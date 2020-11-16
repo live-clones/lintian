@@ -22,6 +22,8 @@ use v5.20;
 use warnings;
 use utf8;
 
+use Carp;
+
 use Lintian::Hint::Standard;
 
 use Moo::Role;
@@ -59,14 +61,21 @@ Store found tags for later processing.
 =cut
 
 sub hint {
-
     my ($self, $tagname, @context_components) = @_;
 
-    my $hint = Lintian::Hint::Standard->new;
-    $hint->name($tagname);
-    $hint->arguments(\@context_components);
+    my $tag = $self->profile->get_tag($tagname);
 
-    $hint->tag($self->profile->get_tag($tagname));
+    croak "tried to issue unknown tag: $tagname"
+      unless defined $tag;
+
+    # skip disabled tags
+    return
+      unless $self->profile->tag_is_enabled($tagname);
+
+    my $hint = Lintian::Hint::Standard->new;
+
+    $hint->tag($tag);
+    $hint->arguments(\@context_components);
 
     push(@{$self->hints}, $hint);
 

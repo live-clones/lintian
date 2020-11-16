@@ -104,7 +104,7 @@ sub issue_hints {
     my @sorted = sort {
              defined $a->override <=> defined $b->override
           || $code_priority{$a->tag->code} <=> $code_priority{$b->tag->code}
-          || $a->name cmp $b->name
+          || $a->tag->name cmp $b->tag->name
           || $type_priority{$a->processable->type}
           <=> $type_priority{$b->processable->type}
           || $a->processable->name cmp $b->processable->name

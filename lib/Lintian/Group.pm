@@ -336,25 +336,12 @@ sub process {
             $OUTPUT->perf_log("$procid,check/$checkname,${raw_res}");
         }
 
-        my $knownlc
-          = List::Compare->new([map { $_->name } @{$processable->hints}],
-            [$self->profile->known_tags]);
-        my @unknown_tagnames = $knownlc->get_Lonly;
-        croak 'tried to issue unknown tags: ' . join(SPACE, @unknown_tagnames)
-          if @unknown_tagnames;
-
-        # remove disabled tags
-        my @enabled_tags
-          = grep { $self->profile->tag_is_enabled($_->name) }
-          @{$processable->hints};
-        $processable->hints(\@enabled_tags);
-
         my %used_overrides;
 
         my @keep_hints;
         for my $hint (@{$processable->hints}) {
 
-            my $declared = $declared_overrides->{$hint->name};
+            my $declared = $declared_overrides->{$hint->tag->name};
             if ($declared && !$hint->tag->show_always) {
 
                 # do not use EMPTY; hash keys literal
@@ -381,7 +368,7 @@ sub process {
                 }
 
                 # new hash keys are autovivified to 0
-                $used_overrides{$hint->name}{$override->{context}}++
+                $used_overrides{$hint->tag->name}{$override->{context}}++
                   if $override;
 
                 $hint->override($override);
@@ -392,7 +379,7 @@ sub process {
 
         $processable->hints(\@keep_hints);
 
-        my %otherwise_visible = map { $_->name => 1 } @keep_hints;
+        my %otherwise_visible = map { $_->tag->name => 1 } @keep_hints;
 
         # look for unused overrides
         for my $tagname (keys %{$declared_overrides}) {

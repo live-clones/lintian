@@ -147,7 +147,7 @@ sub hintlist {
     my @sorted = sort {
                defined $a->override <=> defined $b->override
           ||   $code_priority{$a->tag->code}<=> $code_priority{$b->tag->code}
-          || $a->name cmp $b->name
+          || $a->tag->name cmp $b->tag->name
           || $a->context cmp $b->context
     } @{$arrayref // []};
 

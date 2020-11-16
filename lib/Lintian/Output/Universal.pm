@@ -118,7 +118,7 @@ sub issue_hints {
               . RPARENS
               . COLON
               . SPACE
-              . $hint->name;
+              . $hint->tag->name;
             $line .= SPACE . $details
               if length $details;
 

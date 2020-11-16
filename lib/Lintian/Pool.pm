@@ -180,8 +180,8 @@ sub process{
         my @override_experimental = grep { $_->tag->experimental } @override;
 
         $unused_overrides+= scalar grep {
-                 $_->name eq 'mismatched-override'
-              || $_->name eq 'unused-override'
+                 $_->tag->name eq 'mismatched-override'
+              || $_->tag->name eq 'unused-override'
         } @hints;
 
         my %reported_count;
@@ -200,7 +200,7 @@ sub process{
           if $success && any { $reported_count{$_} } @{$option->{'fail-on'}};
 
         # discard disabled tags
-        @hints= grep { $PROFILE->tag_is_enabled($_->name) } @hints;
+        @hints= grep { $PROFILE->tag_is_enabled($_->tag->name) } @hints;
 
         # discard experimental tags
         @hints = grep { !$_->tag->experimental } @hints
@@ -211,7 +211,7 @@ sub process{
           unless $option->{'show-overrides'};
 
         # discard outside the selected display level
-        @hints= grep { $PROFILE->display_level_for_tag($_->name) }@hints;
+        @hints= grep { $PROFILE->display_level_for_tag($_->tag->name) }@hints;
 
         my $reference_limit = $option->{'display-source'} // [];
         if (@{$reference_limit}) {
