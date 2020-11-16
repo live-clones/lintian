@@ -1,4 +1,4 @@
-# Copyright © 2019 Felix Lechner
+# Copyright © 2019 Felix Lechner <felix.lechner@lease-up.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,40 +16,82 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::Tag::Standard;
+package Lintian::Hint::Bearer;
 
 use v5.20;
 use warnings;
 use utf8;
 
-use Moo;
-use namespace::clean;
+use Lintian::Hint::Standard;
 
-with 'Lintian::Tag';
+use Moo::Role;
+use namespace::clean;
 
 =head1 NAME
 
-Lintian::Tag::Standard - standard tag with arguments concatenated by space
+Lintian::Hint::Bearer -- Facilities for objects receiving Lintian tags
 
 =head1 SYNOPSIS
 
-    use Lintian::Tag::Standard;
+use Moo;
+use namespace::clean;
+
+ with('Lintian::Hint::Bearer');
 
 =head1 DESCRIPTION
 
-Provides a standard tag whose arguments are concatenated by a space.
+A class for collecting Lintian tags as they are found
 
 =head1 INSTANCE METHODS
 
 =over 4
 
+=item profile
+
+=cut
+
+has profile => (is => 'rw');
+
+=item tag (ARGS)
+
+Store found tags for later processing.
+
+=cut
+
+sub tag {
+
+    my ($self, $tagname, @context_components) = @_;
+
+    my $tag = Lintian::Hint::Standard->new;
+    $tag->name($tagname);
+    $tag->arguments(\@context_components);
+
+    $tag->info($self->profile->get_taginfo($tagname));
+
+    push(@{$self->tags}, $tag);
+
+    return;
+}
+
+=item tags
+
+=cut
+
+has tags => (is => 'rw', default => sub { [] });
+
 =back
+
+=head1 AUTHOR
+
+Originally written by Felix Lechner <felix.lechner@lease-up.com> for Lintian.
+
+=head1 SEE ALSO
+
+lintian(1)
 
 =cut
 
 1;
-
-__END__
 
 # Local Variables:
 # indent-tabs-mode: nil

@@ -1,4 +1,4 @@
-# Copyright © 2019 Felix Lechner <felix.lechner@lease-up.com>
+# Copyright © 2019 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,68 +16,69 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::Tag::Bearer;
+package Lintian::Hint;
 
 use v5.20;
 use warnings;
 use utf8;
 
-use Lintian::Tag::Standard;
+use constant EMPTY => q{};
+use constant SPACE => q{ };
 
 use Moo::Role;
 use namespace::clean;
 
 =head1 NAME
 
-Lintian::Tag::Bearer -- Facilities for objects receiving Lintian tags
+Lintian::Hint -- Common facilities for Lintian tags found and to be issued
 
 =head1 SYNOPSIS
 
-use Moo;
-use namespace::clean;
+ use Moo;
+ use namespace::clean;
 
- with('Lintian::Tag::Bearer');
+ with 'Lintian::Hint';
 
 =head1 DESCRIPTION
 
-A class for collecting Lintian tags as they are found
+Common facilities for Lintian tags found and to be issued
 
 =head1 INSTANCE METHODS
 
 =over 4
 
-=item profile
+=item arguments
+=item info
+=item name
+=item override
+=item processable
+
+=item context
+
+Calculate the string representation commonly referred to as 'context'.
 
 =cut
 
-has profile => (is => 'rw');
+has arguments => (is => 'rw', default => sub { [] });
+has info => (is => 'rw');
+has name => (is => 'rw');
+has override => (is => 'rw');
+has processable => (is => 'rw');
 
-=item tag (ARGS)
+sub context {
+    my ($self) = @_;
 
-Store found tags for later processing.
+    # skip empty arguments
+    my @relevant = grep { length } @{$self->arguments};
 
-=cut
+    # concatenate with spaces
+    my $context = join(SPACE, @relevant) // EMPTY;
 
-sub tag {
+    # escape newlines; maybe add others
+    $context =~ s/\n/\\n/g;
 
-    my ($self, $tagname, @context_components) = @_;
-
-    my $tag = Lintian::Tag::Standard->new;
-    $tag->name($tagname);
-    $tag->arguments(\@context_components);
-
-    $tag->info($self->profile->get_taginfo($tagname));
-
-    push(@{$self->tags}, $tag);
-
-    return;
+    return $context;
 }
-
-=item tags
-
-=cut
-
-has tags => (is => 'rw', default => sub { [] });
 
 =back
 
