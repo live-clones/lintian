@@ -41,7 +41,7 @@ sub binary {
     my @etcfiles = grep { $_->name =~ m,^etc, } @files;
     for my $file (@etcfiles) {
 
-        $self->tag('file-in-etc-not-marked-as-conffile', $file)
+        $self->hint('file-in-etc-not-marked-as-conffile', $file)
           unless $self->processable->is_conffile($file->name)
           || $file =~ m,/README$,
           || $file eq 'etc/init.d/skeleton'
@@ -53,7 +53,7 @@ sub binary {
     for my $absolute ($self->processable->conffiles) {
 
         # all paths should be absolute
-        $self->tag('relative-conffile', $absolute)
+        $self->hint('relative-conffile', $absolute)
           unless $absolute =~ m,^/,;
 
         # strip the leading slash
@@ -65,28 +65,28 @@ sub binary {
 
         my $shipped = $self->processable->installed->lookup($relative);
         if (defined $shipped) {
-            $self->tag('conffile-has-bad-file-type', $shipped)
+            $self->hint('conffile-has-bad-file-type', $shipped)
               unless $shipped->is_file;
 
         } else {
-            $self->tag('conffile-is-not-in-package', $relative);
+            $self->hint('conffile-is-not-in-package', $relative);
         }
 
-        $self->tag('file-in-etc-rc.d-marked-as-conffile', $relative)
+        $self->hint('file-in-etc-rc.d-marked-as-conffile', $relative)
           if $relative =~ m,^etc/rc.\.d/,;
 
         if ($relative !~ m,^etc/,) {
             if ($relative =~ m,^usr/,) {
-                $self->tag('file-in-usr-marked-as-conffile', $relative);
+                $self->hint('file-in-usr-marked-as-conffile', $relative);
 
             } else {
-                $self->tag('non-etc-file-marked-as-conffile', $relative);
+                $self->hint('non-etc-file-marked-as-conffile', $relative);
             }
         }
     }
 
     for my $path (keys %count) {
-        $self->tag('duplicate-conffile', $path)
+        $self->hint('duplicate-conffile', $path)
           if $count{$path} > 1;
     }
 

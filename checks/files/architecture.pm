@@ -43,7 +43,7 @@ sub visit_installed_files {
         my $subdir = $1;
         if ($TRIPLETS->known($subdir)) {
 
-            $self->tag('triplet-dir-and-architecture-mismatch',
+            $self->hint('triplet-dir-and-architecture-mismatch',
                 $file->name, 'is for',$TRIPLETS->value($subdir))
               unless ($architecture eq $TRIPLETS->value($subdir));
         }
@@ -71,7 +71,7 @@ sub breakdown_installed_files {
     # check if package is empty
     my $is_dummy = $self->processable->is_pkg_class('any-meta');
 
-    $self->tag('package-contains-no-arch-dependent-files')
+    $self->hint('package-contains-no-arch-dependent-files')
       unless $is_dummy
       || $self->arch_dep_files
       || $architecture eq 'all'

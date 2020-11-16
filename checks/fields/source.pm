@@ -55,7 +55,7 @@ sub source {
     die "Source field does not match package name $source != $stem"
       if $source ne $stem;
 
-    $self->tag('source-field-malformed', $source)
+    $self->hint('source-field-malformed', $source)
       if $source !~ /^[a-z0-9][-+\.a-z0-9]+\z/;
 
     return;
@@ -76,7 +76,7 @@ sub always {
 
     my $source = $fields->unfolded_value('Source');
 
-    $self->tag('source-field-malformed', $source)
+    $self->hint('source-field-malformed', $source)
       unless $source =~ /^ $PKGNAME_REGEX
                          \s*
                          # Optional Version e.g. (1.0)

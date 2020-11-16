@@ -66,12 +66,12 @@ sub visit_installed_files {
     close($fd);
 
     unless (length $module_version) {
-        $self->tag('gfortran-module-does-not-declare-version', $file->name);
+        $self->hint('gfortran-module-does-not-declare-version', $file->name);
         return;
     }
 
     my $depends = $self->processable->fields->value('Depends');
-    $self->tag('missing-prerequisite-for-gfortran-module', $file->name)
+    $self->hint('missing-prerequisite-for-gfortran-module', $file->name)
       unless $depends =~ /\bgfortran-mod-$module_version\b/;
 
     return;

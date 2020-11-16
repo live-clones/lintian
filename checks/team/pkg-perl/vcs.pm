@@ -47,7 +47,7 @@ sub source {
       unless $maintainer=~ /pkg-perl-maintainers\@lists\.alioth\.debian\.org/;
 
     my @non_git = grep { $fields->exists($_) } @NON_GIT_VCS_FIELDS;
-    $self->tag('no-git', $_) for @non_git;
+    $self->hint('no-git', $_) for @non_git;
 
     # check for team locations
     for my $name (@VCS_FIELDS) {
@@ -60,7 +60,7 @@ sub source {
         # get actual capitalization
         my $original_name = $fields->literal_name($name);
 
-        $self->tag('no-team-url', $original_name, $value)
+        $self->hint('no-team-url', $original_name, $value)
           unless $value
           =~ m{^https://salsa\.debian\.org/perl-team/modules/packages}i;
     }

@@ -48,7 +48,7 @@ sub visit_installed_files {
     # location.
 
     if ($file->name =~ m,^usr/share/gnome/apps/.*\.desktop$,) {
-        $self->tag('desktop-file-in-wrong-dir', $file->name);
+        $self->hint('desktop-file-in-wrong-dir', $file->name);
     }
 
     return;

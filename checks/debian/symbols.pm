@@ -66,7 +66,7 @@ sub check_symbols_file {
             my $field = $1;
             my $value = $2;
 
-            $self->tag('package-placeholder-in-symbols-file', "$file, line $.")
+            $self->hint('package-placeholder-in-symbols-file',"$file, line $.")
               if $field eq 'Build-Depends-Package' && $value =~ /#PACKAGE#/;
         }
     }

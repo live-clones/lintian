@@ -49,7 +49,7 @@ sub visit_installed_files {
     # unresolvable link
     unless (defined $path) {
 
-        $self->tag('package-contains-unsafe-symlink', $file->name);
+        $self->hint('package-contains-unsafe-symlink', $file->name);
         return;
     }
 
@@ -103,7 +103,7 @@ sub breakdown_installed_files {
 
         # nope - not found in any of our direct dependencies.  Ergo it is
         # a broken "ln -s target/*.so link" expansion.
-        $self->tag('package-contains-broken-symlink-wildcard', $file, $target);
+        $self->hint('package-contains-broken-symlink-wildcard', $file,$target);
     }
 
     return;

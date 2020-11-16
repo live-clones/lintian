@@ -56,7 +56,7 @@ my $INVALID_DATES
 sub spelling_tag_emitter {
     my ($self, @orig_args) = @_;
     return sub {
-        return $self->tag(@orig_args, @_);
+        return $self->hint(@orig_args, @_);
     };
 }
 
@@ -83,7 +83,7 @@ sub source {
         # make sure dot matches newlines, as well
         if ($contents =~ qr/BEGIN PGP SIGNATURE.*END PGP SIGNATURE/ms) {
 
-            $self->tag('unreleased-changelog-distribution')
+            $self->hint('unreleased-changelog-distribution')
               if $latest_entry->Distribution eq 'UNRELEASED';
         }
     }
@@ -96,7 +96,7 @@ sub source {
 
     } catch {
         my $indicator= ($processable->native ? EMPTY : 'non-') . 'native';
-        $self->tag(
+        $self->hint(
             'malformed-debian-changelog-version',
             $versionstring . " (for $indicator)"
         );
@@ -105,7 +105,7 @@ sub source {
 
     if (defined $latest_version) {
 
-        $self->tag('hyphen-in-upstream-part-of-debian-changelog-version',
+        $self->hint('hyphen-in-upstream-part-of-debian-changelog-version',
             $latest_version->upstream)
           if !$processable->native && $latest_version->upstream =~ qr/-/;
 
@@ -120,7 +120,7 @@ sub source {
             my $revision = $latest_version->maintainer_revision;
             my $distribution = $latest_entry->Distribution;
 
-            $self->tag('version-refers-to-distribution',
+            $self->hint('version-refers-to-distribution',
                 $latest_version->literal)
               if ($revision =~ /testing|(?:un)?stable/i)
               || (
@@ -148,7 +148,7 @@ sub source {
 
             my $suggestion = "$expected~$candidate_string$increment_string";
 
-            $self->tag(
+            $self->hint(
                 'rc-version-greater-than-expected-version',
                 $examine, '>',$expected, "(consider using $suggestion)",
               )
@@ -170,7 +170,7 @@ sub source {
                 $processable->native);
         } catch {
             my $indicator= ($processable->native ? EMPTY : 'non-') . 'native';
-            $self->tag(
+            $self->hint(
                 'odd-historical-debian-changelog-version',
                 $previous_entry->Version . " (for $indicator)"
             );
@@ -178,7 +178,7 @@ sub source {
         };
 
         if ($latest_timestamp && $previous_timestamp) {
-            $self->tag('latest-debian-changelog-entry-without-new-date')
+            $self->hint('latest-debian-changelog-entry-without-new-date')
               unless ($latest_timestamp - $previous_timestamp) > 0
               || lc($latest_entry->Distribution) eq 'unreleased';
         }
@@ -195,7 +195,7 @@ sub source {
                 # disallowed even if epochs differ; see tag description
                 if (   $latest_version->no_epoch eq $no_epoch
                     && $latest_entry->Source eq $entry->Source) {
-                    $self->tag(
+                    $self->hint(
 'latest-debian-changelog-entry-reuses-existing-version',
                         $latest_version->literal. ' ~= '
                           . $entry->Version
@@ -229,7 +229,7 @@ sub source {
                   && $latest_version->maintainer_revision ne '0';
             }
 
-            $self->tag('changelog-file-missing-explicit-entry',
+            $self->hint('changelog-file-missing-explicit-entry',
                     $previous_version->literal
                   . " -> $expected_previous (missing) -> "
                   . $latest_version->literal)
@@ -243,13 +243,14 @@ sub source {
                 && $latest_entry->Source eq $previous_entry->Source
                 && !$processable->native) {
 
-                $self->tag('possible-new-upstream-release-without-new-version')
+                $self->hint(
+                    'possible-new-upstream-release-without-new-version')
                   if $latest_entry->Changes
                   =~ /^\s*\*\s+new\s+upstream\s+(?:\S+\s+)?release\b/im;
 
                 my $latest = $latest_version->maintainer_revision;
                 my $previous = $previous_version->maintainer_revision;
-                $self->tag('non-consecutive-debian-revision',
+                $self->hint('non-consecutive-debian-revision',
                         $previous_version->literal . ' -> '
                       . $latest_version->literal)
                   if $previous =~ /^\d+$/
@@ -258,12 +259,12 @@ sub source {
             }
 
             if ($latest_version->epoch ne $previous_version->epoch) {
-                $self->tag('epoch-change-without-comment',
+                $self->hint('epoch-change-without-comment',
                         $previous_version->literal . ' -> '
                       . $latest_version->literal)
                   unless $latest_entry->Changes =~ /\bepoch\b/im;
 
-                $self->tag(
+                $self->hint(
                     'epoch-changed-but-upstream-version-did-not-go-backwards',
                     $previous_version->literal . ' -> '
                       . $latest_version->literal
@@ -303,10 +304,10 @@ sub binary {
     my @news_files
       = grep { $_->basename =~ m{\A NEWS\.Debian (?:\.gz)? \Z}ixsm }@doc_files;
 
-    $self->tag('debian-news-file-not-compressed', $_->name)
+    $self->hint('debian-news-file-not-compressed', $_->name)
       for grep { $_->basename !~ m{\.gz$} } @news_files;
 
-    $self->tag('wrong-name-for-debian-news-file', $_->name)
+    $self->hint('wrong-name-for-debian-news-file', $_->name)
       for grep { $_->basename =~ m{\.gz$} && $_->basename ne 'NEWS.Debian.gz' }
       @news_files;
 
@@ -315,10 +316,10 @@ sub binary {
     } @doc_files;
 
     # ubuntu permits symlinks; their profile suppresses the tag
-    $self->tag('debian-changelog-file-is-a-symlink', $_->name)
+    $self->hint('debian-changelog-file-is-a-symlink', $_->name)
       for grep { $_->is_symlink } @changelog_files;
 
-    $self->tag('changelog-file-not-compressed', $_->name)
+    $self->hint('changelog-file-not-compressed', $_->name)
       for grep { $_->basename !~ m{ \.gz \Z}xsm } @changelog_files;
 
     # Check if changelog files are compressed with gzip -9.
@@ -335,7 +336,8 @@ sub binary {
         next
           unless defined $resolved;
 
-        $self->tag('changelog-not-compressed-with-max-compression',$path->name)
+        $self->hint('changelog-not-compressed-with-max-compression',
+            $path->name)
           unless $resolved->file_info =~ /max compression/;
     }
 
@@ -366,7 +368,7 @@ sub binary {
 
             if (my @errors = @{$changelog->errors}) {
                 for (@errors) {
-                    $self->tag('syntax-error-in-debian-news-file',
+                    $self->hint('syntax-error-in-debian-news-file',
                         "line $_->[0]","\"$_->[1]\"");
                 }
             }
@@ -376,7 +378,7 @@ sub binary {
                 ($news) = @{$changelog->entries};
                 if ($news->Distribution && $news->Distribution eq 'UNRELEASED')
                 {
-                    $self->tag('debian-news-entry-has-strange-distribution',
+                    $self->hint('debian-news-entry-has-strange-distribution',
                         $news->Distribution);
                 }
                 check_spelling(
@@ -385,14 +387,14 @@ sub binary {
                     $self->spelling_tag_emitter(
                         'spelling-error-in-news-debian'));
                 if ($news->Changes =~ /^\s*\*\s/) {
-                    $self->tag('debian-news-entry-uses-asterisk');
+                    $self->hint('debian-news-entry-uses-asterisk');
                 }
             }
         }
     }
 
     if ($found_html && !$found_text) {
-        $self->tag('html-changelog-without-text-version');
+        $self->hint('html-changelog-without-text-version');
     }
 
     # is this a native Debian package?
@@ -427,10 +429,10 @@ sub binary {
             }
             map { $_->basename } @doc_files
         ) {
-            $self->tag('wrong-name-for-changelog-of-native-package',
+            $self->hint('wrong-name-for-changelog-of-native-package',
                 "usr/share/doc/$pkg/$chg");
         } else {
-            $self->tag(
+            $self->hint(
                 'no-changelog',
                 "usr/share/doc/$pkg/changelog.gz",
                 '(native package)'
@@ -451,7 +453,7 @@ sub binary {
             # search for changelogs with wrong file name
             for (map { $_->basename } @doc_files) {
                 if (m/^change/i and not m/debian/i) {
-                    $self->tag('wrong-name-for-upstream-changelog',
+                    $self->hint('wrong-name-for-upstream-changelog',
                         "usr/share/doc/$pkg/$_");
                     last;
                 }
@@ -470,13 +472,13 @@ sub binary {
             }
             map { $_->basename } @doc_files
         ) {
-            $self->tag('wrong-name-for-debian-changelog-file',
+            $self->hint('wrong-name-for-debian-changelog-file',
                 "usr/share/doc/$pkg/$chg");
         } else {
             if ($foreign_pkg && $found_upstream_text_changelog) {
-                $self->tag('debian-changelog-file-missing-or-wrong-name');
+                $self->hint('debian-changelog-file-missing-or-wrong-name');
             } elsif ($foreign_pkg) {
-                $self->tag(
+                $self->hint(
                     'no-changelog',
                     "usr/share/doc/$pkg/changelog.Debian.gz",
                     '(non-native package)'
@@ -503,7 +505,7 @@ sub binary {
     my $changelog = $processable->changelog;
     if (my @errors = @{$changelog->errors}) {
         foreach (@errors) {
-            $self->tag('syntax-error-in-debian-changelog',
+            $self->hint('syntax-error-in-debian-changelog',
                 "line $_->[0]","\"$_->[1]\"");
         }
     }
@@ -525,7 +527,7 @@ sub binary {
             my ($parsed) = Email::Address::XS->parse($entry->Maintainer);
 
             unless ($parsed->is_valid) {
-                $self->tag('bogus-mail-host-in-debian-changelog',
+                $self->hint('bogus-mail-host-in-debian-changelog',
                     $entry->Maintainer);
                 next;
             }
@@ -534,12 +536,12 @@ sub binary {
                 all { length }
                 ($parsed->address, $parsed->user, $parsed->host)
             ) {
-                $self->tag('bogus-mail-host-in-debian-changelog',
+                $self->hint('bogus-mail-host-in-debian-changelog',
                     $parsed->format);
                 next;
             }
 
-            $self->tag('bogus-mail-host-in-debian-changelog', $parsed->address)
+            $self->hint('bogus-mail-host-in-debian-changelog',$parsed->address)
               unless is_domain($parsed->host,
                 {domain_disable_tld_validation => 1});
         }
@@ -558,7 +560,7 @@ sub binary {
             foreach my $re ($INVALID_DATES->all()) {
                 if ($longdate =~ m/($re)/i) {
                     my $repl = $INVALID_DATES->value($re);
-                    $self->tag('invalid-date-in-debian-changelog',
+                    $self->hint('invalid-date-in-debian-changelog',
                         "($1 -> $repl)");
                     $warned = 1;
                 }
@@ -575,7 +577,7 @@ sub binary {
             if (not $warned and $tz and $weekday_declared ne $weekday_actual) {
                 my $real_weekday = time2str('%A', $latest_timestamp, $tz);
                 my $short_date = time2str('%Y-%m-%d', $latest_timestamp, $tz);
-                $self->tag('debian-changelog-has-wrong-day-of-week',
+                $self->hint('debian-changelog-has-wrong-day-of-week',
                     "$short_date is a $real_weekday");
             }
         }
@@ -588,7 +590,7 @@ sub binary {
             my $previous_timestamp = $previous_entry->Timestamp;
 
             if ($latest_timestamp && $previous_timestamp) {
-                $self->tag('latest-changelog-entry-without-new-date')
+                $self->hint('latest-changelog-entry-without-new-date')
                   unless (($latest_timestamp - $previous_timestamp) > 0
                     or $latest_entry->Distribution eq 'UNRELEASED');
             }
@@ -599,7 +601,7 @@ sub binary {
                 and $previous_dist eq 'experimental') {
                 unless ($latest_entry->Changes
                     =~ /\bto\s+['"‘“]?(?:unstable|sid)['"’”]?\b/im) {
-                    $self->tag('experimental-to-unstable-without-comment');
+                    $self->hint('experimental-to-unstable-without-comment');
                 }
             }
 
@@ -612,7 +614,7 @@ sub binary {
                 my @normalized
                   = map { $codename{$_} // $_ }($latest_dist, $changes_dist);
 
-                $self->tag(
+                $self->hint(
                     'changelog-distribution-does-not-match-changes-file',
                     "($latest_dist != $changes_dist)")
                   unless scalar(uniq @normalized) == 1;
@@ -626,22 +628,22 @@ sub binary {
 
         if (@entries == 1) {
             if ($latest_entry->Version and $latest_entry->Version =~ /-1$/) {
-                $self->tag('initial-upload-closes-no-bugs')
+                $self->hint('initial-upload-closes-no-bugs')
                   unless @{ $latest_entry->Closes };
-                $self->tag('new-package-uses-date-based-version-number',
+                $self->hint('new-package-uses-date-based-version-number',
                     $latest_entry->Version,
                     '(vs. 0~' . $latest_entry->Version .')')
                   if $latest_entry->Version =~ m/^\d{8}/;
             }
-            $self->tag('changelog-is-dh_make-template')
+            $self->hint('changelog-is-dh_make-template')
               if $changes
               =~ /(?:#?\s*)(?:\d|n)+ is the bug number of your ITP/i;
         }
         while ($changes =~ /(closes[\s;]*(?:bug)?\#?\s?\d{6,})[^\w]/ig) {
-            $self->tag('possible-missing-colon-in-closes', $1) if $1;
+            $self->hint('possible-missing-colon-in-closes', $1) if $1;
         }
         if ($changes =~ m/(TEMP-\d{7}-[0-9a-fA-F]{6})/) {
-            $self->tag('changelog-references-temp-security-identifier', $1);
+            $self->hint('changelog-references-temp-security-identifier', $1);
         }
 
         # check for bad intended distribution
@@ -656,26 +658,26 @@ sub binary {
             my $uploaded = $latest_entry->Distribution;
             unless ($uploaded eq 'UNRELEASED') {
                 unless($uploaded eq $intended) {
-                    $self->tag('bad-intended-distribution',
+                    $self->hint('bad-intended-distribution',
                         "intended to $intended but uploaded to $uploaded");
                 }
             }
         }
 
         if($changes =~ /Close:\s+(\#\d+)/xi) {
-            $self->tag('misspelled-closes-bug',$1);
+            $self->hint('misspelled-closes-bug',$1);
         }
 
         my $changesempty = $changes;
         $changesempty =~ s,\W,,gms;
         if (length($changesempty)==0) {
-            $self->tag('changelog-empty-entry')
+            $self->hint('changelog-empty-entry')
               unless $latest_entry->Distribution eq 'UNRELEASED';
         }
 
         # before bug 50004 bts removed bug instead of archiving
         for my $bug (@{$latest_entry->Closes}) {
-            $self->tag('improbable-bug-number-in-closes', $bug)
+            $self->hint('improbable-bug-number-in-closes', $bug)
               if $bug < $BUGS_NUMBER->value('min-bug')
               || $bug > $BUGS_NUMBER->value('max-bug');
         }
@@ -685,14 +687,14 @@ sub binary {
             if ($latest_entry->Version eq $news->Version) {
                 for my $field (qw/Distribution Urgency/) {
                     if ($latest_entry->$field ne $news->$field) {
-                        $self->tag('changelog-news-debian-mismatch',
+                        $self->hint('changelog-news-debian-mismatch',
                             $field,
                             $latest_entry->$field . ' != ' . $news->$field);
                     }
                 }
             }
             unless (exists $allversions{$news->Version}) {
-                $self->tag('debian-news-entry-has-unknown-version',
+                $self->hint('debian-news-entry-has-unknown-version',
                     $news->Version);
             }
         }
@@ -703,11 +705,11 @@ sub binary {
         my @lines = split(/\n/, $changes);
         for my $i (0 .. $#lines) {
             my $line = $i + $chloff;
-            $self->tag('debian-changelog-line-too-short', $1, "(line $line)")
+            $self->hint('debian-changelog-line-too-short', $1, "(line $line)")
               if $lines[$i] =~ /^   [*]\s(.{1,5})$/ and $1 !~ /:$/;
             if (length($lines[$i]) > 81
                 and $lines[$i] !~ /^[\s.o*+-]*(?:[Ss]ee:?\s+)?\S+$/) {
-                $self->tag('debian-changelog-line-too-long', "line $line");
+                $self->hint('debian-changelog-line-too-long', "line $line");
             }
         }
 
@@ -753,7 +755,7 @@ sub check_dch {
               (?:,\s*(?:bug)?\#?\s?\d+)*
               (?:,\s*(((?:bug)?\#?\s?\d*)[[:alpha:]]\w*))/ix
         ) {
-            $self->tag('wrong-bug-number-in-closes', $1,
+            $self->hint('wrong-bug-number-in-closes', $1,
                 "in the installed changelog (line $.)")
               if length $2;
         }
@@ -766,7 +768,7 @@ sub check_dch {
         if (   defined $prefix
             && defined $suffix
             && m/^\Q$prefix\E\s*add-log-mailing-address:.*\Q$suffix\E$/) {
-            $self->tag(
+            $self->hint(
                 'debian-changelog-file-contains-obsolete-user-emacs-settings');
         }
     }

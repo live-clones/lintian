@@ -45,9 +45,9 @@ sub visit_installed_files {
       if $file->is_dir and $usrfile->is_dir;
 
     if ($file =~ m,^lib.+\.(?:so[\.0-9]*|a)$,) {
-        $self->tag('library-in-root-and-usr', $file, $usrfile);
+        $self->hint('library-in-root-and-usr', $file, $usrfile);
     } else {
-        $self->tag('file-in-root-and-usr', $file, $usrfile);
+        $self->hint('file-in-root-and-usr', $file, $usrfile);
     }
 
     return;

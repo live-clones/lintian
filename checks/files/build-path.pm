@@ -45,7 +45,7 @@ sub visit_installed_files {
             my $regex = $BUILD_PATH_REGEX->value($buildpath);
             if ($file->name =~ m{$regex}xms) {
 
-                $self->tag('dir-or-file-in-build-tree', $file->name);
+                $self->hint('dir-or-file-in-build-tree', $file->name);
             }
         }
     }

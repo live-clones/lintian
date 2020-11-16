@@ -39,7 +39,7 @@ with 'Lintian::Output';
 
 =head1 NAME
 
-Lintian::Output::Universal -- Facilities for printing universal tags
+Lintian::Output::Universal -- Facilities for printing universal hints
 
 =head1 SYNOPSIS
 
@@ -47,20 +47,20 @@ Lintian::Output::Universal -- Facilities for printing universal tags
 
 =head1 DESCRIPTION
 
-A class for printing tags using the 'universal' format.
+A class for printing hints using the 'universal' format.
 
 =head1 INSTANCE METHODS
 
 =over 4
 
-=item issue_tags
+=item issue_hints
 
-Print all tags passed in array. A separate arguments with processables
-is necessary to report in case no tags were found.
+Print all hints passed in array. A separate arguments with processables
+is necessary to report in case no hints were found.
 
 =cut
 
-sub issue_tags {
+sub issue_hints {
     my ($self, $groups) = @_;
 
     my @processables = map { $_->get_processables } @{$groups // []};
@@ -68,23 +68,23 @@ sub issue_tags {
     my @pending;
     for my $processable (@processables) {
 
-        # get tags
-        my @tags = @{$processable->tags};
+        # get hints
+        my @hints = @{$processable->hints};
 
-        # associate tags with processable
-        $_->processable($processable) for @tags;
+        # associate hints with processable
+        $_->processable($processable) for @hints;
 
         # remove circular references
-        $processable->tags([]);
+        $processable->hints([]);
 
-        push(@pending, @tags);
+        push(@pending, @hints);
     }
 
-    my %taglist;
+    my %hintlist;
 
-    for my $tag (@pending) {
-        $taglist{$tag->processable} //= [];
-        push(@{$taglist{$tag->processable}}, $tag);
+    for my $hint (@pending) {
+        $hintlist{$hint->processable} //= [];
+        push(@{$hintlist{$hint->processable}}, $hint);
     }
 
     my @lines;
@@ -104,11 +104,11 @@ sub issue_tags {
               . $processable->architecture . ') ...'
         );
 
-        my @subset = @{$taglist{$processable} // []};
+        my @subset = @{$hintlist{$processable} // []};
 
-        for my $tag (@subset) {
+        for my $hint (@subset) {
 
-            my $details = $tag->context;
+            my $details = $hint->context;
 
             my $line
               = $processable->name
@@ -118,7 +118,7 @@ sub issue_tags {
               . RPARENS
               . COLON
               . SPACE
-              . $tag->name;
+              . $hint->name;
             $line .= SPACE . $details
               if length $details;
 

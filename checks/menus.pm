@@ -67,7 +67,7 @@ has documentation => (is => 'rwp', default => 0);
 sub spelling_tag_emitter {
     my ($self, @orig_args) = @_;
     return sub {
-        return $self->tag(@orig_args, @_);
+        return $self->hint(@orig_args, @_);
     };
 }
 
@@ -78,7 +78,7 @@ sub visit_installed_files {
          # menu file?
         if ($file =~ m,^usr/(lib|share)/menu/\S,) { # correct permissions?
             if ($file->operm & 0111) {
-                $self->tag('executable-menu-file',
+                $self->hint('executable-menu-file',
                     sprintf('%s %04o', $file, $file->operm));
             }
 
@@ -86,14 +86,14 @@ sub visit_installed_files {
               if $file =~ m,^usr/(?:lib|share)/menu/README$,;
 
             if ($file =~ m,^usr/lib/,) {
-                $self->tag('menu-file-in-usr-lib', $file);
+                $self->hint('menu-file-in-usr-lib', $file);
             }
 
             $self->_set_menu_file($file->name);
 
             if (    $file =~ m,usr/(?:lib|share)/menu/menu$,
                 and $self->processable->name ne 'menu') {
-                $self->tag('bad-menu-file-name', $file);
+                $self->hint('bad-menu-file-name', $file);
             }
         }
         #menu-methods file?
@@ -116,7 +116,7 @@ sub visit_installed_files {
                 }
                 close($fd);
             }
-            $self->tag('menu-method-lacks-include', $file)
+            $self->hint('menu-method-lacks-include', $file)
               unless $menumethod_includes_menu_h
               or $self->processable->name eq 'menu';
         }
@@ -172,31 +172,31 @@ sub installable {
 
     # prerm scripts should not call update-menus
     if ($prerm{'calls-updatemenus'}) {
-        $self->tag('prerm-calls-updatemenus');
+        $self->hint('prerm-calls-updatemenus');
     }
 
     # postrm scripts should not call install-docs
     if ($postrm{'calls-installdocs'} or $postrm{'calls-installdocs-r'}) {
-        $self->tag('postrm-calls-installdocs');
+        $self->hint('postrm-calls-installdocs');
     }
 
     # preinst scripts should not call either update-menus nor installdocs
     if ($preinst{'calls-updatemenus'}) {
-        $self->tag('preinst-calls-updatemenus');
+        $self->hint('preinst-calls-updatemenus');
     }
 
     if ($preinst{'calls-installdocs'}) {
-        $self->tag('preinst-calls-installdocs');
+        $self->hint('preinst-calls-installdocs');
     }
 
     my $anymenu_file = $self->menu_file || $self->menumethod_file;
 
     # No one needs to call install-docs any more; triggers now handles that.
     if ($postinst{'calls-installdocs'} or $postinst{'calls-installdocs-r'}) {
-        $self->tag('postinst-has-useless-call-to-install-docs');
+        $self->hint('postinst-has-useless-call-to-install-docs');
     }
     if ($prerm{'calls-installdocs'} or $prerm{'calls-installdocs-r'}) {
-        $self->tag('prerm-has-useless-call-to-install-docs');
+        $self->hint('prerm-has-useless-call-to-install-docs');
     }
 
     # check consistency
@@ -206,7 +206,7 @@ sub installable {
         for my $dbpath ($db_dir->children) {
             next if not $dbpath->is_open_ok;
             if ($dbpath->resolve_path->is_executable) {
-                $self->tag('executable-in-usr-share-docbase',
+                $self->hint('executable-in-usr-share-docbase',
                     $dbpath,sprintf('%04o', $dbpath->operm));
                 next;
             }
@@ -218,7 +218,7 @@ sub installable {
             # libraries register their documentation via the ghc compiler's
             # documentation registration mechanism.  See bug #586877.
         } else {
-            $self->tag('possible-documentation-but-no-doc-base-registration');
+            $self->hint('possible-documentation-but-no-doc-base-registration');
         }
     }
 
@@ -234,19 +234,19 @@ sub installable {
         # but debhelper apparently currently still adds that to the
         # maintainer script, so don't warn if it's done.
         if (not $postinst{'calls-updatemenus'}) {
-            $self->tag('postinst-does-not-call-updatemenus', $anymenu_file);
+            $self->hint('postinst-does-not-call-updatemenus', $anymenu_file);
         }
         if ($self->menumethod_file and not $postrm{'calls-updatemenus'}) {
-            $self->tag('postrm-does-not-call-updatemenus',
+            $self->hint('postrm-does-not-call-updatemenus',
                 $self->menumethod_file)
               unless $pkg eq 'menu';
         }
     } else {
         if ($postinst{'calls-updatemenus'}) {
-            $self->tag('postinst-has-useless-call-to-update-menus');
+            $self->hint('postinst-has-useless-call-to-update-menus');
         }
         if ($postrm{'calls-updatemenus'}) {
-            $self->tag('postrm-has-useless-call-to-update-menus');
+            $self->hint('postrm-has-useless-call-to-update-menus');
         }
     }
 
@@ -306,7 +306,7 @@ sub check_doc_base_file {
 
             # Sections' separator.
         } elsif ($string =~ /^(\s*)$/) {
-            $self->tag('doc-base-file-separator-extra-whitespace',
+            $self->hint('doc-base-file-separator-extra-whitespace',
                 "$dbfile:$position")
               if $1;
             next unless $field; # skip successive empty lines
@@ -331,7 +331,7 @@ sub check_doc_base_file {
 
             # Everything else is a syntax error.
         } else {
-            $self->tag('doc-base-file-syntax-error', "$dbfile:$position");
+            $self->hint('doc-base-file-syntax-error', "$dbfile:$position");
         }
 
     } continue {
@@ -350,7 +350,7 @@ sub check_doc_base_file {
     }
 
     # Make sure we saw at least one format.
-    $self->tag('doc-base-file-no-format-section', $dbfile)
+    $self->hint('doc-base-file-no-format-section', $dbfile)
       unless %sawformats;
 
     return;
@@ -367,9 +367,9 @@ sub check_doc_base_field {
     my $pkg = $self->processable->name;
     my $group = $self->group;
 
-    $self->tag('doc-base-file-unknown-field', "$dbfile:$line", $field)
+    $self->hint('doc-base-file-unknown-field', "$dbfile:$line", $field)
       unless defined $knownfields->{$field};
-    $self->tag('duplicate-field-in-doc-base', "$dbfile:$line", $field)
+    $self->hint('duplicate-field-in-doc-base', "$dbfile:$line", $field)
       if $sawfields->{$field};
     $sawfields->{$field} = 1;
 
@@ -385,13 +385,13 @@ sub check_doc_base_field {
         my @files = map { split(' ', $_) } @$vals;
 
         if ($field eq 'Index' && @files > 1) {
-            $self->tag('doc-base-index-references-multiple-files',
+            $self->hint('doc-base-index-references-multiple-files',
                 "$dbfile:$line");
         }
         for my $file (@files) {
             next if $file =~ m %^/usr/share/doc/%;
             next if $file =~ m %^/usr/share/info/%;
-            $self->tag('doc-base-file-references-wrong-path',
+            $self->hint('doc-base-file-references-wrong-path',
                 "$dbfile:$line", $file);
         }
         for my $file (@files) {
@@ -412,7 +412,7 @@ sub check_doc_base_field {
                 $found = $all_files->{$realfile} || $all_files->{"$realfile/"};
             }
             unless ($found) {
-                $self->tag('doc-base-file-references-missing-file',
+                $self->hint('doc-base-file-references-missing-file',
                     "$dbfile:$line",$file);
             }
         }
@@ -426,9 +426,9 @@ sub check_doc_base_field {
         $format =~ s/^\s+|\s+$//g;
 
         $format = lc $format;
-        $self->tag('doc-base-file-unknown-format', "$dbfile:$line", $format)
+        $self->hint('doc-base-file-unknown-format', "$dbfile:$line", $format)
           unless $known_doc_base_formats{$format};
-        $self->tag('duplicate-format-in-doc-base', "$dbfile:$line", $format)
+        $self->hint('duplicate-format-in-doc-base', "$dbfile:$line", $format)
           if $sawformats->{$format};
         $sawformats->{$format} = 1;
 
@@ -439,12 +439,13 @@ sub check_doc_base_field {
     } elsif ($field eq 'Document') {
         $_ = join(' ', @$vals);
 
-        $self->tag('doc-base-invalid-document-field', "$dbfile:$line", $_)
+        $self->hint('doc-base-invalid-document-field', "$dbfile:$line", $_)
           unless /^[a-z0-9+.-]+$/;
-        $self->tag('doc-base-document-field-ends-in-whitespace',
+        $self->hint('doc-base-document-field-ends-in-whitespace',
             "$dbfile:$line")
           if /[ \t]$/;
-        $self->tag('doc-base-document-field-not-in-first-line',"$dbfile:$line")
+        $self->hint('doc-base-document-field-not-in-first-line',
+            "$dbfile:$line")
           unless $line == 1;
 
         # Title field.
@@ -467,12 +468,12 @@ sub check_doc_base_field {
         $_ = join(' ', @$vals);
         unless ($SECTIONS->known($_)) {
             if (m,^App(?:lication)?s/(.+)$, and $SECTIONS->known($1)) {
-                $self->tag('doc-base-uses-applications-section',
+                $self->hint('doc-base-uses-applications-section',
                     "$dbfile:$line", $_);
             } elsif (m,^(.+)/(?:[^/]+)$, and $SECTIONS->known($1)) {
                 # allows creating a new subsection to a known section
             } else {
-                $self->tag('doc-base-unknown-section', "$dbfile:$line", $_);
+                $self->hint('doc-base-unknown-section', "$dbfile:$line", $_);
             }
         }
 
@@ -501,11 +502,11 @@ sub check_doc_base_field {
         for my $idx (1 .. $#{$vals}) {
             $_ = $vals->[$idx];
             if (/manage\s+online\s+manuals\s.*Debian/) {
-                $self->tag('doc-base-abstract-field-is-template',
+                $self->hint('doc-base-abstract-field-is-template',
                     "$dbfile:$line")
                   unless $pkg eq 'doc-base';
             } elsif (/^(\s+)\.(\s*)$/ and ($1 ne ' ' or $2)) {
-                $self->tag(
+                $self->hint(
                     'doc-base-abstract-field-separator-extra-whitespace',
                     "$dbfile:" . ($line - $#{$vals} + $idx));
             } elsif (!$leadsp && /^(\s+)(\S)/) {
@@ -520,7 +521,7 @@ sub check_doc_base_field {
             }
         }
         unless ($leadsp_ok) {
-            $self->tag(
+            $self->hint(
                 'doc-base-abstract-might-contain-extra-leading-whitespace',
                 "$dbfile:$line");
         }
@@ -548,20 +549,20 @@ sub check_doc_base_field {
 sub check_doc_base_file_section {
     my ($self, $dbfile, $line, $sawfields, $sawformats, $knownfields) = @_;
 
-    $self->tag('doc-base-file-no-format', "$dbfile:$line")
+    $self->hint('doc-base-file-no-format', "$dbfile:$line")
       if ((defined $sawfields->{'Files'} || defined $sawfields->{'Index'})
         && !(defined $sawfields->{'Format'}));
 
     # The current format is set by check_doc_base_field.
     if ($sawfields->{'Format'}) {
         my $format =  $sawformats->{' *current* '};
-        $self->tag('doc-base-file-no-index', "$dbfile:$line")
+        $self->hint('doc-base-file-no-index', "$dbfile:$line")
           if ( $format
             && ($format eq 'html' || $format eq 'info')
             && !$sawfields->{'Index'});
     }
     for my $field (sort keys %$knownfields) {
-        $self->tag('doc-base-file-lacks-required-field',
+        $self->hint('doc-base-file-lacks-required-field',
             "$dbfile:$line", $field)
           if ($knownfields->{$field} == 1 && !$sawfields->{$field});
     }
@@ -709,7 +710,7 @@ sub check_script {
 
             # checked first?
             if (not $pres->{'checks-for-updatemenus'} and $pkg ne 'menu') {
-                $self->tag(
+                $self->hint(
 'maintainer-script-does-not-check-for-existence-of-updatemenus',
                     "$spath:$."
                 ) unless $no_check_menu++;
@@ -738,7 +739,7 @@ sub check_script {
             }
             # checked first?
             if (not $pres->{'checks-for-installdocs'}) {
-                $self->tag(
+                $self->hint(
 'maintainer-script-does-not-check-for-existence-of-installdocs',
                     $spath
                 ) unless $no_check_installdocs++;

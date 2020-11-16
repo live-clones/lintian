@@ -44,7 +44,7 @@ sub source {
     return
       unless defined $files;
 
-    $self->tag('debian-files-list-in-source')
+    $self->hint('debian-files-list-in-source')
       if $files->is_file && $files->size > 0;
 
     return;

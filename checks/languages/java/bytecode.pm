@@ -39,7 +39,7 @@ sub visit_installed_files {
 
         my $magic = $file->magic(4);
 
-        $self->tag('package-installs-java-bytecode', $file->name)
+        $self->hint('package-installs-java-bytecode', $file->name)
           if $magic eq "\xCA\xFE\xBA\xBE";
     }
 

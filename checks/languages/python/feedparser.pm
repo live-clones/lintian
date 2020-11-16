@@ -41,7 +41,7 @@ sub visit_installed_files {
     if (    $file->name =~ m{/feedparser\.py$}
         and $self->processable->source ne 'feedparser'){
 
-        $self->tag('embedded-feedparser-library', $file->name)
+        $self->hint('embedded-feedparser-library', $file->name)
           if $file->bytes =~ /Universal feed parser/;
     }
 

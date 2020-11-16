@@ -41,7 +41,7 @@ with 'Lintian::Output';
 
 =head1 NAME
 
-Lintian::Output::HTML - standalone HTML tag output
+Lintian::Output::HTML - standalone HTML hint output
 
 =head1 SYNOPSIS
 
@@ -49,7 +49,7 @@ Lintian::Output::HTML - standalone HTML tag output
 
 =head1 DESCRIPTION
 
-Provides standalone HTML tag output.
+Provides standalone HTML hint output.
 
 =head1 INSTANCE METHODS
 
@@ -67,10 +67,10 @@ sub BUILD {
     return;
 }
 
-=item issue_tags
+=item issue_hints
 
-Print all tags passed in array. A separate arguments with processables
-is necessary to report in case no tags were found.
+Print all hints passed in array. A separate arguments with processables
+is necessary to report in case no hints were found.
 
 =cut
 
@@ -84,7 +84,7 @@ my %code_priority = (
     'O' => 90,
 );
 
-sub issue_tags {
+sub issue_hints {
     my ($self, $groups) = @_;
 
     $groups //= [];
@@ -126,7 +126,7 @@ sub issue_tags {
             my %file_output;
             $file_output{filename} = path($processable->path)->basename;
             $file_output{tags}
-              = $self->taglist($lintian_version, $processable->tags);
+              = $self->hintlist($lintian_version, $processable->hints);
             push(@allfiles_output, \%file_output);
         }
     }
@@ -145,14 +145,14 @@ sub issue_tags {
     return;
 }
 
-=item C<taglist>
+=item C<hintlist>
 
 =cut
 
-sub taglist {
+sub hintlist {
     my ($self, $lintian_version, $arrayref) = @_;
 
-    my @tags;
+    my @hints;
 
     my @sorted = sort {
                defined $a->override <=> defined $b->override
@@ -163,33 +163,33 @@ sub taglist {
 
     for my $input (@sorted) {
 
-        my %tag;
-        push(@tags, \%tag);
+        my %hint;
+        push(@hints, \%hint);
 
-        $tag{name} = $input->info->name;
+        $hint{name} = $input->info->name;
 
-        $tag{url} = "https://lintian.debian.org/tags/$tag{name}.html";
+        $hint{url} = "https://lintian.debian.org/tags/$hint{name}.html";
 
-        $tag{context} = $input->context
+        $hint{context} = $input->context
           if length $input->context;
 
-        $tag{severity} = $input->info->effective_severity;
-        $tag{code} = uc substr($tag{severity}, 0, 1);
+        $hint{severity} = $input->info->effective_severity;
+        $hint{code} = uc substr($hint{severity}, 0, 1);
 
-        $tag{experimental} = 'yes'
+        $hint{experimental} = 'yes'
           if $input->info->experimental;
 
         if ($input->override) {
 
-            $tag{code} = 'O';
+            $hint{code} = 'O';
 
             my @comments = @{ $input->override->{comments} // [] };
-            $tag{comments} = \@comments
+            $hint{comments} = \@comments
               if @comments;
         }
     }
 
-    return \@tags;
+    return \@hints;
 }
 
 =item describe_tags

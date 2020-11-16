@@ -68,15 +68,15 @@ sub installable {
         my ($trigger_type, $arg) = split(m/\s++/, $line, 2);
         my $trigger_info = $TRIGGER_TYPES->value($trigger_type);
         if (not $trigger_info) {
-            $self->tag('unknown-trigger', $line, "(line $.)");
+            $self->hint('unknown-trigger', $line, "(line $.)");
             next;
         }
         if ($trigger_info->{'implicit-await'}) {
-            $self->tag('uses-implicit-await-trigger', $line, "(line $.)");
+            $self->hint('uses-implicit-await-trigger', $line, "(line $.)");
         }
         if (defined(my $prev_info = $seen_triggers{$arg})) {
             my ($prev_line, $prev_line_no) = @{$prev_info};
-            $self->tag('repeated-trigger-name', $line, "(line $.)", 'vs',
+            $self->hint('repeated-trigger-name', $line, "(line $.)", 'vs',
                 $prev_line,"(line $prev_line_no)");
             next;
         }

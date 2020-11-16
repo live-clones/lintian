@@ -42,7 +42,7 @@ sub visit_installed_files {
             next
               unless (m/^\s*#/);
 
-            $self->tag('obsolete-comments-style-in-php-ini', $file->name);
+            $self->hint('obsolete-comments-style-in-php-ini', $file->name);
 
             # only warn once per file:
             last;

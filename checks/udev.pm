@@ -46,7 +46,7 @@ sub installable {
     return unless $rules_dir;
     foreach my $file ($rules_dir->children) {
         if (!$file->is_open_ok) {
-            $self->tag('udev-rule-unreadable', $file);
+            $self->hint('udev-rule-unreadable', $file);
             next;
         }
         $self->check_udev_rules($file);
@@ -79,7 +79,7 @@ sub check_rule {
         && $rule !~ m/ENV\{ID_SOFTWARE_RADIO\}/
         && $rule !~ m/TAG\+="uaccess"/
     ) {
-        $self->tag((
+        $self->hint((
             'udev-rule-missing-uaccess',
             "$file:$linenum",
             'user accessible device missing TAG+="uaccess"'
@@ -92,7 +92,7 @@ sub check_rule {
         && $rule =~ m/ATTR\{idProduct\}=="[0-9a-fA-F]*"/
         && !$in_goto
         && $rule !~ m/SUBSYSTEM=="[^"]+"/) {
-        $self->tag((
+        $self->hint((
             'udev-rule-missing-subsystem',
             "$file:$linenum",
             'vendor/product matching missing SUBSYSTEM specifier'
@@ -136,7 +136,7 @@ sub visit_installed_files {
       unless $file->name =~ m,^etc/udev/,;
 
     # /etc/udev/rules.d
-    $self->tag('udev-rule-in-etc', $file->name)
+    $self->hint('udev-rule-in-etc', $file->name)
       if $file->name =~ m,^etc/udev/rules\.d/\S,;
 
     return;

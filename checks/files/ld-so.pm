@@ -35,7 +35,7 @@ sub visit_installed_files {
 
     if (    $file->name =~ m,^etc/ld\.so\.conf\.d/.+$,
         and $self->processable->name !~ /^libc/){
-        $self->tag('package-modifies-ld.so-search-path', $file->name);
+        $self->hint('package-modifies-ld.so-search-path', $file->name);
     }
 
     return;

@@ -91,7 +91,7 @@ sub source {
     # change in Policy and is therefore meaningless in the Standards-Version
     # field.
     unless ($version =~ m/^\s*(\d+\.\d+\.\d+)(?:\.\d+)?\s*$/) {
-        $self->tag('invalid-standards-version', $version);
+        $self->hint('invalid-standards-version', $version);
         return;
     }
     my $stdver = $1;
@@ -126,10 +126,10 @@ sub source {
             $package = strftime($fmt, gmtime $pkgdate);
             $release = strftime($fmt, gmtime $STANDARDS->value($stdver));
         }
-        $self->tag('timewarp-standards-version', "($package < $release)");
+        $self->hint('timewarp-standards-version', "($package < $release)");
     }
 
-    $self->tag('standards-version', $version);
+    $self->hint('standards-version', $version);
 
     my $tag = "$version (current is $CURRENT)";
     if (not $STANDARDS->known($stdver)) {
@@ -141,10 +141,10 @@ sub source {
                 and $minor == $CURRENT[1]
                 and $patch > $CURRENT[2])
         ) {
-            $self->tag('newer-standards-version', $tag)
+            $self->hint('newer-standards-version', $tag)
               unless $dist =~ /backports/;
         } else {
-            $self->tag('invalid-standards-version', $version);
+            $self->hint('invalid-standards-version', $version);
         }
     } elsif ($stdver eq $CURRENT) {
         # Current standard.  Nothing more to check.
@@ -161,12 +161,12 @@ sub source {
         my $released = strftime('%Y-%m-%d', gmtime $rdate);
         $tag = "$version (released $released) (current is $CURRENT)";
         if ($rdate < $ANCIENT_DATE) {
-            $self->tag('ancient-standards-version', $tag);
+            $self->hint('ancient-standards-version', $tag);
         } else {
             # We have to get the package date from the changelog file.  If we
             # can't find the changelog file, always issue the tag.
             unless (defined $processable->changelog) {
-                $self->tag('out-of-date-standards-version', $tag);
+                $self->hint('out-of-date-standards-version', $tag);
                 return;
             }
             my ($entry) = @{$processable->changelog->entries};
@@ -175,7 +175,7 @@ sub source {
             for my $standard (@STANDARDS) {
                 last if $standard->[0] eq $stdver;
                 if ($standard->[1] < $timestamp) {
-                    $self->tag('out-of-date-standards-version', $tag);
+                    $self->hint('out-of-date-standards-version', $tag);
                     last;
                 }
             }

@@ -118,7 +118,7 @@ sub detect_privacy_breach {
                     my $breaker_tag = $keyvalue->{'tag'};
                     unless (exists $privacybreachhash{'tag-'.$breaker_tag}){
                         $privacybreachhash{'tag-'.$breaker_tag} = 1;
-                        $self->tag($breaker_tag, $file->name,
+                        $self->hint($breaker_tag, $file->name,
                             "(choke on: $capture)");
                     }
                 }
@@ -291,7 +291,7 @@ sub check_tag_url_privacy_breach {
                 my $tag =  $value->{'tag'};
                 my $suggest = $value->{'suggest'} // '';
                 $privacybreachhash->{'tag-'.$breaker}= 1;
-                $self->tag($tag, $file, $suggest, "($url)");
+                $self->hint($tag, $file, $suggest, "($url)");
             }
             # do not go to generic case
             return;
@@ -300,7 +300,7 @@ sub check_tag_url_privacy_breach {
 
     # generic case
     unless (exists $privacybreachhash->{'tag-generic-'.$website}){
-        $self->tag('privacy-breach-generic', $file->name, "[$fulltag] ($url)");
+        $self->hint('privacy-breach-generic', $file->name,"[$fulltag] ($url)");
         $privacybreachhash->{'tag-generic-'.$website} = 1;
     }
     return;

@@ -49,7 +49,7 @@ our $KNOWN_COMMON_LICENSES
 sub spelling_tag_emitter {
     my ($self, @orig_args) = @_;
     return sub {
-        return $self->tag(@orig_args, @_);
+        return $self->hint(@orig_args, @_);
     };
 }
 
@@ -70,15 +70,15 @@ sub source {
     if (@files == 1) {
         my $single = $files[0];
 
-        $self->tag('named-copyright-for-single-installable', $single->name)
+        $self->hint('named-copyright-for-single-installable', $single->name)
           unless $single->name eq 'debian/copyright';
     }
 
-    $self->tag('no-debian-copyright-in-source')
+    $self->hint('no-debian-copyright-in-source')
       unless @files;
 
     my @symlinks = grep { $_->is_symlink } @files;
-    $self->tag('debian-copyright-is-symlink', $_->name) for @symlinks;
+    $self->hint('debian-copyright-is-symlink', $_->name) for @symlinks;
 
     return;
 }
@@ -96,7 +96,8 @@ sub binary {
 
         # check if this symlink references a directory elsewhere
         if ($doclink->link =~ m{^(?:\.\.)?/}s) {
-            $self->tag('usr-share-doc-symlink-points-outside-of-usr-share-doc',
+            $self->hint(
+                'usr-share-doc-symlink-points-outside-of-usr-share-doc',
                 $doclink->link);
             return;
         }
@@ -120,7 +121,7 @@ sub binary {
         $link =~ s,/.*,,;
 
         unless (depends_on($self->processable, $link)) {
-            $self->tag('usr-share-doc-symlink-without-dependency', $link);
+            $self->hint('usr-share-doc-symlink-without-dependency', $link);
 
             return;
         }
@@ -135,13 +136,13 @@ sub binary {
     my $docdir
       = $self->processable->installed->lookup("usr/share/doc/$package/");
     unless ($docdir) {
-        $self->tag('no-copyright-file');
+        $self->hint('no-copyright-file');
         return;
     }
 
     my $found = 0;
     if ($docdir->child('copyright.gz')) {
-        $self->tag('copyright-file-compressed');
+        $self->hint('copyright-file-compressed');
         $found = 1;
     }
 
@@ -152,7 +153,7 @@ sub binary {
         $found = 1;
 
         if ($file->is_symlink) {
-            $self->tag('copyright-file-is-symlink');
+            $self->hint('copyright-file-is-symlink');
             $linked = 1;
          # fall through; coll/copyright-file prevents reading through evil link
         }
@@ -161,7 +162,7 @@ sub binary {
     unless ($found) {
 
         # #522827: special exception for perl for now
-        $self->tag('no-copyright-file')
+        $self->hint('no-copyright-file')
           unless $package eq 'perl';
 
         return;
@@ -201,7 +202,7 @@ sub binary {
     # check contents of copyright file
     my $contents = decode_utf8($bytes);
 
-    $self->tag('copyright-has-crs')
+    $self->hint('copyright-has-crs')
       if $contents =~ /\r/;
 
     my $wrong_directory_detected = 0;
@@ -209,7 +210,7 @@ sub binary {
     if ($contents =~ m{ (usr/share/common-licenses/ ( [^ \t]*? ) \.gz) }xsm) {
         my ($path, $license) = ($1, $2);
         if ($KNOWN_COMMON_LICENSES->known($license)) {
-            $self->tag('copyright-refers-to-compressed-license', $path);
+            $self->hint('copyright-refers-to-compressed-license', $path);
         }
     }
 
@@ -221,16 +222,16 @@ sub binary {
     if ($contents =~ m,(usr/share/common-licenses/(L?GPL|GFDL))([^-]),i) {
         my ($ref, $license, $separator) = ($1, $2, $3);
         if ($separator =~ /[\d\w]/) {
-            $self->tag('copyright-refers-to-nonexistent-license-file',
+            $self->hint('copyright-refers-to-nonexistent-license-file',
                 "$ref$separator");
         } elsif ($contents =~ m,\b(?:any|or)\s+later(?:\s+version)?\b,i
             || $contents =~ m,License: $license-[\d\.]+\+,i
             || $contents =~ m,as Perl itself,i
             || $contents =~ m,License-Alias:\s+Perl,
             || $contents =~ m,License:\s+Perl,) {
-            $self->tag('copyright-refers-to-symlink-license', $ref);
+            $self->hint('copyright-refers-to-symlink-license', $ref);
         } else {
-            $self->tag('copyright-refers-to-versionless-license-file', $ref)
+            $self->hint('copyright-refers-to-versionless-license-file', $ref)
               if $contents =~ /\bversion\b/;
         }
     }
@@ -238,28 +239,28 @@ sub binary {
     # References to /usr/share/common-licenses/BSD are deprecated as of Policy
     # 3.8.5.
     if ($contents =~ m,/usr/share/common-licenses/BSD,) {
-        $self->tag('copyright-refers-to-deprecated-bsd-license-file');
+        $self->hint('copyright-refers-to-deprecated-bsd-license-file');
     }
 
     if ($contents =~ m,(usr/share/common-licences),) {
-        $self->tag('copyright-refers-to-incorrect-directory', $1);
+        $self->hint('copyright-refers-to-incorrect-directory', $1);
         $wrong_directory_detected = 1;
     }
 
     if ($contents =~ m,usr/share/doc/copyright,) {
-        $self->tag('copyright-refers-to-old-directory');
+        $self->hint('copyright-refers-to-old-directory');
         $wrong_directory_detected = 1;
     }
 
     if ($contents =~ m,usr/doc/copyright,) {
-        $self->tag('copyright-refers-to-old-directory');
+        $self->hint('copyright-refers-to-old-directory');
         $wrong_directory_detected = 1;
     }
 
     # Lame check for old FSF zip code.  Try to avoid false positives from other
     # Cambridge, MA addresses.
     if ($contents =~ m/(?:Free\s*Software\s*Foundation.*02139|02111-1307)/s) {
-        $self->tag('old-fsf-address-in-copyright-file');
+        $self->hint('old-fsf-address-in-copyright-file');
     }
 
     # Whether the package is covered by the GPL, used later for the
@@ -275,27 +276,27 @@ sub binary {
             or (    $contents =~ m/\bGNU GENERAL PUBLIC LICENSE\s*Version 3/
                 and $contents =~ m/\bTERMS AND CONDITIONS\s/))
     ) {
-        $self->tag('copyright-file-contains-full-gpl-license');
+        $self->hint('copyright-file-contains-full-gpl-license');
         $gpl = 1;
     }
 
     if (    length($contents) > 12_000
         and $contents =~ m/\bGNU Free Documentation License\s*Version 1\.2/
         and $contents =~ m/\b1\. APPLICABILITY AND DEFINITIONS/) {
-        $self->tag('copyright-file-contains-full-gfdl-license');
+        $self->hint('copyright-file-contains-full-gfdl-license');
     }
 
     if (    length($contents) > 10_000
         and $contents =~ m/\bApache License\s+Version 2\.0,/
         and $contents
         =~ m/TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION/) {
-        $self->tag('copyright-file-contains-full-apache-2-license');
+        $self->hint('copyright-file-contains-full-apache-2-license');
     }
 
     # wtf?
     if (   ($contents =~ m,common-licenses(/\S+),)
         && ($contents !~ m,/usr/share/common-licenses/,)) {
-        $self->tag('copyright-does-not-refer-to-common-license-file', $1);
+        $self->hint('copyright-does-not-refer-to-common-license-file', $1);
     }
 
     # This check is a bit prone to false positives, since some other
@@ -330,7 +331,7 @@ sub binary {
                 qr/GNU Free Documentation License|(?-i:\bGFDL\b)/i
             )
         ) {
-            $self->tag('copyright-not-using-common-license-for-gfdl');
+            $self->hint('copyright-not-using-common-license-for-gfdl');
         }elsif (
             check_names_texts(
                 $contents,
@@ -338,7 +339,7 @@ qr/\b(?:LGPL|gnu[-_](?:lesser|library)[-_]general[-_]public[-_]license)\b/i,
 qr/GNU (?:Lesser|Library) General Public License|(?-i:\bLGPL\b)/i
             )
         ) {
-            $self->tag('copyright-not-using-common-license-for-lgpl');
+            $self->hint('copyright-not-using-common-license-for-lgpl');
         }elsif (
             check_names_texts(
                 $contents,
@@ -346,7 +347,7 @@ qr/GNU (?:Lesser|Library) General Public License|(?-i:\bLGPL\b)/i
                 qr/GNU General Public License|(?-i:\bGPL\b)/i
             )
         ) {
-            $self->tag('copyright-not-using-common-license-for-gpl');
+            $self->hint('copyright-not-using-common-license-for-gpl');
             $gpl = 1;
         }elsif (
             check_names_texts(
@@ -354,7 +355,7 @@ qr/GNU (?:Lesser|Library) General Public License|(?-i:\bLGPL\b)/i
                 qr/\bApache License\s*,?\s*Version 2|\b(?-i:Apache)-2/i
             )
         ) {
-            $self->tag('copyright-not-using-common-license-for-apache2');
+            $self->hint('copyright-not-using-common-license-for-apache2');
         }
     }
 
@@ -369,7 +370,7 @@ qr/GNU (?:Lesser|Library) General Public License|(?-i:\bLGPL\b)/i
                   && $contents !~ m,usr/share/common-licenses/,;
             })
     ) {
-        $self->tag('copyright-file-lacks-pointer-to-perl-license');
+        $self->hint('copyright-file-lacks-pointer-to-perl-license');
     }
 
     # Checks for various packaging helper boilerplate.
@@ -390,19 +391,19 @@ qr/GNU (?:Lesser|Library) General Public License|(?-i:\bLGPL\b)/i
         or $contents =~ m,\<Including paragraphs\>,
         or $contents =~ m,\<likewise for another author\>,
     ) {
-        $self->tag('helper-templates-in-copyright');
+        $self->hint('helper-templates-in-copyright');
     }
 
     # dh-make-perl
     if ($contents =~ m/This copyright info was automatically extracted/) {
-        $self->tag('copyright-contains-automatically-extracted-boilerplate');
+        $self->hint('copyright-contains-automatically-extracted-boilerplate');
     }
     if ($contents =~ m,\<INSERT COPYRIGHT YEAR\(S\) HERE\>,) {
-        $self->tag('helper-templates-in-copyright');
+        $self->hint('helper-templates-in-copyright');
     }
 
     if ($contents =~ m,url://,) {
-        $self->tag('copyright-has-url-from-dh_make-boilerplate');
+        $self->hint('copyright-has-url-from-dh_make-boilerplate');
     }
 
     # dh-make boilerplate
@@ -411,15 +412,15 @@ qr/GNU (?:Lesser|Library) General Public License|(?-i:\bLGPL\b)/i
 "\# If you want to use GPL v2 or later for the /debian/\* files use\n\# the following clauses, or change it to suit. Delete these two lines"
     );
 
-    $self->tag('copyright-contains-dh_make-todo-boilerplate')
+    $self->hint('copyright-contains-dh_make-todo-boilerplate')
       if any { $contents =~ $_ } @dh_make_boilerplate;
 
-    $self->tag('copyright-with-old-dh-make-debian-copyright')
+    $self->hint('copyright-with-old-dh-make-debian-copyright')
       if $contents =~ m,The\s+Debian\s+packaging\s+is\s+\(C\)\s+\d+,i;
 
     # Other flaws in the copyright phrasing or contents.
     if ($found && !$linked) {
-        $self->tag('copyright-without-copyright-notice')
+        $self->hint('copyright-without-copyright-notice')
           unless $contents
           =~ /(?:Copyright|Copr\.|©)(?:.*|[\(C\):\s]+)\b\d{4}\b
                |\bpublic(?:\s+|-)domain\b/xi;
@@ -445,7 +446,7 @@ qr/GNU (?:Lesser|Library) General Public License|(?-i:\bLGPL\b)/i
         my @predepends
           = split(/\s*,\s*/,$self->processable->fields->value('Pre-Depends'));
 
-        $self->tag('possible-gpl-code-linked-with-openssl')
+        $self->hint('possible-gpl-code-linked-with-openssl')
           if any { /^libssl[0-9.]+(?:\s|\z)/ && !/\|/ }
         (@depends, @predepends);
     }
@@ -485,7 +486,7 @@ sub check_cross_link {
         return
           if any { $foreign eq $_ } $source->debian_control->installables;
 
-        $self->tag('usr-share-doc-symlink-to-foreign-package', $foreign);
+        $self->hint('usr-share-doc-symlink-to-foreign-package', $foreign);
 
     } else {
         # The source package is not available, but the binary could
@@ -498,7 +499,7 @@ sub check_cross_link {
         # It was not, but since the source package was not present, we cannot
         # tell if it is foreign or not at this point.
 
-        $self->tag(
+        $self->hint(
 'cannot-check-whether-usr-share-doc-symlink-points-to-foreign-package'
         );
     }

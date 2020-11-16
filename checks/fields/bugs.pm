@@ -44,10 +44,10 @@ sub always {
 
     my $bugs = $fields->unfolded_value('Bugs');
 
-    $self->tag('redundant-bugs-field')
+    $self->hint('redundant-bugs-field')
       if $bugs =~ m{^debbugs://bugs.debian.org/?$}i;
 
-    $self->tag('bugs-field-does-not-refer-to-debian-infrastructure', $bugs)
+    $self->hint('bugs-field-does-not-refer-to-debian-infrastructure', $bugs)
       unless $bugs =~ m{\.debian\.org}
       || $self->processable->name =~ /[-]dbgsym$/;
 

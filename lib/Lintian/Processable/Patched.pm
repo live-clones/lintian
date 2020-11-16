@@ -178,7 +178,7 @@ has patched => (
 
         $index->load;
 
-        $self->tag('unpack-message-for-source', $_)
+        $self->hint('unpack-message-for-source', $_)
           for
           split(/\n/, $unpack_errors . $index_errors . $permissions_errors);
 

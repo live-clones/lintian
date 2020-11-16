@@ -38,7 +38,7 @@ sub breakdown_installed_files {
 
     unless ($self->has_perl_binaries) {
 
-        $self->tag('package-installs-nonbinary-perl-in-usr-lib-perl5', $_)
+        $self->hint('package-installs-nonbinary-perl-in-usr-lib-perl5', $_)
           for @{$self->perl_sources_in_lib};
     }
 
@@ -52,12 +52,12 @@ sub visit_installed_files {
     my ($self, $file) = @_;
 
     # perllocal.pod
-    $self->tag('package-installs-perllocal-pod', $file->name)
+    $self->hint('package-installs-perllocal-pod', $file->name)
       if $file->name =~ m,^usr/lib/perl.*/perllocal.pod$,;
 
     # .packlist files
     if ($file->name =~ m,^usr/lib/perl.*/.packlist$,) {
-        $self->tag('package-installs-packlist', $file->name);
+        $self->hint('package-installs-packlist', $file->name);
 
     }elsif ($file->name =~ m,^usr/lib/(?:[^/]+/)?perl5/.*\.p[lm]$,) {
         push @{$self->perl_sources_in_lib}, $file->name;
@@ -70,7 +70,7 @@ sub visit_installed_files {
     if ($file->name =~ m,^usr/(?:share|lib)/perl/\S,) {
 
         # check if it's the "perl" package itself
-        $self->tag('perl-module-in-core-directory', $file)
+        $self->hint('perl-module-in-core-directory', $file)
           unless $self->processable->source eq 'perl';
     }
 
@@ -97,7 +97,7 @@ sub visit_installed_files {
                    \.pl['"]
              }xsm
             ) {
-                $self->tag('perl-module-uses-perl4-libs-without-dep',
+                $self->hint('perl-module-uses-perl4-libs-without-dep',
                     "$file:$. ${1}.pl");
             }
         }

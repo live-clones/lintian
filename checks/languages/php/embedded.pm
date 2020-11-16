@@ -78,7 +78,7 @@ sub visit_installed_files {
         next
           unless $file->name =~ /$PHP_FILES{$provider}/;
 
-        $self->tag('embedded-php-library', $file->name, 'please use',
+        $self->hint('embedded-php-library', $file->name, 'please use',
             $provider);
     }
 

@@ -41,7 +41,7 @@ sub visit_installed_files {
 
         safe_qx('lzma', '--test', $file->unpacked_path);
 
-        $self->tag('broken-lzma', $file->name)
+        $self->hint('broken-lzma', $file->name)
           if $?;
     }
 

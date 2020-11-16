@@ -55,7 +55,7 @@ sub always {
     $built_using_rel->visit(
         sub {
             if ($_ !~ BUILT_USING_REGEX) {
-                $self->tag('invalid-value-in-built-using-field', $_);
+                $self->hint('invalid-value-in-built-using-field', $_);
                 return 1;
             }
             return 0;

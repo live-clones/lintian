@@ -53,7 +53,7 @@ sub visit_patched_files {
     return
       unless any { $item->name eq $_ } @KNOWN_LOCATIONS;
 
-    $self->tag('specification', $item->name);
+    $self->hint('specification', $item->name);
 
     return
       unless $item->is_open_ok;
@@ -89,7 +89,7 @@ sub visit_patched_files {
         }
     }
 
-    $self->tag('include', $item->name, $_) for @includes;
+    $self->hint('include', $item->name, $_) for @includes;
 
     return;
 }

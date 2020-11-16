@@ -44,7 +44,7 @@ sub always {
 
     my $origin = $fields->unfolded_value('Origin');
 
-    $self->tag('redundant-origin-field') if lc($origin) eq 'debian';
+    $self->hint('redundant-origin-field') if lc($origin) eq 'debian';
 
     return;
 }

@@ -39,7 +39,7 @@ sub visit_patched_files {
     return
       unless $bytes;
 
-    $self->tag('source-contains-prebuilt-yapp-parser', $item->name)
+    $self->hint('source-contains-prebuilt-yapp-parser', $item->name)
       if $bytes
       =~ /^#\s+This file was generated using Parse::Yapp version [\d.]+/m;
 

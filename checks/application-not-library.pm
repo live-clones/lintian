@@ -80,16 +80,16 @@ sub installable {
     # Check for library style package names
     if ($pkg =~ /^lib(?:.+)-perl$|^ruby-|^python[\d.]*-/) {
         if ($pkg =~ /^libapp(?:.+)-perl$/) {
-            $self->tag('libapp-perl-package-name', @programs);
+            $self->hint('libapp-perl-package-name', @programs);
         } else {
-            $self->tag('library-package-name-for-application', @programs);
+            $self->hint('library-package-name-for-application', @programs);
         }
     }
 
     # Check for wrong section
     my $section = $processable->fields->value('Section');
     if ($section =~ /perl|python|ruby|(?:^|\/)libs/) { # oldlibs is ok
-        $self->tag('application-in-library-section', "$section", @programs);
+        $self->hint('application-in-library-section', "$section", @programs);
     }
 
     return;

@@ -43,7 +43,7 @@ sub source {
     # remove lines containing only comments
     my @patches = grep { !/^\s*(?:#|$)/ } @lines;
 
-    $self->tag('number-of-patches', scalar @patches);
+    $self->hint('number-of-patches', scalar @patches);
 
     return;
 }

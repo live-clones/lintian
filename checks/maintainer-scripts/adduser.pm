@@ -81,7 +81,7 @@ sub installable {
         }
     }
 
-    $self->tag('adduser-with-home-var-run', $_->name) for @homevarrun;
+    $self->hint('adduser-with-home-var-run', $_->name) for @homevarrun;
 
     return;
 }

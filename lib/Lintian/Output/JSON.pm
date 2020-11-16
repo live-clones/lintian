@@ -37,7 +37,7 @@ with 'Lintian::Output';
 
 =head1 NAME
 
-Lintian::Output::JSON - JSON tag output
+Lintian::Output::JSON - JSON hint output
 
 =head1 SYNOPSIS
 
@@ -45,7 +45,7 @@ Lintian::Output::JSON - JSON tag output
 
 =head1 DESCRIPTION
 
-Provides JSON tag output.
+Provides JSON hint output.
 
 =head1 INSTANCE METHODS
 
@@ -63,10 +63,10 @@ sub BUILD {
     return;
 }
 
-=item issue_tags
+=item issue_hints
 
-Print all tags passed in array. A separate arguments with processables
-is necessary to report in case no tags were found.
+Print all hints passed in array. A separate arguments with processables
+is necessary to report in case no hints were found.
 
 =cut
 
@@ -80,7 +80,7 @@ my %code_priority = (
     'O' => 90,
 );
 
-sub issue_tags {
+sub issue_hints {
     my ($self, $groups) = @_;
 
     $groups //= [];
@@ -107,7 +107,7 @@ sub issue_tags {
 
             my %file_output;
             $file_output{path} = $processable->path;
-            $file_output{tags} = $self->taglist($processable->tags);
+            $file_output{tags} = $self->hintlist($processable->hints);
 
             push(@allfiles_output, \%file_output);
         }
@@ -135,14 +135,14 @@ sub issue_tags {
     return;
 }
 
-=item C<taglist>
+=item C<hintlist>
 
 =cut
 
-sub taglist {
+sub hintlist {
     my ($self, $arrayref) = @_;
 
-    my @tags;
+    my @hints;
 
     my @sorted = sort {
                defined $a->override <=> defined $b->override
@@ -153,29 +153,29 @@ sub taglist {
 
     for my $input (@sorted) {
 
-        my %tag;
-        push(@tags, \%tag);
+        my %hint;
+        push(@hints, \%hint);
 
-        $tag{name} = $input->info->name;
+        $hint{name} = $input->info->name;
 
-        $tag{context} = $input->context
+        $hint{context} = $input->context
           if length $input->context;
 
-        $tag{severity} = $input->info->effective_severity;
-        $tag{experimental} = 'yes'
+        $hint{severity} = $input->info->effective_severity;
+        $hint{experimental} = 'yes'
           if $input->info->experimental;
 
         if ($input->override) {
 
-            $tag{override} = 'yes';
+            $hint{override} = 'yes';
 
             my @comments = @{ $input->override->{comments} // [] };
-            $tag{'override-comments'} = \@comments
+            $hint{'override-comments'} = \@comments
               if @comments;
         }
     }
 
-    return \@tags;
+    return \@hints;
 }
 
 =item describe_tags

@@ -52,32 +52,32 @@ A class for collecting Lintian tags as they are found
 
 has profile => (is => 'rw');
 
-=item tag (ARGS)
+=item hint (ARGS)
 
 Store found tags for later processing.
 
 =cut
 
-sub tag {
+sub hint {
 
     my ($self, $tagname, @context_components) = @_;
 
-    my $tag = Lintian::Hint::Standard->new;
-    $tag->name($tagname);
-    $tag->arguments(\@context_components);
+    my $hint = Lintian::Hint::Standard->new;
+    $hint->name($tagname);
+    $hint->arguments(\@context_components);
 
-    $tag->info($self->profile->get_taginfo($tagname));
+    $hint->info($self->profile->get_taginfo($tagname));
 
-    push(@{$self->tags}, $tag);
+    push(@{$self->hints}, $hint);
 
     return;
 }
 
-=item tags
+=item hints
 
 =cut
 
-has tags => (is => 'rw', default => sub { [] });
+has hints => (is => 'rw', default => sub { [] });
 
 =back
 

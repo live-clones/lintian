@@ -78,11 +78,11 @@ sub search_for_obsolete_sites {
         foreach my $site ($OBSOLETE_SITES->all) {
             if ($dcontents
                 =~ m((\w+://(?:[\w.]*\.)?\Q$site\E[/:][^\s\"<>\$]*))i) {
-                $self->tag('obsolete-url-in-packaging', $file, $1);
+                $self->hint('obsolete-url-in-packaging', $file, $1);
             }
         }
 
-        $self->tag('obsolete-url-in-packaging', $file, $1)
+        $self->hint('obsolete-url-in-packaging', $file, $1)
           if $dcontents =~m{(ftp://(?:ftp|security)\.debian\.org)}i;
     }
 

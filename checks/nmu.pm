@@ -51,7 +51,7 @@ sub source {
     # looks at debian/changelog in source packages.  Catch a
     # debian/changelog file that's a symlink.
     if ($chf and $chf->is_symlink) {
-        $self->tag('changelog-is-symlink');
+        $self->hint('changelog-is-symlink');
     }
     return unless $processable->changelog;
 
@@ -90,7 +90,7 @@ sub source {
     my $upload_is_backport = $version =~ m/~bpo(\d+)\+(\d+)$/;
 
     if ($uploader =~ m/^\s|\s$/) {
-        $self->tag('extra-whitespace-around-name-in-changelog-trailer');
+        $self->hint('extra-whitespace-around-name-in-changelog-trailer');
 
         # trim both ends
         $uploader =~ s/^\s+|\s+$//g;
@@ -120,28 +120,28 @@ sub source {
     $upload_is_nmu = 0 if not $uploader;
 
     if ($maintainer =~ /packages\@qa.debian.org/) {
-        $self->tag('uploaders-in-orphan')
+        $self->hint('uploaders-in-orphan')
           if $processable->fields->exists('Uploaders');
-        $self->tag('qa-upload-has-incorrect-version-number', $version)
+        $self->hint('qa-upload-has-incorrect-version-number', $version)
           if $version_nmuness == 1;
-        $self->tag('no-qa-in-changelog') if !$changelog_mentions_qa;
+        $self->hint('no-qa-in-changelog') if !$changelog_mentions_qa;
     } elsif ($changelog_mentions_team_upload) {
-        $self->tag('team-upload-has-incorrect-version-number', $version)
+        $self->hint('team-upload-has-incorrect-version-number', $version)
           if $version_nmuness == 1;
-        $self->tag('unnecessary-team-upload') unless $upload_is_nmu;
+        $self->hint('unnecessary-team-upload') unless $upload_is_nmu;
     } else {
         # Local packages may be either NMUs or not.
         unless ($changelog_mentions_local || $version_local) {
-            $self->tag('no-nmu-in-changelog')
+            $self->hint('no-nmu-in-changelog')
               if !$changelog_mentions_nmu && $upload_is_nmu;
-            $self->tag('source-nmu-has-incorrect-version-number', $version)
+            $self->hint('source-nmu-has-incorrect-version-number', $version)
               if $upload_is_nmu
               && $version_nmuness != 1
               && !$upload_is_backport;
         }
-        $self->tag('nmu-in-changelog')
+        $self->hint('nmu-in-changelog')
           if $changelog_mentions_nmu && !$upload_is_nmu;
-        $self->tag('maintainer-upload-has-incorrect-version-number', $version)
+        $self->hint('maintainer-upload-has-incorrect-version-number', $version)
           if !$upload_is_nmu && $version_nmuness;
     }
 

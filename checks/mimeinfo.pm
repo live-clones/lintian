@@ -34,15 +34,15 @@ sub visit_installed_files {
     my ($self, $file) = @_;
 
     if ($file->name =~ m,^usr/share/applications/mimeinfo.cache(?:\.gz)?$,){
-        $self->tag('package-contains-mimeinfo.cache-file', $file->name);
+        $self->hint('package-contains-mimeinfo.cache-file', $file->name);
 
     }elsif ($file->name =~ m,^usr/share/mime/.+,) {
 
         if ($file->name =~ m,^usr/share/mime/[^/]+$,) {
-            $self->tag('package-contains-mime-cache-file', $file->name);
+            $self->hint('package-contains-mime-cache-file', $file->name);
 
         } elsif ($file->name !~ m,^usr/share/mime/packages/,) {
-            $self->tag('package-contains-mime-file-outside-package-dir',
+            $self->hint('package-contains-mime-file-outside-package-dir',
                 $file->name);
         }
     }

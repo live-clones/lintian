@@ -56,7 +56,7 @@ sub source {
         # trim both ends
         $line =~ s/^\s+|\s+$//g;
 
-        $self->tag('unused-entry-in-debian-source-include-binaries', $line)
+        $self->hint('unused-entry-in-debian-source-include-binaries', $line)
           unless $self->processable->patched->resolve_path($line);
     }
 

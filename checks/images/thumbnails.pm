@@ -36,13 +36,13 @@ sub visit_installed_files {
     if (   $file->is_dir
         && $file->name =~ m,/\.xvpics/?$,) {
 
-        $self->tag('package-contains-xvpics-dir', $file->name);
+        $self->hint('package-contains-xvpics-dir', $file->name);
     }
 
     if (   $file->is_dir
         && $file->name =~ m,/\.thumbnails/?$,) {
 
-        $self->tag('package-contains-thumbnails-dir', $file->name);
+        $self->hint('package-contains-thumbnails-dir', $file->name);
     }
 
     return;

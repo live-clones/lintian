@@ -44,7 +44,7 @@ sub installable {
 
     my $type = $self->processable->fields->value('Package-Type');
 
-    $self->tag('explicit-default-in-package-type')
+    $self->hint('explicit-default-in-package-type')
       if $type eq 'deb';
 
     return;

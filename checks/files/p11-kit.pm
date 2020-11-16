@@ -39,7 +39,7 @@ sub visit_installed_files {
                        [[:alnum:]][[:alnum:]_.-]*\.module\Z
                   }xsm
     ) {
-        $self->tag('incorrect-naming-of-pkcs11-module', $file->name);
+        $self->hint('incorrect-naming-of-pkcs11-module', $file->name);
     }
 
     return;

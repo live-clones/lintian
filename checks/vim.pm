@@ -38,7 +38,7 @@ sub visit_installed_files {
           = $1 eq 'doc' && $self->processable->name =~ m,^vimhelp-\w++$,;
         my $is_vim = $self->processable->source =~ m,vim,;
 
-        $self->tag('vim-addon-within-vim-runtime-path', $file->name)
+        $self->hint('vim-addon-within-vim-runtime-path', $file->name)
           unless $is_vim or $is_vimhelp;
     }
 

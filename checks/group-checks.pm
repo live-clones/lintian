@@ -77,7 +77,7 @@ sub source {
     foreach my $comp (@$sccs) {
         # It takes two to tango... erh. make a circular dependency.
         next if scalar @$comp < 2;
-        $self->tag('intra-source-package-circular-dependency', sort @$comp);
+        $self->hint('intra-source-package-circular-dependency', sort @$comp);
     }
 
     return;
@@ -127,7 +127,7 @@ sub overlap_check {
           // $b_info->installed->lookup("$name/");
         if ($b_file) {
             next if $a_file->is_dir and $b_file->is_dir;
-            $self->tag('binaries-have-file-conflict',
+            $self->hint('binaries-have-file-conflict',
                 $a_proc->name,$b_proc->name, $name);
         }
     }
@@ -144,7 +144,7 @@ sub check_multiarch {
             if ($dma eq 'same' or $dma eq 'foreign') {
                 1; # OK
             } else {
-                $self->tag(
+                $self->hint(
                     'dependency-is-not-multi-archified',
                     join(q{ },
                         $processable->name, 'depends on',
@@ -168,7 +168,7 @@ sub check_multiarch {
                 # package and that is M-A same.  Thus it is not
                 # possible to install debug symbols for all
                 # (architecture) variants of the binaries.
-                $self->tag(
+                $self->hint(
                     'debug-package-for-multi-arch-same-pkg-not-coinstallable',
                     $processable->name . ' => ' . $dep->name
                   )

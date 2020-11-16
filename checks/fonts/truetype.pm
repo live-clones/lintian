@@ -46,7 +46,7 @@ sub visit_installed_files {
     return
       unless $file->file_info =~ /^TrueType Font data/;
 
-    $self->tag('truetype-font-wrong-filename', $file->name)
+    $self->hint('truetype-font-wrong-filename', $file->name)
       unless $file->name =~ /\.ttf$/i;
 
     my $font = Font::TTF::Font->open($file->unpacked_path);
@@ -75,7 +75,7 @@ sub visit_installed_files {
     $terms = join(COMMA . SPACE, @clauses)
       if @clauses;
 
-    $self->tag('truetype-font-prohibits-installable-embedding',
+    $self->hint('truetype-font-prohibits-installable-embedding',
         "[$terms] " . $file->name)
       if length $terms;
 

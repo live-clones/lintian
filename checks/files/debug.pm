@@ -40,7 +40,7 @@ sub visit_installed_files {
         unless ($self->processable->is_pkg_class('debug')) {
 
             unless ($self->warned_debug_name) {
-                $self->tag('debug-suffix-not-dbg', $file->name);
+                $self->hint('debug-suffix-not-dbg', $file->name);
                 $self->_set_warned_debug_name(1);
             }
         }

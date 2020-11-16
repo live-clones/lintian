@@ -49,7 +49,7 @@ sub breakdown_installed_files {
             }
         }
 
-        $self->tag('package-contains-devhelp-file-without-symlink', $path)
+        $self->hint('package-contains-devhelp-file-without-symlink', $path)
           unless $found;
     }
 

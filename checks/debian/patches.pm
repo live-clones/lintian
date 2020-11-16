@@ -66,15 +66,15 @@ sub source {
     push(@patch_system, 'quilt')
       if $quilt_format || $build_deps->implies('quilt');
 
-    $self->tag('patch-system', $_) for @patch_system;
+    $self->hint('patch-system', $_) for @patch_system;
 
-    $self->tag('more-than-one-patch-system')
+    $self->hint('more-than-one-patch-system')
       if @patch_system > 1;
 
     if (@patch_system && !$quilt_format) {
 
         my $readme = $debian_dir->resolve_path('README.source');
-        $self->tag('patch-system-but-no-source-readme')
+        $self->hint('patch-system-but-no-source-readme')
           unless defined $readme;
     }
 
@@ -86,10 +86,10 @@ sub source {
         $files .= " and $#direct_changes more"
           if @direct_changes > 1;
 
-        $self->tag('patch-system-but-direct-changes-in-diff', $files)
+        $self->hint('patch-system-but-direct-changes-in-diff', $files)
           if @patch_system;
 
-        $self->tag('direct-changes-in-diff-but-no-patch-system', $files)
+        $self->hint('direct-changes-in-diff-but-no-patch-system', $files)
           unless @patch_system;
     }
 

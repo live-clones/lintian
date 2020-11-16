@@ -43,7 +43,7 @@ sub source {
 
     unless ($self->processable->fields->exists('Testsuite')) {
 
-        $self->tag('no-testsuite-header');
+        $self->hint('no-testsuite-header');
         return;
     }
 
@@ -51,14 +51,14 @@ sub source {
 
     unless ($testsuite eq 'autopkgtest-pkg-perl') {
 
-        $self->tag('no-team-tests', $testsuite);
+        $self->hint('no-team-tests', $testsuite);
         return;
     }
 
     my $metajson = $self->processable->patched->lookup('META.json');
     my $metayml = $self->processable->patched->lookup('META.yml');
 
-    $self->tag('autopkgtest-needs-use-name')
+    $self->hint('autopkgtest-needs-use-name')
       unless (defined $metajson && $metajson->size)
       || (defined $metayml && $metayml->size)
       || $self->processable->patched->lookup('debian/tests/pkg-perl/use-name');

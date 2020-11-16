@@ -54,7 +54,7 @@ sub changes {
         # check section
         if (   ($file_info->{section} eq 'non-free')
             or ($file_info->{section} eq 'contrib')) {
-            $self->tag('bad-section-in-changes-file', $file,
+            $self->hint('bad-section-in-changes-file', $file,
                 $file_info->{section});
         }
 
@@ -62,7 +62,7 @@ sub changes {
             my $checksum_info = $file_info->{checksums}{$alg};
             if (defined $checksum_info) {
                 if ($file_info->{size} != $checksum_info->{filesize}) {
-                    $self->tag('file-size-mismatch-in-changes-file', $file,
+                    $self->hint('file-size-mismatch-in-changes-file', $file,
                            $file_info->{size} . ' != '
                           .$checksum_info->{filesize});
                 }
@@ -75,7 +75,7 @@ sub changes {
         # check size
         my $size = -s $filename;
         if ($size != $file_info->{size}) {
-            $self->tag('file-size-mismatch-in-changes-file',
+            $self->hint('file-size-mismatch-in-changes-file',
                 $file, $file_info->{size} . " != $size");
         }
 
@@ -88,7 +88,7 @@ sub changes {
             $num_checksums{$alg}++;
 
             if ($real_checksum ne $file_info->{checksums}{$alg}{sum}) {
-                $self->tag('checksum-mismatch-in-changes-file',
+                $self->hint('checksum-mismatch-in-changes-file',
                     "Checksum-$alg", $file);
             }
         }
@@ -97,7 +97,7 @@ sub changes {
     my %debs = map { m/^([^_]+)_/ => 1 } grep { m/\.deb$/ } keys %{$files};
     for my $pkg_name (keys %debs) {
         if ($pkg_name =~ m/^(.+)-dbgsym$/) {
-            $self->tag('package-builds-dbg-and-dbgsym-variants',
+            $self->hint('package-builds-dbg-and-dbgsym-variants',
                 "$1-{dbg,dbgsym}")
               if exists $debs{"$1-dbg"};
         }
@@ -107,7 +107,7 @@ sub changes {
     for my $alg (keys %num_checksums) {
         my $seen = $num_checksums{$alg};
         my $expected = keys %{$files};
-        $self->tag(
+        $self->hint(
             'checksum-count-mismatch-in-changes-file',
             "$seen Checksum-$alg checksums != $expected files"
         ) if $seen != $expected;

@@ -121,7 +121,7 @@ sub check_policy {
                 # e.g. BlueZ), and cannot normally be a security flaw
                 # because root can do anything anyway
             } else {
-                $self->tag(
+                $self->hint(
                     ('dbus-policy-without-send-destination', $file, $rule));
 
                 if (   $rule =~ m{send_interface=}
@@ -137,14 +137,14 @@ sub check_policy {
                 } elsif ($rule =~ m{<allow}) {
                     # Looks like CVE-2014-8148 or similar. This is really bad;
                     # emit an additional tag.
-                    $self->tag(
+                    $self->hint(
                         ('dbus-policy-excessively-broad', $file, $rule));
                 }
             }
         }
 
         if ($rule =~ m{at_console=['"]true}) {
-            $self->tag(('dbus-policy-at-console', $file, $rule));
+            $self->hint(('dbus-policy-at-console', $file, $rule));
         }
     }
 
@@ -161,12 +161,12 @@ sub check_service {
         my $name = $1;
         if ($basename ne "${name}.service") {
             if ($kwargs{session}) {
-                $self->tag((
+                $self->hint((
                     'dbus-session-service-wrong-name',
                     "${name}.service", $file
                 ));
             } else {
-                $self->tag(
+                $self->hint(
                     ('dbus-system-service-wrong-name',"${name}.service", $file)
                 );
             }

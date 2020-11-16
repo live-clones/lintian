@@ -47,7 +47,7 @@ sub visit_patched_files {
       unless scalar keys %{$java_info};
 
     my $files = $java_info->{files};
-    $self->tag('source-contains-prebuilt-java-object', $item)
+    $self->hint('source-contains-prebuilt-java-object', $item)
       if any { m/$CLASS_REGEX$/i } keys %{$files};
 
     return;
@@ -90,7 +90,7 @@ sub installable {
         my $bsname = '';
 
         if (exists $java_info->{error}) {
-            $self->tag('zip-parse-error', "$file:",$java_info->{error});
+            $self->hint('zip-parse-error', "$file:",$java_info->{error});
             next;
         }
 
@@ -105,14 +105,14 @@ sub installable {
         $has_jars = 1;
         if($file->name =~ m#^usr/share/java/[^/]+\.jar$#o) {
             $has_public_jars = 1;
-            $self->tag('bad-jar-name', $file)
+            $self->hint('bad-jar-name', $file)
               unless basename($file->name) =~ /^$PKGNAME_REGEX\.jar$/;
         }
         # check for common code files like .class or .clj (Clojure files)
         foreach my $class (grep { m/$CLASS_REGEX$/i } sort keys %{$files}){
             my $mver = $files->{$class};
             (my $src = $class) =~ s/\.[^.]+$/\.java/;
-            $self->tag('jar-contains-source', $file, $src)
+            $self->hint('jar-contains-source', $file, $src)
               if %{$files}{$src};
             $classes = 1;
 
@@ -127,7 +127,7 @@ sub installable {
                 > $MAX_BYTECODE->value('max-bytecode-existing-version')) {
                 # First public major version was 45 (Java1), latest
                 # version is 55 (Java11).
-                $self->tag('unknown-java-class-version', $file,
+                $self->hint('unknown-java-class-version', $file,
                     "($class -> $mver)");
                 # Skip the rest of this Jar.
                 last;
@@ -149,7 +149,7 @@ sub installable {
 
         if($operm & 0111) {
             # Executable ?
-            $self->tag('executable-jar-without-main-class', $file->name)
+            $self->hint('executable-jar-without-main-class', $file->name)
               unless $manifest && $manifest->{'Main-Class'};
 
             # Here, we need to check that the package depends on
@@ -157,7 +157,7 @@ sub installable {
             $missing_jarwrapper = 1
               unless $processable->relation('strong')->implies('jarwrapper');
         } elsif ($file->name !~ m#^usr/share/#) {
-            $self->tag('jar-not-in-usr-share', $file->name);
+            $self->hint('jar-not-in-usr-share', $file->name);
         }
 
         $cp = $manifest->{'Class-Path'}//'' if $manifest;
@@ -179,11 +179,11 @@ sub installable {
                     )
                     || $cp
                 ) {
-                    $self->tag('codeless-jar', $file->name);
+                    $self->hint('codeless-jar', $file->name);
                 }
             }
         } elsif ($classes) {
-            $self->tag('missing-manifest', $file->name);
+            $self->hint('missing-manifest', $file->name);
         }
 
         if ($cp) {
@@ -219,7 +219,7 @@ sub installable {
                 }
             }
 
-            $self->tag(
+            $self->hint(
                 'classpath-contains-relative-path',
                 $file->name . ': ' . join(', ', @relative))if @relative;
         }
@@ -229,12 +229,12 @@ sub installable {
             && $file->name !~ m#^usr/share/maven-repo/.*\.jar#) {
             # Trigger a warning when a maven plugin lib is installed in
             # /usr/share/java/
-            $self->tag('maven-plugin-in-usr-share-java', $file->name);
+            $self->hint('maven-plugin-in-usr-share-java', $file->name);
         }
 
     }
 
-    $self->tag('missing-dep-on-jarwrapper') if $missing_jarwrapper;
+    $self->hint('missing-dep-on-jarwrapper') if $missing_jarwrapper;
 
     if ($jmajlow ne '-') {
         # Byte code numbers:
@@ -259,7 +259,7 @@ sub installable {
         if ($bad) {
             # Map the Class version to a Java version.
             my $v = $jmajlow - 44;
-            $self->tag(
+            $self->hint(
                 'incompatible-java-bytecode-format',
                 "Java${v} version (Class format: $jmajlow)"
             );
@@ -274,7 +274,7 @@ sub installable {
         $has_jars = 1
           if $java_dir
           and any { $_->name =~ m@^[^/]+\.jar$@o } $java_dir->children;
-        $self->tag('javalib-but-no-public-jars') if not $has_jars;
+        $self->hint('javalib-but-no-public-jars') if not $has_jars;
     }
 
     return;

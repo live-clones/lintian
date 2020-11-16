@@ -70,7 +70,7 @@ sub source {
 
         for my $filename (@origtar) {
 
-            $self->tag('orig-tarball-missing-upstream-signature', $filename)
+            $self->hint('orig-tarball-missing-upstream-signature', $filename)
               unless scalar @{$signatures{$filename}};
         }
     }
@@ -88,21 +88,22 @@ sub source {
 
             if ($contents =~ /^LS0tLS1CRUd/m) {
                 # doubly armored
-                $self->tag('doubly-armored-upstream-signature', $signature);
+                $self->hint('doubly-armored-upstream-signature', $signature);
 
             } else {
                 # non standard armored header
-                $self->tag('explicitly-armored-upstream-signature',$signature);
+                $self->hint('explicitly-armored-upstream-signature',
+                    $signature);
             }
 
             my @spurious = ($contents =~ /\n([^:\n]+):/g);
-            $self->tag('spurious-fields-in-upstream-signature',
+            $self->hint('spurious-fields-in-upstream-signature',
                 $signature, @spurious)
               if @spurious;
         }
 
         # multiple signatures in one file
-        $self->tag('concatenated-upstream-signatures', $signature)
+        $self->hint('concatenated-upstream-signatures', $signature)
           if $contents
           =~ m/(?:-----BEGIN PGP SIGNATURE-----[^-]*-----END PGP SIGNATURE-----\s*){2,}/;
     }

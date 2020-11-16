@@ -40,7 +40,7 @@ sub visit_installed_files {
     return
       unless $file->name =~ m{^usr/lib/};
 
-    $self->tag('executable-in-usr-lib', $file->name)
+    $self->hint('executable-in-usr-lib', $file->name)
       if $file->is_file && $file->is_executable;
 
     return;

@@ -41,13 +41,13 @@ sub source {
 
     my $pycompat= $self->processable->patched->resolve_path('debian/pycompat');
     if (defined $pycompat) {
-        $self->tag('debian-pycompat-is-obsolete') if $pycompat->is_file;
+        $self->hint('debian-pycompat-is-obsolete') if $pycompat->is_file;
     }
 
     my $pyversions
       = $self->processable->patched->resolve_path('debian/pyversions');
     if (defined $pyversions) {
-        $self->tag('debian-pyversions-is-obsolete') if $pyversions->is_file;
+        $self->hint('debian-pyversions-is-obsolete') if $pyversions->is_file;
     }
 
     return;

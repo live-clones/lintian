@@ -41,7 +41,7 @@ sub visit_installed_files {
 
         safe_qx('lzop', '--test', $file->unpacked_path);
 
-        $self->tag('broken-lzo', $file->name)
+        $self->hint('broken-lzo', $file->name)
           if $?;
     }
 

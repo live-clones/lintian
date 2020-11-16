@@ -42,11 +42,11 @@ sub always {
     return
       unless $fields->exists('DM-Upload-Allowed');
 
-    $self->tag('dm-upload-allowed-is-obsolete');
+    $self->hint('dm-upload-allowed-is-obsolete');
 
     my $dmupload = $fields->unfolded_value('DM-Upload-Allowed');
 
-    $self->tag('malformed-dm-upload-allowed', $dmupload)
+    $self->hint('malformed-dm-upload-allowed', $dmupload)
       unless $dmupload eq 'yes';
 
     return;

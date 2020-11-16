@@ -52,7 +52,7 @@ sub visit_installed_files {
         # see #785662
         if (index($file->name,'oui') > -1 || index($file->name,'iab') > -1) {
 
-            $self->tag('package-installs-ieee-data', $file->name)
+            $self->hint('package-installs-ieee-data', $file->name)
               unless $self->processable->source eq 'ieee-data';
         }
     }

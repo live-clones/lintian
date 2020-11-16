@@ -44,11 +44,11 @@ sub installable {
 
     my $name = $self->processable->fields->unfolded_value('Package');
 
-    $self->tag('bad-package-name') unless $name =~ /^$PKGNAME_REGEX$/i;
+    $self->hint('bad-package-name') unless $name =~ /^$PKGNAME_REGEX$/i;
 
-    $self->tag('package-not-lowercase') if $name =~ /[A-Z]/;
+    $self->hint('package-not-lowercase') if $name =~ /[A-Z]/;
 
-    $self->tag('unusual-documentation-package-name') if $name =~ /-docs$/;
+    $self->hint('unusual-documentation-package-name') if $name =~ /-docs$/;
 
     return;
 }

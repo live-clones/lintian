@@ -57,14 +57,14 @@ sub source {
     # source.  Only check these against the source package to not
     # repeat ourselves too much.
     if ($version =~ /dfsg/ && $self->processable->native) {
-        $self->tag('dfsg-version-in-native-package', $version);
+        $self->hint('dfsg-version-in-native-package', $version);
     } elsif ($version =~ /\.dfsg/) {
-        $self->tag('dfsg-version-with-period', $version);
+        $self->hint('dfsg-version-with-period', $version);
     } elsif ($version =~ /dsfg/) {
-        $self->tag('dfsg-version-misspelled', $version);
+        $self->hint('dfsg-version-misspelled', $version);
     }
 
-    $self->tag('binary-nmu-debian-revision-in-source', $version)
+    $self->hint('binary-nmu-debian-revision-in-source', $version)
       if $version =~ /\+b\d+$/;
 
     my $dversion = Dpkg::Version->new($version);
@@ -83,7 +83,7 @@ sub source {
 
             my $explanation = $DERIVATIVE_VERSIONS->value($re);
 
-            $self->tag('invalid-version-number-for-derivative',
+            $self->hint('invalid-version-number-for-derivative',
                 $version,"($explanation)");
         }
     }
@@ -103,7 +103,7 @@ sub always {
 
     my $dversion = Dpkg::Version->new($version);
     unless ($dversion->is_valid) {
-        $self->tag('bad-version-number', $version);
+        $self->hint('bad-version-number', $version);
         return;
     }
 
@@ -113,7 +113,7 @@ sub always {
     # Dpkg::Version sets the debian revision to 0 if there is
     # no revision.  So we need to check if the raw version
     # ends with "-0".
-    $self->tag('debian-revision-is-zero', $version)
+    $self->hint('debian-revision-is-zero', $version)
       if $version =~ /-0$/;
 
     my $ubuntu;
@@ -129,16 +129,16 @@ sub always {
             $extra = $1;
         }
 
-        $self->tag('debian-revision-not-well-formed', $version)
+        $self->hint('debian-revision-not-well-formed', $version)
           if defined $extra;
 
     } else {
-        $self->tag('debian-revision-not-well-formed', $version);
+        $self->hint('debian-revision-not-well-formed', $version);
     }
 
     if ($self->processable->type eq 'source') {
 
-        $self->tag('binary-nmu-debian-revision-in-source', $version)
+        $self->hint('binary-nmu-debian-revision-in-source', $version)
           if $debian =~ /^[^.-]+\.[^.-]+\./ and not $ubuntu;
     }
 
@@ -148,7 +148,7 @@ sub always {
 
         my $core_version = $PERL_CORE_PROVIDES->value($name);
 
-        $self->tag('package-superseded-by-perl', "with $core_version");
+        $self->hint('package-superseded-by-perl', "with $core_version");
     }
 
     return;

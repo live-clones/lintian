@@ -41,7 +41,7 @@ sub visit_installed_files {
 
         safe_qx('bzip2', '--test', $file->unpacked_path);
 
-        $self->tag('broken-bz2', $file->name)
+        $self->hint('broken-bz2', $file->name)
           if $?;
     }
 

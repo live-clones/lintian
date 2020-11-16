@@ -53,10 +53,10 @@ sub source {
 
         # Ensure test file contains something
         if ($path and $path->is_open_ok) {
-            $self->tag('pkg-js-autopkgtest-test-is-empty', $filename)
+            $self->hint('pkg-js-autopkgtest-test-is-empty', $filename)
               unless any { /^[^#]*\w/m } $path->bytes;
         } else {
-            $self->tag('pkg-js-autopkgtest-test-is-missing', $filename);
+            $self->hint('pkg-js-autopkgtest-test-is-missing', $filename);
         }
 
         # Ensure all files referenced in debian/tests/pkg-js/files exist
@@ -71,7 +71,7 @@ sub source {
         s/^\s+|\s+$//g for @files;
 
         my @notfound = grep { !$self->path_exists($_) } @files;
-        $self->tag('pkg-js-autopkgtest-file-does-not-exist', $_) for @notfound;
+        $self->hint('pkg-js-autopkgtest-file-does-not-exist', $_)for @notfound;
     }
     # debian/rules check
     my $droot = $processable->patched->resolve_path('debian/') or return;
@@ -114,10 +114,10 @@ sub source {
         }
         # Ensure test file contains something
         if ($path) {
-            $self->tag('pkg-js-tools-test-is-empty', $filename)
+            $self->hint('pkg-js-tools-test-is-empty', $filename)
               unless any { /^[^#]*\w/m } $path->bytes;
         } else {
-            $self->tag('pkg-js-tools-test-is-missing', $filename);
+            $self->hint('pkg-js-tools-test-is-missing', $filename);
         }
     }
     return;
@@ -131,12 +131,12 @@ sub visit_installed_files {
       if $self->processable->name =~ /-dbg$/;
 
     # Warn if a file is installed in old nodejs root dir
-    $self->tag('nodejs-module-installed-in-usr-lib', $file->name)
+    $self->hint('nodejs-module-installed-in-usr-lib', $file->name)
       if $file->name =~ m#usr/lib/nodejs/.*#;
 
     # Warn if package is not installed in a subdirectory of nodejs root
     # directories
-    $self->tag('node-package-install-in-nodejs-rootdir', $file->name)
+    $self->hint('node-package-install-in-nodejs-rootdir', $file->name)
       if $file->name
       =~ m#usr/(?:share|lib(?:/[^/]+)?)/nodejs/(?:package\.json|[^/]*\.js)$#;
 
@@ -144,7 +144,7 @@ sub visit_installed_files {
     return unless $file->is_open_ok;
 
     # Return an error if a package-lock.json or a yanr.lock file is installed
-    $self->tag('nodejs-lock-file', $file->name)
+    $self->hint('nodejs-lock-file', $file->name)
       if $file->name
       =~ m#usr/(?:share|lib(?:/[^/]+)?)/nodejs/([^/]+)(.*/)(package-lock\.json|yarn\.lock)$#;
 
@@ -175,12 +175,12 @@ sub visit_installed_files {
     return if $@ or not length $pac->{name};
 
     # Store node module name & version (classification)
-    $self->tag('nodejs-module', $pac->{name},$pac->{version} // 'undef',
+    $self->hint('nodejs-module', $pac->{name},$pac->{version} // 'undef',
         $file->name);
 
     # Warn if module name is not equal to nodejs directory
     if (($subpath eq '/') and ($dirname ne $pac->{name})) {
-        $self->tag('nodejs-module-installed-in-bad-directory',
+        $self->hint('nodejs-module-installed-in-bad-directory',
             $file->name, $pac->{name}, $dirname);
     } else {
         # Else verify that module is declared at least in Provides: field
@@ -189,7 +189,7 @@ sub visit_installed_files {
         # (replace invalid characters by "-")
         $name =~ s#[/_\@]#-#g;
         $name =~ s/\-\-+/\-/g;
-        $self->tag('nodejs-module-not-declared', $name, $file->name)
+        $self->hint('nodejs-module-not-declared', $name, $file->name)
           if $subpath eq '/'
           and not $provides->implies($name);
     }

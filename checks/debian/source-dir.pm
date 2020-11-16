@@ -59,7 +59,7 @@ sub source {
         $format_extra = '';
         die "unknown source format $format" unless $KNOWN_FORMATS{$format};
     } else {
-        $self->tag('missing-debian-source-format');
+        $self->hint('missing-debian-source-format');
         $format = '1.0';
         $format_extra = 'implicit';
     }
@@ -74,9 +74,9 @@ sub source {
     my $format_info = $format;
     $format_info .= " [$format_extra]"
       if $format_extra;
-    $self->tag('source-format', $format_info);
+    $self->hint('source-format', $format_info);
 
-    $self->tag('older-source-format', $format) if $OLDER_FORMATS{$format};
+    $self->hint('older-source-format', $format) if $OLDER_FORMATS{$format};
 
     return if not $dsrc;
 
@@ -90,12 +90,12 @@ sub source {
             # gitpkg does not create series as a link, so this is most likely
             # a traversal attempt.
             if (not $dpseries or not $dpseries->is_open_ok) {
-                $self->tag('git-patches-not-exported');
+                $self->hint('git-patches-not-exported');
             } else {
                 open(my $series_fd, '<', $dpseries->unpacked_path);
                 my $comment_line = <$series_fd>;
                 my $count = grep { !/^\s*+\#|^\s*+$/ } <$series_fd>;
-                $self->tag('git-patches-not-exported')
+                $self->hint('git-patches-not-exported')
                   unless ($count
                     && ($comment_line
                         =~ /^\s*\#.*quilt-patches-deb-export-hook/));
@@ -107,7 +107,7 @@ sub source {
 
     for my $path ($dsrc->children) {
         my $file = $path->basename;
-        $self->tag('unknown-file-in-debian-source', $file)
+        $self->hint('unknown-file-in-debian-source', $file)
           unless $KNOWN_FILES->known($file) && !$path->is_dir;
     }
 
@@ -115,7 +115,7 @@ sub source {
     if ($options and $options->is_open_ok) {
         open(my $fd, '<', $options->unpacked_path);
         while (<$fd>) {
-            $self->tag('custom-compression-in-debian-source-options',
+            $self->hint('custom-compression-in-debian-source-options',
                 $1, "(line $.)")
               if m/^\s*(compression(?:-level)?\s*=\s+\S+)\n/;
         }

@@ -77,7 +77,7 @@ sub visit_installed_files {
         next
           unless length $file->bytes_match($PEAR_MAGIC);
 
-        $self->tag('embedded-pear-module', $file->name, 'please use',
+        $self->hint('embedded-pear-module', $file->name, 'please use',
             $provider);
     }
 

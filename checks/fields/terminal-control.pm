@@ -46,7 +46,7 @@ sub always {
       = grep { index($self->processable->fields->value($_), ESCAPE) >= 0 }
       @names;
 
-    $self->tag('ansi-escape', $_, $self->processable->fields->value($_))
+    $self->hint('ansi-escape', $_, $self->processable->fields->value($_))
       for @escaped;
 
     return;

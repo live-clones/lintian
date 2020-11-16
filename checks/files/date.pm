@@ -37,7 +37,7 @@ sub visit_installed_files {
 
     my ($year) = ($file->date =~ /^(\d{4})/);
 
-    $self->tag('package-contains-ancient-file', $file->name, $file->date)
+    $self->hint('package-contains-ancient-file', $file->name, $file->date)
       if $year <= 1975 # value from dak CVS: Dinstall::PastCutOffYear
       and not $ALLOWED_ANCIENT_FILES->matches_any($file->name);
 

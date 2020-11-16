@@ -62,7 +62,7 @@ sub visit_installed_files {
     return
       unless length $bytes;
 
-    $self->tag('nodejs-bad-buffer-usage')
+    $self->hint('nodejs-bad-buffer-usage')
       if $bytes =~ /\bnew\s+Buffer\(/;
 
     return;

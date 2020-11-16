@@ -45,13 +45,13 @@ sub source {
     return
       unless defined $patch_dir;
 
-    $self->tag('package-uses-deprecated-dpatch-patch-system');
+    $self->hint('package-uses-deprecated-dpatch-patch-system');
 
     my @list_files
       = grep {$_->basename =~ m/^00list/ && $_->is_open_ok}
       $patch_dir->children;
 
-    $self->tag('dpatch-build-dep-but-no-patch-list')
+    $self->hint('dpatch-build-dep-but-no-patch-list')
       unless @list_files;
 
     my $options_file = $patch_dir->resolve_path('00options');
@@ -86,7 +86,7 @@ sub source {
               unless defined $patch_file;
 
             unless (defined $patch_file) {
-                $self->tag('dpatch-index-references-non-existent-patch',
+                $self->hint('dpatch-index-references-non-existent-patch',
                     $patch_name);
                 next;
             }
@@ -109,7 +109,7 @@ sub source {
             }
             close($fd);
 
-            $self->tag('dpatch-missing-description', $patch_name)
+            $self->hint('dpatch-missing-description', $patch_name)
               unless length $description;
         }
     }

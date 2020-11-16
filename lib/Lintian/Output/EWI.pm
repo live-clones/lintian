@@ -42,7 +42,7 @@ with 'Lintian::Output';
 
 =head1 NAME
 
-Lintian::Output::EWI - standard tag output
+Lintian::Output::EWI - standard hint output
 
 =head1 SYNOPSIS
 
@@ -50,16 +50,16 @@ Lintian::Output::EWI - standard tag output
 
 =head1 DESCRIPTION
 
-Provides standard tag output.
+Provides standard hint output.
 
 =head1 INSTANCE METHODS
 
 =over 4
 
-=item issue_tags
+=item issue_hints
 
-Print all tags passed in array. A separate arguments with processables
-is necessary to report in case no tags were found.
+Print all hints passed in array. A separate arguments with processables
+is necessary to report in case no hints were found.
 
 =cut
 
@@ -81,7 +81,7 @@ my %type_priority = (
     'buildinfo' => 70,
 );
 
-sub issue_tags {
+sub issue_hints {
     my ($self, $groups) = @_;
 
     my @processables = map { $_->get_processables } @{$groups // []};
@@ -89,16 +89,16 @@ sub issue_tags {
     my @pending;
     for my $processable (@processables) {
 
-        # get tags
-        my @tags = @{$processable->tags};
+        # get hints
+        my @hints = @{$processable->hints};
 
-        # associate tags with processable
-        $_->processable($processable) for @tags;
+        # associate hints with processable
+        $_->processable($processable) for @hints;
 
         # remove circular references
-        $processable->tags([]);
+        $processable->hints([]);
 
-        push(@pending, @tags);
+        push(@pending, @hints);
     }
 
     my @sorted = sort {
@@ -111,37 +111,37 @@ sub issue_tags {
           || $a->context cmp $b->context
     } @pending;
 
-    $self->print_tag($_) for @sorted;
+    $self->print_hint($_) for @sorted;
 
     return;
 }
 
-=item C<print_tag($pkg_info, $tag_info, $context, $override)>
+=item C<print_hint($pkg_info, $tag_info, $context, $override)>
 
-Print a tag.  The first two arguments are hash reference with the
-information about the package and the tag, $context is the context
-information for the tag (if any) as an array reference, and $override
-is either undef if the tag is not overridden or a hash with
-override info for this tag.
+Print a hint.  The first two arguments are hash reference with the
+information about the package and the hint, $context is the context
+information for the hint (if any) as an array reference, and $override
+is either undef if the hint is not overridden or a hash with
+override info for this hint.
 
 =cut
 
-sub print_tag {
-    my ($self, $tag) = @_;
+sub print_hint {
+    my ($self, $hint) = @_;
 
-    my $tag_info = $tag->info;
+    my $tag_info = $hint->info;
     my $tag_name = $tag_info->name;
 
-    my $information = $tag->context;
+    my $information = $hint->context;
     $information = SPACE . $self->_quote_print($information)
       unless $information eq EMPTY;
 
-    # Limit the output so people do not drown in tags.  Some tags are
+    # Limit the output so people do not drown in hints.  Some hints are
     # insanely noisy (hi static-library-has-unneeded-section)
     my $limit = $self->tag_display_limit;
     if ($limit) {
 
-        my $proc_id = $tag->processable->identifier;
+        my $proc_id = $hint->processable->identifier;
         my $emitted_count= $self->proc_id2tag_count->{$proc_id}{$tag_name}++;
 
         return
@@ -156,7 +156,7 @@ sub print_tag {
     my $text = $tag_name;
 
     my $code = $tag_info->code;
-    $code = 'O' if defined $tag->override;
+    $code = 'O' if defined $hint->override;
 
     my $tag_color = $self->{colors}{$code};
 
@@ -174,20 +174,20 @@ sub print_tag {
         $output .= $text;
     }
 
-    my $override = $tag->override;
+    my $override = $hint->override;
     if ($override && @{ $override->{comments} }) {
 
         $self->msg($self->_quote_print($_))for @{ $override->{comments} };
     }
 
     my $type = EMPTY;
-    $type = SPACE . $tag->processable->type
-      unless $tag->processable->type eq 'binary';
+    $type = SPACE . $hint->processable->type
+      unless $hint->processable->type eq 'binary';
 
     say $code
       . COLON
       . SPACE
-      . $tag->processable->name
+      . $hint->processable->name
       . $type
       . COLON
       . SPACE

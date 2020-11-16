@@ -55,7 +55,7 @@ has local_manpages => (is => 'rw', default => sub { {} });
 sub spelling_tag_emitter {
     my ($self, @orig_args) = @_;
     return sub {
-        return $self->tag(@orig_args, @_);
+        return $self->hint(@orig_args, @_);
     };
 }
 
@@ -71,16 +71,16 @@ sub visit_installed_files {
 
     if ($file->name =~ m,^usr/share/man/\S+,) {
 
-        $self->tag('manual-page-in-udeb', $file->name)
+        $self->hint('manual-page-in-udeb', $file->name)
           if $self->processable->type eq 'udeb';
 
         if ($file->is_dir) {
-            $self->tag('stray-folder-in-manual', $file->name)
+            $self->hint('stray-folder-in-manual', $file->name)
               unless $file->name
               =~ m,^usr/(?:X11R6|share)/man/(?:[^/]+/)?(?:man\d/)?$,;
 
         } elsif ($file->is_file && ($file->operm & 0111)) {
-            $self->tag('executable-manual-page', $file->name);
+            $self->hint('executable-manual-page', $file->name);
         }
     }
 
@@ -90,7 +90,7 @@ sub visit_installed_files {
     my ($manpage, $path, undef) = fileparse($file);
 
     if ($path =~ m{^usr/share/man/$} && $manpage ne EMPTY) {
-        $self->tag('odd-place-for-manual-page', $file);
+        $self->hint('odd-place-for-manual-page', $file);
         return;
     }
 
@@ -99,15 +99,15 @@ sub visit_installed_files {
     return
       unless defined $subdir;
 
-    $self->tag('build-path-in-manual', $file)
+    $self->hint('build-path-in-manual', $file)
       if $file =~ m{/_build_} || $file =~ m{_tmp_buildd};
 
-    $self->tag('manual-page-with-generic-name', $file)
+    $self->hint('manual-page-with-generic-name', $file)
       if $file =~ m{/README\.};
 
     my ($section) = ($subdir =~ m{^.*man(\d)/$});
     unless (defined $section) {
-        $self->tag('odd-place-for-manual-page', $file);
+        $self->hint('odd-place-for-manual-page', $file);
         return;
     }
 
@@ -117,7 +117,7 @@ sub visit_installed_files {
     # The country should not be part of the man page locale
     # directory unless it's one of the known cases where the
     # language is significantly different between countries.
-    $self->tag('country-in-manual', $file)
+    $self->hint('country-in-manual', $file)
       if $language =~ /_/ && $language !~ /^(?:pt_BR|zh_[A-Z][A-Z])$/;
 
     my $file_info = $file->file_info;
@@ -126,12 +126,12 @@ sub visit_installed_files {
     my $ext = pop @pieces;
     if ($ext ne 'gz') {
         push @pieces, $ext;
-        $self->tag('uncompressed-manual-page', $file);
+        $self->hint('uncompressed-manual-page', $file);
     } elsif ($file->is_file) { # so it's .gz... files first; links later
         if ($file_info !~ m/gzip compressed data/) {
-            $self->tag('wrong-compression-in-manual-page', $file);
+            $self->hint('wrong-compression-in-manual-page', $file);
         } elsif ($file_info !~ m/max compression/) {
-            $self->tag('poor-compression-in-manual-page',$file);
+            $self->hint('poor-compression-in-manual-page',$file);
         }
     }
     my $fn_section = pop @pieces;
@@ -145,10 +145,10 @@ sub visit_installed_files {
 
         # number of directory and manpage extension equal?
         if ($section_num != $section) {
-            $self->tag('odd-place-for-manual-page', $file);
+            $self->hint('odd-place-for-manual-page', $file);
         }
     } else {
-        $self->tag('wrong-name-for-manual-page', $file);
+        $self->hint('wrong-name-for-manual-page', $file);
     }
 
     # check symbolic links to other manual pages
@@ -172,9 +172,9 @@ sub visit_installed_files {
                 or $file->link
                 =~ m,^\.\./\.\./\.\./\.\./usr/share/man/man[237]/undocumented\.[237]\.gz$,
             ) {
-                $self->tag('undocumented-manual-page', $file);
+                $self->hint('undocumented-manual-page', $file);
             } else {
-                $self->tag('broken-link-to-undocumented', $file);
+                $self->hint('broken-link-to-undocumented', $file);
             }
         }
     } else { # not a symlink
@@ -195,7 +195,7 @@ sub visit_installed_files {
             } while ($first =~ /^\.\\"/ && $manfile[$i]); #");
 
             unless ($first) {
-                $self->tag('empty-manual-page', $file);
+                $self->hint('empty-manual-page', $file);
                 return;
             } elsif ($first =~ /^\.so\s+(.+)?$/) {
                 my $dest = $1;
@@ -207,15 +207,16 @@ sub visit_installed_files {
                         if ($rest =~ m,^([^/]+)/(.+)$,) {
                             my (undef, $rest) = ($1, $2);
                             if ($rest !~ m,^[^/]+\.\d(?:\S+)?(?:\.gz)?$,) {
-                                $self->tag('bad-so-link-within-manual-page',
+                                $self->hint('bad-so-link-within-manual-page',
                                     $file);
                             }
                         } else {
-                            $self->tag('bad-so-link-within-manual-page',$file);
+                            $self->hint('bad-so-link-within-manual-page',
+                                $file);
                         }
                     }
                 } else {
-                    $self->tag('bad-so-link-within-manual-page', $file);
+                    $self->hint('bad-so-link-within-manual-page', $file);
                 }
                 return;
             }
@@ -247,7 +248,7 @@ sub visit_installed_files {
             my $exitcode = $?;
             my $status = ($exitcode >> 8);
 
-            $self->tag('bad-whatis-entry', $file)
+            $self->hint('bad-whatis-entry', $file)
               if $status == 2;
 
             if ($status != 0 && $status != 2) {
@@ -262,10 +263,10 @@ sub visit_installed_files {
                 $desc =~ s/^[^:]+: \"(.*)\"$/$1/;
 
                 if ($desc =~ /(\S+)\s+-\s+manual page for \1/i) {
-                    $self->tag('useless-whatis-entry', $file);
+                    $self->hint('useless-whatis-entry', $file);
 
                 } elsif ($desc =~ /\S+\s+-\s+programs? to do something/i) {
-                    $self->tag('manual-page-from-template', $file);
+                    $self->hint('manual-page-from-template', $file);
                 }
             }
         }
@@ -352,7 +353,7 @@ sub visit_installed_files {
                 $line =~ s/^[^:]+: //;
                 $line =~ s/^<standard input>://;
 
-                $self->tag('groff-message', $file, $line);
+                $self->hint('groff-message', $file, $line);
             }
 
             chdir($savedir);
@@ -382,7 +383,7 @@ sub visit_installed_files {
                 # 1 to the index.
                 my $th_section = $th_fields[++$pkgname_idx];
                 if ($th_section && (lc($fn_section) ne lc($th_section))) {
-                    $self->tag('wrong-manual-section',
+                    $self->hint('wrong-manual-section',
                         "$file:$lc $fn_section != $th_section");
                 }
             }
@@ -390,10 +391,10 @@ sub visit_installed_files {
                 || ($line =~ m,(/var/(adm|catman|named|nis|preserve)/),)){
                 # FSSTND dirs in man pages
                 # regexes taken from checks/files
-                $self->tag('FSSTND-dir-in-manual-page', "$file:$lc $1");
+                $self->hint('FSSTND-dir-in-manual-page', "$file:$lc $1");
             }
             if ($line eq '.SH "POD ERRORS"') {
-                $self->tag('pod-conversion-message', "$file:$lc");
+                $self->hint('pod-conversion-message', "$file:$lc");
             }
             # Check for spelling errors if the manpage is English
             check_spelling($line, $self->group->spelling_exceptions,
@@ -428,7 +429,7 @@ sub visit_installed_files {
     for my $line (@lines) {
 
         # see Bug#554897 and Bug#507673; exclude string variables
-        $self->tag('acute-accent-in-manual-page',
+        $self->hint('acute-accent-in-manual-page',
             $file->name . COLON . $position)
           if $line =~ /\\'/ && $line !~ /^\.\s*ds\s/;
 
@@ -536,15 +537,15 @@ sub breakdown_installed_files {
         my @manpages = @{$related_manpages{$command} // []};
 
         my @sections = grep { defined } map { $_->{section} } @manpages;
-        $self->tag('manual-page-for-system-command', $file)
+        $self->hint('manual-page-for-system-command', $file)
           if $file->is_regular_file
           && any { $_ == 1 } @sections;
     }
 
-    $self->tag('no-english-manual-page', $_)
+    $self->hint('no-english-manual-page', $_)
       for map {$local_executables{$_}} @english_missing;
 
-    $self->tag('no-manual-page', $_)
+    $self->hint('no-manual-page', $_)
       for map {$local_executables{$_}} @manpage_missing;
 
     # surplus manpages only for this package; provides sorted output
@@ -556,7 +557,7 @@ sub breakdown_installed_files {
         my $file = $manpage->{file};
         my $section = $manpage->{section};
 
-        $self->tag('spare-manual-page', $file)
+        $self->hint('spare-manual-page', $file)
           if $section == 1 || $section == 8;
     }
 

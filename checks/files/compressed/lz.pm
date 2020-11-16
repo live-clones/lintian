@@ -60,7 +60,7 @@ sub visit_installed_files {
 
         safe_qx($command, '--test', $file->unpacked_path);
 
-        $self->tag('broken-lz', $file->name)
+        $self->hint('broken-lz', $file->name)
           if $?;
     }
 

@@ -51,7 +51,7 @@ sub visit_installed_files {
         my $pkg_config_arch = $2 // '';
         $pkg_config_arch =~ s,\A/,,ms;
 
-        $self->tag('pkg-config-unavailable-for-cross-compilation', $file->name)
+        $self->hint('pkg-config-unavailable-for-cross-compilation',$file->name)
           if $prefix eq 'lib';
 
         open(my $fd, '<:raw', $file->unpacked_path);
@@ -77,7 +77,7 @@ sub visit_installed_files {
 
                 if ($block =~ m{\W\Q$madir\E(\W|$)}xms) {
 
-                    $self->tag('pkg-config-multi-arch-wrong-dir',
+                    $self->hint('pkg-config-multi-arch-wrong-dir',
                         $file->name,
                         'full text contains architecture specific dir',$madir);
 
@@ -94,7 +94,8 @@ sub visit_installed_files {
                     my $extra = $1 // '';
                     $extra =~ s/\s+/ /g;
 
-                    $self->tag('pkg-config-bad-directive', $file->name,$extra);
+                    $self->hint('pkg-config-bad-directive', $file->name,
+                        $extra);
                 }
             }
         }

@@ -46,7 +46,7 @@ sub changes {
     # discard anything after the first word
     $lowercase =~ s/ .*//;
 
-    $self->tag('bad-urgency-in-changes-file', $urgency)
+    $self->hint('bad-urgency-in-changes-file', $urgency)
       unless any { $lowercase =~ $_ } qw(low medium high critical emergency);
 
     return;

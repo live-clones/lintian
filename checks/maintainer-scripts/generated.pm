@@ -75,7 +75,7 @@ sub installable {
         }
     }
 
-    $self->tag('debhelper-autoscript-in-maintainer-scripts', $_)
+    $self->hint('debhelper-autoscript-in-maintainer-scripts', $_)
       for uniq @tools_seen;
 
     return;

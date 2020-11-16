@@ -52,7 +52,7 @@ sub source {
         next
           unless length $bytes;
 
-        $self->tag('carriage-return-line-feed', $file->name)
+        $self->hint('carriage-return-line-feed', $file->name)
           if $bytes =~ m{\r\n\Z}m;
     }
 

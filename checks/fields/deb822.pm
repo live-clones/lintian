@@ -58,7 +58,7 @@ sub source {
             for my $name ($section->names) {
 
                 my $value = $section->value($name);
-                $self->tag('trimmed-deb822-field', $file, SECTION . $count,
+                $self->hint('trimmed-deb822-field', $file, SECTION . $count,
                     $name, $value);
             }
 

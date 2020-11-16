@@ -38,7 +38,7 @@ sub always {
     for my $name (@all) {
 
         my $value = $self->processable->fields->value($name);
-        $self->tag('trimmed-field', $name, $value);
+        $self->hint('trimmed-field', $name, $value);
     }
 
     return;

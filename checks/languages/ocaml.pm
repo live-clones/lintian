@@ -104,7 +104,7 @@ sub visit_installed_files {
     # For each .cmxa file, there must be a matching .a file (#528367)
     $_ = $file;
     if (s/\.cmxa$/.a/ && !$self->processable->installed->lookup($_)) {
-        $self->tag('ocaml-dangling-cmxa', $file);
+        $self->hint('ocaml-dangling-cmxa', $file);
     }
 
     # For each .cmxs file, there must be a matching .cma or .cmo file
@@ -114,7 +114,7 @@ sub visit_installed_files {
         if (   s/\.cmxs$/.cm/
             && !$self->processable->installed->lookup("${_}a")
             && !$self->processable->installed->lookup("${_}o")) {
-            $self->tag('ocaml-dangling-cmxs', $file);
+            $self->hint('ocaml-dangling-cmxs', $file);
         }
     }
 
@@ -125,7 +125,7 @@ sub visit_installed_files {
     if (   s/\.cmx$/.o/
         && !$self->processable->installed->lookup($_)
         && !(exists $self->provided_o->{$_})) {
-        $self->tag('ocaml-dangling-cmx', $file);
+        $self->hint('ocaml-dangling-cmx', $file);
     }
 
     # $somename.cmi should be shipped with $somename.mli or $somename.ml
@@ -136,7 +136,7 @@ sub visit_installed_files {
         && !$self->processable->installed->lookup($_)) {
         $self->_set_cmi_number($self->cmi_number + 1);
         if ($self->cmi_number <= $MAX_CMI) {
-            $self->tag('ocaml-dangling-cmi', $file);
+            $self->hint('ocaml-dangling-cmi', $file);
         }
     }
 
@@ -155,7 +155,7 @@ sub visit_installed_files {
     # $somename.cmo should usually not be shipped with $somename.cma
     $_ = $file;
     if (s/\.cma$/.cmo/ && $self->processable->installed->lookup($_)) {
-        $self->tag('ocaml-stray-cmo', $file);
+        $self->hint('ocaml-stray-cmo', $file);
     }
 
     # development files outside /usr/lib/ocaml (.cmi, .cmx, .cmxa)
@@ -185,7 +185,7 @@ sub breakdown_installed_files {
         # summary about .cmi files
         if ($self->cmi_number > $MAX_CMI) {
             my $plural = ($self->cmi_number - $MAX_CMI == 1) ? '' : 's';
-            $self->tag(
+            $self->hint(
                 'ocaml-dangling-cmi',
                 ($self->cmi_number - $MAX_CMI),
                 "more file$plural not shown"
@@ -196,12 +196,12 @@ sub breakdown_installed_files {
             my $outside_number = $self->outside_number;
             my $outside_prefix = dirname($self->outside_prefix);
             my $plural = ($self->outside_number == 1) ? '' : 's';
-            $self->tag('ocaml-dev-file-not-in-usr-lib-ocaml',
+            $self->hint('ocaml-dev-file-not-in-usr-lib-ocaml',
                 "$outside_number file$plural in $outside_prefix");
         }
         if ($self->has_meta) {
             my $depends = $self->processable->relation('all');
-            $self->tag('ocaml-meta-without-suggesting-findlib')
+            $self->hint('ocaml-meta-without-suggesting-findlib')
               unless $depends->implies('ocaml-findlib');
         }
     } else {
@@ -210,7 +210,7 @@ sub breakdown_installed_files {
             my $dev_number = $self->dev_number;
             my $dev_prefix = dirname($self->dev_prefix);
             my $plural = ($self->dev_number == 1) ? '' : 's';
-            $self->tag(
+            $self->hint(
                 'ocaml-dev-file-in-nondev-package',
                 "$dev_number file$plural in $dev_prefix"
             );

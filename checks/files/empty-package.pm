@@ -126,10 +126,10 @@ sub breakdown_installed_files {
 
     if ($self->is_empty) {
 
-        $self->tag('empty-binary-package')
+        $self->hint('empty-binary-package')
           if $self->processable->type eq 'binary';
 
-        $self->tag('empty-udeb-package')
+        $self->hint('empty-udeb-package')
           if $self->processable->type eq 'udeb';
     }
 

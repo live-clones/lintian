@@ -81,7 +81,7 @@ sub visit_patched_files {
     return
       if any { $category eq $_ } ('upstream', 'backport');
 
-    $self->tag('patch-not-forwarded-upstream', $item->name)
+    $self->hint('patch-not-forwarded-upstream', $item->name)
       if $deb822->last_mention('Forwarded') eq 'no'
       || none { length } (
         $deb822->last_mention('Applied-Upstream'),

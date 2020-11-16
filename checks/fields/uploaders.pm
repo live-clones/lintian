@@ -50,7 +50,7 @@ sub always {
 
     # check for empty field see  #783628
     if ($uploaders =~ /,\s*,/) {
-        $self->tag('uploader-name-missing','you have used a double comma');
+        $self->hint('uploader-name-missing','you have used a double comma');
         $uploaders =~ s/,\s*,/,/g;
     }
 
@@ -58,7 +58,7 @@ sub always {
 
         my $maintainer = $self->processable->fields->value('Maintainer');
 
-        $self->tag('maintainer-also-in-uploaders')
+        $self->hint('maintainer-also-in-uploaders')
           if $uploaders =~ m/\Q$maintainer/;
     }
 

@@ -39,11 +39,11 @@ sub visit_installed_files {
     if (   $file->name =~ /~$/
         or $file->name =~ m,\#[^/]+\#$,
         or $file->name =~ m,/\.[^/]+\.swp$,) {
-        $self->tag('backup-file-in-package', $file->name);
+        $self->hint('backup-file-in-package', $file->name);
     }
 
     if ($file->name =~ m,/\.nfs[^/]+$,) {
-        $self->tag('nfs-temporary-file-in-package', $file->name);
+        $self->hint('nfs-temporary-file-in-package', $file->name);
     }
 
     return;

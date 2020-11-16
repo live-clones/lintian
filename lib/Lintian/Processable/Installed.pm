@@ -73,7 +73,7 @@ has installed => (
 
         $index->load;
 
-        $self->tag('unpack-message-for-deb-data', $_)
+        $self->hint('unpack-message-for-deb-data', $_)
           for split(/\n/, $extract_errors . $index_errors);
 
         return $index;

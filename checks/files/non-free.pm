@@ -49,7 +49,7 @@ sub visit_installed_files {
     # non-free .swf files
     foreach my $flash (@flash_nonfree) {
         if ($file->name =~ m,/$flash,) {
-            $self->tag('non-free-flash', $file->name);
+            $self->hint('non-free-flash', $file->name);
         }
     }
 

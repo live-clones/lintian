@@ -69,7 +69,7 @@ has control => (
 
         $index->load;
 
-        $self->tag('unpack-message-for-deb-control', $_)
+        $self->hint('unpack-message-for-deb-control', $_)
           for split(/\n/, $extract_errors . $index_errors);
 
         return $index;

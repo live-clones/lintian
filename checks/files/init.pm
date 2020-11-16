@@ -34,11 +34,12 @@ sub visit_installed_files {
     my ($self, $file) = @_;
 
     # /etc/init
-    $self->tag('package-installs-deprecated-upstart-configuration',$file->name)
+    $self->hint('package-installs-deprecated-upstart-configuration',
+        $file->name)
       if $file->name =~ m,^etc/init/\S,;
 
     # /etc/init.d
-    $self->tag(
+    $self->hint(
         'non-standard-file-permissions-for-etc-init.d-script',
         sprintf('%s %04o != 0755', $file->name, $file->operm))
       if $file->name =~ m,^etc/init\.d/\S,
@@ -47,13 +48,13 @@ sub visit_installed_files {
       && $file->is_file;
 
     # /etc/rc.d && /etc/rc?.d
-    $self->tag('package-installs-into-etc-rc.d', $file->name)
+    $self->hint('package-installs-into-etc-rc.d', $file->name)
       if $file->name =~ m,^etc/rc(?:\d|S)?\.d/\S,
       && $self->processable->name !~ /^(?:sysvinit|file-rc)$/
       && $self->processable->type ne 'udeb';
 
     # /etc/rc.boot
-    $self->tag('package-installs-into-etc-rc.boot', $file->name)
+    $self->hint('package-installs-into-etc-rc.boot', $file->name)
       if $file->name =~ m,^etc/rc\.boot/\S,;
 
     return;

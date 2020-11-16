@@ -65,7 +65,7 @@ sub always {
 
         my $length = length $self->processable->fields->value($name);
 
-        $self->tag('field-too-long', $name, "($length chars > $maximum)");
+        $self->hint('field-too-long', $name, "($length chars > $maximum)");
     }
 
     return;

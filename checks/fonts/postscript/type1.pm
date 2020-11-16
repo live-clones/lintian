@@ -55,7 +55,7 @@ sub visit_installed_files {
                                    All\s*Rights\s*Reserved\.?\s*
                                        \Z}xsmi
             ) {
-                $self->tag('license-problem-font-adobe-copyrighted-fragment',
+                $self->hint('license-problem-font-adobe-copyrighted-fragment',
                     $item);
 
                 last;
@@ -74,7 +74,7 @@ sub visit_installed_files {
         # in the black book copyrighted fragment
         if ($line =~ m/startlock\s*get\s*exec/) {
 
-            $self->tag(
+            $self->hint(
                 'license-problem-font-adobe-copyrighted-fragment-no-credit',
                 $item->name);
 

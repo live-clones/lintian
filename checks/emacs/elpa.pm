@@ -34,7 +34,7 @@ sub installable {
 
     my $processable = $self->processable;
 
-    $self->tag('emacsen-common-without-dh-elpa')
+    $self->hint('emacsen-common-without-dh-elpa')
       if (
         $processable->installed->lookup(
             'usr/lib/emacsen-common/packages/install/')

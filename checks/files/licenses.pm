@@ -97,7 +97,7 @@ sub visit_installed_files {
         # case you hadn't guessed; liblicense)
         my $fileinfo = $file->file_info;
 
-        $self->tag('extra-license-file', $file->name)
+        $self->hint('extra-license-file', $file->name)
           unless $fileinfo and ($fileinfo =~ m/^[^,]*\bELF\b/)
           or ($fileinfo =~ m/\bcurrent ar archive\b/);
     }

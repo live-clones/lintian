@@ -240,7 +240,7 @@ sub process {
                 for my $context (keys %{$declared_overrides->{$dated}}) {
 
                     # alert user to new tag name
-                    $processable->tag('renamed-tag',
+                    $processable->hint('renamed-tag',
                         "$dated => $modern in line "
                           .$declared_overrides->{$dated}{$context}{line});
 
@@ -249,7 +249,7 @@ sub process {
                         my @lines = (
                             $declared_overrides->{$dated}{$context}{line},
                             $declared_overrides->{$modern}{$context}{line});
-                        $processable->tag('duplicate-override-context',
+                        $processable->hint('duplicate-override-context',
                             $modern, 'lines', sort @lines);
 
                         next;
@@ -277,7 +277,7 @@ sub process {
               keys %{$declared_overrides};
             for my $tagname (@unknown_overrides) {
 
-                $processable->tag('malformed-override',
+                $processable->hint('malformed-override',
                     "Unknown tag $tagname in line "
                       . $declared_overrides->{$tagname}{$_}{line})
                   for keys %{$declared_overrides->{$tagname}};
@@ -337,7 +337,7 @@ sub process {
         }
 
         my $knownlc
-          = List::Compare->new([map { $_->name } @{$processable->tags}],
+          = List::Compare->new([map { $_->name } @{$processable->hints}],
             [$self->profile->known_tags]);
         my @unknown_tagnames = $knownlc->get_Lonly;
         croak 'tried to issue unknown tags: ' . join(SPACE, @unknown_tagnames)
@@ -346,23 +346,23 @@ sub process {
         # remove disabled tags
         my @enabled_tags
           = grep { $self->profile->tag_is_enabled($_->name) }
-          @{$processable->tags};
-        $processable->tags(\@enabled_tags);
+          @{$processable->hints};
+        $processable->hints(\@enabled_tags);
 
         my %used_overrides;
 
-        my @keep_tags;
-        for my $tag (@{$processable->tags}) {
+        my @keep_hints;
+        for my $hint (@{$processable->hints}) {
 
-            my $declared = $declared_overrides->{$tag->name};
-            if ($declared && !$tag->info->show_always) {
+            my $declared = $declared_overrides->{$hint->name};
+            if ($declared && !$hint->info->show_always) {
 
                 # do not use EMPTY; hash keys literal
                 # empty context in specification matches all
                 my $override = $declared->{''};
 
                 # matches context exactly
-                $override = $declared->{$tag->context}
+                $override = $declared->{$hint->context}
                   unless $override;
 
                 # look for patterns
@@ -372,7 +372,7 @@ sub process {
                       keys %{$declared};
 
                     my $match= firstval {
-                        $tag->context =~ m/^$declared->{$_}{pattern}\z/
+                        $hint->context =~ m/^$declared->{$_}{pattern}\z/
                     }
                     @candidates;
 
@@ -381,18 +381,18 @@ sub process {
                 }
 
                 # new hash keys are autovivified to 0
-                $used_overrides{$tag->name}{$override->{context}}++
+                $used_overrides{$hint->name}{$override->{context}}++
                   if $override;
 
-                $tag->override($override);
+                $hint->override($override);
             }
 
-            push(@keep_tags, $tag);
+            push(@keep_hints, $hint);
         }
 
-        $processable->tags(\@keep_tags);
+        $processable->hints(\@keep_hints);
 
-        my %otherwise_visible = map { $_->name => 1 } @keep_tags;
+        my %otherwise_visible = map { $_->name => 1 } @keep_hints;
 
         # look for unused overrides
         for my $tagname (keys %{$declared_overrides}) {
@@ -419,7 +419,7 @@ sub process {
                   = $declared_overrides->{$tagname}{$context}{'renamed-from'}
                   // $tagname;
 
-                $processable->tag($condition, $original_name, $context);
+                $processable->hint($condition, $original_name, $context);
             }
         }
     }

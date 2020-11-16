@@ -74,7 +74,7 @@ sub breakdown_installed_files {
     my $percentage
       = sprintf('%.0f', 100 * $self->usrshare_size / $self->total_size);
 
-    $self->tag(
+    $self->hint(
         'arch-dep-package-has-big-usr-share',
         "${size_usrshare}kB $percentage%"
       )

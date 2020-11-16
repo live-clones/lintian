@@ -61,13 +61,13 @@ sub visit_patched_files {
     if ($item->link =~ m{^/}) {
 
         # allow /dev/null link target for masked systemd service files
-        $self->tag('absolute-symbolic-link-target-in-source',
+        $self->hint('absolute-symbolic-link-target-in-source',
             $item->name, ARROW, $item->link)
           unless $item->link eq '/dev/null';
     }
 
     # some relative links cannot be resolved inside the source
-    $self->tag('wayward-symbolic-link-target-in-source',
+    $self->hint('wayward-symbolic-link-target-in-source',
         $item->name, ARROW, $item->link)
       unless defined $_->link_normalized || $item->link =~ m{^/};
 
@@ -89,7 +89,7 @@ sub tag_build_tree_path {
     foreach my $buildpath ($BUILD_PATH_REGEX->all) {
         my $regex = $BUILD_PATH_REGEX->value($buildpath);
         if ($path =~ m{$regex}xms) {
-            $self->tag('symlink-target-in-build-tree', $msg);
+            $self->hint('symlink-target-in-build-tree', $msg);
         }
     }
     return;
@@ -103,10 +103,10 @@ sub visit_installed_files {
 
     my $mylink = $file->link;
     if ($mylink =~ s,//+,/,g) {
-        $self->tag('symlink-has-double-slash', $file->name, $file->link);
+        $self->hint('symlink-has-double-slash', $file->name, $file->link);
     }
     if ($mylink =~ s,(.)/$,$1,) {
-        $self->tag('symlink-ends-with-slash', $file->name, $file->link);
+        $self->hint('symlink-ends-with-slash', $file->name, $file->link);
     }
 
     # determine top-level directory of file
@@ -121,7 +121,7 @@ sub visit_installed_files {
 
         if ($self->processable->type ne 'udeb' and $filetop eq $linktop) {
             # absolute links within one toplevel directory are _not_ ok!
-            $self->tag('absolute-symlink-in-top-level-folder',
+            $self->hint('absolute-symlink-in-top-level-folder',
                 $file->name, $file->link);
         }
 
@@ -129,12 +129,12 @@ sub visit_installed_files {
             "symlink $file point to $mylink");
 
         if(is_tmp_path($flinkname)) {
-            $self->tag('symlink-target-in-tmp', 'symlink', $file->name,
+            $self->hint('symlink-target-in-tmp', 'symlink', $file->name,
                 "point to $mylink");
         }
 
         # Any other case is already definitely non-recursive
-        $self->tag('symlink-is-self-recursive', $file->name, $file->link)
+        $self->hint('symlink-is-self-recursive', $file->name, $file->link)
           if $mylink eq '/';
 
     } else {
@@ -151,7 +151,7 @@ sub visit_installed_files {
         my ($lastpop, $linkcomponent);
         while ($linkcomponent = shift @linkcomponents) {
             if ($linkcomponent eq '.') {
-                $self->tag('symlink-contains-spurious-segments',
+                $self->hint('symlink-contains-spurious-segments',
                     $file->name, $file->link)
                   unless $mylink eq '.';
                 next;
@@ -160,7 +160,7 @@ sub visit_installed_files {
             if (@filecomponents) {
                 $lastpop = pop @filecomponents;
             } else {
-                $self->tag('symlink-has-too-many-up-segments',
+                $self->hint('symlink-has-too-many-up-segments',
                     $file->name, $file->link);
                 goto NEXT_LINK;
             }
@@ -168,7 +168,7 @@ sub visit_installed_files {
 
         if (!defined $linkcomponent) {
             # After stripping all starting .. components, nothing left
-            $self->tag('symlink-is-self-recursive', $file->name, $file->link);
+            $self->hint('symlink-is-self-recursive', $file->name, $file->link);
         }
 
         # does the link go up and then down into the same
@@ -178,7 +178,7 @@ sub visit_installed_files {
         if (   defined $lastpop
             && defined $linkcomponent
             && $linkcomponent eq $lastpop) {
-            $self->tag('lengthy-symlink', $file->name,  $file->link);
+            $self->hint('lengthy-symlink', $file->name,  $file->link);
         }
 
         if ($#filecomponents == -1) {
@@ -188,14 +188,14 @@ sub visit_installed_files {
                 || ($filetop ne $linkcomponent)) {
                 # relative link into other toplevel directory.
                 # this hits a relative symbolic link in the root too.
-                $self->tag('relative-symlink', $file->name,$file->link);
+                $self->hint('relative-symlink', $file->name,$file->link);
             }
         }
 
         # check additional segments for mistakes like `foo/../bar/'
         foreach (@linkcomponents) {
             if ($_ eq '..' || $_ eq '.') {
-                $self->tag('symlink-contains-spurious-segments',
+                $self->hint('symlink-contains-spurious-segments',
                     $file->name, $file->link);
                 last;
             }
@@ -208,7 +208,7 @@ sub visit_installed_files {
 
         # symlink has correct extension?
         unless ($file->name =~ m,\.$1\s*$,) {
-            $self->tag('compressed-symlink-with-wrong-ext',
+            $self->hint('compressed-symlink-with-wrong-ext',
                 $file->name,$file->link);
         }
     }

@@ -33,7 +33,7 @@ with 'Lintian::Check';
 sub installable {
     my ($self) = @_;
 
-    $self->tag('empty-rust-library-declares-provides')
+    $self->hint('empty-rust-library-declares-provides')
       if $self->processable->name =~ /^librust-/
       && $self->processable->not_just_docs
       && length $self->processable->fields->value('Provides');

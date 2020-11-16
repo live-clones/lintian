@@ -162,7 +162,7 @@ has orig => (
 
             $index->merge_in($subindex);
 
-            $self->tag('unpack-message-for-orig', $_)
+            $self->hint('unpack-message-for-orig', $_)
               for split(/\n/, $combined_errors);
         }
 

@@ -179,7 +179,7 @@ has overrides => (
 
             # require and remove colon when any package details are present
             if ($require_colon && $remaining !~ s/^\s*:\s*//) {
-                $self->tag('malformed-override',
+                $self->hint('malformed-override',
                     "Expected a colon in line $position");
                 next;
             }
@@ -187,14 +187,14 @@ has overrides => (
             my $hint = $remaining;
 
             if (@architectures && $self->architecture eq 'all') {
-                $self->tag('malformed-override',
+                $self->hint('malformed-override',
                     "Architecture list for arch:all package in line $position"
                 );
                 next;
             }
 
             my @invalid = grep { !valid_wildcard($_) } @architectures;
-            $self->tag('malformed-override',
+            $self->hint('malformed-override',
                 "Unknown architecture wildcard $_ in line $position")
               for @invalid;
 
@@ -204,7 +204,7 @@ has overrides => (
             # strip and count negations; confirm it's either all or none
             my $negations = scalar grep { s/^!// } @architectures;
             unless ($negations == @architectures || $negations == 0) {
-                $self->tag('malformed-override',
+                $self->hint('malformed-override',
                     "Inconsistent architecture negation in line $position");
                 next;
             }
@@ -220,7 +220,7 @@ has overrides => (
 
             my ($tagname, $context) = split(SPACE, $hint, 2);
 
-            $self->tag('malformed-override',
+            $self->hint('malformed-override',
                 "Cannot parse line $position: $line")
               unless length $tagname;
 
@@ -280,7 +280,7 @@ has overrides => (
                 my @lines
                   = ($override_data{$tagname}{$context}{line}, $current{line});
 
-                $self->tag('duplicate-override-context', $tagname, 'lines',
+                $self->hint('duplicate-override-context', $tagname, 'lines',
                     sort @lines);
 
                 next;

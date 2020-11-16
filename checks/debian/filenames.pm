@@ -49,11 +49,11 @@ sub source {
         if ($self->processable->patched->resolve_path($problematic)) {
 
             if ($self->processable->patched->resolve_path($correct)) {
-                $self->tag('duplicate-packaging-file',
+                $self->hint('duplicate-packaging-file',
                     "$problematic -> $correct");
 
             } else {
-                $self->tag(
+                $self->hint(
                     'incorrect-packaging-filename',
                     "$problematic -> $correct"
                 );

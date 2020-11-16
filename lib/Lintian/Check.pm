@@ -143,13 +143,13 @@ sub run {
     return;
 }
 
-=item tag
+=item hint
 
 Tag the processable associated with this check
 
 =cut
 
-sub tag {
+sub hint {
     my ($self, @arguments) = @_;
 
     return
@@ -167,7 +167,7 @@ sub tag {
     # could be name-spaced
     $arguments[0] = $taginfo->name;
 
-    return $self->processable->tag(@arguments);
+    return $self->processable->hint(@arguments);
 }
 
 =back

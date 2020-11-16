@@ -54,13 +54,13 @@ sub visit_installed_files {
 
         my $tail = $1;
 
-        $self->tag('multiarch-foreign-cmake-file', $file->name)
+        $self->hint('multiarch-foreign-cmake-file', $file->name)
           if $tail =~ m,^cmake/.+\.cmake$,;
 
-        $self->tag('multiarch-foreign-pkgconfig', $file->name)
+        $self->hint('multiarch-foreign-pkgconfig', $file->name)
           if $tail =~ m,^pkgconfig/[^/]+\.pc$,;
 
-        $self->tag('multiarch-foreign-static-library', $file->name)
+        $self->hint('multiarch-foreign-static-library', $file->name)
           if $tail =~ m,^lib[^/]+\.a$,;
     }
 
@@ -82,7 +82,7 @@ sub breakdown_installed_files {
     my $architecture = $self->processable->fields->value('Architecture');
     my $multiarch = $self->processable->fields->value('Multi-Arch') || 'no';
 
-    $self->tag('multiarch-foreign-shared-library')
+    $self->hint('multiarch-foreign-shared-library')
       if $architecture ne 'all'
       and $multiarch eq 'foreign'
       and $self->has_public_shared_library

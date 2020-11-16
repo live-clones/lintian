@@ -83,7 +83,7 @@ sub installable {
     ) {
         for my $file ($dir->descendants) {
             if ($file->is_file) {
-                $self->tag(('appstream-metadata-in-legacy-location', $file));
+                $self->hint(('appstream-metadata-in-legacy-location', $file));
                 $found_modalias|= $self->check_modalias($file, $modaliases);
             }
         }
@@ -101,7 +101,7 @@ sub installable {
     for my $udevrule (@udevrules) {
         if ($self->check_udev_rules($udevrule, $modaliases)
             && !$found_modalias) {
-            $self->tag(
+            $self->hint(
                 ('appstream-metadata-missing-modalias-provide', $udevrule));
         }
     }
@@ -121,7 +121,7 @@ sub check_modalias {
 
     my $doc = eval {$parser->parse_file($metadatafile->unpacked_path);};
     if ($@) {
-        $self->tag('appstream-metadata-invalid',
+        $self->hint('appstream-metadata-invalid',
             basename($metadatafile->unpacked_path));
         return 0;
     }
@@ -130,7 +130,7 @@ sub check_modalias {
       unless $doc;
 
     if ($doc->findnodes('/application')) {
-        $self->tag('appstream-metadata-legacy-format', $metadatafile);
+        $self->hint('appstream-metadata-legacy-format', $metadatafile);
         return 0;
     }
 
@@ -155,7 +155,7 @@ sub check_modalias {
 
         push(@{$modaliases}, $alias);
 
-        $self->tag('appstream-metadata-malformed-modalias-provide',
+        $self->hint('appstream-metadata-malformed-modalias-provide',
             $metadatafile,
             "include non-valid hex digit in USB matching rule '$alias'")
           if $alias =~ /^usb:v[0-9a-f]{4}p[0-9a-f]{4}d/i
@@ -192,7 +192,7 @@ sub provides_user_device {
                 }
             }
             if (!$foundmatch) {
-                $self->tag((
+                $self->hint((
                     'appstream-metadata-missing-modalias-provide',
                     $udevrulefile, "match rule $match*"
                 ));

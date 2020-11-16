@@ -43,7 +43,7 @@ sub visit_installed_files {
 
     my $contents = $file->bytes;
 
-    $self->tag('package-name-defined-in-config-h', $file->name)
+    $self->hint('package-name-defined-in-config-h', $file->name)
       if $contents =~ m{\bPACKAGE_NAME\b};
 
     return;

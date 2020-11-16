@@ -43,7 +43,7 @@ sub visit_installed_files {
     my @needed = @{$objdump->{NEEDED} // []};
     my @obsolete = grep { /^libcblas\.so\.\d/ } @needed;
 
-    $self->tag('linked-with-obsolete-library', $_, $file->name) for @obsolete;
+    $self->hint('linked-with-obsolete-library', $_, $file->name) for @obsolete;
 
     return;
 }

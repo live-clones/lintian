@@ -255,7 +255,7 @@ sub script_tag {
     $tag = "example-$tag"
       if $filename and $filename =~ m,usr/share/doc/[^/]+/examples/,;
 
-    $self->tag(($tag, $filename, @rest));
+    $self->hint(($tag, $filename, @rest));
     return;
 }
 
@@ -383,7 +383,7 @@ sub installable {
         my $bash_completion_regex
           = qr{^usr/share/bash-completion/completions/.*};
 
-        $self->tag('script-not-executable', $filename)
+        $self->hint('script-not-executable', $filename)
           unless (
                $executable{$filename}
             or $filename =~ m,^usr/(?:lib|share)/.*\.pm,
@@ -400,11 +400,11 @@ sub installable {
           )or $in_docs;
 
         # for bash completion issue this instead
-        $self->tag('bash-completion-with-hashbang', $filename)
+        $self->hint('bash-completion-with-hashbang', $filename)
           if $filename =~ $bash_completion_regex;
 
         # Warn about csh scripts.
-        $self->tag('csh-considered-harmful', $filename)
+        $self->hint('csh-considered-harmful', $filename)
           if (  ($base eq 'csh' or $base eq 'tcsh')
             and $executable{$filename}
             and $filename !~ m,^etc/csh/login\.d/,)
@@ -513,7 +513,7 @@ sub installable {
                           \.pl['"]
                }xsm
                 ) {
-                    $self->tag('script-uses-perl4-libs-without-dep',
+                    $self->hint('script-uses-perl4-libs-without-dep',
                         "$filename:$. ${1}.pl");
                 }
             }
@@ -532,10 +532,10 @@ sub installable {
             }
             if ($depends && !$all_parsed->implies($depends)) {
                 if ($base =~ /^php/) {
-                    $self->tag('php-script-but-no-php-cli-dep',
+                    $self->hint('php-script-but-no-php-cli-dep',
                         $filename,"#!$interpreter");
                 } elsif ($base =~ /^(python\d|ruby|[mg]awk)$/) {
-                    $self->tag((
+                    $self->hint((
                         "$base-script-but-no-$base-dep",$filename,
                         "#!$interpreter"
                     ));
@@ -553,7 +553,7 @@ sub installable {
                     && $all_parsed->matches(qr/^erlang-abi-[\d+\.]+$/)) {
                     # ABI-versioned virtual packages for erlang
                 } else {
-                    $self->tag(
+                    $self->hint(
                         'missing-dep-for-interpreter', "$base => $depends",
                         "($filename)", "#!$interpreter"
                     );
@@ -570,10 +570,10 @@ sub installable {
             my $depends = join(' | ',  @depends);
             unless ($all_parsed->implies($depends)) {
                 if ($base =~ /^(wish|tclsh)/) {
-                    $self->tag("$1-script-but-no-$1-dep", $filename,
+                    $self->hint("$1-script-but-no-$1-dep", $filename,
                         "#!$interpreter");
                 } else {
-                    $self->tag(
+                    $self->hint(
                         'missing-dep-for-interpreter', "$base => $depends",
                         "($filename)", "#!$interpreter"
                     );
@@ -585,10 +585,10 @@ sub installable {
             $depends =~ s/\$1/$version/g;
             unless ($all_parsed->implies($depends)) {
                 if ($base =~ /^(python|ruby)/) {
-                    $self->tag("$1-script-but-no-$1-dep", $filename,
+                    $self->hint("$1-script-but-no-$1-dep", $filename,
                         "#!$interpreter");
                 } else {
-                    $self->tag(
+                    $self->hint(
                         'missing-dep-for-interpreter', "$base => $depends",
                         "($filename)", "#!$interpreter"
                     );
@@ -610,7 +610,7 @@ sub installable {
               if $target->is_script;
         }
 
-        $self->tag('executable-not-elf-or-script', $name)
+        $self->hint('executable-not-elf-or-script', $name)
           unless (
                $ok
             or $ELF{$name}
@@ -639,48 +639,48 @@ sub installable {
         my $base = $1;
 
         # tag for statistics
-        $self->tag('maintainer-script-interpreter',
+        $self->hint('maintainer-script-interpreter',
             "control/$file", $interpreter);
 
         if ($interpreter eq '') {
-            $self->tag('script-without-interpreter', "control/$file");
+            $self->hint('script-without-interpreter', "control/$file");
             next;
         }
 
         if ($interpreter eq 'ELF') {
-            $self->tag('elf-maintainer-script', "control/$file");
+            $self->hint('elf-maintainer-script', "control/$file");
             next;
         }
 
-        $self->tag('interpreter-not-absolute', "control/$file",
+        $self->hint('interpreter-not-absolute', "control/$file",
             "#!$interpreter")
           unless ($interpreter =~ m|^/|);
 
         if ($interpreter =~ m|/usr/local/|) {
-            $self->tag('control-interpreter-in-usr-local',
+            $self->hint('control-interpreter-in-usr-local',
                 "control/$file","#!$interpreter");
         } elsif ($base eq 'sh' or $base eq 'bash' or $base eq 'perl') {
             my $expected = ($INTERPRETERS->value($base))->[0] . '/' . $base;
-            $self->tag(
+            $self->hint(
                 bad_interpreter_tag_name($expected),
                 "#!$interpreter != $expected",
                 "(control/$file)"
             ) unless $interpreter eq $expected;
         } elsif ($file eq 'config') {
-            $self->tag('forbidden-config-interpreter', "#!$interpreter");
+            $self->hint('forbidden-config-interpreter', "#!$interpreter");
         } elsif ($file eq 'postrm') {
-            $self->tag('forbidden-postrm-interpreter', "#!$interpreter");
+            $self->hint('forbidden-postrm-interpreter', "#!$interpreter");
         } elsif ($INTERPRETERS->known($base)) {
             my $data = $INTERPRETERS->value($base);
             my $expected = $data->[0] . '/' . $base;
             unless ($interpreter eq $expected) {
-                $self->tag(
+                $self->hint(
                     bad_interpreter_tag_name($expected),
                     "#!$interpreter != $expected",
                     "(control/$file)"
                 );
             }
-            $self->tag('unusual-control-interpreter', "control/$file",
+            $self->hint('unusual-control-interpreter', "control/$file",
                 "#!$interpreter");
 
             # Interpreters used by preinst scripts must be in
@@ -691,13 +691,13 @@ sub installable {
                 if ($file eq 'preinst') {
                     unless ($processable->relation('Pre-Depends')
                         ->implies($depends)){
-                        $self->tag('preinst-interpreter-without-predepends',
+                        $self->hint('preinst-interpreter-without-predepends',
                             "#!$interpreter");
                     }
                 } else {
                     unless (
                         $processable->relation('strong')->implies($depends)) {
-                        $self->tag(
+                        $self->hint(
                             'control-interpreter-without-depends',
                             "control/$file",
                             "#!$interpreter"
@@ -706,14 +706,14 @@ sub installable {
                 }
             }
         } else {
-            $self->tag('unknown-control-interpreter', "control/$file",
+            $self->hint('unknown-control-interpreter', "control/$file",
                 "#!$interpreter");
             next; # no use doing further checks if it's not a known interpreter
         }
 
         # perhaps we should warn about *csh even if they're somehow screwed,
         # but that's not really important...
-        $self->tag('csh-considered-harmful', "control/$file")
+        $self->hint('csh-considered-harmful', "control/$file")
           if ($base eq 'csh' or $base eq 'tcsh');
 
         next
@@ -726,7 +726,7 @@ sub installable {
         if ($shellscript) {
             $checkbashisms = $base eq 'sh' ? 1 : 0;
 
-            $self->tag('maintainer-shell-script-fails-syntax-check', $file)
+            $self->hint('maintainer-shell-script-fails-syntax-check', $file)
               if ($base eq 'sh' && check_script_syntax('/bin/dash', $file))
               || ($base eq 'bash' && check_script_syntax('/bin/bash', $file));
         }
@@ -752,7 +752,7 @@ sub installable {
             }
 
             if (/\#DEBHELPER\#/) {
-                $self->tag('maintainer-script-has-unexpanded-debhelper-token',
+                $self->hint('maintainer-script-has-unexpanded-debhelper-token',
                     $file);
             }
 
@@ -820,7 +820,7 @@ sub installable {
 
             $saw_udevadm_guard = 1 if m/\b(if|which|command)\s+.*udevadm/g;
             if (m,$LEADIN(?:/bin/)?udevadm\s, and $saw_sete) {
-                $self->tag('udevadm-called-without-guard', "$file:$.")
+                $self->hint('udevadm-called-without-guard', "$file:$.")
                   unless $saw_udevadm_guard
                   or m/\|\|/
                   or $str_deps->implies('udev');
@@ -832,19 +832,19 @@ sub installable {
                 and not m/\bmkdir\b/
                 and not m/\bXXXXXX\b/
                 and not m/\$RANDOM/) {
-                $self->tag(
+                $self->hint(
 'possibly-insecure-handling-of-tmp-files-in-maintainer-script',
                     "$file:$."
                 ) unless $warned{tmp};
                 $warned{tmp} = 1;
             }
             if (m/^\s*killall(?:\s|\z)/) {
-                $self->tag('killall-is-dangerous', "$file:$.")
+                $self->hint('killall-is-dangerous', "$file:$.")
                   unless $warned{killall};
                 $warned{killall} = 1;
             }
             if (m/^\s*mknod(?:\s|\z)/ and not m/\sp\s/) {
-                $self->tag('mknod-in-maintainer-script', "$file:$.");
+                $self->hint('mknod-in-maintainer-script', "$file:$.");
             }
 
             # Collect information about init script invocations to
@@ -974,7 +974,7 @@ sub installable {
                     }
 
                     if ($found) {
-                        $self->tag('possible-bashism-in-maintainer-script',
+                        $self->hint('possible-bashism-in-maintainer-script',
                             "$file:$. \'$match\'");
                     }
 
@@ -996,23 +996,23 @@ sub installable {
                         $saw_debconf = 1;
                     }
                     if (m/^\s*read(?:\s|\z)/ && !$saw_debconf) {
-                        $self->tag('read-in-maintainer-script', "$file:$.");
+                        $self->hint('read-in-maintainer-script', "$file:$.");
                     }
 
-                    $self->tag('multi-arch-same-package-calls-pycompile',
+                    $self->hint('multi-arch-same-package-calls-pycompile',
                         "$file:$.")
                       if m/^\s*py3?compile(?:\s|\z)/
                       and ($processable->fields->value('Multi-Arch') || 'no')
                       eq 'same';
 
                     if (m,>\s*/etc/inetd\.conf(?:\s|\Z),) {
-                        $self->tag('maintainer-script-modifies-inetd-conf',
+                        $self->hint('maintainer-script-modifies-inetd-conf',
                             "$file:$.")
                           unless $processable->relation('Provides')
                           ->implies('inet-superserver');
                     }
                     if (m,^\s*(?:cp|mv)\s+(?:.*\s)?/etc/inetd\.conf\s*$,) {
-                        $self->tag('maintainer-script-modifies-inetd-conf',
+                        $self->hint('maintainer-script-modifies-inetd-conf',
                             "$file:$.")
                           unless $processable->relation('Provides')
                           ->implies('inet-superserver');
@@ -1035,7 +1035,7 @@ sub installable {
                                       (/(?:usr/)?s?bin/[\w.+-]+)
                                       (?:\s|;|\Z)}xsm
                         ) {
-                            $self->tag(
+                            $self->hint(
                                 'command-with-path-in-maintainer-script',
                                 "$file:$. $1")
                               unless $in_automatic_section;
@@ -1049,7 +1049,7 @@ sub installable {
                           (/(?:usr/)?s?bin/[\w.+-]+)
                           \s+ \]}xsm
                     ){
-                        $self->tag('command-with-path-in-maintainer-script',
+                        $self->hint('command-with-path-in-maintainer-script',
                             "$file:$. $1")
                           unless $in_automatic_section;
                     }
@@ -1057,7 +1057,7 @@ sub installable {
                     $cmd =~ s/\`[^\`]+\`//g;
                     if ($cmd =~ m,$LEADIN(/(?:usr/)?s?bin/[\w.+-]+)(?:\s|;|$),)
                     {
-                        $self->tag('command-with-path-in-maintainer-script',
+                        $self->hint('command-with-path-in-maintainer-script',
                             "$file:$. $1")
                           unless $in_automatic_section;
                     }
@@ -1078,7 +1078,7 @@ sub installable {
                                 ->implies($package)) {
                                 my $shortpackage = $package;
                                 $shortpackage =~ s/[ \(].*//;
-                                $self->tag(
+                                $self->hint(
 "maintainer-script-needs-depends-on-$shortpackage",
                                     $file
                                 );
@@ -1099,7 +1099,7 @@ m,$LEADIN(?:/usr/bin/)?dpkg\s+--compare-versions\s+.*\b\Q$ver\E(?!\.)\b,
                 ) {
                     my $date= strftime('%Y-%m-%d', gmtime $old_versions{$ver});
                     my $epoch= strftime('%Y-%m-%d', gmtime $OLDSTABLE_RELEASE);
-                    $self->tag(
+                    $self->hint(
                         'maintainer-script-supports-ancient-package-version',
                         "$file:$.", $ver, "($date < $epoch)");
                     last;
@@ -1107,18 +1107,18 @@ m,$LEADIN(?:/usr/bin/)?dpkg\s+--compare-versions\s+.*\b\Q$ver\E(?!\.)\b,
             }
 
             if (m,$LEADIN(?:/usr/sbin/)?update-inetd\s,) {
-                $self->tag(
+                $self->hint(
                     'maintainer-script-has-invalid-update-inetd-options',
                     "$file:$.", '(--pattern with --add)')
                   if /--pattern/ && /--add/;
-                $self->tag(
+                $self->hint(
                     'maintainer-script-has-invalid-update-inetd-options',
                     "$file:$.", '(--group without --add)')
                   if /--group/ && !/--add/;
             }
 
             my $pdepends = $processable->relation('Pre-Depends');
-            $self->tag('skip-systemd-native-flag-missing-pre-depends',
+            $self->hint('skip-systemd-native-flag-missing-pre-depends',
                 "$file:$.")
               if m/invoke-rc.d\b.*--skip-systemd-native\b/
               && !$pdepends->implies('init-system-helpers (>= 1.54~)');
@@ -1126,7 +1126,7 @@ m,$LEADIN(?:/usr/bin/)?dpkg\s+--compare-versions\s+.*\b\Q$ver\E(?!\.)\b,
             if (m,$LEADIN(?:/usr/sbin/)?dpkg-divert\s,
                 && !/--(?:help|list|truename|version)/) {
                 if (/--local/) {
-                    $self->tag('package-uses-local-diversion', "$file:$.");
+                    $self->hint('package-uses-local-diversion', "$file:$.");
                 }
                 my $mode = /--remove/ ? 'remove' : 'add';
                 my ($divert) = /dpkg-divert\s*(.*)$/;
@@ -1184,27 +1184,27 @@ m,$LEADIN(?:/usr/bin/)?dpkg\s+--compare-versions\s+.*\b\Q$ver\E(?!\.)\b,
         }
 
         foreach my $font (@x11_fonts) {
-            $self->tag('missing-call-to-update-fonts', $font)
+            $self->hint('missing-call-to-update-fonts', $font)
               if $file eq 'postinst' and not $saw_update_fonts;
         }
 
         if ($saw_init && !$saw_invoke) {
-            $self->tag('maintainer-script-calls-init-script-directly',
+            $self->hint('maintainer-script-calls-init-script-directly',
                 "$file:$saw_init");
         }
         unless ($has_code) {
-            $self->tag('maintainer-script-empty', $file);
+            $self->hint('maintainer-script-empty', $file);
         }
         if ($shellscript && !$saw_sete) {
             if ($saw_bange) {
-                $self->tag('maintainer-script-without-set-e', $file);
+                $self->hint('maintainer-script-without-set-e', $file);
             } else {
-                $self->tag('maintainer-script-ignores-errors', $file);
+                $self->hint('maintainer-script-ignores-errors', $file);
             }
         }
 
         if ($saw_statoverride_add && !$saw_statoverride_list) {
-            $self->tag('unconditional-use-of-dpkg-statoverride',
+            $self->hint('unconditional-use-of-dpkg-statoverride',
                 "$file:$saw_statoverride_add");
         }
 
@@ -1218,7 +1218,7 @@ m,$LEADIN(?:/usr/bin/)?dpkg\s+--compare-versions\s+.*\b\Q$ver\E(?!\.)\b,
         # dpkg-maintscript-helper(1) recommends the snippets are in all
         # maintainer scripts but they are not strictly required in prerm.
         for my $file (qw(preinst postinst postrm)) {
-            $self->tag('missing-call-to-dpkg-maintscript-helper',
+            $self->hint('missing-call-to-dpkg-maintscript-helper',
                 "$file ($cmd)")
               unless $seen_helper_cmds{$cmd}{$file};
         }
@@ -1291,7 +1291,7 @@ m,$LEADIN(?:/usr/bin/)?dpkg\s+--compare-versions\s+.*\b\Q$ver\E(?!\.)\b,
 
                 $divert = unquote($divert, $expand_diversions);
 
-                $self->tag('remove-of-unknown-diversion', $divert,
+                $self->hint('remove-of-unknown-diversion', $divert,
                     "$script:$line");
             }
         }
@@ -1305,7 +1305,7 @@ m,$LEADIN(?:/usr/bin/)?dpkg\s+--compare-versions\s+.*\b\Q$ver\E(?!\.)\b,
         $divert = unquote($divert, $expand_diversions);
 
         if (not exists $added_diversions{$divertrx}{'removed'}) {
-            $self->tag('orphaned-diversion', $divert, $script);
+            $self->hint('orphaned-diversion', $divert, $script);
         }
 
         # Handle man page diversions somewhat specially.  We may
@@ -1326,13 +1326,13 @@ m,$LEADIN(?:/usr/bin/)?dpkg\s+--compare-versions\s+.*\b\Q$ver\E(?!\.)\b,
         }
 
         if ($expand_diversions) {
-            $self->tag('diversion-for-unknown-file', $divert, "$script:$line")
+            $self->hint('diversion-for-unknown-file', $divert, "$script:$line")
               unless (
                 any { $_ =~ m/$divertrx/ }
                 $processable->installed->sorted_list
               );
         } else {
-            $self->tag('diversion-for-unknown-file', $divert, "$script:$line")
+            $self->hint('diversion-for-unknown-file', $divert, "$script:$line")
               unless $processable->installed->lookup($divert);
         }
     }
@@ -1368,7 +1368,7 @@ sub generic_check_bad_command {
                 my $extrainfo = defined($1) ? "\'$1\'" : '';
                 my $inpackage = $bad_cmd_data->{'in_package'};
                 unless($pkg =~ m{$inpackage}) {
-                    $self->tag($bad_cmd_tag, "$file:$lineno", $extrainfo);
+                    $self->hint($bad_cmd_tag, "$file:$lineno", $extrainfo);
                 }
             }
         }
