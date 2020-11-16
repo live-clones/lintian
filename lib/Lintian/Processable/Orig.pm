@@ -80,16 +80,19 @@ has orig => (
 
         my $combined_errors = EMPTY;
 
+        my %components = %{$self->components};
+
         # keep sort order; root is missing below otherwise
-        my @tarballs
-          = sort_by { $self->components->{$_} } keys %{$self->components};
+        my @tarballs = sort_by { $components{$_} } keys %components;
 
         for my $tarball (@tarballs) {
 
-            my $component = $self->components->{$tarball};
+            my $component = $components{$tarball};
 
             # so far, all archives with components had an extra level
             my $component_dir = $index->basedir;
+            $component_dir .= SLASH . $component
+              if length $component;
 
             my $subindex = Lintian::Index->new;
             $subindex->basedir($component_dir);
@@ -153,6 +156,9 @@ has orig => (
                 $subindex->drop_common_prefix;
                 $subindex->drop_basedir_segment;
             }
+
+            $subindex->capture_common_prefix
+              if length $component;
 
             $index->merge_in($subindex);
 

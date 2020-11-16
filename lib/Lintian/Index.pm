@@ -479,6 +479,75 @@ sub merge_in {
     return;
 }
 
+=item capture_common_prefix
+
+=cut
+
+sub capture_common_prefix {
+    my ($self) = @_;
+
+    my $new_basedir = path($self->basedir)->parent;
+
+    # do nothing in root
+    return
+      if $new_basedir eq SLASH;
+
+    my $segment = path($self->basedir)->basename;
+    die 'Common path segment has no length'
+      unless length $segment;
+
+    my $prefix;
+    if ($self->anchored) {
+        $prefix = SLASH . $segment;
+    } else {
+        $prefix = $segment . SLASH;
+    }
+
+    my $new_root = Lintian::Index::Item->new;
+
+    $new_root->name('');
+    $new_root->childnames({ $segment => $prefix });
+
+    # random but fixed date; hint, it's a good read. :)
+    $new_root->date('1998-01-25');
+    $new_root->time('22:55:34');
+    $new_root->path_info($FILE_CODE2LPATH_TYPE{'d'} | 0755);
+    $new_root->faux(1);
+
+    my %new_catalog;
+    for my $item (values %{$self->catalog}) {
+
+        # drop common prefix from name
+        my $new_name = $prefix . $item->name;
+        $item->name($new_name);
+
+        if (length $item->link) {
+
+            # add common prefix from link target
+            my $new_link = $prefix . $item->link;
+            $item->link($new_link);
+        }
+
+        # adjust references to children
+        for my $basename (keys %{$item->childnames}) {
+            $item->childnames->{$basename}
+              = $prefix . $item->childnames->{$basename};
+        }
+
+        $new_catalog{$new_name} = $item;
+    }
+
+    $new_catalog{''} = $new_root;
+    $new_catalog{$prefix}->parent_dir($new_root);
+
+    $self->catalog(\%new_catalog);
+
+    # remove segment from base directory
+    $self->basedir($new_basedir);
+
+    return;
+}
+
 =item drop_common_prefix
 
 =cut
@@ -526,6 +595,11 @@ sub drop_common_prefix {
             $item->link($new_link);
         }
 
+        # adjust references to children
+        for my $basename (keys %{$item->childnames}) {
+            $item->childnames->{$basename} =~ s{^$regex}{};
+        }
+
         # unsure this works, but orig not anchored
         $new_name = EMPTY
           if $new_name eq SLASH && $self->anchored;
@@ -565,7 +639,8 @@ sub drop_basedir_segment {
 
         # fix Perl unicode bug
         utf8::downgrade $old_name;
-        system('mv', $old_name, $new_base_dir);
+        my @command = ('mv', $old_name, $new_base_dir);
+        system(@command);
     }
 
     rmdir $self->basedir;
