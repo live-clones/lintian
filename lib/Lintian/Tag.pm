@@ -1,5 +1,5 @@
 # -*- perl -*-
-# Lintian::Tag::Info -- interface to tag metadata
+# Lintian::Tag -- interface to tag metadata
 
 # Copyright © 1998 Christian Schwarz and Richard Braakman
 # Copyright © 2009 Russ Allbery
@@ -18,7 +18,7 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Lintian::Tag::Info;
+package Lintian::Tag;
 
 use v5.20;
 use warnings;
@@ -66,11 +66,11 @@ sub _load_manual_data {
 
 =head1 NAME
 
-Lintian::Tag::Info - Lintian interface to tag metadata
+Lintian::Tag - Lintian interface to tag metadata
 
 =head1 SYNOPSIS
 
-    my $taginfo = Lintian::Tag::Info->new;
+    my $tag = Lintian::Tag->new;
 
 =head1 DESCRIPTION
 

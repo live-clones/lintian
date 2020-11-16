@@ -48,7 +48,7 @@ Common facilities for Lintian tags found and to be issued
 =over 4
 
 =item arguments
-=item info
+=item tag
 =item name
 =item override
 =item processable
@@ -60,7 +60,7 @@ Calculate the string representation commonly referred to as 'context'.
 =cut
 
 has arguments => (is => 'rw', default => sub { [] });
-has info => (is => 'rw');
+has tag => (is => 'rw');
 has name => (is => 'rw');
 has override => (is => 'rw');
 has processable => (is => 'rw');

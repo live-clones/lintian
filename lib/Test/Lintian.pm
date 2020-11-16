@@ -80,19 +80,19 @@ use Lintian::Spelling qw(check_spelling);
 use Lintian::Data;
 use Lintian::Deb822::Parser qw(parse_dpkg_control_string);
 use Lintian::Profile;
-use Lintian::Tag::Info;
+use Lintian::Tag;
 
 # We want data files loaded early to avoid problems with missing data
 # files ending up in releases (like in 2.5.17 and 2.5.18).
 $Lintian::Data::LAZY_LOAD = 0;
 
-my %severities = map { $_ => 1 } @Lintian::Tag::Info::SEVERITIES;
+my %severities = map { $_ => 1 } @Lintian::Tag::SEVERITIES;
 my %check_types = map { $_ => 1 } qw(binary changes source udeb);
 my %known_html_tags = map { $_ => 1 } qw(a em i tt);
 
 # We use this to check for explicit links where it is possible to use
 # a manual ref.
-my $MANUALS = $Lintian::Tag::Info::MANUALS;
+my $MANUALS = $Lintian::Tag::MANUALS;
 # lazy-load this (so loading a profile can affect it)
 my %URLS;
 

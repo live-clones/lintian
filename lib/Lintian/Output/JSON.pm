@@ -146,7 +146,7 @@ sub hintlist {
 
     my @sorted = sort {
                defined $a->override <=> defined $b->override
-          ||   $code_priority{$a->info->code}<=> $code_priority{$b->info->code}
+          ||   $code_priority{$a->tag->code}<=> $code_priority{$b->tag->code}
           || $a->name cmp $b->name
           || $a->context cmp $b->context
     } @{$arrayref // []};
@@ -156,14 +156,14 @@ sub hintlist {
         my %hint;
         push(@hints, \%hint);
 
-        $hint{name} = $input->info->name;
+        $hint{name} = $input->tag->name;
 
         $hint{context} = $input->context
           if length $input->context;
 
-        $hint{severity} = $input->info->effective_severity;
+        $hint{severity} = $input->tag->effective_severity;
         $hint{experimental} = 'yes'
-          if $input->info->experimental;
+          if $input->tag->experimental;
 
         if ($input->override) {
 
@@ -183,31 +183,31 @@ sub hintlist {
 =cut
 
 sub describe_tags {
-    my ($self, @tag_infos) = @_;
+    my ($self, @tags) = @_;
 
     my @array;
 
-    for my $tag_info (@tag_infos) {
+    for my $tag (@tags) {
 
         my %dictionary;
 
-        $dictionary{Name} = $tag_info->name;
-        $dictionary{'Name-Spaced'} = $tag_info->name_spaced
-          if length $tag_info->name_spaced;
-        $dictionary{'Show-Always'} = $tag_info->show_always
-          if length $tag_info->show_always;
+        $dictionary{Name} = $tag->name;
+        $dictionary{'Name-Spaced'} = $tag->name_spaced
+          if length $tag->name_spaced;
+        $dictionary{'Show-Always'} = $tag->show_always
+          if length $tag->show_always;
 
-        $dictionary{Explanation} = $tag_info->explanation;
-        $dictionary{'See-Also'} = $tag_info->see_also
-          if @{$tag_info->see_also};
+        $dictionary{Explanation} = $tag->explanation;
+        $dictionary{'See-Also'} = $tag->see_also
+          if @{$tag->see_also};
 
-        $dictionary{Check} = $tag_info->check;
-        $dictionary{Visibility} = $tag_info->visibility;
-        $dictionary{Experimental} = $tag_info->experimental
-          if length $tag_info->experimental;
+        $dictionary{Check} = $tag->check;
+        $dictionary{Visibility} = $tag->visibility;
+        $dictionary{Experimental} = $tag->experimental
+          if length $tag->experimental;
 
-        $dictionary{'Renamed-From'} = $tag_info->renamed_from
-          if @{$tag_info->renamed_from};
+        $dictionary{'Renamed-From'} = $tag->renamed_from
+          if @{$tag->renamed_from};
 
         push(@array, \%dictionary);
     }

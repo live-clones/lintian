@@ -103,7 +103,7 @@ sub issue_hints {
 
     my @sorted = sort {
              defined $a->override <=> defined $b->override
-          || $code_priority{$a->info->code} <=> $code_priority{$b->info->code}
+          || $code_priority{$a->tag->code} <=> $code_priority{$b->tag->code}
           || $a->name cmp $b->name
           || $type_priority{$a->processable->type}
           <=> $type_priority{$b->processable->type}
@@ -116,7 +116,7 @@ sub issue_hints {
     return;
 }
 
-=item C<print_hint($pkg_info, $tag_info, $context, $override)>
+=item C<print_hint($pkg_info, $tag, $context, $override)>
 
 Print a hint.  The first two arguments are hash reference with the
 information about the package and the hint, $context is the context
@@ -129,8 +129,8 @@ override info for this hint.
 sub print_hint {
     my ($self, $hint) = @_;
 
-    my $tag_info = $hint->info;
-    my $tag_name = $tag_info->name;
+    my $tag = $hint->tag;
+    my $tag_name = $tag->name;
 
     my $information = $hint->context;
     $information = SPACE . $self->_quote_print($information)
@@ -155,13 +155,13 @@ sub print_hint {
 
     my $text = $tag_name;
 
-    my $code = $tag_info->code;
+    my $code = $tag->code;
     $code = 'O' if defined $hint->override;
 
     my $tag_color = $self->{colors}{$code};
 
     # keep original color for tags marked experimental
-    $code = 'X' if $tag_info->experimental;
+    $code = 'X' if $tag->experimental;
 
     $text = Term::ANSIColor::colored($tag_name, $tag_color)
       if $self->color;
@@ -194,8 +194,8 @@ sub print_hint {
       . $output
       . $information;
 
-    $self->describe_tags($tag_info)
-      if $self->showdescription && !$self->issued_tag($tag_info->name);
+    $self->describe_tags($tag)
+      if $self->showdescription && !$self->issued_tag($tag->name);
 
     return;
 }
@@ -255,24 +255,24 @@ sub issued_tag {
 =cut
 
 sub describe_tags {
-    my ($self, @tag_infos) = @_;
+    my ($self, @tags) = @_;
 
-    for my $tag_info (@tag_infos) {
+    for my $tag (@tags) {
         my $code = 'N';
         my $description = 'N:   Unknown tag.';
 
-        if (defined $tag_info) {
+        if (defined $tag) {
 
-            $code = $tag_info->code;
+            $code = $tag->code;
 
-            my $plain_text= markdown_to_plain($tag_info->markdown_description);
+            my $plain_text= markdown_to_plain($tag->markdown_description);
             $description = indent_and_wrap($plain_text, 'N:   ');
 
             chomp $description;
         }
 
         my $output = 'N:' . NEWLINE;
-        $output .= $code . COLON . SPACE . $tag_info->name . NEWLINE;
+        $output .= $code . COLON . SPACE . $tag->name . NEWLINE;
         $output .= 'N:' . NEWLINE;
         $output .= $description . NEWLINE;
         $output .= 'N:' . NEWLINE;

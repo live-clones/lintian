@@ -273,7 +273,7 @@ sub process {
             }
 
             # complain about and filter out unknown tags in overrides
-            my @unknown_overrides = grep { !$self->profile->get_taginfo($_) }
+            my @unknown_overrides = grep { !$self->profile->get_tag($_) }
               keys %{$declared_overrides};
             for my $tagname (@unknown_overrides) {
 
@@ -355,7 +355,7 @@ sub process {
         for my $hint (@{$processable->hints}) {
 
             my $declared = $declared_overrides->{$hint->name};
-            if ($declared && !$hint->info->show_always) {
+            if ($declared && !$hint->tag->show_always) {
 
                 # do not use EMPTY; hash keys literal
                 # empty context in specification matches all

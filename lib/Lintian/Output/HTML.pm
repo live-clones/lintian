@@ -156,7 +156,7 @@ sub hintlist {
 
     my @sorted = sort {
                defined $a->override <=> defined $b->override
-          ||   $code_priority{$a->info->code}<=> $code_priority{$b->info->code}
+          ||   $code_priority{$a->tag->code}<=> $code_priority{$b->tag->code}
           || $a->name cmp $b->name
           || $a->context cmp $b->context
     } @{$arrayref // []};
@@ -166,18 +166,18 @@ sub hintlist {
         my %hint;
         push(@hints, \%hint);
 
-        $hint{name} = $input->info->name;
+        $hint{name} = $input->tag->name;
 
         $hint{url} = "https://lintian.debian.org/tags/$hint{name}.html";
 
         $hint{context} = $input->context
           if length $input->context;
 
-        $hint{severity} = $input->info->effective_severity;
+        $hint{severity} = $input->tag->effective_severity;
         $hint{code} = uc substr($hint{severity}, 0, 1);
 
         $hint{experimental} = 'yes'
-          if $input->info->experimental;
+          if $input->tag->experimental;
 
         if ($input->override) {
 
@@ -197,14 +197,14 @@ sub hintlist {
 =cut
 
 sub describe_tags {
-    my ($self, @tag_infos) = @_;
+    my ($self, @tags) = @_;
 
-    for my $tag_info (@tag_infos) {
+    for my $tag (@tags) {
 
-        say '<p>Name: ' . $tag_info->name . '</p>';
+        say '<p>Name: ' . $tag->name . '</p>';
         say EMPTY;
 
-        print markdown($tag_info->markdown_description);
+        print markdown($tag->markdown_description);
     }
 
     return;

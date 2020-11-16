@@ -132,16 +132,16 @@ for my $tagpath (@tagpaths) {
 
     my $html_output = Lintian::Output::HTML->new;
 
-    my $taginfo = $profile->get_taginfo($tagname);
+    my $tag = $profile->get_tag($tagname);
     BAIL_OUT("Tag $tagname was not loaded via profile")
-      unless defined $taginfo;
+      unless defined $tag;
 
     my $html_description;
     open(my $fh, '>:encoding(UTF-8)', \$html_description);
     select $fh;
 
     print "<!DOCTYPE html><head><title>$tagname</title></head><body>";
-    $html_output->describe_tags($taginfo);
+    $html_output->describe_tags($tag);
     say '</body>';
 
     select *STDOUT;

@@ -35,7 +35,7 @@ use Dpkg::Vendor qw(get_current_vendor get_vendor_info);
 use Lintian::Check::Info;
 use Lintian::Data;
 use Lintian::Deb822::File;
-use Lintian::Tag::Info;
+use Lintian::Tag;
 
 use constant EMPTY => q{};
 use constant SPACE => q{ };
@@ -236,18 +236,18 @@ sub load {
           = File::Find::Rule->file->name(qw(*.tag *.desc))->in($tagdir);
         for my $tagpath (@tagpaths) {
 
-            my $taginfo = Lintian::Tag::Info->new;
-            $taginfo->load($tagpath);
+            my $tag = Lintian::Tag->new;
+            $tag->load($tagpath);
 
             die "Tag in $tagpath is not associated with a check"
-              unless length $taginfo->check;
+              unless length $tag->check;
 
             next
-              if exists $self->known_tags_by_name->{$taginfo->name};
+              if exists $self->known_tags_by_name->{$tag->name};
 
-            $self->known_tags_by_name->{$taginfo->name} = $taginfo;
-            $self->check_tagnames->{$taginfo->check} //= [];
-            push(@{$self->check_tagnames->{$taginfo->check}},$taginfo->name);
+            $self->known_tags_by_name->{$tag->name} = $tag;
+            $self->check_tagnames->{$tag->check} //= [];
+            push(@{$self->check_tagnames->{$tag->check}},$tag->name);
         }
     }
 
@@ -283,20 +283,18 @@ sub load {
     $self->read_profile($name);
 
     # record known aliases
-    for my $taginfo (values %{ $self->known_tags_by_name }) {
+    for my $tag (values %{ $self->known_tags_by_name }) {
 
         my @taken
-          = grep { defined $self->known_aliases->{$_} }
-          @{$taginfo->renamed_from};
+          = grep { defined $self->known_aliases->{$_} }@{$tag->renamed_from};
 
         die 'These aliases of the tag '
-          . $taginfo->name
+          . $tag->name
           . ' are taken already: '
           . join(SPACE, @taken)
           if @taken;
 
-        $self->known_aliases->{$_} = $taginfo->name
-          for @{$taginfo->renamed_from};
+        $self->known_aliases->{$_} = $tag->name for @{$tag->renamed_from};
     }
 
     return;
@@ -322,14 +320,14 @@ sub enabled_tags {
     return keys %{ $self->enabled_tags_by_name };
 }
 
-=item $prof->get_taginfo ($name)
+=item $prof->get_tag ($name)
 
-Returns the Lintian::Tag::Info for $tag if known.
+Returns the Lintian::Tag for $tag if known.
 Otherwise it returns undef.
 
 =cut
 
-sub get_taginfo {
+sub get_tag {
     my ($self, $name) = @_;
 
     return $self->known_tags_by_name->{$name};
@@ -390,11 +388,11 @@ Enables a tag.
 sub enable_tag {
     my ($self, $name) = @_;
 
-    my $taginfo = $self->known_tags_by_name->{$name};
+    my $tag = $self->known_tags_by_name->{$name};
     die "Unknown tag $name"
-      unless $taginfo;
+      unless $tag;
 
-    $self->enabled_checks_by_name->{$taginfo->check}++
+    $self->enabled_checks_by_name->{$tag->check}++
       unless exists $self->enabled_tags_by_name->{$name};
 
     $self->enabled_tags_by_name->{$name} = 1;
@@ -411,13 +409,13 @@ Disable a tag.
 sub disable_tag {
     my ($self, $name) = @_;
 
-    my $taginfo = $self->known_tags_by_name->{$name};
+    my $tag = $self->known_tags_by_name->{$name};
     die "Unknown tag $name"
-      unless $taginfo;
+      unless $tag;
 
-    delete $self->enabled_checks_by_name->{$taginfo->check}
+    delete $self->enabled_checks_by_name->{$tag->check}
       unless exists $self->enabled_tags_by_name->{$name}
-      && --$self->enabled_checks_by_name->{$taginfo->check};
+      && --$self->enabled_checks_by_name->{$tag->check};
 
     delete $self->enabled_tags_by_name->{$name};
 
@@ -581,11 +579,11 @@ sub read_profile {
 
         $self->check_tagnames->{$check->name} //= [];
         my @tagnames = @{$self->check_tagnames->{$check->name}};
-        my @taginfos = map { $self->known_tags_by_name->{$_} } @tagnames;
+        my @tags = map { $self->known_tags_by_name->{$_} } @tagnames;
 
-        $_->check_type($check->type) for @taginfos;
+        $_->check_type($check->type) for @tags;
 
-        $check->add_taginfo($_) for @taginfos;
+        $check->add_tag($_) for @tags;
     }
 
     my @enable_tags = $header->trimmed_list('Enable-Tags', qr/\s*,\s*/);
@@ -635,7 +633,7 @@ sub read_profile {
         croak
 "Profile $name contains invalid severity $severity in section $position"
           if length $severity && none { $severity eq $_ }
-        @Lintian::Tag::Info::SEVERITIES;
+        @Lintian::Tag::SEVERITIES;
 
         my $overridable
           = $self->_parse_boolean($section->unfolded_value('Overridable'),
@@ -643,15 +641,15 @@ sub read_profile {
 
         for my $tagname (@tags) {
 
-            my $taginfo = $self->known_tags_by_name->{$tagname};
+            my $tag = $self->known_tags_by_name->{$tagname};
             croak "Unknown tag $tagname in $name (section $position)"
-              unless defined $taginfo;
+              unless defined $tag;
 
             croak
 "Classification tag $tagname cannot take a severity (profile $name, section $position"
-              if $taginfo->visibility eq 'classification';
+              if $tag->visibility eq 'classification';
 
-            $taginfo->effective_severity($severity)
+            $tag->effective_severity($severity)
               if length $severity;
 
             if ($overridable != -1) {
@@ -700,13 +698,13 @@ sub _parse_boolean {
 =cut
 
 sub display_level_for_tag {
-    my ($self, $tag) = @_;
+    my ($self, $tagname) = @_;
 
-    my $taginfo = $self->get_taginfo($tag);
-    croak "Unknown tag $tag"
-      unless defined $taginfo;
+    my $tag = $self->get_tag($tagname);
+    croak "Unknown tag $tagname"
+      unless defined $tag;
 
-    return $self->display_level_lookup->{$taginfo->effective_severity};
+    return $self->display_level_lookup->{$tag->effective_severity};
 }
 
 =item tag_is_enabled(TAG)
@@ -714,10 +712,10 @@ sub display_level_for_tag {
 =cut
 
 sub tag_is_enabled {
-    my ($self, $tag) = @_;
+    my ($self, $tagname) = @_;
 
     return 1
-      if exists $self->enabled_tags_by_name->{$tag};
+      if exists $self->enabled_tags_by_name->{$tagname};
 
     return 0;
 }
@@ -809,7 +807,7 @@ sub display {
     }
 
     if ($op eq '=') {
-        for my $s (@Lintian::Tag::Info::SEVERITIES) {
+        for my $s (@Lintian::Tag::SEVERITIES) {
             $self->display_level_lookup->{$s} = 0;
         }
     }
@@ -818,10 +816,10 @@ sub display {
 
     my @severities;
     if ($severity) {
-        @severities = $self->_relation_subset($severity, $rel,
-            @Lintian::Tag::Info::SEVERITIES);
+        @severities
+          = $self->_relation_subset($severity, $rel,@Lintian::Tag::SEVERITIES);
     } else {
-        @severities = @Lintian::Tag::Info::SEVERITIES;
+        @severities = @Lintian::Tag::SEVERITIES;
     }
 
     unless (@severities) {

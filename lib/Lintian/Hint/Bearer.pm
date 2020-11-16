@@ -66,7 +66,7 @@ sub hint {
     $hint->name($tagname);
     $hint->arguments(\@context_components);
 
-    $hint->info($self->profile->get_taginfo($tagname));
+    $hint->tag($self->profile->get_tag($tagname));
 
     push(@{$self->hints}, $hint);
 

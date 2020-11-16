@@ -164,11 +164,11 @@ for my $line (<STDIN>) {
     next
       if $already_displayed{$tag_name}++;
 
-    my $tag_info = $profile->get_taginfo($tag_name);
+    my $tag = $profile->get_tag($tag_name);
     next
-      unless defined $tag_info;
+      unless defined $tag;
 
-    $output->describe_tags($tag_info);
+    $output->describe_tags($tag);
 }
 
 exit;

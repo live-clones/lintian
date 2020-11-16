@@ -142,13 +142,13 @@ my @selected = @ARGV;
 @selected = $profile->enabled_tags
   unless @selected;
 
-my @available = grep { defined} map { $profile->get_taginfo($_) } @selected;
+my @available = grep { defined} map { $profile->get_tag($_) } @selected;
 
 my @sorted = sort { lc($a->name) cmp lc($b->name) } @available;
 
 $output->describe_tags(@sorted);
 
-exit any { !defined $profile->get_taginfo($_) } @selected;
+exit any { !defined $profile->get_tag($_) } @selected;
 
 sub show_version {
     my $version = $LINTIAN_VERSION // guess_version($ENV{LINTIAN_BASE});

@@ -172,12 +172,12 @@ sub process{
         $_->hints([]) for $group->get_processables;
 
         my @reported = grep { !$_->override } @hints;
-        my @reported_trusted = grep { !$_->info->experimental } @reported;
-        my @reported_experimental = grep { $_->info->experimental } @reported;
+        my @reported_trusted = grep { !$_->tag->experimental } @reported;
+        my @reported_experimental = grep { $_->tag->experimental } @reported;
 
         my @override = grep { $_->override } @hints;
-        my @override_trusted = grep { !$_->info->experimental } @override;
-        my @override_experimental = grep { $_->info->experimental } @override;
+        my @override_trusted = grep { !$_->tag->experimental } @override;
+        my @override_experimental = grep { $_->tag->experimental } @override;
 
         $unused_overrides+= scalar grep {
                  $_->name eq 'mismatched-override'
@@ -185,13 +185,13 @@ sub process{
         } @hints;
 
         my %reported_count;
-        $reported_count{$_->info->effective_severity}++ for @reported_trusted;
+        $reported_count{$_->tag->effective_severity}++ for @reported_trusted;
         $reported_count{experimental} += scalar @reported_experimental;
         $reported_count{override} += scalar @override;
 
         unless ($option->{'no-override'} || $option->{'show-overrides'}) {
 
-            $override_count{$_->info->effective_severity}++
+            $override_count{$_->tag->effective_severity}++
               for @override_trusted;
             $override_count{experimental} += scalar @override_experimental;
         }
@@ -203,7 +203,7 @@ sub process{
         @hints= grep { $PROFILE->tag_is_enabled($_->name) } @hints;
 
         # discard experimental tags
-        @hints = grep { !$_->info->experimental } @hints
+        @hints = grep { !$_->tag->experimental } @hints
           unless $option->{'display-experimental'};
 
         # discard overridden tags
@@ -218,7 +218,7 @@ sub process{
 
             my @topic_hints;
             for my $hint (@hints) {
-                my @references = split(/,/, $hint->info->references);
+                my @references = split(/,/, $hint->tag->references);
 
                 # retain the first word
                 s/^([\w-]+)\s.*/$1/ for @references;

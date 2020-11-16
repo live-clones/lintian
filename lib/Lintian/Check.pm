@@ -157,15 +157,16 @@ sub hint {
 
     my $tagname = $arguments[0];
 
-    my $taginfo = $self->info->get_tag($tagname);
+    my $tag = $self->info->get_tag($tagname);
+    unless (defined $tag) {
 
-    unless (defined $taginfo) {
         warn 'Check ' . $self->info->name . " has no tag $tagname.";
+
         return;
     }
 
     # could be name-spaced
-    $arguments[0] = $taginfo->name;
+    $arguments[0] = $tag->name;
 
     return $self->processable->hint(@arguments);
 }
