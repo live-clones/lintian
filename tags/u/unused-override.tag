@@ -1,5 +1,6 @@
 Tag: unused-override
 Severity: info
+Show-Always: yes
 Check: lintian
 Explanation: Your package specifies the named override but there were no
  tags that could have been silenced by it.

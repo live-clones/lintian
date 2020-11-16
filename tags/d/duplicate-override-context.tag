@@ -1,5 +1,6 @@
 Tag: duplicate-override-context
 Severity: warning
+Show-Always: yes
 Check: lintian
 Explanation: The given lines in the applicable override file refer to
  the same tag with the same context. It is redundant at best, and

@@ -207,6 +207,9 @@ sub process {
     my $success = 1;
     for my $processable ($self->get_processables){
 
+        # needed to read tag specifications
+        $processable->profile($self->profile);
+
         my $declared_overrides;
 
         $OUTPUT->debug_msg(1,
@@ -346,15 +349,13 @@ sub process {
           @{$processable->tags};
         $processable->tags(\@enabled_tags);
 
-        my @indelible_tags
-          = qw(malformed-override unused-override mismatched-override renamed-tag duplicate-override-context);
         my %used_overrides;
 
         my @keep_tags;
         for my $tag (@{$processable->tags}) {
 
             my $declared = $declared_overrides->{$tag->name};
-            if ($declared && none { $tag->name eq $_ } @indelible_tags) {
+            if ($declared && !$tag->info->show_always) {
 
                 # do not use EMPTY; hash keys literal
                 # empty context in specification matches all
@@ -421,10 +422,6 @@ sub process {
                 $processable->tag($condition, $original_name, $context);
             }
         }
-
-        # copy tag specifications into tags
-        $_->info($self->profile->get_taginfo($_->name))
-          for @{$processable->tags};
     }
 
     $self->processing_end(gmtime->datetime . 'Z');

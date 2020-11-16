@@ -194,6 +194,8 @@ sub describe_tags {
         $dictionary{Name} = $tag_info->name;
         $dictionary{'Name-Spaced'} = $tag_info->name_spaced
           if length $tag_info->name_spaced;
+        $dictionary{'Show-Always'} = $tag_info->show_always
+          if length $tag_info->show_always;
 
         $dictionary{Explanation} = $tag_info->explanation;
         $dictionary{'See-Also'} = $tag_info->see_also

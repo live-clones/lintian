@@ -92,6 +92,8 @@ metadata elements or to format the tag description.
 
 =item name_spaced
 
+=item show_always
+
 =item check_type
 
 =item experimental
@@ -152,6 +154,12 @@ has name_spaced => (
     default => 0
 );
 
+has show_always => (
+    is => 'rw',
+    coerce => sub { my ($boolean) = @_; return ($boolean // 0); },
+    default => 0
+);
+
 has check_type => (
     is => 'rw',
     coerce => sub { my ($text) = @_; return ($text // EMPTY); },
@@ -201,6 +209,7 @@ sub load {
 
     $self->check($fields->value('Check'));
     $self->name_spaced($fields->value('Name-Spaced') eq 'yes');
+    $self->show_always($fields->value('Show-Always') eq 'yes');
 
     my $name = $fields->value('Tag');
     $name = $self->check . SLASH . $name

@@ -33,7 +33,7 @@ Lintian::Tag::Bearer -- Facilities for objects receiving Lintian tags
 
 =head1 SYNOPSIS
 
- use Moo;
+use Moo;
 use namespace::clean;
 
  with('Lintian::Tag::Bearer');
@@ -45,6 +45,12 @@ A class for collecting Lintian tags as they are found
 =head1 INSTANCE METHODS
 
 =over 4
+
+=item profile
+
+=cut
+
+has profile => (is => 'rw');
 
 =item tag (ARGS)
 
@@ -59,6 +65,8 @@ sub tag {
     my $tag = Lintian::Tag::Standard->new;
     $tag->name($tagname);
     $tag->arguments(\@context_components);
+
+    $tag->info($self->profile->get_taginfo($tagname));
 
     push(@{$self->tags}, $tag);
 

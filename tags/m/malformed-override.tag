@@ -1,5 +1,6 @@
 Tag: malformed-override
 Severity: error
+Show-Always: yes
 Check: lintian
 See-Also: lintian 2.4.1
 Explanation: Lintian discovered an override entry with an invalid format. An
