@@ -32,6 +32,7 @@ $convert->html_render_class('My::Pod::Simple::HTML');
 $convert->contents_page_start(header());
 # No footer - it contains a "current time" and is thus unreproducible
 $convert->contents_page_end(q{});
+$convert->css_flurry(0);
 $convert->batch_convert(\@input, $output);
 
 print "HTML version available at $output/index.html\n";
