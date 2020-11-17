@@ -248,6 +248,19 @@ sub load {
             $self->known_tags_by_name->{$tag->name} = $tag;
             $self->check_tagnames->{$tag->check} //= [];
             push(@{$self->check_tagnames->{$tag->check}},$tag->name);
+
+            # record known aliases
+            my @taken
+              = grep { defined $self->known_aliases->{$_} }
+              @{$tag->renamed_from};
+
+            die 'These aliases of the tag '
+              . $tag->name
+              . ' are taken already: '
+              . join(SPACE, @taken)
+              if @taken;
+
+            $self->known_aliases->{$_} = $tag->name for @{$tag->renamed_from};
         }
     }
 
@@ -281,21 +294,6 @@ sub load {
     $self->known_checks_by_name->{lintian} = $lintian;
 
     $self->read_profile($name);
-
-    # record known aliases
-    for my $tag (values %{ $self->known_tags_by_name }) {
-
-        my @taken
-          = grep { defined $self->known_aliases->{$_} }@{$tag->renamed_from};
-
-        die 'These aliases of the tag '
-          . $tag->name
-          . ' are taken already: '
-          . join(SPACE, @taken)
-          if @taken;
-
-        $self->known_aliases->{$_} = $tag->name for @{$tag->renamed_from};
-    }
 
     return;
 }
@@ -388,6 +386,14 @@ Enables a tag.
 sub enable_tag {
     my ($self, $name) = @_;
 
+    my $renamed = $self->known_aliases->{$name};
+    if (length $renamed) {
+
+        warn
+"The tag $name was renamed to $renamed. Please adjust your profile.\n";
+        $name = $renamed;
+    }
+
     my $tag = $self->known_tags_by_name->{$name};
     die "Unknown tag $name"
       unless $tag;
@@ -408,6 +414,14 @@ Disable a tag.
 
 sub disable_tag {
     my ($self, $name) = @_;
+
+    my $renamed = $self->known_aliases->{$name};
+    if (length $renamed) {
+
+        warn
+"The tag $name was renamed to $renamed. Please adjust your profile.\n";
+        $name = $renamed;
+    }
 
     my $tag = $self->known_tags_by_name->{$name};
     die "Unknown tag $name"
@@ -603,12 +617,6 @@ sub read_profile {
 
     push(@disable_tags, $self->known_checks_by_name->{$_}->tags)
       for @disable_checks;
-
-    my @unknown_tags = grep { !exists $self->known_tags_by_name->{$_} }
-      uniq(@enable_tags, @disable_tags);
-
-    croak "Unknown tags in profile $name: " . join(SPACE, @unknown_tags)
-      if @unknown_tags;
 
     $self->enable_tag($_) for @enable_tags;
     $self->disable_tag($_) for @disable_tags;
