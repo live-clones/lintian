@@ -48,6 +48,7 @@ my $UNKNOWN_SHARED_LIBRARY_EXCEPTIONS
 # List of symbols file meta-fields.
 my %symbols_meta_fields = map { $_ => 1 }qw(
   Build-Depends-Package
+  Build-Depends-Packages
   Ignore-Blacklist-Groups
 );
 
