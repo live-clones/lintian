@@ -20,15 +20,8 @@ if (!-d $output) {
     mkdir $output or die "could not create directory: $!";
 }
 
-$Pod::Simple::HTML::Doctype_decl
-  = q{<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"}
-  . qq{ "http://www.w3.org/TR/html4/loose.dtd">\n};
-
-$Pod::Simple::HTML::Content_decl
-  = q{<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">};
-
 my $convert = Pod::Simple::HTMLBatch->new;
-$convert->html_render_class('My::Pod::Simple::HTML');
+$convert->html_render_class('My::Pod::Simple::XHTML');
 $convert->contents_page_start(header());
 # No footer - it contains a "current time" and is thus unreproducible
 $convert->contents_page_end(q{});
@@ -82,15 +75,27 @@ sub guess_version {
     return $version;
 }
 
-package My::Pod::Simple::HTML;
+package My::Pod::Simple::XHTML;
 
 use strict;
 use warnings;
-use parent qw(Pod::Simple::HTML);
+use parent qw(Pod::Simple::XHTML);
 
 # Skip the version tag (incl. a date) to get reproducible output
 sub version_tag_comment {
     return q{};
+}
+
+sub batch_mode_page_object_init {
+    my ($self) = @_;
+
+    $self->html_doctype(
+'<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">'
+    );
+
+    $self->html_charset('UTF-8');
+
+    return;
 }
 
 # Local Variables:
