@@ -128,7 +128,7 @@ has orig => (
             my @prefixes = grep { length } keys %{$subindex->catalog};
 
             # keep top level prefixes
-            s{^([^/]+)/.*$}{$1}s for @prefixes;
+            s{^([^/]+).*$}{$1}s for @prefixes;
 
             # squash identical values
             my @unique = uniq @prefixes;
@@ -152,7 +152,7 @@ has orig => (
             $subindex->load;
 
             # keep common prefix when equal to the source component
-            if ($unwanted ne $component) {
+            if (length $unwanted && $unwanted ne $component) {
                 $subindex->drop_common_prefix;
                 $subindex->drop_basedir_segment;
             }
