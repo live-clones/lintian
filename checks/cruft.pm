@@ -587,9 +587,11 @@ sub visit_patched_files {
         close($fd);
     }
 
+    # see Bug#972614
     $self->tag('package-does-not-install-examples', $item)
       if $item->basename eq 'examples'
       && $item->dirname !~ m{(?:^|/)(?:vendor|third_party)/}
+      && $self->group->get_processables('binary')
       && !$self->group_ships_examples;
 
     return;

@@ -182,6 +182,7 @@ Enable-Tags-From-Check:
  languages/python/obsolete,
  languages/python/scripts,
  languages/r/site-library,
+ languages/rust,
  libraries/shared/obsolete,
  linda,
  lintian,

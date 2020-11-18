@@ -1,0 +1,17 @@
+Source: [% $source %]
+Priority: optional
+Section: libs
+Maintainer: [% $author %]
+Standards-Version: [% $standards_version %]
+Build-Depends: [% $build_depends %]
+Rules-Requires-Root: no
+
+Package: librust-path-abs+serde-derive-dev
+Architecture: [% $package_architecture %]
+Depends: librust-path-abs-dev (= 0.5.0-1), librust-serde-derive-1+default-dev
+Provides: librust-path-abs-0+serde-derive-dev (= 0.5.0-1),
+ librust-path-abs-0.5+serde-derive-dev (= 0.5.0-1),
+ librust-path-abs-0.5.0+serde-derive-dev (= 0.5.0-1)
+Description: Ergonomic paths and files in rust - feature "serde_derive"
+ This metapackage enables feature "serde_derive" for the Rust path_abs crate, by
+ pulling in any additional dependencies needed by that feature.

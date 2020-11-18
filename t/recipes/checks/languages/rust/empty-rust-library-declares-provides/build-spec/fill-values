@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: empty-rust-library-declares-provides
+Description: Empty Rust library that declares a Provides field
