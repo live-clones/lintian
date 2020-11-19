@@ -76,7 +76,7 @@ has orig => (
           if $self->native;
 
         # source packages can be unpacked anywhere; no anchored roots
-        $index->allow_empty(1);
+        $index->anchored(0);
 
         my $combined_errors = EMPTY;
 
@@ -98,7 +98,7 @@ has orig => (
             $subindex->basedir($component_dir);
 
             # source packages can be unpacked anywhere; no anchored roots
-            $subindex->allow_empty(1);
+            $index->anchored(0);
 
             my ($extension) = ($tarball =~ /\.([^.]+)$/);
             die "Source component $tarball has no file exension\n"

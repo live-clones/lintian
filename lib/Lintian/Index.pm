@@ -90,8 +90,6 @@ Returns the base directory for file references.
 
 =item C<anchored>
 
-=item C<allow_empty>
-
 =cut
 
 has catalog => (
@@ -128,7 +126,6 @@ has basedir => (
 );
 
 has anchored => (is => 'rw', default => 0);
-has allow_empty => (is => 'rw', default => 0);
 
 =item sorted_list
 
@@ -333,10 +330,22 @@ sub load {
         } while ($parentname ne EMPTY);
     }
 
-    # all missing directories have been generated
-    die 'The root dir should be present or have been faked'
-      unless exists $all{''} || $self->allow_empty;
+    # insert root for empty tarfies like suckless-tools_45.orig.tar.xz
+    unless (exists $all{''}) {
 
+        my $root = Lintian::Index::Item->new;
+        $root->index($self);
+
+        $root->name(EMPTY);
+        $root->path_info($FILE_CODE2LPATH_TYPE{'d'} | 0755);
+
+        # random but fixed date; hint, it's a good read. :)
+        $root->date('1998-01-25');
+        $root->time('22:55:34');
+        $root->faux(1);
+
+        $all{''} = $root;
+    }
 
     my @directories
       = grep { $_->path_info & Lintian::Index::Item::TYPE_DIR } values %all;
@@ -454,9 +463,6 @@ sub merge_in {
 
     die 'Need same anchoring status'
       unless $self->anchored == $other->anchored;
-
-    die 'Need same tolerance for empty index'
-      unless $self->allow_empty == $other->allow_empty;
 
     # associate all new items with this index
     $_->index($self) for values %{$other->catalog};
