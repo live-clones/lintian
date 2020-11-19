@@ -215,6 +215,7 @@ sub create_from_piped_tar {
 
         my $entry = Lintian::Index::Item->new;
         $entry->init_from_tar_output($line);
+        $entry->index($self);
 
         $catalog{$entry->name} = $entry;
     }
@@ -222,6 +223,7 @@ sub create_from_piped_tar {
     # get numerical owners from second list
     for my $line (@numeric_owner) {
 
+        # entry not used outside this loop
         my $entry = Lintian::Index::Item->new;
         $entry->init_from_tar_output($line);
 
@@ -313,6 +315,8 @@ sub load {
             unless (exists $all{$parentname}) {
 
                 my $added = Lintian::Index::Item->new;
+                $added->index($self);
+
                 $added->name($parentname);
                 $added->path_info($FILE_CODE2LPATH_TYPE{'d'} | 0755);
 
@@ -333,8 +337,6 @@ sub load {
     die 'The root dir should be present or have been faked'
       unless exists $all{''} || $self->allow_empty;
 
-    # add index to all entries, including generated
-    $_->index($self) for values %all;
 
     my @directories
       = grep { $_->path_info & Lintian::Index::Item::TYPE_DIR } values %all;
@@ -504,6 +506,9 @@ sub capture_common_prefix {
     }
 
     my $new_root = Lintian::Index::Item->new;
+
+    # associate new item with this index
+    $new_root->index($self);
 
     $new_root->name('');
     $new_root->childnames({ $segment => $prefix });

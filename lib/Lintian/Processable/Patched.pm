@@ -132,6 +132,7 @@ has patched => (
         while (defined(my $first = shift @lines)) {
 
             my $entry = Lintian::Index::Item->new;
+            $entry->index($index);
 
             $first
               =~ /^($permissionspattern)\ ($sizepattern)\ ($datepattern)\+($timepattern)$/s;
