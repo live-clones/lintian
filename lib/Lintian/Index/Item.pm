@@ -134,6 +134,10 @@ sub get_quoted_filename {
     # convert c-style escapes
     my $name = unescape_c_style($cstylename);
 
+    # slashes cannot appear in names but are sometimes doubled
+    # as in emboss-explorer_2.2.0-10.dsc
+    $name =~ s{/+}{/}g;
+
     return ($name, $extra);
 }
 
