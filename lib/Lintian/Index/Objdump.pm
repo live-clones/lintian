@@ -120,7 +120,9 @@ sub add_objdump {
               unless $container eq $file->name;
 
             my $per_file = shift @per_files;
-            die "No readelf output for $recorded_name"
+
+            # ignore empty archives, such as in musl-dev_1.2.1-1_amd64.deb
+            next
               unless length $per_file;
 
             $parsed .= parse_per_file($per_file, $recorded_name);
