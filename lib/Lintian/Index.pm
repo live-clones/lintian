@@ -623,29 +623,52 @@ sub drop_basedir_segment {
     my ($self) = @_;
 
     my $obsolete = path($self->basedir)->basename;
-    die 'Not enough segments in'
+    die 'Base directory has no name'
       unless length $obsolete;
 
-    my $new_base_dir = path($self->basedir)->parent->stringify;
-    die 'Will not move contents to root'
-      if $new_base_dir eq SLASH;
+    my $parent_dir = path($self->basedir)->parent->stringify;
+    die 'Base directory has no parent'
+      if $parent_dir eq SLASH;
 
-    die "Do not yet know how to rename repeating segment $obsolete"
-      if -e $self->basedir . SLASH . $obsolete;
+    my $grandparent_dir = path($parent_dir)->parent->stringify;
+    die 'Will not do anything in file system root'
+      if $grandparent_dir eq SLASH;
 
-    # overwrite contents a level lower
+    # destroyed when object is lost
+    my $tempdir_tiny
+      = path($grandparent_dir)->tempdir(TEMPLATE => 'customXXXXXXXX');
+
+    my $tempdir = $tempdir_tiny->stringify;
+
+    # addresses Perl unicode bug
+    utf8::downgrade $tempdir;
+
+    # avoids conflict in case of repeating path segments
     for my $child (path($self->basedir)->children) {
         my $old_name = $child->stringify;
 
-        # fix Perl unicode bug
+        # addresses Perl unicode bug
         utf8::downgrade $old_name;
-        my @command = ('mv', $old_name, $new_base_dir);
+
+        my @command = ('mv', $old_name, $tempdir);
         system(@command);
     }
 
     rmdir $self->basedir;
+    $self->basedir($parent_dir);
 
-    $self->basedir($new_base_dir);
+    # addresses Perl unicode bug
+    utf8::downgrade $parent_dir;
+
+    for my $child ($tempdir_tiny->children) {
+        my $old_name = $child->stringify;
+
+        # addresses Perl unicode bug
+        utf8::downgrade $old_name;
+
+        my @command = ('mv', $old_name, $parent_dir);
+        system(@command);
+    }
 
     return;
 }
