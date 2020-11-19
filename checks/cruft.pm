@@ -574,19 +574,17 @@ sub visit_patched_files {
         $self->hint('ancient-libtool', $item->name);
     }elsif ($item->basename eq 'ltmain.sh'
         and not $self->libtool_in_build_depends){
-        open(my $fd, '<', $item->unpacked_path);
-        while (<$fd>) {
-            if (/^VERSION=[\"\']?(1\.(\d)\.(\d+)(?:-(\d))?)/) {
-                my ($version, $major, $minor, $debian)=($1, $2, $3, $4);
-                if ($major < 5 or ($major == 5 and $minor < 2)) {
-                    $self->hint('ancient-libtool', $item->name, $version);
-                }elsif ($minor == 2 and (!$debian || $debian < 2)) {
-                    $self->hint('ancient-libtool', $item->name, $version);
-                }
-                last;
+
+        if ($item->bytes =~ /^VERSION=[\"\']?(1\.(\d)\.(\d+)(?:-(\d))?)/m) {
+            my ($version, $major, $minor, $debian)=($1, $2, $3, $4);
+
+            if ($major < 5 or ($major == 5 and $minor < 2)) {
+                $self->hint('ancient-libtool', $item->name, $version);
+
+            } elsif ($minor == 2 and (!$debian || $debian < 2)) {
+                $self->hint('ancient-libtool', $item->name, $version);
             }
         }
-        close($fd);
     }
 
     # see Bug#972614
