@@ -300,6 +300,10 @@ sub parse_per_file {
                 my $version_number = $1;
                 my $version_string = $2;
 
+                # for libfuse2_2.9.9-3_amd64.deb
+                next
+                  unless defined $version_string;
+
                 $version_string = "($version_string)"
                   if $version_number =~ /h$/;
 
