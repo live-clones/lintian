@@ -67,8 +67,6 @@ has control => (
         my ($extract_errors, $index_errors)
           = $index->create_from_piped_tar(\@command);
 
-        $index->load;
-
         $self->hint('unpack-message-for-deb-control', $_)
           for split(/\n/, $extract_errors . $index_errors);
 

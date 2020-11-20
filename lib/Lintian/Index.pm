@@ -23,6 +23,8 @@ use utf8;
 use autodie;
 
 use Carp;
+use Cwd;
+use IPC::Run3;
 use List::MoreUtils qw(any);
 use Path::Tiny;
 
@@ -188,6 +190,84 @@ sub resolve_path {
     return $self->lookup->resolve_path($name);
 }
 
+=item create_from_basedir
+
+=cut
+
+sub create_from_basedir {
+    my ($self) = @_;
+
+    my $savedir = getcwd;
+    chdir($self->basedir);
+
+    # get times in UTC
+    my @index_command
+      = ('env', 'TZ=UTC', 'find', '-printf', '%M %s %A+\0%p\0%l\0');
+    my $index_output;
+    my $index_errors;
+
+    run3(\@index_command, \undef, \$index_output, \$index_errors);
+
+    chdir($savedir);
+
+    my $permissionspattern = qr,\S{10},;
+    my $sizepattern = qr,\d+,;
+    my $datepattern = qr,\d{4}-\d{2}-\d{2},;
+    my $timepattern = qr,\d{2}:\d{2}:\d{2}\.\d+,;
+    my $pathpattern = qr,[^\0]*,;
+
+    my %all;
+
+    $index_output =~ s/\0$//;
+
+    my @lines = split(/\0/, $index_output, -1);
+    die 'Did not get a multiple of three lines from find.'
+      unless @lines % 3 == 0;
+
+    while (defined(my $first = shift @lines)) {
+
+        my $entry = Lintian::Index::Item->new;
+        $entry->index($self);
+
+        $first
+          =~ /^($permissionspattern)\ ($sizepattern)\ ($datepattern)\+($timepattern)$/s;
+
+        $entry->perm($1);
+        $entry->size($2);
+        $entry->date($3);
+        $entry->time($4);
+
+        my $name = shift @lines;
+
+        my $linktarget = shift @lines;
+
+        # for non-links, string is empty
+        $entry->link($linktarget)
+          if length $linktarget;
+
+        # find prints single dot for base; removed in next step
+        $name =~ s{^\.$}{\./}s;
+
+        # strip relative prefix
+        $name =~ s{^\./+}{}s;
+
+        # make sure directories end with a slash, except root
+        $name .= SLASH
+          if length $name
+          && $entry->perm =~ /^d/
+          && substr($name, -1) ne SLASH;
+        $entry->name($name);
+
+        $all{$entry->name} = $entry;
+    }
+
+    $self->catalog(\%all);
+
+    $self->load;
+
+    return ($index_errors);
+}
+
 =item create_from_piped_tar
 
 =cut
@@ -233,6 +313,8 @@ sub create_from_piped_tar {
     }
 
     $self->catalog(\%catalog);
+
+    $self->load;
 
     return ($extract_errors, $index_errors);
 }
@@ -622,6 +704,8 @@ sub drop_common_prefix {
 
     # add dropped segment to base directory
     $self->basedir($self->basedir . SLASH . $segment);
+
+    $self->drop_basedir_segment;
 
     return;
 }

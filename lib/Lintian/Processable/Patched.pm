@@ -71,8 +71,7 @@ has patched => (
         $index->basedir($self->basedir . SLASH . 'unpacked');
 
         # source packages can be unpacked anywhere; no anchored roots
-
-        my $savedir = getcwd;
+        $index->anchored(0);
 
         path($index->basedir)->remove_tree
           if -d $index->basedir;
@@ -104,69 +103,10 @@ has patched => (
 
         umask $saved_umask;
 
-        # chdir for index_src
+        my $index_errors = $index->create_from_basedir;
+
+        my $savedir = getcwd;
         chdir($index->basedir);
-
-        # get times in UTC
-        my @index_command
-          = ('env', 'TZ=UTC', 'find', '-printf', '%M %s %A+\0%p\0%l\0');
-        my $index_output;
-        my $index_errors;
-
-        run3(\@index_command, \undef, \$index_output, \$index_errors);
-
-        my $permissionspattern = qr,\S{10},;
-        my $sizepattern = qr,\d+,;
-        my $datepattern = qr,\d{4}-\d{2}-\d{2},;
-        my $timepattern = qr,\d{2}:\d{2}:\d{2}\.\d+,;
-        my $pathpattern = qr,[^\0]*,;
-
-        my %all;
-
-        $index_output =~ s/\0$//;
-
-        my @lines = split(/\0/, $index_output, -1);
-        die 'Did not get a multiple of three lines from find.'
-          unless @lines % 3 == 0;
-
-        while (defined(my $first = shift @lines)) {
-
-            my $entry = Lintian::Index::Item->new;
-            $entry->index($index);
-
-            $first
-              =~ /^($permissionspattern)\ ($sizepattern)\ ($datepattern)\+($timepattern)$/s;
-
-            $entry->perm($1);
-            $entry->size($2);
-            $entry->date($3);
-            $entry->time($4);
-
-            my $name = shift @lines;
-
-            my $linktarget = shift @lines;
-
-            # for non-links, string is empty
-            $entry->link($linktarget)
-              if length $linktarget;
-
-            # find prints single dot for base; removed in next step
-            $name =~ s{^\.$}{\./}s;
-
-            # strip relative prefix
-            $name =~ s{^\./+}{}s;
-
-            # make sure directories end with a slash, except root
-            $name .= SLASH
-              if length $name
-              && $entry->perm =~ /^d/
-              && substr($name, -1) ne SLASH;
-            $entry->name($name);
-
-            $all{$entry->name} = $entry;
-        }
-
-        $index->catalog(\%all);
 
         # fix permissions
         my @permissions_command
@@ -176,8 +116,6 @@ has patched => (
         run3(\@permissions_command, \undef, \undef, \$permissions_errors);
 
         chdir($savedir);
-
-        $index->load;
 
         $self->hint('unpack-message-for-source', $_)
           for

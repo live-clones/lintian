@@ -115,55 +115,58 @@ has orig => (
               = $subindex->create_from_piped_tar(\@command);
 
             $combined_errors .= $extract_errors . $index_errors;
+            $self->hint('unpack-message-for-orig', $_)
+              for split(/\n/, $combined_errors);
 
             # treat hard links like regular files
-            for my $item (values %{$subindex->catalog}) {
+            my @hardlinks = grep { $_->is_hardlink } $subindex->sorted_list;
+            for my $item (@hardlinks) {
 
+                my $target = $subindex->lookup($item->link);
+
+                $item->unpacked_path($target->unpacked_path);
+                $item->size($target->size);
+                $item->link(EMPTY);
+
+                # turn into a regular file
                 my $perm = $item->perm;
-                $perm =~ s/^h/-/;
+                $perm =~ s/^-/h/;
                 $item->perm($perm);
+
+                $item->path_info(
+                    ($item->path_info & ~Lintian::Index::Item::TYPE_HARDLINK)
+                    | Lintian::Index::Item::TYPE_FILE);
             }
 
-            # removes root entry (''); do not use sorted_list
-            my @prefixes = grep { length } keys %{$subindex->catalog};
+            my @prefixes = $subindex->sorted_list;
 
-            # keep top level prefixes
+            # keep top level prefixes; no trailing slashes
             s{^([^/]+).*$}{$1}s for @prefixes;
 
-            # squash identical values
-            my @unique = uniq @prefixes;
+            # squash identical values; ignore root entry ('')
+            my @unique = grep { length } uniq @prefixes;
 
-            # unwanted top-level common prefix
-            my $unwanted = EMPTY;
-
-            # check for a single common value
+            # check for single common value
             if (@unique == 1) {
+
+                # no trailing slash for directories
                 my $common = $unique[0];
 
-                # use only if there is no file with that name
+                # proceed if no file with that name (lacks slash)
                 my $conflict = $subindex->lookup($common);
+                unless (defined $conflict) {
 
-                # cannot use Item->is_dir before Index->load
-                $unwanted = $common
-                  unless defined $conflict && $conflict->perm =~ /^[^d]/;
+                    # shortens paths; keeps same base directory
+                    $subindex->drop_common_prefix
+                      unless $common eq $component;
+                }
             }
 
-            # inserts missing directories; must occur afterwards
-            $subindex->load;
-
-            # keep common prefix when equal to the source component
-            if (length $unwanted && $unwanted ne $component) {
-                $subindex->drop_common_prefix;
-                $subindex->drop_basedir_segment;
-            }
-
+            # lowers base directory to match index being merged into
             $subindex->capture_common_prefix
               if length $component;
 
             $index->merge_in($subindex);
-
-            $self->hint('unpack-message-for-orig', $_)
-              for split(/\n/, $combined_errors);
         }
 
         return $index;
