@@ -1,8 +1,34 @@
-lintian (2.102.0+git) UNRELEASED; urgency=medium
+lintian (2.103.0) unstable; urgency=medium
 
-  * WIP (generated at release time: please do not add entries below).
+  * Summary of tag changes:
+    + Added:
+      - duplicate-override-context
 
- -- Chris Lamb <lamby@debian.org>  Fri, 13 Nov 2020 10:00:29 +0000
+  [ Felix Lechner ]
+  * Merge subindices for "orig" sources with multiple tarball components.
+    (Closes: #970750, #971597, #972567)
+  * Do not try to drop a common prefix from indices when a file of that
+    name already exists (Closes: #974820)
+  * Ignore dysfunctional output from readelf (for empty archives) and
+    undefined version strings in readelf output.
+  * Announce names used by the maintainer when flagging overrides for
+    renamed tags. (Closes: #972877)
+  * Turn off CSS generation in Pod::Simple::HTMLBatch for reprotest.
+  * Accept Build-Depends-Packages (plural) as a valid field in symbols
+    control files. (Closes: #974971)
+  * Use Pod::Simple::XHTML to generate docs (instead of Pod::Simple::HTML).
+  * Fix detection of an unwanted prefix for "orig" component tarballs
+    without their own folder.
+  * Rename repeating segments when dropping common path prefixes from
+    indices.
+  * Accept renamed tag names in custom profiles. (Closes: #974946)
+  * Collapse successive slashes in file paths extracted from tar(1).
+  * Update data/fields/perl-provides.
+
+  [ Paul Wise ]
+  * Add several spelling corrections.
+
+ -- Chris Lamb <lamby@debian.org>  Sat, 21 Nov 2020 18:22:40 +0000
 
 lintian (2.102.0) unstable; urgency=medium
 
