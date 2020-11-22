@@ -10,7 +10,7 @@ Build-Depends:
  libfile-basedir-perl,
  libpath-tiny-perl,
  python3-docutils,
-Standards-Version: 4.5.0
+Standards-Version: 4.5.1
 Rules-Requires-Root: no
 Vcs-Git: https://salsa.debian.org/lintian/lintian.git
 Vcs-Browser: https://salsa.debian.org/lintian/lintian
@@ -101,4 +101,4 @@ Description: Debian package checker
  compliance with Debian policy. Every Debian maintainer should check packages
  with this tool before uploading them to the archive.
  .
- This version of Lintian is calibrated for Debian Policy version 4.5.0.
+ This version of Lintian is calibrated for Debian Policy version 4.5.1.
