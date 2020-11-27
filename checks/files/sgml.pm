@@ -35,7 +35,7 @@ sub visit_installed_files {
 
     # /usr/lib/sgml
     if ($file->name =~ m,^usr/lib/sgml/\S,) {
-        $self->tag('file-in-usr-lib-sgml', $file->name);
+        $self->hint('file-in-usr-lib-sgml', $file->name);
     }
 
     return;

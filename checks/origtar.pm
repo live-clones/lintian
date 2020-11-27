@@ -40,7 +40,7 @@ sub source {
 
     my @origfiles = $processable->orig->sorted_list;
 
-    $self->tag('empty-upstream-sources')
+    $self->hint('empty-upstream-sources')
       unless @origfiles;
 
     return;

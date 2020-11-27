@@ -80,7 +80,7 @@ sub emitter {
     my ($self, @orig_args) = @_;
 
     return sub {
-        return $self->tag(@orig_args, @_);
+        return $self->hint(@orig_args, @_);
     };
 }
 

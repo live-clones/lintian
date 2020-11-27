@@ -44,7 +44,7 @@ sub visit_installed_files {
             my $width_delta = abs($directory_width - $file_width);
             my $height_delta = abs($directory_height - $file_height);
 
-            $self->tag('icon-size-and-directory-name-mismatch',
+            $self->hint('icon-size-and-directory-name-mismatch',
                 $file->name,$file_width.'x'.$file_height)
               unless $width_delta <= 2 && $height_delta <= 2;
         }
@@ -52,7 +52,7 @@ sub visit_installed_files {
 
     if (   $file->is_file
         && $file->name =~ m,/icons/[^/]+/scalable/.*\.(?:png|xpm)$,) {
-        $self->tag('raster-image-in-scalable-directory', $file->name);
+        $self->hint('raster-image-in-scalable-directory', $file->name);
     }
 
     return;

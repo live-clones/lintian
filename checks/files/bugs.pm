@@ -37,7 +37,7 @@ sub visit_installed_files {
       unless $file->is_dir;
 
     if ($file->name =~ m,/\.(?:be|ditrack)/?$,) {
-        $self->tag('package-contains-bts-control-dir', $file->name);
+        $self->hint('package-contains-bts-control-dir', $file->name);
     }
 
     return;

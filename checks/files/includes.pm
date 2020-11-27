@@ -60,7 +60,7 @@ sub visit_installed_files {
     if (   $file->is_file
         && $GENERIC_HEADER_FILES->matches_any($file->basename, 'i')) {
 
-        $self->tag('header-has-overly-generic-name', $file->name);
+        $self->hint('header-has-overly-generic-name', $file->name);
     }
 
     return;

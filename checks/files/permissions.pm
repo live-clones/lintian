@@ -65,7 +65,7 @@ sub setup_installed_files {
 sub visit_installed_files {
     my ($self, $file) = @_;
 
-    $self->tag(
+    $self->hint(
         'octal-permissions', $self->component,
         sprintf('%4o', $file->operm),  $file->name
     );
@@ -103,26 +103,26 @@ sub visit_installed_files {
 
             # Check for setuid and setgid that isn't expected.
             if ($setuid and $setgid) {
-                $self->tag('setuid-gid-binary', $file->name,
+                $self->hint('setuid-gid-binary', $file->name,
                     sprintf('%04o %s',$file->operm,$file->identity));
             } elsif ($setuid) {
-                $self->tag('setuid-binary', $file->name,
+                $self->hint('setuid-binary', $file->name,
                     sprintf('%04o %s',$file->operm,$file->identity));
             } elsif ($setgid) {
-                $self->tag('setgid-binary', $file->name,
+                $self->hint('setgid-binary', $file->name,
                     sprintf('%04o %s',$file->operm,$file->identity));
             }
 
             # Check for permission problems other than the setuid status.
             if (($file->operm & 0444) != 0444) {
-                $self->tag('executable-is-not-world-readable',
+                $self->hint('executable-is-not-world-readable',
                     $file->name,sprintf('%04o',$file->operm));
             } elsif ($file->operm != 04755
                 && $file->operm != 02755
                 && $file->operm != 06755
                 && $file->operm != 04754) {
 
-                $self->tag('non-standard-setuid-executable-perm',
+                $self->hint('non-standard-setuid-executable-perm',
                     $file->name,sprintf('%04o',$file->operm));
             }
         }elsif ($file->operm & 0111) {
@@ -130,16 +130,16 @@ sub visit_installed_files {
             # general: executable files
             if ($file->identity eq 'root/games') {
                 if ($file->operm != 2755) {
-                    $self->tag('non-standard-game-executable-perm',
+                    $self->hint('non-standard-game-executable-perm',
                         $file->name,sprintf('%04o != 2755',$file->operm));
                 }
             } else {
                 if (($file->operm & 0444) != 0444) {
-                    $self->tag('executable-is-not-world-readable',
+                    $self->hint('executable-is-not-world-readable',
                         $file->name,sprintf('%04o',$file->operm));
 
                 } elsif ($file->operm != 0755) {
-                    $self->tag('non-standard-executable-perm',
+                    $self->hint('non-standard-executable-perm',
                         $file->name,sprintf('%04o != 0755',$file->operm));
                 }
             }
@@ -154,7 +154,7 @@ sub visit_installed_files {
 
             } elsif ($file->name =~ m,^usr/lib/.*\.ali$,) {
                 # GNAT compiler wants read-only Ada library information.
-                $self->tag('bad-permissions-for-ali-file', $file->name)
+                $self->hint('bad-permissions-for-ali-file', $file->name)
                   unless $file->operm == 0444;
 
             } elsif ($file->operm == 0600 and $file->name =~ m,^etc/backup.d/,)
@@ -163,12 +163,12 @@ sub visit_installed_files {
 
             } elsif ($file->name =~ m,^etc/sudoers.d/,) {
                 # sudo requires sudoers files to be mode 0440
-                $self->tag('bad-perm-for-file-in-etc-sudoers.d',
+                $self->hint('bad-perm-for-file-in-etc-sudoers.d',
                     $file->name,sprintf('%04o != 0440', $file->operm))
                   unless $file->operm == 0440;
 
             } elsif ($file->operm != 0644) {
-                $self->tag('non-standard-file-perm', $file->name,
+                $self->hint('non-standard-file-perm', $file->name,
                     sprintf('%04o != 0644',$file->operm));
             }
         }
@@ -204,7 +204,7 @@ sub visit_installed_files {
 
         }elsif ($file->operm != 0755) {
             # otherwise, complain if it's not 0755.
-            $self->tag('non-standard-dir-perm', $file->name,
+            $self->hint('non-standard-dir-perm', $file->name,
                 sprintf('%04o != 0755', $file->operm));
         }
     }
@@ -216,7 +216,7 @@ sub source {
     my ($self) = @_;
 
     my $component = path($self->processable->path)->basename;
-    $self->tag(
+    $self->hint(
         'octal-permissions', $component,
         sprintf('%4o', $_->operm),  $_->name
     )for $self->processable->patched->sorted_list;

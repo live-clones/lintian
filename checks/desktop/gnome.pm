@@ -34,7 +34,7 @@ sub visit_installed_files {
     my ($self, $file) = @_;
 
     # /etc/gconf/schemas
-    $self->tag('package-installs-into-etc-gconf-schemas', $file->name)
+    $self->hint('package-installs-into-etc-gconf-schemas', $file->name)
       if $file->name =~ m,^etc/gconf/schemas/\S,;
 
     return;

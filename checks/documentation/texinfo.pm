@@ -64,10 +64,11 @@ sub binary {
             if ($file->is_file) {
                 # compressed with maximum compression rate?
                 if ($file_info !~ m/gzip compressed data/) {
-                    $self->tag('info-document-not-compressed-with-gzip',$file);
+                    $self->hint('info-document-not-compressed-with-gzip',
+                        $file);
                 } else {
                     if ($file_info !~ m/max compression/) {
-                        $self->tag(
+                        $self->hint(
 'info-document-not-compressed-with-max-compression',
                             $file
                         );
@@ -78,13 +79,13 @@ sub binary {
             next;
         } else {
             push(@fname_pieces, $ext);
-            $self->tag('info-document-not-compressed', $file);
+            $self->hint('info-document-not-compressed', $file);
         }
         my $infoext = pop @fname_pieces;
         unless ($infoext && $infoext =~ /^info(-\d+)?$/) { # it's not foo.info
             unless (!@fname_pieces) {
                 # it's not foo{,-{1,2,3,...}}
-                $self->tag('info-document-has-wrong-extension', $file);
+                $self->hint('info-document-has-wrong-extension', $file);
             }
         }
 
@@ -106,9 +107,9 @@ sub binary {
                 $end     = 1 if /^END-INFO-DIR-ENTRY\b/;
             }
             close($fd);
-            $self->tag('info-document-missing-dir-section', $file)
+            $self->hint('info-document-missing-dir-section', $file)
               unless $section;
-            $self->tag('info-document-missing-dir-entry', $file)
+            $self->hint('info-document-missing-dir-entry', $file)
               unless $start && $end;
         }
 
@@ -133,7 +134,7 @@ sub binary {
                     $src =~ s/\\(.)/$1/g;   # unbackslash
                     $processable->installed->lookup(
                         normalize_link_target('usr/share/info', $src))
-                      or $self->tag('info-document-missing-image-file',
+                      or $self->hint('info-document-missing-image-file',
                         $file, $src);
                 }
             }

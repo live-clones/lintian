@@ -389,7 +389,7 @@ sub visit_patched_files {
         my $reason = $banned->{'reason'};
         my $link = $banned->{'link'};
 
-        $self->tag(
+        $self->hint(
             'license-problem-md5sum-non-distributable-file',
             $item->name, "usual name is $usualname.",
             $reason, "See also $link."
@@ -402,7 +402,7 @@ sub visit_patched_files {
         my $reason = $nonfree->{'reason'};
         my $link = $nonfree->{'link'};
 
-        $self->tag(
+        $self->hint(
             'license-problem-md5sum-non-free-file',
             $item->name, "usual name is $usualname.",
             $reason, "See also $link."
@@ -411,10 +411,10 @@ sub visit_patched_files {
 
     # Check for CMake cache files.  These embed the source path and hence
     # will cause FTBFS on buildds, so they should never be present
-    $self->tag('source-contains-cmake-cache-file', $item->name)
+    $self->hint('source-contains-cmake-cache-file', $item->name)
       if $item->basename eq 'CMakeCache.txt';
 
-    $self->tag('source-contains-debian-substvars', $item->name)
+    $self->hint('source-contains-debian-substvars', $item->name)
       if $item->name =~ m{^debian/(?:.+\.)?substvars$}s;
 
     # check full text problem
@@ -428,7 +428,7 @@ sub visit_patched_files {
         while (my $line = <$fd>) {
             next unless $line =~ m/^#/;
             if ($marker && $line =~ m/^#BZ[h0][0-9]/) {
-                $self->tag('source-contains-waf-binary', $item->name);
+                $self->hint('source-contains-waf-binary', $item->name);
                 last;
             }
             $marker = 1 if $line =~ m/^#==>/;
@@ -444,7 +444,7 @@ sub visit_patched_files {
         && $item->file_info eq 'MS Windows HtmlHelp Data'
         && $item->is_open_ok
         && index($item->bytes, 'Halibut,') == -1) {
-        $self->tag('source-contains-prebuilt-ms-help-file', $item->name);
+        $self->hint('source-contains-prebuilt-ms-help-file', $item->name);
     }
 
     # Ensure we have a README.source for R data files
@@ -456,7 +456,7 @@ sub visit_patched_files {
         my $fd = open_gz($item->unpacked_path);
         read($fd, my $magic, 4);
         close($fd);
-        $self->tag('r-data-without-readme-source', $item->name)
+        $self->hint('r-data-without-readme-source', $item->name)
           if $magic eq 'RDX2';
     }
 
@@ -466,7 +466,8 @@ sub visit_patched_files {
         open(my $fd, '<', $item->unpacked_path);
         while (my $line = <$fd>) {
             next if $line =~ m{^\s*dnl};
-            $self->tag('autotools-pkg-config-macro-not-cross-compilation-safe',
+            $self->hint(
+                'autotools-pkg-config-macro-not-cross-compilation-safe',
                 $item->name, "(line $.)")
               if $line=~ m{AC_PATH_PROG\s*\([^,]+,\s*\[?pkg-config\]?\s*,};
         }
@@ -480,7 +481,7 @@ sub visit_patched_files {
             or $item->file_info =~ /\bbitmap\b/i
             or $item->file_info =~ /^PDF Document\b/i
             or $item->file_info =~ /^Postscript Document\b/i) {
-            $self->tag('license-problem-non-free-img-lenna', $item->name)
+            $self->hint('license-problem-non-free-img-lenna', $item->name)
               unless $LENNA_WHITELIST->known($item->md5sum);
         }
     }
@@ -492,12 +493,12 @@ sub visit_patched_files {
         if($item->file_info =~ m{$regtype}) {
             my $regname = $warn_data->{'regname'};
             if($item->name =~ m{$regname}) {
-                $self->tag($tag_filetype, $item->name);
+                $self->hint($tag_filetype, $item->name);
                 if($warn_data->{'checkmissing'}) {
                     my %hash;
                     $hash{$_->[1]} = $_->[0]
                       for @{$warn_data->{'transform'} // []};
-                    $self->tag('source-is-missing', $item->name)
+                    $self->hint('source-is-missing', $item->name)
                       unless $self->find_source($item, \%hash);
                 }
             }
@@ -508,7 +509,7 @@ sub visit_patched_files {
     # debian/upstream should be a directory
     if (   $item->name eq 'debian/upstream'
         || $item->name eq 'debian/upstream-metadata.yaml') {
-        $self->tag('debian-upstream-obsolete-path', $item->name);
+        $self->hint('debian-upstream-obsolete-path', $item->name);
     }
 
     if (   $item->name eq 'debian/README.source'
@@ -519,7 +520,7 @@ sub visit_patched_files {
             index($contents,
                 'You WILL either need to modify or delete this file') >= 0
         ) {
-            $self->tag('readme-source-is-dh_make-template');
+            $self->hint('readme-source-is-dh_make-template');
         }
     }
 
@@ -529,7 +530,7 @@ sub visit_patched_files {
         open(my $fd, '<', $item->unpacked_path);
         while (my $line = <$fd>) {
             next unless $line =~ m/(?<!")(FIX_?ME)(?!")/;
-            $self->tag('file-contains-fixme-placeholder',
+            $self->hint('file-contains-fixme-placeholder',
                 $item->name . ":$. $1");
         }
     }
@@ -550,13 +551,14 @@ sub visit_patched_files {
             # ignore comments
             $contents =~ s/#.*$//m;
             if (index($contents, 'usr/lib/perl5') >= 0) {
-                $self->tag('mentions-deprecated-usr-lib-perl5-directory',
+                $self->hint('mentions-deprecated-usr-lib-perl5-directory',
                     $short);
             }
         }
     }
 
-    $self->tag('source-contains-prebuilt-doxygen-documentation',$item->dirname)
+    $self->hint('source-contains-prebuilt-doxygen-documentation',
+        $item->dirname)
       if $item->basename =~ m{^doxygen.(?:png|sty)$}
       and $self->processable->source ne 'doxygen';
 
@@ -565,30 +567,28 @@ sub visit_patched_files {
     # they're doing and is using it as part of the build.
     if ($item->basename =~ m{\A config.(?:cache|log|status) \Z}xsm) {
         if ($item->dirname ne 'debian') {
-            $self->tag('configure-generated-file-in-source', $item->name);
+            $self->hint('configure-generated-file-in-source', $item->name);
         }
     }elsif ($item->basename eq 'ltconfig'
         and not $self->libtool_in_build_depends) {
-        $self->tag('ancient-libtool', $item->name);
+        $self->hint('ancient-libtool', $item->name);
     }elsif ($item->basename eq 'ltmain.sh'
         and not $self->libtool_in_build_depends){
-        open(my $fd, '<', $item->unpacked_path);
-        while (<$fd>) {
-            if (/^VERSION=[\"\']?(1\.(\d)\.(\d+)(?:-(\d))?)/) {
-                my ($version, $major, $minor, $debian)=($1, $2, $3, $4);
-                if ($major < 5 or ($major == 5 and $minor < 2)) {
-                    $self->tag('ancient-libtool', $item->name, $version);
-                }elsif ($minor == 2 and (!$debian || $debian < 2)) {
-                    $self->tag('ancient-libtool', $item->name, $version);
-                }
-                last;
+
+        if ($item->bytes =~ /^VERSION=[\"\']?(1\.(\d)\.(\d+)(?:-(\d))?)/m) {
+            my ($version, $major, $minor, $debian)=($1, $2, $3, $4);
+
+            if ($major < 5 or ($major == 5 and $minor < 2)) {
+                $self->hint('ancient-libtool', $item->name, $version);
+
+            } elsif ($minor == 2 and (!$debian || $debian < 2)) {
+                $self->hint('ancient-libtool', $item->name, $version);
             }
         }
-        close($fd);
     }
 
     # see Bug#972614
-    $self->tag('package-does-not-install-examples', $item)
+    $self->hint('package-does-not-install-examples', $item)
       if $item->basename eq 'examples'
       && $item->dirname !~ m{(?:^|/)(?:vendor|third_party)/}
       && $self->group->get_processables('binary')
@@ -625,7 +625,7 @@ sub source {
           = grep { $_->md5sum ne $orig->lookup($_->name)->md5sum }
           @common_items;
 
-        $self->tag('no-debian-changes')
+        $self->hint('no-debian-changes')
           unless @added_by_debian || @touched_by_debian;
 
         $prefix = 'debian-adds';
@@ -640,7 +640,7 @@ sub source {
 
         my $rule = first_value { $directory->name =~ /$_->[0]/s }
         @directory_checks;
-        $self->tag("${prefix}-$rule->[1]", $directory->name)
+        $self->hint("${prefix}-$rule->[1]", $directory->name)
           if defined $rule;
     }
 
@@ -648,7 +648,7 @@ sub source {
     for my $file (@files) {
 
         my $rule = first_value { $file->name =~ /$_->[0]/s } @file_checks;
-        $self->tag("${prefix}-$rule->[1]", $file->name)
+        $self->hint("${prefix}-$rule->[1]", $file->name)
           if defined $rule;
     }
 
@@ -835,7 +835,7 @@ sub check_html_cruft {
                 && $block
                 !~ m,\$(?:doxygenversion|projectname|projectnumber|projectlogo)\b,
             ){
-                $self->tag('source-contains-prebuilt-doxygen-documentation',
+                $self->hint('source-contains-prebuilt-doxygen-documentation',
                     $item);
                 return -1;
             }
@@ -886,7 +886,7 @@ sub check_js_script {
     if ($firstline =~ m/.{0,20}((?:\bcopyright\b|[\(]c[\)]\s*\w|©).{0,50})/) {
         my $extract = $1;
         $extract =~ s/^\s+|\s+$//g;
-        $self->tag('embedded-script-includes-copyright-statement',
+        $self->hint('embedded-script-includes-copyright-statement',
             $item->name,'extract of copyright statement:',$extract);
     }
 
@@ -912,14 +912,14 @@ sub search_in_block0 {
         # exception sphinx documentation
         if($item->basename eq 'searchindex.js') {
             if($block =~ m/\A\s*search\.setindex\s* \s* \(\s*\{/xms) {
-                $self->tag('source-contains-prebuilt-sphinx-documentation',
+                $self->hint('source-contains-prebuilt-sphinx-documentation',
                     $item->dirname);
                 return;
             }
         }
         if($item->basename eq 'search_index.js') {
             if($block =~ m/\A\s*var\s*search_index\s*=/xms) {
-                $self->tag('source-contains-prebuilt-pandoc-documentation',
+                $self->hint('source-contains-prebuilt-pandoc-documentation',
                     $item->dirname);
                 return;
             }
@@ -934,7 +934,7 @@ sub search_in_block0 {
         # Be robust check also .js
         elsif($item->basename eq 'deployJava.js') {
             if($block =~ m/(?:\A|\v)\s*var\s+deployJava\s*=\s*function/xmsi) {
-                $self->tag('source-is-missing', $item->name)
+                $self->hint('source-is-missing', $item->name)
                   unless $self->find_source($item,
                     {'.txt' => '(?i)\.js$', '' => EMPTY});
                 return;
@@ -964,7 +964,7 @@ sub search_in_block0 {
             foreach my $badcopyrighttag ($BAD_LINK_COPYRIGHT->all) {
                 my $regex =  $BAD_LINK_COPYRIGHT->value($badcopyrighttag);
                 if($copyrighttarget =~ m{$regex}) {
-                    $self->tag($badcopyrighttag, $item->name);
+                    $self->hint($badcopyrighttag, $item->name);
                     last;
                 }
             }
@@ -979,12 +979,12 @@ sub warn_prebuilt_javascript{
 
     my $extratext
       =  'line length is '.int($linelength)." characters (>$cutoff)";
-    $self->tag('source-contains-prebuilt-javascript-object',
+    $self->hint('source-contains-prebuilt-javascript-object',
         $item->name,$extratext);
     # Check for missing source.  It will check
     # for the source file in well known directories
     if ($item->basename =~ m{\.js$}i) {
-        $self->tag('source-is-missing', $item->name, $extratext)
+        $self->hint('source-is-missing', $item->name, $extratext)
           unless $self->find_source(
             $item,
             {
@@ -994,7 +994,7 @@ sub warn_prebuilt_javascript{
             });
     } else  {
         # html file
-        $self->tag('source-is-missing', $item->name, $extratext)
+        $self->hint('source-is-missing', $item->name, $extratext)
           unless $self->find_source($item, {'.fragment.js' => '$'});
     }
     return;
@@ -1045,7 +1045,7 @@ sub detect_browserify {
         my $regex = $BROWSERIFY_REGEX->value($browserifyregex);
         if($block =~ m{$regex}) {
             my $extra = (defined $1) ? 'code fragment:'.$1 : EMPTY;
-            $self->tag('source-contains-browserified-javascript',
+            $self->hint('source-contains-browserified-javascript',
                 $item->name, $extra);
             last;
         }
@@ -1065,7 +1065,7 @@ sub linelength_test {
     # first check if line >  VERY_LONG_LINE_LENGTH that is likely minification
     # avoid problem by recursive regex with longline
     if($linelength) {
-        $self->tag(
+        $self->hint(
             'very-long-line-length-in-source-file',
             $item->name,'line length is',
             int($linelength),'characters (>'.VERY_LONG_LINE_LENGTH.')'
@@ -1136,7 +1136,7 @@ sub linelength_test {
 
 sub tag_gfdl {
     my ($self, $applytag, $name, $gfdlsections) = @_;
-    $self->tag($applytag, $name, 'invariant part is:', $gfdlsections);
+    $self->hint($applytag, $name, 'invariant part is:', $gfdlsections);
     return;
 }
 
@@ -1194,7 +1194,7 @@ sub check_gfdl_license_problem {
     ) {
         if ($gfdlsections eq EMPTY) {
             # lie in order to check more part
-            $self->tag('license-problem-gfdl-invariants-empty', $name);
+            $self->hint('license-problem-gfdl-invariants-empty', $name);
             $licenseproblemhash->{'license-problem-gfdl-invariants-empty'}= 1;
             return 0;
         }
@@ -1272,7 +1272,7 @@ sub rfc_whitelist_filename {
             return 0;
         }
     }
-    $self->tag($licenseproblem, $name);
+    $self->hint($licenseproblem, $name);
     return 1;
 }
 
@@ -1296,7 +1296,7 @@ sub php_source_whitelist {
     if($self->processable->source =~ m,^php\d*(?:\.\d+)?$,xms) {
         return 0;
     }
-    $self->tag($licenseproblem, $name);
+    $self->hint($licenseproblem, $name);
     return 1;
 }
 
@@ -1512,7 +1512,7 @@ sub license_check {
                 next LICENSE;
             }
         }else {
-            $self->tag($licenseproblem, $name);
+            $self->hint($licenseproblem, $name);
             $licenseproblemhash->{$licenseproblem} = 1;
             $ret = 1;
             next LICENSE;

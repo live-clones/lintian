@@ -46,7 +46,7 @@ my $PLANNED_FEATURES = Lintian::Data->new('description/planned-features');
 sub spelling_tag_emitter {
     my ($self, @orig_args) = @_;
     return sub {
-        return $self->tag(@orig_args, @_);
+        return $self->hint(@orig_args, @_);
     };
 }
 
@@ -67,7 +67,7 @@ sub installable {
 
     my $full_description= $processable->fields->untrimmed_value('Description');
 
-    $self->tag('odd-mark-in-description', 'comma not followed by whitespace')
+    $self->hint('odd-mark-in-description', 'comma not followed by whitespace')
       if $full_description =~ /,[^\s\d]/;
 
     $full_description =~ m/^([^\n]*)\n(.*)$/s;
@@ -88,30 +88,30 @@ sub installable {
     $extended //= EMPTY;
 
     if ($synopsis =~ m/^\s*$/) {
-        $self->tag('description-synopsis-is-empty');
+        $self->hint('description-synopsis-is-empty');
     } else {
         if ($synopsis =~ m/^\Q$pkg\E\b/i) {
-            $self->tag('description-starts-with-package-name');
+            $self->hint('description-starts-with-package-name');
         }
         if ($synopsis =~ m/^(an?|the)\s/i) {
-            $self->tag('description-synopsis-starts-with-article');
+            $self->hint('description-synopsis-starts-with-article');
         }
         if ($synopsis =~ m/(.*\.)(?:\s*$|\s+\S+)/i) {
-            $self->tag('synopsis-is-a-sentence',"\"$synopsis\"")
+            $self->hint('synopsis-is-a-sentence',"\"$synopsis\"")
               unless $1 =~ m/\s+etc\.$/
               or $1 =~ m/\s+e\.?g\.$/
               or $1 =~ m/(?<!\.)\.\.\.$/;
         }
         if ($synopsis =~ m/\t/) {
-            $self->tag('description-contains-tabs') unless $tabs++;
+            $self->hint('description-contains-tabs') unless $tabs++;
         }
         if ($synopsis =~ m/^missing\s*$/i) {
-            $self->tag('description-is-debmake-template') unless $template++;
+            $self->hint('description-is-debmake-template') unless $template++;
         } elsif ($synopsis =~ m/<insert up to 60 chars description>/) {
-            $self->tag('description-is-dh_make-template') unless $template++;
+            $self->hint('description-is-dh_make-template') unless $template++;
         }
         if ($synopsis !~ m/\s/) {
-            $self->tag('description-too-short', $synopsis);
+            $self->hint('description-too-short', $synopsis);
         }
         my $pkg_fmt = lc $pkg;
         my $synopsis_fmt = lc $synopsis;
@@ -120,7 +120,7 @@ sub installable {
         $synopsis_fmt =~ s,[-_/\\], ,g;
         $synopsis_fmt =~ s,\s+, ,g;
         if ($pkg_fmt eq $synopsis_fmt) {
-            $self->tag('description-is-pkg-name', $synopsis);
+            $self->hint('description-is-pkg-name', $synopsis);
         }
 
         # We have to decode into UTF-8 to get the right length for the
@@ -128,7 +128,7 @@ sub installable {
         # this will mangle it, but it doesn't matter for the length
         # check.
         if (length(decode('utf-8', $synopsis)) >= 80) {
-            $self->tag('synopsis-too-long');
+            $self->hint('synopsis-too-long');
         }
     }
 
@@ -145,41 +145,41 @@ sub installable {
             my $firstline = lc $line;
             my $lsyn = lc $synopsis;
             if ($firstline =~ /^\Q$lsyn\E$/) {
-                $self->tag('description-synopsis-is-duplicated');
+                $self->hint('description-synopsis-is-duplicated');
             } else {
                 $firstline =~ s/[^a-zA-Z0-9]+//g;
                 $lsyn =~ s/[^a-zA-Z0-9]+//g;
                 if ($firstline eq $lsyn) {
-                    $self->tag('description-synopsis-is-duplicated');
+                    $self->hint('description-synopsis-is-duplicated');
                 }
             }
         }
 
         if ($line =~ /^ \.\s*\S/ || $line =~ /^ \s+\.\s*$/) {
-            $self->tag('description-contains-invalid-control-statement');
+            $self->hint('description-contains-invalid-control-statement');
         } elsif ($line =~ /^ [\-\*]/) {
        # Print it only the second time.  Just one is not enough to be sure that
        # it's a list, and after the second there's no need to repeat it.
-            $self->tag('possible-unindented-list-in-extended-description')
+            $self->hint('possible-unindented-list-in-extended-description')
               if $unindented_list++ == 2;
         }
 
         if ($line =~ /\t/) {
-            $self->tag('description-contains-tabs') unless $tabs++;
+            $self->hint('description-contains-tabs') unless $tabs++;
         }
 
         if ($line =~ m,^\s*Homepage: <?https?://,i) {
-            $self->tag('description-contains-homepage');
+            $self->hint('description-contains-homepage');
             $flagged_homepage = 1;
         }
 
         if ($PLANNED_FEATURES->matches_any($line, 'i')) {
-            $self->tag('description-mentions-planned-features',
+            $self->hint('description-mentions-planned-features',
                 "(line $position)");
         }
 
         if (index(lc($line), DH_MAKE_PERL_TEMPLATE) != -1) {
-            $self->tag('description-contains-dh-make-perl-template');
+            $self->hint('description-contains-dh-make-perl-template');
         }
 
         my $first_person = $line;
@@ -187,26 +187,26 @@ sub installable {
             =~ m/(?:^|\s)(I|[Mm]y|[Oo]urs?|mine|myself|me|us|[Ww]e)(?:$|\s)/) {
             my $word = $1;
             $first_person =~ s/\Q$word//;
-            $self->tag('using-first-person-in-description',
+            $self->hint('using-first-person-in-description',
                 "line $position: $word");
         }
 
         if ($position == 1) {
             # checks for the first line of the extended description:
             if ($line =~ /^ \s/) {
-                $self->tag('description-starts-with-leading-spaces');
+                $self->hint('description-starts-with-leading-spaces');
             }
             if ($line =~ /^\s*missing\s*$/i) {
-                $self->tag('description-is-debmake-template')
+                $self->hint('description-is-debmake-template')
                   unless $template++;
             } elsif (
                 $line =~ /<insert long description, indented with spaces>/) {
-                $self->tag('description-is-dh_make-template')
+                $self->hint('description-is-dh_make-template')
                   unless $template++;
             }
         }
 
-        $self->tag('extended-description-line-too-long', "line $position")
+        $self->hint('extended-description-line-too-long', "line $position")
           if length decode('utf-8', $line) > 80;
 
     } continue {
@@ -218,14 +218,14 @@ sub installable {
             # Ignore debug packages with empty "extended" description
             # "debug symbols for pkg foo" is generally descriptive
             # enough.
-            $self->tag('extended-description-is-empty')
+            $self->hint('extended-description-is-empty')
               if not $processable->is_pkg_class('debug');
         } elsif (@lines < 2 && $synopsis !~ /(?:dummy|transition)/i) {
-            $self->tag('extended-description-is-probably-too-short')
+            $self->hint('extended-description-is-probably-too-short')
               unless $processable->is_pkg_class('any-meta')
               or $pkg =~ m{-dbg\Z}xsm;
         } elsif ($extended =~ /^ \.\s*\n|\n \.\s*\n \.\s*\n|\n \.\s*\n?$/) {
-            $self->tag('extended-description-contains-empty-paragraph');
+            $self->hint('extended-description-contains-empty-paragraph');
         }
     }
 
@@ -239,9 +239,9 @@ sub installable {
                          |official\s+site|project\s+home/xi
             and $extended =~ m,\b(https?://[a-z0-9][^>\s]+),i
         ) {
-            $self->tag('description-possibly-contains-homepage', $1);
+            $self->hint('description-possibly-contains-homepage', $1);
         } elsif ($extended =~ m,\b(https?://[a-z0-9][^>\s]+)>?\.?\s*\z,i) {
-            $self->tag('description-possibly-contains-homepage', $1);
+            $self->hint('description-possibly-contains-homepage', $1);
         }
     }
 
@@ -289,7 +289,7 @@ sub installable {
             }
         }
 
-        $self->tag('perl-module-name-not-mentioned-in-description', $mod)
+        $self->hint('perl-module-name-not-mentioned-in-description', $mod)
           if (index(lc($extended), $mod_lc) < 0 and $pm_found);
     }
 

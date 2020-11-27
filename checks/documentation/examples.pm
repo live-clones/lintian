@@ -36,7 +36,7 @@ sub visit_installed_files {
     if (   $file->is_dir
         && $file->name =~ m,usr/share/doc/[^/]+/examples/examples/?$,) {
 
-        $self->tag('nested-examples-directory', $file->name);
+        $self->hint('nested-examples-directory', $file->name);
     }
 
     return;

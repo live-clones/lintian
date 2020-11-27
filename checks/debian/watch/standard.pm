@@ -50,11 +50,11 @@ sub source {
     my @standards = ($contents =~ /^version\s*=\s*(\d+)\s*$/mg);
 
     unless (@standards) {
-        $self->tag('missing-debian-watch-file-standard');
+        $self->hint('missing-debian-watch-file-standard');
         return;
     }
 
-    $self->tag('multiple-debian-watch-file-standards',join(SPACE, @standards))
+    $self->hint('multiple-debian-watch-file-standards',join(SPACE, @standards))
       if @standards > 1;
 
     my @available = (2, 3, 4);
@@ -62,18 +62,18 @@ sub source {
     my @unknown = $standard_lc->get_Lonly;
     my @known = $standard_lc->get_intersection;
 
-    $self->tag('unknown-debian-watch-file-standard', $_)for @unknown;
+    $self->hint('unknown-debian-watch-file-standard', $_)for @unknown;
 
     return
       unless @known;
 
     my $highest = max(@known);
-    $self->tag('debian-watch-file-standard', $highest);
+    $self->hint('debian-watch-file-standard', $highest);
 
-    $self->tag('older-debian-watch-file-standard', $highest)
+    $self->hint('older-debian-watch-file-standard', $highest)
       if $highest == 3;
 
-    $self->tag('obsolete-debian-watch-file-standard', $highest)
+    $self->hint('obsolete-debian-watch-file-standard', $highest)
       if $highest < 3;
 
     return;

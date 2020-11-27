@@ -87,21 +87,21 @@ sub source {
                   ->implies('${python3:Depends}')
             }
             @package_names;
-            $self->tag('python-foo-but-no-python3-foo', $bin);
+            $self->hint('python-foo-but-no-python3-foo', $bin);
         }
     }
 
     my $build_all = $processable->relation('Build-Depends-All');
-    $self->tag('build-depends-on-python-sphinx-only')
+    $self->hint('build-depends-on-python-sphinx-only')
       if $build_all->implies('python-sphinx')
       and not $build_all->implies('python3-sphinx');
 
     my $maintainer = $self->processable->fields->value('Maintainer');
-    $self->tag('python-teams-merged', $maintainer)
+    $self->hint('python-teams-merged', $maintainer)
       if $maintainer =~ m{python-modules-team\@lists\.alioth\.debian\.org}
       || $maintainer =~ m{python-apps-team\@lists\.alioth\.debian\.org};
 
-    $self->tag(
+    $self->hint(
         'alternatively-build-depends-on-python-sphinx-and-python3-sphinx')
       if $processable->fields->value('Build-Depends')
       =~ m,\bpython-sphinx\s+\|\s+python3-sphinx\b,g;
@@ -112,7 +112,7 @@ sub source {
         for my $binpkg ($processable->debian_control->installables) {
             next if any { $binpkg =~ /$_/ } @IGNORE;
             next if $binpkg !~ qr/$regex/;
-            $self->tag('mismatched-python-substvar', $binpkg, $substvar)
+            $self->hint('mismatched-python-substvar', $binpkg, $substvar)
               if $processable->binary_relation($binpkg, 'all')
               ->implies($substvar);
         }
@@ -135,12 +135,12 @@ sub source {
         my @pyversion = split(/\s*,\s*/, $pyversion);
 
         if ($pyversion =~ m/^current/) {
-            $self->tag('python-version-current-is-deprecated', $field);
+            $self->hint('python-version-current-is-deprecated', $field);
         }
 
         if (@pyversion > 2) {
             if (any { !/^\d+\.\d+$/ } @pyversion) {
-                $self->tag('malformed-python-version', $field, $pyversion);
+                $self->hint('malformed-python-version', $field, $pyversion);
             }
         } else {
             my $okay = 0;
@@ -158,7 +158,7 @@ sub source {
                     last;
                 }
             }
-            $self->tag('malformed-python-version', $field, $pyversion)
+            $self->hint('malformed-python-version', $field, $pyversion)
               unless $okay;
         }
 
@@ -168,14 +168,14 @@ sub source {
             my $ancient = $VERSIONS->value("ancient-python$major");
 
             if (versions_lte($v, $ancient)) {
-                $self->tag('ancient-python-version-field', $field, $v);
+                $self->hint('ancient-python-version-field', $field, $v);
             } elsif (versions_lte($v, $old)) {
-                $self->tag('old-python-version-field', $field, $v);
+                $self->hint('old-python-version-field', $field, $v);
             }
         }
     }
 
-    $self->tag('source-package-encodes-python-version')
+    $self->hint('source-package-encodes-python-version')
       if $processable->name =~ m/^python\d-/
       and $processable->name ne 'python3-defaults';
 
@@ -202,7 +202,7 @@ sub installable {
                 and $file
                 =~ m,usr/lib/(?<version>python[23])[\d.]*/(?:site|dist)-packages,
                 and not $deps->implies($REQUIRED_DEPENDS{$+{version}})) {
-                $self->tag('python-package-missing-depends-on-python');
+                $self->hint('python-package-missing-depends-on-python');
                 last;
             }
         }
@@ -214,7 +214,7 @@ sub installable {
       FIELD: for my $py2 (@PYTHON2) {
             for my $py3 (@PYTHON3) {
                 if ($dep->implies("$py2:any") and $dep->implies("$py3:any")) {
-                    $self->tag('depends-on-python2-and-python3',
+                    $self->hint('depends-on-python2-and-python3',
                         "$field: $py2, [..], $py3");
                     last FIELD;
                 }
@@ -229,14 +229,14 @@ sub installable {
         and $entries[0]->Changes
         !~ /\bpython ?2(?:\.x)? (?:variant|version)\b/im
         and index($entries[0]->Changes, $pkg) == -1) {
-        $self->tag('new-package-should-not-package-python2-module', $pkg);
+        $self->hint('new-package-should-not-package-python2-module', $pkg);
     }
 
     # Python applications
     if ($pkg !~ /^python[23]?-/ and none { $_ eq $pkg } @PYTHON2) {
         for my $field (@FIELDS) {
             for my $dep (@PYTHON2) {
-                $self->tag(
+                $self->hint(
                     'dependency-on-python-version-marked-for-end-of-life',
                     "($field: $dep)")
                   if $processable->relation($field)->implies("$dep:any");
@@ -249,7 +249,7 @@ sub installable {
         my $basepkg = $DJANGO_PACKAGES{$regex};
         next if $pkg !~ /$regex/;
         next if any { $pkg =~ /$_/ } @IGNORE;
-        $self->tag('django-package-does-not-depend-on-django', $basepkg)
+        $self->hint('django-package-does-not-depend-on-django', $basepkg)
           if not $processable->relation('strong')->implies($basepkg);
     }
 
@@ -262,7 +262,7 @@ sub installable {
                 my $visit = sub {
                     my $rel = $_;
                     return if any { $rel =~ /$_/ } @IGNORE;
-                    $self->tag(
+                    $self->hint(
 'python-package-depends-on-package-from-other-python-variant',
                         "$field: $rel"
                     ) if /^$prefix-/;
@@ -282,37 +282,37 @@ sub visit_installed_files {
     #  skip any file installed inside a __pycache__ directory
     #  - we have a separate check for that directory.
     if ($file->name =~ m,\.py[co]$, && $file->name !~ m,/__pycache__/,) {
-        $self->tag('package-installs-python-bytecode', $file->name);
+        $self->hint('package-installs-python-bytecode', $file->name);
     }
 
     # __pycache__ (directory for pyc/pyo files)
     if ($file->is_dir && $file->name =~ m,/__pycache__/,){
-        $self->tag('package-installs-python-pycache-dir', $file);
+        $self->hint('package-installs-python-pycache-dir', $file);
     }
 
     if (   $file->is_file
         && $file->name
         =~ m,^usr/lib/debug/usr/lib/pyshared/(python\d?(?:\.\d+))/(.++)$,) {
         my $correct = "usr/lib/debug/usr/lib/pymodules/$1/$2";
-        $self->tag('python-debug-in-wrong-location', $file->name, $correct);
+        $self->hint('python-debug-in-wrong-location', $file->name, $correct);
     }
 
     # .egg (Python egg files)
-    $self->tag('package-installs-python-egg', $file->name)
+    $self->hint('package-installs-python-egg', $file->name)
       if $file->name =~ m,\.egg$,
       && ( $file->name =~ m,^usr/lib/python\d+(?:\.\d+/),
         || $file->name =~ m,^usr/lib/pyshared,
         || $file->name =~ m,^usr/share/,);
 
     # /usr/lib/site-python
-    $self->tag('file-in-usr-lib-site-python', $file->name)
+    $self->hint('file-in-usr-lib-site-python', $file->name)
       if $file->name =~ m,^usr/lib/site-python/\S,;
 
     # pythonX.Y extensions
     if (   $file->name =~ m,^usr/lib/python\d\.\d/\S,
         && $file->name !~ m,^usr/lib/python\d\.\d/(?:site|dist)-packages/,){
 
-        $self->tag('third-party-package-in-python-dir', $file->name)
+        $self->hint('third-party-package-in-python-dir', $file->name)
           unless $self->processable->source =~ m/^python(?:\d\.\d)?$/
           || $self->processable->source =~ m{\A python\d?-
                                (?:stdlib-extensions|profiler|old-doctools) \Z}xsm;
@@ -373,12 +373,12 @@ sub visit_installed_files {
           unless $actual_module_path eq $specified_module_path;
 
         for my $regex ($GENERIC_PYTHON_MODULES->all) {
-            $self->tag('python-module-has-overly-generic-name',
+            $self->hint('python-module-has-overly-generic-name',
                 $file->name, "($1)")
               if $relative =~ m,^($regex)(?:\.py|/__init__\.py)$,i;
         }
 
-        $self->tag('unknown-file-in-python-module-directory', $file->name)
+        $self->hint('unknown-file-in-python-module-directory', $file->name)
           if $file->is_file
           and $relative eq $file->basename  # "top-level"
           and not $ALLOWED_PYTHON_FILES->matches_any($file->basename, 'i');
@@ -390,7 +390,7 @@ sub visit_installed_files {
 sub breakdown_installed_files {
     my ($self) = @_;
 
-    $self->tag(
+    $self->hint(
         'python-module-in-wrong-location',
         $_ . ARROW . $self->correct_location->{$_}
     )for keys %{$self->correct_location};

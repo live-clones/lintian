@@ -28,7 +28,7 @@ use Carp qw(croak);
 use Devel::Size qw(total_size);
 use File::Spec;
 use List::Compare;
-use List::MoreUtils qw(uniq firstval);
+use List::MoreUtils qw(none uniq firstval);
 use Path::Tiny;
 use POSIX qw(ENOENT);
 use Time::HiRes qw(gettimeofday tv_interval);
@@ -207,6 +207,9 @@ sub process {
     my $success = 1;
     for my $processable ($self->get_processables){
 
+        # needed to read tag specifications
+        $processable->profile($self->profile);
+
         my $declared_overrides;
 
         $OUTPUT->debug_msg(1,
@@ -222,38 +225,59 @@ sub process {
             }
 
             my %alias = %{$self->profile->known_aliases};
+            my @renamed_overrides
+              = grep { length $alias{$_} } keys %{$declared_overrides};
 
             # treat renamed tags in overrides
-            for my $tagname (keys %{$declared_overrides}) {
+            for my $dated (@renamed_overrides) {
 
-                # use new name if tag was renamed
-                my $current = $alias{$tagname};
+                # get new name
+                my $modern = $alias{$dated};
 
-                next
-                  unless defined $current;
+                # make space for renamed override
+                $declared_overrides->{$modern} //= {};
 
-                unless ($current eq $tagname) {
+                for my $context (keys %{$declared_overrides->{$dated}}) {
 
-                    $processable->tag('renamed-tag',
-                        "$tagname => $current in line "
-                          .$declared_overrides->{$tagname}{$_}{line})
-                      for keys %{$declared_overrides->{$tagname}};
+                    # alert user to new tag name
+                    $processable->hint('renamed-tag',
+                        "$dated => $modern in line "
+                          .$declared_overrides->{$dated}{$context}{line});
 
-                    $declared_overrides->{$current} //= {};
-                    $declared_overrides->{$current}{$_}
-                      = $declared_overrides->{$tagname}{$_}
-                      for keys %{$declared_overrides->{$tagname}};
+                    if (exists $declared_overrides->{$modern}{$context}) {
 
-                    delete $declared_overrides->{$tagname};
+                        my @lines = (
+                            $declared_overrides->{$dated}{$context}{line},
+                            $declared_overrides->{$modern}{$context}{line});
+                        $processable->hint('duplicate-override-context',
+                            $modern, 'lines', sort @lines);
+
+                        next;
+                    }
+
+                    # transfer context to current tag name
+                    $declared_overrides->{$modern}{$context}
+                      = $declared_overrides->{$dated}{$context};
+
+                    # remember old tagname
+                    $declared_overrides->{$modern}{$context}{'renamed-from'}
+                      = $dated;
+
+                    # remove the old override context
+                    delete $declared_overrides->{$dated}{$context};
                 }
+
+                # remove the alias override if there are no contexts left
+                delete $declared_overrides->{$dated}
+                  unless %{$declared_overrides->{$dated}};
             }
 
             # complain about and filter out unknown tags in overrides
-            my @unknown_overrides = grep { !$self->profile->get_taginfo($_) }
+            my @unknown_overrides = grep { !$self->profile->get_tag($_) }
               keys %{$declared_overrides};
             for my $tagname (@unknown_overrides) {
 
-                $processable->tag('malformed-override',
+                $processable->hint('malformed-override',
                     "Unknown tag $tagname in line "
                       . $declared_overrides->{$tagname}{$_}{line})
                   for keys %{$declared_overrides->{$tagname}};
@@ -312,39 +336,20 @@ sub process {
             $OUTPUT->perf_log("$procid,check/$checkname,${raw_res}");
         }
 
-        my $knownlc
-          = List::Compare->new([map { $_->name } @{$processable->tags}],
-            [$self->profile->known_tags]);
-        my @unknown_tagnames = $knownlc->get_Lonly;
-        croak 'tried to issue unknown tags: ' . join(SPACE, @unknown_tagnames)
-          if @unknown_tagnames;
-
-        # remove disabled tags
-        my @enabled_tags
-          = grep { $self->profile->tag_is_enabled($_->name) }
-          @{$processable->tags};
-        $processable->tags(\@enabled_tags);
-
         my %used_overrides;
 
-        my @keep_tags;
-        for my $tag (@{$processable->tags}) {
+        my @keep_hints;
+        for my $hint (@{$processable->hints}) {
 
-            next
-              if $tag->name eq 'mismatched-override'
-              || $tag->name eq 'unused-override';
-
-            my $override;
-
-            my $declared = $declared_overrides->{$tag->name};
-            if ($declared) {
+            my $declared = $declared_overrides->{$hint->tag->name};
+            if ($declared && !$hint->tag->show_always) {
 
                 # do not use EMPTY; hash keys literal
                 # empty context in specification matches all
-                $override = $declared->{''};
+                my $override = $declared->{''};
 
                 # matches context exactly
-                $override = $declared->{$tag->context}
+                $override = $declared->{$hint->context}
                   unless $override;
 
                 # look for patterns
@@ -354,7 +359,7 @@ sub process {
                       keys %{$declared};
 
                     my $match= firstval {
-                        $tag->context =~ m/^$declared->{$_}{pattern}\z/
+                        $hint->context =~ m/^$declared->{$_}{pattern}\z/
                     }
                     @candidates;
 
@@ -363,18 +368,18 @@ sub process {
                 }
 
                 # new hash keys are autovivified to 0
-                $used_overrides{$tag->name}{$override->{context}}++
+                $used_overrides{$hint->tag->name}{$override->{context}}++
                   if $override;
+
+                $hint->override($override);
             }
 
-            $tag->override($override);
-
-            push(@keep_tags, $tag);
+            push(@keep_hints, $hint);
         }
 
-        $processable->tags(\@keep_tags);
+        $processable->hints(\@keep_hints);
 
-        my %otherwise_visible = map { $_->name => 1 } @keep_tags;
+        my %otherwise_visible = map { $_->tag->name => 1 } @keep_hints;
 
         # look for unused overrides
         for my $tagname (keys %{$declared_overrides}) {
@@ -390,19 +395,20 @@ sub process {
             my @unused_contexts = $context_lc->get_Lonly;
 
             # cannot be overridden or suppressed
-            if ($otherwise_visible{$tagname}) {
-                $processable->tag('mismatched-override', $tagname, $_)
-                  for @unused_contexts;
+            my $condition = 'unused-override';
+            $condition = 'mismatched-override'
+              if $otherwise_visible{$tagname};
 
-            } else {
-                $processable->tag('unused-override', $tagname, $_)
-                  for @unused_contexts;
+            for my $context (@unused_contexts) {
+
+                # for renames, use the original name from overrides
+                my $original_name
+                  = $declared_overrides->{$tagname}{$context}{'renamed-from'}
+                  // $tagname;
+
+                $processable->hint($condition, $original_name, $context);
             }
         }
-
-        # copy tag specifications into tags
-        $_->info($self->profile->get_taginfo($_->name))
-          for @{$processable->tags};
     }
 
     $self->processing_end(gmtime->datetime . 'Z');

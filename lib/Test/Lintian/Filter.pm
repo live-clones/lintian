@@ -191,20 +191,20 @@ sub find_selected_lintian_testpaths {
 
             my %wanted = map { $_ => 1 } @{$filter->{check}};
 
-            for my $tag (@{$filter->{tag}}) {
+            for my $tagname (@{$filter->{tag}}) {
 
-                my $taginfo = $profile->get_taginfo($tag);
-                unless ($taginfo) {
-                    say "Tag $tag not found";
+                my $tag = $profile->get_tag($tagname);
+                unless ($tag) {
+                    say "Tag $tagname not found";
                     return;
                 }
 
-                if (none { $tag eq $_ } $profile->enabled_tags) {
-                    say "Tag $tag not enabled";
+                if (none { $tagname eq $_ } $profile->enabled_tags) {
+                    say "Tag $tagname not enabled";
                     return;
                 }
 
-                $wanted{$taginfo->check} = 1;
+                $wanted{$tag->check} = 1;
             }
 
             for my $testpath (find_all_testpaths($suitepath)) {

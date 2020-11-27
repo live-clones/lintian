@@ -46,7 +46,7 @@ sub source {
 
     unless ($self->processable->fields->exists('Testsuite')) {
 
-        $self->tag('no-testsuite-header');
+        $self->hint('no-testsuite-header');
         return;
     }
 
@@ -54,7 +54,7 @@ sub source {
 
     unless ($testsuite eq 'autopkgtest-pkg-nodejs') {
 
-        $self->tag('no-team-tests', $testsuite);
+        $self->hint('no-team-tests', $testsuite);
         return;
     }
 

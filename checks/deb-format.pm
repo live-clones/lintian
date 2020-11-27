@@ -60,10 +60,10 @@ sub installable {
         my $count = scalar(@members);
         my ($ctrl_member, $data_member);
         if ($count < 3) {
-            $self->tag('malformed-deb-archive',
+            $self->hint('malformed-deb-archive',
                 "found only $count members instead of 3");
         } elsif ($members[0] ne 'debian-binary') {
-            $self->tag('malformed-deb-archive',
+            $self->hint('malformed-deb-archive',
                 "first member $members[0] not debian-binary");
         } elsif (
             $count == 3 and none {
@@ -117,7 +117,7 @@ sub installable {
                 } else {
                     $text = 'unexpected member';
                 }
-                $self->tag('misplaced-extra-member-in-deb',
+                $self->hint('misplaced-extra-member-in-deb',
                     "$member ($text at position $actual_index)");
             }
         }
@@ -125,23 +125,23 @@ sub installable {
         if (not defined($ctrl_member)) {
             # Somehow I doubt we will ever get this far without a control
             # file... :)
-            $self->tag('malformed-deb-archive', 'Missing control.tar member');
+            $self->hint('malformed-deb-archive', 'Missing control.tar member');
             $failed = 1;
         } else {
             if (
                 $ctrl_member !~ m/\A
                      control\.tar(?:\.(?:gz|xz))?  \Z/xsm
             ) {
-                $self->tag(
+                $self->hint(
                     'malformed-deb-archive',
                     join(' ',
                         "second (official) member $ctrl_member",
                         'not control.tar.(gz|xz)'));
                 $failed = 1;
             } elsif ($ctrl_member eq 'control.tar') {
-                $self->tag('uses-no-compression-for-control-tarball');
+                $self->hint('uses-no-compression-for-control-tarball');
             }
-            $self->tag('control-tarball-compression-format',
+            $self->hint('control-tarball-compression-format',
                 $ctrl_member =~ s/^control\.tar\.?//r || '(none)');
         }
 
@@ -149,7 +149,7 @@ sub installable {
             # Somehow I doubt we will ever get this far without a data
             # member (i.e. I suspect unpacked and index will fail), but
             # mah
-            $self->tag('malformed-deb-archive', 'Missing data.tar member');
+            $self->hint('malformed-deb-archive', 'Missing data.tar member');
             $failed = 1;
         } else {
             if (
@@ -157,7 +157,7 @@ sub installable {
                      data\.tar(?:\.(?:gz|bz2|xz|lzma))?  \Z/xsm
             ) {
                 # wasn't okay after all
-                $self->tag(
+                $self->hint(
                     'malformed-deb-archive',
                     join(' ',
                         "third (official) member $data_member",
@@ -165,20 +165,20 @@ sub installable {
                 $failed = 1;
             } elsif ($self->processable->type eq 'udeb'
                 && $data_member !~ m/^data\.tar\.[gx]z$/) {
-                $self->tag(
+                $self->hint(
                     'udeb-uses-unsupported-compression-for-data-tarball');
             } elsif ($data_member eq 'data.tar.lzma') {
-                $self->tag('uses-deprecated-compression-for-data-tarball',
+                $self->hint('uses-deprecated-compression-for-data-tarball',
                     'lzma');
                 # Ubuntu's archive allows lzma packages.
-                $self->tag('lzma-deb-archive');
+                $self->hint('lzma-deb-archive');
             } elsif ($data_member eq 'data.tar.bz2') {
-                $self->tag('uses-deprecated-compression-for-data-tarball',
+                $self->hint('uses-deprecated-compression-for-data-tarball',
                     'bzip2');
             } elsif ($data_member eq 'data.tar') {
-                $self->tag('uses-no-compression-for-data-tarball');
+                $self->hint('uses-no-compression-for-data-tarball');
             }
-            $self->tag('data-tarball-compression-format',
+            $self->hint('data-tarball-compression-format',
                 $data_member =~ s/^data\.tar\.?//r || '(none)');
         }
     } else {
@@ -187,7 +187,7 @@ sub installable {
         $stderr =~ s/\n.*//s;
         $stderr =~ s/^ar:\s*//;
         $stderr =~ s/^deb:\s*//;
-        $self->tag('malformed-deb-archive', "ar error: $stderr");
+        $self->hint('malformed-deb-archive', "ar error: $stderr");
     }
 
     # Check the debian-binary version number.  We probably won't get
@@ -198,11 +198,11 @@ sub installable {
     if (not defined($failed)) {
         my $output = safe_qx('ar', 'p', $deb_path, 'debian-binary');
         if ($? != 0) {
-            $self->tag('malformed-deb-archive',
+            $self->hint('malformed-deb-archive',
                 'cannot read debian-binary member');
         } elsif ($output !~ /^2\.\d+\n/) {
             my ($version) = split(m/\n/, $output);
-            $self->tag('malformed-deb-archive', "version $version not 2.0");
+            $self->hint('malformed-deb-archive', "version $version not 2.0");
         }
     }
 

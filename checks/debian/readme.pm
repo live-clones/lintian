@@ -36,7 +36,7 @@ with 'Lintian::Check';
 sub spelling_tag_emitter {
     my ($self, @orig_args) = @_;
     return sub {
-        return $self->tag(@orig_args, @_);
+        return $self->hint(@orig_args, @_);
     };
 }
 
@@ -72,7 +72,7 @@ sub installable {
     return if not defined($fd);
     while (my $line = <$fd>) {
         if ($line =~ m,/usr/doc\b,) {
-            $self->tag('readme-debian-mentions-usr-doc', "line $.");
+            $self->hint('readme-debian-mentions-usr-doc', "line $.");
         }
         $readme .= $line;
     }
@@ -86,9 +86,9 @@ sub installable {
     );
     my $regex = join('|', @template);
     if ($readme =~ m/$regex/i) {
-        $self->tag('readme-debian-contains-debmake-template');
+        $self->hint('readme-debian-contains-debmake-template');
     } elsif ($readme =~ m/^\s*-- [^<]*<([^> ]+.\@[^>.]*)>/m) {
-        $self->tag('readme-debian-contains-invalid-email-address', $1);
+        $self->hint('readme-debian-contains-invalid-email-address', $1);
     }
 
     check_spelling(

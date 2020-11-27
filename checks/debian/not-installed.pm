@@ -53,7 +53,7 @@ sub source {
     my @usr_lib_triplet = grep { m{^usr/lib/$ARCHITECTURE_TRIPLET/} } @lines;
     my @too_specific = grep { !m{^usr/lib/\*/} } @usr_lib_triplet;
 
-    $self->tag('unwanted-path-too-specific', $_) for @too_specific;
+    $self->hint('unwanted-path-too-specific', $_) for @too_specific;
 
     return;
 }

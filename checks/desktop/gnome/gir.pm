@@ -44,7 +44,7 @@ sub source {
             if (
                 not $processable->binary_relation($bin, 'strong')
                 ->implies('${gir:Depends}')) {
-                $self->tag(('typelib-missing-gir-depends', $bin));
+                $self->hint(('typelib-missing-gir-depends', $bin));
             }
         }
     }
@@ -80,7 +80,7 @@ sub installable {
         = $processable->installed->resolve_path('usr/lib/girepository-1.0/')) {
         push @typelibs, $dir->children;
         foreach my $typelib ($dir->children) {
-            $self->tag((
+            $self->hint((
                 'typelib-not-in-multiarch-directory',$typelib,
                 "usr/lib/$madir/girepository-1.0"
             ));
@@ -96,23 +96,23 @@ sub installable {
 
     if ($section ne 'libdevel' && $section ne 'oldlibs') {
         foreach my $gir (@girs) {
-            $self->tag(('gir-section-not-libdevel', $gir, $section));
+            $self->hint(('gir-section-not-libdevel', $gir, $section));
         }
     }
 
     if ($section ne 'introspection' && $section ne 'oldlibs') {
         foreach my $typelib (@typelibs) {
-            $self->tag(
+            $self->hint(
                 ('typelib-section-not-introspection', $typelib, $section));
         }
     }
 
     if ($processable->architecture eq 'all') {
         foreach my $gir (@girs) {
-            $self->tag(('gir-in-arch-all-package', $gir));
+            $self->hint(('gir-in-arch-all-package', $gir));
         }
         foreach my $typelib (@typelibs) {
-            $self->tag(('typelib-in-arch-all-package', $typelib));
+            $self->hint(('typelib-in-arch-all-package', $typelib));
         }
     }
 
@@ -134,7 +134,7 @@ sub installable {
         if (
             not $processable->relation('strong')
             ->implies("$expected (= $version)")) {
-            $self->tag(('gir-missing-typelib-dependency', $gir, $expected));
+            $self->hint(('gir-missing-typelib-dependency', $gir, $expected));
         }
     }
 
@@ -144,7 +144,7 @@ sub installable {
         $expected =~ tr/_/-/;
         if ($pkg ne $expected
             and not $processable->relation('Provides')->implies($expected)) {
-            $self->tag(
+            $self->hint(
                 ('typelib-package-name-does-not-match', $typelib, $expected));
         }
     }

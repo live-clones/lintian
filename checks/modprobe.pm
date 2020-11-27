@@ -39,12 +39,12 @@ sub visit_installed_files {
         and $1 !~ m,\.conf$,
         and not $file->is_dir) {
 
-        $self->tag('non-conf-file-in-modprobe.d', $file->name);
+        $self->hint('non-conf-file-in-modprobe.d', $file->name);
     } elsif ($file->name =~ m,^etc/modprobe\.d/(.+)$,
         or $file->name =~ m,^etc/modules-load\.d/(.+)$,) {
 
         my @obsolete = uniq($file->bytes =~ /^\s*(install|remove)/mg);
-        $self->tag('obsolete-command-in-modprobe.d-file', $file->name, $_)
+        $self->hint('obsolete-command-in-modprobe.d-file', $file->name, $_)
           for @obsolete;
     }
 

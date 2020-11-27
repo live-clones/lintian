@@ -52,7 +52,7 @@ sub source {
     }
 
     # Check if more than one signing key is present
-    $self->tag('public-upstream-keys-in-multiple-locations',
+    $self->hint('public-upstream-keys-in-multiple-locations',
         sort keys %key_locations)
       if scalar keys %key_locations > 1;
 
@@ -61,7 +61,7 @@ sub source {
 
         # native packages should not have such keys
         if ($processable->native) {
-            $self->tag('public-upstream-key-in-native-package', $key_name);
+            $self->hint('public-upstream-key-in-native-package', $key_name);
             next;
         }
 
@@ -79,7 +79,7 @@ sub source {
         my $output = safe_qx(@command);
 
         if ($?) {
-            $self->tag('public-upstream-key-unusable',
+            $self->hint('public-upstream-key-unusable',
                 $key_name,'cannot be processed');
             next;
         }
@@ -94,7 +94,7 @@ sub source {
         shift @keys;
 
         unless (scalar @keys) {
-            $self->tag('public-upstream-key-unusable',
+            $self->hint('public-upstream-key-unusable',
                 $key_name,'contains no keys');
             next;
         }
@@ -107,14 +107,14 @@ sub source {
 
             # require at least one packet
             unless (length $public_key) {
-                $self->tag('public-upstream-key-unusable',
+                $self->hint('public-upstream-key-unusable',
                     $key_name,'has no public key');
                 next;
             }
 
             # look for key identifier
             unless ($public_key =~ qr/^\s*keyid:\s+(\S+)$/m) {
-                $self->tag('public-upstream-key-unusable',
+                $self->hint('public-upstream-key-unusable',
                     $key_name, 'has no keyid');
                 next;
             }
@@ -137,7 +137,7 @@ sub source {
             my $extrasignatures = scalar @thirdparty;
 
             # export-minimal strips such signatures
-            $self->tag('public-upstream-key-not-minimal',
+            $self->hint('public-upstream-key-not-minimal',
                 $key_name,
                 "has $extrasignatures extra signature(s) for keyid $keyid")
               if $extrasignatures;

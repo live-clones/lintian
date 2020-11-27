@@ -38,7 +38,7 @@ sub visit_installed_files {
     my ($self, $file) = @_;
 
     # links to FHS locations are allowed
-    $self->tag('package-installs-file-to-usr-x11r6', $file->name)
+    $self->hint('package-installs-file-to-usr-x11r6', $file->name)
       if $file->name =~ m,^usr/X11R6/, && !$file->is_symlink;
 
     return
@@ -52,17 +52,17 @@ sub visit_installed_files {
           if any { $subdir eq $_ } qw(100dpi 75dpi misc);
 
         if (any { $subdir eq $_ } qw(PEX CID Speedo cyrillic)) {
-            $self->tag('file-in-discouraged-x11-font-directory', $file->name);
+            $self->hint('file-in-discouraged-x11-font-directory', $file->name);
 
         } elsif (
             none { $subdir eq $_ }
             qw(100dpi 75dpi misc Type1 encodings util)
         ) {
-            $self->tag('file-in-unknown-x11-font-directory', $file->name);
+            $self->hint('file-in-unknown-x11-font-directory', $file->name);
 
         } elsif ($file->basename eq 'encodings.dir'
             or $file->basename =~ m{fonts\.(dir|scale|alias)}) {
-            $self->tag('package-contains-compiled-font-file', $file->name);
+            $self->hint('package-contains-compiled-font-file', $file->name);
         }
     }
 
@@ -76,10 +76,10 @@ sub breakdown_installed_files {
     my %fontdirs = %{$self->fontdirs};
 
     # check for multiple DPIs in the same X11 bitmap font package.
-    $self->tag('package-contains-multiple-dpi-fonts')
+    $self->hint('package-contains-multiple-dpi-fonts')
       if $fontdirs{'100dpi'} && $fontdirs{'75dpi'};
 
-    $self->tag('package-mixes-misc-and-dpi-fonts')
+    $self->hint('package-mixes-misc-and-dpi-fonts')
       if $fontdirs{misc} && keys %fontdirs > 1;
 
     return;

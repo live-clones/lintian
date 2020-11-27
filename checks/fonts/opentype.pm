@@ -46,7 +46,7 @@ sub visit_installed_files {
     return
       unless $file->file_info =~ /^OpenType font data/;
 
-    $self->tag('opentype-font-wrong-filename', $file->name)
+    $self->hint('opentype-font-wrong-filename', $file->name)
       unless $file->name =~ /\.otf$/i;
 
     my $font = Font::TTF::Font->open($file->unpacked_path);
@@ -74,7 +74,7 @@ sub visit_installed_files {
     $terms = join(COMMA . SPACE, @clauses)
       if @clauses;
 
-    $self->tag('opentype-font-prohibits-installable-embedding',
+    $self->hint('opentype-font-prohibits-installable-embedding',
         "[$terms] " . $file->name)
       if length $terms;
 

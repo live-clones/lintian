@@ -44,7 +44,7 @@ sub visit_installed_files {
         # may prompt for password with -t; piping yes '' does not work
         safe_qx('unzip', '-l', $file->unpacked_path);
 
-        $self->tag('broken-zip', $file->name)
+        $self->hint('broken-zip', $file->name)
           if $?;
 
         # should issue a tag for encrypted members, see Bug#935292

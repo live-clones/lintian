@@ -38,14 +38,14 @@ sub visit_installed_files {
 
     # /etc/cron.daily, etc.
     # NB: cron ships ".placeholder" files, which shouldn't be run.
-    $self->tag('run-parts-cron-filename-contains-illegal-chars', $file->name)
+    $self->hint('run-parts-cron-filename-contains-illegal-chars', $file->name)
       if $file->name
       =~ m,^etc/cron\.(?:daily|hourly|monthly|weekly|d)/[^\.].*[\+\.],;
 
     # /etc/cron.d
     # NB: cron ships ".placeholder" files in etc/cron.d,
     # which we shouldn't tag.
-    $self->tag('bad-permissions-for-etc-cron.d-script',
+    $self->hint('bad-permissions-for-etc-cron.d-script',
         sprintf('%s %04o != 0644', $file->name, $file->operm))
       if $file->name =~ m,^etc/cron\.d/[^\.], && $file->operm != 0644;
 

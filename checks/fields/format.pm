@@ -51,7 +51,7 @@ sub source {
           if $format =~ /^\s*$f\s*\z/;
     }
 
-    $self->tag('unsupported-source-format', $format) unless $supported;
+    $self->hint('unsupported-source-format', $format) unless $supported;
 
     return;
 }
@@ -63,7 +63,7 @@ sub changes {
 
     # without a Format field something is wrong
     unless (length $format) {
-        $self->tag('malformed-changes-file');
+        $self->hint('malformed-changes-file');
         return;
     }
 

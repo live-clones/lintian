@@ -41,7 +41,7 @@ sub visit_installed_files {
 
         safe_qx('xz', '--test', $file->unpacked_path);
 
-        $self->tag('broken-xz', $file->name)
+        $self->hint('broken-xz', $file->name)
           if $?;
     }
 

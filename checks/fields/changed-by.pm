@@ -53,7 +53,7 @@ sub changes {
           if $changed_by =~ /$regex/;
 
         my $explanation = $DERIVATIVE_CHANGED_BY->value($regex);
-        $self->tag('changed-by-invalid-for-derivative',
+        $self->hint('changed-by-invalid-for-derivative',
             $changed_by, "($explanation)");
     }
 

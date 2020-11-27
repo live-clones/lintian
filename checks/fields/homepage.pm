@@ -64,10 +64,10 @@ sub source {
         }
 
         if ($binary_has_homepage_field) {
-            $self->tag('homepage-in-binary-package');
+            $self->hint('homepage-in-binary-package');
 
         } else {
-            $self->tag('no-homepage-field');
+            $self->hint('no-homepage-field');
         }
 
         return;
@@ -89,7 +89,7 @@ sub always {
     my $orig = $fields->value('Homepage');
 
     if ($homepage =~ /^<(?:UR[LI]:)?.*>$/i) {
-        $self->tag('superfluous-clutter-in-homepage', $orig);
+        $self->hint('superfluous-clutter-in-homepage', $orig);
         $homepage = substr($homepage, 1, length($homepage) - 2);
     }
 
@@ -97,12 +97,12 @@ sub always {
     my $uri = URI->new($homepage);
 
     # not an absolute URI or (most likely) an invalid protocol
-    $self->tag('bad-homepage', $orig)
+    $self->hint('bad-homepage', $orig)
       unless $uri->scheme && $uri->scheme =~ /^(?:ftp|https?|gopher)$/;
 
     foreach my $line ($BAD_HOMEPAGES->all) {
         my ($tag, $re) = split(/\s*~~\s*/, $line);
-        $self->tag($tag, $orig) if $homepage =~ m/$re/;
+        $self->hint($tag, $orig) if $homepage =~ m/$re/;
     }
 
     return;

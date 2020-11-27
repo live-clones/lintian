@@ -43,7 +43,7 @@ sub source {
     my $deprecated_configure = $processable->patched->lookup('configure.in');
 
     if (defined $deprecated_configure) {
-        $self->tag('deprecated-configure-filename');
+        $self->hint('deprecated-configure-filename');
     }
 
     return;

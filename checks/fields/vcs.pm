@@ -211,12 +211,12 @@ sub always {
         }
     }
 
-    $self->tag('package-is-team-maintained', $team_email,
+    $self->hint('package-is-team-maintained', $team_email,
         "(with $num_uploaders uploaders)")
       if $is_teammaintained;
-    $self->tag('package-is-co-maintained', "(with $num_uploaders uploaders)")
+    $self->hint('package-is-co-maintained', "(with $num_uploaders uploaders)")
       if $is_comaintained;
-    $self->tag('package-is-maintained-by-individual')
+    $self->hint('package-is-maintained-by-individual')
       if $is_maintained_by_individual;
 
     my %seen_vcs;
@@ -232,24 +232,24 @@ sub always {
 
         my @parts = &$splitter($uri);
         if (not @parts or not $parts[0]) {
-            $self->tag('vcs-field-uses-unknown-uri-format', $fieldname, $uri);
+            $self->hint('vcs-field-uses-unknown-uri-format', $fieldname, $uri);
         } else {
             if (    $VCS_RECOMMENDED_URIS{$platform}
                 and $parts[0] !~ $VCS_RECOMMENDED_URIS{$platform}) {
                 if (    $VCS_VALID_URIS{$platform}
                     and $parts[0] =~ $VCS_VALID_URIS{$platform}) {
-                    $self->tag('vcs-field-uses-not-recommended-uri-format',
+                    $self->hint('vcs-field-uses-not-recommended-uri-format',
                         $fieldname, $uri);
                 } else {
-                    $self->tag('vcs-field-uses-unknown-uri-format',
+                    $self->hint('vcs-field-uses-unknown-uri-format',
                         $fieldname,$uri);
                 }
             }
 
-            $self->tag('vcs-field-has-unexpected-spaces', $fieldname, $uri)
+            $self->hint('vcs-field-has-unexpected-spaces', $fieldname, $uri)
               if (any { $_ and /\s/} @parts);
 
-            $self->tag('vcs-field-uses-insecure-uri', $fieldname, $uri)
+            $self->hint('vcs-field-uses-insecure-uri', $fieldname, $uri)
               if $parts[0] =~ m%^(?:git|(?:nosmart\+)?http|svn)://%
               || $parts[0] =~ m%^(?:lp|:pserver):%;
         }
@@ -263,18 +263,18 @@ sub always {
                 &$canonify($canonicalized, $tag);
             }
 
-            $self->tag($tag, $fieldname, $parts[0], $canonicalized)
+            $self->hint($tag, $fieldname, $parts[0], $canonicalized)
               unless $canonicalized eq $parts[0];
         }
 
         if ($platform eq 'Browser') {
 
-            $self->tag('vcs-browser-links-to-empty-view', $uri)
+            $self->hint('vcs-browser-links-to-empty-view', $uri)
               if $uri =~ m%rev=0&sc=0%;
 
         } else {
-            $self->tag('vcs', lc $platform);
-            $self->tag('vcs-uri', $uri);
+            $self->hint('vcs', lc $platform);
+            $self->hint('vcs-uri', $uri);
             $seen_vcs{$platform}++;
 
             foreach my $regex ($KNOWN_VCS_HOSTERS->all) {
@@ -284,7 +284,7 @@ sub always {
                         && $platform ne $re_vcs
                         && $platform ne 'Browser') {
 
-                        $self->tag('vcs-field-mismatch',
+                        $self->hint('vcs-field-mismatch',
                             "Vcs-$platform != Vcs-$re_vcs",$uri);
 
                         # warn once
@@ -295,7 +295,7 @@ sub always {
         }
 
         if ($uri =~ m{//(.+)\.debian\.org/}) {
-            $self->tag('vcs-obsolete-in-debian-infrastructure',
+            $self->hint('vcs-obsolete-in-debian-infrastructure',
                 $fieldname, $uri)
               unless $1 =~ m{^(?:salsa|.*\.dgit)$};
 
@@ -305,32 +305,32 @@ sub always {
         if ($maintainer =~ /packages\@qa.debian.org/ && $platform ne 'Browser')
         {
             if ($uri =~ m{//(.+)\.debian\.org/}) {
-                $self->tag('orphaned-package-maintained-in-private-space',
+                $self->hint('orphaned-package-maintained-in-private-space',
                     $fieldname, $uri)
                   unless $uri =~ m{//salsa\.debian\.org/debian/}
                   || $uri =~ m{//git\.dgit\.debian\.org/};
             } else {
-                $self->tag(
+                $self->hint(
                     'orphaned-package-not-maintained-in-debian-infrastructure',
                     $fieldname, $uri
                 );
             }
         }
 
-        $self->tag('old-dpmt-vcs')
+        $self->hint('old-dpmt-vcs')
           if $maintainer =~ m{python-modules-team\@lists\.alioth\.debian\.org}
           and $uri !~ m{salsa.debian.org/python-team/packages/.+};
 
-        $self->tag('old-papt-vcs')
+        $self->hint('old-papt-vcs')
           if $maintainer =~ m{python-apps-team\@lists\.alioth\.debian\.org}
           and $uri !~ m{salsa.debian.org/python-team/packages/.+};
     }
 
-    $self->tag('vcs-fields-use-more-than-one-vcs',
+    $self->hint('vcs-fields-use-more-than-one-vcs',
         sort map { lc } keys %seen_vcs)
       if keys %seen_vcs > 1;
 
-    $self->tag('co-maintained-package-with-no-vcs-fields')
+    $self->hint('co-maintained-package-with-no-vcs-fields')
       if $type eq 'source'
       and ($is_comaintained or $is_teammaintained)
       and not %seen_vcs;
@@ -345,7 +345,7 @@ sub always {
 
             if ($processable->fields->value($fieldname)=~ m/^($regex.*)/xi){
 
-                $self->tag('missing-vcs-browser-field', $fieldname, $1);
+                $self->hint('missing-vcs-browser-field', $fieldname, $1);
 
                 # warn once
                 last;

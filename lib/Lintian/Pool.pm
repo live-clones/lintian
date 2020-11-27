@@ -161,37 +161,37 @@ sub process{
 
         my $success= $group->process(\%ignored_overrides, $option, $OUTPUT);
 
-        # associate all tags with processable
+        # associate all hints with processable
         for my $processable ($group->get_processables){
-            $_->processable($processable) for @{$processable->tags};
+            $_->processable($processable) for @{$processable->hints};
         }
 
-        my @tags = map { @{$_->tags} } $group->get_processables;
+        my @hints = map { @{$_->hints} } $group->get_processables;
 
         # remove circular references
-        $_->tags([]) for $group->get_processables;
+        $_->hints([]) for $group->get_processables;
 
-        my @reported = grep { !$_->override } @tags;
-        my @reported_trusted = grep { !$_->info->experimental } @reported;
-        my @reported_experimental = grep { $_->info->experimental } @reported;
+        my @reported = grep { !$_->override } @hints;
+        my @reported_trusted = grep { !$_->tag->experimental } @reported;
+        my @reported_experimental = grep { $_->tag->experimental } @reported;
 
-        my @override = grep { $_->override } @tags;
-        my @override_trusted = grep { !$_->info->experimental } @override;
-        my @override_experimental = grep { $_->info->experimental } @override;
+        my @override = grep { $_->override } @hints;
+        my @override_trusted = grep { !$_->tag->experimental } @override;
+        my @override_experimental = grep { $_->tag->experimental } @override;
 
         $unused_overrides+= scalar grep {
-                 $_->name eq 'mismatched-override'
-              || $_->name eq 'unused-override'
-        } @tags;
+                 $_->tag->name eq 'mismatched-override'
+              || $_->tag->name eq 'unused-override'
+        } @hints;
 
         my %reported_count;
-        $reported_count{$_->info->effective_severity}++ for @reported_trusted;
+        $reported_count{$_->tag->effective_severity}++ for @reported_trusted;
         $reported_count{experimental} += scalar @reported_experimental;
         $reported_count{override} += scalar @override;
 
         unless ($option->{'no-override'} || $option->{'show-overrides'}) {
 
-            $override_count{$_->info->effective_severity}++
+            $override_count{$_->tag->effective_severity}++
               for @override_trusted;
             $override_count{experimental} += scalar @override_experimental;
         }
@@ -200,25 +200,25 @@ sub process{
           if $success && any { $reported_count{$_} } @{$option->{'fail-on'}};
 
         # discard disabled tags
-        @tags= grep { $PROFILE->tag_is_enabled($_->name) } @tags;
+        @hints= grep { $PROFILE->tag_is_enabled($_->tag->name) } @hints;
 
         # discard experimental tags
-        @tags = grep { !$_->info->experimental } @tags
+        @hints = grep { !$_->tag->experimental } @hints
           unless $option->{'display-experimental'};
 
         # discard overridden tags
-        @tags = grep { !defined $_->override } @tags
+        @hints = grep { !defined $_->override } @hints
           unless $option->{'show-overrides'};
 
         # discard outside the selected display level
-        @tags= grep { $PROFILE->display_level_for_tag($_->name) }@tags;
+        @hints= grep { $PROFILE->display_level_for_tag($_->tag->name) }@hints;
 
         my $reference_limit = $option->{'display-source'} // [];
         if (@{$reference_limit}) {
 
-            my @topic_tags;
-            for my $tag (@tags) {
-                my @references = split(/,/, $tag->info->references);
+            my @topic_hints;
+            for my $hint (@hints) {
+                my @references = split(/,/, $hint->tag->references);
 
                 # retain the first word
                 s/^([\w-]+)\s.*/$1/ for @references;
@@ -226,20 +226,20 @@ sub process{
                 # remove anything in parentheses at the end
                 s/\(\S+\)$// for @references;
 
-                # check if tag refers to the selected references
+                # check if hint refers to the selected references
                 my $referencelc
                   = List::Compare->new(\@references, $reference_limit);
                 next
                   unless $referencelc->get_intersection;
 
-                push(@topic_tags, $tag);
+                push(@topic_hints, $hint);
             }
 
-            @tags = @topic_tags;
+            @hints = @topic_hints;
         }
 
-        # put tags back into their respective processables
-        push(@{$_->processable->tags}, $_) for @tags;
+        # put hints back into their respective processables
+        push(@{$_->processable->hints}, $_) for @hints;
 
         # interruptions can leave processes behind (manpages); wait and reap
         if ($$exit_code_ref == 1) {
@@ -282,8 +282,8 @@ sub process{
         $OUTPUT->v_msg('Finished processing group ' . $group->name);
     }
 
-    # pass everything, in case some groups or processables have no tags
-    $OUTPUT->issue_tags([values %{$self->groups}]);
+    # pass everything, in case some groups or processables have no hints
+    $OUTPUT->issue_hints([values %{$self->groups}]);
 
     unless ($option->{'no-override'}
         || $option->{'show-overrides'}) {
@@ -297,8 +297,8 @@ sub process{
 
             my $text
               = ($total == 1)
-              ? "$total tag overridden"
-              : "$total tags overridden";
+              ? "$total hint overridden"
+              : "$total hints overridden";
 
             my @output;
 

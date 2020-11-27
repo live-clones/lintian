@@ -61,7 +61,7 @@ sub visit_installed_files {
                 or index($block,'pkg-config')  > -1)
         ) {
 
-            $self->tag('old-style-config-script', $file->name);
+            $self->hint('old-style-config-script', $file->name);
 
             # could be ok but only if multi-arch: no
             unless ($multiarch eq 'no' && $architecture ne 'all') {
@@ -81,7 +81,7 @@ sub visit_installed_files {
                     $tagname .= '-arch-all'
                       if $architecture eq 'all';
 
-                    $self->tag($tagname, $file->name,
+                    $self->hint($tagname, $file->name,
                         'full text contains architecture specific dir',$madir);
 
                     last;

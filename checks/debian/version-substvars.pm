@@ -86,7 +86,7 @@ sub source {
             my $visitor = sub {
                 if (/\$[{]Source-Version[}]/ and not $svid) {
                     $svid++;
-                    $self->tag('substvar-source-version-is-deprecated', $pkg1);
+                    $self->hint('substvar-source-version-is-deprecated',$pkg1);
                 }
                 if (
                     m/^($PKGNAME_REGEX)(?: :[-a-z0-9]+)? \s*   # pkg-name $1
@@ -99,7 +99,7 @@ sub source {
                     # We can't test dependencies on packages whose names are
                     # formed via substvars expanded during the build.  Assume
                     # those maintainers know what they're doing.
-                    $self->tag('version-substvar-for-external-package',
+                    $self->hint('version-substvar-for-external-package',
                         "$pkg1 -> $other")
                       unless $processable->debian_control->installable_fields(
                         $other)->exists('Architecture')
@@ -146,7 +146,7 @@ sub source {
                 if ($pkg2_is_any and $substvar_strips_binNMU) {
                     unless ($gt) {
                         # (b1) any -> any (= ${source:Version})
-                        $self->tag('not-binnmuable-any-depends-any',
+                        $self->hint('not-binnmuable-any-depends-any',
                             "$pkg1 -> $pkg2");
                     } else {
                         # any -> any (>= ${source:Version})
@@ -157,17 +157,17 @@ sub source {
                 } elsif (not $pkg2_is_any) {
                     # (b2) any -> all ( = ${binary:Version}) [or S-V]
                     # or  -- same --  (>= ${binary:Version}) [or S-V]
-                    $self->tag('not-binnmuable-any-depends-all',
+                    $self->hint('not-binnmuable-any-depends-all',
                         "$pkg1 -> $pkg2")
                       if not $substvar_strips_binNMU;
                     if ($substvar_strips_binNMU and not $gt) {
-                        $self->tag('maybe-not-arch-all-binnmuable',
+                        $self->hint('maybe-not-arch-all-binnmuable',
                             "$pkg1 -> $pkg2");
                     }
                 }
             } elsif ($pkg2_is_any && !$gt) {
                 # (b3) all -> any (= ${either-of-them})
-                $self->tag('not-binnmuable-all-depends-any', "$pkg1 -> $pkg2");
+                $self->hint('not-binnmuable-all-depends-any',"$pkg1 -> $pkg2");
             }
         }
     }

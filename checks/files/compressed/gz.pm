@@ -60,7 +60,7 @@ sub visit_installed_files {
 
         safe_qx('gzip', '--test', $file->unpacked_path);
 
-        $self->tag('broken-gz', $file->name)
+        $self->hint('broken-gz', $file->name)
           if $?;
     }
 
@@ -84,11 +84,11 @@ sub visit_installed_files {
 
                 if ($multiarch eq 'same' && $file->name !~ /\Q$architecture\E/)
                 {
-                    $self->tag('gzip-file-is-not-multi-arch-same-safe',
+                    $self->hint('gzip-file-is-not-multi-arch-same-safe',
                         $file->name);
 
                 } else {
-                    $self->tag('package-contains-timestamped-gzip',
+                    $self->hint('package-contains-timestamped-gzip',
                         $file->name,gmtime($gziptime)->datetime);
                 }
             }

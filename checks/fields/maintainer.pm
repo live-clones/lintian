@@ -51,7 +51,7 @@ sub source {
 
     my $is_list = $maintainer =~ /\@lists(?:\.alioth)?\.debian\.org\b/;
 
-    $self->tag('no-human-maintainers')
+    $self->hint('no-human-maintainers')
       if $is_list && !$self->processable->fields->exists('Uploaders');
 
     return;
@@ -71,7 +71,7 @@ sub changes {
     my $source_maintainer = $source->fields->value('Maintainer');
 
     # not for derivatives; https://wiki.ubuntu.com/DebianMaintainerField
-    $self->tag('inconsistent-maintainer',
+    $self->hint('inconsistent-maintainer',
         $changes_maintainer . ' (changes vs. source) ' .$source_maintainer)
       unless $changes_maintainer eq $source_maintainer
       || !$KNOWN_DISTS->known($changes_distribution);

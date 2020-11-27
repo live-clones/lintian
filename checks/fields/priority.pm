@@ -53,7 +53,7 @@ sub always {
     if ($self->processable->type eq 'source'
         || !$self->processable->is_pkg_class('auto-generated')) {
 
-        $self->tag('priority-extra-is-replaced-by-priority-optional')
+        $self->hint('priority-extra-is-replaced-by-priority-optional')
           if $priority eq 'extra';
 
         # Re-map to optional to avoid an additional warning from
@@ -62,10 +62,10 @@ sub always {
           if $priority eq 'extra';
     }
 
-    $self->tag('unknown-priority', $priority)
+    $self->hint('unknown-priority', $priority)
       unless $KNOWN_PRIOS->known($priority);
 
-    $self->tag('excessive-priority-for-library-package', $priority)
+    $self->hint('excessive-priority-for-library-package', $priority)
       if $self->processable->name =~ /^lib/
       && $self->processable->name !~ /-bin$/
       && $self->processable->name !~ /^libc[0-9.]+$/

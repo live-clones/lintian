@@ -80,7 +80,7 @@ sub visit_installed_files {
 
     my @missing = grep { !$features{$_} } sort keys %features;
 
-    $self->tag('portable-executable-missing-security-features',
+    $self->hint('portable-executable-missing-security-features',
         $file,join(SPACE, @missing))
       if scalar @missing;
 

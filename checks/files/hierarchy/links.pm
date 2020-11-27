@@ -55,7 +55,7 @@ sub visit_installed_files {
     # either /usr/lib or one level below for architecture, if applicable
     $restraint =~ s{^((?:[^/]+/){3}).*$}{$1}s;
 
-    $self->tag('breakout-link', $file->name . ARROW .  $target)
+    $self->hint('breakout-link', $file->name . ARROW .  $target)
       unless $target =~ m{^\Q$restraint\E};
 
     return;

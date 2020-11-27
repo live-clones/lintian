@@ -174,6 +174,11 @@ sub init_from_tar_output {
     # strip relative prefix
     $name =~ s{^\./+}{}s;
 
+    # slashes cannot appear in names but are sometimes doubled
+    # as in emboss-explorer_2.2.0-10.dsc
+    # better implemented in a Moo trigger on the attribute
+    $name =~ s{/+}{/}g;
+
     # make sure directories end with a slash, except root
     $name .= SLASH
       if length $name && $self->perm =~ /^d/ && substr($name, -1) ne SLASH;
@@ -186,6 +191,10 @@ sub init_from_tar_output {
         my ($linktarget, undef) = get_quoted_filename($extra, $symlinkpattern);
         die "Cannot parse symbolic link target in tar output: $line"
           unless defined $linktarget;
+
+        # do not remove multiple slashes from symlink targets
+        # caught by symlink-has-double-slash, which is tested
+        # leaves resolution of these links unsolved
 
         # do not strip relative prefix for symbolic links
         $self->link($linktarget);
@@ -200,6 +209,12 @@ sub init_from_tar_output {
 
         # strip relative prefix
         $linktarget =~ s{^\./+}{}s;
+
+        # slashes cannot appear in names but are sometimes doubled
+        # as in emboss-explorer_2.2.0-10.dsc
+        # better implemented in a Moo trigger on the attribute, but requires
+        # separate attributes for hard and symbolic link targets
+        $linktarget =~ s{/+}{/}g;
 
         $self->link($linktarget);
     }

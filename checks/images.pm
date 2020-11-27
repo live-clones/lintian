@@ -37,7 +37,7 @@ sub visit_installed_files {
         and $file->name =~ m,\.(?:bmp|gif|jpe?g|png|tiff|x[pb]m)$,
         and not length $file->link) {
 
-        $self->tag('image-file-in-usr-lib', $file->name);
+        $self->hint('image-file-in-usr-lib', $file->name);
     }
 
     return;

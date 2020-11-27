@@ -44,20 +44,20 @@ sub source {
       = $self->processable->patched->resolve_path('debian/upstream/metadata');
 
     if ($self->processable->native) {
-        $self->tag('upstream-metadata-in-native-source')
+        $self->hint('upstream-metadata-in-native-source')
           if defined $file;
         return;
     }
 
     unless (defined $file) {
-        $self->tag('upstream-metadata-file-is-missing');
+        $self->hint('upstream-metadata-file-is-missing');
         return;
     }
 
-    $self->tag('upstream-metadata-exists');
+    $self->hint('upstream-metadata-exists');
 
     unless ($file->is_open_ok) {
-        $self->tag('upstream-metadata-is-not-a-file');
+        $self->hint('upstream-metadata-is-not-a-file');
         return;
     }
 
@@ -85,21 +85,21 @@ sub source {
             && length $line
             && length $document);
 
-        $self->tag('upstream-metadata-yaml-invalid', $message);
+        $self->hint('upstream-metadata-yaml-invalid', $message);
 
         return;
     }
 
     unless (ref $yaml eq 'HASH') {
-        $self->tag('upstream-metadata-not-yaml-mapping', $file->name);
+        $self->hint('upstream-metadata-not-yaml-mapping', $file->name);
         return;
     }
 
-    $self->tag('upstream-metadata-field-present', $_) for keys %{$yaml};
+    $self->hint('upstream-metadata-field-present', $_) for keys %{$yaml};
 
-    $self->tag('upstream-metadata-missing-repository')
+    $self->hint('upstream-metadata-missing-repository')
       if none { defined $yaml->{$_} } qw(Repository Repository-Browse);
-    $self->tag('upstream-metadata-missing-bug-tracking')
+    $self->hint('upstream-metadata-missing-bug-tracking')
       if none { defined $yaml->{$_} } qw(Bug-Database Bug-Submit);
 
     return;

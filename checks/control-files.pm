@@ -59,7 +59,7 @@ sub installable {
         # the control.tar.gz should only contain files (and the "root"
         # dir, but that is excluded from the index)
         if (not $file->is_regular_file) {
-            $self->tag('control-file-is-not-a-file', $file);
+            $self->hint('control-file-is-not-a-file', $file);
             # Doing further checks is probably not going to yield anything
             # remotely useful.
             next;
@@ -68,10 +68,10 @@ sub installable {
         # valid control file?
         unless ($ctrl->known($file)) {
             if ($ctrl_alt->known($file)) {
-                $self->tag('not-allowed-control-file', $file);
+                $self->hint('not-allowed-control-file', $file);
                 next;
             } else {
-                $self->tag('unknown-control-file', $file);
+                $self->hint('unknown-control-file', $file);
                 next;
             }
         }
@@ -79,7 +79,7 @@ sub installable {
         my $experm = $ctrl->value($file);
 
         if ($file->size == 0 and $file->basename ne 'md5sums') {
-            $self->tag('control-file-is-empty', $file);
+            $self->hint('control-file-is-empty', $file);
         }
 
         # skip `control' control file (that's an exception: dpkg
@@ -90,12 +90,12 @@ sub installable {
         my $operm = $file->operm;
         if ($operm & 0111 or $experm & 0111) {
             $has_ctrl_script = 1;
-            $self->tag('ctrl-script', $file);
+            $self->hint('ctrl-script', $file);
         }
 
         # correct permissions?
         unless ($operm == $experm) {
-            $self->tag('control-file-has-bad-permissions',
+            $self->hint('control-file-has-bad-permissions',
                 sprintf('%s %04o != %04o', $file, $operm, $experm));
         }
 
@@ -103,14 +103,14 @@ sub installable {
 
         # correct owner?
         unless ($file->identity eq 'root/root' || $file->identity eq '0/0') {
-            $self->tag('control-file-has-bad-owner',
+            $self->hint('control-file-has-bad-owner',
                 $file->name. SPACE. $file->identity. ' != root/root (or 0/0)');
         }
 
         # for other maintainer scripts checks, see the scripts check
     }
     if (not $has_ctrl_script) {
-        $self->tag('no-ctrl-scripts');
+        $self->hint('no-ctrl-scripts');
     }
     return;
 } # </run>

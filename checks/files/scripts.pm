@@ -43,7 +43,7 @@ sub visit_installed_files {
                     (?:p[ly]|php|rb|[bc]?sh|tcl)
                     \Z}xsm
     ) {
-        $self->tag('script-with-language-extension', $file->name);
+        $self->hint('script-with-language-extension', $file->name);
     }
 
     return;

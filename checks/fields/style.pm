@@ -106,7 +106,7 @@ sub check_style {
         # capitalize up to three letters after an X, if followed by hyphen
         $standard =~ s/^(X(?:S|B|C){1,3})-/\U$1-/i;
 
-        $self->tag('cute-field', $location, "$name vs $standard")
+        $self->hint('cute-field', $location, "$name vs $standard")
           unless $name eq $standard;
     }
 

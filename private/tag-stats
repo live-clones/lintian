@@ -20,7 +20,7 @@ use lib "$FindBin::RealBin/../lib";
 use Cwd qw(realpath);
 
 use Lintian::Deb822::Parser qw(read_dpkg_control);
-use Lintian::Tag::Info;
+use Lintian::Tag;
 
 $ENV{LINTIAN_BASE} = realpath("$FindBin::RealBin/..")
   // die 'Cannot resolve LINTIAN_BASE';
@@ -50,8 +50,8 @@ for my $check (readdir($checkdir)) {
 
         $severity = 'unclassified' if not $severity;
 
-        my $info = Lintian::Tag::Info->new($tag, $desc->{'Check-Script'},
-            $desc->{'Type'});
+        my $info
+          = Lintian::Tag->new($tag, $desc->{'Check-Script'},$desc->{'Type'});
         my $code = $info->code;
 
         push(@{$stats{severity}{$severity}}, $name);

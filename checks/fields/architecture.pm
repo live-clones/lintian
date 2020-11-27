@@ -76,7 +76,7 @@ sub visit_installed_files {
 sub breakdown_installed_files {
     my ($self) = @_;
 
-    $self->tag('r-package-not-arch-all')
+    $self->hint('r-package-not-arch-all')
       if $self->have_r_package_not_arch_all;
 
     return;
@@ -96,21 +96,21 @@ sub installable {
       unless @architectures;
 
     for my $architecture (@architectures) {
-        $self->tag('arch-wildcard-in-binary-package', $architecture)
+        $self->hint('arch-wildcard-in-binary-package', $architecture)
           if is_arch_wildcard($architecture);
     }
 
-    $self->tag('too-many-architectures') if @architectures > 1;
+    $self->hint('too-many-architectures') if @architectures > 1;
 
     my $architecture = $architectures[0];
 
     return
       if $architecture eq 'all';
 
-    $self->tag('aspell-package-not-arch-all')
+    $self->hint('aspell-package-not-arch-all')
       if $pkg =~ /^aspell-[a-z]{2}(?:-.*)?$/;
 
-    $self->tag('documentation-package-not-architecture-independent')
+    $self->hint('documentation-package-not-architecture-independent')
       if $pkg =~ /-docs?$/;
 
     return;
@@ -128,7 +128,7 @@ sub always {
 
     for my $architecture (@architectures) {
 
-        $self->tag('unknown-architecture', $architecture)
+        $self->hint('unknown-architecture', $architecture)
           unless is_arch_or_wildcard($architecture)
           || ($architecture eq 'source'
             && ($type eq 'changes' || $type eq 'buildinfo'));
@@ -158,7 +158,7 @@ sub always {
               if @errorset;
         }
 
-        $self->tag('magic-arch-in-arch-list') if $magic_error;
+        $self->hint('magic-arch-in-arch-list') if $magic_error;
     }
 
     # Used for later tests.

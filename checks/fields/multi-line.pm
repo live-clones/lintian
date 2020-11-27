@@ -73,7 +73,7 @@ sub always {
         $value =~ s/\n$//;
 
         # check if fields have newlines in them
-        $self->tag('multiline-field', $name)
+        $self->hint('multiline-field', $name)
           if index($value, NEWLINE) >= 0;
     }
 

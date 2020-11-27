@@ -16,27 +16,29 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::Tag::Bearer;
+package Lintian::Hint::Bearer;
 
 use v5.20;
 use warnings;
 use utf8;
 
-use Lintian::Tag::Standard;
+use Carp;
+
+use Lintian::Hint::Standard;
 
 use Moo::Role;
 use namespace::clean;
 
 =head1 NAME
 
-Lintian::Tag::Bearer -- Facilities for objects receiving Lintian tags
+Lintian::Hint::Bearer -- Facilities for objects receiving Lintian tags
 
 =head1 SYNOPSIS
 
- use Moo;
+use Moo;
 use namespace::clean;
 
- with('Lintian::Tag::Bearer');
+ with('Lintian::Hint::Bearer');
 
 =head1 DESCRIPTION
 
@@ -46,30 +48,45 @@ A class for collecting Lintian tags as they are found
 
 =over 4
 
-=item tag (ARGS)
+=item profile
+
+=cut
+
+has profile => (is => 'rw');
+
+=item hint (ARGS)
 
 Store found tags for later processing.
 
 =cut
 
-sub tag {
-
+sub hint {
     my ($self, $tagname, @context_components) = @_;
 
-    my $tag = Lintian::Tag::Standard->new;
-    $tag->name($tagname);
-    $tag->arguments(\@context_components);
+    my $tag = $self->profile->get_tag($tagname);
 
-    push(@{$self->tags}, $tag);
+    croak "tried to issue unknown tag: $tagname"
+      unless defined $tag;
+
+    # skip disabled tags
+    return
+      unless $self->profile->tag_is_enabled($tagname);
+
+    my $hint = Lintian::Hint::Standard->new;
+
+    $hint->tag($tag);
+    $hint->arguments(\@context_components);
+
+    push(@{$self->hints}, $hint);
 
     return;
 }
 
-=item tags
+=item hints
 
 =cut
 
-has tags => (is => 'rw', default => sub { [] });
+has hints => (is => 'rw', default => sub { [] });
 
 =back
 

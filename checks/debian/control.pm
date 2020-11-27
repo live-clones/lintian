@@ -73,7 +73,7 @@ sub source {
     return
       unless $dcontrol;
 
-    $self->tag('debian-control-file-is-a-symlink')
+    $self->hint('debian-control-file-is-a-symlink')
       if $dcontrol->is_symlink;
 
     return
@@ -101,7 +101,7 @@ sub source {
                   (?:\?p=)?collab-maint/<pkg>\.git}smx
         ) {
             # Emit it only once per package
-            $self->tag('control-file-contains-dh_make-vcs-comment')
+            $self->hint('control-file-contains-dh_make-vcs-comment')
               unless $seen_vcs_comment++;
             next;
         }
@@ -117,33 +117,33 @@ sub source {
             if ($field =~ /^XS-Vcs-/) {
                 my $base = $field;
                 $base =~ s/^XS-//;
-                $self->tag('xs-vcs-field-in-debian-control', $field)
+                $self->hint('xs-vcs-field-in-debian-control', $field)
                   if $src_fields->known($base);
             }
 
             if ($field eq 'XS-Testsuite') {
-                $self->tag('xs-testsuite-field-in-debian-control', $field);
+                $self->hint('xs-testsuite-field-in-debian-control', $field);
             }
 
             if ($field eq 'XC-Package-Type') {
-                $self->tag('xc-package-type-in-debian-control',
+                $self->hint('xc-package-type-in-debian-control',
                     "line $position");
             }
 
             unless ($line =~ /^\S+: \S/ || $line =~ /^\S+:$/) {
-                $self->tag('debian-control-has-unusual-field-spacing',
+                $self->hint('debian-control-has-unusual-field-spacing',
                     "line $position");
             }
 
             # something like "Maintainer: Maintainer: bad field"
             if ($line =~ /^\Q$field\E: \s* \Q$field\E \s* :/xsmi) {
-                $self->tag('debian-control-repeats-field-name-in-value',
+                $self->hint('debian-control-repeats-field-name-in-value',
                     "line $position");
             }
 
             if (    $field =~ /^Rules?-Requires?-Roots?$/i
                 and $field ne 'Rules-Requires-Root') {
-                $self->tag('spelling-error-in-rules-requires-root',
+                $self->hint('spelling-error-in-rules-requires-root',
                     $field,"(line $position)");
             }
         }
@@ -164,7 +164,7 @@ sub source {
     }
 
     for my $field ($processable->debian_control->source_fields->names) {
-        $self->tag(
+        $self->hint(
             'debian-control-has-empty-field',
             "field \"$field\" in source paragraph",
           )
@@ -176,29 +176,29 @@ sub source {
 
     foreach my $bin (@package_names) {
         my $bfields = $processable->debian_control->installable_fields($bin);
-        $self->tag('build-info-in-binary-control-file-section', "Package $bin")
+        $self->hint('build-info-in-binary-control-file-section',"Package $bin")
           if (
             first { $bfields->value("Build-$_") }
             qw(Depends Depends-Indep Conflicts Conflicts-Indep)
           );
         foreach my $field ($bfields->names) {
-            $self->tag(
+            $self->hint(
                 'binary-control-field-duplicates-source',
                 "field \"$field\" in package $bin"
               )
               if ( $processable->debian_control->source_fields->exists($field)
                 && $bfields->value($field) eq
                 $processable->debian_control->source_fields->value($field));
-            $self->tag(
+            $self->hint(
                 'debian-control-has-empty-field',
                 "field \"$field\" in package $bin",
             ) if $bfields->value($field) eq '';
         }
         if ($bin =~ /[-]dbgsym$/) {
-            $self->tag('debian-control-has-dbgsym-package', $bin);
+            $self->hint('debian-control-has-dbgsym-package', $bin);
         }
         if ($bin =~ /[-]dbg$/) {
-            $self->tag('debian-control-has-obsolete-dbg-package', $bin)
+            $self->hint('debian-control-has-obsolete-dbg-package', $bin)
               unless dbg_pkg_is_known($bin);
         }
     }
@@ -276,9 +276,9 @@ sub source {
               ->exists($dep_fields[$strong]);
             my $relation
               = $processable->binary_relation($bin, $dep_fields[$strong]);
-            $self->tag('package-depends-on-itself', $bin, $dep_fields[$strong])
+            $self->hint('package-depends-on-itself', $bin,$dep_fields[$strong])
               if $relation->implies($bin);
-            $self->tag('package-depends-on-hardcoded-libc',
+            $self->hint('package-depends-on-hardcoded-libc',
                 $bin, $dep_fields[$strong])
               if $relation->implies($LIBCS)
               and $pkg !~ /^e?glibc$/;
@@ -290,7 +290,7 @@ sub source {
                     $processable->debian_control->installable_fields($bin)
                     ->value($dep_fields[$weak])) {
                     next unless $dependency;
-                    $self->tag('stronger-dependency-implies-weaker',
+                    $self->hint('stronger-dependency-implies-weaker',
                         $bin,"$dep_fields[$strong] -> $dep_fields[$weak]",
                         $dependency)
                       if $relation->implies($dependency);
@@ -351,7 +351,7 @@ sub source {
         }
 
         if ($depends =~ m/\$\{misc:Pre-Depends\}/) {
-            $self->tag('depends-on-misc-pre-depends', $bin);
+            $self->hint('depends-on-misc-pre-depends', $bin);
         }
 
         # Check mismatches in archive area.
@@ -373,10 +373,10 @@ sub source {
           if $area eq $bin_area
           or ($area eq 'main' and $bin_area eq 'contrib');
 
-        $self->tag('section-area-mismatch', 'Package', $bin);
+        $self->hint('section-area-mismatch', 'Package', $bin);
     }
 
-    $self->tag('section-area-mismatch')
+    $self->hint('section-area-mismatch')
       if $seen_contrib
       and not $seen_main
       and $area eq 'main';
@@ -405,7 +405,7 @@ sub source {
     for my $short (keys %short_descriptions) {
         # Assume that substvars are correctly handled
         next if $short =~ m/\$\{.+\}/;
-        $self->tag(
+        $self->hint(
             'duplicate-short-description',
             sort @{$short_descriptions{$short}}
         )if scalar @{$short_descriptions{$short}} > 1;
@@ -415,7 +415,7 @@ sub source {
     for my $long (keys %long_descriptions) {
         # Assume that substvars are correctly handled
         next if $long =~ m/\$\{.+\}/;
-        $self->tag('duplicate-long-description',
+        $self->hint('duplicate-long-description',
             sort @{$long_descriptions{$long}})
           if scalar @{$long_descriptions{$long}} > 1;
     }
@@ -447,7 +447,7 @@ sub source {
                      \s*$              # trailing spaces at the end
               }x
         ) {
-            $self->tag('invalid-restriction-formula-in-build-profiles-field',
+            $self->hint('invalid-restriction-formula-in-build-profiles-field',
                 $raw,$bin);
         } else {
             # parse the field and check the profile names
@@ -455,7 +455,7 @@ sub source {
             for my $restrlist (split />\s+</, $raw) {
                 for my $profile (split /\s+/, $restrlist) {
                     $profile =~ s/^!//;
-                    $self->tag('invalid-profile-name-in-build-profiles-field',
+                    $self->hint('invalid-profile-name-in-build-profiles-field',
                         $profile, $bin)
                       unless $KNOWN_BUILD_PROFILES->known($profile)
                       or $profile =~ /^pkg\.[a-z0-9][a-z0-9+.-]+\../;
@@ -473,12 +473,12 @@ sub source {
           = $processable->debian_control->source_fields->value(
             'Rules-Requires-Root');
         if ($r3 eq 'no') {
-            $self->tag('rules-does-not-require-root');
+            $self->hint('rules-does-not-require-root');
         } else {
-            $self->tag('rules-requires-root-explicitly');
+            $self->hint('rules-requires-root-explicitly');
         }
     } else {
-        $self->tag('silent-on-rules-requiring-root');
+        $self->hint('silent-on-rules-requiring-root');
     }
 
     if ((
@@ -493,7 +493,7 @@ sub source {
             foreach my $file ($proc->installed->sorted_list) {
                 my $owner = $file->owner . ':' . $file->group;
                 next if $owner eq 'root:root';
-                $self->tag('rules-silently-require-root',
+                $self->hint('rules-silently-require-root',
                     $pkg, $file,"($owner)");
                 last BINARY;
             }
@@ -508,7 +508,7 @@ sub source {
         my $raw = $processable->debian_control->installable_fields($bin)
           ->value('Architecture');
         if ($raw =~ /\n./) {
-            $self->tag('multiline-architecture-field',$bin);
+            $self->hint('multiline-architecture-field',$bin);
         }
     }
 
@@ -516,7 +516,7 @@ sub source {
     foreach my $bin (@package_names) {
         next unless $bin =~ m/gir[\d\.]+-.*-[\d\.]+$/;
         my $relation = $processable->binary_relation($bin, 'all');
-        $self->tag(
+        $self->hint(
             'gobject-introspection-package-missing-depends-on-gir-depends',
             $bin)
           unless $relation->implies('${gir:Depends}');
@@ -532,24 +532,24 @@ sub source {
             my $arch = $processable->debian_control->installable_fields($bin)
               ->value('Architecture');
             if ($arch eq 'all') {
-                $self->tag('built-using-field-on-arch-all-package', $bin)
+                $self->hint('built-using-field-on-arch-all-package', $bin)
                   if length $bu;
             } else {
                 if (!length($bu) || $bu !~ /\$\{misc:Built-Using\}/) {
-                    $self->tag('missing-built-using-field-for-golang-package',
+                    $self->hint('missing-built-using-field-for-golang-package',
                         $bin);
                 }
             }
         }
 
-        $self->tag('missing-xs-go-import-path-for-golang-package')
+        $self->hint('missing-xs-go-import-path-for-golang-package')
           unless (
             $processable->debian_control->source_fields->value(
                 'XS-Go-Import-Path'));
     }
 
     my $changes = $group->changes;
-    $self->tag('source-only-upload-to-non-free-without-autobuild')
+    $self->hint('source-only-upload-to-non-free-without-autobuild')
       if defined($changes)
       and $changes->fields->value('Architecture') eq 'source'
       and $processable->is_non_free
@@ -623,7 +623,7 @@ sub check_dev_depends {
                   if$processable->debian_control->installable_fields($target)
                   ->value('Architecture') eq 'all'
                   && $versions[0] =~ /^\s*=\s*\$\{source:Version\}/;
-                $self->tag('weak-library-dev-dependency',
+                $self->hint('weak-library-dev-dependency',
                     "$package on $depends[0]");
             }
         } elsif (@depends == 2) {
@@ -635,7 +635,7 @@ sub check_dev_depends {
                         (?: (?:binary|source):(?:Upstream-)?Version
                         |Source-Version)\}/xsm
             ) {
-                $self->tag('weak-library-dev-dependency',
+                $self->hint('weak-library-dev-dependency',
                     "$package on $depends[0], $depends[1]");
             }
         }
@@ -649,7 +649,7 @@ sub check_relation {
     my ($self, $pkg, $field, $rawvalue, $relation) = @_;
 
     for my $dup ($relation->duplicates) {
-        $self->tag('duplicate-in-relation-field', 'in', $pkg,
+        $self->hint('duplicate-in-relation-field', 'in', $pkg,
             "$field:", join(', ', @$dup));
     }
 
@@ -672,11 +672,12 @@ sub check_relation {
             # trim right
             s/\s+$//;
         }
-        $self->tag('missing-separator-between-items',
+        $self->hint('missing-separator-between-items',
             'in', $pkg,"$field field between '$prev' and '$next'");
     }
     while ($rawvalue =~ /([^\s\(]+\s*\([<>]\s*[^<>=]+\))/g) {
-        $self->tag('obsolete-relation-form-in-source','in', $pkg,"$field: $1");
+        $self->hint('obsolete-relation-form-in-source','in', $pkg,
+            "$field: $1");
     }
     return;
 }

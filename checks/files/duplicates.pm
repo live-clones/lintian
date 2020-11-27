@@ -70,10 +70,10 @@ sub breakdown_installed_files {
           if scalar @files < 2;
 
         if (any { m,changelog,io} @files) {
-            $self->tag('duplicate-changelog-files', sort @files);
+            $self->hint('duplicate-changelog-files', sort @files);
 
         } else {
-            $self->tag('duplicate-files', sort @files);
+            $self->hint('duplicate-files', sort @files);
         }
     }
 

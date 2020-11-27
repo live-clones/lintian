@@ -44,7 +44,7 @@ sub source {
 
     my @manpages = grep { $_->basename =~ m{\.desktop$} } @nopatches;
 
-    $self->tag('maintainer-desktop-entry', $_->name) for @manpages;
+    $self->hint('maintainer-desktop-entry', $_->name) for @manpages;
 
     return;
 }

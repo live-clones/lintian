@@ -53,7 +53,7 @@ sub visit_installed_files {
 
     # both compressed and uncompressed present
     if ($file->name =~ $DUPLICATED_COMPRESSED_FILE_REGEX) {
-        $self->tag('compressed-duplicate', $file->name)
+        $self->hint('compressed-duplicate', $file->name)
           if $self->processable->installed->lookup($1);
     }
 

@@ -74,7 +74,7 @@ sub what_is_python {
 
     for my $unwanted (keys %BOGUS_PREREQUISITES) {
 
-        $self->tag('bogus-python-prerequisite', $_, $unwanted)
+        $self->hint('bogus-python-prerequisite', $_, $unwanted)
           for @{$BOGUS_PREREQUISITES{$unwanted}};
     }
 

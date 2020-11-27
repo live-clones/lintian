@@ -70,7 +70,7 @@ sub source {
                 push(@lang_templates, $basename);
                 open(my $fd, '<', $path->unpacked_path);
                 while (<$fd>) {
-                    $self->tag('untranslatable-debconf-templates',
+                    $self->hint('untranslatable-debconf-templates',
                         "$basename: $.")
                       if (m/^Description: (.+)/i and $1 !~/for internal use/);
                 }
@@ -80,9 +80,9 @@ sub source {
                 my $in_template = 0;
                 my $saw_tl_note = 0;
                 while (<$fd>) {
-                    $self->tag('translated-default-field', "$basename: $.")
+                    $self->hint('translated-default-field', "$basename: $.")
                       if (m{^_Default(?:Choice)?: [^\[]*$}) && !$saw_tl_note;
-                    $self->tag('untranslatable-debconf-templates',
+                    $self->hint('untranslatable-debconf-templates',
                         "$basename: $.")
                       if (m/^Description: (.+)/i and $1 !~/for internal use/);
 
@@ -119,7 +119,7 @@ sub source {
     #TODO: check whether all templates are named in TEMPLATES.pot
     if ($has_template) {
         if (not $debian_po_dir or not $debian_po_dir->is_dir) {
-            $self->tag('not-using-po-debconf');
+            $self->hint('not-using-po-debconf');
             return;
         }
     } else {
@@ -129,7 +129,7 @@ sub source {
     # If we got here, we're using po-debconf, so there shouldn't be any stray
     # language templates left over from debconf-mergetemplate.
     for (@lang_templates) {
-        $self->tag('stray-translated-debconf-templates', $_)
+        $self->hint('stray-translated-debconf-templates', $_)
           unless /templates\.in$/;
     }
 
@@ -145,20 +145,20 @@ sub source {
             next if $_ eq ''; #m,^\.\./, or
             my $po_path = $debian_dir->resolve_path($_);
             unless ($po_path and $po_path->is_file) {
-                $self->tag('missing-file-from-potfiles-in', $_);
+                $self->hint('missing-file-from-potfiles-in', $_);
                 $missing_files = 1;
             }
         }
         close($fd);
     } else {
-        $self->tag('missing-potfiles-in');
+        $self->hint('missing-potfiles-in');
         $missing_files = 1;
     }
     if (not $templ_pot_path or not $templ_pot_path->is_open_ok) {
         # We use is_open_ok here, because if it is present, we will
         # (have a subprocess) open it if the POTFILES.in file also
         # existed.
-        $self->tag('missing-templates-pot');
+        $self->hint('missing-templates-pot');
         $missing_files = 1;
     }
 
@@ -222,7 +222,7 @@ sub source {
         # output could be helpful to user but is currently not printed
 
         if ($error) {
-            $self->tag('invalid-potfiles-in');
+            $self->hint('invalid-potfiles-in');
             return;
         }
 
@@ -253,7 +253,7 @@ sub source {
             $error = $_;
         };
 
-        $self->tag('newer-debconf-templates') if length $error;
+        $self->hint('newer-debconf-templates') if length $error;
     }
 
     return unless $debian_po_dir;
@@ -261,7 +261,7 @@ sub source {
     for my $po_path ($debian_po_dir->children) {
         my $basename = $po_path->basename;
         next unless $basename =~ m/\.po$/ || $po_path->is_dir;
-        $self->tag('misnamed-po-file', $po_path)
+        $self->hint('misnamed-po-file', $po_path)
           unless ($basename =~ /^[a-z]{2,3}(_[A-Z]{2})?(?:\@[^\.]+)?\.po$/);
         next unless $po_path->is_open_ok;
         local ($/) = "\n\n";
@@ -270,13 +270,14 @@ sub source {
         while (<$fd>) {
 
             if (/Language\-Team:.*debian-i18n\@lists\.debian\.org/i) {
-                $self->tag('debconf-translation-using-general-list',$basename);
+                $self->hint('debconf-translation-using-general-list',
+                    $basename);
             }
             last if m/^msgstr/m;
         }
         close($fd);
         unless ($_) {
-            $self->tag('invalid-po-file', $po_path);
+            $self->hint('invalid-po-file', $po_path);
             next;
         }
         s/"\n"//g;
@@ -284,7 +285,7 @@ sub source {
         if (m/charset=(.*?)\\n/) {
             $charset = ($1 eq 'CHARSET' ? '' : $1);
         }
-        $self->tag('unknown-encoding-in-po-file', $po_path)
+        $self->hint('unknown-encoding-in-po-file', $po_path)
           unless length($charset);
 
         my $error;
@@ -300,7 +301,7 @@ sub source {
 
         run3(\@command, \undef, \undef, \$stats);
 
-        $self->tag('invalid-po-file', $po_path)
+        $self->hint('invalid-po-file', $po_path)
           if $?;
 
         $stats //= EMPTY;
@@ -309,7 +310,7 @@ sub source {
           if $stats =~ m/^\w+ \w+ \w+\.$/;
     }
 
-    $self->tag('no-complete-debconf-translation') if !$full_translation;
+    $self->hint('no-complete-debconf-translation') if !$full_translation;
 
     return;
 }

@@ -36,7 +36,7 @@ sub visit_installed_files {
     return
       if $file->is_file || $file->is_dir || $file->is_symlink;
 
-    $self->tag('special-file', $file->name, sprintf('%04o',$file->operm));
+    $self->hint('special-file', $file->name, sprintf('%04o',$file->operm));
 
     return;
 }

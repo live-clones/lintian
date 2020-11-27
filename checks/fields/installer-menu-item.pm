@@ -46,7 +46,7 @@ sub udeb {
 
     my $menu_item = $fields->unfolded_value('Installer-Menu-Item');
 
-    $self->tag('bad-menu-item', $menu_item) unless $menu_item =~ /^\d+$/;
+    $self->hint('bad-menu-item', $menu_item) unless $menu_item =~ /^\d+$/;
 
     return;
 }

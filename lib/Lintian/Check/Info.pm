@@ -26,7 +26,7 @@ use utf8;
 use Path::Tiny;
 
 use Lintian::Deb822::File;
-use Lintian::Tag::Info ();
+use Lintian::Tag ();
 
 use constant EMPTY => q{};
 use constant SPACE => q{ };
@@ -184,23 +184,23 @@ sub is_check_type {
     return $self->type_table->{$type} // 0;
 }
 
-=item $cs->add_taginfo ($taginfo)
+=item $cs->add_tag ($tag)
 
-Associates a L<tag|Lintian::Tag::Info> as issued by this check.
+Associates a L<tag|Lintian::Tag> as issued by this check.
 
 =cut
 
-sub add_taginfo {
-    my ($self, $taginfo) = @_;
+sub add_tag {
+    my ($self, $tag) = @_;
 
-    $self->tag_table->{$taginfo->name} = $taginfo;
+    $self->tag_table->{$tag->name} = $tag;
 
     return;
 }
 
 =item $cs->get_tag ($tagname)
 
-Return the L<tag|Lintian::Tag::Info> or undef (if the tag is not in
+Return the L<tag|Lintian::Tag> or undef (if the tag is not in
 this check).
 
 =cut

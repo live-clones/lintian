@@ -45,7 +45,7 @@ sub spelling_tag_emitter {
     my ($self, @orig_args) = @_;
 
     return sub {
-        return $self->tag(@orig_args, @_);
+        return $self->hint(@orig_args, @_);
     };
 }
 
@@ -73,11 +73,11 @@ sub source {
     # 3.0 (quilt) sources do not need quilt
     unless ($quilt_format) {
 
-        $self->tag('quilt-build-dep-but-no-series-file')
+        $self->hint('quilt-build-dep-but-no-series-file')
           if $build_deps->implies('quilt')
           && (!defined $patch_series || !$patch_series->is_open_ok);
 
-        $self->tag('quilt-series-but-no-build-dep')
+        $self->hint('quilt-series-but-no-build-dep')
           if $patch_series
           && $patch_series->is_file
           && !$build_deps->implies('quilt');
@@ -94,7 +94,7 @@ sub source {
         while (my $patch = <$series_fd>) {
             $patch =~ s/(?:^|\s+)#.*$//; # Strip comment
             if (rindex($patch,"\n") < 0) {
-                $self->tag('quilt-series-without-trailing-newline');
+                $self->hint('quilt-series-without-trailing-newline');
             }
 
             # trim both ends
@@ -112,7 +112,7 @@ sub source {
         }
         close($series_fd);
 
-        $self->tag('quilt-patch-with-non-standard-options', @badopts)
+        $self->hint('quilt-patch-with-non-standard-options', @badopts)
           if @badopts;
 
         my @patch_files;
@@ -124,7 +124,8 @@ sub source {
                 push(@patch_files, $file);
 
             } else {
-                $self->tag('quilt-series-references-non-existent-patch',$name);
+                $self->hint('quilt-series-references-non-existent-patch',
+                    $name);
             }
         }
 
@@ -149,10 +150,10 @@ sub source {
             }
             close($patch_fd);
 
-            $self->tag('quilt-patch-missing-description', $file->basename)
+            $self->hint('quilt-patch-missing-description', $file->basename)
               unless length $description;
 
-            $self->tag('quilt-patch-using-template-description',
+            $self->hint('quilt-patch-using-template-description',
                 $file->basename)
               if $has_template_description;
 
@@ -171,7 +172,7 @@ sub source {
 
         if ($versioned_patch and $versioned_patch->is_file) {
             if (not $patch_header or not $patch_header->is_file) {
-                $self->tag('format-3.0-but-debian-changes-patch');
+                $self->hint('format-3.0-but-debian-changes-patch');
             }
         }
     }
@@ -192,7 +193,7 @@ sub source {
             }
             close($fd);
 
-            $self->tag('package-uses-vendor-specific-patch-series', $file)
+            $self->hint('package-uses-vendor-specific-patch-series', $file)
               if $file =~ /\.series$/;
         }
 
@@ -203,7 +204,7 @@ sub source {
 
             # Use path relative to debian/patches for "subdir/foo"
             my $name = substr($file, length $patch_dir);
-            $self->tag('patch-file-present-but-not-mentioned-in-series', $name)
+            $self->hint('patch-file-present-but-not-mentioned-in-series',$name)
               unless $known_files{$name} or $file->is_dir;
         }
     }
@@ -233,7 +234,7 @@ sub check_patch {
 
     my @debian_files = ($output =~ m{^((?:\./)?debian/.*)$}ms);
 
-    $self->tag('patch-modifying-debian-files', $patch_file->basename, $_)
+    $self->hint('patch-modifying-debian-files', $patch_file->basename, $_)
       for @debian_files;
 
     return;

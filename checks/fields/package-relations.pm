@@ -129,7 +129,7 @@ sub installable {
             any { $_ eq $_[0] } qw(Depends Pre-Depends Recommends Suggests);
         };
 
-        $self->tag('alternates-not-allowed', $field)
+        $self->hint('alternates-not-allowed', $field)
           if ($data =~ /\|/ && !&$is_dep_field($field));
         $self->check_field($field, $data) if &$is_dep_field($field);
 
@@ -152,7 +152,7 @@ sub installable {
             }
 
             # Only for (Pre-)?Depends.
-            $self->tag('virtual-package-depends-without-real-package-depends',
+            $self->hint('virtual-package-depends-without-real-package-depends',
                 "$field: $alternatives[0][0]")
               if (
                    $VIRTUAL_PACKAGES->known($alternatives[0][0])
@@ -165,7 +165,7 @@ sub installable {
 
             # Check defaults for transitions.  Here, we only care
             # that the first alternative is current.
-            $self->tag('depends-on-old-emacs', "$field: $alternatives[0][0]")
+            $self->hint('depends-on-old-emacs', "$field: $alternatives[0][0]")
               if ( &$is_dep_field($field)
                 && $known_obsolete_emacs{$alternatives[0][0]});
 
@@ -174,45 +174,46 @@ sub installable {
                     $part_d_orig)
                   = @$part_d;
 
-                $self->tag('invalid-versioned-provides', $part_d_orig)
+                $self->hint('invalid-versioned-provides', $part_d_orig)
                   if ( $field eq 'Provides'
                     && $d_version->[0]
                     && $d_version->[0] ne '=');
 
-                $self->tag('bad-provided-package-name', $d_pkg)
+                $self->hint('bad-provided-package-name', $d_pkg)
                   if $d_pkg !~ /^[a-z0-9][-+\.a-z0-9]+$/;
 
-                $self->tag('breaks-without-version', $part_d_orig)
+                $self->hint('breaks-without-version', $part_d_orig)
                   if ( $field eq 'Breaks'
                     && !$d_version->[0]
                     && !$VIRTUAL_PACKAGES->known($d_pkg)
                     && !$replaces->implies($part_d_orig));
 
-                $self->tag('conflicts-with-version', $part_d_orig)
+                $self->hint('conflicts-with-version', $part_d_orig)
                   if ($field eq 'Conflicts' && $d_version->[0]);
 
-                $self->tag('obsolete-relation-form', "$field: $part_d_orig")
+                $self->hint('obsolete-relation-form', "$field: $part_d_orig")
                   if (
                     $d_version && any { $d_version->[0] eq $_ }
                     ('<', '>'));
 
-                $self->tag('bad-version-in-relation', "$field: $part_d_orig")
+                $self->hint('bad-version-in-relation', "$field: $part_d_orig")
                   if ($d_version->[0] && !version_check($d_version->[1]));
 
-                $self->tag('package-relation-with-self',"$field: $part_d_orig")
+                $self->hint('package-relation-with-self',
+                    "$field: $part_d_orig")
                   if ($pkg eq $d_pkg)
                   && (!$d_march)
                   && ( $field ne 'Conflicts'
                     && $field ne 'Replaces'
                     && $field ne 'Provides');
 
-                $self->tag('bad-relation', "$field: $part_d_orig") if $rest;
+                $self->hint('bad-relation', "$field: $part_d_orig") if $rest;
 
                 push @seen_obsolete_packages, [$part_d_orig, $d_pkg]
                   if ( $OBSOLETE_PACKAGES->known($d_pkg)
                     && &$is_dep_field($field));
 
-                $self->tag('depends-on-metapackage', "$field: $part_d_orig")
+                $self->hint('depends-on-metapackage', "$field: $part_d_orig")
                   if (  $KNOWN_METAPACKAGES->known($d_pkg)
                     and not $KNOWN_METAPACKAGES->known($pkg)
                     and not $processable->is_pkg_class('any-meta')
@@ -221,7 +222,7 @@ sub installable {
                 # diffutils is a special case since diff was
                 # renamed to diffutils, so a dependency on
                 # diffutils effectively is a versioned one.
-                $self->tag(
+                $self->hint(
                     'depends-on-essential-package-without-using-version',
                     "$field: $part_d_orig")
                   if ( $KNOWN_ESSENTIAL->known($d_pkg)
@@ -230,44 +231,44 @@ sub installable {
                     && $d_pkg ne 'diffutils'
                     && $d_pkg ne 'dash');
 
-                $self->tag('package-depends-on-an-x-font-package',
+                $self->hint('package-depends-on-an-x-font-package',
                     "$field: $part_d_orig")
                   if ( $field =~ /^(?:Pre-)?Depends$/
                     && $d_pkg =~ /^xfont.*/
                     && $d_pkg ne 'xfonts-utils'
                     && $d_pkg ne 'xfonts-encodings');
 
-                $self->tag('depends-on-packaging-dev',$field)
+                $self->hint('depends-on-packaging-dev',$field)
                   if (($field =~ /^(?:Pre-)?Depends$/|| $field eq 'Recommends')
                     && $d_pkg eq 'packaging-dev'
                     && !$processable->is_pkg_class('any-meta'));
 
-                $self->tag('needless-suggest-recommend-libservlet-java',
+                $self->hint('needless-suggest-recommend-libservlet-java',
                     "$d_pkg")
                   if (($field eq 'Recommends' || $field eq 'Suggests')
                     && $d_pkg =~ m/libservlet[\d\.]+-java/);
 
-                $self->tag('needlessly-depends-on-awk', $field)
+                $self->hint('needlessly-depends-on-awk', $field)
                   if ( $d_pkg eq 'awk'
                     && !$d_version->[0]
                     && &$is_dep_field($field)
                     && $pkg ne 'base-files');
 
-                $self->tag('depends-on-libdb1-compat', $field)
+                $self->hint('depends-on-libdb1-compat', $field)
                   if ( $d_pkg eq 'libdb1-compat'
                     && $pkg !~ /^libc(?:6|6.1|0.3)/
                     && $field =~ /^(?:Pre-)?Depends$/);
 
-                $self->tag('depends-on-python-minimal', $field,)
+                $self->hint('depends-on-python-minimal', $field,)
                   if ( $d_pkg =~ /^python[\d.]*-minimal$/
                     && &$is_dep_field($field)
                     && $pkg !~ /^python[\d.]*-minimal$/);
 
-                $self->tag('doc-package-depends-on-main-package', $field)
+                $self->hint('doc-package-depends-on-main-package', $field)
                   if ("$d_pkg-doc" eq $pkg
                     && $field =~ /^(?:Pre-)?Depends$/);
 
-                $self->tag(
+                $self->hint(
                     'package-relation-with-perl-modules', "$field: $d_pkg"
                       # matches "perl-modules" (<= 5.20) as well as
                       # perl-modules-5.xx (>> 5.20)
@@ -276,19 +277,19 @@ sub installable {
                   && $field ne 'Replaces'
                   && $processable->source ne 'perl';
 
-                $self->tag('depends-exclusively-on-makedev', $field,)
+                $self->hint('depends-exclusively-on-makedev', $field,)
                   if ( $field eq 'Depends'
                     && $d_pkg eq 'makedev'
                     && @alternatives == 1);
 
-                $self->tag('lib-recommends-documentation',
+                $self->hint('lib-recommends-documentation',
                     "$field: $part_d_orig")
                   if ( $field eq 'Recommends'
                     && $pkg =~ m/^lib/
                     && $pkg !~ m/-(?:dev|docs?|tools|bin)$/
                     && $part_d_orig =~ m/-docs?$/);
 
-                $self->tag('binary-package-depends-on-toolchain-package',
+                $self->hint('binary-package-depends-on-toolchain-package',
                     "$field: $part_d_orig")
                   if $KNOWN_TOOLCHAIN->known($d_pkg)
                   and &$is_dep_field($field)
@@ -301,7 +302,7 @@ sub installable {
                 # classpath-doc) to be useful; other packages
                 # should depend on default-jdk-doc if they want
                 # the Java Core API.
-                $self->tag('depends-on-specific-java-doc-package',$field)
+                $self->hint('depends-on-specific-java-doc-package',$field)
                   if (
                        &$is_dep_field($field)
                     && $pkg ne 'default-jdk-doc'
@@ -326,12 +327,12 @@ sub installable {
                   if $replacement ne '';
                 if ($pkg_name eq $alternatives[0][0]
                     or scalar @seen_obsolete_packages== scalar @alternatives) {
-                    $self->tag(
+                    $self->hint(
                         'depends-on-obsolete-package',
                         "$field: $dep${replacement}"
                     );
                 } else {
-                    $self->tag(
+                    $self->hint(
                         'ored-depends-on-obsolete-package',
                         "$field: $dep${replacement}"
                     );
@@ -345,19 +346,20 @@ sub installable {
             if (scalar(@alternatives) == $javadep
                 && !exists $nag_once{'needless-dependency-on-jre'}){
                 $nag_once{'needless-dependency-on-jre'} = 1;
-                $self->tag('needless-dependency-on-jre');
+                $self->hint('needless-dependency-on-jre');
             }
         }
-        $self->tag('package-depends-on-multiple-libstdc-versions',
+        $self->hint('package-depends-on-multiple-libstdc-versions',
             @seen_libstdcs)
           if (scalar @seen_libstdcs > 1);
-        $self->tag('package-depends-on-multiple-tcl-versions', @seen_tcls)
+        $self->hint('package-depends-on-multiple-tcl-versions', @seen_tcls)
           if (scalar @seen_tcls > 1);
-        $self->tag('package-depends-on-multiple-tclx-versions', @seen_tclxs)
+        $self->hint('package-depends-on-multiple-tclx-versions', @seen_tclxs)
           if (scalar @seen_tclxs > 1);
-        $self->tag('package-depends-on-multiple-tk-versions', @seen_tks)
+        $self->hint('package-depends-on-multiple-tk-versions', @seen_tks)
           if (scalar @seen_tks > 1);
-        $self->tag('package-depends-on-multiple-libpng-versions',@seen_libpngs)
+        $self->hint('package-depends-on-multiple-libpng-versions',
+            @seen_libpngs)
           if (scalar @seen_libpngs > 1);
     }
 
@@ -375,7 +377,7 @@ sub installable {
             for my $package (split /\s*,\s*/,
                 $processable->fields->value($conflict)) {
 
-                $self->tag('conflicts-with-dependency', $field, $package)
+                $self->hint('conflicts-with-dependency', $field, $package)
                   if $relation->implies($package);
             }
         }
@@ -409,11 +411,11 @@ sub source {
         }
     }
 
-    $self->tag('build-depends-indep-without-arch-indep')
+    $self->hint('build-depends-indep-without-arch-indep')
       if ( $processable->fields->exists('Build-Depends-Indep')
         && $arch_indep_packages == 0);
 
-    $self->tag('build-depends-arch-without-arch-dependent-binary')
+    $self->hint('build-depends-arch-without-arch-dependent-binary')
       if ( $processable->fields->exists('Build-Depends-Arch')
         && $arch_dep_packages == 0);
 
@@ -439,7 +441,7 @@ sub source {
                 push @alternatives, [_split_dep($_), $_]
                   for (split /\s*\|\s*/, $dep);
 
-                $self->tag(
+                $self->hint(
                     'virtual-package-depends-without-real-package-depends',
                     "$field: $alternatives[0][0]")
                   if ( $VIRTUAL_PACKAGES->known($alternatives[0][0])
@@ -452,7 +454,7 @@ sub source {
 
                     for my $arch (@{$d_arch->[0]}) {
                         if ($arch eq 'all' || !is_arch_or_wildcard($arch)){
-                            $self->tag(
+                            $self->hint(
                                 'invalid-arch-string-in-source-relation',
                                 "$arch [$field: $part_d_orig]");
                         }
@@ -461,7 +463,7 @@ sub source {
                     for my $restrlist (@{$d_restr}) {
                         for my $prof (@{$restrlist}) {
                             $prof =~ s/^!//;
-                            $self->tag(
+                            $self->hint(
                                 'invalid-profile-name-in-source-relation',
                                 "$prof [$field: $part_d_orig]"
                               )
@@ -472,42 +474,43 @@ sub source {
 
                     if (   $d_pkg =~ /^openjdk-\d+-doc$/
                         or $d_pkg eq 'classpath-doc'){
-                        $self->tag(
+                        $self->hint(
                             'build-depends-on-specific-java-doc-package',
                             $d_pkg);
                     }
 
                     if ($d_pkg eq 'java-compiler'){
-                        $self->tag('build-depends-on-an-obsolete-java-package',
+                        $self->hint(
+                            'build-depends-on-an-obsolete-java-package',
                             $d_pkg);
                     }
 
                     if (    $d_pkg =~ /^libdb\d+\.\d+.*-dev$/
                         and &$is_dep_field($field)) {
-                        $self->tag('build-depends-on-versioned-berkeley-db',
+                        $self->hint('build-depends-on-versioned-berkeley-db',
                             "$field:$d_pkg");
                     }
 
-                    $self->tag('conflicting-negation-in-source-relation',
+                    $self->hint('conflicting-negation-in-source-relation',
                         "$field: $part_d_orig")
                       unless (not $d_arch
                         or $d_arch->[1] == 0
                         or $d_arch->[1] eq @{ $d_arch->[0] });
 
-                    $self->tag('depends-on-packaging-dev', $field)
+                    $self->hint('depends-on-packaging-dev', $field)
                       if ($d_pkg eq 'packaging-dev');
 
-                    $self->tag('build-depends-on-build-essential', $field)
+                    $self->hint('build-depends-on-build-essential', $field)
                       if ($d_pkg eq 'build-essential');
 
-                    $self->tag(
+                    $self->hint(
 'build-depends-on-build-essential-package-without-using-version',
                         "$d_pkg [$field: $part_d_orig]"
                       )
                       if ($known_build_essential->known($d_pkg)
                         && !$d_version->[1]);
 
-                    $self->tag(
+                    $self->hint(
 'build-depends-on-essential-package-without-using-version',
                         "$field: $part_d_orig"
                       )
@@ -518,31 +521,31 @@ sub source {
                       if ( $OBSOLETE_PACKAGES->known($d_pkg)
                         && &$is_dep_field($field));
 
-                    $self->tag('build-depends-on-metapackage',
+                    $self->hint('build-depends-on-metapackage',
                         "$field: $part_d_orig")
                       if (  $KNOWN_METAPACKAGES->known($d_pkg)
                         and &$is_dep_field($field));
 
-                    $self->tag('build-depends-on-non-build-package',
+                    $self->hint('build-depends-on-non-build-package',
                         "$field: $part_d_orig")
                       if (  $NO_BUILD_DEPENDS->known($d_pkg)
                         and &$is_dep_field($field));
 
-                    $self->tag('build-depends-on-1-revision',
+                    $self->hint('build-depends-on-1-revision',
                         "$field: $part_d_orig")
                       if ( $d_version->[0] eq '>='
                         && $d_version->[1] =~ /-1$/
                         && &$is_dep_field($field));
 
-                    $self->tag('bad-relation', "$field: $part_d_orig")
+                    $self->hint('bad-relation', "$field: $part_d_orig")
                       if $rest;
 
-                    $self->tag('bad-version-in-relation',
+                    $self->hint('bad-version-in-relation',
                         "$field: $part_d_orig")
                       if ($d_version->[0]
                         && !version_check($d_version->[1]));
 
-                    $self->tag(
+                    $self->hint(
                         'package-relation-with-perl-modules',
                         "$field: $part_d_orig"
                           # matches "perl-modules" (<= 5.20) as well as
@@ -564,10 +567,10 @@ sub source {
                       if $replacement ne '';
                     if (   $pkg_name eq $alternatives[0][0]
                         or $all_obsolete) {
-                        $self->tag('build-depends-on-obsolete-package',
+                        $self->hint('build-depends-on-obsolete-package',
                             "$field: $dep${replacement}");
                     } else {
-                        $self->tag('ored-build-depends-on-obsolete-package',
+                        $self->hint('ored-build-depends-on-obsolete-package',
                             "$field: $dep${replacement}");
                     }
                 }
@@ -586,7 +589,7 @@ sub source {
           = Lintian::Relation->and(map { $processable->relation($_) }@$fields);
         my @dups = $relation->duplicates;
         for my $dup (@dups) {
-            $self->tag('package-has-a-duplicate-build-relation',
+            $self->hint('package-has-a-duplicate-build-relation',
                 join(', ', @$dup));
         }
     }
@@ -601,7 +604,7 @@ sub source {
         next unless $_;
         for my $conflict (split /\s*,\s*/, $_) {
             if ($build_all->implies($conflict)) {
-                $self->tag('build-conflicts-with-build-dependency', $conflict);
+                $self->hint('build-conflicts-with-build-dependency',$conflict);
             }
         }
     }
@@ -628,27 +631,27 @@ sub source {
             $missing = 0
               if $deps->matches(qr/-dbg \Z/xsm, VISIT_PRED_NAME);
         }
-        $self->tag('dbg-package-missing-depends', $dbg_proc->name)
+        $self->hint('dbg-package-missing-depends', $dbg_proc->name)
           if $missing;
     }
 
     # Check for a python*-dev build dependency in source packages that
     # build only arch: all packages.
     if ($arch_dep_packages == 0 and $build_all->implies($PYTHON_DEV)) {
-        $self->tag('build-depends-on-python-dev-with-no-arch-any');
+        $self->hint('build-depends-on-python-dev-with-no-arch-any');
     }
 
     my $bdepends = $processable->relation('Build-Depends');
 
     # libmodule-build-perl
     # matches() instead of implies() because of possible OR relation
-    $self->tag('libmodule-build-perl-needs-to-be-in-build-depends')
+    $self->hint('libmodule-build-perl-needs-to-be-in-build-depends')
       if $processable->relation('Build-Depends-Indep')
       ->matches(qr/^libmodule-build-perl$/, VISIT_PRED_NAME)
       && !$bdepends->matches(qr/^libmodule-build-perl$/,VISIT_PRED_NAME);
 
     # libmodule-build-tiny-perl
-    $self->tag('libmodule-build-tiny-perl-needs-to-be-in-build-depends')
+    $self->hint('libmodule-build-tiny-perl-needs-to-be-in-build-depends')
       if $processable->relation('Build-Depends-Indep')
       ->implies('libmodule-build-tiny-perl')
       && !$bdepends->implies('libmodule-build-tiny-perl');
@@ -705,17 +708,17 @@ sub check_field {
     my $has_mail_transport_agent = $processable->relation($field)
       ->matches(qr/^mail-transport-agent$/, VISIT_PRED_NAME);
 
-    $self->tag('default-mta-dependency-not-listed-first',"$field: $data")
+    $self->hint('default-mta-dependency-not-listed-first',"$field: $data")
       if $processable->relation($field)
       ->matches(qr/\|\s+default-mta/, VISIT_OR_CLAUSE_FULL);
 
     if ($has_default_mta) {
-        $self->tag(
+        $self->hint(
             'default-mta-dependency-does-not-specify-mail-transport-agent',
             "$field: $data")
           unless $has_mail_transport_agent;
     } elsif ($has_mail_transport_agent) {
-        $self->tag(
+        $self->hint(
             'mail-transport-agent-dependency-does-not-specify-default-mta',
             "$field: $data")
           unless $has_default_mta;

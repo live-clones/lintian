@@ -106,6 +106,7 @@ has colors => (
             'I' => 'cyan',
             'P' => 'green',
             'C' => 'blue',
+            'O' => 'bright_black',
         }
     });
 has perf_debug => (is => 'rw', default => 0);

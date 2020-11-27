@@ -62,30 +62,30 @@ sub visit_installed_files {
 
         if (    $file->name =~ m,$VCS_FILES_OR_ALL,
             and $file->name !~ m,^usr/share/cargo/registry/,) {
-            $self->tag('package-contains-vcs-control-file', $file->name);
+            $self->hint('package-contains-vcs-control-file', $file->name);
         }
 
         if ($file->name =~ m/svn-commit.*\.tmp$/) {
-            $self->tag('svn-commit-file-in-package', $file->name);
+            $self->hint('svn-commit-file-in-package', $file->name);
         }
 
         if ($file->name =~ m/svk-commit.+\.tmp$/) {
-            $self->tag('svk-commit-file-in-package', $file->name);
+            $self->hint('svk-commit-file-in-package', $file->name);
         }
 
     }elsif ($file->is_dir) {
 
         if ($file->name =~ m,/CVS/?$,) {
-            $self->tag('package-contains-vcs-control-dir', $file->name);
+            $self->hint('package-contains-vcs-control-dir', $file->name);
         }
 
         if ($file->name =~ m,/\.(?:svn|bzr|git|hg)/?$,) {
-            $self->tag('package-contains-vcs-control-dir', $file->name);
+            $self->hint('package-contains-vcs-control-dir', $file->name);
         }
 
         if (   ($file->name =~ m,/\.arch-ids/?$,)
             || ($file->name =~ m,/\{arch\}/?$,)) {
-            $self->tag('package-contains-vcs-control-dir', $file->name);
+            $self->hint('package-contains-vcs-control-dir', $file->name);
         }
     }
 

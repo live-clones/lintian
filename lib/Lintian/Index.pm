@@ -23,6 +23,8 @@ use utf8;
 use autodie;
 
 use Carp;
+use Cwd;
+use IPC::Run3;
 use List::MoreUtils qw(any);
 use Path::Tiny;
 
@@ -90,8 +92,6 @@ Returns the base directory for file references.
 
 =item C<anchored>
 
-=item C<allow_empty>
-
 =cut
 
 has catalog => (
@@ -128,7 +128,6 @@ has basedir => (
 );
 
 has anchored => (is => 'rw', default => 0);
-has allow_empty => (is => 'rw', default => 0);
 
 =item sorted_list
 
@@ -191,6 +190,84 @@ sub resolve_path {
     return $self->lookup->resolve_path($name);
 }
 
+=item create_from_basedir
+
+=cut
+
+sub create_from_basedir {
+    my ($self) = @_;
+
+    my $savedir = getcwd;
+    chdir($self->basedir);
+
+    # get times in UTC
+    my @index_command
+      = ('env', 'TZ=UTC', 'find', '-printf', '%M %s %A+\0%p\0%l\0');
+    my $index_output;
+    my $index_errors;
+
+    run3(\@index_command, \undef, \$index_output, \$index_errors);
+
+    chdir($savedir);
+
+    my $permissionspattern = qr,\S{10},;
+    my $sizepattern = qr,\d+,;
+    my $datepattern = qr,\d{4}-\d{2}-\d{2},;
+    my $timepattern = qr,\d{2}:\d{2}:\d{2}\.\d+,;
+    my $pathpattern = qr,[^\0]*,;
+
+    my %all;
+
+    $index_output =~ s/\0$//;
+
+    my @lines = split(/\0/, $index_output, -1);
+    die 'Did not get a multiple of three lines from find.'
+      unless @lines % 3 == 0;
+
+    while (defined(my $first = shift @lines)) {
+
+        my $entry = Lintian::Index::Item->new;
+        $entry->index($self);
+
+        $first
+          =~ /^($permissionspattern)\ ($sizepattern)\ ($datepattern)\+($timepattern)$/s;
+
+        $entry->perm($1);
+        $entry->size($2);
+        $entry->date($3);
+        $entry->time($4);
+
+        my $name = shift @lines;
+
+        my $linktarget = shift @lines;
+
+        # for non-links, string is empty
+        $entry->link($linktarget)
+          if length $linktarget;
+
+        # find prints single dot for base; removed in next step
+        $name =~ s{^\.$}{\./}s;
+
+        # strip relative prefix
+        $name =~ s{^\./+}{}s;
+
+        # make sure directories end with a slash, except root
+        $name .= SLASH
+          if length $name
+          && $entry->perm =~ /^d/
+          && substr($name, -1) ne SLASH;
+        $entry->name($name);
+
+        $all{$entry->name} = $entry;
+    }
+
+    $self->catalog(\%all);
+
+    $self->load;
+
+    return ($index_errors);
+}
+
 =item create_from_piped_tar
 
 =cut
@@ -215,6 +292,7 @@ sub create_from_piped_tar {
 
         my $entry = Lintian::Index::Item->new;
         $entry->init_from_tar_output($line);
+        $entry->index($self);
 
         $catalog{$entry->name} = $entry;
     }
@@ -222,6 +300,7 @@ sub create_from_piped_tar {
     # get numerical owners from second list
     for my $line (@numeric_owner) {
 
+        # entry not used outside this loop
         my $entry = Lintian::Index::Item->new;
         $entry->init_from_tar_output($line);
 
@@ -234,6 +313,8 @@ sub create_from_piped_tar {
     }
 
     $self->catalog(\%catalog);
+
+    $self->load;
 
     return ($extract_errors, $index_errors);
 }
@@ -313,6 +394,8 @@ sub load {
             unless (exists $all{$parentname}) {
 
                 my $added = Lintian::Index::Item->new;
+                $added->index($self);
+
                 $added->name($parentname);
                 $added->path_info($FILE_CODE2LPATH_TYPE{'d'} | 0755);
 
@@ -329,12 +412,22 @@ sub load {
         } while ($parentname ne EMPTY);
     }
 
-    # all missing directories have been generated
-    die 'The root dir should be present or have been faked'
-      unless exists $all{''} || $self->allow_empty;
+    # insert root for empty tarfies like suckless-tools_45.orig.tar.xz
+    unless (exists $all{''}) {
 
-    # add index to all entries, including generated
-    $_->index($self) for values %all;
+        my $root = Lintian::Index::Item->new;
+        $root->index($self);
+
+        $root->name(EMPTY);
+        $root->path_info($FILE_CODE2LPATH_TYPE{'d'} | 0755);
+
+        # random but fixed date; hint, it's a good read. :)
+        $root->date('1998-01-25');
+        $root->time('22:55:34');
+        $root->faux(1);
+
+        $all{''} = $root;
+    }
 
     my @directories
       = grep { $_->path_info & Lintian::Index::Item::TYPE_DIR } values %all;
@@ -453,9 +546,6 @@ sub merge_in {
     die 'Need same anchoring status'
       unless $self->anchored == $other->anchored;
 
-    die 'Need same tolerance for empty index'
-      unless $self->allow_empty == $other->allow_empty;
-
     # associate all new items with this index
     $_->index($self) for values %{$other->catalog};
 
@@ -475,6 +565,78 @@ sub merge_in {
 
     # unset other base directory
     $other->basedir(EMPTY);
+
+    return;
+}
+
+=item capture_common_prefix
+
+=cut
+
+sub capture_common_prefix {
+    my ($self) = @_;
+
+    my $new_basedir = path($self->basedir)->parent;
+
+    # do nothing in root
+    return
+      if $new_basedir eq SLASH;
+
+    my $segment = path($self->basedir)->basename;
+    die 'Common path segment has no length'
+      unless length $segment;
+
+    my $prefix;
+    if ($self->anchored) {
+        $prefix = SLASH . $segment;
+    } else {
+        $prefix = $segment . SLASH;
+    }
+
+    my $new_root = Lintian::Index::Item->new;
+
+    # associate new item with this index
+    $new_root->index($self);
+
+    $new_root->name('');
+    $new_root->childnames({ $segment => $prefix });
+
+    # random but fixed date; hint, it's a good read. :)
+    $new_root->date('1998-01-25');
+    $new_root->time('22:55:34');
+    $new_root->path_info($FILE_CODE2LPATH_TYPE{'d'} | 0755);
+    $new_root->faux(1);
+
+    my %new_catalog;
+    for my $item (values %{$self->catalog}) {
+
+        # drop common prefix from name
+        my $new_name = $prefix . $item->name;
+        $item->name($new_name);
+
+        if (length $item->link) {
+
+            # add common prefix from link target
+            my $new_link = $prefix . $item->link;
+            $item->link($new_link);
+        }
+
+        # adjust references to children
+        for my $basename (keys %{$item->childnames}) {
+            $item->childnames->{$basename}
+              = $prefix . $item->childnames->{$basename};
+        }
+
+        $new_catalog{$new_name} = $item;
+    }
+
+    $new_catalog{''} = $new_root;
+    $new_catalog{$prefix}->parent_dir($new_root);
+
+    $self->catalog(\%new_catalog);
+
+    # remove segment from base directory
+    $self->basedir($new_basedir);
 
     return;
 }
@@ -526,6 +688,11 @@ sub drop_common_prefix {
             $item->link($new_link);
         }
 
+        # adjust references to children
+        for my $basename (keys %{$item->childnames}) {
+            $item->childnames->{$basename} =~ s{^$regex}{};
+        }
+
         # unsure this works, but orig not anchored
         $new_name = EMPTY
           if $new_name eq SLASH && $self->anchored;
@@ -538,6 +705,8 @@ sub drop_common_prefix {
     # add dropped segment to base directory
     $self->basedir($self->basedir . SLASH . $segment);
 
+    $self->drop_basedir_segment;
+
     return;
 }
 
@@ -549,28 +718,52 @@ sub drop_basedir_segment {
     my ($self) = @_;
 
     my $obsolete = path($self->basedir)->basename;
-    die 'Not enough segments in'
+    die 'Base directory has no name'
       unless length $obsolete;
 
-    my $new_base_dir = path($self->basedir)->parent->stringify;
-    die 'Will not move contents to root'
-      if $new_base_dir eq SLASH;
+    my $parent_dir = path($self->basedir)->parent->stringify;
+    die 'Base directory has no parent'
+      if $parent_dir eq SLASH;
 
-    die "Do not yet know how to rename repeating segment $obsolete"
-      if -e $self->basedir . SLASH . $obsolete;
+    my $grandparent_dir = path($parent_dir)->parent->stringify;
+    die 'Will not do anything in file system root'
+      if $grandparent_dir eq SLASH;
 
-    # overwrite contents a level lower
+    # destroyed when object is lost
+    my $tempdir_tiny
+      = path($grandparent_dir)->tempdir(TEMPLATE => 'customXXXXXXXX');
+
+    my $tempdir = $tempdir_tiny->stringify;
+
+    # addresses Perl unicode bug
+    utf8::downgrade $tempdir;
+
+    # avoids conflict in case of repeating path segments
     for my $child (path($self->basedir)->children) {
         my $old_name = $child->stringify;
 
-        # fix Perl unicode bug
+        # addresses Perl unicode bug
         utf8::downgrade $old_name;
-        system('mv', $old_name, $new_base_dir);
+
+        my @command = ('mv', $old_name, $tempdir);
+        system(@command);
     }
 
     rmdir $self->basedir;
+    $self->basedir($parent_dir);
 
-    $self->basedir($new_base_dir);
+    # addresses Perl unicode bug
+    utf8::downgrade $parent_dir;
+
+    for my $child ($tempdir_tiny->children) {
+        my $old_name = $child->stringify;
+
+        # addresses Perl unicode bug
+        utf8::downgrade $old_name;
+
+        my @command = ('mv', $old_name, $parent_dir);
+        system(@command);
+    }
 
     return;
 }

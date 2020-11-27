@@ -43,7 +43,7 @@ sub source {
 
     my $fields = $self->processable->fields;
 
-    $self->tag('essential-in-source-package')
+    $self->hint('essential-in-source-package')
       if $fields->exists('Essential');
 
     return;
@@ -60,13 +60,13 @@ sub always {
     my $essential = $fields->unfolded_value('Essential');
 
     unless ($essential eq 'yes' || $essential eq 'no') {
-        $self->tag('unknown-essential-value');
+        $self->hint('unknown-essential-value');
         return;
     }
 
-    $self->tag('essential-no-not-needed') if $essential eq 'no';
+    $self->hint('essential-no-not-needed') if $essential eq 'no';
 
-    $self->tag('new-essential-package')
+    $self->hint('new-essential-package')
       if $essential eq 'yes'
       && !$KNOWN_ESSENTIAL->known($self->processable->name);
 

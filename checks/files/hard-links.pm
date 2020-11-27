@@ -40,7 +40,7 @@ sub visit_installed_files {
     $target_dir =~ s,[^/]*$,,;
 
     # link always sorts after target; hard links are calibrated
-    $self->tag('package-contains-hardlink',$file->name . ' -> ' . $file->link)
+    $self->hint('package-contains-hardlink',$file->name . ' -> ' . $file->link)
       if $file->name =~ m,^etc/,
       or $file->link =~ m,^etc/,
       or $file->name !~ m,^\Q$target_dir\E[^/]*$,;

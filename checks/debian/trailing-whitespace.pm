@@ -84,12 +84,12 @@ sub source {
         if (scalar @empty_at_end && $empty_at_end[-1] == scalar @lines) {
             pop @empty_at_end;
         } else {
-            $self->tag('no-newline-at-end', $file);
+            $self->hint('no-newline-at-end', $file);
         }
 
         push(@trailing_whitespace, @empty_at_end);
 
-        $self->tag('trailing-whitespace', "$file (line $_)")
+        $self->hint('trailing-whitespace', "$file (line $_)")
           for @trailing_whitespace;
     }
 

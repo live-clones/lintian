@@ -37,7 +37,7 @@ sub visit_installed_files {
     if ($file->name=~ m,^usr/share/games/(?:applications|mime|icons|pixmaps)/,
         and not $file->is_dir) {
 
-        $self->tag('global-data-in-games-directory', $file->name);
+        $self->hint('global-data-in-games-directory', $file->name);
     }
 
     return;
@@ -68,15 +68,15 @@ sub installable {
         if ($section =~ m,games$,) {
 
             if ($games) {
-                $self->tag('package-section-games-but-has-usr-bin');
+                $self->hint('package-section-games-but-has-usr-bin');
 
             } else {
-                $self->tag('package-section-games-but-contains-no-game');
+                $self->hint('package-section-games-but-contains-no-game');
             }
         }
 
     } elsif ($games > 0 and $section !~ m,games$,) {
-        $self->tag('game-outside-section');
+        $self->hint('game-outside-section');
     }
 
     return;

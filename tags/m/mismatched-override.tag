@@ -1,5 +1,6 @@
 Tag: mismatched-override
 Severity: warning
+Show-Always: yes
 Check: lintian
 Explanation: The named tag could have been silenced but the context specified
  with the override did not match.

@@ -59,7 +59,7 @@ sub source {
         my $val = $processable->fields->value($field) || HYPHEN;
         my $data = $DERIVATIVE_FIELDS->value($field);
 
-        $self->tag('invalid-field-for-derivative',
+        $self->hint('invalid-field-for-derivative',
             "$field: $val ($data->{'explanation'})")
           if $val !~ m/$data->{'regexp'}/;
     }

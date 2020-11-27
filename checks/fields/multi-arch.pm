@@ -68,7 +68,7 @@ sub source {
 
             my $specific = "debian/$bin.lintian-overrides.$arch";
 
-            $self->tag('multi-arch-same-package-has-arch-specific-overrides',
+            $self->hint('multi-arch-same-package-has-arch-specific-overrides',
                 $specific)
               if $processable->patched->resolve_path($specific);
         }
@@ -84,7 +84,7 @@ sub installable {
 
     if ($self->processable->name =~ /^x?fonts-/) {
 
-        $self->tag('font-package-not-multi-arch-foreign')
+        $self->hint('font-package-not-multi-arch-foreign')
           unless ($fields->value('Multi-Arch') || 'no')
           =~/^(?:foreign|allowed)$/;
     }
@@ -98,7 +98,7 @@ sub installable {
 
         my $architecture = $fields->unfolded_value('Architecture');
 
-        $self->tag('illegal-multi-arch-value', $architecture, $multi)
+        $self->hint('illegal-multi-arch-value', $architecture, $multi)
           if $architecture eq 'all' && $multi eq 'same';
     }
 
@@ -115,7 +115,7 @@ sub always {
 
     my $multi = $fields->unfolded_value('Multi-Arch');
 
-    $self->tag('unknown-multi-arch-value', $self->processable->name, $multi)
+    $self->hint('unknown-multi-arch-value', $self->processable->name, $multi)
       unless $multi =~ /^(?:no|foreign|allowed|same)$/;
 
     return;

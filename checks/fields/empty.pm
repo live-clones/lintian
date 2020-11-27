@@ -35,7 +35,7 @@ sub always {
     my @all = $self->processable->fields->names;
     my @empty = grep { !length $self->processable->fields->value($_) } @all;
 
-    $self->tag('empty-field', $_) for @empty;
+    $self->hint('empty-field', $_) for @empty;
 
     return;
 }

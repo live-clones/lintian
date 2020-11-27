@@ -38,7 +38,7 @@ use Moo::Role;
 use MooX::Aliases;
 use namespace::clean;
 
-with 'Lintian::Tag::Bearer';
+with 'Lintian::Hint::Bearer';
 
 =encoding utf-8
 

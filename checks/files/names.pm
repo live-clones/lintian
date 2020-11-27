@@ -43,13 +43,13 @@ sub visit_installed_files {
 
     # unusual characters
     if ($file->name =~ m,\s+\z,) {
-        $self->tag('file-name-ends-in-whitespace', $file->name);
+        $self->hint('file-name-ends-in-whitespace', $file->name);
     }
     if ($file->name =~ m,/\*\z,) {
-        $self->tag('star-file', $file->name);
+        $self->hint('star-file', $file->name);
     }
     if ($file->name =~ m,/-\z,) {
-        $self->tag('hyphen-file', $file->name);
+        $self->hint('hyphen-file', $file->name);
     }
 
     # check for generic bad filenames
@@ -57,22 +57,22 @@ sub visit_installed_files {
 
         my $regex = $FNAMES->value($tag);
 
-        $self->tag($tag, $file->name)
+        $self->hint($tag, $file->name)
           if $file->name =~ m/$regex/;
     }
 
     if (exists($PATH_DIRECTORIES{$file->dirname})) {
 
-        $self->tag('file-name-in-PATH-is-not-ASCII', $file->name)
+        $self->hint('file-name-in-PATH-is-not-ASCII', $file->name)
           if $file->basename !~ m{\A [[:ascii:]]++ \Z}xsm;
 
-        $self->tag('zero-byte-executable-in-path', $file->name)
+        $self->hint('zero-byte-executable-in-path', $file->name)
           if $file->is_regular_file
           and $file->is_executable
           and $file->size == 0;
 
     } elsif (!valid_utf8($file->name)) {
-        $self->tag('shipped-file-without-utf8-name', $file->name);
+        $self->hint('shipped-file-without-utf8-name', $file->name);
     }
 
     return;
@@ -86,7 +86,7 @@ sub source {
         my @orig_non_utf8 = grep { !valid_utf8($_->name) }
           $self->processable->orig->sorted_list;
 
-        $self->tag('upstream-file-without-utf8-name', $_->name)
+        $self->hint('upstream-file-without-utf8-name', $_->name)
           for @orig_non_utf8;
     }
 
@@ -102,11 +102,11 @@ sub source {
     my @maintainer_fault = grep { !m{^.pc/} } @non_utf8;
 
     if ($self->processable->native) {
-        $self->tag('native-source-file-without-utf8-name', $_)
+        $self->hint('native-source-file-without-utf8-name', $_)
           for @maintainer_fault;
 
     } else {
-        $self->tag('patched-file-without-utf8-name', $_) for @maintainer_fault;
+        $self->hint('patched-file-without-utf8-name', $_)for @maintainer_fault;
     }
 
     return;

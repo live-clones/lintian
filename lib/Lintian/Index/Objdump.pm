@@ -120,7 +120,9 @@ sub add_objdump {
               unless $container eq $file->name;
 
             my $per_file = shift @per_files;
-            die "No readelf output for $recorded_name"
+
+            # ignore empty archives, such as in musl-dev_1.2.1-1_amd64.deb
+            next
               unless length $per_file;
 
             $parsed .= parse_per_file($per_file, $recorded_name);
@@ -299,6 +301,10 @@ sub parse_per_file {
             while ($line =~ /([0-9a-f]+h?)\s*(?:\((\S+)\))?(?:\s|\Z)/gci) {
                 my $version_number = $1;
                 my $version_string = $2;
+
+                # for libfuse2_2.9.9-3_amd64.deb
+                next
+                  unless defined $version_string;
 
                 $version_string = "($version_string)"
                   if $version_number =~ /h$/;

@@ -38,7 +38,7 @@ sub visit_installed_files {
         && $file->name =~ m,^etc/emacs.*/\S,
         && $file->operm != 0644) {
 
-        $self->tag('bad-permissions-for-etc-emacs-script',
+        $self->hint('bad-permissions-for-etc-emacs-script',
             sprintf('%s %04o != 0644', $file->name, $file->operm));
     }
 

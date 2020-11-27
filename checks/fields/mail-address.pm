@@ -73,7 +73,7 @@ sub always {
     }
 
     for my $role (@singles_present) {
-        $self->tag('too-many-contacts', $role,
+        $self->hint('too-many-contacts', $role,
             $self->processable->fields->value($role))
           if @{$parsed{$role}} > 1;
     }
@@ -86,7 +86,7 @@ sub always {
         $count{$_}++ for @addresses;
         my @duplicates = grep { $count{$_} > 1 } keys %count;
 
-        $self->tag('duplicate-contact', $role, $_) for @duplicates;
+        $self->hint('duplicate-contact', $role, $_) for @duplicates;
     }
 
     return;
@@ -96,44 +96,44 @@ sub check_single_address {
     my ($self, $role, $parsed) = @_;
 
     unless ($parsed->is_valid) {
-        $self->tag('malformed-contact', $role, $parsed->original);
+        $self->hint('malformed-contact', $role, $parsed->original);
         return;
     }
 
-    $self->tag('mail-contact', $role, $parsed->format);
+    $self->hint('mail-contact', $role, $parsed->format);
 
     unless (all { length } ($parsed->address, $parsed->user, $parsed->host)) {
-        $self->tag('incomplete-mail-address', $role, $parsed->format);
+        $self->hint('incomplete-mail-address', $role, $parsed->format);
         return;
     }
 
-    $self->tag('bogus-mail-host', $role, $parsed->address)
+    $self->hint('bogus-mail-host', $role, $parsed->address)
       unless is_domain($parsed->host, {domain_disable_tld_validation => 1});
 
-    $self->tag('mail-address-loops-or-bounces',$role, $parsed->address)
+    $self->hint('mail-address-loops-or-bounces',$role, $parsed->address)
       if any { $_ eq $parsed->address } @KNOWN_BOUNCE_ADDRESSES;
 
     unless (length $parsed->phrase) {
-        $self->tag('no-phrase', $role, $parsed->format);
+        $self->hint('no-phrase', $role, $parsed->format);
         return;
     }
 
-    $self->tag('root-in-contact', $role, $parsed->format)
+    $self->hint('root-in-contact', $role, $parsed->format)
       if $parsed->user eq 'root' || $parsed->phrase eq 'root';
 
     # Debian QA Group
-    $self->tag('faulty-debian-qa-group-phrase',
+    $self->hint('faulty-debian-qa-group-phrase',
         $role, $parsed->phrase . ARROW . QA_GROUP_PHRASE)
       if $parsed->address eq QA_GROUP_ADDRESS
       && $parsed->phrase ne QA_GROUP_PHRASE;
 
-    $self->tag('faulty-debian-qa-group-address',
+    $self->hint('faulty-debian-qa-group-address',
         $role, $parsed->address . ARROW . QA_GROUP_ADDRESS)
       if ( $parsed->phrase =~ /\bdebian\s+qa\b/i
         && $parsed->address ne QA_GROUP_ADDRESS)
       || $parsed->address eq 'debian-qa@lists.debian.org';
 
-    $self->tag('mailing-list-on-alioth', $role, $parsed->address)
+    $self->hint('mailing-list-on-alioth', $role, $parsed->address)
       if $parsed->host eq 'lists.alioth.debian.org';
 
     return;

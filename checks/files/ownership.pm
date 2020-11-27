@@ -43,7 +43,7 @@ sub visit_installed_files {
             || $file->gid == 65_534
             || ($file->gid >= 60_000 && $file->gid < 65_000))
     ) {
-        $self->tag('wrong-file-owner-uid-or-gid', $file->name,
+        $self->hint('wrong-file-owner-uid-or-gid', $file->name,
             $file->uid . '/' . $file->gid);
     }
 

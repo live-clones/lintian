@@ -67,17 +67,17 @@ sub source {
     my $lc = List::Compare->new(\@testsuites, [$KNOWN_TESTSUITES->all]);
     my @unknown = $lc->get_Lonly;
 
-    $self->tag('unknown-testsuite', $_) for @unknown;
+    $self->hint('unknown-testsuite', $_) for @unknown;
 
     my $tests_control
       = $self->processable->patched->resolve_path('debian/tests/control');
 
     # field added automatically since dpkg 1.17 when d/tests/control is present
-    $self->tag('unnecessary-testsuite-autopkgtest-field')
+    $self->hint('unnecessary-testsuite-autopkgtest-field')
       if (any { $_ eq 'autopkgtest' } @testsuites) && defined $tests_control;
 
     # need d/tests/control for plain autopkgtest
-    $self->tag('missing-tests-control')
+    $self->hint('missing-tests-control')
       if (any { $_ eq 'autopkgtest' } @testsuites) && !defined $tests_control;
 
     die 'debian tests control is not a regular file'
@@ -93,7 +93,7 @@ sub source {
 
         my @sections = @{$control_file->sections};
 
-        $self->tag('empty-debian-tests-control')
+        $self->hint('empty-debian-tests-control')
           unless @sections;
 
         $self->check_control_paragraph($_) for @sections;
@@ -101,7 +101,7 @@ sub source {
         if (scalar @sections == 1) {
             my $command = $sections[0]->unfolded_value('Test-Command');
 
-            $self->tag('no-op-testsuite')
+            $self->hint('no-op-testsuite')
               if $command =~ m{(?:/bin/)?true};
         }
     }
@@ -109,10 +109,10 @@ sub source {
     my $control_autodep8
       = $self->processable->patched->resolve_path(
         'debian/tests/control.autodep8');
-    $self->tag('debian-tests-control-autodep8-is-obsolete', $control_autodep8)
+    $self->hint('debian-tests-control-autodep8-is-obsolete', $control_autodep8)
       if defined $control_autodep8;
 
-    $self->tag('debian-tests-control-and-control-autodep8',
+    $self->hint('debian-tests-control-and-control-autodep8',
         $tests_control,$control_autodep8)
       if defined $tests_control && defined $control_autodep8;
 
@@ -122,10 +122,10 @@ sub source {
 sub check_control_paragraph {
     my ($self, $section) = @_;
 
-    $self->tag('no-tests')
+    $self->hint('no-tests')
       unless $section->exists('Tests') || $section->exists('Test-Command');
 
-    $self->tag(
+    $self->hint(
         'exclusive-runtime-tests-field','tests, test-command',
         'paragraph starting at line', $section->position
     ) if $section->exists('Tests') && $section->exists('Test-Command');
@@ -140,7 +140,7 @@ sub check_control_paragraph {
     my @lowercase_unknown = $lc->get_Lonly;
 
     my @unknown = map { $section->literal_name($_) } @lowercase_unknown;
-    $self->tag('unknown-runtime-tests-field', $_,
+    $self->hint('unknown-runtime-tests-field', $_,
         'in line', $section->position($_))
       for @unknown;
 
@@ -148,7 +148,7 @@ sub check_control_paragraph {
     my @features= grep { length } split(/\s*,\s*|\s+/, $features_field);
     for my $feature (@features) {
 
-        $self->tag('unknown-runtime-tests-feature',
+        $self->hint('unknown-runtime-tests-feature',
             $feature,'in line', $section->position('Features'))
           unless exists $KNOWN_FEATURES{$feature}
           || $feature =~ m/^test-name=\S+/;
@@ -161,11 +161,11 @@ sub check_control_paragraph {
 
         my $line = $section->position('Restrictions');
 
-        $self->tag('unknown-runtime-tests-restriction',
+        $self->hint('unknown-runtime-tests-restriction',
             $restriction,'in line', $line)
           unless $KNOWN_RESTRICTIONS->known($restriction);
 
-        $self->tag('obsolete-runtime-tests-restriction',
+        $self->hint('obsolete-runtime-tests-restriction',
             $restriction,'in line', $line)
           if $KNOWN_OBSOLETE_RESTRICTIONS->known($restriction);
     }
@@ -192,7 +192,7 @@ sub check_control_paragraph {
           $relation->unparsable_predicates;
 
         my $line = $section->position('Depends');
-        $self->tag(
+        $self->hint(
             'testsuite-dependency-has-unparsable-elements',
             DOUBLE_QUOTE . $_ . DOUBLE_QUOTE,
             "(in line $line)"
@@ -208,24 +208,24 @@ sub check_test_file {
     # Special case with "Tests-Directory: ." (see #849880)
     my $path = $directory eq '.' ? $name : "$directory/$name";
 
-    $self->tag('illegal-runtime-test-name', $name,'in line', $position)
+    $self->hint('illegal-runtime-test-name', $name,'in line', $position)
       unless $name =~ m{^ [ [:alnum:] \+ \- \. / ]+ $}x;
 
     my $file = $self->processable->patched->resolve_path($path);
     unless (defined $file) {
-        $self->tag('missing-runtime-test-file', $path,'in line', $position);
+        $self->hint('missing-runtime-test-file', $path,'in line', $position);
         return;
     }
 
     unless ($file->is_open_ok) {
-        $self->tag('runtime-test-file-is-not-a-regular-file', $path);
+        $self->hint('runtime-test-file-is-not-a-regular-file', $path);
         return;
     }
 
     open(my $fd, '<', $file->unpacked_path);
     while (my $line = <$fd>) {
 
-        $self->tag('uses-deprecated-adttmp', $path, "(line $.)")
+        $self->hint('uses-deprecated-adttmp', $path, "(line $.)")
           if $line =~ /ADTTMP/;
 
         if ($line =~ /(py3versions)((?:\s+--?\w+)*)/) {
@@ -233,11 +233,11 @@ sub check_test_file {
             my $command = $1 . $2;
             my $options = $2;
 
-            $self->tag('runtime-test-file-uses-installed-python-versions',
+            $self->hint('runtime-test-file-uses-installed-python-versions',
                 $path, $command, "(line $.)")
               if $options =~ /\s(?:-\w*i|--installed)/;
 
-            $self->tag(
+            $self->hint(
 'runtime-test-file-uses-supported-python-versions-without-python-all-build-depends',
                 $path,
                 $command,

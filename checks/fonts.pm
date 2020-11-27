@@ -49,17 +49,17 @@ sub visit_installed_files {
     my $owner = $FONT_PACKAGES->value($font);
     if (length $owner) {
 
-        $self->tag('duplicate-font-file', $item->name, 'also in', $owner)
+        $self->hint('duplicate-font-file', $item->name, 'also in', $owner)
           unless $self->processable->name eq $owner
           || $self->processable->type eq 'udeb';
 
     } else {
         unless ($item->name =~ m{^usr/lib/R/site-library/}) {
 
-            $self->tag('font-in-non-font-package', $item->name)
+            $self->hint('font-in-non-font-package', $item->name)
               unless $self->processable->name =~ m/^(?:[ot]tf|t1|x?fonts)-/;
 
-            $self->tag('font-outside-font-dir', $item->name)
+            $self->hint('font-outside-font-dir', $item->name)
               unless $item->name =~ m{^usr/share/fonts/};
         }
     }

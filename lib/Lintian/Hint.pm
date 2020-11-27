@@ -16,40 +16,81 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::Tag::Standard;
+package Lintian::Hint;
 
 use v5.20;
 use warnings;
 use utf8;
 
-use Moo;
-use namespace::clean;
+use constant EMPTY => q{};
+use constant SPACE => q{ };
 
-with 'Lintian::Tag';
+use Moo::Role;
+use namespace::clean;
 
 =head1 NAME
 
-Lintian::Tag::Standard - standard tag with arguments concatenated by space
+Lintian::Hint -- Common facilities for Lintian tags found and to be issued
 
 =head1 SYNOPSIS
 
-    use Lintian::Tag::Standard;
+ use Moo;
+ use namespace::clean;
+
+ with 'Lintian::Hint';
 
 =head1 DESCRIPTION
 
-Provides a standard tag whose arguments are concatenated by a space.
+Common facilities for Lintian tags found and to be issued
 
 =head1 INSTANCE METHODS
 
 =over 4
 
+=item arguments
+=item tag
+=item override
+=item processable
+
+=item context
+
+Calculate the string representation commonly referred to as 'context'.
+
+=cut
+
+has arguments => (is => 'rw', default => sub { [] });
+has tag => (is => 'rw');
+has override => (is => 'rw');
+has processable => (is => 'rw');
+
+sub context {
+    my ($self) = @_;
+
+    # skip empty arguments
+    my @relevant = grep { length } @{$self->arguments};
+
+    # concatenate with spaces
+    my $context = join(SPACE, @relevant) // EMPTY;
+
+    # escape newlines; maybe add others
+    $context =~ s/\n/\\n/g;
+
+    return $context;
+}
+
 =back
+
+=head1 AUTHOR
+
+Originally written by Felix Lechner <felix.lechner@lease-up.com> for Lintian.
+
+=head1 SEE ALSO
+
+lintian(1)
 
 =cut
 
 1;
-
-__END__
 
 # Local Variables:
 # indent-tabs-mode: nil

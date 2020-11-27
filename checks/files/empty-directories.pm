@@ -53,7 +53,7 @@ sub visit_installed_files {
       || $file->name eq 'usr/share/perl5/';
 
     # warn about empty directories
-    $self->tag('package-contains-empty-directory', $file->name)
+    $self->hint('package-contains-empty-directory', $file->name)
       if scalar $file->children == 0;
 
     return;

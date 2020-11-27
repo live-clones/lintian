@@ -37,7 +37,7 @@ has r_site_libraries => (is => 'rw', default => sub { [] });
 sub breakdown_installed_files {
     my ($self) = @_;
 
-    $self->tag('ships-r-site-library', $_) for @{$self->r_site_libraries};
+    $self->hint('ships-r-site-library', $_) for @{$self->r_site_libraries};
 
     return
       unless @{$self->r_site_libraries};
@@ -45,7 +45,7 @@ sub breakdown_installed_files {
     my $depends = $self->processable->relation('strong');
 
     # no version allowed for virtual package; no alternatives
-    $self->tag('requires-r-api')
+    $self->hint('requires-r-api')
       unless $depends->matches(qr/^r-api-[\w\d+-.]+$/, VISIT_OR_CLAUSE_FULL);
 
     return;

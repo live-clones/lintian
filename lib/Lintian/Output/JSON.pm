@@ -37,7 +37,7 @@ with 'Lintian::Output';
 
 =head1 NAME
 
-Lintian::Output::JSON - JSON tag output
+Lintian::Output::JSON - JSON hint output
 
 =head1 SYNOPSIS
 
@@ -45,7 +45,7 @@ Lintian::Output::JSON - JSON tag output
 
 =head1 DESCRIPTION
 
-Provides JSON tag output.
+Provides JSON hint output.
 
 =head1 INSTANCE METHODS
 
@@ -63,10 +63,10 @@ sub BUILD {
     return;
 }
 
-=item issue_tags
+=item issue_hints
 
-Print all tags passed in array. A separate arguments with processables
-is necessary to report in case no tags were found.
+Print all hints passed in array. A separate arguments with processables
+is necessary to report in case no hints were found.
 
 =cut
 
@@ -80,7 +80,7 @@ my %code_priority = (
     'O' => 90,
 );
 
-sub issue_tags {
+sub issue_hints {
     my ($self, $groups) = @_;
 
     $groups //= [];
@@ -107,7 +107,7 @@ sub issue_tags {
 
             my %file_output;
             $file_output{path} = $processable->path;
-            $file_output{tags} = $self->taglist($processable->tags);
+            $file_output{tags} = $self->hintlist($processable->hints);
 
             push(@allfiles_output, \%file_output);
         }
@@ -135,47 +135,47 @@ sub issue_tags {
     return;
 }
 
-=item C<taglist>
+=item C<hintlist>
 
 =cut
 
-sub taglist {
+sub hintlist {
     my ($self, $arrayref) = @_;
 
-    my @tags;
+    my @hints;
 
     my @sorted = sort {
                defined $a->override <=> defined $b->override
-          ||   $code_priority{$a->info->code}<=> $code_priority{$b->info->code}
-          || $a->name cmp $b->name
+          ||   $code_priority{$a->tag->code}<=> $code_priority{$b->tag->code}
+          || $a->tag->name cmp $b->tag->name
           || $a->context cmp $b->context
     } @{$arrayref // []};
 
     for my $input (@sorted) {
 
-        my %tag;
-        push(@tags, \%tag);
+        my %hint;
+        push(@hints, \%hint);
 
-        $tag{name} = $input->info->name;
+        $hint{name} = $input->tag->name;
 
-        $tag{context} = $input->context
+        $hint{context} = $input->context
           if length $input->context;
 
-        $tag{severity} = $input->info->effective_severity;
-        $tag{experimental} = 'yes'
-          if $input->info->experimental;
+        $hint{severity} = $input->tag->effective_severity;
+        $hint{experimental} = 'yes'
+          if $input->tag->experimental;
 
         if ($input->override) {
 
-            $tag{override} = 'yes';
+            $hint{override} = 'yes';
 
             my @comments = @{ $input->override->{comments} // [] };
-            $tag{'override-comments'} = \@comments
+            $hint{'override-comments'} = \@comments
               if @comments;
         }
     }
 
-    return \@tags;
+    return \@hints;
 }
 
 =item describe_tags
@@ -183,29 +183,31 @@ sub taglist {
 =cut
 
 sub describe_tags {
-    my ($self, @tag_infos) = @_;
+    my ($self, @tags) = @_;
 
     my @array;
 
-    for my $tag_info (@tag_infos) {
+    for my $tag (@tags) {
 
         my %dictionary;
 
-        $dictionary{Name} = $tag_info->name;
-        $dictionary{'Name-Spaced'} = $tag_info->name_spaced
-          if length $tag_info->name_spaced;
+        $dictionary{Name} = $tag->name;
+        $dictionary{'Name-Spaced'} = $tag->name_spaced
+          if length $tag->name_spaced;
+        $dictionary{'Show-Always'} = $tag->show_always
+          if length $tag->show_always;
 
-        $dictionary{Explanation} = $tag_info->explanation;
-        $dictionary{'See-Also'} = $tag_info->see_also
-          if @{$tag_info->see_also};
+        $dictionary{Explanation} = $tag->explanation;
+        $dictionary{'See-Also'} = $tag->see_also
+          if @{$tag->see_also};
 
-        $dictionary{Check} = $tag_info->check;
-        $dictionary{Visibility} = $tag_info->visibility;
-        $dictionary{Experimental} = $tag_info->experimental
-          if length $tag_info->experimental;
+        $dictionary{Check} = $tag->check;
+        $dictionary{Visibility} = $tag->visibility;
+        $dictionary{Experimental} = $tag->experimental
+          if length $tag->experimental;
 
-        $dictionary{'Renamed-From'} = $tag_info->renamed_from
-          if @{$tag_info->renamed_from};
+        $dictionary{'Renamed-From'} = $tag->renamed_from
+          if @{$tag->renamed_from};
 
         push(@array, \%dictionary);
     }

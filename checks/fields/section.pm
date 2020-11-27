@@ -55,7 +55,7 @@ sub udeb {
 
     my $section = $self->processable->fields->unfolded_value('Section');
 
-    $self->tag('wrong-section-for-udeb', $section)
+    $self->hint('wrong-section-for-udeb', $section)
       unless $section eq 'debian-installer';
 
     return;
@@ -83,14 +83,14 @@ sub always {
     my $fraction = $parts[-1];
 
     if (defined $division) {
-        $self->tag('unknown-section', $section)
+        $self->hint('unknown-section', $section)
           unless $KNOWN_ARCHIVE_PARTS{$division};
     }
 
     if ($fraction eq 'unknown' && !length $division) {
-        $self->tag('section-is-dh_make-template');
+        $self->hint('section-is-dh_make-template');
     } else {
-        $self->tag('unknown-section', $section)
+        $self->hint('unknown-section', $section)
           unless $KNOWN_SECTIONS->known($fraction);
     }
 
@@ -110,7 +110,7 @@ sub always {
 
                 my $better
                   = (defined $division ? "$division/" : EMPTY) . $section;
-                $self->tag('wrong-section-according-to-package-name',
+                $self->hint('wrong-section-according-to-package-name',
                     "$pkg => $better");
             }
 
@@ -120,7 +120,7 @@ sub always {
 
     if ($fraction eq 'debug') {
 
-        $self->tag('wrong-section-according-to-package-name',"$pkg")
+        $self->hint('wrong-section-according-to-package-name',"$pkg")
           if $pkg !~ /-dbg(?:sym)?$/;
     }
 
@@ -128,7 +128,7 @@ sub always {
 
         my $priority = $self->processable->fields->unfolded_value('Priority');
 
-        $self->tag('transitional-package-not-oldlibs-optional',
+        $self->hint('transitional-package-not-oldlibs-optional',
             "$fraction/$priority")
           unless $priority eq 'optional' && $fraction eq 'oldlibs';
     }

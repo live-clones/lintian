@@ -35,7 +35,7 @@ sub visit_installed_files {
 
     my $quotedpath = quotemeta($file->name);
 
-    $self->tag('package-contains-usr-unmerged-pathnames', $file->name)
+    $self->hint('package-contains-usr-unmerged-pathnames', $file->name)
       if $file->name =~ m,^(?:bin|sbin|lib.*)/.+$,
       and not $file->is_symlink
       and not $file->is_dir

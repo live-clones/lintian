@@ -48,13 +48,13 @@ sub source {
 
     my $file = $self->processable->patched->resolve_path('debian/watch');
     unless ($file && $file->is_file) {
-        $self->tag('debian-watch-file-is-missing')
+        $self->hint('debian-watch-file-is-missing')
           unless $self->processable->native;
         return;
     }
 
     # Perform the other checks even if it is a native package
-    $self->tag('debian-watch-file-in-native-package')
+    $self->hint('debian-watch-file-in-native-package')
       if $self->processable->native;
 
     # Check if the Debian version contains anything that resembles a repackaged
@@ -83,7 +83,7 @@ sub source {
         last if defined $templatestring;
     }
 
-    $self->tag('debian-watch-contains-dh_make-template', $templatestring)
+    $self->hint('debian-watch-contains-dh_make-template', $templatestring)
       if length $templatestring;
 
     # strip comments
@@ -182,14 +182,14 @@ sub source {
               || $option =~ /^pgpmode\s*=\s*(?!none\s*$)\S.*$/;
         }
 
-        $self->tag('debian-watch-file-uses-deprecated-sf-redirector-method',
+        $self->hint('debian-watch-file-uses-deprecated-sf-redirector-method',
             $remainder)
           if $remainder =~ m{qa\.debian\.org/watch/sf\.php\?};
 
-        $self->tag('debian-watch-file-uses-deprecated-githubredir', $remainder)
+        $self->hint('debian-watch-file-uses-deprecated-githubredir',$remainder)
           if $remainder =~ m{githubredir\.debian\.net};
 
-        $self->tag('debian-watch-lacks-sourceforge-redirector', $remainder)
+        $self->hint('debian-watch-lacks-sourceforge-redirector', $remainder)
           if $remainder =~ m{ (?:https?|ftp)://
                               (?:(?:.+\.)?dl|(?:pr)?downloads?|ftp\d?|upload) \.
                               (?:sourceforge|sf)\.net}xsm
@@ -198,7 +198,7 @@ sub source {
           || $remainder =~ m{https?://(?:www\.)?(?:sourceforge|sf)\.net
                   /projects/.+/files}xsm;
 
-        $self->tag('debian-watch-uses-insecure-uri',$1)
+        $self->hint('debian-watch-uses-insecure-uri',$1)
           if $remainder =~ m{((?:http|ftp):(?!//sf.net/)\S+)};
 
         # This bit is as-is from uscan.pl:
@@ -224,19 +224,19 @@ sub source {
         # If the version of the package contains dfsg, assume that it needs
         # to be mangled to get reasonable matches with upstream.
         my $needs_repack_mangling = ($repack && $lastversion eq 'debian');
-        $self->tag('debian-watch-not-mangling-version', $line)
+        $self->hint('debian-watch-not-mangling-version', $line)
           if $needs_repack_mangling
           && !$repack_mangle
           && !$repack_dmangle_auto;
 
-        $self->tag('debian-watch-mangles-debian-version-improperly',$line)
+        $self->hint('debian-watch-mangles-debian-version-improperly',$line)
           if $needs_repack_mangling
           && $repack_mangle
           && !$repack_dmangle;
 
         my $needs_prerelease_mangling
           = ($prerelease && $lastversion eq 'debian');
-        $self->tag('debian-watch-mangles-upstream-version-improperly',$line)
+        $self->hint('debian-watch-mangles-upstream-version-improperly',$line)
           if $needs_prerelease_mangling
           && $prerelease_mangle
           && !$prerelease_umangle;
@@ -244,13 +244,13 @@ sub source {
         my $upstream_url = $remainder;
         # Keep only URL part
         $upstream_url =~ s/(.*?\S)\s.*$/$1/;
-        $self->tag('debian-watch-upstream-component', $upstream_url)
+        $self->hint('debian-watch-upstream-component', $upstream_url)
           if any { /^component=/ } @options;
     }
 
-    $self->tag('debian-watch-line-invalid', $_)for @errors;
+    $self->hint('debian-watch-line-invalid', $_)for @errors;
 
-    $self->tag('debian-watch-does-not-check-gpg-signature')
+    $self->hint('debian-watch-does-not-check-gpg-signature')
       unless $withgpgverification;
 
     # look for upstream signing key
@@ -260,11 +260,11 @@ sub source {
     my $keyfile = firstval {$_ && $_->is_file} @candidates;
 
     # check upstream key is present if needed
-    $self->tag('debian-watch-file-pubkey-file-is-missing')
+    $self->hint('debian-watch-file-pubkey-file-is-missing')
       if $withgpgverification && !$keyfile;
 
     # check upstream key is used if present
-    $self->tag('debian-watch-could-verify-download', $keyfile->name)
+    $self->hint('debian-watch-could-verify-download', $keyfile->name)
       if $keyfile && !$withgpgverification;
 
     if (defined $self->processable->changelog && %dversions) {
@@ -290,14 +290,14 @@ sub source {
             local $" = ', ';
             if (!$self->processable->native
                 && exists($changelog_versions{'orig'}{$dversion})) {
-                $self->tag(
+                $self->hint(
                     'debian-watch-file-specifies-wrong-upstream-version',
                     $dversion);
                 next;
             }
             if (exists $changelog_versions{'mangled'}{$dversion}
                 && $changelog_versions{'mangled'}{$dversion} != 1) {
-                $self->tag('debian-watch-file-specifies-old-upstream-version',
+                $self->hint('debian-watch-file-specifies-old-upstream-version',
                     $dversion);
                 next;
             }

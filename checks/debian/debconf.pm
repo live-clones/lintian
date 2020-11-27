@@ -101,7 +101,7 @@ sub source {
             chomp $@;
 
             $@ =~ s/^syntax error in //;
-            $self->tag('syntax-error-in-debconf-template',"$file: $@");
+            $self->hint('syntax-error-in-debconf-template',"$file: $@");
 
             next;
         }
@@ -109,7 +109,7 @@ sub source {
         my @unsplit_choices
           = grep {$_->exists('Template') && $_->exists('_Choices')}@templates;
 
-        $self->tag('template-uses-unsplit-choices',
+        $self->hint('template-uses-unsplit-choices',
             $file->name, $_->value('Template'))
           for @unsplit_choices;
     }
@@ -139,7 +139,7 @@ sub installable {
     my $ctrl_config = $self->processable->control->lookup('config');
     if (defined $ctrl_config && $ctrl_config->is_file) {
 
-        $self->tag('debconf-config-not-executable')
+        $self->hint('debconf-config-not-executable')
           unless $ctrl_config->is_executable;
 
         $seenconfig = 1;
@@ -185,12 +185,12 @@ sub installable {
 
     # Check that both debconf control area files are present.
     if ($seenconfig and not $seentemplates and not $usesdbconfig) {
-        $self->tag('no-debconf-templates');
+        $self->hint('no-debconf-templates');
     } elsif ($seentemplates
         and not $seenconfig
         and not $usespreinst
         and $self->processable->type ne 'udeb') {
-        $self->tag('no-debconf-config');
+        $self->hint('no-debconf-config');
     }
 
     # Lots of template checks.
@@ -214,7 +214,7 @@ sub installable {
                 chomp $@;
 
                 $@ =~ s/^syntax error in //;
-                $self->tag(
+                $self->hint(
                     'syntax-error-in-debconf-template',
                     "DEBIAN/$ctrl_templates: $@"
                 );
@@ -231,22 +231,22 @@ sub installable {
 
         my $name = $template->value('Template');
         if (!$template->exists('Template')) {
-            $self->tag('no-template-name');
+            $self->hint('no-template-name');
             $name = 'no-template-name';
 
         } else {
             push @templates_seen, $name;
-            $self->tag('malformed-template-name', $name)
+            $self->hint('malformed-template-name', $name)
               unless $name =~ m{[A-Za-z0-9.+-](?:/[A-Za-z0-9.+-])};
         }
 
         my $type = $template->value('Type');
         if (!$template->exists('Type')) {
-            $self->tag('no-template-type', $name);
+            $self->hint('no-template-type', $name);
 
         } elsif (!$valid_types{$type}) {
             # cdebconf has a special "entropy" type
-            $self->tag('unknown-template-type', $type)
+            $self->hint('unknown-template-type', $type)
               unless $type eq 'entropy'
               && $alldependencies->implies('cdebconf');
 
@@ -255,7 +255,7 @@ sub installable {
 
         } elsif ($type eq 'boolean') {
             my $default = $template->value('Default');
-            $self->tag('boolean-template-has-bogus-default', $name, $default)
+            $self->hint('boolean-template-has-bogus-default', $name, $default)
               if $template->exists('Default')
               && (none { $default eq $_ } ('true', 'false'));
         }
@@ -269,31 +269,31 @@ sub installable {
                 if ($key =~ /^Choices-/) {
                     my $translated = $template->value($key);
                     if (!length($translated) || $translated =~ /^\s*$/){
-                        $self->tag('empty-translated-choices', $name, $key);
+                        $self->hint('empty-translated-choices', $name, $key);
                     }
 
                     if (count_choices($translated) != $nrchoices) {
-                        $self->tag('mismatch-translated-choices', $name, $key);
+                        $self->hint('mismatch-translated-choices', $name,$key);
                     }
                 }
             }
 
-            $self->tag('select-with-boolean-choices', $name)
+            $self->hint('select-with-boolean-choices', $name)
               if $choices =~ /^\s*(yes\s*,\s*no|no\s*,\s*yes)\s*$/i;
         }
 
-        $self->tag('select-without-choices', $name)
+        $self->hint('select-without-choices', $name)
           if $isselect && !$template->exists('Choices');
 
         my $description = $template->value('Description');
-        $self->tag('no-template-description', $name)
+        $self->hint('no-template-description', $name)
           unless length $description
           || length $template->value('_Description');
 
         if ($description =~ /^\s*(.*?)\s*?\n\s*\1\s*$/){
             # Check for duplication. Should all this be folded into the
             # description checks?
-            $self->tag('duplicate-long-description-in-template',$name);
+            $self->hint('duplicate-long-description-in-template',$name);
         }
 
         my %languages;
@@ -307,7 +307,7 @@ sub installable {
             $stripped =~ s/^_//;
             unless ($template_fields{$stripped}) {
                 # Ignore language codes here
-                $self->tag('unknown-field-in-templates',$name, $field);
+                $self->hint('unknown-field-in-templates',$name, $field);
             }
         }
 
@@ -340,31 +340,31 @@ sub installable {
                     && (   $short !~ m/:$/
                         || $short =~ m/^(what|who|when|where|which|how)/i)
                 ) {
-                    $self->tag('malformed-prompt-in-templates',$name);
+                    $self->hint('malformed-prompt-in-templates',$name);
                 }
             }
             if ($isselect) {
                 if ($short =~ /^(Please|Cho+se|Enter|Select|Specify|Give)/) {
-                    $self->tag('using-imperative-form-in-templates',$name);
+                    $self->hint('using-imperative-form-in-templates',$name);
                 }
             }
             if ($ttype eq 'boolean') {
                 if ($short !~ /\?/) {
-                    $self->tag('malformed-question-in-templates',$name);
+                    $self->hint('malformed-question-in-templates',$name);
                 }
             }
             if (defined $extended && $extended =~ /[^\?]\?(\s+|$)/) {
-                $self->tag(
+                $self->hint(
                     'using-question-in-extended-description-in-templates',
                     $name);
             }
             if ($ttype eq 'note') {
                 if ($short =~ /[.?;:]$/) {
-                    $self->tag('malformed-title-in-templates',$name);
+                    $self->hint('malformed-title-in-templates',$name);
                 }
             }
             if (length($short) > 75) {
-                $self->tag('too-long-short-description-in-templates',$name)
+                $self->hint('too-long-short-description-in-templates',$name)
                   unless $self->processable->type eq 'udeb'
                   && $ttype eq 'text';
             }
@@ -372,11 +372,11 @@ sub installable {
                 if ($description
                     =~ /(\A|\s)(I|[Mm]y|[Ww]e|[Oo]ur|[Oo]urs|mine|myself|ourself|me|us)(\Z|\s)/
                 ) {
-                    $self->tag('using-first-person-in-templates',$name);
+                    $self->hint('using-first-person-in-templates',$name);
                 }
                 if (    $description =~ /[ \'\"]yes[ \'\",;.]/i
                     and $ttype eq 'boolean') {
-                    $self->tag(
+                    $self->hint(
                         'making-assumptions-about-interfaces-in-templates',
                         $name);
                 }
@@ -401,7 +401,7 @@ sub installable {
                     $lines++;
                 }
                 if ($lines > 20) {
-                    $self->tag('too-long-extended-description-in-templates',
+                    $self->hint('too-long-extended-description-in-templates',
                         $name);
                 }
             }
@@ -444,7 +444,7 @@ sub installable {
                    Debian::DebConf::Client::ConfModule),x
                 ) {
                     my $cmod = $1;
-                    $self->tag('loads-obsolete-confmodule', "$file:$. $cmod");
+                    $self->hint('loads-obsolete-confmodule', "$file:$. $cmod");
                     $usesconfmodule = 1;
                     $obsoleteconfmodule = 1;
                 }
@@ -456,7 +456,7 @@ sub installable {
                     and m/db_input/
                     and not $config_calls_db_input) {
                     # TODO: Perl?
-                    $self->tag('postinst-uses-db-input')
+                    $self->hint('postinst-uses-db-input')
                       unless $self->processable->type eq 'udeb';
                     $db_input=1;
                 }
@@ -470,9 +470,9 @@ sub installable {
                     my ($priority, $template) = ($1, $2);
                     $templates_used{$self->get_template_name($template)}= 1;
                     if ($priority !~ /^\$\S+$/) {
-                        $self->tag('unknown-debconf-priority', "$file:$. $1")
+                        $self->hint('unknown-debconf-priority', "$file:$. $1")
                           unless ($valid_priorities{$priority});
-                        $self->tag('possible-debconf-note-abuse',
+                        $self->hint('possible-debconf-note-abuse',
                             "$file:$. $template")
                           if (
                             $potential_db_abuse{$template}
@@ -499,7 +499,7 @@ sub installable {
                 }
                 if (not $isdefault and m/db_fset.*isdefault/) {
                     # TODO: Perl?
-                    $self->tag('isdefault-flag-is-deprecated', $file);
+                    $self->hint('isdefault-flag-is-deprecated', $file);
                     $isdefault = 1;
                 }
                 if (not $db_purge and m/db_purge/) {    # TODO: Perl?
@@ -509,7 +509,7 @@ sub installable {
 
             if ($file eq 'postinst' or $file eq 'config') {
                 unless ($usesconfmodule) {
-                    $self->tag("$file-does-not-load-confmodule")
+                    $self->hint("$file-does-not-load-confmodule")
                       unless ($self->processable->type eq 'udeb'
                         || ($file eq 'postinst' && !$seenconfig));
                 }
@@ -520,19 +520,19 @@ sub installable {
                 # package is a debconf provider (in which case db_purge
                 # won't be available)
                 unless ($db_purge or $selfrelation->implies($ANY_DEBCONF)) {
-                    $self->tag('postrm-does-not-purge-debconf');
+                    $self->hint('postrm-does-not-purge-debconf');
                 }
             }
 
             close($fd);
         } elsif ($file eq 'postinst') {
-            $self->tag('postinst-does-not-load-confmodule')
+            $self->hint('postinst-does-not-load-confmodule')
               unless ($self->processable->type eq 'udeb' || !$seenconfig);
         } elsif ($file eq 'postrm') {
             # Make an exception for debconf providing packages as some of
             # them (incl. "debconf" itself) cleans up in prerm and have no
             # postrm script at all.
-            $self->tag('postrm-does-not-purge-debconf')
+            $self->hint('postrm-does-not-purge-debconf')
               unless $self->processable->type eq 'udeb'
               or $selfrelation->implies($ANY_DEBCONF);
         }
@@ -557,7 +557,7 @@ sub installable {
         unless ($used
             or $self->processable->name eq 'debconf'
             or $self->processable->type eq 'udeb') {
-            $self->tag('unused-debconf-template', $template)
+            $self->hint('unused-debconf-template', $template)
               unless $template =~ m,^shared/packages-(wordlist|ispell)$,
               or $template =~ m,/languages$,;
         }
@@ -570,12 +570,12 @@ sub installable {
         unless (
             $self->processable->relation('Pre-Depends')->implies($ANY_DEBCONF))
         {
-            $self->tag('missing-debconf-dependency-for-preinst')
+            $self->hint('missing-debconf-dependency-for-preinst')
               unless $self->processable->type eq 'udeb';
         }
     } else {
         unless ($alldependencies->implies($ANY_DEBCONF) or $usesdbconfig) {
-            $self->tag('missing-debconf-dependency');
+            $self->hint('missing-debconf-dependency');
         }
     }
 
@@ -601,7 +601,7 @@ sub installable {
             s/#.*//;    # Not perfect for Perl, but should be OK
             if (   m,/usr/share/debconf/confmodule,
                 or m/(?:Debconf|Debian::DebConf)::Client::ConfModule/) {
-                $self->tag('debconf-is-not-a-registry', $file->name);
+                $self->hint('debconf-is-not-a-registry', $file->name);
                 last;
             }
         }

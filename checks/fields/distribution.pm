@@ -48,7 +48,7 @@ sub changes {
     my @distributions
       = $self->processable->fields->trimmed_list('Distribution');
 
-    $self->tag('multiple-distributions-in-changes-file',
+    $self->hint('multiple-distributions-in-changes-file',
         join(SPACE, @distributions))
       if @distributions > 1;
 
@@ -72,7 +72,7 @@ sub changes {
     }
 
     my @unknown = grep { !$KNOWN_DISTS->known($major{$_}) } @targets;
-    $self->tag('bad-distribution-in-changes-file', $_) for @unknown;
+    $self->hint('bad-distribution-in-changes-file', $_) for @unknown;
 
     my @new_version = qw(sid unstable experimental);
     my $upload_lc = List::Compare->new(\@targets, \@new_version);
@@ -99,14 +99,14 @@ sub changes {
         $distnumber = $1;
         $bpoversion = $2;
 
-        $self->tag('upload-has-backports-version-number', $version, $_)
+        $self->hint('upload-has-backports-version-number', $version, $_)
           for @regular;
     }
 
     my @backports = grep { /backports/ } @targets;
     for my $target (@backports) {
 
-        $self->tag('backports-upload-has-incorrect-version-number',
+        $self->hint('backports-upload-has-incorrect-version-number',
             $version, $target)
           if (!defined $distnumber || !defined $bpoversion)
           || ($major{$target} eq 'squeeze' && $distnumber ne '60')
@@ -116,7 +116,7 @@ sub changes {
 
         # for a ~bpoXX+2 or greater version, there
         # probably will be only a single changelog entry
-        $self->tag('backports-changes-missing')
+        $self->hint('backports-changes-missing')
           if ($bpoversion // 0) < 2 && @changes_versions == 1;
     }
 
@@ -138,7 +138,7 @@ sub changes {
     if ((any { $_ eq 'UNRELEASED' } @changesdists)
         && none { $_ eq 'UNRELEASED' } @distributions) {
 
-        $self->tag('unreleased-changes');
+        $self->hint('unreleased-changes');
         return;
     }
 
@@ -149,10 +149,10 @@ sub changes {
     if (@from_distribution || @from_changes) {
 
         if (any { $_ eq 'experimental' } @from_changes) {
-            $self->tag('distribution-and-experimental-mismatch');
+            $self->hint('distribution-and-experimental-mismatch');
 
         } else {
-            $self->tag('distribution-and-changes-mismatch',
+            $self->hint('distribution-and-changes-mismatch',
                 join(SPACE, @from_distribution, @from_changes));
         }
     }

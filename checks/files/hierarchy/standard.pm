@@ -45,21 +45,21 @@ sub visit_installed_files {
 
     # /etc/opt
     if ($file->name =~ m,^etc/opt/.,) {
-        $self->tag('dir-or-file-in-etc-opt', $file->name);
+        $self->hint('dir-or-file-in-etc-opt', $file->name);
     }
 
     # /usr/local
     elsif ($file->name =~ m,^usr/local/\S+,) {
         if ($file->is_dir) {
-            $self->tag('dir-in-usr-local', $file->name);
+            $self->hint('dir-in-usr-local', $file->name);
         } else {
-            $self->tag('file-in-usr-local', $file->name);
+            $self->hint('file-in-usr-local', $file->name);
         }
     }
     # /usr/share
     elsif ($file->name =~ m,^usr/share/[^/]+$,) {
         if ($file->is_file) {
-            $self->tag('file-directly-in-usr-share', $file->name);
+            $self->hint('file-directly-in-usr-share', $file->name);
         }
     }
     # /usr/bin
@@ -68,7 +68,7 @@ sub visit_installed_files {
             and $file->name =~ m,^usr/bin/.,
             and $file->name !~ m,^usr/bin/(?:X11|mh)/,) {
 
-            $self->tag('subdir-in-usr-bin', $file->name);
+            $self->hint('subdir-in-usr-bin', $file->name);
         }
     }
     # /usr subdirs
@@ -76,7 +76,7 @@ sub visit_installed_files {
         and $file->name =~ m,^usr/[^/]+/$,){
         # FSSTND dirs
         if ($file->name=~ m,^usr/(?:dict|doc|etc|info|man|adm|preserve)/,){
-            $self->tag('FSSTND-dir-in-usr', $file->name);
+            $self->hint('FSSTND-dir-in-usr', $file->name);
         }
         # FHS dirs
         elsif (
@@ -97,10 +97,10 @@ sub visit_installed_files {
                 unless ($self->processable->source =~ m/^e?glibc$/
                     or $self->processable->name =~ m/^lib$libsuffix/) {
 
-                    $self->tag('non-multi-arch-lib-dir', $file->name);
+                    $self->hint('non-multi-arch-lib-dir', $file->name);
                 }
             } else {
-                $self->tag('non-standard-dir-in-usr', $file->name)
+                $self->hint('non-standard-dir-in-usr', $file->name)
                   unless $file->name =~ m,^usr/libexec/,; # #834607
             }
 
@@ -116,7 +116,7 @@ sub visit_installed_files {
     elsif ( $self->processable->type ne 'udeb'
         and $file->name =~ m,^var/[^/]+/$,){ # FSSTND dirs
         if ($file->name =~ m,^var/(?:adm|catman|named|nis|preserve)/,) {
-            $self->tag('FSSTND-dir-in-var', $file->name);
+            $self->hint('FSSTND-dir-in-var', $file->name);
         }
         # base-files is special
         elsif ($self->processable->name eq 'base-files'
@@ -131,24 +131,24 @@ sub visit_installed_files {
                                 |tmp|www|yp)/
              }xsm
         ) {
-            $self->tag('non-standard-dir-in-var', $file->name);
+            $self->hint('non-standard-dir-in-var', $file->name);
         }
 
     } elsif ($self->processable->type ne 'udeb'
         and $file->name =~ m,^var/lib/games/.,) {
-        $self->tag('non-standard-dir-in-var', $file->name);
+        $self->hint('non-standard-dir-in-var', $file->name);
 
         # /var/lock
     } elsif ($self->processable->type ne 'udeb'
         and $file->name =~ m,^var/lock/.,) {
-        $self->tag('dir-or-file-in-var-lock', $file->name);
+        $self->hint('dir-or-file-in-var-lock', $file->name);
 
         # /var/run
     } elsif ($self->processable->type ne 'udeb'
         and $file->name =~ m,^var/run/.,) {
-        $self->tag('dir-or-file-in-var-run', $file->name);
+        $self->hint('dir-or-file-in-var-run', $file->name);
     } elsif ($self->processable->type ne 'udeb' and $file->name =~ m,^run/.,) {
-        $self->tag('dir-or-file-in-run', $file->name);
+        $self->hint('dir-or-file-in-run', $file->name);
     }
 
     # /var/www
@@ -156,11 +156,11 @@ sub visit_installed_files {
     # historically been the default document root, but they
     # shouldn't be installing stuff under that directory.
     elsif ($file->name =~ m,^var/www/\S+,) {
-        $self->tag('dir-or-file-in-var-www', $file->name);
+        $self->hint('dir-or-file-in-var-www', $file->name);
     }
     # /opt
     elsif ($file->name =~ m,^opt/.,) {
-        $self->tag('dir-or-file-in-opt', $file->name);
+        $self->hint('dir-or-file-in-opt', $file->name);
     } elsif ($file->name =~ m,^hurd/,) {
         return;
     } elsif ($file->name =~ m,^servers/,) {
@@ -168,27 +168,27 @@ sub visit_installed_files {
     }
     # /home
     elsif ($file->name =~ m,^home/.,) {
-        $self->tag('dir-or-file-in-home', $file->name);
+        $self->hint('dir-or-file-in-home', $file->name);
     } elsif ($file->name =~ m,^root/.,) {
-        $self->tag('dir-or-file-in-home', $file->name);
+        $self->hint('dir-or-file-in-home', $file->name);
     }
     # /tmp, /var/tmp, /usr/tmp
     elsif (_is_tmp_path($file->name)) {
-        $self->tag('dir-or-file-in-tmp', $file->name);
+        $self->hint('dir-or-file-in-tmp', $file->name);
     }
     # /mnt
     elsif ($file->name =~ m,^mnt/.,) {
-        $self->tag('dir-or-file-in-mnt', $file->name);
+        $self->hint('dir-or-file-in-mnt', $file->name);
     }
     # /bin
     elsif ($file->name =~ m,^bin/,) {
         if ($file->is_dir and $file->name =~ m,^bin/.,) {
-            $self->tag('subdir-in-bin', $file->name);
+            $self->hint('subdir-in-bin', $file->name);
         }
     }
     # /srv
     elsif ($file->name =~ m,^srv/.,) {
-        $self->tag('dir-or-file-in-srv', $file->name);
+        $self->hint('dir-or-file-in-srv', $file->name);
     }
     # FHS directory?
     elsif (
@@ -210,7 +210,7 @@ sub visit_installed_files {
             unless ($self->processable->source =~ m/^e?glibc$/
                 or $self->processable->name =~ m/^lib$libsuffix/) {
 
-                $self->tag('non-multi-arch-lib-dir', $file->name);
+                $self->hint('non-multi-arch-lib-dir', $file->name);
             }
         } else {
             unless ($self->processable->name eq 'base-files'
@@ -218,7 +218,7 @@ sub visit_installed_files {
                 or $self->processable->name eq 'hurd-udeb'
                 or $self->processable->name =~ /^rootskel(?:-bootfloppy)?/) {
 
-                $self->tag('non-standard-toplevel-dir', $file->name);
+                $self->hint('non-standard-toplevel-dir', $file->name);
             }
         }
     }
@@ -228,7 +228,7 @@ sub visit_installed_files {
         or $file->name =~ m,^usr/(?:doc|bin)/X11/,
         or $file->name =~ m,^var/adm/,) {
 
-        $self->tag('use-of-compat-symlink', $file->name);
+        $self->hint('use-of-compat-symlink', $file->name);
     }
 
     # any files
@@ -250,7 +250,7 @@ sub visit_installed_files {
                         build|home|mnt|opt|root|run|srv
                        |(?:(?:usr|var)/)?tmp)|var/www/}xsm
         ) {
-            $self->tag('file-in-unusual-dir', $file->name);
+            $self->hint('file-in-unusual-dir', $file->name);
         }
     }
 

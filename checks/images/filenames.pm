@@ -105,12 +105,12 @@ sub visit_installed_files {
 
     if ($conflicting_format) {
 
-        $self->tag('image-file-has-conflicting-name',
+        $self->hint('image-file-has-conflicting-name',
             $file->name . ' (is ' . $our_format->{name} . ')')
           unless $our_format->{good_name}->($file->name);
 
     } else {
-        $self->tag('image-file-has-unexpected-name',
+        $self->hint('image-file-has-unexpected-name',
             $file->name . ' (is ' . $our_format->{name} . ')');
     }
 

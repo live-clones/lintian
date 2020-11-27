@@ -60,7 +60,7 @@ sub source {
     my @missing_dsc = grep { !$fields->exists($_) } @DSC;
 
     my $dscfile = path($self->processable->path)->basename;
-    $self->tag('required-field', $dscfile, $_) for @missing_dsc;
+    $self->hint('required-field', $dscfile, $_) for @missing_dsc;
 
     # look at d/control source paragraph
     my @missing_control_source
@@ -68,7 +68,7 @@ sub source {
       @DEBIAN_CONTROL_SOURCE;
 
     my $controlfile = 'debian/control';
-    $self->tag('required-field', $controlfile . AT . 'source', $_)
+    $self->hint('required-field', $controlfile . AT . 'source', $_)
       for @missing_control_source;
 
     # look at d/control installable paragraphs
@@ -78,7 +78,7 @@ sub source {
           = grep {!$debian_control->installable_fields($installable)->exists($_)}
           @DEBIAN_CONTROL_INSTALLABLE;
 
-        $self->tag('required-field', $controlfile . AT . $installable, $_)
+        $self->hint('required-field', $controlfile . AT . $installable, $_)
           for @missing_control_installable;
     }
 
@@ -94,7 +94,7 @@ sub installable {
       = grep { !$fields->exists($_) } @INSTALLATION_CONTROL;
 
     my $debfile = path($self->processable->path)->basename;
-    $self->tag('required-field', $debfile, $_)
+    $self->hint('required-field', $debfile, $_)
       for @missing_installation_control;
 
     return;
@@ -108,7 +108,7 @@ sub changes {
     my @missing_changes = grep { !$fields->exists($_) } @CHANGES;
 
     my $changesfile = path($self->processable->path)->basename;
-    $self->tag('required-field', $changesfile, $_) for @missing_changes;
+    $self->hint('required-field', $changesfile, $_) for @missing_changes;
 
     return;
 }

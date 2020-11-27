@@ -48,11 +48,11 @@ sub visit_installed_files {
     if ($file->name =~ m,^usr/share/doc/$ppkg/override\.[lL]intian(?:\.gz)?$,
         or $file->name =~ m,^usr/share/lintian/overrides/$ppkg/.+,) {
 
-        $self->tag('override-file-in-wrong-location', $file->name);
+        $self->hint('override-file-in-wrong-location', $file->name);
 
     } elsif ($file->name =~ m,^usr/share/lintian/overrides/(.+)/.+$,) {
 
-        $self->tag('override-file-in-wrong-package', $file->name)
+        $self->hint('override-file-in-wrong-package', $file->name)
           unless $1 eq $self->processable->name;
     }
 
@@ -62,7 +62,7 @@ sub visit_installed_files {
 sub source {
     my ($self) = @_;
 
-    $self->tag('old-source-override-location')
+    $self->hint('old-source-override-location')
       if $self->processable->patched->resolve_path(
         'debian/source.lintian-overrides');
 

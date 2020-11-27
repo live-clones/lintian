@@ -49,22 +49,22 @@ sub visit_installed_files {
         if ($lwccode ne 'l10n') {
 
             if ($INCORRECT_LOCALE_CODES->known($lwccode)) {
-                $self->tag('incorrect-locale-code',"$lwccode ->",
+                $self->hint('incorrect-locale-code',"$lwccode ->",
                     $INCORRECT_LOCALE_CODES->value($lwccode));
 
             } elsif ($INCORRECT_LOCALE_CODES->known($lcode)) {
-                $self->tag('incorrect-locale-code',"$lcode ->",
+                $self->hint('incorrect-locale-code',"$lcode ->",
                     $INCORRECT_LOCALE_CODES->value($lcode));
 
             } elsif (!$LOCALE_CODES->known($lcode)) {
-                $self->tag('unknown-locale-code', $lcode);
+                $self->hint('unknown-locale-code', $lcode);
 
             } elsif ($LOCALE_CODES->known($lcode)
                 && defined($LOCALE_CODES->value($lcode))) {
                 # If there's a key-value pair in the codes
                 # list it means the ISO 639-2 code is being
                 # used instead of ISO 639-1's
-                $self->tag('incorrect-locale-code', "$lcode ->",
+                $self->hint('incorrect-locale-code', "$lcode ->",
                     $LOCALE_CODES->value($lcode));
             }
         }

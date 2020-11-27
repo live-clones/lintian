@@ -179,7 +179,7 @@ has overrides => (
 
             # require and remove colon when any package details are present
             if ($require_colon && $remaining !~ s/^\s*:\s*//) {
-                $self->tag('malformed-override',
+                $self->hint('malformed-override',
                     "Expected a colon in line $position");
                 next;
             }
@@ -187,14 +187,14 @@ has overrides => (
             my $hint = $remaining;
 
             if (@architectures && $self->architecture eq 'all') {
-                $self->tag('malformed-override',
+                $self->hint('malformed-override',
                     "Architecture list for arch:all package in line $position"
                 );
                 next;
             }
 
             my @invalid = grep { !valid_wildcard($_) } @architectures;
-            $self->tag('malformed-override',
+            $self->hint('malformed-override',
                 "Unknown architecture wildcard $_ in line $position")
               for @invalid;
 
@@ -204,7 +204,7 @@ has overrides => (
             # strip and count negations; confirm it's either all or none
             my $negations = scalar grep { s/^!// } @architectures;
             unless ($negations == @architectures || $negations == 0) {
-                $self->tag('malformed-override',
+                $self->hint('malformed-override',
                     "Inconsistent architecture negation in line $position");
                 next;
             }
@@ -220,7 +220,7 @@ has overrides => (
 
             my ($tagname, $context) = split(SPACE, $hint, 2);
 
-            $self->tag('malformed-override',
+            $self->hint('malformed-override',
                 "Cannot parse line $position: $line")
               unless length $tagname;
 
@@ -248,8 +248,8 @@ has overrides => (
             if ($context =~ m/\*/) {
                 # It is a pattern, pre-compute it
                 my $pattern = $context;
-                my $end = ''; # Trailing "match anything" (if any)
-                my $pat = ''; # The rest of the pattern
+                my $end = EMPTY; # Trailing "match anything" (if any)
+                my $pat = EMPTY; # The rest of the pattern
                  # Split does not help us if $pattern ends with *
                  # so we deal with that now
                 if ($pattern =~ s/\Q*\E+\z//){
@@ -259,7 +259,7 @@ has overrides => (
                 # Are there any * left (after the above)?
                 if ($pattern =~ m/\Q*\E/) {
                     # this works even if $text starts with a *, since
-                    # that is split as '', <text>
+                    # that is split as EMPTY, <text>
                     my @pargs = split(m/\Q*\E++/, $pattern);
                     $pat = join('.*', map { quotemeta($_) } @pargs);
                 } else {
@@ -274,6 +274,18 @@ has overrides => (
             @comments = ();
 
             $override_data{$tagname} //= {};
+
+            if (exists $override_data{$tagname}{$context}) {
+
+                my @lines
+                  = ($override_data{$tagname}{$context}{line}, $current{line});
+
+                $self->hint('duplicate-override-context', $tagname, 'lines',
+                    sort @lines);
+
+                next;
+            }
+
             $override_data{$tagname}{$context} = \%current;
 
             %previous = %current;

@@ -36,7 +36,7 @@ sub visit_installed_files {
     if (   $file->is_dir
         && $file->faux) {
 
-        $self->tag('missing-intermediate-directory', $file->name);
+        $self->hint('missing-intermediate-directory', $file->name);
     }
 
     return;

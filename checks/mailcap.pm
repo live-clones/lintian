@@ -82,7 +82,7 @@ sub visit_installed_files {
 
         my @placeholders = uniq grep { /\%s/ } @quoted;
 
-        $self->tag(
+        $self->hint(
             'quoted-placeholder-in-mailcap-entry',
             $file->name . COLON . $position,
             @placeholders

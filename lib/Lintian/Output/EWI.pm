@@ -30,6 +30,7 @@ use Text::Wrap;
 use constant OSC_HYPERLINK => qq{\033]8;;};
 use constant OSC_DONE => qq{\033\\};
 
+use constant EMPTY => q{};
 use constant SPACE => q{ };
 use constant COLON => q{:};
 use constant NEWLINE => qq{\n};
@@ -41,7 +42,7 @@ with 'Lintian::Output';
 
 =head1 NAME
 
-Lintian::Output::EWI - standard tag output
+Lintian::Output::EWI - standard hint output
 
 =head1 SYNOPSIS
 
@@ -49,16 +50,16 @@ Lintian::Output::EWI - standard tag output
 
 =head1 DESCRIPTION
 
-Provides standard tag output.
+Provides standard hint output.
 
 =head1 INSTANCE METHODS
 
 =over 4
 
-=item issue_tags
+=item issue_hints
 
-Print all tags passed in array. A separate arguments with processables
-is necessary to report in case no tags were found.
+Print all hints passed in array. A separate arguments with processables
+is necessary to report in case no hints were found.
 
 =cut
 
@@ -80,7 +81,7 @@ my %type_priority = (
     'buildinfo' => 70,
 );
 
-sub issue_tags {
+sub issue_hints {
     my ($self, $groups) = @_;
 
     my @processables = map { $_->get_processables } @{$groups // []};
@@ -88,66 +89,64 @@ sub issue_tags {
     my @pending;
     for my $processable (@processables) {
 
-        # get tags
-        my @tags = @{$processable->tags};
+        # get hints
+        my @hints = @{$processable->hints};
 
-        # associate tags with processable
-        $_->processable($processable) for @tags;
+        # associate hints with processable
+        $_->processable($processable) for @hints;
 
         # remove circular references
-        $processable->tags([]);
+        $processable->hints([]);
 
-        push(@pending, @tags);
+        push(@pending, @hints);
     }
 
     my @sorted = sort {
              defined $a->override <=> defined $b->override
-          || $code_priority{$a->info->code} <=> $code_priority{$b->info->code}
-          || $a->name cmp $b->name
+          || $code_priority{$a->tag->code} <=> $code_priority{$b->tag->code}
+          || $a->tag->name cmp $b->tag->name
           || $type_priority{$a->processable->type}
           <=> $type_priority{$b->processable->type}
           || $a->processable->name cmp $b->processable->name
           || $a->context cmp $b->context
     } @pending;
 
-    $self->print_tag($_) for @sorted;
+    $self->print_hint($_) for @sorted;
 
     return;
 }
 
-=item C<print_tag($pkg_info, $tag_info, $context, $override)>
+=item C<print_hint($pkg_info, $tag, $context, $override)>
 
-Print a tag.  The first two arguments are hash reference with the
-information about the package and the tag, $context is the context
-information for the tag (if any) as an array reference, and $override
-is either undef if the tag is not overridden or a hash with
-override info for this tag.
+Print a hint.  The first two arguments are hash reference with the
+information about the package and the hint, $context is the context
+information for the hint (if any) as an array reference, and $override
+is either undef if the hint is not overridden or a hash with
+override info for this hint.
 
 =cut
 
-sub print_tag {
-    my ($self, $tag) = @_;
+sub print_hint {
+    my ($self, $hint) = @_;
 
-    my $tag_info = $tag->info;
-    my $information = $tag->context;
-    my $override = $tag->override;
-    my $processable = $tag->processable;
+    my $tag = $hint->tag;
+    my $tag_name = $tag->name;
 
-    $information = ' ' . $self->_quote_print($information)
-      if $information ne '';
-    my $code = $tag_info->code;
-    my $tag_color = ($tag->override ? 'bright_black' : $self->{colors}{$code});
-    my $fpkg_info= $self->_format_pkg_info($processable, $tag_info, $override);
-    my $tag_name = $tag_info->name;
-    my $limit = $self->tag_display_limit;
-    my $output;
+    my $information = $hint->context;
+    $information = SPACE . $self->_quote_print($information)
+      unless $information eq EMPTY;
 
-    # Limit the output so people do not drown in tags.  Some tags are
+    # Limit the output so people do not drown in hints.  Some hints are
     # insanely noisy (hi static-library-has-unneeded-section)
+    my $limit = $self->tag_display_limit;
     if ($limit) {
-        my $proc_id = $processable->identifier;
+
+        my $proc_id = $hint->processable->identifier;
         my $emitted_count= $self->proc_id2tag_count->{$proc_id}{$tag_name}++;
-        return if $emitted_count >= $limit;
+
+        return
+          if $emitted_count >= $limit;
+
         my $msg
           = ' ... use --no-tag-display-limit to see all (or pipe to a file/program)';
         $information = $self->_quote_print($msg)
@@ -155,9 +154,19 @@ sub print_tag {
     }
 
     my $text = $tag_name;
+
+    my $code = $tag->code;
+    $code = 'O' if defined $hint->override;
+
+    my $tag_color = $self->{colors}{$code};
+
+    # keep original color for tags marked experimental
+    $code = 'X' if $tag->experimental;
+
     $text = Term::ANSIColor::colored($tag_name, $tag_color)
       if $self->color;
 
+    my $output;
     if ($self->tty_hyperlinks && $self->color) {
         my $target= 'https://lintian.debian.org/tags/' . $tag_name . '.html';
         $output .= $self->osc_hyperlink($text, $target);
@@ -165,16 +174,28 @@ sub print_tag {
         $output .= $text;
     }
 
+    my $override = $hint->override;
     if ($override && @{ $override->{comments} }) {
-        for my $c (@{ $override->{comments} }) {
-            $self->msg($self->_quote_print($c));
-        }
+
+        $self->msg($self->_quote_print($_))for @{ $override->{comments} };
     }
 
-    say "$fpkg_info: $output$information";
+    my $type = EMPTY;
+    $type = SPACE . $hint->processable->type
+      unless $hint->processable->type eq 'binary';
 
-    $self->describe_tags($tag_info)
-      if $self->showdescription && !$self->issued_tag($tag_info->name);
+    say $code
+      . COLON
+      . SPACE
+      . $hint->processable->name
+      . $type
+      . COLON
+      . SPACE
+      . $output
+      . $information;
+
+    $self->describe_tags($tag)
+      if $self->showdescription && !$self->issued_tag($tag->name);
 
     return;
 }
@@ -189,7 +210,9 @@ they allow non-ascii printables etc.
 
 sub _quote_print {
     my ($self, $string) = @_;
+
     $string =~ s/[^[:print:]]/?/g;
+
     return $string;
 }
 
@@ -204,16 +227,6 @@ sub osc_hyperlink {
     my $end = OSC_HYPERLINK . OSC_DONE;
 
     return $start . $text . $end;
-}
-
-sub _format_pkg_info {
-    my ($self, $processable, $tag_info, $override) = @_;
-    my $code = $tag_info->code;
-    $code = 'X' if $tag_info->experimental;
-    $code = 'O' if defined $override;
-    my $type = '';
-    $type = SPACE . $processable->type if $processable->type ne 'binary';
-    return "$code: " . $processable->name . $type;
 }
 
 =item issuedtags
@@ -242,24 +255,24 @@ sub issued_tag {
 =cut
 
 sub describe_tags {
-    my ($self, @tag_infos) = @_;
+    my ($self, @tags) = @_;
 
-    for my $tag_info (@tag_infos) {
+    for my $tag (@tags) {
         my $code = 'N';
         my $description = 'N:   Unknown tag.';
 
-        if (defined $tag_info) {
+        if (defined $tag) {
 
-            $code = $tag_info->code;
+            $code = $tag->code;
 
-            my $plain_text= markdown_to_plain($tag_info->markdown_description);
+            my $plain_text= markdown_to_plain($tag->markdown_description);
             $description = indent_and_wrap($plain_text, 'N:   ');
 
             chomp $description;
         }
 
         my $output = 'N:' . NEWLINE;
-        $output .= $code . COLON . SPACE . $tag_info->name . NEWLINE;
+        $output .= $code . COLON . SPACE . $tag->name . NEWLINE;
         $output .= 'N:' . NEWLINE;
         $output .= $description . NEWLINE;
         $output .= 'N:' . NEWLINE;

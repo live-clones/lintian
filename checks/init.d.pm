@@ -115,11 +115,11 @@ sub installable {
             my ($name,$opt) = ($1,$2);
             next if $opt eq 'remove';
             if ($initd_postinst{$name}++ == 1) {
-                $self->tag('duplicate-updaterc.d-calls-in-postinst', $name);
+                $self->hint('duplicate-updaterc.d-calls-in-postinst', $name);
                 next;
             }
             unless (m,>\s*/dev/null,) {
-                $self->tag('output-of-updaterc.d-not-redirected-to-dev-null',
+                $self->hint('output-of-updaterc.d-not-redirected-to-dev-null',
                     "$name postinst");
             }
         }
@@ -137,7 +137,7 @@ sub installable {
                        ($ACTION_R)/x;
             my ($name,$opt) = ($1,$2);
             next if $opt eq 'remove';
-            $self->tag('preinst-calls-updaterc.d', $name);
+            $self->hint('preinst-calls-updaterc.d', $name);
         }
         close($fd);
     }
@@ -150,11 +150,11 @@ sub installable {
             s/\#.*$//;
             next unless m/update-rc\.d\s+($OPTS_R)*($INITD_NAME_REGEX)/;
             if ($initd_postrm{$2}++ == 1) {
-                $self->tag('duplicate-updaterc.d-calls-in-postrm', $2);
+                $self->hint('duplicate-updaterc.d-calls-in-postrm', $2);
                 next;
             }
             unless (m,>\s*/dev/null,) {
-                $self->tag('output-of-updaterc.d-not-redirected-to-dev-null',
+                $self->hint('output-of-updaterc.d-not-redirected-to-dev-null',
                     "$2 postrm");
             }
         }
@@ -168,7 +168,7 @@ sub installable {
             next if /$EXCLUDE_R/;
             s/\#.*$//;
             next unless m/update-rc\.d\s+($OPTS_R)*($INITD_NAME_REGEX)/;
-            $self->tag('prerm-calls-updaterc.d', $2);
+            $self->hint('prerm-calls-updaterc.d', $2);
         }
         close($fd);
     }
@@ -178,12 +178,12 @@ sub installable {
         if ($initd_postrm{$_}) {
             delete $initd_postrm{$_};
         } else {
-            $self->tag('postrm-does-not-call-updaterc.d-for-init.d-script',
+            $self->hint('postrm-does-not-call-updaterc.d-for-init.d-script',
                 "etc/init.d/$_");
         }
     }
     for (keys %initd_postrm) {
-        $self->tag('postrm-contains-additional-updaterc.d-calls',
+        $self->hint('postrm-contains-additional-updaterc.d-calls',
             "etc/init.d/$_");
     }
 
@@ -200,7 +200,7 @@ sub installable {
                 $ok = 1 if $initd_path->link eq '/lib/init/upstart-job';
             }
             if (not $ok) {
-                $self->tag('init.d-script-not-included-in-package',
+                $self->hint('init.d-script-not-included-in-package',
                     "etc/init.d/$initd_file");
             }
             next;
@@ -211,7 +211,7 @@ sub installable {
             or (    not $processable->is_conffile($initd_path->name)
                 and not $initd_path->is_symlink)
         ) {
-            $self->tag('init.d-script-not-marked-as-conffile',
+            $self->hint('init.d-script-not-marked-as-conffile',
                 "etc/init.d/$initd_file");
         }
 
@@ -245,7 +245,7 @@ sub installable {
         # unregistered scripts so that we get more complete Lintian
         # coverage in the first pass.
         unless ($initd_postinst{$script->basename}) {
-            $self->tag($tagname, $script);
+            $self->hint($tagname, $script);
             $self->check_init($script);
         }
     }
@@ -280,17 +280,17 @@ sub check_init {
                     $tag{$arg} = 1;
                 }
             } elsif ($l =~ m,^\#!\s*(/usr/[^\s]+),) {
-                $self->tag('init.d-script-uses-usr-interpreter',
+                $self->hint('init.d-script-uses-usr-interpreter',
                     $initd_path, $1);
             }
         }
         if ($l =~ m/Please remove the "Author" lines|Example initscript/) {
-            $self->tag('init.d-script-contains-skeleton-template-content',
+            $self->hint('init.d-script-contains-skeleton-template-content',
                 "${initd_path}:$.");
         }
         if ($l =~ m/^\#\#\# BEGIN INIT INFO/) {
             if ($lsb{BEGIN}) {
-                $self->tag('init.d-script-has-duplicate-lsb-section',
+                $self->hint('init.d-script-has-duplicate-lsb-section',
                     $initd_path);
                 next;
             }
@@ -304,16 +304,16 @@ sub check_init {
                     $lsb{END} = 1;
                     last;
                 } elsif ($l !~ /^\#/) {
-                    $self->tag('init.d-script-has-unterminated-lsb-section',
+                    $self->hint('init.d-script-has-unterminated-lsb-section',
                         "${initd_path}:$.");
                     last;
                 } elsif ($l =~ /^\# ([a-zA-Z-]+):\s*(.*?)\s*$/) {
                     my $keyword = lc $1;
                     my $value = $2;
-                    $self->tag('init.d-script-has-duplicate-lsb-keyword',
+                    $self->hint('init.d-script-has-duplicate-lsb-keyword',
                         "${initd_path}:$. $keyword")
                       if (defined $lsb{$keyword});
-                    $self->tag(
+                    $self->hint(
                         'init.d-script-has-unknown-lsb-keyword',
                         "${initd_path}:$. $keyword"
                       )
@@ -326,7 +326,7 @@ sub check_init {
                     $value =~ s/^\#\s*//;
                     $lsb{description} .= ' ' . $value;
                 } else {
-                    $self->tag('init.d-script-has-bad-lsb-line',
+                    $self->hint('init.d-script-has-bad-lsb-line',
                         "${initd_path}:$.");
                 }
             }
@@ -339,7 +339,7 @@ sub check_init {
         $in_file_test = 0 if ($l =~ m/\bfi\b/);
         if (!$in_file_test && $l =~ m,^\s*\.\s+["'"]?(/etc/default/[\$\w/-]+),)
         {
-            $self->tag('init.d-script-sourcing-without-test',
+            $self->hint('init.d-script-sourcing-without-test',
                 "${initd_path}:$. $1");
         }
 
@@ -365,7 +365,7 @@ sub check_init {
             && none { $_->basename =~ m/\.service$/ && !$_->is_dir }
             $processable->installed->sorted_list
         ) {
-            $self->tag('init.d-script-needs-depends-on-lsb-base',
+            $self->hint('init.d-script-needs-depends-on-lsb-base',
                 $initd_path, "(line $.)");
         }
     }
@@ -373,17 +373,17 @@ sub check_init {
 
     # Make sure all of the required keywords are present.
     if (not $lsb{BEGIN}) {
-        $self->tag('init.d-script-missing-lsb-section', $initd_path);
+        $self->hint('init.d-script-missing-lsb-section', $initd_path);
     } else {
         for my $keyword (keys %lsb_keywords) {
             if ($lsb_keywords{$keyword} && !defined $lsb{$keyword}) {
                 if ($keyword eq 'short-description') {
-                    $self->tag('init.d-script-missing-lsb-short-description',
+                    $self->hint('init.d-script-missing-lsb-short-description',
                         $initd_path);
                 } elsif ($keyword eq 'description') {
                     next;
                 } else {
-                    $self->tag('init.d-script-missing-lsb-keyword',
+                    $self->hint('init.d-script-missing-lsb-keyword',
                         $initd_path, $keyword);
                 }
             }
@@ -397,11 +397,11 @@ sub check_init {
             if ($runlevel =~ /^[sS0-6]$/) {
                 $start{lc $runlevel} = 1;
                 if ($runlevel eq '0' or $runlevel eq '6') {
-                    $self->tag('init.d-script-starts-in-stop-runlevel',
+                    $self->hint('init.d-script-starts-in-stop-runlevel',
                         $initd_path, $runlevel);
                 }
             } else {
-                $self->tag('init.d-script-has-bad-start-runlevel',
+                $self->hint('init.d-script-has-bad-start-runlevel',
                     $initd_path, $runlevel);
             }
         }
@@ -411,7 +411,7 @@ sub check_init {
         my $start = join(' ', sort grep {$_ =~ /^[2-5]$/} keys %start);
         if (length($start) > 0 and $start ne '2 3 4 5') {
             my @missing = grep { !defined $start{$_} } qw(2 3 4 5);
-            $self->tag('init.d-script-missing-start', $initd_path,@missing);
+            $self->hint('init.d-script-missing-start', $initd_path,@missing);
         }
     }
     if (defined $lsb{'default-stop'}) {
@@ -420,15 +420,15 @@ sub check_init {
             if ($runlevel =~ /^[sS0-6]$/) {
                 $stop{$runlevel} = 1 unless $runlevel =~ /[sS2-5]/;
                 if ($start{$runlevel}) {
-                    $self->tag('init.d-script-has-conflicting-start-stop',
+                    $self->hint('init.d-script-has-conflicting-start-stop',
                         $initd_path, $runlevel);
                 }
                 if ($runlevel =~ /[sS]/) {
-                    $self->tag('init-d-script-stops-in-s-runlevel',
+                    $self->hint('init-d-script-stops-in-s-runlevel',
                         $initd_path);
                 }
             } else {
-                $self->tag('init.d-script-has-bad-stop-runlevel',
+                $self->hint('init.d-script-has-bad-stop-runlevel',
                     $initd_path, $runlevel);
             }
         }
@@ -441,7 +441,7 @@ sub check_init {
             if (none { $base eq $_ } qw(killprocs sendsigs halt reboot)) {
                 my @missing = grep { !defined $stop{$_} } qw(0 1 6);
                 my $start = join(' ', sort keys %start);
-                $self->tag('init.d-script-possible-missing-stop',
+                $self->hint('init.d-script-possible-missing-stop',
                     $initd_path,@missing)
                   unless $start eq 's';
             }
@@ -451,14 +451,14 @@ sub check_init {
         my $provides_self;
         for my $facility (split(/\s+/, $lsb{'provides'})) {
             if ($facility =~ /^\$/) {
-                $self->tag('init.d-script-provides-virtual-facility',
+                $self->hint('init.d-script-provides-virtual-facility',
                     $initd_path, $facility);
             }
             if ($initd_path->basename =~/^\Q$facility\E(?:.sh)?$/) {
                 $provides_self = 1;
             }
         }
-        $self->tag('init.d-script-does-not-provide-itself', $initd_path)
+        $self->hint('init.d-script-does-not-provide-itself', $initd_path)
           unless $provides_self;
     }
 
@@ -470,7 +470,7 @@ sub check_init {
         my @required = split(' ', $lsb{'required-start'} || '');
         if ($needs_fs) {
             if (none { /^\$(?:local_fs|remote_fs|all)\z/ } @required) {
-                $self->tag('init.d-script-missing-dependency-on-local_fs',
+                $self->hint('init.d-script-missing-dependency-on-local_fs',
                     "${initd_path}: required-start");
             }
         }
@@ -482,7 +482,7 @@ sub check_init {
                 none { /^(?:\$(?:local|remote)_fs|\$all|umountn?fs)\z/ }
                 @required
             ) {
-                $self->tag('init.d-script-missing-dependency-on-local_fs',
+                $self->hint('init.d-script-missing-dependency-on-local_fs',
                     "${initd_path}: required-stop");
             }
         }
@@ -494,16 +494,17 @@ sub check_init {
         next unless defined $lsb{$keyword};
         for my $dependency (split(/\s+/, $lsb{$keyword})) {
             if (defined $implied_dependencies{$dependency}) {
-                $self->tag('non-virtual-facility-in-initd-script',
+                $self->hint('non-virtual-facility-in-initd-script',
                     $initd_path,
                     "$dependency -> $implied_dependencies{$dependency}");
             } elsif ($keyword =~ m/^required-/ && $dependency =~ m/^\$/) {
-                $self->tag('init.d-script-depends-on-unknown-virtual-facility',
+                $self->hint(
+                    'init.d-script-depends-on-unknown-virtual-facility',
                     $initd_path, $dependency)
                   unless ($VIRTUAL_FACILITIES->known($dependency));
             }
             if ($dependency =~ m/^\$all$/) {
-                $self->tag('init.d-script-depends-on-all-virtual-facility',
+                $self->hint('init.d-script-depends-on-all-virtual-facility',
                     $initd_path, $keyword);
             }
         }
@@ -512,11 +513,11 @@ sub check_init {
     # all tags included in file?
     for my $option (qw(start stop restart force-reload)) {
         $tag{$option}
-          or $self->tag('init.d-script-does-not-implement-required-option',
+          or $self->hint('init.d-script-does-not-implement-required-option',
             $initd_path, $option);
     }
 
-    $self->tag('init.d-script-does-not-implement-status-option', $initd_path)
+    $self->hint('init.d-script-does-not-implement-status-option', $initd_path)
       unless $tag{'status'};
 
     return;
@@ -533,7 +534,7 @@ sub check_defaults {
         return if not $path->is_open_ok;
         open(my $fd, '<', $path->unpacked_path);
         while (<$fd>) {
-            $self->tag('init.d-script-should-always-start-service',
+            $self->hint('init.d-script-should-always-start-service',
                 $path, "(line $.)")
               if m/$ALWAYS_START/;
         }
@@ -552,7 +553,7 @@ sub visit_installed_files {
 
         my $service = $1;
 
-        $self->tag('package-supports-alternative-init-but-no-init.d-script',
+        $self->hint('package-supports-alternative-init-but-no-init.d-script',
             $file)
           unless $self->processable->installed->resolve_path(
             "etc/init.d/${service}")
@@ -567,7 +568,7 @@ sub visit_installed_files {
         my $file
           = $self->processable->installed->resolve_path(
             "etc/sv/${service}/run");
-        $self->tag(
+        $self->hint(
             'directory-in-etc-sv-directory-without-executable-run-script',
             $file)
           if not $file or not $file->is_executable;

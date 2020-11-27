@@ -60,7 +60,7 @@ sub visit_installed_files {
         my $temp_file = $2;
 
         # ... except modules which are allowed to ship .load files
-        $self->tag('apache2-configuration-files-need-conf-suffix', $file)
+        $self->hint('apache2-configuration-files-need-conf-suffix', $file)
           unless $temp_type eq 'mods' and $temp_file =~ m#\.load#;
     }
 
@@ -78,7 +78,8 @@ sub visit_installed_files {
 
     # Package appears to be a legacy web application
     elsif ($file =~ m#^etc/apache2/conf\.d/(.*)$#) {
-        $self->tag('apache2-reverse-dependency-uses-obsolete-directory',$file);
+        $self->hint('apache2-reverse-dependency-uses-obsolete-directory',
+            $file);
         $self->check_web_application_package($file,'conf', $1);
         $self->_set_seen_apache2_special_file(1);
     }
@@ -86,7 +87,7 @@ sub visit_installed_files {
     # Package does scary things
     elsif ($file =~ m#^etc/apache2/(?:conf|sites|mods)-enabled/.*$#) {
 
-        $self->tag(
+        $self->hint(
             'apache2-reverse-dependency-ships-file-in-not-allowed-directory',
             $file);
 
@@ -116,7 +117,7 @@ sub check_web_application_package {
     my $pkg = $self->processable->name;
     my $processable = $self->processable;
 
-    $self->tag('non-standard-apache2-configuration-name',
+    $self->hint('non-standard-apache2-configuration-name',
         $webapp, '!=', "$pkg.conf")
       if $webapp ne "$pkg.conf"
       or $webapp =~ m/^local-./;
@@ -128,7 +129,7 @@ sub check_web_application_package {
     # A web application must not depend on apache2-whatever
     my $visit = sub {
         if (m/^apache2(?:\.2)?-(?:common|data|bin)$/) {
-            $self->tag('web-application-depends-on-apache2-data-package', $_);
+            $self->hint('web-application-depends-on-apache2-data-package', $_);
             return 1;
         }
         return 0;
@@ -139,7 +140,7 @@ sub check_web_application_package {
     # apache2 | httpd but don't worry about versions, virtual package
     # don't support that
     if ($rel->implies('apache2')) {
-        $self->tag('web-application-works-only-with-apache');
+        $self->hint('web-application-works-only-with-apache');
     }
 
     $self->inspect_conf_file($pkgtype, $file);
@@ -162,7 +163,7 @@ sub check_module_package {
 
     $expected_name =~ tr/_/-/;
     if ($expected_name ne $pkg) {
-        $self->tag('non-standard-apache2-module-package-name',
+        $self->hint('non-standard-apache2-module-package-name',
             $pkg, '!=',$expected_name);
     }
 
@@ -170,7 +171,7 @@ sub check_module_package {
         $processable->relation('strong'),
         $processable->relation('Recommends'));
     if (!$rel->matches(qr/^apache2-api-\d+$/)) {
-        $self->tag('apache2-module-does-not-depend-on-apache2-api');
+        $self->hint('apache2-module-does-not-depend-on-apache2-api');
     }
 
     # The module is called mod_foo.so, thus the load file is expected to be
@@ -183,7 +184,7 @@ sub check_module_package {
     if (my $f = $processable->installed->lookup($load_file)) {
         $self->inspect_conf_file('mods', $f);
     } else {
-        $self->tag('apache2-module-does-not-ship-load-file', $load_file);
+        $self->hint('apache2-module-does-not-ship-load-file', $load_file);
     }
 
     if (my $f = $processable->installed->lookup($conf_file)) {
@@ -218,14 +219,14 @@ sub check_maintainer_scripts {
             # directly
             if (m/\b(a2(?:en|dis)(?:conf|site|mod))\b/) {
 
-                $self->tag('apache2-reverse-dependency-calls-wrapper-script',
+                $self->hint('apache2-reverse-dependency-calls-wrapper-script',
                     $file,$1);
             }
 
             # Do not allow reverse dependencies to call "invoke-rc.d apache2
             if (m/invoke-rc\.d\s+apache2/) {
 
-                $self->tag('apache2-reverse-dependency-calls-invoke-rc.d',
+                $self->hint('apache2-reverse-dependency-calls-invoke-rc.d',
                     $file);
             }
 
@@ -256,18 +257,18 @@ sub inspect_conf_file {
         for my $directive ('Order', 'Satisfy', 'Allow', 'Deny',
             qr{</?Limit.*?>}xsm, qr{</?LimitExcept.*?>}xsm) {
             if (m{\A \s* ($directive) (?:\s+|\Z)}xsm and not $skip) {
-                $self->tag('apache2-deprecated-auth-config',
+                $self->hint('apache2-deprecated-auth-config',
                     $file, "(line $.)", $1);
             }
         }
 
         if (m/^#\s*(Depends|Conflicts):\s+(.*?)\s*$/) {
             my ($field, $value) = ($1, $2);
-            $self->tag('apache2-unsupported-dependency', $file, $field)
+            $self->hint('apache2-unsupported-dependency', $file, $field)
               if $field eq 'Conflicts' and $conftype ne 'mods';
             my @dependencies = split(/[\n\s]+/, $value);
             foreach my $dep (@dependencies) {
-                $self->tag('apache2-unparsable-dependency',
+                $self->hint('apache2-unparsable-dependency',
                     $file, "(line $.)", $dep)
                   if $dep =~ m/[^\w\.]/
                   or $dep =~ /^mod\_/
