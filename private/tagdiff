@@ -38,6 +38,7 @@ use List::Util qw(all);
 use Path::Tiny;
 use Term::ANSIColor qw(:constants);
 use Text::Diff;
+use Unicode::UTF8 qw(encode_utf8);
 
 use Test::Lintian::Output::Universal qw(order);
 
@@ -62,7 +63,7 @@ unless (
 }
 
 # check arguments and options
-die "Please use -h for usage information.\n"
+die encode_utf8("Please use -h for usage information.\n")
   if scalar @ARGV != 2;
 
 # get arguments
@@ -92,12 +93,12 @@ if (-t STDOUT) {
     s/^(\-.*)$/$red$1$reset/ for @lines;
 }
 
-print $_ . NEWLINE for @lines;
+print encode_utf8($_ . NEWLINE) for @lines;
 
 exit;
 
 sub usage {
-    print <<"END";
+    my $message =<<"END";
 Usage: $0 <expected-tag-file> <actual-tag-file>
 
     Print differences between the tag information in the two files. The files
@@ -112,6 +113,9 @@ Usage: $0 <expected-tag-file> <actual-tag-file>
     Returns with a zero exit code under normal conditions, even when the tags
     do not match.
 END
+
+    print encode_utf8($message);
+
     return;
 }
 

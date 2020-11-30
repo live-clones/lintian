@@ -34,11 +34,11 @@ use FindBin;
 use lib "$FindBin::RealBin/../lib";
 
 use Cwd;
-use Capture::Tiny qw(capture_merged);
 use Getopt::Long;
 use List::Util qw(all);
 use Path::Tiny;
 use Term::ANSIColor;
+use Unicode::UTF8 qw(encode_utf8 decode_utf8);
 
 use Test::Lintian::Output::Universal qw(parse_line order);
 
@@ -64,7 +64,7 @@ unless (
 }
 
 # check arguments and options
-die "Please use -h for usage information.\n"
+die encode_utf8("Please use -h for usage information.\n")
   if scalar @ARGV != 2;
 
 # get arguments
@@ -81,7 +81,7 @@ my $changed;
 foreach my $line (@difflines) {
     my ($sign, $stripped) = $line =~ qr/^([+-])(.*)$/;
 
-    die "$diffpath is not a tagdiff file"
+    die encode_utf8("$diffpath is not a tagdiff file")
       unless length $sign && defined $stripped;
 
     if ($interactive) {
@@ -100,19 +100,20 @@ foreach my $line (@difflines) {
         my $colored = $stripped;
         $colored = colored($stripped, $color)
           if -t STDOUT;
-        print "$colored - $command (y/n/q)? ";
+        print encode_utf8("$colored - $command (y/n/q)? ");
 
-        my $decision = <STDIN>;
+        my $decision_bytes = <STDIN>;
+        my $decision = decode_utf8($decision_bytes);
         chomp $decision;
         exit if $decision eq 'q';
         next unless $decision eq 'y';
     }
 
     if ($sign eq '+') {
-        # say "Adding: $stripped";
+        # say encode_utf8("Adding: $stripped");
         push(@tagslines, $stripped);
     } else {
-        # say "Removing: $stripped";
+        # say encode_utf8("Removing: $stripped");
         # remove the first match only
         my $found = 0;
         @tagslines = grep {$_ ne $stripped || $found++} @tagslines;
@@ -132,7 +133,7 @@ path($tagspath)->spew_utf8($joined);
 exit;
 
 sub usage {
-    print <<"END";
+    my $message =<<"END";
 Usage: $0 -i <tagdiff-file> <tags-file>
 
     --interactive, -i  Apply <tagdiff-file> interactively
@@ -142,6 +143,9 @@ Usage: $0 -i <tagdiff-file> <tags-file>
 
     The tags are then sorted in the order preferred for universal tags.
 END
+
+    print encode_utf8($message);
+
     return;
 }
 

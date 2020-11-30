@@ -38,6 +38,7 @@ use Getopt::Long;
 use List::Util qw(all);
 use Path::Tiny;
 use Term::ANSIColor;
+use Unicode::UTF8 qw(encode_utf8);
 
 use Test::Lintian::Output::Universal qw(parse_line order);
 
@@ -59,7 +60,7 @@ unless (
 }
 
 # check arguments and options
-die "Please use -h for usage information.\n"
+die encode_utf8("Please use -h for usage information.\n")
   if scalar @ARGV != 1;
 
 # get arguments
@@ -77,11 +78,13 @@ path($tagspath)->spew_utf8($joined);
 exit;
 
 sub usage {
-    print <<"END";
+    my $message =<<"END";
 Usage: $0 <tagfile>
-
     Sorts tagfile in the order preferred for universal tags.
 END
+
+    print encode_utf8($message);
+
     return;
 }
 

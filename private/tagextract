@@ -36,6 +36,7 @@ use lib "$FindBin::RealBin/../lib";
 use Getopt::Long;
 use List::Util qw(all);
 use Path::Tiny;
+use Unicode::UTF8 qw(encode_utf8);
 
 use Test::Lintian::Output::EWI;
 
@@ -54,13 +55,13 @@ unless (
 }
 
 # check arguments and options
-die "Please use -h for usage information.\n"
+die encode_utf8("Please use -h for usage information.\n")
   if scalar @ARGV < 1 || scalar @ARGV > 2;
 
 # get arguments
 my ($inpath, $outpath) = @ARGV;
 
-die "File $inpath does not exist.\n"
+die encode_utf8("File $inpath does not exist.\n")
   unless -f $inpath;
 
 my $text = path($inpath)->slurp_utf8;
@@ -69,7 +70,7 @@ my $converted = to_universal($format, $text);
 if (defined $outpath) {
     path($outpath)->spew_utf8($converted);
 }else {
-    print $converted;
+    print encode_utf8($converted);
 }
 
 exit;
@@ -81,11 +82,11 @@ sub to_universal {
         return Test::Lintian::Output::EWI::to_universal($text);
     }
 
-    die "Unknown format: $format\n";
+    die encode_utf8("Unknown format: $format\n");
 }
 
 sub usage {
-    print <<"END";
+    my $message =<<"END";
 Usage: $0 -f <format> <in-file> <out-file>
 
     --format, -f <format>  Format of Lintian output file <in-file>
@@ -100,6 +101,9 @@ Usage: $0 -f <format> <in-file> <out-file>
 
     Prints to stdout when no <out-file> is given.
 END
+
+    print encode_utf8($message);
+
     return;
 }
 
