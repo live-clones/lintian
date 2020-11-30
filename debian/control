@@ -56,7 +56,7 @@ Depends:
  libnamespace-clean-perl,
  libpath-tiny-perl,
  libperlio-gzip-perl,
- libperlio-utf8_strict-perl,
+ libperlio-utf8-strict-perl,
  libproc-processtable-perl,
  libsereal-decoder-perl,
  libsereal-encoder-perl,
