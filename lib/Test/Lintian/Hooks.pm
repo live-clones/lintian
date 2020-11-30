@@ -58,6 +58,7 @@ use File::Path;
 use File::stat;
 use List::MoreUtils qw(any);
 use Path::Tiny;
+use Unicode::UTF8 qw(encode_utf8 decode_utf8);
 
 use constant NEWLINE => qq{\n};
 use constant SPACE => q{ };
@@ -78,18 +79,18 @@ and places the result in the file OUTPUT.
 sub sed_hook {
     my ($script, $path, $output) = @_;
 
-    croak "Parser script $script does not exist." unless -f $script;
+    croak encode_utf8("Parser script $script does not exist.")
+      unless -f $script;
 
-    my $captured = qx(sed -r -f $script $path);
-    croak "Hook failed: sed -ri -f $script $path > $output: $!" if $?;
+    my $bytes = qx{sed -r -f $script $path};
+    croak encode_utf8("Hook failed: sed -ri -f $script $path > $output: $!")
+      if $?;
 
-    open(my $handle, '>', $output)
-      or croak "Could not open file $output: $!";
-    print {$handle} $captured;
-    close($handle)
-      or carp "Could not close file $output: $!";
+    # already in bytes
+    path($output)->spew($bytes);
 
-    croak "Did not create parser output file $output." unless -f $output;
+    croak encode_utf8("Did not create parser output file $output.")
+      unless -f $output;
 
     return $output;
 }
@@ -105,14 +106,16 @@ sub sort_lines {
     my ($path, $sorted) = @_;
 
     open(my $rfd, '<', $path)
-      or croak "Could not open pre-sort file $path: $!";
-    my @lines = sort(<$rfd>);
-    close($rfd) or carp "Could not close open pre-sort file $path: $!";
+      or croak encode_utf8("Could not open pre-sort file $path: $!");
+    my @lines = sort map { decode_utf8($_) } <$rfd>;
+    close $rfd
+      or carp encode_utf8("Could not close open pre-sort file $path: $!");
 
     open(my $wfd, '>', $sorted)
-      or croak "Could not open sorted file $sorted: $!";
-    print {$wfd} $_ for @lines;
-    close($wfd) or carp "Could not close sorted file $sorted: $!";
+      or croak encode_utf8("Could not open sorted file $sorted: $!");
+    print {$wfd} encode_utf8($_) for @lines;
+    close $wfd
+      or carp encode_utf8("Could not close sorted file $sorted: $!");
 
     return $sorted;
 }
@@ -132,8 +135,8 @@ sub calibrate {
 
     if (-x $hook) {
         system($hook, $expected, $actual, $calibrated) == 0
-          or croak "Hook $hook failed on $actual: $!";
-        croak "No calibrated tags created in $calibrated"
+          or croak encode_utf8("Hook $hook failed on $actual: $!");
+        croak encode_utf8("No calibrated tags created in $calibrated")
           unless -f $calibrated;
         return $calibrated;
     }
@@ -180,21 +183,25 @@ sub find_missing_prerequisites {
     push(@lines, "Build-Conflicts: $build_conflicts")
       if length $build_conflicts;
 
-    $temp->spew(join(NEWLINE, @lines) . NEWLINE);
+    $temp->spew_utf8(join(NEWLINE, @lines) . NEWLINE);
 
     # run dpkg-checkbuilddeps
     my $command = "dpkg-checkbuilddeps $temp";
     my ($missing, $status) = capture_merged { system($command); };
     $status = ($status >> 8) & 255;
 
-    die "$command failed: $missing" if !$status && length $missing;
+    $missing = decode_utf8($missing)
+      if length $missing;
+
+    die encode_utf8("$command failed: $missing")
+      if !$status && length $missing;
 
     # parse for missing prerequisites
     if ($missing =~ s{\A dpkg-checkbuilddeps: [ ] (?:error: [ ])? }{}xsm) {
         $missing =~ s{Unmet build dependencies}{Unmet}gi;
         chomp($missing);
         # expect exactly one line.
-        die "Unexpected output from dpkg-checkbuilddeps: $missing"
+        die encode_utf8("Unexpected output from dpkg-checkbuilddeps: $missing")
           if $missing =~ s{\n}{\\n}gxsm;
         return $missing;
     }

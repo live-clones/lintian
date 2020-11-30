@@ -65,6 +65,7 @@ use Path::Tiny;
 use Test::More;
 use Text::Diff;
 use Try::Tiny;
+use Unicode::UTF8 qw(encode_utf8 decode_utf8);
 
 use Lintian::Deb822::File;
 use Lintian::Profile;
@@ -110,7 +111,7 @@ sub logged_runner {
     # set path to logfile
     my $logpath = $runpath . SLASH . $files->unfolded_value('Log');
 
-    my $log = capture_merged {
+    my $log_bytes = capture_merged {
         try {
             # call runner
             runner($runpath, $logpath)
@@ -121,6 +122,8 @@ sub logged_runner {
         };
     };
 
+    my $log = decode_utf8($log_bytes);
+
     # append runner log to population log
     path($logpath)->append_utf8($log) if length $log;
 
@@ -129,8 +132,8 @@ sub logged_runner {
 
     # print log and die on error
     if ($error) {
-        print $log if length $log && $ENV{'DUMP_LOGS'}//NO eq YES;
-        die "Runner died for $runpath: $error";
+        print encode_utf8($log) if length $log && $ENV{'DUMP_LOGS'}//NO eq YES;
+        die encode_utf8("Runner died for $runpath: $error");
     }
 
     return;
@@ -149,14 +152,15 @@ sub runner {
     # set a predictable locale
     $ENV{'LC_ALL'} = 'C';
 
-    say EMPTY;
-    say '------- Runner starts here -------';
+    say encode_utf8(EMPTY);
+    say encode_utf8('------- Runner starts here -------');
 
     # bail out if runpath does not exist
-    BAIL_OUT("Cannot find test directory $runpath.") unless -d $runpath;
+    BAIL_OUT(encode_utf8("Cannot find test directory $runpath."))
+      unless -d $runpath;
 
     # announce location
-    say "Running test at $runpath.";
+    say encode_utf8("Running test at $runpath.");
 
     # read dynamic file names
     my $runfiles = "$runpath/files";
@@ -172,63 +176,66 @@ sub runner {
 
     # get data age
     $spec_epoch = max(stat($rundescpath)->mtime, $spec_epoch);
-    say 'Specification is from : '. rfc822date($spec_epoch);
+    say encode_utf8('Specification is from : '. rfc822date($spec_epoch));
 
-    say EMPTY;
+    say encode_utf8(EMPTY);
 
     # age of runner executable
     my $runner_epoch = $ENV{'RUNNER_EPOCH'}//time;
-    say 'Runner modified on   : '. rfc822date($runner_epoch);
+    say encode_utf8('Runner modified on   : '. rfc822date($runner_epoch));
 
     # age of harness executable
     my $harness_epoch = $ENV{'HARNESS_EPOCH'}//time;
-    say 'Harness modified on  : '. rfc822date($harness_epoch);
+    say encode_utf8('Harness modified on  : '. rfc822date($harness_epoch));
 
     # calculate rebuild threshold
     my $threshold= max($spec_epoch, $runner_epoch, $harness_epoch);
-    say 'Rebuild threshold is : '. rfc822date($threshold);
+    say encode_utf8('Rebuild threshold is : '. rfc822date($threshold));
 
-    say EMPTY;
+    say encode_utf8(EMPTY);
 
     # age of Lintian executable
     my $lintian_epoch = $ENV{'LINTIAN_EPOCH'}//time;
-    say 'Lintian modified on  : '. rfc822date($lintian_epoch);
+    say encode_utf8('Lintian modified on  : '. rfc822date($lintian_epoch));
 
     my $testname = $testcase->unfolded_value('Testname');
     # name of encapsulating directory should be that of test
     my $expected_name = path($runpath)->basename;
-    die"Test in $runpath is called $testname instead of $expected_name"
+    die encode_utf8(
+        "Test in $runpath is called $testname instead of $expected_name")
       unless $testname eq $expected_name;
 
     # skip test if marked
     my $skipfile = "$runpath/skip";
     if (-f $skipfile) {
         my $reason = path($skipfile)->slurp_utf8 || 'No reason given';
-        say "Skipping test: $reason";
+        say encode_utf8("Skipping test: $reason");
         plan skip_all => "(disabled) $reason";
     }
 
     # skip if missing prerequisites
     my $missing = find_missing_prerequisites($testcase);
     if (length $missing) {
-        say "Missing prerequisites: $missing";
+        say encode_utf8("Missing prerequisites: $missing");
         plan skip_all => $missing;
     }
 
     # check test architectures
     unless (length $ENV{'DEB_HOST_ARCH'}) {
-        say 'DEB_HOST_ARCH is not set.';
-        BAIL_OUT('DEB_HOST_ARCH is not set.');
+        say encode_utf8('DEB_HOST_ARCH is not set.');
+        BAIL_OUT(encode_utf8('DEB_HOST_ARCH is not set.'));
     }
     my $platforms = $testcase->unfolded_value('Test-Architectures');
     if ($platforms ne 'any') {
         my @wildcards = split(SPACE, $platforms);
         my @matches= map {
-            qx{dpkg-architecture -a $ENV{'DEB_HOST_ARCH'} -i $_; echo -n \$?}
+            decode_utf8(
+qx{dpkg-architecture -a $ENV{'DEB_HOST_ARCH'} -i $_; echo -n \$?}
+            )
         } @wildcards;
         unless (any { $_ == 0 } @matches) {
-            say 'Architecture mismatch';
-            plan skip_all => 'Architecture mismatch';
+            say encode_utf8('Architecture mismatch');
+            plan skip_all => encode_utf8('Architecture mismatch');
         }
     }
 
@@ -241,7 +248,7 @@ sub runner {
     my $subject = path("$runpath/subject")->realpath;
 
     # get lintian subject
-    die 'Could not get subject of Lintian examination.'
+    die encode_utf8('Could not get subject of Lintian examination.')
       unless -f $subject;
 
     # run lintian
@@ -252,12 +259,15 @@ sub runner {
       = $testcase->unfolded_value('Lintian-Command-Line');
     my $command
       = "cd $runpath; $ENV{'LINTIAN_UNDER_TEST'} $lintian_command_line $subject";
-    say $command;
+    say encode_utf8($command);
     my ($output, $status) = capture_merged { system($command); };
     $status = ($status >> 8) & 255;
 
-    say "$command exited with status $status.";
-    say $output if $status == 1;
+    $output = decode_utf8($output)
+      if length $output;
+
+    say encode_utf8("$command exited with status $status.");
+    say encode_utf8($output) if $status == 1;
 
     my $expected_status = $testcase->unfolded_value('Exit-Status');
 
@@ -282,7 +292,7 @@ sub runner {
     $output = EMPTY;
     $output .= $_ . NEWLINE for @lines;
 
-    die 'No match strategy defined'
+    die encode_utf8('No match strategy defined')
       unless $testcase->exists('Match-Strategy');
 
     my $match_strategy = $testcase->unfolded_value('Match-Strategy');
@@ -294,7 +304,7 @@ sub runner {
         push(@errors, check_tags($testcase, $runpath, $output));
 
     } else {
-        die "Unknown match strategy $match_strategy.";
+        die encode_utf8("Unknown match strategy $match_strategy.");
     }
 
     my $okay = !(scalar @errors);
@@ -332,7 +342,7 @@ sub check_literal {
       unless -e $expected;
 
     my $raw = "$runpath/literal.actual";
-    path($raw)->spew($output);
+    path($raw)->spew_utf8($output);
 
     # run a sed-script if it exists
     my $actual = "$runpath/literal.actual.parsed";
@@ -340,8 +350,8 @@ sub check_literal {
     if(-f $script) {
         sed_hook($script, $raw, $actual);
     } else {
-        die"Could not copy actual tags $raw to $actual: $!"
-          if(system('cp', '-p', $raw, $actual));
+        die encode_utf8("Could not copy actual tags $raw to $actual: $!")
+          if system('cp', '-p', $raw, $actual);
     }
 
     return check_result($testcase, $runpath, $expected, $actual);
@@ -360,7 +370,7 @@ sub check_tags {
       unless -e $expected;
 
     my $raw = "$runpath/tags.actual";
-    path($raw)->spew($output);
+    path($raw)->spew_utf8($output);
 
     # run a sed-script if it exists
     my $actual = "$runpath/tags.actual.parsed";
@@ -368,8 +378,8 @@ sub check_tags {
     if(-f $sedscript) {
         sed_hook($sedscript, $raw, $actual);
     } else {
-        die"Could not copy actual tags $raw to $actual: $!"
-          if(system('cp', '-p', $raw, $actual));
+        die encode_utf8("Could not copy actual tags $raw to $actual: $!")
+          if system('cp', '-p', $raw, $actual);
     }
 
     # calibrate tags; may write to $actual
@@ -378,8 +388,9 @@ sub check_tags {
     if(-x $calscript) {
         calibrate($calscript, $actual, $expected, $calibrated);
     } else {
-        die"Could not copy expected tags $expected to $calibrated: $!"
-          if(system('cp', '-p', $expected, $calibrated));
+        die encode_utf8(
+            "Could not copy expected tags $expected to $calibrated: $!")
+          if system('cp', '-p', $expected, $calibrated);
     }
 
     return check_result($testcase, $runpath, $calibrated, $actual);
@@ -433,10 +444,10 @@ sub check_result {
             @difflines = reverse sort @difflines;
             my $tagdiff;
             $tagdiff .= $_ . NEWLINE for @difflines;
-            path("$runpath/tagdiff")->spew($tagdiff // EMPTY);
+            path("$runpath/tagdiff")->spew_utf8($tagdiff // EMPTY);
 
         } else {
-            die "Unknown match strategy $match_strategy.";
+            die encode_utf8("Unknown match strategy $match_strategy.");
         }
 
         push(@errors, EMPTY);
@@ -470,7 +481,7 @@ sub check_result {
         my @checks = $testcase->trimmed_list('Check');
         foreach my $check (@checks) {
             my $checkscript = $profile->get_checkinfo($check);
-            die "Unknown Lintian check $check"
+            die encode_utf8("Unknown Lintian check $check")
               unless defined $checkscript;
 
             push(@related, $checkscript->tags);

@@ -50,6 +50,7 @@ use Time::Duration;
 use Time::Moment;
 use Time::Piece;
 use Try::Tiny;
+use Unicode::UTF8 qw(encode_utf8 decode_utf8);
 
 use Lintian::IO::Async qw(safe_qx);
 
@@ -93,7 +94,7 @@ $ENV{CCACHE_DISABLE} = 1;
 $ENV{NO_PKG_MANGLE} //= 'true';
 
 $ENV{LINTIAN_BASE} = realpath("$FindBin::RealBin/..")
-  // die 'Cannot resolve LINTIAN_BASE';
+  // die encode_utf8('Cannot resolve LINTIAN_BASE');
 
 # options
 my $debug;
@@ -120,7 +121,7 @@ unless (
 }
 
 # check number of arguments
-die('Please use -h for usage information.')
+die encode_utf8('Please use -h for usage information.')
   if @ARGV > 1;
 
 # get arguments
@@ -130,7 +131,7 @@ my ($testset) = @ARGV;
 $testset ||= 't';
 
 # check test set directory
-die "Cannot find testset directory $testset"
+die encode_utf8("Cannot find testset directory $testset")
   unless -d $testset;
 
 # make sure testset is an absolute path
@@ -144,20 +145,20 @@ path($outpath)->mkpath
   unless -e $outpath;
 
 # make sure test work path is a directory
-die "Test work directory $outpath is not a directory"
+die encode_utf8("Test work directory $outpath is not a directory")
   unless -d $outpath;
 
 # make sure outpath is absolute
 $outpath = path($outpath)->relative->stringify;
 
-say EMPTY;
+say encode_utf8(EMPTY);
 
 # tie verbosity to debug
 $verbose = 1 + $debug if $debug;
 
 # can be 0 without value ("-j"), and -1 if option was not specified at all
 $numjobs = default_parallel() if $numjobs <= 0;
-say "Running up to $numjobs tests concurrently"
+say encode_utf8("Running up to $numjobs tests concurrently")
   if $numjobs > 1 && $verbose >= 2;
 
 $ENV{'DUMP_LOGS'} = $dump_logs//NO ? YES : NO;
@@ -169,32 +170,33 @@ $ENV{'DPKG_NLS'} = 0;
 my $helperpath = "$testset/../bin";
 if (-d $helperpath) {
     my $helpers = path($helperpath)->absolute->stringify
-      // die("Cannot resolve $helperpath: $!");
+      // die encode_utf8("Cannot resolve $helperpath: $!");
     $ENV{'PATH'} = "$helpers:$ENV{'PATH'}";
 }
 
 # get architecture
 cache_dpkg_architecture_values();
-say "Host architecture is $ENV{'DEB_HOST_ARCH'}.";
+say encode_utf8("Host architecture is $ENV{'DEB_HOST_ARCH'}.");
 
 # get latest policy version and date
 ($ENV{'POLICY_VERSION'}, $ENV{'POLICY_EPOCH'}) = get_latest_policy();
-say "Latest policy version is $ENV{'POLICY_VERSION'} from "
-  . rfc822date($ENV{'POLICY_EPOCH'});
+say encode_utf8("Latest policy version is $ENV{'POLICY_VERSION'} from "
+      . rfc822date($ENV{'POLICY_EPOCH'}));
 
 # get current debhelper compat level; do not name DH_COMPAT; causes conflict
 $ENV{'DEFAULT_DEBHELPER_COMPAT'} = get_recommended_debhelper_version();
-say
-"Using compat level $ENV{'DEFAULT_DEBHELPER_COMPAT'} as a default for packages built with debhelper.";
+say encode_utf8(
+"Using compat level $ENV{'DEFAULT_DEBHELPER_COMPAT'} as a default for packages built with debhelper."
+);
 
-say EMPTY;
+say encode_utf8(EMPTY);
 
 # print environment
 my @vars = sort keys %ENV;
-say 'Environment:' if @vars;
-for my $var (@vars) { say INDENT . "$var=$ENV{$var}" }
+say encode_utf8('Environment:') if @vars;
+for my $var (@vars) { say encode_utf8(INDENT . "$var=$ENV{$var}") }
 
-say EMPTY;
+say encode_utf8(EMPTY);
 
 my $status = 0;
 
@@ -205,7 +207,8 @@ my @descfiles
 my @specpaths = map { path($_)->parent->absolute->stringify } @descfiles;
 
 # prepare output directories
-say 'Preparing the sources for '. scalar @specpaths. ' test packages.'
+say encode_utf8(
+    'Preparing the sources for '. scalar @specpaths. ' test packages.')
   if @specpaths;
 
 my @prepqueue = map { path($_)->relative->stringify } @specpaths;
@@ -261,7 +264,7 @@ my $prepare = IO::Async::Function->new(
         my $error;
 
         # capture output
-        my $log = capture_merged {
+        my $log_bytes =capture_merged {
 
             try {
 
@@ -278,12 +281,15 @@ my $prepare = IO::Async::Function->new(
             };
         };
 
+        my $log = decode_utf8($log_bytes);
+
         # save log;
         my $logfile = "$sourcepath.log";
         path($logfile)->spew_utf8($log) if $log;
 
         # print something if there was an error
-        die(($log // EMPTY) . "Preparation failed for $specpath: $error")
+        die encode_utf8(
+            ($log // EMPTY) . "Preparation failed for $specpath: $error")
           if $error;
 
         return $specpath;
@@ -295,7 +301,7 @@ my $prepare = IO::Async::Function->new(
 my $loop = IO::Async::Loop->new;
 $loop->add($prepare);
 
-$SIG{INT} = sub { $prepare->stop; die "Caught a sigint $!" };
+$SIG{INT} = sub { $prepare->stop; die encode_utf8("Caught a sigint $!") };
 my @preptasks = map {$prepare->call(args => [$_])} sort @prepqueue;
 
 my $allprepared = Future->wait_all(@preptasks);
@@ -304,15 +310,15 @@ $loop->await($allprepared);
 
 my @failedprep = $allprepared->failed_futures;
 if (@failedprep) {
-    say EMPTY;
-    say 'Failed preparation tasks:';
-    say NEWLINE . $_->failure for @failedprep;
+    say encode_utf8(EMPTY);
+    say encode_utf8('Failed preparation tasks:');
+    say encode_utf8(NEWLINE . $_->failure) for @failedprep;
     exit 1;
 } else {
-    say 'Package sources are ready.';
+    say encode_utf8('Package sources are ready.');
 }
 
-say EMPTY;
+say encode_utf8(EMPTY);
 
 my $build = IO::Async::Function->new(
     code => sub {
@@ -329,12 +335,14 @@ my $build = IO::Async::Function->new(
         my $sourcepath = $relative->absolute($sourceroot)->relative->stringify;
         my $buildpath = $relative->absolute($buildroot)->relative->stringify;
 
-        my $sha1sums
-          = qx{cd $sourcepath; find . -type f -print0 | sort -z | xargs -0 sha1sum};
+        my $sha1sums_bytes
+          =qx{cd $sourcepath; find . -type f -print0 | sort -z | xargs -0 sha1sum};
+
+        my $sha1sums = decode_utf8($sha1sums_bytes);
 
         my $checksum_path = "$buildpath/source-files.sha1sums";
         if (-r $checksum_path) {
-            my $previous = path($checksum_path)->slurp;
+            my $previous = path($checksum_path)->slurp_utf8;
 
             # only rebuild if needed
             return
@@ -342,7 +350,7 @@ my $build = IO::Async::Function->new(
         }
 
         $0 = "Lintian build test: $specpath [$position/$total]";
-        say "Building in $buildpath [$position/$total]";
+        say encode_utf8("Building in $buildpath [$position/$total]");
 
         path($buildpath)->remove_tree
           if -e $buildpath;
@@ -354,7 +362,7 @@ my $build = IO::Async::Function->new(
 
         my $error;
 
-        my $log = capture_merged {
+        my $log_bytes = capture_merged {
 
             try {
                 # call runner
@@ -364,6 +372,8 @@ my $build = IO::Async::Function->new(
                 $error = $_;
             };
         };
+
+        my $log = decode_utf8($log_bytes);
 
         # delete old runner log
         my $betterlogpath = $buildpath . SLASH . $files->unfolded_value('Log');
@@ -379,11 +389,12 @@ my $build = IO::Async::Function->new(
         # add error if there was one
         path($betterlogpath)->append_utf8($error) if length $error;
 
-        path($checksum_path)->spew($sha1sums)
+        path($checksum_path)->spew_utf8($sha1sums)
           unless length $error;
 
         # print log and die on error
-        die(($log // EMPTY) . "Builder died for $buildpath: $error")
+        die encode_utf8(
+            ($log // EMPTY) . "Builder died for $buildpath: $error")
           if length $error;
 
         return $specpath;
@@ -394,7 +405,7 @@ my $build = IO::Async::Function->new(
 
 $loop->add($build);
 
-$SIG{INT} = sub { $build->stop; die "Caught a sigint $!" };
+$SIG{INT} = sub { $build->stop; die encode_utf8("Caught a sigint $!") };
 
 my $counter;
 my @buildtasks= map {$build->call(args => [$_, ++$counter, scalar @specpaths])}
@@ -406,21 +417,21 @@ $loop->await($allbuilt);
 
 my @failedbuilds = $allbuilt->failed_futures;
 if (@failedbuilds) {
-    say EMPTY;
-    say 'Failed build tasks:';
-    say NEWLINE . $_->failure for @failedbuilds;
+    say encode_utf8(EMPTY);
+    say encode_utf8('Failed build tasks:');
+    say encode_utf8(NEWLINE . $_->failure) for @failedbuilds;
     exit 1;
 } else {
-    say 'All test packages are up to date.';
+    say encode_utf8('All test packages are up to date.');
 }
 
-say EMPTY;
+say encode_utf8(EMPTY);
 
 my $processing_end = Time::Moment->from_string(gmtime->datetime . 'Z');
 my $duration = duration($processing_start->delta_seconds($processing_end));
-say "Building the test packages took $duration.";
+say encode_utf8("Building the test packages took $duration.");
 
-say EMPTY;
+say encode_utf8(EMPTY);
 
 exit 0;
 
@@ -433,7 +444,7 @@ exit 0;
 # Return the default number of parallelization to be used
 sub default_parallel {
     # check cpuinfo for the number of cores...
-    my $cpus = safe_qx('nproc');
+    my $cpus = decode_utf8(safe_qx('nproc'));
     if ($cpus =~ m/^\d+$/) {
         # Running up to twice the number of cores usually gets the most out
         # of the CPUs and disks but it might be too aggressive to be the
@@ -446,8 +457,8 @@ sub default_parallel {
 }
 
 sub usage {
-    print <<"END";
-Usage: $0 [options] [-j [<jobs>]] [<testset-directory>]
+    my $message =<<"END";
+-Usage: $0 [options] [-j [<jobs>]] [<testset-directory>]
 
     -d          Display additional debugging information
     --dump-logs Print build log to STDOUT, if a build fails.
@@ -461,6 +472,9 @@ Usage: $0 [options] [-j [<jobs>]] [<testset-directory>]
     the particular selection.  This parameter can be a list of selectors:
     what:<which>[,<what:...>]
 END
+
+    print encode_utf8($message);
+
     return;
 }
 

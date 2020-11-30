@@ -53,12 +53,12 @@ BEGIN {
     );
 }
 
-use Capture::Tiny qw(capture);
 use Carp;
 use File::Spec::Functions qw(abs2rel rel2abs);
 use File::Path qw(remove_tree);
 use Path::Tiny;
 use POSIX qw(locale_h strftime);
+use Unicode::UTF8 qw(encode_utf8 decode_utf8);
 
 use Lintian::Data;
 use Lintian::IO::Async qw(safe_qx);
@@ -76,10 +76,13 @@ Ensures that the output from dpkg-architecture has been cached.
 
 sub cache_dpkg_architecture_values {
 
-    my $output = safe_qx('dpkg-architecture');
+    my $output = decode_utf8(safe_qx('dpkg-architecture'));
 
-    die 'dpkg-architecture failed'
+    die encode_utf8('dpkg-architecture failed')
       if $?;
+
+    $output = decode_utf8($output)
+      if length $output;
 
     my @lines = split(/\n/, $output);
 
@@ -109,8 +112,9 @@ sub get_latest_policy {
       map { [$_, $STANDARDS->value($_)] } $STANDARDS->all;
 
     my $version = $STANDARDS[0][0]
-      // die 'Could not get latest policy version.';
-    my $epoch = $STANDARDS[0][1]// die 'Could not get latest policy date.';
+      // die encode_utf8('Could not get latest policy version.');
+    my $epoch = $STANDARDS[0][1]
+      // die encode_utf8('Could not get latest policy date.');
 
     return ($version, $epoch);
 }
@@ -162,7 +166,7 @@ sub copy_dir_contents {
     if (scalar path($source)->children) {
 
         system('cp', '-rp', "$source/.", '-t', $destination)== 0
-          or croak("Could not copy $source to $destination: $!");
+          or croak encode_utf8("Could not copy $source to $destination: $!");
     }
     return 1;
 }

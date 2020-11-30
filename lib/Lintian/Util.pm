@@ -56,6 +56,8 @@ BEGIN {
           drain_pipe
           drop_relative_prefix
           read_md5sums
+          utf8_clean_log
+          utf8_clean_bytes
           version_from_changelog
           $PKGNAME_REGEX
           $PKGREPACK_REGEX
@@ -589,6 +591,56 @@ sub read_md5sums {
     }
 
     return (\%checksums, \@errors);
+}
+
+=item utf8_clean_log
+
+=cut
+
+sub utf8_clean_log {
+    my ($bytes) = @_;
+
+    my $hex_sequence = sub {
+        my ($bytes) = @_;
+        return '{hex:' . sprintf('%vX', $bytes) . '}';
+    };
+
+    my $utf8_clean_word = sub {
+        my ($word) = @_;
+        return utf8_clean_bytes($word, SLASH, $hex_sequence);
+    };
+
+    my $utf8_clean_line = sub {
+        my ($line) = @_;
+        return utf8_clean_bytes($line, SPACE, $utf8_clean_word);
+    };
+
+    return utf8_clean_bytes($bytes, NEWLINE, $utf8_clean_line);
+}
+
+=item utf8_clean_bytes
+
+=cut
+
+sub utf8_clean_bytes {
+    my ($bytes, $separator, $utf8_clean_part) = @_;
+
+    my @utf8_clean_parts;
+
+    my $regex = quotemeta($separator);
+    my @parts = split(/$regex/, $bytes);
+
+    for my $part (@parts) {
+
+        if (valid_utf8($part)) {
+            push(@utf8_clean_parts, $part);
+
+        } else {
+            push(@utf8_clean_parts, $utf8_clean_part->($part));
+        }
+    }
+
+    return join($separator, @utf8_clean_parts);
 }
 
 =back

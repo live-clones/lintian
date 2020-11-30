@@ -51,6 +51,7 @@ BEGIN {
 
 use Carp;
 use List::Util qw(all);
+use Unicode::UTF8 qw(encode_utf8);
 
 use Test::Lintian::Output::Universal qw(universal_string order);
 
@@ -88,7 +89,7 @@ sub to_universal {
         # for binary packages, the type field is empty
         $type //= 'binary';
 
-        croak "Cannot parse line $line"
+        croak encode_utf8("Cannot parse line $line")
           unless all { length } ($code, $package, $type, $name);
 
         my $converted = universal_string($package, $type, $name, $details);

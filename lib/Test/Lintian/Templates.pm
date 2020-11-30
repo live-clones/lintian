@@ -63,6 +63,7 @@ use File::Find::Rule;
 use File::stat;
 use Path::Tiny;
 use Text::Template;
+use Unicode::UTF8 qw(encode_utf8);
 
 use Test::Lintian::ConfigFile qw(read_config);
 use Test::Lintian::Helper qw(copy_dir_contents);
@@ -96,18 +97,19 @@ sub copy_skeleton_template_sets {
         my ($relative, $name)
           =($set =~ qr/^\s*([^()\s]+)\s*\(([^()\s]+)\)\s*$/);
 
-        croak 'No template destination specified in skeleton.'
+        croak encode_utf8('No template destination specified in skeleton.')
           unless length $relative;
 
-        croak 'No template set specified in skeleton.'
+        croak encode_utf8('No template set specified in skeleton.')
           unless length $name;
 
         my $templatesetpath = "$testset/templates/$name";
-        croak "Cannot find template set '$name' at $templatesetpath."
+        croak encode_utf8(
+            "Cannot find template set '$name' at $templatesetpath.")
           unless -d $templatesetpath;
 
-        say "Installing template set '$name'"
-          . ($relative ne DOT ? " to ./$relative." : EMPTY);
+        say encode_utf8("Installing template set '$name'"
+              . ($relative ne DOT ? " to ./$relative." : EMPTY));
 
         # create directory
         my $destination = "$runpath/$relative";
@@ -158,31 +160,32 @@ sub fill_skeleton_templates {
         my ($relative, $name)
           =($target=~ qr/^\s*([^()\s]+)\s*(?:\(([^()\s]+)\))?\s*$/);
 
-        croak 'No fill destination specified in skeleton.'
+        croak encode_utf8('No fill destination specified in skeleton.')
           unless length $relative;
 
         if (length $name) {
 
             # template set
             my $whitelistpath = "$testset/whitelists/$name";
-            croak "Cannot find template whitelist '$name' at $whitelistpath"
+            croak encode_utf8(
+                "Cannot find template whitelist '$name' at $whitelistpath")
               unless -f $whitelistpath;
 
-            say EMPTY;
+            say encode_utf8(EMPTY);
 
-            say 'Generate files '
-              . ($relative ne DOT ? "in ./$relative " : EMPTY)
-              . "from templates using whitelist '$name'.";
+            say encode_utf8('Generate files '
+                  . ($relative ne DOT ? "in ./$relative " : EMPTY)
+                  . "from templates using whitelist '$name'.");
             my $whitelist = read_config($whitelistpath);
 
             my @candidates = $whitelist->trimmed_list('May-Generate');
             my $destination = "$runpath/$relative";
 
-            say 'Fill templates'
-              . ($relative ne DOT ? " in ./$relative" : EMPTY)
-              . COLON
-              . SPACE
-              . join(SPACE, @candidates);
+            say encode_utf8('Fill templates'
+                  . ($relative ne DOT ? " in ./$relative" : EMPTY)
+                  . COLON
+                  . SPACE
+                  . join(SPACE, @candidates));
 
             foreach my $candidate (@candidates) {
                 my $generated = rel2abs($candidate, $destination);
@@ -196,7 +199,7 @@ sub fill_skeleton_templates {
         }else {
 
             # single file
-            say "Filling template: $relative";
+            say encode_utf8("Filling template: $relative");
 
             my $generated = rel2abs($relative, $runpath);
             my $template = "$generated.in";
@@ -221,7 +224,7 @@ preserve files when no generation is necessary.
 sub fill_whitelisted_templates {
     my ($directory, $whitelistpath, $data, $data_epoch) = @_;
 
-    croak "No whitelist found at $whitelistpath"
+    croak encode_utf8("No whitelist found at $whitelistpath")
       unless -f $whitelistpath;
 
     my $whitelist = read_config($whitelistpath);
@@ -282,23 +285,27 @@ sub fill_template {
             DELIMITERS => ['[%', '%]'],
             SOURCE => $template
         );
-        croak("Cannot read template $template: $Text::Template::ERROR")
+        croak encode_utf8(
+            "Cannot read template $template: $Text::Template::ERROR")
           unless $filler;
 
         open(my $handle, '>', $generated)
-          or croak "Could not open file $generated: $!";
+          or croak encode_utf8("Could not open file $generated: $!");
         $filler->fill_in(
             OUTPUT => $handle,
             HASH => $data,
             DELIMITERS => $delimiters
           )
-          or croak("Could not create file $generated from template $template");
-        close($handle)
-          or carp "Could not close file $generated: $!";
+          or croak encode_utf8(
+            "Could not create file $generated from template $template");
+        close $handle
+          or carp encode_utf8("Could not close file $generated: $!");
 
         # transfer file permissions from template to generated file
-        my $stat = stat($template) or croak "stat $template failed: $!";
-        chmod $stat->mode, $generated or croak "chmod $generated failed: $!";
+        my $stat = stat($template)
+          or croak encode_utf8("stat $template failed: $!");
+        chmod $stat->mode, $generated
+          or croak encode_utf8("chmod $generated failed: $!");
 
         # set mtime to $threshold
         path($generated)->touch($threshold);

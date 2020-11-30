@@ -58,6 +58,7 @@ use Time::Duration;
 use Time::Moment;
 use Time::Piece;
 use Try::Tiny;
+use Unicode::UTF8 qw(encode_utf8 decode_utf8);
 
 use Lintian::IO::Async qw(safe_qx);
 
@@ -97,7 +98,7 @@ delete $ENV{$_} for @disallowed;
 if (($ENV{LINTIAN_TEST_INSTALLED} // 'no') eq 'yes') {
 
     $ENV{LINTIAN_UNDER_TEST} = realpath('/usr/bin/lintian')
-      // die 'Lintian is not installed';
+      // die encode_utf8('Lintian is not installed');
 
 } else {
     $ENV{LINTIAN_UNDER_TEST} = realpath($FindBin::RealBin . '/../bin/lintian');
@@ -105,7 +106,7 @@ if (($ENV{LINTIAN_TEST_INSTALLED} // 'no') eq 'yes') {
 
 $ENV{LINTIAN_BASE}
   = realpath(dirname(dirname($ENV{LINTIAN_UNDER_TEST})))
-  // die 'Cannot resolve LINTIAN_BASE';
+  // die encode_utf8('Cannot resolve LINTIAN_BASE');
 
 # options
 my $coverage;
@@ -138,7 +139,7 @@ unless (
 }
 
 # check number of arguments
-die('Please use -h for usage information.')
+die encode_utf8('Please use -h for usage information.')
   if @ARGV > 1;
 
 # get arguments
@@ -148,7 +149,7 @@ my ($testset) = @ARGV;
 $testset ||= 't';
 
 # check test set directory
-die "Cannot find testset directory $testset"
+die encode_utf8("Cannot find testset directory $testset")
   unless -d $testset;
 
 # make sure testset is an absolute path
@@ -162,7 +163,7 @@ make_path($outpath)
   unless -e $outpath;
 
 # make sure test work path is a directory
-die "Test work directory $outpath is not a directory"
+die encode_utf8("Test work directory $outpath is not a directory")
   unless -d $outpath;
 
 # make sure outpath is absolute
@@ -180,23 +181,24 @@ my @lintianfiles
 push(@lintianfiles, Cwd::realpath($ENV{'LINTIAN_UNDER_TEST'}));
 $ENV{'LINTIAN_EPOCH'}
   = max(map { -e $_ ? stat($_)->mtime : time } @lintianfiles);
-say 'Lintian modified on '. rfc822date($ENV{'LINTIAN_EPOCH'});
+say encode_utf8('Lintian modified on '. rfc822date($ENV{'LINTIAN_EPOCH'}));
 
 my $error;
-my $string = capture_merged {
+my $bytes = capture_merged {
     my @command = ($ENV{'LINTIAN_UNDER_TEST'}, '--version');
     system(@command) == 0
       or $error = "system @command failed: $?";
 };
-die $string . $error
+my $string = decode_utf8($bytes);
+die encode_utf8($string . $error)
   if length $error;
 
 chomp $string;
 my ($version) = $string =~ qr/^\S+\s+v(.+)$/;
-die 'Cannot get Lintian version' unless length $version;
-say "Version under test is $version.";
+die encode_utf8('Cannot get Lintian version') unless length $version;
+say encode_utf8("Version under test is $version.");
 
-say EMPTY;
+say encode_utf8(EMPTY);
 
 # set environment for coverage
 if (defined $coverage) {
@@ -224,7 +226,7 @@ $verbose = 1 + $debug if $debug;
 
 # can be 0 without value ("-j"), and -1 if option was not specified at all
 $numjobs = default_parallel() if $numjobs <= 0;
-say "Running up to $numjobs tests concurrently"
+say encode_utf8("Running up to $numjobs tests concurrently")
   if $numjobs > 1 && $verbose >= 2;
 
 $ENV{'DUMP_LOGS'} = $dump_logs//NO ? YES : NO;
@@ -235,23 +237,25 @@ $ENV{'DPKG_NLS'} = 0;
 
 my $helperpath = "$testset/../private";
 if (-d $helperpath) {
-    my $helpers = rel2abs($helperpath)// die("Cannot resolve $helperpath: $!");
+    my $helpers = rel2abs($helperpath)
+      // die encode_utf8("Cannot resolve $helperpath: $!");
     $ENV{'PATH'} = "$helpers:$ENV{'PATH'}";
 }
 
 # get architecture
 cache_dpkg_architecture_values();
-say "Host architecture is $ENV{'DEB_HOST_ARCH'}.";
+say encode_utf8("Host architecture is $ENV{'DEB_HOST_ARCH'}.");
 
 # get latest policy version and date
 ($ENV{'POLICY_VERSION'}, $ENV{'POLICY_EPOCH'}) = get_latest_policy();
-say "Latest policy version is $ENV{'POLICY_VERSION'} from "
-  . rfc822date($ENV{'POLICY_EPOCH'});
+say encode_utf8("Latest policy version is $ENV{'POLICY_VERSION'} from "
+      . rfc822date($ENV{'POLICY_EPOCH'}));
 
 # get current debhelper compat level; do not name DH_COMPAT; causes conflict
 $ENV{'DEFAULT_DEBHELPER_COMPAT'} = get_recommended_debhelper_version();
-say
-"Using compat level $ENV{'DEFAULT_DEBHELPER_COMPAT'} as a default for packages built with debhelper.";
+say encode_utf8(
+"Using compat level $ENV{'DEFAULT_DEBHELPER_COMPAT'} as a default for packages built with debhelper."
+);
 
 # get harness date, including templates, skeletons and whitelists
 my @harnessparts
@@ -262,16 +266,16 @@ my $harness_files_epoch
   = max(map { -e $_ ? stat($_)->mtime : time } @harnessfiles);
 $ENV{'HARNESS_EPOCH'}
   = max(our_modification_epoch, perl_modification_epoch, $harness_files_epoch);
-say 'Harness modified on '. rfc822date($ENV{'HARNESS_EPOCH'});
+say encode_utf8('Harness modified on '. rfc822date($ENV{'HARNESS_EPOCH'}));
 
-say EMPTY;
+say encode_utf8(EMPTY);
 
 # print environment
 my @vars = sort keys %ENV;
-say 'Environment:' if @vars;
-for my $var (@vars) { say INDENT . "$var=$ENV{$var}" }
+say encode_utf8('Environment:') if @vars;
+for my $var (@vars) { say encode_utf8(INDENT . "$var=$ENV{$var}") }
 
-say EMPTY;
+say encode_utf8(EMPTY);
 
 my $status = 0;
 
@@ -313,8 +317,8 @@ push(@runscripts, @requiredscripts);
 # make all paths relative
 @runscripts = map { abs2rel($_) } @runscripts;
 
-say 'Running selected and required Perl test scripts.';
-say EMPTY;
+say encode_utf8('Running selected and required Perl test scripts.');
+say encode_utf8(EMPTY);
 
 # run scripts through harness
 $harness->aggregate_tests($aggregator, sort @runscripts);
@@ -325,7 +329,7 @@ unless (!@runscripts || $aggregator->all_passed || $keep_going) {
     exit 1;
 }
 
-say EMPTY;
+say encode_utf8(EMPTY);
 
 # find test paths
 my @testpaths = find_selected_lintian_testpaths($testset, $onlyrun);
@@ -352,7 +356,7 @@ my $filleval = IO::Async::Function->new(
         my $error;
 
         # capture output
-        my $log = capture_merged {
+        my $log_bytes = capture_merged {
 
             try {
 
@@ -368,7 +372,7 @@ my $filleval = IO::Async::Function->new(
                 my $traversal = Cwd::realpath("$buildpath/subject");
 
                 if (length $traversal) {
-                    die "Cannot link to subject in $buildpath"
+                    die encode_utf8("Cannot link to subject in $buildpath")
                       if system("cd $evalpath; ln -s $traversal subject");
                 }
 
@@ -378,12 +382,15 @@ my $filleval = IO::Async::Function->new(
             };
         };
 
+        my $log = decode_utf8($log_bytes);
+
         # save log;
         my $logfile = "$evalpath/log";
         path($logfile)->spew_utf8($log) if $log;
 
         # print something if there was an error
-        die(($log // EMPTY) . "Preparation failed for $specpath: $error")
+        die encode_utf8(
+            ($log // EMPTY) . "Preparation failed for $specpath: $error")
           if $error;
 
         return $specpath;
@@ -395,7 +402,7 @@ my $filleval = IO::Async::Function->new(
 my $loop = IO::Async::Loop->new;
 $loop->add($filleval);
 
-$SIG{INT} = sub { $filleval->stop; die "Caught a sigint $!" };
+$SIG{INT} = sub { $filleval->stop; die encode_utf8("Caught a sigint $!") };
 
 my @filltasks = map {$filleval->call(args => [$_])} sort @testpaths;
 
@@ -411,10 +418,10 @@ my @workpaths
 # if ($platforms ne 'any') {
 #     my @wildcards = split(SPACE, $platforms);
 #     my @matches= map {
-#         qx{dpkg-architecture -a $ENV{'DEB_HOST_ARCH'} -i $_; echo -n \$?}
+#         decode_utf8(qx{dpkg-architecture -a $ENV{'DEB_HOST_ARCH'} -i $_; echo -n \$?})
 #     } @wildcards;
 #     unless (any { $_ == 0 } @matches) {
-#         say 'Architecture mismatch';
+#         say encode_utf8('Architecture mismatch');
 #         return;
 #     }
 # }
@@ -428,9 +435,9 @@ for my $path (@workpaths) {
 
     my @runners = File::Find::Rule->file->name('*.t')->in($path);
 
-    die "No runner in $path"
+    die encode_utf8("No runner in $path")
       unless scalar @runners;
-    die "More than one runner in $path"
+    die encode_utf8("More than one runner in $path")
       if scalar @runners > 1;
 
     push(@workscripts, @runners);
@@ -442,18 +449,19 @@ $harness->aggregate_tests($aggregator, sort @workscripts);
 $aggregator->stop;
 $formatter->summary($aggregator);
 
-say EMPTY;
+say encode_utf8(EMPTY);
 
 my $processing_end = Time::Moment->from_string(gmtime->datetime . 'Z');
 my $duration = duration($processing_start->delta_seconds($processing_end));
-say "The test suite ran for $duration.";
+say encode_utf8("The test suite ran for $duration.");
 
 $status = 1
   unless $aggregator->all_passed;
 
 if (-t STDOUT && !$unattended) {
     my @failed = $aggregator->failed;
-    say 'Offering to re-calibrate the tags expected in tests that failed.'
+    say encode_utf8(
+        'Offering to re-calibrate the tags expected in tests that failed.')
       if @failed;
 
     my $accept_all;
@@ -467,8 +475,9 @@ if (-t STDOUT && !$unattended) {
         my $relative = abs2rel($workpath, $evalroot);
         my $testpath = abs2rel(rel2abs($relative, "$testset/recipes"));
 
-        say EMPTY;
-        say 'Failed test: ' . colored($testpath, 'bold white on_blue');
+        say encode_utf8(EMPTY);
+        say encode_utf8(
+            'Failed test: ' . colored($testpath, 'bold white on_blue'));
 
         my $match_strategy = $testcase->unfolded_value('Match-Strategy');
 
@@ -478,8 +487,8 @@ if (-t STDOUT && !$unattended) {
             next
               unless -r $diffpath;
 
-            my $diff = path($diffpath)->slurp;
-            print $diff;
+            my $diff = path($diffpath)->slurp_utf8;
+            print encode_utf8($diff);
 
         } elsif ($match_strategy eq 'literal') {
 
@@ -488,21 +497,24 @@ if (-t STDOUT && !$unattended) {
               unless -r $actualpath;
             my @command
               = ('diff', '-uN', "$testpath/eval/literal", $actualpath);
-            say join(SPACE, @command);
+            say encode_utf8(join(SPACE, @command));
             system(@command);
 
         } else {
-            say
-"Do not know how to fix tests using matching strategy $match_strategy.";
+            say encode_utf8(
+"Do not know how to fix tests using matching strategy $match_strategy."
+            );
             next;
         }
 
         unless ($accept_all) {
 
-            print
-'>>>  Fix test (y), accept all (a), do not fix (n), quit (q/default)? ';
+            print encode_utf8(
+'>>>  Fix test (y), accept all (a), do not fix (n), quit (q/default)? '
+            );
 
-            my $decision = <STDIN>;
+            my $decision_bytes = <STDIN>;
+            my $decision = decode_utf8($decision_bytes);
             chomp $decision;
 
             last
@@ -530,11 +542,11 @@ if (-t STDOUT && !$unattended) {
             unshift(@adjustargs, '-i')
               unless $accept_all;
 
-            die "Cannot run tagadjust for $testpath"
+            die encode_utf8("Cannot run tagadjust for $testpath")
               if system('tagadjust', @adjustargs);
 
             # also copy the new tags to workpath; no need to rebuild
-            die "Cannot copy updated tags to $workpath"
+            die encode_utf8("Cannot copy updated tags to $workpath")
               if system('cp', $tagspath, "$workpath/tags");
 
         } elsif ($match_strategy eq 'literal') {
@@ -543,19 +555,20 @@ if (-t STDOUT && !$unattended) {
             next
               unless -r $actualpath;
 
-            die "Cannot copy to accept literal output for $testpath"
+            die encode_utf8(
+                "Cannot copy to accept literal output for $testpath")
               if system('cp', $actualpath, "$testpath/eval/literal");
 
         }
     }
 
-    say NEWLINE . 'Accepted all remaining tag changes.'
+    say encode_utf8(NEWLINE . 'Accepted all remaining tag changes.')
       if $accept_all;
 
 } else {
     my @crashed = $aggregator->parse_errors;
 
-    say 'Showing full logs for tests with parse errors.'
+    say encode_utf8('Showing full logs for tests with parse errors.')
       if @crashed;
 
     for my $absolutepath (@crashed) {
@@ -567,11 +580,11 @@ if (-t STDOUT && !$unattended) {
         next
           unless -e $logpath;
 
-        say EMPTY;
-        say "Log for test $scriptpath:";
+        say encode_utf8(EMPTY);
+        say encode_utf8("Log for test $scriptpath:");
 
-        my $log = path($logpath)->slurp;
-        print $log;
+        my $log = path($logpath)->slurp_utf8;
+        print encode_utf8($log);
     }
 }
 
@@ -582,7 +595,7 @@ unless (scalar @runscripts - scalar @requiredscripts + scalar @workscripts
     exit 1;
 }
 
-say EMPTY;
+say encode_utf8(EMPTY);
 
 exit $status;
 
@@ -595,7 +608,7 @@ exit $status;
 # Return the default number of parallelization to be used
 sub default_parallel {
     # check cpuinfo for the number of cores...
-    my $cpus = safe_qx('nproc');
+    my $cpus = decode_utf8(safe_qx('nproc'));
     if ($cpus =~ m/^\d+$/) {
         # Running up to twice the number of cores usually gets the most out
         # of the CPUs and disks but it might be too aggressive to be the
@@ -608,7 +621,7 @@ sub default_parallel {
 }
 
 sub usage {
-    print <<"END";
+    my $message =<<"END";
 Usage: $0 [options] [-j [<jobs>]] <testset-directory>
 
     --onlyrun   Select only some tests for a quick check
@@ -644,12 +657,16 @@ Test artifacts are cached in --work-dir [default: debian/test-out] and
 will generally be reused to save time. To recreate the test packages,
 run 'private/build-test-packages'.
 END
+
+    print encode_utf8($message);
+
     return;
 }
 
 sub quick_hint {
     my ($selection) = @_;
-    print <<"END";
+
+    my $message =<<"END";
 
 No tests were selected by your filter:
 
@@ -663,6 +680,9 @@ selector like:
 You can also use 'minimal:', which runs only the tests that cannot
 be turned off, such as the internal tests for the harness.
 END
+
+    print encode_utf8($message);
+
     return;
 }
 

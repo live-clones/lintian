@@ -74,7 +74,7 @@ use File::Basename qw(basename);
 use File::Find ();
 use List::MoreUtils qw{any};
 use Path::Tiny;
-use Unicode::UTF8 qw(valid_utf8 decode_utf8);
+use Unicode::UTF8 qw(valid_utf8 decode_utf8 encode_utf8);
 
 use Lintian::Spelling qw(check_spelling);
 use Lintian::Data;
@@ -313,7 +313,7 @@ sub test_load_profiles {
     my $sre;
     my %opt = ('no_chdir' => 1,);
     if (not defined $absdir) {
-        die "$dir cannot be resolved: $!";
+        die encode_utf8("$dir cannot be resolved: $!");
     }
     $absdir = "$absdir/profiles";
     $sre = qr,\Q$absdir\E/,;
@@ -579,7 +579,7 @@ sub test_tags_implemented {
             next;
         }
 
-        $codestr = path($check)->slurp;
+        $codestr = path($check)->slurp_utf8;
 
         for my $tag (@tags) {
             push @missing, $tag unless $codestr =~ /\Q$tag/;
@@ -620,7 +620,7 @@ sub load_profile_for_test {
     # load a specific one - then current one will do.
     return if $PROFILE and not $profname;
 
-    die "Cannot load two profiles.\n"
+    die encode_utf8("Cannot load two profiles.\n")
       if $PROFILE and $PROFILE->name ne $profname;
 
     return if $PROFILE; # Already loaded? stop here

@@ -137,7 +137,7 @@ for my $tagpath (@tagpaths) {
       unless defined $tag;
 
     my $html_description;
-    open(my $fh, '>:encoding(UTF-8)', \$html_description);
+    open(my $fh, '>:utf8_strict', \$html_description);
     select $fh;
 
     print "<!DOCTYPE html><head><title>$tagname</title></head><body>";

@@ -75,6 +75,7 @@ use File::Spec::Functions qw(abs2rel);
 use File::stat;
 use List::Util qw(min max);
 use Path::Tiny;
+use Unicode::UTF8 qw(encode_utf8);
 
 use Test::Lintian::Helper qw(rfc822date);
 
@@ -97,7 +98,8 @@ sub new {
 
     my $self = bless {}, $class;
 
-    croak 'Cannot proceed without a path.' unless exists $params{path};
+    croak encode_utf8('Cannot proceed without a path.')
+      unless exists $params{path};
     $self->{path} = $params{path};
 
     $self->{exclude} = [];
@@ -172,14 +174,15 @@ sub run {
       = { map { $_ => stat($_)->mtime }
           File::Find::Rule->file->in($self->{path}) };
 
-    say 'Found the following file modification times (most recent first):'
+    say encode_utf8(
+        'Found the following file modification times (most recent first):')
       if $self->{verbose};
 
     my @ordered= reverse sort { $self->{mtimes}{$a} <=> $self->{mtimes}{$b} }
       keys %{$self->{mtimes}};
     foreach my $file (@ordered) {
         my $relative = abs2rel($file, $self->{path});
-        say rfc822date($self->{mtimes}{$file}) . " : $relative"
+        say encode_utf8(rfc822date($self->{mtimes}{$file}) . " : $relative")
           if $self->{verbose};
     }
 
@@ -220,61 +223,66 @@ sub _process_remaining_stages {
         # get good paths that will match those of File::Find
         @exclude = map { path($_)->realpath } @exclude;
 
-        say EMPTY if $self->{verbose};
+        say encode_utf8(EMPTY) if $self->{verbose};
 
         my @relative = sort map { abs2rel($_, $self->{path}) } @products;
-        say 'Considering production of: ' . join(SPACE, @relative)
+        say encode_utf8('Considering production of: ' . join(SPACE, @relative))
           if $self->{verbose};
 
-        say 'Excluding: '
-          . join(SPACE, sort map { abs2rel($_, $self->{path}) } @exclude)
+        say encode_utf8('Excluding: '
+              . join(SPACE, sort map { abs2rel($_, $self->{path}) } @exclude))
           if $self->{verbose};
 
         my %relevant = %{$self->{mtimes}};
         delete @relevant{@exclude};
 
-   # my @ordered= reverse sort { $relevant{$a} <=> $relevant{$b} }
-   #   keys %relevant;
-   # foreach my $file (@ordered) {
-   #   say rfc822date($relevant{$file}) . ' : ' . abs2rel($file, $self->{path})
-   #     if $self->{verbose};
-   # }
+# my @ordered= reverse sort { $relevant{$a} <=> $relevant{$b} }
+#   keys %relevant;
+# foreach my $file (@ordered) {
+#   say encode_utf8(rfc822date($relevant{$file}) . ' : ' . abs2rel($file, $self->{path}))
+#     if $self->{verbose};
+# }
 
-        say EMPTY if $self->{verbose};
+        say encode_utf8(EMPTY) if $self->{verbose};
 
         my $file_epoch = (max(values %relevant))//time;
-        say 'Input files modified on      : '. rfc822date($file_epoch)
+        say encode_utf8(
+            'Input files modified on      : '. rfc822date($file_epoch))
           if $self->{verbose};
 
         my $systemic_minimum_epoch = $self->{minimum_epoch} // 0;
-        say 'Systemic minimum epoch is    : '
-          . rfc822date($systemic_minimum_epoch)
+        say encode_utf8('Systemic minimum epoch is    : '
+              . rfc822date($systemic_minimum_epoch))
           if $self->{verbose};
 
         my $stage_minimum_epoch = $stage{minimum_epoch} // 0;
-        say 'Stage minimum epoch is       : '. rfc822date($stage_minimum_epoch)
+        say encode_utf8('Stage minimum epoch is       : '
+              . rfc822date($stage_minimum_epoch))
           if $self->{verbose};
 
         my $threshold
           = max($stage_minimum_epoch, $systemic_minimum_epoch, $file_epoch);
-        say 'Rebuild threshold is         : '. rfc822date($threshold)
+        say encode_utf8(
+            'Rebuild threshold is         : '. rfc822date($threshold))
           if $self->{verbose};
 
-        say EMPTY if $self->{verbose};
+        say encode_utf8(EMPTY) if $self->{verbose};
 
         my $product_epoch
           = min(map { -f $_ ? stat($_)->mtime : 0 } @products);
         if($product_epoch) {
-            say 'Products modified on         : '. rfc822date($product_epoch)
+            say encode_utf8(
+                'Products modified on         : '. rfc822date($product_epoch))
               if $self->{verbose};
         } else {
-            say 'At least one product is not present.' if $self->{verbose};
+            say encode_utf8('At least one product is not present.')
+              if $self->{verbose};
         }
 
         # not producing if times are equal; resolution 1 sec
         if ($product_epoch < $threshold) {
 
-            say 'Producing: ' . join(SPACE, @relative)
+            say encode_utf8('Producing: ' . join(SPACE, @relative))
               if $self->{verbose};
 
             $stage{build}->() if exists $stage{build};
@@ -284,7 +292,8 @@ sub _process_remaining_stages {
 
         } else {
 
-            say 'Skipping production of: ' . join(SPACE, @relative)
+            say encode_utf8(
+                'Skipping production of: ' . join(SPACE, @relative))
               if $self->{verbose};
 
             $stage{skip}->() if exists $stage{skip};

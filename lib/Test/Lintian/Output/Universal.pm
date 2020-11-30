@@ -60,6 +60,7 @@ use Carp;
 use List::MoreUtils qw(uniq);
 use List::Util qw(all);
 use Path::Tiny;
+use Unicode::UTF8 qw(encode_utf8);
 
 use constant SPACE => q{ };
 use constant EMPTY => q{};
@@ -141,7 +142,7 @@ sub parse_line {
     my ($package, $type, $name, $details)
       = $line =~ qr/^(\S+)\s+\(([^)]+)\):\s+(\S+)(?:\s+(.*))?$/;
 
-    croak "Cannot parse line $line"
+    croak encode_utf8("Cannot parse line $line")
       unless all { length } ($package, $type, $name);
 
     return ($package, $type, $name, $details);
@@ -154,11 +155,11 @@ sub parse_line {
 sub universal_string {
     my ($package, $type, $name, $details) = @_;
 
-    croak 'Need a package name'
+    croak encode_utf8('Need a package name')
       unless length $package;
-    croak 'Need a package type'
+    croak encode_utf8('Need a package type')
       unless length $type;
-    croak 'Need a tag name'
+    croak encode_utf8('Need a tag name')
       unless length $name;
 
     my $line

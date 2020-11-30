@@ -48,9 +48,7 @@ BEGIN {
     );
 }
 
-use Data::Dumper;
-
-use Capture::Tiny qw(capture_merged);
+use Carp;
 use Cwd qw(getcwd);
 use File::Copy;
 use File::Find::Rule;
@@ -60,6 +58,7 @@ use List::Util qw(max);
 use Path::Tiny;
 use Text::Template;
 use Try::Tiny;
+use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Deb822::Section;
 
@@ -88,8 +87,8 @@ in SPEC_PATH. The optional parameter REBUILD forces a rebuild if true.
 sub prepare {
     my ($specpath, $sourcepath, $testset, $force_rebuild)= @_;
 
-    say '------- Preparation starts here -------';
-    say "Work directory is $sourcepath.";
+    say encode_utf8('------- Preparation starts here -------');
+    say encode_utf8("Work directory is $sourcepath.");
 
     # for template fill, earliest date without timewarp warning
     my $data_epoch = $ENV{'POLICY_EPOCH'}//time;
@@ -99,7 +98,8 @@ sub prepare {
 
     # read default file names
     my $defaultfilespath = "$defaultspath/files";
-    die "Cannot find $defaultfilespath" unless -f $defaultfilespath;
+    die encode_utf8("Cannot find $defaultfilespath")
+      unless -f $defaultfilespath;
 
     # read file and adjust data age threshold
     my $files = read_config($defaultfilespath);
@@ -120,35 +120,36 @@ sub prepare {
     my $testcase = Lintian::Deb822::Section->new;
     $testcase->set($_, $defaults->value($_)) for $defaults->names;
 
-    die "Name missing for $specpath"
+    die encode_utf8("Name missing for $specpath")
       unless $desc->exists('Testname');
 
-    die 'Outdated test specification (./debian/debian exists).'
+    die encode_utf8('Outdated test specification (./debian/debian exists).')
       if -e "$specpath/debian/debian";
 
     if (-d $sourcepath) {
 
         # check for old build artifacts
         my $buildstamp = "$sourcepath/build-stamp";
-        say 'Found old build artifact.' if -f $buildstamp;
+        say encode_utf8('Found old build artifact.') if -f $buildstamp;
 
         # check for old debian/debian directory
         my $olddebiandir = "$sourcepath/debian/debian";
-        say 'Found old debian/debian directory.' if -e $olddebiandir;
+        say encode_utf8('Found old debian/debian directory.')
+          if -e $olddebiandir;
 
         # check for rebuild demand
-        say 'Forcing rebuild.' if $force_rebuild;
+        say encode_utf8('Forcing rebuild.') if $force_rebuild;
 
         # delete work directory
         if($force_rebuild || -f $buildstamp || -e $olddebiandir) {
-            say "Removing work directory $sourcepath.";
+            say encode_utf8("Removing work directory $sourcepath.");
             remove_tree($sourcepath);
         }
     }
 
     # create work directory
     unless (-d $sourcepath) {
-        say "Creating directory $sourcepath.";
+        say encode_utf8("Creating directory $sourcepath.");
         make_path($sourcepath);
     }
 
@@ -176,7 +177,8 @@ sub prepare {
 
     # copy test specification to working directory
     my $offset = path($specpath)->relative($testset)->stringify;
-    say "Copy test specification $offset from $testset to $sourcepath.";
+    say encode_utf8(
+        "Copy test specification $offset from $testset to $sourcepath.");
     copy_dir_contents($specpath, $sourcepath);
 
     my $valuefolder = $testcase->unfolded_value('Fill-Values-Folder');
@@ -211,20 +213,20 @@ sub prepare {
     $testcase->set('Date', rfc822date($data_epoch))
       unless $testcase->exists('Date');
 
-    warn 'Cannot override Architecture: in test '
-      . $testcase->unfolded_value('Testname')
+    warn encode_utf8('Cannot override Architecture: in test '
+          . $testcase->unfolded_value('Testname'))
       if $testcase->exists('Architecture');
 
-    die 'DEB_HOST_ARCH is not set.'
+    die encode_utf8('DEB_HOST_ARCH is not set.')
       unless defined $ENV{'DEB_HOST_ARCH'};
     $testcase->set('Host-Architecture', $ENV{'DEB_HOST_ARCH'});
 
-    die 'Could not get POLICY_VERSION.'
+    die encode_utf8('Could not get POLICY_VERSION.')
       unless defined $ENV{'POLICY_VERSION'};
     $testcase->set('Standards-Version', $ENV{'POLICY_VERSION'})
       unless $testcase->exists('Standards-Version');
 
-    die 'Could not get DEFAULT_DEBHELPER_COMPAT.'
+    die encode_utf8('Could not get DEFAULT_DEBHELPER_COMPAT.')
       unless defined $ENV{'DEFAULT_DEBHELPER_COMPAT'};
     $testcase->set('Dh-Compat-Level', $ENV{'DEFAULT_DEBHELPER_COMPAT'})
       unless $testcase->exists('Dh-Compat-Level');
@@ -253,13 +255,13 @@ sub prepare {
     }
 
     # calculate build dependencies
-    warn 'Cannot override Build-Depends:'
+    warn encode_utf8('Cannot override Build-Depends:')
       if $testcase->exists('Build-Depends');
     combine_fields($testcase, 'Build-Depends', COMMA . SPACE,
         'Default-Build-Depends', 'Extra-Build-Depends');
 
     # calculate build conflicts
-    warn 'Cannot override Build-Conflicts:'
+    warn encode_utf8('Cannot override Build-Conflicts:')
       if $testcase->exists('Build-Conflicts');
     combine_fields($testcase, 'Build-Conflicts', COMMA . SPACE,
         'Default-Build-Conflicts', 'Extra-Build-Conflicts');
@@ -270,7 +272,7 @@ sub prepare {
     $hashref = fill_hash_from_hash($hashref);
     write_hash_to_deb822_section($hashref, $testcase);
 
-    say EMPTY;
+    say encode_utf8(EMPTY);
 
     # fill remaining templates
     fill_skeleton_templates($testcase->value('Fill-Targets'),
@@ -292,10 +294,10 @@ sub prepare {
     # set mtime for dynamic test data
     $rundesc->touch($data_epoch);
 
-    say EMPTY;
+    say encode_utf8(EMPTY);
 
     # announce data age
-    say 'Data epoch is : '. rfc822date($data_epoch);
+    say encode_utf8('Data epoch is : '. rfc822date($data_epoch));
 
     return;
 }
@@ -310,15 +312,16 @@ in SPEC_PATH. The optional parameter REBUILD forces a rebuild if true.
 sub filleval {
     my ($specpath, $evalpath, $testset, $force_rebuild)= @_;
 
-    say '------- Filling evaluation starts here -------';
-    say "Evaluation directory is $evalpath.";
+    say encode_utf8('------- Filling evaluation starts here -------');
+    say encode_utf8("Evaluation directory is $evalpath.");
 
     # read defaults
     my $defaultspath = "$testset/defaults";
 
     # read default file names
     my $defaultfilespath = "$defaultspath/files";
-    die "Cannot find $defaultfilespath" unless -f $defaultfilespath;
+    die encode_utf8("Cannot find $defaultfilespath")
+      unless -f $defaultfilespath;
 
     # read file with default file names
     my $files = read_config($defaultfilespath);
@@ -337,7 +340,7 @@ sub filleval {
     my $testcase = Lintian::Deb822::Section->new;
     $testcase->set($_, $defaults->value($_)) for $defaults->names;
 
-    die "Name missing for $specpath"
+    die encode_utf8("Name missing for $specpath")
       unless $desc->exists('Testname');
 
     # delete old test scripts
@@ -370,7 +373,8 @@ sub filleval {
 
     # copy test specification to working directory
     my $offset = path($specpath)->relative($testset)->stringify;
-    say "Copy test specification $offset from $testset to $evalpath.";
+    say encode_utf8(
+        "Copy test specification $offset from $testset to $evalpath.");
     copy_dir_contents($specpath, $evalpath);
 
     my $valuefolder = $testcase->unfolded_value('Fill-Values-Folder');
@@ -397,7 +401,7 @@ sub filleval {
     $hashref = fill_hash_from_hash($hashref);
     write_hash_to_deb822_section($hashref, $testcase);
 
-    say EMPTY;
+    say encode_utf8(EMPTY);
 
     # fill remaining templates
     fill_skeleton_templates($testcase->value('Fill-Targets'),
@@ -413,7 +417,7 @@ sub filleval {
       = path($evalpath)->child($files->unfolded_value('Test-Specification'));
     write_config($testcase, $rundesc->stringify);
 
-    say EMPTY;
+    say encode_utf8(EMPTY);
 
     return;
 }
@@ -505,12 +509,13 @@ sub fill_hash_from_hash {
 
         my $template = $origin{$key} // EMPTY;
         my $filler= Text::Template->new(TYPE => 'STRING', SOURCE => $template);
-        croak("Cannot read template $template: $Text::Template::ERROR")
+        croak encode_utf8(
+            "Cannot read template $template: $Text::Template::ERROR")
           unless $filler;
 
         my $generated
           = $filler->fill_in(HASH => \%origin, DELIMITERS => $delimiters);
-        croak("Could not create string from template $template")
+        croak encode_utf8("Could not create string from template $template")
           unless defined $generated;
         $destination{$key} = $generated;
     }

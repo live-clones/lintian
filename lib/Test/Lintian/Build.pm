@@ -47,8 +47,13 @@ BEGIN {
 }
 
 use Carp;
-use Path::Tiny;
+use Cwd;
+use IPC::Run3;
 use List::MoreUtils qw(any);
+use Path::Tiny;
+use Unicode::UTF8 qw(valid_utf8 encode_utf8);
+
+use Lintian::Util qw(utf8_clean_log);
 
 use Test::Lintian::ConfigFile qw(read_config);
 use Test::Lintian::Hooks qw(find_missing_prerequisites);
@@ -74,7 +79,7 @@ sub build_subject {
     my ($sourcepath, $buildpath) = @_;
 
     # check test architectures
-    die 'DEB_HOST_ARCH is not set.'
+    die encode_utf8('DEB_HOST_ARCH is not set.')
       unless (length $ENV{'DEB_HOST_ARCH'});
 
     # read dynamic file names
@@ -90,14 +95,14 @@ sub build_subject {
     my $skipfile = "$sourcepath/skip";
     if (-f $skipfile) {
         my $reason = path($skipfile)->slurp_utf8 || 'No reason given';
-        say "Skipping test: $reason";
+        say encode_utf8("Skipping test: $reason");
         return;
     }
 
     # skip if missing prerequisites
     my $missing = find_missing_prerequisites($testcase);
     if (length $missing) {
-        say "Missing prerequisites: $missing";
+        say encode_utf8("Missing prerequisites: $missing");
         return;
     }
 
@@ -107,23 +112,40 @@ sub build_subject {
     path($buildpath)->mkpath;
 
     # get lintian subject
-    croak 'Could not get subject of Lintian examination.'
+    croak encode_utf8('Could not get subject of Lintian examination.')
       unless $testcase->exists('Build-Product');
 
     my $build_product = $testcase->unfolded_value('Build-Product');
-
     my $subject = "$buildpath/$build_product";
 
-    if ($testcase->exists('Build-Command')) {
-        my $command
-          = "cd $buildpath; " . $testcase->unfolded_value('Build-Command');
-        croak "$command failed" if system($command);
+    say encode_utf8("Building in $buildpath");
+
+    my $command = $testcase->unfolded_value('Build-Command');
+    if (length $command) {
+
+        my $savedir = Cwd::getcwd;
+        chdir($buildpath);
+
+        my $combined_bytes;
+
+        # array command breaks test files/contents/contains-build-path
+        run3($command, \undef, \$combined_bytes, \$combined_bytes);
+        my $status = ($? >> 8);
+
+        chdir($savedir);
+
+        # sanitize log so it is UTF-8 from here on
+        my $utf8_bytes = utf8_clean_log($combined_bytes);
+        print $utf8_bytes;
+
+        croak encode_utf8("$command failed")
+          if $status;
     }
 
-    croak 'Build was unsuccessful.'
+    croak encode_utf8('Build was unsuccessful.')
       unless -f $subject;
 
-    die "Cannot link to build product $build_product"
+    die encode_utf8("Cannot link to build product $build_product")
       if system("cd $buildpath; ln -s $build_product subject");
 
     return;

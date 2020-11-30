@@ -50,6 +50,7 @@ BEGIN {
 use Carp;
 use List::MoreUtils qw(any);
 use Path::Tiny;
+use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Deb822::File;
 
@@ -71,12 +72,12 @@ returns it. When also passed a HASHREF, will fill that instead.
 sub read_config {
     my ($configpath) = @_;
 
-    croak "Cannot find file $configpath."
+    croak encode_utf8("Cannot find file $configpath.")
       unless -f $configpath;
 
     my $deb822 = Lintian::Deb822::File->new;
     my @sections = $deb822->read_file($configpath);
-    die "$configpath does not have exactly one paragraph"
+    die encode_utf8("$configpath does not have exactly one paragraph")
       unless scalar @sections == 1;
 
     my $config = $sections[0];

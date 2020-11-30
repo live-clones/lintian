@@ -55,6 +55,7 @@ use List::MoreUtils qw(uniq none);
 use List::Util qw(any all);
 use Path::Tiny;
 use Text::CSV;
+use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Profile;
 use Test::Lintian::ConfigFile qw(read_config);
@@ -81,7 +82,7 @@ sub get_suitepath {
     my ($basepath, $suite) = @_;
     my $suitepath = rel2abs($suite, $basepath);
 
-    croak("Cannot find suite $suite in $basepath")
+    croak encode_utf8("Cannot find suite $suite in $basepath")
       unless -d $suitepath;
 
     return $suitepath;
@@ -195,12 +196,12 @@ sub find_selected_lintian_testpaths {
 
                 my $tag = $profile->get_tag($tagname);
                 unless ($tag) {
-                    say "Tag $tagname not found";
+                    say encode_utf8("Tag $tagname not found");
                     return;
                 }
 
                 if (none { $tagname eq $_ } $profile->enabled_tags) {
-                    say "Tag $tagname not enabled";
+                    say encode_utf8("Tag $tagname not enabled");
                     return;
                 }
 
@@ -315,7 +316,7 @@ sub find_all_tags {
     my @checks = $desc->trimmed_list('Check');
     for my $check (@checks) {
         my $checkscript = $profile->get_checkinfo($check);
-        die "Unknown Lintian check $check"
+        die encode_utf8("Unknown Lintian check $check")
           unless defined $checkscript;
 
         $tags{$_} = 1 for $checkscript->tags;
@@ -326,7 +327,7 @@ sub find_all_tags {
 
     # read tags from specification
     my $temp = Path::Tiny->tempfile;
-    die "tagextract failed: $!"
+    die encode_utf8("tagextract failed: $!")
       if system('private/tagextract', '-f', 'EWI', "$testpath/tags",
         $temp->stringify);
     my @lines = $temp->lines_utf8({ chomp => 1 });
@@ -337,12 +338,12 @@ sub find_all_tags {
     foreach my $line (@lines) {
 
         my $status = $csv->parse($line);
-        die "Cannot parse line $line: " . $csv->error_diag
+        die encode_utf8("Cannot parse line $line: " . $csv->error_diag)
           unless $status;
 
         my ($type, $package, $name, $details) = $csv->fields;
 
-        die "Cannot parse line $line"
+        die encode_utf8("Cannot parse line $line")
           unless all { length } ($type, $package, $name);
 
         $expected{$name} = 1;
