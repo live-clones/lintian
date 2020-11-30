@@ -18,6 +18,7 @@ use List::Compare;
 use List::Util qw(uniq);
 use LWP::Simple;
 use Path::Tiny;
+use Unicode::UTF8 qw(encode_utf8);
 use YAML::XS;
 
 use Lintian::Deb822::File;
@@ -30,7 +31,7 @@ use constant INDENT => q{    };
 use constant NEWLINE => qq{\n};
 
 $ENV{LINTIAN_BASE} = realpath("$FindBin::RealBin/..")
-  // die 'Cannot resolve LINTIAN_BASE';
+  // die encode_utf8('Cannot resolve LINTIAN_BASE');
 
 # generate main profile
 my $checkdir = "$ENV{LINTIAN_BASE}/checks";
@@ -56,15 +57,15 @@ generate_profile(
 # generate profile for FTP Master auto-reject
 my $auto_reject_url = 'https://ftp-master.debian.org/static/lintian.tags';
 my $contents = get($auto_reject_url);
-die "Couldn't get file from $auto_reject_url"
+die encode_utf8("Couldn't get file from $auto_reject_url")
   unless defined $contents;
 
 my $yaml = Load($contents);
-die "Couldn't parse output from $auto_reject_url"
+die encode_utf8("Couldn't parse output from $auto_reject_url")
   unless defined $yaml;
 
 my $base = $yaml->{lintian};
-die "Couldn't parse document base for $auto_reject_url"
+die encode_utf8("Couldn't parse document base for $auto_reject_url")
   unless defined $base;
 
 my @want_fatal = uniq @{ $base->{fatal} // [] };
@@ -79,7 +80,7 @@ for my $tagpath (@descfiles) {
 
     my $deb822 = Lintian::Deb822::File->new;
     my @sections = $deb822->read_file($tagpath);
-    die "Tag in $tagpath does not have exactly one paragraph"
+    die encode_utf8("Tag in $tagpath does not have exactly one paragraph")
       unless scalar @sections == 1;
 
     my $fields = $sections[0];
@@ -91,8 +92,9 @@ for my $tagpath (@descfiles) {
 
     my @taken = grep { exists $new_name{$_} } @renamed_from;
 
-    say "Warning: Ignoring $_ as an alias for $new_name{$_} in favor of $name."
-      for @taken;
+    say encode_utf8(
+        "Warning: Ignoring $_ as an alias for $new_name{$_} in favor of $name."
+    )for @taken;
 
     $new_name{$_} = $name for @renamed_from;
 }
@@ -100,9 +102,9 @@ for my $tagpath (@descfiles) {
 my $old_lc
   = List::Compare->new([@want_fatal, @want_nonfatal], [keys %new_name]);
 my @old_names = $old_lc->get_intersection;
-say 'FTP Master uses old tag names for auto-rejection:'
+say encode_utf8('FTP Master uses old tag names for auto-rejection:')
   if @old_names;
-say INDENT . "- $_  =>  $new_name{$_}" for @old_names;
+say encode_utf8(INDENT . "- $_  =>  $new_name{$_}") for @old_names;
 
 # replace old names
 @want_fatal = uniq map { $new_name{$_} // $_ } @want_fatal;
@@ -117,15 +119,16 @@ my @unknown_nonfatal = $nonfatal_lc->get_Lonly;
 my @nonfatal = $nonfatal_lc->get_intersection;
 
 my @unknown = (@unknown_fatal, @unknown_nonfatal);
-say 'Warning, disregarding unknown tags for profile ftp-master-auto-reject:'
+say encode_utf8(
+    'Warning, disregarding unknown tags for profile ftp-master-auto-reject:')
   if @unknown;
-say INDENT . HYPHEN . SPACE . $_ for @unknown;
+say encode_utf8(INDENT . HYPHEN . SPACE . $_) for @unknown;
 
-say 'Found '
-  . scalar @fatal
-  . ' fatal and '
-  . scalar @nonfatal
-  . ' non-fatal tags for profile ftp-master-auto-reject.';
+say encode_utf8('Found '
+      . scalar @fatal
+      . ' fatal and '
+      . scalar @nonfatal
+      . ' non-fatal tags for profile ftp-master-auto-reject.');
 
 generate_profile(
     'debian',
@@ -156,7 +159,7 @@ EOSTR
     path($folder)->mkpath
       unless -d $folder;
 
-    path("$folder/$name.profile")->spew($text);
+    path("$folder/$name.profile")->spew_utf8($text);
 
     return;
 }

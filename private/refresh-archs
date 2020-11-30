@@ -27,6 +27,7 @@ use lib "$FindBin::RealBin/../lib";
 
 use File::Temp qw(tempfile);
 use POSIX qw (strftime);
+use Unicode::UTF8 qw(decode_utf8);
 
 use Lintian::Deb822::Parser qw(parse_dpkg_control_string);
 use Lintian::IPC::Run3 qw(safe_qx);
@@ -125,12 +126,12 @@ unless ($datapath) {
 
 $ENV{'LC_ALL'} = 'C';
 
-my $output = safe_qx('dpkg-architecture', '--version');
+my $output = decode_utf8(safe_qx('dpkg-architecture', '--version'));
 my @lines = split(/\n/, $output);
 my $dver = shift @lines;
 chomp $dver;
 
-my @archlist = split(/\n/, safe_qx('dpkg-architecture', '-L'));
+my @archlist = split(/\n/, decode_utf8(safe_qx('dpkg-architecture', '-L')));
 while (defined(my $archstr = shift @archlist)) {
 
     delete $ENV{'DEB_HOST_ARCH'};
@@ -138,7 +139,8 @@ while (defined(my $archstr = shift @archlist)) {
 
     say "Working on architecture $archstr.";
 
-    my @hostvars = split(/\n/, safe_qx('dpkg-architecture', "-a$archstr"));
+    my @hostvars
+      = split(/\n/, decode_utf8(safe_qx('dpkg-architecture', "-a$archstr")));
     while (defined(my $var = shift @hostvars)) {
         chomp $var;
         my ($key, $value) = split /=/, $var, 2;
@@ -149,7 +151,8 @@ while (defined(my $archstr = shift @archlist)) {
     delete($ENV{'DEB_BUILD_MAINT_OPTIONS'});
 
     my $default_features
-      = safe_qx('dpkg-buildflags', '--query-features', 'hardening');
+      = decode_utf8(
+        safe_qx('dpkg-buildflags', '--query-features', 'hardening'));
     my @hardening_defaults = parse_dpkg_control_string($default_features);
 
     # First, find all hardening features enabled by default on this
@@ -172,7 +175,8 @@ while (defined(my $archstr = shift @archlist)) {
     $ENV{'DEB_BUILD_MAINT_OPTIONS'} = 'hardening=+all';
 
     my $available_features
-      = safe_qx('dpkg-buildflags', '--query-features', 'hardening');
+      = decode_utf8(
+        safe_qx('dpkg-buildflags', '--query-features', 'hardening'));
     my @hardening_available = parse_dpkg_control_string($available_features);
 
     # Now scan over all hardening features for this architecture.
