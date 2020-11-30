@@ -160,7 +160,8 @@ sub hint {
     my $tag = $self->info->get_tag($tagname);
     unless (defined $tag) {
 
-        warn 'Check ' . $self->info->name . " has no tag $tagname.";
+        warn encode_utf8(
+            'Check ' . $self->info->name . " has no tag $tagname.");
 
         return;
     }

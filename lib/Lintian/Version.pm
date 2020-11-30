@@ -32,6 +32,8 @@ our @EXPORT_OK = (qw(
 
 use Exporter qw(import);
 
+use Unicode::UTF8 qw(decode_utf8);
+
 use Lintian::IPC::Run3 qw(safe_qx);
 use Lintian::Util qw(version_from_changelog);
 
@@ -78,7 +80,7 @@ sub version_from_git {
     return EMPTY
       unless -d $git_path;
 
-    my $guess = safe_qx('git', "--git-dir=$git_path", 'describe');
+    my $guess = decode_utf8(safe_qx('git', "--git-dir=$git_path", 'describe'));
     chomp $guess;
 
     return ($guess // EMPTY);

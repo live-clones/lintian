@@ -23,6 +23,7 @@ use utf8;
 use autodie;
 
 use Path::Tiny;
+use Unicode::UTF8 qw(decode_utf8);
 
 use Lintian::IPC::Run3 qw(safe_qx);
 
@@ -66,7 +67,8 @@ sub add_strings {
           unless $file->file_info =~ /\bELF\b/;
 
         # prior implementations sometimes made the list unique
-        my $allstrings= safe_qx('strings', '--all', '--',$file->unpacked_path);
+        my $allstrings = decode_utf8(
+            safe_qx('strings', '--all', '--',$file->unpacked_path));
 
         $file->strings($allstrings);
     }

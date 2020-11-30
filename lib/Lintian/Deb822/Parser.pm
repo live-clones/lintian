@@ -44,6 +44,8 @@ our @EXPORT_OK = (qw(
 
 use Exporter qw(import);
 
+use Unicode::UTF8 qw(encode_utf8);
+
 =head1 NAME
 
 Lintian::Deb822::Parser - Lintian's generic Deb822 parser functions
@@ -137,7 +139,7 @@ autodie exceptions if open or close fails.
 sub read_dpkg_control {
     my ($file, $flags, $field_starts) = @_;
 
-    open(my $handle, '<:encoding(UTF-8)', $file);
+    open(my $handle, '<:utf8_strict', $file);
     local $/ = undef;
     my $string = <$handle>;
     close $handle;
@@ -404,7 +406,7 @@ sub visit_dpkg_paragraph_string {
         if (substr($line, 0, 1) eq '#') {
             next
               unless $flags & DCTRL_NO_COMMENTS;
-            die "No comments allowed (line $position).\n";
+            die encode_utf8("No comments allowed (line $position).\n");
         }
 
         # empty line?
@@ -425,12 +427,12 @@ sub visit_dpkg_paragraph_string {
         { # skip until end of signature
             my $saw_end = 0;
 
-            die "PGP signature before message (line $position).\n"
+            die encode_utf8("PGP signature before message (line $position).\n")
               unless $signed;
 
-            die
+            die encode_utf8(
 "Found two PGP signatures (line $signature and line $position).\n"
-              if $signature;
+            )if $signature;
 
             $signature = $position;
             while (defined($line = shift @lines)) {
@@ -444,7 +446,7 @@ sub visit_dpkg_paragraph_string {
 
             # The "at line X" may seem a little weird, but it keeps the
             # message format identical.
-            die "Cannot find END PGP SIGNATURE header.\n"
+            die encode_utf8("Cannot find END PGP SIGNATURE header.\n")
               unless $saw_end;
         }
         # other pgp control?
@@ -468,15 +470,16 @@ sub visit_dpkg_paragraph_string {
                   = qr/(?:BEGIN|END) PGP (?:(?:COMPRESSED|ENCRYPTED) )?MESSAGE/;
 
                 if ($line =~ /^-----($key|$msgpart|$msg)-----[ \r\t]*$/) {
-                    die "Unexpected $1 header (line $position).\n";
+                    die encode_utf8(
+                        "Unexpected $1 header (line $position).\n");
                 }
 
-                die "Malformed PGP header (line $position).\n";
+                die encode_utf8("Malformed PGP header (line $position).\n");
 
             } else {
-                die
-                  "Multiple PGP messages (line $signed and line $position).\n"
-                  if $signed;
+                die encode_utf8(
+"Multiple PGP messages (line $signed and line $position).\n"
+                )if $signed;
 
                 # NB: If you remove this, keep in mind that it may
                 # allow two paragraphs to merge.  Consider:
@@ -489,7 +492,8 @@ sub visit_dpkg_paragraph_string {
                 # At the time of writing: If $open_section is
                 # true, it will remain so until the empty line
                 # after the PGP header.
-                die "Expected PGP MESSAGE header (line $position).\n"
+                die encode_utf8(
+                    "Expected PGP MESSAGE header (line $position).\n")
                   if $last_tag;
 
                 $signed = $position;
@@ -522,7 +526,7 @@ sub visit_dpkg_paragraph_string {
             # At the time of writing: If $open_section is true, it
             # will remain so until the empty line after the PGP
             # header.
-            die "Data after PGP SIGNATURE (line $position).\n";
+            die encode_utf8("Data after PGP SIGNATURE (line $position).\n");
         }
         # new empty field?
         elsif ($line =~ /^([^: \t]+):\s*$/) {
@@ -553,7 +557,7 @@ sub visit_dpkg_paragraph_string {
             if (exists $section->{$tag}) {
                 # Policy: A paragraph must not contain more than one instance
                 # of a particular field name.
-                die "Duplicate field $tag (line $position).\n";
+                die encode_utf8("Duplicate field $tag (line $position).\n");
             }
             $value =~ s/#.*$//
               if $flags & DCTRL_COMMENTS_AT_EOL;
@@ -565,9 +569,9 @@ sub visit_dpkg_paragraph_string {
 
         # continued field?
         elsif ($line =~ /^([ \t].*\S.*)$/) {
-            die
+            die encode_utf8(
 "Continuation line not in paragraph (line $position). Missing a dot on the previous line?\n"
-              unless $open_section;
+            )unless $open_section;
 
             # Policy: Many fields' values may span several lines; in this case
             # each continuation line must start with a space or a tab.  Any
@@ -585,14 +589,15 @@ sub visit_dpkg_paragraph_string {
         # None of the above => syntax error
         else {
 
-            die "Unexpected whitespace (line $position). Missing a dot?\n"
+            die encode_utf8(
+                "Unexpected whitespace (line $position). Missing a dot?\n")
               if $line =~ /^\s+$/;
 
             # Replace non-printables and non-space characters with
             # "_" - just in case.
             $line =~ s/[^[:graph:][:space:]]/_/g;
 
-            die "Cannot parse line $position: $line\n";
+            die encode_utf8("Cannot parse line $position: $line\n");
         }
 
     }continue {
@@ -607,7 +612,7 @@ sub visit_dpkg_paragraph_string {
     # paragraphs from being emitted to the code argument, so we might
     # as well just do this last.
 
-    die "Cannot find BEGIN PGP SIGNATURE\n."
+    die encode_utf8("Cannot find BEGIN PGP SIGNATURE\n.")
       if $signed && !$signature;
 
     return;

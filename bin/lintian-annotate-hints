@@ -38,14 +38,13 @@ use Cwd qw(getcwd realpath);
 use File::BaseDir qw(config_home config_files data_home);
 use File::Basename;
 use Getopt::Long ();
+use Unicode::UTF8 qw(encode_utf8 decode_utf8);
 
 use Lintian::Output::EWI;
 use Lintian::Profile;
 use Lintian::Version qw(guess_version);
 
 use constant EMPTY => q{};
-
-binmode(STDOUT, ':encoding(UTF-8)');
 
 if (my $coverage_arg = $ENV{'LINTIAN_COVERAGE'}) {
     my $p5opt = $ENV{'PERL5OPT'}//EMPTY;
@@ -54,7 +53,7 @@ if (my $coverage_arg = $ENV{'LINTIAN_COVERAGE'}) {
 }
 
 $ENV{LINTIAN_BASE} = realpath("$FindBin::RealBin/..")
-  // die 'Cannot resolve LINTIAN_BASE';
+  // die encode_utf8('Cannot resolve LINTIAN_BASE');
 
 my $annotate;
 my @INCLUDE_DIRS;
@@ -72,7 +71,7 @@ my %options = (
 
 Getopt::Long::Configure('gnu_getopt');
 Getopt::Long::GetOptions(%options)
-  or die "error parsing options\n";
+  or die encode_utf8("error parsing options\n");
 
 # only absolute paths
 my @RESTRICTED_CONFIG_DIRS;
@@ -128,8 +127,9 @@ my %already_displayed;
 # Otherwise, read input files or STDIN, watch for tags, and add
 # descriptions whenever we see one, can, and haven't already
 # explained that tag.  Strip off color and HTML sequences.
-for my $line (<STDIN>) {
-    print $line;
+for my $bytes (<STDIN>) {
+    my $line = decode_utf8($bytes);
+    print encode_utf8($line);
     chomp $line;
 
     next
@@ -191,15 +191,15 @@ sub split_tag {
 sub show_version {
     my $version = $LINTIAN_VERSION // guess_version($ENV{LINTIAN_BASE});
 
-    die 'Unable to determine the version automatically!?'
+    die encode_utf8('Unable to determine the version automatically!?')
       unless length $version;
 
-    say "annotate-lintian-hints v$version";
+    say encode_utf8("annotate-lintian-hints v$version");
     exit;
 }
 
 sub show_help {
-    print <<"EOT";
+    my $message =<<"EOT";
 Usage: annotate-lintian-hints [log-file...] ...
        annotate-lintian-hints --annotate [overrides ...]
 
@@ -210,6 +210,9 @@ Options:
     --[no-]user-dirs   whether to include profiles from user directories
     --version          show version info and exit
 EOT
+
+    print encode_utf8($message);
+
     exit;
 }
 

@@ -24,6 +24,7 @@ use autodie;
 
 use Cwd;
 use Path::Tiny;
+use Unicode::UTF8 qw(decode_utf8);
 
 use Lintian::IPC::Run3 qw(safe_qx);
 
@@ -74,7 +75,7 @@ sub add_ar {
 
     # fails silently for non-ar files (#934899); probably creates empty entries
     # in case of trouble, please try: "next if $?;" underneath it
-        my $output = safe_qx('ar', 't', $archive);
+        my $output = decode_utf8(safe_qx('ar', 't', $archive));
         my @members = split(/\n/, $output);
 
         my $count = 1;

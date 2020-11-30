@@ -22,6 +22,8 @@ use v5.20;
 use warnings;
 use utf8;
 
+use Unicode::UTF8 qw(encode_utf8);
+
 use constant EMPTY => q{};
 
 use Moo::Role;
@@ -73,7 +75,7 @@ has components => (
         my $noepoch = $source_version;
         if ($noepoch =~ /:/) {
             $noepoch =~ s/^(?:\d+):(.+)/$1/
-              or die "Bad version number '$noepoch'";
+              or die encode_utf8("Bad version number '$noepoch'");
         }
 
         my $baserev = $source . '_' . $noepoch;

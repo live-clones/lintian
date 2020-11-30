@@ -28,6 +28,7 @@ use autodie;
 use Cwd;
 use IPC::Run3;
 use Path::Tiny;
+use Unicode::UTF8 qw(encode_utf8 decode_utf8);
 
 use constant EMPTY => q{};
 
@@ -79,6 +80,9 @@ sub add_objdump {
 
         run3(\@command, \undef, \$combined, \$combined);
 
+        $combined = decode_utf8($combined)
+          if length $combined;
+
         # each object file in an archive gets its own File section
         my @per_files = split(/^(File): (.*)$/m, $combined);
         shift @per_files while @per_files && $per_files[0] ne 'File';
@@ -98,17 +102,18 @@ sub add_objdump {
             unshift(@per_files, 'File');
         }
 
-        die "Parsed data from readelf is not a multiple of three for $file"
+        die encode_utf8(
+            "Parsed data from readelf is not a multiple of three for $file")
           unless @per_files % 3 == 0;
 
         my $parsed;
         while (defined(my $fixed = shift @per_files)) {
 
-            die "Unknown output from readelf for $file"
+            die encode_utf8("Unknown output from readelf for $file")
               unless $fixed eq 'File';
 
             my $recorded_name = shift @per_files;
-            die "No file name from readelf for $file"
+            die encode_utf8("No file name from readelf for $file")
               unless length $file;
 
             my ($container, $member) = ($recorded_name =~ /^(.*)\(([^)]+)\)$/);
@@ -116,7 +121,8 @@ sub add_objdump {
             $container = $recorded_name
               unless defined $container && defined $member;
 
-            die "Container not same as file name ($container vs $file)"
+            die encode_utf8(
+                "Container not same as file name ($container vs $file)")
               unless $container eq $file->name;
 
             my $per_file = shift @per_files;

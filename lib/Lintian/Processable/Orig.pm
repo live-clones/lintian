@@ -25,6 +25,7 @@ use autodie;
 use List::MoreUtils qw(uniq);
 use List::UtilsBy qw(sort_by);
 use Path::Tiny;
+use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Index;
 
@@ -101,11 +102,11 @@ has orig => (
             $index->anchored(0);
 
             my ($extension) = ($tarball =~ /\.([^.]+)$/);
-            die "Source component $tarball has no file exension\n"
+            die encode_utf8("Source component $tarball has no file exension\n")
               unless length $extension;
 
             my $decompress = $DECOMPRESS_COMMAND{lc $extension};
-            die "Don't know how to decompress $tarball"
+            die encode_utf8("Don't know how to decompress $tarball")
               unless $decompress;
 
             my @command

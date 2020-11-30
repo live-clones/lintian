@@ -40,6 +40,7 @@ BEGIN {
 use IPC::Open3;
 use IO::Select;
 use Symbol;
+use Unicode::UTF8 qw(encode_utf8);
 
 # read up to 40kB at a time.  this happens to be 4096 "tar records"
 # (with a block-size of 512 and a block factor of 20, which appear to
@@ -92,7 +93,7 @@ sub unpack_and_index_piped_tar {
             $produce_stderr, @produce_command
         );
     };
-    die $@ if $@;
+    die map { encode_utf8($_) } $@ if $@;
 
     close $produce_stdin;
 
@@ -116,7 +117,7 @@ sub unpack_and_index_piped_tar {
             $extract_stderr, @extract_command
         );
     };
-    die $@ if $@;
+    die map { encode_utf8($_) } $@ if $@;
 
     push(@pids, $extract_pid);
 
@@ -136,7 +137,7 @@ sub unpack_and_index_piped_tar {
         $named_pid
           = open3($named_stdin, $named_stdout, $named_stderr, @named_command);
     };
-    die $@ if $@;
+    die map { encode_utf8($_) } $@ if $@;
 
     push(@pids, $named_pid);
 
@@ -155,7 +156,7 @@ sub unpack_and_index_piped_tar {
             $numeric_stderr, @numeric_command
         );
     };
-    die $@ if $@;
+    die map { encode_utf8($_) } $@ if $@;
 
     push(@pids, $numeric_pid);
 
@@ -177,7 +178,7 @@ sub unpack_and_index_piped_tar {
             # using 4096 * TAR_RECORD_SIZE tripped up older kernels < 5.7
             my $length = sysread($handle, $buffer, 4 * 1024);
 
-            die "Error from child: $!\n"
+            die encode_utf8("Error from child: $!\n")
               unless defined $length;
 
             if ($length == 0){
@@ -211,7 +212,7 @@ sub unpack_and_index_piped_tar {
                 $named_errors .= $buffer;
 
                 # } else {
-                #   die "Shouldn't be here\n";
+                #   die encode_utf8("Shouldn't be here\n");
             }
         }
     }

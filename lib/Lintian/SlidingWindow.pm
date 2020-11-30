@@ -23,7 +23,7 @@ use warnings;
 use utf8;
 use autodie;
 
-use Carp qw(croak);
+use Unicode::UTF8 qw(encode_utf8);
 
 sub new {
     my ($class, $handle, $blocksub, $blocksize) = @_;
@@ -58,7 +58,7 @@ sub readwindow {
         $blocksize *= 2 if $first;
         my $res = read($self->{'_handle'}, $window, $blocksize);
         if (not $res) {
-            die "read failed: $!\n" if not defined($res);
+            die encode_utf8("read failed: $!\n") if not defined($res);
             return;
         }
     }

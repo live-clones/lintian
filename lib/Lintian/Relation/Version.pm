@@ -24,7 +24,6 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Carp qw(croak);
 use Exporter qw(import);
 
 BEGIN {
@@ -34,6 +33,9 @@ BEGIN {
 }
 
 use AptPkg::Config '$_config';
+use Carp qw(croak);
+use Unicode::UTF8 qw(encode_utf8);
+
 my $versioning = do {
     my $config = AptPkg::Config->new;
     $config->init;
@@ -164,7 +166,7 @@ sub versions_compare {
     elsif ($op eq '>=') { return versions_gte($p, $q) }
     elsif ($op eq '<<') { return versions_lt($p, $q) }
     elsif ($op eq '>>') { return versions_gt($p, $q) }
-    else { croak("unknown operator $op") }
+    else { croak encode_utf8("unknown operator $op") }
 }
 
 =item versions_comparator (A, B)

@@ -22,6 +22,8 @@ use warnings;
 use utf8;
 use autodie;
 
+use Path::Tiny;
+
 use constant EMPTY => q{};
 
 use Moo::Role;
@@ -62,25 +64,16 @@ sub conffiles {
     return
       unless $cf && $cf->is_file && $cf->is_open_ok;
 
-    open(my $fd, '<', $cf->unpacked_path);
-    while (my $absolute = <$fd>) {
+    my @absolute = path($cf->unpacked_path)->lines_utf8;
 
-        chomp $absolute;
+    # dpkg strips whitespace (using isspace) from the right hand
+    # side of the file name.
 
-        # dpkg strips whitespace (using isspace) from the right hand
-        # side of the file name.
+    # trim right
+    s/\s+$// for @absolute;
 
-        # trim right
-        $absolute =~ s/\s+$//;
-
-        next
-          if $absolute eq EMPTY;
-
-        # list contains absolute paths, unlike lookup
-        push(@{$self->{conffiles}}, $absolute);
-    }
-
-    close($fd);
+    # list contains absolute paths, unlike lookup
+    push(@{$self->{conffiles}}, grep { length } @absolute);
 
     return @{$self->{conffiles}};
 }

@@ -23,6 +23,7 @@ use warnings;
 use utf8;
 
 use Carp;
+use Unicode::UTF8 qw(encode_utf8);
 
 use constant EMPTY => q{};
 
@@ -71,10 +72,10 @@ sub set {
 
     my ($self, $literal, $native) = @_;
 
-    croak 'Literal version string required for version parsing'
+    croak encode_utf8('Literal version string required for version parsing')
       unless defined $literal;
 
-    croak 'Native flag required for version parsing'
+    croak encode_utf8('Native flag required for version parsing')
       unless defined $native;
 
     my $epoch_pattern      = qr/([0-9]+)/;
@@ -129,7 +130,8 @@ sub set {
 
     my $reconstructed= $epoch_string . $no_epoch;
 
-    croak "Failed to parse package version: $reconstructed ne $literal"
+    croak encode_utf8(
+        "Failed to parse package version: $reconstructed ne $literal")
       unless $reconstructed eq $literal;
 
     $self->_set_literal($literal);

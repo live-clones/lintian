@@ -24,6 +24,7 @@ use utf8;
 
 use Carp qw(croak);
 use Path::Tiny;
+use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Deb822::File;
 
@@ -68,10 +69,10 @@ Initializes a new object from FILE.
 sub init {
     my ($self, $file) = @_;
 
-    croak "File $file is not an absolute, resolved path"
+    croak encode_utf8("File $file is not an absolute, resolved path")
       unless $file eq path($file)->realpath->stringify;
 
-    croak "File $file does not exist"
+    croak encode_utf8("File $file does not exist")
       unless -e $file;
 
     $self->path($file);
@@ -79,7 +80,8 @@ sub init {
 
     my $primary = Lintian::Deb822::File->new;
     my @sections = $primary->read_file($self->path)
-      or croak $self->path. ' is not a valid '. $self->type . ' file';
+      or croak encode_utf8(
+        $self->path. ' is not a valid '. $self->type . ' file');
 
     $self->fields($sections[0]);
 
@@ -89,7 +91,7 @@ sub init {
 
     unless (length $name) {
         $name = $self->guess_name($self->path);
-        croak 'Cannot determine the name from '. $self->path
+        croak encode_utf8('Cannot determine the name from '. $self->path)
           unless length $name;
     }
 

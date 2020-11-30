@@ -27,6 +27,7 @@ use autodie;
 use Carp qw(croak);
 use File::Basename qw(basename);
 use File::Copy qw(copy);
+use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Util qw(get_file_digest);
 
@@ -71,7 +72,7 @@ will be installed
 sub new {
     my ($class, %opts) = @_;
     my $self = {%opts,};
-    croak('Missing required parameter html_dir (or it is undef)')
+    croak encode_utf8('Missing required parameter html_dir (or it is undef)')
       if not defined $opts{'html_dir'};
     $self->{'_resource_cache'} = {};
     $self->{'_resource_integrity'} = {};
@@ -127,7 +128,7 @@ sub install_resource {
         $basename = $resource_name;
         $resource = $opt->{'source_file'};
         if (index($basename, '/') > -1) {
-            croak(
+            croak encode_utf8(
                 join(' ',
                     qq(Resource "${resource_name}" must not contain "/"),
                     'when source_file is given'));
@@ -144,7 +145,7 @@ sub install_resource {
         $b64digest .= '=';
     }
 
-    croak("Resource name ${basename} already in use")
+    croak encode_utf8("Resource name ${basename} already in use")
       if defined($self->{'_resource_cache'}{$basename});
     if ($basename =~ m/^.+(\.[^\.]+)$/xsm) {
         my $ext = $1;
@@ -155,10 +156,10 @@ sub install_resource {
         rename($resource, "$resource_root/$install_name");
     } elsif ($method eq 'copy') {
         copy($resource, "$resource_root/$install_name")
-          or
-          croak("Cannot copy $resource to $resource_root/$install_name: $!");
+          or croak encode_utf8(
+            "Cannot copy $resource to $resource_root/$install_name: $!");
     } else {
-        croak(
+        croak encode_utf8(
             join(' ',
                 "Unknown install method ${method}",
                 '- please use "move" or "copy"'));
@@ -178,7 +179,7 @@ basename of the path given to install_resource.
 
 sub resource_URL {
     my ($self, $resource_name) = @_;
-    croak("Unknown resource $resource_name")
+    croak encode_utf8("Unknown resource $resource_name")
       if not defined($self->{'_resource_cache'}{$resource_name});
     return $self->{'_resource_cache'}{$resource_name};
 }
@@ -192,7 +193,7 @@ Return a string that is valid in the "integrity" field of a C<< <link>
 
 sub resource_integrity_value {
     my ($self, $resource_name) = @_;
-    croak("Unknown resource $resource_name")
+    croak encode_utf8("Unknown resource $resource_name")
       if not defined($self->{'_resource_integrity'}{$resource_name});
     return $self->{'_resource_integrity'}{$resource_name};
 }

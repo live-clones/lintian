@@ -33,6 +33,7 @@ use Path::Tiny;
 use POSIX qw(ENOENT);
 use Time::HiRes qw(gettimeofday tv_interval);
 use Time::Piece;
+use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Processable::Installable;
 use Lintian::Processable::Buildinfo;
@@ -153,7 +154,7 @@ sub add_processable_from_file {
     my ($self, $file) = @_;
 
     my $absolute = path($file)->realpath->stringify;
-    croak "Cannot resolve $file: $!"
+    croak encode_utf8("Cannot resolve $file: $!")
       unless $absolute;
 
     my $processable;
@@ -177,7 +178,7 @@ sub add_processable_from_file {
         $processable = Lintian::Processable::Changes->new;
 
     } else {
-        croak "$file is not a known type of package";
+        croak encode_utf8("$file is not a known type of package");
     }
 
     $processable->pooldir($self->pooldir);
@@ -198,7 +199,8 @@ sub process {
     my ($self, $ignored_overrides, $option, $OUTPUT)= @_;
 
     my $groupname = $self->name;
-    local $SIG{__WARN__} = sub { warn "Warning in group $groupname: $_[0]" };
+    local $SIG{__WARN__}
+      = sub { warn encode_utf8("Warning in group $groupname: $_[0]") };
 
     $self->processing_start(gmtime->datetime . 'Z');
     $OUTPUT->v_msg('Starting on group ' . $self->name);
@@ -221,7 +223,7 @@ sub process {
 
             eval {$declared_overrides = $processable->overrides;};
             if (my $err = $@) {
-                die $err if not ref $err or $err->errno != ENOENT;
+                die encode_utf8($err) if not ref $err or $err->errno != ENOENT;
             }
 
             my %alias = %{$self->profile->known_aliases};
@@ -323,7 +325,7 @@ sub process {
                 $message
                   .= "warning: cannot run $checkname check on package $procid\n";
                 $message .= "skipping check of $procid\n";
-                warn $message;
+                warn encode_utf8($message);
 
                 $success = 0;
 
@@ -507,14 +509,14 @@ sub add_processable{
     $self->name($processable->get_group_id)
       unless length $self->name;
 
-    croak 'Please set pool directory first.'
+    croak encode_utf8('Please set pool directory first.')
       unless $self->pooldir;
 
-    croak 'Not a supported type (' . $processable->type . ')'
+    croak encode_utf8('Not a supported type (' . $processable->type . ')')
       unless exists $SUPPORTED_TYPES{$processable->type};
 
     if ($processable->type eq 'changes') {
-        die 'Cannot add another ' . $processable->type . ' file'
+        die encode_utf8('Cannot add another ' . $processable->type . ' file')
           if $self->changes;
         $self->changes($processable);
 
@@ -524,13 +526,13 @@ sub add_processable{
           unless $self->buildinfo;
 
     } elsif ($processable->type eq 'source'){
-        die 'Cannot add another source package'
+        die encode_utf8('Cannot add another source package')
           if $self->source;
         $self->source($processable);
 
     } else {
         my $type = $processable->type;
-        die 'Unknown type ' . $type
+        die encode_utf8('Unknown type ' . $type)
           unless $type eq 'binary' || $type eq 'udeb';
 
         # check for duplicate; should be rewritten with arrays
@@ -569,7 +571,7 @@ sub get_processables {
         return values %{$self->$type}
           if $type eq 'binary'
           or $type eq 'udeb';
-        die "Unknown type of processable: $type";
+        die encode_utf8("Unknown type of processable: $type");
     }
     # We return changes, dsc, buildinfo, debs and udebs in that order,
     # because that is the order lintian used to process a changes

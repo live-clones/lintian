@@ -27,6 +27,7 @@ use utf8;
 use autodie;
 
 use Carp qw(croak);
+use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Relation;
 
@@ -116,7 +117,7 @@ sub relation {
             $relation = Lintian::Relation->and(map { $self->relation($_) }
                   @{ $alias{$lowercase} });
         } else {
-            croak "unknown relation field $name"
+            croak encode_utf8("unknown relation field $name")
               unless $known{$lowercase};
             my $value = $self->fields->value($name);
             $relation = Lintian::Relation->new($value);

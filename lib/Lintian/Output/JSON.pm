@@ -121,16 +121,8 @@ sub issue_hints {
 
     my $json = $encoder->encode(\%output);
 
-    # duplicate STDOUT
-    open(my $RAW, '>&', *STDOUT) or die 'Cannot dup STDOUT';
-
-    # avoid all PerlIO layers such as utf8
-    binmode($RAW, ':raw');
-
-    # output encoded JSON to the raw handle
-    print {$RAW} $json;
-
-    close $RAW;
+    # output encoded JSON; is already in UTF-8
+    print $json;
 
     return;
 }
@@ -225,16 +217,8 @@ sub describe_tags {
 
     my $json = $encoder->encode($object);
 
-    # duplicate STDOUT
-    open(my $RAW, '>&', *STDOUT) or die 'Cannot dup STDOUT';
-
-    # avoid all PerlIO layers such as utf8
-    binmode($RAW, ':raw');
-
-    # output encoded JSON to the raw handle
-    print {$RAW} $json;
-
-    close $RAW;
+    # output encoded JSON; is already in UTF-8
+    print $json;
 
     return;
 }

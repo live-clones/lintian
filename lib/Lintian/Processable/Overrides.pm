@@ -25,7 +25,7 @@ use autodie;
 use IPC::Run3;
 use List::MoreUtils qw(none first_value);
 use Path::Tiny;
-use Unicode::UTF8 qw(valid_utf8 decode_utf8);
+use Unicode::UTF8 qw(valid_utf8 decode_utf8 encode_utf8);
 
 use Lintian::Architecture qw(:all);
 
@@ -96,15 +96,20 @@ has overrides => (
 
             my @command
               = (qw{gzip --decompress --stdout}, $override_item->name);
-            my $bytes;
+            my $stdout;
             my $stderr;
 
-            run3(\@command, \undef, \$bytes, \$stderr);
-            die "gunzip $override_item failed: $stderr"
+            run3(\@command, \undef, \$stdout, \$stderr);
+
+            $stdout = decode_utf8($stdout)
+              if length $stdout;
+            $stderr = decode_utf8($stderr)
               if length $stderr;
 
-            $contents = decode_utf8($bytes)
-              if valid_utf8($bytes);
+            die encode_utf8("gunzip $override_item failed: $stderr")
+              if length $stderr;
+
+            $contents = $stdout;
 
         } else {
             $contents = $override_item->decoded_utf8;

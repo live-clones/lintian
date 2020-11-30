@@ -31,6 +31,7 @@ use Time::HiRes qw(gettimeofday tv_interval);
 use Path::Tiny;
 use POSIX qw(:sys_wait_h);
 use Proc::ProcessTable;
+use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Group;
 
@@ -252,18 +253,23 @@ sub process{
 
             # announce left over processes, see commit 3bbcc3b
             if (@leftover) {
-                warn "\nSome processes were left over (maybe unreaped):\n";
+                warn encode_utf8(
+                    "\nSome processes were left over (maybe unreaped):\n");
 
-                my $FORMAT = "    %-12s %-12s %-8s %-24s %s\n";
-                printf($FORMAT, 'PID', 'TTY', 'STATUS', 'START', 'COMMAND');
+                my $FORMAT = '    %-12s %-12s %-8s %-24s %s';
+                say encode_utf8(
+                    sprintf(
+                        $FORMAT,'PID', 'TTY', 'STATUS', 'START', 'COMMAND'
+                    ));
 
-                printf($FORMAT,
-                    $_->pid,$_->ttydev,$_->state,scalar(localtime($_->start)),
-                    $_->cmndline)
-                  for @leftover;
+                say encode_utf8(
+                    sprintf($FORMAT,
+                        $_->pid,$_->ttydev,
+                        $_->state,scalar(localtime($_->start)),
+                        $_->cmndline))for @leftover;
 
                 $$exit_code_ref = 1;
-                die "Aborting.\n";
+                die encode_utf8("Aborting.\n");
             }
         }
 
@@ -274,9 +280,11 @@ sub process{
         my $total_tres = sprintf('%.3fs', $total_raw_res);
 
         if ($success) {
-            print {$STATUS_FD} 'complete ' . $group->name . " ($total_tres)\n";
+            print {$STATUS_FD}
+              encode_utf8('complete ' . $group->name . " ($total_tres)\n");
         } else {
-            print {$STATUS_FD} 'error ' . $group->name . " ($total_tres)\n";
+            print {$STATUS_FD}
+              encode_utf8('error ' . $group->name . " ($total_tres)\n");
             $$exit_code_ref = 1;
         }
         $OUTPUT->v_msg('Finished processing group ' . $group->name);

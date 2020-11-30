@@ -40,7 +40,6 @@ BEGIN {
     );
 }
 
-use Carp qw(croak);
 use IO::Async::Loop;
 use IO::Async::Process;
 

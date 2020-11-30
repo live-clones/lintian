@@ -23,6 +23,7 @@ use warnings;
 use utf8;
 
 use Path::Tiny;
+use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Deb822::Parser qw(parse_dpkg_control_string);
 use Lintian::Deb822::Section;
@@ -125,7 +126,7 @@ sub parse_string {
     if (length $@) {
         chomp $@;
         $@ =~ s/^syntax error at //;
-        die "syntax error in $@\n"
+        die encode_utf8("syntax error in $@\n")
           if length $@;
     }
 

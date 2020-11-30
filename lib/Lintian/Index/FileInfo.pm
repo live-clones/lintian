@@ -24,6 +24,7 @@ use autodie;
 
 use Cwd;
 use IPC::Run3;
+use Unicode::UTF8 qw(encode_utf8 decode_utf8);
 
 use constant EMPTY => q{};
 use constant SPACE => q{ };
@@ -75,20 +76,22 @@ sub add_fileinfo {
     # output then contains "ERROR" messages but is still usable
     run3(\@command, \$input, \$stdout);
 
+    # allow processing of file names with non UTF-8 bytes
+
     my %fileinfo;
 
     $stdout =~ s/\0$//;
 
     my @lines = split(/\0/, $stdout, -1);
 
-    die 'Did not get an even number lines from file command.'
+    die encode_utf8('Did not get an even number lines from file command.')
       unless @lines % 2 == 0;
 
     while(defined(my $path = shift @lines)) {
 
         my $type = shift @lines;
 
-        die "syntax error in file-info output: '$path' '$type'"
+        die encode_utf8("syntax error in file-info output: '$path' '$type'")
           unless length $path && length $type;
 
         # drop relative prefix, if present

@@ -115,7 +115,7 @@ sub parse {
 
         # trim end
         s/\s+\r?$//;
-        #	printf(STDERR "%-39.39s %-39.39s\n",$expect,$_);
+        #	print encode_utf*(sprintf(STDERR "%-39.39s %-39.39s\n",$expect,$_));
         if (
 m/^(?<Source>\w[-+0-9a-z.]*) \((?<Version>[^\(\) \t]+)\)(?<Distribution>(?:\s+[-+0-9a-z.]+)+)\;\s*(?<kvpairs>.*)$/i
         ){
@@ -137,7 +137,7 @@ m/^(?<Source>\w[-+0-9a-z.]*) \((?<Version>[^\(\) \t]+)\)(?<Distribution>(?:\s+[-
 
             unless ($entry->is_empty) {
                 $entry->Closes(find_closes($entry->Changes));
-                #		    print STDERR, Dumper($entry);
+
                 push @{$self->entries}, $entry;
                 $entry = Lintian::Inspect::Changelog::Entry->new;
             }
@@ -259,8 +259,9 @@ m/^ \-\- (?<name>.*) <(?<email>.*)>(?<sep>  ?)(?<date>(?:\w+\,\s*)?\d{1,2}\s+\w+
                     && !$entry->is_empty) {
                     # lets assume we have missed the actual header line
                     $entry->Closes(find_closes($entry->Changes));
-                    #		    print STDERR, Dumper($entry);
+
                     push @{$self->entries}, $entry;
+
                     $entry = Lintian::Inspect::Changelog::Entry->new;
                     $entry->Source(UNKNOWN);
                     $entry->Distribution(UNKNOWN);
@@ -322,9 +323,6 @@ m/^ \-\- (?<name>.*) <(?<email>.*)>(?<sep>  ?)(?<date>(?:\w+\,\s*)?\d{1,2}\s+\w+
         $entry->Closes(find_closes($entry->Changes));
         push @{$self->entries}, $entry;
     }
-
-    #    use Data::Dumper;
-    #    print Dumper( $self );
 
     return;
 }

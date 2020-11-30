@@ -25,6 +25,7 @@ use warnings;
 use utf8;
 
 use Carp qw(croak);
+use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Relation;
 
@@ -128,7 +129,7 @@ sub binary_relation {
                   @{ $alias{$lowercase} });
 
         } else {
-            croak "unknown relation field $name"
+            croak encode_utf8("unknown relation field $name")
               unless $known{$lowercase};
             my $value
               = $self->debian_control->installable_fields($package)
@@ -197,7 +198,7 @@ sub relation {
             $relation = Lintian::Relation->new($value);
 
         } else {
-            croak "unknown relation field $name";
+            croak encode_utf8("unknown relation field $name");
         }
 
         $self->saved_relations->{$lowercase} = $relation;

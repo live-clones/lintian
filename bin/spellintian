@@ -38,8 +38,8 @@ use File::BaseDir qw(config_home config_files data_home);
 use File::Basename;
 use Getopt::Long ();
 use Path::Tiny;
+use Unicode::UTF8 qw(encode_utf8 decode_utf8);
 
-use Lintian::IPC::Run3 qw(safe_qx);
 use Lintian::Spelling qw(check_spelling check_spelling_picky);
 use Lintian::Profile;
 use Lintian::Version qw(guess_version);
@@ -47,15 +47,13 @@ use Lintian::Version qw(guess_version);
 use constant EMPTY => q{};
 use constant COLON => q{:};
 
-binmode(STDOUT, ':encoding(UTF-8)');
-
 $SIG{__WARN__} = sub {
     my ($message) = @_;
 
     $message =~ s/\A([[:upper:]])/lc($1)/e;
     $message =~ s/\n+\z//;
 
-    die "spellintian: $message\n";
+    die encode_utf8("spellintian: $message\n");
 };
 
 if (my $coverage_arg = $ENV{'LINTIAN_COVERAGE'}) {
@@ -65,7 +63,7 @@ if (my $coverage_arg = $ENV{'LINTIAN_COVERAGE'}) {
 }
 
 $ENV{LINTIAN_BASE} = realpath("$FindBin::RealBin/..")
-  // die 'Cannot resolve LINTIAN_BASE';
+  // die encode_utf8('Cannot resolve LINTIAN_BASE');
 
 my @INCLUDE_DIRS;
 my $picky = 0;
@@ -82,7 +80,7 @@ my %options = (
 Getopt::Long::Configure('gnu_getopt');
 
 Getopt::Long::GetOptions(%options)
-  or die "error parsing options\n";
+  or die encode_utf8("error parsing options\n");
 
 # only absolute paths
 my @RESTRICTED_CONFIG_DIRS;
@@ -119,20 +117,20 @@ $profile->load(undef, \@CONFIG_DIRS,
 my $exit_code = 0;
 
 unless (@ARGV) {
-    my $text = do { local $/; <STDIN> };
+    my $text = do { local $/; decode_utf8(<STDIN>) };
     spellcheck(undef, $picky, $text);
 }
 
 for my $path (@ARGV) {
 
     unless (-f $path) {
-        print STDERR "$path is not a file\n";
+        print STDERR encode_utf8("$path is not a file\n");
         $exit_code = 1;
 
         next;
     }
 
-    my $text = path($path)->slurp;
+    my $text = path($path)->slurp_utf8;
     spellcheck($path, $picky, $text);
 }
 
@@ -141,15 +139,15 @@ exit $exit_code;
 sub show_version {
     my $version = $LINTIAN_VERSION // guess_version($ENV{LINTIAN_BASE});
 
-    die 'Unable to determine the version automatically!?'
+    die encode_utf8('Unable to determine the version automatically!?')
       unless length $version;
 
-    say "spellintian v$version";
+    say encode_utf8("spellintian v$version");
     exit;
 }
 
 sub show_help {
-    print <<'EOF' ;
+    my $message =<<'EOF' ;
 Usage: spellintian [--picky] [FILE...]
 
 Options:
@@ -158,6 +156,9 @@ Options:
     --[no-]user-dirs   whether to include profiles from user directories
     --version          show version info and exit
 EOF
+
+    print encode_utf8($message);
+
     exit;
 }
 
@@ -168,7 +169,7 @@ sub spellcheck {
 
     my $spelling_error_handler = sub {
         my ($mistake, $correction) = @_;
-        say "$prefix$mistake -> $correction";
+        say encode_utf8("$prefix$mistake -> $correction");
     };
 
     check_spelling($text, $spelling_error_handler);

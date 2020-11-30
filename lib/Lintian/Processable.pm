@@ -24,7 +24,6 @@ use warnings;
 use utf8;
 use warnings::register;
 
-use Carp qw(croak);
 use Path::Tiny;
 
 use constant EMPTY => q{};

@@ -92,11 +92,13 @@ has changelog_path => (
         my $changelogpath;
         if ($packagechangelogpath->basename =~ /\.gz$/) {
 
-            my $contents = safe_qx('gunzip', '-c', $resolved->unpacked_path);
+            my $contents
+              = decode_utf8(safe_qx('gunzip', '-c', $resolved->unpacked_path));
 
             $changelogpath
               = path($self->basedir)->child('changelog')->stringify;
-            path($changelogpath)->spew($contents);
+
+            path($changelogpath)->spew_utf8($contents);
 
         } else {
             $changelogpath = $resolved->unpacked_path;

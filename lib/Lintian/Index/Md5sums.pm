@@ -24,6 +24,7 @@ use autodie;
 
 use Cwd;
 use IPC::Run3;
+use Unicode::UTF8 qw(encode_utf8 decode_utf8);
 
 use Lintian::Util qw(read_md5sums);
 
@@ -66,13 +67,17 @@ sub add_md5sums {
     $input .= $_->name . NULL for @files;
 
     my $stdout;
-    my $errors;
+    my $stderr;
 
     my @command = ('xargs', '--null', '--no-run-if-empty', 'md5sum', '--');
-    run3(\@command, \$input, \$stdout, \$errors);
-
+    run3(\@command, \$input, \$stdout, \$stderr);
     my $status = ($? >> 8);
-    die "Cannot run @command: $errors\n"
+
+    # allow processing of file names with non UTF-8 bytes
+    $stderr = decode_utf8($stderr)
+      if length $stderr;
+
+    die encode_utf8("Cannot run @command: $stderr\n")
       if $status;
 
     my ($md5sums, undef) = read_md5sums($stdout);

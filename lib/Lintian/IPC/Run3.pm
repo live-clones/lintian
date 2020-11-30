@@ -39,8 +39,8 @@ BEGIN {
     );
 }
 
-use Carp qw(croak);
 use IPC::Run3;
+use Unicode::UTF8 qw(encode_utf8 decode_utf8);
 
 use Lintian::Deb822::File;
 
@@ -117,7 +117,7 @@ sub get_deb_info {
     my @dpkg_command = ('dpkg-deb', '--ctrl-tarfile', $path);
 
     my $dpkg_pid = open(my $from_dpkg, '-|', @dpkg_command)
-      or die "Cannot run @dpkg_command: $!";
+      or die encode_utf8("Cannot run @dpkg_command: $!");
 
     # would like to set buffer size to 4096 & TAR_RECORD_SIZE
 
@@ -126,19 +126,23 @@ sub get_deb_info {
     my $stderr;
     my @tar_command = ('tar', '--wildcards', '-xO', '-f', '-', '*control');
     run3(\@tar_command, $from_dpkg, \$stdout, \$stderr);
-
     my $status = ($? >> 8);
+
+    # allow reading of control files with non UTF-8 byte content
+    $stderr = decode_utf8($stderr)
+      if length $stderr;
+
     if ($status) {
 
         my $message= "Non-zero status $status from @tar_command";
         $message .= COLON . NEWLINE . $stderr
           if length $stderr;
 
-        die $message;
+        die encode_utf8($message);
     }
 
     close $from_dpkg
-      or warn "close failed for handle from @dpkg_command: $!";
+      or warn encode_utf8("close failed for handle from @dpkg_command: $!");
 
     waitpid($dpkg_pid, 0);
 

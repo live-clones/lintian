@@ -26,15 +26,16 @@ use autodie;
 
 use Carp qw(croak confess);
 use POSIX qw(ENOENT);
+use Unicode::UTF8 qw(encode_utf8);
 
 our $LAZY_LOAD = 1;
 
 sub _checked_open {
     my ($path) = @_;
     my $fd;
-    eval {open($fd, '<:encoding(UTF-8)', $path);};
+    eval {open($fd, '<:utf8_strict', $path);};
     if (my $err = $@) {
-        die($err) if not ref $err or $err->errno != ENOENT;
+        die encode_utf8($err) if not ref $err or $err->errno != ENOENT;
         return;
     }
     return $fd;
@@ -45,8 +46,11 @@ sub new {
     my $data_name = $args[0];
     my $self = {};
     my $data;
-    croak 'no data type specified' unless $data_name;
+
+    croak encode_utf8('no data type specified') unless $data_name;
+
     bless $self, $class;
+
     $data = $self->_get_data($data_name);
     if ($data) {
         # We already loaded this data file - just pull from cache
@@ -105,7 +109,7 @@ sub new {
     # Returns a listref of profile names
     sub _get_vendor_names {
         my ($self) = @_;
-        croak 'No vendor given' unless $profile;
+        croak encode_utf8('No vendor given') unless $profile;
         my @vendors;
         push @vendors, reverse @{ $profile->profile_list };
         return \@vendors;
@@ -141,8 +145,8 @@ sub new {
             $cur++;
         }
         if (not defined $file) {
-            croak "Unknown data file: $data_name" unless $start;
-            croak "No parent data file for $vendors->[$start]";
+            croak encode_utf8("Unknown data file: $data_name") unless $start;
+            croak encode_utf8("No parent data file for $vendors->[$start]");
         }
         return ($fd, $cur);
     }
@@ -164,7 +168,8 @@ sub _parse_file {
         if ($line =~ s/^\@//) {
             my ($op, $value) = split(m{ \s++ }xsm, $line, 2);
             if ($op eq 'delete') {
-                croak "Missing key after \@delete in $filename at line $."
+                croak encode_utf8(
+                    "Missing key after \@delete in $filename at line $.")
                   unless defined $value && length $value;
                 @{$keyorder} = grep { $_ ne $value } @{$keyorder};
                 delete $dataset->{$value};
@@ -177,9 +182,10 @@ sub _parse_file {
             } elsif ($op eq 'if-vendor-is' or $op eq 'if-vendor-is-not') {
                 my ($desired_name, $remain) = split(m{ \s++ }xsm, $value, 2);
                 my $actual_name;
-                croak "Missing vendor name after \@$op"
+                croak encode_utf8("Missing vendor name after \@$op")
                   unless $desired_name;
-                croak "Missing command after vendor name for \@$op"
+                croak encode_utf8(
+                    "Missing command after vendor name for \@$op")
                   unless $remain;
                 $actual_name = (split('/', $vendors->[0], 2))[0];
                 if ($op eq 'if-vendor-is') {
@@ -190,7 +196,8 @@ sub _parse_file {
                 $line = $remain;
                 redo;
             } else {
-                croak "Unknown operation \@$op in $filename at line $.";
+                croak encode_utf8(
+                    "Unknown operation \@$op in $filename at line $.");
             }
             next;
         }
@@ -203,7 +210,8 @@ sub _parse_file {
                 $val = $code->($key, $val, $pval);
                 if (not defined($val)) {
                     next if defined($pval);
-                    croak "undefined value for $key (data-name: $data_name)";
+                    croak encode_utf8(
+                        "undefined value for $key (data-name: $data_name)");
                 }
             }
         } else {

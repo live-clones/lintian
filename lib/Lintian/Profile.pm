@@ -29,6 +29,7 @@ use File::Find::Rule;
 use List::Compare;
 use List::MoreUtils qw(any none uniq first_value);
 use Path::Tiny;
+use Unicode::UTF8 qw(encode_utf8);
 
 use Dpkg::Vendor qw(get_current_vendor get_vendor_info);
 
@@ -165,7 +166,7 @@ has known_vendors => (
     default => sub {
 
         my $vendor = Dpkg::Vendor::get_current_vendor();
-        croak 'Could not determine the current vendor'
+        croak encode_utf8('Could not determine the current vendor')
           unless $vendor;
 
         my @vendors;
@@ -175,7 +176,7 @@ has known_vendors => (
             my $info = Dpkg::Vendor::get_vendor_info($vendor);
             # Cannot happen atm, but in case Dpkg::Vendor changes its internals
             #  or our code changes
-            croak "Could not look up the parent vendor of $vendor"
+            croak encode_utf8("Could not look up the parent vendor of $vendor")
               unless $info;
 
             $vendor = $info->{'Parent'};
@@ -239,7 +240,7 @@ sub load {
             my $tag = Lintian::Tag->new;
             $tag->load($tagpath);
 
-            die "Tag in $tagpath is not associated with a check"
+            die encode_utf8("Tag in $tagpath is not associated with a check")
               unless length $tag->check;
 
             next
@@ -254,10 +255,10 @@ sub load {
               = grep { defined $self->known_aliases->{$_} }
               @{$tag->renamed_from};
 
-            die 'These aliases of the tag '
-              . $tag->name
-              . ' are taken already: '
-              . join(SPACE, @taken)
+            die encode_utf8('These aliases of the tag '
+                  . $tag->name
+                  . ' are taken already: '
+                  . join(SPACE, @taken))
               if @taken;
 
             $self->known_aliases->{$_} = $tag->name for @{$tag->renamed_from};
@@ -389,13 +390,14 @@ sub enable_tag {
     my $renamed = $self->known_aliases->{$name};
     if (length $renamed) {
 
-        warn
-"The tag $name was renamed to $renamed. Please adjust your profile.\n";
+        warn encode_utf8(
+"The tag $name was renamed to $renamed. Please adjust your profile.\n"
+        );
         $name = $renamed;
     }
 
     my $tag = $self->known_tags_by_name->{$name};
-    die "Unknown tag $name"
+    die encode_utf8("Unknown tag $name")
       unless $tag;
 
     $self->enabled_checks_by_name->{$tag->check}++
@@ -418,13 +420,14 @@ sub disable_tag {
     my $renamed = $self->known_aliases->{$name};
     if (length $renamed) {
 
-        warn
-"The tag $name was renamed to $renamed. Please adjust your profile.\n";
+        warn encode_utf8(
+"The tag $name was renamed to $renamed. Please adjust your profile.\n"
+        );
         $name = $renamed;
     }
 
     my $tag = $self->known_tags_by_name->{$name};
-    die "Unknown tag $name"
+    die encode_utf8("Unknown tag $name")
       unless $tag;
 
     delete $self->enabled_checks_by_name->{$tag->check}
@@ -490,7 +493,7 @@ sub read_profile {
         @search_space = ($requested_name);
 
     } else {
-        croak "$requested_name is not a valid profile name";
+        croak encode_utf8("$requested_name is not a valid profile name");
     }
 
     my @candidates;
@@ -500,7 +503,8 @@ sub read_profile {
 
     my $path = first_value { -e } @candidates;
 
-    croak 'Could not find a profile matching: ' . join(SPACE, @search_space)
+    croak encode_utf8(
+        'Could not find a profile matching: ' . join(SPACE, @search_space))
       unless length $path;
 
     my $deb822 = Lintian::Deb822::File->new;
@@ -508,21 +512,21 @@ sub read_profile {
 
     my ($header, @sections) = @paragraphs;
 
-    croak "Profile has no header in $path"
+    croak encode_utf8("Profile has no header in $path")
       unless defined $header;
 
     my $name = $header->unfolded_value('Profile');
-    croak "Profile has no name in $path"
+    croak encode_utf8("Profile has no name in $path")
       unless length $name;
 
-    croak "Invalid Profile field in $path"
+    croak encode_utf8("Invalid Profile field in $path")
       if $name =~ m{^/} || $name =~ m{\.};
 
     # normalize name
     $name .= '/main'
       unless $name =~ m{/};
 
-    croak "Recursive definition of $name"
+    croak encode_utf8("Recursive definition of $name")
       if exists $self->parent_map->{$name};
 
     # Mark as being loaded.
@@ -541,8 +545,8 @@ sub read_profile {
     my @valid_fields
       = qw(Profile Extends Enable-Tags-From-Check Disable-Tags-From-Check Enable-Tags Disable-Tags);
     my @unknown_fields = $header->extra(@valid_fields);
-    croak "Unknown fields in header of profile $name: "
-      . join(SPACE, @unknown_fields)
+    croak encode_utf8("Unknown fields in header of profile $name: "
+          . join(SPACE, @unknown_fields))
       if @unknown_fields;
 
     my @enable_checks
@@ -555,8 +559,8 @@ sub read_profile {
     my %count;
     $count{$_}++ for @allchecks;
     my @duplicate_checks = grep { $count{$_} > 1 } keys %count;
-    die "These checks appear in profile $name more than once: "
-      . join(SPACE, @duplicate_checks)
+    die encode_utf8("These checks appear in profile $name more than once: "
+          . join(SPACE, @duplicate_checks))
       if @duplicate_checks;
 
     # make sure checks are loaded
@@ -573,7 +577,7 @@ sub read_profile {
             }
         }
 
-        croak "Profile $name references unknown check $name"
+        croak encode_utf8("Profile $name references unknown check $name")
           unless defined $location;
 
         # ignore duplicates
@@ -608,8 +612,8 @@ sub read_profile {
     %count = ();
     $count{$_}++ for @alltags;
     my @duplicate_tags = grep { $count{$_} > 1 } keys %count;
-    die "These tags appear in in profile $name more than once: "
-      . join(SPACE, @duplicate_tags)
+    die encode_utf8("These tags appear in in profile $name more than once: "
+          . join(SPACE, @duplicate_tags))
       if @duplicate_tags;
 
     push(@enable_tags, $self->known_checks_by_name->{$_}->tags)
@@ -628,18 +632,20 @@ sub read_profile {
 
         my @valid_fields = qw(Tags Overridable Severity);
         my @unknown_fields = $section->extra(@valid_fields);
-        croak "Unknown fields in section $position of profile $name: "
-          . join(SPACE, @unknown_fields)
+        croak encode_utf8(
+            "Unknown fields in section $position of profile $name: "
+              . join(SPACE, @unknown_fields))
           if @unknown_fields;
 
         my @tags = $section->trimmed_list('Tags', qr/\s*,\s*/);
-        croak
-          "Tags field missing or empty in section $position of profile $name"
-          unless @tags;
+        croak encode_utf8(
+            "Tags field missing or empty in section $position of profile $name"
+        )unless @tags;
 
         my $severity = $section->unfolded_value('Severity');
-        croak
+        croak encode_utf8(
 "Profile $name contains invalid severity $severity in section $position"
+          )
           if length $severity && none { $severity eq $_ }
         @Lintian::Tag::SEVERITIES;
 
@@ -650,12 +656,13 @@ sub read_profile {
         for my $tagname (@tags) {
 
             my $tag = $self->known_tags_by_name->{$tagname};
-            croak "Unknown tag $tagname in $name (section $position)"
+            croak encode_utf8(
+                "Unknown tag $tagname in $name (section $position)")
               unless defined $tag;
 
-            croak
+            croak encode_utf8(
 "Classification tag $tagname cannot take a severity (profile $name, section $position"
-              if $tag->visibility eq 'classification';
+            )if $tag->visibility eq 'classification';
 
             $tag->effective_severity($severity)
               if length $severity;
@@ -698,7 +705,8 @@ sub _parse_boolean {
     return 0
       if $text eq 'false' or $text =~ /^no?$/;
 
-    croak "$text is not a boolean value in $profile (section $position)";
+    croak encode_utf8(
+        "$text is not a boolean value in $profile (section $position)");
 }
 
 =item display_level_for_tag
@@ -709,7 +717,7 @@ sub display_level_for_tag {
     my ($self, $tagname) = @_;
 
     my $tag = $self->get_tag($tagname);
-    croak "Unknown tag $tagname"
+    croak encode_utf8("Unknown tag $tagname")
       unless defined $tag;
 
     return $self->display_level_lookup->{$tag->effective_severity};
@@ -811,7 +819,7 @@ sub display {
 
     unless ($op =~ /^[+=-]\z/ and $rel =~ /^(?:[<>]=?|=)\z/) {
         my $error = $self->_format_level($op, $rel, $severity);
-        die 'invalid display constraint ' . $error;
+        die encode_utf8('invalid display constraint ' . $error);
     }
 
     if ($op eq '=') {
@@ -832,7 +840,7 @@ sub display {
 
     unless (@severities) {
         my $error = $self->_format_level($op, $rel, $severity);
-        die 'invalid display constraint ' . $error;
+        die encode_utf8('invalid display constraint ' . $error);
     }
 
     for my $s (@severities) {

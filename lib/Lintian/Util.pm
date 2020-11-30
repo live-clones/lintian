@@ -69,7 +69,7 @@ use Digest::MD5;
 use Digest::SHA;
 use List::MoreUtils qw(first_value);
 use Path::Tiny;
-use Unicode::UTF8 qw(valid_utf8);
+use Unicode::UTF8 qw(valid_utf8 encode_utf8);
 
 use Lintian::Deb822::File;
 use Lintian::Inspect::Changelog;
@@ -260,7 +260,7 @@ sub perm2oct {
                     ([-r])([-w])([-xtT])     # other
                /xsm
     ) {
-        croak "$text does not appear to be a permission string";
+        croak encode_utf8("$text does not appear to be a permission string");
     }
 
     $octal += 00400 if $1 eq 'r';   # owner read
@@ -478,9 +478,15 @@ will cause a trappable error.
 
 sub is_ancestor_of {
     my ($ancestor, $file) = @_;
-    my $resolved_file = abs_path($file)// croak("resolving $file failed: $!");
-    my $resolved_ancestor = abs_path($ancestor)
-      // croak("resolving $ancestor failed: $!");
+
+    my $resolved_file = abs_path($file);
+    croak encode_utf8("resolving $file failed: $!")
+      unless defined $resolved_file;
+
+    my $resolved_ancestor = abs_path($ancestor);
+    croak encode_utf8("resolving $ancestor failed: $!")
+      unless defined $resolved_ancestor;
+
     my $len;
     return 1 if $resolved_ancestor eq $resolved_file;
     # add a slash, "path/some-dir" is not "path/some-dir-2" and this
@@ -536,7 +542,7 @@ sub unescape_md5sum_filename {
     }
 
     # do not stop inside an escape sequence
-    die 'Name terminated inside an escape sequence'
+    die encode_utf8('Name terminated inside an escape sequence')
       if $escaped;
 
     return $path;

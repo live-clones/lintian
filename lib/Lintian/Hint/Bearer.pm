@@ -23,6 +23,7 @@ use warnings;
 use utf8;
 
 use Carp;
+use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Hint::Standard;
 
@@ -65,7 +66,7 @@ sub hint {
 
     my $tag = $self->profile->get_tag($tagname);
 
-    croak "tried to issue unknown tag: $tagname"
+    croak encode_utf8("tried to issue unknown tag: $tagname")
       unless defined $tag;
 
     # skip disabled tags

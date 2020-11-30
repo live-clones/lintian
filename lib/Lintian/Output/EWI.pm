@@ -25,6 +25,7 @@ use utf8;
 use HTML::HTML5::Entities;
 use Term::ANSIColor ();
 use Text::Wrap;
+use Unicode::UTF8 qw(encode_utf8);
 
 # for tty hyperlinks
 use constant OSC_HYPERLINK => qq{\033]8;;};
@@ -184,15 +185,15 @@ sub print_hint {
     $type = SPACE . $hint->processable->type
       unless $hint->processable->type eq 'binary';
 
-    say $code
-      . COLON
-      . SPACE
-      . $hint->processable->name
-      . $type
-      . COLON
-      . SPACE
-      . $output
-      . $information;
+    say encode_utf8($code
+          . COLON
+          . SPACE
+          . $hint->processable->name
+          . $type
+          . COLON
+          . SPACE
+          . $output
+          . $information);
 
     $self->describe_tags($tag)
       if $self->showdescription && !$self->issued_tag($tag->name);
@@ -277,7 +278,7 @@ sub describe_tags {
         $output .= $description . NEWLINE;
         $output .= 'N:' . NEWLINE;
 
-        print $output;
+        print encode_utf8($output);
     }
 
     return;

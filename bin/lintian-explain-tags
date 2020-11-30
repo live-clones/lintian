@@ -39,6 +39,7 @@ use File::BaseDir qw(config_home config_files data_home);
 use File::Basename;
 use Getopt::Long ();
 use List::MoreUtils qw(any);
+use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Output::EWI;
 use Lintian::Output::HTML;
@@ -51,8 +52,6 @@ use constant SPACE => q{ };
 use constant COLON => q{:};
 use constant NEWLINE => qq{\n};
 
-binmode(STDOUT, ':encoding(UTF-8)');
-
 if (my $coverage_arg = $ENV{'LINTIAN_COVERAGE'}) {
     my $p5opt = $ENV{'PERL5OPT'}//EMPTY;
     $p5opt .= ' ' if $p5opt ne EMPTY;
@@ -60,7 +59,7 @@ if (my $coverage_arg = $ENV{'LINTIAN_COVERAGE'}) {
 }
 
 $ENV{LINTIAN_BASE} = realpath("$FindBin::RealBin/..")
-  // die 'Cannot resolve LINTIAN_BASE';
+  // die encode_utf8('Cannot resolve LINTIAN_BASE');
 
 my $format = 'ewi';
 my @INCLUDE_DIRS;
@@ -82,7 +81,7 @@ my %options = (
 
 Getopt::Long::Configure('gnu_getopt');
 Getopt::Long::GetOptions(%options)
-  or die "error parsing options\n";
+  or die encode_utf8("error parsing options\n");
 
 # only absolute paths
 my @RESTRICTED_CONFIG_DIRS;
@@ -129,11 +128,11 @@ if ($format eq 'ewi') {
     $output = Lintian::Output::HTML->new;
 
 } else {
-    die "Invalid output format $format\n";
+    die encode_utf8("Invalid output format $format\n");
 }
 
 if ($list_tags) {
-    say for sort { lc($a) cmp lc($b) } $profile->enabled_tags;
+    say encode_utf8($_) for sort { lc($a) cmp lc($b) } $profile->enabled_tags;
     exit;
 }
 
@@ -153,15 +152,15 @@ exit any { !defined $profile->get_tag($_) } @selected;
 sub show_version {
     my $version = $LINTIAN_VERSION // guess_version($ENV{LINTIAN_BASE});
 
-    die 'Unable to determine the version automatically!?'
+    die encode_utf8('Unable to determine the version automatically!?')
       unless length $version;
 
-    say "annotate-lintian-hints v$version";
+    say encode_utf8("annotate-lintian-hints v$version");
     exit;
 }
 
 sub show_help {
-    print <<"EOT";
+    my $message =<<"EOT";
 Usage: explain-lintian-tags [log-file...] ...
        explain-lintian-tags [--tags] tag ...
 
@@ -173,6 +172,9 @@ Options:
     --[no-]user-dirs   whether to include profiles from user directories
     --version          show version info and exit
 EOT
+
+    print encode_utf8($message);
+
     exit;
 }
 

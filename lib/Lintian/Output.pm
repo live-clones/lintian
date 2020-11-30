@@ -23,6 +23,8 @@ use v5.20;
 use warnings;
 use utf8;
 
+use Unicode::UTF8 qw(encode_utf8);
+
 use Moo::Role;
 use namespace::clean;
 
@@ -154,7 +156,7 @@ sub msg {
     return
       if $self->verbosity < 0;
 
-    say "N: $_" for @args;
+    say encode_utf8("N: $_") for @args;
 
     return;
 }
@@ -165,7 +167,7 @@ sub v_msg {
     return
       unless $self->verbosity > 0;
 
-    say "N: $_" for @args;
+    say encode_utf8("N: $_") for @args;
 
     return;
 }
@@ -176,7 +178,7 @@ sub debug_msg {
     return
       unless $self->debug && ($self->debug >= $level);
 
-    say "N: $_" for @args;
+    say encode_utf8("N: $_") for @args;
 
     return;
 }
@@ -197,7 +199,7 @@ sub perf_log {
 
     return unless $self->perf_debug;
 
-    say { $self->perf_log_fd } $_ for @args;
+    say { $self->perf_log_fd } encode_utf8($_) for @args;
 
     return;
 }

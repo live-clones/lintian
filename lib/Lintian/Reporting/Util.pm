@@ -115,7 +115,7 @@ sub save_state_cache {
     # proper locking, but it will at least ensure that the file
     # is in a consistent state.
     eval {
-        print {$tmp_fd} YAML::XS::Dump($state);
+        print {$tmp_fd} encode_utf8(YAML::XS::Dump($state));
 
         close($tmp_fd) or die("close $tmp_path: $!");
 

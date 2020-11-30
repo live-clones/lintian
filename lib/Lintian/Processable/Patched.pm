@@ -27,6 +27,7 @@ use autodie;
 use Cwd;
 use IPC::Run3;
 use Path::Tiny;
+use Unicode::UTF8 qw(encode_utf8 decode_utf8);
 
 use Lintian::Index;
 use Lintian::Index::Item;
@@ -76,7 +77,7 @@ has patched => (
         path($index->basedir)->remove_tree
           if -d $index->basedir;
 
-        print "N: Using dpkg-source to unpack\n"
+        print encode_utf8("N: Using dpkg-source to unpack\n")
           if $ENV{'LINTIAN_DEBUG'};
 
         my $saved_umask = umask;
@@ -91,14 +92,17 @@ has patched => (
         my $unpack_errors;
 
         run3(\@unpack_command, \undef, \undef, \$unpack_errors);
-
         my $status = ($? >> 8);
+
+        $unpack_errors = decode_utf8($unpack_errors)
+          if length $unpack_errors;
+
         if ($status) {
             my $message = "Non-zero status $status from @unpack_command";
             $message .= COLON . NEWLINE . $unpack_errors
               if length $unpack_errors;
 
-            die $message;
+            die encode_utf8($message);
         }
 
         umask $saved_umask;
@@ -114,6 +118,9 @@ has patched => (
         my $permissions_errors;
 
         run3(\@permissions_command, \undef, \undef, \$permissions_errors);
+
+        $permissions_errors = decode_utf8($permissions_errors)
+          if length $permissions_errors;
 
         chdir($savedir);
 

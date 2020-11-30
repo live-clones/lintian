@@ -24,6 +24,7 @@ use warnings;
 use utf8;
 
 use Path::Tiny;
+use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Deb822::File;
 use Lintian::Tag ();
@@ -112,10 +113,10 @@ has tag_table => (
 sub load {
     my ($self) = @_;
 
-    die 'No base directory'
+    die encode_utf8('No base directory')
       unless length $self->basedir;
 
-    die 'No name'
+    die encode_utf8('No name')
       unless length $self->name;
 
     my $module = $self->name;
@@ -135,17 +136,17 @@ sub load {
 
     my $deb822 = Lintian::Deb822::File->new;
     my @sections = $deb822->read_file($descpath);
-    die "$descpath does not have exactly one paragraph"
+    die encode_utf8("$descpath does not have exactly one paragraph")
       unless scalar @sections == 1;
 
     my $fields = $sections[0];
 
-    die "No name field in $descpath"
+    die encode_utf8("No name field in $descpath")
       unless $fields->exists('Check-Script');
 
     my $name = $fields->value('Check-Script');
 
-    die "Wrong name $name vs " . $self->name
+    die encode_utf8("Wrong name $name vs " . $self->name)
       unless $name eq $self->name;
 
     $self->type($fields->value('Type'));
@@ -220,7 +221,7 @@ sub get_tag {
     return
       unless defined $name_spaced;
 
-    warn "Using $prefixed as name spaced while not so declared."
+    warn encode_utf8("Using $prefixed as name spaced while not so declared.")
       unless $name_spaced->name_spaced;
 
     return $name_spaced;

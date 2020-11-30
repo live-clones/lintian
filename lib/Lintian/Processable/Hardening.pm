@@ -65,7 +65,7 @@ sub hardening_info {
     my %hardening_info;
 
     if (-e $hardf) {
-        open(my $idx, '<', $hardf);
+        open(my $idx, '<:utf8_strict', $hardf);
         while (my $line = <$idx>) {
             chomp($line);
 

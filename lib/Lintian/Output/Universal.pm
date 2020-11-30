@@ -24,6 +24,7 @@ use utf8;
 
 use Carp;
 use List::MoreUtils qw(all);
+use Unicode::UTF8 qw(encode_utf8);
 
 use constant SPACE => q{ };
 use constant EMPTY => q{};
@@ -129,7 +130,7 @@ sub issue_hints {
     my @sorted
       = reverse sort { order($a) cmp order($b) } @lines;
 
-    say $_ for @sorted;
+    say encode_utf8($_) for @sorted;
 
     return;
 }
@@ -165,7 +166,7 @@ sub parse_line {
     my ($package, $type, $name, $details)
       = $line =~ qr/^(\S+)\s+\(([^)]+)\):\s+(\S+)(?:\s+(.*))?$/;
 
-    croak "Cannot parse line $line"
+    croak encode_utf8("Cannot parse line $line")
       unless all { length } ($package, $type, $name);
 
     return ($package, $type, $name, $details);

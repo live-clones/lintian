@@ -24,6 +24,7 @@ use utf8;
 
 use Carp qw(croak);
 use Path::Tiny;
+use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::IPC::Run3 qw(get_deb_info);
 
@@ -79,16 +80,17 @@ Initializes a new object from FILE.
 sub init {
     my ($self, $file) = @_;
 
-    croak "File $file is not an absolute, resolved path"
+    croak encode_utf8("File $file is not an absolute, resolved path")
       unless $file eq path($file)->realpath->stringify;
 
-    croak "File $file does not exist"
+    croak encode_utf8("File $file does not exist")
       unless -e $file;
 
     $self->path($file);
 
     my $section = get_deb_info($self->path)
-      or croak 'could not read control data in ' . $self->path . ": $!";
+      or croak encode_utf8(
+        'could not read control data in ' . $self->path . ": $!");
 
     $self->fields($section);
 
@@ -101,7 +103,7 @@ sub init {
 
     unless (length $name) {
         $name = $self->guess_name($self->path);
-        croak 'Cannot determine the name from ' . $self->path
+        croak encode_utf8('Cannot determine the name from ' . $self->path)
           unless length $name;
     }
 

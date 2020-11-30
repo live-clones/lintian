@@ -740,7 +740,7 @@ sub check_dch {
     my ($prefix, $suffix);
     my $lineno = 0;
     my ($estart, $tstart) = (0, 0);
-    open(my $fd, '<:encoding(UTF-8)', $path);
+    open(my $fd, '<:utf8_strict', $path);
     while (<$fd>) {
 
         unless ($tstart) {

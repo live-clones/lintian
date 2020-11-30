@@ -26,6 +26,7 @@ use utf8;
 
 use Carp qw(croak);
 use List::MoreUtils qw(none);
+use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Data;
 use Lintian::Deb822::File;
@@ -119,7 +120,7 @@ has visibility => (
         my ($text) = @_;
 
         $text //= EMPTY;
-        croak "Unknown tag severity $text"
+        croak encode_utf8("Unknown tag severity $text")
           if none { $text eq $_ } @SEVERITIES;
 
         return $text;
@@ -134,7 +135,7 @@ has effective_severity => (
         my ($text) = @_;
 
         $text //= EMPTY;
-        croak "Unknown tag severity $text"
+        croak encode_utf8("Unknown tag severity $text")
           if none { $text eq $_ } @SEVERITIES;
 
         return $text;
@@ -197,12 +198,12 @@ Loads a tag description from PATH.
 sub load {
     my ($self, $tagpath) = @_;
 
-    croak "Cannot read tag file from $tagpath"
+    croak encode_utf8("Cannot read tag file from $tagpath")
       unless -r $tagpath;
 
     my $deb822 = Lintian::Deb822::File->new;
     my @sections = $deb822->read_file($tagpath);
-    croak "$tagpath does not have exactly one paragraph"
+    croak encode_utf8("$tagpath does not have exactly one paragraph")
       unless scalar @sections == 1;
 
     my $fields = $sections[0];
@@ -233,7 +234,7 @@ sub load {
 
     $self->renamed_from([$fields->trimmed_list('Renamed-From')]);
 
-    croak "No Tag field in $tagpath"
+    croak encode_utf8("No Tag field in $tagpath")
       unless length $self->name;
 
     $self->effective_severity($self->visibility);

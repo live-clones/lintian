@@ -44,7 +44,7 @@ use List::Compare;
 use List::MoreUtils qw(any none first_value);
 use Path::Tiny;
 use POSIX qw(:sys_wait_h);
-use Unicode::UTF8 qw(valid_utf8 decode_utf8);
+use Unicode::UTF8 qw(encode_utf8 decode_utf8);
 
 use Lintian::Deb822::Parser qw(parse_dpkg_control_string);
 use Lintian::Inspect::Changelog;
@@ -64,10 +64,6 @@ use constant NEWLINE => qq{\n};
 # only in GNOME; need original environment
 my $interactive = -t STDIN && (-t *STDOUT || !(-f *STDOUT || -c *STDOUT));
 my $hyperlinks_capable = $interactive && qx{env | fgrep -i gnome};
-
-# only do once; layers are additive
-binmode(*STDOUT, ':encoding(UTF-8)');
-binmode(*STDERR, ':encoding(UTF-8)');
 
 # Globally ignore SIGPIPE.  We'd rather deal with error returns from write
 # than randomly delivered signals.
@@ -101,10 +97,10 @@ $ENV{LC_ALL} = 'C';
 $ENV{TZ} = EMPTY;
 
 $ENV{LINTIAN_BASE} = realpath("$FindBin::RealBin/..")
-  // die 'Cannot resolve LINTIAN_BASE';
+  // die encode_utf8('Cannot resolve LINTIAN_BASE');
 
 $ENV{LINTIAN_VERSION} = $LINTIAN_VERSION // guess_version($ENV{LINTIAN_BASE});
-die 'Unable to determine the version automatically!?'
+die encode_utf8('Unable to determine the version automatically!?')
   unless length $ENV{LINTIAN_VERSION};
 
 if (my $coverage_arg = $ENV{LINTIAN_COVERAGE}) {
@@ -165,18 +161,18 @@ Getopt::Long::Configure('default', 'bundling',
     'no_getopt_compat','no_auto_abbrev','permute');
 
 Getopt::Long::GetOptions(\%command_line, @getoptions)
-  or die "error parsing options\n";
+  or die encode_utf8("error parsing options\n");
 
 my @basenames = map { path($_)->basename } @ARGV;
 $0 = join(SPACE, "$FindBin::RealBin/$FindBin::RealScript", @basenames);
 
 if (exists $command_line{'version'}) {
-    say "Lintian v$ENV{LINTIAN_VERSION}";
+    say encode_utf8("Lintian v$ENV{LINTIAN_VERSION}");
     exit;
 }
 
 if (exists $command_line{'print-version'}) {
-    say $ENV{LINTIAN_VERSION};
+    say encode_utf8($ENV{LINTIAN_VERSION});
     exit;
 }
 
@@ -241,7 +237,8 @@ if (length $LINTIAN_CFG) {
     # for keys appearing multiple times, now uses the last value
     my $object = Config::Tiny->read($LINTIAN_CFG, 'utf8');
     my $error = $object->errstr;
-    die "syntax error in configuration file $LINTIAN_CFG: $error\n"
+    die encode_utf8(
+        "syntax error in configuration file $LINTIAN_CFG: $error\n")
       if length $error;
 
     # used elsewhere to check for values already set
@@ -271,7 +268,8 @@ if (length $LINTIAN_CFG) {
     my $knownlc
       = List::Compare->new([keys %config], [@allowed, @ENV_FROM_CONFIG]);
     my @unknown = $knownlc->get_Lonly;
-    die "Unknown setting in $LINTIAN_CFG: " . join(SPACE, @unknown) . NEWLINE
+    die encode_utf8(
+        "Unknown setting in $LINTIAN_CFG: " . join(SPACE, @unknown) . NEWLINE)
       if @unknown;
 }
 
@@ -394,35 +392,38 @@ for my $level (@{$selected{'display-level'}}) {
 
 if (length $selected{'tags-from-file'}) {
 
-    open(my $file, '<', $selected{'tags-from-file'});
-    my @activate;
-    for my $line (<$file>) {
-        $line =~ s/^\s+//;
-        $line =~ s/\s+$//;
-        next unless $line;
-        next if $line =~ /^\#/;
-        push(@activate, split(/\s*,\s*/, $line));
-    }
-    close $file;
+    my @lines = path($selected{'tags-from-file'})->lines_utf8;
+    for my $line (@lines) {
 
-    push(@{$selected{tags}}, @activate);
+        # trim both ends
+        $line =~ s/^\s+|\s+$//g;
+
+        next
+          unless length $line;
+        next
+          if $line =~ /^\#/;
+
+        my @activate = split(/\s*,\s*/, $line);
+        push(@{$selected{tags}}, @activate);
+    }
 }
 
 if (length $selected{'suppress-tags-from-file'}) {
 
-    my @suppress;
-    open(my $file, '<', $selected{'suppress-tags-from-file'});
-    for my $line (<$file>) {
-        chomp $line;
-        $line =~ s/^\s+//;
-        # Remove trailing white-space/comments
-        $line =~ s/(\#.*+|\s+)$//;
-        next unless $line;
-        push(@suppress, split(/\s*,\s*/, $line));
-    }
-    close $file;
+    my @lines = path($selected{'suppress-tags-from-file'})->lines_utf8;
+    for my $line (@lines) {
 
-    push(@{$selected{'suppress-tags'}}, @suppress);
+        # trim both ends
+        $line =~ s/^\s+|\s+$//g;
+
+        next
+          unless length $line;
+        next
+          if $line =~ /^\#/;
+
+        my @suppress = split(/\s*,\s*/, $line);
+        push(@{$selected{'suppress-tags'}}, @suppress);
+    }
 }
 
 # only absolute paths
@@ -438,9 +439,8 @@ my $STATUS_FD;
 
 # root permissions?
 # check if effective UID is 0
-if ($> == 0 && !$selected{'allow-root'}) {
-    warn "warning: running with root privileges is not recommended!\n";
-}
+warn encode_utf8("warning: running with root privileges is not recommended!\n")
+  if $> == 0 && !$selected{'allow-root'};
 
 if ($selected{'ignore-lintian-env'}) {
     delete($ENV{$_}) for grep { m/^LINTIAN_/ } keys %ENV;
@@ -448,14 +448,15 @@ if ($selected{'ignore-lintian-env'}) {
 
 # option --all and packages specified at the same time?
 if ($selected{'packages-from-file'} && $#ARGV+1 > 0) {
-    warn
-"warning: option --packages-from-file cannot be mixed with package parameters!\n";
-    warn "(will ignore --packages-from-file option)\n";
+    warn encode_utf8(
+"warning: option --packages-from-file cannot be mixed with package parameters!\n"
+    );
+    warn encode_utf8("(will ignore --packages-from-file option)\n");
 
     delete($selected{'packages-from-file'});
 }
 
-die "Cannot use profile together with --ftp-master-rejects.\n"
+die encode_utf8("Cannot use profile together with --ftp-master-rejects.\n")
   if $selected{profile} && $selected{'ftp-master-rejects'};
 # --ftp-master-rejects is implemented in a profile
 $selected{profile} = 'debian/ftp-master-auto-reject'
@@ -465,13 +466,14 @@ $selected{profile} = 'debian/ftp-master-auto-reject'
 my @unknown_fail_on
   = grep {!/^(?:error|warning|info|pedantic|experimental|override|none)$/ }
   @{$selected{'fail-on'}};
-die "Unrecognized fail-on argument: @unknown_fail_on\n"
+die encode_utf8("Unrecognized fail-on argument: @unknown_fail_on\n")
   if @unknown_fail_on;
 
 if (any { $_ eq 'none' } @{$selected{'fail-on'}}) {
     if (@{$selected{'fail-on'}} > 1) {
-        die
-"Cannot combine 'none' with other conditions: @{$selected{'fail-on'}}\n";
+        die encode_utf8(
+"Cannot combine 'none' with other conditions: @{$selected{'fail-on'}}\n"
+        );
     } else {
         @{$selected{'fail-on'}} = [];
     }
@@ -505,9 +507,10 @@ my $envlc = List::Compare->new([keys %config], \@ENV_FROM_CONFIG);
 my @from_file = $envlc->get_intersection;
 
 my @already = grep { defined $ENV{$_} } @from_file;
-warn 'The environment overrides these settings in the configuration file: '
-  . join(SPACE, @already)
-  . NEWLINE
+warn encode_utf8(
+        'The environment overrides these settings in the configuration file: '
+      . join(SPACE, @already)
+      . NEWLINE)
   if @already;
 
 my @not_yet = grep { !defined $ENV{$_} } @from_file;
@@ -517,7 +520,7 @@ $OUTPUT->debug_msg(1,
   if @not_yet;
 $ENV{$_} = $config{$_} for @not_yet;
 
-die "The color value must be one of auto, always, or never.\n"
+die encode_utf8("The color value must be one of auto, always, or never.\n")
   unless (any { $selected{color} eq $_ } qw(auto always never));
 
 if ($selected{color} eq 'never') {
@@ -525,7 +528,7 @@ if ($selected{color} eq 'never') {
 } else {
     $selected{hyperlinks} //= 'on';
 }
-die "The hyperlink value must be on or off\n"
+die encode_utf8("The hyperlink value must be on or off\n")
   unless $selected{hyperlinks} =~ /^(?:on|off)$/;
 
 $selected{verbose} = -1
@@ -540,7 +543,9 @@ if ($selected{verbose} || !-t *STDOUT) {
 if ($selected{debug}) {
     $selected{verbose} = 1;
     $ENV{LINTIAN_DEBUG} = $selected{debug};
-    $SIG{__DIE__} = sub { Carp::confess(@_) };
+    $SIG{__DIE__} = sub {
+        Carp::confess(map { encode_utf8($_) } @_);
+    };
 }
 
 $OUTPUT->verbosity($selected{verbose});
@@ -602,8 +607,9 @@ if ($selected{debug}) {
 }
 
 if (defined $selected{LINTIAN_PROFILE}) {
-    warn
-"Warning: Please use 'profile' in config file; LINTIAN_PROFILE is obsolete.\n";
+    warn encode_utf8(
+"Warning: Please use 'profile' in config file; LINTIAN_PROFILE is obsolete.\n"
+    );
     $selected{profile} //= $selected{LINTIAN_PROFILE};
     delete $selected{LINTIAN_PROFILE};
 }
@@ -642,7 +648,7 @@ if (@{$selected{'check-part'}} || @{$selected{tags}}) {
                 next;
             }
             my $checkinfo = $PROFILE->get_checkinfo($checkname);
-            die "Unrecognized check (via -C): $checkname\n"
+            die encode_utf8("Unrecognized check (via -C): $checkname\n")
               unless $checkinfo;
 
             $PROFILE->enable_tag($_) for $checkinfo->tags;
@@ -653,7 +659,7 @@ if (@{$selected{'check-part'}} || @{$selected{tags}}) {
     # we are disabling checks
     for my $checkname (@{$selected{'dont-check-part'}}) {
         my $checkinfo = $PROFILE->get_checkinfo($checkname);
-        die "Unrecognized check (via -X): $checkname\n"
+        die encode_utf8("Unrecognized check (via -X): $checkname\n")
           unless $checkinfo;
 
         $PROFILE->disable_tag($_) for $checkinfo->tags;
@@ -678,7 +684,8 @@ push(@subjects, @ARGV);
 if ($selected{'packages-from-file'}){
     my $fd = open_file_or_fd($selected{'packages-from-file'}, '<');
 
-    while (my $line = <$fd>) {
+    while (my $bytes = <$fd>) {
+        my $line = decode_utf8($bytes);
         chomp $line;
 
         next
@@ -696,15 +703,15 @@ if ($selected{'packages-from-file'}){
 my $pool = Lintian::Pool->new;
 
 for my $path (@subjects) {
-    die "$path is not a file\n" unless -f $path;
+    die encode_utf8("$path is not a file\n") unless -f $path;
 
     # in ubuntu, automatic dbgsym packages end with .ddeb
-    die
+    die encode_utf8(
 "bad package file name $path (neither .deb, .udeb, .ddeb, .changes, .dsc or .buildinfo file)\n"
-      unless $path =~ /\.(?:[u|d]?deb|dsc|changes|buildinfo)$/;
+    )unless $path =~ /\.(?:[u|d]?deb|dsc|changes|buildinfo)$/;
 
     my $absolute = abs_path($path);
-    die "Cannot resolve $path: $!"
+    die encode_utf8("Cannot resolve $path: $!")
       unless $absolute;
 
     eval {
@@ -728,7 +735,7 @@ for my $path (@subjects) {
             next
               if $basename =~ m{/};
 
-            die "$parent/$basename does not exist, exiting\n"
+            die encode_utf8("$parent/$basename does not exist, exiting\n")
               unless -f "$parent/$basename";
 
             # only care about some files; ddeb is ubuntu dbgsym
@@ -743,7 +750,7 @@ for my $path (@subjects) {
         $pool->add_group($group);
     };
     if ($@) {
-        warn "Skipping $path: $@\n";
+        warn encode_utf8("Skipping $path: $@\n");
         $exit_code = 1;
     }
 }
@@ -797,10 +804,11 @@ sub parse_boolean {
     return 0
       if $str eq 'false' || $str =~ m/^no?$/;
 
-    croak "\"$str\" is not a valid boolean value";
+    croak encode_utf8("'$str' is not a valid boolean value");
 }
 
 sub _find_changes {
+    # read bytes to side-step any encoding errors
     my $contents = path('debian/changelog')->slurp;
     my $changelog = Lintian::Inspect::Changelog->new;
     $changelog->parse($contents);
@@ -817,12 +825,12 @@ sub _find_changes {
     if (not $last) {
         my @errors = @{$changelog->errors};
         if (@errors) {
-            warn "Cannot parse debian/changelog due to errors:\n";
+            warn encode_utf8("Cannot parse debian/changelog due to errors:\n");
             for my $error (@errors) {
-                warn "$error->[2] (line $error->[1])\n";
+                warn encode_utf8("$error->[2] (line $error->[1])\n");
             }
         } else {
-            warn "debian/changelog does not have any data?\n";
+            warn encode_utf8("debian/changelog does not have any data?\n");
         }
         exit 1;
     }
@@ -831,27 +839,31 @@ sub _find_changes {
     unless (defined $version && defined $source) {
         $version //= '<N/A>';
         $source //= '<N/A>';
-        warn "Cannot determine source and version from debian/changelog:\n";
-        warn "Source: $source\n";
-        warn "Version: $source\n";
+        warn encode_utf8(
+            "Cannot determine source and version from debian/changelog:\n");
+        warn encode_utf8("Source: $source\n");
+        warn encode_utf8("Version: $source\n");
         exit 1;
     }
     # remove the epoch
     $version =~ s/^\d+://;
     if (exists $ENV{DEB_BUILD_ARCH}) {
-        push(@archs, $ENV{DEB_BUILD_ARCH});
+        push(@archs, decode_utf8($ENV{DEB_BUILD_ARCH}));
     } else {
-        my $arch = safe_qx('dpkg', '--print-architecture');
+        my $arch = decode_utf8(safe_qx('dpkg', '--print-architecture'));
         chomp $arch;
         push(@archs, $arch) if length $arch;
     }
-    push @archs, $ENV{DEB_HOST_ARCH} if exists $ENV{DEB_HOST_ARCH};
+    push(@archs, decode_utf8($ENV{DEB_HOST_ARCH}))
+      if exists $ENV{DEB_HOST_ARCH};
     # Maybe cross-built for something dpkg knows about...
     open(my $foreign, '-|', 'dpkg', '--print-foreign-architectures');
-    while (my $line = <$foreign>) {
+    while (my $bytes = <$foreign>) {
+        my $line = decode_utf8($bytes);
         chomp($line);
         # Skip already attempted architectures (e.g. via DEB_BUILD_ARCH)
-        next if any { $_ eq $line } @archs;
+        next
+          if any { $_ eq $line } @archs;
         push(@archs, $line);
     }
     close($foreign);
@@ -863,12 +875,13 @@ sub _find_changes {
         }
     }
 
-    warn"Cannot find changes file for ${source}/${version}, tried:\n";
+    warn encode_utf8(
+        "Cannot find changes file for ${source}/${version}, tried:\n");
 
-    warn "  ${source}_${version}_${_}.changes\n" for @archs;
+    warn encode_utf8("  ${source}_${version}_${_}.changes\n") for @archs;
 
-    warn " in the following dirs:\n";
-    warn '  ', join("\n  ", @dirs), "\n";
+    warn encode_utf8(" in the following dirs:\n");
+    warn encode_utf8('  ', join("\n  ", @dirs), "\n");
 
     exit 0;
 }
@@ -904,10 +917,10 @@ sub open_file_or_fd {
             $fd = \*STDIN;
         } elsif ($to_open =~ m/^\&\d+$/) {
             open($fd, '<&=', substr($to_open, 1))
-              or die "fdopen $to_open for reading: $!\n";
+              or die encode_utf8("fdopen $to_open for reading: $!\n");
         } else {
             open($fd, '<', $to_open)
-              or die "open $to_open for reading: $!\n";
+              or die encode_utf8("open $to_open for reading: $!\n");
         }
 
     } elsif ($mode eq '>') {
@@ -915,15 +928,16 @@ sub open_file_or_fd {
             $fd = \*STDOUT;
         } elsif ($to_open =~ m/^\&\d+$/) {
             open($fd, '>&=', substr($to_open, 1))
-              or die "fdopen $to_open for writing: $!\n";
+              or die encode_utf8("fdopen $to_open for writing: $!\n");
         } else {
             $mode = ">$mode" if $to_open =~ s/^\+//;
             open($fd, $mode, $to_open)
-              or die "open $to_open for write/append ($mode): $!\n";
+              or
+              die encode_utf8("open $to_open for write/append ($mode): $!\n");
         }
 
     } else {
-        croak "Invalid mode \"$mode\" for open_file_or_fd";
+        croak encode_utf8("Invalid mode '$mode' for open_file_or_fd");
     }
 
     return $fd;
@@ -935,7 +949,7 @@ sub open_file_or_fd {
 
 sub default_jobs {
 
-    my $cpus = safe_qx('nproc');
+    my $cpus = decode_utf8(safe_qx('nproc'));
 
     return 2
       unless $cpus =~ m/^\d+$/;
@@ -972,13 +986,13 @@ sub END {
         if (my $err = $@) {
             # Don't use L::Output here as it might be (partly) cleaned
             # up.
-            warn "warning: closing ${filename} failed: $err\n";
+            warn encode_utf8("warning: closing ${filename} failed: $err\n");
         }
     }
 }
 
 sub _die_in_signal_handler {
-    die "N: Interrupted.\n";
+    die encode_utf8("N: Interrupted.\n");
 }
 
 sub retrigger_signal {
@@ -992,15 +1006,15 @@ sub retrigger_signal {
 sub interrupted {
     $received_signal = $_[0];
     $SIG{$received_signal} = 'DEFAULT';
-    print {$STATUS_FD} "ack-signal SIG${received_signal}\n";
+    print {$STATUS_FD} encode_utf8("ack-signal SIG${received_signal}\n");
     return _die_in_signal_handler();
 }
 
 sub show_help {
 
-    say "Lintian v$ENV{LINTIAN_VERSION}";
+    say encode_utf8("Lintian v$ENV{LINTIAN_VERSION}");
 
-    print <<"EOT-EOT-EOT";
+    my $message =<<"EOT-EOT-EOT";
 Syntax: lintian [action] [options] [--] [packages] ...
 Actions:
     -c, --check               check packages (default action)
@@ -1047,6 +1061,8 @@ Configuration options:
 
 Some options were omitted. Please check the manual page for the complete list.
 EOT-EOT-EOT
+
+    print encode_utf8($message);
 
     exit;
 }
