@@ -98,6 +98,11 @@ sub source {
 
         $self->check_control_paragraph($_) for @sections;
 
+        my @thorough
+          = grep { $_->value('Restrictions') !~ m{\bsuperficial\b} } @sections;
+        $self->hint('superficial-tests')
+          if @sections && !@thorough;
+
         if (scalar @sections == 1) {
             my $command = $sections[0]->unfolded_value('Test-Command');
 
