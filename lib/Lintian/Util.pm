@@ -601,8 +601,8 @@ sub utf8_clean_log {
     my ($bytes) = @_;
 
     my $hex_sequence = sub {
-        my ($bytes) = @_;
-        return '{hex:' . sprintf('%vX', $bytes) . '}';
+        my ($unclean_bytes) = @_;
+        return '{hex:' . sprintf('%vX', $unclean_bytes) . '}';
     };
 
     my $utf8_clean_word = sub {

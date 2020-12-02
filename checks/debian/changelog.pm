@@ -140,7 +140,7 @@ sub source {
           = ($examine =~ m/[^~a-z]($candidate_pattern)($increment_pattern)/sm);
         if (length $candidate_string && !length $latest_version->source_nmu) {
 
-            my $increment_string //= EMPTY;
+            $increment_string //= EMPTY;
 
             # remove rc-part and any preceding symbol
             my $expected = $examine;

@@ -100,16 +100,15 @@ sub always {
 
         foreach my $name_section ($NAME_SECTION_MAPPINGS->all()) {
             my $regex= $NAME_SECTION_MAPPINGS->value($name_section)->{'regex'};
-            my $section
+            my $want
               = $NAME_SECTION_MAPPINGS->value($name_section)->{'section'};
 
             next
               unless ($pkg =~ m{$regex});
 
-            unless ($fraction eq $section) {
+            unless ($fraction eq $want) {
 
-                my $better
-                  = (defined $division ? "$division/" : EMPTY) . $section;
+                my $better= (defined $division ? "$division/" : EMPTY) . $want;
                 $self->hint('wrong-section-according-to-package-name',
                     "$pkg => $better");
             }

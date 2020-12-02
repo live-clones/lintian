@@ -163,7 +163,7 @@ EOF
 }
 
 sub spellcheck {
-    my ($path, $picky, $text) = @_;
+    my ($path, $be_picky, $text) = @_;
 
     my $prefix = $path ? "$path: " : EMPTY;
 
@@ -174,7 +174,7 @@ sub spellcheck {
 
     check_spelling($text, $spelling_error_handler);
     check_spelling_picky($text, $spelling_error_handler)
-      if $picky;
+      if $be_picky;
 
     return;
 }

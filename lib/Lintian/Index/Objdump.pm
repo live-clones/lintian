@@ -154,7 +154,7 @@ sub parse_per_file {
     my @dynamic_symbols;
     my %program_headers;
     my $truncated = 0;
-    my $section = EMPTY;
+    my $elf_section = EMPTY;
     my $static_lib_issues = 0;
 
     my $parsed .= "Filename: $filename\n";
@@ -191,31 +191,31 @@ sub parse_per_file {
             next;
 
         } elsif ($line =~ /^Program Headers:/) {
-            $section = 'PH';
+            $elf_section = 'PH';
             $parsed .= "Program-Headers:\n";
 
         } elsif ($line =~ /^Section Headers:/) {
-            $section = 'SH';
+            $elf_section = 'SH';
             $parsed .= "Section-Headers:\n";
 
         } elsif ($line =~ /^Dynamic section at offset .*:/) {
-            $section = 'DS';
+            $elf_section = 'DS';
             $parsed .= "Dynamic-Section:\n";
 
         } elsif ($line =~ /^Version symbols section /) {
-            $section = 'VS';
+            $elf_section = 'VS';
 
         } elsif ($line =~ /^Symbol table '.dynsym'/) {
-            $section = 'DS';
+            $elf_section = 'DS';
 
         } elsif ($line =~ /^Symbol table/) {
-            $section = EMPTY;
+            $elf_section = EMPTY;
 
         } elsif ($line =~ /^\s*$/) {
-            $section = EMPTY;
+            $elf_section = EMPTY;
 
         } elsif ($line =~ /^\s*(\S+)\s*(?:(?:\S+\s+){4})\S+\s(...)/
-            and $section eq 'PH') {
+            and $elf_section eq 'PH') {
 
             my $header = $1;
             my $flags = $2;
@@ -254,7 +254,7 @@ sub parse_per_file {
             next;
 
         } elsif ($line =~ /^\s*\[\s*(\d+)\] (\S+)(?:\s|\Z)/
-            && $section eq 'SH') {
+            && $elf_section eq 'SH') {
 
             my $section = $2;
             $sections[$1] = $section;
@@ -265,7 +265,7 @@ sub parse_per_file {
 
         } elsif ($line
             =~ /^\s*0x(?:[0-9A-F]+)\s+\((.*?)\)\s+([\x21-\x7f][\x20-\x7f]*)\Z/i
-            && $section eq 'DS') {
+            && $elf_section eq 'DS') {
 
             my $type = $1;
             my $value = $2;
@@ -302,7 +302,7 @@ sub parse_per_file {
 
         } elsif (
             $line =~ /^\s*[0-9a-f]+: \s* \S+ \s* (?:\(\S+\))? (?:\s|\Z)/xi
-            && $section eq 'VS') {
+            && $elf_section eq 'VS') {
 
             while ($line =~ /([0-9a-f]+h?)\s*(?:\((\S+)\))?(?:\s|\Z)/gci) {
                 my $version_number = $1;
@@ -320,7 +320,7 @@ sub parse_per_file {
 
         } elsif ($line
             =~ /^\s*(\d+):\s*[0-9a-f]+\s+\d+\s+(?:(?:\S+\s+){3})(?:\[.*\]\s+)?(\S+)\s+(.*)\Z/
-            && $section eq 'DS') {
+            && $elf_section eq 'DS') {
 
            # We (sometimes) need to read the "Version symbols section" first to
            # use this data and readelf tends to print after this section, so

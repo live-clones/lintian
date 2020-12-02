@@ -141,7 +141,6 @@ sub source {
     my ($self) = @_;
 
     my $processable = $self->processable;
-    my $group = $self->group;
 
     my $debian_dir = $processable->patched->resolve_path('debian');
     my $rules;

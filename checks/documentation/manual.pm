@@ -87,15 +87,15 @@ sub visit_installed_files {
     return
       unless $file->is_file || $file->is_symlink;
 
-    my ($manpage, $path, undef) = fileparse($file);
+    my ($manpage, $page_path, undef) = fileparse($file);
 
-    if ($path =~ m{^usr/share/man/$} && $manpage ne EMPTY) {
+    if ($page_path =~ m{^usr/share/man/$} && $manpage ne EMPTY) {
         $self->hint('odd-place-for-manual-page', $file);
         return;
     }
 
     # manual page?
-    my ($subdir) = ($path =~ m{^usr/share/man(/\S+)});
+    my ($subdir) = ($page_path =~ m{^usr/share/man(/\S+)});
     return
       unless defined $subdir;
 
@@ -162,7 +162,7 @@ sub visit_installed_files {
             #    ../../../../usr/share/man/man?/undocumented...
             if ((
                         $file->link =~ m,^undocumented\.([237])\.gz,
-                    and $path =~ m,^usr/share/man/man$1,
+                    and $page_path =~ m,^usr/share/man/man$1,
                 )
                 or $file->link =~ m,^\.\./man[237]/undocumented\.[237]\.gz$,
                 or $file->link
@@ -200,11 +200,11 @@ sub visit_installed_files {
             } elsif ($first =~ /^\.so\s+(.+)?$/) {
                 my $dest = $1;
                 if ($dest =~ m,^([^/]+)/(.+)$,) {
-                    my ($manxorlang, $rest) = ($1, $2);
+                    my ($manxorlang, $remainder) = ($1, $2);
                     if ($manxorlang !~ /^man\d+$/) {
                         # then it's likely a language subdir, so let's run
                         # the other component through the same check
-                        if ($rest =~ m,^([^/]+)/(.+)$,) {
+                        if ($remainder =~ m,^([^/]+)/(.+)$,) {
                             my (undef, $rest) = ($1, $2);
                             if ($rest !~ m,^[^/]+\.\d(?:\S+)?(?:\.gz)?$,) {
                                 $self->hint('bad-so-link-within-manual-page',
@@ -232,7 +232,7 @@ sub visit_installed_files {
         # lexgrog can't handle pages in all languages at the
         # moment, leading to huge numbers of false negatives. When
         # man-db is fixed, this limitation should be removed.
-        if ($path =~ m,/man/man\d/,) {
+        if ($page_path =~ m,/man/man\d/,) {
 
             delete local $ENV{$_}
               for grep { $_ ne 'PATH' && $_ ne 'TMPDIR' } keys %ENV;
@@ -399,7 +399,7 @@ sub visit_installed_files {
             # Check for spelling errors if the manpage is English
             check_spelling($line, $self->group->spelling_exceptions,
                 $stag_emitter, 0)
-              if ($path =~ m,/man/man\d/,);
+              if ($page_path =~ m,/man/man\d/,);
         }
     }
 

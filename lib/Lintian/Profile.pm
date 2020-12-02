@@ -274,18 +274,18 @@ sub load {
 
         for my $checkpath (@checkpaths) {
             my $relative = path($checkpath)->relative($checkdir)->stringify;
-            my ($name) = ($relative =~ qr/^(.*)\.pm$/);
+            my ($check_name) = ($relative =~ qr/^(.*)\.pm$/);
 
             # ignore duplicates
             next
-              if exists $self->known_checks_by_name->{$name};
+              if exists $self->known_checks_by_name->{$check_name};
 
             my $check = Lintian::Check::Info->new;
             $check->basedir($checkdir);
-            $check->name($name);
+            $check->name($check_name);
             $check->load;
 
-            $self->known_checks_by_name->{$name} = $check;
+            $self->known_checks_by_name->{$check_name} = $check;
         }
     }
 
@@ -542,12 +542,12 @@ sub read_profile {
     # any).
     push(@{$self->profile_list}, $name);
 
-    my @valid_fields
+    my @valid_header_fields
       = qw(Profile Extends Enable-Tags-From-Check Disable-Tags-From-Check Enable-Tags Disable-Tags);
-    my @unknown_fields = $header->extra(@valid_fields);
+    my @unknown_header_fields = $header->extra(@valid_header_fields);
     croak encode_utf8("Unknown fields in header of profile $name: "
-          . join(SPACE, @unknown_fields))
-      if @unknown_fields;
+          . join(SPACE, @unknown_header_fields))
+      if @unknown_header_fields;
 
     my @enable_checks
       = $header->trimmed_list('Enable-Tags-From-Check', qr/\s*,\s*/);

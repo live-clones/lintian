@@ -62,7 +62,6 @@ sub installable {
 
     my $missing_jarwrapper = 0;
     my $has_public_jars = 0;
-    my $has_jars = 0;
     my $jmajlow = '-';
 
     my $depends = $processable->relation('strong')->unparse;
@@ -102,7 +101,6 @@ sub installable {
         next
           if $file->name =~ m#usr/lib/xul(?:-ext|runner[^/]*+)/#o;
 
-        $has_jars = 1;
         if($file->name =~ m#^usr/share/java/[^/]+\.jar$#o) {
             $has_public_jars = 1;
             $self->hint('bad-jar-name', $file)

@@ -7,14 +7,14 @@ use autodie;
 
 use Pod::Simple::HTMLBatch;
 
-my (@input, $output, $version);
+my (@input, $output, $lintian_version);
 
 $output = pop @ARGV;
 @input = @ARGV;
 
 push @input, './lib', './doc/tutorial' unless @input;
 $output //= './doc/api.html';
-$version = guess_version();
+$lintian_version = guess_version();
 
 if (!-d $output) {
     mkdir $output or die "could not create directory: $!";
@@ -37,11 +37,11 @@ sub header {
          "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-  <title>Lintian (v$version) API doc</title>
+  <title>Lintian (v$lintian_version) API doc</title>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 </head>
 <body class='contentspage'>
-<h1>Lintian (v$version) API doc</h1>
+<h1>Lintian (v$lintian_version) API doc</h1>
 <p><em>Note: </em>This API is not stable between releases.</p>
 EOF
 }

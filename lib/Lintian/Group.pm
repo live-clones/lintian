@@ -204,7 +204,7 @@ sub process {
 
     $self->processing_start(gmtime->datetime . 'Z');
     $OUTPUT->v_msg('Starting on group ' . $self->name);
-    my $timer = [gettimeofday];
+    my $group_timer = [gettimeofday];
 
     my $success = 1;
     for my $processable ($self->get_processables){
@@ -415,7 +415,7 @@ sub process {
 
     $self->processing_end(gmtime->datetime . 'Z');
 
-    my $raw_res = tv_interval($timer);
+    my $raw_res = tv_interval($group_timer);
     my $tres = sprintf('%.3fs', $raw_res);
     $OUTPUT->debug_msg(1,
         'Checking all of group ' . $self->name . " done ($tres)");

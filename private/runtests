@@ -183,15 +183,15 @@ $ENV{'LINTIAN_EPOCH'}
   = max(map { -e $_ ? stat($_)->mtime : time } @lintianfiles);
 say encode_utf8('Lintian modified on '. rfc822date($ENV{'LINTIAN_EPOCH'}));
 
-my $error;
+my $lintian_error;
 my $bytes = capture_merged {
     my @command = ($ENV{'LINTIAN_UNDER_TEST'}, '--version');
     system(@command) == 0
-      or $error = "system @command failed: $?";
+      or $lintian_error = "system @command failed: $?";
 };
 my $string = decode_utf8($bytes);
-die encode_utf8($string . $error)
-  if length $error;
+die encode_utf8($string . $lintian_error)
+  if length $lintian_error;
 
 chomp $string;
 my ($version) = $string =~ qr/^\S+\s+v(.+)$/;
@@ -299,15 +299,15 @@ my $aggregator = TAP::Parser::Aggregator->new;
 $aggregator->start;
 
 my @runscripts;
-my $scriptpath = "$testset/scripts";
+my $allscripts_path = "$testset/scripts";
 
 # add selected scripts
-push(@runscripts, find_selected_scripts($scriptpath, $onlyrun));
+push(@runscripts, find_selected_scripts($allscripts_path, $onlyrun));
 
 # always add internal harness tests
 my @requiredscripts;
 @requiredscripts
-  = sort File::Find::Rule->file()->name('*.t')->in("$scriptpath/harness")
+  = sort File::Find::Rule->file()->name('*.t')->in("$allscripts_path/harness")
   unless length $onlyrun;
 push(@runscripts, @requiredscripts);
 

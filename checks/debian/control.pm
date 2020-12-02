@@ -61,7 +61,6 @@ my $SIGNING_KEY_FILENAMES = Lintian::Data->new('common/signing-key-filenames');
 sub source {
     my ($self) = @_;
 
-    my $pkg = $self->processable->name;
     my $processable = $self->processable;
     my $group = $self->group;
 
@@ -281,7 +280,7 @@ sub source {
             $self->hint('package-depends-on-hardcoded-libc',
                 $bin, $dep_fields[$strong])
               if $relation->implies($LIBCS)
-              and $pkg !~ /^e?glibc$/;
+              and $self->processable->name !~ /^e?glibc$/;
             for my $weak (($strong + 1) .. $#dep_fields) {
                 next
                   unless $processable->debian_control->installable_fields($bin)

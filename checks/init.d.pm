@@ -544,17 +544,17 @@ sub check_defaults {
 }
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     # check for missing init.d script when alternative init system is present
 
-    if (   $file =~ m,etc/sv/([^/]+)/run$,
-        or $file =~ m,lib/systemd/system/([^/@]+)\.service,) {
+    if (   $item =~ m,etc/sv/([^/]+)/run$,
+        or $item =~ m,lib/systemd/system/([^/@]+)\.service,) {
 
         my $service = $1;
 
         $self->hint('package-supports-alternative-init-but-no-init.d-script',
-            $file)
+            $item)
           unless $self->processable->installed->resolve_path(
             "etc/init.d/${service}")
           or $self->processable->installed->resolve_path(
@@ -563,15 +563,15 @@ sub visit_installed_files {
             "lib/systemd/system/${service}.timer");
     }
 
-    if ($file =~ m,etc/sv/([^/]+)/$,) {
+    if ($item =~ m,etc/sv/([^/]+)/$,) {
         my $service = $1;
-        my $file
+        my $runfile
           = $self->processable->installed->resolve_path(
             "etc/sv/${service}/run");
         $self->hint(
             'directory-in-etc-sv-directory-without-executable-run-script',
-            $file)
-          if not $file or not $file->is_executable;
+            $runfile)
+          if not $runfile or not $runfile->is_executable;
     }
 
     return;

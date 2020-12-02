@@ -282,11 +282,11 @@ has overrides => (
 
             if (exists $override_data{$tagname}{$context}) {
 
-                my @lines
+                my @same_context
                   = ($override_data{$tagname}{$context}{line}, $current{line});
 
                 $self->hint('duplicate-override-context', $tagname, 'lines',
-                    sort @lines);
+                    sort @same_context);
 
                 next;
             }

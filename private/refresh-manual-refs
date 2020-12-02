@@ -58,7 +58,7 @@ my $index_re
   = qr/<a href="(.+?)">\s*([A-Z]|[A-Z]?[\d\.]+?)\.?\s+([\w\s[:punct:]]+?)\s*<\/a>/;
 my $sphinx_re
   = qr/<a class="reference internal" href="(.+)">([\d\.]+)\.\s+(.*)<\/a>/;
-my $fields = [['url'], ['section'], ['title']];
+my $page_fields = [['url'], ['section'], ['title']];
 my $dbk_index_re
   = qr/([\d.]+?)\.\s+<a\s*href="(.+?)"\s*>([\w\s[:punct:]]+?)<\/a\s*>/i;
 my $dbk_fields = [['section'], ['url'], ['title']];
@@ -69,28 +69,31 @@ my %manuals = (
     'policy' => [
         '/usr/share/doc/debian-policy/policy.html/index.html',
         'https://www.debian.org/doc/debian-policy/',
-        $sphinx_re, $fields
+        $sphinx_re, $page_fields
     ],
     'menu-policy' => [
         '/usr/share/doc/debian-policy/menu-policy.html/index.html',
         'https://www.debian.org/doc/packaging-manuals/menu-policy/',
-        $index_re, $fields
+        $index_re,
+        $page_fields
     ],
     'perl-policy' => [
         '/usr/share/doc/debian-policy/perl-policy.html/index.html',
         'https://www.debian.org/doc/packaging-manuals/perl-policy/',
-        $index_re, $fields
+        $index_re,
+        $page_fields
     ],
     'python-policy' => [
         '/usr/share/doc/python3/python-policy.html/index.html',
         'https://www.debian.org/doc/packaging-manuals/python-policy/',
-        $index_re, $fields
+        $index_re,
+        $page_fields
     ],
     'java-policy' => [
         '/usr/share/doc/java-policy/debian-java-policy/index.html',
         'https://www.debian.org/doc/packaging-manuals/java-policy/',
         $dbk_index_re2,
-        $fields
+        $page_fields
     ],
     'vim-policy' => [
         '/usr/share/doc/vim/vim-policy.html/index.html',
@@ -107,7 +110,7 @@ my %manuals = (
         '/usr/share/doc/developers-reference/index.html',
         'https://www.debian.org/doc/developers-reference/',
         $index_re,
-        $fields,
+        $page_fields,
 #<<< no perl tidy
 # breaking this regex up with x should work, but for some reason it
 # trips a false positive in the minimum-version (thinking it requires
@@ -118,11 +121,11 @@ my %manuals = (
     'menu' => [
         '/usr/share/doc/menu/html/index.html',
         'https://www.debian.org/doc/packaging-manuals/menu.html/',
-        $index_re, $fields
+        $index_re, $page_fields
     ],
     'doc-base' => [
         '/usr/share/doc/doc-base/doc-base.html/index.html', '',
-        $index_re, $fields
+        $index_re, $page_fields
     ],
     'debconf-spec' => [
         '/usr/share/doc/debian-policy/debconf_specification.html',
@@ -130,7 +133,7 @@ my %manuals = (
             'https://www.debian.org',
             'doc/packaging-manuals/debconf_specification.html'),
         $index_re,
-        $fields
+        $page_fields
     ],
     'fhs' => [
         '/usr/share/doc/debian-policy/fhs/fhs-3.0.html',

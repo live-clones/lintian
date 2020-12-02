@@ -364,10 +364,10 @@ qr/GNU (?:Lesser|Library) General Public License|(?-i:\bLGPL\b)/i
             $contents,
             qr/\b(?:perl|artistic)\b/,
             sub {
-                my ($contents) = @_;
-                $contents
+                my ($text) = @_;
+                $text
                   =~ /(?:under )?(?:the )?(?:same )?(?:terms )?as Perl itself\b/i
-                  && $contents !~ m,usr/share/common-licenses/,;
+                  && $text !~ m,usr/share/common-licenses/,;
             })
     ) {
         $self->hint('copyright-file-lacks-pointer-to-perl-license');

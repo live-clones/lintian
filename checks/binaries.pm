@@ -74,9 +74,9 @@ sub spelling_tag_emitter {
 }
 
 sub _embedded_libs {
-    my ($key, $val, undef) = @_;
+    my ($key, $some_val, undef) = @_;
     my $result = {'libname' => $key,};
-    my ($opts, $regex) = split m/\|\|/, $val, 2;
+    my ($opts, $regex) = split m/\|\|/, $some_val, 2;
     if (!$regex) {
         $regex = $opts;
         $opts = '';

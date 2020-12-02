@@ -461,7 +461,7 @@ sub check_dep5_copyright {
     my @shipped_names
       = sort map { $_->name } grep { $_->is_file } @shipped_items;
 
-    my @license_names= grep { m,(^|/)(COPYING[^/]*|LICENSE)$, } @shipped_names;
+    my @notice_names= grep { m,(^|/)(COPYING[^/]*|LICENSE)$, } @shipped_names;
     my @quilt_names = grep { m,^\.pc/, } @shipped_names;
 
     my @names_with_comma = grep { /,/ } @shipped_names;
@@ -716,7 +716,7 @@ sub check_dep5_copyright {
               for @mismatched;
         }
 
-        my @no_license_needed = (@quilt_names, @license_names);
+        my @no_license_needed = (@quilt_names, @notice_names);
         my $unlicensed_lc
           = List::Compare->new(\@shipped_names, \@no_license_needed);
         my @license_needed = $unlicensed_lc->get_Lonly;
@@ -765,7 +765,7 @@ sub check_dep5_copyright {
 
     # license files do not require their own entries in d/copyright.
     my $license_lc
-      = List::Compare->new(\@license_names, [keys %sections_by_wildcard]);
+      = List::Compare->new(\@notice_names, [keys %sections_by_wildcard]);
     my @listed_licences = $license_lc->get_intersection;
 
     $self->hint('license-file-listed-in-debian-copyright',$_)
