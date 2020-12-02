@@ -316,20 +316,19 @@ sub get_interpreter {
     my ($self) = @_;
 
     my $magic;
-    my $interpreter;
+    my $interpreter_bytes;
 
     open(my $fd, '<', $self->unpacked_path);
     if (read($fd, $magic, 2) && $magic eq '#!' && !eof($fd)) {
-        my $interpreter_bytes = <$fd>;
-
-        $interpreter = decode_utf8($interpreter_bytes);
+        $interpreter_bytes = <$fd>;
 
         # trim both ends
-        $interpreter =~ s/^\s+|\s+$//g;
+        $interpreter_bytes =~ s/^\s+|\s+$//g;
     }
     close $fd;
 
-    return $interpreter;
+    # decoding UTF-8 fails on magyarispell_1.6.1-2.dsc and ldc_1.24.0-1.dsc
+    return $interpreter_bytes;
 }
 
 =item is_script
