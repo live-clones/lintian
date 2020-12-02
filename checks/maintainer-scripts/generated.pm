@@ -44,14 +44,9 @@ sub installable {
 
     for my $file (@control) {
 
-        my $interpreter = $file->control->{interpreter};
-        # do not check for empty interpreter
+        my $hashbang = $file->hashbang;
         next
-          unless length $interpreter;
-
-        # do not check ELF
-        next
-          if $interpreter eq 'ELF';
+          unless length $hashbang;
 
         next
           unless $file->is_open_ok;

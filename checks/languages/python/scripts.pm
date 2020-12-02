@@ -39,10 +39,8 @@ sub visit_installed_files {
     return
       unless $file->is_script;
 
-    my $interpreter = $file->script->{interpreter};
-
     $self->hint('script-uses-unversioned-python-in-shebang', $file)
-      if $interpreter =~ m,^(/usr/bin/)?python$,;
+      if $file->interpreter =~ m{^(/usr/bin/)?python$};
 
     return;
 }

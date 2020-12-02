@@ -200,11 +200,11 @@ sub check_maintainer_scripts {
       = grep { $_->is_control } $self->processable->control->sorted_list;
     for my $file (@control) {
 
-        my $interpreter = $file->control->{interpreter};
+        my $hashbang = $file->hashbang;
 
         # skip anything but shell scripts
         next
-          unless $interpreter =~ m/sh\b/;
+          unless $hashbang =~ m/^\S*sh\b/;
 
         next
           unless $file->is_open_ok;

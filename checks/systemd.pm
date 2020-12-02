@@ -491,9 +491,9 @@ sub check_maintainer_scripts {
     for my $file (@control) {
 
         # skip anything but shell scripts
-        my $interpreter = $file->control->{interpreter};
+        my $hashbang = $file->hashbang;
         next
-          unless $interpreter =~ m/sh\b/;
+          unless $hashbang =~ m/^\S*sh\b/;
 
         # Don't follow unsafe links
         next

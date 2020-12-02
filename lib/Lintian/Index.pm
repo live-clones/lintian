@@ -44,12 +44,10 @@ use namespace::clean;
 
 with
   'Lintian::Index::Ar',
-  'Lintian::Index::Control::Scripts',
   'Lintian::Index::FileInfo',
   'Lintian::Index::Java',
   'Lintian::Index::Md5sums',
   'Lintian::Index::Objdump',
-  'Lintian::Index::Scripts',
   'Lintian::Index::Strings';
 
 my %FILE_CODE2LPATH_TYPE = (
@@ -527,8 +525,6 @@ sub load {
 
     $self->add_md5sums;
     $self->add_fileinfo;
-    $self->add_scripts;
-    $self->add_control;
 
     $self->add_ar;
     $self->add_java;

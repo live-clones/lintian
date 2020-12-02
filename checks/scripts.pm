@@ -301,8 +301,8 @@ sub installable {
         next
           unless $file->is_script;
 
-        my $interpreter = $file->script->{interpreter};
-        my $calls_env = $file->script->{calls_env};
+        my $interpreter = $file->interpreter;
+        my $calls_env = $file->calls_env;
 
         my $filename = $file->name;
         my $path;
@@ -633,7 +633,17 @@ sub installable {
     my $expand_diversions = 0;
     for my $file (@control) {
 
-        my $interpreter = $file->control->{interpreter};
+        my $interpreter;
+        if ($file->is_elf) {
+            $interpreter = 'ELF';
+
+        } else {
+            # keep 'env', if present
+            $interpreter = $file->hashbang;
+
+            # keep base command without options
+            $interpreter =~ s/^(\S+).*/$1/;
+        }
 
         $interpreter =~ m|([^/]*)$|;
         my $base = $1;

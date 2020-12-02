@@ -306,30 +306,99 @@ sub magic {
     return $magic;
 }
 
-=item get_interpreter
+=item C<hashbang>
 
-Returns the interpreter for the file if it is a script.
+Returns the C<hashbang> for the file if it is a script.
 
 =cut
 
-sub get_interpreter {
-    my ($self) = @_;
+has hashbang => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
 
-    my $magic;
-    my $interpreter_bytes;
+        return EMPTY
+          unless $self->is_script;
 
-    open(my $fd, '<', $self->unpacked_path);
-    if (read($fd, $magic, 2) && $magic eq '#!' && !eof($fd)) {
-        $interpreter_bytes = <$fd>;
+        my $trimmed_bytes = EMPTY;
+        my $magic;
+
+        open(my $fd, '<', $self->unpacked_path);
+        if (read($fd, $magic, 2) && $magic eq '#!' && !eof($fd)) {
+            $trimmed_bytes = <$fd>;
+        }
+        close $fd;
+
+        # decoding UTF-8 fails on magyarispell_1.6.1-2.dsc and ldc_1.24.0-1.dsc
+
+        # remove comment, if any
+        $trimmed_bytes =~ s/^([^#]*)/$1/;
 
         # trim both ends
-        $interpreter_bytes =~ s/^\s+|\s+$//g;
-    }
-    close $fd;
+        $trimmed_bytes =~ s/^\s+|\s+$//g;
 
-    # decoding UTF-8 fails on magyarispell_1.6.1-2.dsc and ldc_1.24.0-1.dsc
-    return $interpreter_bytes;
-}
+        return $trimmed_bytes;
+    });
+
+=item interpreter
+
+Returns the interpreter requested by a script but strips C<env>.
+
+=cut
+
+has interpreter => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        my $interpreter = $self->hashbang;
+
+        $interpreter =~ s{^/usr/bin/env\s+}{};
+
+        # keep base command without options
+        $interpreter =~ s/^(\S+).*/$1/;
+
+        return $interpreter;
+    });
+
+=item C<calls_env>
+
+Returns true if file is a script that calls C<env>.
+
+=cut
+
+has calls_env => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        # must return a boolean success value #943724
+        return 1
+          if $self->hashbang =~ m{^/usr/bin/env\s+};
+
+        return 0;
+    });
+
+=item is_elf
+
+Returns true if file is an ELF executable, and false otherwise.
+
+=cut
+
+has is_elf => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        return 1
+          if $self->magic(4) eq "\x7FELF";
+
+        return 0;
+    });
 
 =item is_script
 
@@ -337,14 +406,21 @@ Returns true if file is a script and false otherwise.
 
 =cut
 
-sub is_script {
-    my ($self) = @_;
+has is_script => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
 
-    return 1
-      if scalar keys %{$self->script};
+        # skip lincity data files; magic: #!#!#!
+        return 0
+          if $self->magic(6) eq '#!#!#!';
 
-    return 0;
-}
+        return 0
+          unless $self->magic(2) eq '#!';
+
+        return 1;
+    });
 
 =item is_control
 
@@ -352,14 +428,18 @@ Returns true if file is a maintainer script and false otherwise.
 
 =cut
 
-sub is_control {
-    my ($self) = @_;
+has is_control => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
 
-    return 1
-      if scalar keys %{$self->control};
+        return 0
+          unless $self->is_open_ok
+          && $self->name =~ m/^(?:(?:pre|post)(?:inst|rm)|config)$/;
 
-    return 0;
-}
+        return 1;
+    });
 
 =item identity
 
@@ -1001,13 +1081,9 @@ files.
 
 =item java_info
 
-=item script
-
 =item strings
 
 =item objdump
-
-=item control
 
 =item C<basedir>
 
@@ -1127,10 +1203,6 @@ has java_info => (
     is => 'rw',
     coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
     default => sub { {} });
-has script => (
-    is => 'rw',
-    coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
-    default => sub { {} });
 has strings => (
     is => 'rw',
     coerce => sub { my ($text) = @_; return ($text // EMPTY); },
@@ -1142,10 +1214,6 @@ has objdump => (
     default => EMPTY
 );
 has ar_info => (
-    is => 'rw',
-    coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
-    default => sub { {} });
-has control => (
     is => 'rw',
     coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
     default => sub { {} });
