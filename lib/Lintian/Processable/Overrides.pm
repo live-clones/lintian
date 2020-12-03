@@ -27,7 +27,7 @@ use List::MoreUtils qw(none first_value);
 use Path::Tiny;
 use Unicode::UTF8 qw(valid_utf8 decode_utf8 encode_utf8);
 
-use Lintian::Architecture qw(:all);
+use Lintian::Architecture::Analyzer;
 
 use constant EMPTY => q{};
 use constant SPACE => q{ };
@@ -118,6 +118,9 @@ has overrides => (
         return {}
           unless length $contents;
 
+        my $analyzer = Lintian::Architecture::Analyzer->new;
+        $analyzer->profile($self->profile);
+
         my %override_data;
         my @comments;
         my %previous;
@@ -198,7 +201,8 @@ has overrides => (
                 next;
             }
 
-            my @invalid = grep { !valid_wildcard($_) } @architectures;
+            my @invalid
+              = grep { !$analyzer->valid_wildcard($_) } @architectures;
             $self->hint('malformed-override',
                 "Unknown architecture wildcard $_ in line $position")
               for @invalid;
@@ -219,7 +223,7 @@ has overrides => (
               if @architectures
               && (
                 $negations xor
-                none { wildcard_matches($_, $self->architecture) }
+                none { $analyzer->wildcard_matches($_, $self->architecture) }
                 @architectures
               );
 

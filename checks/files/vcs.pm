@@ -30,37 +30,68 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-my $COMPRESS_FILE_EXTENSIONS
-  = Lintian::Data->new('files/compressed-file-extensions',
-    qr/\s++/,sub { return qr/\Q$_[0]\E/ });
+has COMPRESS_FILE_EXTENSIONS => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        return $self->profile->load_data('files/compressed-file-extensions',
+            qr/\s++/,sub { return qr/\Q$_[0]\E/ });
+    });
 
 # an OR (|) regex of all compressed extension
-my $COMPRESS_FILE_EXTENSIONS_OR_ALL = sub { qr/(:?$_[0])/ }
-  ->(
-    join('|',
-        map {$COMPRESS_FILE_EXTENSIONS->value($_) }
-          $COMPRESS_FILE_EXTENSIONS->all));
+has COMPRESS_FILE_EXTENSIONS_OR_ALL => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        my $text = join('|',
+            map {$self->COMPRESS_FILE_EXTENSIONS->value($_) }
+              $self->COMPRESS_FILE_EXTENSIONS->all);
+
+        return qr/$text/;
+    });
 
 # vcs control files
-my $VCS_FILES = Lintian::Data->new(
-    'files/vcs-control-files',
-    qr/\s++/,
-    sub {
-        my $regexp = $_[0];
-        $regexp=~ s/\$[{]COMPRESS_EXT[}]/$COMPRESS_FILE_EXTENSIONS_OR_ALL/g;
-        return qr/(?:$regexp)/x;
+has VCS_FILES => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        my $regex = $self->COMPRESS_FILE_EXTENSIONS_OR_ALL;
+        return $self->profile->load_data(
+            'files/vcs-control-files',
+            qr/\s++/,
+            sub {
+                my $regexp = $_[0];
+                $regexp=~ s/\$[{]COMPRESS_EXT[}]/$regex/g;
+                return qr/(?:$regexp)/x;
+            });
     });
 
 # an OR (|) regex of all vcs files
-my $VCS_FILES_OR_ALL = sub { qr/(?:$_[0])/ }
-  ->(join('|', map { $VCS_FILES->value($_) } $VCS_FILES->all));
+has VCS_FILES_OR_ALL => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        my $text = join('|',
+            map { $self->VCS_FILES->value($_) } $self->VCS_FILES->all);
+        return qr/$text/;
+    });
 
 sub visit_installed_files {
     my ($self, $file) = @_;
 
     if ($file->is_file) {
 
-        if (    $file->name =~ m,$VCS_FILES_OR_ALL,
+        my $regex = $self->VCS_FILES_OR_ALL;
+
+        if (    $file->name =~ m{$regex}
             and $file->name !~ m,^usr/share/cargo/registry/,) {
             $self->hint('package-contains-vcs-control-file', $file->name);
         }

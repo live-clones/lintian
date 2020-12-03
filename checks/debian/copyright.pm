@@ -32,7 +32,6 @@ use List::MoreUtils qw(any all none uniq);
 use Path::Tiny;
 use Unicode::UTF8 qw[valid_utf8 decode_utf8];
 
-use Lintian::Data;
 use Lintian::Deb822::Parser qw(parse_dpkg_control_string);
 use Lintian::IPC::Run3 qw(safe_qx);
 use Lintian::Spelling qw(check_spelling);
@@ -41,10 +40,6 @@ use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-our $KNOWN_ESSENTIAL = Lintian::Data->new('fields/essential');
-our $KNOWN_COMMON_LICENSES
-  =  Lintian::Data->new('copyright-file/common-licenses');
 
 sub spelling_tag_emitter {
     my ($self, @orig_args) = @_;
@@ -120,7 +115,7 @@ sub binary {
         my $link = $doclink->link;
         $link =~ s,/.*,,;
 
-        unless (depends_on($self->processable, $link)) {
+        unless ($self->depends_on($self->processable, $link)) {
             $self->hint('usr-share-doc-symlink-without-dependency', $link);
 
             return;
@@ -206,6 +201,9 @@ sub binary {
       if $contents =~ /\r/;
 
     my $wrong_directory_detected = 0;
+
+    my $KNOWN_COMMON_LICENSES
+      =  $self->profile->load_data('copyright-file/common-licenses');
 
     if ($contents =~ m{ (usr/share/common-licenses/ ( [^ \t]*? ) \.gz) }xsm) {
         my ($path, $license) = ($1, $2);
@@ -427,7 +425,7 @@ qr/GNU (?:Lesser|Library) General Public License|(?-i:\bLGPL\b)/i
     }
 
     check_spelling(
-        $contents,
+        $self->profile,$contents,
         $self->group->spelling_exceptions,
         $self->spelling_tag_emitter('spelling-error-in-copyright'), 0
     );
@@ -459,7 +457,9 @@ qr/GNU (?:Lesser|Library) General Public License|(?-i:\bLGPL\b)/i
 # Returns true if the package whose information is in $processable depends $package
 # or if $package is essential.
 sub depends_on {
-    my ($processable, $package) = @_;
+    my ($self, $processable, $package) = @_;
+
+    my $KNOWN_ESSENTIAL = $self->profile->load_data('fields/essential');
 
     return 1
       if $KNOWN_ESSENTIAL->known($package);

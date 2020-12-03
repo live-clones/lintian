@@ -33,22 +33,13 @@ use autodie;
 use Dpkg::Version qw(version_check);
 use List::MoreUtils qw(any);
 
-use Lintian::Architecture qw(:all);
-use Lintian::Data ();
+use Lintian::Architecture::Analyzer;
 use Lintian::Relation qw(:constants);
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-our $KNOWN_ESSENTIAL = Lintian::Data->new('fields/essential');
-our $KNOWN_TOOLCHAIN = Lintian::Data->new('fields/toolchain');
-our $KNOWN_METAPACKAGES = Lintian::Data->new('fields/metapackages');
-our $NO_BUILD_DEPENDS = Lintian::Data->new('fields/no-build-depends');
-our $known_build_essential
-  = Lintian::Data->new('fields/build-essential-packages');
-our $KNOWN_BUILD_PROFILES = Lintian::Data->new('fields/build-profiles');
 
 # Still in the archive but shouldn't be the primary Emacs dependency.
 our %known_obsolete_emacs = map { $_ => 1 }
@@ -87,19 +78,12 @@ our @known_java_pkg = map { qr/$_/ } (
     'classpath', # deprecated packages (removed in Squeeze)
 );
 
-our $DH_ADDONS = Lintian::Data->new('common/dh_addons', '=');
-our %DH_ADDONS_VALUES = map { $DH_ADDONS->value($_) => 1 } $DH_ADDONS->all;
-
 # Python development packages that are used almost always just for building
 # architecture-dependent modules.  Used to check for unnecessary build
 # dependencies for architecture-independent source packages.
 our $PYTHON_DEV = join(' | ',
     qw(python3-dev python3-all-dev),
     map { "python$_-dev" } qw(2.7 3 3.7 3.8 3.9));
-
-our $OBSOLETE_PACKAGES
-  = Lintian::Data->new('fields/obsolete-packages',qr/\s*=>\s*/);
-our $VIRTUAL_PACKAGES   = Lintian::Data->new('fields/virtual-packages');
 
 sub installable {
     my ($self) = @_;
@@ -108,6 +92,18 @@ sub installable {
     my $type = $self->processable->type;
     my $processable = $self->processable;
     my $group = $self->group;
+
+    my $KNOWN_ESSENTIAL = $self->profile->load_data('fields/essential');
+    my $KNOWN_TOOLCHAIN = $self->profile->load_data('fields/toolchain');
+    my $KNOWN_METAPACKAGES = $self->profile->load_data('fields/metapackages');
+
+    my $DH_ADDONS = $self->profile->load_data('common/dh_addons', '=');
+    my %DH_ADDONS_VALUES = map { $DH_ADDONS->value($_) => 1 } $DH_ADDONS->all;
+
+    my $OBSOLETE_PACKAGES
+      = $self->profile->load_data('fields/obsolete-packages',qr/\s*=>\s*/);
+
+    my $VIRTUAL_PACKAGES= $self->profile->load_data('fields/virtual-packages');
 
     my $javalib = 0;
     my $replaces = $processable->relation('Replaces');
@@ -394,6 +390,19 @@ sub source {
     my $processable = $self->processable;
     my $group = $self->group;
 
+    my $KNOWN_ESSENTIAL = $self->profile->load_data('fields/essential');
+    my $KNOWN_METAPACKAGES = $self->profile->load_data('fields/metapackages');
+    my $NO_BUILD_DEPENDS= $self->profile->load_data('fields/no-build-depends');
+    my $known_build_essential
+      = $self->profile->load_data('fields/build-essential-packages');
+    my $KNOWN_BUILD_PROFILES
+      = $self->profile->load_data('fields/build-profiles');
+
+    my $OBSOLETE_PACKAGES
+      = $self->profile->load_data('fields/obsolete-packages',qr/\s*=>\s*/);
+
+    my $VIRTUAL_PACKAGES= $self->profile->load_data('fields/virtual-packages');
+
     my @binpkgs = $processable->debian_control->installables;
 
     #Get number of arch-indep packages:
@@ -424,6 +433,9 @@ sub source {
         qw(Build-Depends Build-Depends-Indep Build-Depends-Arch);
     };
 
+    my $analyzer = Lintian::Architecture::Analyzer->new;
+    $analyzer->profile($self->profile);
+
     my %depend;
     for my $field (
         qw(Build-Depends Build-Depends-Indep Build-Depends-Arch Build-Conflicts Build-Conflicts-Indep Build-Conflicts-Arch)
@@ -453,7 +465,8 @@ sub source {
                       = @$part_d;
 
                     for my $arch (@{$d_arch->[0]}) {
-                        if ($arch eq 'all' || !is_arch_or_wildcard($arch)){
+                        if ($arch eq 'all'
+                            || !$analyzer->is_arch_or_wildcard($arch)){
                             $self->hint(
                                 'invalid-arch-string-in-source-relation',
                                 "$arch [$field: $part_d_orig]");

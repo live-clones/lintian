@@ -38,11 +38,6 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-our $DERIVATIVE_VERSIONS= Lintian::Data->new('fields/derivative-versions',
-    qr/\s*~~\s*/, sub { $_[1]; });
-
-our $PERL_CORE_PROVIDES = Lintian::Data->new('fields/perl-provides', '\s+');
-
 sub source {
     my ($self) = @_;
 
@@ -74,6 +69,10 @@ sub source {
 
     my ($epoch, $upstream, $debian)
       = ($dversion->epoch, $dversion->version, $dversion->revision);
+
+    my $DERIVATIVE_VERSIONS
+      = $self->profile->load_data('fields/derivative-versions',
+        qr/\s*~~\s*/, sub { $_[1]; });
 
     unless ($self->processable->native) {
         foreach my $re ($DERIVATIVE_VERSIONS->all) {
@@ -142,9 +141,16 @@ sub always {
           if $debian =~ /^[^.-]+\.[^.-]+\./ and not $ubuntu;
     }
 
+    my $PERL_CORE_PROVIDES
+      = $self->profile->load_data('fields/perl-provides', '\s+');
+
     my $name = $fields->value('Package');
-    if ($PERL_CORE_PROVIDES->known($name)
-        && perl_core_has_version($name, '>=', "$epoch:$upstream")) {
+    if (
+        $PERL_CORE_PROVIDES->known($name)
+        && perl_core_has_version(
+            $name, '>=', "$epoch:$upstream", $PERL_CORE_PROVIDES
+        )
+    ) {
 
         my $core_version = $PERL_CORE_PROVIDES->value($name);
 
@@ -155,7 +161,7 @@ sub always {
 }
 
 sub perl_core_has_version {
-    my ($package, $op, $version) = @_;
+    my ($package, $op, $version, $PERL_CORE_PROVIDES) = @_;
 
     my $core_version = $PERL_CORE_PROVIDES->value($package);
 

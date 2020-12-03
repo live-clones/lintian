@@ -29,14 +29,10 @@ use warnings;
 use utf8;
 use autodie;
 
-use Lintian::Data ();
-
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-our $KNOWN_ESSENTIAL = Lintian::Data->new('fields/essential');
 
 sub source {
     my ($self) = @_;
@@ -65,6 +61,8 @@ sub always {
     }
 
     $self->hint('essential-no-not-needed') if $essential eq 'no';
+
+    my $KNOWN_ESSENTIAL = $self->profile->load_data('fields/essential');
 
     $self->hint('new-essential-package')
       if $essential eq 'yes'

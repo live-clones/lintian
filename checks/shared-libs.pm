@@ -29,7 +29,6 @@ use autodie;
 use File::Basename;
 use List::MoreUtils qw(any none uniq);
 
-use Lintian::Data;
 use Lintian::Relation;
 
 use Moo;
@@ -37,13 +36,9 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-# Libraries that should only be used in the presence of certain capabilities
-# may be located in subdirectories of the standard ldconfig search path with
-# one of the following names.
-my $HWCAP_DIRS = Lintian::Data->new('shared-libs/hwcap-dirs');
-
-my $UNKNOWN_SHARED_LIBRARY_EXCEPTIONS
-  = Lintian::Data->new('shared-libs/unknown-shared-library-exceptions');
+# not presently used
+#my $UNKNOWN_SHARED_LIBRARY_EXCEPTIONS
+#  = $self->profile->load_data('shared-libs/unknown-shared-library-exceptions');
 
 # List of symbols file meta-fields.
 my %symbols_meta_fields = map { $_ => 1 }qw(
@@ -52,9 +47,6 @@ my %symbols_meta_fields = map { $_ => 1 }qw(
   Ignore-Blacklist-Groups
 );
 
-my $ldconfig_dirs = Lintian::Data->new('shared-libs/ldconfig-dirs');
-my $MA_DIRS = Lintian::Data->new('common/multiarch-dirs', qr/\s++/);
-
 sub installable {
     my ($self) = @_;
 
@@ -62,6 +54,8 @@ sub installable {
     my $type = $self->processable->type;
     my $processable = $self->processable;
     my $group = $self->group;
+
+    my $ldconfig_dirs = $self->profile->load_data('shared-libs/ldconfig-dirs');
 
     my ($must_call_ldconfig, %SONAME, %SHARED_LIB_PRESENT,
         %STATIC_LIB_PRESENT, %sharedobject);
@@ -130,7 +124,7 @@ sub installable {
             # Installed in a directory controlled by the dynamic
             # linker?  We have to strip off directories named for
             # hardware capabilities.
-            if (needs_ldconfig($cur_file)) {
+            if ($self->needs_ldconfig($cur_file)) {
                 # yes! so postinst must call ldconfig
                 $must_call_ldconfig = $real_file;
             }
@@ -226,6 +220,9 @@ sub installable {
 
         # not a public shared library, skip it
         next unless $ldconfig_dirs->known($dir);
+
+        my $MA_DIRS
+          = $self->profile->load_data('common/multiarch-dirs', qr/\s++/);
 
         # symlink found?
         my $link_file = "$dir/$SONAME{$shlib_file}";
@@ -788,7 +785,14 @@ sub is_nss_plugin {
 }
 
 sub needs_ldconfig {
-    my ($file) = @_;
+    my ($self, $file) = @_;
+
+   # Libraries that should only be used in the presence of certain capabilities
+   # may be located in subdirectories of the standard ldconfig search path with
+   # one of the following names.
+    my $HWCAP_DIRS = $self->profile->load_data('shared-libs/hwcap-dirs');
+    my $ldconfig_dirs = $self->profile->load_data('shared-libs/ldconfig-dirs');
+
     my $dirname = dirname($file);
     my $last;
     do {

@@ -59,11 +59,14 @@ Get group that the processable is in.
 
 Check::Info structure for this check.
 
+=item profile
+
 =cut
 
 has processable => (is => 'rw', default => sub { {} });
 has group => (is => 'rw', default => sub { {} });
 has info => (is => 'rw');
+has profile => (is => 'rw');
 
 =item visit_files
 

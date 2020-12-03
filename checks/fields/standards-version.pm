@@ -31,41 +31,10 @@ use Date::Parse qw(str2time);
 use List::Util qw(first);
 use POSIX qw(strftime);
 
-use Lintian::Data;
-
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-# Any Standards Version released before this day is "ancient"
-my $ANCIENT_DATE_DATA = Lintian::Data->new(
-    'standards-version/ancient-date',
-    qr{\s*<\s*},
-    sub {
-        my $date = str2time($_[1])
-          or die "Cannot parse ANCIENT_DATE: $!";
-        return $date;
-    });
-
-my $ANCIENT_DATE = $ANCIENT_DATE_DATA->value('ANCIENT')
-  or die 'Cannot get ANCIENT_DATE';
-
-my $STANDARDS= Lintian::Data->new('standards-version/release-dates', qr/\s+/);
-
-# In addition to the normal Lintian::Data structure, we also want a list of
-# all standards and their release dates so that we can check things like the
-# release date of the standard released after the one a package declared.  Do
-# that by pulling all data out of the Lintian::Data structure and sorting it
-# by release date.  We can also use this to get the current standards version.
-my @STANDARDS = reverse sort { $a->[1] <=> $b->[1] }
-  map { [$_, $STANDARDS->value($_)] } $STANDARDS->all;
-my $CURRENT_DATE = $STANDARDS[0][1];
-
-# In scalar context you get the string (e.g. "3.9.2")
-# and in list context you get it split into pieces (3, 9, 2)
-my $CURRENT      = $STANDARDS[0][0];
-my @CURRENT      = split(m/\./, $CURRENT);
 
 sub source {
     my ($self) = @_;
@@ -74,6 +43,36 @@ sub source {
 
     return
       unless $processable->fields->exists('Standards-Version');
+
+    # Any Standards Version released before this day is "ancient"
+    my $ANCIENT_DATE_DATA = $self->profile->load_data(
+        'standards-version/ancient-date',
+        qr{\s*<\s*},
+        sub {
+            my $date = str2time($_[1])
+              or die "Cannot parse ANCIENT_DATE: $!";
+            return $date;
+        });
+
+    my $ANCIENT_DATE = $ANCIENT_DATE_DATA->value('ANCIENT')
+      or die 'Cannot get ANCIENT_DATE';
+
+    my $STANDARDS
+      = $self->profile->load_data('standards-version/release-dates', qr/\s+/);
+
+ # In addition to the normal Lintian::Data structure, we also want a list of
+ # all standards and their release dates so that we can check things like the
+ # release date of the standard released after the one a package declared.  Do
+ # that by pulling all data out of the Lintian::Data structure and sorting it
+ # by release date.  We can also use this to get the current standards version.
+    my @STANDARDS = reverse sort { $a->[1] <=> $b->[1] }
+      map { [$_, $STANDARDS->value($_)] } $STANDARDS->all;
+    my $CURRENT_DATE = $STANDARDS[0][1];
+
+    # In scalar context you get the string (e.g. "3.9.2")
+    # and in list context you get it split into pieces (3, 9, 2)
+    my $CURRENT      = $STANDARDS[0][0];
+    my @CURRENT      = split(m/\./, $CURRENT);
 
     # udebs aren't required to conform to policy, so they don't need
     # Standards-Version. (If they have it, though, it should be valid.)

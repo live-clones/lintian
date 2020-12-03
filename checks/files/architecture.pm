@@ -30,7 +30,14 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-my $TRIPLETS = Lintian::Data->new('files/triplets', qr/\s++/);
+has TRIPLETS => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        return $self->profile->load_data('files/triplets', qr/\s++/);
+    });
 
 has arch_dep_files => (is => 'rwp', default => 0);
 
@@ -41,11 +48,11 @@ sub visit_installed_files {
 
     if ($file->name =~ m,^(?:usr/)?lib/([^/]+)/$,) {
         my $subdir = $1;
-        if ($TRIPLETS->known($subdir)) {
+        if ($self->TRIPLETS->known($subdir)) {
 
             $self->hint('triplet-dir-and-architecture-mismatch',
-                $file->name, 'is for',$TRIPLETS->value($subdir))
-              unless ($architecture eq $TRIPLETS->value($subdir));
+                $file->name, 'is for',$self->TRIPLETS->value($subdir))
+              unless ($architecture eq $self->TRIPLETS->value($subdir));
         }
     }
 
@@ -57,7 +64,7 @@ sub visit_installed_files {
 
     if ($file->dirname =~ m,^(?:usr)?/lib/([^/]+)/$,) {
         $self->_set_arch_dep_files(1)
-          if $TRIPLETS->known($1 // '');
+          if $self->TRIPLETS->known($1 // '');
     }
 
     return;

@@ -26,13 +26,14 @@ use utf8;
 
 use Exporter qw(import);
 
-use Lintian::Data;
-
 use constant DOUBLE_QUOTE => q{"};
 
 our @EXPORT_OK = qw(check_spelling check_spelling_picky
   $known_shells_regex
 );
+
+use Carp qw(croak);
+use Unicode::UTF8 qw(encode_utf8);
 
 =head1 NAME
 
@@ -86,7 +87,11 @@ Returns the number of spelling mistakes found in TEXT.
 my (%CORRECTIONS, @CORRECTIONS_MULTIWORD);
 
 sub check_spelling {
-    my ($text, $exceptions, $code_ref, $duplicate_check) = @_;
+    my ($profile, $text, $exceptions, $code_ref, $duplicate_check) = @_;
+
+    croak encode_utf8('No profile')
+      unless defined $profile;
+
     return 0 unless $text;
     if (not $code_ref and $exceptions and ref($exceptions) eq 'CODE') {
         $code_ref = $exceptions;
@@ -102,8 +107,8 @@ sub check_spelling {
 
     if (!%CORRECTIONS) {
         my $corrections_multiword
-          = Lintian::Data->new('spelling/corrections-multiword', '\|\|');
-        my $corrections = Lintian::Data->new('spelling/corrections', '\|\|');
+          = $profile->load_data('spelling/corrections-multiword', '\|\|');
+        my $corrections = $profile->load_data('spelling/corrections', '\|\|');
         for my $misspelled ($corrections->all) {
             $CORRECTIONS{$misspelled} = $corrections->value($misspelled);
         }
@@ -209,12 +214,15 @@ Returns the number of spelling mistakes found in TEXT.
 =cut
 
 sub check_spelling_picky {
-    my ($text, $code_ref) = @_;
+    my ($profile, $text, $code_ref) = @_;
+
+    croak encode_utf8('No profile')
+      unless defined $profile;
 
     my %seen;
     my $counter = 0;
     my $corrections_case
-      = Lintian::Data->new('spelling/corrections-case', '\|\|');
+      = $profile->load_data('spelling/corrections-case', '\|\|');
 
     # Check this first in case it's contained in square brackets and
     # removed below.

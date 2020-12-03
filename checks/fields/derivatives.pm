@@ -29,8 +29,6 @@ use warnings;
 use utf8;
 use autodie;
 
-use Lintian::Data ();
-
 use constant HYPHEN => q{-};
 
 use Moo;
@@ -38,21 +36,21 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-my $DERIVATIVE_FIELDS = Lintian::Data->new(
-    'fields/derivative-fields',
-    qr/\s*\~\~\s*/,
-    sub {
-        my ($regexp, $explanation) = split(/\s*\~\~\s*/, $_[1], 2);
-        return {
-            'regexp' => qr/$regexp/,
-            'explanation' => $explanation,
-        };
-    });
-
 sub source {
     my ($self) = @_;
 
     my $processable = $self->processable;
+
+    my $DERIVATIVE_FIELDS = $self->profile->load_data(
+        'fields/derivative-fields',
+        qr/\s*\~\~\s*/,
+        sub {
+            my ($regexp, $explanation) = split(/\s*\~\~\s*/, $_[1], 2);
+            return {
+                'regexp' => qr/$regexp/,
+                'explanation' => $explanation,
+            };
+        });
 
     foreach my $field ($DERIVATIVE_FIELDS->all) {
 

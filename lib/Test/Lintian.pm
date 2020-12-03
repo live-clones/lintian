@@ -77,14 +77,9 @@ use Path::Tiny;
 use Unicode::UTF8 qw(valid_utf8 decode_utf8 encode_utf8);
 
 use Lintian::Spelling qw(check_spelling);
-use Lintian::Data;
 use Lintian::Deb822::Parser qw(parse_dpkg_control_string);
 use Lintian::Profile;
 use Lintian::Tag;
-
-# We want data files loaded early to avoid problems with missing data
-# files ending up in releases (like in 2.5.17 and 2.5.18).
-$Lintian::Data::LAZY_LOAD = 0;
 
 my %severities = map { $_ => 1 } @Lintian::Tag::SEVERITIES;
 my %check_types = map { $_ => 1 } qw(binary changes source udeb);
@@ -92,7 +87,8 @@ my %known_html_tags = map { $_ => 1 } qw(a em i tt);
 
 # We use this to check for explicit links where it is possible to use
 # a manual ref.
-my $MANUALS = $Lintian::Tag::MANUALS;
+my $MANUALS;
+
 # lazy-load this (so loading a profile can affect it)
 my %URLS;
 
@@ -239,7 +235,7 @@ sub test_check_desc {
             };
             # FIXME: There are a couple of known false-positives that
             # breaks the test.
-            # check_spelling($explanation, $handler);
+            # check_spelling($profile, $explanation, $handler);
             $builder->is_eq($mistakes, 0,
                 "$content_type $cname: $tag has no spelling errors");
 
@@ -631,8 +627,12 @@ sub load_profile_for_test {
     $PROFILE = Lintian::Profile->new;
     $PROFILE->load($profname, [@inc, $ENV{'LINTIAN_BASE'}]);
 
-    Lintian::Data->set_vendor($PROFILE);
+    $MANUALS
+      = $PROFILE->load_data('output/manual-references', qr/::/,
+        \&Lintian::Tag::load_manual_data);
+
     $ENV{'LINTIAN_CONFIG_DIRS'} = join(':', @inc);
+
     return;
 }
 

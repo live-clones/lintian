@@ -38,16 +38,18 @@ sub octify {
     return oct($val);
 }
 
-my $DEB_PERMISSIONS
-  = Lintian::Data->new('control-files/deb-permissions',  qr/\s++/, \&octify);
-my $UDEB_PERMISSIONS
-  = Lintian::Data->new('control-files/udeb-permissions', qr/\s++/, \&octify);
-
 sub installable {
     my ($self) = @_;
 
     my $type = $self->processable->type;
     my $processable = $self->processable;
+
+    my $DEB_PERMISSIONS
+      = $self->profile->load_data('control-files/deb-permissions',
+        qr/\s++/, \&octify);
+    my $UDEB_PERMISSIONS
+      = $self->profile->load_data('control-files/udeb-permissions',
+        qr/\s++/, \&octify);
 
     my $ctrl = $type eq 'udeb' ? $UDEB_PERMISSIONS : $DEB_PERMISSIONS;
     my $ctrl_alt = $type eq 'udeb' ? $DEB_PERMISSIONS : $UDEB_PERMISSIONS;

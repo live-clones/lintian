@@ -28,7 +28,6 @@ use autodie;
 use File::Basename;
 use List::MoreUtils qw(any none);
 
-use Lintian::Data ();
 use Lintian::Util qw(normalize_link_target $PKGNAME_REGEX);
 
 use Moo;
@@ -37,7 +36,6 @@ use namespace::clean;
 with 'Lintian::Check';
 
 our $CLASS_REGEX = qr/\.(?:class|cljc?)/;
-our $MAX_BYTECODE = Lintian::Data->new('java/constants', qr/\s*=\s*/);
 
 sub visit_patched_files {
     my ($self, $item) = @_;
@@ -70,6 +68,8 @@ sub installable {
     $depends =~ s/lib[^\s,]+-java-doc//g;
 
     my @java_lib_depends = ($depends =~ m/\b(lib[^\s,]+-java)\b/g);
+
+    my $MAX_BYTECODE= $self->profile->load_data('java/constants', qr/\s*=\s*/);
 
     # We first loop over jar files to find problems
 

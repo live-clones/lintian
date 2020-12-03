@@ -31,7 +31,14 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-my $FONT_PACKAGES = Lintian::Data->new('files/fonts', qr/\s+/);
+has FONT_PACKAGES => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        return $self->profile->load_data('files/fonts', qr/\s+/);
+    });
 
 sub visit_installed_files {
     my ($self, $item) = @_;
@@ -46,7 +53,7 @@ sub visit_installed_files {
 
     my $font = lc $anycase;
 
-    my $owner = $FONT_PACKAGES->value($font);
+    my $owner = $self->FONT_PACKAGES->value($font);
     if (length $owner) {
 
         $self->hint('duplicate-font-file', $item->name, 'also in', $owner)

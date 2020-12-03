@@ -54,6 +54,7 @@ sub always {
             for my $comment (@comments) {
 
                 check_spelling(
+                    $self->profile,
                     $comment,
                     $self->group->spelling_exceptions,
                     $self->emitter(
@@ -62,6 +63,7 @@ sub always {
                     ));
 
                 check_spelling_picky(
+                    $self->profile,
                     $comment,
                     $self->emitter(
                         'capitalization-in-override-comment',

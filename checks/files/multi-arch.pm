@@ -30,8 +30,23 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-my $MULTIARCH_DIRS = Lintian::Data->new('common/multiarch-dirs', qr/\s++/);
-my $TRIPLETS = Lintian::Data->new('files/triplets', qr/\s++/);
+has MULTIARCH_DIRS => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        return $self->profile->load_data('common/multiarch-dirs', qr/\s++/);
+    });
+
+has TRIPLETS => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        return $self->profile->load_data('files/triplets', qr/\s++/);
+    });
 
 my %PATH_DIRECTORIES = map { $_ => 1 } qw(
   bin/ sbin/ usr/bin/ usr/sbin/ usr/games/ );
@@ -45,7 +60,7 @@ sub visit_installed_files {
     my $architecture = $self->processable->fields->value('Architecture');
     my $multiarch = $self->processable->fields->value('Multi-Arch') || 'no';
 
-    my $multiarch_dir = $MULTIARCH_DIRS->value($architecture);
+    my $multiarch_dir = $self->MULTIARCH_DIRS->value($architecture);
 
     if (    not $file->is_dir
         and defined($multiarch_dir)
@@ -70,7 +85,7 @@ sub visit_installed_files {
 
     if ($file->name =~ m,^(?:usr/)?lib/(?:([^/]+)/)?lib[^/]*\.so$,) {
         $self->_set_has_public_shared_library(1)
-          if (!defined($1) || $TRIPLETS->known($1));
+          if (!defined($1) || $self->TRIPLETS->known($1));
     }
 
     return;

@@ -27,7 +27,6 @@ use autodie;
 
 use Encode qw(decode);
 
-use Lintian::Data;
 use Lintian::Spelling qw(check_spelling check_spelling_picky);
 
 # Compared to a lower-case string, so it must be all lower-case
@@ -40,8 +39,6 @@ use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-my $PLANNED_FEATURES = Lintian::Data->new('description/planned-features');
 
 sub spelling_tag_emitter {
     my ($self, @orig_args) = @_;
@@ -131,6 +128,9 @@ sub installable {
             $self->hint('synopsis-too-long');
         }
     }
+
+    my $PLANNED_FEATURES
+      = $self->profile->load_data('description/planned-features');
 
     my $flagged_homepage;
     my @lines = split(/\n/, $extended);
@@ -247,6 +247,7 @@ sub installable {
 
     if ($synopsis) {
         check_spelling(
+            $self->profile,
             $synopsis,
             $group->spelling_exceptions,
             $self->spelling_tag_emitter(
@@ -256,6 +257,7 @@ sub installable {
         # capitalization error, such as "dbus" -> "D-Bus".  Therefore,
         # we exempt auto-generated packages from this check.
         check_spelling_picky(
+            $self->profile,
             $synopsis,
             $self->spelling_tag_emitter(
                 'capitalization-error-in-description-synopsis')
@@ -264,10 +266,10 @@ sub installable {
 
     if ($extended) {
         check_spelling(
-            $extended,
+            $self->profile,$extended,
             $group->spelling_exceptions,
             $self->spelling_tag_emitter('spelling-error-in-description'));
-        check_spelling_picky($extended,
+        check_spelling_picky($self->profile, $extended,
             $self->spelling_tag_emitter('capitalization-error-in-description')
         );
     }

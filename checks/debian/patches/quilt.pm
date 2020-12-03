@@ -220,7 +220,8 @@ sub check_patch {
         my $tag_emitter
           = $self->spelling_tag_emitter('spelling-error-in-patch-description',
             $patch_file);
-        check_spelling($description, $self->group->spelling_exceptions,
+        check_spelling($self->profile, $description,
+            $self->group->spelling_exceptions,
             $tag_emitter, 0);
     }
 

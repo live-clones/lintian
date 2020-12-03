@@ -43,8 +43,6 @@ use autodie;
 use File::Basename;
 use List::MoreUtils qw(any);
 
-use Lintian::Data;
-
 use Moo;
 use namespace::clean;
 
@@ -83,8 +81,15 @@ sub _menu_sections {
     return $ret;
 }
 
-my $MENU_SECTIONS
-  = Lintian::Data->new('menu-format/menu-sections',qr|/|, \&_menu_sections);
+has MENU_SECTIONS => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        return $self->profile->load_data('menu-format/menu-sections',qr|/|,
+            \&_menu_sections);
+    });
 
 # Authoritative source of desktop keys:
 # https://specifications.freedesktop.org/desktop-entry-spec/latest/
@@ -93,14 +98,35 @@ my $MENU_SECTIONS
 my @req_desktop_keys = qw(Type Name);
 
 # This is a list of all known keys.
-my $KNOWN_DESKTOP_KEYS =  Lintian::Data->new('menu-format/known-desktop-keys');
+has KNOWN_DESKTOP_KEYS => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
 
-my $DEPRECATED_DESKTOP_KEYS
-  = Lintian::Data->new('menu-format/deprecated-desktop-keys');
+        return $self->profile->load_data('menu-format/known-desktop-keys');
+    });
+
+has DEPRECATED_DESKTOP_KEYS => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        return $self->profile->load_data(
+            'menu-format/deprecated-desktop-keys');
+    });
 
 # KDE uses some additional keys that should start with X-KDE but don't for
 # historical reasons.
-my $KDE_DESKTOP_KEYS = Lintian::Data->new('menu-format/kde-desktop-keys');
+has KDE_DESKTOP_KEYS => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        return $self->profile->load_data('menu-format/kde-desktop-keys');
+    });
 
 # Known types of desktop entries.
 # https://specifications.freedesktop.org/desktop-entry-spec/latest/ar01s06.html
@@ -138,7 +164,14 @@ my %main_categories = map { $_ => 1 } qw(
 # This is a list of all Additional Categories for .desktop files.  Ideally we
 # should be checking to be sure the associated Main Categories are present,
 # but we don't have support for that yet.
-my $ADD_CATEGORIES = Lintian::Data->new('menu-format/add-categories');
+has ADD_CATEGORIES => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        return $self->profile->load_data('menu-format/add-categories');
+    });
 
 # This is a list of Reserved Categories for .desktop files.  To use one of
 # these, the desktop entry must also have an OnlyShowIn key limiting the
@@ -480,7 +513,7 @@ sub verify_line {
 
     # Check for Evil new root sections.
     my ($rootsec, $sect) = split m:/:, $section, 2;
-    my $root_data = $MENU_SECTIONS->value($rootsec);
+    my $root_data = $self->MENU_SECTIONS->value($rootsec);
     if (not defined $root_data) {
         if (not $rootsec =~ m/$pkg/i) {
             $self->hint(
@@ -620,7 +653,7 @@ sub verify_desktop_file {
             $basetag =~ s/\[([^\]]+)\]$//;
             if (exists $vals{$tag}) {
                 $self->hint('duplicate-key-in-desktop', "$file:$. $tag");
-            } elsif ($DEPRECATED_DESKTOP_KEYS->known($basetag)) {
+            } elsif ($self->DEPRECATED_DESKTOP_KEYS->known($basetag)) {
                 if ($basetag eq 'Encoding') {
                     push(
                         @pending,
@@ -636,8 +669,8 @@ sub verify_desktop_file {
                             "$file:$. $tag"
                         ]);
                 }
-            } elsif (not $KNOWN_DESKTOP_KEYS->known($basetag)
-                and not $KDE_DESKTOP_KEYS->known($basetag)
+            } elsif (not $self->KNOWN_DESKTOP_KEYS->known($basetag)
+                and not $self->KDE_DESKTOP_KEYS->known($basetag)
                 and not $basetag =~ /^X-/) {
                 push(@pending,
                     ['desktop-entry-contains-unknown-key', "$file:$. $tag"]);
@@ -712,7 +745,7 @@ sub verify_desktop_file {
                   unless $vals{'OnlyShowIn'};
                 $saw_main = 1;
                 $in_reserved = 1;
-            } elsif (not $ADD_CATEGORIES->known($cat)
+            } elsif (not $self->ADD_CATEGORIES->known($cat)
                 and not $main_categories{$cat}) {
                 $self->hint('desktop-entry-invalid-category', "$cat $file");
             } elsif ($main_categories{$cat}) {

@@ -32,11 +32,24 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-my $MULTIARCH_DIRS = Lintian::Data->new('common/multiarch-dirs', qr/\s++/);
+has MULTIARCH_DIRS => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
 
-my $PKG_CONFIG_BAD_REGEX
-  = Lintian::Data->new('files/pkg-config-bad-regex',qr/~~~~~/,
-    sub { return  qr/$_[0]/xsm;});
+        return $self->profile->load_data('common/multiarch-dirs', qr/\s++/);
+    });
+
+has PKG_CONFIG_BAD_REGEX => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        return $self->profile->load_data('files/pkg-config-bad-regex',
+            qr/~~~~~/,sub { return  qr/$_[0]/xsm;});
+    });
 
 sub visit_installed_files {
     my ($self, $file) = @_;
@@ -67,9 +80,9 @@ sub visit_installed_files {
             # arch specific dir
 
           MULTI_ARCH_DIR:
-            foreach my $wildcard ($MULTIARCH_DIRS->all) {
+            foreach my $wildcard ($self->MULTIARCH_DIRS->all) {
 
-                my $madir = $MULTIARCH_DIRS->value($wildcard);
+                my $madir = $self->MULTIARCH_DIRS->value($wildcard);
 
                 if ($pkg_config_arch eq $madir) {
                     next MULTI_ARCH_DIR;
@@ -86,9 +99,9 @@ sub visit_installed_files {
             }
 
           PKG_CONFIG_TABOO:
-            foreach my $taboo ($PKG_CONFIG_BAD_REGEX->all) {
+            foreach my $taboo ($self->PKG_CONFIG_BAD_REGEX->all) {
 
-                my $regex = $PKG_CONFIG_BAD_REGEX->value($taboo);
+                my $regex = $self->PKG_CONFIG_BAD_REGEX->value($taboo);
 
                 while($block =~ m{$regex}xmsg) {
                     my $extra = $1 // '';

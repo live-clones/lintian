@@ -25,8 +25,6 @@ use warnings;
 use utf8;
 use autodie qw(open);
 
-use Lintian::Data;
-
 use Moo;
 use namespace::clean;
 
@@ -47,13 +45,13 @@ sub _parse_trigger_types {
     return \%values;
 }
 
-my $TRIGGER_TYPES = Lintian::Data->new('triggers/trigger-types',
-    qr/\s*\Q=>\E\s*/, \&_parse_trigger_types);
-
 sub installable {
     my ($self) = @_;
 
     my $processable = $self->processable;
+
+    my $TRIGGER_TYPES = $self->profile->load_data('triggers/trigger-types',
+        qr/\s*\Q=>\E\s*/, \&_parse_trigger_types);
 
     my $triggers_file = $processable->control->lookup('triggers');
     return if not $triggers_file or not $triggers_file->is_open_ok;

@@ -29,8 +29,6 @@ use autodie;
 use File::Basename qw(dirname);
 use List::MoreUtils qw(any none);
 
-use Lintian::Data;
-
 use Moo;
 use namespace::clean;
 
@@ -72,7 +70,6 @@ my %implied_dependencies = (
     'sysklogd'   => '$syslog'
 );
 
-our $VIRTUAL_FACILITIES = Lintian::Data->new('init.d/virtual_facilities');
 # Regex to match names of init.d scripts; it is a bit more lax than
 # package names (e.g. allows "_").  We do not allow it to start with a
 # "dash" to avoid confusing it with a command-line option (also,
@@ -487,6 +484,9 @@ sub check_init {
             }
         }
     }
+
+    my $VIRTUAL_FACILITIES
+      = $self->profile->load_data('init.d/virtual_facilities');
 
     # Check syntax rules that apply to all of the keywords.
     for my $keyword (qw(required-start should-start required-stop should-stop))

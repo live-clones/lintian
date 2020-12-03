@@ -29,8 +29,6 @@ use autodie;
 
 use List::MoreUtils qw(any none);
 
-use Lintian::Data;
-
 use constant EMPTY => q{};
 use constant SPACE => q{ };
 use constant NEWLINE => qq{\n};
@@ -39,8 +37,6 @@ use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-my $KNOWN_DISTS = Lintian::Data->new('changes-file/known-dists');
 
 sub changes {
     my ($self) = @_;
@@ -70,6 +66,8 @@ sub changes {
 
         $major{$target} = $reduced;
     }
+
+    my $KNOWN_DISTS = $self->profile->load_data('changes-file/known-dists');
 
     my @unknown = grep { !$KNOWN_DISTS->known($major{$_}) } @targets;
     $self->hint('bad-distribution-in-changes-file', $_) for @unknown;

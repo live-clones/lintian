@@ -30,33 +30,40 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-my $OBSOLETE_PATHS = Lintian::Data->new(
-    'files/obsolete-paths',
-    qr/\s*\->\s*/,
-    sub {
-        my @sliptline =  split(/\s*\~\~\s*/, $_[1], 2);
+has OBSOLETE_PATHS => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
 
-        if (scalar(@sliptline) != 2) {
-            die "Syntax error in files/obsolete-paths $.";
-        }
+        return $self->profile->load_data(
+            'files/obsolete-paths',
+            qr/\s*\->\s*/,
+            sub {
+                my @sliptline =  split(/\s*\~\~\s*/, $_[1], 2);
 
-        my ($newdir, $moreinfo) =  @sliptline;
+                if (scalar(@sliptline) != 2) {
+                    die "Syntax error in files/obsolete-paths $.";
+                }
 
-        return {
-            'newdir' => $newdir,
-            'moreinfo' => $moreinfo,
-            'match' => qr/$_[0]/x,
-            'olddir' => $_[0],
-        };
+                my ($newdir, $moreinfo) =  @sliptline;
+
+                return {
+                    'newdir' => $newdir,
+                    'moreinfo' => $moreinfo,
+                    'match' => qr/$_[0]/x,
+                    'olddir' => $_[0],
+                };
+            });
     });
 
 sub visit_installed_files {
     my ($self, $file) = @_;
 
     # check for generic obsolete path
-    foreach my $obsolete_path ($OBSOLETE_PATHS->all) {
+    foreach my $obsolete_path ($self->OBSOLETE_PATHS->all) {
 
-        my $obs_data = $OBSOLETE_PATHS->value($obsolete_path);
+        my $obs_data = $self->OBSOLETE_PATHS->value($obsolete_path);
         my $oldpathmatch = $obs_data->{'match'};
 
         if ($file->name =~ m{$oldpathmatch}) {

@@ -24,7 +24,6 @@ use autodie;
 use Carp qw(croak);
 use List::MoreUtils qw(any none);
 
-use Lintian::Data;
 use Lintian::SlidingWindow;
 
 use Moo;
@@ -42,19 +41,6 @@ our $ANYPYTHON_DEPEND
   = "$PYTHON_DEPEND | $PYTHON2X_DEPEND | $PYTHON3_DEPEND | $PYTHON3X_DEPEND";
 our $PYTHON3_ALL_DEPEND
   = 'python3-all:any | python3-all-dev:any | python3-all-dbg:any';
-
-my $KNOWN_MAKEFILES = Lintian::Data->new('rules/known-makefiles', '\|\|');
-my $DEPRECATED_MAKEFILES = Lintian::Data->new('rules/deprecated-makefiles');
-my $POLICYRULES = Lintian::Data->new('rules/policy-rules', qr/\s++/);
-
-# forbidden construct in rules
-my $BAD_CONSTRUCT_IN_RULES
-  = Lintian::Data->new('rules/rules-should-not-use', qr/\s*~~\s*/,
-    sub { return qr/$_[1]/xs });
-
-my $BAD_MULTILINE_CONSTRUCT_IN_RULES
-  = Lintian::Data->new('rules/rules-should-not-use-multiline',
-    qr/\s*~~\s*/,sub { return qr/$_[1]/xsm });
 
 # Certain build tools must be listed in Build-Depends even if there are no
 # arch-specific packages because they're required in order to run the clean
@@ -157,6 +143,21 @@ sub source {
         $self->hint('debian-rules-is-symlink');
         return unless $rules->is_open_ok;
     }
+
+    my $KNOWN_MAKEFILES
+      = $self->profile->load_data('rules/known-makefiles', '\|\|');
+    my $DEPRECATED_MAKEFILES
+      = $self->profile->load_data('rules/deprecated-makefiles');
+    my $POLICYRULES= $self->profile->load_data('rules/policy-rules', qr/\s++/);
+
+    # forbidden construct in rules
+    my $BAD_CONSTRUCT_IN_RULES
+      = $self->profile->load_data('rules/rules-should-not-use', qr/\s*~~\s*/,
+        sub { return qr/$_[1]/xs });
+
+    my $BAD_MULTILINE_CONSTRUCT_IN_RULES
+      = $self->profile->load_data('rules/rules-should-not-use-multiline',
+        qr/\s*~~\s*/,sub { return qr/$_[1]/xsm });
 
     my $architecture = $processable->fields->value('Architecture');
 

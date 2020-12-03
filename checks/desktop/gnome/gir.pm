@@ -32,8 +32,6 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-my $MA_DIRS = Lintian::Data->new('common/multiarch-dirs', qr/\s++/);
-
 sub source {
     my ($self) = @_;
 
@@ -61,6 +59,8 @@ sub installable {
 
     my @girs;
     my @typelibs;
+
+    my $MA_DIRS = $self->profile->load_data('common/multiarch-dirs', qr/\s++/);
 
     my $section = $processable->fields->value('Section') || 'NONE';
     my $madir = $MA_DIRS->value($processable->architecture);

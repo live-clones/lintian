@@ -60,10 +60,23 @@ my %MISMATCHED_SUBSTVARS = (
     '^python2?-.+' => '${python3:Depends}',
 );
 
-my $ALLOWED_PYTHON_FILES = Lintian::Data->new('files/allowed-python-files');
-my $GENERIC_PYTHON_MODULES= Lintian::Data->new('files/generic-python-modules');
+has ALLOWED_PYTHON_FILES => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
 
-my $VERSIONS = Lintian::Data->new('python/versions', qr/\s*=\s*/);
+        return $self->profile->load_data('files/allowed-python-files');
+    });
+has GENERIC_PYTHON_MODULES => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        return $self->profile->load_data('files/generic-python-modules');
+    });
+
 my @VERSION_FIELDS = qw(X-Python-Version XS-Python-Version X-Python3-Version);
 
 has correct_location => (is => 'rw', default => sub { {} });
@@ -117,6 +130,8 @@ sub source {
               ->implies($substvar);
         }
     }
+
+    my $VERSIONS = $self->profile->load_data('python/versions', qr/\s*=\s*/);
 
     foreach my $field (@VERSION_FIELDS) {
 
@@ -372,7 +387,7 @@ sub visit_installed_files {
         $self->correct_location->{$actual_module_path} = $specified_module_path
           unless $actual_module_path eq $specified_module_path;
 
-        for my $regex ($GENERIC_PYTHON_MODULES->all) {
+        for my $regex ($self->GENERIC_PYTHON_MODULES->all) {
             $self->hint('python-module-has-overly-generic-name',
                 $file->name, "($1)")
               if $relative =~ m,^($regex)(?:\.py|/__init__\.py)$,i;
@@ -381,7 +396,8 @@ sub visit_installed_files {
         $self->hint('unknown-file-in-python-module-directory', $file->name)
           if $file->is_file
           and $relative eq $file->basename  # "top-level"
-          and not $ALLOWED_PYTHON_FILES->matches_any($file->basename, 'i');
+          and
+          not $self->ALLOWED_PYTHON_FILES->matches_any($file->basename, 'i');
     }
 
     return;

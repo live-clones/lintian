@@ -2,9 +2,9 @@
 
 use strict;
 use warnings;
+
 use lib "$ENV{LINTIAN_BASE}/lib";
 
-use Lintian::Data;
 use Lintian::Profile;
 
 sub _split_hash {
@@ -16,9 +16,7 @@ sub _split_hash {
 my $PROFILE = Lintian::Profile->new;
 $PROFILE->load('debian/main', [$ENV{'LINTIAN_BASE'}]);
 
-Lintian::Data->set_vendor ($PROFILE);
-
-my $HARDENING = Lintian::Data->new ('binaries/hardening-tags', qr/\s*\|\|\s*/o, \&_split_hash);
+my $HARDENING = $PROFILE->load_data('binaries/hardening-tags', qr/\s*\|\|\s*/, \&_split_hash);
 
 my ($expected, undef, $calibrated) = @ARGV;
 

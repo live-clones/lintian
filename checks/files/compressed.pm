@@ -30,26 +30,40 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-my $COMPRESS_FILE_EXTENSIONS
-  = Lintian::Data->new('files/compressed-file-extensions',
-    qr/\s++/,sub { return qr/\Q$_[0]\E/ });
+has COMPRESS_FILE_EXTENSIONS => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        return $self->profile->load_data('files/compressed-file-extensions',
+            qr/\s++/,sub { return qr/\Q$_[0]\E/ });
+    });
 
 # an OR (|) regex of all compressed extension
-my $COMPRESS_FILE_EXTENSIONS_OR_ALL = sub { qr/(:?$_[0])/ }
-  ->(
-    join('|',
-        map {$COMPRESS_FILE_EXTENSIONS->value($_) }
-          $COMPRESS_FILE_EXTENSIONS->all));
+has COMPRESS_FILE_EXTENSIONS_OR_ALL => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
 
-# see tag duplicated-compressed-file
-my $DUPLICATED_COMPRESSED_FILE_REGEX
-  = qr/^(.+)\.(?:$COMPRESS_FILE_EXTENSIONS_OR_ALL)$/;
+        my $text = join('|',
+            map {$self->COMPRESS_FILE_EXTENSIONS->value($_) }
+              $self->COMPRESS_FILE_EXTENSIONS->all);
+
+        return qr/$text/;
+    });
 
 sub visit_installed_files {
     my ($self, $file) = @_;
 
     return
       unless $file->is_file;
+
+    my $regex = $self->COMPRESS_FILE_EXTENSIONS_OR_ALL;
+
+    # see tag duplicated-compressed-file
+    my $DUPLICATED_COMPRESSED_FILE_REGEX= qr/^(.+)\.$regex$/;
 
     # both compressed and uncompressed present
     if ($file->name =~ $DUPLICATED_COMPRESSED_FILE_REGEX) {

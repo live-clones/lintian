@@ -31,7 +31,6 @@ use List::MoreUtils qw(any);
 use List::Util qw(first none);
 use Path::Tiny;
 
-use Lintian::Data ();
 use Lintian::Deb822::Parser qw(parse_dpkg_control_string);
 use Lintian::Relation ();
 
@@ -46,17 +45,6 @@ with 'Lintian::Check';
 # rather than using ${shlibs:Depends}.
 my @LIBCS = qw(libc6 libc6.1 libc0.1 libc0.3);
 my $LIBCS = Lintian::Relation->new(join(' | ', @LIBCS));
-
-my $src_fields = Lintian::Data->new('common/source-fields');
-my $KNOWN_BUILD_PROFILES = Lintian::Data->new('fields/build-profiles');
-my $KNOWN_DBG_PACKAGE = Lintian::Data->new(
-    'common/dbg-pkg',
-    qr/\s*\~\~\s*/,
-    sub {
-        return qr/$_[0]/xms;
-    });
-
-my $SIGNING_KEY_FILENAMES = Lintian::Data->new('common/signing-key-filenames');
 
 sub source {
     my ($self) = @_;
@@ -81,6 +69,8 @@ sub source {
     # another check complains about invalid encoding
     return
       unless $dcontrol->is_valid_utf8;
+
+    my $src_fields = $self->profile->load_data('common/source-fields');
 
     my $contents = $dcontrol->decoded_utf8;
     my @lines = split(/\n/, $contents);
@@ -198,7 +188,7 @@ sub source {
         }
         if ($bin =~ /[-]dbg$/) {
             $self->hint('debian-control-has-obsolete-dbg-package', $bin)
-              unless dbg_pkg_is_known($bin);
+              unless $self->dbg_pkg_is_known($bin);
         }
     }
 
@@ -419,6 +409,9 @@ sub source {
           if scalar @{$long_descriptions{$long}} > 1;
     }
 
+    my $KNOWN_BUILD_PROFILES
+      = $self->profile->load_data('fields/build-profiles');
+
     # check the syntax of the Build-Profiles field
     for my $bin (@package_names) {
         my $raw = $processable->debian_control->installable_fields($bin)
@@ -560,7 +553,14 @@ sub source {
 
 # check debug package
 sub dbg_pkg_is_known {
-    my ($pkg) = @_;
+    my ($self, $pkg) = @_;
+
+    my $KNOWN_DBG_PACKAGE = $self->profile->load_data(
+        'common/dbg-pkg',
+        qr/\s*\~\~\s*/,
+        sub {
+            return qr/$_[0]/xms;
+        });
 
     foreach my $dbg_regexp ($KNOWN_DBG_PACKAGE->all) {
         my $regex = $KNOWN_DBG_PACKAGE->value($dbg_regexp);

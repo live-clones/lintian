@@ -41,8 +41,6 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-our $SIGNING_KEY_FILENAMES= Lintian::Data->new('common/signing-key-filenames');
-
 sub source {
     my ($self) = @_;
 
@@ -252,6 +250,9 @@ sub source {
 
     $self->hint('debian-watch-does-not-check-gpg-signature')
       unless $withgpgverification;
+
+    my $SIGNING_KEY_FILENAMES
+      = $self->profile->load_data('common/signing-key-filenames');
 
     # look for upstream signing key
     my @candidates

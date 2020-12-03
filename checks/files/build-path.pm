@@ -30,9 +30,15 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-my $BUILD_PATH_REGEX
-  = Lintian::Data->new('files/build-path-regex',qr/~~~~~/,
-    sub { return  qr/$_[0]/xsm;});
+has BUILD_PATH_REGEX => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        return $self->profile->load_data('files/build-path-regex',qr/~~~~~/,
+            sub { return  qr/$_[0]/xsm;});
+    });
 
 sub visit_installed_files {
     my ($self, $file) = @_;
@@ -41,8 +47,8 @@ sub visit_installed_files {
     unless ($self->processable->source eq 'sbuild'
         || $self->processable->source eq 'pbuilder') {
 
-        foreach my $buildpath ($BUILD_PATH_REGEX->all) {
-            my $regex = $BUILD_PATH_REGEX->value($buildpath);
+        foreach my $buildpath ($self->BUILD_PATH_REGEX->all) {
+            my $regex = $self->BUILD_PATH_REGEX->value($buildpath);
             if ($file->name =~ m{$regex}xms) {
 
                 $self->hint('dir-or-file-in-build-tree', $file->name);

@@ -31,20 +31,15 @@ use autodie;
 
 use Path::Tiny;
 
-use Lintian::Data ();
-
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
 
-our $KNOWN_SOURCE_FIELDS = Lintian::Data->new('common/source-fields');
-our $KNOWN_BINARY_FIELDS = Lintian::Data->new('fields/binary-fields');
-our $KNOWN_UDEB_FIELDS = Lintian::Data->new('fields/udeb-fields');
-
 sub source {
     my ($self) = @_;
 
+    my $KNOWN_SOURCE_FIELDS= $self->profile->load_data('common/source-fields');
     my @unknown= $self->processable->fields->extra($KNOWN_SOURCE_FIELDS->all);
 
     my $dscfile = path($self->processable->path)->basename;
@@ -56,6 +51,7 @@ sub source {
 sub binary {
     my ($self) = @_;
 
+    my $KNOWN_BINARY_FIELDS= $self->profile->load_data('fields/binary-fields');
     my @unknown= $self->processable->fields->extra($KNOWN_BINARY_FIELDS->all);
 
     my $debfile = path($self->processable->path)->basename;
@@ -67,6 +63,7 @@ sub binary {
 sub udeb {
     my ($self) = @_;
 
+    my $KNOWN_UDEB_FIELDS = $self->profile->load_data('fields/udeb-fields');
     my @unknown = $self->processable->fields->extra($KNOWN_UDEB_FIELDS->all);
 
     my $udebfile = path($self->processable->path)->basename;

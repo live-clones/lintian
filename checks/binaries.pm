@@ -30,7 +30,6 @@ use autodie;
 use File::Spec;
 use List::MoreUtils qw(any);
 
-use Lintian::Data;
 use Lintian::Relation qw(:constants);
 use Lintian::Spelling qw(check_spelling);
 
@@ -55,13 +54,6 @@ use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-my $ARCH_REGEX = Lintian::Data->new('binaries/arch-regex', qr/\s*\~\~/,
-    sub { return qr/$_[1]/ });
-my $ARCH_64BIT_EQUIVS
-  = Lintian::Data->new('binaries/arch-64bit-equivs', qr/\s*\=\>\s*/);
-my $BINARY_SPELLING_EXCEPTIONS
-  = Lintian::Data->new('binaries/spelling-exceptions', qr/\s+/);
 
 my %PATH_DIRECTORIES = map { $_ => 1 } qw(
   bin/ sbin/ usr/bin/ usr/sbin/ usr/games/ );
@@ -110,25 +102,12 @@ sub _embedded_libs {
     return $result;
 }
 
-our $EMBEDDED_LIBRARIES
-  = Lintian::Data->new('binaries/embedded-libs', qr/\s*+\|\|/,
-    \&_embedded_libs);
-
-our $MULTIARCH_DIRS = Lintian::Data->new('common/multiarch-dirs', qr/\s++/);
-
 sub _split_hash {
     my (undef, $val) = @_;
     my $hash = {};
     map { $hash->{$_} = 1 } split /\s*,\s*/, $val;
     return $hash;
 }
-
-our $HARDENING= Lintian::Data->new('binaries/hardening-tags', qr/\s*\|\|\s*/,
-    \&_split_hash);
-our $HARDENED_FUNCTIONS = Lintian::Data->new('binaries/hardened-functions');
-our $LFS_SYMBOLS = Lintian::Data->new('binaries/lfs-symbols');
-our $OBSOLETE_CRYPT_FUNCTIONS
-  = Lintian::Data->new('binaries/obsolete-crypt-functions', qr/\s*\|\|\s*/);
 
 our $ARCH_32_REGEX;
 
@@ -139,6 +118,23 @@ sub installable {
     my $type = $self->processable->type;
     my $processable = $self->processable;
     my $group = $self->group;
+
+    my $ARCH_REGEX
+      = $self->profile->load_data('binaries/arch-regex', qr/\s*\~\~/,
+        sub { return qr/$_[1]/ });
+
+    my $HARDENING
+      = $self->profile->load_data('binaries/hardening-tags', qr/\s*\|\|\s*/,
+        \&_split_hash);
+
+    my $HARDENED_FUNCTIONS
+      = $self->profile->load_data('binaries/hardened-functions');
+
+    my $LFS_SYMBOLS = $self->profile->load_data('binaries/lfs-symbols');
+
+    my $OBSOLETE_CRYPT_FUNCTIONS
+      = $self->profile->load_data('binaries/obsolete-crypt-functions',
+        qr/\s*\|\|\s*/);
 
     my ($madir, %directories, $built_with_golang, $built_with_octave, %SONAME);
     my ($arch_hardening, $gnu_triplet_re, $ruby_triplet_re);
@@ -267,6 +263,19 @@ sub installable {
               unless $name =~ m%^usr/lib/debug/%;
         }
     }
+
+    my $ARCH_64BIT_EQUIVS
+      = $self->profile->load_data('binaries/arch-64bit-equivs',qr/\s*\=\>\s*/);
+
+    my $BINARY_SPELLING_EXCEPTIONS
+      = $self->profile->load_data('binaries/spelling-exceptions', qr/\s+/);
+
+    my $EMBEDDED_LIBRARIES
+      = $self->profile->load_data('binaries/embedded-libs', qr/\s*+\|\|/,
+        \&_embedded_libs);
+
+    my $MULTIARCH_DIRS
+      = $self->profile->load_data('common/multiarch-dirs', qr/\s++/);
 
     # For the package naming check, filter out SONAMEs where all the
     # files are at paths other than /lib, /usr/lib and /usr/lib/<MA-DIR>.
@@ -444,7 +453,8 @@ sub installable {
         };
         my $tag_emitter
           = $self->spelling_tag_emitter('spelling-error-in-binary', $file);
-        check_spelling($file->strings, $exceptions, $tag_emitter, 0);
+        check_spelling($self->profile, $file->strings, $exceptions,
+            $tag_emitter, 0);
 
         # stripped?
         if ($fileinfo =~ m,\bnot stripped\b,) {

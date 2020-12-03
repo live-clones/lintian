@@ -29,24 +29,12 @@ use warnings;
 use utf8;
 use autodie;
 
-use Lintian::Data ();
-
 use constant EMPTY => q{};
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-our $KNOWN_SECTIONS = Lintian::Data->new('fields/archive-sections');
-
-# Mapping of package names to section names
-my $NAME_SECTION_MAPPINGS = Lintian::Data->new(
-    'fields/name_section_mappings',
-    qr/\s*=>\s*/,
-    sub {
-        return {'regex' =>  qr/$_[0]/x, 'section' => $_[1]};
-    });
 
 our %KNOWN_ARCHIVE_PARTS = map { $_ => 1 } ('non-free', 'contrib');
 
@@ -68,6 +56,16 @@ sub always {
 
     return
       unless $self->processable->fields->exists('Section');
+
+    my $KNOWN_SECTIONS = $self->profile->load_data('fields/archive-sections');
+
+    # Mapping of package names to section names
+    my $NAME_SECTION_MAPPINGS = $self->profile->load_data(
+        'fields/name_section_mappings',
+        qr/\s*=>\s*/,
+        sub {
+            return {'regex' =>  qr/$_[0]/x, 'section' => $_[1]};
+        });
 
     my $section = $self->processable->fields->unfolded_value('Section');
 

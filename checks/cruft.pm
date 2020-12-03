@@ -37,7 +37,6 @@ use File::Basename qw(basename);
 use List::MoreUtils qw(any first_value);
 use Path::Tiny;
 
-use Lintian::Data;
 use Lintian::Relation ();
 use Lintian::Util qw(normalize_pkg_path open_gz);
 use Lintian::SlidingWindow;
@@ -62,8 +61,8 @@ with 'Lintian::Check';
 
 # load data for md5sums based check
 sub _md5sum_based_lintian_data {
-    my ($filename) = @_;
-    return Lintian::Data->new(
+    my ($self, $filename) = @_;
+    return $self->profile->load_data(
         $filename,
         qr/\s*\~\~\s*/,
         sub {
@@ -83,120 +82,172 @@ sub _md5sum_based_lintian_data {
 }
 
 # forbidden files
-my $NON_DISTRIBUTABLE_FILES
-  = _md5sum_based_lintian_data('cruft/non-distributable-files');
+has NON_DISTRIBUTABLE_FILES => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        return $self->_md5sum_based_lintian_data(
+            'cruft/non-distributable-files');
+    });
 
 # non free files
-my $NON_FREE_FILES = _md5sum_based_lintian_data('cruft/non-free-files');
+has NON_FREE_FILES => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
 
-# prebuilt-file or forbidden file type
-my $WARN_FILE_TYPE =  Lintian::Data->new(
-    'cruft/warn-file-type',
-    qr/\s*\~\~\s*/,
-    sub {
-        my @sliptline = split(/\s*\~\~\s*/, $_[1], 4);
-        if (scalar(@sliptline) < 1 or scalar(@sliptline) > 4) {
-            die "Syntax error in cruft/warn-file-type $.";
-        }
-        my ($regtype, $regname, $transformlist) = @sliptline;
-
-        # allow empty regname
-        $regname //= EMPTY;
-
-        # trim both ends
-        $regname =~ s/^\s+|\s+$//g;
-
-        if (length($regname) == 0) {
-            $regname = '.*';
-        }
-
-        # build transform pair
-        $transformlist //= EMPTY;
-        $transformlist =~ s/^\s+|\s+$//g;
-
-        my $syntaxerror = 'Syntax error in cruft/warn-file-type';
-        my @transformpairs;
-        unless($transformlist eq EMPTY) {
-            my @transforms = split(/\s*\&\&\s*/, $transformlist);
-            if(scalar(@transforms) > 0) {
-                foreach my $transform (@transforms) {
-                    # regex transform
-                    if($transform =~ m'^s/') {
-                        $transform =~ m'^s/([^/]*?)/([^/]*?)/$';
-                        unless(defined($1) and defined($2)) {
-                            die "$syntaxerror in transform regex $.";
-                        }
-                        push(@transformpairs,[$1,$2]);
-                    } elsif ($transform =~ m'^map\s*{') {
-                        $transform
-                          =~ m#^map \s* { \s* 's/([^/]*?)/\'.\$_.'/' \s* } \s* qw\(([^\)]*)\)#x;
-                        unless(defined($1) and defined($2)) {
-                            die "$syntaxerror in map transform regex $.";
-                        }
-                        my $words = $2;
-                        my $match = $1;
-                        my @wordarray = split(/\s+/,$words);
-                        if(scalar(@wordarray) == 0) {
-                            die
-"$syntaxerror in map transform regex : no qw arg $.";
-                        }
-                        foreach my $word (@wordarray) {
-                            push(@transformpairs,[$match, $word]);
-                        }
-                    } else {
-                        die "$syntaxerror in last field $.";
-                    }
-                }
-            }
-        }
-
-        return {
-            'regtype'   => qr/$regtype/x,
-            'regname' => qr/$regname/x,
-            'checkmissing' => (not not scalar(@transformpairs)),
-            'transform' => \@transformpairs,
-        };
+        return $self->_md5sum_based_lintian_data('cruft/non-free-files');
     });
 
 # prebuilt-file or forbidden file type
-my $RFC_WHITELIST =  Lintian::Data->new(
-    'cruft/rfc-whitelist',
-    qr/\s*\~\~\s*/,
-    sub {
-        return qr/$_[0]/xms;
+has WARN_FILE_TYPE => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        return $self->profile->load_data(
+            'cruft/warn-file-type',
+            qr/\s*\~\~\s*/,
+            sub {
+                my @sliptline = split(/\s*\~\~\s*/, $_[1], 4);
+                if (scalar(@sliptline) < 1 or scalar(@sliptline) > 4) {
+                    die "Syntax error in cruft/warn-file-type $.";
+                }
+                my ($regtype, $regname, $transformlist) = @sliptline;
+
+                # allow empty regname
+                $regname //= EMPTY;
+
+                # trim both ends
+                $regname =~ s/^\s+|\s+$//g;
+
+                if (length($regname) == 0) {
+                    $regname = '.*';
+                }
+
+                # build transform pair
+                $transformlist //= EMPTY;
+                $transformlist =~ s/^\s+|\s+$//g;
+
+                my $syntaxerror = 'Syntax error in cruft/warn-file-type';
+                my @transformpairs;
+                unless($transformlist eq EMPTY) {
+                    my @transforms = split(/\s*\&\&\s*/, $transformlist);
+                    if(scalar(@transforms) > 0) {
+                        foreach my $transform (@transforms) {
+                            # regex transform
+                            if($transform =~ m'^s/') {
+                                $transform =~ m'^s/([^/]*?)/([^/]*?)/$';
+                                unless(defined($1) and defined($2)) {
+                                    die "$syntaxerror in transform regex $.";
+                                }
+                                push(@transformpairs,[$1,$2]);
+                            } elsif ($transform =~ m'^map\s*{') {
+                                $transform
+                                  =~ m#^map \s* { \s* 's/([^/]*?)/\'.\$_.'/' \s* } \s* qw\(([^\)]*)\)#x;
+                                unless(defined($1) and defined($2)) {
+                                    die
+                                      "$syntaxerror in map transform regex $.";
+                                }
+                                my $words = $2;
+                                my $match = $1;
+                                my @wordarray = split(/\s+/,$words);
+                                if(scalar(@wordarray) == 0) {
+                                    die
+"$syntaxerror in map transform regex : no qw arg $.";
+                                }
+                                foreach my $word (@wordarray) {
+                                    push(@transformpairs,[$match, $word]);
+                                }
+                            } else {
+                                die "$syntaxerror in last field $.";
+                            }
+                        }
+                    }
+                }
+
+                return {
+                    'regtype'   => qr/$regtype/x,
+                    'regname' => qr/$regname/x,
+                    'checkmissing' => (not not scalar(@transformpairs)),
+                    'transform' => \@transformpairs,
+                };
+            });
+    });
+
+# prebuilt-file or forbidden file type
+has RFC_WHITELIST => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+        return $self->profile->load_data(
+            'cruft/rfc-whitelist',
+            qr/\s*\~\~\s*/,
+            sub {
+                return qr/$_[0]/xms;
+            });
     });
 
 # "Known good" files that match eg. lena.jpg.
-my $LENNA_WHITELIST = Lintian::Data->new('cruft/lenna-whitelist');
+has LENNA_WHITELIST => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        return $self->profile->load_data('cruft/lenna-whitelist');
+    });
 
 # prebuilt-file or forbidden copyright
-my $BAD_LINK_COPYRIGHT =  Lintian::Data->new(
-    'cruft/bad-link-copyright',
-    qr/\s*\~\~\s*/,
-    sub {
-        return qr/$_[1]/xms;
+has BAD_LINK_COPYRIGHT => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        return $self->profile->load_data(
+            'cruft/bad-link-copyright',
+            qr/\s*\~\~\s*/,
+            sub {
+                return qr/$_[1]/xms;
+            });
     });
 
 # get javascript name
 sub _minified_javascript_name_regexp {
+    my ($self) = @_;
     my $jsv
-      = $WARN_FILE_TYPE->value('source-contains-prebuilt-javascript-object');
+      = $self->WARN_FILE_TYPE->value(
+        'source-contains-prebuilt-javascript-object');
     return defined($jsv)
       ? $jsv->{'regname'}
       : qr/(?i)[-._](?:min|pack(?:ed)?)\.js$/;
 }
 
 # get browserified regexp
-my $BROWSERIFY_REGEX =  Lintian::Data->new(
-    'cruft/browserify-regex',
-    qr/\s*\~\~\s*/,
-    sub {
-        return qr/$_[1]/xms;
+has BROWSERIFY_REGEX => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        return $self->profile->load_data(
+            'cruft/browserify-regex',
+            qr/\s*\~\~\s*/,
+            sub {
+                return qr/$_[1]/xms;
+            });
     });
 
 sub _get_license_check_file {
-    my ($filename) = @_;
-    my $data = Lintian::Data->new(
+    my ($self, $filename) = @_;
+
+    my $data = $self->profile->load_data(
         $filename,
         qr/\s*\~\~\s*/,
         sub {
@@ -261,54 +312,76 @@ sub _get_license_check_file {
 }
 
 # get usual non distributable license
-my $NON_DISTRIBUTABLE_LICENSES
-  = _get_license_check_file('cruft/non-distributable-license');
+has NON_DISTRIBUTABLE_LICENSES => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        return $self->_get_license_check_file(
+            'cruft/non-distributable-license');
+    });
 
 # get non free license
 # get usual non distributable license
-my $NON_FREE_LICENSES = _get_license_check_file('cruft/non-free-license');
+has NON_FREE_LICENSES => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        return $self->_get_license_check_file('cruft/non-free-license');
+    });
 
 # get usual data about admissible/not admissible GFDL invariant part of license
-my $GFDL_FRAGMENTS = Lintian::Data->new(
-    'cruft/gfdl-license-fragments-checks',
-    qr/\s*\~\~\s*/,
-    sub {
-        my ($gfdlsectionsregex,$secondpart) = @_;
+has GFDL_FRAGMENTS => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
 
-        # allow empty parameters
-        $gfdlsectionsregex //= EMPTY;
+        return $self->profile->load_data(
+            'cruft/gfdl-license-fragments-checks',
+            qr/\s*\~\~\s*/,
+            sub {
+                my ($gfdlsectionsregex,$secondpart) = @_;
 
-        # trim both ends
-        $gfdlsectionsregex =~ s/^\s+|\s+$//g;
+                # allow empty parameters
+                $gfdlsectionsregex //= EMPTY;
 
-        $secondpart //= EMPTY;
-        my ($acceptonlyinfile,$applytag)= split(/\s*\~\~\s*/, $secondpart, 2);
+                # trim both ends
+                $gfdlsectionsregex =~ s/^\s+|\s+$//g;
 
-        $acceptonlyinfile //= EMPTY;
-        $applytag //= EMPTY;
+                $secondpart //= EMPTY;
+                my ($acceptonlyinfile,$applytag)
+                  = split(/\s*\~\~\s*/, $secondpart, 2);
 
-        # trim both ends
-        $acceptonlyinfile =~ s/^\s+|\s+$//g;
-        $applytag =~ s/^\s+|\s+$//g;
+                $acceptonlyinfile //= EMPTY;
+                $applytag //= EMPTY;
 
-        # empty first field is everything
-        if (length($gfdlsectionsregex) == 0) {
-            $gfdlsectionsregex = '.*';
-        }
-        # empty regname is none
-        if (length($acceptonlyinfile) == 0) {
-            $acceptonlyinfile = '.*';
-        }
+                # trim both ends
+                $acceptonlyinfile =~ s/^\s+|\s+$//g;
+                $applytag =~ s/^\s+|\s+$//g;
 
-        my %ret = (
-            'gfdlsectionsregex'   => qr/$gfdlsectionsregex/xis,
-            'acceptonlyinfile' => qr/$acceptonlyinfile/xs,
-        );
-        unless ($applytag eq EMPTY) {
-            $ret{'tag'} = $applytag;
-        }
+                # empty first field is everything
+                if (length($gfdlsectionsregex) == 0) {
+                    $gfdlsectionsregex = '.*';
+                }
+                # empty regname is none
+                if (length($acceptonlyinfile) == 0) {
+                    $acceptonlyinfile = '.*';
+                }
 
-        return \%ret;
+                my %ret = (
+                    'gfdlsectionsregex'   => qr/$gfdlsectionsregex/xis,
+                    'acceptonlyinfile' => qr/$acceptonlyinfile/xs,
+                );
+                unless ($applytag eq EMPTY) {
+                    $ret{'tag'} = $applytag;
+                }
+
+                return \%ret;
+            });
     });
 
 # Directory checks.  These regexes match a directory that shouldn't be in the
@@ -383,7 +456,7 @@ has group_ships_examples => (
 sub visit_patched_files {
     my ($self, $item) = @_;
 
-    my $banned = $NON_DISTRIBUTABLE_FILES->value($item->md5sum);
+    my $banned = $self->NON_DISTRIBUTABLE_FILES->value($item->md5sum);
     if (defined $banned) {
         my $usualname = $banned->{'name'};
         my $reason = $banned->{'reason'};
@@ -396,7 +469,7 @@ sub visit_patched_files {
         );
     }
 
-    my $nonfree = $NON_FREE_FILES->value($item->md5sum);
+    my $nonfree = $self->NON_FREE_FILES->value($item->md5sum);
     if (defined $nonfree) {
         my $usualname = $nonfree->{'name'};
         my $reason = $nonfree->{'reason'};
@@ -482,13 +555,13 @@ sub visit_patched_files {
             or $item->file_info =~ /^PDF Document\b/i
             or $item->file_info =~ /^Postscript Document\b/i) {
             $self->hint('license-problem-non-free-img-lenna', $item->name)
-              unless $LENNA_WHITELIST->known($item->md5sum);
+              unless $self->LENNA_WHITELIST->known($item->md5sum);
         }
     }
 
     # warn by file type
-    foreach my $tag_filetype ($WARN_FILE_TYPE->all) {
-        my $warn_data = $WARN_FILE_TYPE->value($tag_filetype);
+    foreach my $tag_filetype ($self->WARN_FILE_TYPE->all) {
+        my $warn_data = $self->WARN_FILE_TYPE->value($tag_filetype);
         my $regtype = $warn_data->{'regtype'};
         if($item->file_info =~ m{$regtype}) {
             my $regname = $warn_data->{'regname'};
@@ -783,7 +856,7 @@ sub full_text_check {
         if(
             $self->license_check(
                 $item->name,$item->basename,
-                $NON_DISTRIBUTABLE_LICENSES,$block,
+                $self->NON_DISTRIBUTABLE_LICENSES,$block,
                 $blocknumber,\$cleanedblock,
                 \%matchedkeyword,\%licenseproblemhash
             )
@@ -797,8 +870,8 @@ sub full_text_check {
             next BLOCK;
         }
 
-        $self->license_check($item->name,$item->basename,$NON_FREE_LICENSES,
-            $block,
+        $self->license_check($item->name,$item->basename,
+            $self->NON_FREE_LICENSES,$block,
             $blocknumber,\$cleanedblock, \%matchedkeyword,
             \%licenseproblemhash);
 
@@ -895,10 +968,10 @@ sub check_js_script {
 
 # check if file is javascript but not minified
 sub _is_javascript_but_not_minified {
-    my ($name) = @_;
+    my ($self, $name) = @_;
     my $isjsfile = ($name =~ m/\.js$/) ? 1 : 0;
     if($isjsfile) {
-        my $minjsregexp =  _minified_javascript_name_regexp();
+        my $minjsregexp = $self->_minified_javascript_name_regexp();
         $isjsfile = ($name =~ m{$minjsregexp}) ? 0 : 1;
     }
     return $isjsfile;
@@ -908,7 +981,7 @@ sub _is_javascript_but_not_minified {
 sub search_in_block0 {
     my ($self, $item, $block) = @_;
 
-    if(_is_javascript_but_not_minified($item->name)) {
+    if($self->_is_javascript_but_not_minified($item->name)) {
         # exception sphinx documentation
         if($item->basename eq 'searchindex.js') {
             if($block =~ m/\A\s*search\.setindex\s* \s* \(\s*\{/xms) {
@@ -961,8 +1034,8 @@ sub search_in_block0 {
                   href="([^"]+)" \s*/? \s*>,xmsi;
         if(defined($1)) {
             my $copyrighttarget = $1;
-            foreach my $badcopyrighttag ($BAD_LINK_COPYRIGHT->all) {
-                my $regex =  $BAD_LINK_COPYRIGHT->value($badcopyrighttag);
+            foreach my $badcopyrighttag ($self->BAD_LINK_COPYRIGHT->all) {
+                my $regex=  $self->BAD_LINK_COPYRIGHT->value($badcopyrighttag);
                 if($copyrighttarget =~ m{$regex}) {
                     $self->hint($badcopyrighttag, $item->name);
                     last;
@@ -1041,8 +1114,8 @@ sub detect_browserify {
     my ($self, $item, $block) = @_;
 
     $block =~ s,\n, ,msg;
-    foreach my $browserifyregex ($BROWSERIFY_REGEX->all) {
-        my $regex = $BROWSERIFY_REGEX->value($browserifyregex);
+    foreach my $browserifyregex ($self->BROWSERIFY_REGEX->all) {
+        my $regex = $self->BROWSERIFY_REGEX->value($browserifyregex);
         if($block =~ m{$regex}) {
             my $extra = (defined $1) ? 'code fragment:'.$1 : EMPTY;
             $self->hint('source-contains-browserified-javascript',
@@ -1225,8 +1298,8 @@ sub check_gfdl_license_problem {
 
     # GFDL license, assume it is bad unless it
     # explicitly states it has no "bad sections".
-    foreach my $gfdl_fragment ($GFDL_FRAGMENTS->all) {
-        my $gfdl_data = $GFDL_FRAGMENTS->value($gfdl_fragment);
+    foreach my $gfdl_fragment ($self->GFDL_FRAGMENTS->all) {
+        my $gfdl_data = $self->GFDL_FRAGMENTS->value($gfdl_fragment);
         my $gfdlsectionsregex = $gfdl_data->{'gfdlsectionsregex'};
         if ($gfdlsections =~ m{$gfdlsectionsregex}) {
             my $acceptonlyinfile = $gfdl_data->{'acceptonlyinfile'};
@@ -1266,8 +1339,8 @@ sub rfc_whitelist_filename {
     return 0 if $name eq 'debian/copyright';
     my $lcname = lc($basename);
 
-    foreach my $rfc_regexp ($RFC_WHITELIST->all) {
-        my $regex = $RFC_WHITELIST->value($rfc_regexp);
+    foreach my $rfc_regexp ($self->RFC_WHITELIST->all) {
+        my $regex = $self->RFC_WHITELIST->value($rfc_regexp);
         if($lcname =~ m/$regex/xms) {
             return 0;
         }

@@ -30,8 +30,14 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-my $MULTIARCH_DIRS = Lintian::Data->new('common/multiarch-dirs', qr/\s++/);
-my $GENERIC_HEADER_FILES = Lintian::Data->new('files/generic-header-files');
+has GENERIC_HEADER_FILES => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        return $self->profile->load_data('files/generic-header-files');
+    });
 
 has header_dirs => (is => 'rwp');
 
@@ -39,6 +45,9 @@ sub setup_installed_files {
     my ($self) = @_;
 
     my %header_dirs = ('usr/include/' => 1);
+
+    my $MULTIARCH_DIRS
+      = $self->profile->load_data('common/multiarch-dirs', qr/\s++/);
 
     foreach my $arch ($MULTIARCH_DIRS->all) {
         my $dir = $MULTIARCH_DIRS->value($arch);
@@ -58,7 +67,7 @@ sub visit_installed_files {
       unless exists $self->header_dirs->{$file->dirname};
 
     if (   $file->is_file
-        && $GENERIC_HEADER_FILES->matches_any($file->basename, 'i')) {
+        && $self->GENERIC_HEADER_FILES->matches_any($file->basename, 'i')) {
 
         $self->hint('header-has-overly-generic-name', $file->name);
     }

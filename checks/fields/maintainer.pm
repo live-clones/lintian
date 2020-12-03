@@ -31,15 +31,10 @@ use warnings;
 use utf8;
 use autodie;
 
-use Lintian::Data;
-
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-my $KNOWN_BOUNCE_ADDRESSES = Lintian::Data->new('fields/bounce-addresses');
-my $KNOWN_DISTS = Lintian::Data->new('changes-file/known-dists');
 
 sub source {
     my ($self) = @_;
@@ -69,6 +64,8 @@ sub changes {
       = $self->processable->fields->value('Distribution');
 
     my $source_maintainer = $source->fields->value('Maintainer');
+
+    my $KNOWN_DISTS = $self->profile->load_data('changes-file/known-dists');
 
     # not for derivatives; https://wiki.ubuntu.com/DebianMaintainerField
     $self->hint('inconsistent-maintainer',

@@ -33,23 +33,12 @@ use File::Basename;
 use List::MoreUtils qw(any first_index);
 use Text::ParseWords qw(shellwords);
 
-use Lintian::Data;
-
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
 
 has timers => (is => 'rwp', default => sub{ [] });
-
-# Init scripts that do not need a service file
-my $INIT_WHITELIST = Lintian::Data->new('systemd/init-whitelist');
-
-# Known security flags
-my $HARDENING_FLAGS = Lintian::Data->new('systemd/hardening-flags');
-
-# Usual WantedBy= targets
-my $WANTEDBY_WHITELIST = Lintian::Data->new('systemd/wantedby-whitelist');
 
 sub setup_installed_files {
     my ($self) = @_;
@@ -117,6 +106,9 @@ sub get_init_scripts {
     my ($self) = @_;
 
     my $processable = $self->processable;
+
+    # Init scripts that do not need a service file
+    my $INIT_WHITELIST = $self->profile->load_data('systemd/init-whitelist');
 
     my @scripts;
     if ($processable->name ne 'initscripts'
@@ -249,6 +241,13 @@ sub check_systemd_service_file {
 
     my $pkg = $self->processable->name;
     my $processable = $self->processable;
+
+    # Known security flags
+    my $HARDENING_FLAGS = $self->profile->load_data('systemd/hardening-flags');
+
+    # Usual WantedBy= targets
+    my $WANTEDBY_WHITELIST
+      = $self->profile->load_data('systemd/wantedby-whitelist');
 
     $self->hint('systemd-service-file-outside-lib', $file)
       if ($file =~ m,^etc/systemd/system/,);

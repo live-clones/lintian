@@ -35,7 +35,6 @@ use Path::Tiny;
 use Try::Tiny;
 use Unicode::UTF8 qw(valid_utf8 decode_utf8);
 
-use Lintian::Data ();
 use Lintian::Inspect::Changelog;
 use Lintian::Inspect::Changelog::Version;
 use Lintian::IPC::Run3 qw(safe_qx);
@@ -48,10 +47,6 @@ use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-my $BUGS_NUMBER= Lintian::Data->new('changelog-file/bugs-number', qr/\s*=\s*/);
-my $INVALID_DATES
-  = Lintian::Data->new('changelog-file/invalid-dates', qr/\s*=\>\s*/);
 
 sub spelling_tag_emitter {
     my ($self, @orig_args) = @_;
@@ -382,6 +377,7 @@ sub binary {
                         $news->Distribution);
                 }
                 check_spelling(
+                    $self->profile,
                     $news->Changes,
                     $group->spelling_exceptions,
                     $self->spelling_tag_emitter(
@@ -546,6 +542,12 @@ sub binary {
                 {domain_disable_tld_validation => 1});
         }
     }
+
+    my $BUGS_NUMBER
+      = $self->profile->load_data('changelog-file/bugs-number', qr/\s*=\s*/);
+    my $INVALID_DATES
+      = $self->profile->load_data('changelog-file/invalid-dates',
+        qr/\s*=\>\s*/);
 
     if (@entries) {
 
@@ -717,7 +719,7 @@ sub binary {
         # positives on changelog entries for spelling fixes.
         $changes =~ s/^.*(?:spelling|typo).*\n//gm;
         check_spelling(
-            $changes,
+            $self->profile,$changes,
             $group->spelling_exceptions,
             $self->spelling_tag_emitter('spelling-error-in-changelog'));
     }

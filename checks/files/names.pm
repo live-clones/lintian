@@ -33,7 +33,14 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-my $FNAMES = Lintian::Data->new('files/fnames', qr/\s*\~\~\s*/);
+has FNAMES => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        return $self->profile->load_data('files/fnames', qr/\s*\~\~\s*/);
+    });
 
 my %PATH_DIRECTORIES = map { $_ => 1 } qw(
   bin/ sbin/ usr/bin/ usr/sbin/ usr/games/ );
@@ -53,9 +60,9 @@ sub visit_installed_files {
     }
 
     # check for generic bad filenames
-    foreach my $tag ($FNAMES->all()) {
+    foreach my $tag ($self->FNAMES->all()) {
 
-        my $regex = $FNAMES->value($tag);
+        my $regex = $self->FNAMES->value($tag);
 
         $self->hint($tag, $file->name)
           if $file->name =~ m/$regex/;

@@ -27,15 +27,10 @@ use warnings;
 use utf8;
 use autodie;
 
-use Lintian::Data;
-
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-my $DERIVATIVE_CHANGED_BY= Lintian::Data->new('common/derivative-changed-by',
-    qr/\s*~~\s*/, sub { $_[1]; });
 
 sub changes {
     my ($self) = @_;
@@ -46,6 +41,10 @@ sub changes {
       unless $self->processable->fields->exists('Changed-By');
 
     my $changed_by = $self->processable->fields->value('Changed-By');
+
+    my $DERIVATIVE_CHANGED_BY
+      = $self->profile->load_data('common/derivative-changed-by',
+        qr/\s*~~\s*/, sub { $_[1]; });
 
     for my $regex ($DERIVATIVE_CHANGED_BY->all) {
 

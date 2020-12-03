@@ -30,9 +30,24 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-my $LOCALE_CODES = Lintian::Data->new('files/locale-codes', qr/\s++/);
-my $INCORRECT_LOCALE_CODES
-  = Lintian::Data->new('files/incorrect-locale-codes', qr/\s++/);
+has LOCALE_CODES => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        return $self->profile->load_data('files/locale-codes', qr/\s++/);
+    });
+
+has INCORRECT_LOCALE_CODES => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        return $self->profile->load_data('files/incorrect-locale-codes',
+            qr/\s++/);
+    });
 
 sub visit_installed_files {
     my ($self, $file) = @_;
@@ -48,24 +63,24 @@ sub visit_installed_files {
         # special exception:
         if ($lwccode ne 'l10n') {
 
-            if ($INCORRECT_LOCALE_CODES->known($lwccode)) {
+            if ($self->INCORRECT_LOCALE_CODES->known($lwccode)) {
                 $self->hint('incorrect-locale-code',"$lwccode ->",
-                    $INCORRECT_LOCALE_CODES->value($lwccode));
+                    $self->INCORRECT_LOCALE_CODES->value($lwccode));
 
-            } elsif ($INCORRECT_LOCALE_CODES->known($lcode)) {
+            } elsif ($self->INCORRECT_LOCALE_CODES->known($lcode)) {
                 $self->hint('incorrect-locale-code',"$lcode ->",
-                    $INCORRECT_LOCALE_CODES->value($lcode));
+                    $self->INCORRECT_LOCALE_CODES->value($lcode));
 
-            } elsif (!$LOCALE_CODES->known($lcode)) {
+            } elsif (!$self->LOCALE_CODES->known($lcode)) {
                 $self->hint('unknown-locale-code', $lcode);
 
-            } elsif ($LOCALE_CODES->known($lcode)
-                && defined($LOCALE_CODES->value($lcode))) {
+            } elsif ($self->LOCALE_CODES->known($lcode)
+                && defined($self->LOCALE_CODES->value($lcode))) {
                 # If there's a key-value pair in the codes
                 # list it means the ISO 639-2 code is being
                 # used instead of ISO 639-1's
                 $self->hint('incorrect-locale-code', "$lcode ->",
-                    $LOCALE_CODES->value($lcode));
+                    $self->LOCALE_CODES->value($lcode));
             }
         }
     }

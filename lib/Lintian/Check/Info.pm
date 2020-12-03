@@ -258,6 +258,7 @@ sub run_check {
         $check->info($self);
         $check->processable($processable);
         $check->group($group);
+        $check->profile($group->profile);
 
         $check->run;
 

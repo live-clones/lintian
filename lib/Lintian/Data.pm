@@ -22,250 +22,68 @@ package Lintian::Data;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
-use Carp qw(croak confess);
-use POSIX qw(ENOENT);
-use Unicode::UTF8 qw(encode_utf8);
+use List::MoreUtils qw(any);
 
-our $LAZY_LOAD = 1;
+use constant EMPTY => q{};
 
-sub _checked_open {
-    my ($path) = @_;
-    my $fd;
-    eval {open($fd, '<:utf8_strict', $path);};
-    if (my $err = $@) {
-        die encode_utf8($err) if not ref $err or $err->errno != ENOENT;
-        return;
-    }
-    return $fd;
-}
+use Moo;
+use namespace::clean;
 
-sub new {
-    my ($class, @args) = @_;
-    my $data_name = $args[0];
-    my $self = {};
-    my $data;
+has set => (
+    is => 'rw',
+    coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
+    default => sub { {} });
 
-    croak encode_utf8('no data type specified') unless $data_name;
-
-    bless $self, $class;
-
-    $data = $self->_get_data($data_name);
-    if ($data) {
-        # We already loaded this data file - just pull from cache
-        $self->{'data'} = $data;
-    } else {
-        # Pretend we loaded this data file, but leave a "reminder" to
-        # do it later.
-        $self->{'promise'} = \@args;
-        $self->_force_promise if not $LAZY_LOAD;
-    }
-    return $self;
-}
-
-# _get_data fetches an already loaded dataset by type.  It is
-# mostly useful for determining whether it makes sense to make
-# sense to be "lazy".
-#
-# _load_data loads a dataset into %data, which is private to this
-# module.  Use %data as a cache to avoid loading the same dataset more
-# than once (which means lintian doesn't support having the list
-# change over the life of the process).  The returned object knows
-# what dataset, stored in %data, it is supposed to act on.
-{
-    my %data;
-
-    sub _get_data {
-        my ($self, $data_name) = @_;
-        return $data{$data_name};
-    }
-
-    sub _load_data {
-        my ($self, $data_spec) = @_;
-        my $data_name = $data_spec->[0];
-        unless (exists($data{$data_name})) {
-            my $vendors = $self->_get_vendor_names;
-            my ($dataset, $keyorder) = ({}, []);
-            my ($fd, $vno) = $self->_open_data_file($data_name, $vendors, 0);
-            $self->_parse_file($data_name, $fd, $dataset, $keyorder,
-                $data_spec, $vendors, $vno);
-            close($fd);
-            $data{$data_name} = {dataset => $dataset, keyorder => $keyorder};
-        }
-        return $self->{'data'} = $data{$data_name};
-    }
-}
-
-{
-    my $profile;
-    # Set vendor profile
-    sub set_vendor {
-        my (undef, $vendor) = @_;
-        $profile = $vendor;
-        return;
-    }
-
-    # Returns a listref of profile names
-    sub _get_vendor_names {
-        my ($self) = @_;
-        croak encode_utf8('No vendor given') unless $profile;
-        my @vendors;
-        push @vendors, reverse @{ $profile->profile_list };
-        return \@vendors;
-    }
-
-    # Open the (next) data file
-    #
-    # $self->_open_data_file ($data_name, $vendors, $start)
-    # - $data_name is the data file (e.g. "common/architectures")
-    # - $vendors is the listref return by _get_vendor_names
-    # - $start is an index into $vendors (the first $vendor to try)
-    sub _open_data_file {
-        my ($self, $data_name, $vendors, $start) = @_;
-        my ($fd, $file);
-        my $cur = $start;
-
-      OUTER: for (; $cur < scalar @$vendors ; $cur++) {
-            my $vendorpart = "vendors/$vendors->[$cur]/data/$data_name";
-            foreach my $datafile ($profile->include_path($vendorpart)) {
-                $fd =_checked_open($datafile);
-                next if not $fd;
-                $file = $datafile;
-                last OUTER;
-            }
-        }
-        if (not defined $file and $cur == scalar @$vendors) {
-            foreach my $datafile ($profile->include_path("data/$data_name")) {
-                $fd =_checked_open($datafile);
-                next if not $fd;
-                $file = $datafile;
-                last;
-            }
-            $cur++;
-        }
-        if (not defined $file) {
-            croak encode_utf8("Unknown data file: $data_name") unless $start;
-            croak encode_utf8("No parent data file for $vendors->[$start]");
-        }
-        return ($fd, $cur);
-    }
-}
-
-sub _parse_file {
-    my ($self, $data_name, $fd, $dataset, $keyorder, $data_spec, $vendors,$vno)
-      = @_;
-    my (undef, $separator, $code) = @{$data_spec};
-    my $filename = $data_name;
-    $filename = $vendors->[$vno] . '/' . $data_name if $vno < scalar @$vendors;
-    local $.;
-    while (my $line = <$fd>) {
-
-        # trim both ends
-        $line =~ s/^\s+|\s+$//g;
-
-        next if $line =~ m{ \A \#}xsm or $line eq '';
-        if ($line =~ s/^\@//) {
-            my ($op, $value) = split(m{ \s++ }xsm, $line, 2);
-            if ($op eq 'delete') {
-                croak encode_utf8(
-                    "Missing key after \@delete in $filename at line $.")
-                  unless defined $value && length $value;
-                @{$keyorder} = grep { $_ ne $value } @{$keyorder};
-                delete $dataset->{$value};
-            } elsif ($op eq 'include-parent') {
-                my ($pfd, $pvo)
-                  = $self->_open_data_file($data_name, $vendors,$vno +1);
-                $self->_parse_file($data_name, $pfd, $dataset, $keyorder,
-                    $data_spec, $vendors, $pvo);
-                close($pfd);
-            } elsif ($op eq 'if-vendor-is' or $op eq 'if-vendor-is-not') {
-                my ($desired_name, $remain) = split(m{ \s++ }xsm, $value, 2);
-                my $actual_name;
-                croak encode_utf8("Missing vendor name after \@$op")
-                  unless $desired_name;
-                croak encode_utf8(
-                    "Missing command after vendor name for \@$op")
-                  unless $remain;
-                $actual_name = (split('/', $vendors->[0], 2))[0];
-                if ($op eq 'if-vendor-is') {
-                    next if $actual_name ne $desired_name;
-                } else {
-                    next if $actual_name eq $desired_name;
-                }
-                $line = $remain;
-                redo;
-            } else {
-                croak encode_utf8(
-                    "Unknown operation \@$op in $filename at line $.");
-            }
-            next;
-        }
-
-        my ($key, $val);
-        if (defined $separator) {
-            ($key, $val) = split(/$separator/, $line, 2);
-            if ($code) {
-                my $pval = $dataset->{$key};
-                $val = $code->($key, $val, $pval);
-                if (not defined($val)) {
-                    next if defined($pval);
-                    croak encode_utf8(
-                        "undefined value for $key (data-name: $data_name)");
-                }
-            }
-        } else {
-            ($key, $val) = ($line => 1);
-        }
-        push @{$keyorder}, $key unless exists $dataset->{$key};
-        $dataset->{$key} = $val;
-    }
-    return;
-}
-
-sub _force_promise {
-    my ($self) = @_;
-    my $promise = $self->{promise};
-    my $data = $self->_load_data($promise);
-    delete $self->{promise};
-    return $data;
-}
+has keyorder => (
+    is => 'rw',
+    coerce => sub { my ($arrayref) = @_; return ($arrayref // []); },
+    default => sub { [] });
 
 # Query a data object for whether a particular keyword is valid.
 sub known {
     my ($self, $keyword) = @_;
-    if(!defined($keyword)) {
-        return;
-    }
-    my $data = $self->{data} || $self->_force_promise;
-    return (exists $data->{'dataset'}{$keyword}) ? 1 : undef;
+
+    return 0
+      unless length $keyword;
+
+    return 1
+      if exists $self->set->{$keyword};
+
+    return 0;
 }
 
 # Return all known keywords (in no particular order).
 sub all {
     my ($self) = @_;
-    my $data = $self->{data} || $self->_force_promise;
-    return @{$data->{'keyorder'}};
+
+    return @{$self->keyorder};
 }
 
 # Query a data object for the value attached to a particular keyword.
 sub value {
     my ($self, $keyword) = @_;
-    my $data = $self->{data} || $self->_force_promise;
-    return $data->{'dataset'}{$keyword} // undef;
+
+    return
+      unless length $keyword;
+
+    return $self->set->{$keyword};
 }
 
 # Query a data object for whether a particular keyword matches any regex.
 # Accepts an optional second argument for regex modifiers.
 sub matches_any {
     my ($self, $keyword, $modifiers) = @_;
-    $modifiers //= '';
-    for my $regex ($self->all) {
-        if ($keyword =~ m,(?$modifiers)$regex,) {
-            return 1;
-        }
-    }
-    return;
+
+    return 0
+      unless length $keyword;
+
+    $modifiers //= EMPTY;
+
+    return 1
+      if any { $keyword =~ /(?$modifiers)$_/ } $self->all;
+
+    return 0;
 }
 
 1;

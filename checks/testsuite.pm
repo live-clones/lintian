@@ -29,7 +29,6 @@ use List::Compare;
 use List::MoreUtils qw(any none);
 use Path::Tiny;
 
-use Lintian::Data;
 use Lintian::Deb822::File;
 use Lintian::Deb822::Parser qw(DCTRL_COMMENTS_AT_EOL);
 use Lintian::Relation;
@@ -42,11 +41,6 @@ use namespace::clean;
 with 'Lintian::Check';
 
 my %KNOWN_FEATURES = map { $_ => 1 } qw();
-my $KNOWN_FIELDS = Lintian::Data->new('testsuite/known-fields');
-my $KNOWN_RESTRICTIONS = Lintian::Data->new('testsuite/known-restrictions');
-my $KNOWN_OBSOLETE_RESTRICTIONS
-  = Lintian::Data->new('testsuite/known-obsolete-restrictions');
-my $KNOWN_TESTSUITES = Lintian::Data->new('testsuite/known-testsuites');
 
 our $PYTHON3_ALL_DEPEND
   = 'python3-all:any | python3-all-dev:any | python3-all-dbg:any';
@@ -58,6 +52,9 @@ my %KNOWN_SPECIAL_DEPENDS = map { $_ => 1 } qw(
 
 sub source {
     my ($self) = @_;
+
+    my $KNOWN_TESTSUITES
+      = $self->profile->load_data('testsuite/known-testsuites');
 
     my $debian_control = $self->processable->debian_control;
 
@@ -127,6 +124,8 @@ sub source {
 sub check_control_paragraph {
     my ($self, $section) = @_;
 
+    my $KNOWN_FIELDS = $self->profile->load_data('testsuite/known-fields');
+
     $self->hint('no-tests')
       unless $section->exists('Tests') || $section->exists('Test-Command');
 
@@ -158,6 +157,11 @@ sub check_control_paragraph {
           unless exists $KNOWN_FEATURES{$feature}
           || $feature =~ m/^test-name=\S+/;
     }
+
+    my $KNOWN_RESTRICTIONS
+      = $self->profile->load_data('testsuite/known-restrictions');
+    my $KNOWN_OBSOLETE_RESTRICTIONS
+      = $self->profile->load_data('testsuite/known-obsolete-restrictions');
 
     my $restrictions_field = $section->unfolded_value('Restrictions');
     my @restrictions

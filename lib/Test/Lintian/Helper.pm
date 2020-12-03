@@ -60,7 +60,6 @@ use Path::Tiny;
 use POSIX qw(locale_h strftime);
 use Unicode::UTF8 qw(encode_utf8 decode_utf8);
 
-use Lintian::Data;
 use Lintian::IO::Async qw(safe_qx);
 use Lintian::Profile;
 
@@ -104,10 +103,9 @@ of the Debian policy. The second is its effective date.
 sub get_latest_policy {
     my $profile = Lintian::Profile->new;
     $profile->load(undef, [$ENV{'LINTIAN_BASE'}]);
-    Lintian::Data->set_vendor($profile);
 
     my $STANDARDS
-      = Lintian::Data->new('standards-version/release-dates', qr/\s+/);
+      = $profile->load_data('standards-version/release-dates', qr/\s+/);
     my @STANDARDS = reverse sort { $a->[1] <=> $b->[1] }
       map { [$_, $STANDARDS->value($_)] } $STANDARDS->all;
 
@@ -129,9 +127,8 @@ via Lintian::Data, relative to the established LINTIAN_BASE.
 sub get_recommended_debhelper_version {
     my $profile = Lintian::Profile->new;
     $profile->load(undef, [$ENV{'LINTIAN_BASE'}]);
-    Lintian::Data->set_vendor($profile);
 
-    my $compat_level= Lintian::Data->new('debhelper/compat-level', qr/=/);
+    my $compat_level = $profile->load_data('debhelper/compat-level', qr/=/);
 
     return $compat_level->value('recommended');
 }

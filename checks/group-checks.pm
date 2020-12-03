@@ -28,16 +28,12 @@ use autodie;
 
 use List::MoreUtils qw(any);
 
-use Lintian::Data;
 use Lintian::Relation;
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-my $KNOWN_DBG_PACKAGE = Lintian::Data->new('common/dbg-pkg',qr/\s*\~\~\s*/,
-    sub { return qr/$_[0]/xms; });
 
 sub source {
     my ($self) = @_;
@@ -136,6 +132,10 @@ sub overlap_check {
 
 sub check_multiarch {
     my ($self, $processable, $deps) = @_;
+
+    my $KNOWN_DBG_PACKAGE
+      = $self->profile->load_data('common/dbg-pkg',qr/\s*\~\~\s*/,
+        sub { return qr/$_[0]/xms; });
 
     my $ma = $processable->fields->value('Multi-Arch') || 'no';
     if ($ma eq 'same') {

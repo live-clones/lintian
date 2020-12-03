@@ -27,8 +27,6 @@ use autodie;
 
 use List::MoreUtils qw(any);
 
-use Lintian::Data;
-
 use Moo;
 use namespace::clean;
 
@@ -38,8 +36,6 @@ our %KNOWN_FORMATS = map { $_ => 1 }
   ('1.0', '2.0', '3.0 (quilt)', '3.0 (native)', '3.0 (git)', '3.0 (bzr)');
 
 my %OLDER_FORMATS = map { $_ => 1 }('1.0');
-
-our $KNOWN_FILES = Lintian::Data->new('debian-source-dir/known-files');
 
 sub source {
     my ($self) = @_;
@@ -104,6 +100,9 @@ sub source {
         }
         close($git_patches_fd);
     }
+
+    my $KNOWN_FILES
+      = $self->profile->load_data('debian-source-dir/known-files');
 
     for my $path ($dsrc->children) {
         my $file = $path->basename;

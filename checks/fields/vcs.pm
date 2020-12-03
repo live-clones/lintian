@@ -32,20 +32,10 @@ use autodie;
 
 use List::MoreUtils qw(any);
 
-use Lintian::Data ();
-
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-our $KNOWN_VCS_HOSTERS= Lintian::Data->new(
-    'fields/vcs-hosters',
-    qr/\s*~~\s*/,
-    sub {
-        my @ret = split(',', $_[1]);
-        return \@ret;
-    });
 
 my %VCS_EXTRACT = (
     Browser => sub { return @_;},
@@ -218,6 +208,14 @@ sub always {
       if $is_comaintained;
     $self->hint('package-is-maintained-by-individual')
       if $is_maintained_by_individual;
+
+    my $KNOWN_VCS_HOSTERS= $self->profile->load_data(
+        'fields/vcs-hosters',
+        qr/\s*~~\s*/,
+        sub {
+            my @ret = split(',', $_[1]);
+            return \@ret;
+        });
 
     my %seen_vcs;
     while (my ($platform, $splitter) = each %VCS_EXTRACT) {

@@ -28,7 +28,6 @@ use autodie;
 use File::Temp;
 use List::Util qw(pairs);
 
-use Lintian::Data;
 use Lintian::IPC::Run3 qw(safe_qx);
 
 use Moo;
@@ -36,12 +35,13 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-my $SIGNING_KEY_FILENAMES = Lintian::Data->new('common/signing-key-filenames');
-
 sub source {
     my ($self) = @_;
 
     my $processable = $self->processable;
+
+    my $SIGNING_KEY_FILENAMES
+      = $self->profile->load_data('common/signing-key-filenames');
 
     # Check all possible locations for signing keys
     my %key_locations;

@@ -23,12 +23,14 @@ package Lintian::Profile;
 use v5.20;
 use warnings;
 use utf8;
+use autodie;
 
-use Carp qw(croak);
+use Carp qw(croak confess);
 use File::Find::Rule;
 use List::Compare;
 use List::MoreUtils qw(any none uniq first_value);
 use Path::Tiny;
+use POSIX qw(ENOENT);
 use Unicode::UTF8 qw(encode_utf8);
 
 use Dpkg::Vendor qw(get_current_vendor get_vendor_info);
@@ -226,8 +228,6 @@ sub load {
     $self->saved_include_path(\@full_inc_path);
     $self->saved_safe_include_path($include_path);
 
-    Lintian::Data->set_vendor($self);
-
     for my $tagdir ($self->_safe_include_path('tags')) {
 
         next
@@ -238,6 +238,7 @@ sub load {
         for my $tagpath (@tagpaths) {
 
             my $tag = Lintian::Tag->new;
+            $tag->profile($self);
             $tag->load($tagpath);
 
             die encode_utf8("Tag in $tagpath is not associated with a check")
@@ -846,6 +847,185 @@ sub display {
     for my $s (@severities) {
         $self->display_level_lookup->{$s} = $status;
     }
+
+    return;
+}
+
+=item data_cache
+
+=cut
+
+has data_cache => (
+    is => 'rw',
+    coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
+    default => sub { {} });
+
+=item load_data
+
+=cut
+
+sub load_data {
+    my ($self, @args) = @_;
+
+    my $data_name = shift @args;
+
+    croak encode_utf8('no data type specified')
+      unless $data_name;
+
+    unless (exists $self->data_cache->{$data_name}) {
+
+        my @vendors = reverse @{ $self->profile_list };
+
+        my $data = Lintian::Data->new;
+
+        my $this_platform = $vendors[0];
+        $self->open_data_file($data_name, $this_platform, \@vendors, $data,
+            \@args);
+
+        $self->data_cache->{$data_name} = $data;
+    }
+
+    return $self->data_cache->{$data_name};
+}
+
+=item open_data_file
+
+=cut
+
+# Open the (next) data file
+#
+# $self->_open_data_file ($data_name, $vendors, $start)
+# - $data_name is the data file (e.g. "common/architectures")
+# - $vendors is the listref return by _get_vendor_names
+# - $start is an index into $vendors (the first $vendor to try)
+sub open_data_file {
+    my ($self, $data_name, $platform, $vendors, $data, $args) = @_;
+
+    my $vendor;
+    my $path;
+
+    while(defined($vendor = shift @{$vendors})) {
+
+        my $vendorpart = "vendors/$vendor/data/$data_name";
+        my @candidates = $self->include_path($vendorpart);
+
+        $path = first_value { -r } @candidates;
+        last
+          if length $path;
+    }
+
+    unless (defined $path) {
+
+        my @candidates = $self->include_path("data/$data_name");
+        $path = first_value { -r } @candidates;
+    }
+
+    unless (defined $path) {
+        croak encode_utf8("Unknown data file: $data_name")
+          unless $vendor;
+        croak encode_utf8("No parent data file for $vendor");
+    }
+
+    my $fd;
+
+    eval {open($fd, '<:utf8_strict', $path);};
+    die encode_utf8($@)
+      if length $@;
+
+    my $dataset = $data->set;
+    my $keyorder = $data->keyorder;
+
+    my ($separator, $code) = @{$args};
+
+    my $filename = $data_name;
+    $filename = $vendor . '/' . $data_name
+      if length $vendor;
+
+    local $.;
+    while (my $line = <$fd>) {
+
+        # trim both ends
+        $line =~ s/^\s+|\s+$//g;
+
+        next
+          unless length $line;
+
+        next
+          if $line =~ m{^\#};
+
+        # a command
+        if ($line =~ s/^\@//) {
+
+            my ($directive, $value) = split(/\s+/, $line, 2);
+            if ($directive eq 'delete') {
+                croak encode_utf8(
+                    "Missing key after \@delete in $filename at line $.")
+                  unless length $value;
+                @{$keyorder} = grep { $_ ne $value } @{$keyorder};
+                delete $dataset->{$value};
+
+            } elsif ($directive eq 'include-parent') {
+                $self->open_data_file($data_name, $platform, $vendors, $data,
+                    $args);
+
+            } elsif ($directive eq 'if-vendor-is'
+                || $directive eq 'if-vendor-is-not') {
+
+                my ($specified, $remain) = split(/\s+/, $value, 2);
+
+                croak encode_utf8("Missing vendor name after \@$directive")
+                  unless length $specified;
+                croak encode_utf8(
+                    "Missing command after vendor name for \@$directive")
+                  unless length $remain;
+
+                my $actual_vendor = (split('/', $platform, 2))[0];
+
+                if ($directive eq 'if-vendor-is') {
+                    next if $actual_vendor ne $specified;
+                } else {
+                    next if $actual_vendor eq $specified;
+                }
+
+                $line = $remain;
+                redo;
+
+            } else {
+                croak encode_utf8(
+                    "Unknown operation \@$directive in $filename at line $.");
+            }
+            next;
+        }
+
+        my ($key, $val);
+        if (defined $separator) {
+
+            ($key, $val) = split(/$separator/, $line, 2);
+
+            if ($code) {
+                my $pval = $dataset->{$key};
+                $val = $code->($key, $val, $pval);
+
+                unless (defined $val) {
+                    next
+                      if defined $pval;
+
+                    croak encode_utf8(
+                        "undefined value for $key (data-name: $data_name)");
+                }
+            }
+
+        } else {
+            ($key, $val) = ($line => 1);
+        }
+
+        push(@{$keyorder}, $key)
+          unless exists $dataset->{$key};
+
+        $dataset->{$key} = $val;
+    }
+
+    close($fd);
 
     return;
 }

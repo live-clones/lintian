@@ -31,14 +31,10 @@ use autodie;
 
 use List::MoreUtils qw(any);
 
-use Lintian::Data ();
-
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-my $KNOWN_PRIOS = Lintian::Data->new('fields/priorities');
 
 sub always {
     my ($self) = @_;
@@ -61,6 +57,8 @@ sub always {
         $priority = 'optional'
           if $priority eq 'extra';
     }
+
+    my $KNOWN_PRIOS = $self->profile->load_data('fields/priorities');
 
     $self->hint('unknown-priority', $priority)
       unless $KNOWN_PRIOS->known($priority);

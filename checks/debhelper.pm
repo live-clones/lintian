@@ -31,7 +31,6 @@ use List::MoreUtils qw(any firstval);
 use List::UtilsBy qw(min_by);
 use Text::LevenshteinXS qw(distance);
 
-use Lintian::Data;
 use Lintian::Relation qw(:constants);
 
 use constant UNDERSCORE => q{_};
@@ -47,26 +46,31 @@ with 'Lintian::Check';
 # from that derive the compatibility level....
 my $cdbscompat = 5;
 
-my $maint_commands = Lintian::Data->new('debhelper/maint_commands');
-my $dh_commands_depends = Lintian::Data->new('debhelper/dh_commands', '=');
-my $filename_configs = Lintian::Data->new('debhelper/filename-config-files');
-my $dh_ver_deps= Lintian::Data->new('debhelper/dh_commands-manual', qr/\|\|/);
-my $dh_addons = Lintian::Data->new('common/dh_addons', '=');
-my $dh_addons_manual
-  = Lintian::Data->new('debhelper/dh_addons-manual', qr/\|\|/);
-my $compat_level = Lintian::Data->new('debhelper/compat-level',qr/=/);
-
 my $MISC_DEPENDS = Lintian::Relation->new('${misc:Depends}');
-
-my @KNOWN_DH_COMMANDS= map { $_, $_ . '-arch', $_ . '-indep' }
-  map { 'override' . $_, 'execute_before' . $_, 'execute_after' . $_ }
-  map { UNDERSCORE . $_ } $dh_commands_depends->all;
 
 sub source {
     my ($self) = @_;
 
     my $processable = $self->processable;
     my $group = $self->group;
+
+    my $maint_commands = $self->profile->load_data('debhelper/maint_commands');
+    my $filename_configs
+      = $self->profile->load_data('debhelper/filename-config-files');
+    my $compat_level
+      = $self->profile->load_data('debhelper/compat-level',qr/=/);
+
+    my $dh_ver_deps
+      = $self->profile->load_data('debhelper/dh_commands-manual', qr/\|\|/);
+    my $dh_addons = $self->profile->load_data('common/dh_addons', '=');
+    my $dh_addons_manual
+      = $self->profile->load_data('debhelper/dh_addons-manual', qr/\|\|/);
+
+    my $dh_commands_depends
+      = $self->profile->load_data('debhelper/dh_commands', '=');
+    my @KNOWN_DH_COMMANDS= map { $_, $_ . '-arch', $_ . '-indep' }
+      map { 'override' . $_, 'execute_before' . $_, 'execute_after' . $_ }
+      map { UNDERSCORE . $_ } $dh_commands_depends->all;
 
     my $droot = $processable->patched->resolve_path('debian/');
     my ($drules, $dh_bd_version, $level);

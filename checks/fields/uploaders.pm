@@ -29,8 +29,6 @@ use warnings;
 use utf8;
 use autodie;
 
-use Lintian::Data;
-
 use Moo;
 use namespace::clean;
 

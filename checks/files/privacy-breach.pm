@@ -36,58 +36,79 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-my $PRIVACY_BREAKER_WEBSITES= Lintian::Data->new(
-    'files/privacy-breaker-websites',
-    qr/\s*\~\~/,
-    sub {
-        my ($regex, $tag, $suggest) = split(/\s*\~\~\s*/, $_[1], 3);
+has PRIVACY_BREAKER_WEBSITES => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
 
-        $tag //= EMPTY;
+        return $self->profile->load_data(
+            'files/privacy-breaker-websites',
+            qr/\s*\~\~/,
+            sub {
+                my ($regex, $tag, $suggest) = split(/\s*\~\~\s*/, $_[1], 3);
 
-        # trim both ends
-        $tag =~ s/^\s+|\s+$//g;
+                $tag //= EMPTY;
 
-        if (length($tag) == 0) {
-            $tag = $_[0];
-        }
-        my %ret = (
-            'tag' => $tag,
-            'regexp' => qr/$regex/xsm,
-        );
-        if (defined($suggest)) {
-            $ret{'suggest'} = $suggest;
-        }
-        return \%ret;
+                # trim both ends
+                $tag =~ s/^\s+|\s+$//g;
+
+                if (length($tag) == 0) {
+                    $tag = $_[0];
+                }
+                my %ret = (
+                    'tag' => $tag,
+                    'regexp' => qr/$regex/xsm,
+                );
+                if (defined($suggest)) {
+                    $ret{'suggest'} = $suggest;
+                }
+                return \%ret;
+            });
     });
 
-my $PRIVACY_BREAKER_FRAGMENTS= Lintian::Data->new(
-    'files/privacy-breaker-fragments',
-    qr/\s*\~\~/,
-    sub {
-        my ($regex, $tag) = split(/\s*\~\~\s*/, $_[1], 2);
-        return {
-            'keyword' => $_[0],
-            'regex' => qr/$regex/xsm,
-            'tag' => $tag,
-        };
+has PRIVACY_BREAKER_FRAGMENTS => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        return $self->profile->load_data(
+            'files/privacy-breaker-fragments',
+            qr/\s*\~\~/,
+            sub {
+                my ($regex, $tag) = split(/\s*\~\~\s*/, $_[1], 2);
+                return {
+                    'keyword' => $_[0],
+                    'regex' => qr/$regex/xsm,
+                    'tag' => $tag,
+                };
+            });
     });
 
-my $PRIVACY_BREAKER_TAG_ATTR= Lintian::Data->new(
-    'files/privacy-breaker-tag-attr',
-    qr/\s*\~\~\s*/,
-    sub {
-        my ($keywords,$regex) = split(/\s*\~\~\s*/, $_[1], 2);
-        $regex =~ s/&URL/(?:(?:ht|f)tps?:)?\/\/[^"\r\n]*/g;
-        my @keywordlist;
-        my @keywordsorraw = split(/\s*\|\|\s*/,$keywords);
-        foreach my $keywordor (@keywordsorraw) {
-            my @keywordsandraw = split(/\s*&&\s*/,$keywordor);
-            push(@keywordlist, \@keywordsandraw);
-        }
-        return {
-            'keywords' => \@keywordlist,
-            'regex' => qr/$regex/xsm,
-        };
+has PRIVACY_BREAKER_TAG_ATTR => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        return $self->profile->load_data(
+            'files/privacy-breaker-tag-attr',
+            qr/\s*\~\~\s*/,
+            sub {
+                my ($keywords,$regex) = split(/\s*\~\~\s*/, $_[1], 2);
+                $regex =~ s/&URL/(?:(?:ht|f)tps?:)?\/\/[^"\r\n]*/g;
+                my @keywordlist;
+                my @keywordsorraw = split(/\s*\|\|\s*/,$keywords);
+                foreach my $keywordor (@keywordsorraw) {
+                    my @keywordsandraw = split(/\s*&&\s*/,$keywordor);
+                    push(@keywordlist, \@keywordsandraw);
+                }
+                return {
+                    'keywords' => \@keywordlist,
+                    'regex' => qr/$regex/xsm,
+                };
+            });
     });
 
 sub detect_privacy_breach {
@@ -109,9 +130,10 @@ sub detect_privacy_breach {
         }
 
         # try generic fragment tagging
-        foreach my $keyword ($PRIVACY_BREAKER_FRAGMENTS->all) {
+        foreach my $keyword ($self->PRIVACY_BREAKER_FRAGMENTS->all) {
             if(index($block,$keyword) > -1) {
-                my $keyvalue = $PRIVACY_BREAKER_FRAGMENTS->value($keyword);
+                my $keyvalue
+                  = $self->PRIVACY_BREAKER_FRAGMENTS->value($keyword);
                 my $regex = $keyvalue->{'regex'};
                 if ($block =~ m{($regex)}) {
                     my $capture = $1;
@@ -153,8 +175,8 @@ sub detect_generic_privacy_breach {
 
     # now check generic tag
   TYPE:
-    foreach my $type ($PRIVACY_BREAKER_TAG_ATTR->all) {
-        my $keyvalue = $PRIVACY_BREAKER_TAG_ATTR->value($type);
+    foreach my $type ($self->PRIVACY_BREAKER_TAG_ATTR->all) {
+        my $keyvalue = $self->PRIVACY_BREAKER_TAG_ATTR->value($type);
         my $keywords =  $keyvalue->{'keywords'};
 
         my $orblockok = 0;
@@ -283,8 +305,8 @@ sub check_tag_url_privacy_breach {
     }
 
     # track well known site
-    foreach my $breaker ($PRIVACY_BREAKER_WEBSITES->all) {
-        my $value = $PRIVACY_BREAKER_WEBSITES->value($breaker);
+    foreach my $breaker ($self->PRIVACY_BREAKER_WEBSITES->all) {
+        my $value = $self->PRIVACY_BREAKER_WEBSITES->value($breaker);
         my $regex = $value->{'regexp'};
         if ($website =~ m{$regex}mxs) {
             unless (exists $privacybreachhash->{'tag-'.$breaker}) {

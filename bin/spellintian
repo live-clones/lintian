@@ -110,15 +110,15 @@ if ($user_dirs) {
 my @CONFIG_DIRS = grep { -d }
   grep { length } map { realpath($_) } ($ENV{'LINTIAN_BASE'}, @INCLUDE_DIRS);
 
-my $profile = Lintian::Profile->new;
-$profile->load(undef, \@CONFIG_DIRS,
+my $PROFILE = Lintian::Profile->new;
+$PROFILE->load(undef, \@CONFIG_DIRS,
     { 'restricted-search-dirs' => \@RESTRICTED_CONFIG_DIRS });
 
 my $exit_code = 0;
 
 unless (@ARGV) {
     my $text = do { local $/; decode_utf8(<STDIN>) };
-    spellcheck(undef, $picky, $text);
+    spellcheck($PROFILE, undef, $picky, $text);
 }
 
 for my $path (@ARGV) {
@@ -131,7 +131,7 @@ for my $path (@ARGV) {
     }
 
     my $text = path($path)->slurp_utf8;
-    spellcheck($path, $picky, $text);
+    spellcheck($PROFILE, $path, $picky, $text);
 }
 
 exit $exit_code;
@@ -163,7 +163,7 @@ EOF
 }
 
 sub spellcheck {
-    my ($path, $be_picky, $text) = @_;
+    my ($profile, $path, $be_picky, $text) = @_;
 
     my $prefix = $path ? "$path: " : EMPTY;
 
@@ -172,8 +172,8 @@ sub spellcheck {
         say encode_utf8("$prefix$mistake -> $correction");
     };
 
-    check_spelling($text, $spelling_error_handler);
-    check_spelling_picky($text, $spelling_error_handler)
+    check_spelling($profile, $text, $spelling_error_handler);
+    check_spelling_picky($profile, $text, $spelling_error_handler)
       if $be_picky;
 
     return;

@@ -30,7 +30,14 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-my $ALLOWED_ANCIENT_FILES = Lintian::Data->new('files/allowed-ancient-files');
+has ALLOWED_ANCIENT_FILES => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        return $self->profile->load_data('files/allowed-ancient-files');
+    });
 
 sub visit_installed_files {
     my ($self, $file) = @_;
@@ -39,7 +46,7 @@ sub visit_installed_files {
 
     $self->hint('package-contains-ancient-file', $file->name, $file->date)
       if $year <= 1975 # value from dak CVS: Dinstall::PastCutOffYear
-      and not $ALLOWED_ANCIENT_FILES->matches_any($file->name);
+      and not $self->ALLOWED_ANCIENT_FILES->matches_any($file->name);
 
     return;
 }

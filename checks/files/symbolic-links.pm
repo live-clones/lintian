@@ -32,24 +32,29 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-my $BUILD_PATH_REGEX
-  = Lintian::Data->new('files/build-path-regex',qr/~~~~~/,
-    sub { return  qr/$_[0]/xsm;});
+has COMPRESS_FILE_EXTENSIONS => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
 
-my $COMPRESS_FILE_EXTENSIONS
-  = Lintian::Data->new('files/compressed-file-extensions',
-    qr/\s++/,sub { return qr/\Q$_[0]\E/ });
+        return $self->profile->load_data('files/compressed-file-extensions',
+            qr/\s++/,sub { return qr/\Q$_[0]\E/ });
+    });
 
 # an OR (|) regex of all compressed extension
-my $COMPRESS_FILE_EXTENSIONS_OR_ALL = sub { qr/(:?$_[0])/ }
-  ->(
-    join('|',
-        map {$COMPRESS_FILE_EXTENSIONS->value($_) }
-          $COMPRESS_FILE_EXTENSIONS->all));
+has COMPRESS_FILE_EXTENSIONS_OR_ALL => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
 
-# see tag compressed-symlink-with-wrong-ext
-my $COMPRESSED_SYMLINK_POINTING_TO_COMPRESSED_REGEX
-  = qr/\.($COMPRESS_FILE_EXTENSIONS_OR_ALL)\s*$/;
+        my $text = join('|',
+            map {$self->COMPRESS_FILE_EXTENSIONS->value($_) }
+              $self->COMPRESS_FILE_EXTENSIONS->all);
+
+        return qr/$text/;
+    });
 
 sub visit_patched_files {
     my ($self, $item) = @_;
@@ -86,6 +91,11 @@ sub is_tmp_path {
 
 sub tag_build_tree_path {
     my ($self, $path, $msg) = @_;
+
+    my $BUILD_PATH_REGEX
+      = $self->profile->load_data('files/build-path-regex',qr/~~~~~/,
+        sub { return  qr/$_[0]/xsm;});
+
     foreach my $buildpath ($BUILD_PATH_REGEX->all) {
         my $regex = $BUILD_PATH_REGEX->value($buildpath);
         if ($path =~ m{$regex}xms) {
@@ -202,6 +212,11 @@ sub visit_installed_files {
         }
     }
   NEXT_LINK:
+
+    my $regex = $self->COMPRESS_FILE_EXTENSIONS_OR_ALL;
+
+    # see tag compressed-symlink-with-wrong-ext
+    my $COMPRESSED_SYMLINK_POINTING_TO_COMPRESSED_REGEX= qr/\.($regex)\s*$/;
 
     if ($file->link =~ $COMPRESSED_SYMLINK_POINTING_TO_COMPRESSED_REGEX) {
         # symlink is pointing to a compressed file

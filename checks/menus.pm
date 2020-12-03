@@ -30,7 +30,6 @@ use autodie;
 
 use Path::Tiny;
 
-use Lintian::Data;
 use Lintian::Spelling
   qw(check_spelling check_spelling_picky $known_shells_regex);
 
@@ -57,8 +56,6 @@ our %KNOWN_DOCBASE_FORMAT_FIELDS = (
     'Files'   => 1,
     'Index'   => 0
 );
-
-our $SECTIONS = Lintian::Data->new('doc-base/sections');
 
 has menu_file => (is => 'rwp');
 has menumethod_file => (is => 'rwp');
@@ -367,6 +364,8 @@ sub check_doc_base_field {
     my $pkg = $self->processable->name;
     my $group = $self->group;
 
+    my $SECTIONS = $self->profile->load_data('doc-base/sections');
+
     $self->hint('doc-base-file-unknown-field', "$dbfile:$line", $field)
       unless defined $knownfields->{$field};
     $self->hint('duplicate-field-in-doc-base', "$dbfile:$line", $field)
@@ -456,11 +455,13 @@ sub check_doc_base_field {
                 'spelling-error-in-doc-base-title-field',
                 "${dbfile}:${line}");
             check_spelling(
+                $self->profile,
                 join(' ', @$vals),
                 $group->spelling_exceptions,
                 $stag_emitter
             );
-            check_spelling_picky(join(' ', @$vals), $stag_emitter);
+            check_spelling_picky($self->profile, join(' ', @$vals),
+                $stag_emitter);
         }
 
         # Section field.
@@ -533,11 +534,13 @@ sub check_doc_base_field {
                 'spelling-error-in-doc-base-abstract-field',
                 "${dbfile}:${line}");
             check_spelling(
+                $self->profile,
                 join(' ', @$vals),
                 $group->spelling_exceptions,
                 $stag_emitter
             );
-            check_spelling_picky(join(' ', @$vals), $stag_emitter);
+            check_spelling_picky($self->profile, join(' ', @$vals),
+                $stag_emitter);
         }
     }
 

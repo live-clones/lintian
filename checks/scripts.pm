@@ -33,7 +33,6 @@ use autodie;
 use List::MoreUtils qw(any);
 use POSIX qw(strftime);
 
-use Lintian::Data;
 use Lintian::IPC::Run3 qw(safe_qx);
 use Lintian::Relation;
 use Lintian::Spelling qw($known_shells_regex);
@@ -54,8 +53,15 @@ with 'Lintian::Check';
 # $INTERPRETERS maps names of (unversioned) interpreters to the path
 # they are installed and what package to depend on to use them.
 #
-my $INTERPRETERS = Lintian::Data->new('scripts/interpreters', qr/\s*=\>\s*/,
-    \&_parse_interpreters);
+has INTERPRETERS => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        return $self->profile->load_data('scripts/interpreters',
+            qr/\s*=\>\s*/,\&_parse_interpreters);
+    });
 
 # The more complex case of interpreters that may have a version number.
 #
@@ -87,9 +93,15 @@ my $INTERPRETERS = Lintian::Data->new('scripts/interpreters', qr/\s*=\>\s*/,
 #    $VERSIONED_INTERPRETERS->value ('lua') is
 #       [ '/usr/bin', 'lua', qr/^lua([\d.]+)$/, 'lua$1', ["40", "50", "5.1"] ]
 #
-my $VERSIONED_INTERPRETERS
-  = Lintian::Data->new('scripts/versioned-interpreters',
-    qr/\s*=\>\s*/,\&_parse_versioned_interpreters);
+has VERSIONED_INTERPRETERS => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        return $self->profile->load_data('scripts/versioned-interpreters',
+            qr/\s*=\>\s*/,\&_parse_versioned_interpreters);
+    });
 
 # When detecting commands inside shell scripts, use this regex to match the
 # beginning of the command rather than checking whether the command is at the
@@ -103,50 +115,59 @@ my $LEADIN = qr/$LEADINSTR/;
 my $OLDSTABLE_RELEASE = 1_497_766_956;
 
 #forbidden command in maintainer scripts
-my $BAD_MAINT_CMD = Lintian::Data->new(
-    'scripts/maintainer-script-bad-command',
-    qr/\s*\~\~/,
-    sub {
-        my @sliptline = split(/\s*\~\~/, $_[1], 5);
-        if(scalar(@sliptline) != 5) {
-            die "Syntax error in scripts/maintainer-script-bad-command: $.";
-        }
-        my ($incat,$inauto,$exceptinpackage,$inscript,$regexp) = @sliptline;
-        $regexp =~ s/\$[{]LEADIN[}]/$LEADINSTR/;
+has BAD_MAINT_CMD => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
 
-        $incat //= EMPTY;
-        $inauto //= EMPTY;
+        return $self->profile->load_data(
+            'scripts/maintainer-script-bad-command',
+            qr/\s*\~\~/,
+            sub {
+                my @sliptline = split(/\s*\~\~/, $_[1], 5);
+                if(scalar(@sliptline) != 5) {
+                    die
+"Syntax error in scripts/maintainer-script-bad-command: $.";
+                }
+                my ($incat,$inauto,$exceptinpackage,$inscript,$regexp)
+                  = @sliptline;
+                $regexp =~ s/\$[{]LEADIN[}]/$LEADINSTR/;
 
-        # trim both ends
-        $incat =~ s/^\s+|\s+$//g;
-        $inauto =~ s/^\s+|\s+$//g;
+                $incat //= EMPTY;
+                $inauto //= EMPTY;
+
+                # trim both ends
+                $incat =~ s/^\s+|\s+$//g;
+                $inauto =~ s/^\s+|\s+$//g;
 
    # allow empty $exceptinpackage and set it synonymous to check in all package
-        $exceptinpackage //= EMPTY;
+                $exceptinpackage //= EMPTY;
 
-        # trim both ends
-        $exceptinpackage =~ s/^\s+|\s+$//g;
+                # trim both ends
+                $exceptinpackage =~ s/^\s+|\s+$//g;
 
-        if (length($exceptinpackage) == 0) {
-            $exceptinpackage = '\a\Z';
-        }
-        # allow empty $inscript and set to synonymous to check in all script
-        $inscript //= EMPTY;
+                if (length($exceptinpackage) == 0) {
+                    $exceptinpackage = '\a\Z';
+                }
+           # allow empty $inscript and set to synonymous to check in all script
+                $inscript //= EMPTY;
 
-        # trim both ends
-        $inscript =~ s/^\s+|\s+$//g;
+                # trim both ends
+                $inscript =~ s/^\s+|\s+$//g;
 
-        if (length($inscript) == 0) {
-            $inscript = '.*';
-        }
-        return {
-            # use not not to normalize boolean
-            'ignore_automatically_added' => not(not($inauto)),
-            'in_cat_string' => not(not($incat)),
-            'in_package' => qr/$exceptinpackage/x,
-            'in_script' => qr/$inscript/x,
-            'regexp' => qr/$regexp/x,
-        };
+                if (length($inscript) == 0) {
+                    $inscript = '.*';
+                }
+                return {
+                    # use not not to normalize boolean
+                    'ignore_automatically_added' => not(not($inauto)),
+                    'in_cat_string' => not(not($incat)),
+                    'in_package' => qr/$exceptinpackage/x,
+                    'in_script' => qr/$inscript/x,
+                    'regexp' => qr/$regexp/x,
+                };
+            });
     });
 
 # Any of the following packages can satisfy an update-inetd dependency.
@@ -436,13 +457,13 @@ sub installable {
         # check $INTERPRETERS and %versioned_interpreters.  If not
         # found there, see if it ends in a version number and the base
         # is found in $VERSIONED_INTERPRETERS
-        my $data = $INTERPRETERS->value($base);
+        my $data = $self->INTERPRETERS->value($base);
         my $versioned = 0;
         if (not defined $data) {
-            $data = $VERSIONED_INTERPRETERS->value($base);
+            $data = $self->VERSIONED_INTERPRETERS->value($base);
             undef $data if ($data and not defined($data->[1]));
             if (not defined($data) and $base =~ /^(.*[^\d.-])-?[\d.]+$/) {
-                $data = $VERSIONED_INTERPRETERS->value($1);
+                $data = $self->VERSIONED_INTERPRETERS->value($1);
                 undef $data unless ($data and $base =~ /$data->[2]/);
             }
             $versioned = 1 if $data;
@@ -462,14 +483,14 @@ sub installable {
             $self->script_tag('script-uses-deprecated-nodejs-location',
                 $filename);
             # Check whether we have correct dependendies on nodejs regardless.
-            $data = $INTERPRETERS->value('node');
+            $data = $self->INTERPRETERS->value('node');
         } elsif ($base =~ /^php/) {
             $self->script_tag('php-script-with-unusual-interpreter',
                 $filename, "$interpreter");
 
             # This allows us to still perform the dependencies checks
             # below even when an unusual interpreter has been found.
-            $data = $INTERPRETERS->value('php');
+            $data = $self->INTERPRETERS->value('php');
         } else {
             my $pinter = 0;
             if ($interpreter =~ m,^/,) {
@@ -559,7 +580,7 @@ sub installable {
                     );
                 }
             }
-        } elsif ($VERSIONED_INTERPRETERS->known($base)) {
+        } elsif ($self->VERSIONED_INTERPRETERS->known($base)) {
             my @versions = @{ $data->[4] };
             my @depends = map {
                 my $d = $data->[3];
@@ -670,7 +691,8 @@ sub installable {
             $self->hint('control-interpreter-in-usr-local',
                 "control/$file","#!$interpreter");
         } elsif ($base eq 'sh' or $base eq 'bash' or $base eq 'perl') {
-            my $expected = ($INTERPRETERS->value($base))->[0] . '/' . $base;
+            my $expected
+              = ($self->INTERPRETERS->value($base))->[0] . '/' . $base;
             $self->hint(
                 bad_interpreter_tag_name($expected),
                 "#!$interpreter != $expected",
@@ -680,8 +702,8 @@ sub installable {
             $self->hint('forbidden-config-interpreter', "#!$interpreter");
         } elsif ($file eq 'postrm') {
             $self->hint('forbidden-postrm-interpreter', "#!$interpreter");
-        } elsif ($INTERPRETERS->known($base)) {
-            my $data = $INTERPRETERS->value($base);
+        } elsif ($self->INTERPRETERS->known($base)) {
+            my $data = $self->INTERPRETERS->value($base);
             my $expected = $data->[0] . '/' . $base;
             unless ($interpreter eq $expected) {
                 $self->hint(
@@ -1361,8 +1383,8 @@ sub generic_check_bad_command {
 
     # try generic bad maintainer script command tagging
   BAD_CMD:
-    foreach my $bad_cmd_tag ($BAD_MAINT_CMD->all) {
-        my $bad_cmd_data = $BAD_MAINT_CMD->value($bad_cmd_tag);
+    foreach my $bad_cmd_tag ($self->BAD_MAINT_CMD->all) {
+        my $bad_cmd_data = $self->BAD_MAINT_CMD->value($bad_cmd_tag);
         my $inscript = $bad_cmd_data->{'in_script'};
         next
           if $in_automatic_section

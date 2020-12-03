@@ -29,14 +29,10 @@ use warnings;
 use utf8;
 use autodie;
 
-use Lintian::Data ();
-
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-my $BAD_HOMEPAGES = Lintian::Data->new('fields/bad-homepages');
 
 sub source {
     my ($self) = @_;
@@ -99,6 +95,8 @@ sub always {
     # not an absolute URI or (most likely) an invalid protocol
     $self->hint('bad-homepage', $orig)
       unless $uri->scheme && $uri->scheme =~ /^(?:ftp|https?|gopher)$/;
+
+    my $BAD_HOMEPAGES = $self->profile->load_data('fields/bad-homepages');
 
     foreach my $line ($BAD_HOMEPAGES->all) {
         my ($tag, $re) = split(/\s*~~\s*/, $line);

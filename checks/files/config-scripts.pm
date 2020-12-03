@@ -32,7 +32,14 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-my $MULTIARCH_DIRS = Lintian::Data->new('common/multiarch-dirs', qr/\s++/);
+has MULTIARCH_DIRS => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        return $self->profile->load_data('common/multiarch-dirs', qr/\s++/);
+    });
 
 sub visit_installed_files {
     my ($self, $file) = @_;
@@ -67,8 +74,8 @@ sub visit_installed_files {
             unless ($multiarch eq 'no' && $architecture ne 'all') {
 
                 # check multi-arch path
-                foreach my $wildcard ($MULTIARCH_DIRS->all) {
-                    my $madir= $MULTIARCH_DIRS->value($wildcard);
+                foreach my $wildcard ($self->MULTIARCH_DIRS->all) {
+                    my $madir= $self->MULTIARCH_DIRS->value($wildcard);
 
                     next
                       unless $block =~ m{\W\Q$madir\E(\W|$)}xms;

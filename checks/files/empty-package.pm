@@ -33,7 +33,14 @@ with 'Lintian::Check';
 
 # Common files stored in /usr/share/doc/$pkg that aren't sufficient to
 # consider the package non-empty.
-my $STANDARD_FILES = Lintian::Data->new('files/standard-files');
+has STANDARD_FILES => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        return $self->profile->load_data('files/standard-files');
+    });
 
 has is_dummy => (is => 'rwp');
 has is_empty => (is => 'rwp', default => 1);
@@ -95,7 +102,7 @@ sub visit_installed_files {
     # file isn't one of the uninteresting ones, the
     # package isn't empty.
     return
-      if $STANDARD_FILES->known($file->basename);
+      if $self->STANDARD_FILES->known($file->basename);
 
     # ignore all READMEs
     return

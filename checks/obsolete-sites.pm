@@ -26,14 +26,11 @@ use warnings;
 use utf8;
 use autodie;
 
-use Lintian::Data ();
-
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
 
-our $OBSOLETE_SITES = Lintian::Data->new('obsolete-sites/obsolete-sites');
 my @interesting_files = qw(
   control
   copyright
@@ -67,6 +64,9 @@ sub source {
 
 sub search_for_obsolete_sites {
     my ($self, $dfile, $file) = @_;
+
+    my $OBSOLETE_SITES
+      = $self->profile->load_data('obsolete-sites/obsolete-sites');
 
     if (defined($dfile) and $dfile->is_regular_file and $dfile->is_open_ok) {
 

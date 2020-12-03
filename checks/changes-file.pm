@@ -28,15 +28,12 @@ use autodie;
 
 use Path::Tiny;
 
-use Lintian::Data;
 use Lintian::Util qw(get_file_checksum);
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-my $KNOWN_DISTS = Lintian::Data->new('changes-file/known-dists');
 
 sub changes {
     my ($self) = @_;

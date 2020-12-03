@@ -61,16 +61,29 @@ my @DOCUMENTATION_FILE_REGEXES = qw{
   ^todos?$
 };
 
-my $COMPRESS_FILE_EXTENSIONS
-  = Lintian::Data->new('files/compressed-file-extensions',
-    qr/\s++/,sub { return qr/\Q$_[0]\E/ });
+has COMPRESS_FILE_EXTENSIONS => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        return $self->profile->load_data('files/compressed-file-extensions',
+            qr/\s++/,sub { return qr/\Q$_[0]\E/ });
+    });
 
 # an OR (|) regex of all compressed extension
-my $COMPRESS_FILE_EXTENSIONS_OR_ALL = sub { qr/(:?$_[0])/ }
-  ->(
-    join('|',
-        map {$COMPRESS_FILE_EXTENSIONS->value($_) }
-          $COMPRESS_FILE_EXTENSIONS->all));
+has COMPRESS_FILE_EXTENSIONS_OR_ALL => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        my $text = join('|',
+            map {$self->COMPRESS_FILE_EXTENSIONS->value($_) }
+              $self->COMPRESS_FILE_EXTENSIONS->all);
+
+        return qr/$text/;
+    });
 
 has ppkg => (is => 'rwp');
 
@@ -106,10 +119,12 @@ sub visit_installed_files {
           if $file->parent_dir->child('doxygen.png');
     }
 
+    my $regex = $self->COMPRESS_FILE_EXTENSIONS_OR_ALL;
+
     # doxygen compressed map
     if (
         $file->name =~ m{^usr/share/doc/(?:.+/)?(?:doxygen|html)/
-                         .*\.map\.$COMPRESS_FILE_EXTENSIONS_OR_ALL}xs
+                         .*\.map\.$regex}xs
     ) {
         $self->hint('compressed-documentation', $file->name);
     }

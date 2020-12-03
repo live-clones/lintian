@@ -397,7 +397,8 @@ sub visit_installed_files {
                 $self->hint('pod-conversion-message', "$file:$lc");
             }
             # Check for spelling errors if the manpage is English
-            check_spelling($line, $self->group->spelling_exceptions,
+            check_spelling($self->profile, $line,
+                $self->group->spelling_exceptions,
                 $stag_emitter, 0)
               if ($page_path =~ m,/man/man\d/,);
         }

@@ -28,7 +28,6 @@ use Carp qw(croak);
 use List::MoreUtils qw(none);
 use Unicode::UTF8 qw(encode_utf8);
 
-use Lintian::Data;
 use Lintian::Deb822::File;
 
 use constant EMPTY => q{};
@@ -45,25 +44,6 @@ use namespace::clean;
 
 # Ordered lists of severities, used for display level parsing.
 our @SEVERITIES= qw(classification pedantic info warning error);
-
-# loads the first time info is called
-our $MANUALS
-  = Lintian::Data->new('output/manual-references', qr/::/,\&_load_manual_data);
-
-sub _load_manual_data {
-    my ($key, $rawvalue, $pval) = @_;
-
-    my ($section, $title, $url) = split m/::/, $rawvalue, 3;
-    my $ret;
-    if (not defined $pval) {
-        $ret = $pval = {};
-    }
-
-    $pval->{$section}{title} = $title;
-    $pval->{$section}{url} = $url;
-
-    return $ret;
-}
 
 =head1 NAME
 
@@ -83,7 +63,7 @@ metadata elements or to format the tag description.
 
 =over 4
 
-=item tag
+=item name
 
 =item visibility
 
@@ -104,6 +84,8 @@ metadata elements or to format the tag description.
 =item see_also
 
 =item renamed_from
+
+=item profile
 
 =cut
 
@@ -189,6 +171,8 @@ has renamed_from => (
     coerce => sub { my ($arrayref) = @_; return ($arrayref // []); },
     default => sub { [] });
 
+has profile => (is => 'rw');
+
 =item load(PATH)
 
 Loads a tag description from PATH.
@@ -229,7 +213,7 @@ sub load {
     # trim both ends of each
     s/^\s+|\s+$//g for @see_also;
 
-    my @markdown = map { markdown_citation($_) } @see_also;
+    my @markdown = map { $self->markdown_citation($_) } @see_also;
     $self->see_also(\@markdown);
 
     $self->renamed_from([$fields->trimmed_list('Renamed-From')]);
@@ -332,12 +316,12 @@ sub markdown_reference_statement {
 =cut
 
 sub markdown_citation {
-    my ($citation) = @_;
+    my ($self, $citation) = @_;
 
     my $markdown;
 
     if ($citation =~ /^([\w-]+)\s+(.+)$/) {
-        $markdown = markdown_from_manuals($1, $2);
+        $markdown = $self->markdown_from_manuals($1, $2);
 
     } elsif ($citation =~ /^([\w.-]+)\((\d\w*)\)$/) {
         my ($name, $section) = ($1, $2);
@@ -361,12 +345,38 @@ sub markdown_citation {
     return $markdown // $citation;
 }
 
+=item load_manual_data
+
+=cut
+
+sub load_manual_data {
+    my ($key, $rawvalue, $pval) = @_;
+
+    my ($section, $title, $url) = split m/::/, $rawvalue, 3;
+    my $ret;
+    if (not defined $pval) {
+        $ret = $pval = {};
+    }
+
+    $pval->{$section}{title} = $title;
+    $pval->{$section}{url} = $url;
+
+    return $ret;
+}
+
 =item markdown_from_manuals
 
 =cut
 
 sub markdown_from_manuals {
-    my ($volume, $section) = @_;
+    my ($self, $volume, $section) = @_;
+
+    croak encode_utf8('No profile')
+      unless defined $self->profile;
+
+    my $MANUALS
+      = $self->profile->load_data('output/manual-references', qr/::/,
+        \&load_manual_data);
 
     return EMPTY
       unless $MANUALS->known($volume);

@@ -31,10 +31,11 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-my $SIGNING_KEY_FILENAMES = Lintian::Data->new('common/signing-key-filenames');
-
 sub source {
     my ($self) = @_;
+
+    my $SIGNING_KEY_FILENAMES
+      = $self->profile->load_data('common/signing-key-filenames');
 
     my @keynames = $SIGNING_KEY_FILENAMES->all;
     my @keypaths

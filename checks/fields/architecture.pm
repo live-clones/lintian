@@ -32,7 +32,7 @@ use autodie;
 use List::Compare;
 use List::MoreUtils qw(any);
 
-use Lintian::Architecture qw(:all);
+use Lintian::Architecture::Analyzer;
 
 use constant EMPTY => q{};
 use constant SPACE => q{ };
@@ -95,9 +95,12 @@ sub installable {
     return
       unless @architectures;
 
+    my $analyzer = Lintian::Architecture::Analyzer->new;
+    $analyzer->profile($self->profile);
+
     for my $architecture (@architectures) {
         $self->hint('arch-wildcard-in-binary-package', $architecture)
-          if is_arch_wildcard($architecture);
+          if $analyzer->is_arch_wildcard($architecture);
     }
 
     $self->hint('too-many-architectures') if @architectures > 1;
@@ -123,13 +126,15 @@ sub always {
     my $processable = $self->processable;
 
     my $unsplit = $processable->fields->unfolded_value('Architecture');
-
     my @architectures = split(SPACE, $unsplit);
+
+    my $analyzer = Lintian::Architecture::Analyzer->new;
+    $analyzer->profile($self->profile);
 
     for my $architecture (@architectures) {
 
         $self->hint('unknown-architecture', $architecture)
-          unless is_arch_or_wildcard($architecture)
+          unless $analyzer->is_arch_or_wildcard($architecture)
           || ($architecture eq 'source'
             && ($type eq 'changes' || $type eq 'buildinfo'));
     }
