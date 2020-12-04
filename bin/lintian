@@ -40,6 +40,7 @@ use Carp qw(croak verbose);
 use Config::Tiny;
 use File::BaseDir qw(config_files data_home);
 use Getopt::Long ();
+use IO::Interactive qw(is_interactive);
 use List::Compare;
 use List::MoreUtils qw(any none first_value);
 use Path::Tiny;
@@ -62,8 +63,7 @@ use constant SLASH => q{/};
 use constant NEWLINE => qq{\n};
 
 # only in GNOME; need original environment
-my $interactive = -t STDIN && (-t *STDOUT || !(-f *STDOUT || -c *STDOUT));
-my $hyperlinks_capable = $interactive && qx{env | fgrep -i gnome};
+my $hyperlinks_capable = is_interactive && qx{env | fgrep -i gnome};
 
 # Globally ignore SIGPIPE.  We'd rather deal with error returns from write
 # than randomly delivered signals.
@@ -534,7 +534,7 @@ die encode_utf8("The hyperlink value must be on or off\n")
 $selected{verbose} = -1
   if $selected{quiet};
 
-if ($selected{verbose} || !-t *STDOUT) {
+if ($selected{verbose} || !is_interactive) {
     $selected{'tag-display-limit'} //= 0;
 } else {
     $selected{'tag-display-limit'} //= 4;
@@ -554,7 +554,7 @@ $OUTPUT->debug($selected{debug});
 $OUTPUT->color(1)
   if $selected{color} eq 'always'
   || ($selected{color} eq 'auto'
-    && -t *STDOUT);
+    && is_interactive);
 
 $OUTPUT->tty_hyperlinks($hyperlinks_capable&& $selected{hyperlinks} eq 'on');
 $OUTPUT->tag_display_limit($selected{'tag-display-limit'});

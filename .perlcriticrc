@@ -75,7 +75,7 @@ include =
 
 [InputOutput::ProhibitBarewordFileHandles]
 
-[-InputOutput::ProhibitInteractiveTest]
+[InputOutput::ProhibitInteractiveTest]
 
 [InputOutput::ProhibitJoinedReadline]
 

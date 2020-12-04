@@ -48,6 +48,7 @@ use List::MoreUtils qw(any uniq);
 use List::Util qw(max);
 use IO::Async::Function;
 use IO::Async::Loop;
+use IO::Interactive qw(is_interactive);
 use Path::Tiny;
 use TAP::Formatter::Console;
 use TAP::Formatter::File;
@@ -171,8 +172,6 @@ $outpath = rel2abs($outpath);
 
 my $ACTIVE_JOBS = 0;
 
-my $output_is_tty = -t STDOUT;
-
 # get lintian modification date
 my @lintianparts
   = ('checks', 'commands', 'data','bin', 'profiles', 'vendors', 'lib/Lintian');
@@ -287,7 +286,7 @@ $formatter = TAP::Formatter::Console->new({
         errors => 1,
         jobs => $numjobs,
         color => 1,
-    }) if -t STDOUT;
+    }) if is_interactive;
 
 my $harness = TAP::Harness->new({
     formatter => $formatter,
@@ -458,7 +457,7 @@ say encode_utf8("The test suite ran for $duration.");
 $status = 1
   unless $aggregator->all_passed;
 
-if (-t STDOUT && !$unattended) {
+if (is_interactive && !$unattended) {
     my @failed = $aggregator->failed;
     say encode_utf8(
         'Offering to re-calibrate the tags expected in tests that failed.')

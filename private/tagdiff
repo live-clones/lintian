@@ -34,6 +34,7 @@ use FindBin;
 use lib "$FindBin::RealBin/../lib";
 
 use Getopt::Long;
+use IO::Interactive qw(is_interactive);
 use List::Util qw(all);
 use Path::Tiny;
 use Term::ANSIColor qw(:constants);
@@ -83,7 +84,7 @@ chomp @lines;
 @lines = reverse sort @lines;
 
 # apply color when on a terminal
-if (-t STDOUT) {
+if (is_interactive) {
 
     my $green = GREEN;
     my $red = RED;

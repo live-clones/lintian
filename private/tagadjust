@@ -35,6 +35,7 @@ use lib "$FindBin::RealBin/../lib";
 
 use Cwd;
 use Getopt::Long;
+use IO::Interactive qw(is_interactive);
 use List::Util qw(all);
 use Path::Tiny;
 use Term::ANSIColor;
@@ -99,7 +100,7 @@ foreach my $line (@difflines) {
 
         my $colored = $stripped;
         $colored = colored($stripped, $color)
-          if -t STDOUT;
+          if is_interactive;
         print encode_utf8("$colored - $command (y/n/q)? ");
 
         my $decision_bytes = <STDIN>;
