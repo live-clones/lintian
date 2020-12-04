@@ -48,10 +48,10 @@ $tagspath->spew($tagstext);
 # read tag names from file
 my @actual = sort +uniq +get_tagnames($tagspath->stringify);
 
-my @expected = (
-    'backports-changes-missing',
-    'backports-upload-has-incorrect-version-number',
-    'bad-distribution-in-changes-file'
+my @expected = qw(
+  backports-changes-missing
+  backports-upload-has-incorrect-version-number
+  bad-distribution-in-changes-file
 );
 
 # test plan

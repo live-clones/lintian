@@ -36,7 +36,7 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-our %KNOWN_ARCHIVE_PARTS = map { $_ => 1 } ('non-free', 'contrib');
+our %KNOWN_ARCHIVE_PARTS = map { $_ => 1 } qw(non-free contrib);
 
 sub udeb {
     my ($self) = @_;

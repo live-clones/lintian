@@ -39,8 +39,8 @@ use namespace::clean;
 with 'Lintian::Check';
 
 # Supported documentation formats for doc-base files.
-our %known_doc_base_formats = map { $_ => 1 }
-  ('html', 'text', 'pdf', 'postscript', 'info', 'dvi', 'debiandoc-sgml');
+our %known_doc_base_formats
+  = map { $_ => 1 }qw(html text pdf postscript info dvi debiandoc-sgml);
 
 # Known fields for doc-base files.  The value is 1 for required fields and 0
 # for optional fields.

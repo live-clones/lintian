@@ -69,7 +69,10 @@ sub add_md5sums {
     my $stdout;
     my $stderr;
 
-    my @command = ('xargs', '--null', '--no-run-if-empty', 'md5sum', '--');
+    my @command = qw(
+      xargs --null --no-run-if-empty
+      md5sum --
+    );
     run3(\@command, \$input, \$stdout, \$stderr);
     my $status = ($? >> 8);
 

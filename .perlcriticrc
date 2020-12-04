@@ -61,7 +61,7 @@ include =
 
 [CodeLayout::ProhibitHardTabs]
 
-[-CodeLayout::ProhibitQuotedWordLists]
+[CodeLayout::ProhibitQuotedWordLists]
 
 [CodeLayout::ProhibitTrailingWhitespace]
 

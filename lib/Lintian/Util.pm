@@ -88,12 +88,13 @@ use constant NEWLINE => qq{\n};
 # preload cache for common permission strings
 # call overhead o perm2oct was measurable on chromium-browser/32.0.1700.123-2
 # load time went from ~1.5s to ~0.1s; of 115363 paths, only 306 were uncached
-my %OCTAL_LOOKUP = map { $_ => perm2oct($_) } (
-    '-rw-r--r--', # standard (non-executable) file
-    '-rwxr-xr-x', # standard executable file
-    'drwxr-xr-x', # standard dir perm
-    'drwxr-sr-x', # standard dir perm with suid (lintian-lab on lintian.d.o)
-    'lrwxrwxrwx', # symlinks
+# standard file, executable file, standard dir, dir with suid, symlink
+my %OCTAL_LOOKUP = map { $_ => perm2oct($_) } qw(
+  -rw-r--r--
+  -rwxr-xr-x
+  drwxr-xr-x
+  drwxr-sr-x
+  lrwxrwxrwx
 );
 
 =head1 NAME
@@ -293,7 +294,7 @@ sub perm2oct {
 sub human_bytes {
     my ($size) = @_;
 
-    my @units = ('B', 'kiB', 'MiB', 'GiB');
+    my @units = qw(B kiB MiB GiB);
 
     my $unit = shift @units;
 

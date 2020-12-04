@@ -84,7 +84,7 @@ has diffstat => (
 
         my $stdout;
         my $stderr;
-        my @diffstat_command = ('diffstat',  '-p1');
+        my @diffstat_command = qw(diffstat -p1);
         run3(\@diffstat_command, $from_gunzip, \$stdout, \$stderr);
         my $status = ($? >> 8);
 

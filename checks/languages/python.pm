@@ -270,7 +270,7 @@ sub installable {
 
     if ($pkg =~ /^python([23]?)-/ and none { $pkg =~ /$_/ } @IGNORE) {
         my $version = $1 || '2'; # Assume python-foo is a Python 2.x package
-        my @prefixes = ($version eq '2') ? 'python3' : ('python', 'python2');
+        my @prefixes = ($version eq '2') ? 'python3' : qw(python python2);
 
         for my $field (@FIELDS) {
             for my $prefix (@prefixes) {

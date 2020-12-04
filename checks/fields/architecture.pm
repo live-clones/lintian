@@ -146,7 +146,7 @@ sub always {
 
         if (any { $_ eq 'all' } @architectures) {
             $magic_error++
-              unless any { $type eq $_ } ('source', 'changes', 'buildinfo');
+              unless any { $type eq $_ } qw(source changes buildinfo);
         }
 
         my $anylc = List::Compare->new(\@architectures, ['any']);
@@ -157,7 +157,7 @@ sub always {
             # Allow 'all' to be present in source packages as well
             # (#626775)
             @errorset = grep { $_ ne 'all' } @errorset
-              if any { $type eq $_ } ('source', 'changes', 'buildinfo');
+              if any { $type eq $_ } qw(source changes buildinfo);
 
             $magic_error++
               if @errorset;

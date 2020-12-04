@@ -67,9 +67,9 @@ sub add_fileinfo {
 
     my $stdout;
 
-    my @command = (
-        'xargs', '--null','--no-run-if-empty', 'file',
-        '--no-pad', '--print0', '--print0', '--'
+    my @command = qw(
+      xargs --null --no-run-if-empty
+      file --no-pad --print0 --print0 --
     );
 
     # ignore failures; file returns non-zero on parse errors

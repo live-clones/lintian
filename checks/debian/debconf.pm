@@ -257,7 +257,7 @@ sub installable {
             my $default = $template->value('Default');
             $self->hint('boolean-template-has-bogus-default', $name, $default)
               if $template->exists('Default')
-              && (none { $default eq $_ } ('true', 'false'));
+              && (none { $default eq $_ } qw(true false));
         }
 
         my $choices = $template->value('Choices');

@@ -44,26 +44,55 @@ with 'Lintian::Check';
 # Still in the archive but shouldn't be the primary Emacs dependency.
 our %known_obsolete_emacs = map { $_ => 1 }
   map { $_, $_.'-el', $_.'-gtk', $_.'-nox', $_.'-lucid' }
-  qw(emacs21 emacs22 emacs23);
-
-our %known_libstdcs = map { $_ => 1 } (
-    'libstdc++2.9-glibc2.1', 'libstdc++2.10',
-    'libstdc++2.10-glibc2.2','libstdc++3',
-    'libstdc++3.0', 'libstdc++4',
-    'libstdc++5','libstdc++6',
-    'lib64stdc++6',
+  qw(
+  emacs21
+  emacs22
+  emacs23
 );
 
-our %known_tcls = map { $_ => 1 }
-  ('tcl74', 'tcl8.0', 'tcl8.2', 'tcl8.3', 'tcl8.4', 'tcl8.5',);
+our %known_libstdcs = map { $_ => 1 } qw(
+  libstdc++2.9-glibc2.1
+  libstdc++2.10
+  libstdc++2.10-glibc2.2
+  libstdc++3
+  libstdc++3.0
+  libstdc++4
+  libstdc++5
+  libstdc++6
+  lib64stdc++6
+);
 
-our %known_tclxs
-  = map { $_ => 1 } ('tclx76', 'tclx8.0.4', 'tclx8.2', 'tclx8.3', 'tclx8.4',);
+our %known_tcls = map { $_ => 1 } qw(
+  tcl74
+  tcl8.0
+  tcl8.2
+  tcl8.3
+  tcl8.4
+  tcl8.5
+);
 
-our %known_tks
-  = map { $_ => 1 } ('tk40', 'tk8.0', 'tk8.2', 'tk8.3', 'tk8.4', 'tk8.5',);
+our %known_tclxs = map { $_ => 1 } qw(
+  tclx76
+  tclx8.0.4
+  tclx8.2
+  tclx8.3
+  tclx8.4
+);
 
-our %known_libpngs = map { $_ => 1 } ('libpng12-0', 'libpng2', 'libpng3',);
+our %known_tks = map { $_ => 1 } qw(
+  tk40
+  tk8.0
+  tk8.2
+  tk8.3
+  tk8.4
+  tk8.5
+);
+
+our %known_libpngs = map { $_ => 1 } qw(
+  libpng12-0
+  libpng2
+  libpng3
+);
 
 our @known_java_pkg = map { qr/$_/ } (
     'default-j(?:re|dk)(?:-headless)?',

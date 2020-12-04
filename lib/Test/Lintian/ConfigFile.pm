@@ -103,7 +103,7 @@ sub write_config {
         my @elements = $testcase->trimmed_list($name);
         unless (
             scalar @elements > 1 && any { lc($_) eq lc($name) }
-            ('Test-For', 'Test-Against')
+            qw(Test-For Test-Against)
         ) {
             push(@lines,
                 $name . COLON . SPACE . $testcase->value($name) . NEWLINE);

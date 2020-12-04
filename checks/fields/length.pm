@@ -38,14 +38,19 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-my @ALLOWED_FIELDS
-  = qw(Build-Ids Description Package-List Installed-Build-Depends Checksums-Sha256);
+my @ALLOWED_FIELDS = qw(
+  Build-Ids
+  Description
+  Package-List
+  Installed-Build-Depends
+  Checksums-Sha256
+);
 
 sub always {
     my ($self) = @_;
 
     return
-      if any { $self->processable->type eq $_ } ('changes', 'buildinfo');
+      if any { $self->processable->type eq $_ } qw(changes buildinfo);
 
     my $maximum = 5_000;
 
