@@ -72,10 +72,12 @@ sub find_closes {
     my $changes = shift;
     my @closes = ();
 
-    while ($changes
+    while (
+        $changes
         && ($changes
-            =~ /closes:\s*(?:bug)?\#?\s?\d+(?:,\s*(?:bug)?\#?\s?\d+)*/ig)) {
-        push(@closes, $& =~ /\#?\s?(\d+)/g);
+            =~ /(closes:\s*(?:bug)?\#?\s?\d+(?:,\s*(?:bug)?\#?\s?\d+)*)/ig)
+    ) {
+        push(@closes, $1 =~ /\#?\s?(\d+)/g);
     }
 
     @closes = sort { $a <=> $b } @closes;
