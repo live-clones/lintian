@@ -1014,7 +1014,7 @@ sub show_help {
 
     say encode_utf8("Lintian v$ENV{LINTIAN_VERSION}");
 
-    my $message =<<"EOT-EOT-EOT";
+    my $message =<<"EOT";
 Syntax: lintian [action] [options] [--] [packages] ...
 Actions:
     -c, --check               check packages (default action)
@@ -1060,7 +1060,7 @@ Configuration options:
     --[no-]user-dirs          whether to use files from user directories
 
 Some options were omitted. Please check the manual page for the complete list.
-EOT-EOT-EOT
+EOT
 
     print encode_utf8($message);
 
