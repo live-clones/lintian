@@ -966,7 +966,9 @@ sub END {
 
     # Prevent LAB->close, $unpacker->kill_jobs etc. from affecting
     # the exit code.
-    local ($!, $?, $@);
+    local $! = undef;
+    local $? = 0;
+    local $@ = undef;
 
     my %already_closed;
 

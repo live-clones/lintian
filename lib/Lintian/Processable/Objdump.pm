@@ -67,7 +67,7 @@ has objdump_info => (
         my @paragraphs = parse_dpkg_control_string($concatenated);
 
         my %objdump_info;
-        local $_;
+        local $_ = undef;
 
         for my $paragraph (@paragraphs) {
 

@@ -111,7 +111,7 @@ sub parse {
     my $unknowncounter = 1; # to make version unique, e.g. for using as id
     my $lineno = 0;
 
-    local $_;
+    local $_ = undef;
     for (@lines) {
         $lineno++;
 

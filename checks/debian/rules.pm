@@ -189,7 +189,7 @@ sub source {
     # We skip some of the rule analysis if debian/rules includes any
     # other files, since to chase all includes we'd have to have all
     # of its build dependencies installed.
-    local $_;
+    local $_ = undef;
     my $build_all = $processable->relation('Build-Depends-All');
     my @arch_rules = (qr/^clean$/, qr/^binary-arch$/, qr/^build-arch$/);
     my @indep_rules = (qr/^build$/, qr/^build-indep$/, qr/^binary-indep$/);
@@ -320,7 +320,7 @@ sub source {
         # requirement.
         if (/^(?:[^:]+\s)?\.PHONY(?:\s[^:]+)?:(.+)/s) {
             my @targets = split(' ', $1);
-            local $_;
+            local $_ = undef;
             for (@targets) {
                 # Is it $(VAR) ?
                 if (m/^\$[\(\{]([^\)\}]++)[\)\}]$/) {
@@ -374,7 +374,7 @@ sub source {
                             # we think we know what it will expand to - note
                             # we ought to "delay" it was a "=" variable rather
                             # than ":=" or "+=".
-                            local $_;
+                            local $_ = undef;
 
                    # discards empty elements at end, effectively trimming right
                             for (split(/\s+/, $val)) {

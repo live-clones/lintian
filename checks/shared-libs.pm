@@ -179,7 +179,7 @@ sub installable {
             $self->hint('sharedobject-in-library-directory-missing-soname',
                 $cur_file);
         } elsif ($cur_file =~ m/\.la$/ and not length $cur_file->link) {
-            local $_;
+            local $_ = undef;
             open(my $fd, '<', $cur_file->unpacked_path);
             while(<$fd>) {
                 next

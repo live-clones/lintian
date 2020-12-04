@@ -99,7 +99,7 @@ sub binary {
                 next;
             }
             my $fd = open_gz($file->unpacked_path);
-            local $_;
+            local $_ = undef;
             my ($section, $start, $end);
             while (<$fd>) {
                 $section = 1 if /^INFO-DIR-SECTION\s+\S/;

@@ -77,7 +77,7 @@ exit 0;
 
 sub parse_iso_xml {
     open(my $fd, '<', '/usr/share/xml/iso-codes/iso_639_3.xml');
-    local $_;
+    local $_ = undef;
     local $/ = '/>';
     while (<$fd>) {
         my $special = 0;
@@ -105,7 +105,7 @@ sub parse_iso_xml {
 
 sub parse_iso_query {
     open(my $fd, '-|', 'isoquery', '-i', '639-2');
-    local $_;
+    local $_ = undef;
     while (<$fd>) {
         next unless m/^(\S{3})\s+(?:\S{3}\s+)?(?:(\S{2})\s+)?/;
         my ($iso1, $iso2) = ($2, $1);

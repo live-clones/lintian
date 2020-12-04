@@ -568,7 +568,7 @@ sub source {
                 }
 
                 open(my $fd, '<', $file->unpacked_path);
-                local $_;
+                local $_ = undef;
                 while (<$fd>) {
                     next if /^\s*$/;
                     next if (/^\#/ and $level >= 5);

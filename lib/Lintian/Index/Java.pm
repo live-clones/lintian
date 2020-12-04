@@ -82,7 +82,7 @@ sub add_java {
     my $file;
     my $file_list;
     my $manifest = 0;
-    local $_;
+    local $_ = undef;
 
     my %java_info;
 

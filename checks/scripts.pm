@@ -1418,7 +1418,7 @@ sub script_is_evil_and_wrong {
     my $var = '0';
     my $backgrounded = 0;
     open(my $fd, '<', $path->unpacked_path);
-    local $_;
+    local $_ = undef;
     while (<$fd>) {
         chomp;
         next if m/^#/;
@@ -1491,7 +1491,7 @@ sub check_script_syntax {
 }
 
 sub remove_comments {
-    local $_;
+    local $_ = undef;
 
     my $line = shift || '';
     $_ = $line;

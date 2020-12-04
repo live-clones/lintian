@@ -941,7 +941,7 @@ sub open_data_file {
     $filename = $vendor . '/' . $data_name
       if length $vendor;
 
-    local $.;
+    local $. = undef;
     while (my $line = <$fd>) {
 
         # trim both ends

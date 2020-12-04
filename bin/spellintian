@@ -117,7 +117,7 @@ $PROFILE->load(undef, \@CONFIG_DIRS,
 my $exit_code = 0;
 
 unless (@ARGV) {
-    my $text = do { local $/; decode_utf8(<STDIN>) };
+    my $text = do { local $/ = undef; decode_utf8(<STDIN>) };
     spellcheck($PROFILE, undef, $picky, $text);
 }
 

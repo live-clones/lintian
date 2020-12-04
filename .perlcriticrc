@@ -174,7 +174,7 @@ allow_last_statement_to_be_comma_separated_in_map_and_grep = 1
 
 [Variables::ProtectPrivateVars]
 
-[-Variables::RequireInitializationForLocalVars]
+[Variables::RequireInitializationForLocalVars]
 
 [Variables::RequireLocalizedPunctuationVars]
 allow = %ENV %SIG $! $? $0

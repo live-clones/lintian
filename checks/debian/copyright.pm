@@ -530,7 +530,7 @@ sub check_names_texts {
 
     my @paragraphs;
 
-    local $@;
+    local $@ = undef;
     eval {@paragraphs = parse_dpkg_control_string($contents);};
 
     # parse error: copyright not in new format, just check text
