@@ -42,7 +42,7 @@ sub udeb {
     #---- Installer-Menu-Item (udeb)
 
     return
-      unless $fields->exists('Installer-Menu-Item');
+      unless $fields->declares('Installer-Menu-Item');
 
     my $menu_item = $fields->unfolded_value('Installer-Menu-Item');
 

@@ -127,7 +127,7 @@ functions = open opendir chdir read readdir readline closedir sysopen sysread sy
 
 [-RegularExpressions::RequireLineBoundaryMatching]
 
-[-Subroutines::ProhibitBuiltinHomonyms]
+[Subroutines::ProhibitBuiltinHomonyms]
 
 [Subroutines::ProhibitExplicitReturnUndef]
 

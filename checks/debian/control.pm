@@ -175,7 +175,7 @@ sub source {
                 'binary-control-field-duplicates-source',
                 "field \"$field\" in package $bin"
               )
-              if ( $processable->debian_control->source_fields->exists($field)
+              if ($processable->debian_control->source_fields->declares($field)
                 && $bfields->value($field) eq
                 $processable->debian_control->source_fields->value($field));
             $self->hint(
@@ -220,7 +220,7 @@ sub source {
         Build-conflicts Build-Conflicts-Indep)
     ) {
         next
-          unless $processable->debian_control->source_fields->exists($field);
+          unless $processable->debian_control->source_fields->declares($field);
         my $raw = $processable->debian_control->source_fields->value($field);
         my $rel;
         $rel = Lintian::Relation->new($raw);
@@ -234,7 +234,7 @@ sub source {
         ) {
             next
               unless $processable->debian_control->installable_fields($bin)
-              ->exists($field);
+              ->declares($field);
 
             my $raw
               = $processable->debian_control->installable_fields($bin)
@@ -262,7 +262,7 @@ sub source {
         for my $strong (0 .. $#dep_fields) {
             next
               unless $processable->debian_control->installable_fields($bin)
-              ->exists($dep_fields[$strong]);
+              ->declares($dep_fields[$strong]);
             my $relation
               = $processable->binary_relation($bin, $dep_fields[$strong]);
             $self->hint('package-depends-on-itself', $bin,$dep_fields[$strong])
@@ -274,7 +274,7 @@ sub source {
             for my $weak (($strong + 1) .. $#dep_fields) {
                 next
                   unless $processable->debian_control->installable_fields($bin)
-                  ->exists($dep_fields[$weak]);
+                  ->declares($dep_fields[$weak]);
                 for my $dependency (split /\s*,\s*/,
                     $processable->debian_control->installable_fields($bin)
                     ->value($dep_fields[$weak])) {
@@ -458,7 +458,7 @@ sub source {
 
     # Check Rules-Requires-Root
     if (
-        $processable->debian_control->source_fields->exists(
+        $processable->debian_control->source_fields->declares(
             'Rules-Requires-Root')
     ) {
         my $r3

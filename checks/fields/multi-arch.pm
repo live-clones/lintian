@@ -90,11 +90,11 @@ sub installable {
     }
 
     return
-      unless $fields->exists('Multi-Arch');
+      unless $fields->declares('Multi-Arch');
 
     my $multi = $fields->unfolded_value('Multi-Arch');
 
-    if ($fields->exists('Architecture')) {
+    if ($fields->declares('Architecture')) {
 
         my $architecture = $fields->unfolded_value('Architecture');
 
@@ -111,7 +111,7 @@ sub always {
     my $fields = $self->processable->fields;
 
     return
-      unless $fields->exists('Multi-Arch');
+      unless $fields->declares('Multi-Arch');
 
     my $multi = $fields->unfolded_value('Multi-Arch');
 

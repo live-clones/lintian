@@ -122,7 +122,7 @@ sub check_web_application_package {
       if $webapp ne "$pkg.conf"
       or $webapp =~ m/^local-./;
 
-    my $rel = Lintian::Relation->and(
+    my $rel = Lintian::Relation->logical_and(
         $processable->relation('strong'),
         $processable->relation('Recommends'));
 
@@ -167,7 +167,7 @@ sub check_module_package {
             $pkg, '!=',$expected_name);
     }
 
-    $rel = Lintian::Relation->and(
+    $rel = Lintian::Relation->logical_and(
         $processable->relation('strong'),
         $processable->relation('Recommends'));
     if (!$rel->matches(qr/^apache2-api-\d+$/)) {

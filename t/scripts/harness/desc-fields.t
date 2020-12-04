@@ -88,14 +88,14 @@ for my $descpath (@descpaths) {
         $name, "Test name matches encapsulating directory in $testpath");
 
     # mandatory fields
-    ok($testcase->exists($_), "Field $_ exists in $name") for @mandatory;
+    ok($testcase->declares($_), "Field $_ exists in $name") for @mandatory;
 
     # disallowed fields
-    ok(!$testcase->exists($_), "Field $_ does not exist in $name")
+    ok(!$testcase->declares($_), "Field $_ does not exist in $name")
       for @disallowed;
 
     # no test-against without check
-    ok(!$testcase->exists('Test-Against') || $testcase->exists('Check'),
+    ok(!$testcase->declares('Test-Against') || $testcase->declares('Check'),
         "No Test-Against without Check in $name");
 
     # get checks

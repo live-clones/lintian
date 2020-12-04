@@ -95,7 +95,7 @@ my $defaults = read_config($defaultspath);
 
 for my $name ($defaults->names) {
     $testcase->set($name, $defaults->value($name))
-      unless $testcase->exists($name);
+      unless $testcase->declares($name);
 }
 
 # test plan

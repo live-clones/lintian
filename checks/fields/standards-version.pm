@@ -42,7 +42,7 @@ sub source {
     my $processable = $self->processable;
 
     return
-      unless $processable->fields->exists('Standards-Version');
+      unless $processable->fields->declares('Standards-Version');
 
     # Any Standards Version released before this day is "ancient"
     my $ANCIENT_DATE_DATA = $self->profile->load_data(

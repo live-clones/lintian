@@ -39,7 +39,7 @@ sub source {
 
     my $fields = $self->processable->fields;
 
-    unless ($fields->exists('Homepage')) {
+    unless ($fields->declares('Homepage')) {
 
         my $homepage = $fields->unfolded_value('Homepage');
 
@@ -52,7 +52,7 @@ sub source {
         for my $binary ($debian_control->installables) {
 
             if ($debian_control->installable_fields($binary)
-                ->exists('Homepage')) {
+                ->declares('Homepage')) {
 
                 $binary_has_homepage_field = 1;
                 last;
@@ -78,7 +78,7 @@ sub always {
     my $fields = $self->processable->fields;
 
     return
-      unless $fields->exists('Homepage');
+      unless $fields->declares('Homepage');
 
     my $homepage = $fields->unfolded_value('Homepage');
 

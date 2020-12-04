@@ -398,7 +398,7 @@ sub binary {
     # as it is the most likely case.
     my $source = $processable->fields->value('Source');
     my $version;
-    if ($processable->fields->exists('Source') && $source =~ m/\((.*)\)/) {
+    if ($processable->fields->declares('Source') && $source =~ m/\((.*)\)/) {
         $version = $1;
     } else {
         $version = $processable->fields->value('Version');

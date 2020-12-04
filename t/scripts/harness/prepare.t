@@ -117,7 +117,7 @@ is(
 
 is($testcase->unfolded_value('Test-For'),
     'shlib-with-non-pic-code','Correct Test-For');
-ok(!$testcase->exists('Test-Against'), 'Correct Test-Against');
+ok(!$testcase->declares('Test-Against'), 'Correct Test-Against');
 
 is($testcase->unfolded_value('Standards-Version'),
     $ENV{'POLICY_VERSION'}, 'Correct policy version');

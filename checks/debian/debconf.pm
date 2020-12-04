@@ -107,7 +107,8 @@ sub source {
         }
 
         my @unsplit_choices
-          = grep {$_->exists('Template') && $_->exists('_Choices')}@templates;
+          = grep {$_->declares('Template') && $_->declares('_Choices')}
+          @templates;
 
         $self->hint('template-uses-unsplit-choices',
             $file->name, $_->value('Template'))
@@ -162,7 +163,7 @@ sub installable {
 
     # Consider every package to depend on itself.
     my $selfrel;
-    if ($self->processable->fields->exists('Version')) {
+    if ($self->processable->fields->declares('Version')) {
         $_ = $self->processable->fields->value('Version');
         $selfrel = $self->processable->name . " (= $_)";
     } else {
@@ -172,10 +173,10 @@ sub installable {
     # Include self and provides as a package providing debconf presumably
     # satisfies its own use of debconf (if any).
     my $selfrelation
-      = Lintian::Relation->and($self->processable->relation('Provides'),
-        $selfrel);
+      = Lintian::Relation->logical_and(
+        $self->processable->relation('Provides'),$selfrel);
     my $alldependencies
-      = Lintian::Relation->and($self->processable->relation('strong'),
+      = Lintian::Relation->logical_and($self->processable->relation('strong'),
         $selfrelation);
 
     # See if the package depends on dbconfig-common.  Packages that do
@@ -230,7 +231,7 @@ sub installable {
         my $isselect = EMPTY;
 
         my $name = $template->value('Template');
-        if (!$template->exists('Template')) {
+        if (!$template->declares('Template')) {
             $self->hint('no-template-name');
             $name = 'no-template-name';
 
@@ -241,7 +242,7 @@ sub installable {
         }
 
         my $type = $template->value('Type');
-        if (!$template->exists('Type')) {
+        if (!$template->declares('Type')) {
             $self->hint('no-template-type', $name);
 
         } elsif (!$valid_types{$type}) {
@@ -256,12 +257,12 @@ sub installable {
         } elsif ($type eq 'boolean') {
             my $default = $template->value('Default');
             $self->hint('boolean-template-has-bogus-default', $name, $default)
-              if $template->exists('Default')
+              if $template->declares('Default')
               && (none { $default eq $_ } qw(true false));
         }
 
         my $choices = $template->value('Choices');
-        if ($template->exists('Choices') && $choices !~ /^\s*$/) {
+        if ($template->declares('Choices') && $choices !~ /^\s*$/) {
 
             my $nrchoices = count_choices($choices);
             for my $key ($template->names) {
@@ -283,7 +284,7 @@ sub installable {
         }
 
         $self->hint('select-without-choices', $name)
-          if $isselect && !$template->exists('Choices');
+          if $isselect && !$template->declares('Choices');
 
         my $description = $template->value('Description');
         $self->hint('no-template-description', $name)

@@ -41,7 +41,7 @@ sub source {
     return
       unless $maintainer=~ /pkg-perl-maintainers\@lists\.alioth\.debian\.org/;
 
-    unless ($self->processable->fields->exists('Testsuite')) {
+    unless ($self->processable->fields->declares('Testsuite')) {
 
         $self->hint('no-testsuite-header');
         return;

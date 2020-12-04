@@ -537,7 +537,7 @@ sub read_profile {
       unless length $self->name;
 
     $self->read_profile($header->unfolded_value('Extends'))
-      if $header->exists('Extends');
+      if $header->declares('Extends');
 
     # Add the profile to the "chain" after loading its parent (if
     # any).

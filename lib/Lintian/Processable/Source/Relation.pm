@@ -124,7 +124,7 @@ sub binary_relation {
 
         if (length $alias{$lowercase}) {
             $relation
-              = Lintian::Relation->and(
+              = Lintian::Relation->logical_and(
                 map { $self->binary_relation($package, $_) }
                   @{ $alias{$lowercase} });
 
@@ -191,7 +191,8 @@ sub relation {
             my @fields
               = ("Build-$type", "Build-$type-Indep", "Build-$type-Arch");
             $relation
-              = Lintian::Relation->and(map { $self->relation($_) } @fields);
+              = Lintian::Relation->logical_and(map { $self->relation($_) }
+                  @fields);
 
         } elsif ($name =~ /^Build-(Depends|Conflicts)(?:-(?:Arch|Indep))?$/i){
             my $value = $self->fields->value($name);

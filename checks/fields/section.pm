@@ -55,7 +55,7 @@ sub always {
     my $pkg = $self->processable->name;
 
     return
-      unless $self->processable->fields->exists('Section');
+      unless $self->processable->fields->declares('Section');
 
     my $KNOWN_SECTIONS = $self->profile->load_data('fields/archive-sections');
 

@@ -60,7 +60,7 @@ sub installable {
     my $unindented_list = 0;
 
     return
-      unless $processable->fields->exists('Description');
+      unless $processable->fields->declares('Description');
 
     my $full_description= $processable->fields->untrimmed_value('Description');
 
@@ -232,7 +232,7 @@ sub installable {
     # Check for a package homepage in the description and no Homepage
     # field.  This is less accurate and more of a guess than looking
     # for the old Homepage: convention in the body.
-    unless ($processable->fields->exists('Homepage') or $flagged_homepage) {
+    unless ($processable->fields->declares('Homepage') or $flagged_homepage) {
         if (
             $extended =~ /homepage|webpage|website|url|upstream|web\s+site
                          |home\s+page|further\s+information|more\s+info

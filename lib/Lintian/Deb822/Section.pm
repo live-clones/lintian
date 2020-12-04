@@ -243,11 +243,11 @@ sub set {
     return;
 }
 
-=item delete (FIELD)
+=item drop (FIELD)
 
 =cut
 
-sub delete {
+sub drop {
     my ($self, $name) = @_;
 
     return
@@ -266,13 +266,13 @@ sub delete {
     return;
 }
 
-=item exists (NAME)
+=item declares (NAME)
 
 Returns a boolean for whether the named field exists.
 
 =cut
 
-sub exists {
+sub declares {
     my ($self, $name) = @_;
 
     return 1

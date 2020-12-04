@@ -44,7 +44,7 @@ sub source {
     # required in source packages, but dpkg-source already refuses to unpack
     # without this field (and fields depends on unpacked)
     return
-      unless $fields->exists('Source');
+      unless $fields->declares('Source');
 
     my $source = $fields->unfolded_value('Source');
 
@@ -72,7 +72,7 @@ sub always {
 
     # optional in binary packages
     return
-      unless $fields->exists('Source');
+      unless $fields->declares('Source');
 
     my $source = $fields->unfolded_value('Source');
 

@@ -118,7 +118,7 @@ sub is_pkg_class {
 
     if ($class eq 'auto-generated') {
         return 1
-          if $self->fields->exists('Auto-Built-Package');
+          if $self->fields->declares('Auto-Built-Package');
 
         return 0;
     }

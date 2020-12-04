@@ -44,7 +44,7 @@ sub source {
     my $fields = $self->processable->fields;
 
     return
-      unless $fields->exists('Version');
+      unless $fields->declares('Version');
 
     my $version = $fields->unfolded_value('Version');
 
@@ -96,7 +96,7 @@ sub always {
     my $fields = $self->processable->fields;
 
     return
-      unless $fields->exists('Version');
+      unless $fields->declares('Version');
 
     my $version = $fields->unfolded_value('Version');
 

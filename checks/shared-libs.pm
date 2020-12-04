@@ -166,7 +166,7 @@ sub installable {
 
             # executable stack.
             if (not defined $objdump->{$cur_file}{'PH'}{STACK}) {
-                if ($processable->fields->exists('Architecture')) {
+                if ($processable->fields->declares('Architecture')) {
                     my $arch = $processable->fields->value('Architecture');
                     $self->hint('shared-library-lacks-stack-section',
                         $cur_file);
@@ -351,7 +351,8 @@ sub installable {
     # uninitialization warnings later.
     $version = '0-1' unless length $version;
     $provides
-      = Lintian::Relation->and($processable->relation('Provides'), $provides);
+      = Lintian::Relation->logical_and($processable->relation('Provides'),
+        $provides);
 
     my $shlibsf = $processable->control->lookup('shlibs');
     my $symbolsf = $processable->control->lookup('symbols');

@@ -212,7 +212,7 @@ sub find_selected_lintian_testpaths {
                 my $desc = read_config("$testpath/eval/" . DESC);
 
                 next
-                  unless $desc->exists('Check');
+                  unless $desc->declares('Check');
 
                 for my $check ($desc->trimmed_list('Check')) {
                     push(@insuite, $testpath)
@@ -230,7 +230,7 @@ sub find_selected_lintian_testpaths {
                 my $desc = read_config("$testpath/build-spec/fill-values");
 
                 next
-                  unless $desc->exists('Skeleton');
+                  unless $desc->declares('Skeleton');
 
                 my $skeleton = $desc->unfolded_value('Skeleton');
                 push(@insuite, $testpath)
@@ -306,7 +306,7 @@ sub find_all_tags {
     my $desc = read_config("$testpath/eval/" . DESC);
 
     return EMPTY
-      unless $desc->exists('Check');
+      unless $desc->declares('Check');
 
     my %tags;
 
@@ -323,7 +323,7 @@ sub find_all_tags {
     }
 
     return keys %tags
-      unless $desc->exists('Test-Against');
+      unless $desc->declares('Test-Against');
 
     # read tags from specification
     my $temp = Path::Tiny->tempfile;

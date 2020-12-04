@@ -113,7 +113,7 @@ sub build_subject {
 
     # get lintian subject
     croak encode_utf8('Could not get subject of Lintian examination.')
-      unless $testcase->exists('Build-Product');
+      unless $testcase->declares('Build-Product');
 
     my $build_product = $testcase->unfolded_value('Build-Product');
     my $subject = "$buildpath/$build_product";

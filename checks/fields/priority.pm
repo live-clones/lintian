@@ -42,7 +42,7 @@ sub always {
     my $fields = $self->processable->fields;
 
     return
-      unless $fields->exists('Priority');
+      unless $fields->declares('Priority');
 
     my $priority = $fields->unfolded_value('Priority');
 

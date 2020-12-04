@@ -92,7 +92,7 @@ sub last_mention {
 
         # empty when field not present
         $latest = $section->value($name)
-          if $section->exists($name);
+          if $section->declares($name);
     }
 
     return ($latest // EMPTY);

@@ -40,7 +40,7 @@ sub source {
     my ($self) = @_;
 
     return
-      unless $self->processable->fields->exists('Format');
+      unless $self->processable->fields->declares('Format');
 
     my $format = $self->processable->fields->unfolded_value('Format');
 

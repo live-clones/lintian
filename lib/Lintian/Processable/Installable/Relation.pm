@@ -114,7 +114,8 @@ sub relation {
     unless (defined $relation) {
 
         if (exists $alias{$lowercase}) {
-            $relation = Lintian::Relation->and(map { $self->relation($_) }
+            $relation
+              = Lintian::Relation->logical_and(map { $self->relation($_) }
                   @{ $alias{$lowercase} });
         } else {
             croak encode_utf8("unknown relation field $name")

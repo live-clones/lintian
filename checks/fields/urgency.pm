@@ -36,7 +36,7 @@ sub changes {
     my ($self) = @_;
 
     return
-      unless $self->processable->fields->exists('Urgency');
+      unless $self->processable->fields->declares('Urgency');
 
     my $urgency = $self->processable->fields->value('Urgency');
 

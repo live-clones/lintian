@@ -136,7 +136,7 @@ sub source {
     foreach my $field (@VERSION_FIELDS) {
 
         next
-          unless $processable->debian_control->source_fields->exists($field);
+          unless $processable->debian_control->source_fields->declares($field);
 
         my $pyversion
           = $processable->debian_control->source_fields->value($field);
@@ -203,7 +203,7 @@ sub installable {
     my $pkg = $self->processable->name;
     my $processable = $self->processable;
 
-    my $deps = Lintian::Relation->and($processable->relation('all'),
+    my $deps = Lintian::Relation->logical_and($processable->relation('all'),
         $processable->relation('Provides'), $pkg);
     my @entries
       = $processable->changelog

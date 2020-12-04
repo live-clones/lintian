@@ -298,7 +298,8 @@ sub installable {
         $executable{$file} = 1;
     }
 
-    my $all_parsed = Lintian::Relation->and($processable->relation('all'),
+    my $all_parsed
+      = Lintian::Relation->logical_and($processable->relation('all'),
         $processable->relation('Provides'),$pkg);
     my $str_deps = $processable->relation('strong');
 

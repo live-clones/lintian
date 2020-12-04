@@ -242,7 +242,7 @@ An alias for new_norestriction.
 
 *new_noarch = \&new_norestriction;
 
-=item and(RELATION, ...)
+=item logical_and(RELATION, ...)
 
 Creates a new Lintian::Relation object produced by AND'ing all the
 relations together.  Semantically it is the similar to:
@@ -254,7 +254,7 @@ are Lintian::Relation objects already.
 
 =cut
 
-sub and {
+sub logical_and {
     my ($class, @args) = @_;
     my (@result, $last_rel, $rels);
     foreach my $arg (@args) {

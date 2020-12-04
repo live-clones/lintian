@@ -142,7 +142,7 @@ sub installable {
         qw(Depends Pre-Depends Recommends Suggests Conflicts Provides Enhances Replaces Breaks)
     ) {
         next
-          unless $processable->fields->exists($field);
+          unless $processable->fields->declares($field);
 
         # get data and clean it
         my $data = $processable->fields->unfolded_value($field);
@@ -392,11 +392,11 @@ sub installable {
     # the other dependency fields.
     for my $conflict (qw/Conflicts Breaks/) {
         next
-          unless $processable->fields->exists($conflict);
+          unless $processable->fields->declares($conflict);
 
         for my $field (qw(Depends Pre-Depends Recommends Suggests)) {
             next
-              unless $processable->fields->exists($field);
+              unless $processable->fields->declares($field);
 
             my $relation = $processable->relation($field);
             for my $package (split /\s*,\s*/,
@@ -450,11 +450,11 @@ sub source {
     }
 
     $self->hint('build-depends-indep-without-arch-indep')
-      if ( $processable->fields->exists('Build-Depends-Indep')
+      if ( $processable->fields->declares('Build-Depends-Indep')
         && $arch_indep_packages == 0);
 
     $self->hint('build-depends-arch-without-arch-dependent-binary')
-      if ( $processable->fields->exists('Build-Depends-Arch')
+      if ( $processable->fields->declares('Build-Depends-Arch')
         && $arch_dep_packages == 0);
 
     my $is_dep_field = sub {
@@ -469,7 +469,7 @@ sub source {
     for my $field (
         qw(Build-Depends Build-Depends-Indep Build-Depends-Arch Build-Conflicts Build-Conflicts-Indep Build-Conflicts-Arch)
     ) {
-        if ($processable->fields->exists($field)) {
+        if ($processable->fields->declares($field)) {
 
             # get data and clean it
             my $data = $processable->fields->unfolded_value($field);
@@ -628,7 +628,8 @@ sub source {
 
     for my $fields (@to_check) {
         my $relation
-          = Lintian::Relation->and(map { $processable->relation($_) }@$fields);
+          = Lintian::Relation->logical_and(map { $processable->relation($_) }
+              @$fields);
         my @dups = $relation->duplicates;
         for my $dup (@dups) {
             $self->hint('package-has-a-duplicate-build-relation',

@@ -40,7 +40,7 @@ sub source {
     my $fields = $self->processable->fields;
 
     $self->hint('essential-in-source-package')
-      if $fields->exists('Essential');
+      if $fields->declares('Essential');
 
     return;
 }
@@ -51,7 +51,7 @@ sub always {
     my $fields = $self->processable->fields;
 
     return
-      unless $fields->exists('Essential');
+      unless $fields->declares('Essential');
 
     my $essential = $fields->unfolded_value('Essential');
 

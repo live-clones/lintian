@@ -46,14 +46,14 @@ sub source {
     return
       unless $maintainer=~ /pkg-perl-maintainers\@lists\.alioth\.debian\.org/;
 
-    my @non_git = grep { $fields->exists($_) } @NON_GIT_VCS_FIELDS;
+    my @non_git = grep { $fields->declares($_) } @NON_GIT_VCS_FIELDS;
     $self->hint('no-git', $_) for @non_git;
 
     # check for team locations
     for my $name (@VCS_FIELDS) {
 
         next
-          unless $fields->exists($name);
+          unless $fields->declares($name);
 
         my $value = $fields->value($name);
 

@@ -169,7 +169,7 @@ sub always {
     for my $field (qw(Maintainer Uploaders)) {
 
         next
-          unless $processable->fields->exists($field);
+          unless $processable->fields->declares($field);
 
         my $maintainer = $processable->fields->unfolded_value($field);
 
@@ -224,7 +224,7 @@ sub always {
         my $maintainer = $processable->fields->value('Maintainer');
 
         next
-          unless $processable->fields->exists($fieldname);
+          unless $processable->fields->declares($fieldname);
 
         my $uri = $processable->fields->unfolded_value($fieldname);
 
@@ -334,7 +334,7 @@ sub always {
       and not %seen_vcs;
 
     # Check for missing Vcs-Browser headers
-    unless ($processable->fields->exists('Vcs-Browser')) {
+    unless ($processable->fields->declares('Vcs-Browser')) {
 
         foreach my $regex ($KNOWN_VCS_HOSTERS->all) {
 

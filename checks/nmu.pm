@@ -121,7 +121,7 @@ sub source {
 
     if ($maintainer =~ /packages\@qa.debian.org/) {
         $self->hint('uploaders-in-orphan')
-          if $processable->fields->exists('Uploaders');
+          if $processable->fields->declares('Uploaders');
         $self->hint('qa-upload-has-incorrect-version-number', $version)
           if $version_nmuness == 1;
         $self->hint('no-qa-in-changelog') if !$changelog_mentions_qa;

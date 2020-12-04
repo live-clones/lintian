@@ -274,7 +274,7 @@ qx{dpkg-architecture -a $ENV{'DEB_HOST_ARCH'} -i $_; echo -n \$?}
     my @errors;
     push(@errors,
         "Exit code $status differs from expected value $expected_status.")
-      if $testcase->exists('Exit-Status')
+      if $testcase->declares('Exit-Status')
       && $status != $expected_status;
 
     # filter out some warnings if running under coverage
@@ -293,7 +293,7 @@ qx{dpkg-architecture -a $ENV{'DEB_HOST_ARCH'} -i $_; echo -n \$?}
     $output .= $_ . NEWLINE for @lines;
 
     die encode_utf8('No match strategy defined')
-      unless $testcase->exists('Match-Strategy');
+      unless $testcase->declares('Match-Strategy');
 
     my $match_strategy = $testcase->unfolded_value('Match-Strategy');
 
@@ -309,7 +309,7 @@ qx{dpkg-architecture -a $ENV{'DEB_HOST_ARCH'} -i $_; echo -n \$?}
 
     my $okay = !(scalar @errors);
 
-    if ($testcase->exists('Todo')) {
+    if ($testcase->declares('Todo')) {
 
         my $explanation = $testcase->unfolded_value('Todo');
         diag "TODO ($explanation)";
@@ -471,7 +471,7 @@ sub check_result {
     # look out for tags being tested
     my @related;
 
-    if (   $testcase->exists('Check')
+    if (   $testcase->declares('Check')
         && $testcase->unfolded_value('Check') ne 'all') {
 
         my $profile = Lintian::Profile->new;

@@ -118,10 +118,10 @@ for my $tagpath (@tagpaths) {
     }
 
     # mandatory fields
-    ok($fields->exists($_), "Field $_ exists in $tagpath")for @mandatory;
+    ok($fields->declares($_), "Field $_ exists in $tagpath")for @mandatory;
 
     # disallowed fields
-    ok(!$fields->exists($_), "Field $_ does not exist in $tagpath")
+    ok(!$fields->declares($_), "Field $_ does not exist in $tagpath")
       for @disallowed;
 
     ok($profile->get_checkinfo($checkname),

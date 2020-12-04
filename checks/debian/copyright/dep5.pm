@@ -241,7 +241,7 @@ sub check_dep5_copyright {
     my %license_text_by_section;
     my %license_identifier_by_section;
 
-    my @license_sections = grep { $_->exists('License') } @sections;
+    my @license_sections = grep { $_->declares('License') } @sections;
     for my $section (@license_sections) {
 
         $self->hint('tab-in-license-text',
@@ -313,7 +313,7 @@ sub check_dep5_copyright {
         # stand-alone license
         if (   length $license_identifier
             && length $license_text
-            && !$section->exists('Files')) {
+            && !$section->declares('Files')) {
             $found_standalone{$license_identifier} //= [];
             push(@{$found_standalone{$license_identifier}}, $section);
         }
@@ -343,7 +343,7 @@ sub check_dep5_copyright {
 
     my ($header, @followers) = @sections;
 
-    my @obsolete_fields = grep { $header->exists($_) } keys %NEW_FIELD_NAMES;
+    my @obsolete_fields = grep { $header->declares($_) } keys %NEW_FIELD_NAMES;
     for my $old_name (@obsolete_fields) {
 
         $self->hint(
@@ -355,7 +355,7 @@ sub check_dep5_copyright {
     }
 
     $self->hint('copyright-excludes-files-in-native-package')
-      if $header->exists('Files-Excluded')
+      if $header->declares('Files-Excluded')
       && $self->processable->native;
 
     unless ($self->processable->native) {
@@ -407,23 +407,23 @@ sub check_dep5_copyright {
 
     $self->hint('missing-field-in-dep5-copyright',
         'Format','(line ' . $header->position . ')')
-      if none { $header->exists($_) } qw(Format Format-Specification);
+      if none { $header->declares($_) } qw(Format Format-Specification);
 
     my $debian_control = $self->processable->debian_control;
     $self->hint('missing-explanation-for-contrib-or-non-free-package')
       if ($debian_control->source_fields->value('Section'))
       =~ m{^(?:contrib|non-free)(?:/.+)?$}
-      && none { $header->exists($_) } qw(Comment Disclaimer);
+      && none { $header->declares($_) } qw(Comment Disclaimer);
 
     $self->hint('missing-explanation-for-repacked-upstream-tarball')
       if $self->processable->repacked
       && $header->value('Source') =~ m{^https?://}
-      && none { $header->exists($_) } qw(Comment Files-Excluded);
+      && none { $header->declares($_) } qw(Comment Files-Excluded);
 
     my @ambiguous_sections = grep {
-             $_->exists('License')
-          && $_->exists('Copyright')
-          && !$_->exists('Files')
+             $_->declares('License')
+          && $_->declares('Copyright')
+          && !$_->declares('Files')
     } @followers;
 
     $self->hint(
@@ -432,7 +432,7 @@ sub check_dep5_copyright {
     ) for @ambiguous_sections;
 
     my @unknown_sections
-      = grep {!$_->exists('License')&& !$_->exists('Files')} @followers;
+      = grep {!$_->declares('License')&& !$_->declares('Files')} @followers;
 
     $self->hint(
         'unknown-paragraph-in-dep5-copyright',
@@ -478,7 +478,7 @@ sub check_dep5_copyright {
     # only attempt to evaluate globbing if commas could be legal
     my $check_wildcards = !@fields_with_comma || @names_with_comma;
 
-    my @files_sections = grep {$_->exists('Files')} @followers;
+    my @files_sections = grep {$_->declares('Files')} @followers;
 
     for my $section (@files_sections) {
 
@@ -488,16 +488,16 @@ sub check_dep5_copyright {
 
         $self->hint('missing-field-in-dep5-copyright',
             'License', '(paragraph at line ' . $section->position . ')')
-          unless $section->exists('License');
+          unless $section->declares('License');
 
         $self->hint('missing-field-in-dep5-copyright',
             'Copyright','(paragraph at line ' . $section->position . ')')
-          unless $section->exists('Copyright');
+          unless $section->declares('Copyright');
 
         $self->hint('missing-field-in-dep5-copyright',
             'Copyright',
             '(empty field, line ' . $section->position('Copyright') . ')')
-          if $section->exists('Copyright')
+          if $section->declares('Copyright')
           && $section->value('Copyright') =~ /^\s*$/;
     }
 
@@ -513,7 +513,7 @@ sub check_dep5_copyright {
           = @{$license_names_by_section{$section->position} // []};
         my $license_text = $license_text_by_section{$section->position};
 
-        if ($section->exists('Files') && !length $license_text) {
+        if ($section->declares('Files') && !length $license_text) {
             $required_standalone{$_} = $section for @license_names;
         }
 
@@ -522,9 +522,9 @@ sub check_dep5_copyright {
         # If it is the first paragraph, it might be an instance of
         # the (no-longer) optional "first Files-field".
         if (   $section_count == 0
-            && $section->exists('License')
-            && $section->exists('Copyright')
-            && !$section->exists('Files')) {
+            && $section->declares('License')
+            && $section->declares('Copyright')
+            && !$section->declares('Files')) {
 
             @wildcards = (ASTERISK);
 
@@ -549,7 +549,7 @@ sub check_dep5_copyright {
             '(line ' . $section->position('License') . ')'
           )
           if !@wildcards
-          && $section->exists('License')
+          && $section->declares('License')
           && !length $license_text;
 
         next

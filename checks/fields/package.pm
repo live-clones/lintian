@@ -40,7 +40,7 @@ sub installable {
     my ($self) = @_;
 
     return
-      unless $self->processable->fields->exists('Package');
+      unless $self->processable->fields->declares('Package');
 
     my $name = $self->processable->fields->unfolded_value('Package');
 

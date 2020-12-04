@@ -155,7 +155,7 @@ sub find_missing_prerequisites {
 
     # without prerequisites, no need to look
     return
-      unless any { $testcase->exists($_) }
+      unless any { $testcase->declares($_) }
     qw(Build-Depends Build-Conflicts Test-Depends Test-Conflicts);
 
     # create a temporary file

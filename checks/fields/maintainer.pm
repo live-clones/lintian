@@ -40,14 +40,14 @@ sub source {
     my ($self) = @_;
 
     return
-      unless $self->processable->fields->exists('Maintainer');
+      unless $self->processable->fields->declares('Maintainer');
 
     my $maintainer = $self->processable->fields->value('Maintainer');
 
     my $is_list = $maintainer =~ /\@lists(?:\.alioth)?\.debian\.org\b/;
 
     $self->hint('no-human-maintainers')
-      if $is_list && !$self->processable->fields->exists('Uploaders');
+      if $is_list && !$self->processable->fields->declares('Uploaders');
 
     return;
 }

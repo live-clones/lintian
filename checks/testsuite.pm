@@ -127,12 +127,12 @@ sub check_control_paragraph {
     my $KNOWN_FIELDS = $self->profile->load_data('testsuite/known-fields');
 
     $self->hint('no-tests')
-      unless $section->exists('Tests') || $section->exists('Test-Command');
+      unless $section->declares('Tests') || $section->declares('Test-Command');
 
     $self->hint(
         'exclusive-runtime-tests-field','tests, test-command',
         'paragraph starting at line', $section->position
-    ) if $section->exists('Tests') && $section->exists('Test-Command');
+    ) if $section->declares('Tests') && $section->declares('Test-Command');
 
     my $tests_field = $section->unfolded_value('Tests');
     my $test_command = $section->unfolded_value('Test-Command');
@@ -187,7 +187,7 @@ sub check_control_paragraph {
     $self->check_test_file($directory, $_, $section->position('Tests'))
       for @tests;
 
-    if ($section->exists('Depends')) {
+    if ($section->declares('Depends')) {
 
         my $depends = $section->unfolded_value('Depends');
 

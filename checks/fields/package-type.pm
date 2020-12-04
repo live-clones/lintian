@@ -40,7 +40,7 @@ sub installable {
     my ($self) = @_;
 
     return
-      unless $self->processable->fields->exists('Package-Type');
+      unless $self->processable->fields->declares('Package-Type');
 
     my $type = $self->processable->fields->value('Package-Type');
 

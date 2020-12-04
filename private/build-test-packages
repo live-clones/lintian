@@ -241,7 +241,7 @@ path($_)->remove_tree for @obsoletepackages;
 # remove empty directories
 for my $folder (@obsoletesources, @obsoletepackages) {
     my $candidate = path($folder)->parent;
-    while ($candidate->exists && !$candidate->children) {
+    while ($candidate->declares && !$candidate->children) {
         rmdir $candidate->stringify;
         $candidate = $candidate->parent;
     }

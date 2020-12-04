@@ -142,7 +142,7 @@ sub load {
     my $fields = $sections[0];
 
     die encode_utf8("No name field in $descpath")
-      unless $fields->exists('Check-Script');
+      unless $fields->declares('Check-Script');
 
     my $name = $fields->value('Check-Script');
 

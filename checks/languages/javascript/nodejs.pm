@@ -165,7 +165,8 @@ sub visit_installed_files {
     $declared .= "( = $version)" if length $version;
     $version ||= '0-1';
     my $provides
-      = Lintian::Relation->and($processable->relation('Provides'), $declared);
+      = Lintian::Relation->logical_and($processable->relation('Provides'),
+        $declared);
 
     my $content = $file->bytes;
 

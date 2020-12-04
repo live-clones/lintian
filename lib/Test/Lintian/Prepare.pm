@@ -121,7 +121,7 @@ sub prepare {
     $testcase->set($_, $defaults->value($_)) for $defaults->names;
 
     die encode_utf8("Name missing for $specpath")
-      unless $desc->exists('Testname');
+      unless $desc->declares('Testname');
 
     die encode_utf8('Outdated test specification (./debian/debian exists).')
       if -e "$specpath/debian/debian";
@@ -170,7 +170,7 @@ sub prepare {
     # populate working directory with specified template sets
     copy_skeleton_template_sets($testcase->value('Template-Sets'),
         $sourcepath, $testset)
-      if $testcase->exists('Template-Sets');
+      if $testcase->declares('Template-Sets');
 
     # delete templates for which we have originals
     remove_surplus_templates($specpath, $sourcepath);
@@ -207,15 +207,15 @@ sub prepare {
 
     # add other helpful info to testcase
     $testcase->set('Source', $testcase->unfolded_value('Testname'))
-      unless $testcase->exists('Source');
+      unless $testcase->declares('Source');
 
     # record our effective data age as date, unless given
     $testcase->set('Date', rfc822date($data_epoch))
-      unless $testcase->exists('Date');
+      unless $testcase->declares('Date');
 
     warn encode_utf8('Cannot override Architecture: in test '
           . $testcase->unfolded_value('Testname'))
-      if $testcase->exists('Architecture');
+      if $testcase->declares('Architecture');
 
     die encode_utf8('DEB_HOST_ARCH is not set.')
       unless defined $ENV{'DEB_HOST_ARCH'};
@@ -224,15 +224,15 @@ sub prepare {
     die encode_utf8('Could not get POLICY_VERSION.')
       unless defined $ENV{'POLICY_VERSION'};
     $testcase->set('Standards-Version', $ENV{'POLICY_VERSION'})
-      unless $testcase->exists('Standards-Version');
+      unless $testcase->declares('Standards-Version');
 
     die encode_utf8('Could not get DEFAULT_DEBHELPER_COMPAT.')
       unless defined $ENV{'DEFAULT_DEBHELPER_COMPAT'};
     $testcase->set('Dh-Compat-Level', $ENV{'DEFAULT_DEBHELPER_COMPAT'})
-      unless $testcase->exists('Dh-Compat-Level');
+      unless $testcase->declares('Dh-Compat-Level');
 
     # add additional version components
-    if ($testcase->exists('Version')) {
+    if ($testcase->declares('Version')) {
 
         # add upstream version
         my $upstream_version = $testcase->unfolded_value('Version');
@@ -245,7 +245,7 @@ sub prepare {
         $no_epoch =~ s/^\d+://;
         $testcase->set('No-Epoch', $no_epoch);
 
-        unless ($testcase->exists('Prev-Version')) {
+        unless ($testcase->declares('Prev-Version')) {
             my $prev_version = '0.0.1';
             $prev_version .= '-1'
               unless $testcase->unfolded_value('Type') eq 'native';
@@ -256,13 +256,13 @@ sub prepare {
 
     # calculate build dependencies
     warn encode_utf8('Cannot override Build-Depends:')
-      if $testcase->exists('Build-Depends');
+      if $testcase->declares('Build-Depends');
     combine_fields($testcase, 'Build-Depends', COMMA . SPACE,
         'Default-Build-Depends', 'Extra-Build-Depends');
 
     # calculate build conflicts
     warn encode_utf8('Cannot override Build-Conflicts:')
-      if $testcase->exists('Build-Conflicts');
+      if $testcase->declares('Build-Conflicts');
     combine_fields($testcase, 'Build-Conflicts', COMMA . SPACE,
         'Default-Build-Conflicts', 'Extra-Build-Conflicts');
 
@@ -277,7 +277,7 @@ sub prepare {
     # fill remaining templates
     fill_skeleton_templates($testcase->value('Fill-Targets'),
         $hashref, $data_epoch, $sourcepath, $testset)
-      if $testcase->exists('Fill-Targets');
+      if $testcase->declares('Fill-Targets');
 
     # write the dynamic file names
     my $runfiles = path($sourcepath)->child('files');
@@ -341,14 +341,14 @@ sub filleval {
     $testcase->set($_, $defaults->value($_)) for $defaults->names;
 
     die encode_utf8("Name missing for $specpath")
-      unless $desc->exists('Testname');
+      unless $desc->declares('Testname');
 
     # delete old test scripts
     my @oldrunners = File::Find::Rule->file->name('*.t')->in($evalpath);
     unlink(@oldrunners);
 
     $testcase->set('Skeleton', $desc->value('Skeleton'))
-      unless $testcase->exists('Skeleton');
+      unless $testcase->declares('Skeleton');
 
     my $skeletonname = $testcase->unfolded_value('Skeleton');
     if (length $skeletonname) {
@@ -366,7 +366,7 @@ sub filleval {
     # populate working directory with specified template sets
     copy_skeleton_template_sets($testcase->value('Template-Sets'),
         $evalpath, $testset)
-      if $testcase->exists('Template-Sets');
+      if $testcase->declares('Template-Sets');
 
     # delete templates for which we have originals
     remove_surplus_templates($specpath, $evalpath);
@@ -406,7 +406,7 @@ sub filleval {
     # fill remaining templates
     fill_skeleton_templates($testcase->value('Fill-Targets'),
         $hashref, time, $evalpath, $testset)
-      if $testcase->exists('Fill-Targets');
+      if $testcase->declares('Fill-Targets');
 
     # write the dynamic file names
     my $runfiles = path($evalpath)->child('files');
@@ -437,7 +437,7 @@ sub combine_fields {
     for my $source (@sources) {
         push(@contents, $testcase->value($source))
           if length $source;
-        $testcase->delete($source);
+        $testcase->drop($source);
     }
 
     # combine
@@ -449,7 +449,7 @@ sub combine_fields {
     }
 
     # delete the combined entry if it is empty
-    $testcase->delete($destination)
+    $testcase->drop($destination)
       unless length $testcase->value($destination);
 
     return;

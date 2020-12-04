@@ -61,11 +61,11 @@ foreach my $descpath (@descpaths) {
     # get test path
     my $testpath = path($descpath)->parent->stringify;
 
-    ok($testcase->exists('Check'),
+    ok($testcase->declares('Check'),
         "Test specification for $name defines a field Check");
 
     next
-      unless $testcase->exists('Check');
+      unless $testcase->declares('Check');
 
     my @checks = $testcase->trimmed_list('Check');
 

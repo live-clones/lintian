@@ -38,7 +38,7 @@ sub always {
     my ($self) = @_;
 
     return
-      unless $self->processable->fields->exists('Uploaders');
+      unless $self->processable->fields->declares('Uploaders');
 
     my $uploaders = $self->processable->fields->value('Uploaders');
 
@@ -52,7 +52,7 @@ sub always {
         $uploaders =~ s/,\s*,/,/g;
     }
 
-    if ($self->processable->fields->exists('Maintainer')) {
+    if ($self->processable->fields->declares('Maintainer')) {
 
         my $maintainer = $self->processable->fields->value('Maintainer');
 

@@ -40,7 +40,7 @@ sub always {
     my $fields = $self->processable->fields;
 
     return
-      unless $fields->exists('Bugs');
+      unless $fields->declares('Bugs');
 
     my $bugs = $fields->unfolded_value('Bugs');
 

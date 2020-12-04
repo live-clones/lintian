@@ -40,7 +40,7 @@ sub always {
     my $fields = $self->processable->fields;
 
     return
-      unless $fields->exists('DM-Upload-Allowed');
+      unless $fields->declares('DM-Upload-Allowed');
 
     $self->hint('dm-upload-allowed-is-obsolete');
 

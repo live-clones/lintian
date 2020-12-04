@@ -44,7 +44,7 @@ sub source {
       unless $maintainer
       =~ /pkg-javascript-maintainers\@lists\.alioth\.debian\.org/;
 
-    unless ($self->processable->fields->exists('Testsuite')) {
+    unless ($self->processable->fields->declares('Testsuite')) {
 
         $self->hint('no-testsuite-header');
         return;

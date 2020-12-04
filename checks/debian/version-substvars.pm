@@ -80,7 +80,7 @@ sub source {
         foreach my $field (@dep_fields) {
             next
               unless $processable->debian_control->installable_fields($pkg1)
-              ->exists($field);
+              ->declares($field);
             my $rel = $processable->binary_relation($pkg1, $field);
             my $svid = 0;
             my $visitor = sub {
@@ -102,7 +102,7 @@ sub source {
                     $self->hint('version-substvar-for-external-package',
                         "$pkg1 -> $other")
                       unless $processable->debian_control->installable_fields(
-                        $other)->exists('Architecture')
+                        $other)->declares('Architecture')
                       or any { "$other (= $substvar)" eq $_ } @provided
                       or $other =~ /\$\{\S+\}/;
                 }
@@ -133,7 +133,7 @@ sub source {
 
             if (
                 not $processable->debian_control->installable_fields($pkg2)
-                ->exists('Architecture')) {
+                ->declares('Architecture')) {
                 # external relation or subst var package - either way,
                 # handled above.
                 next;
