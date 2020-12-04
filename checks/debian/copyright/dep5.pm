@@ -39,6 +39,7 @@ use constant EMPTY => q{};
 use constant SPACE => q{ };
 use constant SLASH => q{/};
 use constant COLON => q{:};
+use constant HYPHEN => q{-};
 use constant ASTERISK => q{*};
 use constant LEFT_SQUARE => q{[};
 use constant RIGHT_SQUARE => q{]};
@@ -305,7 +306,7 @@ sub check_dep5_copyright {
 
             $self->hint('license-problem-undefined-license',
                 $name,'(line ' . $section->position('License') . ')')
-              if $name =~ /^-$/
+              if $name eq HYPHEN
               || $name
               =~ m{\b(?:fixmes?|todos?|undefined?|unknown?|unspecified)\b};
         }

@@ -223,7 +223,7 @@ functions = open opendir chdir read readdir readline closedir sysopen sysread sy
 
 [Objects::ProhibitIndirectSyntax]
 
-[-RegularExpressions::ProhibitFixedStringMatches]
+[RegularExpressions::ProhibitFixedStringMatches]
 
 [RegularExpressions::ProhibitSingleCharAlternation]
 

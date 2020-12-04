@@ -279,7 +279,7 @@ sub check_systemd_service_file {
 
         my @wanted_by
           = $self->extract_service_file_values($file, 'Install', 'WantedBy');
-        my $is_oneshot =any { /^oneshot$/ }
+        my $is_oneshot = any { $_ eq 'oneshot' }
         $self->extract_service_file_values($file, 'Service', 'Type');
 
         # We are a "standalone" service file if we have no .path or .timer

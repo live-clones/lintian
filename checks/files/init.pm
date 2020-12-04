@@ -25,6 +25,8 @@ use warnings;
 use utf8;
 use autodie;
 
+use List::SomeUtils qw(none);
+
 use Moo;
 use namespace::clean;
 
@@ -50,7 +52,7 @@ sub visit_installed_files {
     # /etc/rc.d && /etc/rc?.d
     $self->hint('package-installs-into-etc-rc.d', $file->name)
       if $file->name =~ m,^etc/rc(?:\d|S)?\.d/\S,
-      && $self->processable->name !~ /^(?:sysvinit|file-rc)$/
+      && (none { $self->processable->name eq $_ } qw(sysvinit file-rc))
       && $self->processable->type ne 'udeb';
 
     # /etc/rc.boot

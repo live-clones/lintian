@@ -64,8 +64,10 @@ sub should_skip {
 
     open(my $fd, '-|', 'dpkg-parsechangelog', '-c0');
 
-    while (<$fd>) {
-        $skip = 0 if m/^Distribution: UNRELEASED$/;
+    while (my $line = <$fd>) {
+        chomp $line;
+        $skip = 0
+          if $line eq 'Distribution: UNRELEASED';
     }
 
     close($fd);

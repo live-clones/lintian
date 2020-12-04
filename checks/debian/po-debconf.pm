@@ -80,6 +80,7 @@ sub source {
                 my $in_template = 0;
                 my $saw_tl_note = 0;
                 while (<$fd>) {
+                    chomp;
                     $self->hint('translated-default-field', "$basename: $.")
                       if (m{^_Default(?:Choice)?: [^\[]*$}) && !$saw_tl_note;
                     $self->hint('untranslatable-debconf-templates',
@@ -107,7 +108,7 @@ sub source {
                         my $description = $1;
                         next if $description =~ /for internal use/;
                         $has_template = 1;
-                    } elsif ($in_template and /^$/) {
+                    } elsif ($in_template && !length($_)) {
                         $in_template = 0;
                     }
                 }

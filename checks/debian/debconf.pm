@@ -480,7 +480,7 @@ sub installable {
                             and (
                                 not($potential_makedev->{($. - 1)}
                                     and ($priority eq 'low')))
-                            and ($priority =~ /^(low|medium)$/));
+                            and ($priority eq 'low' || $priority eq 'medium'));
                     }
                 }
                 if (

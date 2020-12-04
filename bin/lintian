@@ -469,9 +469,17 @@ $selected{profile} = 'debian/ftp-master-auto-reject'
   if $selected{'ftp-master-rejects'};
 
 @{$selected{'fail-on'}} = split(/,/, join(COMMA, @{$selected{'fail-on'}}));
-my @unknown_fail_on
-  = grep {!/^(?:error|warning|info|pedantic|experimental|override|none)$/ }
-  @{$selected{'fail-on'}};
+my @known_fail_on = qw(
+  error
+  warning
+  info
+  pedantic
+  experimental
+  override
+  none
+);
+my $fail_on_lc = List::Compare->new($selected{'fail-on'}, \@known_fail_on);
+my @unknown_fail_on = $fail_on_lc->get_Lonly;
 die encode_utf8("Unrecognized fail-on argument: @unknown_fail_on\n")
   if @unknown_fail_on;
 
@@ -534,7 +542,7 @@ if ($selected{color} eq 'never') {
     $selected{hyperlinks} //= 'on';
 }
 die encode_utf8("The hyperlink value must be on or off\n")
-  unless $selected{hyperlinks} =~ /^(?:on|off)$/;
+  unless any { $selected{hyperlinks} eq $_ } qw(on off);
 
 $selected{verbose} = -1
   if $selected{quiet};

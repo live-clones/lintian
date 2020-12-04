@@ -203,7 +203,7 @@ m/^(?:\w+\s+\w+\s+\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}\s+[\w\s]*\d{4})\s+(?:.*)\s+[<\
             || m/^(?:[\w.+-]+)[- ]\S+ Debian \S+/i
             || m/^Changes from version (?:.*) to (?:.*):/i
             || m/^Changes for [\w.+-]+-[\w.+-]+:?$/i
-            || m/^Old Changelog:$/i
+            || fc($_) eq fc('Old Changelog:')
             || m/^(?:\d+:)?\w[\w.+~-]*:?$/) {
             # save entries on old changelog format verbatim
             # we assume the rest of the file will be in old format once we

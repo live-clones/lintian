@@ -29,7 +29,7 @@ use warnings;
 use utf8;
 use autodie;
 
-use List::SomeUtils qw(uniq);
+use List::SomeUtils qw(uniq any);
 
 use Lintian::IPC::Run3 qw(safe_qx);
 
@@ -84,9 +84,10 @@ sub installable {
 
     if ($self->processable->name =~ /^x?fonts-/) {
 
+        my $multi = $fields->value('Multi-Arch') || 'no';
+
         $self->hint('font-package-not-multi-arch-foreign')
-          unless ($fields->value('Multi-Arch') || 'no')
-          =~/^(?:foreign|allowed)$/;
+          unless any { $multi eq $_ } qw(foreign allowed);
     }
 
     return
@@ -116,7 +117,7 @@ sub always {
     my $multi = $fields->unfolded_value('Multi-Arch');
 
     $self->hint('unknown-multi-arch-value', $self->processable->name, $multi)
-      unless $multi =~ /^(?:no|foreign|allowed|same)$/;
+      unless any { $multi eq $_ } qw(no foreign allowed same);
 
     return;
 }

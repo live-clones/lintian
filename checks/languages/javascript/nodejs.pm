@@ -46,7 +46,7 @@ sub source {
     my @testsuites= split(m/\s*,\s*/,
         $processable->debian_control->source_fields->value('Testsuite'));
 
-    if (any { /^autopkgtest-pkg-nodejs$/ } @testsuites) {
+    if (any { $_ eq 'autopkgtest-pkg-nodejs' } @testsuites) {
         # Check control file exists in sources
         my $filename = 'debian/tests/pkg-js/test';
         my $path = $processable->patched->resolve_path($filename);

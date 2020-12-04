@@ -943,6 +943,19 @@ sub matches {
     return $self->visit(sub { m/$regex/ }, $what | VISIT_STOP_FIRST_MATCH);
 }
 
+=item equals
+
+Same for full-string matches. Satisfies the perlcritic policy
+RegularExpressions::ProhibitFixedStringMatches.
+
+=cut
+
+sub equals {
+    my ($self, $string, $what) = @_;
+    $what //= VISIT_PRED_NAME;
+    return $self->visit(sub { $_ eq $string }, $what | VISIT_STOP_FIRST_MATCH);
+}
+
 =item visit (CODE[, FLAGS])
 
 Visit clauses or predicates of this relation.  Each clause or

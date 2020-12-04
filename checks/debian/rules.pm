@@ -191,8 +191,8 @@ sub source {
     # of its build dependencies installed.
     local $_ = undef;
     my $build_all = $processable->relation('Build-Depends-All');
-    my @arch_rules = (qr/^clean$/, qr/^binary-arch$/, qr/^build-arch$/);
-    my @indep_rules = (qr/^build$/, qr/^build-indep$/, qr/^binary-indep$/);
+    my @arch_rules = map { qr/^$_$/ } qw(clean binary-arch build-arch);
+    my @indep_rules = qw(build build-indep binary-indep);
     my (@current_targets, %rules_per_target,  %debhelper_group);
     my (%seen, %overridden);
     my ($maybe_skipping, @conditionals);
@@ -408,7 +408,7 @@ sub source {
                     $rules_per_target{$target} ||= [];
                     push @{$rules_per_target{$target}}, $_;
                     $arch = 1 if (any { $target =~ /$_/ } @arch_rules);
-                    $indep = 1 if (any { $target =~ /$_/ } @indep_rules);
+                    $indep = 1 if (any { $target eq $_ } @indep_rules);
                     $indep = 1 if $target eq '%';
                     $indep = 1 if $target =~ /^override_/;
                 }

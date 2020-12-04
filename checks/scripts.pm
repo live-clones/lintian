@@ -1419,7 +1419,7 @@ sub script_is_evil_and_wrong {
     while (<$fd>) {
         chomp;
         next if m/^#/;
-        next if m/^$/;
+        next unless length($_);
         last if (++$i > 55);
         if (
             m~

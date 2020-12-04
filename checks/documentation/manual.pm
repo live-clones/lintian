@@ -89,7 +89,7 @@ sub visit_installed_files {
 
     my ($manpage, $page_path, undef) = fileparse($file);
 
-    if ($page_path =~ m{^usr/share/man/$} && $manpage ne EMPTY) {
+    if ($page_path eq 'usr/share/man/' && $manpage ne EMPTY) {
         $self->hint('odd-place-for-manual-page', $file);
         return;
     }

@@ -687,8 +687,8 @@ sub source {
     # matches() instead of implies() because of possible OR relation
     $self->hint('libmodule-build-perl-needs-to-be-in-build-depends')
       if $processable->relation('Build-Depends-Indep')
-      ->matches(qr/^libmodule-build-perl$/, VISIT_PRED_NAME)
-      && !$bdepends->matches(qr/^libmodule-build-perl$/,VISIT_PRED_NAME);
+      ->equals('libmodule-build-perl', VISIT_PRED_NAME)
+      && !$bdepends->equals('libmodule-build-perl', VISIT_PRED_NAME);
 
     # libmodule-build-tiny-perl
     $self->hint('libmodule-build-tiny-perl-needs-to-be-in-build-depends')
@@ -743,10 +743,9 @@ sub check_field {
     my $processable = $self->processable;
 
     my $has_default_mta
-      = $processable->relation($field)
-      ->matches(qr/^default-mta$/, VISIT_PRED_NAME);
+      = $processable->relation($field)->equals('default-mta', VISIT_PRED_NAME);
     my $has_mail_transport_agent = $processable->relation($field)
-      ->matches(qr/^mail-transport-agent$/, VISIT_PRED_NAME);
+      ->equals('mail-transport-agent', VISIT_PRED_NAME);
 
     $self->hint('default-mta-dependency-not-listed-first',"$field: $data")
       if $processable->relation($field)
