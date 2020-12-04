@@ -111,7 +111,7 @@ sub parse_element {
         (?:[:]([a-z0-9-]+))?            # optional Multi-arch arch specification (2)
         (?:                             # start of optional version
          \s* \(                         # open parenthesis for version part
-         \s* (<<|<=|=|>=|>>|<|>)        # relation part (3)
+         \s* (<<|<=|>=|>>|[=<>])        # relation part (3)
          \s* ([^\)]+)                   # version (4)
          \s* \)                         # closing parenthesis
         )?                              # end of optional version

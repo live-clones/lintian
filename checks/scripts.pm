@@ -192,7 +192,7 @@ my @depends_needed = (
 my @bashism_single_quote_regexs = (
     $LEADIN . qr'echo\s+(?:-[^e\s]+\s+)?\'[^\']*(\\[abcEfnrtv0])+.*?[\']',
     # unsafe echo with backslashes
-    $LEADIN . qr'source\s+[\"\']?(?:\.\/|\/|\$|[\w~.-])\S*',
+    $LEADIN . qr'source\s+[\"\']?(?:\.\/|[\/\$\w~.-])\S*',
     # should be '.', not 'source'
 );
 my @bashism_string_regexs = (
@@ -202,7 +202,7 @@ my @bashism_string_regexs = (
     qr'\$\{\#?\w+\[[0-9\*\@]+\]\}',# bash arrays, ${name[0|*|@]}
     qr'\$\{!\w+[\@*]\}',                 # ${!prefix[*|@]}
     qr'\$\{!\w+\}',              # ${!name}
-    qr'(\$\(|\`)\s*\<\s*\S+\s*(\)|\`)', # $(\< foo) should be $(cat foo)
+    qr'(\$\(|\`)\s*\<\s*\S+\s*([\)\`])', # $(\< foo) should be $(cat foo)
     qr'\$\{?RANDOM\}?\b',                # $RANDOM
     qr'\$\{?(OS|MACH)TYPE\}?\b',   # $(OS|MACH)TYPE
     qr'\$\{?HOST(TYPE|NAME)\}?\b', # $HOST(TYPE|NAME)
@@ -923,13 +923,13 @@ sub installable {
                             not $found
                         and not m{\A \s*\.\s+
                                    (?:\"[^\"]+\"|\'[^\']+\')\s*
-                                   (?:\&|\||\d?>|<|;|\Z)}xsm
+                                   (?:[\&\|<;]|\d?>|\Z)}xsm
                         and m/^\s*(\.\s+[^\s;\`:]+\s+([^\s;]+))/
                     ) {
 
                         my $extra;
                         ($match, $extra) = ($1, $2);
-                        if ($extra =~ /^(\&|\||\d?>|<)/) {
+                        if ($extra =~ /^([\&\|<]|\d?>)/) {
                             # everything is ok
                             ;
                         } else {

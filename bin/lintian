@@ -740,7 +740,7 @@ for my $path (@subjects) {
 
             # only care about some files; ddeb is ubuntu dbgsym
             next
-              unless $basename =~ /\.(?:u|d)?deb$/
+              unless $basename =~ /\.[ud]?deb$/
               || $basename =~ /\.dsc$/
               || $basename =~ /\.buildinfo$/;
 

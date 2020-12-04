@@ -115,7 +115,7 @@ functions = open opendir chdir read readdir readline closedir sysopen sysread sy
 
 [-RegularExpressions::ProhibitFixedStringMatches]
 
-[-RegularExpressions::ProhibitSingleCharAlternation]
+[RegularExpressions::ProhibitSingleCharAlternation]
 
 [RegularExpressions::ProhibitUnusedCapture]
 
