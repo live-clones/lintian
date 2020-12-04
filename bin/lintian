@@ -876,12 +876,13 @@ sub _find_changes {
     }
 
     warn encode_utf8(
-        "Cannot find changes file for ${source}/${version}, tried:\n");
+"Cannot find a changes file for ${source}/${version}. It would be named like:\n"
+    );
 
-    warn encode_utf8("  ${source}_${version}_${_}.changes\n") for @archs;
+    warn encode_utf8("    ${source}_${version}_${_}.changes\n") for @archs;
 
-    warn encode_utf8(" in the following dirs:\n");
-    warn encode_utf8('  ', join("\n  ", @dirs), "\n");
+    warn encode_utf8(" in any of those places:\n");
+    warn encode_utf8("    $_\n") for @dirs;
 
     exit 0;
 }
