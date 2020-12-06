@@ -47,9 +47,8 @@ sub visit_installed_files {
     # don't warn about this yet until KDE adopts the new
     # location.
 
-    if ($file->name =~ m,^usr/share/gnome/apps/.*\.desktop$,) {
-        $self->hint('desktop-file-in-wrong-dir', $file->name);
-    }
+    $self->hint('desktop-file-in-wrong-dir', $file->name)
+      if $file->name =~ m{^usr/share/gnome/apps/.*\.desktop$};
 
     return;
 }

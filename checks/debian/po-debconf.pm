@@ -102,8 +102,12 @@ sub source {
                         next
                           if $template eq 'shared/packages-wordlist'
                           or $template eq 'shared/packages-ispell';
-                        next if $template =~ m,/languages$,;
+
+                        next
+                          if $template =~ m{/languages$};
+
                         $in_template = 1;
+
                     } elsif ($in_template and /^_?Description: (.+)/i) {
                         my $description = $1;
                         next if $description =~ /for internal use/;

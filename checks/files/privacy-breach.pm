@@ -126,7 +126,7 @@ sub detect_privacy_breach {
 
         # strip comments
         for my $x (qw(<!--(?!\[if).*?--\s*> /\*(?!@cc_on).*?\*/)) {
-            $block =~ s@$x@@gs;
+            $block =~ s/$x//gs;
         }
 
         # try generic fragment tagging
@@ -222,9 +222,9 @@ sub detect_generic_privacy_breach {
 
 sub is_localhost {
     my ($urlshort) = @_;
-    if(    $urlshort =~ m!^(?:[^/]+@)?localhost(?:[:][^/]+)?/!i
-        || $urlshort =~ m!^(?:[^/]+@)?::1(?:[:][^/]+)?/!i
-        || $urlshort =~ m!^(?:[^/]+@)?127(?:\.\d{1,3}){3}(?:[:][^/]+)?/!i) {
+    if(    $urlshort =~ m{^(?:[^/]+@)?localhost(?:[:][^/]+)?/}i
+        || $urlshort =~ m{^(?:[^/]+@)?::1(?:[:][^/]+)?/}i
+        || $urlshort =~ m{^(?:[^/]+@)?127(?:\.\d{1,3}){3}(?:[:][^/]+)?/}i) {
         return 1;
     }else {
         return 0;
@@ -235,7 +235,7 @@ sub check_tag_url_privacy_breach {
     my ($self, $fulltag, $tagattr, $url,$privacybreachhash, $file) = @_;
     my $website = $url;
     # detect also "^//" trick
-    $website =~ s,^"?(?:(?:ht|f)tps?:)?//,,;
+    $website =~ s{^"?(?:(?:ht|f)tps?:)?//}{};
     $website =~ s/"?$//;
 
     if (is_localhost($website)){
@@ -246,11 +246,11 @@ sub check_tag_url_privacy_breach {
     # reparse fulltag for rel
     if ($tagattr eq 'link') {
         my $rel = $fulltag;
-        $rel =~ m,<link
+        $rel =~ /<link
                       (?:\s[^>]+)? \s+
                       rel="([^"\r\n]*)"
                       [^>]*
-                      >,xismog;
+                      >/xismog;
         my $relcontent = $1;
         if (defined($relcontent)) {
             # See, for example, https://www.w3schools.com/tags/att_link_rel.asp
@@ -273,11 +273,11 @@ sub check_tag_url_privacy_breach {
             return if ($allowed{$relcontent});
             if ($relcontent eq 'alternate') {
                 my $type = $fulltag;
-                $type =~ m,<link
+                $type =~ /<link
                       (?:\s[^>]+)? \s+
                       type="([^"\r\n]*)"
                       [^>]*
-                      >,xismog;
+                      >/xismog;
                 my $typecontent = $1;
                 if($typecontent eq 'application/rdf+xml') {
                     # see #79991
@@ -333,7 +333,7 @@ sub visit_installed_files {
 
     # html/javascript
     if (   $file->is_file
-        && $file->name =~ m,\.(?:x?html?\d?|js|xht|xml|css)$,i) {
+        && $file->name =~ m/\.(?:x?html?\d?|js|xht|xml|css)$/i) {
 
         if(     $self->processable->source eq 'josm'
             and $file->basename eq 'defaultpresets.xml') {

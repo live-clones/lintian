@@ -69,7 +69,7 @@ sub visit_installed_files {
     return
       if $self->processable->type eq 'udeb';
 
-    if ($file->name =~ m,^usr/share/man/\S+,) {
+    if ($file->name =~ m{^usr/share/man/\S+}) {
 
         $self->hint('manual-page-in-udeb', $file->name)
           if $self->processable->type eq 'udeb';
@@ -77,7 +77,7 @@ sub visit_installed_files {
         if ($file->is_dir) {
             $self->hint('stray-folder-in-manual', $file->name)
               unless $file->name
-              =~ m,^usr/(?:X11R6|share)/man/(?:[^/]+/)?(?:man\d/)?$,;
+              =~ m{^usr/(?:X11R6|share)/man/(?:[^/]+/)?(?:man\d/)?$};
 
         } elsif ($file->is_file && ($file->operm & 0111)) {
             $self->hint('executable-manual-page', $file->name);
@@ -153,7 +153,7 @@ sub visit_installed_files {
 
     # check symbolic links to other manual pages
     if ($file->is_symlink) {
-        if ($file->link =~ m,(^|/)undocumented,) {
+        if ($file->link =~ m{(^|/)undocumented}) {
             # undocumented link in /usr/share/man -- possibilities
             #    undocumented... (if in the appropriate section)
             #    ../man?/undocumented...
@@ -161,16 +161,16 @@ sub visit_installed_files {
             #    ../../../share/man/man?/undocumented...
             #    ../../../../usr/share/man/man?/undocumented...
             if ((
-                        $file->link =~ m,^undocumented\.([237])\.gz,
-                    and $page_path =~ m,^usr/share/man/man$1,
+                       $file->link =~ m{^undocumented\.([237])\.gz}
+                    && $page_path =~ m{^usr/share/man/man$1}
                 )
-                or $file->link =~ m,^\.\./man[237]/undocumented\.[237]\.gz$,
-                or $file->link
-                =~ m,^\.\./\.\./man/man[237]/undocumented\.[237]\.gz$,
-                or $file->link
-                =~ m,^\.\./\.\./\.\./share/man/man[237]/undocumented\.[237]\.gz$,
-                or $file->link
-                =~ m,^\.\./\.\./\.\./\.\./usr/share/man/man[237]/undocumented\.[237]\.gz$,
+                || $file->link =~ m{^\.\./man[237]/undocumented\.[237]\.gz$}
+                || $file->link
+                =~ m{^\.\./\.\./man/man[237]/undocumented\.[237]\.gz$}
+                || $file->link
+                =~ m{^\.\./\.\./\.\./share/man/man[237]/undocumented\.[237]\.gz$}
+                || $file->link
+                =~ m{^\.\./\.\./\.\./\.\./usr/share/man/man[237]/undocumented\.[237]\.gz$}
             ) {
                 $self->hint('undocumented-manual-page', $file);
             } else {
@@ -199,17 +199,17 @@ sub visit_installed_files {
                 return;
             } elsif ($first =~ /^\.so\s+(.+)?$/) {
                 my $dest = $1;
-                if ($dest =~ m,^([^/]+)/(.+)$,) {
+                if ($dest =~ m{^([^/]+)/(.+)$}) {
                     my ($manxorlang, $remainder) = ($1, $2);
                     if ($manxorlang !~ /^man\d+$/) {
                         # then it's likely a language subdir, so let's run
                         # the other component through the same check
-                        if ($remainder =~ m,^([^/]+)/(.+)$,) {
-                            my (undef, $rest) = ($1, $2);
-                            if ($rest !~ m,^[^/]+\.\d(?:\S+)?(?:\.gz)?$,) {
-                                $self->hint('bad-so-link-within-manual-page',
-                                    $file);
-                            }
+                        if ($remainder =~ m{^([^/]+)/(.+)$}) {
+
+                            my $rest = $2;
+                            $self->hint('bad-so-link-within-manual-page',$file)
+                              unless $rest =~ m{^[^/]+\.\d(?:\S+)?(?:\.gz)?$};
+
                         } else {
                             $self->hint('bad-so-link-within-manual-page',
                                 $file);
@@ -232,7 +232,7 @@ sub visit_installed_files {
         # lexgrog can't handle pages in all languages at the
         # moment, leading to huge numbers of false negatives. When
         # man-db is fixed, this limitation should be removed.
-        if ($page_path =~ m,/man/man\d/,) {
+        if ($page_path =~ m{/man/man\d/}) {
 
             delete local $ENV{$_}
               for grep { $_ ne 'PATH' && $_ ne 'TMPDIR' } keys %ENV;
@@ -343,8 +343,8 @@ sub visit_installed_files {
                 next
                   if $line
                   =~ /:(\d+): warning \[.*\]: (?:can\'t break|cannot adjust) line/
-                  && ( $manfile[$1 - 1] =~ m,(?:https?|ftp|file)://.+,i
-                    || $manfile[$1 - 1] =~ m,^\s*\.\s*UE\b,);
+                  && ( $manfile[$1 - 1] =~ m{(?:https?|ftp|file)://.+}i
+                    || $manfile[$1 - 1] =~ m{^\s*\.\s*UE\b});
 
                 # ignore common undefined macros from pod2man << Perl 5.10
                 next
@@ -387,8 +387,8 @@ sub visit_installed_files {
                         "$file:$lc $fn_section != $th_section");
                 }
             }
-            if (   ($line =~ m,(/usr/(dict|doc|etc|info|man|adm|preserve)/),)
-                || ($line =~ m,(/var/(adm|catman|named|nis|preserve)/),)){
+            if (   ($line =~ m{(/usr/(dict|doc|etc|info|man|adm|preserve)/)})
+                || ($line =~ m{(/var/(adm|catman|named|nis|preserve)/)})){
                 # FSSTND dirs in man pages
                 # regexes taken from checks/files
                 $self->hint('FSSTND-dir-in-manual-page', "$file:$lc $1");
@@ -400,7 +400,7 @@ sub visit_installed_files {
             check_spelling($self->profile, $line,
                 $self->group->spelling_exceptions,
                 $stag_emitter, 0)
-              if ($page_path =~ m,/man/man\d/,);
+              if $page_path =~ m{/man/man\d/};
         }
     }
 

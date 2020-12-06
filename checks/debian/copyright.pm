@@ -113,7 +113,7 @@ sub binary {
         # We therefore just require the dependency for now and
         # don't worry about the version number.
         my $link = $doclink->link;
-        $link =~ s,/.*,,;
+        $link =~ s{/.*}{};
 
         unless ($self->depends_on($self->processable, $link)) {
             $self->hint('usr-share-doc-symlink-without-dependency', $link);
@@ -217,16 +217,16 @@ sub binary {
     # This won't catch all of our false positives for GPL references
     # that don't include a specific version number, but it will get
     # the obvious ones.
-    if ($contents =~ m,(usr/share/common-licenses/(L?GPL|GFDL))([^-]),i) {
+    if ($contents =~ m{(usr/share/common-licenses/(L?GPL|GFDL))([^-])}i) {
         my ($ref, $license, $separator) = ($1, $2, $3);
         if ($separator =~ /[\d\w]/) {
             $self->hint('copyright-refers-to-nonexistent-license-file',
                 "$ref$separator");
-        } elsif ($contents =~ m,\b(?:any|or)\s+later(?:\s+version)?\b,i
-            || $contents =~ m,License: $license-[\d\.]+\+,i
-            || $contents =~ m,as Perl itself,i
-            || $contents =~ m,License-Alias:\s+Perl,
-            || $contents =~ m,License:\s+Perl,) {
+        } elsif ($contents =~ /\b(?:any|or)\s+later(?:\s+version)?\b/i
+            || $contents =~ /License: $license-[\d\.]+\+/i
+            || $contents =~ /as Perl itself/i
+            || $contents =~ /License-Alias:\s+Perl/
+            || $contents =~ /License:\s+Perl/) {
             $self->hint('copyright-refers-to-symlink-license', $ref);
         } else {
             $self->hint('copyright-refers-to-versionless-license-file', $ref)
@@ -236,21 +236,21 @@ sub binary {
 
     # References to /usr/share/common-licenses/BSD are deprecated as of Policy
     # 3.8.5.
-    if ($contents =~ m,/usr/share/common-licenses/BSD,) {
+    if ($contents =~ m{/usr/share/common-licenses/BSD}) {
         $self->hint('copyright-refers-to-deprecated-bsd-license-file');
     }
 
-    if ($contents =~ m,(usr/share/common-licences),) {
+    if ($contents =~ m{(usr/share/common-licences)}) {
         $self->hint('copyright-refers-to-incorrect-directory', $1);
         $wrong_directory_detected = 1;
     }
 
-    if ($contents =~ m,usr/share/doc/copyright,) {
+    if ($contents =~ m{usr/share/doc/copyright}) {
         $self->hint('copyright-refers-to-old-directory');
         $wrong_directory_detected = 1;
     }
 
-    if ($contents =~ m,usr/doc/copyright,) {
+    if ($contents =~ m{usr/doc/copyright}) {
         $self->hint('copyright-refers-to-old-directory');
         $wrong_directory_detected = 1;
     }
@@ -292,8 +292,8 @@ sub binary {
     }
 
     # wtf?
-    if (   ($contents =~ m,common-licenses(/\S+),)
-        && ($contents !~ m,/usr/share/common-licenses/,)) {
+    if (   ($contents =~ m{common-licenses(/\S+)})
+        && ($contents !~ m{/usr/share/common-licenses/})) {
         $self->hint('copyright-does-not-refer-to-common-license-file', $1);
     }
 
@@ -303,7 +303,7 @@ sub binary {
     # e-mail discussions of licensing are included in the copyright
     # file but aren't referring to the license of the package.
     unless (
-           $contents =~ m,/usr/share/common-licenses,
+           $contents =~ m{/usr/share/common-licenses}
         || $contents =~ m/Zope Public License/
         || $contents =~ m/LICENSE AGREEMENT FOR PYTHON 1.6.1/
         || $contents =~ m/LaTeX Project Public License/
@@ -365,7 +365,7 @@ qr/GNU (?:Lesser|Library) General Public License|(?-i:\bLGPL\b)/i
                 my ($text) = @_;
                 $text
                   =~ /(?:under )?(?:the )?(?:same )?(?:terms )?as Perl itself\b/i
-                  && $text !~ m,usr/share/common-licenses/,;
+                  && $text !~ m{usr/share/common-licenses/};
             })
     ) {
         $self->hint('copyright-file-lacks-pointer-to-perl-license');
@@ -373,36 +373,31 @@ qr/GNU (?:Lesser|Library) General Public License|(?-i:\bLGPL\b)/i
 
     # Checks for various packaging helper boilerplate.
 
-    if (
-           $contents =~ m,\<fill in (?:http/)?ftp site\>,
-        or $contents =~ m,\<Must follow here\>,
-        or $contents =~ m,\<Put the license of the package here,
-        or $contents =~ m,\<put author[\'\(]s\)? name and email here\>,
-        or $contents =~ m,\<Copyright \(C\) YYYY Name OfAuthor\>,
-        or $contents =~ m,Upstream Author\(s\),
-        or $contents =~ m,\<years\>,
-        or $contents =~ m,\<special license\>,
-        or $contents
-        =~ m,\<Put the license of the package here indented by 1 space\>,
-        or $contents=~ m,\Q<This follows the format of Description: lines\E \s*
-             \Qin control file>\E,x
-        or $contents =~ m,\<Including paragraphs\>,
-        or $contents =~ m,\<likewise for another author\>,
-    ) {
-        $self->hint('helper-templates-in-copyright');
-    }
+    $self->hint('helper-templates-in-copyright')
+      if $contents =~ m{<fill in (?:http/)?ftp site>}
+      || $contents =~ /<Must follow here>/
+      || $contents =~ /<Put the license of the package here/
+      || $contents =~ /<put author[\'\(]s\)? name and email here>/
+      || $contents =~ /<Copyright \(C\) YYYY Name OfAuthor>/
+      || $contents =~ /Upstream Author\(s\)/
+      || $contents =~ /<years>/
+      || $contents =~ /<special license>/
+      || $contents
+      =~ /<Put the license of the package here indented by 1 space>/
+      || $contents
+      =~ /<This follows the format of Description: lines\s*in control file>/
+      || $contents =~ /<Including paragraphs>/
+      || $contents =~ /<likewise for another author>/;
 
     # dh-make-perl
-    if ($contents =~ m/This copyright info was automatically extracted/) {
-        $self->hint('copyright-contains-automatically-extracted-boilerplate');
-    }
-    if ($contents =~ m,\<INSERT COPYRIGHT YEAR\(S\) HERE\>,) {
-        $self->hint('helper-templates-in-copyright');
-    }
+    $self->hint('copyright-contains-automatically-extracted-boilerplate')
+      if $contents =~ /This copyright info was automatically extracted/;
 
-    if ($contents =~ m,url://,) {
-        $self->hint('copyright-has-url-from-dh_make-boilerplate');
-    }
+    $self->hint('helper-templates-in-copyright')
+      if $contents =~ /<INSERT COPYRIGHT YEAR\(S\) HERE>/;
+
+    $self->hint('copyright-has-url-from-dh_make-boilerplate')
+      if $contents =~ m{url://};
 
     # dh-make boilerplate
     my @dh_make_boilerplate = (
@@ -411,10 +406,10 @@ qr/GNU (?:Lesser|Library) General Public License|(?-i:\bLGPL\b)/i
     );
 
     $self->hint('copyright-contains-dh_make-todo-boilerplate')
-      if any { $contents =~ $_ } @dh_make_boilerplate;
+      if any { $contents =~ /$_/ } @dh_make_boilerplate;
 
     $self->hint('copyright-with-old-dh-make-debian-copyright')
-      if $contents =~ m,The\s+Debian\s+packaging\s+is\s+\(C\)\s+\d+,i;
+      if $contents =~ /The\s+Debian\s+packaging\s+is\s+\(C\)\s+\d+/i;
 
     # Other flaws in the copyright phrasing or contents.
     if ($found && !$linked) {

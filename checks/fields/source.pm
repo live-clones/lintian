@@ -49,7 +49,7 @@ sub source {
     my $source = $fields->unfolded_value('Source');
 
     my $filename = $self->processable->path;
-    my ($base) = ($filename =~ m,[\a|/]([^/]+)$,);
+    my ($base) = ($filename =~ m{[\a|/]([^/]+)$});
     my ($stem) = ($base =~ /^([^_]+)_/);
 
     die "Source field does not match package name $source != $stem"

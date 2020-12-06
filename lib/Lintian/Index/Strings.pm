@@ -60,7 +60,7 @@ sub add_strings {
     for my $file (@files) {
 
         next
-          if $file->name =~ m,^usr/lib/debug/,;
+          if $file->name =~ m{^usr/lib/debug/};
 
         # skip non-binaries
         next

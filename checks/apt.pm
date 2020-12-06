@@ -34,13 +34,13 @@ sub visit_installed_files {
     my ($self, $file) = @_;
 
     return
-      unless $file->name =~ m,^etc/apt/,;
+      unless $file->name =~ m{^etc/apt/};
 
     # /etc/apt/preferences
     unless ($self->processable->source eq 'apt') {
 
         $self->hint('package-installs-apt-preferences', $file->name)
-          if $file->name =~ m,^etc/apt/preferences(?:$|\.d/[^/]+),;
+          if $file->name =~ m{^etc/apt/preferences(?:$|\.d/[^/]+)};
     }
 
     # /etc/apt/sources
@@ -48,7 +48,7 @@ sub visit_installed_files {
         || $self->processable->name =~ /-apt-source$/) {
 
         $self->hint('package-installs-apt-sources', $file->name)
-          if $file->name =~ m,^etc/apt/sources\.list(?:$|\.d/[^/]+),;
+          if $file->name =~ m{^etc/apt/sources\.list(?:$|\.d/[^/]+)};
     }
 
     # /etc/apt/trusted.gpg
@@ -56,7 +56,7 @@ sub visit_installed_files {
         || $self->processable->name =~ /(?:-apt-source|-archive-keyring)$/) {
 
         $self->hint('package-installs-apt-keyring', $file->name)
-          if $file->name =~ m,^etc/apt/trusted\.gpg(?:$|\.d/[^/]+),;
+          if $file->name =~ m{^etc/apt/trusted\.gpg(?:$|\.d/[^/]+)};
     }
 
     return;

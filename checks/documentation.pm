@@ -101,14 +101,14 @@ sub visit_installed_files {
     my $ppkg = $self->ppkg;
 
     if ($self->processable->type eq 'udeb') {
-        if ($file->name =~ m,^usr/share/(?:doc|info)/\S,) {
+        if ($file->name =~ m{^usr/share/(?:doc|info)/\S}) {
 
             $self->hint('udeb-contains-documentation-file', $file->name);
             return;
         }
     }
 
-    if ($file->name =~ m,^usr/share/info/dir(?:\.old)?(?:\.gz)?$,) {
+    if ($file->name =~ m{^usr/share/info/dir(?:\.old)?(?:\.gz)?$}) {
         $self->hint('package-contains-info-dir-file', $file->name);
     }
 
@@ -155,7 +155,7 @@ sub visit_installed_files {
         }
     }
 
-    if ($file->name =~ m,^usr/share/doc/\S,) {
+    if ($file->name =~ m{^usr/share/doc/\S}) {
 
         # file not owned by root?
         unless ($file->identity eq 'root/root' || $file->identity eq '0/0') {
@@ -164,9 +164,9 @@ sub visit_installed_files {
         }
 
         # executable in /usr/share/doc ?
-        if (    $file->is_file
-            and $file->name !~ m,^usr/share/doc/(?:[^/]+/)?examples/,
-            and ($file->operm & 0111)) {
+        if (   $file->is_file
+            && $file->name !~ m{^usr/share/doc/(?:[^/]+/)?examples/}
+            && ($file->operm & 0111)) {
 
             if ($file->is_script) {
                 $self->hint('script-in-usr-share-doc', $file->name);
@@ -181,10 +181,10 @@ sub visit_installed_files {
             # Exceptions: examples may contain empty files for various
             # reasons, Doxygen generates empty *.map files, and Python
             # uses __init__.py to mark module directories.
-            unless ($file->name =~ m,^usr/share/doc/(?:[^/]+/)?examples/,
-                or $file->name
+            unless ($file->name =~ m{^usr/share/doc/(?:[^/]+/)?examples/}
+                || $file->name
                 =~ m{^usr/share/doc/(?:.+/)?(?:doxygen|html)/.*\.map$}s
-                or $file->name=~ m{^usr/share/doc/(?:.+/)?__init__\.py$}s){
+                || $file->name=~ m{^usr/share/doc/(?:.+/)?__init__\.py$}s){
 
                 $self->hint('zero-byte-file-in-doc-directory', $file->name);
             }
@@ -207,8 +207,8 @@ sub visit_installed_files {
     }
 
     # file directly in /usr/share/doc ?
-    if (    $file->is_file
-        and $file->name =~ m,^usr/share/doc/[^/]+$,){
+    if (   $file->is_file
+        && $file->name =~ m{^usr/share/doc/[^/]+$}) {
         $self->hint('file-directly-in-usr-share-doc', $file->name);
     }
 
@@ -220,12 +220,12 @@ sub visit_installed_files {
 
     # contains a README for another distribution/platform?
     if (
-        $file->name =~ m,^usr/share/doc/$ppkg/readme\.
+        $file->name =~ m{^usr/share/doc/$ppkg/readme\.
                              (?:apple|aix|atari|be|beos|bsd|bsdi
                                |cygwin|darwin|irix|gentoo|freebsd|mac|macos
                                |macosx|netbsd|openbsd|osf|redhat|sco|sgi
                                |solaris|suse|sun|vms|win32|win9x|windows
-                             )(?:\.txt)?(?:\.gz)?$,xi
+                             )(?:\.txt)?(?:\.gz)?$}xi
     ) {
         $self->hint('package-contains-readme-for-other-platform-or-distro',
             $file->name);
@@ -233,8 +233,8 @@ sub visit_installed_files {
 
     # contains a compressed version of objects.inv in
     # sphinx-generated documentation?
-    if (    $file->name=~ m,^usr/share/doc/$ppkg/(?:[^/]+/)+objects\.inv\.gz$,
-        and $file->file_info =~ m/gzip compressed/) {
+    if (   $file->name=~ m{^usr/share/doc/$ppkg/(?:[^/]+/)+objects\.inv\.gz$}
+        && $file->file_info =~ m/gzip compressed/) {
         $self->hint('compressed-documentation', $file->name);
     }
 

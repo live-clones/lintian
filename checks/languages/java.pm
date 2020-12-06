@@ -95,13 +95,13 @@ sub installable {
 
         # The Java Policy says very little about requires for (jars in) JVMs
         next
-          if $file->name =~ m#usr/lib/jvm(?:-exports)?/[^/]++/#o;
+          if $file->name =~ m{^usr/lib/jvm(?:-exports)?/[^/]+/};
 
         # Ignore Mozilla's jar files, see #635495
         next
-          if $file->name =~ m#usr/lib/xul(?:-ext|runner[^/]*+)/#o;
+          if $file->name =~ m{^usr/lib/xul(?:-ext|runner[^/]*+)/};
 
-        if($file->name =~ m#^usr/share/java/[^/]+\.jar$#o) {
+        if ($file->name =~ m{^usr/share/java/[^/]+\.jar$}) {
             $has_public_jars = 1;
             $self->hint('bad-jar-name', $file)
               unless basename($file->name) =~ /^$PKGNAME_REGEX\.jar$/;
@@ -154,7 +154,7 @@ sub installable {
             # jarwrapper.
             $missing_jarwrapper = 1
               unless $processable->relation('strong')->implies('jarwrapper');
-        } elsif ($file->name !~ m#^usr/share/#) {
+        } elsif ($file->name !~ m{^usr/share/}) {
             $self->hint('jar-not-in-usr-share', $file->name);
         }
 
@@ -171,9 +171,9 @@ sub installable {
                 if ((
                            $bsname !~ m/\.source$/
                         && $file->name
-                        !~ m#^usr/share/maven-repo/.*-javadoc\.jar#
-                        && $file->name!~m#\.doc(?:\.(?:user|isv))?_[^/]+.jar#
-                        && $file->name!~m#\.source_[^/]+.jar#
+                        !~ m{^usr/share/maven-repo/.*-javadoc\.jar}
+                        && $file->name !~ m{\.doc(?:\.(?:user|isv))?_[^/]+.jar}
+                        && $file->name !~ m{\.source_[^/]+.jar}
                     )
                     || $cp
                 ) {
@@ -191,8 +191,8 @@ sub installable {
             for my $p (@paths) {
                 if ($p) {
                     # Strip leading ./
-                    $p =~ s#^\./++##g;
-                    if ($p !~ m#^(?:file://)?/# and $p =~ m#/#) {
+                    $p =~ s{^\./+}{}g;
+                    if ($p !~ m{^(?:file://)?/} && $p =~ m{/}) {
                         my $target = normalize_link_target($jar_dir, $p);
                         my $tinfo;
                         # Can it be normalized?
@@ -200,8 +200,8 @@ sub installable {
                         # Relative link to usr/share/java ? Works if
                         # we are depending of a Java library.
                         next
-                          if $target =~ m,^usr/share/java/[^/]+.jar$,
-                          and @java_lib_depends;
+                          if $target =~ m{^usr/share/java/[^/]+.jar$}
+                          && @java_lib_depends;
                         $tinfo = $processable->installed->lookup($target);
                         # Points to file or link in this package,
                         #  which is sometimes easier than
@@ -224,7 +224,7 @@ sub installable {
 
         if (   $has_public_jars
             && $pkg =~ /^lib.*maven.*plugin.*/
-            && $file->name !~ m#^usr/share/maven-repo/.*\.jar#) {
+            && $file->name !~ m{^usr/share/maven-repo/.*\.jar}) {
             # Trigger a warning when a maven plugin lib is installed in
             # /usr/share/java/
             $self->hint('maven-plugin-in-usr-share-java', $file->name);
@@ -266,13 +266,16 @@ sub installable {
 
     my $is_transitional = $processable->is_pkg_class('transitional');
     if (!$has_public_jars && !$is_transitional && $pkg =~ /^lib[^\s,]+-java$/){
+
         # Skip this if it installs a symlink in usr/share/java
         my $java_dir= $processable->installed->resolve_path('usr/share/java/');
         my $has_jars = 0;
         $has_jars = 1
           if $java_dir
-          and any { $_->name =~ m@^[^/]+\.jar$@o } $java_dir->children;
-        $self->hint('javalib-but-no-public-jars') if not $has_jars;
+          && (any { $_->name =~ m{^[^/]+\.jar$} } $java_dir->children);
+
+        $self->hint('javalib-but-no-public-jars')
+          unless $has_jars;
     }
 
     return;

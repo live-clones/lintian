@@ -25,6 +25,8 @@ use warnings;
 use utf8;
 use autodie;
 
+use List::SomeUtils qw(none);
+
 use Moo;
 use namespace::clean;
 
@@ -40,17 +42,8 @@ sub breakdown_installed_files {
     # devhelp.
     for my $path (@{$self->related}) {
 
-        my $found = 0;
-        for my $link (@{$self->links}) {
-            if ($path =~ m,^\Q$link,) {
-                $found = 1;
-
-                last;
-            }
-        }
-
         $self->hint('package-contains-devhelp-file-without-symlink', $path)
-          unless $found;
+          if none { $path =~ /^\Q$_\E/ } @{$self->links};
     }
 
     $self->_set_related([]);
@@ -68,18 +61,18 @@ sub visit_installed_files {
     # those directories to another directory.  The presence of such a link
     # blesses any file below that other directory.
     if (length $file->link
-        && $file->name =~ m,^usr/share/(?:devhelp/books|gtk-doc/html)/,) {
+        && $file->name =~ m{^usr/share/(?:devhelp/books|gtk-doc/html)/}) {
         my $blessed = $file->link_normalized // '<broken-link>';
         push(@{$self->links}, $blessed);
     }
 
     # .devhelp2? files
     if (
-        $file->name =~ m,\.devhelp2?(?:\.gz)?$,
+        $file->name =~ /\.devhelp2?(?:\.gz)?$/
         # If the file is located in a directory not searched by devhelp, we
         # check later to see if it's in a symlinked directory.
-        and not $file->name =~ m,^usr/share/(?:devhelp/books|gtk-doc/html)/,
-        and not $file->name =~ m,^usr/share/doc/[^/]+/examples/,
+        && $file->name !~ m{^usr/share/(?:devhelp/books|gtk-doc/html)/}
+        && $file->name !~ m{^usr/share/doc/[^/]+/examples/}
     ) {
         push(@{$self->related}, $file->name);
     }

@@ -48,10 +48,10 @@ sub visit_installed_files {
     my $multiarch = $self->processable->fields->value('Multi-Arch') || 'no';
 
     # check old style config scripts
-    if (    $file->name =~ m,^usr/bin/,
-        and $file->name =~ m,-config$,
-        and $file->is_script
-        and $file->is_regular_file) {
+    if (   $file->name =~ m{^usr/bin/}
+        && $file->name =~ m/-config$/
+        && $file->is_script
+        && $file->is_regular_file) {
 
         # try to find some indication of
         # config file (read only one block)

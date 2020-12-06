@@ -35,10 +35,10 @@ sub visit_installed_files {
 
     my $processable = $self->processable;
 
-    if (    $file->is_file
-        and $file->name !~ m,\.debug$,
-        and $processable->is_pkg_class('debug')
-        and $processable->is_pkg_class('auto-generated')) {
+    if (   $file->is_file
+        && $file->name !~ /\.debug$/
+        && $processable->is_pkg_class('debug')
+        && $processable->is_pkg_class('auto-generated')) {
         $self->hint('non-debug-file-in-debug-package', $file->name);
     }
 

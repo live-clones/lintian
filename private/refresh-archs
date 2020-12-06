@@ -224,7 +224,7 @@ sub write_data_line {
         my $fd = $files{$filename}{'fd'};
         foreach my $orig (@{ $files{$filename}{'line-spec'} }) {
             my $line = $orig; # copy the template
-            $line =~ s#\@([^@ \t]+)\@#$vars->{$1}//die "Unknown var: $1"#eg;
+            $line =~ s{\@([^@ \t]+)\@}{$vars->\{$1\}//die "Unknown var: $1"}eg;
             push @{ $files{$filename}{'lines'} }, $line;
         }
     }

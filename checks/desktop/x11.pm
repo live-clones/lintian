@@ -39,13 +39,13 @@ sub visit_installed_files {
 
     # links to FHS locations are allowed
     $self->hint('package-installs-file-to-usr-x11r6', $file->name)
-      if $file->name =~ m,^usr/X11R6/, && !$file->is_symlink;
+      if $file->name =~ m{^usr/X11R6/} && !$file->is_symlink;
 
     return
       if $file->is_dir;
 
     # /usr/share/fonts/X11
-    my ($subdir) = ($file->name =~ m,^usr/share/fonts/X11/([^/]+)/\S+,);
+    my ($subdir) = ($file->name =~ m{^usr/share/fonts/X11/([^/]+)/\S+});
     if (defined $subdir) {
 
         $self->fontdirs->{$subdir}++

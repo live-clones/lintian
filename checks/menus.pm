@@ -73,28 +73,27 @@ sub visit_installed_files {
 
     if ($file->is_file) { # file checks
          # menu file?
-        if ($file =~ m,^usr/(lib|share)/menu/\S,) { # correct permissions?
+        if ($file =~ m{^usr/(lib|share)/menu/\S}) { # correct permissions?
             if ($file->operm & 0111) {
                 $self->hint('executable-menu-file',
                     sprintf('%s %04o', $file, $file->operm));
             }
 
             return
-              if $file =~ m,^usr/(?:lib|share)/menu/README$,;
+              if $file =~ m{^usr/(?:lib|share)/menu/README$};
 
-            if ($file =~ m,^usr/lib/,) {
+            if ($file =~ m{^usr/lib/}) {
                 $self->hint('menu-file-in-usr-lib', $file);
             }
 
             $self->_set_menu_file($file->name);
 
-            if (    $file =~ m,usr/(?:lib|share)/menu/menu$,
-                and $self->processable->name ne 'menu') {
-                $self->hint('bad-menu-file-name', $file);
-            }
+            $self->hint('bad-menu-file-name', $file)
+              if $file =~ m{^usr/(?:lib|share)/menu/menu$}
+              && $self->processable->name ne 'menu';
         }
         #menu-methods file?
-        elsif ($file =~ m,^etc/menu-methods/\S,) {
+        elsif ($file =~ m{^etc/menu-methods/\S}) {
             #TODO: we should test if the menu-methods file
             # is made executable in the postinst as recommended by
             # the menu manual
@@ -106,7 +105,7 @@ sub visit_installed_files {
                 open(my $fd, '<', $file->unpacked_path);
                 while (<$fd>) {
                     chomp;
-                    if (m,^!include menu.h,) {
+                    if (/^!include menu.h/) {
                         $menumethod_includes_menu_h = 1;
                         last;
                     }
@@ -388,8 +387,9 @@ sub check_doc_base_field {
                 "$dbfile:$line");
         }
         for my $file (@files) {
-            next if $file =~ m %^/usr/share/doc/%;
-            next if $file =~ m %^/usr/share/info/%;
+            next if $file =~ m{^/usr/share/doc/};
+            next if $file =~ m{^/usr/share/info/};
+
             $self->hint('doc-base-file-references-wrong-path',
                 "$dbfile:$line", $file);
         }
@@ -402,8 +402,8 @@ sub check_doc_base_field {
                 my $regex = quotemeta($realfile);
                 unless ($field eq 'Index') {
                     next if $regex =~ /\[/;
-                    $regex =~ s%\\\*%[^/]*%g;
-                    $regex =~ s%\\\?%[^/]%g;
+                    $regex =~ s{\\\*}{[^/]*}g;
+                    $regex =~ s{\\\?}{[^/]}g;
                     $regex .= '/?';
                 }
                 $found = grep { /^$regex\z/ } keys %$all_files;
@@ -468,10 +468,10 @@ sub check_doc_base_field {
     } elsif ($field eq 'Section') {
         $_ = join(' ', @$vals);
         unless ($SECTIONS->known($_)) {
-            if (m,^App(?:lication)?s/(.+)$, and $SECTIONS->known($1)) {
+            if (m{^App(?:lication)?s/(.+)$} && $SECTIONS->known($1)) {
                 $self->hint('doc-base-uses-applications-section',
                     "$dbfile:$line", $_);
-            } elsif (m,^(.+)/(?:[^/]+)$, and $SECTIONS->known($1)) {
+            } elsif (m{^(.+)/(?:[^/]+)$} && $SECTIONS->known($1)) {
                 # allows creating a new subsection to a known section
             } else {
                 $self->hint('doc-base-unknown-section', "$dbfile:$line", $_);
@@ -580,25 +580,25 @@ sub add_file_link_info {
     my $link = $processable->installed->lookup($file)->link;
     my $ishard = $processable->installed->lookup($file)->is_hardlink;
 
-    $file = '/' . $file if (not $file =~ m%^/%); # make file absolute
-    $file =~ s%/+%/%g;                           # remove duplicated `/'
+    $file = '/' . $file unless $file =~ m{^/}; # make file absolute
+    $file =~ s{/+}{/}g;                           # remove duplicated `/'
     $all_files->{$file} = 1;
 
     if (length $link) {
-        $link = './' . $link if $link !~ m,^/,;
+        $link = './' . $link if $link !~ m{^/};
         if ($ishard) {
-            $link =~ s,^\./,/,;
-        } elsif (not $link =~ m,^/,) {            # not absolute link
+            $link =~ s{^\./}{/};
+        } elsif ($link !~ m{^/}) {            # not absolute link
             $link
               = '/' . $link;                  # make sure link starts with '/'
-            $link =~ s,/+\./+,/,g;                # remove all /./ parts
+            $link =~ s{/+\./+}{/}g;                # remove all /./ parts
             my $dcount = 1;
-            while ($link =~ s,^/+\.\./+,/,) {     #\ count & remove
+            while ($link =~ s{^/+\.\./+}{/}) {     #\ count & remove
                 $dcount++;                         #/ any leading /../ parts
             }
             my $f = $file;
             while ($dcount--) {                   #\ remove last $dcount
-                $f =~ s,/[^/]*$,,;                #/ path components from $file
+                $f=~ s{/[^/]*$}{};                #/ path components from $file
             }
             $link
               = $f. $link;                   # now we should have absolute link
@@ -613,7 +613,7 @@ sub add_file_link_info {
 sub delink {
     my ($file, $all_links) = @_;
 
-    $file =~ s%/+%/%g;                            # remove duplicated '/'
+    $file =~ s{/+}{/}g;                            # remove duplicated '/'
     return $file unless %$all_links;              # package doesn't symlinks
 
     my $p1 = '';
@@ -638,7 +638,7 @@ sub delink {
     #    i) $all_links{$X} != $X for each $X
     #   ii) both keys and values of %all_links start with '/'
 
-    while (($p2 =~ s%^(/[^/]*)%%g) > 0) {
+    while (($p2 =~ s{^(/[^/]*)}{}g) > 0) {
         $p1 .= $1;
         if (defined $all_links->{$p1}) {
             return '!!! SYMLINK LOOP !!!' if defined $used_links{$p1};
@@ -667,12 +667,12 @@ sub check_script {
     open(my $fd, '<', $spath->unpacked_path);
     $interp = <$fd>;
     $interp = '' unless defined $interp;
-    if ($interp =~ m,^\#\!\s*/bin/$known_shells_regex,) {
+    if ($interp =~ m{^\#\!\s*/bin/$known_shells_regex}) {
         $interp = 'sh';
-    } elsif ($interp =~ m,^\#\!\s*/usr/bin/perl,) {
+    } elsif ($interp =~ m{^\#\!\s*/usr/bin/perl}) {
         $interp = 'perl';
     } else {
-        if ($interp =~ m,^\#\!\s*(.+),) {
+        if ($interp =~ m{^\#\!\s*(.+)}) {
             $interp = $1;
         } else { # hmm, doesn't seem to start with #!
              # is it a binary? look for ELF header

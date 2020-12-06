@@ -46,7 +46,7 @@ sub visit_installed_files {
 
     my $architecture = $self->processable->fields->value('Architecture');
 
-    if ($file->name =~ m,^(?:usr/)?lib/([^/]+)/$,) {
+    if ($file->name =~ m{^(?:usr/)?lib/([^/]+)/$}) {
         my $subdir = $1;
         if ($self->TRIPLETS->known($subdir)) {
 
@@ -57,12 +57,12 @@ sub visit_installed_files {
     }
 
     $self->_set_arch_dep_files(1)
-      if not $file->is_dir
-      and $file->name !~ m,^usr/share/,
-      and $file->file_info
-      and $file->file_info !~ m/\bASCII text\b/;
+      if !$file->is_dir
+      && $file->name !~ m{^usr/share/}
+      && $file->file_info
+      && $file->file_info !~ m/\bASCII text\b/;
 
-    if ($file->dirname =~ m,^(?:usr)?/lib/([^/]+)/$,) {
+    if ($file->dirname =~ m{^(?:usr)?/lib/([^/]+)/$}) {
         $self->_set_arch_dep_files(1)
           if $self->TRIPLETS->known($1 // '');
     }

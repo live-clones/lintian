@@ -148,7 +148,7 @@ sub source {
                 $examine, '>',$expected, "(consider using $suggestion)",
               )
               if $latest_version->maintainer_revision eq '1'
-              || $latest_version->maintainer_revision=~ m,^0(?:\.1|ubuntu1)?$,
+              || $latest_version->maintainer_revision=~ /^0(?:\.1|ubuntu1)?$/
               || $processable->native;
         }
     }
@@ -671,7 +671,7 @@ sub binary {
         }
 
         my $changesempty = $changes;
-        $changesempty =~ s,\W,,gms;
+        $changesempty =~ s/\W//gms;
         if (length($changesempty)==0) {
             $self->hint('changelog-empty-entry')
               unless $latest_entry->Distribution eq 'UNRELEASED';

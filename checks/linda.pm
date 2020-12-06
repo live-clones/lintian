@@ -33,9 +33,8 @@ with 'Lintian::Check';
 sub visit_installed_files {
     my ($self, $file) = @_;
 
-    if ($file->name =~ m,^usr/share/linda/overrides/\S+,) {
-        $self->hint('package-contains-linda-override', $file->name);
-    }
+    $self->hint('package-contains-linda-override', $file->name)
+      if $file->name =~ m{^usr/share/linda/overrides/\S+};
 
     return;
 }

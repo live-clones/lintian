@@ -35,7 +35,7 @@ sub visit_installed_files {
 
     # /etc/emacs.*
     if (   $file->is_file
-        && $file->name =~ m,^etc/emacs.*/\S,
+        && $file->name =~ m{^etc/emacs.*/\S}
         && $file->operm != 0644) {
 
         $self->hint('bad-permissions-for-etc-emacs-script',

@@ -45,12 +45,12 @@ sub visit_installed_files {
     my $ppkg = $self->ppkg;
 
     # misplaced overrides
-    if ($file->name =~ m,^usr/share/doc/$ppkg/override\.[lL]intian(?:\.gz)?$,
-        or $file->name =~ m,^usr/share/lintian/overrides/$ppkg/.+,) {
+    if ($file->name =~ m{^usr/share/doc/$ppkg/override\.[lL]intian(?:\.gz)?$}
+        || $file->name =~ m{^usr/share/lintian/overrides/$ppkg/.+}) {
 
         $self->hint('override-file-in-wrong-location', $file->name);
 
-    } elsif ($file->name =~ m,^usr/share/lintian/overrides/(.+)/.+$,) {
+    } elsif ($file->name =~ m{^usr/share/lintian/overrides/(.+)/.+$}) {
 
         $self->hint('override-file-in-wrong-package', $file->name)
           unless $1 eq $self->processable->name;

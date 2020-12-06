@@ -111,7 +111,7 @@ sub source {
     }
 
     while (<$rules_fd>) {
-        while (s,\\$,, and defined(my $cont = <$rules_fd>)) {
+        while (s/\\$// && defined(my $cont = <$rules_fd>)) {
             $_ .= $cont;
         }
         if (/^ifn?(?:eq|def)\s/) {
@@ -167,7 +167,7 @@ sub source {
             }
             $seencommand = 1;
             $needbuilddepends = 1;
-        } elsif (m,^(?:$command_prefix_pattern)dh\s+,) {
+        } elsif (m{^(?:$command_prefix_pattern)dh\s+}) {
             $build_systems{'dh'} = 1;
             delete($build_systems{'debhelper'});
             $seen_dh = 1;
@@ -208,8 +208,10 @@ sub source {
                     }
                 }
             }
-        } elsif (m,^include\s+/usr/share/cdbs/1/rules/debhelper.mk,
-            or m,^include\s+/usr/share/R/debian/r-cran.mk,) {
+
+        } elsif (m{^include\s+/usr/share/cdbs/1/rules/debhelper.mk}
+            || m{^include\s+/usr/share/R/debian/r-cran.mk}) {
+
             $build_systems{'cdbs-with-debhelper.mk'} = 1;
             delete($build_systems{'cdbs-without-debhelper.mk'});
             $seencommand = 1;
@@ -281,10 +283,11 @@ sub source {
                   if length $missingauto;
             }
 
-        } elsif (m,^include\s+/usr/share/cdbs/,) {
+        } elsif (m{^include\s+/usr/share/cdbs/}) {
             $inclcdbs = 1;
             $build_systems{'cdbs-without-debhelper.mk'} = 1
               if not exists($build_systems{'cdbs-with-debhelper.mk'});
+
         } elsif (
             m{
               ^include \s+
@@ -359,18 +362,22 @@ sub source {
         my $binpkg = $proc->name;
         my $breaks = $processable->binary_relation($binpkg, 'Breaks');
         my $strong = $processable->binary_relation($binpkg, 'strong');
+
         $self->hint('package-uses-dh-runit-but-lacks-breaks-substvar', $binpkg)
           if $seen{'runit'}
-          and $strong->implies('runit')
-          and any { m,^etc/sv/, } $proc->installed->sorted_list
-          and not $breaks->implies('${runit:Breaks}');
+          && $strong->implies('runit')
+          && (any { m{^etc/sv/} } $proc->installed->sorted_list)
+          && !$breaks->implies('${runit:Breaks}');
     }
 
     my $compatnan = 0;
     my $compatvirtual;
     my $compat_file = $droot->child('compat');
+
     my $visit = sub {
-        return 0 unless m,^debhelper-compat \(= (\d+)\)$,;
+        return 0
+          unless m{^debhelper-compat \(= (\d+)\)$};
+
         $level = $1;
         $compatvirtual = $level;
         $self->hint('debhelper-compat-virtual-relation', $compatvirtual);
@@ -703,9 +710,8 @@ sub check_dh_exec {
 
     # Only /usr/bin/dh-exec is allowed, even if
     # /usr/lib/dh-exec/dh-exec-subst works too.
-    if ($cmd =~ m,/usr/lib/dh-exec/,) {
-        $self->hint('dh-exec-private-helper', $path);
-    }
+    $self->hint('dh-exec-private-helper', $path)
+      if $cmd =~ m{^/usr/lib/dh-exec/};
 
     my ($dhe_subst, $dhe_install, $dhe_filter) = (0, 0, 0);
     open(my $fd, '<', $path->unpacked_path);

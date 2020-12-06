@@ -43,7 +43,7 @@ has timers => (is => 'rwp', default => sub{ [] });
 sub setup_installed_files {
     my ($self) = @_;
 
-    my @timers = grep { m,^lib/systemd/system/[^\/]+\.timer$, }
+    my @timers = grep { m{^lib/systemd/system/[^\/]+\.timer$} }
       $self->processable->installed->sorted_list;
     $self->_set_timers(\@timers);
 
@@ -54,7 +54,7 @@ sub visit_installed_files {
     my ($self, $file) = @_;
 
     $self->hint('missing-systemd-timer-for-cron-script', $file)
-      if $file->dirname =~ m,^etc/cron\.[^\/]+/$, && !scalar @{$self->timers};
+      if $file->dirname =~ m{^etc/cron\.[^\/]+/$} && !scalar @{$self->timers};
 
     return;
 }
@@ -69,7 +69,7 @@ sub installable {
     if (my $tmpfiles= $processable->installed->resolve_path('etc/tmpfiles.d/'))
     {
         for my $file ($tmpfiles->descendants) {
-            if ($file->is_file && $file->basename =~ m,\.conf$,) {
+            if ($file->is_file && $file->basename =~ m{\.conf$}) {
                 $self->hint('systemd-tmpfiles.d-outside-usr-lib', $file);
             }
         }
@@ -153,15 +153,15 @@ sub check_init_script {
 
         $lsb_source_seen = 1
           if $. == 1
-          and m{\A [#]! \s* (?:/usr/bin/env)? \s* /lib/init/init-d-script}xsm;
-        if (m,#.*Default-Start:.*S,) {
+          && m{\A [#]! \s* (?:/usr/bin/env)? \s* /lib/init/init-d-script}xsm;
+        if (m{#.*Default-Start:.*S}) {
             $is_rcs_script = 1;
         }
 
         next if /^#/;
-        if (m,(?:\.|source)\s+/lib/(?:lsb/init-functions|init/init-d-script),){
-            $lsb_source_seen = 1;
-        }
+
+        $lsb_source_seen = 1
+          if m{(?:\.|source)\s+/lib/(?:lsb/init-functions|init/init-d-script)};
     }
     close($fh);
 
@@ -194,7 +194,7 @@ sub get_systemd_service_files {
     my $processable = $self->processable;
     my @res;
     my @potential
-      = grep { m,/systemd/system/.*\.service$, }
+      = grep { m{/systemd/system/.*\.service$} }
       $processable->installed->sorted_list;
 
     for my $file (@potential) {
@@ -250,9 +250,9 @@ sub check_systemd_service_file {
       = $self->profile->load_data('systemd/wantedby-whitelist');
 
     $self->hint('systemd-service-file-outside-lib', $file)
-      if ($file =~ m,^etc/systemd/system/,);
+      if ($file =~ m{^etc/systemd/system/});
     $self->hint('systemd-service-file-outside-lib', $file)
-      if ($file =~ m,^usr/lib/systemd/system/,);
+      if ($file =~ m{^usr/lib/systemd/system/});
 
     unless ($file->is_open_ok
         || ($file->is_symlink && $file->link eq '/dev/null')) {
@@ -271,7 +271,7 @@ sub check_systemd_service_file {
         qw(ExecStart ExecStartPre ExecStartPost ExecReload ExecStop ExecStopPost)
     ) {
         $self->hint('systemd-service-file-wraps-init-script', $file, $key)
-          if any { m,^/etc/init\.d/, }
+          if any { m{^/etc/init\.d/} }
         $self->extract_service_file_values($file, 'Service', $key);
     }
 
@@ -285,7 +285,7 @@ sub check_systemd_service_file {
         # We are a "standalone" service file if we have no .path or .timer
         # equivalent.
         my $is_standalone = 1;
-        if ($file =~ m,lib/systemd/system/([^/]*?)@?\.service,) {
+        if ($file =~ m{^lib/systemd/system/([^/]*?)@?\.service$}) {
             my $service = $1;
             for my $x (qw(path timer)) {
                 $is_standalone = 0
@@ -307,19 +307,19 @@ sub check_systemd_service_file {
 
         $self->hint('systemd-service-file-missing-install-key', $file,)
           unless @wanted_by
-          or$self->extract_service_file_values($file, 'Install', 'RequiredBy')
-          or $self->extract_service_file_values($file, 'Install', 'Also')
-          or $is_oneshot
-          or not $is_standalone
-          or $file !~ m,^lib/systemd/[^\/]+/[^\/]+\.service$,
-          or $file =~ m,@\.service$,;
+          || $self->extract_service_file_values($file, 'Install', 'RequiredBy')
+          || $self->extract_service_file_values($file, 'Install', 'Also')
+          || $is_oneshot
+          || !$is_standalone
+          || $file !~ m{^lib/systemd/[^\/]+/[^\/]+\.service$}
+          || $file =~ m{@\.service$};
 
         my @pidfile
           = $self->extract_service_file_values($file,'Service','PIDFile');
         foreach my $x (@pidfile) {
             $self->hint('systemd-service-file-refers-to-var-run',
                 $file, 'PIDFile', $x)
-              if $x =~ m,^/var/run/,;
+              if $x =~ m{^/var/run/};
         }
         my $seen_hardening;
         foreach my $x ($HARDENING_FLAGS->all) {
@@ -470,7 +470,7 @@ sub extract_service_file_values {
             next;
         }
 
-        my ($key, $value) = ($_ =~ m,^(.*)\s*=\s*(.*)$,);
+        my ($key, $value) = ($_ =~ m{^(.*)\s*=\s*(.*)$});
         if (   defined($key)
             && $section eq $extract_section
             && $key eq $extract_key) {
@@ -526,13 +526,13 @@ sub check_systemd_socket_files {
 
     my @files = $self->processable->installed->sorted_list;
 
-    foreach my $file (grep { m,/systemd/system/.*\.socket$, } @files) {
+    foreach my $file (grep { m{/systemd/system/.*\.socket$} } @files) {
         my @xs
           = $self->extract_service_file_values($file,'Socket','ListenStream');
         foreach my $x (@xs) {
             $self->hint('systemd-service-file-refers-to-var-run',
                 $file, 'ListenStream', $x)
-              if $x =~ m,^/var/run/,;
+              if $x =~ m{^/var/run/};
         }
     }
 

@@ -49,15 +49,14 @@ sub visit_installed_files {
     my ($self, $file) = @_;
 
     # unusual characters
-    if ($file->name =~ m,\s+\z,) {
-        $self->hint('file-name-ends-in-whitespace', $file->name);
-    }
-    if ($file->name =~ m,/\*\z,) {
-        $self->hint('star-file', $file->name);
-    }
-    if ($file->name =~ m,/-\z,) {
-        $self->hint('hyphen-file', $file->name);
-    }
+    $self->hint('file-name-ends-in-whitespace', $file->name)
+      if $file->name =~ /\s+\z/;
+
+    $self->hint('star-file', $file->name)
+      if $file->name =~ m{/\*\z};
+
+    $self->hint('hyphen-file', $file->name)
+      if $file->name =~ m{/-\z};
 
     # check for generic bad filenames
     foreach my $tag ($self->FNAMES->all()) {

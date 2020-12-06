@@ -155,7 +155,7 @@ has objdump_info => (
                 }
             }
 
-            if ($paragraph->{'Filename'} =~ m,^(.+)\(([^/\)]+)\)$,) {
+            if ($paragraph->{'Filename'} =~ m{^(.+)\(([^/\)]+)\)$}) {
 
                 # object file in a static lib.
                 my ($lib, $obj) = ($1, $2);

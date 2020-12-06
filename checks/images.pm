@@ -33,12 +33,10 @@ with 'Lintian::Check';
 sub visit_installed_files {
     my ($self, $file) = @_;
 
-    if (    $file->name =~ m,^usr/lib/,
-        and $file->name =~ m,\.(?:bmp|gif|jpe?g|png|tiff|x[pb]m)$,
-        and not length $file->link) {
-
-        $self->hint('image-file-in-usr-lib', $file->name);
-    }
+    $self->hint('image-file-in-usr-lib', $file->name)
+      if $file->name =~ m{^usr/lib/}
+      && $file->name =~ m{\.(?:bmp|gif|jpe?g|png|tiff|x[pb]m)$}
+      && !length $file->link;
 
     return;
 }

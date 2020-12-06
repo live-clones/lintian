@@ -61,7 +61,7 @@ sub visit_installed_files {
 
     if (   $file->is_regular_file
         && $file->name
-        =~ m,/(?:[^/]-)?(?:oui|iab)(?:\.(txt|idx|db))?(?:\.$regex)?\Z,x) {
+        =~ m{/(?:[^/]-)?(?:oui|iab)(?:\.(txt|idx|db))?(?:\.$regex)?\Z}x) {
 
         # see #785662
         if (index($file->name,'oui') > -1 || index($file->name,'iab') > -1) {

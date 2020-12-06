@@ -33,10 +33,9 @@ with 'Lintian::Check';
 sub visit_installed_files {
     my ($self, $file) = @_;
 
-    if (    $file->name =~ m,^etc/ld\.so\.conf\.d/.+$,
-        and $self->processable->name !~ /^libc/){
-        $self->hint('package-modifies-ld.so-search-path', $file->name);
-    }
+    $self->hint('package-modifies-ld.so-search-path', $file->name)
+      if $file->name =~ m{^etc/ld\.so\.conf\.d/.+$}
+      && $self->processable->name !~ /^libc/;
 
     return;
 }

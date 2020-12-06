@@ -131,25 +131,25 @@ my %VCS_CANONIFY = (
 # Valid URI formats for the Vcs-* fields
 # currently only checks the protocol, not the actual format of the URI
 my %VCS_RECOMMENDED_URIS = (
-    Browser => qr;^https?://;,
-    Arch    => qr;^https?://;,
-    Bzr     => qr;^(?:lp:|(?:nosmart\+)?https?://);,
-    Cvs     => qr;^:(?:pserver:|ext:_?anoncvs);,
-    Darcs   => qr;^https?://;,
-    Hg      => qr;^https?://;,
-    Git     => qr;^(?:git|https?|rsync)://;,
-    Svn     => qr;^(?:svn|(?:svn\+)?https?)://;,
-    Mtn     => qr;^mtn://;,
+    Browser => qr{^https?://},
+    Arch    => qr{^https?://},
+    Bzr     => qr{^(?:lp:|(?:nosmart\+)?https?://)},
+    Cvs     => qr{^:(?:pserver:|ext:_?anoncvs)},
+    Darcs   => qr{^https?://},
+    Hg      => qr{^https?://},
+    Git     => qr{^(?:git|https?|rsync)://},
+    Svn     => qr{^(?:svn|(?:svn\+)?https?)://},
+    Mtn     => qr{^mtn://},
 );
 
 my %VCS_VALID_URIS = (
-    Arch    => qr;^https?://;,
-    Bzr     => qr;^(?:sftp|(?:bzr\+)?ssh)://;,
-    Cvs     => qr;^(?:-d\s*)?:(?:ext|pserver):;,
-    Hg      => qr;^ssh://;,
-    Git     => qr;^(?:git\+)?ssh://|^[\w.]+@[a-zA-Z0-9.]+:[/a-zA-Z0-9.];,
-    Svn     => qr;^(?:svn\+)?ssh://;,
-    Mtn     => qr;^[\w.-]+$;,
+    Arch    => qr{^https?://},
+    Bzr     => qr{^(?:sftp|(?:bzr\+)?ssh)://},
+    Cvs     => qr{^(?:-d\s*)?:(?:ext|pserver):},
+    Hg      => qr{^ssh://},
+    Git     => qr{^(?:git\+)?ssh://|^[\w.]+@[a-zA-Z0-9.]+:[/a-zA-Z0-9.]},
+    Svn     => qr{^(?:svn\+)?ssh://},
+    Mtn     => qr{^[\w.-]+$},
 );
 
 sub always {
@@ -250,8 +250,8 @@ sub always {
               if (any { $_ and /\s/} @parts);
 
             $self->hint('vcs-field-uses-insecure-uri', $fieldname, $uri)
-              if $parts[0] =~ m%^(?:git|(?:nosmart\+)?http|svn)://%
-              || $parts[0] =~ m%^(?:lp|:pserver):%;
+              if $parts[0] =~ m{^(?:git|(?:nosmart\+)?http|svn)://}
+              || $parts[0] =~ m{^(?:lp|:pserver):};
         }
 
         if ($VCS_CANONIFY{$platform}) {
@@ -270,7 +270,7 @@ sub always {
         if ($platform eq 'Browser') {
 
             $self->hint('vcs-browser-links-to-empty-view', $uri)
-              if $uri =~ m%rev=0&sc=0%;
+              if $uri =~ /rev=0&sc=0/;
 
         } else {
             $self->hint('vcs', lc $platform);

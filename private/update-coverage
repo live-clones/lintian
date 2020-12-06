@@ -44,7 +44,7 @@ my @legacy_in_new;
 
 for my $desc (glob('checks/*.desc')) {
     for my $data (read_dpkg_control($desc)) {
-        $desc =~ s,.*/,,;
+        $desc =~ s{.*/}{};
         $desc =~ s/\.desc$//;
         if (exists $data->{Tag}) {
             $tags{$data->{Tag}} = $desc;

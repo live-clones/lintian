@@ -311,7 +311,7 @@ sub source {
 
     my $area = $processable->debian_control->source_fields->value('Section');
 
-    if ($area =~ m%^([^/]+)/%) {
+    if ($area =~ m{^([^/]+)/}) {
         $area = $1;
     } else {
         $area = 'main';
@@ -351,7 +351,7 @@ sub source {
         next
           unless length $area && length $bin_area;
 
-        if ($bin_area =~ m%^([^/]+)/%) {
+        if ($bin_area =~ m{^([^/]+)/}) {
             $bin_area = $1;
         } else {
             $bin_area = 'main';

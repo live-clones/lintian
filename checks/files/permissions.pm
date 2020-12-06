@@ -89,8 +89,8 @@ sub visit_installed_files {
             }
 
             # 2nd special case: program is a setgid game
-            if (   $file->name =~ m,^usr/lib/games/\S+,
-                or $file->name =~ m,^usr/games/\S+,) {
+            if (   $file->name =~ m{^usr/lib/games/\S+}
+                || $file->name =~ m{^usr/games/\S+}) {
 
                 # setgid games is ok, so remove it
                 undef $setgid
@@ -99,7 +99,7 @@ sub visit_installed_files {
 
             # 3rd special case: allow anything with suid in the name
             undef $setuid
-              if $self->processable->name =~ m,-suid,;
+              if $self->processable->name =~ /-suid/;
 
             # Check for setuid and setgid that isn't expected.
             if ($setuid and $setgid) {
@@ -147,21 +147,20 @@ sub visit_installed_files {
             # general: normal (non-executable) files
 
             # special case first: game data
-            if (    $file->operm == 0664
-                and $file->identity eq 'root/games'
-                and $file->name =~ m,^var/(lib/)?games/\S+,) {
+            if (   $file->operm == 0664
+                && $file->identity eq 'root/games'
+                && $file->name =~ m{^var/(lib/)?games/\S+}) {
                 # everything is ok
 
-            } elsif ($file->name =~ m,^usr/lib/.*\.ali$,) {
+            } elsif ($file->name =~ m{^usr/lib/.*\.ali$}) {
                 # GNAT compiler wants read-only Ada library information.
                 $self->hint('bad-permissions-for-ali-file', $file->name)
                   unless $file->operm == 0444;
 
-            } elsif ($file->operm == 0600 and $file->name =~ m,^etc/backup.d/,)
-            {
+            } elsif ($file->operm == 0600 && $file->name =~ m{^etc/backup.d/}){
                 # backupninja expects configurations files to be 0600
 
-            } elsif ($file->name =~ m,^etc/sudoers.d/,) {
+            } elsif ($file->name =~ m{^etc/sudoers.d/}) {
                 # sudo requires sudoers files to be mode 0440
                 $self->hint('bad-perm-for-file-in-etc-sudoers.d',
                     $file->name,sprintf('%04o != 0440', $file->operm))
@@ -177,9 +176,9 @@ sub visit_installed_files {
 
         # special cases first:
         # game directory with setgid bit
-        if (    $file->name =~ m,^var/(?:lib/)?games/\S+,
-            and $file->operm == 02775
-            and $file->identity eq 'root/games') {
+        if (   $file->name =~ m{^var/(?:lib/)?games/\S+}
+            && $file->operm == 02775
+            && $file->identity eq 'root/games') {
             # do nothing, this is allowed, but not mandatory
 
         } elsif ((

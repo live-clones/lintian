@@ -25,6 +25,8 @@ use warnings;
 use utf8;
 use autodie;
 
+use List::SomeUtils qw(any);
+
 use Moo;
 use namespace::clean;
 
@@ -32,8 +34,8 @@ with 'Lintian::Check';
 
 # A list of known non-free flash executables
 my @flash_nonfree = (
-    qr<(?i)dewplayer(?:-\w+)?\.swf$>,
-    qr<(?i)(?:mp3|flv)player\.swf$>,
+    qr/(?i)dewplayer(?:-\w+)?\.swf$/,
+    qr/(?i)(?:mp3|flv)player\.swf$/,
     # Situation needs to be clarified:
     #    qr,(?i)multipleUpload\.swf$,
     #    qr,(?i)xspf_jukebox\.swf$,
@@ -47,11 +49,8 @@ sub visit_installed_files {
       if $self->processable->is_non_free;
 
     # non-free .swf files
-    foreach my $flash (@flash_nonfree) {
-        if ($file->name =~ m,/$flash,) {
-            $self->hint('non-free-flash', $file->name);
-        }
-    }
+    $self->hint('non-free-flash', $file->name)
+      if any { $file->name =~ m{/$_} } @flash_nonfree;
 
     return;
 }

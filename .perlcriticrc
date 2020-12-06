@@ -229,7 +229,7 @@ functions = open opendir chdir read readdir readline closedir sysopen sysread sy
 
 [RegularExpressions::ProhibitUnusedCapture]
 
-[-RegularExpressions::ProhibitUnusualDelimiters]
+[RegularExpressions::ProhibitUnusualDelimiters]
 
 [-RegularExpressions::RequireDotMatchAnything]
 

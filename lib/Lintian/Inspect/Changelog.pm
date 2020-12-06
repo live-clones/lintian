@@ -193,7 +193,7 @@ m/^(?<Source>\w[-+0-9a-z.]*) \((?<Version>[^\(\) \t]+)\)(?<Distribution>(?:\s+[-
         } elsif (/^\# /) {
             next; # skip comments, even that's not supported
 
-        } elsif (m,^/\*.*\*/,) {
+        } elsif (m{^/\*.*\*/}) {
             next; # more comments
 
         } elsif (

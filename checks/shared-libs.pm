@@ -72,8 +72,8 @@ sub installable {
 
     foreach my $file ($processable->installed->sorted_list) {
         $SHARED_LIB_PRESENT{$1} = 1
-          if $file =~ m%.*\/lib([^/]+)\.so(?:\.\d+){0,3}$%;
-        $STATIC_LIB_PRESENT{$1} = 1 if $file =~ m,.*\/lib([^/]+)\.a$,;
+          if $file =~ /\/lib([^\/]+)\.so(?:\.\d+){0,3}$/;
+        $STATIC_LIB_PRESENT{$1} = 1 if $file =~ m{/lib([^/]+)\.a$};
         next if not $file->is_file;
         my $fileinfo = $file->file_info;
         if (   $fileinfo =~ m/^[^,]*\bELF\b/
@@ -158,7 +158,7 @@ sub installable {
                 # special.
                 $self->hint('shared-library-is-executable', $cur_file, $perms)
                   unless ($objdump->{$cur_file}{INTERP}
-                    or $cur_file =~ m,^lib.*/ld-[\d.]+\.so$,);
+                    || $cur_file =~ m{^lib.*/ld-[\d.]+\.so$});
             } elsif ($perm != 0644) {
                 $self->hint('odd-permissions-on-shared-library',
                     $cur_file, $perms);
@@ -189,14 +189,14 @@ sub installable {
                 if ($field eq 'libdir') {
                     # dirname with leading slash and without the trailing one.
                     my $expected = '/' . substr($cur_file->dirname, 0, -1);
-                    $value =~ s,/+$,,;
+                    $value =~ s{/+$}{};
 
                     # python-central is a special case since the
                     # libraries are moved at install time.
                     next
                       if ($value
-                        =~ m,^/usr/lib/python[\d.]+/(?:site|dist)-packages,
-                        and $expected =~ m,^/usr/share/pyshared,);
+                        =~ m{^/usr/lib/python[\d.]+/(?:site|dist)-packages}
+                        and $expected =~ m{^/usr/share/pyshared});
                     $self->hint('incorrect-libdir-in-la-file', $cur_file,
                         "$value != $expected")
                       unless($expected eq $value);
@@ -216,7 +216,7 @@ sub installable {
             die "shlib $shlib_file not found in package (should not happen!)";
         }
 
-        my ($dir, $shlib_name) = $shlib_file =~ m,(.*)/([^/]+)$,;
+        my ($dir, $shlib_name) = $shlib_file =~ m{(.*)/([^/]+)$};
 
         # not a public shared library, skip it
         next unless $ldconfig_dirs->known($dir);
@@ -280,7 +280,7 @@ sub installable {
 
             # If the shared library is in /lib, we have to look for
             # the dev symlink in /usr/lib
-            $link_file = "usr/$link_file" unless $shlib_file =~ m,^usr/,;
+            $link_file = "usr/$link_file" unless $shlib_file =~ m{^usr/};
 
             push @alt, $link_file;
 
@@ -513,7 +513,7 @@ sub installable {
                     foreach my $part (split /\s*,\s*/) {
                         foreach my $subpart (split /\s*\|\s*/, $part) {
                             $subpart
-                              =~ m,^(\S+)(\s*(?:\(\S+\s+\S+\)|#MINVER#))?$,;
+                              =~ m{^(\S+)(\s*(?:\(\S+\s+\S+\)|#MINVER#))?$};
                             ($dep_package, $dep) = ($1, $2 || '');
                             if (defined $dep_package) {
                                 push @symbols_depends, $dep_package . $dep;
@@ -543,7 +543,7 @@ sub installable {
 
                 foreach my $part (split /\s*,\s*/) {
                     foreach my $subpart (split /\s*\|\s*/, $part) {
-                        $subpart =~ m,^(\S+)(\s*(?:\(\S+\s+\S+\)|#MINVER#))?$,;
+                        $subpart =~ m{^(\S+)(\s*(?:\(\S+\s+\S+\)|#MINVER#))?$};
                         ($dep_package, $dep) = ($1, $2 || '');
                         if (defined $dep_package) {
                             push @symbols_depends, $dep_package . $dep;
@@ -781,7 +781,10 @@ sub format_soname {
 # to a libc nss plugin (libnss_<name>.so.$version).
 sub is_nss_plugin {
     my ($path) = @_;
-    return 1 if $path =~ m,^(.*/)?libnss_[^.]+\.so\.\d+$,;
+
+    return 1
+      if $path =~ m{^(.*/)?libnss_[^.]+\.so\.\d+$};
+
     return 0;
 }
 
@@ -797,12 +800,17 @@ sub needs_ldconfig {
     my $dirname = dirname($file);
     my $last;
     do {
-        $dirname =~ s%/([^/]+)$%%;
+        $dirname =~ s{/([^/]+)$}{};
         $last = $1;
+
     } while ($last && $HWCAP_DIRS->known($last));
+
     $dirname .= "/$last" if $last;
+
     # yes! so postinst must call ldconfig
-    return 1 if $ldconfig_dirs->known($dirname);
+    return 1
+      if $ldconfig_dirs->known($dirname);
+
     return 0;
 }
 

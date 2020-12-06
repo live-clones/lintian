@@ -190,83 +190,83 @@ my @depends_needed = (
 );
 
 my @bashism_single_quote_regexs = (
-    $LEADIN . qr'echo\s+(?:-[^e\s]+\s+)?\'[^\']*(\\[abcEfnrtv0])+.*?[\']',
+    $LEADIN . qr{echo\s+(?:-[^e\s]+\s+)?\'[^\']*(\\[abcEfnrtv0])+.*?[\']},
     # unsafe echo with backslashes
-    $LEADIN . qr'source\s+[\"\']?(?:\.\/|[\/\$\w~.-])\S*',
+    $LEADIN . qr{source\s+[\"\']?(?:\.\/|[\/\$\w~.-])\S*},
     # should be '.', not 'source'
 );
 my @bashism_string_regexs = (
-    qr'\$\[\w+\]',               # arith not allowed
-    qr'\$\{\w+\:\d+(?::\d+)?\}',   # ${foo:3[:1]}
-    qr'\$\{\w+(/.+?){1,2}\}',    # ${parm/?/pat[/str]}
-    qr'\$\{\#?\w+\[[0-9\*\@]+\]\}',# bash arrays, ${name[0|*|@]}
-    qr'\$\{!\w+[\@*]\}',                 # ${!prefix[*|@]}
-    qr'\$\{!\w+\}',              # ${!name}
-    qr'(\$\(|\`)\s*\<\s*\S+\s*([\)\`])', # $(\< foo) should be $(cat foo)
-    qr'\$\{?RANDOM\}?\b',                # $RANDOM
-    qr'\$\{?(OS|MACH)TYPE\}?\b',   # $(OS|MACH)TYPE
-    qr'\$\{?HOST(TYPE|NAME)\}?\b', # $HOST(TYPE|NAME)
-    qr'\$\{?DIRSTACK\}?\b',        # $DIRSTACK
-    qr'\$\{?EUID\}?\b',            # $EUID should be "id -u"
-    qr'\$\{?UID\}?\b',           # $UID should be "id -ru"
-    qr'\$\{?SECONDS\}?\b',       # $SECONDS
-    qr'\$\{?BASH_[A-Z]+\}?\b',     # $BASH_SOMETHING
-    qr'\$\{?SHELLOPTS\}?\b',       # $SHELLOPTS
-    qr'\$\{?PIPESTATUS\}?\b',      # $PIPESTATUS
-    qr'\$\{?SHLVL\}?\b',                 # $SHLVL
-    qr'<<<',                       # <<< here string
-    $LEADIN . qr'echo\s+(?:-[^e\s]+\s+)?\"[^\"]*(\\[abcEfnrtv0])+.*?[\"]',
+    qr/\$\[\w+\]/,               # arith not allowed
+    qr/\$\{\w+\:\d+(?::\d+)?\}/,   # ${foo:3[:1]}
+    qr/\$\{\w+(\/.+?){1,2}\}/,    # ${parm/?/pat[/str]}
+    qr/\$\{\#?\w+\[[0-9\*\@]+\]\}/,# bash arrays, ${name[0|*|@]}
+    qr/\$\{!\w+[\@*]\}/,                 # ${!prefix[*|@]}
+    qr/\$\{!\w+\}/,              # ${!name}
+    qr/(\$\(|\`)\s*\<\s*\S+\s*([\)\`])/, # $(\< foo) should be $(cat foo)
+    qr/\$\{?RANDOM\}?\b/,                # $RANDOM
+    qr/\$\{?(OS|MACH)TYPE\}?\b/,   # $(OS|MACH)TYPE
+    qr/\$\{?HOST(TYPE|NAME)\}?\b/, # $HOST(TYPE|NAME)
+    qr/\$\{?DIRSTACK\}?\b/,        # $DIRSTACK
+    qr/\$\{?EUID\}?\b/,            # $EUID should be "id -u"
+    qr/\$\{?UID\}?\b/,           # $UID should be "id -ru"
+    qr/\$\{?SECONDS\}?\b/,       # $SECONDS
+    qr/\$\{?BASH_[A-Z]+\}?\b/,     # $BASH_SOMETHING
+    qr/\$\{?SHELLOPTS\}?\b/,       # $SHELLOPTS
+    qr/\$\{?PIPESTATUS\}?\b/,      # $PIPESTATUS
+    qr/\$\{?SHLVL\}?\b/,                 # $SHLVL
+    qr/<<</,                       # <<< here string
+    $LEADIN . qr/echo\s+(?:-[^e\s]+\s+)?\"[^\"]*(\\[abcEfnrtv0])+.*?[\"]/,
     # unsafe echo with backslashes
 );
 my @bashism_regexs = (
-    qr'(?:^|\s+)function \w+(\s|\(|\Z)',  # function is useless
-    qr'(test|-o|-a)\s*[^\s]+\s+==\s', # should be 'b = a'
-    qr'\[\s+[^\]]+\s+==\s',        # should be 'b = a'
-    qr'\s(\|\&)',                        # pipelining is not POSIX
-    qr'[^\\\$]\{(?:[^\s\\\}]*?,)+[^\\\}\s]*\}', # brace expansion
-    qr'(?:^|\s+)\w+\[\d+\]=',      # bash arrays, H[0]
-    $LEADIN . qr'read\s+(?:-[a-qs-zA-Z\d-]+)',
+    qr/(?:^|\s+)function \w+(\s|\(|\Z)/,  # function is useless
+    qr/(test|-o|-a)\s*[^\s]+\s+==\s/, # should be 'b = a'
+    qr/\[\s+[^\]]+\s+==\s/,        # should be 'b = a'
+    qr/\s(\|\&)/,                        # pipelining is not POSIX
+    qr/[^\\\$]\{(?:[^\s\\\}]*?,)+[^\\\}\s]*\}/, # brace expansion
+    qr/(?:^|\s+)\w+\[\d+\]=/,      # bash arrays, H[0]
+    $LEADIN . qr/read\s+(?:-[a-qs-zA-Z\d-]+)/,
     # read with option other than -r
-    $LEADIN . qr'read\s*(?:-\w+\s*)*(?:\".*?\"|[\'].*?[\'])?\s*(?:;|$)',
+    $LEADIN . qr/read\s*(?:-\w+\s*)*(?:\".*?\"|[\'].*?[\'])?\s*(?:;|$)/,
     # read without variable
-    qr'\&>',                     # cshism
-    qr'(<\&|>\&)\s*((-|\d+)[^\s;|)`&\\\\]|[^-\d\s]+)', # should be >word 2>&1
-    qr'\[\[(?!:)',               # alternative test command
-    $LEADIN . qr'select\s+\w+',    # 'select' is not POSIX
-    $LEADIN . qr'echo\s+(-n\s+)?-n?en?',  # echo -e
-    $LEADIN . qr'exec\s+-[acl]',   # exec -c/-l/-a name
-    qr'(?:^|\s+)let\s',          # let ...
-    qr'(?<![\$\(])\(\(.*\)\)',     # '((' should be '$(('
-    qr'\$\[[^][]+\]',            # '$[' should be '$(('
-    qr'(\[|test)\s+-a',          # test with unary -a (should be -e)
-    qr'/dev/(tcp|udp)',          # /dev/(tcp|udp)
-    $LEADIN . qr'\w+\+=',                # should be "VAR="${VAR}foo"
-    $LEADIN . qr'suspend\s',
-    $LEADIN . qr'caller\s',
-    $LEADIN . qr'complete\s',
-    $LEADIN . qr'compgen\s',
-    $LEADIN . qr'declare\s',
-    $LEADIN . qr'typeset\s',
-    $LEADIN . qr'disown\s',
-    $LEADIN . qr'builtin\s',
-    $LEADIN . qr'set\s+-[BHT]+',   # set -[BHT]
-    $LEADIN . qr'alias\s+-p',      # alias -p
-    $LEADIN . qr'unalias\s+-a',    # unalias -a
-    $LEADIN . qr'local\s+-[a-zA-Z]+', # local -opt
-    qr'(?:^|\s+)\s*\(?\w*[^\(\w\s]+\S*?\s*\(\)\s*([\{|\(]|\Z)',
+    qr/\&>/,                     # cshism
+    qr/(<\&|>\&)\s*((-|\d+)[^\s;|)`&\\\\]|[^-\d\s]+)/, # should be >word 2>&1
+    qr/\[\[(?!:)/,               # alternative test command
+    $LEADIN . qr/select\s+\w+/,    # 'select' is not POSIX
+    $LEADIN . qr/echo\s+(-n\s+)?-n?en?/,  # echo -e
+    $LEADIN . qr/exec\s+-[acl]/,   # exec -c/-l/-a name
+    qr/(?:^|\s+)let\s/,          # let ...
+    qr/(?<![\$\(])\(\(.*\)\)/,     # '((' should be '$(('
+    qr/\$\[[^][]+\]/,            # '$[' should be '$(('
+    qr/(\[|test)\s+-a/,          # test with unary -a (should be -e)
+    qr{/dev/(tcp|udp)},          # /dev/(tcp|udp)
+    $LEADIN . qr/\w+\+=/,                # should be "VAR="${VAR}foo"
+    $LEADIN . qr/suspend\s/,
+    $LEADIN . qr/caller\s/,
+    $LEADIN . qr/complete\s/,
+    $LEADIN . qr/compgen\s/,
+    $LEADIN . qr/declare\s/,
+    $LEADIN . qr/typeset\s/,
+    $LEADIN . qr/disown\s/,
+    $LEADIN . qr/builtin\s/,
+    $LEADIN . qr/set\s+-[BHT]+/,   # set -[BHT]
+    $LEADIN . qr/alias\s+-p/,      # alias -p
+    $LEADIN . qr/unalias\s+-a/,    # unalias -a
+    $LEADIN . qr/local\s+-[a-zA-Z]+/, # local -opt
+    qr/(?:^|\s+)\s*\(?\w*[^\(\w\s]+\S*?\s*\(\)\s*([\{|\(]|\Z)/,
     # function names should only contain [a-z0-9_]
-    $LEADIN . qr'(push|pop)d(\s|\Z)',   # (push|pod)d
-    $LEADIN . qr'export\s+-[^p]',  # export only takes -p as an option
-    $LEADIN . qr'ulimit(\s|\Z)',
-    $LEADIN . qr'shopt(\s|\Z)',
-    $LEADIN . qr'type\s',
-    $LEADIN . qr'time\s',
-    $LEADIN . qr'dirs(\s|\Z)',
-    qr'(?:^|\s+)[<>]\(.*?\)',      # <() process substitution
-    qr'(?:^|\s+)readonly\s+-[af]', # readonly -[af]
-    $LEADIN . qr'(sh|\$\{?SHELL\}?) -[rD]', # sh -[rD]
-    $LEADIN . qr'(sh|\$\{?SHELL\}?) --\w+', # sh --long-option
-    $LEADIN . qr'(sh|\$\{?SHELL\}?) [-+]O', # sh [-+]O
+    $LEADIN . qr/(push|pop)d(\s|\Z)/,   # (push|pod)d
+    $LEADIN . qr/export\s+-[^p]/,  # export only takes -p as an option
+    $LEADIN . qr/ulimit(\s|\Z)/,
+    $LEADIN . qr/shopt(\s|\Z)/,
+    $LEADIN . qr/type\s/,
+    $LEADIN . qr/time\s/,
+    $LEADIN . qr/dirs(\s|\Z)/,
+    qr/(?:^|\s+)[<>]\(.*?\)/,      # <() process substitution
+    qr/(?:^|\s+)readonly\s+-[af]/, # readonly -[af]
+    $LEADIN . qr/(sh|\$\{?SHELL\}?) -[rD]/, # sh -[rD]
+    $LEADIN . qr/(sh|\$\{?SHELL\}?) --\w+/, # sh --long-option
+    $LEADIN . qr/(sh|\$\{?SHELL\}?) [-+]O/, # sh [-+]O
 );
 
 # a local function to help use separate tags for example scripts
@@ -274,7 +274,7 @@ sub script_tag {
     my($self, $tag, $filename, @rest) = @_;
 
     $tag = "example-$tag"
-      if $filename and $filename =~ m,usr/share/doc/[^/]+/examples/,;
+      if $filename && $filename =~ m{^usr/share/doc/[^/]+/examples/};
 
     $self->hint(($tag, $filename, @rest));
     return;
@@ -304,7 +304,7 @@ sub installable {
     my $str_deps = $processable->relation('strong');
 
     my @x11_fonts
-      = grep {m,^usr/share/fonts/X11/.*\.(?:afm|pcf|pfa|pfb)(?:\.gz)?$,}
+      = grep { m{^usr/share/fonts/X11/.*\.(?:afm|pcf|pfa|pfb)(?:\.gz)?$} }
       $processable->installed->sorted_list;
 
     my %old_versions;
@@ -337,28 +337,28 @@ sub installable {
         # Supposedly, they could be checked as examples, but there is
         # a risk that the scripts need substitution to be complete
         # (so, syntax checking is not as reliable).
-        my $in_docs = $filename =~ m,^usr/(?:share/doc|src)/,;
-        my $in_examples = $filename =~ m,^usr/share/doc/[^/]+/examples/,;
+        my $in_docs = $filename =~ m{^usr/(?:share/doc|src)/};
+        my $in_examples = $filename =~ m{^usr/share/doc/[^/]+/examples/};
 
         # no checks necessary at all for scripts in /usr/share/doc/
         # unless they are examples
         next
           if $in_docs && !$in_examples;
 
-        my ($base) = $interpreter =~ m,([^/]*)$,;
+        my ($base) = $interpreter =~ m{([^/]*)$};
 
         # Ignore Python scripts that are shipped under dist-packages; these
         # files aren't supposed to be called as scripts.
         next
           if $base eq 'python'
-          and $filename =~ m,^usr/lib/python3/dist-packages/,;
+          && $filename =~ m{^usr/lib/python3/dist-packages/};
 
         # allow exception for .in files that have stuff like #!@PERL@
         next
-          if (  $filename =~ m,\.in$,
-            and $interpreter =~ m,^(\@|<\<)[A-Z_]+(\@|>\>)$,);
+          if $filename =~ /\.in$/
+          && $interpreter =~ /^(\@|<\<)[A-Z_]+(\@|>\>)$/;
 
-        my $is_absolute = ($interpreter =~ m,^/, or $calls_env);
+        my $is_absolute = ($interpreter =~ m{^/} || $calls_env);
 
         # As a special-exception, Policy 10.4 states that Perl scripts must use
         # /usr/bin/perl directly and not via /usr/bin/env, etc.
@@ -371,7 +371,7 @@ sub installable {
         # (/usr/bin, /bin etc).  They are probably not scripts after
         # all.
         next
-          if ( $filename !~ m,(?:bin/|etc/init\.d/),
+          if ( $filename !~ m{(?:bin/|etc/init\.d/)}
             && !$executable{$filename}
             && !$is_absolute
             && !$in_examples);
@@ -390,7 +390,7 @@ sub installable {
 
         # Skip upstream source code shipped in /usr/share/cargo/registry/
         next
-          if $filename =~ m,^usr/share/cargo/registry/,;
+          if $filename =~ m{^usr/share/cargo/registry/};
 
         if ($interpreter eq '') {
             $self->script_tag('script-without-interpreter', $filename);
@@ -406,20 +406,19 @@ sub installable {
           = qr{^usr/share/bash-completion/completions/.*};
 
         $self->hint('script-not-executable', $filename)
-          unless (
-               $executable{$filename}
-            or $filename =~ m,^usr/(?:lib|share)/.*\.pm,
-            or $filename =~ m,^usr/(?:lib|share)/.*\.py,
-            or $filename =~ m,^usr/(?:lib|share)/ruby/.*\.rb,
-            or $filename =~ m,^usr/share/debconf/confmodule(?:\.sh)?$,
-            or $filename =~ m,\.in$,
-            or $filename =~ m,\.erb$,
-            or $filename =~ m,\.ex$,
-            or $filename eq 'etc/init.d/skeleton'
-            or $filename =~ m,^etc/menu-methods,
-            or $filename =~ $bash_completion_regex,
-            or $filename =~ m,^etc/X11/Xsession\.d,
-          )or $in_docs;
+          unless$executable{$filename}
+          || $filename =~ m{^usr/(?:lib|share)/.*\.pm}
+          || $filename =~ m{^usr/(?:lib|share)/.*\.py}
+          || $filename =~ m{^usr/(?:lib|share)/ruby/.*\.rb}
+          || $filename =~ m{^usr/share/debconf/confmodule(?:\.sh)?$}
+          || $filename =~ /\.in$/
+          || $filename =~ /\.erb$/
+          || $filename =~ /\.ex$/
+          || $filename eq 'etc/init.d/skeleton'
+          || $filename =~ m{^etc/menu-methods}
+          || $filename =~ $bash_completion_regex
+          || $filename =~ m{^etc/X11/Xsession\.d}
+          || $in_docs;
 
         # for bash completion issue this instead
         $self->hint('bash-completion-with-hashbang', $filename)
@@ -427,10 +426,10 @@ sub installable {
 
         # Warn about csh scripts.
         $self->hint('csh-considered-harmful', $filename)
-          if (  ($base eq 'csh' or $base eq 'tcsh')
-            and $executable{$filename}
-            and $filename !~ m,^etc/csh/login\.d/,)
-          and not $in_docs;
+          if ( ($base eq 'csh' || $base eq 'tcsh')
+            && $executable{$filename}
+            && $filename !~ m{^etc/csh/login\.d/})
+          && !$in_docs;
 
         next
           unless $file->is_open_ok;
@@ -439,12 +438,12 @@ sub installable {
         # at exit 0 and goes on to blow up on the patch itself.
         if ($base =~ /^$known_shells_regex$/) {
             if (
-                    -x $interpreter
-                and not script_is_evil_and_wrong($file)
-                and $filename !~ m,\.dpatch$,
-                and $filename !~ m,\.erb$,
+                   -x $interpreter
+                && !script_is_evil_and_wrong($file)
+                && $filename !~ /\.dpatch$/
+                && $filename !~ /\.erb$/
                 # exclude some shells. zsh -n is broken, see #485885
-                and $base !~ m/^(?:z|t?c)sh$/
+                && $base !~ m/^(?:z|t?c)sh$/
             ) {
 
                 if (check_script_syntax($interpreter, $file)) {
@@ -475,7 +474,7 @@ sub installable {
                 $self->script_tag(bad_interpreter_tag_name($expected),
                     $filename, "(#!$interpreter != $expected)");
             }
-        } elsif ($interpreter =~ m,/usr/local/,) {
+        } elsif ($interpreter =~ m{^/usr/local/}) {
             $self->script_tag('interpreter-in-usr-local', $filename,
                 "#!$interpreter");
         } elsif ($interpreter eq '/bin/env') {
@@ -494,7 +493,7 @@ sub installable {
             $data = $self->INTERPRETERS->value('php');
         } else {
             my $pinter = 0;
-            if ($interpreter =~ m,^/,) {
+            if ($interpreter =~ m{^/}) {
                 # Check if the package ships the interpreter (and it is
                 # executable).
                 my $interfile = substr $interpreter, 1;
@@ -561,9 +560,9 @@ sub installable {
                         "$base-script-but-no-$base-dep",$filename,
                         "#!$interpreter"
                     ));
-                } elsif ($base eq 'csh' && $filename =~ m,^etc/csh/login\.d/,){
+                } elsif ($base eq 'csh' && $filename =~ m{^etc/csh/login\.d/}){
                     # Initialization files for csh.
-                } elsif ($base eq 'fish' && $filename =~ m,^etc/fish\.d/,) {
+                } elsif ($base eq 'fish' && $filename =~ m{^etc/fish\.d/}) {
                     # Initialization files for fish.
                 } elsif (
                     $base eq 'ocamlrun'
@@ -635,11 +634,11 @@ sub installable {
         $self->hint('executable-not-elf-or-script', $name)
           unless (
                $ok
-            or $ELF{$name}
-            or $scripts{$name}
-            or $name =~ m,^usr(?:/X11R6)?/man/,
-            or $name =~ m/\.exe$/ # mono convention
-            or $name =~ m/\.jar$/ # Debian Java policy 2.2
+            || $ELF{$name}
+            || $scripts{$name}
+            || $name =~ m{^usr(?:/X11R6)?/man/}
+            || $name =~ m/\.exe$/ # mono convention
+            || $name =~ m/\.jar$/ # Debian Java policy 2.2
           );
     }
 
@@ -667,7 +666,7 @@ sub installable {
             $interpreter =~ s/^(\S+).*/$1/;
         }
 
-        $interpreter =~ m|([^/]*)$|;
+        $interpreter =~ m{([^/]*)$};
         my $base = $1;
 
         # tag for statistics
@@ -686,9 +685,9 @@ sub installable {
 
         $self->hint('interpreter-not-absolute', "control/$file",
             "#!$interpreter")
-          unless ($interpreter =~ m|^/|);
+          unless ($interpreter =~ m{^/});
 
-        if ($interpreter =~ m|/usr/local/|) {
+        if ($interpreter =~ m{^/usr/local/}) {
             $self->hint('control-interpreter-in-usr-local',
                 "control/$file","#!$interpreter");
         } elsif ($base eq 'sh' or $base eq 'bash' or $base eq 'perl') {
@@ -780,7 +779,7 @@ sub installable {
         my $previous_line = '';
         my $in_automatic_section = 0;
         while (<$fd>) {
-            if ($. == 1 && $shellscript && m,/$base\s*.*\s-\w*e\w*\b,) {
+            if ($. == 1 && $shellscript && m{/$base\s*.*\s-\w*e\w*\b}) {
                 $saw_bange = 1;
             }
 
@@ -797,11 +796,11 @@ sub installable {
 
             # skip empty lines
             next
-              if m,^\s*$,;
+              if /^\s*$/;
 
             # skip comment lines
             next
-              if m,^\s*\#,;
+              if /^\s*\#/;
             $_ = remove_comments($_);
 
             # Concatenate lines containing continuation character (\)
@@ -832,16 +831,16 @@ sub installable {
             }
 
             if ($shellscript
-                && m,${LEADIN}set\s*(?:\s+-(?:-.*|[^e]+))*\s-\w*e,) {
+                && /${LEADIN}set\s*(?:\s+-(?:-.*|[^e]+))*\s-\w*e/) {
                 $saw_sete = 1;
             }
 
-            if (m,$LEADIN(?:/usr/bin/)?dpkg-statoverride\s,) {
+            if (m{$LEADIN(?:/usr/bin/)?dpkg-statoverride\s}) {
                 $saw_statoverride_add = $. if /--add/;
                 $saw_statoverride_list = 1 if /--list/;
             }
 
-            if (m,$LEADIN(?:/usr/bin/)?dpkg-maintscript-helper\s(\S+),) {
+            if (m{$LEADIN(?:/usr/bin/)?dpkg-maintscript-helper\s(\S+)}) {
                 my $cmd = $1;
                 $seen_helper_cmds{$cmd} = () unless $seen_helper_cmds{$cmd};
                 $seen_helper_cmds{$cmd}{$file} = 1;
@@ -849,17 +848,17 @@ sub installable {
 
             $saw_update_fonts = 1
               if
-              m,$LEADIN(?:/usr/bin/)?update-fonts-(?:alias|dir|scale)\s(\S+),;
+              m{$LEADIN(?:/usr/bin/)?update-fonts-(?:alias|dir|scale)\s(\S+)};
 
             $saw_udevadm_guard = 1 if m/\b(if|which|command)\s+.*udevadm/g;
-            if (m,$LEADIN(?:/bin/)?udevadm\s, and $saw_sete) {
+            if (m{$LEADIN(?:/bin/)?udevadm\s} && $saw_sete) {
                 $self->hint('udevadm-called-without-guard', "$file:$.")
                   unless $saw_udevadm_guard
                   or m/\|\|/
                   or $str_deps->implies('udev');
             }
 
-            if (    m,[^\w](?:(?:/var)?/tmp|\$TMPDIR)/[^)\]}\s],
+            if (    m{[^\w](?:(?:/var)?/tmp|\$TMPDIR)/[^)\]\}\s]}
                 and not m/\bmks?temp\b/
                 and not m/\btempfile\b/
                 and not m/\bmkdir\b/
@@ -887,12 +886,11 @@ sub installable {
             # tag direct invocations where invoke-rc.d is never used
             # in the same script.  Lots of false negatives, but
             # hopefully not many false positives.
-            if (m%^\s*/etc/init\.d/(?:\S+)\s+[\"\']?(?:\S+)[\"\']?%) {
-                $saw_init = $.;
-            }
-            if (m%^\s*invoke-rc\.d\s+%) {
-                $saw_invoke = $.;
-            }
+            $saw_init = $.
+              if m{^\s*/etc/init\.d/(?:\S+)\s+[\"\']?(?:\S+)[\"\']?};
+
+            $saw_invoke = $.
+              if m{^\s*invoke-rc\.d\s+};
 
             if ($shellscript) {
                 if ($cat_string ne '' and m/^\Q$cat_string\E$/) {
@@ -1022,9 +1020,9 @@ sub installable {
                     $self->generic_check_bad_command($_, $file, $., 0,
                         $in_automatic_section);
 
-                    if (m,/usr/share/debconf/confmodule,) {
-                        $saw_debconf = 1;
-                    }
+                    $saw_debconf = 1
+                      if m{/usr/share/debconf/confmodule};
+
                     if (m/^\s*read(?:\s|\z)/ && !$saw_debconf) {
                         $self->hint('read-in-maintainer-script', "$file:$.");
                     }
@@ -1035,13 +1033,14 @@ sub installable {
                       and ($processable->fields->value('Multi-Arch') || 'no')
                       eq 'same';
 
-                    if (m,>\s*/etc/inetd\.conf(?:\s|\Z),) {
+                    if (m{>\s*/etc/inetd\.conf(?:\s|\Z)}) {
                         $self->hint('maintainer-script-modifies-inetd-conf',
                             "$file:$.")
                           unless $processable->relation('Provides')
                           ->implies('inet-superserver');
                     }
-                    if (m,^\s*(?:cp|mv)\s+(?:.*\s)?/etc/inetd\.conf\s*$,) {
+
+                    if (m{^\s*(?:cp|mv)\s+(?:.*\s)?/etc/inetd\.conf\s*$}) {
                         $self->hint('maintainer-script-modifies-inetd-conf',
                             "$file:$.")
                           unless $processable->relation('Provides')
@@ -1058,7 +1057,7 @@ sub installable {
                     # extract all backquoted expressions and check
                     # them separately, and then remove them from a
                     # copy of a string and then check it for bashisms.
-                    while (m,\`([^\`]+)\`,g) {
+                    while (/\`([^\`]+)\`/g) {
                         my $cmd = $1;
                         if (
                             $cmd =~ m{ $LEADIN
@@ -1085,7 +1084,7 @@ sub installable {
                     }
 
                     $cmd =~ s/\`[^\`]+\`//g;
-                    if ($cmd =~ m,$LEADIN(/(?:usr/)?s?bin/[\w.+-]+)(?:\s|;|$),)
+                    if ($cmd =~ m{$LEADIN(/(?:usr/)?s?bin/[\w.+-]+)(?:\s|;|$)})
                     {
                         $self->hint('command-with-path-in-maintainer-script',
                             "$file:$. $1")
@@ -1099,9 +1098,9 @@ sub installable {
                     if (    $pkg ne $package
                         and /$regex/
                         and not $warned{$package}) {
-                        if (   m,-x\s+\S*$regex,
-                            or m,(?:which|type)\s+$regex,
-                            or m,command\s+.*?$regex,) {
+                        if (   /-x\s+\S*$regex/
+                            || /(?:which|type)\s+$regex/
+                            || /command\s+.*?$regex/) {
                             $warned{$package} = 1;
                         } elsif (!/\|\|\s*true\b/) {
                             unless ($processable->relation('strong')
@@ -1125,7 +1124,7 @@ sub installable {
             for my $ver (sort keys %old_versions) {
                 next if $ver =~ /^\d+$/;
                 if (
-m,$LEADIN(?:/usr/bin/)?dpkg\s+--compare-versions\s+.*\b\Q$ver\E(?!\.)\b,
+m{$LEADIN(?:/usr/bin/)?dpkg\s+--compare-versions\s+.*\b\Q$ver\E(?!\.)\b}
                 ) {
                     my $date= strftime('%Y-%m-%d', gmtime $old_versions{$ver});
                     my $epoch= strftime('%Y-%m-%d', gmtime $OLDSTABLE_RELEASE);
@@ -1136,7 +1135,7 @@ m,$LEADIN(?:/usr/bin/)?dpkg\s+--compare-versions\s+.*\b\Q$ver\E(?!\.)\b,
                 }
             }
 
-            if (m,$LEADIN(?:/usr/sbin/)?update-inetd\s,) {
+            if (m{$LEADIN(?:/usr/sbin/)?update-inetd\s}) {
                 $self->hint(
                     'maintainer-script-has-invalid-update-inetd-options',
                     "$file:$.", '(--pattern with --add)')
@@ -1153,7 +1152,7 @@ m,$LEADIN(?:/usr/bin/)?dpkg\s+--compare-versions\s+.*\b\Q$ver\E(?!\.)\b,
               if m/invoke-rc.d\b.*--skip-systemd-native\b/
               && !$pdepends->implies('init-system-helpers (>= 1.54~)');
 
-            if (m,$LEADIN(?:/usr/sbin/)?dpkg-divert\s,
+            if (m{$LEADIN(?:/usr/sbin/)?dpkg-divert\s}
                 && !/--(?:help|list|truename|version)/) {
                 if (/--local/) {
                     $self->hint('package-uses-local-diversion', "$file:$.");
@@ -1187,7 +1186,7 @@ m,$LEADIN(?:/usr/bin/)?dpkg\s+--compare-versions\s+.*\b\Q$ver\E(?!\.)\b,
                 # * stripping the initial slash if the path was quoted
                 $divert =~ s/[\"\']//g;
                 # remove the leading / because it's not in the index hash
-                $divert =~ s,^/,,;
+                $divert =~ s{^/}{};
 
                 # trim both ends
                 $divert =~ s/^\s+|\s+$//g;
@@ -1349,7 +1348,7 @@ m,$LEADIN(?:/usr/bin/)?dpkg\s+--compare-versions\s+.*\b\Q$ver\E(?!\.)\b,
         # wildcard expressions instead that match everything in the
         # same numeric section so that they'll match the files shipped
         # in the package.
-        if ($divertrx =~ m,^(usr\\/share\\/man\\/\S+\\/.*\\\.\d)\w*(\\\.gz\z),)
+        if ($divertrx =~ m{^(usr\\/share\\/man\\/\S+\\/.*\\\.\d)\w*(\\\.gz\z)})
         {
             $divertrx = "$1.*$2";
             $expand_diversions = 1;
@@ -1422,7 +1421,7 @@ sub script_is_evil_and_wrong {
         next unless length($_);
         last if (++$i > 55);
         if (
-            m~
+            /
             # the exec should either be "eval"ed or a new statement
             (?:^\s*|\beval\s*[\'\"]|(?:;|&&|\b(?:then|else))\s*)
 
@@ -1443,14 +1442,14 @@ sub script_is_evil_and_wrong {
             # Finally the whole subexpression may be omitted for scripts
             # which do not pass on their parameters (i.e. after re-execing
             # they take their parameters (and potentially data) from stdin
-            .?(?:\$[{]1:?\+.?)?(?:\$[\@\*])?~x
+            .?(?:\$[{]1:?\+.?)?(?:\$[\@\*])?/x
         ) {
             $ret = 1;
             last;
         } elsif (/^\s*(\w+)=\$0;/) {
             $var = $1;
         } elsif (
-            m~
+            /
             # Match scripts which use "foo $0 $@ &\nexec true\n"
             # Program name
             \S+\s+
@@ -1458,16 +1457,16 @@ sub script_is_evil_and_wrong {
             # As above
             .?\$$var.?\s*
             (?:--\s*)?
-            .?(?:\$[{]1:?\+.?)?(?:\$[\@\*])?.?\s*\&~x
+            .?(?:\$[{]1:?\+.?)?(?:\$[\@\*])?.?\s*\&/x
         ) {
 
             $backgrounded = 1;
         } elsif (
             $backgrounded
-            and m~
+            && /
             # the exec should either be "eval"ed or a new statement
             (?:^\s*|\beval\s*[\'\"]|(?:;|&&|\b(?:then|else))\s*)
-            exec\s+true(?:\s|\Z)~x
+            exec\s+true(?:\s|\Z)/x
         ) {
 
             $ret = 1;
@@ -1515,10 +1514,10 @@ sub remove_comments {
 sub unquote {
     my ($string, $replace_regex) = @_;
 
-    $string =~ s,\\,,g;
-    if ($replace_regex) {
-        $string =~ s,\.\+,*,g;
-    }
+    $string =~ s{\\}{}g;
+
+    $string =~ s{\.\+}{*}g
+      if $replace_regex;
 
     return $string;
 }

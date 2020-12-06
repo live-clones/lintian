@@ -49,7 +49,7 @@ sub visit_installed_files {
     # will be fixed in Perl 5.10, and people can cause more problems
     # by trying to fix it, so just ignore them.
     return
-      if $file->name =~ m,^usr/lib/(?:[^/]+/)?perl5/$,
+      if $file->name =~ m{^usr/lib/(?:[^/]+/)?perl5/$}
       || $file->name eq 'usr/share/perl5/';
 
     # warn about empty directories

@@ -33,10 +33,10 @@ with 'Lintian::Check';
 sub visit_installed_files {
     my ($self, $file) = @_;
 
-    if ($file->name =~ m,^usr/share/vim/vim(?:current|\d{2})/([^/]++),){
+    if ($file->name =~ m{^usr/share/vim/vim(?:current|\d\d)/([^/]+)}){
         my $is_vimhelp
-          = $1 eq 'doc' && $self->processable->name =~ m,^vimhelp-\w++$,;
-        my $is_vim = $self->processable->source =~ m,vim,;
+          = $1 eq 'doc' && $self->processable->name =~ /^vimhelp-\w+$/;
+        my $is_vim = $self->processable->source =~ /vim/;
 
         $self->hint('vim-addon-within-vim-runtime-path', $file->name)
           unless $is_vim or $is_vimhelp;

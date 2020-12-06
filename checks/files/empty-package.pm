@@ -71,7 +71,7 @@ sub visit_installed_files {
     my $ppkg = quotemeta($self->processable->name);
 
     # skip if file is outside /usr/share/doc/$pkg directory
-    if ($file->name !~ m,^usr/share/doc/\Q$pkg\E,) {
+    if ($file->name !~ m{^usr/share/doc/\Q$pkg\E}) {
 
         # - except if it is a lintian override.
         return
@@ -89,7 +89,7 @@ sub visit_installed_files {
     }
 
     # skip if /usr/share/doc/$pkg has files in a subdirectory
-    if ($file->name =~ m,^usr/share/doc/\Q$pkg\E/[^/]++/,) {
+    if ($file->name =~ m{^usr/share/doc/\Q$pkg\E/[^/]+/}) {
         $self->_set_is_empty(0);
         return;
     }

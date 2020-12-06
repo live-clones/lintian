@@ -81,11 +81,12 @@ sub visit_patched_files {
 
 sub is_tmp_path {
     my ($path) = @_;
-    if(    $path =~ m,^tmp/.,
-        or $path =~ m,^(?:var|usr)/tmp/.,
-        or $path =~ m,^/dev/shm/,) {
-        return 1;
-    }
+
+    return 1
+      if $path =~ m{^tmp/.}
+      || $path =~ m{^(?:var|usr)/tmp/.}
+      || $path =~ m{^/dev/shm/};
+
     return 0;
 }
 
@@ -112,18 +113,17 @@ sub visit_installed_files {
       unless $file->is_symlink;
 
     my $mylink = $file->link;
-    if ($mylink =~ s,//+,/,g) {
-        $self->hint('symlink-has-double-slash', $file->name, $file->link);
-    }
-    if ($mylink =~ s,(.)/$,$1,) {
-        $self->hint('symlink-ends-with-slash', $file->name, $file->link);
-    }
+    $self->hint('symlink-has-double-slash', $file->name, $file->link)
+      if $mylink =~ s{//+}{/}g;
+
+    $self->hint('symlink-ends-with-slash', $file->name, $file->link)
+      if $mylink =~ s{(.)/$}{$1};
 
     # determine top-level directory of file
-    $file->name =~ m,^/?([^/]*),;
+    $file->name =~ m{^/?([^/]*)};
     my $filetop = $1;
 
-    if ($mylink =~ m,^/([^/]*),) {
+    if ($mylink =~ m{^/([^/]*)}) {
         my $flinkname = substr($mylink,1);
         # absolute link, including link to /
         # determine top-level directory of link
@@ -222,10 +222,9 @@ sub visit_installed_files {
         # symlink is pointing to a compressed file
 
         # symlink has correct extension?
-        unless ($file->name =~ m,\.$1\s*$,) {
-            $self->hint('compressed-symlink-with-wrong-ext',
-                $file->name,$file->link);
-        }
+        $self->hint('compressed-symlink-with-wrong-ext',
+            $file->name,$file->link)
+          unless $file->name =~ /\.$1\s*$/;
     }
 
     return;

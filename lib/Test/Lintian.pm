@@ -260,9 +260,8 @@ sub test_check_desc {
 
             # Check the tag explanation for unescaped <> or for unknown tags
             # (which probably indicate the same thing).
-            while (
-                $explanation=~ s,<([^\s>]+)(?:\s+href=\"[^\"]+\")?>.*?</\1>,,s)
-            {
+            while ($explanation
+                =~ s{<([^\s>]+)(?:\s+href=\"[^\"]+\")?>.*?</\1>}{}s){
                 push @htmltags, $1;
             }
             @htmltags
@@ -312,7 +311,7 @@ sub test_load_profiles {
         die encode_utf8("$dir cannot be resolved: $!");
     }
     $absdir = "$absdir/profiles";
-    $sre = qr,\Q$absdir\E/,;
+    $sre = qr{\Q$absdir\E/};
 
     @inc = ($absdir, '/usr/share/lintian') unless @inc;
 
@@ -321,7 +320,7 @@ sub test_load_profiles {
 
         return
           unless $profname =~ s/\.profile$//;
-        $profname =~ s,^$sre,,;
+        $profname =~ s/^$sre//;
 
         my $profile = Lintian::Profile->new;
 
@@ -433,8 +432,8 @@ sub test_load_checks {
             next;
         }
 
-        $ppkg =~ s,[-.],_,g;
-        $ppkg =~ s,/,::,g;
+        $ppkg =~ s/[-.]/_/g;
+        $ppkg =~ s{/}{::}g;
         $ppkg = "Lintian::$ppkg";
 
         if ($ppkg->can('run') && !$ppkg->DOES('Lintian::Check')) {
@@ -650,9 +649,9 @@ sub _check_reference {
     }
 
     foreach my $reference (split /\s*,\s*/, $refdata) {
-        if (   $reference =~ m,^https?://bugs.debian.org/(\d++)$,
-            or $reference
-            =~ m,^https?://bugs.debian.org/cgi-bin/bugreport.cgi\?/.*bug=(\d++).*$,
+        if (   $reference =~ m{^https?://bugs.debian.org/(\d++)$}
+            || $reference
+            =~ m{^https?://bugs.debian.org/cgi-bin/bugreport.cgi\?/.*bug=(\d++).*$}
         ) {
             push @issues, "replace \"$reference\" with \"#$1\"";
         } elsif (exists $URLS{$reference}) {
@@ -669,10 +668,10 @@ sub _check_reference {
             # Check it is a valid reference like URLs or #123456
             # NB: "policy 10.1" references already covered above
             my $ok = 0;
-            $ok = 1 if $reference =~ m/^#\d++$/; # debbugs reference
-            $ok = 1 if $reference =~ m,^(?:ftp|https?)://,; # browser URL
-            $ok = 1 if $reference =~ m,^/,; # local file reference
-            $ok = 1 if $reference =~ m,[\w_-]+\(\d\w*\)$,; # man reference
+            $ok = 1 if $reference =~ /^#\d+$/; # debbugs reference
+            $ok = 1 if $reference =~ m{^(?:ftp|https?)://}; # browser URL
+            $ok = 1 if $reference =~ m{^/}; # local file reference
+            $ok = 1 if $reference =~ m{[\w_-]+\(\d\w*\)$}; # man reference
             push @issues, "unknown/malformed reference \"$reference\""
               unless $ok;
         }
@@ -694,7 +693,7 @@ sub _find_check {
     if (-d $input) {
         my (@result, $regex);
         if ($find_opt->{'want-check-name'}) {
-            $regex = qr,^\Q$input\E/*,;
+            $regex = qr{^\Q$input\E/*};
         }
         my $wanted = sub {
             if (defined $filter) {

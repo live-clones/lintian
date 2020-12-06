@@ -145,7 +145,7 @@ sub visit_installed_files {
         $self->_set_dev_number($self->dev_number + 1);
         if (defined $self->dev_prefix) {
             my $dev_prefix = $self->dev_prefix;
-            chop $dev_prefix while ($file !~ m@^$dev_prefix@);
+            chop $dev_prefix while ($file !~ m{^$dev_prefix});
             $self->_set_dev_prefix($dev_prefix);
         } else {
             $self->_set_dev_prefix($file->name);
@@ -160,11 +160,11 @@ sub visit_installed_files {
 
     # development files outside /usr/lib/ocaml (.cmi, .cmx, .cmxa)
     # .cma, .cmo and .cmxs are excluded because they can be plugins
-    if ($file =~ m/\.cm(i|xa?)$/ && $file !~ m@^usr/lib/ocaml/@) {
+    if ($file =~ m/\.cm(i|xa?)$/ && $file !~ m{^usr/lib/ocaml/}) {
         $self->_set_outside_number($self->outside_number + 1);
         if (defined $self->outside_prefix) {
             my $outside_prefix = $self->outside_prefix;
-            chop $outside_prefix while ($file !~ m@^$outside_prefix@);
+            chop $outside_prefix while ($file !~ m{^$outside_prefix});
             $self->_set_outside_prefix($outside_prefix);
         } else {
             $self->_set_outside_prefix($file->name);
@@ -173,7 +173,7 @@ sub visit_installed_files {
 
     # If there is a META file, ocaml-findlib should be at least suggested.
     $self->_set_has_meta(1)
-      if $file =~ m@^usr/lib/ocaml/(.+/)?META(\..*)?$@;
+      if $file =~ m{^usr/lib/ocaml/(.+/)?META(\..*)?$};
 
     return;
 }

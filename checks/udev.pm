@@ -133,11 +133,11 @@ sub visit_installed_files {
     my ($self, $file) = @_;
 
     return
-      unless $file->name =~ m,^etc/udev/,;
+      unless $file->name =~ m{^etc/udev/};
 
     # /etc/udev/rules.d
     $self->hint('udev-rule-in-etc', $file->name)
-      if $file->name =~ m,^etc/udev/rules\.d/\S,;
+      if $file->name =~ m{^etc/udev/rules\.d/\S};
 
     return;
 }

@@ -51,33 +51,34 @@ sub visit_installed_files {
       if $file->is_dir;
 
     return
-      if $file !~ m#^(?:usr/lib/apache2/modules/|etc/apache2/)#;
+      if $file !~ m{^(?:usr/lib/apache2/modules/|etc/apache2/)};
 
     # Package installs an unrecognized file - check this for all files
-    if (    $file !~ m#\.conf$#
-        and $file =~ m#^etc/apache2/(conf|site|mods)-available/(.*)$#){
+    if (   $file !~ /\.conf$/
+        && $file =~ m{^etc/apache2/(conf|site|mods)-available/(.*)$}){
+
         my $temp_type = $1;
         my $temp_file = $2;
 
         # ... except modules which are allowed to ship .load files
         $self->hint('apache2-configuration-files-need-conf-suffix', $file)
-          unless $temp_type eq 'mods' and $temp_file =~ m#\.load#;
+          unless $temp_type eq 'mods' && $temp_file =~ /\.load$/;
     }
 
     # Package appears to be a binary module
-    if ($file =~ m#^usr/lib/apache2/modules/(.*)\.so#) {
+    if ($file =~ m{^usr/lib/apache2/modules/(.*)\.so}) {
         $self->check_module_package($1);
         $self->_set_seen_apache2_special_file(1);
     }
 
     # Package appears to be a web application
-    elsif ($file =~ m#^etc/apache2/(conf|site)-available/(.*)$#) {
+    elsif ($file =~ m{^etc/apache2/(conf|site)-available/(.*)$}) {
         $self->check_web_application_package($file, $1, $2);
         $self->_set_seen_apache2_special_file(1);
     }
 
     # Package appears to be a legacy web application
-    elsif ($file =~ m#^etc/apache2/conf\.d/(.*)$#) {
+    elsif ($file =~ m{^etc/apache2/conf\.d/(.*)$}) {
         $self->hint('apache2-reverse-dependency-uses-obsolete-directory',
             $file);
         $self->check_web_application_package($file,'conf', $1);
@@ -85,7 +86,7 @@ sub visit_installed_files {
     }
 
     # Package does scary things
-    elsif ($file =~ m#^etc/apache2/(?:conf|sites|mods)-enabled/.*$#) {
+    elsif ($file =~ m{^etc/apache2/(?:conf|sites|mods)-enabled/.*$}) {
 
         $self->hint(
             'apache2-reverse-dependency-ships-file-in-not-allowed-directory',
@@ -178,8 +179,8 @@ sub check_module_package {
     # named foo.load
     my $load_file = $module;
     my $conf_file = $module;
-    $load_file =~ s#^mod.(.*)$#etc/apache2/mods-available/$1.load#;
-    $conf_file =~ s#^mod.(.*)$#etc/apache2/mods-available/$1.conf#;
+    $load_file =~ s{^mod.(.*)$}{etc/apache2/mods-available/$1.load};
+    $conf_file =~ s{^mod.(.*)$}{etc/apache2/mods-available/$1.conf};
 
     if (my $f = $processable->installed->lookup($load_file)) {
         $self->inspect_conf_file('mods', $f);

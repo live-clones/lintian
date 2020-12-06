@@ -22,7 +22,7 @@ my %TESTS_BAD = (
 );
 
 my $DATADIR = $0;
-$DATADIR =~ s,[^/]+$,,o;
+$DATADIR =~ s{[^/]+$}{};
 if ($DATADIR) {
     # invoked in some other dir
     $DATADIR = "$DATADIR/data";

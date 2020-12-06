@@ -62,28 +62,28 @@ sub visit_installed_files {
 
     my $multiarch_dir = $self->MULTIARCH_DIRS->value($architecture);
 
-    if (    not $file->is_dir
-        and defined($multiarch_dir)
-        and $multiarch eq 'foreign'
-        and $file->name =~ m,^usr/lib/\Q$multiarch_dir\E/(.*)$,) {
+    if (   !$file->is_dir
+        && defined $multiarch_dir
+        && $multiarch eq 'foreign'
+        && $file->name =~ m{^usr/lib/\Q$multiarch_dir\E/(.*)$}) {
 
         my $tail = $1;
 
         $self->hint('multiarch-foreign-cmake-file', $file->name)
-          if $tail =~ m,^cmake/.+\.cmake$,;
+          if $tail =~ m{^cmake/.+\.cmake$};
 
         $self->hint('multiarch-foreign-pkgconfig', $file->name)
-          if $tail =~ m,^pkgconfig/[^/]+\.pc$,;
+          if $tail =~ m{^pkgconfig/[^/]+\.pc$};
 
         $self->hint('multiarch-foreign-static-library', $file->name)
-          if $tail =~ m,^lib[^/]+\.a$,;
+          if $tail =~ m{^lib[^/]+\.a$};
     }
 
     if (exists($PATH_DIRECTORIES{$file->dirname})) {
         $self->_set_has_public_executable(1);
     }
 
-    if ($file->name =~ m,^(?:usr/)?lib/(?:([^/]+)/)?lib[^/]*\.so$,) {
+    if ($file->name =~ m{^(?:usr/)?lib/(?:([^/]+)/)?lib[^/]*\.so$}) {
         $self->_set_has_public_shared_library(1)
           if (!defined($1) || $self->TRIPLETS->known($1));
     }

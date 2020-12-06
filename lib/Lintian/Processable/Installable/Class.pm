@@ -135,7 +135,7 @@ sub is_pkg_class {
         # Section "tasks" or "metapackages" qualifies as well
         my $section = $self->fields->value('Section');
         return 1
-          if $section =~ m,(?:^|/)(?:tasks|metapackages)$,;
+          if $section =~ m{(?:^|/)(?:tasks|metapackages)$};
 
         return 1
           if $self->name =~ m/^task-/;

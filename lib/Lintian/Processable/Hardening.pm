@@ -69,7 +69,7 @@ sub hardening_info {
         while (my $line = <$idx>) {
             chomp($line);
 
-            if ($line =~ m,^([^:]+):(?:\./)?(.*)$,) {
+            if ($line =~ m{^([^:]+):(?:\./)?(.*)$}) {
                 my ($tag, $file) = ($1, $2);
 
                 push(@{$hardening_info{$file}}, $tag);

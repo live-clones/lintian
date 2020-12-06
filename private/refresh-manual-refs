@@ -207,8 +207,8 @@ sub extract_refs {
             }
 
             $ref{title} =~ s/\s+/ /g;
-            $ref{title} =~ s,<span[^>]*>(.*?)</span ?>,$1,ig;
-            $ref{title} =~ s,<code[^>]*>(.*?)</code ?>,<code>$1</code>,ig;
+            $ref{title} =~ s{<span[^>]*>(.*?)</span ?>}{$1}ig;
+            $ref{title} =~ s{<code[^>]*>(.*?)</code ?>}{<code>$1</code>}ig;
 
             $ref{url} = "$url$ref{url}";
             $ref{url} = '' if not $url;

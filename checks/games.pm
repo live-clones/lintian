@@ -34,7 +34,7 @@ sub visit_installed_files {
     my ($self, $file) = @_;
 
     # non-games-specific data in games subdirectory
-    if ($file->name=~ m,^usr/share/games/(?:applications|mime|icons|pixmaps)/,
+    if ($file->name=~ m{^usr/share/games/(?:applications|mime|icons|pixmaps)/}
         and not $file->is_dir) {
 
         $self->hint('global-data-in-games-directory', $file->name);
@@ -65,7 +65,7 @@ sub installable {
     my $other = $self->dir_counts('bin/') + $self->dir_counts('usr/bin/');
 
     if ($other) {
-        if ($section =~ m,games$,) {
+        if ($section =~ m{games$}) {
 
             if ($games) {
                 $self->hint('package-section-games-but-has-usr-bin');
@@ -75,7 +75,7 @@ sub installable {
             }
         }
 
-    } elsif ($games > 0 and $section !~ m,games$,) {
+    } elsif ($games > 0 and $section !~ m{games$}) {
         $self->hint('game-outside-section');
     }
 

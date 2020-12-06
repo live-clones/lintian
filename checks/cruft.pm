@@ -140,15 +140,15 @@ has WARN_FILE_TYPE => (
                     if(scalar(@transforms) > 0) {
                         foreach my $transform (@transforms) {
                             # regex transform
-                            if($transform =~ m'^s/') {
-                                $transform =~ m'^s/([^/]*?)/([^/]*?)/$';
+                            if($transform =~ m{^s/}) {
+                                $transform =~ m{^s/([^/]*?)/([^/]*?)/$};
                                 unless(defined($1) and defined($2)) {
                                     die "$syntaxerror in transform regex $.";
                                 }
                                 push(@transformpairs,[$1,$2]);
-                            } elsif ($transform =~ m'^map\s*{') {
+                            } elsif ($transform =~ /^map\s*{/) {
                                 $transform
-                                  =~ m#^map \s* { \s* 's/([^/]*?)/\'.\$_.'/' \s* } \s* qw\(([^\)]*)\)#x;
+                                  =~ m{^map \s* \{ \s* 's/([^/]*?)/\'.\$_.'/' \s* \} \s* qw\(([^\)]*)\)}x;
                                 unless(defined($1) and defined($2)) {
                                     die
                                       "$syntaxerror in map transform regex $.";
@@ -389,19 +389,19 @@ has GFDL_FRAGMENTS => (
 # source-contains or debian-adds).  Note that only one of these regexes
 # should trigger for any single directory.
 my @directory_checks = (
-    [qr,^(.+/)?CVS/?$,        => 'cvs-control-dir'],
-    [qr,^(.+/)?\.svn/?$,      => 'svn-control-dir'],
-    [qr,^(.+/)?\.bzr/?$,      => 'bzr-control-dir'],
-    [qr,^(.+/)?\{arch\}/?$,   => 'arch-control-dir'],
-    [qr,^(.+/)?\.arch-ids/?$, => 'arch-control-dir'],
-    [qr!^(.+/)?,,.+/?$!       => 'arch-control-dir'],
-    [qr,^(.+/)?\.git/?$,      => 'git-control-dir'],
-    [qr,^(.+/)?\.hg/?$,       => 'hg-control-dir'],
-    [qr,^(.+/)?\.be/?$,       => 'bts-control-dir'],
-    [qr,^(.+/)?\.ditrack/?$,  => 'bts-control-dir'],
+    [qr{^(.+/)?CVS/?$}        => 'cvs-control-dir'],
+    [qr{^(.+/)?\.svn/?$}      => 'svn-control-dir'],
+    [qr{^(.+/)?\.bzr/?$}      => 'bzr-control-dir'],
+    [qr{^(.+/)?\{arch\}/?$}   => 'arch-control-dir'],
+    [qr{^(.+/)?\.arch-ids/?$} => 'arch-control-dir'],
+    [qr{^(.+/)?,,.+/?$}       => 'arch-control-dir'],
+    [qr{^(.+/)?\.git/?$}      => 'git-control-dir'],
+    [qr{^(.+/)?\.hg/?$}       => 'hg-control-dir'],
+    [qr{^(.+/)?\.be/?$}       => 'bts-control-dir'],
+    [qr{^(.+/)?\.ditrack/?$}  => 'bts-control-dir'],
 
     # Special case (can only be triggered for diffs)
-    [qr,^(.+/)?\.pc/?$, => 'quilt-control-dir'],
+    [qr{^(.+/)?\.pc/?$} => 'quilt-control-dir'],
 );
 
 # File checks.  These regexes match files that shouldn't be in the source
@@ -409,14 +409,14 @@ my @directory_checks = (
 # debian-adds).  Note that only one of these regexes should trigger for any
 # given file.
 my @file_checks = (
-    [qr,^(.+/)?svn-commit\.(.+\.)?tmp$, => 'svn-commit-file'],
-    [qr,^(.+/)?svk-commit.+\.tmp$,      => 'svk-commit-file'],
-    [qr,^(.+/)?\.arch-inventory$,       => 'arch-inventory-file'],
-    [qr,^(.+/)?\.hgtags$,               => 'hg-tags-file'],
-    [qr,^(.+/)?\.\#(.+?)\.\d+(\.\d+)*$, => 'cvs-conflict-copy'],
-    [qr,^(.+/)?(.+?)\.(r[1-9]\d*)$,     => 'svn-conflict-file'],
-    [qr,\.(orig|rej)$,                  => 'patch-failure-file'],
-    [qr,((^|/)[^/]+\.swp|~)$,           => 'editor-backup-file'],
+    [qr{^(.+/)?svn-commit\.(.+\.)?tmp$} => 'svn-commit-file'],
+    [qr{^(.+/)?svk-commit.+\.tmp$}      => 'svk-commit-file'],
+    [qr{^(.+/)?\.arch-inventory$}       => 'arch-inventory-file'],
+    [qr{^(.+/)?\.hgtags$}               => 'hg-tags-file'],
+    [qr{^(.+/)?\.\#(.+?)\.\d+(\.\d+)*$} => 'cvs-conflict-copy'],
+    [qr{^(.+/)?(.+?)\.(r[1-9]\d*)$}     => 'svn-conflict-file'],
+    [qr{\.(orig|rej)$}                  => 'patch-failure-file'],
+    [qr{((^|/)[^/]+\.swp|~)$}           => 'editor-backup-file'],
 );
 
 # Check if the package build-depends on autotools-dev, automake,
@@ -521,7 +521,7 @@ sub visit_patched_files {
     }
 
     # Ensure we have a README.source for R data files
-    if (   $item->basename =~ m,\.(?:rda|Rda|rdata|Rdata|RData)$,
+    if (   $item->basename =~ /\.(?:rda|Rda|rdata|Rdata|RData)$/
         && $item->is_file
         && $item->is_open_ok
         && $item->file_info =~ /gzip compressed data/
@@ -533,7 +533,7 @@ sub visit_patched_files {
           if $magic eq 'RDX2';
     }
 
-    if (   $item->name =~ m,configure.(in|ac)$,
+    if (   $item->name =~ /configure\.(in|ac)$/
         && $item->is_file
         && $item->is_open_ok) {
         open(my $fd, '<', $item->unpacked_path);
@@ -834,7 +834,7 @@ sub full_text_check {
         return;
     }
 
-    my $ishtml = ($item->basename =~ m,\.(?:x?html?\d?|xht)$,i);
+    my $ishtml = ($item->basename =~ /\.(?:x?html?\d?|xht)$/i);
     my $skiphtml = 0;
 
     # some js file comments are really really long
@@ -900,13 +900,13 @@ sub check_html_cruft {
     if($blocknumber == 0) {
         if(index($block,'<meta name="generator"') > -1) {
             if(
-                $block =~ m,<meta \s+ name="generator" \s+
-                content="doxygen,smx
+                $block =~ /<meta \s+ name="generator" \s+
+                content="doxygen/smx
                 # Identify and ignore documentation templates by looking
                 # for the use of various interpolated variables.
                 # <http://www.doxygen.nl/manual/config.html#cfg_html_header>
                 && $block
-                !~ m,\$(?:doxygenversion|projectname|projectnumber|projectlogo)\b,
+                !~ /\$(?:doxygenversion|projectname|projectnumber|projectlogo)\b/
             ){
                 $self->hint('source-contains-prebuilt-doxygen-documentation',
                     $item);
@@ -918,12 +918,12 @@ sub check_html_cruft {
     while(($indexscript = index($blockscript, '<script')) > -1) {
         $blockscript = substr($blockscript,$indexscript);
         # sourced script ok
-        if($blockscript =~  m,\A<script\s+[^>]*?src="[^"]+?"[^>]*?>,sm) {
+        if ($blockscript =~ m{\A<script\s+[^>]*?src="[^"]+?"[^>]*?>}sm) {
             $blockscript = substr($blockscript,$+[0]);
             next;
         }
         # extract script
-        if($blockscript =~ m,<script[^>]*?>(.*?)</script>,sm) {
+        if ($blockscript =~ m{<script[^>]*?>(.*?)</script>}sm) {
             $blockscript = substr($blockscript,$+[0]);
             if($self->check_js_script($item, $1)) {
                 return 0;
@@ -934,7 +934,7 @@ sub check_html_cruft {
         # first check if we have the full <script> tag and do the check
         # if we get <script src="  "
         # then skip
-        if($blockscript =~ m,\A<script[^>]*?>,sm) {
+        if ($blockscript =~ /\A<script[^>]*?>/sm) {
             $blockscript = substr($blockscript,$+[0]);
             $self->check_js_script($item, $blockscript);
         }
@@ -1029,9 +1029,9 @@ sub search_in_block0 {
     # search link rel header
     if(index($block,' rel="copyright" ') > -1) {
         my $href = $block;
-        $href =~ m,<link \s+
+        $href =~ m{<link \s+
                   rel="copyright" \s+
-                  href="([^"]+)" \s*/? \s*>,xmsi;
+                  href="([^"]+)" \s*/? \s*>}xmsi;
         if(defined($1)) {
             my $copyrighttarget = $1;
             foreach my $badcopyrighttag ($self->BAD_LINK_COPYRIGHT->all) {
@@ -1113,7 +1113,7 @@ sub _strip_c_comments {
 sub detect_browserify {
     my ($self, $item, $block) = @_;
 
-    $block =~ s,\n, ,msg;
+    $block =~ s/\n/ /msg;
     foreach my $browserifyregex ($self->BROWSERIFY_REGEX->all) {
         my $regex = $self->BROWSERIFY_REGEX->value($browserifyregex);
         if($block =~ m{$regex}) {
@@ -1144,8 +1144,8 @@ sub linelength_test {
             int($linelength),'characters (>'.VERY_LONG_LINE_LENGTH.')'
         );
         # clean up jslint craps line
-        $block =~ s,^\s*/[*][^\n]*[*]/\s*$,,gm;
-        $block =~ s,^\s*//[^\n]*$,,gm;
+        $block =~ s{^\s*/[*][^\n]*[*]/\s*$}{}gm;
+        $block =~ s{^\s*//[^\n]*$}{}gm;
         $block =~ s/^\s+//gm;
 
         # try to remove comments in first 8192 block (license...)
@@ -1366,10 +1366,11 @@ sub php_source_whitelist {
         return 0;
     }
 
-    if($self->processable->source =~ m,^php\d*(?:\.\d+)?$,xms) {
-        return 0;
-    }
+    return 0
+      if $self->processable->source =~ /^php\d*(?:\.\d+)?$/xms;
+
     $self->hint($licenseproblem, $name);
+
     return 1;
 }
 
@@ -1408,8 +1409,8 @@ sub _clean_block {
     $text =~ s/\\hyperlink
                  [{][^}]*?[}]
                  [{]([^}]*?)[}]/ $1 /gxms;    # (la)?tex hyperlink
-    $text =~ s,-\\/,-,gxms;                   # tex strange hyphen
-    $text =~ s,\\char, ,gxms;                 # tex  char command
+    $text =~ s{-\\/}{-}gxms;                   # tex strange hyphen
+    $text =~ s/\\char/ /gxms;                 # tex  char command
 
     # Texinfo comment with end section
     $text =~ s/\@c(?:omment)?\h+
@@ -1478,7 +1479,7 @@ sub _clean_block {
     # single char at end
     # String, C-style comment/javadoc indent,
     # quotes for strings, pipe and backslash, tilde in some txt
-    $text =~ s,[%\*\"\|\\\#~], ,gxms;
+    $text =~ s/[%\*\"\|\\\#~]/ /gxms;
     # delete double spacing now and normalize spacing
     # to space character
     $text =~ s{\s++}{ }gsm;

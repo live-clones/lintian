@@ -187,7 +187,7 @@ sub installable {
               unless defined $ARCH_32_REGEX;
             $has_lfs = 1 unless $file_info =~ m/$ARCH_32_REGEX/;
             # We don't care if it is a debug file
-            $has_lfs = 1 if $name =~ m,^usr/lib/debug/,;
+            $has_lfs = 1 if $name =~ m{^usr/lib/debug/};
         }
 
         if (defined $objdump->{SONAME}) {
@@ -260,7 +260,7 @@ sub installable {
           if defined $has_lfs and not $has_lfs;
         if ($objdump->{'BAD-DYNAMIC-TABLE'}) {
             $self->hint('binary-with-bad-dynamic-table', $name)
-              unless $name =~ m%^usr/lib/debug/%;
+              unless $name =~ m{^usr/lib/debug/};
         }
     }
 
@@ -292,21 +292,20 @@ sub installable {
     }
 
     $gnu_triplet_re = quotemeta $madir;
-    $gnu_triplet_re =~ s,^i386,i[3-6]86,;
+    $gnu_triplet_re =~ s{^i386}{i[3-6]86};
     $ruby_triplet_re = $gnu_triplet_re;
-    $ruby_triplet_re =~ s,linux\\-gnu$,linux,;
-    $ruby_triplet_re =~ s,linux\\-gnu,linux\\-,;
+    $ruby_triplet_re =~ s{linux\\-gnu$}{linux};
+    $ruby_triplet_re =~ s{linux\\-gnu}{linux\\-};
 
     sub lib_soname_path {
         my ($dir, @paths) = @_;
         foreach my $path (@paths) {
             next
-              if $path
-              =~ m%^(?:usr/)?lib(?:32|64)?/libnss_[^.]+\.so(?:\.[0-9]+)$%;
-            return 1 if $path =~ m%^lib/[^/]+$%;
-            return 1 if $path =~ m%^usr/lib/[^/]+$%;
-            return 1 if defined $dir && $path =~ m%lib/$dir/[^/]++$%;
-            return 1 if defined $dir && $path =~ m%usr/lib/$dir/[^/]++$%;
+              if $path=~ m{^(?:usr/)?lib(?:32|64)?/libnss_[^.]+\.so(?:\.\d+)$};
+            return 1 if $path =~ m{^lib/[^/]+$};
+            return 1 if $path =~ m{^usr/lib/[^/]+$};
+            return 1 if defined $dir && $path =~ m{^lib/$dir/[^/]+$};
+            return 1 if defined $dir && $path =~ m{^usr/lib/$dir/[^/]+$};
         }
         return 0;
     }
@@ -360,17 +359,17 @@ sub installable {
         }
 
         $fname = $file->name;
-        if ($fname =~ m,^etc/,) {
+        if ($fname =~ m{^etc/}) {
             $self->hint('binary-in-etc', $file);
         }
 
-        if ($fname =~ m,^usr/share/,) {
+        if ($fname =~ m{^usr/share/}) {
             $self->hint('arch-dependent-file-in-usr-share', $file);
         }
 
         if ($multiarch eq 'same') {
             unless ($fname
-                =~ m,\b$gnu_triplet_re(?:\b|_)|/(?:$ruby_triplet_re|java-\d+-openjdk-\Q$arch\E|\.build-id)/,
+                =~ m{\b$gnu_triplet_re(?:\b|_)|/(?:$ruby_triplet_re|java-\d+-openjdk-\Q$arch\E|\.build-id)/}
             ) {
                 $self->hint(
                     'arch-dependent-file-not-in-arch-specific-directory',
@@ -422,19 +421,19 @@ sub installable {
             if ($fileinfo =~ m/$archre/) {
                 # If it matches the architecture regex, it is good
                 $bad = 0;
-            } elsif ($fname =~ m,(?:^|/)lib(x?\d{2})/,
-                or $fname =~ m,^emul/ia(\d{2}),) {
+            } elsif ($fname =~ m{(?:^|/)lib(x?\d\d)/}
+                or $fname =~ m{^emul/ia(\d\d)}) {
                 my $bitre = $ARCH_REGEX->value($1);
                 # Special case - "old" multi-arch dirs
                 $bad = 0 if $bitre and $fileinfo =~ m/$bitre/;
-            } elsif ($fname =~ m,^usr/lib/debug/\.build-id/,) {
+            } elsif ($fname =~ m{^usr/lib/debug/\.build-id/}) {
                 # Detached debug symbols could be for a biarch library.
                 $bad = 0;
             } elsif ($fname =~ GUILE_PATH_REGEX) {
                 # Guile binaries do not objdump/strip (etc.) correctly.
                 $bad = 0;
             } elsif ($ARCH_64BIT_EQUIVS->known($arch)
-                && $fname =~ m,^lib/modules/,) {
+                && $fname =~ m{^lib/modules/}) {
                 my $arch64re
                   = $ARCH_REGEX->value($ARCH_64BIT_EQUIVS->value($arch));
                 # Allow amd64 kernel modules to be installed on i386.
@@ -457,16 +456,17 @@ sub installable {
             $tag_emitter, 0);
 
         # stripped?
-        if ($fileinfo =~ m,\bnot stripped\b,) {
+        if ($fileinfo =~ m{\bnot stripped\b}) {
             # Is it an object file (which generally cannot be
             # stripped), a kernel module, debugging symbols, or
             # perhaps a debugging package?
-            unless ($fname =~ m,\.k?o$,
-                or $pkg =~ m/-dbg$/
-                or $pkg =~ m/debug/
-                or $fname =~ m,/lib/debug/,
-                or $fname =~ GUILE_PATH_REGEX
-                or $fname =~ m,\.gox$,) {
+            unless ($fname =~ /\.k?o$/
+                || $pkg =~ /-dbg$/
+                || $pkg =~ /debug/
+                || $fname =~ m{/lib/debug/}
+                || $fname =~ GUILE_PATH_REGEX
+                || $fname =~ /\.gox$/) {
+
                 if (    $fileinfo =~ m/executable/
                     and $file->strings =~ m/^Caml1999X0[0-9][0-9]$/m) {
                     # Check for OCaml custom executables (#498138)
@@ -477,7 +477,7 @@ sub installable {
             }
         } else {
             # stripped but a debug or profiling library?
-            if (($fname =~ m,/lib/debug/,) or ($fname =~ m,/lib/profile/,)){
+            if ($fname =~ m{/lib/debug/} || $fname =~ m{/lib/profile/}) {
                 $self->hint('stripped-library',$file)
                   unless $file->size == 0;
             } else {
@@ -494,7 +494,7 @@ sub installable {
                     my $name;
                     next unless $file->is_dir || $file->is_symlink;
                     $name = $file->name;
-                    $name =~ s,/\z,,;
+                    $name =~ s{/\z}{};
                     $directories{"/$name"}++;
                 }
             }
@@ -504,13 +504,13 @@ sub installable {
             foreach my $rpath (map {File::Spec->canonpath($_)}@rpaths) {
                 next
                   if $rpath
-                  =~ m,^/usr/lib/(?:$madir/)?(?:games/)?(?:\Q$pkg\E|\Q$srcpkg\E)(?:/|\z),;
-                next if $rpath =~ m,^\$\{?ORIGIN\}?,;
+                  =~ m{^/usr/lib/(?:$madir/)?(?:games/)?(?:\Q$pkg\E|\Q$srcpkg\E)(?:/|\z)};
+                next if $rpath =~ m{^\$\{?ORIGIN\}?};
                 # GHC in Debian uses a scheme for RPATH. (#914873)
-                next if $rpath =~ m,^/usr/lib/ghc/,;
+                next if $rpath =~ m{^/usr/lib/ghc/};
                 next
                   if $directories{$rpath}
-                  and $rpath !~ m,^(?:/usr)?/lib(?:/$madir)?/?\z,;
+                  && $rpath !~ m{^(?:/usr)?/lib(?:/$madir)?/?\z};
                 $self->hint('custom-library-search-path', $file, $rpath);
             }
         }
@@ -536,20 +536,18 @@ sub installable {
           if $type eq 'udeb';
 
         # Perl library?
-        if ($fname =~ m,^usr/lib/(?:[^/]+/)?perl5/.*\.so$,) {
-            $has_perl_lib = 1;
-        }
+        $has_perl_lib = 1
+          if $fname =~ m{^usr/lib/(?:[^/]+/)?perl5/.*\.so$};
 
         # PHP extension?
-        if ($fname =~ m,^usr/lib/php\d/.*\.so(?:\.\d+)*$,) {
-            $has_php_ext = 1;
-        }
+        $has_php_ext = 1
+          if $fname =~ m{^usr/lib/php\d/.*\.so(?:\.\d+)*$};
 
         # Python extension using Numpy C ABI?
         if (
-            $fname =~ m,usr/lib/(?:pyshared/)?python2\.\d+/.*(?<!_d)\.so$,
-            or(     $fname =~ m,usr/lib/python3/.+\.cpython-\d+([a-z]+)\.so$,
-                and $1 !~ /d/)
+            $fname =~ m{^usr/lib/(?:pyshared/)?python2\.\d+/.*(?<!_d)\.so$}
+            || (   $fname =~ m{^usr/lib/python3/.+\.cpython-\d+([a-z]+)\.so$}
+                && $1 !~ /d/)
         ) {
             if (index($file->strings, 'numpy') > -1
                 and $file->strings =~ NUMPY_REGEX) {
@@ -560,7 +558,7 @@ sub installable {
         # Something other than detached debugging symbols in
         # /usr/lib/debug paths.
         if ($fname
-            =~ m,^usr/lib/debug/(?:lib\d*|s?bin|usr|opt|dev|emul|\.build-id)/,)
+            =~ m{^usr/lib/debug/(?:lib\d*|s?bin|usr|opt|dev|emul|\.build-id)/})
         {
             if (exists($objdump->{NEEDED})) {
                 $self->hint('debug-symbols-not-detached', $file);
@@ -573,7 +571,7 @@ sub installable {
         }
 
         # Detached debugging symbols directly in /usr/lib/debug.
-        if ($fname =~ m,^usr/lib/debug/[^/]+$,) {
+        if ($fname =~ m{^usr/lib/debug/[^/]+$}) {
             unless (exists($objdump->{NEEDED})
                 || $fileinfo =~ m/statically linked/) {
                 $self->hint('debug-symbols-directly-in-usr-lib-debug', $file);
@@ -586,12 +584,12 @@ sub installable {
                 # Some exceptions: kernel modules, syslinux modules, detached
                 # debugging information and the dynamic loader (which itself
                 # has no dependencies).
-                next if ($fname =~ m%^boot/modules/%);
-                next if ($fname =~ m%^lib/modules/%);
-                next if ($fname =~ m%^usr/lib/debug/%);
-                next if ($fname =~ m%\.(?:[ce]32|e64)$%);
-                next if ($fname =~ m%^usr/lib/jvm/.*\.debuginfo$%);
-                next if ($fname =~ GUILE_PATH_REGEX);
+                next if $fname =~ m{^boot/modules/};
+                next if $fname =~ m{^lib/modules/};
+                next if $fname =~ m{^usr/lib/debug/};
+                next if $fname =~ m{\.(?:[ce]32|e64)$};
+                next if $fname =~ m{^usr/lib/jvm/.*\.debuginfo$};
+                next if $fname =~ GUILE_PATH_REGEX;
                 next
                   if (
                     $fname =~ m{
@@ -605,20 +603,20 @@ sub installable {
                 # Some exceptions: files in /boot, /usr/lib/debug/*,
                 # named *-static or *.static, or *-static as
                 # package-name.
-                next if ($fname =~ m%^boot/%);
-                next if ($fname =~ /[\.-]static$/);
-                next if ($pkg =~ /-static$/);
+                next if $fname =~ m{^boot/};
+                next if $fname =~ /[\.-]static$/;
+                next if $pkg =~ /-static$/;
                 # Binaries built by the Go compiler are statically
                 # linked by default.
-                next if ($built_with_golang);
+                next if $built_with_golang;
                 # klibc binaries appear to be static.
                 next
-                  if (exists $objdump->{INTERP}
-                    && $objdump->{INTERP} =~ m,/lib/klibc-\S+\.so,);
+                  if exists $objdump->{INTERP}
+                  && $objdump->{INTERP} =~ m{/lib/klibc-\S+\.so};
                 # Location of debugging symbols.
-                next if ($fname =~ m%^usr/lib/debug/%);
+                next if $fname =~ m{^usr/lib/debug/};
                 # ldconfig must be static.
-                next if ($fname eq 'sbin/ldconfig');
+                next if $fname eq 'sbin/ldconfig';
                 $self->hint('statically-linked-binary', $file);
             }
         } else {
@@ -642,9 +640,9 @@ sub installable {
                     $needs_libcxx_count++;
                 }
             }
-            if (    $no_libc
-                and not $fname =~ m,/libc\b,
-                and not($built_with_octave and $fname =~ m/\.(oct|mex)$/)) {
+            if (   $no_libc
+                && $fname !~ m{/libc\b}
+                && (!$built_with_octave || $fname !~ m/\.(?:oct|mex)$/)) {
                 # If there is no libc dependency, then it is most likely a
                 # bug.  The major exception is that some C++ libraries,
                 # but these tend to link against libstdc++ instead.  (see

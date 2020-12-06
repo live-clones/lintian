@@ -35,7 +35,7 @@ sub visit_installed_files {
 
     # /etc/pam.conf
     $self->hint('config-file-reserved', $file->name, 'by libpam-runtime')
-      if $file->name =~ m,^etc/pam.conf,
+      if $file->name =~ m{^etc/pam.conf$}
       && $self->processable->name ne 'libpam-runtime';
 
     return;

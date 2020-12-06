@@ -108,7 +108,7 @@ sub binary {
 
         $self->hint('file-missing-in-md5sums', $name)
           unless $self->processable->is_conffile($name)
-          || $name =~ m%^var/lib/[ai]spell/.%;
+          || $name =~ m{^var/lib/[ai]spell/.};
     }
 
     # checksum should match for common files

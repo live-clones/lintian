@@ -113,9 +113,9 @@ sub installable {
         my $pkg_fmt = lc $pkg;
         my $synopsis_fmt = lc $synopsis;
         # made a fuzzy match
-        $pkg_fmt =~ s,[-_], ,g;
-        $synopsis_fmt =~ s,[-_/\\], ,g;
-        $synopsis_fmt =~ s,\s+, ,g;
+        $pkg_fmt =~ s/[-_]/ /g;
+        $synopsis_fmt =~ s{[-_/\\]}{ }g;
+        $synopsis_fmt =~ s/\s+/ /g;
         if ($pkg_fmt eq $synopsis_fmt) {
             $self->hint('description-is-pkg-name', $synopsis);
         }
@@ -168,7 +168,7 @@ sub installable {
             $self->hint('description-contains-tabs') unless $tabs++;
         }
 
-        if ($line =~ m,^\s*Homepage: <?https?://,i) {
+        if ($line =~ m{^\s*Homepage: <?https?://}i) {
             $self->hint('description-contains-homepage');
             $flagged_homepage = 1;
         }
@@ -237,10 +237,10 @@ sub installable {
             $extended =~ /homepage|webpage|website|url|upstream|web\s+site
                          |home\s+page|further\s+information|more\s+info
                          |official\s+site|project\s+home/xi
-            and $extended =~ m,\b(https?://[a-z0-9][^>\s]+),i
+            && $extended =~ m{\b(https?://[a-z0-9][^>\s]+)}i
         ) {
             $self->hint('description-possibly-contains-homepage', $1);
-        } elsif ($extended =~ m,\b(https?://[a-z0-9][^>\s]+)>?\.?\s*\z,i) {
+        } elsif ($extended =~ m{\b(https?://[a-z0-9][^>\s]+)>?\.?\s*\z}i) {
             $self->hint('description-possibly-contains-homepage', $1);
         }
     }
@@ -285,7 +285,7 @@ sub installable {
         my $pm     = $mod_path_elements[-1].'.pm';
 
         foreach my $filepath ($processable->installed->sorted_list) {
-            if ($filepath =~ m(\Q$pmpath\E\z|/\Q$pm\E\z)i) {
+            if ($filepath =~ m{\Q$pmpath\E\z|/\Q$pm\E\z}i) {
                 $pm_found = 1;
                 last;
             }

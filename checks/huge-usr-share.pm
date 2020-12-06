@@ -51,7 +51,7 @@ sub visit_installed_files {
 
     # space taken up in /usr/share.
     $self->_set_usrshare_size($self->usrshare_size + $file->size)
-      if $file =~ m,usr/share/,;
+      if $file =~ m{^usr/share/};
 
     return;
 }

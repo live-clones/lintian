@@ -85,12 +85,12 @@ sub source {
 
     while (<$rules_fd>) {
         # reconstitute splitted lines
-        while (s,\\$,, and defined(my $cont = <$rules_fd>)) {
+        while (s/\\$// && defined(my $cont = <$rules_fd>)) {
             $_ .= $cont;
         }
         # skip comments
         next if /^\s*\#/;
-        if (m,^(?:$command_prefix_pattern)dh\s+,) {
+        if (m{^(?:$command_prefix_pattern)dh\s+}) {
             $seen_dh_dynamic = 1 if m/\$[({]\w/;
             while (/\s--with(?:=|\s+)(['"]?)(\S+)\1/g) {
                 my $addon_list = $2;
@@ -132,13 +132,13 @@ sub visit_installed_files {
 
     # Warn if a file is installed in old nodejs root dir
     $self->hint('nodejs-module-installed-in-usr-lib', $file->name)
-      if $file->name =~ m#usr/lib/nodejs/.*#;
+      if $file->name =~ m{^usr/lib/nodejs/.*};
 
     # Warn if package is not installed in a subdirectory of nodejs root
     # directories
     $self->hint('node-package-install-in-nodejs-rootdir', $file->name)
       if $file->name
-      =~ m#usr/(?:share|lib(?:/[^/]+)?)/nodejs/(?:package\.json|[^/]*\.js)$#;
+      =~ m{^usr/(?:share|lib(?:/[^/]+)?)/nodejs/(?:package\.json|[^/]*\.js)$};
 
     # Now we have to open package.json
     return unless $file->is_open_ok;
@@ -146,12 +146,12 @@ sub visit_installed_files {
     # Return an error if a package-lock.json or a yanr.lock file is installed
     $self->hint('nodejs-lock-file', $file->name)
       if $file->name
-      =~ m#usr/(?:share|lib(?:/[^/]+)?)/nodejs/([^/]+)(.*/)(package-lock\.json|yarn\.lock)$#;
+      =~ m{^usr/(?:share|lib(?:/[^/]+)?)/nodejs/([^/]+)(.*/)(package-lock\.json|yarn\.lock)$};
 
     # Look only nodejs package.json files
     return
       unless $file->name
-      =~ m#usr/(?:share|lib(?:/[^/]+)?)/nodejs/([^\@/]+|\@[^/]+/[^/]+)(.*/)package\.json$#;
+      =~ m{^usr/(?:share|lib(?:/[^/]+)?)/nodejs/([^\@/]+|\@[^/]+/[^/]+)(.*/)package\.json$};
 
     # First regexp arg: directory in /**/nodejs or @foo/bar when dir starts
     #                   with '@', following npm registry policy
@@ -188,8 +188,8 @@ sub visit_installed_files {
         my $name = 'node-' . lc($pac->{name});
         # Normalize name following Debian policy
         # (replace invalid characters by "-")
-        $name =~ s#[/_\@]#-#g;
-        $name =~ s/\-\-+/\-/g;
+        $name =~ s{[/_\@]}{-}g;
+        $name =~ s/-+/-/g;
         $self->hint('nodejs-module-not-declared', $name, $file->name)
           if $subpath eq '/'
           and not $provides->implies($name);
@@ -204,7 +204,7 @@ sub path_exists {
 
     # Split each line in path elements
     my @elem= map { s/\*/.*/g; s/^\.\*$/.*\\w.*/; $_ ? qr{^$_/?$} : () }
-      split m#/#,
+      split m{/},
       $expr;
     my @dir = ('.');
 

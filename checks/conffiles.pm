@@ -38,12 +38,12 @@ sub binary {
     my @files= grep { $_->is_file } $self->processable->installed->sorted_list;
 
     # files /etc must be conffiles, with some exceptions).
-    my @etcfiles = grep { $_->name =~ m,^etc, } @files;
+    my @etcfiles = grep { $_->name =~ /^etc/ } @files;
     for my $file (@etcfiles) {
 
         $self->hint('file-in-etc-not-marked-as-conffile', $file)
           unless $self->processable->is_conffile($file->name)
-          || $file =~ m,/README$,
+          || $file =~ m{/README$}
           || $file eq 'etc/init.d/skeleton'
           || $file eq 'etc/init.d/rc'
           || $file eq 'etc/init.d/rcS';
@@ -54,11 +54,11 @@ sub binary {
 
         # all paths should be absolute
         $self->hint('relative-conffile', $absolute)
-          unless $absolute =~ m,^/,;
+          unless $absolute =~ m{^/};
 
         # strip the leading slash
         my $relative = $absolute;
-        $relative =~ s,^/++,,;
+        $relative =~ s{^/+}{};
 
         $count{$relative} //= 0;
         $count{$relative}++;
@@ -73,10 +73,10 @@ sub binary {
         }
 
         $self->hint('file-in-etc-rc.d-marked-as-conffile', $relative)
-          if $relative =~ m,^etc/rc.\.d/,;
+          if $relative =~ m{^etc/rc.\.d/};
 
-        if ($relative !~ m,^etc/,) {
-            if ($relative =~ m,^usr/,) {
+        if ($relative !~ m{^etc/}) {
+            if ($relative =~ m{^usr/}) {
                 $self->hint('file-in-usr-marked-as-conffile', $relative);
 
             } else {

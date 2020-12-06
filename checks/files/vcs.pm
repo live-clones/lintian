@@ -91,10 +91,9 @@ sub visit_installed_files {
 
         my $regex = $self->VCS_FILES_OR_ALL;
 
-        if (    $file->name =~ m{$regex}
-            and $file->name !~ m,^usr/share/cargo/registry/,) {
-            $self->hint('package-contains-vcs-control-file', $file->name);
-        }
+        $self->hint('package-contains-vcs-control-file', $file->name)
+          if $file->name =~ m{$regex}
+          && $file->name !~ m{^usr/share/cargo/registry/};
 
         if ($file->name =~ m/svn-commit.*\.tmp$/) {
             $self->hint('svn-commit-file-in-package', $file->name);
@@ -104,20 +103,13 @@ sub visit_installed_files {
             $self->hint('svk-commit-file-in-package', $file->name);
         }
 
-    }elsif ($file->is_dir) {
+    } elsif ($file->is_dir) {
 
-        if ($file->name =~ m,/CVS/?$,) {
-            $self->hint('package-contains-vcs-control-dir', $file->name);
-        }
-
-        if ($file->name =~ m,/\.(?:svn|bzr|git|hg)/?$,) {
-            $self->hint('package-contains-vcs-control-dir', $file->name);
-        }
-
-        if (   ($file->name =~ m,/\.arch-ids/?$,)
-            || ($file->name =~ m,/\{arch\}/?$,)) {
-            $self->hint('package-contains-vcs-control-dir', $file->name);
-        }
+        $self->hint('package-contains-vcs-control-dir', $file->name)
+          if $file->name =~ m{/CVS/?$}
+          || $file->name =~ m{/\.(?:svn|bzr|git|hg)/?$}
+          || $file->name =~ m{/\.arch-ids/?$}
+          || $file->name =~ m{/\{arch\}/?$};
     }
 
     return;

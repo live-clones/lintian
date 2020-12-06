@@ -90,7 +90,7 @@ sub find_dep5_version {
     my $uri = $original_uri;
     my $version;
 
-    if ($uri =~ m,\b(?:rev=REVISION|VERSIONED_FORMAT_URL)\b,) {
+    if ($uri =~ /\b(?:rev=REVISION|VERSIONED_FORMAT_URL)\b/) {
         $self->hint('boilerplate-copyright-format-uri', $uri);
         return undef;
     }
@@ -100,11 +100,13 @@ sub find_dep5_version {
                                 Proposals/CopyrightFormat\b}{}xsm
     ){
         $version = '0~wiki';
-        $uri =~ m,^\?action=recall&rev=(\d+)$,
-          and $version = "$version~$1";
+
+        $version = "$version~$1"
+          if $uri =~ /^\?action=recall&rev=(\d+)$/;
+
         return $version;
     }
-    if ($uri =~ m,^https?://dep(-team\.pages)?\.debian\.net/deps/dep5/?$,) {
+    if ($uri =~ m{^https?://dep(-team\.pages)?\.debian\.net/deps/dep5/?$}) {
         $version = '0+svn';
         return $version;
     }
@@ -113,8 +115,10 @@ sub find_dep5_version {
                                   wsvn/dep/web/deps/dep5\.mdwn\b}{}xsm
     ){
         $version = '0+svn';
-        $uri =~ m,^\?(?:\S+[&;])?rev=(\d+)(?:[&;]\S+)?$,
-          and $version = "$version~$1";
+
+        $version = "$version~$1"
+          if $uri =~ /^\?(?:\S+[&;])?rev=(\d+)(?:[&;]\S+)?$/;
+
         return $version;
     }
     if (
@@ -181,13 +185,13 @@ sub check_dep5_copyright {
 
     # get format before parsing as a debian control file
     my $first_para = $contents;
-    $first_para =~ s,^#.*,,mg;
-    $first_para =~ s,[ \t]+$,,mg;
-    $first_para =~ s,^\n+,,g;
-    $first_para =~ s,\n\n.*,\n,s;    #;; hi emacs
-    $first_para =~ s,\n?[ \t]+, ,g;
+    $first_para =~ s/^#.*//mg;
+    $first_para =~ s/[ \t]+$//mg;
+    $first_para =~ s/^\n+//g;
+    $first_para =~ s/\n\n.*/\n/s;    #;; hi emacs
+    $first_para =~ s/\n?[ \t]+/ /g;
 
-    $first_para =~ m,^Format(?:-Specification)?:\s*(.*),mi;
+    $first_para =~ /^Format(?:-Specification)?:\s*(.*)/mi;
     my $uri = $1;
 
     unless (length $uri) {
@@ -211,7 +215,7 @@ sub check_dep5_copyright {
     } elsif (versions_compare($version, '<<', $LAST_SIGNIFICANT_DEP5_CHANGE)) {
         $self->hint('out-of-date-copyright-format-uri', $uri);
 
-    } elsif ($uri =~ m,^http://www\.debian\.org/,) {
+    } elsif ($uri =~ m{^http://www\.debian\.org/}) {
         $self->hint('insecure-copyright-format-uri', $uri);
     }
 
@@ -283,11 +287,11 @@ sub check_dep5_copyright {
           if $license_identifier =~ m{\s+\|\s+};
 
         for my $name (@license_names) {
-            if ($name =~ m,\s,) {
+            if ($name =~ /\s/) {
 
-                if($name =~ m,[^ ]+ \s+ with \s+ (.*),x) {
+                if($name =~ /[^ ]+ \s+ with \s+ (.*)/x) {
                     my $exceptiontext = $1;
-                    unless ($exceptiontext =~ m,[^ ]+ \s+ exception,x) {
+                    unless ($exceptiontext =~ /[^ ]+ \s+ exception/x) {
                         $self->hint('bad-exception-format-in-dep5-copyright',
                             $name,
                             '(line ' . $section->position('License') . ')');
@@ -462,8 +466,8 @@ sub check_dep5_copyright {
     my @shipped_names
       = sort map { $_->name } grep { $_->is_file } @shipped_items;
 
-    my @notice_names= grep { m,(^|/)(COPYING[^/]*|LICENSE)$, } @shipped_names;
-    my @quilt_names = grep { m,^\.pc/, } @shipped_names;
+    my @notice_names= grep { m{(^|/)(COPYING[^/]*|LICENSE)$} } @shipped_names;
+    my @quilt_names = grep { m{^\.pc/} } @shipped_names;
 
     my @names_with_comma = grep { /,/ } @shipped_names;
     my @fields_with_comma = grep { $_->value('Files') =~ /,/ } @followers;

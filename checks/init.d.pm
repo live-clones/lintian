@@ -115,10 +115,10 @@ sub installable {
                 $self->hint('duplicate-updaterc.d-calls-in-postinst', $name);
                 next;
             }
-            unless (m,>\s*/dev/null,) {
-                $self->hint('output-of-updaterc.d-not-redirected-to-dev-null',
-                    "$name postinst");
-            }
+
+            $self->hint('output-of-updaterc.d-not-redirected-to-dev-null',
+                "$name postinst")
+              unless m{>\s*/dev/null};
         }
         close($fd);
     }
@@ -145,15 +145,19 @@ sub installable {
         while (<$fd>) {
             next if /$EXCLUDE_R/;
             s/\#.*$//;
-            next unless m/update-rc\.d\s+($OPTS_R)*($INITD_NAME_REGEX)/;
-            if ($initd_postrm{$2}++ == 1) {
+            next
+              unless /update-rc\.d\s+($OPTS_R)*($INITD_NAME_REGEX)/;
+
+            my $name = $2;
+
+            if ($initd_postrm{$name}++ == 1) {
                 $self->hint('duplicate-updaterc.d-calls-in-postrm', $2);
                 next;
             }
-            unless (m,>\s*/dev/null,) {
-                $self->hint('output-of-updaterc.d-not-redirected-to-dev-null',
-                    "$2 postrm");
-            }
+
+            $self->hint('output-of-updaterc.d-not-redirected-to-dev-null',
+                "$name postrm")
+              unless m{>\s*/dev/null};
         }
         close($fd);
     }
@@ -276,7 +280,7 @@ sub check_init {
                 for my $arg (qw(start stop restart force-reload status)) {
                     $tag{$arg} = 1;
                 }
-            } elsif ($l =~ m,^\#!\s*(/usr/[^\s]+),) {
+            } elsif ($l =~ m{^\#!\s*(/usr/[^\s]+)}) {
                 $self->hint('init.d-script-uses-usr-interpreter',
                     $initd_path, $1);
             }
@@ -334,7 +338,7 @@ sub check_init {
         $in_file_test = 1
           if ($l =~ m/\bif\s+.*?(?:test|\[)(?:\s+\!)?\s+-[efr]\s+/);
         $in_file_test = 0 if ($l =~ m/\bfi\b/);
-        if (!$in_file_test && $l =~ m,^\s*\.\s+["'"]?(/etc/default/[\$\w/-]+),)
+        if (!$in_file_test && $l =~ m{^\s*\.\s+["'"]?(/etc/default/[\$\w/-]+)})
         {
             $self->hint('init.d-script-sourcing-without-test',
                 "${initd_path}:$. $1");
@@ -350,7 +354,7 @@ sub check_init {
 
         # This should be more sophisticated: ignore heredocs, ignore quoted
         # text and the arguments to echo, etc.
-        $needs_fs = 1 if ($l =~ m,^[^\#]*/var/,);
+        $needs_fs = 1 if $l =~ m{^[^\#]*/var/};
 
         while ($l =~ s/^[^\#]*?(start|stop|restart|force-reload|status)//) {
             $tag{$1} = 1;
@@ -548,8 +552,8 @@ sub visit_installed_files {
 
     # check for missing init.d script when alternative init system is present
 
-    if (   $item =~ m,etc/sv/([^/]+)/run$,
-        or $item =~ m,lib/systemd/system/([^/@]+)\.service,) {
+    if (   $item =~ m{etc/sv/([^/]+)/run$}
+        || $item =~ m{lib/systemd/system/([^/@]+)\.service}) {
 
         my $service = $1;
 
@@ -563,11 +567,13 @@ sub visit_installed_files {
             "lib/systemd/system/${service}.timer");
     }
 
-    if ($item =~ m,etc/sv/([^/]+)/$,) {
+    if ($item =~ m{etc/sv/([^/]+)/$}) {
+
         my $service = $1;
         my $runfile
           = $self->processable->installed->resolve_path(
             "etc/sv/${service}/run");
+
         $self->hint(
             'directory-in-etc-sv-directory-without-executable-run-script',
             $runfile)

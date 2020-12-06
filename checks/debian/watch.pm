@@ -204,7 +204,7 @@ sub source {
           = split(' ', $remainder, 4);
         # Per #765995, $base might be undefined.
         if (defined $base) {
-            if ($base =~ s%/([^/]*\([^/]*\)[^/]*)$%/%) {
+            if ($base =~ s{/([^/]*\([^/]*\)[^/]*)$}{/}) {
                # Last component of $base has a pair of parentheses, so no
                # separate filepattern field; we remove the filepattern from the
                # end of $base and rescan the rest of the line

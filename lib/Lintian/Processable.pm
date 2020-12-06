@@ -31,7 +31,7 @@ use constant COLON => q{:};
 use constant SLASH => q{/};
 use constant UNDERSCORE => q{_};
 
-use constant EVIL_CHARACTERS => qr,[/&|;\$"'<>],;
+use constant EVIL_CHARACTERS => qr{[/&|;\$"'<>]};
 
 use Moo::Role;
 use MooX::Aliases;
@@ -262,7 +262,7 @@ sub clean_field {
 
     # make sure none of the fields can cause traversal
     my $clean = $value;
-    $clean =~ s,${\EVIL_CHARACTERS},_,g;
+    $clean =~ s/${\EVIL_CHARACTERS}/_/g;
 
     return $clean;
 }

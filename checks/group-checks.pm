@@ -118,7 +118,7 @@ sub overlap_check {
     foreach my $a_file ($a_info->installed->sorted_list) {
         my $name = $a_file->name;
         my $b_file;
-        $name =~ s,/$,,;
+        $name =~ s{/$}{};
         $b_file = $b_info->installed->lookup($name)
           // $b_info->installed->lookup("$name/");
         if ($b_file) {
@@ -153,15 +153,15 @@ sub check_multiarch {
         }
     } elsif ($ma ne 'same'
         and ($processable->fields->value('Section') || 'none')
-        =~ m,(?:^|/)debug$,) {
+        =~ m{(?:^|/)debug$}) {
         # Debug package that isn't M-A: same, exploit that (non-debug)
         # dependencies is (almost certainly) a package for which the
         # debug carries debug symbols.
         foreach my $dep (@$deps) {
             my $dma = $dep->fields->value('Multi-Arch') || 'no';
             if ($dma eq 'same'
-                and ($dep->fields->value('Section') || 'none')
-                !~ m,(?:^|/)debug$,){
+                && ($dep->fields->value('Section') || 'none')
+                !~ m{(?:^|/)debug$}){
 
                 # Debug package isn't M-A: same, but depends on a
                 # package that is from same source that isn't a debug

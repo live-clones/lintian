@@ -33,7 +33,7 @@ with 'Lintian::Check';
 sub visit_installed_files {
     my ($self, $file) = @_;
 
-    if ($file->name =~ m,/icons/[^/]+/(\d+)x(\d+)/(?!animations/).*\.png$,){
+    if ($file->name =~ m{/icons/[^/]+/(\d+)x(\d+)/(?!animations/).*\.png$}){
 
         my ($directory_width, $directory_height) = ($1, $2);
         my $resolved = $file->resolve_path;
@@ -51,7 +51,7 @@ sub visit_installed_files {
     }
 
     if (   $file->is_file
-        && $file->name =~ m,/icons/[^/]+/scalable/.*\.(?:png|xpm)$,) {
+        && $file->name =~ m{/icons/[^/]+/scalable/.*\.(?:png|xpm)$}) {
         $self->hint('raster-image-in-scalable-directory', $file->name);
     }
 

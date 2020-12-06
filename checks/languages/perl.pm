@@ -53,21 +53,21 @@ sub visit_installed_files {
 
     # perllocal.pod
     $self->hint('package-installs-perllocal-pod', $file->name)
-      if $file->name =~ m,^usr/lib/perl.*/perllocal.pod$,;
+      if $file->name =~ m{^usr/lib/perl.*/perllocal.pod$};
 
     # .packlist files
-    if ($file->name =~ m,^usr/lib/perl.*/.packlist$,) {
+    if ($file->name =~ m{^usr/lib/perl.*/.packlist$}) {
         $self->hint('package-installs-packlist', $file->name);
 
-    }elsif ($file->name =~ m,^usr/lib/(?:[^/]+/)?perl5/.*\.p[lm]$,) {
+    }elsif ($file->name =~ m{^usr/lib/(?:[^/]+/)?perl5/.*\.p[lm]$}) {
         push @{$self->perl_sources_in_lib}, $file->name;
 
-    }elsif ($file->name =~ m,^usr/lib/(?:[^/]+/)?perl5/.*\.(?:bs|so)$,) {
+    }elsif ($file->name =~ m{^usr/lib/(?:[^/]+/)?perl5/.*\.(?:bs|so)$}) {
         $self->_set_has_perl_binaries(1);
     }
 
     # perl modules
-    if ($file->name =~ m,^usr/(?:share|lib)/perl/\S,) {
+    if ($file->name =~ m{^usr/(?:share|lib)/perl/\S}) {
 
         # check if it's the "perl" package itself
         $self->hint('perl-module-in-core-directory', $file)
@@ -78,7 +78,7 @@ sub visit_installed_files {
     # we do the same check on perl scripts in checks/scripts
     my $dep = $self->processable->relation('strong');
     if (   $file->is_file
-        && $file->name =~ m,\.pm$,
+        && $file->name =~ /\.pm$/
         && !$dep->implies('libperl4-corelibs-perl | perl (<< 5.12.3-7)')) {
 
         open(my $fd, '<', $file->unpacked_path);

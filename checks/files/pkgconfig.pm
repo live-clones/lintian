@@ -58,11 +58,11 @@ sub visit_installed_files {
 
     # arch-indep pkgconfig
     if (   $file->is_regular_file
-        && $file->name=~ m,^usr/(lib(/[^/]+)?|share)/pkgconfig/[^/]+\.pc$,){
+        && $file->name=~ m{^usr/(lib(/[^/]+)?|share)/pkgconfig/[^/]+\.pc$}){
 
         my $prefix = $1;
         my $pkg_config_arch = $2 // '';
-        $pkg_config_arch =~ s,\A/,,ms;
+        $pkg_config_arch =~ s{\A/}{}ms;
 
         $self->hint('pkg-config-unavailable-for-cross-compilation',$file->name)
           if $prefix eq 'lib';
@@ -73,9 +73,9 @@ sub visit_installed_files {
       BLOCK:
         while (my $block = $sfd->readwindow) {
             # remove comment line
-            $block =~ s,\#\V*,,gsm;
+            $block =~ s/\#\V*//gsm;
             # remove continuation line
-            $block =~ s,\\\n, ,gxsm;
+            $block =~ s/\\\n/ /gxsm;
             # check if pkgconfig file include path point to
             # arch specific dir
 

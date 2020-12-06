@@ -53,7 +53,7 @@ sub visit_installed_files {
     my ($self, $file) = @_;
 
     if (   $file->is_dir
-        && $file->name =~ m,^usr/share/locale/([^/]+)/$,) {
+        && $file->name =~ m{^usr/share/locale/([^/]+)/$}) {
 
         # Without encoding:
         my ($lwccode) = split(m/[.@]/, $1);

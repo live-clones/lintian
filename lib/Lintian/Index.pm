@@ -213,11 +213,11 @@ sub create_from_basedir {
     $index_errors = decode_utf8($index_errors)
       if length $index_errors;
 
-    my $permissionspattern = qr,\S{10},;
-    my $sizepattern = qr,\d+,;
-    my $datepattern = qr,\d{4}-\d{2}-\d{2},;
-    my $timepattern = qr,\d{2}:\d{2}:\d{2}\.\d+,;
-    my $pathpattern = qr,[^\0]*,;
+    my $permissionspattern = qr/\S{10}/;
+    my $sizepattern = qr/\d+/;
+    my $datepattern = qr/\d{4}-\d{2}-\d{2}/;
+    my $timepattern = qr/\d{2}:\d{2}:\d{2}\.\d+/;
+    my $pathpattern = qr/[^\0]*/;
 
     my %all;
 

@@ -32,61 +32,59 @@ with 'Lintian::Check';
 
 sub _is_tmp_path {
     my ($path) = @_;
-    if(    $path =~ m,^tmp/.,
-        or $path =~ m,^(?:var|usr)/tmp/.,
-        or $path =~ m,^/dev/shm/,) {
-        return 1;
-    }
+
+    return 1
+      if $path =~ m{^tmp/.}
+      || $path =~ m{^(?:var|usr)/tmp/.}
+      || $path =~ m{^/dev/shm/};
+
     return 0;
 }
 
 sub visit_installed_files {
     my ($self, $file) = @_;
 
-    # /etc/opt
-    if ($file->name =~ m,^etc/opt/.,) {
-        $self->hint('dir-or-file-in-etc-opt', $file->name);
-    }
+    if ($file->name =~ m{^etc/opt/.}) {
 
-    # /usr/local
-    elsif ($file->name =~ m,^usr/local/\S+,) {
+        # /etc/opt
+        $self->hint('dir-or-file-in-etc-opt', $file->name);
+
+    } elsif ($file->name =~ m{^usr/local/\S+}) {
+        # /usr/local
         if ($file->is_dir) {
             $self->hint('dir-in-usr-local', $file->name);
         } else {
             $self->hint('file-in-usr-local', $file->name);
         }
-    }
-    # /usr/share
-    elsif ($file->name =~ m,^usr/share/[^/]+$,) {
-        if ($file->is_file) {
-            $self->hint('file-directly-in-usr-share', $file->name);
-        }
-    }
-    # /usr/bin
-    elsif ($file->name =~ m,^usr/bin/,) {
-        if (    $file->is_dir
-            and $file->name =~ m,^usr/bin/.,
-            and $file->name !~ m,^usr/bin/(?:X11|mh)/,) {
 
-            $self->hint('subdir-in-usr-bin', $file->name);
-        }
-    }
-    # /usr subdirs
-    elsif ( $self->processable->type ne 'udeb'
-        and $file->name =~ m,^usr/[^/]+/$,){
-        # FSSTND dirs
-        if ($file->name=~ m,^usr/(?:dict|doc|etc|info|man|adm|preserve)/,){
+    } elsif ($file->name =~ m{^usr/share/[^/]+$}) {
+        # /usr/share
+        $self->hint('file-directly-in-usr-share', $file->name)
+          if $file->is_file;
+
+    } elsif ($file->name =~ m{^usr/bin/}) {
+        # /usr/bin
+        $self->hint('subdir-in-usr-bin', $file->name)
+          if $file->is_dir
+          && $file->name =~ m{^usr/bin/.}
+          && $file->name !~ m{^usr/bin/(?:X11|mh)/};
+
+    } elsif ($self->processable->type ne 'udeb'
+        && $file->name =~ m{^usr/[^/]+/$}) {
+
+        # /usr subdirs
+        if ($file->name=~ m{^usr/(?:dict|doc|etc|info|man|adm|preserve)/}) {
+            # FSSTND dirs
             $self->hint('FSSTND-dir-in-usr', $file->name);
-        }
-        # FHS dirs
-        elsif (
-            $file->name !~ m,^usr/(?:X11R6|X386|
+        } elsif (
+            $file->name !~ m{^usr/(?:X11R6|X386|
                                     bin|games|include|
                                     lib|
                                     local|sbin|share|
-                                    src|spool|tmp)/,x
+                                    src|spool|tmp)/}x
         ) {
-            if ($file->name =~ m,^usr/lib(?'libsuffix'64|x?32)/,) {
+            # FHS dirs
+            if ($file->name =~ m{^usr/lib(?<libsuffix>64|x?32)/}) {
                 my $libsuffix = $+{libsuffix};
                 # eglibc exception is due to FHS. Other are
                 # transitional, waiting for full
@@ -100,8 +98,9 @@ sub visit_installed_files {
                     $self->hint('non-multi-arch-lib-dir', $file->name);
                 }
             } else {
+                # see Bug#834607
                 $self->hint('non-standard-dir-in-usr', $file->name)
-                  unless $file->name =~ m,^usr/libexec/,; # #834607
+                  unless $file->name =~ m{^usr/libexec/};
             }
 
         }
@@ -113,146 +112,143 @@ sub visit_installed_files {
     }
 
     # /var subdirs
-    elsif ( $self->processable->type ne 'udeb'
-        and $file->name =~ m,^var/[^/]+/$,){ # FSSTND dirs
-        if ($file->name =~ m,^var/(?:adm|catman|named|nis|preserve)/,) {
+    elsif ($self->processable->type ne 'udeb'
+        && $file->name =~ m{^var/[^/]+/$}) {
+
+        if ($file->name =~ m{^var/(?:adm|catman|named|nis|preserve)/}) {
+            # FSSTND dirs
             $self->hint('FSSTND-dir-in-var', $file->name);
-        }
-        # base-files is special
-        elsif ($self->processable->name eq 'base-files'
-            && $file->name =~ m,^var/(?:backups|local)/,){
+
+        } elsif ($self->processable->name eq 'base-files'
+            && $file->name =~ m{^var/(?:backups|local)/}) {
+            # base-files is special
             # ignore
-        }
-        # FHS dirs with exception in Debian policy
-        elsif (
+
+        } elsif (
             $file->name !~ m{\A var/
                              (?: account|lib|cache|crash|games
                                 |lock|log|opt|run|spool|state
                                 |tmp|www|yp)/
              }xsm
         ) {
+            # FHS dirs with exception in Debian policy
             $self->hint('non-standard-dir-in-var', $file->name);
         }
 
     } elsif ($self->processable->type ne 'udeb'
-        and $file->name =~ m,^var/lib/games/.,) {
+        && $file->name =~ m{^var/lib/games/.}) {
         $self->hint('non-standard-dir-in-var', $file->name);
 
-        # /var/lock
     } elsif ($self->processable->type ne 'udeb'
-        and $file->name =~ m,^var/lock/.,) {
+        && $file->name =~ m{^var/lock/.}) {
+        # /var/lock
         $self->hint('dir-or-file-in-var-lock', $file->name);
 
-        # /var/run
     } elsif ($self->processable->type ne 'udeb'
-        and $file->name =~ m,^var/run/.,) {
+        && $file->name =~ m{^var/run/.}) {
+        # /var/run
         $self->hint('dir-or-file-in-var-run', $file->name);
-    } elsif ($self->processable->type ne 'udeb' and $file->name =~ m,^run/.,) {
-        $self->hint('dir-or-file-in-run', $file->name);
-    }
 
-    # /var/www
-    # Packages are allowed to create /var/www since it's
-    # historically been the default document root, but they
-    # shouldn't be installing stuff under that directory.
-    elsif ($file->name =~ m,^var/www/\S+,) {
+    } elsif ($self->processable->type ne 'udeb' && $file->name =~ m{^run/.}) {
+        $self->hint('dir-or-file-in-run', $file->name);
+
+    } elsif ($file->name =~ m{^var/www/\S+}) {
+        # /var/www
+        # Packages are allowed to create /var/www since it's
+        # historically been the default document root, but they
+        # shouldn't be installing stuff under that directory.
         $self->hint('dir-or-file-in-var-www', $file->name);
-    }
-    # /opt
-    elsif ($file->name =~ m,^opt/.,) {
+
+    } elsif ($file->name =~ m{^opt/.}) {
+        # /opt
         $self->hint('dir-or-file-in-opt', $file->name);
-    } elsif ($file->name =~ m,^hurd/,) {
+
+    } elsif ($file->name =~ m{^hurd/}) {
         return;
-    } elsif ($file->name =~ m,^servers/,) {
+
+    } elsif ($file->name =~ m{^servers/}) {
         return;
-    }
-    # /home
-    elsif ($file->name =~ m,^home/.,) {
+
+    } elsif ($file->name =~ m{^home/.}) {
+        # /home
         $self->hint('dir-or-file-in-home', $file->name);
-    } elsif ($file->name =~ m,^root/.,) {
+
+    } elsif ($file->name =~ m{^root/.}) {
         $self->hint('dir-or-file-in-home', $file->name);
-    }
-    # /tmp, /var/tmp, /usr/tmp
-    elsif (_is_tmp_path($file->name)) {
+
+    } elsif (_is_tmp_path($file->name)) {
+        # /tmp, /var/tmp, /usr/tmp
         $self->hint('dir-or-file-in-tmp', $file->name);
-    }
-    # /mnt
-    elsif ($file->name =~ m,^mnt/.,) {
+
+    } elsif ($file->name =~ m{^mnt/.}) {
+        # /mnt
         $self->hint('dir-or-file-in-mnt', $file->name);
-    }
-    # /bin
-    elsif ($file->name =~ m,^bin/,) {
-        if ($file->is_dir and $file->name =~ m,^bin/.,) {
-            $self->hint('subdir-in-bin', $file->name);
-        }
-    }
-    # /srv
-    elsif ($file->name =~ m,^srv/.,) {
+
+    } elsif ($file->name =~ m{^bin/}) {
+        # /bin
+        $self->hint('subdir-in-bin', $file->name)
+          if $file->is_dir && $file->name =~ m{^bin/.};
+
+    } elsif ($file->name =~ m{^srv/.}) {
+        # /srv
         $self->hint('dir-or-file-in-srv', $file->name);
-    }
-    # FHS directory?
-    elsif (
-            $file->name =~ m,^[^/]+/$,
-        and $file->name !~ m{\A (?:
+
+    }elsif (
+        $file->name =~ m{^[^/]+/$}
+        && $file->name !~ m{\A (?:
                   bin|boot|dev|etc|home|lib
                  |mnt|opt|root|run|sbin|srv|sys
                  |tmp|usr|var)  /
-          }oxsm
+          }xsm
     ) {
+        # FHS directory?
+
         # Make an exception for the base-files package here and
         # other similar packages because they install a slew of
         # top-level directories for setting up the base system.
         # (Specifically, /cdrom, /floppy, /initrd, and /proc are
         # not mentioned in the FHS).
-        if ($file->name =~ m,^lib(?'libsuffix'64|x?32)/,) {
+        if ($file->name =~ m{^lib(?<libsuffix>64|x?32)/}) {
             my $libsuffix = $+{libsuffix};
+
             # see comments for ^usr/lib(?'libsuffix'64|x?32)
-            unless ($self->processable->source =~ m/^e?glibc$/
-                or $self->processable->name =~ m/^lib$libsuffix/) {
+            $self->hint('non-multi-arch-lib-dir', $file->name)
+              unless $self->processable->source =~ m/^e?glibc$/
+              || $self->processable->name =~ m/^lib$libsuffix/;
 
-                $self->hint('non-multi-arch-lib-dir', $file->name);
-            }
         } else {
-            unless ($self->processable->name eq 'base-files'
-                or $self->processable->name eq 'hurd'
-                or $self->processable->name eq 'hurd-udeb'
-                or $self->processable->name =~ /^rootskel(?:-bootfloppy)?/) {
-
-                $self->hint('non-standard-toplevel-dir', $file->name);
-            }
+            $self->hint('non-standard-toplevel-dir', $file->name)
+              unless $self->processable->name eq 'base-files'
+              || $self->processable->name eq 'hurd'
+              || $self->processable->name eq 'hurd-udeb'
+              || $self->processable->name =~ /^rootskel(?:-bootfloppy)?/;
         }
     }
 
     # compatibility symlinks should not be used
-    if (   $file->name =~ m,^usr/(?:spool|tmp)/,
-        or $file->name =~ m,^usr/(?:doc|bin)/X11/,
-        or $file->name =~ m,^var/adm/,) {
-
-        $self->hint('use-of-compat-symlink', $file->name);
-    }
+    $self->hint('use-of-compat-symlink', $file->name)
+      if $file->name =~ m{^usr/(?:spool|tmp)/}
+      || $file->name =~ m{^usr/(?:doc|bin)/X11/}
+      || $file->name =~ m{^var/adm/};
 
     # any files
-    if (not $file->is_dir) {
-        unless (
-               $self->processable->type eq 'udeb'
-            or $file->name =~ m,^usr/(?:bin|dict|doc|games|
+    $self->hint('file-in-unusual-dir', $file->name)
+      unless $file->is_dir
+      || $self->processable->type eq 'udeb'
+      || $file->name =~ m{^usr/(?:bin|dict|doc|games|
                                     include|info|lib(?:x?32|64)?|
-                                    man|sbin|share|src|X11R6)/,x
-            or $file->name =~ m,^lib(?:x?32|64)?/(?:modules/|libc5-compat/)?,
-            or $file->name =~ m,^var/(?:games|lib|www|named)/,
-            or $file->name =~ m,^(?:bin|boot|dev|etc|sbin)/,
-            # non-FHS, but still usual
-            or $file->name =~ m,^usr/[^/]+-linux[^/]*/,
-            or $file->name =~ m,^usr/libexec/, # FHS 3.0 / #834607
-            or $file->name =~ m,^usr/iraf/,
-            # not allowed, but tested individually
-            or $file->name =~ m{\A (?:
+                                    man|sbin|share|src|X11R6)/}x
+      || $file->name =~ m{^lib(?:x?32|64)?/(?:modules/|libc5-compat/)?}
+      || $file->name =~ m{^var/(?:games|lib|www|named)/}
+      || $file->name =~ m{^(?:bin|boot|dev|etc|sbin)/}
+      # non-FHS, but still usual
+      || $file->name =~ m{^usr/[^/]+-linux[^/]*/}
+      || $file->name =~ m{^usr/libexec/} # FHS 3.0 / #834607
+      || $file->name =~ m{^usr/iraf/}
+      # not allowed, but tested individually
+      || $file->name =~ m{\A (?:
                         build|home|mnt|opt|root|run|srv
-                       |(?:(?:usr|var)/)?tmp)|var/www/}xsm
-        ) {
-            $self->hint('file-in-unusual-dir', $file->name);
-        }
-    }
+                       |(?:(?:usr|var)/)?tmp)|var/www/}xsm;
 
     return;
 }

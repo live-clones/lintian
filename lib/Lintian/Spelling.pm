@@ -226,7 +226,7 @@ sub check_spelling_picky {
 
     # Check this first in case it's contained in square brackets and
     # removed below.
-    if ($text =~ m,meta\s+package,) {
+    if ($text =~ /meta\s+package/) {
         $counter++;
         $code_ref->('meta package', 'metapackage');
     }
@@ -265,7 +265,7 @@ Regular expression that matches names of any known shell.
 
 =cut
 
-our $known_shells_regex = qr'(?:[bd]?a|t?c|(?:pd|m)?k|z)?sh';
+our $known_shells_regex = qr/(?:[bd]?a|t?c|(?:pd|m)?k|z)?sh/;
 
 =back
 

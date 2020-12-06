@@ -69,7 +69,7 @@ sub breakdown_installed_files {
         next
           if scalar @files < 2;
 
-        if (any { m,changelog,io} @files) {
+        if (any { m/changelog/i} @files) {
             $self->hint('duplicate-changelog-files', sort @files);
 
         } else {

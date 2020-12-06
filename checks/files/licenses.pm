@@ -65,31 +65,31 @@ sub visit_installed_files {
         # Ignore extra license files in examples, since various
         # package building software includes example packages with
         # licenses.
-        and ($file->operm & 0111) == 0
-        and not $file->name =~ m{ \. (?:
+        && ($file->operm & 0111) == 0
+        && $file->name !~ m{ \. (?:
                   # Common "non-license" file extensions...
                    el|[ch]|cc|p[ylmc]|[hu]i|p_hi|html|php|rb|xpm
                      |png|jpe?g|gif|svg|dtd|mk|lisp|yml|rs|ogg|xbm
                ) \Z}xsm
-        and not $file->name=~ m,^usr/share/zope/Products/.*\.(?:dtml|pt|cpt)$,
-        and not $file->name =~ m,/under\S+License\.docbook$,
-        and not $file->name =~ m,^usr/share/doc/[^/]+/examples/,
+        && $file->name !~ m{^usr/share/zope/Products/.*\.(?:dtml|pt|cpt)$}
+        && $file->name !~ m{/under\S+License\.docbook$}
+        && $file->name !~ m{^usr/share/doc/[^/]+/examples/}
         # liblicense has a manpage called license
-        and not $file->name =~ m,^usr/share/man/(?:[^/]+/)?man\d/,
+        && $file->name !~ m{^usr/share/man/(?:[^/]+/)?man\d/}
         # liblicense (again)
-        and not $file->name =~ m,^usr/share/pyshared-data/,
+        && $file->name !~ m{^usr/share/pyshared-data/}
         # Rust crate unmodified upstream sources
-        and not $file->name =~ m,^usr/share/cargo/registry/,
+        && $file->name !~ m{^usr/share/cargo/registry/}
         # Some GNOME/GTK software uses these to show the "license
         # header".
-        and not $file->name =~ m,
+        && $file->name !~ m{
                ^usr/share/(?:gnome/)?help/[^/]+/[^/]+/license\.page$
-             ,x
+             }x
         # base-files (which is required to ship them)
-        and not $file->name =~ m,^usr/share/common-licenses/[^/]+$,
-        and not length $file->link
+        && $file->name !~ m{^usr/share/common-licenses/[^/]+$}
+        && !length($file->link)
         # Sphinx includes various license files
-        and not $file->name =~ m,/_sources/license(\.rst)?\.txt$,i
+        && $file->name !~ m{/_sources/license(?:\.rst)?\.txt$}i
     ) {
 
         # okay, we cannot rule it out based on file name; but if

@@ -33,15 +33,15 @@ with 'Lintian::Check';
 sub visit_installed_files {
     my ($self, $file) = @_;
 
-    if ($file->name =~ m,^usr/share/applications/mimeinfo.cache(?:\.gz)?$,){
+    if ($file->name =~ m{^usr/share/applications/mimeinfo.cache(?:\.gz)?$}){
         $self->hint('package-contains-mimeinfo.cache-file', $file->name);
 
-    }elsif ($file->name =~ m,^usr/share/mime/.+,) {
+    }elsif ($file->name =~ m{^usr/share/mime/.+}) {
 
-        if ($file->name =~ m,^usr/share/mime/[^/]+$,) {
+        if ($file->name =~ m{^usr/share/mime/[^/]+$}) {
             $self->hint('package-contains-mime-cache-file', $file->name);
 
-        } elsif ($file->name !~ m,^usr/share/mime/packages/,) {
+        } elsif ($file->name !~ m{^usr/share/mime/packages/}) {
             $self->hint('package-contains-mime-file-outside-package-dir',
                 $file->name);
         }

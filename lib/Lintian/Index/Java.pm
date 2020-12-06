@@ -76,7 +76,7 @@ sub add_java {
     for my $file (@java_files) {
 
         push(@lines, parse_jar($file->name))
-          if $file->name =~ m#\S+\.jar$#i;
+          if $file->name =~ /\S+\.jar$/i;
     }
 
     my $file;
@@ -90,25 +90,25 @@ sub add_java {
         chomp $line;
         next if $line =~ /^\s*$/;
 
-        if ($line =~ m#^-- ERROR:\s*(\S.++)$#o) {
+        if ($line =~ /^-- ERROR:\s*(\S.+)$/) {
             $java_info{$file}{error} = $1;
 
-        } elsif ($line =~ m#^-- MANIFEST: (?:\./)?(?:.+)$#o) {
+        } elsif ($line =~ m{^-- MANIFEST: (?:\./)?(?:.+)$}) {
             # TODO: check $file == $1 ?
             $java_info{$file}{manifest} = {};
             $manifest = $java_info{$file}{manifest};
             $file_list = 0;
 
-        } elsif ($line =~ m#^-- (?:\./)?(.+)$#o) {
+        } elsif ($line =~ m{^-- (?:\./)?(.+)$}) {
             $file = $1;
             $java_info{$file}{files} = {};
             $file_list = $java_info{$file}{files};
             $manifest = 0;
         } else {
-            if ($manifest && $line =~ m#^  (\S+):\s(.*)$#o) {
+            if ($manifest && $line =~ m{^  (\S+):\s(.*)$}) {
                 $manifest->{$1} = $2;
             } elsif ($file_list) {
-                my ($fname, $clmajor) = ($line =~ m#^([^-].*):\s*([-\d]+)$#);
+                my ($fname, $clmajor) = ($line =~ m{^([^-].*):\s*([-\d]+)$});
                 $file_list->{$fname} = $clmajor;
             }
         }
@@ -163,7 +163,7 @@ sub parse_jar {
 
             # store for later processing
             $manifest = $member
-              if $name =~ m@^META-INF/MANIFEST.MF$@oi;
+              if $name =~ m{^META-INF/MANIFEST.MF$}i;
 
             # add version if we can find it
             my $jversion;

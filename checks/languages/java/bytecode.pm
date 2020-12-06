@@ -34,8 +34,8 @@ sub visit_installed_files {
     my ($self, $file) = @_;
 
     # .class (compiled Java files)
-    if (   $file->name =~ m,\.class$,
-        && $file->name !~ m,(?:WEB-INF|demo|doc|example|sample|test),) {
+    if (   $file->name =~ /\.class$/
+        && $file->name !~ /(?:WEB-INF|demo|doc|example|sample|test)/) {
 
         my $magic = $file->magic(4);
 

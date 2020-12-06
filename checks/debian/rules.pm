@@ -50,32 +50,32 @@ our $PYTHON3_ALL_DEPEND
 # optional tags to use for reporting the problem if some information other
 # than the default is required.
 our @GLOBAL_CLEAN_DEPENDS = (
-    [ant => qr'^include\s*/usr/share/cdbs/1/rules/ant\.mk'],
-    [cdbs => qr'^include\s+/usr/share/cdbs/'],
-    [cdbs => qr'^include\s+/usr/share/R/debian/r-cran\.mk'],
-    [dbs => qr'^include\s+/usr/share/dbs/'],
-    ['dh-make-php' => qr'^include\s+/usr/share/cdbs/1/class/pear\.mk'],
+    [ant => qr{^include\s*/usr/share/cdbs/1/rules/ant\.mk}],
+    [cdbs => qr{^include\s+/usr/share/cdbs/}],
+    [cdbs => qr{^include\s+/usr/share/R/debian/r-cran\.mk}],
+    [dbs => qr{^include\s+/usr/share/dbs/}],
+    ['dh-make-php' => qr{^include\s+/usr/share/cdbs/1/class/pear\.mk}],
     [
         'debhelper | debhelper-compat' =>
-          qr'^include\s+/usr/share/cdbs/1/rules/debhelper\.mk'
+          qr{^include\s+/usr/share/cdbs/1/rules/debhelper\.mk}
     ],
     [
         'debhelper | debhelper-compat' =>
-          qr'^include\s+/usr/share/R/debian/r-cran\.mk'
+          qr{^include\s+/usr/share/R/debian/r-cran\.mk}
     ],
-    [dpatch => qr'^include\s+/usr/share/cdbs/1/rules/dpatch\.mk'],
+    [dpatch => qr{^include\s+/usr/share/cdbs/1/rules/dpatch\.mk}],
     [
         'gnome-pkg-tools | dh-sequence-gnome' =>
-          qr'^include\s+/usr/share/gnome-pkg-tools/'
+          qr{^include\s+/usr/share/gnome-pkg-tools/}
     ],
-    [quilt => qr'^include\s+/usr/share/cdbs/1/rules/patchsys-quilt\.mk'],
-    [dpatch => qr'^include\s+/usr/share/dpatch/'],
-    ['mozilla-devscripts' => qr'^include\s+/usr/share/mozilla-devscripts/'],
-    [quilt => qr'^include\s+/usr/share/quilt/'],
-    ['ruby-pkg-tools' => qr'^include\s+/usr/share/ruby-pkg-tools/1/class/'],
-    ['r-base-dev' => qr'^include\s+/usr/share/R/debian/r-cran\.mk'],
+    [quilt => qr{^include\s+/usr/share/cdbs/1/rules/patchsys-quilt\.mk}],
+    [dpatch => qr{^include\s+/usr/share/dpatch/}],
+    ['mozilla-devscripts' => qr{^include\s+/usr/share/mozilla-devscripts/}],
+    [quilt => qr{^include\s+/usr/share/quilt/}],
+    ['ruby-pkg-tools' => qr{^include\s+/usr/share/ruby-pkg-tools/1/class/}],
+    ['r-base-dev' => qr{^include\s+/usr/share/R/debian/r-cran\.mk}],
     [
-        $ANYPYTHON_DEPEND => qr'/usr/share/cdbs/1/class/python-distutils\.mk',
+        $ANYPYTHON_DEPEND => qr{/usr/share/cdbs/1/class/python-distutils\.mk},
         'missing-python-build-dependency'
     ],
 );
@@ -84,10 +84,10 @@ our @GLOBAL_CLEAN_DEPENDS = (
 # debian/rules file, this package must be listed in either Build-Depends or
 # Build-Depends-Indep as appropriate; and optional tags as above.
 my @GLOBAL_DEPENDS=(
-    ['dh-ocaml, ocaml-nox | ocaml' => qr'^\t\s*dh_ocaml(?:init|doc)\s'],
+    ['dh-ocaml, ocaml-nox | ocaml' => qr/^\t\s*dh_ocaml(?:init|doc)\s/],
     [
         'debhelper | debhelper-compat | dh-autoreconf' =>
-          qr'^\t\s*dh_autoreconf(?:_clean)?\s'
+          qr/^\t\s*dh_autoreconf(?:_clean)?\s/
     ],
 );
 
@@ -95,21 +95,21 @@ my @GLOBAL_DEPENDS=(
 # regex matches in one of clean, build-arch, binary-arch, or a rule they
 # depend on, this package is allowed (and required) in Build-Depends.
 my @RULE_CLEAN_DEPENDS =(
-    [ant => qr'^\t\s*(\S+=\S+\s+)*ant\s'],
-    ['debhelper | debhelper-compat' => qr'^\t\s*dh_(?!autoreconf).+'],
-    ['dh-ocaml, ocaml-nox | ocaml' => qr'^\t\s*dh_ocamlinit\s'],
-    [dpatch => qr'^\t\s*(\S+=\S+\s+)*dpatch\s'],
-    ['po-debconf' => qr'^\t\s*debconf-updatepo\s'],
-    [$PYTHON_DEPEND => qr'^\t\s*python\s', 'missing-python-build-dependency'],
+    [ant => qr/^\t\s*(\S+=\S+\s+)*ant\s/],
+    ['debhelper | debhelper-compat' => qr/^\t\s*dh_(?!autoreconf).+/],
+    ['dh-ocaml, ocaml-nox | ocaml' => qr/^\t\s*dh_ocamlinit\s/],
+    [dpatch => qr/^\t\s*(\S+=\S+\s+)*dpatch\s/],
+    ['po-debconf' => qr/^\t\s*debconf-updatepo\s/],
+    [$PYTHON_DEPEND => qr/^\t\s*python\s/, 'missing-python-build-dependency'],
     [
-        $PYTHON3_DEPEND => qr'^\t\s*python3\s',
+        $PYTHON3_DEPEND => qr/^\t\s*python3\s/,
         'missing-python-build-dependency'
     ],
     [
-        $ANYPYTHON_DEPEND => qr'\ssetup\.py\b',
+        $ANYPYTHON_DEPEND => qr/\ssetup\.py\b/,
         'missing-python-build-dependency'
     ],
-    [quilt => qr'^\t\s*(\S+=\S+\s+)*quilt\s'],
+    [quilt => qr/^\t\s*(\S+=\S+\s+)*quilt\s/],
 );
 
 # Rules about required debhelper command ordering.  Each command is put into a
@@ -171,7 +171,7 @@ sub source {
     my $start = <$rules_fd>;
     $start //= q{};
     $self->hint('debian-rules-not-a-makefile')
-      unless $start =~ m%^\#!\s*/usr/bin/make\s+-[re]?f[re]?\s*$%;
+      unless $start =~ m{^\#!\s*/usr/bin/make\s+-[re]?f[re]?\s*$};
 
     # Check if debian/rules is marked as executable.
     $self->hint('debian-rules-not-executable') unless $rules->is_executable;
@@ -200,7 +200,7 @@ sub source {
     my $includes = 0;
 
     while (<$rules_fd>) {
-        while (s,\\$,, and defined(my $cont = <$rules_fd>)) {
+        while (s/\\$// && defined(my $cont = <$rules_fd>)) {
             $_ .= $cont;
         }
         my $line = $_;
@@ -237,9 +237,8 @@ sub source {
             || m/^\t\s*(?:\$[\(\{]MAKE[\}\)]|make)\s(?:.*\s)?-(\w*)i.*(?:dist)?clean/s
         ) {
             # Ignore "-C<dir>" (#671537)
-            if (not $1 or $1 !~ m,^C,) {
-                $self->hint('debian-rules-ignores-make-clean-error',"line $.");
-            }
+            $self->hint('debian-rules-ignores-make-clean-error',"line $.")
+              unless $1 && $1 =~ /^C/;
         }
 
         if (/^\s*(?:export\s+)?DEB_BUILD_OPTIONS\s*:?=/ && keys(%seen) == 0) {

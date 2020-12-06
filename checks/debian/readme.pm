@@ -71,7 +71,7 @@ sub installable {
     my $fd = open_readme($pkg_name, $processable);
     return if not defined($fd);
     while (my $line = <$fd>) {
-        if ($line =~ m,/usr/doc\b,) {
+        if ($line =~ m{/usr/doc\b}) {
             $self->hint('readme-debian-mentions-usr-doc', "line $.");
         }
         $readme .= $line;

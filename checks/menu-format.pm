@@ -87,7 +87,7 @@ has MENU_SECTIONS => (
     default => sub {
         my ($self) = @_;
 
-        return $self->profile->load_data('menu-format/menu-sections',qr|/|,
+        return $self->profile->load_data('menu-format/menu-sections',qr{/},
             \&_menu_sections);
     });
 
@@ -435,22 +435,22 @@ sub verify_line {
     # Sanitize the section tag
     my $section = $vals{'section'};
     $section =~ tr:/:/:s;       # eliminate duplicate slashes. # Hallo emacs ;;
-    $section =~ s:/$::          # remove trailing slash
+    $section =~ s{/$}{}         # remove trailing slash
       unless $section eq '/'; # - except if $section is '/'
 
     # Be sure the command is provided by the package.
     my ($okay, $command)
       = $self->verify_cmd($fullname, $linecount, $vals{'command'});
     $self->hint('menu-command-not-in-package', "$fullname:$linecount $command")
-      unless ($okay
-        or not $command
-        or ($tested_packages >= 2)
-        or
-        ($section =~ m:^(WindowManagers/Modules|FVWM Modules|Window Maker):));
+      unless $okay
+      || !$command
+      || $tested_packages >= 2
+      ||$section =~ m{^(WindowManagers/Modules|FVWM Modules|Window Maker)};
 
-    if (defined($command)) {
-        $command =~ s@^(?:usr/)?s?bin/@@;
-        $command =~ s@^usr/games/@@;
+    if (defined $command) {
+        $command =~ s{^(?:usr/)?s?bin/}{};
+        $command =~ s{^usr/games/}{};
+
         if ($desktop_cmds->{$command}) {
             $self->hint('command-in-menu-file-and-desktop-file',
                 $command,"${fullname}:${linecount}");
@@ -472,13 +472,13 @@ sub verify_line {
     # Check the needs tag.
     my $needs = lc($vals{'needs'}); # needs is case insensitive.
 
-    if ($section =~ m:^(WindowManagers/Modules|FVWM Modules|Window Maker):) {
+    if ($section =~ m{^(WindowManagers/Modules|FVWM Modules|Window Maker)}) {
         # WM/Modules: needs must not be the regular ones nor wm
         if ($needs_tag_vals_hash{$needs} or $needs eq 'wm') {
             $self->hint('non-wm-module-in-wm-modules-menu-section',
                 "$needs $fullname:$linecount");
         }
-    } elsif ($section =~ m:^Window ?Managers:) {
+    } elsif ($section =~ m{^Window ?Managers}) {
         # Other WM sections: needs must be wm
         if ($needs ne 'wm') {
             $self->hint('non-wm-in-windowmanager-menu-section',
@@ -496,23 +496,23 @@ sub verify_line {
 
     # Check the section tag
     # Check for historical changes in the section tree.
-    if ($section =~ m:^Apps/Games:) {
+    if ($section =~ m{^Apps/Games}) {
         $self->hint('menu-item-uses-apps-games-section',
             "$fullname:$linecount");
-        $section =~ s:^Apps/::;
+        $section =~ s{^Apps/}{};
     }
-    if ($section =~ m:^Apps/:) {
+    if ($section =~ m{^Apps/}) {
         $self->hint('menu-item-uses-apps-section', "$fullname:$linecount");
-        $section =~ s:^Apps/:Applications/:;
+        $section =~ s{^Apps/}{Applications/};
     }
-    if ($section =~ m:^WindowManagers:) {
+    if ($section =~ m{^WindowManagers}) {
         $self->hint('menu-item-uses-windowmanagers-section',
             "$fullname:$linecount");
-        $section =~ s:^WindowManagers:Window Managers:;
+        $section =~ s{^WindowManagers}{Window Managers};
     }
 
     # Check for Evil new root sections.
-    my ($rootsec, $sect) = split m:/:, $section, 2;
+    my ($rootsec, $sect) = split(m{/}, $section, 2);
     my $root_data = $self->MENU_SECTIONS->value($rootsec);
     if (not defined $root_data) {
         if (not $rootsec =~ m/$pkg/i) {
@@ -551,9 +551,9 @@ sub verify_icon {
         return;
     }
 
-    $self->hint('menu-icon-uses-relative-path', $icon) unless $icon =~ m,^/,;
+    $self->hint('menu-icon-uses-relative-path', $icon) unless $icon =~ m{^/};
 
-    $icon =~ s|^/*||og;
+    $icon =~ s{^/*}{}g;
 
     if (not($icon =~ m/\.xpm$/i)) {
         $self->hint('menu-icon-not-in-xpm-format', $icon);
@@ -719,15 +719,17 @@ sub verify_desktop_file {
     #
     # TODO:  Should check quoting and the check special field
     # codes in Exec for desktop files.
-    if (    $file =~ m,^usr/share/applications/,
-        and $vals{'Exec'}
-        and $vals{'Exec'} =~ /\S/) {
+    if (   $file =~ m{^usr/share/applications/}
+        && $vals{'Exec'}
+        && $vals{'Exec'} =~ /\S/) {
+
         my ($okay, $command)
           = $self->verify_cmd($file->name, undef, $vals{'Exec'});
         $self->hint('desktop-command-not-in-package', $file, $command)
           unless $okay
           or $command eq 'kcmshell';
-        $command =~ s@^(?:usr/)?s?bin/@@;
+
+        $command =~ s{^(?:usr/)?s?bin/}{};
         $desktop_cmds->{$command} = 1
           if $command !~ m/^(?:su-to-root|sux?|(?:gk|kde)su)$/;
     }
@@ -770,11 +772,11 @@ sub verify_desktop_file {
 
     # Check that the Exec tag specifies how to pass a filename if MimeType
     # tags are present.
-    if ($file =~ m,^usr/share/applications/, and defined $vals{'MimeType'}) {
-        unless(defined $vals{'Exec'}
-            and $vals{'Exec'} =~ m,(?:^|[^%])%[fFuU],){
-            $self->hint('desktop-mime-but-no-exec-code', $file);
-        }
+    if ($file =~ m{^usr/share/applications/} && defined $vals{'MimeType'}) {
+
+        $self->hint('desktop-mime-but-no-exec-code', $file)
+          unless defined $vals{'Exec'}
+          && $vals{'Exec'} =~ /(?:^|[^%])%[fFuU]/;
     }
 
     return;
@@ -802,8 +804,9 @@ sub verify_cmd {
     if ($com[0] and $com[0] eq '/usr/sbin/su-to-root') {
         $self->hint('su-to-root-with-usr-sbin', $location);
     }
-    if (    $com[0]
-        and $com[0] =~ m,^(?:/usr/s?bin/)?(su-to-root|gksu|kdesu|sux)$,) {
+    if (   $com[0]
+        && $com[0] =~ m{^(?:/usr/s?bin/)?(su-to-root|gksu|kdesu|sux)$}) {
+
         my $wrapper = $1;
         shift @com;
         while (@com) {
@@ -840,13 +843,13 @@ sub verify_cmd {
     }
     my $cmd_file = $cmd;
     if ($cmd_file) {
-        $cmd_file =~ s,^/,,;
+        $cmd_file =~ s{^/}{};
     }
     my $okay = $cmd
       && ( $cmd =~ /^[\'\"]/
         || $processable->installed->lookup($cmd_file)
-        || $cmd =~ m,^(/bin/)?sh,
-        || $cmd =~ m,^(/usr/bin/)?sensible-(pager|editor|browser),
+        || $cmd =~ m{^(/bin/)?sh}
+        || $cmd =~ m{^(/usr/bin/)?sensible-(pager|editor|browser)}
         || any { $processable->installed->lookup($_ . $cmd) } @path);
     return ($okay, $cmd_file);
 }

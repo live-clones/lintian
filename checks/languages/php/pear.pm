@@ -157,7 +157,7 @@ sub source {
             my $has_addon_php = 0;
             open(my $rules_fd, '<', $rules->unpacked_path);
             while (<$rules_fd>) {
-                while (s,\\$,, and defined(my $cont = <$rules_fd>)) {
+                while (s/\\$// && defined(my $cont = <$rules_fd>)) {
                     $_ .= $cont;
                 }
                 next if /^\s*\#/;

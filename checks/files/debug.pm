@@ -35,7 +35,7 @@ has warned_debug_name => (is => 'rwp', default => 0);
 sub visit_installed_files {
     my ($self, $file) = @_;
 
-    if ($file->name =~ m,^usr/lib/debug/\S,) {
+    if ($file->name =~ m{^usr/lib/debug/\S}) {
 
         unless ($self->processable->is_pkg_class('debug')) {
 

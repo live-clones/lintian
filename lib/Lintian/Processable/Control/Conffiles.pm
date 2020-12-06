@@ -102,7 +102,7 @@ sub is_conffile {
 
             # strip the leading slash
             my $relative = $absolute;
-            $relative =~ s,^/++,,;
+            $relative =~ s{^/+}{};
 
             # look up happens with a relative path
             $self->{conffiles_lookup}{$relative} = 1;

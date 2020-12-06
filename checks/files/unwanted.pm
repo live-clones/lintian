@@ -36,15 +36,13 @@ sub visit_installed_files {
     return
       unless $file->is_file;
 
-    if (   $file->name =~ /~$/
-        or $file->name =~ m,\#[^/]+\#$,
-        or $file->name =~ m,/\.[^/]+\.swp$,) {
-        $self->hint('backup-file-in-package', $file->name);
-    }
+    $self->hint('backup-file-in-package', $file->name)
+      if $file->name =~ /~$/
+      || $file->name =~ m{\#[^/]+\#$}
+      || $file->name =~ m{/\.[^/]+\.swp$};
 
-    if ($file->name =~ m,/\.nfs[^/]+$,) {
-        $self->hint('nfs-temporary-file-in-package', $file->name);
-    }
+    $self->hint('nfs-temporary-file-in-package', $file->name)
+      if $file->name =~ m{/\.nfs[^/]+$};
 
     return;
 }

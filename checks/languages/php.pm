@@ -35,7 +35,7 @@ sub visit_installed_files {
 
     # /etc/php/*/mods-available/*.ini
     if (   $file->is_file
-        && $file->name =~ m,^etc/php/.*/mods-available/.+\.ini$,) {
+        && $file->name =~ m{^etc/php/.*/mods-available/.+\.ini$}) {
 
         open(my $fd, '<', $file->unpacked_path);
         while (<$fd>) {

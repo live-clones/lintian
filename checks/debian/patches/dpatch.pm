@@ -68,11 +68,11 @@ sub source {
         while(<$fd>) {
             chomp;
             next if (/^\#/); #ignore comments or CPP directive
-            s%//.*%% if $list_uses_cpp; # remove C++ style comments
-            if ($list_uses_cpp && m%/\*%) {
+            s{//.*}{} if $list_uses_cpp; # remove C++ style comments
+            if ($list_uses_cpp && m{/\*}) {
                 # remove C style comments
-                $_ .= <$fd> while($_ !~ m%\*/%);
-                s%/\*[^*]*\*/%%g;
+                $_ .= <$fd> while($_ !~ m{\*/});
+                s{/\*[^*]*\*/}{}g;
             }
             next if (/^\s*$/); #ignore blank lines
             push @patches, split(' ', $_);

@@ -64,7 +64,7 @@ sub visit_installed_files {
     my ($self, $file) = @_;
 
     $self->have_r_package_not_arch_all(1)
-      if $file->name =~ m,^usr/lib/R/.*/DESCRIPTION,
+      if $file->name =~ m{^usr/lib/R/.*/DESCRIPTION}
       && !$file->is_dir
       && $self->processable->name =~ /^r-(?:cran|bioc|other)-/
       && $file->bytes =~ m/NeedsCompilation: no/m

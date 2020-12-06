@@ -34,7 +34,7 @@ sub visit_installed_files {
     my ($self, $file) = @_;
 
     return
-      unless $file->name =~ m,^(?:s?bin|lib(?:|[ox]?32|64))/,;
+      unless $file->name =~ m{^(?:s?bin|lib(?:|[ox]?32|64))/};
 
     my $usrfile = $self->processable->installed->lookup("usr/$file");
 
@@ -44,7 +44,7 @@ sub visit_installed_files {
     return
       if $file->is_dir and $usrfile->is_dir;
 
-    if ($file =~ m,^lib.+\.(?:so[\.0-9]*|a)$,) {
+    if ($file =~ m{^lib.+\.(?:so[\.0-9]*|a)$}) {
         $self->hint('library-in-root-and-usr', $file, $usrfile);
     } else {
         $self->hint('file-in-root-and-usr', $file, $usrfile);

@@ -38,26 +38,26 @@ sub visit_installed_files {
     # /etc/init
     $self->hint('package-installs-deprecated-upstart-configuration',
         $file->name)
-      if $file->name =~ m,^etc/init/\S,;
+      if $file->name =~ m{^etc/init/\S};
 
     # /etc/init.d
     $self->hint(
         'non-standard-file-permissions-for-etc-init.d-script',
         sprintf('%s %04o != 0755', $file->name, $file->operm))
-      if $file->name =~ m,^etc/init\.d/\S,
-      && $file->name !~ m,^etc/init\.d/(?:README|skeleton)$,
+      if $file->name =~ m{^etc/init\.d/\S}
+      && $file->name !~ m{^etc/init\.d/(?:README|skeleton)$}
       && $file->operm != 0755
       && $file->is_file;
 
     # /etc/rc.d && /etc/rc?.d
     $self->hint('package-installs-into-etc-rc.d', $file->name)
-      if $file->name =~ m,^etc/rc(?:\d|S)?\.d/\S,
+      if $file->name =~ m{^etc/rc(?:\d|S)?\.d/\S}
       && (none { $self->processable->name eq $_ } qw(sysvinit file-rc))
       && $self->processable->type ne 'udeb';
 
     # /etc/rc.boot
     $self->hint('package-installs-into-etc-rc.boot', $file->name)
-      if $file->name =~ m,^etc/rc\.boot/\S,;
+      if $file->name =~ m{^etc/rc\.boot/\S};
 
     return;
 }

@@ -37,13 +37,13 @@ sub visit_installed_files {
       unless $file->is_hardlink;
 
     my $target_dir = $file->link;
-    $target_dir =~ s,[^/]*$,,;
+    $target_dir =~ s{[^/]*$}{};
 
     # link always sorts after target; hard links are calibrated
     $self->hint('package-contains-hardlink',$file->name . ' -> ' . $file->link)
-      if $file->name =~ m,^etc/,
-      or $file->link =~ m,^etc/,
-      or $file->name !~ m,^\Q$target_dir\E[^/]*$,;
+      if $file->name =~ m{^etc/}
+      || $file->link =~ m{^etc/}
+      || $file->name !~ m{^\Q$target_dir\E[^/]*$};
 
     return;
 }

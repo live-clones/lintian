@@ -117,7 +117,7 @@ sub source {
     $self->hint(
         'alternatively-build-depends-on-python-sphinx-and-python3-sphinx')
       if $processable->fields->value('Build-Depends')
-      =~ m,\bpython-sphinx\s+\|\s+python3-sphinx\b,g;
+      =~ /\bpython-sphinx\s+\|\s+python3-sphinx\b/;
 
     # Mismatched substvars
     foreach my $regex (keys %MISMATCHED_SUBSTVARS) {
@@ -213,10 +213,10 @@ sub installable {
     # Check for missing dependencies
     if ($pkg !~ /-dbg$/) {
         foreach my $file ($processable->installed->sorted_list) {
-            if (    $file->is_file
-                and $file
-                =~ m,usr/lib/(?<version>python[23])[\d.]*/(?:site|dist)-packages,
-                and not $deps->implies($REQUIRED_DEPENDS{$+{version}})) {
+            if (   $file->is_file
+                && $file
+                =~ m{^usr/lib/(?<version>python[23])[\d.]*/(?:site|dist)-packages}
+                && !$deps->implies($REQUIRED_DEPENDS{$+{version}})) {
                 $self->hint('python-package-missing-depends-on-python');
                 last;
             }
@@ -296,36 +296,37 @@ sub visit_installed_files {
     # .pyc/.pyo (compiled Python files)
     #  skip any file installed inside a __pycache__ directory
     #  - we have a separate check for that directory.
-    if ($file->name =~ m,\.py[co]$, && $file->name !~ m,/__pycache__/,) {
-        $self->hint('package-installs-python-bytecode', $file->name);
-    }
+    $self->hint('package-installs-python-bytecode', $file->name)
+      if $file->name =~ /\.py[co]$/
+      && $file->name !~ m{/__pycache__/};
 
     # __pycache__ (directory for pyc/pyo files)
-    if ($file->is_dir && $file->name =~ m,/__pycache__/,){
-        $self->hint('package-installs-python-pycache-dir', $file);
-    }
+    $self->hint('package-installs-python-pycache-dir', $file)
+      if $file->is_dir
+      && $file->name =~ m{/__pycache__/};
 
     if (   $file->is_file
         && $file->name
-        =~ m,^usr/lib/debug/usr/lib/pyshared/(python\d?(?:\.\d+))/(.++)$,) {
+        =~ m{^usr/lib/debug/usr/lib/pyshared/(python\d?(?:\.\d+))/(.+)$}) {
+
         my $correct = "usr/lib/debug/usr/lib/pymodules/$1/$2";
         $self->hint('python-debug-in-wrong-location', $file->name, $correct);
     }
 
     # .egg (Python egg files)
     $self->hint('package-installs-python-egg', $file->name)
-      if $file->name =~ m,\.egg$,
-      && ( $file->name =~ m,^usr/lib/python\d+(?:\.\d+/),
-        || $file->name =~ m,^usr/lib/pyshared,
-        || $file->name =~ m,^usr/share/,);
+      if $file->name =~ /\.egg$/
+      && ( $file->name =~ m{^usr/lib/python\d+(?:\.\d+/)}
+        || $file->name =~ m{^usr/lib/pyshared}
+        || $file->name =~ m{^usr/share/});
 
     # /usr/lib/site-python
     $self->hint('file-in-usr-lib-site-python', $file->name)
-      if $file->name =~ m,^usr/lib/site-python/\S,;
+      if $file->name =~ m{^usr/lib/site-python/\S};
 
     # pythonX.Y extensions
-    if (   $file->name =~ m,^usr/lib/python\d\.\d/\S,
-        && $file->name !~ m,^usr/lib/python\d\.\d/(?:site|dist)-packages/,){
+    if (   $file->name =~ m{^usr/lib/python\d\.\d/\S}
+        && $file->name !~ m{^usr/lib/python\d\.\d/(?:site|dist)-packages/}){
 
         $self->hint('third-party-package-in-python-dir', $file->name)
           unless $self->processable->source =~ m/^python(?:\d\.\d)?$/
@@ -390,7 +391,7 @@ sub visit_installed_files {
         for my $regex ($self->GENERIC_PYTHON_MODULES->all) {
             $self->hint('python-module-has-overly-generic-name',
                 $file->name, "($1)")
-              if $relative =~ m,^($regex)(?:\.py|/__init__\.py)$,i;
+              if $relative =~ m{^($regex)(?:\.py|/__init__\.py)$}i;
         }
 
         $self->hint('unknown-file-in-python-module-directory', $file->name)

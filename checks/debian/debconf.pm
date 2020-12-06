@@ -127,8 +127,8 @@ sub installable {
         open(my $fd, '<', $preinst->unpacked_path);
         while (<$fd>) {
             s/\#.*//;    # Not perfect for Perl, but should be OK
-            if (   m,/usr/share/debconf/confmodule,
-                or m/(?:Debconf|Debian::DebConf)::Client::ConfModule/) {
+            if (   m{/usr/share/debconf/confmodule}
+                || m/(?:Debconf|Debian::DebConf)::Client::ConfModule/) {
                 $usespreinst=1;
                 last;
             }
@@ -430,19 +430,19 @@ sub installable {
             while (<$fd>) {
                 s/#.*//;    # Not perfect for Perl, but should be OK
                 next unless m/\S/;
-                while (s%\\$%%) {
+                while (s{\\$}{}) {
                     my $next = <$fd>;
                     last unless $next;
                     $_ .= $next;
                 }
-                if (   m,(?:\.|source)\s+/usr/share/debconf/confmodule,
+                if (   m{(?:\.|source)\s+/usr/share/debconf/confmodule}
                     || m/(?:use|require)\s+Debconf::Client::ConfModule/) {
                     $usesconfmodule=1;
                 }
                 if (
-                    not $obsoleteconfmodule
-                    and m,(/usr/share/debconf/confmodule\.sh|
-                   Debian::DebConf::Client::ConfModule),x
+                    !$obsoleteconfmodule
+                    && m{(/usr/share/debconf/confmodule\.sh|
+                   Debian::DebConf::Client::ConfModule)}x
                 ) {
                     my $cmod = $1;
                     $self->hint('loads-obsolete-confmodule', "$file:$. $cmod");
@@ -461,7 +461,7 @@ sub installable {
                       unless $self->processable->type eq 'udeb';
                     $db_input=1;
                 }
-                if (m%/dev/%) {
+                if (m{/dev/}) {
                     $potential_makedev->{$.} = 1;
                 }
                 if (
@@ -555,13 +555,12 @@ sub installable {
             }
         }
 
-        unless ($used
-            or $self->processable->name eq 'debconf'
-            or $self->processable->type eq 'udeb') {
-            $self->hint('unused-debconf-template', $template)
-              unless $template =~ m,^shared/packages-(wordlist|ispell)$,
-              or $template =~ m,/languages$,;
-        }
+        $self->hint('unused-debconf-template', $template)
+          unless $template =~ m{^shared/packages-(wordlist|ispell)$}
+          || $template =~ m{/languages$}
+          || $used
+          || $self->processable->name eq 'debconf'
+          || $self->processable->type eq 'udeb';
     }
 
     # Check that the right dependencies are in the control file.  Accept any
@@ -600,8 +599,8 @@ sub installable {
         open(my $fd, '<', $file->unpacked_path);
         while (<$fd>) {
             s/#.*//;    # Not perfect for Perl, but should be OK
-            if (   m,/usr/share/debconf/confmodule,
-                or m/(?:Debconf|Debian::DebConf)::Client::ConfModule/) {
+            if (   m{/usr/share/debconf/confmodule}
+                || m/(?:Debconf|Debian::DebConf)::Client::ConfModule/) {
                 $self->hint('debconf-is-not-a-registry', $file->name);
                 last;
             }
