@@ -406,8 +406,8 @@ qr/GNU (?:Lesser|Library) General Public License|(?-i:\bLGPL\b)/i
 
     # dh-make boilerplate
     my @dh_make_boilerplate = (
-"\# Please also look if there are files or directories which have a\n\# different copyright/license attached and list them here.",
-"\# If you want to use GPL v2 or later for the /debian/\* files use\n\# the following clauses, or change it to suit. Delete these two lines"
+"# Please also look if there are files or directories which have a\n# different copyright/license attached and list them here.",
+"# If you want to use GPL v2 or later for the /debian/* files use\n# the following clauses, or change it to suit. Delete these two lines"
     );
 
     $self->hint('copyright-contains-dh_make-todo-boilerplate')

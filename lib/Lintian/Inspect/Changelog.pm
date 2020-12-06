@@ -156,7 +156,7 @@ m/^(?<Source>\w[-+0-9a-z.]*) \((?<Version>[^\(\) \t]+)\)(?<Distribution>(?:\s+[-
             for my $kv (split(/\s*,\s*/,$kvpairs)) {
                 $kv =~ m/^([-0-9a-z]+)\=\s*(.*\S)$/i
                   ||push @{$self->errors},
-                  [$lineno,"bad key-value after \`;\': \`$kv\'"];
+                  [$lineno,"bad key-value after ';': '$kv'"];
                 my $k = ucfirst $1;
                 my $v = $2;
                 $kvdone{$k}++

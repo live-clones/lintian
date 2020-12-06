@@ -1005,7 +1005,7 @@ sub installable {
 
                     if ($found) {
                         $self->hint('possible-bashism-in-maintainer-script',
-                            "$file:$. \'$match\'");
+                            "$file:$. '$match'");
                     }
 
                     # Only look for the beginning of a heredoc here,
@@ -1395,7 +1395,7 @@ sub generic_check_bad_command {
         if ($incat == $findincatstring) {
             my $regex = $bad_cmd_data->{'regexp'};
             if ($line =~ m{$regex}) {
-                my $extrainfo = defined($1) ? "\'$1\'" : '';
+                my $extrainfo = defined($1) ? "'$1'" : EMPTY;
                 my $inpackage = $bad_cmd_data->{'in_package'};
                 unless($pkg =~ m{$inpackage}) {
                     $self->hint($bad_cmd_tag, "$file:$lineno", $extrainfo);

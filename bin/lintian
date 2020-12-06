@@ -1030,7 +1030,7 @@ Actions:
     -F, --ftp-master-rejects  only check for automatic reject tags
     -T X, --tags X            only run checks needed for requested tags
     --tags-from-file X        like --tags, but read list from file
-    -X X, --dont-check-part X don\'t check certain aspects
+    -X X, --dont-check-part X don't check certain aspects
 General options:
     -h, --help                display this help text
     --print-version           print unadorned version number and exit
@@ -1054,8 +1054,8 @@ Behavior options:
     --profile X               Use the profile X or use vendor X checks
     --show-overrides          output tags that have been overridden
     --hide-overrides          do not output tags that have been overridden (default)
-    --suppress-tags T,...     don\'t show the specified tags
-    --suppress-tags-from-file X don\'t show the tags listed in file X
+    --suppress-tags T,...     don't show the specified tags
+    --suppress-tags-from-file X don't show the tags listed in file X
     --tag-display-limit X     Specify "tag per package" display limit
     --no-tag-display-limit    Disable "tag per package" display limit
                               (equivalent to --tag-display-limit=0)
