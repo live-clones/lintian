@@ -163,7 +163,7 @@ include =
 
 [Freenode::StrictWarnings]
 
-[-Freenode::Threads]
+[Freenode::Threads]
 
 [-Freenode::Wantarray]
 
