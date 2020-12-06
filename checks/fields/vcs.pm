@@ -218,7 +218,9 @@ sub always {
         });
 
     my %seen_vcs;
-    while (my ($platform, $splitter) = each %VCS_EXTRACT) {
+    for my $platform (keys %VCS_EXTRACT) {
+
+        my $splitter = $VCS_EXTRACT{$platform};
 
         my $fieldname = "Vcs-$platform";
         my $maintainer = $processable->fields->value('Maintainer');

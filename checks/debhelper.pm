@@ -594,16 +594,26 @@ sub source {
         $self->hint('package-uses-dh-exec-but-lacks-build-depends');
     }
 
-    while (my ($dep, $command) = each %missingbdeps) {
-        next if $dep eq 'debhelper'; #handled above
+    for my $dep (keys %missingbdeps) {
+
+        my $command = $missingbdeps{$dep};
+
+        next
+          if $dep eq 'debhelper'; #handled above
+
         next
           if $level >= 10
           and any { $_ eq $dep } qw(autotools-dev dh-strip-nondeterminism);
+
         $self->hint('missing-build-dependency-for-dh_-command',
             "$command => $dep")
           unless ($bdepends_noarch->implies($dep));
     }
-    while (my ($dep, $addon) = each %missingbdeps_addons) {
+
+    for my $dep (keys %missingbdeps_addons) {
+
+        my $addon = $missingbdeps_addons{$dep};
+
         $self->hint('missing-build-dependency-for-dh-addon', "$addon => $dep")
           unless ($bdepends_noarch->implies($dep));
 

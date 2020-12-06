@@ -130,13 +130,17 @@ sub parse_string {
           if length $@;
     }
 
-    while (my ($index, $paragraph) = each(@paragraphs)) {
+    my $index = 0;
+    for my $paragraph (@paragraphs) {
 
         my $section = Lintian::Deb822::Section->new;
         $section->verbatim($paragraph);
         $section->positions($positions[$index]);
 
         push(@{$self->sections}, $section);
+
+    } continue {
+        $index++;
     }
 
     return @{$self->sections};

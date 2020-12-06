@@ -135,7 +135,7 @@ include =
 
 [Freenode::DollarAB]
 
-[-Freenode::Each]
+[Freenode::Each]
 
 [-Freenode::EmptyReturn]
 

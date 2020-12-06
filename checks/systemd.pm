@@ -365,7 +365,11 @@ sub check_systemd_service_file {
             'User' => 'nobody',
             'Group' => 'nogroup',
         );
-        while ((my $key, my $value) = each(%bad_users)) {
+
+        for my $key (keys %bad_users) {
+
+            my $value = $bad_users{$key};
+
             if (
                 any { $_ eq $value }
                 $self->extract_service_file_values($file, 'Service',$key)
