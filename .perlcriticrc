@@ -141,7 +141,7 @@ include =
 
 [Freenode::IndirectObjectNotation]
 
-[-Freenode::LexicalForeachIterator]
+[Freenode::LexicalForeachIterator]
 
 [-Freenode::LoopOnHash]
 
