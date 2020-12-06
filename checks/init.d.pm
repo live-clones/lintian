@@ -27,7 +27,7 @@ use utf8;
 use autodie;
 
 use File::Basename qw(dirname);
-use List::MoreUtils qw(any none);
+use List::SomeUtils qw(any none);
 
 use Moo;
 use namespace::clean;

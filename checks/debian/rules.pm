@@ -22,7 +22,7 @@ use utf8;
 use autodie;
 
 use Carp qw(croak);
-use List::MoreUtils qw(any none);
+use List::SomeUtils qw(any none);
 
 use Lintian::SlidingWindow;
 

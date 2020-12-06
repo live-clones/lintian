@@ -24,7 +24,7 @@ use utf8;
 use autodie;
 
 use File::Copy qw(copy);
-use List::MoreUtils qw(first_value);
+use List::SomeUtils qw(first_value);
 use Path::Tiny;
 use Unicode::UTF8 qw(valid_utf8 decode_utf8);
 

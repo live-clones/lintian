@@ -26,7 +26,7 @@ use utf8;
 use autodie;
 
 use File::Basename;
-use List::MoreUtils qw(any none);
+use List::SomeUtils qw(any none);
 
 use Lintian::Util qw(normalize_link_target $PKGNAME_REGEX);
 

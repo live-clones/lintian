@@ -23,7 +23,7 @@ use utf8;
 use autodie;
 
 use IPC::Run3;
-use List::MoreUtils qw(none first_value);
+use List::SomeUtils qw(none first_value);
 use Path::Tiny;
 use Unicode::UTF8 qw(valid_utf8 decode_utf8 encode_utf8);
 

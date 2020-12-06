@@ -27,7 +27,7 @@ use warnings;
 use utf8;
 use autodie;
 
-use List::MoreUtils qw(any none);
+use List::SomeUtils qw(any none);
 
 use constant EMPTY => q{};
 use constant SPACE => q{ };

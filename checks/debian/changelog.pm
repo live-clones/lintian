@@ -30,7 +30,7 @@ use Data::Validate::Domain;
 use Date::Format qw(time2str);
 use Email::Address::XS;
 use List::Util qw(first);
-use List::MoreUtils qw(any all uniq);
+use List::SomeUtils qw(any all uniq);
 use Path::Tiny;
 use Try::Tiny;
 use Unicode::UTF8 qw(valid_utf8 decode_utf8);

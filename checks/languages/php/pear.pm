@@ -25,7 +25,7 @@ use warnings;
 use utf8;
 use autodie;
 
-use List::MoreUtils qw(none);
+use List::SomeUtils qw(none);
 
 use Lintian::Relation;
 

@@ -26,7 +26,7 @@ use utf8;
 use AptPkg::Config '$_config';
 use AptPkg::System '$_system';
 use AptPkg::Cache;
-use List::MoreUtils qw(none uniq);
+use List::SomeUtils qw(none uniq);
 
 # initialise the global config object with the default values and
 # setup the $_system object

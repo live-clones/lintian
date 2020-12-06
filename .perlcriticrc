@@ -157,7 +157,7 @@ include =
 
 [Freenode::POSIXImports]
 
-[-Freenode::PreferredAlternatives]
+[Freenode::PreferredAlternatives]
 
 [-Freenode::Prototypes]
 

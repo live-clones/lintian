@@ -26,7 +26,7 @@ use autodie qw(open);
 
 use Date::Parse qw(str2time);
 use Carp qw(croak confess);
-use List::MoreUtils qw(all);
+use List::SomeUtils qw(all);
 use Path::Tiny;
 use Text::Balanced qw(extract_delimited);
 use Unicode::UTF8 qw(valid_utf8 decode_utf8 encode_utf8);

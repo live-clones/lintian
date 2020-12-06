@@ -27,7 +27,7 @@ use utf8;
 use autodie;
 
 use List::Compare;
-use List::MoreUtils qw(any firstval);
+use List::SomeUtils qw(any firstval);
 use List::UtilsBy qw(min_by);
 use Text::LevenshteinXS qw(distance);
 

@@ -26,7 +26,7 @@ use warnings;
 use utf8;
 use autodie;
 
-use List::MoreUtils qw(any none);
+use List::SomeUtils qw(any none);
 
 use Lintian::Relation qw(:constants);
 use Lintian::Relation::Version qw(versions_lte);

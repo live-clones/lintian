@@ -49,7 +49,7 @@ BEGIN {
 use Carp;
 use Cwd;
 use IPC::Run3;
-use List::MoreUtils qw(any);
+use List::SomeUtils qw(any);
 use Path::Tiny;
 use Unicode::UTF8 qw(valid_utf8 encode_utf8);
 

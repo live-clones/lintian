@@ -30,7 +30,7 @@ use utf8;
 use autodie;
 
 use List::Compare;
-use List::MoreUtils qw(any);
+use List::SomeUtils qw(any);
 
 use Lintian::Architecture::Analyzer;
 

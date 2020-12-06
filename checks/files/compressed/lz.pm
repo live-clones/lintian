@@ -25,7 +25,7 @@ use v5.20;
 use warnings;
 use utf8;
 
-use List::MoreUtils qw(first_value);
+use List::SomeUtils qw(first_value);
 
 use Lintian::IPC::Run3 qw(safe_qx);
 use Lintian::Util qw(locate_executable);

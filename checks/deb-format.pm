@@ -24,7 +24,7 @@ use utf8;
 use autodie;
 
 use IPC::Run3;
-use List::MoreUtils qw(first_index none);
+use List::SomeUtils qw(first_index none);
 use Path::Tiny;
 
 use Lintian::IPC::Run3 qw(safe_qx);

@@ -26,7 +26,7 @@ use utf8;
 use autodie;
 
 use List::Compare;
-use List::MoreUtils qw(any none);
+use List::SomeUtils qw(any none);
 use Path::Tiny;
 
 use Lintian::Deb822::File;

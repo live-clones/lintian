@@ -57,7 +57,7 @@ BEGIN {
 }
 
 use Carp;
-use List::MoreUtils qw(uniq);
+use List::SomeUtils qw(uniq);
 use List::Util qw(all);
 use Path::Tiny;
 use Unicode::UTF8 qw(encode_utf8);

@@ -69,7 +69,7 @@ use Carp qw(croak);
 use Cwd qw(abs_path);
 use Digest::MD5;
 use Digest::SHA;
-use List::MoreUtils qw(first_value);
+use List::SomeUtils qw(first_value);
 use Path::Tiny;
 use Unicode::UTF8 qw(valid_utf8 encode_utf8);
 

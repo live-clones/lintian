@@ -31,7 +31,7 @@ use utf8;
 use autodie;
 
 use Dpkg::Version qw(version_check);
-use List::MoreUtils qw(any);
+use List::SomeUtils qw(any);
 
 use Lintian::Architecture::Analyzer;
 use Lintian::Relation qw(:constants);
@@ -150,20 +150,19 @@ sub installable {
 
         my (@seen_libstdcs, @seen_tcls, @seen_tclxs,@seen_tks, @seen_libpngs);
 
-        my $is_dep_field = sub {
-            any { $_ eq $_[0] } qw(Depends Pre-Depends Recommends Suggests);
-        };
+        my $is_dep_field
+          = any { $field eq $_ } qw(Depends Pre-Depends Recommends Suggests);
 
         $self->hint('alternates-not-allowed', $field)
-          if ($data =~ /\|/ && !&$is_dep_field($field));
-        $self->check_field($field, $data) if &$is_dep_field($field);
+          if ($data =~ /\|/ && !$is_dep_field);
+        $self->check_field($field, $data) if $is_dep_field;
 
         for my $dep (split /\s*,\s*/, $data) {
             my (@alternatives, @seen_obsolete_packages);
             push @alternatives, [_split_dep($_), $_]
               for (split /\s*\|\s*/, $dep);
 
-            if (&$is_dep_field($field)) {
+            if ($is_dep_field) {
                 push @seen_libstdcs, $alternatives[0][0]
                   if defined $known_libstdcs{$alternatives[0][0]};
                 push @seen_tcls, $alternatives[0][0]
@@ -191,7 +190,7 @@ sub installable {
             # Check defaults for transitions.  Here, we only care
             # that the first alternative is current.
             $self->hint('depends-on-old-emacs', "$field: $alternatives[0][0]")
-              if ( &$is_dep_field($field)
+              if ( $is_dep_field
                 && $known_obsolete_emacs{$alternatives[0][0]});
 
             for my $part_d (@alternatives) {
@@ -236,13 +235,13 @@ sub installable {
 
                 push @seen_obsolete_packages, [$part_d_orig, $d_pkg]
                   if ( $OBSOLETE_PACKAGES->known($d_pkg)
-                    && &$is_dep_field($field));
+                    && $is_dep_field);
 
                 $self->hint('depends-on-metapackage', "$field: $part_d_orig")
                   if (  $KNOWN_METAPACKAGES->known($d_pkg)
                     and not $KNOWN_METAPACKAGES->known($pkg)
                     and not $processable->is_pkg_class('any-meta')
-                    and &$is_dep_field($field));
+                    and $is_dep_field);
 
                 # diffutils is a special case since diff was
                 # renamed to diffutils, so a dependency on
@@ -252,7 +251,7 @@ sub installable {
                     "$field: $part_d_orig")
                   if ( $KNOWN_ESSENTIAL->known($d_pkg)
                     && !$d_version->[0]
-                    && &$is_dep_field($field)
+                    && $is_dep_field
                     && $d_pkg ne 'diffutils'
                     && $d_pkg ne 'dash');
 
@@ -276,7 +275,7 @@ sub installable {
                 $self->hint('needlessly-depends-on-awk', $field)
                   if ( $d_pkg eq 'awk'
                     && !$d_version->[0]
-                    && &$is_dep_field($field)
+                    && $is_dep_field
                     && $pkg ne 'base-files');
 
                 $self->hint('depends-on-libdb1-compat', $field)
@@ -286,7 +285,7 @@ sub installable {
 
                 $self->hint('depends-on-python-minimal', $field,)
                   if ( $d_pkg =~ /^python[\d.]*-minimal$/
-                    && &$is_dep_field($field)
+                    && $is_dep_field
                     && $pkg !~ /^python[\d.]*-minimal$/);
 
                 $self->hint('doc-package-depends-on-main-package', $field)
@@ -317,7 +316,7 @@ sub installable {
                 $self->hint('binary-package-depends-on-toolchain-package',
                     "$field: $part_d_orig")
                   if $KNOWN_TOOLCHAIN->known($d_pkg)
-                  and &$is_dep_field($field)
+                  and $is_dep_field
                   and not $pkg =~ m/^dh-/
                   and not $pkg =~ m/-(source|src)$/
                   and not $processable->is_pkg_class('any-meta')
@@ -329,7 +328,7 @@ sub installable {
                 # the Java Core API.
                 $self->hint('depends-on-specific-java-doc-package',$field)
                   if (
-                       &$is_dep_field($field)
+                       $is_dep_field
                     && $pkg ne 'default-jdk-doc'
                     && (   $d_pkg eq 'classpath-doc'
                         || $d_pkg =~ /openjdk-\d+-doc/));
@@ -457,11 +456,6 @@ sub source {
       if ( $processable->fields->declares('Build-Depends-Arch')
         && $arch_dep_packages == 0);
 
-    my $is_dep_field = sub {
-        any { $_ eq $_[0] }
-        qw(Build-Depends Build-Depends-Indep Build-Depends-Arch);
-    };
-
     my $analyzer = Lintian::Architecture::Analyzer->new;
     $analyzer->profile($self->profile);
 
@@ -470,6 +464,9 @@ sub source {
         qw(Build-Depends Build-Depends-Indep Build-Depends-Arch Build-Conflicts Build-Conflicts-Indep Build-Conflicts-Arch)
     ) {
         if ($processable->fields->declares($field)) {
+
+            my $is_dep_field = any { $field eq $_ }
+            qw(Build-Depends Build-Depends-Indep Build-Depends-Arch);
 
             # get data and clean it
             my $data = $processable->fields->unfolded_value($field);
@@ -486,7 +483,7 @@ sub source {
                     'virtual-package-depends-without-real-package-depends',
                     "$field: $alternatives[0][0]")
                   if ( $VIRTUAL_PACKAGES->known($alternatives[0][0])
-                    && &$is_dep_field($field));
+                    && $is_dep_field);
 
                 for my $part_d (@alternatives) {
                     my ($d_pkg, undef, $d_version, $d_arch, $d_restr,
@@ -528,7 +525,7 @@ sub source {
                     }
 
                     if (    $d_pkg =~ /^libdb\d+\.\d+.*-dev$/
-                        and &$is_dep_field($field)) {
+                        and $is_dep_field) {
                         $self->hint('build-depends-on-versioned-berkeley-db',
                             "$field:$d_pkg");
                     }
@@ -561,23 +558,23 @@ sub source {
                         && $d_pkg ne 'dash');
                     push @seen_obsolete_packages, [$part_d_orig, $d_pkg]
                       if ( $OBSOLETE_PACKAGES->known($d_pkg)
-                        && &$is_dep_field($field));
+                        && $is_dep_field);
 
                     $self->hint('build-depends-on-metapackage',
                         "$field: $part_d_orig")
                       if (  $KNOWN_METAPACKAGES->known($d_pkg)
-                        and &$is_dep_field($field));
+                        and $is_dep_field);
 
                     $self->hint('build-depends-on-non-build-package',
                         "$field: $part_d_orig")
                       if (  $NO_BUILD_DEPENDS->known($d_pkg)
-                        and &$is_dep_field($field));
+                        and $is_dep_field);
 
                     $self->hint('build-depends-on-1-revision',
                         "$field: $part_d_orig")
                       if ( $d_version->[0] eq '>='
                         && $d_version->[1] =~ /-1$/
-                        && &$is_dep_field($field));
+                        && $is_dep_field);
 
                     $self->hint('bad-relation', "$field: $part_d_orig")
                       if $rest;

@@ -30,7 +30,7 @@ use utf8;
 use autodie;
 
 use File::Basename;
-use List::MoreUtils qw(any first_index);
+use List::SomeUtils qw(any first_index);
 use Text::ParseWords qw(shellwords);
 
 use Moo;

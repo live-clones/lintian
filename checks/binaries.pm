@@ -28,7 +28,7 @@ use utf8;
 use autodie;
 
 use File::Spec;
-use List::MoreUtils qw(any);
+use List::SomeUtils qw(any);
 
 use Lintian::Relation qw(:constants);
 use Lintian::Spelling qw(check_spelling);

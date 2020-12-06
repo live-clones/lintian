@@ -25,7 +25,7 @@ use warnings;
 use utf8;
 
 use Carp qw(croak);
-use List::MoreUtils qw(none);
+use List::SomeUtils qw(none);
 use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Deb822::File;

@@ -28,7 +28,7 @@ use autodie;
 use Carp qw(croak confess);
 use File::Find::Rule;
 use List::Compare;
-use List::MoreUtils qw(any none uniq first_value);
+use List::SomeUtils qw(any none uniq first_value);
 use Path::Tiny;
 use POSIX qw(ENOENT);
 use Unicode::UTF8 qw(encode_utf8);
@@ -555,7 +555,7 @@ sub read_profile {
     my @disable_checks
       = $header->trimmed_list('Disable-Tags-From-Check', qr/\s*,\s*/);
 
-    # List::MoreUtils has 'duplicates' starting at 0.423
+    # List::SomeUtils has 'duplicates' starting at 0.423
     my @allchecks = (@enable_checks, @disable_checks);
     my %count;
     $count{$_}++ for @allchecks;
@@ -608,7 +608,7 @@ sub read_profile {
     my @enable_tags = $header->trimmed_list('Enable-Tags', qr/\s*,\s*/);
     my @disable_tags = $header->trimmed_list('Disable-Tags', qr/\s*,\s*/);
 
-    # List::MoreUtils has 'duplicates' starting at 0.423
+    # List::SomeUtils has 'duplicates' starting at 0.423
     my @alltags = (@enable_tags, @disable_tags);
     %count = ();
     $count{$_}++ for @alltags;

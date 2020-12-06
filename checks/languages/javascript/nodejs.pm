@@ -26,7 +26,7 @@ use utf8;
 use autodie;
 
 use JSON::MaybeXS;
-use List::MoreUtils qw(any);
+use List::SomeUtils qw(any);
 use Path::Tiny;
 
 use Lintian::Relation;

@@ -31,7 +31,7 @@ use File::Basename;
 use IO::Uncompress::Gunzip qw(gunzip $GunzipError);
 use IPC::Run3;
 use List::Compare;
-use List::MoreUtils qw(any none);
+use List::SomeUtils qw(any none);
 use Path::Tiny;
 use Text::ParseWords ();
 use Unicode::UTF8 qw(valid_utf8 decode_utf8);

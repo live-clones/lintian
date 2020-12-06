@@ -33,7 +33,7 @@ use autodie;
 
 use Data::Validate::Domain;
 use Email::Address::XS;
-use List::MoreUtils qw(any all);
+use List::SomeUtils qw(any all);
 
 use constant QA_GROUP_PHRASE => 'Debian QA Group';
 use constant QA_GROUP_ADDRESS => 'packages@qa.debian.org';

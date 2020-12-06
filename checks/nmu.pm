@@ -26,7 +26,7 @@ use warnings;
 use utf8;
 use autodie;
 
-use List::MoreUtils qw(any);
+use List::SomeUtils qw(any);
 use List::Util qw(first);
 
 use Moo;

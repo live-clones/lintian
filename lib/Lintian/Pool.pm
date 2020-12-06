@@ -26,7 +26,7 @@ use utf8;
 use autodie;
 
 use Cwd qw(getcwd);
-use List::MoreUtils qw(any);
+use List::SomeUtils qw(any);
 use Time::HiRes qw(gettimeofday tv_interval);
 use Path::Tiny;
 use POSIX qw(:sys_wait_h);

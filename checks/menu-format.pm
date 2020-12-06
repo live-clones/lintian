@@ -41,7 +41,7 @@ use utf8;
 use autodie;
 
 use File::Basename;
-use List::MoreUtils qw(any);
+use List::SomeUtils qw(any);
 
 use Moo;
 use namespace::clean;

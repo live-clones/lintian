@@ -28,7 +28,7 @@ use Carp qw(croak);
 use Devel::Size qw(total_size);
 use File::Spec;
 use List::Compare;
-use List::MoreUtils qw(none uniq firstval);
+use List::SomeUtils qw(none uniq firstval);
 use Path::Tiny;
 use POSIX qw(ENOENT);
 use Time::HiRes qw(gettimeofday tv_interval);

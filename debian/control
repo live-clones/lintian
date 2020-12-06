@@ -50,7 +50,7 @@ Depends:
  libipc-run3-perl,
  libjson-maybexs-perl,
  liblist-compare-perl,
- liblist-moreutils-perl,
+ liblist-someutils-perl,
  liblist-utilsby-perl,
  libmoo-perl,
  libmoox-aliases-perl,

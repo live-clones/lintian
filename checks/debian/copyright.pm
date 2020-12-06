@@ -28,7 +28,7 @@ use warnings;
 use utf8;
 use autodie;
 
-use List::MoreUtils qw(any all none uniq);
+use List::SomeUtils qw(any all none uniq);
 use Path::Tiny;
 use Unicode::UTF8 qw[valid_utf8 decode_utf8];
 

@@ -32,7 +32,7 @@ use v5.10;
 use File::Basename;
 use File::Find::Rule;
 use List::Compare;
-use List::MoreUtils qw(uniq);
+use List::SomeUtils qw(uniq);
 use Path::Tiny;
 use Test::More;
 

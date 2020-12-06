@@ -43,7 +43,7 @@ my $LINTIAN_VERSION;
 use Cwd qw(getcwd);
 use File::BaseDir qw(config_home config_files data_home);
 use Getopt::Long ();
-use List::MoreUtils qw(any);
+use List::SomeUtils qw(any);
 use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Output::EWI;

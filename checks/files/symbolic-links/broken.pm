@@ -26,7 +26,7 @@ use utf8;
 use autodie;
 
 use File::Basename qw(dirname);
-use List::MoreUtils qw(any);
+use List::SomeUtils qw(any);
 
 use constant EMPTY => q{};
 

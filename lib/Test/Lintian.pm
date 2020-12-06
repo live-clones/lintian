@@ -72,7 +72,7 @@ use parent 'Test::Builder::Module';
 use Cwd qw(realpath);
 use File::Basename qw(basename);
 use File::Find ();
-use List::MoreUtils qw{any};
+use List::SomeUtils qw{any};
 use Path::Tiny;
 use Unicode::UTF8 qw(valid_utf8 decode_utf8 encode_utf8);
 

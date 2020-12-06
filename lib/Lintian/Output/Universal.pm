@@ -23,7 +23,7 @@ use warnings;
 use utf8;
 
 use Carp;
-use List::MoreUtils qw(all);
+use List::SomeUtils qw(all);
 use Unicode::UTF8 qw(encode_utf8);
 
 use constant SPACE => q{ };

@@ -56,7 +56,7 @@ use File::Basename;
 use File::Find::Rule;
 use File::Path;
 use File::stat;
-use List::MoreUtils qw(any);
+use List::SomeUtils qw(any);
 use Path::Tiny;
 use Unicode::UTF8 qw(encode_utf8 decode_utf8);
 

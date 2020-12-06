@@ -28,7 +28,7 @@ use warnings;
 use utf8;
 use autodie;
 
-use List::MoreUtils qw(any);
+use List::SomeUtils qw(any);
 
 use Lintian::IPC::Run3 qw(safe_qx);
 use Lintian::Spelling qw(check_spelling);

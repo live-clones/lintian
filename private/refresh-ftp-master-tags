@@ -30,7 +30,7 @@ LWP::Simple->import(qw(get));
 
 use POSIX qw(strftime);
 
-use List::MoreUtils qw(uniq);
+use List::SomeUtils qw(uniq);
 
 our $YAML_URL = 'https://ftp-master.debian.org/static/lintian.tags';
 

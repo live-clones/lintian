@@ -40,7 +40,7 @@ use constant THISDIR => dirname realpath __FILE__;
 # use Lintian modules that belong to this program
 use lib THISDIR . '/../lib';
 
-use List::MoreUtils qw(none);
+use List::SomeUtils qw(none);
 use POSIX qw(strftime);
 
 # For each manual, we need:

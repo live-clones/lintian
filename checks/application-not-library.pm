@@ -24,7 +24,7 @@ use v5.20;
 use warnings;
 use utf8;
 
-use List::MoreUtils qw(any);
+use List::SomeUtils qw(any);
 
 use Moo;
 use namespace::clean;

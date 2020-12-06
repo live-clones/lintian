@@ -28,7 +28,7 @@ use warnings;
 use utf8;
 use autodie;
 
-use List::MoreUtils qw(any firstval firstres);
+use List::SomeUtils qw(any firstval firstres);
 use Path::Tiny;
 
 use Lintian::Inspect::Changelog::Version;

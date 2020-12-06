@@ -26,7 +26,7 @@ use utf8;
 use autodie;
 
 use Data::DPath qw(dpath);
-use List::MoreUtils qw(any);
+use List::SomeUtils qw(any);
 use Scalar::Util qw(reftype);
 use YAML::XS qw(LoadFile);
 

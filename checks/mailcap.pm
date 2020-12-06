@@ -25,7 +25,7 @@ use warnings;
 use utf8;
 use autodie qw(open);
 
-use List::MoreUtils qw(uniq);
+use List::SomeUtils qw(uniq);
 use Text::Balanced qw(extract_delimited extract_multiple);
 
 use constant EMPTY => q{};

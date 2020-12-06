@@ -25,7 +25,7 @@ use warnings;
 use utf8;
 use autodie;
 
-use List::MoreUtils qw(uniq);
+use List::SomeUtils qw(uniq);
 
 use Moo;
 use namespace::clean;

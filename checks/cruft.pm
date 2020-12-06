@@ -34,7 +34,7 @@ use autodie;
 
 use Carp qw(croak);
 use File::Basename qw(basename);
-use List::MoreUtils qw(any first_value);
+use List::SomeUtils qw(any first_value);
 use Path::Tiny;
 
 use Lintian::Relation ();

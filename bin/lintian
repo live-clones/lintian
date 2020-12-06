@@ -48,7 +48,7 @@ use File::BaseDir qw(config_files data_home);
 use Getopt::Long ();
 use IO::Interactive qw(is_interactive);
 use List::Compare;
-use List::MoreUtils qw(any none first_value);
+use List::SomeUtils qw(any none first_value);
 use Path::Tiny;
 use POSIX qw(:sys_wait_h);
 use Unicode::UTF8 qw(encode_utf8 decode_utf8);

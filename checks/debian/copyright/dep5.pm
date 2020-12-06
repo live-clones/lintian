@@ -28,7 +28,7 @@ use utf8;
 use autodie;
 
 use List::Compare;
-use List::MoreUtils qw(any all none uniq);
+use List::SomeUtils qw(any all none uniq);
 use Text::Glob qw(match_glob);
 use XML::LibXML;
 
