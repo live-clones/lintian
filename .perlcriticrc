@@ -150,6 +150,8 @@ functions = open opendir chdir read readdir readline closedir sysopen sysread sy
 
 [Modules::ProhibitPOSIXimport]
 
+[Modules::ProhibitUseQuotedVersion]
+
 [Modules::RequireBarewordIncludes]
 
 [Modules::RequireEndWithOne]
