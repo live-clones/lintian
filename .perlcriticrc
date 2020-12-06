@@ -147,7 +147,7 @@ include =
 
 [-Freenode::ModPerl]
 
-[-Freenode::MultidimensionalArrayEmulation]
+[Freenode::MultidimensionalArrayEmulation]
 
 [-Freenode::OpenArgs]
 
