@@ -252,9 +252,10 @@ terminal_funcs = CORE::exec fatal_error internal_error Lintian::Util::internal_e
 
 [-ValuesAndExpressions::ConstantBeforeLt]
 
-[-ValuesAndExpressions::NotWithCompare]
+[ValuesAndExpressions::NotWithCompare]
 
 [-ValuesAndExpressions::ProhibitArrayAssignAref]
+# not needed with Freenode::ArrayAssignAref
 
 [-ValuesAndExpressions::ProhibitBarewordDoubleColon]
 
