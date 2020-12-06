@@ -91,13 +91,11 @@ include =
 
 [-Documentation::PodSpelling]
 
-[Documentation::ProhibitUnbalancedParens]
-
 [-Documentation::ProhibitAdjacentLinks]
 
 [Documentation::ProhibitDuplicateHeadings]
 
-[-Documentation::ProhibitDuplicateSeeAlso]
+[Documentation::ProhibitDuplicateSeeAlso]
 
 [-Documentation::ProhibitBadAproposMarkup]
 
@@ -106,6 +104,8 @@ include =
 [Documentation::ProhibitParagraphEndComma]
 
 [Documentation::ProhibitParagraphTwoDots]
+
+[Documentation::ProhibitUnbalancedParens]
 
 [-Documentation::ProhibitVerbatimMarkup]
 
