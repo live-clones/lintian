@@ -29,9 +29,15 @@ use warnings;
 use utf8;
 use autodie;
 
+use Cwd qw(realpath);
+use File::Basename qw(dirname);
+
+# neither Path::This nor lib::relative are in Debian
+use constant THISFILE => realpath __FILE__;
+use constant THISDIR => dirname realpath __FILE__;
+
 # use Lintian modules that belong to this program
-use FindBin;
-use lib "$FindBin::RealBin/../lib";
+use lib THISDIR . '/../lib';
 
 use Getopt::Long;
 use IO::Interactive qw(is_interactive);

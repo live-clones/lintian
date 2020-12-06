@@ -131,7 +131,7 @@ include =
 
 [Freenode::DeprecatedFeatures]
 
-[-Freenode::DiscouragedModules]
+[Freenode::DiscouragedModules]
 
 [-Freenode::DollarAB]
 

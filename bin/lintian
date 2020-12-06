@@ -28,14 +28,20 @@ use warnings;
 use utf8;
 use autodie;
 
+use Cwd qw(realpath);
+use File::Basename qw(dirname);
+
+# neither Path::This nor lib::relative are in Debian
+use constant THISFILE => realpath __FILE__;
+use constant THISDIR => dirname realpath __FILE__;
+
 # use Lintian modules that belong to this program
-use FindBin;
-use lib "$FindBin::RealBin/../lib";
+use lib THISDIR . '/../lib';
 
 # substituted during package build
 my $LINTIAN_VERSION;
 
-use Cwd qw(abs_path getcwd realpath);
+use Cwd qw(getcwd);
 use Carp qw(croak verbose);
 use Config::Tiny;
 use File::BaseDir qw(config_files data_home);
@@ -96,7 +102,7 @@ $ENV{PATH} //= '/bin:/usr/bin';
 $ENV{LC_ALL} = 'C';
 $ENV{TZ} = EMPTY;
 
-$ENV{LINTIAN_BASE} = realpath("$FindBin::RealBin/..")
+$ENV{LINTIAN_BASE} = realpath(THISDIR . '/..')
   // die encode_utf8('Cannot resolve LINTIAN_BASE');
 
 $ENV{LINTIAN_VERSION} = $LINTIAN_VERSION // guess_version($ENV{LINTIAN_BASE});
@@ -164,7 +170,7 @@ Getopt::Long::GetOptions(\%command_line, @getoptions)
   or die encode_utf8("error parsing options\n");
 
 my @basenames = map { path($_)->basename } @ARGV;
-$0 = join(SPACE, "$FindBin::RealBin/$FindBin::RealScript", @basenames);
+$0 = join(SPACE, THISFILE, @basenames);
 
 if (exists $command_line{'version'}) {
     say encode_utf8("Lintian v$ENV{LINTIAN_VERSION}");
@@ -709,7 +715,7 @@ for my $path (@subjects) {
 "bad package file name $path (neither .deb, .udeb, .ddeb, .changes, .dsc or .buildinfo file)\n"
     )unless $path =~ /\.(?:[u|d]?deb|dsc|changes|buildinfo)$/;
 
-    my $absolute = abs_path($path);
+    my $absolute = realpath($path);
     die encode_utf8("Cannot resolve $path: $!")
       unless $absolute;
 

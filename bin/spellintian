@@ -26,16 +26,21 @@ use warnings;
 use utf8;
 use autodie;
 
+use Cwd qw(realpath);
+use File::Basename qw(dirname);
+
+# neither Path::This nor lib::relative are in Debian
+use constant THISFILE => realpath __FILE__;
+use constant THISDIR => dirname realpath __FILE__;
+
 # use Lintian modules that belong to this program
-use FindBin;
-use lib "$FindBin::RealBin/../lib";
+use lib THISDIR . '/../lib';
 
 # substituted during package build
 my $LINTIAN_VERSION;
 
-use Cwd qw(getcwd realpath);
+use Cwd qw(getcwd);
 use File::BaseDir qw(config_home config_files data_home);
-use File::Basename;
 use Getopt::Long ();
 use Path::Tiny;
 use Unicode::UTF8 qw(encode_utf8 decode_utf8);
@@ -62,7 +67,7 @@ if (my $coverage_arg = $ENV{'LINTIAN_COVERAGE'}) {
     $ENV{'PERL5OPT'} = "${p5opt} ${coverage_arg}";
 }
 
-$ENV{LINTIAN_BASE} = realpath("$FindBin::RealBin/..")
+$ENV{LINTIAN_BASE} = realpath(THISDIR . '/..')
   // die encode_utf8('Cannot resolve LINTIAN_BASE');
 
 my @INCLUDE_DIRS;

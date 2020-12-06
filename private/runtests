@@ -33,13 +33,17 @@ use warnings;
 use utf8;
 use autodie;
 
+use Cwd qw(realpath);
+use File::Basename qw(dirname);
+
+# neither Path::This nor lib::relative are in Debian
+use constant THISFILE => realpath __FILE__;
+use constant THISDIR => dirname realpath __FILE__;
+
 # use Lintian modules that belong to this program
-use FindBin;
-use lib "$FindBin::RealBin/../lib";
+use lib THISDIR . '/../lib';
 
 use Capture::Tiny qw(capture_merged);
-use Cwd qw(realpath);
-use File::Basename;
 use File::Path qw(make_path);
 use File::Spec::Functions qw(abs2rel rel2abs splitpath splitdir);
 use File::stat;
@@ -102,7 +106,7 @@ if (($ENV{LINTIAN_TEST_INSTALLED} // 'no') eq 'yes') {
       // die encode_utf8('Lintian is not installed');
 
 } else {
-    $ENV{LINTIAN_UNDER_TEST} = realpath($FindBin::RealBin . '/../bin/lintian');
+    $ENV{LINTIAN_UNDER_TEST} = realpath(THISDIR . '/../bin/lintian');
 }
 
 $ENV{LINTIAN_BASE}

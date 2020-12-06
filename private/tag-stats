@@ -13,16 +13,20 @@ use warnings;
 use utf8;
 use autodie qw(opendir closedir);
 
-# use Lintian modules that belong to this program
-use FindBin;
-use lib "$FindBin::RealBin/../lib";
-
 use Cwd qw(realpath);
+use File::Basename qw(dirname);
+
+# neither Path::This nor lib::relative are in Debian
+use constant THISFILE => realpath __FILE__;
+use constant THISDIR => dirname realpath __FILE__;
+
+# use Lintian modules that belong to this program
+use lib THISDIR . '/../lib';
 
 use Lintian::Deb822::Parser qw(read_dpkg_control);
 use Lintian::Tag;
 
-$ENV{LINTIAN_BASE} = realpath("$FindBin::RealBin/..")
+$ENV{LINTIAN_BASE} = realpath(THISDIR . '/..')
   // die 'Cannot resolve LINTIAN_BASE';
 
 my @severities = reverse qw(pedantic info warning error);
