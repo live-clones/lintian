@@ -250,7 +250,7 @@ terminal_funcs = CORE::exec fatal_error internal_error Lintian::Util::internal_e
 [-TestingAndDebugging::RequireUseWarnings]
 # not needed with Freenode::StrictWarnings]
 
-[-ValuesAndExpressions::ConstantBeforeLt]
+[ValuesAndExpressions::ConstantBeforeLt]
 
 [ValuesAndExpressions::NotWithCompare]
 
