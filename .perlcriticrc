@@ -155,7 +155,7 @@ include =
 
 [-Freenode::PackageMatchesFilename]
 
-[-Freenode::POSIXImports]
+[Freenode::POSIXImports]
 
 [-Freenode::PreferredAlternatives]
 
@@ -201,7 +201,8 @@ functions = open opendir chdir read readdir readline closedir sysopen sysread sy
 
 [Modules::ProhibitMultiplePackages]
 
-[Modules::ProhibitPOSIXimport]
+[-Modules::ProhibitPOSIXimport]
+# not needed with Freenode::POSIXImports
 
 [Modules::ProhibitUseQuotedVersion]
 
