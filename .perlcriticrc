@@ -165,7 +165,7 @@ include =
 
 [Freenode::Threads]
 
-[-Freenode::Wantarray]
+[Freenode::Wantarray]
 
 [-Freenode::WarningsSwitch]
 
