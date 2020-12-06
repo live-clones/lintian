@@ -929,12 +929,9 @@ sub installable {
 
                         my $extra;
                         ($match, $extra) = ($1, $2);
-                        if ($extra =~ /^([\&\|<]|\d?>)/) {
-                            # everything is ok
-                            ;
-                        } else {
-                            $found = 1;
-                        }
+
+                        $found = 1
+                          unless $extra =~ /^([\&\|<]|\d?>)/;
                     }
 
                     my $line = $_;

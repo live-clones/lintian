@@ -217,6 +217,8 @@ allow_last_statement_to_be_comma_separated_in_map_and_grep = 1
 
 [ValuesAndExpressions::ProhibitMixedBooleanOperators]
 
+[ValuesAndExpressions::ProhibitNullStatements]
+
 [ValuesAndExpressions::ProhibitQuotesAsQuotelikeOperatorDelimiters]
 
 [-ValuesAndExpressions::ProhibitUnknownBackslash]
