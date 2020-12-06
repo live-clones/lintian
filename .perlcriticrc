@@ -144,6 +144,8 @@ functions = open opendir chdir read readdir readline closedir sysopen sysread sy
 [-Modules::ProhibitExcessMainComplexity]
 # Maybe some day...
 
+[Modules::ProhibitModuleShebang]
+
 [Modules::ProhibitMultiplePackages]
 
 [Modules::RequireBarewordIncludes]
