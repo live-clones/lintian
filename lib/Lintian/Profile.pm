@@ -789,7 +789,7 @@ sub _relation_subset {
         }
     }
 
-    return
+    return ()
       unless defined($found);
 
     if (length($rel) > 1) {
@@ -797,7 +797,7 @@ sub _relation_subset {
 
     }
 
-    return
+    return ()
       if $found == $#list;
 
     return @list[($found + 1) .. $#list];

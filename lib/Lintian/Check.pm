@@ -155,7 +155,7 @@ Tag the processable associated with this check
 sub hint {
     my ($self, @arguments) = @_;
 
-    return
+    return undef
       unless @arguments;
 
     my $tagname = $arguments[0];
@@ -166,7 +166,7 @@ sub hint {
         warn encode_utf8(
             'Check ' . $self->info->name . " has no tag $tagname.");
 
-        return;
+        return undef;
     }
 
     # could be name-spaced

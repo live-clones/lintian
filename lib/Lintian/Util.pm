@@ -455,7 +455,7 @@ sub normalize_pkg_path {
         } elsif ($component eq DOUBLEDOT) {
             # are we out of bounds?
             my $discard = pop @final;
-            return
+            return undef
               unless defined $discard;
 
         } else {

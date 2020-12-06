@@ -91,7 +91,7 @@ sub find_dep5_version {
 
     if ($uri =~ m,\b(?:rev=REVISION|VERSIONED_FORMAT_URL)\b,) {
         $self->hint('boilerplate-copyright-format-uri', $uri);
-        return;
+        return undef;
     }
 
     if (
@@ -139,7 +139,7 @@ sub find_dep5_version {
 
     $self->hint('unknown-copyright-format-uri', $original_uri);
 
-    return;
+    return undef;
 }
 
 sub check_dep5_copyright {

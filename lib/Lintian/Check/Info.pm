@@ -218,7 +218,7 @@ sub get_tag {
     my $prefixed = $self->name . SLASH . $tagname;
 
     my $name_spaced = $self->tag_table->{$prefixed};
-    return
+    return undef
       unless defined $name_spaced;
 
     warn encode_utf8("Using $prefixed as name spaced while not so declared.")

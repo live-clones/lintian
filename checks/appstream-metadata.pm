@@ -113,7 +113,7 @@ sub check_modalias {
 
     if (!$metadatafile->is_open_ok) {
         # FIXME report this as an error
-        return;
+        return 0;
     }
 
     my $parser = XML::LibXML->new;

@@ -399,8 +399,10 @@ sub check_systemd_service_file {
 
 sub service_file_lines {
     my ($path) = @_;
+
     my (@lines, $continuation);
-    return if $path->is_symlink and $path->link eq '/dev/null';
+    return ()
+      if $path->is_symlink and $path->link eq '/dev/null';
 
     open(my $fh, '<', $path->unpacked_path);
     while (<$fh>) {

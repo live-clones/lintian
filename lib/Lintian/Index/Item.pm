@@ -125,7 +125,7 @@ sub get_quoted_filename {
     my ($delimited, $extra)
       = extract_delimited($unknown, DOUBLEQUOTE, $skip, BACKSLASH);
 
-    return
+    return (undef, undef)
       unless defined $delimited;
 
     # drop quotes
@@ -556,7 +556,7 @@ sub child {
       unless length $basename;
 
     my $childname = $self->childnames->{$basename};
-    return
+    return undef
       unless $childname;
 
     croak encode_utf8('No index in ' . $self->name)
@@ -829,7 +829,7 @@ sub follow {
     $maxlinks //= 18;
 
     # catch recursive links
-    return
+    return undef
       unless $maxlinks > 0;
 
     # reduce counter
@@ -849,7 +849,7 @@ sub follow {
         $reference = $self->parent_dir;
     }
 
-    return
+    return undef
       unless defined $reference;
 
     # follow link
@@ -918,7 +918,7 @@ sub resolve_path {
     if (length $self->link) {
         # follow the link
         my $dereferenced = $self->follow($maxlinks);
-        return
+        return undef
           unless defined $dereferenced;
 
         # and use that to resolve the request
@@ -931,7 +931,7 @@ sub resolve_path {
     if ($request =~ s{^/+}{}s) {
 
         # require anchoring for absolute references
-        return
+        return undef
           unless $self->index->anchored;
 
         # get root entry
@@ -946,7 +946,7 @@ sub resolve_path {
         $reference = $self->parent_dir;
     }
 
-    return
+    return undef
       unless defined $reference;
 
     # read first segment; strip all trailing slashes for recursive use
@@ -961,7 +961,7 @@ sub resolve_path {
         # for double dot, go up a level
         if ($segment eq DOUBLEDOT) {
             my $parent = $reference->parent_dir;
-            return
+            return undef
               unless defined $parent;
 
             return $parent->resolve_path($request, $maxlinks);
@@ -969,7 +969,7 @@ sub resolve_path {
 
         # look for child otherwise
         my $child = $reference->child($segment);
-        return
+        return undef
           unless defined $child;
 
         return $child->resolve_path($request, $maxlinks);

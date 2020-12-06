@@ -176,7 +176,7 @@ sub lookup {
     return $found
       if defined $found;
 
-    return;
+    return undef;
 }
 
 =item resolve_path

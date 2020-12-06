@@ -91,7 +91,7 @@ sub readwindow {
 sub blocknumber {
     my ($self) = @_;
     if($self->{'_blocknumber'} == -1) {
-        return;
+        return undef;
     }
     return $self->{'_blocknumber'};
 }

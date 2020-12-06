@@ -61,7 +61,7 @@ sub conffiles {
 
     # read conffiles if it exists and is a file
     my $cf = $self->control->resolve_path('conffiles');
-    return
+    return ()
       unless $cf && $cf->is_file && $cf->is_open_ok;
 
     my @absolute = path($cf->unpacked_path)->lines_utf8;

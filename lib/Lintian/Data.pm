@@ -64,7 +64,7 @@ sub all {
 sub value {
     my ($self, $keyword) = @_;
 
-    return
+    return undef
       unless length $keyword;
 
     return $self->set->{$keyword};

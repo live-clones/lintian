@@ -198,7 +198,7 @@ sub parse_jar {
             my ($contents, $zerr) = $manifest->contents;
 
        # bug in Archive::Zip; seen in android-platform-libcore_10.0.0+r36-1.dsc
-            return
+            return ()
               unless defined $zerr;
 
             if ($zerr == AZ_OK) {

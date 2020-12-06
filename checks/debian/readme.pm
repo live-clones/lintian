@@ -56,7 +56,7 @@ sub open_readme {
             return $fd;
         }
     }
-    return;
+    return undef;
 }
 
 sub installable {

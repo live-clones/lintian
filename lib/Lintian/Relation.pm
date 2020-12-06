@@ -414,7 +414,9 @@ sub implies_element {
     my ($self, $p, $q) = @_;
 
     # If the names don't match, there is no relationship between them.
-    return if $$p[1] ne $$q[1];
+
+    return undef
+      if $$p[1] ne $$q[1];
 
     # the restriction formula forms a disjunctive normal form expression one
     # way to check whether A <dnf1> implies A <dnf2> is to check:
@@ -434,7 +436,10 @@ sub implies_element {
     #
     # FIXME: we are not doing this check yet so if we encounter a dependency
     # with build profiles we assume that one does not imply the other:
-    return if defined $$p[6] or defined $$q[6];
+
+    return undef
+      if defined $$p[6]
+      or defined $$q[6];
 
     # If the names match, then the only difference is in the architecture or
     # version clauses.  First, check architecture.  The architectures for p
@@ -454,7 +459,8 @@ sub implies_element {
         # If q has no arches, it is a superset of p and there are no useful
         # implications.
         elsif (not @q_arches) {
-            return;
+
+            return undef;
         }
 
         # Both have arches.  If neither are negated, we know nothing useful
@@ -465,7 +471,9 @@ sub implies_element {
             for my $arch (@q_arches) {
                 $subset = 0 unless $p_arches{$arch};
             }
-            return unless $subset;
+
+            return undef
+              unless $subset;
         }
 
         # If both are negated, we know nothing useful unless p is a subset of
@@ -477,13 +485,16 @@ sub implies_element {
             for my $arch (@p_arches) {
                 $subset = 0 unless $q_arches{$arch};
             }
-            return unless $subset;
+
+            return undef
+              unless $subset;
         }
 
         # If q is negated and p isn't, we'd need to know the full list of
         # arches to know if there's any relationship, so bail.
         elsif (not $p_arch_neg and $q_arch_neg) {
-            return;
+
+            return undef;
         }
 
         # If p is negated and q isn't, q is a subset of p iff none of the
@@ -494,7 +505,9 @@ sub implies_element {
             for my $arch (@p_arches) {
                 $subset = 0 if $q_arches{substr($arch, 1)};
             }
-            return unless $subset;
+
+            return undef
+              unless $subset;
         }
     }
 
@@ -516,9 +529,14 @@ sub implies_element {
     # matters)
     if (defined $$p[5]) {
         # Assume the identity to hold
-        return unless defined $$q[5] and $$p[5] eq $$q[5];
+        return undef
+          unless defined $$q[5] and $$p[5] eq $$q[5];
+
     } elsif (defined $$q[5]) {
-        return unless $$q[5] eq 'any';
+
+        return undef
+          unless $$q[5] eq 'any';
+
         # pkg:any implies pkg (but the reverse is not true).
         #
         # TODO: Review this case.  Are there cases where Q cannot
@@ -534,7 +552,8 @@ sub implies_element {
 
     # If q does have a version clause, then p must also have one to have any
     # useful relationship.
-    return if not defined $$p[2];
+    return undef
+      if not defined $$p[2];
 
     # q wants an exact version, so p must provide that exact version.  p
     # disproves q if q's version is outside the range enforced by p.
@@ -604,7 +623,7 @@ sub implies_element {
         }
     }
 
-    return;
+    return undef;
 }
 
 =item implies_array
@@ -694,7 +713,7 @@ sub implies_array {
         # Assume eqv. holds for unparsable elements.
         return 1 if $p0 eq $q0 and $p->[1] eq $q->[1];
     }
-    return;
+    return undef;
 }
 
 # The public interface.
@@ -732,7 +751,9 @@ sub implies_element_inverse {
     my ($self, $p, $q) = @_;
     my $result = $self->implies_element($p, $q);
 
-    return if not defined($result);
+    return undef
+      if not defined($result);
+
     return $result ? 0 : 1;
 }
 

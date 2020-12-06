@@ -154,7 +154,7 @@ sub find_missing_prerequisites {
     my ($testcase) = @_;
 
     # without prerequisites, no need to look
-    return
+    return undef
       unless any { $testcase->declares($_) }
     qw(Build-Depends Build-Conflicts Test-Depends Test-Conflicts);
 
@@ -206,7 +206,7 @@ sub find_missing_prerequisites {
         return $missing;
     }
 
-    return;
+    return undef;
 }
 
 =back

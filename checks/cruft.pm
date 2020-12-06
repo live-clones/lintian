@@ -733,10 +733,10 @@ sub find_source {
 
     $patternref //= {};
 
-    return
+    return undef
       unless $file->is_regular_file;
 
-    return
+    return undef
       if $self->processable->is_non_free;
 
     my %patterns = %{$patternref};

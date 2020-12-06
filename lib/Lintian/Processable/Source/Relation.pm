@@ -111,12 +111,12 @@ my %known = map { $_ => 1 }
 sub binary_relation {
     my ($self, $package, $name) = @_;
 
-    return
+    return undef
       unless length $name;
 
     my $lowercase = lc $name;
 
-    return
+    return undef
       unless length $package;
 
     my $relation = $self->saved_binary_relations->{$package}{$lowercase};
@@ -178,7 +178,7 @@ has saved_relations => (
 sub relation {
     my ($self, $name) = @_;
 
-    return
+    return undef
       unless length $name;
 
     my $lowercase = lc $name;
@@ -225,7 +225,7 @@ has saved_relations_noarch => (
 sub relation_noarch {
     my ($self, $name) = @_;
 
-    return
+    return undef
       unless length $name;
 
     my $lowercase = lc $name;

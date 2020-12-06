@@ -126,7 +126,9 @@ for my $pkg (@core_packages) {
 sub find_core_version {
     my $module = shift;
     my $ret;
-    return if $module =~ /^perl(5|api)/;
+
+    return undef
+      if $module =~ /^perl(5|api)/;
 
     if (exists $module_name{$module}) {
         $module = $module_name{$module};

@@ -197,12 +197,12 @@ sub find_selected_lintian_testpaths {
                 my $tag = $profile->get_tag($tagname);
                 unless ($tag) {
                     say encode_utf8("Tag $tagname not found");
-                    return;
+                    return ();
                 }
 
                 if (none { $tagname eq $_ } $profile->enabled_tags) {
                     say encode_utf8("Tag $tagname not enabled");
-                    return;
+                    return ();
                 }
 
                 $wanted{$tag->check} = 1;

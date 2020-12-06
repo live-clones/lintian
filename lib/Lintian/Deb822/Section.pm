@@ -320,7 +320,7 @@ sub position {
       unless length $field;
 
     my $exact = $self->legend->{lc $field};
-    return
+    return undef
       unless length $exact;
 
     return $self->positions->{$exact};
