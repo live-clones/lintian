@@ -161,7 +161,7 @@ include =
 
 [Freenode::Prototypes]
 
-[-Freenode::StrictWarnings]
+[Freenode::StrictWarnings]
 
 [-Freenode::Threads]
 
@@ -244,9 +244,11 @@ functions = open opendir chdir read readdir readline closedir sysopen sysread sy
 [Subroutines::RequireFinalReturn]
 terminal_funcs = CORE::exec fatal_error internal_error Lintian::Util::internal_error Die error
 
-[TestingAndDebugging::RequireUseStrict]
+[-TestingAndDebugging::RequireUseStrict]
+# not needed with Freenode::StrictWarnings]
 
-[TestingAndDebugging::RequireUseWarnings]
+[-TestingAndDebugging::RequireUseWarnings]
+# not needed with Freenode::StrictWarnings]
 
 [-ValuesAndExpressions::ConstantBeforeLt]
 
