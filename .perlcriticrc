@@ -95,7 +95,7 @@ include =
 
 [-Documentation::ProhibitAdjacentLinks]
 
-[-Documentation::ProhibitDuplicateHeadings]
+[Documentation::ProhibitDuplicateHeadings]
 
 [-Documentation::ProhibitDuplicateSeeAlso]
 
