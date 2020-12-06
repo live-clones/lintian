@@ -151,7 +151,7 @@ include =
 
 [Freenode::OpenArgs]
 
-[-Freenode::OverloadOptions]
+[Freenode::OverloadOptions]
 
 [-Freenode::PackageMatchesFilename]
 
