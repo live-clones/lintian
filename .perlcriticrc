@@ -149,7 +149,7 @@ include =
 
 [Freenode::MultidimensionalArrayEmulation]
 
-[-Freenode::OpenArgs]
+[Freenode::OpenArgs]
 
 [-Freenode::OverloadOptions]
 
@@ -177,7 +177,8 @@ include =
 
 [InputOutput::ProhibitJoinedReadline]
 
-[InputOutput::ProhibitTwoArgOpen]
+[-InputOutput::ProhibitTwoArgOpen]
+# not needed with Freenode::OpenArgs
 
 [InputOutput::RequireCheckedSyscalls]
 functions = open opendir chdir read readdir readline closedir sysopen sysread sysclose mkdir link pipe readlink unlink rename symlink fork
