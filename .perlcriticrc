@@ -159,7 +159,7 @@ include =
 
 [Freenode::PreferredAlternatives]
 
-[-Freenode::Prototypes]
+[Freenode::Prototypes]
 
 [-Freenode::StrictWarnings]
 

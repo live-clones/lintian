@@ -1512,7 +1512,7 @@ sub remove_comments {
     return $_;
 }
 
-sub unquote($$) {
+sub unquote {
     my ($string, $replace_regex) = @_;
 
     $string =~ s,\\,,g;
