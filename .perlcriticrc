@@ -119,7 +119,7 @@ include =
 
 [Documentation::RequirePackageMatchesPodName]
 
-[-Freenode::AmpersandSubCalls]
+[Freenode::AmpersandSubCalls]
 
 [-Freenode::ArrayAssignAref]
 
