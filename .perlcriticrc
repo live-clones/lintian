@@ -97,7 +97,7 @@ include =
 
 [Documentation::ProhibitDuplicateSeeAlso]
 
-[-Documentation::ProhibitBadAproposMarkup]
+[Documentation::ProhibitBadAproposMarkup]
 
 [Documentation::ProhibitLinkToSelf]
 

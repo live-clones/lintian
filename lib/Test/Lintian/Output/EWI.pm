@@ -20,7 +20,7 @@ package Test::Lintian::Output::EWI;
 
 =head1 NAME
 
-Test::Lintian::Output::EWI -- routines to process C<EWI> tags
+Test::Lintian::Output::EWI -- routines to process EWI tags
 
 =head1 SYNOPSIS
 

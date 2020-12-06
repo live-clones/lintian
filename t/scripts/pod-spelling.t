@@ -103,7 +103,7 @@ dirs PROFNAME CHECKNAMES COLLMAP ERRHANDLER LPKG unpacker worklist
 BASEPATH stderr stdout stdin ascii html issuedtags subclasses
 showdescription printables overridable processables msg ORed SIGKILLs
 SIGTERM wildcard wildcards ar whitelist blacklist API amd armhf cpu
-linux whitelisted blacklisted shaX sha parsers
+linux whitelisted blacklisted shaX sha parsers EWI
 customisation ALGO CLOC CMD DEBFILE DEST DSCFILE FOH NOCLOSE PARENTDIR
 PGP STARTLINE STR UTF bitmask cp debconf rw processable severities
 AND'ing # ' # this is getting old
