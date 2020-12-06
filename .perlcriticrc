@@ -133,7 +133,7 @@ include =
 
 [Freenode::DiscouragedModules]
 
-[-Freenode::DollarAB]
+[Freenode::DollarAB]
 
 [-Freenode::Each]
 
