@@ -31,7 +31,7 @@ $ENV{LINTIAN_BASE} = realpath(THISDIR . '/..')
 
 # Check that we're being run from the right place (although the above probably
 # died if we weren't).
-unless (-f 'private/runtests') {
+unless (-e 'private/runtests') {
     warn "update-coverage source be run from the top level of the Lintian\n";
     warn "source tree.\n\n";
     die "Cannot find private/runtests -- run from the right directory?\n";

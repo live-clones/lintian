@@ -76,7 +76,7 @@ has diffstat => (
         my $diffpath = path($self->path)->parent->child($diffname)->stringify;
 
         return {}
-          unless -f $diffpath;
+          unless -e $diffpath;
 
         my @gunzip_command = ('gunzip', '--stdout', $diffpath);
         my $gunzip_pid = open(my $from_gunzip, '-|', @gunzip_command)

@@ -68,7 +68,7 @@ die encode_utf8("Please use -h for usage information.\n")
 my ($inpath, $outpath) = @ARGV;
 
 die encode_utf8("File $inpath does not exist.\n")
-  unless -f $inpath;
+  unless -e $inpath;
 
 my $original_text = path($inpath)->slurp_utf8;
 my $converted = to_universal($target_format, $original_text);

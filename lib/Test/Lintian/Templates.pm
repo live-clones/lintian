@@ -136,7 +136,7 @@ sub remove_surplus_templates {
     foreach my $original (@originals) {
         my $relative = abs2rel($original, $source);
         my $template = rel2abs("$relative.in", $destination);
-        unlink($template) if -f $template;
+        unlink($template) if -e $template;
     }
     return;
 }
@@ -169,7 +169,7 @@ sub fill_skeleton_templates {
             my $whitelistpath = "$testset/whitelists/$name";
             croak encode_utf8(
                 "Cannot find template whitelist '$name' at $whitelistpath")
-              unless -f $whitelistpath;
+              unless -e $whitelistpath;
 
             say encode_utf8(EMPTY);
 
@@ -193,7 +193,7 @@ sub fill_skeleton_templates {
 
                 # fill template if needed
                 fill_template($template, $generated, $testcase, $threshold)
-                  if -f $template;
+                  if -e $template;
             }
 
         }else {
@@ -206,7 +206,7 @@ sub fill_skeleton_templates {
 
             # fill template if needed
             fill_template($template, $generated, $testcase, $threshold)
-              if -f $template;
+              if -e $template;
         }
     }
     return;
@@ -225,7 +225,7 @@ sub fill_whitelisted_templates {
     my ($directory, $whitelistpath, $data, $data_epoch) = @_;
 
     croak encode_utf8("No whitelist found at $whitelistpath")
-      unless -f $whitelistpath;
+      unless -e $whitelistpath;
 
     my $whitelist = read_config($whitelistpath);
     my @list = $whitelist->trimmed_list('May-Generate');
@@ -236,7 +236,7 @@ sub fill_whitelisted_templates {
 
         # fill template if needed
         fill_template($template, $generated, $data, $data_epoch)
-          if -f $template;
+          if -e $template;
     }
     return;
 }
@@ -273,9 +273,9 @@ sub fill_template {
     my ($template, $generated, $data, $data_epoch, $delimiters) = @_;
 
     my $generated_epoch
-      = length $generated  && -f $generated ? stat($generated)->mtime : 0;
+      = length $generated  && -e $generated ? stat($generated)->mtime : 0;
     my $template_epoch
-      = length $template && -f $template ? stat($template)->mtime : time;
+      = length $template && -e $template ? stat($template)->mtime : time;
     my $threshold = max($template_epoch, $data_epoch//time);
 
     if ($generated_epoch <= $threshold) {
@@ -312,7 +312,7 @@ sub fill_template {
     }
 
     # delete template
-    unlink($template) if -f $generated;
+    unlink($template) if -e $generated;
 
     return;
 }

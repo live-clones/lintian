@@ -572,7 +572,7 @@ sub read_profile {
         my $location;
         for my $directory ($self->_safe_include_path('checks')) {
 
-            if (-f "$directory/$name.desc") {
+            if (-e "$directory/$name.desc") {
                 $location = $directory;
                 last;
             }

@@ -382,11 +382,11 @@ my $build = IO::Async::Function->new(
 
         # delete old runner log
         my $betterlogpath = $buildpath . SLASH . $files->unfolded_value('Log');
-        unlink $betterlogpath if -f $betterlogpath;
+        unlink $betterlogpath if -e $betterlogpath;
 
        # move the early log for directory preparation to position of runner log
         my $earlylogpath = "$sourcepath.log";
-        move($earlylogpath, $betterlogpath) if -f $earlylogpath;
+        move($earlylogpath, $betterlogpath) if -e $earlylogpath;
 
         # append runner log to population log
         path($betterlogpath)->append_utf8($log) if length $log;

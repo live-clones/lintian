@@ -63,7 +63,7 @@ prepare($specpath->stringify, $runpath->stringify, 't');
 # test plan
 plan tests => 1;
 
-ok(!-f $runpath->child('debian')->child('watch')->stringify,
+ok(!-e $runpath->child('debian')->child('watch')->stringify,
     'No watch file present');
 
 # Local Variables:

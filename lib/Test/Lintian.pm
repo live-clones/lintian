@@ -706,7 +706,7 @@ sub _find_check {
                     return;
                 }
             }
-            return unless m/\.desc$/ and -f $_;
+            return unless m/\.desc$/ and -e $_;
             if ($regex) {
                 s/$regex//;
                 s/\.desc$//;

@@ -219,9 +219,9 @@ unless ($command_line{'no-user-dirs'}) {
 my $LINTIAN_CFG = $command_line{cfg} // EMPTY;
 
 $LINTIAN_CFG ||= $ENV{LINTIAN_CFG}
-  if length $ENV{LINTIAN_CFG} && -f $ENV{LINTIAN_CFG};
+  if length $ENV{LINTIAN_CFG} && -e $ENV{LINTIAN_CFG};
 
-$LINTIAN_CFG ||= first_value { length $_ && -f $_ }
+$LINTIAN_CFG ||= first_value { length $_ && -e $_ }
 ($xdg_config_file, $dot_config_file, '/etc/lintianrc');
 
 # only absolute paths, for use elsewhere
@@ -589,7 +589,7 @@ if ($#ARGV == -1
     # If debian/changelog exists, assume an implied
     # "../<source>_<version>_<arch>.changes" (or
     # "../<source>_<version>_source.changes").
-    if (-f 'debian/changelog') {
+    if (-e 'debian/changelog') {
         my $file = _find_changes();
         push @ARGV, $file;
         $ok = 1;
@@ -708,7 +708,7 @@ if ($selected{'packages-from-file'}){
 my $pool = Lintian::Pool->new;
 
 for my $path (@subjects) {
-    die encode_utf8("$path is not a file\n") unless -f $path;
+    die encode_utf8("$path is not a readable file\n") unless -r $path;
 
     # in ubuntu, automatic dbgsym packages end with .ddeb
     die encode_utf8(
@@ -741,7 +741,7 @@ for my $path (@subjects) {
               if $basename =~ m{/};
 
             die encode_utf8("$parent/$basename does not exist, exiting\n")
-              unless -f "$parent/$basename";
+              unless -e "$parent/$basename";
 
             # only care about some files; ddeb is ubuntu dbgsym
             next
@@ -876,7 +876,7 @@ sub _find_changes {
     for my $dir (@dirs) {
         for my $arch (@archs) {
             $changes = "$dir/${source}_${version}_${arch}.changes";
-            return $changes if -f $changes;
+            return $changes if -e $changes;
         }
     }
 

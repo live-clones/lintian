@@ -152,11 +152,11 @@ sub copy_dir_contents {
 
         # recursively delete directories to be replaced by a file
         remove_tree($prospective)
-          if -d $prospective && -f $path;
+          if -d $prospective && -e $path && !-d _;
 
         # remove files to be replaced by a directory
         unlink($prospective)
-          if -f $prospective && -d $path;
+          if -e $prospective && !-d _ && -d $path;
     }
 
     # 'cp -r' with a dot will error without files present

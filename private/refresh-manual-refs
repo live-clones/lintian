@@ -153,7 +153,7 @@ my %manuals = (
     my $ok = 1;
     foreach my $manual (sort keys %manuals) {
         my ($index, undef) = @{$manuals{$manual}};
-        unless (-f $index) {
+        unless (-e $index) {
             print STDERR
               "Manual \"$manual\" not available (missing: $index)\n";
             $ok = 0;

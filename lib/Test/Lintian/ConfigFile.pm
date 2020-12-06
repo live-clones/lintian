@@ -73,7 +73,7 @@ sub read_config {
     my ($configpath) = @_;
 
     croak encode_utf8("Cannot find file $configpath.")
-      unless -f $configpath;
+      unless -e $configpath;
 
     my $deb822 = Lintian::Deb822::File->new;
     my @sections = $deb822->read_file($configpath);

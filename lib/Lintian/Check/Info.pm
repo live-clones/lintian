@@ -132,7 +132,7 @@ sub load {
 
     my $descpath = $self->basedir . SLASH . $self->name . '.desc';
     return
-      unless -f $descpath;
+      unless -e $descpath;
 
     my $deb822 = Lintian::Deb822::File->new;
     my @sections = $deb822->read_file($descpath);

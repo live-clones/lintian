@@ -113,11 +113,11 @@ sub find_selected_scripts {
 
             # look for files with the standard suffix
             my $withsuffix = rel2abs("$lookfor.t", $scriptpath);
-            push(@found, $withsuffix) if (-f $withsuffix);
+            push(@found, $withsuffix) if -e $withsuffix;
 
             # look for script with exact name
             my $exactpath = rel2abs($lookfor, $scriptpath);
-            push(@found, $exactpath) if (-f $exactpath);
+            push(@found, $exactpath) if -e $exactpath;
 
             # also add entire directory if name matches
             push(@found, File::Find::Rule->file()->name('*.t')->in($exactpath))
@@ -288,7 +288,7 @@ sub find_testpaths_by_name {
 
     my @named = File::Find::Rule->directory()->name($name)->in($path);
     my @testpaths= grep { defined }
-      map { -f rel2abs('eval/' . DESC, $_) ? $_ : undef } @named;
+      map { -e rel2abs('eval/' . DESC, $_) ? $_ : undef } @named;
 
     return @testpaths;
 }

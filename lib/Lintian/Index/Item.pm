@@ -806,7 +806,7 @@ sub _check_open {
     # "UNSAFE_PATH" or "FS_PATH_IS_OK"
 
     confess 'Opening of irregular file not supported: ' . $self->name
-      unless $self->is_file || ($self->is_symlink && -f $self->unpacked_path);
+      unless $self->is_file || ($self->is_symlink && -e $self->unpacked_path);
 
     $self->path_info($self->path_info | OPEN_IS_OK);
 

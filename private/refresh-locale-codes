@@ -133,7 +133,7 @@ sub check_requirements {
     push @missing, 'isoquery in PATH'
       unless length locate_executable('isoquery');
     push @missing, 'The file /usr/share/xml/iso-codes/iso_639_3.xml'
-      unless -f '/usr/share/xml/iso-codes/iso_639_3.xml';
+      unless -e '/usr/share/xml/iso-codes/iso_639_3.xml';
 
     return unless @missing;
 

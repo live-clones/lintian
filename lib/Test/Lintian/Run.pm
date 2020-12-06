@@ -207,7 +207,7 @@ sub runner {
 
     # skip test if marked
     my $skipfile = "$runpath/skip";
-    if (-f $skipfile) {
+    if (-e $skipfile) {
         my $reason = path($skipfile)->slurp_utf8 || 'No reason given';
         say encode_utf8("Skipping test: $reason");
         plan skip_all => "(disabled) $reason";
@@ -240,7 +240,7 @@ qx{dpkg-architecture -a $ENV{'DEB_HOST_ARCH'} -i $_; echo -n \$?}
     }
 
     plan skip_all => 'No package found'
-      unless -f "$runpath/subject";
+      unless -e "$runpath/subject";
 
     # set the testing plan
     plan tests => 1;
@@ -249,7 +249,7 @@ qx{dpkg-architecture -a $ENV{'DEB_HOST_ARCH'} -i $_; echo -n \$?}
 
     # get lintian subject
     die encode_utf8('Could not get subject of Lintian examination.')
-      unless -f $subject;
+      unless -e $subject;
 
     # run lintian
     $ENV{'LINTIAN_COVERAGE'}.= ",-db,./cover_db-$testname"
@@ -347,7 +347,7 @@ sub check_literal {
     # run a sed-script if it exists
     my $actual = "$runpath/literal.actual.parsed";
     my $script = "$runpath/post-test";
-    if(-f $script) {
+    if (-e $script) {
         sed_hook($script, $raw, $actual);
     } else {
         die encode_utf8("Could not copy actual tags $raw to $actual: $!")
@@ -375,7 +375,7 @@ sub check_tags {
     # run a sed-script if it exists
     my $actual = "$runpath/tags.actual.parsed";
     my $sedscript = "$runpath/post-test";
-    if(-f $sedscript) {
+    if (-e $sedscript) {
         sed_hook($sedscript, $raw, $actual);
     } else {
         die encode_utf8("Could not copy actual tags $raw to $actual: $!")

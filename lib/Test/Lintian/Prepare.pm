@@ -99,7 +99,7 @@ sub prepare {
     # read default file names
     my $defaultfilespath = "$defaultspath/files";
     die encode_utf8("Cannot find $defaultfilespath")
-      unless -f $defaultfilespath;
+      unless -e $defaultfilespath;
 
     # read file and adjust data age threshold
     my $files = read_config($defaultfilespath);
@@ -130,7 +130,7 @@ sub prepare {
 
         # check for old build artifacts
         my $buildstamp = "$sourcepath/build-stamp";
-        say encode_utf8('Found old build artifact.') if -f $buildstamp;
+        say encode_utf8('Found old build artifact.') if -e $buildstamp;
 
         # check for old debian/debian directory
         my $olddebiandir = "$sourcepath/debian/debian";
@@ -141,7 +141,7 @@ sub prepare {
         say encode_utf8('Forcing rebuild.') if $force_rebuild;
 
         # delete work directory
-        if($force_rebuild || -f $buildstamp || -e $olddebiandir) {
+        if($force_rebuild || -e $buildstamp || -e $olddebiandir) {
             say encode_utf8("Removing work directory $sourcepath.");
             remove_tree($sourcepath);
         }
@@ -321,7 +321,7 @@ sub filleval {
     # read default file names
     my $defaultfilespath = "$defaultspath/files";
     die encode_utf8("Cannot find $defaultfilespath")
-      unless -f $defaultfilespath;
+      unless -e $defaultfilespath;
 
     # read file with default file names
     my $files = read_config($defaultfilespath);

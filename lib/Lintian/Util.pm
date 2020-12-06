@@ -376,7 +376,7 @@ sub version_from_changelog {
     my $changelog_path = "$package_path/debian/changelog";
 
     return EMPTY
-      unless -f $changelog_path;
+      unless -e $changelog_path;
 
     my $contents = path($changelog_path)->slurp_utf8;
     my $changelog = Lintian::Inspect::Changelog->new;

@@ -93,7 +93,7 @@ sub build_subject {
 
     # skip test if marked
     my $skipfile = "$sourcepath/skip";
-    if (-f $skipfile) {
+    if (-e $skipfile) {
         my $reason = path($skipfile)->slurp_utf8 || 'No reason given';
         say encode_utf8("Skipping test: $reason");
         return;
@@ -143,7 +143,7 @@ sub build_subject {
     }
 
     croak encode_utf8('Build was unsuccessful.')
-      unless -f $subject;
+      unless -e $subject;
 
     die encode_utf8("Cannot link to build product $build_product")
       if system("cd $buildpath; ln -s $build_product subject");

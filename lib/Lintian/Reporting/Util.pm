@@ -77,7 +77,7 @@ sub load_state_cache {
     my $state = {};
 
     return $state
-      unless -f $state_file;
+      unless -e $state_file;
 
     my $yaml = path($state_file)->slurp;
 

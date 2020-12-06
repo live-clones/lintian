@@ -80,7 +80,7 @@ sub sed_hook {
     my ($script, $path, $output) = @_;
 
     croak encode_utf8("Parser script $script does not exist.")
-      unless -f $script;
+      unless -e $script;
 
     my $bytes = qx{sed -r -f $script $path};
     croak encode_utf8("Hook failed: sed -ri -f $script $path > $output: $!")
@@ -90,7 +90,7 @@ sub sed_hook {
     path($output)->spew($bytes);
 
     croak encode_utf8("Did not create parser output file $output.")
-      unless -f $output;
+      unless -e $output;
 
     return $output;
 }
@@ -137,7 +137,7 @@ sub calibrate {
         system($hook, $expected, $actual, $calibrated) == 0
           or croak encode_utf8("Hook $hook failed on $actual: $!");
         croak encode_utf8("No calibrated tags created in $calibrated")
-          unless -f $calibrated;
+          unless -e $calibrated;
         return $calibrated;
     }
     return $expected;
