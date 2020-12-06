@@ -36,9 +36,8 @@ my %PHP_FILES = (
     'libphp-adodb'         => qr{(?i)/adodb\.inc\.php$},
     'smarty3?'             => qr{(?i)/Smarty(?:_Compiler)?\.class\.php$},
     'libphp-phpmailer'     => qr{(?i)/class\.phpmailer(\.(?:php|inc))+$},
-    'phpsysinfo'           => qr{(?i)/phpsysinfo\.dtd$},
     'phpsysinfo'           =>
-      qr{(?i)/class\.(?:Linux|(?:Open|Net|Free|)BSD)\.inc\.php$},
+qr{(?i)/phpsysinfo\.dtd|/class\.(?:Linux|(?:Open|Net|Free|)BSD)\.inc\.php$},
     'php-openid'           => qr{/Auth/(?:OpenID|Yadis/Yadis)\.php$},
     'libphp-snoopy'        => qr{(?i)/Snoopy\.class\.(?:php|inc)$},
     'libmarkdown-php'      => qr{(?i)/markdown\.php$},
