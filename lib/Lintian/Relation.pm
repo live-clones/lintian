@@ -786,6 +786,8 @@ sub implies_array_inverse {
     } elsif ($q0 eq 'NOT') {
         return $self->implies_array($p, $$q[1]);
     }
+
+    return 0;
 }
 
 # The public interface.
@@ -993,6 +995,8 @@ sub visit {
         }
         return 0;
     }
+
+    return 0;
 }
 
 =item empty

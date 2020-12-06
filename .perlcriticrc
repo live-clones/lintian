@@ -127,7 +127,7 @@ include =
 
 [Freenode::ConditionalDeclarations]
 
-[-Freenode::ConditionalImplicitReturn]
+[Freenode::ConditionalImplicitReturn]
 
 [-Freenode::DeprecatedFeatures]
 
