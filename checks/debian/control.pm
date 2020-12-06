@@ -594,13 +594,17 @@ sub check_dev_depends {
         # going on.  Assume that the maintainer knows what they're
         # doing.  Otherwise, separate out just the versions.
         next if any { /\|/ } @depends;
-        my @versions = sort map {
-            if (/^[\w.+-]+(?:\s*\(([^\)]+)\))/) {
-                $1;
+
+        my @unsorted;
+        for my $item (@depends) {
+            if ($item =~ /^[\w.+-]+(?:\s*\(([^\)]+)\))/) {
+                push(@unsorted, $1);
             } else {
-                '';
+                push(@unsorted, EMPTY);
             }
-        } @depends;
+        }
+
+        my @versions = sort @unsorted;
 
         # If there's only one mention of this package, the dependency
         # should be tight.  Otherwise, there should be both >>/>= and

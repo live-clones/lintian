@@ -439,25 +439,22 @@ sub extract_service_file_values {
 
     my (@values, $section);
 
-    my @lines = service_file_lines($file);
+    my @unfiltered = service_file_lines($file);
 
-    if (any { /^\.include / } @lines) {
-        my $parent_dir = $file->parent_dir;
-        @lines = map {
-            if (/^\.include (.+)$/) {
-                my $path = $parent_dir->resolve_path($1);
-                if (defined($path)
-                    && $path->is_open_ok) {
-                    service_file_lines($path);
-                } else {
-                    # doesn't exist, exists but not a file or "out-of-bounds"
-                    $_;
-                }
-            } else {
-                $_;
+    my @lines;
+    for my $line (@unfiltered) {
+
+        if ($line =~ /^\.include (.+)$/) {
+            my $path = $file->parent_dir->resolve_path($1);
+            if (defined $path && $path->is_open_ok) {
+                push(@lines, service_file_lines($path));
+                next;
             }
-        } @lines;
+        }
+
+        push(@lines, $line);
     }
+
     for (@lines) {
         # section header
         if (/^\[([^\]]+)\]$/) {

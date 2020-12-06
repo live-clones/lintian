@@ -582,11 +582,14 @@ sub installable {
             }
         } elsif ($self->VERSIONED_INTERPRETERS->known($base)) {
             my @versions = @{ $data->[4] };
-            my @depends = map {
+
+            my @depends;
+            for my $version (@versions) {
                 my $d = $data->[3];
-                $d =~ s/\$1/$_/g;
-                $d;
-            } @versions;
+                $d =~ s/\$1/$version/g;
+                push(@depends, $d);
+            }
+
             unshift(@depends, $data->[1]) if length $data->[1];
             my $depends = join(' | ',  @depends);
             unless ($all_parsed->implies($depends)) {

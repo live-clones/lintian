@@ -203,9 +203,11 @@ sub path_exists {
     my $processable = $self->processable;
 
     # Split each line in path elements
-    my @elem= map { s/\*/.*/g; s/^\.\*$/.*\\w.*/; $_ ? qr{^$_/?$} : () }
-      split m{/},
-      $expr;
+    my @strings = split(m{/}, $expr);
+    s/\*/.*/g for @strings;
+    s/^\.\*$/.*\\w.*/ for @strings;
+
+    my @elem = map { qr{^$_/?$} } grep { length } @strings;
     my @dir = ('.');
 
     # Follow directories

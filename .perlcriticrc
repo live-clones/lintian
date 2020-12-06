@@ -21,7 +21,7 @@ include =
 
 [BuiltinFunctions::ProhibitBooleanGrep]
 
-[-BuiltinFunctions::ProhibitComplexMappings]
+[BuiltinFunctions::ProhibitComplexMappings]
 
 [BuiltinFunctions::ProhibitLvalueSubstr]
 

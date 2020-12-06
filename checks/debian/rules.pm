@@ -351,11 +351,11 @@ sub source {
         if (!/^ifn?(?:eq|def)\s/ && m/^([^\s:][^:]*):+(.*)/s) {
             my ($target_names, $target_dependencies) = ($1, $2);
             @current_targets = split ' ', $target_names;
-            my @depends = map {
-                $_ = quotemeta $_;
-                s/\\\$\\\([^\):]+\\:([^=]+)\\=([^\)]+)\1\\\)/$2.*/g;
-                qr/^$_$/;
-            } split(' ', $target_dependencies);
+
+            my @quoted = map { quotemeta } split(' ', $target_dependencies);
+            s/\\\$\\\([^\):]+\\:([^=]+)\\=([^\)]+)\1\\\)/$2.*/g for @quoted;
+            my @depends = map { qr/^$_$/ } @quoted;
+
             for my $target (@current_targets) {
                 $overridden{$1} = $. if $target =~ m/override_(.+)/;
                 if ($target =~ /%/) {

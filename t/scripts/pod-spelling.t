@@ -18,10 +18,11 @@ use Test::Lintian;
 eval 'use Test::Spelling';
 plan skip_all => 'Pod spell checking requires Test::Spelling' if $@;
 
-my @GOOD_WORDS = grep {$_ ne ''} map {
-    s/ \s* (?: [#] .* )? \Z//xsm;
-    split(m/\s++/, $_);
-} <DATA>;
+my @GOOD_WORDS;
+while (my $line = <DATA>) {
+    $line =~ s/ \s* (?: [#] .* )? \Z//xsm;
+    push(@GOOD_WORDS, grep { length } split(/\s+/, $line));
+}
 
 add_stopwords(@GOOD_WORDS);
 

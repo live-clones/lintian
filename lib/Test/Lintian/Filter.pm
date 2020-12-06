@@ -267,9 +267,7 @@ sub find_all_testpaths {
     my ($directory) = @_;
     my @descfiles = File::Find::Rule->file()->name(DESC)->in($directory);
 
-    my @testpaths
-      = map { my $parent = path($_)->parent->parent; $parent->stringify }
-      @descfiles;
+    my @testpaths= map { path($_)->parent->parent->stringify }@descfiles;
 
     return @testpaths;
 }
