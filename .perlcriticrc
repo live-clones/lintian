@@ -129,7 +129,7 @@ include =
 
 [Freenode::ConditionalImplicitReturn]
 
-[-Freenode::DeprecatedFeatures]
+[Freenode::DeprecatedFeatures]
 
 [-Freenode::DiscouragedModules]
 
