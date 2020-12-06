@@ -60,7 +60,7 @@ sub source {
     my $uploader = canonicalize($entry->Maintainer // '');
     my $changes = $entry->Changes;
     $changes =~ s/^(\s*\n)+//;
-    my $firstline = first { /^\s*\*/ } split('\n', $changes);
+    my $firstline = first { /^\s*\*/ } split(/\n/, $changes);
 
     # Check the first line for QA, NMU or team upload mentions.
     if ($firstline) {

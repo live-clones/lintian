@@ -737,7 +737,7 @@ sub verify_desktop_file {
     # Check the Category tag.
     my $in_reserved;
     if (defined $vals{'Categories'}) {
-        my @cats = split(';', $vals{'Categories'});
+        my @cats = split(/;/, $vals{'Categories'});
         my $saw_main;
         for my $cat (@cats) {
             next if $cat =~ /^X-/;
@@ -764,7 +764,7 @@ sub verify_desktop_file {
     # more than one environment.  In that case, the application probably
     # should be using NotShowIn instead.
     if (defined $vals{OnlyShowIn} and not $in_reserved) {
-        my @envs = split(';', $vals{OnlyShowIn});
+        my @envs = split(/;/, $vals{OnlyShowIn});
         if (@envs > 1) {
             $self->hint('desktop-entry-limited-to-environments', $file);
         }

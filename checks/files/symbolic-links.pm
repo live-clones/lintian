@@ -151,11 +151,11 @@ sub visit_installed_files {
         # relative link, we can assume from here that the link
         # starts nor ends with /
 
-        my @filecomponents = split('/', $file->name);
+        my @filecomponents = split(m{/}, $file->name);
         # chop off the name of the symlink
         pop @filecomponents;
 
-        my @linkcomponents = split('/', $mylink);
+        my @linkcomponents = split(m{/}, $mylink);
 
         # handle `../' at beginning of $file->link
         my ($lastpop, $linkcomponent);

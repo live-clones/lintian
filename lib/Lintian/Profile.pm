@@ -979,7 +979,7 @@ sub open_data_file {
                     "Missing command after vendor name for \@$directive")
                   unless length $remain;
 
-                my $actual_vendor = (split('/', $platform, 2))[0];
+                my $actual_vendor = (split(m{/}, $platform, 2))[0];
 
                 if ($directive eq 'if-vendor-is') {
                     next if $actual_vendor ne $specified;

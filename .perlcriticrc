@@ -33,7 +33,7 @@ include =
 
 [-BuiltinFunctions::ProhibitStringyEval]
 
-[-BuiltinFunctions::ProhibitStringySplit]
+[BuiltinFunctions::ProhibitStringySplit]
 
 [BuiltinFunctions::ProhibitUniversalCan]
 

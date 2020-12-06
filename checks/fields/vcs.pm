@@ -213,7 +213,7 @@ sub always {
         'fields/vcs-hosters',
         qr/\s*~~\s*/,
         sub {
-            my @ret = split(',', $_[1]);
+            my @ret = split(m{,}, $_[1]);
             return \@ret;
         });
 

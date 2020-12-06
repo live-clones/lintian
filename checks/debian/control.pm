@@ -331,7 +331,7 @@ sub source {
         if (length $desc
             and $processable->debian_control->installable_package_type($bin)ne
             'udeb') {
-            push @descriptions, [$bin, split("\n", $desc, 2)];
+            push @descriptions, [$bin, split(/\n/, $desc, 2)];
         }
 
         # If this looks like a -dev package, check its dependencies.
