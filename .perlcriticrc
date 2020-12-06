@@ -167,7 +167,7 @@ include =
 
 [Freenode::Wantarray]
 
-[-Freenode::WarningsSwitch]
+[Freenode::WarningsSwitch]
 
 [-Freenode::WhileDiamondDefaultAssignment]
 
