@@ -59,17 +59,63 @@ include =
 
 [ClassHierarchies::ProhibitOneArgBless]
 
+[-CodeLayout::ProhibitFatCommaNewline]
+
+[-CodeLayout::ProhibitIfIfSameLine]
+
 [CodeLayout::ProhibitHardTabs]
 
 [CodeLayout::ProhibitQuotedWordLists]
 
 [CodeLayout::ProhibitTrailingWhitespace]
 
+[-CodeLayout::RequireFinalSemicolon]
+
 [CodeLayout::RequireTidyCode]
+
+[-CodeLayout::RequireTrailingCommaAtNewline]
 
 [ControlStructures::ProhibitUnreachableCode]
 
+[-Compatibility::ConstantPragmaHash]
+
+[-Compatibility::ConstantLeadingUnderscore]
+
+[-Compatibility::Gtk2Constants]
+
+[-Compatibility::PerlMinimumVersionAndWhy]
+
+[-Compatibility::PodMinimumVersion]
+
+[-Compatibility::ProhibitUnixDevNull]
+
 [-Documentation::PodSpelling]
+
+[-Documentation::ProhibitUnbalancedParens]
+
+[-Documentation::ProhibitAdjacentLinks]
+
+[-Documentation::ProhibitDuplicateHeadings]
+
+[-Documentation::ProhibitDuplicateSeeAlso]
+
+[-Documentation::ProhibitBadAproposMarkup]
+
+[-Documentation::ProhibitLinkToSelf]
+
+[-Documentation::ProhibitParagraphEndComma]
+
+[-Documentation::ProhibitParagraphTwoDots]
+
+[-Documentation::ProhibitVerbatimMarkup]
+
+[-Documentation::RequireEndBeforeLastPod]
+
+[-Documentation::RequireFilenameMarkup]
+
+[-Documentation::RequireFinalCut]
+
+[-Documentation::RequireLinkedURLs]
 
 [Documentation::RequirePackageMatchesPodName]
 
@@ -84,6 +130,10 @@ include =
 [InputOutput::RequireCheckedSyscalls]
 functions = open opendir chdir read readdir readline closedir sysopen sysread sysclose mkdir link pipe readlink unlink rename symlink fork
 # possible TODO: close
+
+[-Miscellanea::TextDomainPlaceholders]
+
+[-Miscellanea::TextDomainUnused]
 
 [Modules::ProhibitAutomaticExportation]
 
@@ -138,10 +188,24 @@ terminal_funcs = CORE::exec fatal_error internal_error Lintian::Util::internal_e
 
 [TestingAndDebugging::RequireUseWarnings]
 
+[-ValuesAndExpressions::ConstantBeforeLt]
+
+[-ValuesAndExpressions::NotWithCompare]
+
+[-ValuesAndExpressions::ProhibitArrayAssignAref]
+
+[-ValuesAndExpressions::ProhibitBarewordDoubleColon]
+
 [ValuesAndExpressions::ProhibitCommaSeparatedStatements]
 allow_last_statement_to_be_comma_separated_in_map_and_grep = 1
 
 [-ValuesAndExpressions::ProhibitConstantPragma]
+
+[-ValuesAndExpressions::ProhibitDuplicateHashKeys]
+
+[-ValuesAndExpressions::ProhibitEmptyCommas]
+
+[-ValuesAndExpressions::ProhibitFiletest_f]
 
 [ValuesAndExpressions::ProhibitImplicitNewlines]
 
@@ -155,9 +219,15 @@ allow_last_statement_to_be_comma_separated_in_map_and_grep = 1
 
 [ValuesAndExpressions::ProhibitQuotesAsQuotelikeOperatorDelimiters]
 
+[-ValuesAndExpressions::ProhibitUnknownBackslash]
+
 [ValuesAndExpressions::RequireNumberSeparators]
 
+[-ValuesAndExpressions::RequireNumericVersion]
+
 [ValuesAndExpressions::RequireUpperCaseHeredocTerminator]
+
+[-ValuesAndExpressions::UnexpandedSpecialLiteral]
 
 [Variables::ProhibitConditionalDeclarations]
 

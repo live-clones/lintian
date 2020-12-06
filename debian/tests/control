@@ -20,6 +20,7 @@ Depends:
  javahelper,
  libio-async-loop-epoll-perl (>= 0.20),
  libio-async-perl,
+ libperl-critic-pulp-perl,
  libpod-coverage-trustpod-perl,
  libtest-minimumversion-perl,
  libtest-perl-critic-perl,
