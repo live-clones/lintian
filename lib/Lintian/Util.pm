@@ -123,7 +123,7 @@ is not anchored and does not enforce any "boundary" characters.
 
 =cut
 
-our $PKGNAME_REGEX = qr/[a-z0-9][-+\.a-z0-9]+/;
+our $PKGNAME_REGEX = qr/[a-z0-9][-+~\.a-z0-9]+/;
 
 =item $PKGREPACK_REGEX
 
