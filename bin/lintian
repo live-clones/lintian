@@ -470,13 +470,12 @@ die encode_utf8("Unrecognized fail-on argument: @unknown_fail_on\n")
   if @unknown_fail_on;
 
 if (any { $_ eq 'none' } @{$selected{'fail-on'}}) {
-    if (@{$selected{'fail-on'}} > 1) {
-        die encode_utf8(
+
+    die encode_utf8(
 "Cannot combine 'none' with other conditions: @{$selected{'fail-on'}}\n"
-        );
-    } else {
-        @{$selected{'fail-on'}} = [];
-    }
+    )if @{$selected{'fail-on'}} > 1;
+
+    $selected{'fail-on'} = [];
 }
 
 # environment variables override settings in conf file, so load them now

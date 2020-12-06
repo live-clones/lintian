@@ -121,7 +121,7 @@ include =
 
 [Freenode::AmpersandSubCalls]
 
-[-Freenode::ArrayAssignAref]
+[Freenode::ArrayAssignAref]
 
 [-Freenode::BarewordFilehandles]
 
