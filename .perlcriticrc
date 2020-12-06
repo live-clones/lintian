@@ -103,7 +103,7 @@ include =
 
 [-Documentation::ProhibitLinkToSelf]
 
-[-Documentation::ProhibitParagraphEndComma]
+[Documentation::ProhibitParagraphEndComma]
 
 [-Documentation::ProhibitParagraphTwoDots]
 

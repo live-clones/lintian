@@ -312,7 +312,7 @@ L<Lintian::Processable::Installable>
 
 L<Lintian::Processable::Buildinfo>
 
-L<Lintian::Processable::Changes>,
+L<Lintian::Processable::Changes>
 
 L<Lintian::Processable::Source>
 
