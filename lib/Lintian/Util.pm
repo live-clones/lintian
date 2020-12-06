@@ -416,8 +416,7 @@ target is the root dir and C<undef> if the path cannot be normalized
 without escaping the package root.
 
 B<CAVEAT>: This function is I<not always sufficient> to test if it is
-safe to open a given symlink.  Use
-L<is_ancestor_of|Lintian::Util/is_ancestor_of(PARENTDIR, PATH)> for
+safe to open a given symlink. Use C<is_ancestor_of(PARENTDIR, PATH)> for
 that.  If you must use this function, remember to check that the
 target is not a symlink (or if it is, that it can be resolved safely).
 

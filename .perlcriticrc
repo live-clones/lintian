@@ -99,7 +99,7 @@ include =
 
 [-Documentation::ProhibitBadAproposMarkup]
 
-[-Documentation::ProhibitLinkToSelf]
+[Documentation::ProhibitLinkToSelf]
 
 [Documentation::ProhibitParagraphEndComma]
 
