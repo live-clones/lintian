@@ -122,7 +122,7 @@ Timestamp (Date expressed in seconds since the epoch)
 
 =item ERROR
 
-ERROR (last parse error related to this entry in the format described
+Last parse error related to this entry in the format described
 at Parse::DebianChangelog::get_parse_errors.
 
 =back
