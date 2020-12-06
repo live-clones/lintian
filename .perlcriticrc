@@ -139,7 +139,7 @@ include =
 
 [Freenode::EmptyReturn]
 
-[-Freenode::IndirectObjectNotation]
+[Freenode::IndirectObjectNotation]
 
 [-Freenode::LexicalForeachIterator]
 
