@@ -41,6 +41,7 @@ use lib THISDIR . '/../lib';
 
 use Getopt::Long;
 use IO::Interactive qw(is_interactive);
+use IO::Prompt::Tiny qw(prompt);
 use List::Util qw(all);
 use Path::Tiny;
 use Term::ANSIColor;
@@ -106,13 +107,16 @@ foreach my $line (@difflines) {
         my $colored = $stripped;
         $colored = colored($stripped, $color)
           if is_interactive;
-        print encode_utf8("$colored - $command (y/n/q)? ");
 
-        my $decision_bytes = <STDIN>;
+        my $decision_bytes
+          = prompt(encode_utf8("$colored - $command (y/n/q)? "));
         my $decision = decode_utf8($decision_bytes);
-        chomp $decision;
-        exit if $decision eq 'q';
-        next unless $decision eq 'y';
+
+        exit
+          if $decision eq 'q' || $decision eq EMPTY;
+
+        next
+          unless $decision eq 'y';
     }
 
     if ($sign eq '+') {

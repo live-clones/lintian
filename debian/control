@@ -47,6 +47,7 @@ Depends:
  libfont-ttf-perl,
  libhtml-html5-entities-perl,
  libio-interactive-perl,
+ libio-prompt-tiny--perl,
  libipc-run3-perl,
  libjson-maybexs-perl,
  liblist-compare-perl,
