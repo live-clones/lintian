@@ -137,8 +137,8 @@ sub check_requirements {
 
     return unless @missing;
 
-    print STDERR "Missing requirements:\n";
-    print STDERR "\t", join("\n\t", @missing), "\n";
+    print {*STDERR} "Missing requirements:\n";
+    print {*STDERR} "\t", join("\n\t", @missing), "\n";
     exit 1;
 }
 

@@ -70,7 +70,7 @@ for my $tag (keys(%added)) {
 }
 
 if (not %added and not %removed) {
-    print STDERR "No tags were added or removed\n";
+    print {*STDERR} "No tags were added or removed\n";
 }
 
 if ($opt{'in-place'}) {

@@ -192,9 +192,9 @@ sub unpack_and_index_piped_tar {
             }
 
             if ($handle == $produce_stdout) {
-                print $extract_stdin $buffer;
-                print $named_stdin $buffer;
-                print $numeric_stdin $buffer;
+                print {$extract_stdin} $buffer;
+                print {$named_stdin} $buffer;
+                print {$numeric_stdin} $buffer;
 
             } elsif ($handle == $named_stdout) {
                 $named .= $buffer;

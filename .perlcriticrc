@@ -222,7 +222,7 @@ include =
 [-InputOutput::ProhibitTwoArgOpen]
 # not needed with Freenode::OpenArgs
 
-[-InputOutput::RequireBracedFileHandleWithPrint]
+[InputOutput::RequireBracedFileHandleWithPrint]
 
 [-InputOutput::RequireBriefOpen]
 

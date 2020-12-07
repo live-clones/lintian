@@ -129,7 +129,7 @@ unless (@ARGV) {
 for my $path (@ARGV) {
 
     unless (-r $path) {
-        print STDERR encode_utf8("$path is not a readable file\n");
+        print {*STDERR} encode_utf8("$path is not a readable file\n");
         $exit_code = 1;
 
         next;

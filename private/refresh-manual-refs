@@ -154,7 +154,7 @@ my %manuals = (
     foreach my $manual (sort keys %manuals) {
         my ($index, undef) = @{$manuals{$manual}};
         unless (-e $index) {
-            print STDERR
+            print {*STDERR}
               "Manual \"$manual\" not available (missing: $index)\n";
             $ok = 0;
         }
@@ -184,7 +184,7 @@ sub extract_refs {
         if (not $title and m/$title_re/) {
             $title = 1;
             my @out = ($manual, '', $1, $url);
-            print $fh join('::', @out) . "\n";
+            print {$fh} join('::', @out) . "\n";
         }
 
         while (m/$ref_re/g) {
