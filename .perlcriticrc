@@ -333,7 +333,7 @@ functions = open opendir chdir read readdir readline closedir sysopen sysread sy
 [-Subroutines::ProhibitSubroutinePrototypes]
 # not needed with Freenode::Prototypes
 
-[-Subroutines::ProhibitUnusedPrivateSubroutines]
+[Subroutines::ProhibitUnusedPrivateSubroutines]
 
 [-Subroutines::ProtectPrivateSubs]
 
