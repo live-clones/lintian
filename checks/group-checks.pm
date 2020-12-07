@@ -81,53 +81,60 @@ sub source {
 }
 
 sub check_file_overlap {
-    my ($self, @procs) = @_;
-    # Sort them for stable output
-    my @sorted = sort { $a->name cmp $b->name } @procs;
-    for (my $i = 0 ; $i < scalar @sorted ; $i++) {
-        my $processable = $sorted[$i];
+    my ($self, @processables) = @_;
 
-        my @p= grep { $_ }
-          split(/,/, $processable->fields->value('Provides'));
-        my $prov
-          = Lintian::Relation->new(join(' |̈́ ', $processable->name, @p));
-        for (my $j = $i ; $j < scalar @sorted ; $j++) {
-            my $other = $sorted[$j];
+    # make a local copy to be modified
+    my @remaining = @processables;
 
-            my @op= grep { $_ }
-              split(/,/, $other->fields->value('Provides'));
-            my $oprov= Lintian::Relation->new(join(' | ', $other->name, @op));
-            # poor man's "Multi-arch: same" work-around.
-            next if $processable->name eq $other->name;
+    # avoids checking the same combo twice
+    while(defined(my $one = shift @remaining)) {
 
-            # $other conflicts/replaces with $processable
-            next if $other->relation('Conflicts')->implies($prov);
-            next if $other->relation('Replaces')->implies($processable->name);
+        my @provides_one = $one->fields->trimmed_list('Provides', qr{,});
+        my $relation_one
+          = Lintian::Relation->new(join(' |̈́ ', $one->name, @provides_one));
 
-            # $processable conflicts/replaces with $other
-            next if $processable->relation('Conflicts')->implies($oprov);
-            next if $processable->relation('Replaces')->implies($other->name);
+        # avoids checking the same combo twice
+        for my $two (@remaining) {
 
-            $self->overlap_check($processable, $processable, $other, $other);
+            # poor man's work-around for "Multi-arch: same"
+            next
+              if $one->name eq $two->name;
+
+            my @provides_two = $two->fields->trimmed_list('Provides', qr{,});
+            my $relation_two
+              = Lintian::Relation->new(join(' | ', $two->name, @provides_two));
+
+            # $two conflicts/replaces with $one
+            next
+              if $two->relation('Conflicts')->implies($relation_one);
+            next
+              if $two->relation('Replaces')->implies($one->name);
+
+            # $one conflicts/replaces with $two
+            next
+              if $one->relation('Conflicts')->implies($relation_two);
+            next
+              if $one->relation('Replaces')->implies($two->name);
+
+            for my $one_file ($one->installed->sorted_list) {
+
+                my $name = $one_file->name;
+
+                $name =~ s{/$}{};
+                my $two_file = $two->installed->lookup($name)
+                  // $two->installed->lookup("$name/");
+                next
+                  unless defined $two_file;
+
+                next
+                  if $one_file->is_dir && $two_file->is_dir;
+
+                $self->hint('binaries-have-file-conflict',
+                    sort($one->name, $two->name), $name);
+            }
         }
     }
-    return;
-}
 
-sub overlap_check {
-    my ($self, $a_proc, $a_info, $b_proc, $b_info) = @_;
-    foreach my $a_file ($a_info->installed->sorted_list) {
-        my $name = $a_file->name;
-        my $b_file;
-        $name =~ s{/$}{};
-        $b_file = $b_info->installed->lookup($name)
-          // $b_info->installed->lookup("$name/");
-        if ($b_file) {
-            next if $a_file->is_dir and $b_file->is_dir;
-            $self->hint('binaries-have-file-conflict',
-                $a_proc->name,$b_proc->name, $name);
-        }
-    }
     return;
 }
 

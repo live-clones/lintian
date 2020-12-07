@@ -192,11 +192,14 @@ sub extract_refs {
 
         while (m/$ref_re/g) {
             my %ref;
-            for (my $i = 0; $i < scalar @{$fields}; $i++) {
-                foreach my $c (@{$fields->[$i]}) {
-                    my $v = $i + 1;
-                    $ref{$c} = eval '$' . $v;
-                }
+
+            my $v = 1;
+            for my $field (@{$fields}) {
+
+                $ref{$_} = eval '$' . $v for @{$field};
+
+            } continue {
+                $v++;
             }
 
             if ($ref{url} =~ m/^(.+?\.html)#?/i) {

@@ -41,6 +41,8 @@ our (@EXPORT_OK, %EXPORT_TAGS);
 );
 @EXPORT_OK = (@{ $EXPORT_TAGS{constants} });
 
+use List::SomeUtils qw(any);
+
 use Lintian::Relation::Version qw(:all);
 
 use Const::Fast;
@@ -333,16 +335,27 @@ sub duplicates {
     # the missing one of the pair to the existing set rather than creating a
     # new one.
     my (%dups, %seen);
-    for (my $i = 1; $i < @{$self}; $i++) {
-        my $self_i = $self->[$i];
-        for (my $j = $i + 1; $j < @{$self}; $j++) {
-            my $self_j = $self->[$j];
-            my $forward = implies_array($self_i, $self_j);
-            my $reverse = implies_array($self_j, $self_i);
+
+    my @remaining = @{$self};
+
+    # discard AND identifier
+    shift @remaining;
+    my $i = 1;
+
+    while (@remaining > 1) {
+
+        my $branch_i = shift @remaining;
+        my $j = $i + 1;
+
+        # run against all others
+        for my $branch_j (@remaining) {
+
+            my $forward = implies_array($branch_i, $branch_j);
+            my $reverse = implies_array($branch_j, $branch_i);
 
             if ($forward or $reverse) {
-                my $one = $self->unparse($self_i);
-                my $two = $self->unparse($self_j);
+                my $one = $self->unparse($branch_i);
+                my $two = $self->unparse($branch_j);
 
                 if ($seen{$one}) {
                     $dups{$seen{$one}}{$two} = $j;
@@ -358,7 +371,11 @@ sub duplicates {
                     $seen{$two} = $one;
                 }
             }
+        } continue {
+            $j++;
         }
+    } continue {
+        $i++;
     }
 
     # The sort maintains the original order in which we encountered the
@@ -697,18 +714,22 @@ sub implies_array {
             }
             return 0;
         } elsif ($p0 eq 'OR') {
-            for ($i = 1; $i < @{$p}; $i++) {
-                my $j = 1;
-                my $satisfies = 0;
-                while ($j < @{$q}) {
-                    if (implies_array($p->[$i], $q->[$j++])) {
-                        $satisfies = 1;
-                        last;
-                    }
-                }
-                return 0 unless $satisfies;
+
+            my @p_branches = @{$p};
+            shift @p_branches;
+
+            my @q_branches = @{$q};
+            shift @q_branches;
+
+            for my $p_branch (@p_branches) {
+
+                return 0
+                  unless any { implies_array($p_branch, $_) }
+                @q_branches;
             }
+
             return 1;
+
         } elsif ($p->[0] eq 'NOT') {
             return implies_array_inverse($p->[1], $q);
         }

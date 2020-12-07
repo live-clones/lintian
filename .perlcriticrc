@@ -81,7 +81,7 @@ include =
 
 [-CodeLayout::RequireTrailingCommas]
 
-[-ControlStructures::ProhibitCStyleForLoops]
+[ControlStructures::ProhibitCStyleForLoops]
 
 [-ControlStructures::ProhibitCascadingIfElse]
 
