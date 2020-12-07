@@ -335,7 +335,7 @@ functions = open opendir chdir read readdir readline closedir sysopen sysread sy
 
 [Subroutines::ProhibitUnusedPrivateSubroutines]
 
-[-Subroutines::ProtectPrivateSubs]
+[Subroutines::ProtectPrivateSubs]
 
 [-Subroutines::RequireArgUnpacking]
 
