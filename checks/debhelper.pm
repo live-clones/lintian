@@ -33,6 +33,7 @@ use Text::LevenshteinXS qw(distance);
 
 use Lintian::Relation qw(:constants);
 
+use constant EMPTY => q{};
 use constant UNDERSCORE => q{_};
 
 use Moo;
@@ -68,9 +69,17 @@ sub source {
 
     my $dh_commands_depends
       = $self->profile->load_data('debhelper/dh_commands', '=');
-    my @KNOWN_DH_COMMANDS= map { $_, $_ . '-arch', $_ . '-indep' }
-      map { 'override' . $_, 'execute_before' . $_, 'execute_after' . $_ }
-      map { UNDERSCORE . $_ } $dh_commands_depends->all;
+
+    my @KNOWN_DH_COMMANDS;
+    for my $command ($dh_commands_depends->all) {
+        for my $focus (EMPTY, qw(-arch -indep)) {
+            for my $timing (qw(override execute_before execute_after)) {
+
+                push(@KNOWN_DH_COMMANDS,
+                    $timing . UNDERSCORE . $command . $focus);
+            }
+        }
+    }
 
     my $droot = $processable->patched->resolve_path('debian/');
     my ($drules, $dh_bd_version, $level);

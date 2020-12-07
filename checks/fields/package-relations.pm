@@ -36,19 +36,24 @@ use List::SomeUtils qw(any);
 use Lintian::Architecture::Analyzer;
 use Lintian::Relation qw(:constants);
 
+use constant EMPTY => q{};
+
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
 
 # Still in the archive but shouldn't be the primary Emacs dependency.
-our %known_obsolete_emacs = map { $_ => 1 }
-  map { $_, $_.'-el', $_.'-gtk', $_.'-nox', $_.'-lucid' }
-  qw(
-  emacs21
-  emacs22
-  emacs23
-);
+my @obsolete_emacs_versions = qw(21 22 23);
+my @emacs_flavors = (EMPTY, qw(-el -gtk -nox -lucid));
+our %known_obsolete_emacs;
+for my $version (@obsolete_emacs_versions) {
+    for my $flavor (@emacs_flavors) {
+
+        my $package = 'emacs' . $version . $flavor;
+        $known_obsolete_emacs{$package} = 1;
+    }
+}
 
 our %known_libstdcs = map { $_ => 1 } qw(
   libstdc++2.9-glibc2.1
