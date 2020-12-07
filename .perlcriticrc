@@ -326,7 +326,7 @@ functions = open opendir chdir read readdir readline closedir sysopen sysread sy
 
 [-Subroutines::ProhibitManyArgs]
 
-[-Subroutines::ProhibitNestedSubs]
+[Subroutines::ProhibitNestedSubs]
 
 [Subroutines::ProhibitReturnSort]
 

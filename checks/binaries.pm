@@ -109,6 +109,25 @@ sub _split_hash {
     return $hash;
 }
 
+sub lib_soname_path {
+    my ($dir, @paths) = @_;
+
+    for my $path (@paths) {
+        next
+          if $path=~ m{^(?:usr/)?lib(?:32|64)?/libnss_[^.]+\.so(?:\.\d+)$};
+
+        return 1
+          if $path =~ m{^lib/[^/]+$};
+        return 1
+          if $path =~ m{^usr/lib/[^/]+$};
+        return 1
+          if defined $dir && $path =~ m{^lib/$dir/[^/]+$};
+        return 1
+          if defined $dir && $path =~ m{^usr/lib/$dir/[^/]+$};
+    }
+    return 0;
+}
+
 our $ARCH_32_REGEX;
 
 sub installable {
@@ -297,18 +316,6 @@ sub installable {
     $ruby_triplet_re =~ s{linux\\-gnu$}{linux};
     $ruby_triplet_re =~ s{linux\\-gnu}{linux\\-};
 
-    sub lib_soname_path {
-        my ($dir, @paths) = @_;
-        foreach my $path (@paths) {
-            next
-              if $path=~ m{^(?:usr/)?lib(?:32|64)?/libnss_[^.]+\.so(?:\.\d+)$};
-            return 1 if $path =~ m{^lib/[^/]+$};
-            return 1 if $path =~ m{^usr/lib/[^/]+$};
-            return 1 if defined $dir && $path =~ m{^lib/$dir/[^/]+$};
-            return 1 if defined $dir && $path =~ m{^usr/lib/$dir/[^/]+$};
-        }
-        return 0;
-    }
     my @sonames
       = sort grep { lib_soname_path($madir, @{$SONAME{$_}}) } keys %SONAME;
 
