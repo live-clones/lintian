@@ -104,12 +104,40 @@ for my $tagpath (@descfiles) {
     $new_name{$_} = $name for @renamed_from;
 }
 
-my $old_lc
-  = List::Compare->new([@want_fatal, @want_nonfatal], [keys %new_name]);
-my @old_names = $old_lc->get_intersection;
+my $old_fatal_lc= List::Compare->new(\@want_fatal, [keys %new_name]);
+my $old_nonfatal_lc= List::Compare->new(\@want_nonfatal, [keys %new_name]);
+
+my @old_fatal_names = $old_fatal_lc->get_intersection;
+my @old_nonfatal_names = $old_nonfatal_lc->get_intersection;
+
 say encode_utf8('FTP Master uses old tag names for auto-rejection:')
-  if @old_names;
-say encode_utf8(INDENT . "- $_  =>  $new_name{$_}") for @old_names;
+  if @old_fatal_names || @old_nonfatal_names;
+say encode_utf8(INDENT . "-   [fatal]   $_  =>  $new_name{$_}")
+  for @old_fatal_names;
+say encode_utf8(INDENT . "- [non-fatal] $_  =>  $new_name{$_}")
+  for @old_nonfatal_names;
+
+my $new_fatal_lc
+  = List::Compare->new(\@want_fatal, [map { $new_name{$_} } @old_fatal_names]);
+my $new_nonfatal_lc
+  = List::Compare->new(\@want_nonfatal,
+    [map { $new_name{$_} } @old_nonfatal_names]);
+
+my @aware_fatal_names = $new_fatal_lc->get_intersection;
+my @aware_nonfatal_names = $new_nonfatal_lc->get_intersection;
+
+say encode_utf8('They already know about those tags:')
+  if @aware_fatal_names || @aware_nonfatal_names;
+say encode_utf8(INDENT . "-   [fatal]   $_") for @aware_fatal_names;
+say encode_utf8(INDENT . "- [non-fatal] $_") for @aware_nonfatal_names;
+
+my @unaware_fatal_names = $new_fatal_lc->get_Ronly;
+my @unaware_nonfatal_names = $new_nonfatal_lc->get_Ronly;
+
+say encode_utf8('The following tags have to be added:')
+  if @unaware_fatal_names || @unaware_nonfatal_names;
+say encode_utf8(INDENT . "-   [fatal]   $_") for @unaware_fatal_names;
+say encode_utf8(INDENT . "- [non-fatal] $_") for @unaware_nonfatal_names;
 
 # replace old names
 @want_fatal = uniq map { $new_name{$_} // $_ } @want_fatal;
@@ -122,8 +150,8 @@ my @fatal = $fatal_lc->get_intersection;
 my $nonfatal_lc = List::Compare->new(\@want_nonfatal, \@known_tags);
 my @unknown_nonfatal = $nonfatal_lc->get_Lonly;
 my @nonfatal = $nonfatal_lc->get_intersection;
-
 my @unknown = (@unknown_fatal, @unknown_nonfatal);
+
 say encode_utf8(
     'Warning, disregarding unknown tags for profile ftp-master-auto-reject:')
   if @unknown;
