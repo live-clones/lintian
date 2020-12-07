@@ -132,7 +132,7 @@ my %already_displayed;
 # Otherwise, read input files or STDIN, watch for tags, and add
 # descriptions whenever we see one, can, and haven't already
 # explained that tag.  Strip off color and HTML sequences.
-for my $bytes (<STDIN>) {
+while(my $bytes = <STDIN>) {
     my $line = decode_utf8($bytes);
     print encode_utf8($line);
     chomp $line;
