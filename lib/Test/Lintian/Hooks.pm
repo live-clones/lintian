@@ -56,6 +56,7 @@ use File::Basename;
 use File::Find::Rule;
 use File::Path;
 use File::stat;
+use IPC::Run3;
 use List::SomeUtils qw(any);
 use Path::Tiny;
 use Unicode::UTF8 qw(encode_utf8 decode_utf8);
@@ -82,9 +83,13 @@ sub sed_hook {
     croak encode_utf8("Parser script $script does not exist.")
       unless -e $script;
 
-    my $bytes = qx{sed -r -f $script $path};
+    my @command = (qw{sed -r -f}, $script, $path);
+    my $bytes;
+    run3(\@command, \undef, \$bytes);
+    my $status = ($? >> 8);
+
     croak encode_utf8("Hook failed: sed -ri -f $script $path > $output: $!")
-      if $?;
+      if $status;
 
     # already in bytes
     path($output)->spew($bytes);

@@ -22,6 +22,7 @@ use v5.20;
 use warnings;
 use utf8;
 
+use IPC::Run3;
 use HTTP::Tiny;
 use Path::Tiny;
 use Time::Moment;
@@ -40,11 +41,13 @@ die "Failed!\n"
 
 $tempfile->spew_utf8($response->{content});
 
-my $rfc822 = qx{dpkg-parsechangelog --format rfc822 --all --file $path};
-my %release_date;
+my $rfc822;
+my @command = (qw{dpkg-parsechangelog --format rfc822 --all --file}, $path);
+run3(\@command, \undef, \$rfc822);
 
 # other parsers are more efficient
 my @sections = split(/\n\n/, $rfc822);
+my %release_date;
 for my $section (@sections) {
 
     my ($version) = ($section =~ /^Version:\s+(\S+)\s*$/m);

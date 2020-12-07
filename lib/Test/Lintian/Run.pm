@@ -59,6 +59,7 @@ use File::Spec::Functions qw(abs2rel rel2abs splitpath catpath);
 use File::Compare;
 use File::Copy;
 use File::stat;
+use IPC::Run3;
 use List::Compare;
 use List::Util qw(max min any all);
 use Path::Tiny;
@@ -227,13 +228,22 @@ sub runner {
     }
     my $platforms = $testcase->unfolded_value('Test-Architectures');
     if ($platforms ne 'any') {
+
         my @wildcards = split(SPACE, $platforms);
-        my @matches= map {
-            decode_utf8(
-qx{dpkg-architecture -a $ENV{'DEB_HOST_ARCH'} -i $_; echo -n \$?}
-            )
-        } @wildcards;
-        unless (any { $_ == 0 } @matches) {
+        my $match = 0;
+        for my $wildcard (@wildcards) {
+
+            my @command = (qw{dpkg-architecture -a},
+                $ENV{'DEB_HOST_ARCH'}, '-i', $wildcard);
+            run3(\@command, \undef, \undef, \undef);
+            my $status = ($? >> 8);
+
+            unless ($status) {
+                $match = 1;
+                last;
+            }
+        }
+        unless ($match) {
             say encode_utf8('Architecture mismatch');
             plan skip_all => encode_utf8('Architecture mismatch');
         }

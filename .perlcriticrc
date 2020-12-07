@@ -205,7 +205,7 @@ include =
 
 [-Freenode::WhileDiamondDefaultAssignment]
 
-[-InputOutput::ProhibitBacktickOperators]
+[InputOutput::ProhibitBacktickOperators]
 
 [InputOutput::ProhibitBarewordFileHandles]
 

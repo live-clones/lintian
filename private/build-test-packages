@@ -42,6 +42,7 @@ use constant THISDIR => dirname realpath __FILE__;
 # use Lintian modules that belong to this program
 use lib THISDIR . '/../lib';
 
+use Cwd qw(getcwd);
 use Capture::Tiny qw(capture_merged);
 use File::Copy;
 use File::Find::Rule;
@@ -49,6 +50,7 @@ use File::stat;
 use Getopt::Long;
 use IO::Async::Function;
 use IO::Async::Loop;
+use IPC::Run3;
 use List::Compare;
 use Path::Tiny;
 use Time::Duration;
@@ -340,8 +342,14 @@ my $build = IO::Async::Function->new(
         my $sourcepath = $relative->absolute($sourceroot)->relative->stringify;
         my $buildpath = $relative->absolute($buildroot)->relative->stringify;
 
-        my $sha1sums_bytes
-          =qx{cd $sourcepath; find . -type f -print0 | sort -z | xargs -0 sha1sum};
+        my $savedir = getcwd;
+        chdir $sourcepath;
+
+        my $sha1sums_bytes;
+        run3('find . -type f -print0 | sort -z | xargs -0 sha1sum',
+            \undef, \$sha1sums_bytes);
+
+        chdir $savedir;
 
         my $sha1sums = decode_utf8($sha1sums_bytes);
 
