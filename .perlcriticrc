@@ -99,7 +99,7 @@ include =
 
 [ControlStructures::ProhibitUnreachableCode]
 
-[-ControlStructures::ProhibitUntilBlocks]
+[ControlStructures::ProhibitUntilBlocks]
 
 [-ControlStructures::ProhibitYadaOperator]
 
