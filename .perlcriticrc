@@ -87,7 +87,7 @@ include =
 
 [-ControlStructures::ProhibitDeepNests]
 
-[-ControlStructures::ProhibitLabelsWithSpecialBlockNames]
+[ControlStructures::ProhibitLabelsWithSpecialBlockNames]
 
 [-ControlStructures::ProhibitMutatingListFunctions]
 
