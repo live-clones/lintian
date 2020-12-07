@@ -125,7 +125,9 @@ sub find_selected_scripts {
         }
     }
 
-    return sort +uniq @found;
+    my @sorted = sort +uniq @found;
+
+    return @sorted;
 }
 
 =item find_selected_lintian_testpaths(TEST_SET, ONLY_RUN)

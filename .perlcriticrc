@@ -316,6 +316,7 @@ functions = open opendir chdir read readdir readline closedir sysopen sysread sy
 [-RegularExpressions::RequireLineBoundaryMatching]
 
 [-Subroutines::ProhibitAmpersandSigils]
+# not needed with Freenode::AmpersandSubCalls
 
 [Subroutines::ProhibitBuiltinHomonyms]
 
@@ -327,9 +328,10 @@ functions = open opendir chdir read readdir readline closedir sysopen sysread sy
 
 [-Subroutines::ProhibitNestedSubs]
 
-[-Subroutines::ProhibitReturnSort]
+[Subroutines::ProhibitReturnSort]
 
 [-Subroutines::ProhibitSubroutinePrototypes]
+# not needed with Freenode::Prototypes
 
 [-Subroutines::ProhibitUnusedPrivateSubroutines]
 
