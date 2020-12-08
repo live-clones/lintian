@@ -433,7 +433,7 @@ terminal_funcs = CORE::exec fatal_error internal_error Lintian::Util::internal_e
 
 [-Variables::ProhibitPackageVars]
 
-[-Variables::ProhibitPerl4PackageNames]
+[Variables::ProhibitPerl4PackageNames]
 
 [-Variables::ProhibitPunctuationVars]
 # Requires "use English" and our style is against that.
