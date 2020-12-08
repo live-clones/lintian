@@ -109,7 +109,7 @@ foreach my $line (@difflines) {
           if is_interactive;
 
         my $decision_bytes
-          = prompt(encode_utf8("$colored - $command (y/n/q)? "));
+          = prompt(encode_utf8("$colored - $command (y/n/q)?"));
         my $decision = decode_utf8($decision_bytes);
 
         exit

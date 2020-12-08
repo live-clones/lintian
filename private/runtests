@@ -515,7 +515,7 @@ if (is_interactive && !$unattended) {
 
             my $decision_bytes = prompt(
                 encode_utf8(
-'>>>  Fix test (y), accept all (a), do not fix (n), quit (q/default)? '
+'>>>  Fix test (y), accept all (a), do not fix (n), quit (q/default)?'
                 ));
             my $decision = decode_utf8($decision_bytes);
 
