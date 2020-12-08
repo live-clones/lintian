@@ -25,17 +25,18 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use File::Basename;
 use List::SomeUtils qw(any none);
 
 use Lintian::Util qw(normalize_link_target $PKGNAME_REGEX $PKGVERSION_REGEX);
 
-use constant EMPTY => q{};
-
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $EMPTY => q{};
 
 our $CLASS_REGEX = qr/\.(?:class|cljc?)/;
 
@@ -87,8 +88,8 @@ sub installable {
         my $jar_dir = dirname($file);
         my $classes = 0;
         my $datafiles = 1;
-        my $cp = EMPTY;
-        my $bsname = EMPTY;
+        my $cp = $EMPTY;
+        my $bsname = $EMPTY;
 
         if (exists $java_info->{error}) {
             $self->hint('zip-parse-error', "$file:",$java_info->{error});
@@ -163,8 +164,8 @@ sub installable {
             $self->hint('jar-not-in-usr-share', $file->name);
         }
 
-        $cp = $manifest->{'Class-Path'}//EMPTY if $manifest;
-        $bsname = $manifest->{'Bundle-SymbolicName'}//EMPTY if $manifest;
+        $cp = $manifest->{'Class-Path'}//$EMPTY if $manifest;
+        $bsname = $manifest->{'Bundle-SymbolicName'}//$EMPTY if $manifest;
 
         if ($manifest) {
             if (!$classes) {

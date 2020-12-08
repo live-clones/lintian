@@ -29,12 +29,14 @@ use warnings;
 use utf8;
 use autodie;
 
-use constant ESCAPE => qq{\033};
+use Const::Fast;
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $ESCAPE => qq{\033};
 
 sub always {
     my ($self) = @_;
@@ -43,7 +45,7 @@ sub always {
 
     # fields that contain ESC characters
     my @escaped
-      = grep { index($self->processable->fields->value($_), ESCAPE) >= 0 }
+      = grep { index($self->processable->fields->value($_), $ESCAPE) >= 0 }
       @names;
 
     $self->hint('ansi-escape', $_, $self->processable->fields->value($_))

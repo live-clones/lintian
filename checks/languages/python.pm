@@ -26,19 +26,19 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use List::SomeUtils qw(any none);
 
 use Lintian::Relation qw(:constants);
 use Lintian::Relation::Version qw(versions_lte);
 
-use constant EMPTY => q{};
-use constant SLASH => q{/};
-use constant ARROW => q{ -> };
-
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $EMPTY => q{};
+const my $ARROW => q{ -> };
 
 my @FIELDS = qw(Depends Pre-Depends Recommends Suggests);
 my @IGNORE = qw(-dev$ -docs?$ -common$ -tools$);
@@ -355,7 +355,7 @@ sub visit_installed_files {
                    \Z}xsm
     ){
         my ($debug, $pyver, $actual_package_dir, $relative) = ($1, $2, $3, $4);
-        $debug //= EMPTY;
+        $debug //= $EMPTY;
 
         my ($pmaj, $pmin) = split(m{\.}, $pyver, 2);
         $pmin //= 0;
@@ -409,7 +409,7 @@ sub breakdown_installed_files {
 
     $self->hint(
         'python-module-in-wrong-location',
-        $_ . ARROW . $self->correct_location->{$_}
+        $_ . $ARROW . $self->correct_location->{$_}
     )for keys %{$self->correct_location};
 
     return;

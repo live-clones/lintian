@@ -25,12 +25,14 @@ use warnings;
 use utf8;
 use autodie;
 
-use constant ARROW => q{->};
+use Const::Fast;
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $ARROW => q{->};
 
 has COMPRESS_FILE_EXTENSIONS => (
     is => 'rw',
@@ -67,13 +69,13 @@ sub visit_patched_files {
 
         # allow /dev/null link target for masked systemd service files
         $self->hint('absolute-symbolic-link-target-in-source',
-            $item->name, ARROW, $item->link)
+            $item->name, $ARROW, $item->link)
           unless $item->link eq '/dev/null';
     }
 
     # some relative links cannot be resolved inside the source
     $self->hint('wayward-symbolic-link-target-in-source',
-        $item->name, ARROW, $item->link)
+        $item->name, $ARROW, $item->link)
       unless defined $_->link_normalized || $item->link =~ m{^/};
 
     return;

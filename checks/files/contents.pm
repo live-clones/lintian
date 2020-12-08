@@ -27,18 +27,19 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use List::SomeUtils qw(any);
-
-use constant EMPTY => q{};
-use constant SLASH => q{/};
-use constant WORD_BOUNDARY => q{\b};
-use constant NON_WORD_BOUNDARY => q{\B};
-use constant ARROW => q{ -> };
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $EMPTY => q{};
+const my $SLASH => q{/};
+const my $WORD_BOUNDARY => q{\b};
+const my $NON_WORD_BOUNDARY => q{\B};
+const my $ARROW => q{ -> };
 
 my $SENSIBLE_REGEX
   = qr{(?<!-)(?:select-editor|sensible-(?:browser|editor|pager))\b};
@@ -58,7 +59,7 @@ has switched_locations => (
         my %switched_locations;
         for my $command (@commands) {
 
-            my @variants = map { $_ . SLASH . $command->basename }
+            my @variants = map { $_ . $SLASH . $command->basename }
               qw(bin sbin usr/bin usr/sbin);
             my @confused = grep { $_ ne $command->name } @variants;
 
@@ -73,7 +74,7 @@ sub build_path {
 
     my $buildinfo = $self->group->buildinfo;
 
-    return EMPTY
+    return $EMPTY
       unless $buildinfo;
 
     return $buildinfo->fields->value('Build-Path');
@@ -108,9 +109,9 @@ sub check_item {
   # but word boundaries are also superior in strings spanning multiple commands
         my $correct = $switched_locations{$confused};
         $self->hint('bin-sbin-mismatch', $item->name,
-            $confused . ARROW . $correct)
+            $confused . $ARROW . $correct)
           if length $item->mentions_in_operation(
-            NON_WORD_BOUNDARY . quotemeta(SLASH . $confused) . WORD_BOUNDARY);
+            $NON_WORD_BOUNDARY. quotemeta($SLASH . $confused). $WORD_BOUNDARY);
     }
 
     if (length $self->build_path) {

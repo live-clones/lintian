@@ -27,14 +27,15 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use List::SomeUtils qw(any);
-
-use constant SPACE => q{ };
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $SPACE => q{ };
 
 sub source {
     my ($self) = @_;
@@ -91,7 +92,7 @@ sub check_apache_notice_files {
     }
 
     $self->hint('missing-notice-file-for-apache-license',
-        join(SPACE, @notice_files));
+        join($SPACE, @notice_files));
 
     return;
 }

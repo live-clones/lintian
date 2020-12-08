@@ -27,6 +27,7 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use List::Compare;
 use List::SomeUtils qw(any all none uniq);
 use Text::Glob qw(match_glob);
@@ -35,24 +36,24 @@ use XML::LibXML;
 use Lintian::Deb822::File;
 use Lintian::Relation::Version qw(versions_compare);
 
-use constant EMPTY => q{};
-use constant SPACE => q{ };
-use constant SLASH => q{/};
-use constant COLON => q{:};
-use constant HYPHEN => q{-};
-use constant ASTERISK => q{*};
-use constant LEFT_SQUARE => q{[};
-use constant RIGHT_SQUARE => q{]};
-
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
 
-my $LAST_SIGNIFICANT_DEP5_CHANGE = '0+svn~166';
-my $LAST_DEP5_OVERHAUL = '0+svn~148';
+const my $LAST_SIGNIFICANT_DEP5_CHANGE => '0+svn~166';
+const my $LAST_DEP5_OVERHAUL => '0+svn~148';
 
-my %NEW_FIELD_NAMES        = (
+const my $EMPTY => q{};
+const my $SPACE => q{ };
+const my $SLASH => q{/};
+const my $COLON => q{:};
+const my $HYPHEN => q{-};
+const my $ASTERISK => q{*};
+const my $LEFT_SQUARE => q{[};
+const my $RIGHT_SQUARE => q{]};
+
+const my %NEW_FIELD_NAMES        => (
     'Format-Specification' => 'Format',
     'Maintainer'           => 'Upstream-Contact',
     'Upstream-Maintainer'  => 'Upstream-Contact',
@@ -233,7 +234,7 @@ sub check_dep5_copyright {
 
         $@ =~ s/^syntax error in //;
         $self->hint('syntax-error-in-dep5-copyright',
-            $copyright_file->name . COLON . SPACE . $@);
+            $copyright_file->name . $COLON . $SPACE . $@);
 
         return;
     }
@@ -257,8 +258,8 @@ sub check_dep5_copyright {
         my ($anycase_identifier, $license_text)
           = split(/\n/, $section->untrimmed_value('License'), 2);
 
-        $anycase_identifier //= EMPTY;
-        $license_text //= EMPTY;
+        $anycase_identifier //= $EMPTY;
+        $license_text //= $EMPTY;
 
         # replace some weird characters
         $anycase_identifier =~ s/[(),]/ /g;
@@ -310,7 +311,7 @@ sub check_dep5_copyright {
 
             $self->hint('license-problem-undefined-license',
                 $name,'(line ' . $section->position('License') . ')')
-              if $name eq HYPHEN
+              if $name eq $HYPHEN
               || $name
               =~ m{\b(?:fixmes?|todos?|undefined?|unknown?|unspecified)\b};
         }
@@ -384,12 +385,12 @@ sub check_dep5_copyright {
             unless ($wildcard =~ /\*/ || $wildcard =~ /\?/) {
 
                 my $candidate = $wildcard;
-                $candidate .= SLASH
+                $candidate .= $SLASH
                   unless $candidate =~ m{/$};
 
                 my $item = $self->processable->orig->lookup($candidate);
 
-                $wildcard = $candidate . ASTERISK
+                $wildcard = $candidate . $ASTERISK
                   if defined $item && $item->is_dir;
             }
 
@@ -531,7 +532,7 @@ sub check_dep5_copyright {
             && $section->declares('Copyright')
             && !$section->declares('Files')) {
 
-            @wildcards = (ASTERISK);
+            @wildcards = ($ASTERISK);
 
         } else {
             @wildcards = $section->trimmed_list('Files');
@@ -545,7 +546,7 @@ sub check_dep5_copyright {
         $self->hint(
             'global-files-wildcard-not-first-paragraph-in-dep5-copyright',
             '(line ' . $section->position('Files') . ')')
-          if (any { $_ eq ASTERISK } @wildcards) && $section_count > 0;
+          if (any { $_ eq $ASTERISK } @wildcards) && $section_count > 0;
 
         # stand-alone license paragraph
         $self->hint(
@@ -616,9 +617,9 @@ sub check_dep5_copyright {
 
         $self->hint(
             'redundant-globbing-patterns',
-            LEFT_SQUARE
-              . join(SPACE, @{$wildcards_same_section_by_file{$_}})
-              . RIGHT_SQUARE,
+            $LEFT_SQUARE
+              . join($SPACE, @{$wildcards_same_section_by_file{$_}})
+              . $RIGHT_SQUARE,
             "for $_"
         ) for @overmatched_same_section;
 
@@ -709,7 +710,7 @@ sub check_dep5_copyright {
             next
               unless $first;
 
-            my $seen = lc($first->firstChild->data // EMPTY);
+            my $seen = lc($first->firstChild->data // $EMPTY);
             next
               unless $seen;
 

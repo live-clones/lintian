@@ -29,12 +29,14 @@ use warnings;
 use utf8;
 use autodie;
 
-use constant EMPTY => q{};
+use Const::Fast;
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $EMPTY => q{};
 
 our %KNOWN_ARCHIVE_PARTS = map { $_ => 1 } qw(non-free contrib);
 
@@ -106,7 +108,8 @@ sub always {
 
             unless ($fraction eq $want) {
 
-                my $better= (defined $division ? "$division/" : EMPTY) . $want;
+                my $better
+                  = (defined $division ? "$division/" : $EMPTY) . $want;
                 $self->hint('wrong-section-according-to-package-name',
                     "$pkg => $better");
             }

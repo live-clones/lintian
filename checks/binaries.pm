@@ -27,33 +27,34 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use File::Spec;
 use List::SomeUtils qw(any);
 
 use Lintian::Relation qw(:constants);
 use Lintian::Spelling qw(check_spelling);
 
-use constant NUMPY_REGEX => qr/
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
+
+const my $NUMPY_REGEX => qr/
     \Qmodule compiled against ABI version \E (?:0x)?%x
     \Q but this version of numpy is \E (?:0x)?%x
 /x;
 
 # Guile object files do not objdump/strip correctly, so exclude them
 # from a number of tests. (#918444)
-use constant GUILE_PATH_REGEX => qr{^usr/lib(?:/[^/]+)+/guile/[^/]+/.+\.go$};
+const my $GUILE_PATH_REGEX => qr{^usr/lib(?:/[^/]+)+/guile/[^/]+/.+\.go$};
 
 # These are the ones file(1) looks for.  The ".zdebug_info" being the
 # compressed version of .debug_info.
 # - Technically, file(1) also looks for .symtab, but that is apparently
 #   not strippable for static libs.  Accordingly, it is omitted below.
-use constant DEBUG_SECTIONS => qw(.debug_info .zdebug_info);
+const my @DEBUG_SECTIONS => qw(.debug_info .zdebug_info);
 
-use constant EMPTY => q{};
-
-use Moo;
-use namespace::clean;
-
-with 'Lintian::Check';
+const my $EMPTY => q{};
 
 my %PATH_DIRECTORIES = map { $_ => 1 } qw(
   bin/ sbin/ usr/bin/ usr/sbin/ usr/games/ );
@@ -71,7 +72,7 @@ sub _embedded_libs {
     my ($opts, $regex) = split m/\|\|/, $some_val, 2;
     if (!$regex) {
         $regex = $opts;
-        $opts = EMPTY;
+        $opts = $EMPTY;
     } else {
 
         # trim both ends
@@ -157,8 +158,8 @@ sub installable {
 
     my ($madir, %directories, $built_with_golang, $built_with_octave, %SONAME);
     my ($arch_hardening, $gnu_triplet_re, $ruby_triplet_re);
-    my $needs_libc = EMPTY;
-    my $needs_libcxx = EMPTY;
+    my $needs_libc = $EMPTY;
+    my $needs_libcxx = $EMPTY;
     my $needs_libc_file;
     my $needs_libcxx_file;
     my $needs_libc_count = 0;
@@ -194,7 +195,7 @@ sub installable {
         # $name can be an object inside a static lib.  These do
         # not appear in the output of our file_info collection.
         my $file = $processable->installed->lookup($name);
-        my $file_info = EMPTY;
+        my $file_info = $EMPTY;
         $file_info = $file->file_info
           if defined $file;
 
@@ -397,7 +398,7 @@ sub installable {
                 die "object ($file $obj) in static lib is missing!?"
                   unless defined $libobj;
 
-                if (any { exists($libobj->{'SH'}{$_}) } DEBUG_SECTIONS) {
+                if (any { exists($libobj->{'SH'}{$_}) } @DEBUG_SECTIONS) {
                     $self->hint('unstripped-static-library',"${file}(${obj})");
                 } else {
                     $self->tag_unneeded_sections(
@@ -436,7 +437,7 @@ sub installable {
             } elsif ($fname =~ m{^usr/lib/debug/\.build-id/}) {
                 # Detached debug symbols could be for a biarch library.
                 $bad = 0;
-            } elsif ($fname =~ GUILE_PATH_REGEX) {
+            } elsif ($fname =~ $GUILE_PATH_REGEX) {
                 # Guile binaries do not objdump/strip (etc.) correctly.
                 $bad = 0;
             } elsif ($ARCH_64BIT_EQUIVS->known($arch)
@@ -471,7 +472,7 @@ sub installable {
                 || $pkg =~ /-dbg$/
                 || $pkg =~ /debug/
                 || $fname =~ m{/lib/debug/}
-                || $fname =~ GUILE_PATH_REGEX
+                || $fname =~ $GUILE_PATH_REGEX
                 || $fname =~ /\.gox$/) {
 
                 if (    $fileinfo =~ m/executable/
@@ -557,7 +558,7 @@ sub installable {
                 && $1 !~ /d/)
         ) {
             if (index($file->strings, 'numpy') > -1
-                and $file->strings =~ NUMPY_REGEX) {
+                and $file->strings =~ $NUMPY_REGEX) {
                 $uses_numpy_c_abi = 1;
             }
         }
@@ -596,7 +597,7 @@ sub installable {
                 next if $fname =~ m{^usr/lib/debug/};
                 next if $fname =~ m{\.(?:[ce]32|e64)$};
                 next if $fname =~ m{^usr/lib/jvm/.*\.debuginfo$};
-                next if $fname =~ GUILE_PATH_REGEX;
+                next if $fname =~ $GUILE_PATH_REGEX;
                 next
                   if (
                     $fname =~ m{
@@ -656,7 +657,7 @@ sub installable {
                 # #719806)
                 if ($is_shared) {
                     $self->hint('library-not-linked-against-libc', $file)
-                      unless $needs_libcxx ne EMPTY;
+                      unless $needs_libcxx ne $EMPTY;
                 } else {
                     $self->hint('program-not-linked-against-libc', $file);
                 }
@@ -695,7 +696,7 @@ sub installable {
             # Match libcXX or libcXX-*, but not libc3p0.
             my $re = qr/^\Q$needs_libc\E\b/;
             if (!$depends->matches($re)) {
-                my $others = EMPTY;
+                my $others = $EMPTY;
                 $needs_libc_count--;
                 if ($needs_libc_count > 0) {
                     $others = " and $needs_libc_count others";
@@ -704,11 +705,11 @@ sub installable {
                     "needed by $needs_libc_file$others");
             }
         }
-        if ($needs_libcxx ne EMPTY) {
+        if ($needs_libcxx ne $EMPTY) {
             # Match libstdc++XX or libcstdc++XX-*
             my $re = qr/^\Q$needs_libcxx\E\b/;
             if (!$depends->matches($re)) {
-                my $others = EMPTY;
+                my $others = $EMPTY;
                 $needs_libcxx_count--;
                 if ($needs_libcxx_count > 0) {
                     $others = " and $needs_libcxx_count others";

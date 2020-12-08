@@ -31,20 +31,19 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use Data::Validate::Domain;
 use Email::Address::XS;
 use List::SomeUtils qw(any all);
-
-use constant QA_GROUP_PHRASE => 'Debian QA Group';
-use constant QA_GROUP_ADDRESS => 'packages@qa.debian.org';
-
-use constant EMPTY => q{};
-use constant ARROW => q{ -> };
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $QA_GROUP_PHRASE => 'Debian QA Group';
+const my $QA_GROUP_ADDRESS => 'packages@qa.debian.org';
+const my $ARROW => q{ -> };
 
 # list of addresses known to bounce messages from role accounts
 my @KNOWN_BOUNCE_ADDRESSES = qw(
@@ -123,14 +122,14 @@ sub check_single_address {
 
     # Debian QA Group
     $self->hint('faulty-debian-qa-group-phrase',
-        $role, $parsed->phrase . ARROW . QA_GROUP_PHRASE)
-      if $parsed->address eq QA_GROUP_ADDRESS
-      && $parsed->phrase ne QA_GROUP_PHRASE;
+        $role, $parsed->phrase . $ARROW . $QA_GROUP_PHRASE)
+      if $parsed->address eq $QA_GROUP_ADDRESS
+      && $parsed->phrase ne $QA_GROUP_PHRASE;
 
     $self->hint('faulty-debian-qa-group-address',
-        $role, $parsed->address . ARROW . QA_GROUP_ADDRESS)
+        $role, $parsed->address . $ARROW . $QA_GROUP_ADDRESS)
       if ( $parsed->phrase =~ /\bdebian\s+qa\b/i
-        && $parsed->address ne QA_GROUP_ADDRESS)
+        && $parsed->address ne $QA_GROUP_ADDRESS)
       || $parsed->address eq 'debian-qa@lists.debian.org';
 
     $self->hint('mailing-list-on-alioth', $role, $parsed->address)

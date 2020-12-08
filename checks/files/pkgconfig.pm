@@ -25,14 +25,16 @@ use warnings;
 use utf8;
 use autodie;
 
-use Lintian::SlidingWindow;
+use Const::Fast;
 
-use constant EMPTY => q{};
+use Lintian::SlidingWindow;
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $EMPTY => q{};
 
 has MULTIARCH_DIRS => (
     is => 'rw',
@@ -63,7 +65,7 @@ sub visit_installed_files {
         && $file->name=~ m{^usr/(lib(/[^/]+)?|share)/pkgconfig/[^/]+\.pc$}){
 
         my $prefix = $1;
-        my $pkg_config_arch = $2 // EMPTY;
+        my $pkg_config_arch = $2 // $EMPTY;
         $pkg_config_arch =~ s{\A/}{}ms;
 
         $self->hint('pkg-config-unavailable-for-cross-compilation',$file->name)
@@ -106,7 +108,7 @@ sub visit_installed_files {
                 my $regex = $self->PKG_CONFIG_BAD_REGEX->value($taboo);
 
                 while($block =~ m{$regex}xmsg) {
-                    my $extra = $1 // EMPTY;
+                    my $extra = $1 // $EMPTY;
                     $extra =~ s/\s+/ /g;
 
                     $self->hint('pkg-config-bad-directive', $file->name,

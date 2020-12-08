@@ -26,6 +26,7 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use Data::Validate::Domain;
 use Date::Format qw(time2str);
 use Email::Address::XS;
@@ -41,12 +42,12 @@ use Lintian::IPC::Run3 qw(safe_qx);
 use Lintian::Relation::Version qw(versions_gt);
 use Lintian::Spelling qw(check_spelling);
 
-use constant EMPTY => q{};
-
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $EMPTY => q{};
 
 sub spelling_tag_emitter {
     my ($self, @orig_args) = @_;
@@ -90,7 +91,7 @@ sub source {
         $latest_version->set($versionstring, $processable->native);
 
     } catch {
-        my $indicator= ($processable->native ? EMPTY : 'non-') . 'native';
+        my $indicator= ($processable->native ? $EMPTY : 'non-') . 'native';
         $self->hint(
             'malformed-debian-changelog-version',
             $versionstring . " (for $indicator)"
@@ -135,7 +136,7 @@ sub source {
           = ($examine =~ m/[^~a-z]($candidate_pattern)($increment_pattern)/sm);
         if (length $candidate_string && !length $latest_version->source_nmu) {
 
-            $increment_string //= EMPTY;
+            $increment_string //= $EMPTY;
 
             # remove rc-part and any preceding symbol
             my $expected = $examine;
@@ -164,7 +165,7 @@ sub source {
             $previous_version->set($previous_entry->Version,
                 $processable->native);
         } catch {
-            my $indicator= ($processable->native ? EMPTY : 'non-') . 'native';
+            my $indicator= ($processable->native ? $EMPTY : 'non-') . 'native';
             $self->hint(
                 'odd-historical-debian-changelog-version',
                 $previous_entry->Version . " (for $indicator)"
@@ -569,7 +570,7 @@ sub binary {
             }
             my ($weekday_declared, $numberportion)
               = split(m/,\s*/, $longdate, 2);
-            $numberportion //= EMPTY;
+            $numberportion //= $EMPTY;
             my ($tz, $weekday_actual);
 
             if ($numberportion =~ m/[ ]+ ([^ ]+)\Z/xsm) {
@@ -626,7 +627,7 @@ sub binary {
 
         # Some checks should only be done against the most recent
         # changelog entry.
-        my $changes = $latest_entry->Changes || EMPTY;
+        my $changes = $latest_entry->Changes || $EMPTY;
 
         if (@entries == 1) {
             if ($latest_entry->Version and $latest_entry->Version =~ /-1$/) {

@@ -25,12 +25,14 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
+
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
 
-use constant FILENAME_LENGTH_LIMIT => 80;
+const my $FILENAME_LENGTH_LIMIT => 80;
 
 # We could derive this from data/fields/architectures, but that
 # contains things like kopensolaris-sparc64 and kfreebsd-sparc64,
@@ -76,8 +78,8 @@ sub always {
     $extra = $len unless defined $extra;
 
     $self->hint('package-has-long-file-name',
-        "$extra > ". FILENAME_LENGTH_LIMIT)
-      if $len > FILENAME_LENGTH_LIMIT;
+        "$extra > ". $FILENAME_LENGTH_LIMIT)
+      if $len > $FILENAME_LENGTH_LIMIT;
 
     return if $type ne 'source';
 
@@ -98,9 +100,9 @@ sub always {
         $len = $flen if ($flen > $len);
     }
 
-    if ($len > FILENAME_LENGTH_LIMIT){
+    if ($len > $FILENAME_LENGTH_LIMIT){
         $self->hint('source-package-component-has-long-file-name',
-            "$len > " . FILENAME_LENGTH_LIMIT);
+            "$len > " . $FILENAME_LENGTH_LIMIT);
     }
 
     return;

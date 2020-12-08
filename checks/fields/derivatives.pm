@@ -29,12 +29,14 @@ use warnings;
 use utf8;
 use autodie;
 
-use constant HYPHEN => q{-};
+use Const::Fast;
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $HYPHEN => q{-};
 
 sub source {
     my ($self) = @_;
@@ -54,7 +56,7 @@ sub source {
 
     foreach my $field ($DERIVATIVE_FIELDS->all) {
 
-        my $val = $processable->fields->value($field) || HYPHEN;
+        my $val = $processable->fields->value($field) || $HYPHEN;
         my $data = $DERIVATIVE_FIELDS->value($field);
 
         $self->hint('invalid-field-for-derivative',

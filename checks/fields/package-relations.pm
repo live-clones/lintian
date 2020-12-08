@@ -30,22 +30,23 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use Dpkg::Version qw(version_check);
 use List::SomeUtils qw(any);
 
 use Lintian::Architecture::Analyzer;
 use Lintian::Relation qw(:constants);
 
-use constant EMPTY => q{};
-
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
 
+const my $EMPTY => q{};
+
 # Still in the archive but shouldn't be the primary Emacs dependency.
 my @obsolete_emacs_versions = qw(21 22 23);
-my @emacs_flavors = (EMPTY, qw(-el -gtk -nox -lucid));
+my @emacs_flavors = ($EMPTY, qw(-el -gtk -nox -lucid));
 our %known_obsolete_emacs;
 for my $version (@obsolete_emacs_versions) {
     for my $flavor (@emacs_flavors) {
@@ -351,9 +352,10 @@ sub installable {
 
             for my $d (@seen_obsolete_packages) {
                 my ($dep, $pkg_name) = @{$d};
-                my $replacement = $OBSOLETE_PACKAGES->value($pkg_name)// EMPTY;
+                my $replacement = $OBSOLETE_PACKAGES->value($pkg_name)
+                  // $EMPTY;
                 $replacement = ' => ' . $replacement
-                  if $replacement ne EMPTY;
+                  if $replacement ne $EMPTY;
                 if ($pkg_name eq $alternatives[0][0]
                     or scalar @seen_obsolete_packages== scalar @alternatives) {
                     $self->hint(
@@ -605,10 +607,10 @@ sub source {
                 for my $d (@seen_obsolete_packages) {
                     my ($dep, $pkg_name) = @{$d};
                     my $replacement = $OBSOLETE_PACKAGES->value($pkg_name)
-                      // EMPTY;
+                      // $EMPTY;
 
                     $replacement = ' => ' . $replacement
-                      if $replacement ne EMPTY;
+                      if $replacement ne $EMPTY;
                     if (   $pkg_name eq $alternatives[0][0]
                         or $all_obsolete) {
                         $self->hint('build-depends-on-obsolete-package',
@@ -712,11 +714,11 @@ sub source {
 sub _split_dep {
     my $dep = shift;
     my ($pkg, $dmarch, $version, $darch, $restr)
-      = (EMPTY, EMPTY, [EMPTY,EMPTY], [[], 0], []);
+      = ($EMPTY, $EMPTY, [$EMPTY,$EMPTY], [[], 0], []);
 
     if ($dep =~ s/^\s*([^<\s\[\(]+)\s*//) {
         ($pkg, $dmarch) = split(/:/, $1, 2);
-        $dmarch //= EMPTY;  # Ensure it is defined (in case there is no ":")
+        $dmarch //= $EMPTY;  # Ensure it is defined (in case there is no ":")
     }
 
     if (length $dep) {

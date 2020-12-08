@@ -32,10 +32,6 @@ use autodie;
 use Lintian::Relation qw(:constants);
 use Lintian::Util qw($PKGNAME_REGEX $PKGVERSION_REGEX);
 
-use constant {
-    BUILT_USING_REGEX => qr/^$PKGNAME_REGEX \(= $PKGVERSION_REGEX\)$/,
-};
-
 use Moo;
 use namespace::clean;
 
@@ -54,7 +50,7 @@ sub always {
     my $built_using_rel = Lintian::Relation->new($built_using);
     $built_using_rel->visit(
         sub {
-            if ($_ !~ BUILT_USING_REGEX) {
+            if ($_ !~ /^$PKGNAME_REGEX \(= $PKGVERSION_REGEX\)$/) {
                 $self->hint('invalid-value-in-built-using-field', $_);
                 return 1;
             }

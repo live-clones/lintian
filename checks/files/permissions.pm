@@ -25,14 +25,15 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use Path::Tiny;
-
-use constant EMPTY => q{};
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $EMPTY => q{};
 
 has component => (is => 'rw');
 has linked_against_libvga => (is => 'rw');
@@ -77,8 +78,8 @@ sub visit_installed_files {
         if ($file->operm & 06000) {
 
             # general: setuid/setgid files
-            my $setuid = EMPTY;
-            my $setgid = EMPTY;
+            my $setuid = $EMPTY;
+            my $setgid = $EMPTY;
 
             $setuid = $file->owner if $file->operm & 04000;
             $setgid = $file->group if $file->operm & 02000;

@@ -25,15 +25,16 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use List::Compare;
 use List::Util qw(max);
-
-use constant SPACE => q{ };
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $SPACE => q{ };
 
 sub source {
     my ($self) = @_;
@@ -54,7 +55,8 @@ sub source {
         return;
     }
 
-    $self->hint('multiple-debian-watch-file-standards',join(SPACE, @standards))
+    $self->hint('multiple-debian-watch-file-standards',
+        join($SPACE, @standards))
       if @standards > 1;
 
     my @available = (2, 3, 4);

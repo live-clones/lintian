@@ -27,16 +27,17 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use Date::Parse qw(str2time);
 use List::Util qw(first);
 use POSIX qw(strftime);
-
-use constant EMPTY => q{};
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $EMPTY => q{};
 
 sub source {
     my ($self) = @_;
@@ -107,7 +108,7 @@ sub source {
         my ($entry) = @{$processable->changelog->entries};
         $pkgdate
           = ($entry && $entry->Timestamp) ? $entry->Timestamp : $CURRENT_DATE;
-        $dist = ($entry && $entry->Distribution)? $entry->Distribution : EMPTY;
+        $dist= ($entry && $entry->Distribution)? $entry->Distribution : $EMPTY;
     } else {
         $pkgdate = $CURRENT_DATE;
     }

@@ -26,6 +26,7 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use Cwd qw(getcwd);
 use File::Basename;
 use IO::Uncompress::Gunzip qw(gunzip $GunzipError);
@@ -39,16 +40,14 @@ use Unicode::UTF8 qw(valid_utf8 decode_utf8);
 use Lintian::Spelling qw(check_spelling);
 use Lintian::Util qw(open_gz);
 
-use constant LINTIAN_COVERAGE => ($ENV{'LINTIAN_COVERAGE'}?1:0);
-
-use constant EMPTY => q{};
-use constant COLON => q{:};
-use constant NEWLINE => qq{\n};
-
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $EMPTY => q{};
+const my $COLON => q{:};
+const my $NEWLINE => qq{\n};
 
 has local_manpages => (is => 'rw', default => sub { {} });
 
@@ -89,7 +88,7 @@ sub visit_installed_files {
 
     my ($manpage, $page_path, undef) = fileparse($file);
 
-    if ($page_path eq 'usr/share/man/' && $manpage ne EMPTY) {
+    if ($page_path eq 'usr/share/man/' && $manpage ne $EMPTY) {
         $self->hint('odd-place-for-manual-page', $file);
         return;
     }
@@ -112,7 +111,7 @@ sub visit_installed_files {
     }
 
     my ($language) = ($subdir =~ m{^/([^/]+)/man\d/$});
-    $language //= EMPTY;
+    $language //= $EMPTY;
 
     # The country should not be part of the man page locale
     # directory unless it's one of the known cases where the
@@ -189,9 +188,9 @@ sub visit_installed_files {
         close $fd;
         # Is it a .so link?
         if ($file->size < 256) {
-            my ($i, $first) = (0, EMPTY);
+            my ($i, $first) = (0, $EMPTY);
             do {
-                $first = $manfile[$i++] || EMPTY;
+                $first = $manfile[$i++] || $EMPTY;
             } while ($first =~ /^\.\\"/ && $manfile[$i]); #");
 
             unless ($first) {
@@ -253,7 +252,7 @@ sub visit_installed_files {
 
             if ($status != 0 && $status != 2) {
                 my $message = "Non-zero status $status from @command";
-                $message .= COLON . NEWLINE . $stderr
+                $message .= $COLON . $NEWLINE . $stderr
                   if length $stderr;
 
                 warn $message;
@@ -281,7 +280,7 @@ sub visit_installed_files {
               for grep { $_ ne 'PATH' && $_ ne 'TMPDIR' } keys %ENV;
             local $ENV{LC_ALL} = 'C.UTF-8';
 
-            local $ENV{MANROFFSEQ} = EMPTY;
+            local $ENV{MANROFFSEQ} = $EMPTY;
 
             # set back to 80 when Bug#892423 is fixed in groff
             local $ENV{MANWIDTH} = 120;
@@ -313,7 +312,7 @@ sub visit_installed_files {
                 # warnings and sometimes in our child process.
                 # Filter them out, but only during coverage.
                 next
-                  if LINTIAN_COVERAGE
+                  if $ENV{LINTIAN_COVERAGE}
                   && $line =~ m{
                       \A Deep [ ] recursion [ ] on [ ] subroutine [ ]
                       "[^"]+" [ ] at [ ] .*B/Deparse.pm [ ] line [ ]
@@ -375,7 +374,8 @@ sub visit_installed_files {
                 # more than one, they will be separated by a comma and
                 # a whitespace.  In case we find the comma, we advance
                 # $pkgname_idx.
-                while ((substr($th_fields[$pkgname_idx], -1) // EMPTY) eq ','){
+                while ((substr($th_fields[$pkgname_idx], -1) // $EMPTY) eq ',')
+                {
                     $pkgname_idx++;
                 }
                 # We're now at the last package, so we should be able
@@ -431,7 +431,7 @@ sub visit_installed_files {
 
         # see Bug#554897 and Bug#507673; exclude string variables
         $self->hint('acute-accent-in-manual-page',
-            $file->name . COLON . $position)
+            $file->name . $COLON . $position)
           if $line =~ /\\'/ && $line !~ /^\.\s*ds\s/;
 
     } continue {
@@ -509,8 +509,8 @@ sub breakdown_installed_files {
           unless $path =~ m{man\d/$};
 
         my ($language) = ($path =~ m{/([^/]+)/man\d/$});
-        $language //= EMPTY;
-        $language = EMPTY if $language eq 'man';
+        $language //= $EMPTY;
+        $language = $EMPTY if $language eq 'man';
 
         $distant_manpages{$name} //= [];
 
@@ -528,7 +528,7 @@ sub breakdown_installed_files {
     my @manpage_missing = $related->get_Lonly;
 
     my @english_missing = grep {
-        none {$_->{language} eq EMPTY}
+        none {$_->{language} eq $EMPTY}
         @{$related_manpages{$_} // []}
     } @documented;
 

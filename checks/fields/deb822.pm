@@ -25,14 +25,16 @@ use warnings;
 use utf8;
 use autodie;
 
-use Lintian::Deb822::File;
+use Const::Fast;
 
-use constant SECTION => q{§};
+use Lintian::Deb822::File;
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $SECTION => q{§};
 
 my @SOURCE_DEB822 = qw(debian/control);
 
@@ -58,7 +60,7 @@ sub source {
             for my $name ($section->names) {
 
                 my $value = $section->value($name);
-                $self->hint('trimmed-deb822-field', $file, SECTION . $count,
+                $self->hint('trimmed-deb822-field', $file, $SECTION . $count,
                     $name, $value);
             }
 

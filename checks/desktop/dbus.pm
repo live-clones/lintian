@@ -26,12 +26,14 @@ use warnings;
 use utf8;
 use autodie;
 
-use constant EMPTY => q{};
+use Const::Fast;
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $EMPTY => q{};
 
 sub installable {
     my ($self) = @_;
@@ -97,13 +99,13 @@ sub check_policy {
     my @rules;
     # a small rubbish state machine: we want to match a <policy> containing
     # any <allow> or <deny> rule that is about sending
-    my $policy = EMPTY;
+    my $policy = $EMPTY;
     while ($xml =~ m{(<policy[^>]*>)|(</policy\s*>)|(<(?:allow|deny)[^>]*>)}sg)
     {
         if (defined $1) {
             $policy = $1;
         } elsif (defined $2) {
-            $policy = EMPTY;
+            $policy = $EMPTY;
         } else {
             push(@rules, $policy.$3);
         }

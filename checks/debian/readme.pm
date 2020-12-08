@@ -25,15 +25,17 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
+
 use Lintian::Spelling qw(check_spelling);
 use Lintian::Util qw(open_gz);
-
-use constant EMPTY => q{};
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $EMPTY => q{};
 
 sub spelling_tag_emitter {
     my ($self, @orig_args) = @_;
@@ -68,7 +70,7 @@ sub installable {
     my $processable = $self->processable;
     my $group = $self->group;
 
-    my $readme = EMPTY;
+    my $readme = $EMPTY;
 
     my $fd = open_readme($pkg_name, $processable);
     return if not defined($fd);

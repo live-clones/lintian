@@ -25,17 +25,16 @@ use warnings;
 use utf8;
 use autodie qw(open);
 
+use Const::Fast;
 use Font::TTF::Font;
-
-use constant SPACE => q{ };
-use constant COMMA => q{,};
-use constant LSQUARE => q{[};
-use constant RSQUARE => q{]};
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $SPACE => q{ };
+const my $COMMA => q{,};
 
 sub visit_installed_files {
     my ($self, $file) = @_;
@@ -71,7 +70,7 @@ sub visit_installed_files {
       if $permissions & 0x08;
 
     my $terms;
-    $terms = join(COMMA . SPACE, @clauses)
+    $terms = join($COMMA . $SPACE, @clauses)
       if @clauses;
 
     $self->hint('opentype-font-prohibits-installable-embedding',

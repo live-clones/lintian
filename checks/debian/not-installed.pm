@@ -24,14 +24,14 @@ use v5.20;
 use warnings;
 use utf8;
 
-use constant ASTERISK => q{*};
+use Const::Fast;
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
 
-my $ARCHITECTURE_TRIPLET = qr{[^/-]+-[^/-]+-[^/-]+};
+const my $ARCHITECTURE_TRIPLET => qr{[^/-]+-[^/-]+-[^/-]+};
 
 sub source {
     my ($self) = @_;

@@ -29,16 +29,17 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use File::Basename;
 use List::SomeUtils qw(any first_index);
 use Text::ParseWords qw(shellwords);
-
-use constant EMPTY => q{};
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $EMPTY => q{};
 
 has timers => (is => 'rwp', default => sub{ [] });
 
@@ -424,7 +425,7 @@ sub service_file_lines {
         # trim right
         s/\s+$//;
 
-        next if $_ eq EMPTY;
+        next if $_ eq $EMPTY;
 
         next if /^[#;\n]/;
 
@@ -473,7 +474,7 @@ sub extract_service_file_values {
         if (   defined($key)
             && $section eq $extract_section
             && $key eq $extract_key) {
-            if ($value eq EMPTY) {
+            if ($value eq $EMPTY) {
                 # Empty assignment resets the list
                 @values = ();
             } else {

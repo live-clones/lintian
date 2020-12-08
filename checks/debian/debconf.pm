@@ -26,6 +26,7 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use List::SomeUtils qw(none);
 use Path::Tiny;
 
@@ -34,13 +35,13 @@ use Lintian::Deb822::Parser qw(:constants);
 use Lintian::Relation;
 use Lintian::Util qw($PKGNAME_REGEX);
 
-use constant EMPTY => q{};
-use constant SPACE => q{ };
-
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $EMPTY => q{};
+const my $SPACE => q{ };
 
 # From debconf-devel(7), section 'THE TEMPLATES FILE', up to date with debconf
 # version 1.5.24.  Added indices for cdebconf (indicates sort order for
@@ -228,7 +229,7 @@ sub installable {
     my @templates_seen;
     my %potential_db_abuse;
     for my $template (@templates) {
-        my $isselect = EMPTY;
+        my $isselect = $EMPTY;
 
         my $name = $template->value('Template');
         if (!$template->declares('Template')) {
@@ -325,11 +326,11 @@ sub installable {
             ($short, $extended) = split(/\n/, $description, 2);
             unless (defined $short) {
                 $short = $description;
-                $extended = EMPTY;
+                $extended = $EMPTY;
             }
         } else {
-            $short = EMPTY;
-            $extended = EMPTY;
+            $short = $EMPTY;
+            $extended = $EMPTY;
         }
 
         my $ttype = $type;
@@ -388,12 +389,12 @@ sub installable {
                 my $lines = 0;
                 for my $string (split(/\n/, $extended)) {
                     while (length($string) > 80) {
-                        my $pos = rindex($string, SPACE, 80);
+                        my $pos = rindex($string, $SPACE, 80);
                         if ($pos == -1) {
-                            $pos = index($string, SPACE);
+                            $pos = index($string, $SPACE);
                         }
                         if ($pos == -1) {
-                            $string = EMPTY;
+                            $string = $EMPTY;
                         } else {
                             $string = substr($string, $pos + 1);
                             $lines++;
@@ -618,18 +619,18 @@ sub installable {
 sub count_choices {
     my ($choices) = @_;
     my @items;
-    my $item = EMPTY;
+    my $item = $EMPTY;
     for my $chunk (split /(\\[, ]|,\s+)/, $choices) {
         if ($chunk =~ /^\\([, ])$/) {
             $item .= $1;
         } elsif ($chunk =~ /^,\s+$/) {
             push(@items, $item);
-            $item = EMPTY;
+            $item = $EMPTY;
         } else {
             $item .= $chunk;
         }
     }
-    push(@items, $item) if $item ne EMPTY;
+    push(@items, $item) if $item ne $EMPTY;
     return scalar(@items);
 }
 

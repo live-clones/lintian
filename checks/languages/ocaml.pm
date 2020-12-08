@@ -25,17 +25,18 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use File::Basename;
 use Path::Tiny;
 
 use Lintian::Relation ();
 
-use constant EMPTY => q{};
-
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $EMPTY => q{};
 
 has provided_o => (is => 'rwp', default => sub{ {} });
 has is_lib_package => (is => 'rwp', default => 0);
@@ -186,7 +187,7 @@ sub breakdown_installed_files {
     if ($self->is_dev_package) {
         # summary about .cmi files
         if ($self->cmi_number > $MAX_CMI) {
-            my $plural = ($self->cmi_number - $MAX_CMI == 1) ? EMPTY : 's';
+            my $plural = ($self->cmi_number - $MAX_CMI == 1) ? $EMPTY : 's';
             $self->hint(
                 'ocaml-dangling-cmi',
                 ($self->cmi_number - $MAX_CMI),
@@ -197,7 +198,7 @@ sub breakdown_installed_files {
         if ($self->outside_number) {
             my $outside_number = $self->outside_number;
             my $outside_prefix = dirname($self->outside_prefix);
-            my $plural = ($self->outside_number == 1) ? EMPTY : 's';
+            my $plural = ($self->outside_number == 1) ? $EMPTY : 's';
             $self->hint('ocaml-dev-file-not-in-usr-lib-ocaml',
                 "$outside_number file$plural in $outside_prefix");
         }
@@ -211,7 +212,7 @@ sub breakdown_installed_files {
         if ($self->dev_number > 0) {
             my $dev_number = $self->dev_number;
             my $dev_prefix = dirname($self->dev_prefix);
-            my $plural = ($self->dev_number == 1) ? EMPTY : 's';
+            my $plural = ($self->dev_number == 1) ? $EMPTY : 's';
             $self->hint(
                 'ocaml-dev-file-in-nondev-package',
                 "$dev_number file$plural in $dev_prefix"

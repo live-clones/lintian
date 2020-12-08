@@ -28,6 +28,7 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use List::SomeUtils qw(any all none uniq);
 use Path::Tiny;
 use Unicode::UTF8 qw[valid_utf8 decode_utf8];
@@ -36,12 +37,12 @@ use Lintian::Deb822::Parser qw(parse_dpkg_control_string);
 use Lintian::IPC::Run3 qw(safe_qx);
 use Lintian::Spelling qw(check_spelling);
 
-use constant EMPTY => q{};
-
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $EMPTY => q{};
 
 sub spelling_tag_emitter {
     my ($self, @orig_args) = @_;
@@ -512,7 +513,7 @@ sub check_names_texts {
 
     my $text_check;
 
-    if ((ref($action) || EMPTY) eq 'Regexp') {
+    if ((ref($action) || $EMPTY) eq 'Regexp') {
         $text_check = sub {
             my ($textref) = @_;
             return ${$textref} =~ $action;

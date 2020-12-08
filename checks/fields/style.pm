@@ -25,14 +25,15 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use Path::Tiny;
-
-use constant AT => q{@};
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $AT => q{@};
 
 # policy section 5.2 states unequivocally that the two fields Section
 # and Priority are recommended not only in the source paragraph, but
@@ -59,13 +60,13 @@ sub source {
 
     # look at d/control source paragraph
     my @source_fields = $debian_control->source_fields->names;
-    $self->check_style($controlfile . AT . 'source', @source_fields);
+    $self->check_style($controlfile . $AT . 'source', @source_fields);
 
     # look at d/control installable paragraphs
     for my $installable ($debian_control->installables) {
         my @installable_fields
           = $debian_control->installable_fields($installable)->names;
-        $self->check_style($controlfile . AT . $installable,
+        $self->check_style($controlfile . $AT . $installable,
             @installable_fields);
     }
 

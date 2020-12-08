@@ -25,20 +25,20 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use Encode qw(decode);
 
 use Lintian::Spelling qw(check_spelling check_spelling_picky);
-
-# Compared to a lower-case string, so it must be all lower-case
-use constant DH_MAKE_PERL_TEMPLATE => 'this description was'
-  . ' automagically extracted from the module by dh-make-perl';
-
-use constant EMPTY => q{};
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+# Compared to a lower-case string, so it must be all lower-case
+const my $DH_MAKE_PERL_TEMPLATE =>
+'this description was automagically extracted from the module by dh-make-perl';
+const my $EMPTY => q{};
 
 sub spelling_tag_emitter {
     my ($self, @orig_args) = @_;
@@ -79,10 +79,10 @@ sub installable {
         # trim both ends
         $synopsis =~ s/^\s+|\s+$//g;
 
-        $extended = EMPTY;
+        $extended = $EMPTY;
     }
 
-    $extended //= EMPTY;
+    $extended //= $EMPTY;
 
     if ($synopsis =~ m/^\s*$/) {
         $self->hint('description-synopsis-is-empty');
@@ -178,7 +178,7 @@ sub installable {
                 "(line $position)");
         }
 
-        if (index(lc($line), DH_MAKE_PERL_TEMPLATE) != -1) {
+        if (index(lc($line), $DH_MAKE_PERL_TEMPLATE) != -1) {
             $self->hint('description-contains-dh-make-perl-template');
         }
 

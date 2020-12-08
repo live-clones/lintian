@@ -29,20 +29,21 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use List::Compare;
 use List::SomeUtils qw(any);
 
 use Lintian::Architecture::Analyzer;
-
-use constant EMPTY => q{};
-use constant SPACE => q{ };
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
 
-has architecture => (is => 'rw', default => EMPTY);
+const my $EMPTY => q{};
+const my $SPACE => q{ };
+
+has architecture => (is => 'rw', default => $EMPTY);
 has have_r_package_not_arch_all => (is => 'rw', default => 0);
 
 sub setup_installed_files {
@@ -50,7 +51,7 @@ sub setup_installed_files {
 
     my $unsplit = $self->processable->fields->unfolded_value('Architecture');
 
-    my @architectures = split(SPACE, $unsplit);
+    my @architectures = split($SPACE, $unsplit);
 
     return
       unless @architectures;
@@ -90,7 +91,7 @@ sub installable {
 
     my $unsplit = $processable->fields->unfolded_value('Architecture');
 
-    my @architectures = split(SPACE, $unsplit);
+    my @architectures = split($SPACE, $unsplit);
 
     return
       unless @architectures;
@@ -126,7 +127,7 @@ sub always {
     my $processable = $self->processable;
 
     my $unsplit = $processable->fields->unfolded_value('Architecture');
-    my @architectures = split(SPACE, $unsplit);
+    my @architectures = split($SPACE, $unsplit);
 
     my $analyzer = Lintian::Architecture::Analyzer->new;
     $analyzer->profile($self->profile);

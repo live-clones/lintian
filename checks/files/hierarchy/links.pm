@@ -26,12 +26,14 @@ use warnings;
 use utf8;
 use autodie;
 
-use constant ARROW => q{ -> };
+use Const::Fast;
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $ARROW => q{ -> };
 
 sub visit_installed_files {
     my ($self, $file) = @_;
@@ -55,7 +57,7 @@ sub visit_installed_files {
     # either /usr/lib or one level below for architecture, if applicable
     $restraint =~ s{^((?:[^/]+/){3}).*$}{$1}s;
 
-    $self->hint('breakout-link', $file->name . ARROW .  $target)
+    $self->hint('breakout-link', $file->name . $ARROW .  $target)
       unless $target =~ m{^\Q$restraint\E};
 
     return;

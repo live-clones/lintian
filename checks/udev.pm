@@ -26,12 +26,14 @@ use warnings;
 use utf8;
 use autodie qw(open);
 
-use constant EMPTY => q{};
+use Const::Fast;
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $EMPTY => q{};
 
 # Check /lib/udev/rules.d/, detect use of MODE="0666" and use of
 # GROUP="plugdev" without TAG+="uaccess".
@@ -110,7 +112,7 @@ sub check_udev_rules {
     my $linenum = 0;
     my $cont;
     my $retval = 0;
-    my $in_goto = EMPTY;
+    my $in_goto = $EMPTY;
     while (<$fd>) {
         chomp;
         $linenum++;
@@ -123,7 +125,7 @@ sub check_udev_rules {
             next;
         }
         next if /^#.*/; # Skip comments
-        $in_goto = EMPTY if m/LABEL="[^"]+"/;
+        $in_goto = $EMPTY if m/LABEL="[^"]+"/;
         $in_goto = $_ if m/SUBSYSTEM!="[^"]+"/ && m/GOTO="[^"]+"/;
         $retval |= $self->check_rule($file, $linenum, $in_goto, $_);
     }

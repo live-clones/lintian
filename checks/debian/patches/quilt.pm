@@ -28,20 +28,20 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use List::SomeUtils qw(any);
 
 use Lintian::IPC::Run3 qw(safe_qx);
 use Lintian::Spelling qw(check_spelling);
 
-use constant PATCH_DESC_TEMPLATE => 'TODO: Put a short summary on'
-  . ' the line above and replace this paragraph';
-
-use constant EMPTY => q{};
-
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $PATCH_DESC_TEMPLATE =>
+  'TODO: Put a short summary on the line above and replace this paragraph';
+const my $EMPTY => q{};
 
 sub spelling_tag_emitter {
     my ($self, @orig_args) = @_;
@@ -102,7 +102,7 @@ sub source {
             # trim both ends
             $patch =~ s/^\s+|\s+$//g;
 
-            next if $patch eq EMPTY;
+            next if $patch eq $EMPTY;
             if ($patch =~ m{^(\S+)\s+(\S.*)$}) {
                 my $patch_options;
                 ($patch, $patch_options) = ($1, $2);
@@ -136,7 +136,7 @@ sub source {
             next
               unless $file->is_open_ok;
 
-            my $description = EMPTY;
+            my $description = $EMPTY;
             my $has_template_description = 0;
 
             open(my $patch_fd, '<', $file->unpacked_path);
@@ -148,7 +148,7 @@ sub source {
                 $description .= $_
                   unless m{^(?:Index: |=+$|diff .+|index |From: )};
                 $has_template_description = 1
-                  if index($_, PATCH_DESC_TEMPLATE) != -1;
+                  if index($_, $PATCH_DESC_TEMPLATE) != -1;
             }
             close($patch_fd);
 

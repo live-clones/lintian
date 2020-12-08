@@ -25,17 +25,18 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use List::SomeUtils qw(any none);
 use Unicode::UTF8 qw(valid_utf8 decode_utf8);
 
 use Lintian::Deb822::File;
 
-use constant EMPTY => q{};
-
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $EMPTY => q{};
 
 sub visit_patched_files {
     my ($self, $item) = @_;
@@ -77,7 +78,7 @@ sub visit_patched_files {
     my $origin = $deb822->last_mention('Origin');
 
     my ($category) = split(m{\s*,\s*}, $origin, 2);
-    $category //= EMPTY;
+    $category //= $EMPTY;
     return
       if any { $category eq $_ } qw(upstream backport);
 

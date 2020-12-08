@@ -25,6 +25,7 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use List::Compare;
 use List::SomeUtils qw(any none);
 use Path::Tiny;
@@ -33,12 +34,12 @@ use Lintian::Deb822::File;
 use Lintian::Deb822::Parser qw(DCTRL_COMMENTS_AT_EOL);
 use Lintian::Relation;
 
-use constant DOUBLE_QUOTE => q{"};
-
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $DOUBLE_QUOTE => q{"};
 
 my %KNOWN_FEATURES = map { $_ => 1 } qw();
 
@@ -203,7 +204,7 @@ sub check_control_paragraph {
         my $line = $section->position('Depends');
         $self->hint(
             'testsuite-dependency-has-unparsable-elements',
-            DOUBLE_QUOTE . $_ . DOUBLE_QUOTE,
+            $DOUBLE_QUOTE . $_ . $DOUBLE_QUOTE,
             "(in line $line)"
         )for @unparsable;
     }

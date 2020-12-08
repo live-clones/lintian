@@ -26,12 +26,14 @@ use warnings;
 use utf8;
 use autodie;
 
-use constant SPACE => q{ };
+use Const::Fast;
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $SPACE => q{ };
 
 sub octify {
     my (undef, $val) = @_;
@@ -106,7 +108,10 @@ sub installable {
         # correct owner?
         unless ($file->identity eq 'root/root' || $file->identity eq '0/0') {
             $self->hint('control-file-has-bad-owner',
-                $file->name. SPACE. $file->identity. ' != root/root (or 0/0)');
+                    $file->name
+                  . $SPACE
+                  . $file->identity
+                  . ' != root/root (or 0/0)');
         }
 
         # for other maintainer scripts checks, see the scripts check

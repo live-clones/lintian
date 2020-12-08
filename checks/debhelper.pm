@@ -26,6 +26,7 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use List::Compare;
 use List::SomeUtils qw(any firstval);
 use List::UtilsBy qw(min_by);
@@ -33,13 +34,13 @@ use Text::LevenshteinXS qw(distance);
 
 use Lintian::Relation qw(:constants);
 
-use constant EMPTY => q{};
-use constant UNDERSCORE => q{_};
-
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $EMPTY => q{};
+const my $UNDERSCORE => q{_};
 
 # If there is no debian/compat file present but cdbs is being used, cdbs will
 # create one automatically.  Currently it always uses compatibility level 5.
@@ -72,11 +73,11 @@ sub source {
 
     my @KNOWN_DH_COMMANDS;
     for my $command ($dh_commands_depends->all) {
-        for my $focus (EMPTY, qw(-arch -indep)) {
+        for my $focus ($EMPTY, qw(-arch -indep)) {
             for my $timing (qw(override execute_before execute_after)) {
 
                 push(@KNOWN_DH_COMMANDS,
-                    $timing . UNDERSCORE . $command . $focus);
+                    $timing . $UNDERSCORE . $command . $focus);
             }
         }
     }
@@ -84,12 +85,12 @@ sub source {
     my $droot = $processable->patched->resolve_path('debian/');
     my ($drules, $dh_bd_version, $level);
 
-    my $seencommand = EMPTY;
-    my $needbuilddepends = EMPTY;
-    my $needdhexecbuilddepends = EMPTY;
-    my $needtomodifyscripts = EMPTY;
+    my $seencommand = $EMPTY;
+    my $needbuilddepends = $EMPTY;
+    my $needdhexecbuilddepends = $EMPTY;
+    my $needtomodifyscripts = $EMPTY;
     my $compat = 0;
-    my $seendhcleank = EMPTY;
+    my $seendhcleank = $EMPTY;
     my (%missingbdeps, %missingbdeps_addons, $maybe_skipping, $dhcompatvalue);
     my $inclcdbs = 0;
 
@@ -347,7 +348,7 @@ sub source {
     }
 
     my @pkgs = $processable->debian_control->installables;
-    my $single_pkg = EMPTY;
+    my $single_pkg = $EMPTY;
     $single_pkg
       =  $processable->debian_control->installable_package_type($pkgs[0])
       if scalar @pkgs == 1;
@@ -412,7 +413,7 @@ sub source {
             }
         }
         close($fd);
-        if ($compat ne EMPTY) {
+        if ($compat ne $EMPTY) {
             my $compat_value = $compat;
             # Recommend people use debhelper-compat (introduced in debhelper
             # 11.1.5~alpha1) over debian/compat, except for experimental/beta
@@ -502,8 +503,8 @@ sub source {
             # They need to have #DEBHELPER# in their scripts.  Search
             # for scripts that look like maintainer scripts and make
             # sure the token is there.
-            my $binpkg = $1 || EMPTY;
-            my $seentag = EMPTY;
+            my $binpkg = $1 || $EMPTY;
+            my $seentag = $EMPTY;
             open(my $fd, '<', $file->unpacked_path);
             while (<$fd>) {
                 if (m/\#DEBHELPER\#/) {
@@ -789,7 +790,7 @@ sub check_dh_exec {
 sub _shebang_cmd {
     my ($path) = @_;
     my $magic;
-    my $cmd = EMPTY;
+    my $cmd = $EMPTY;
     open(my $fd, '<', $path->unpacked_path);
     if (read($fd, $magic, 2)) {
         if ($magic eq '#!') {
@@ -798,7 +799,7 @@ sub _shebang_cmd {
             # It is beyond me why anyone would place a lincity data
             # file here...  but if they do, we will handle it
             # correctly.
-            $cmd = EMPTY if $cmd =~ /^#!/;
+            $cmd = $EMPTY if $cmd =~ /^#!/;
 
             # trim both ends
             $cmd =~ s/^\s+|\s+$//g;

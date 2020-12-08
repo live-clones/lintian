@@ -25,14 +25,15 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use Path::Tiny;
-
-use constant AT => q{@};
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $AT => q{@};
 
 # policy section 5.2 states unequivocally that the two fields Section
 # and Priority are recommended not only in the source paragraph, but
@@ -76,7 +77,7 @@ sub source {
       @DEBIAN_CONTROL_SOURCE;
 
     my $controlfile = 'debian/control';
-    $self->hint('recommended-field', $controlfile . AT . 'source', $_)
+    $self->hint('recommended-field', $controlfile . $AT . 'source', $_)
       for @missing_control_source;
 
     # look at d/control installable paragraphs
@@ -86,7 +87,7 @@ sub source {
             !$debian_control->installable_fields($installable)->declares($_)
         }@DEBIAN_CONTROL_INSTALLABLE;
 
-        $self->hint('recommended-field', $controlfile . AT . $installable, $_)
+        $self->hint('recommended-field', $controlfile . $AT . $installable, $_)
           for @missing_control_installable;
     }
 

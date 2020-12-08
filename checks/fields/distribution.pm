@@ -27,16 +27,16 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use List::SomeUtils qw(any none);
-
-use constant EMPTY => q{};
-use constant SPACE => q{ };
-use constant NEWLINE => qq{\n};
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $EMPTY => q{};
+const my $SPACE => q{ };
 
 sub changes {
     my ($self) = @_;
@@ -45,7 +45,7 @@ sub changes {
       = $self->processable->fields->trimmed_list('Distribution');
 
     $self->hint('multiple-distributions-in-changes-file',
-        join(SPACE, @distributions))
+        join($SPACE, @distributions))
       if @distributions > 1;
 
     my @targets = grep { $_ ne 'UNRELEASED' } @distributions;
@@ -128,7 +128,7 @@ sub changes {
         $multiple = $1;
     }
 
-    my @changesdists = split(SPACE, $multiple // EMPTY);
+    my @changesdists = split($SPACE, $multiple // $EMPTY);
     return
       unless @changesdists;
 
@@ -151,7 +151,7 @@ sub changes {
 
         } else {
             $self->hint('distribution-and-changes-mismatch',
-                join(SPACE, @from_distribution, @from_changes));
+                join($SPACE, @from_distribution, @from_changes));
         }
     }
 

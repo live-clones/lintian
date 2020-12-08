@@ -26,15 +26,16 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use List::SomeUtils qw(any);
 use List::Util qw(first);
-
-use constant EMPTY => q{};
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $EMPTY => q{};
 
 sub source {
     my ($self) = @_;
@@ -59,7 +60,7 @@ sub source {
 
     # Get some data from the changelog file.
     my ($entry) = @{$processable->changelog->entries};
-    my $uploader = canonicalize($entry->Maintainer // EMPTY);
+    my $uploader = canonicalize($entry->Maintainer // $EMPTY);
     my $changes = $entry->Changes;
     $changes =~ s/^(\s*\n)+//;
     my $firstline = first { /^\s*\*/ } split(/\n/, $changes);

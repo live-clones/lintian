@@ -30,8 +30,6 @@ use List::Util qw(none);
 use YAML::XS;
 $YAML::XS::LoadBlessed = 0;
 
-use constant EMPTY => q{};
-
 use Moo;
 use namespace::clean;
 

@@ -29,14 +29,15 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use List::Compare;
-
-use constant NEWLINE => qq{\n};
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $NEWLINE => qq{\n};
 
 # based on policy 5.6
 my @always_single = (
@@ -74,7 +75,7 @@ sub always {
 
         # check if fields have newlines in them
         $self->hint('multiline-field', $name)
-          if index($value, NEWLINE) >= 0;
+          if index($value, $NEWLINE) >= 0;
     }
 
     return;

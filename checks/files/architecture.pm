@@ -25,12 +25,14 @@ use warnings;
 use utf8;
 use autodie;
 
-use constant EMPTY => q{};
+use Const::Fast;
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $EMPTY => q{};
 
 has TRIPLETS => (
     is => 'rw',
@@ -66,7 +68,7 @@ sub visit_installed_files {
 
     if ($file->dirname =~ m{^(?:usr)?/lib/([^/]+)/$}) {
         $self->_set_arch_dep_files(1)
-          if $self->TRIPLETS->known($1 // EMPTY);
+          if $self->TRIPLETS->known($1 // $EMPTY);
     }
 
     return;

@@ -25,6 +25,7 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use Cwd qw(realpath);
 use File::Temp();
 use IPC::Run3;
@@ -32,13 +33,12 @@ use Try::Tiny;
 
 use Lintian::IPC::Run3 qw(safe_qx);
 
-use constant EMPTY => q{};
-use constant NEWLINE => qq{\n};
-
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $EMPTY => q{};
 
 sub source {
     my ($self) = @_;
@@ -147,7 +147,7 @@ sub source {
             next if /^\s*\#/;
             s/.*\]\s*//;
             #  Cannot check files which are not under debian/
-            next if $_ eq EMPTY; #m,^\.\./, or
+            next if $_ eq $EMPTY; #m,^\.\./, or
             my $po_path = $debian_dir->resolve_path($_);
             unless ($po_path and $po_path->is_file) {
                 $self->hint('missing-file-from-potfiles-in', $_);
@@ -270,7 +270,7 @@ sub source {
           unless ($basename =~ /^[a-z]{2,3}(_[A-Z]{2})?(?:\@[^\.]+)?\.po$/);
         next unless $po_path->is_open_ok;
         local ($/) = "\n\n";
-        $_ = EMPTY;
+        $_ = $EMPTY;
         open(my $fd, '<', $po_path->unpacked_path);
         while (<$fd>) {
 
@@ -286,9 +286,9 @@ sub source {
             next;
         }
         s/"\n"//g;
-        my $charset = EMPTY;
+        my $charset = $EMPTY;
         if (m/charset=(.*?)\\n/) {
-            $charset = ($1 eq 'CHARSET' ? EMPTY : $1);
+            $charset = ($1 eq 'CHARSET' ? $EMPTY : $1);
         }
         $self->hint('unknown-encoding-in-po-file', $po_path)
           unless length($charset);
@@ -309,7 +309,7 @@ sub source {
         $self->hint('invalid-po-file', $po_path)
           if $?;
 
-        $stats //= EMPTY;
+        $stats //= $EMPTY;
 
         $full_translation = 1
           if $stats =~ m/^\w+ \w+ \w+\.$/;

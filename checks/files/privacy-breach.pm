@@ -25,16 +25,17 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
+
 use Lintian::SlidingWindow;
-
-use constant BLOCKSIZE => 16_384;
-
-use constant EMPTY => q{};
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $BLOCKSIZE => 16_384;
+const my $EMPTY => q{};
 
 has PRIVACY_BREAKER_WEBSITES => (
     is => 'rw',
@@ -48,7 +49,7 @@ has PRIVACY_BREAKER_WEBSITES => (
             sub {
                 my ($regex, $tag, $suggest) = split(/\s*\~\~\s*/, $_[1], 3);
 
-                $tag //= EMPTY;
+                $tag //= $EMPTY;
 
                 # trim both ends
                 $tag =~ s/^\s+|\s+$//g;
@@ -120,7 +121,7 @@ sub detect_privacy_breach {
 
     open(my $fd, '<:raw', $file->unpacked_path);
 
-    my $sfd = Lintian::SlidingWindow->new($fd,sub { $_=lc($_); },BLOCKSIZE);
+    my $sfd = Lintian::SlidingWindow->new($fd,sub { $_=lc($_); },$BLOCKSIZE);
 
     while (my $block = $sfd->readwindow) {
 
@@ -311,7 +312,7 @@ sub check_tag_url_privacy_breach {
         if ($website =~ m{$regex}mxs) {
             unless (exists $privacybreachhash->{'tag-'.$breaker}) {
                 my $tag =  $value->{'tag'};
-                my $suggest = $value->{'suggest'} // EMPTY;
+                my $suggest = $value->{'suggest'} // $EMPTY;
                 $privacybreachhash->{'tag-'.$breaker}= 1;
                 $self->hint($tag, $file, $suggest, "($url)");
             }

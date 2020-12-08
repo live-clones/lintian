@@ -26,14 +26,16 @@ use warnings;
 use utf8;
 use autodie;
 
-use Lintian::Util qw(open_gz normalize_link_target);
+use Const::Fast;
 
-use constant EMPTY => q{};
+use Lintian::Util qw(open_gz normalize_link_target);
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $EMPTY => q{};
 
 sub binary {
     my ($self) = @_;
@@ -47,7 +49,7 @@ sub binary {
     # Read package contents...
     foreach my $file ($info_dir->descendants) {
         # NB: file_info can be undef (e.g. symlinks)
-        my $file_info = $file->file_info // EMPTY;
+        my $file_info = $file->file_info // $EMPTY;
         my $fname = $file->basename;
 
         next unless $file->is_symlink or $file->is_file;

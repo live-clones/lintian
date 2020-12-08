@@ -25,15 +25,16 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use File::Basename qw(dirname);
 use List::SomeUtils qw(any);
-
-use constant EMPTY => q{};
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $EMPTY => q{};
 
 has wildcard_links => (is => 'rwp', default => sub{ [] });
 
@@ -56,7 +57,7 @@ sub visit_installed_files {
     # will always have links to the package root (although
     # self-recursive and possibly not very useful)
     return
-      if $path eq EMPTY;
+      if $path eq $EMPTY;
 
     # If it contains a "*" it probably a bad
     # ln -s target/*.so link expansion.  We do not bother looking

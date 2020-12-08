@@ -42,17 +42,18 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use List::SomeUtils qw(any);
 
 use Lintian::Relation qw(:constants);
 use Lintian::Util qw($PKGNAME_REGEX);
 
-use constant EMPTY => q{};
-
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $EMPTY => q{};
 
 sub source {
     my ($self) = @_;
@@ -127,7 +128,7 @@ sub source {
                        \$[{]((?:Source-|source:|binary:)Version)[}] # subvar
                       /x;
 
-            my $gt = $2//EMPTY;
+            my $gt = $2//$EMPTY;
             $pkg2 = $1;
             $substvar_strips_binNMU = ($3 eq 'source:Version');
 

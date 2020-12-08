@@ -25,14 +25,15 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use Path::Tiny;
-
-use constant AT => q{@};
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $AT => q{@};
 
 # policy 5.2
 my @DEBIAN_CONTROL_SOURCE = qw(Source Maintainer Standards-Version);
@@ -68,7 +69,7 @@ sub source {
       @DEBIAN_CONTROL_SOURCE;
 
     my $controlfile = 'debian/control';
-    $self->hint('required-field', $controlfile . AT . 'source', $_)
+    $self->hint('required-field', $controlfile . $AT . 'source', $_)
       for @missing_control_source;
 
     # look at d/control installable paragraphs
@@ -78,7 +79,7 @@ sub source {
             !$debian_control->installable_fields($installable)->declares($_)
         }@DEBIAN_CONTROL_INSTALLABLE;
 
-        $self->hint('required-field', $controlfile . AT . $installable, $_)
+        $self->hint('required-field', $controlfile . $AT . $installable, $_)
           for @missing_control_installable;
     }
 

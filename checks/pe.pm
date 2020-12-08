@@ -25,12 +25,14 @@ use warnings;
 use utf8;
 use autodie;
 
-use constant SPACE  =>  q{ };
+use Const::Fast;
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $SPACE => q{ };
 
 sub visit_installed_files {
     my ($self, $file) = @_;
@@ -81,7 +83,7 @@ sub visit_installed_files {
     my @missing = grep { !$features{$_} } sort keys %features;
 
     $self->hint('portable-executable-missing-security-features',
-        $file,join(SPACE, @missing))
+        $file,join($SPACE, @missing))
       if scalar @missing;
 
     close($fd);

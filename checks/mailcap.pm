@@ -25,17 +25,17 @@ use warnings;
 use utf8;
 use autodie qw(open);
 
+use Const::Fast;
 use List::SomeUtils qw(uniq);
 use Text::Balanced qw(extract_delimited extract_multiple);
-
-use constant EMPTY => q{};
-use constant SPACE => q{ };
-use constant COLON => q{:};
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $EMPTY => q{};
+const my $COLON => q{:};
 
 sub visit_installed_files {
     my ($self, $file) = @_;
@@ -70,7 +70,7 @@ sub visit_installed_files {
 
         push(@continuation, {string => $_, position => $.});
 
-        my $line = EMPTY;
+        my $line = $EMPTY;
         $line .= $_->{string}for @continuation;
 
         my $position = $continuation[0]->{position};
@@ -84,7 +84,7 @@ sub visit_installed_files {
 
         $self->hint(
             'quoted-placeholder-in-mailcap-entry',
-            $file->name . COLON . $position,
+            $file->name . $COLON . $position,
             @placeholders
         )if @placeholders;
 

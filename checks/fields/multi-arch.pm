@@ -29,16 +29,17 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use List::SomeUtils qw(uniq any);
 
 use Lintian::IPC::Run3 qw(safe_qx);
-
-use constant SPACE => q{ };
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $SPACE => q{ };
 
 sub source {
     my ($self) = @_;
@@ -55,7 +56,7 @@ sub source {
         my $wildcard = $processable->debian_control->installable_fields($bin)
           ->value('Architecture');
         my @arches   = split(
-            SPACE,
+            $SPACE,
             safe_qx(
                 'dpkg-architecture', '--match-wildcard',
                 $wildcard,           '--list-known'

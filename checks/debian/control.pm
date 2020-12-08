@@ -27,6 +27,7 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use List::SomeUtils qw(any);
 use List::Util qw(first none);
 use Path::Tiny;
@@ -34,12 +35,12 @@ use Path::Tiny;
 use Lintian::Deb822::Parser qw(parse_dpkg_control_string);
 use Lintian::Relation ();
 
-use constant EMPTY => q{};
-
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $EMPTY => q{};
 
 # The list of libc packages, used for checking for a hard-coded dependency
 # rather than using ${shlibs:Depends}.
@@ -181,7 +182,7 @@ sub source {
             $self->hint(
                 'debian-control-has-empty-field',
                 "field \"$field\" in package $bin",
-            ) if $bfields->value($field) eq EMPTY;
+            ) if $bfields->value($field) eq $EMPTY;
         }
         if ($bin =~ /[-]dbgsym$/) {
             $self->hint('debian-control-has-dbgsym-package', $bin);
@@ -600,7 +601,7 @@ sub check_dev_depends {
             if ($item =~ /^[\w.+-]+(?:\s*\(([^\)]+)\))/) {
                 push(@unsorted, $1);
             } else {
-                push(@unsorted, EMPTY);
+                push(@unsorted, $EMPTY);
             }
         }
 
