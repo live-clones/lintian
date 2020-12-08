@@ -24,7 +24,7 @@ use autodie;
 
 use Const::Fast;
 use IPC::Run3;
-use List::SomeUtils qw(none first_value);
+use List::SomeUtils qw(none true first_value);
 use Path::Tiny;
 use Unicode::UTF8 qw(valid_utf8 decode_utf8 encode_utf8);
 
@@ -211,13 +211,18 @@ has overrides => (
             next
               if @invalid;
 
-            # strip and count negations; confirm it's either all or none
-            my $negations = scalar grep { s/^!// } @architectures;
+            # count negations
+            my $negations = true { /^!/ } @architectures;
+
+            # confirm it is either all or none
             unless ($negations == @architectures || $negations == 0) {
                 $self->hint('malformed-override',
                     "Inconsistent architecture negation in line $position");
                 next;
             }
+
+            # strip negations if present
+            s/^!// for @architectures;
 
             # proceed when none specified
             next

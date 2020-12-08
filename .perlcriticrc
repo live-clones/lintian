@@ -89,7 +89,7 @@ include =
 
 [ControlStructures::ProhibitLabelsWithSpecialBlockNames]
 
-[-ControlStructures::ProhibitMutatingListFunctions]
+[ControlStructures::ProhibitMutatingListFunctions]
 
 [-ControlStructures::ProhibitNegativeExpressionsInUnlessAndUntilConditions]
 
