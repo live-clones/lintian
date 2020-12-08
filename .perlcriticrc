@@ -446,7 +446,7 @@ terminal_funcs = CORE::exec fatal_error internal_error Lintian::Util::internal_e
 
 [Variables::RequireInitializationForLocalVars]
 
-[-Variables::RequireLexicalLoopIterators]
+[Variables::RequireLexicalLoopIterators]
 
 [Variables::RequireLocalizedPunctuationVars]
 allow = %ENV %SIG $! $? $0
