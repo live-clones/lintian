@@ -181,7 +181,7 @@ exit 0;
 sub generate_profile {
     my ($vendor, $name, @paragraphs) = @_;
 
-    my $text =<<EOSTR;
+    my $text =<<"EOSTR";
 # This profile is auto-generated
 Profile: $vendor/$name
 EOSTR

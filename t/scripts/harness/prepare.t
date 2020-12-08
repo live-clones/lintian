@@ -50,7 +50,7 @@ my $specpath = $tempdir->child('spec')->child($TESTNAME);
 $specpath->mkpath;
 
 # test description
-my $desctext =<<EOSTR;
+my $desctext =<<"EOSTR";
 Testname: $TESTNAME
 Version: 1.0-2
 Skeleton: upload-native
@@ -61,6 +61,7 @@ Description: Test checks related to non-pic code
 Test-For: shlib-with-non-pic-code
 Check: shared-libs
 EOSTR
+
 my $descpath = $specpath->child('fill-values');
 $descpath->spew($desctext);
 

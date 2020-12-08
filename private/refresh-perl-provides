@@ -79,7 +79,7 @@ warn(
     }
     @{$cache->files});
 
-print <<EOF;
+print <<"EOF";
 # virtual packages provided by the Perl core packages that also have a
 # separate binary package available
 #

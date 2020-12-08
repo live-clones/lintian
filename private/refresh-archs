@@ -70,7 +70,7 @@ my (%archs, %files);
 add_data_file(
     'filename' => 'common/multiarch-dirs',
     'line-spec' => ['@DEB_HOST_ARCH@ @DEB_HOST_MULTIARCH@'],
-    'header'  => <<EOF
+    'header'  => <<'EOF'
 # List of "Multiarch dirs" relationships as provided by
 # dpkg-architecture - arch -> dir mapping
 EOF
@@ -79,7 +79,7 @@ EOF
 add_data_file(
     'filename' => 'files/triplets',
     'line-spec' => ['@DEB_HOST_MULTIARCH@ @DEB_HOST_ARCH@'],
-    'header' => <<EOF
+    'header' => <<'EOF'
 # List of "triplet architecture" relationships as provided by
 # dpkg-architecture'
 EOF
@@ -89,7 +89,7 @@ add_data_file(
     'filename' => 'common/architectures',
     'line-spec' =>
       ['@DEB_HOST_ARCH@ || @DEB_HOST_ARCH_OS@ @DEB_HOST_ARCH_CPU@'],
-    'header' => <<EOF
+    'header' => <<'EOF'
 # List of known architectures as provided by dpkg-architecture
 # (excluding "all" and "any", which are handled specially)
 EOF
@@ -99,7 +99,7 @@ add_data_file(
     'filename' => 'shared-libs/ldconfig-dirs',
     'line-spec' => ['lib/@DEB_HOST_MULTIARCH@','usr/lib/@DEB_HOST_MULTIARCH@'],
     'keep' => 1,
-    'header' => <<EOF
+    'header' => <<'EOF'
 # The list of directories searched by default by the dynamic linker.
 # Packages installing shared libraries into these directories must call
 # ldconfig, must have shlibs files, and must ensure those libraries have
@@ -118,7 +118,7 @@ EOF
 add_data_file(
     'filename' => 'binaries/hardening-tags',
     'line-spec' => ['@DEB_HOST_ARCH@ || @HARDENING@'],
-    'header' => <<EOF
+    'header' => <<'EOF'
 # Map of architectures to enabled hardening tags.
 #
 # NB: Keep this in sync with checks/binaries.desc

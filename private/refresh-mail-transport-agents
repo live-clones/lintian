@@ -65,7 +65,7 @@ for my $provides (@{$versions->{ProvidesList}}) {
     push @packages, $provides->{OwnerPkg}->{Name};
 }
 
-print <<EOF;
+print <<'EOF';
 # Packages that provide mail-transport-agent
 #
 EOF

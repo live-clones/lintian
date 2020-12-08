@@ -35,7 +35,7 @@ use lib "$ENV{'LINTIAN_BASE'}/lib";
 use Test::Lintian::Output::Universal qw(get_tagnames);
 
 # dummy tags
-my $tagstext =<<EOSTR;
+my $tagstext =<<'EOSTR';
 distribution-multiple-bad (changes): bad-distribution-in-changes-file foo-backportss
 distribution-multiple-bad (changes): bad-distribution-in-changes-file foo
 distribution-multiple-bad (changes): bad-distribution-in-changes-file bar

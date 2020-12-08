@@ -47,7 +47,7 @@ my $testpath = $tempdir->child($TESTNAME);
 $testpath->mkpath;
 
 # test description
-my $desctext =<<EOSTR;
+my $desctext =<<"EOSTR";
 Testname: $TESTNAME
 Sequence: 2500
 Version: 1.0
@@ -56,11 +56,12 @@ Check:
  changes-file
 References: Debian Bug #514853
 EOSTR
+
 my $descpath = $testpath->child('desc');
 $descpath->spew($desctext);
 
 # expected tags
-my $expectedtext =<<EOSTR;
+my $expectedtext =<<'EOSTR';
 distribution-multiple-bad (changes): multiple-distributions-in-changes-file stable foo-backportss bar foo
 distribution-multiple-bad (changes): bad-distribution-in-changes-file foo-backportss
 distribution-multiple-bad (changes): bad-distribution-in-changes-file foo
@@ -68,17 +69,19 @@ distribution-multiple-bad (changes): bad-distribution-in-changes-file bar
 distribution-multiple-bad (changes): backports-upload-has-incorrect-version-number 1.0
 distribution-multiple-bad (changes): backports-changes-missing
 EOSTR
+
 my $expected = $testpath->child('tags');
 $expected->spew($expectedtext);
 
 # actual tags with one line missing
-my $nomatchtext =<<EOSTR;
+my $nomatchtext =<<'EOSTR';
 distribution-multiple-bad (changes): multiple-distributions-in-changes-file stable foo-backportss bar foo
 distribution-multiple-bad (changes): bad-distribution-in-changes-file foo-backportss
 distribution-multiple-bad (changes): bad-distribution-in-changes-file bar
 distribution-multiple-bad (changes): backports-upload-has-incorrect-version-number 1.0
 distribution-multiple-bad (changes): backports-changes-missing
 EOSTR
+
 my $nomatch = $testpath->child('tags.nomatch');
 $nomatch->spew($nomatchtext);
 

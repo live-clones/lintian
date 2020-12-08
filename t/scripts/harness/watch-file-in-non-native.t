@@ -47,11 +47,12 @@ my $specpath = $tempdir->child('spec')->child($TESTNAME);
 $specpath->mkpath;
 
 # test description
-my $desctext =<<EOSTR;
+my $desctext =<<"EOSTR";
 Testname: $TESTNAME
 Version: 1-1
 Skeleton: upload-non-native
 EOSTR
+
 my $descpath = $specpath->child('fill-values');
 $descpath->spew($desctext);
 

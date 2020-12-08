@@ -57,7 +57,7 @@ $outfile = "$DATADIR/files/locale-codes.new";
 
 open(my $out, '>', $outfile);
 
-print {$out} <<EOF ;
+print {$out} <<"EOF" ;
 # List of locale codes.  This is derived from the ISO 639-1, ISO
 # 639-2, and ISO 639-3 standards.
 # If a language has 639-1 and 639-2 codes, the -1 code is also included

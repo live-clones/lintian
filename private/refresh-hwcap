@@ -45,7 +45,7 @@ while (my $line = <$orig>) {
 close($orig);
 
 open(my $fp, '>', $path);
-print {$fp} <<EOF ;
+print {$fp} <<"EOF" ;
 # List of all known hwcap.
 #
 # Last updated: $date
