@@ -51,6 +51,14 @@ const my $RIGHT_SQUARE => q{]};
 const my $LEFT_ANGLE => q{<};
 const my $RIGHT_ANGLE => q{>};
 
+const my $BRANCH_TYPE => 0;
+const my $NAME => 1;
+const my $OPERATOR => 2;
+const my $VERSION => 3;
+const my $BD_ARCHITECTURE => 4;
+const my $MACHINE_ARCHITECTURE => 5;
+const my $RESTRICTIONS => 6;
+
 =head1 NAME
 
 Lintian::Relation - Lintian operations on dependencies and relationships
@@ -288,7 +296,8 @@ sub logical_and {
         next
           if $relation->is_empty;
 
-        if ($tree[0] eq 'AND' && $relation->trunk->[0] eq 'AND') {
+        if (   $tree[$BRANCH_TYPE] eq 'AND'
+            && $relation->trunk->[$BRANCH_TYPE] eq 'AND') {
 
             my @anded = @{$relation->trunk};
             shift @anded;
@@ -322,7 +331,7 @@ sub duplicates {
 
     # there are no duplicates unless the top-level relationship is AND.
     return ()
-      unless $self->trunk->[0] eq 'AND';
+      unless $self->trunk->[$BRANCH_TYPE] eq 'AND';
 
     # The logic here is a bit complex in order to merge sets of duplicate
     # dependencies.  We want foo (<< 2), foo (>> 1), foo (= 1.5) to end up as
@@ -430,7 +439,7 @@ sub implies_element {
     # If the names don't match, there is no relationship between them.
 
     return undef
-      if $p->[1] ne $q->[1];
+      if $p->[$NAME] ne $q->[$NAME];
 
     # the restriction formula forms a disjunctive normal form expression one
     # way to check whether A <dnf1> implies A <dnf2> is to check:
@@ -452,14 +461,16 @@ sub implies_element {
     # with build profiles we assume that one does not imply the other:
 
     return undef
-      if defined $p->[6]
-      || defined $q->[6];
+      if defined $p->[$RESTRICTIONS]
+      || defined $q->[$RESTRICTIONS];
 
     # If the names match, then the only difference is in the architecture or
     # version clauses.  First, check architecture.  The architectures for p
     # must be a superset of the architectures for q.
-    my @p_arches = split($SPACE, defined($p->[4]) ? $p->[4] : $EMPTY);
-    my @q_arches = split($SPACE, defined($q->[4]) ? $q->[4] : $EMPTY);
+    my @p_arches = split($SPACE,
+        defined($p->[$BD_ARCHITECTURE]) ? $p->[$BD_ARCHITECTURE] : $EMPTY);
+    my @q_arches = split($SPACE,
+        defined($q->[$BD_ARCHITECTURE]) ? $q->[$BD_ARCHITECTURE] : $EMPTY);
     if (@p_arches || @q_arches) {
         my $p_arch_neg = @p_arches && $p_arches[0] =~ /^!/;
         my $q_arch_neg = @q_arches && $q_arches[0] =~ /^!/;
@@ -541,15 +552,16 @@ sub implies_element {
     # "pkg:X" (for any valid value of X) seems to imply "pkg:any",
     # fixing that is a TODO (because version clauses complicates
     # matters)
-    if (defined $p->[5]) {
+    if (defined $p->[$MACHINE_ARCHITECTURE]) {
         # Assume the identity to hold
         return undef
-          unless defined $q->[5] and $p->[5] eq $q->[5];
+          unless defined $q->[$MACHINE_ARCHITECTURE]
+          && $p->[$MACHINE_ARCHITECTURE] eq $q->[$MACHINE_ARCHITECTURE];
 
-    } elsif (defined $q->[5]) {
+    } elsif (defined $q->[$MACHINE_ARCHITECTURE]) {
 
         return undef
-          unless $q->[5] eq 'any';
+          unless $q->[$MACHINE_ARCHITECTURE] eq 'any';
 
         # pkg:any implies pkg (but the reverse is not true).
         #
@@ -562,78 +574,79 @@ sub implies_element {
     # than q's, or is equivalent.
 
     # If q has no version clause, then p's clause is always stronger.
-    return 1 if not defined $q->[2];
+    return 1
+      unless defined $q->[$OPERATOR];
 
     # If q does have a version clause, then p must also have one to have any
     # useful relationship.
     return undef
-      if not defined $p->[2];
+      unless defined $p->[$OPERATOR];
 
     # q wants an exact version, so p must provide that exact version.  p
     # disproves q if q's version is outside the range enforced by p.
-    if ($q->[2] eq $EQUAL) {
-        if ($p->[2] eq '<<') {
-            return versions_lte($p->[3], $q->[3]) ? 0 : undef;
-        } elsif ($p->[2] eq '<=') {
-            return versions_lt($p->[3], $q->[3]) ? 0 : undef;
-        } elsif ($p->[2] eq '>>') {
-            return versions_gte($p->[3], $q->[3]) ? 0 : undef;
-        } elsif ($p->[2] eq '>=') {
-            return versions_gt($p->[3], $q->[3]) ? 0 : undef;
-        } elsif ($p->[2] eq $EQUAL) {
-            return versions_equal($p->[3], $q->[3]) ? 1 : 0;
+    if ($q->[$OPERATOR] eq $EQUAL) {
+        if ($p->[$OPERATOR] eq '<<') {
+            return versions_lte($p->[$VERSION], $q->[$VERSION]) ? 0 : undef;
+        } elsif ($p->[$OPERATOR] eq '<=') {
+            return versions_lt($p->[$VERSION], $q->[$VERSION]) ? 0 : undef;
+        } elsif ($p->[$OPERATOR] eq '>>') {
+            return versions_gte($p->[$VERSION], $q->[$VERSION]) ? 0 : undef;
+        } elsif ($p->[$OPERATOR] eq '>=') {
+            return versions_gt($p->[$VERSION], $q->[$VERSION]) ? 0 : undef;
+        } elsif ($p->[$OPERATOR] eq $EQUAL) {
+            return versions_equal($p->[$VERSION], $q->[$VERSION]) ? 1 : 0;
         }
     }
 
     # A greater than clause may disprove a less than clause.  Otherwise, if
     # p's clause is <<, <=, or =, the version must be <= q's to imply q.
-    if ($q->[2] eq '<=') {
-        if ($p->[2] eq '>>') {
-            return versions_gte($p->[3], $q->[3]) ? 0 : undef;
-        } elsif ($p->[2] eq '>=') {
-            return versions_gt($p->[3], $q->[3]) ? 0 : undef;
-        } elsif ($p->[2] eq $EQUAL) {
-            return versions_lte($p->[3], $q->[3]) ? 1 : 0;
+    if ($q->[$OPERATOR] eq '<=') {
+        if ($p->[$OPERATOR] eq '>>') {
+            return versions_gte($p->[$VERSION], $q->[$VERSION]) ? 0 : undef;
+        } elsif ($p->[$OPERATOR] eq '>=') {
+            return versions_gt($p->[$VERSION], $q->[$VERSION]) ? 0 : undef;
+        } elsif ($p->[$OPERATOR] eq $EQUAL) {
+            return versions_lte($p->[$VERSION], $q->[$VERSION]) ? 1 : 0;
         } else {
-            return versions_lte($p->[3], $q->[3]) ? 1 : undef;
+            return versions_lte($p->[$VERSION], $q->[$VERSION]) ? 1 : undef;
         }
     }
 
     # Similar, but << is stronger than <= so p's version must be << q's
     # version if the p relation is <= or =.
-    if ($q->[2] eq '<<') {
-        if ($p->[2] eq '>>' or $p->[2] eq '>=') {
-            return versions_gte($p->[3], $p->[3]) ? 0 : undef;
-        } elsif ($p->[2] eq '<<') {
-            return versions_lte($p->[3], $q->[3]) ? 1 : undef;
-        } elsif ($p->[2] eq $EQUAL) {
-            return versions_lt($p->[3], $q->[3]) ? 1 : 0;
+    if ($q->[$OPERATOR] eq '<<') {
+        if ($p->[$OPERATOR] eq '>>' || $p->[$OPERATOR] eq '>=') {
+            return versions_gte($p->[$VERSION], $p->[$VERSION]) ? 0 : undef;
+        } elsif ($p->[$OPERATOR] eq '<<') {
+            return versions_lte($p->[$VERSION], $q->[$VERSION]) ? 1 : undef;
+        } elsif ($p->[$OPERATOR] eq $EQUAL) {
+            return versions_lt($p->[$VERSION], $q->[$VERSION]) ? 1 : 0;
         } else {
-            return versions_lt($p->[3], $q->[3]) ? 1 : undef;
+            return versions_lt($p->[$VERSION], $q->[$VERSION]) ? 1 : undef;
         }
     }
 
     # Same logic as above, only inverted.
-    if ($q->[2] eq '>=') {
-        if ($p->[2] eq '<<') {
-            return versions_lte($p->[3], $q->[3]) ? 0 : undef;
-        } elsif ($p->[2] eq '<=') {
-            return versions_lt($p->[3], $q->[3]) ? 0 : undef;
-        } elsif ($p->[2] eq $EQUAL) {
-            return versions_gte($p->[3], $q->[3]) ? 1 : 0;
+    if ($q->[$OPERATOR] eq '>=') {
+        if ($p->[$OPERATOR] eq '<<') {
+            return versions_lte($p->[$VERSION], $q->[$VERSION]) ? 0 : undef;
+        } elsif ($p->[$OPERATOR] eq '<=') {
+            return versions_lt($p->[$VERSION], $q->[$VERSION]) ? 0 : undef;
+        } elsif ($p->[$OPERATOR] eq $EQUAL) {
+            return versions_gte($p->[$VERSION], $q->[$VERSION]) ? 1 : 0;
         } else {
-            return versions_gte($p->[3], $q->[3]) ? 1 : undef;
+            return versions_gte($p->[$VERSION], $q->[$VERSION]) ? 1 : undef;
         }
     }
-    if ($q->[2] eq '>>') {
-        if ($p->[2] eq '<<' or $p->[2] eq '<=') {
-            return versions_lte($p->[3], $q->[3]) ? 0 : undef;
-        } elsif ($p->[2] eq '>>') {
-            return versions_gte($p->[3], $q->[3]) ? 1 : undef;
-        } elsif ($p->[2] eq $EQUAL) {
-            return versions_gt($p->[3], $q->[3]) ? 1 : 0;
+    if ($q->[$OPERATOR] eq '>>') {
+        if ($p->[$OPERATOR] eq '<<' || $p->[$OPERATOR] eq '<=') {
+            return versions_lte($p->[$VERSION], $q->[$VERSION]) ? 0 : undef;
+        } elsif ($p->[$OPERATOR] eq '>>') {
+            return versions_gte($p->[$VERSION], $q->[$VERSION]) ? 1 : undef;
+        } elsif ($p->[$OPERATOR] eq $EQUAL) {
+            return versions_gt($p->[$VERSION], $q->[$VERSION]) ? 1 : 0;
         } else {
-            return versions_gt($p->[3], $q->[3]) ? 1 : undef;
+            return versions_gt($p->[$VERSION], $q->[$VERSION]) ? 1 : undef;
         }
     }
 
@@ -649,8 +662,8 @@ sub implies_element {
 sub implies_array {
     my ($p, $q) = @_;
     my $i;
-    my $q0 = $q->[0];
-    my $p0 = $p->[0];
+    my $q0 = $q->[$BRANCH_TYPE];
+    my $p0 = $p->[$BRANCH_TYPE];
     if ($q0 eq 'PRED') {
         if ($p0 eq 'PRED') {
             return implies_element($p, $q);
@@ -719,7 +732,7 @@ sub implies_array {
 
             return 1;
 
-        } elsif ($p->[0] eq 'NOT') {
+        } elsif ($p->[$BRANCH_TYPE] eq 'NOT') {
             return implies_array_inverse($p->[1], $q);
         }
     } elsif ($q0 eq 'NOT') {
@@ -793,8 +806,8 @@ sub implies_element_inverse {
 sub implies_array_inverse {
     my ($p, $q) = @_;
     my $i;
-    my $q0 = $q->[0];
-    my $p0 = $p->[0];
+    my $q0 = $q->[$BRANCH_TYPE];
+    my $p0 = $p->[$BRANCH_TYPE];
     if ($q0 eq 'PRED') {
         if ($p0 eq 'PRED') {
             return implies_element_inverse($p, $q);
@@ -873,44 +886,45 @@ sub to_string {
     my $tree = $branch // $self->trunk;
 
     my $text;
-    if ($tree->[0] eq 'PRED') {
+    if ($tree->[$BRANCH_TYPE] eq 'PRED') {
 
-        $text = $tree->[1];
+        $text = $tree->[$NAME];
 
-        $text .= $COLON . $tree->[5]
-          if length $tree->[5];
+        $text .= $COLON . $tree->[$MACHINE_ARCHITECTURE]
+          if length $tree->[$MACHINE_ARCHITECTURE];
 
         $text
           .= $SPACE
           . $LEFT_PARENS
-          . $tree->[2]
+          . $tree->[$OPERATOR]
           . $SPACE
-          . $tree->[3]
+          . $tree->[$VERSION]
           . $RIGHT_PARENS
-          if length $tree->[2];
+          if length $tree->[$OPERATOR];
 
-        $text .= $SPACE . $LEFT_SQUARE . $tree->[4] . $RIGHT_SQUARE
-          if length $tree->[4];
+        $text
+          .= $SPACE . $LEFT_SQUARE . $tree->[$BD_ARCHITECTURE] . $RIGHT_SQUARE
+          if length $tree->[$BD_ARCHITECTURE];
 
-        $text .= $SPACE . $LEFT_ANGLE . $tree->[6] . $RIGHT_ANGLE
-          if length $tree->[6];
+        $text .= $SPACE . $LEFT_ANGLE . $tree->[$RESTRICTIONS] . $RIGHT_ANGLE
+          if length $tree->[$RESTRICTIONS];
 
-    } elsif ($tree->[0] eq 'AND' || $tree->[0] eq 'OR') {
+    } elsif ($tree->[$BRANCH_TYPE] eq 'AND' || $tree->[$BRANCH_TYPE] eq 'OR') {
 
-        my $connector = ($tree->[0] eq 'AND') ? ', ' : ' | ';
+        my $connector = ($tree->[$BRANCH_TYPE] eq 'AND') ? ', ' : ' | ';
         my @separated = map { $self->to_string($_) } @{$tree}[1 .. $#{$tree}];
         $text = join($connector, @separated);
 
-    } elsif ($tree->[0] eq 'NOT') {
-        $text = '! ' . $self->to_string($tree->[1]);
+    } elsif ($tree->[$BRANCH_TYPE] eq 'NOT') {
+        $text = '! ' . $self->to_string($tree->[$NAME]);
 
-    } elsif ($tree->[0] eq 'PRED-UNPARSABLE') {
+    } elsif ($tree->[$BRANCH_TYPE] eq 'PRED-UNPARSABLE') {
         # return the original value
-        $text = $tree->[1];
+        $text = $tree->[$NAME];
 
     } else {
         require Carp;
-        Carp::confess("Case $tree->[0] not implemented");
+        Carp::confess("Case $tree->[$BRANCH_TYPE] not implemented");
     }
 
     return $text;
@@ -1054,12 +1068,12 @@ sub visit {
     my ($self, $code, $flags, $branch) = @_;
 
     my $tree = $branch // $self->trunk;
-    my $rel_type = $tree->[0];
+    my $rel_type = $tree->[$BRANCH_TYPE];
 
     $flags //= 0;
 
     if ($rel_type eq 'PRED') {
-        my $against = $tree->[1];
+        my $against = $tree->[$NAME];
         $against = $self->to_string($tree)
           if $flags & VISIT_PRED_FULL;
 
@@ -1100,7 +1114,7 @@ sub is_empty {
     my ($self) = @_;
 
     return 1
-      if $self->trunk->[0] eq 'AND' && !$self->trunk->[1];
+      if $self->trunk->[$BRANCH_TYPE] eq 'AND' && !$self->trunk->[$NAME];
 
     return 0;
 }
@@ -1121,10 +1135,10 @@ sub unparsable_predicates {
     my @unparsable;
 
     while (my $current = pop(@worklist)) {
-        my $rel_type = $current->[0];
+        my $rel_type = $current->[$BRANCH_TYPE];
         next if $rel_type eq 'PRED';
         if ($rel_type eq 'PRED-UNPARSABLE') {
-            push(@unparsable, $current->[1]);
+            push(@unparsable, $current->[$NAME]);
             next;
         }
         push(@worklist, @{$current}[1 .. $#{$current}]);

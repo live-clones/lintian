@@ -25,6 +25,7 @@ use v5.20;
 use warnings;
 use utf8;
 
+use Const::Fast;
 use List::Util qw(none);
 use YAML::XS;
 
@@ -35,6 +36,9 @@ use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+# Need 0.69 for $LoadBlessed (#861958)
+const my $HAS_LOAD_BLESSED => 0.69;
 
 sub source {
     my ($self) = @_;
@@ -60,9 +64,8 @@ sub source {
         return;
     }
 
-    # Need 0.69 for $LoadBlessed (#861958)
     return
-      if $YAML::XS::VERSION < 0.69;
+      if $YAML::XS::VERSION < $HAS_LOAD_BLESSED;
 
     my $yaml;
     eval { $yaml = YAML::XS::LoadFile($file->unpacked_path); };

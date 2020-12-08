@@ -37,6 +37,8 @@ with 'Lintian::Check';
 const my $BLOCKSIZE => 16_384;
 const my $EMPTY => q{};
 
+const my $PRIVACY_BREAKER_WEBSITES_FIELDS => 3;
+
 has PRIVACY_BREAKER_WEBSITES => (
     is => 'rw',
     lazy => 1,
@@ -47,7 +49,8 @@ has PRIVACY_BREAKER_WEBSITES => (
             'files/privacy-breaker-websites',
             qr/\s*\~\~/,
             sub {
-                my ($regex, $tag, $suggest) = split(/\s*\~\~\s*/, $_[1], 3);
+                my ($regex, $tag, $suggest)= split(/ \s* ~~ \s* /msx,
+                    $_[1],$PRIVACY_BREAKER_WEBSITES_FIELDS);
 
                 $tag //= $EMPTY;
 
@@ -132,7 +135,7 @@ sub detect_privacy_breach {
 
         # try generic fragment tagging
         foreach my $keyword ($self->PRIVACY_BREAKER_FRAGMENTS->all) {
-            if(index($block,$keyword) > -1) {
+            if ($block =~ / \Q$keyword\E /msx) {
                 my $keyvalue
                   = $self->PRIVACY_BREAKER_FRAGMENTS->value($keyword);
                 my $regex = $keyvalue->{'regex'};
@@ -152,9 +155,12 @@ sub detect_privacy_breach {
             data-href="// codebase="http codebase="ftp codebase="// data="http
             data="ftp data="// poster="http poster="ftp poster="// <link @import)
         ) {
-            next if index($block, $x) == -1;
+            next
+              unless $block =~ / \Q$x\E /msx;
+
             $self->detect_generic_privacy_breach($block,\%privacybreachhash,
                 $file);
+
             last;
         }
     }
@@ -188,7 +194,7 @@ sub detect_generic_privacy_breach {
 
                 my $thiskeyword = $matchedkeyword{$keyword};
                 if(!defined($thiskeyword)) {
-                    if(index($block,$keyword) > -1) {
+                    if ($block =~ / \Q$keyword\E /msx) {
                         $matchedkeyword{$keyword} = 1;
                         $orblockok = 1;
                     }else {

@@ -29,6 +29,7 @@ use warnings;
 use autodie;
 use v5.10;
 
+use Const::Fast;
 use File::Find::Rule;
 use List::SomeUtils qw(uniq);
 use List::Util qw(all);
@@ -40,6 +41,8 @@ use lib "$ENV{'LINTIAN_BASE'}/lib";
 use Lintian::Profile;
 use Test::Lintian::ConfigFile qw(read_config);
 
+const my $FIXED_TESTS_PER_FILE => 6;
+
 my @descpaths = File::Find::Rule->file()->name('desc')->in('t/recipes');
 
 # mandatory fields
@@ -49,7 +52,7 @@ my @mandatory = qw(Testname);
 my @disallowed = qw(Test-For Checks References Reference Ref);
 
 # tests per desc
-my $perfile = 6 + scalar @mandatory + scalar @disallowed;
+my $perfile = $FIXED_TESTS_PER_FILE + scalar @mandatory + scalar @disallowed;
 
 # set the testing plan
 my $known_tests = $perfile * scalar @descpaths;

@@ -391,7 +391,7 @@ terminal_funcs = CORE::exec fatal_error internal_error Lintian::Util::internal_e
 
 [ValuesAndExpressions::ProhibitLongChainsOfMethodCalls]
 
-[-ValuesAndExpressions::ProhibitMagicNumbers]
+[ValuesAndExpressions::ProhibitMagicNumbers]
 
 [ValuesAndExpressions::ProhibitMismatchedOperators]
 

@@ -50,6 +50,10 @@ with
 const my $EMPTY => q{};
 const my $SLASH => q{/};
 const my $HYPHEN => q{-};
+const my $NO_LIMIT => -1;
+
+const my $LINES_PER_FILE => 3;
+const my $WIDELY_READABLE_FOLDER => 0755;
 
 my %FILE_CODE2LPATH_TYPE = (
     $HYPHEN => Lintian::Index::Item::TYPE_FILE
@@ -225,9 +229,10 @@ sub create_from_basedir {
 
     $index_output =~ s/\0$//;
 
-    my @lines = split(/\0/, $index_output, -1);
-    die encode_utf8('Did not get a multiple of three lines from find.')
-      unless @lines % 3 == 0;
+    my @lines = split(/\0/, $index_output, $NO_LIMIT);
+    die encode_utf8(
+        "Did not get a multiple of $LINES_PER_FILE lines from find.")
+      unless @lines % $LINES_PER_FILE == 0;
 
     while (defined(my $first = shift @lines)) {
 
@@ -260,7 +265,7 @@ sub create_from_basedir {
         $name .= $SLASH
           if length $name
           && $entry->perm =~ /^d/
-          && substr($name, -1) ne $SLASH;
+          && $name !~ m{ /$ }msx;
         $entry->name($name);
 
         $all{$entry->name} = $entry;
@@ -404,7 +409,8 @@ sub load {
                 $added->index($self);
 
                 $added->name($parentname);
-                $added->path_info($FILE_CODE2LPATH_TYPE{'d'} | 0755);
+                $added->path_info(
+                    $FILE_CODE2LPATH_TYPE{'d'} | $WIDELY_READABLE_FOLDER);
 
                 # random but fixed date; hint, it's a good read. :)
                 $added->date('1998-01-25');
@@ -426,7 +432,7 @@ sub load {
         $root->index($self);
 
         $root->name($EMPTY);
-        $root->path_info($FILE_CODE2LPATH_TYPE{'d'} | 0755);
+        $root->path_info($FILE_CODE2LPATH_TYPE{'d'} | $WIDELY_READABLE_FOLDER);
 
         # random but fixed date; hint, it's a good read. :)
         $root->date('1998-01-25');
@@ -610,7 +616,7 @@ sub capture_common_prefix {
     # random but fixed date; hint, it's a good read. :)
     $new_root->date('1998-01-25');
     $new_root->time('22:55:34');
-    $new_root->path_info($FILE_CODE2LPATH_TYPE{'d'} | 0755);
+    $new_root->path_info($FILE_CODE2LPATH_TYPE{'d'} | $WIDELY_READABLE_FOLDER);
     $new_root->faux(1);
 
     my %new_catalog;

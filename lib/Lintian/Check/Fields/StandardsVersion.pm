@@ -39,6 +39,8 @@ with 'Lintian::Check';
 
 const my $EMPTY => q{};
 
+const my $MAXIMUM_COMPONENTS_ANALYZED => 3;
+
 sub source {
     my ($self) = @_;
 
@@ -73,7 +75,7 @@ sub source {
     $latest_standard =~ s{\.0$}{};
 
     my ($latest_major, $latest_minor, $latest_patch)
-      = split(m{\.}, $latest_standard, 3);
+      = split(m{ [.] }msx, $latest_standard, $MAXIMUM_COMPONENTS_ANALYZED);
 
     my $release_epoch = $policy_releases->epoch($latest_standard);
 

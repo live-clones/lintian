@@ -34,7 +34,9 @@ use namespace::clean;
 const my $COLON => q{:};
 const my $UNDERSCORE => q{_};
 const my $NEWLINE => qq{\n};
+
 const my $OPEN_PIPE => q{-|};
+const my $WAIT_STATUS_SHIFT => 8;
 
 =head1 NAME
 
@@ -87,7 +89,7 @@ has diffstat => (
         my $stderr;
         my @diffstat_command = qw(diffstat -p1);
         run3(\@diffstat_command, $from_gunzip, \$stdout, \$stderr);
-        my $status = ($? >> 8);
+        my $status = ($? >> $WAIT_STATUS_SHIFT);
 
         $stdout = decode_utf8($stdout)
           if length $stdout;

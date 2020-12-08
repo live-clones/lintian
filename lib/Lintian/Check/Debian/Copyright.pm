@@ -44,6 +44,10 @@ with 'Lintian::Check';
 
 const my $EMPTY => q{};
 
+const my $APPROXIMATE_GPL_LENGTH => 12_000;
+const my $APPROXIMATE_GFDL_LENGTH => 12_000;
+const my $APPROXIMATE_APACHE_2_LENGTH => 10_000;
+
 sub spelling_tag_emitter {
     my ($self, @orig_args) = @_;
     return sub {
@@ -269,28 +273,37 @@ sub binary {
     my $gpl;
 
     if (
-        length($contents) > 12_000
-        and (
-            $contents =~m{  \b \QGNU GENERAL PUBLIC LICENSE\E \s*
+        length $contents > $APPROXIMATE_GPL_LENGTH
+        && (
+            $contents =~ m{  \b \QGNU GENERAL PUBLIC LICENSE\E \s*
                     \QTERMS AND CONDITIONS FOR COPYING,\E \s*
-                    \QDISTRIBUTION AND MODIFICATION\E\b}mx
-            or (    $contents =~ m/\bGNU GENERAL PUBLIC LICENSE\s*Version 3/
-                and $contents =~ m/\bTERMS AND CONDITIONS\s/))
+                    \QDISTRIBUTION AND MODIFICATION\E \b }msx
+            || (
+                $contents =~ m{ \b \QGNU GENERAL PUBLIC LICENSE\E
+                                   \s* \QVersion 3\E }msx
+                && $contents =~ m{ \b \QTERMS AND CONDITIONS\E \s }msx
+            ))
     ) {
         $self->hint('copyright-file-contains-full-gpl-license');
         $gpl = 1;
     }
 
-    if (    length($contents) > 12_000
-        and $contents =~ m/\bGNU Free Documentation License\s*Version 1\.2/
-        and $contents =~ m/\b1\. APPLICABILITY AND DEFINITIONS/) {
+    if (
+        length $contents > $APPROXIMATE_GFDL_LENGTH
+        && $contents =~ m{ \b \QGNU Free Documentation License\E
+                           \s* \QVersion 1.2\E }msx
+        && $contents =~ m{ \b \Q1. APPLICABILITY AND DEFINITIONS\E }msx
+    ) {
+
         $self->hint('copyright-file-contains-full-gfdl-license');
     }
 
-    if (    length($contents) > 10_000
-        and $contents =~ m/\bApache License\s+Version 2\.0,/
-        and $contents
-        =~ m/TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION/) {
+    if (   length $contents > $APPROXIMATE_APACHE_2_LENGTH
+        && $contents =~ m{ \b \QApache License\E \s+ \QVersion 2.0,\E }msx
+        && $contents
+        =~ m{ \QTERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION\E }msx
+    ) {
+
         $self->hint('copyright-file-contains-full-apache-2-license');
     }
 

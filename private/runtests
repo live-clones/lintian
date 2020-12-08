@@ -126,7 +126,7 @@ $ENV{LINTIAN_BASE}
 my $coverage;
 my $debug;
 my $dump_logs = 1;
-my $numjobs = -1;
+my $numjobs;
 my $keep_going;
 my $onlyrun;
 my $outpath;
@@ -236,8 +236,8 @@ $numjobs = 1 if exists $ENV{'LINTIAN_COVERAGE'};
 # tie verbosity to debug
 $verbose = 1 + $debug if $debug;
 
-# can be 0 without value ("-j"), and -1 if option was not specified at all
-$numjobs = default_parallel() if $numjobs <= 0;
+# can be 0 without value ("-j") or undef if option was not specified at all
+$numjobs ||= default_parallel();
 say encode_utf8("Running up to $numjobs tests concurrently")
   if $numjobs > 1 && $verbose >= 2;
 

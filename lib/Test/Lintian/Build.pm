@@ -60,6 +60,7 @@ use Test::Lintian::ConfigFile qw(read_config);
 use Test::Lintian::Hooks qw(find_missing_prerequisites);
 
 const my $SLASH => q{/};
+const my $WAIT_STATUS_SHIFT => 8;
 
 =head1 FUNCTIONS
 
@@ -127,7 +128,7 @@ sub build_subject {
 
         # array command breaks test files/contents/contains-build-path
         run3($command, \undef, \$combined_bytes, \$combined_bytes);
-        my $status = ($? >> 8);
+        my $status = ($? >> $WAIT_STATUS_SHIFT);
 
         chdir($savedir);
 

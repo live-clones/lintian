@@ -49,6 +49,8 @@ with 'Lintian::Check';
 
 const my $EMPTY => q{};
 
+const my $MAXIMUM_WIDTH => 82;
+
 sub spelling_tag_emitter {
     my ($self, @orig_args) = @_;
     return sub {
@@ -712,10 +714,10 @@ sub binary {
             my $line = $i + $chloff;
             $self->hint('debian-changelog-line-too-short', $1, "(line $line)")
               if $lines[$i] =~ /^   [*]\s(.{1,5})$/ and $1 !~ /:$/;
-            if (length($lines[$i]) > 81
-                and $lines[$i] !~ /^[\s.o*+-]*(?:[Ss]ee:?\s+)?\S+$/) {
-                $self->hint('debian-changelog-line-too-long', "line $line");
-            }
+
+            $self->hint('debian-changelog-line-too-long', "line $line")
+              if length $lines[$i] >= $MAXIMUM_WIDTH
+              && $lines[$i] !~ /^ [\s.o*+-]* (?: [Ss]ee:?\s+ )? \S+ $/msx;
         }
 
         # Strip out all lines that contain the word spelling to avoid false

@@ -86,6 +86,8 @@ const my $NEWLINE => qq{\n};
 const my $YES => q{yes};
 const my $NO => q{no};
 
+const my $WAIT_STATUS_SHIFT => 8;
+
 # turn off the @@-style headers in Text::Diff
 no warnings 'redefine';
 sub Text::Diff::Unified::file_header { return $EMPTY; }
@@ -239,7 +241,7 @@ sub runner {
             my @command = (qw{dpkg-architecture -a},
                 $ENV{'DEB_HOST_ARCH'}, '-i', $wildcard);
             run3(\@command, \undef, \undef, \undef);
-            my $status = ($? >> 8);
+            my $status = ($? >> $WAIT_STATUS_SHIFT);
 
             unless ($status) {
                 $match = 1;
@@ -274,7 +276,7 @@ sub runner {
       = "cd $runpath; $ENV{'LINTIAN_UNDER_TEST'} $lintian_command_line $subject";
     say encode_utf8($command);
     my ($output, $status) = capture_merged { system($command); };
-    $status = ($status >> 8) & 255;
+    $status >>= $WAIT_STATUS_SHIFT;
 
     $output = decode_utf8($output)
       if length $output;

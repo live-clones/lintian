@@ -36,7 +36,10 @@ use namespace::clean;
 
 const my $EMPTY => q{};
 const my $SPACE => q{ };
+const my $INDENT => $SPACE x 4;
 const my $HYPHEN => q{-};
+
+const my $LINES_PER_FILE => 3;
 
 =head1 NAME
 
@@ -106,8 +109,8 @@ sub add_objdump {
         }
 
         die encode_utf8(
-            "Parsed data from readelf is not a multiple of three for $file")
-          unless @per_files % 3 == 0;
+"Parsed data from readelf is not a multiple of $LINES_PER_FILE for $file"
+        )unless @per_files % $LINES_PER_FILE == 0;
 
         my $parsed;
         while (defined(my $fixed = shift @per_files)) {
@@ -356,7 +359,7 @@ sub parse_per_file {
 
             if ($symbol_version eq '*local*' || $symbol_version eq '*global*'){
                 if ($section eq 'UND') {
-                    $symbol_version = $SPACE x 4;
+                    $symbol_version = $INDENT;
                 } else {
                     $symbol_version = 'Base';
                 }

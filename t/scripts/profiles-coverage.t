@@ -15,6 +15,7 @@ use Test::More;
 use Lintian::Deb822::Parser qw(read_dpkg_control);
 
 const my $EMPTY => q{};
+const my $TESTS_PER_TAG => 3;
 
 my $known_tests = 0;
 
@@ -63,7 +64,7 @@ for my $desc (@tagpaths) {
     $TAGS{$tagname} = 0;
 }
 
-$known_tests += 3 * scalar @tagpaths;
+$known_tests += $TESTS_PER_TAG * scalar @tagpaths;
 
 my @profilepaths
   = File::Find::Rule->file->name('*.profile')->in("$root/profiles");

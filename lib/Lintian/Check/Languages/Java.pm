@@ -39,6 +39,8 @@ with 'Lintian::Check';
 const my $EMPTY => q{};
 const my $HYPHEN => q{-};
 
+const my $BYTE_CODE_VERSION_OFFSET => 44;
+
 our $CLASS_REGEX = qr/\.(?:class|cljc?)/;
 
 sub visit_patched_files {
@@ -85,7 +87,6 @@ sub installable {
 
         my $files = $java_info->{files};
         my $manifest = $java_info->{manifest};
-        my $operm = $file->operm;
         my $jar_dir = dirname($file);
         my $classes = 0;
         my $datafiles = 1;
@@ -152,8 +153,8 @@ sub installable {
         $datafiles = 0
           if none { /\.(?:xml|properties|x?html|xhp)$/i } keys %{$files};
 
-        if($operm & 0111) {
-            # Executable ?
+        if ($file->is_executable) {
+
             $self->hint('executable-jar-without-main-class', $file->name)
               unless $manifest && $manifest->{'Main-Class'};
 
@@ -263,11 +264,9 @@ sub installable {
 
         if ($bad) {
             # Map the Class version to a Java version.
-            my $v = $jmajlow - 44;
-            $self->hint(
-                'incompatible-java-bytecode-format',
-                "Java${v} version (Class format: $jmajlow)"
-            );
+            my $java_version = $jmajlow - $BYTE_CODE_VERSION_OFFSET;
+            $self->hint('incompatible-java-bytecode-format',
+                "Java$java_version version (Class format: $jmajlow)");
         }
     }
 

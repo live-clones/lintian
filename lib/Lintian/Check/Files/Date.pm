@@ -25,10 +25,15 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
+
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+# value from dak CVS: Dinstall::PastCutOffYear
+const my $DINSTALL_CUTOFF_YEAR => 1975;
 
 has ALLOWED_ANCIENT_FILES => (
     is => 'rw',
@@ -45,8 +50,8 @@ sub visit_installed_files {
     my ($year) = ($file->date =~ /^(\d{4})/);
 
     $self->hint('package-contains-ancient-file', $file->name, $file->date)
-      if $year <= 1975 # value from dak CVS: Dinstall::PastCutOffYear
-      and not $self->ALLOWED_ANCIENT_FILES->matches_any($file->name);
+      if $year <= $DINSTALL_CUTOFF_YEAR
+      && !$self->ALLOWED_ANCIENT_FILES->matches_any($file->name);
 
     return;
 }

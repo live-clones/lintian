@@ -36,6 +36,9 @@ with 'Lintian::Check';
 
 const my $EMPTY => q{};
 
+# The maximum number of *.cmi files to show individually.
+const my $MAX_CMI => 3;
+
 has provided_o => (is => 'rwp', default => sub{ {} });
 has is_lib_package => (is => 'rwp', default => 0);
 has is_dev_package => (is => 'rwp', default => 0);
@@ -53,9 +56,6 @@ has dev_prefix => (is => 'rwp');
 
 # does the package provide a META file?
 has has_meta => (is => 'rwp', default => 0);
-
-# The maximum number of *.cmi files to show individually.
-our $MAX_CMI = 3;
 
 sub setup_installed_files {
     my ($self) = @_;

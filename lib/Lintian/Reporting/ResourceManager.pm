@@ -36,6 +36,9 @@ const my $SPACE => q{ };
 const my $SLASH => q{/};
 const my $EQUALS => q{=};
 
+const my $BASE64_UNIT => 4;
+const my $WIDELY_READABLE_FOLDER => 0755;
+
 =head1 NAME
 
 Lintian::Reporting::ResourceManager -- A simple resource manager for html_reports
@@ -132,7 +135,9 @@ sub install_resource {
     if ($opt && exists($opt->{'source_file'})) {
         $basename = $resource_name;
         $resource = $opt->{'source_file'};
-        if (index($basename, $SLASH) > -1) {
+
+        if ($basename =~ m{ / }msx) {
+
             croak encode_utf8(
                 join($SPACE,
                     qq(Resource "${resource_name}" must not contain "/"),
@@ -146,7 +151,7 @@ sub install_resource {
     $install_name = $digest->clone->hexdigest;
     $b64digest = $digest->b64digest;
 
-    while (length($b64digest) % 4) {
+    while (length($b64digest) % $BASE64_UNIT) {
         $b64digest .= $EQUALS;
     }
 
@@ -156,7 +161,7 @@ sub install_resource {
         my $ext = $1;
         $install_name .= $ext;
     }
-    mkdir($resource_root, 0755) if not -d $resource_root;
+    mkdir($resource_root, $WIDELY_READABLE_FOLDER) if not -d $resource_root;
     if ($method eq 'move') {
         rename($resource, "$resource_root/$install_name");
     } elsif ($method eq 'copy') {

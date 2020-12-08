@@ -24,6 +24,7 @@ use IPC::Run3;
 use Lintian::IPC::Run3 qw(safe_qx);
 
 const my $PLUS => q{+};
+const my $WAIT_STATUS_SHIFT => 8;
 
 my (%added, %removed, %opt);
 
@@ -40,9 +41,11 @@ Getopt::Long::GetOptions(%opthash)
 my ($commit_range) = @ARGV;
 if (not $commit_range) {
     my $describe = safe_qx(qw(git describe --abbrev=0));
-    if ($? != 0) {
-        die 'git describe failed with code ' . (($? >> 8) & 0xff);
-    }
+    my $status = $? >> $WAIT_STATUS_SHIFT;
+
+    die "git describe failed with code $status\n"
+      if $status;
+
     chomp($describe);
     if (not $describe) {
         die "git describe did not return anything.\n";

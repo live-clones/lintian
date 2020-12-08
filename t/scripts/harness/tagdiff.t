@@ -31,6 +31,7 @@ use Test::More;
 const my $EMPTY => q{};
 const my $SPACE => q{ };
 const my $LINESEP => qr/^/;
+const my $WAIT_STATUS_SHIFT => 8;
 
 # the files below were generated from changelog-file-general on Feb 1, 2019
 
@@ -191,7 +192,7 @@ sub tagdiff {
 
     my @command = ('tagdiff', $left_tiny->stringify, $right_tiny->stringify);
     my ($diff, $status) = capture_merged { system(@command); };
-    $status = ($status >> 8) & 255;
+    $status >>= $WAIT_STATUS_SHIFT;
 
     die 'Error executing: ' . join($SPACE, @command) . ": $!"
       if none { $_ eq $status } (0, 1);

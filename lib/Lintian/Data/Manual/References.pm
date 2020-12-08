@@ -23,10 +23,14 @@ use v5.20;
 use warnings;
 use utf8;
 
+use Const::Fast;
+
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Data';
+
+const my $THREE_PARTS => 3;
 
 =head1 NAME
 
@@ -75,7 +79,7 @@ has accumulator => (
               if defined $previous;
 
             my ($section, $title, $url)
-              = split($self->separator, $remainder, 3);
+              = split($self->separator, $remainder, $THREE_PARTS);
 
             my %entry;
             $entry{$section}{title} = $title;

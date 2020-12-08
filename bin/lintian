@@ -74,6 +74,8 @@ const my $EQUAL => q{=};
 const my $HYPHEN => q{-};
 const my $OPEN_PIPE => q{-|};
 
+const my $DEFAULT_TAG_LIMIT => 4;
+
 # only in GNOME; need original environment
 my $hyperlinks_capable = is_interactive && any { /^GNOME/ } keys %ENV;
 
@@ -550,13 +552,13 @@ if ($selected{color} eq 'never') {
 die encode_utf8("The hyperlink value must be on or off\n")
   unless any { $selected{hyperlinks} eq $_ } qw(on off);
 
-$selected{verbose} = -1
+$selected{verbose} = 0
   if $selected{quiet};
 
 if ($selected{verbose} || !is_interactive) {
     $selected{'tag-display-limit'} //= 0;
 } else {
-    $selected{'tag-display-limit'} //= 4;
+    $selected{'tag-display-limit'} //= $DEFAULT_TAG_LIMIT;
 }
 
 if ($selected{debug}) {
@@ -597,8 +599,8 @@ if (defined(my $status_log = $selected{'status-log'})) {
 }
 
 # check for arguments
-if ($#ARGV == -1
-    && !$selected{'packages-from-file'}) {
+unless (@ARGV || $selected{'packages-from-file'}) {
+
     my $ok = 0;
     # If debian/changelog exists, assume an implied
     # "../<source>_<version>_<arch>.changes" (or
@@ -1003,7 +1005,7 @@ sub END {
           unless defined $fno;
 
         next
-          if $fno > -1 && $already_closed{$fno}++;
+          if $fno >= 0 && $already_closed{$fno}++;
 
         eval {close $fd;};
         if (my $err = $@) {

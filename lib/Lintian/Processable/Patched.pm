@@ -40,6 +40,9 @@ const my $COLON => q{:};
 const my $SLASH => q{/};
 const my $NEWLINE => qq{\n};
 
+const my $NO_UMASK => 0000;
+const my $WAIT_STATUS_SHIFT => 8;
+
 =head1 NAME
 
 Lintian::Processable::Patched - access to sources with Debian patches applied
@@ -81,7 +84,7 @@ has patched => (
           if $ENV{'LINTIAN_DEBUG'};
 
         my $saved_umask = umask;
-        umask 0000;
+        umask $NO_UMASK;
 
         my @unpack_command= (
             qw(dpkg-source -q --no-check --extract),
@@ -92,7 +95,7 @@ has patched => (
         my $unpack_errors;
 
         run3(\@unpack_command, \undef, \undef, \$unpack_errors);
-        my $status = ($? >> 8);
+        my $status = ($? >> $WAIT_STATUS_SHIFT);
 
         $unpack_errors = decode_utf8($unpack_errors)
           if length $unpack_errors;

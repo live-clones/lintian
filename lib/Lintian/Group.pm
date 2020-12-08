@@ -48,6 +48,8 @@ use namespace::clean;
 const my $EMPTY => q{};
 const my $SLASH => q{/};
 
+const my $EXTRA_VERBOSE => 3;
+
 # A private table of supported types.
 my %SUPPORTED_TYPES = (
     'binary'  => 1,
@@ -428,12 +430,13 @@ sub process {
         my $group_id = $pivot->source . $SLASH . $pivot->source_version;
         my $group_usage
           = human_bytes(total_size([map { $_ } $self->get_processables]));
-        $OUTPUT->debug_msg(3, "Memory usage [group:$group_id]: $group_usage");
+        $OUTPUT->debug_msg($EXTRA_VERBOSE,
+            "Memory usage [group:$group_id]: $group_usage");
 
         for my $processable ($self->get_processables) {
             my $id = $processable->identifier;
             my $usage = human_bytes(total_size($processable));
-            $OUTPUT->debug_msg(3, "Memory usage [$id]: $usage");
+            $OUTPUT->debug_msg($EXTRA_VERBOSE, "Memory usage [$id]: $usage");
         }
     }
 

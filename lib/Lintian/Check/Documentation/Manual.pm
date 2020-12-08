@@ -50,6 +50,13 @@ const my $COMMA => q{,};
 const my $DOT => q{.};
 const my $NEWLINE => qq{\n};
 
+const my $USER_COMMAND_SECTION => 1;
+const my $SYSTEM_COMMAND_SECTION => 8;
+
+const my $WAIT_STATUS_SHIFT => 8;
+const my $MINIMUM_SHARED_OBJECT_SIZE => 256;
+const my $WIDE_SCREEN => 120;
+
 has local_manpages => (is => 'rw', default => sub { {} });
 
 sub spelling_tag_emitter {
@@ -79,7 +86,7 @@ sub visit_installed_files {
               unless $file->name
               =~ m{^usr/(?:X11R6|share)/man/(?:[^/]+/)?(?:man\d/)?$};
 
-        } elsif ($file->is_file && ($file->operm & 0111)) {
+        } elsif ($file->is_file && $file->is_executable) {
             $self->hint('executable-manual-page', $file->name);
         }
     }
@@ -187,8 +194,9 @@ sub visit_installed_files {
         }
         my @manfile = <$fd>;
         close $fd;
+
         # Is it a .so link?
-        if ($file->size < 256) {
+        if ($file->size < $MINIMUM_SHARED_OBJECT_SIZE) {
             my ($i, $first) = (0, $EMPTY);
             do {
                 $first = $manfile[$i++] || $EMPTY;
@@ -246,7 +254,7 @@ sub visit_installed_files {
             run3(\@command, \undef, \$stdout, \$stderr);
 
             my $exitcode = $?;
-            my $status = ($exitcode >> 8);
+            my $status = ($exitcode >> $WAIT_STATUS_SHIFT);
 
             $self->hint('bad-whatis-entry', $file)
               if $status == 2;
@@ -284,7 +292,7 @@ sub visit_installed_files {
             local $ENV{MANROFFSEQ} = $EMPTY;
 
             # set back to 80 when Bug#892423 is fixed in groff
-            local $ENV{MANWIDTH} = 120;
+            local $ENV{MANWIDTH} = $WIDE_SCREEN;
 
             my $stdout;
             my $stderr;
@@ -301,7 +309,7 @@ sub visit_installed_files {
             run3(\@command, \undef, \$stdout, \$stderr);
 
             my $exitcode = $?;
-            my $status = ($exitcode >> 8);
+            my $status = ($exitcode >> $WAIT_STATUS_SHIFT);
 
             my @lines = split(/\n/, $stderr);
 
@@ -559,7 +567,7 @@ sub breakdown_installed_files {
         my @sections = grep { defined } map { $_->{section} } @manpages;
         $self->hint('manual-page-for-system-command', $file)
           if $file->is_regular_file
-          && any { $_ == 1 } @sections;
+          && any { $_ == $USER_COMMAND_SECTION } @sections;
     }
 
     $self->hint('no-english-manual-page', $_)
@@ -578,7 +586,8 @@ sub breakdown_installed_files {
         my $section = $manpage->{section};
 
         $self->hint('spare-manual-page', $file)
-          if $section == 1 || $section == 8;
+          if $section == $USER_COMMAND_SECTION
+          || $section == $SYSTEM_COMMAND_SECTION;
     }
 
     return;

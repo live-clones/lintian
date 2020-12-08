@@ -58,10 +58,10 @@ sub always {
 
     if ($type eq 'binary' || $type eq 'source'){
         # Here we add length .deb / .dsc (in both cases +4)
-        $len += 4;
+        $len += length '.deb';
     } else {
         # .udeb, that's a +5
-        $len += 5;
+        $len += length '.udeb';
     }
 
     if ($type ne 'source') {
@@ -72,7 +72,7 @@ sub always {
             $extra = "$real ($len)";
         } else {
             # _all has length 4
-            $len += 4;
+            $len += length '_all';
         }
     }
     $extra = $len unless defined $extra;

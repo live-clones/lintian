@@ -37,6 +37,9 @@ with 'Lintian::Check';
 
 const my $SPACE => q{ };
 
+const my $MINIMUM_DEB_ARCHIVE_MEMBERS => 3;
+const my $INDEX_NOT_FOUND => -1;
+
 sub installable {
     my ($self) = @_;
 
@@ -58,14 +61,18 @@ sub installable {
         my @members = split(/\n/, $stdout);
         my $count = scalar(@members);
         my ($ctrl_member, $data_member);
-        if ($count < 3) {
+
+        if ($count < $MINIMUM_DEB_ARCHIVE_MEMBERS) {
             $self->hint('malformed-deb-archive',
-                "found only $count members instead of 3");
+"found only $count members instead of $MINIMUM_DEB_ARCHIVE_MEMBERS"
+            );
+
         } elsif ($members[0] ne 'debian-binary') {
             $self->hint('malformed-deb-archive',
                 "first member $members[0] not debian-binary");
+
         } elsif (
-            $count == 3 and none {
+            $count == $MINIMUM_DEB_ARCHIVE_MEMBERS && none {
                 substr($_, 0, 1) eq '_';
             }
             @members
@@ -76,19 +83,20 @@ sub installable {
             # "extra" members, because they can trigger more tags
             # (see below)
             (undef, $ctrl_member, $data_member) = @members;
+
         } else {
             my $ctrl_index
               = first_index { substr($_, 0, 1) ne '_' } @members[1..$#members];
             my $data_index;
 
-            if ($ctrl_index != -1) {
+            if ($ctrl_index != $INDEX_NOT_FOUND) {
                 # Since we searched only a sublist of @members, we have to
                 # add 1 to $ctrl_index
                 $ctrl_index++;
                 $ctrl_member = $members[$ctrl_index];
                 $data_index = first_index { substr($_, 0, 1) ne '_' }
                 @members[$ctrl_index+1..$#members];
-                if ($data_index != -1) {
+                if ($data_index != $INDEX_NOT_FOUND) {
                     # Since we searched only a sublist of @members, we
                     # have to adjust $data_index
                     $data_index += $ctrl_index + 1;

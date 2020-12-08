@@ -29,6 +29,7 @@ use Lintian::Tag;
 
 const my $SPACE => q{ };
 const my $INDENT => $SPACE x 4;
+const my $EXTRA_VERBOSE => 3;
 
 $ENV{LINTIAN_BASE} = realpath(THISDIR . '/..')
   // die 'Cannot resolve LINTIAN_BASE';
@@ -75,7 +76,8 @@ print "Severity\n";
 foreach my $s (@severities) {
     my $tags = $stats{severity}{$s} // [];
     print "  $s: " . @{$tags} . "\n";
-    print $INDENT . join("\n    ", sort @{$tags}) . "\n" if $verbose >= 3;
+    print $INDENT . join("\n    ", sort @{$tags}) . "\n"
+      if $verbose >= $EXTRA_VERBOSE;
 }
 
 foreach my $t (@types) {

@@ -51,6 +51,7 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use Exporter qw(import);
 use File::Temp qw(tempfile);
 use List::Util qw(shuffle);
@@ -64,6 +65,8 @@ our @EXPORT_OK = (qw(
       save_state_cache
       find_backlog
 ));
+
+const my $WIDELY_READABLE => 0644;
 
 =item load_state_cache(STATE_DIR)
 
@@ -121,7 +124,7 @@ sub save_state_cache {
 
         # There is no secret in this.  Set it to 0644, so it does not
         # require sudo access on lintian.d.o to read the file.
-        chmod(0644, $tmp_path);
+        chmod($WIDELY_READABLE, $tmp_path);
 
         rename($tmp_path, $state_file)
           or die("rename $tmp_path -> $state_file: $!");

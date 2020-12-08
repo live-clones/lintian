@@ -25,6 +25,7 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use Cwd qw(getcwd);
 use List::SomeUtils qw(any);
 use Time::HiRes qw(gettimeofday tv_interval);
@@ -37,6 +38,8 @@ use Lintian::Group;
 
 use Moo;
 use namespace::clean;
+
+const my $ANY_CHILD => -1;
 
 =head1 NAME
 
@@ -244,7 +247,7 @@ sub process{
 
         # interruptions can leave processes behind (manpages); wait and reap
         if (${$exit_code_ref} == 1) {
-            1 while waitpid(-1, WNOHANG) > 0;
+            1 while waitpid($ANY_CHILD, WNOHANG) > 0;
         }
 
         if ($option->{debug}) {

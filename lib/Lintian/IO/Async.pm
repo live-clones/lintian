@@ -58,6 +58,8 @@ const my $EMPTY => q{};
 const my $COLON => q{:};
 const my $NEWLINE => qq{\n};
 
+const my $WAIT_STATUS_SHIFT => 8;
+
 =head1 NAME
 
 Lintian::IO::Async - process functions based on IO::Async
@@ -91,7 +93,7 @@ sub safe_qx {
         command => [@command],
         on_finish => sub {
             my ($pid, $exitcode, $stdout, $stderr) = @_;
-            $status = ($exitcode >> 8);
+            $status = ($exitcode >> $WAIT_STATUS_SHIFT);
 
             if ($status) {
                 my $message = "Command @command exited with status $status";
@@ -147,7 +149,7 @@ sub get_deb_info {
         stderr => { into => \$dpkgerror },
         on_finish => sub {
             my ($self, $exitcode) = @_;
-            my $status = ($exitcode >> 8);
+            my $status = ($exitcode >> $WAIT_STATUS_SHIFT);
 
             if ($status) {
                 my $message= "Non-zero status $status from @dpkgcommand";
@@ -174,7 +176,7 @@ sub get_deb_info {
         stderr => { into => \$tarerror },
         on_finish => sub {
             my ($self, $exitcode) = @_;
-            my $status = ($exitcode >> 8);
+            my $status = ($exitcode >> $WAIT_STATUS_SHIFT);
 
             if ($status) {
                 my $message = "Non-zero status $status from @tarcommand";
@@ -239,7 +241,7 @@ sub unpack_and_index_piped_tar {
         stderr => { into => \$deberror },
         on_finish => sub {
             my ($self, $exitcode) = @_;
-            my $status = ($exitcode >> 8);
+            my $status = ($exitcode >> $WAIT_STATUS_SHIFT);
 
             if ($status) {
                 my $message
@@ -266,7 +268,7 @@ sub unpack_and_index_piped_tar {
         stderr => { into => \$extracterror },
         on_finish => sub {
             my ($self, $exitcode) = @_;
-            my $status = ($exitcode >> 8);
+            my $status = ($exitcode >> $WAIT_STATUS_SHIFT);
 
             if ($status) {
                 my $message = "Non-zero status $status from extract tar";
@@ -294,7 +296,7 @@ sub unpack_and_index_piped_tar {
         stderr => { into => \$namederror },
         on_finish => sub {
             my ($self, $exitcode) = @_;
-            my $status = ($exitcode >> 8);
+            my $status = ($exitcode >> $WAIT_STATUS_SHIFT);
 
             if ($status) {
                 my $message = "Non-zero status $status from index tar";
@@ -319,7 +321,7 @@ sub unpack_and_index_piped_tar {
         stderr => { into => \$numericerror },
         on_finish => sub {
             my ($self, $exitcode) = @_;
-            my $status = ($exitcode >> 8);
+            my $status = ($exitcode >> $WAIT_STATUS_SHIFT);
 
             if ($status) {
                 my $message = "Non-zero status $status from index tar";

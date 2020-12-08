@@ -79,6 +79,20 @@ const my $DOUBLE_QUOTE => q{"};
 const my $BACKSLASH => q{\\};
 const my $HASHBANG => q{#!};
 
+const my $MAXIMUM_LINK_DEPTH => 18;
+
+const my $BYTE_MAXIMUM => 255;
+const my $SINGLE_OCTAL_MASK => 07;
+const my $DUAL_OCTAL_MASK => 077;
+
+const my $ELF_MAGIC_SIZE => 4;
+const my $LINCITY_MAGIC_SIZE => 6;
+const my $SHELL_SCRIPT_MAGIC_SIZE => 2;
+
+const my $READ_BITS => 0444;
+const my $WRITE_BITS => 0222;
+const my $EXECUTABLE_BITS => 0111;
+
 const my $SETUID => 04000;
 const my $SETGID => 02000;
 
@@ -109,10 +123,10 @@ my $hardlinkpattern = qr/\s+link\s+to\s+/;
 
 # adapted from https://www.perlmonks.org/?node_id=1056606
 my %T = (
-    (map {chr() => chr} 0..0377),
-    (map {sprintf('%o',$_) => chr} 0..07),
-    (map {sprintf('%02o',$_) => chr} 0..077),
-    (map {sprintf('%03o',$_) => chr} 0..0377),
+    (map {chr() => chr} 0..$BYTE_MAXIMUM),
+    (map {sprintf('%o',$_) => chr} 0..($BYTE_MAXIMUM & $SINGLE_OCTAL_MASK)),
+    (map {sprintf('%02o',$_) => chr} 0..($BYTE_MAXIMUM & $DUAL_OCTAL_MASK)),
+    (map {sprintf('%03o',$_) => chr} 0..$BYTE_MAXIMUM),
     (split //, "r\rn\nb\ba\af\ft\tv\013"));
 
 sub unescape_c_style {
@@ -187,7 +201,9 @@ sub init_from_tar_output {
 
     # make sure directories end with a slash, except root
     $name .= $SLASH
-      if length $name && $self->perm =~ /^d/ && substr($name, -1) ne $SLASH;
+      if length $name
+      && $self->perm =~ / ^d /msx
+      && $name !~ m{ /$ }msx;
 
     $self->name($name);
 
@@ -442,7 +458,7 @@ has is_elf => (
         my ($self) = @_;
 
         return 1
-          if $self->magic(4) eq "\x7FELF";
+          if $self->magic($ELF_MAGIC_SIZE) eq "\x7FELF";
 
         return 0;
     });
@@ -461,10 +477,10 @@ has is_script => (
 
         # skip lincity data files; magic: #!#!#!
         return 0
-          if $self->magic(6) eq '#!#!#!';
+          if $self->magic($LINCITY_MAGIC_SIZE) eq '#!#!#!';
 
         return 0
-          unless $self->magic(2) eq $HASHBANG;
+          unless $self->magic($SHELL_SCRIPT_MAGIC_SIZE) eq $HASHBANG;
 
         return 1;
     });
@@ -746,28 +762,22 @@ at least one bit denoting executability set (bitmask 0111).
 
 =cut
 
-sub _any_bit_in_operm {
-    my ($self, $bitmask) = @_;
-
-    return ($self->path_info & $bitmask) ? 1 : 0;
-}
-
 sub is_readable   {
     my ($self) = @_;
 
-    return $self->_any_bit_in_operm(0444);
+    return $self->path_info & $READ_BITS;
 }
 
 sub is_writable   {
     my ($self) = @_;
 
-    return $self->_any_bit_in_operm(0222);
+    return $self->path_info & $WRITE_BITS;
 }
 
 sub is_executable {
     my ($self) = @_;
 
-    return $self->_any_bit_in_operm(0111);
+    return $self->path_info & $EXECUTABLE_BITS;
 }
 
 =item all_bits_set
@@ -938,7 +948,7 @@ sub follow {
       if defined $self->dereferenced;
 
     # set limit
-    $maxlinks //= 18;
+    $maxlinks //= $MAXIMUM_LINK_DEPTH;
 
     # catch recursive links
     return undef

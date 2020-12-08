@@ -48,7 +48,20 @@ const my $HASHBANG => q{#!};
 # create one automatically.  Currently it always uses compatibility level 5.
 # It may be better to look at what version of cdbs the package depends on and
 # from that derive the compatibility level....
-my $cdbscompat = 5;
+const my $CDBS_COMPAT => 5;
+
+# minimum versions for features
+const my $BRACE_EXPANSION => 5;
+const my $USES_EXECUTABLE_FILES => 9;
+const my $DH_PARALLEL_NOT_NEEDED => 10;
+const my $REQUIRES_AUTOTOOLS => 10;
+const my $USES_AUTORECONF => 10;
+const my $INVOKES_SYSTEMD => 10;
+const my $BETTER_SYSTEMD_INTEGRATION => 11;
+const my $VERSIONED_PREREQUISITE_AVAILABLE => 11;
+
+const my $LEVENSHTEIN_TOLERANCE => 3;
+const my $MANY_OVERRIDES => 20;
 
 my $MISC_DEPENDS = Lintian::Relation->new->load('${misc:Depends}');
 
@@ -240,7 +253,7 @@ sub source {
             $inclcdbs = 1;
 
             # CDBS sets DH_COMPAT but doesn't export it.
-            $dhcompatvalue = $cdbscompat;
+            $dhcompatvalue = $CDBS_COMPAT;
 
         } elsif ($line =~ /^\s*export\s+DH_COMPAT\s*:?=\s*([^\s]+)/) {
             $level = $1;
@@ -276,7 +289,8 @@ sub source {
 
                 my %distance
                   = map { $_ => distance($target, $_) } @KNOWN_DH_COMMANDS;
-                my @near = grep { $distance{$_} < 3 } keys %distance;
+                my @near = grep { $distance{$_} < $LEVENSHTEIN_TOLERANCE }
+                  keys %distance;
                 my $nearest = min_by { $distance{$_} } @near;
 
                 $self->hint('typo-in-debhelper-override-target',
@@ -455,8 +469,8 @@ sub source {
                 $level = $compat_value;
             }
             $self->hint('uses-debhelper-compat-file')
-              if $compat_value >= 11
-              and $compat_value < $compat_level->value('experimental');
+              if $compat_value >= $VERSIONED_PREREQUISITE_AVAILABLE
+              && $compat_value < $compat_level->value('experimental');
         } else {
             $self->hint('debhelper-compat-file-is-empty');
         }
@@ -491,23 +505,23 @@ sub source {
             'debian-rules-uses-deprecated-systemd-override',
             "override_dh_systemd_$suffix$arch",
             "(line $line)"
-        ) if $line and $level >= 11;
+        ) if $line && $level >= $BETTER_SYSTEMD_INTEGRATION;
     }
 
     my $num_overrides = scalar(keys %overrides);
     $self->hint('excessive-debhelper-overrides', $num_overrides)
-      if $num_overrides >= 20;
+      if $num_overrides >= $MANY_OVERRIDES;
 
     $self->hint(
         'debian-rules-uses-unnecessary-dh-argument',
         'dh ... --parallel',
         "(line $seen_dh_parallel)"
-    ) if $seen_dh_parallel and $level >= 10;
+    ) if $seen_dh_parallel && $level >= $DH_PARALLEL_NOT_NEEDED;
 
     $self->hint(
         'debian-rules-uses-unnecessary-dh-argument',
         "dh ... --with=systemd (line $seen_dh_systemd)"
-    ) if $seen_dh_systemd and $level >= 10;
+    ) if $seen_dh_systemd && $level >= $INVOKES_SYSTEMD;
 
     # Check the files in the debian directory for various debhelper-related
     # things.
@@ -572,7 +586,7 @@ sub source {
             # a list of filenames.
             if ($filename_configs->recognizes($base)) {
                 next unless $file->is_open_ok;
-                if ($level < 9) {
+                if ($level < $USES_EXECUTABLE_FILES) {
                     # debhelper only use executable files in compat 9
                     $self->tag_if_executable($file);
                 } else {
@@ -608,7 +622,7 @@ sub source {
 
                     next
                       if $line =~ /^\#/
-                      && $level >= 5;
+                      && $level >= $BRACE_EXPANSION;
 
                     if ($line =~ /((?<!\\)\{(?:[^\s\\\}]*?,)+[^\\\}\s,]*,*\})/)
                     {
@@ -642,8 +656,8 @@ sub source {
           if $dep eq 'debhelper'; #handled above
 
         next
-          if $level >= 10
-          and any { $_ eq $dep } qw(autotools-dev dh-strip-nondeterminism);
+          if $level >= $REQUIRES_AUTOTOOLS
+          && (any { $_ eq $dep } qw(autotools-dev dh-strip-nondeterminism));
 
         $self->hint('missing-build-dependency-for-dh_-command',
             "$command => $dep")
@@ -674,9 +688,12 @@ sub source {
       unless $bdepends->implies("debhelper (>= ${dh_bd_version}~)")
       || $bdepends->implies("debhelper-compat (= ${dh_bd_version})");
 
-    if ($level >= 10) {
+    if ($level >= $USES_AUTORECONF) {
         for my $pkg (qw(dh-autoreconf autotools-dev)) {
-            next if $pkg eq 'autotools-dev' and $uses_autotools_dev_dh;
+
+            next
+              if $pkg eq 'autotools-dev' and $uses_autotools_dev_dh;
+
             $self->hint('useless-autoreconf-build-depends', $pkg)
               if $bdepends->implies($pkg);
         }

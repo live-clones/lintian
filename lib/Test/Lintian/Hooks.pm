@@ -63,6 +63,7 @@ use Path::Tiny;
 use Unicode::UTF8 qw(encode_utf8 decode_utf8);
 
 const my $NEWLINE => qq{\n};
+const my $WAIT_STATUS_SHIFT => 8;
 
 =head1 FUNCTIONS
 
@@ -84,7 +85,7 @@ sub sed_hook {
     my @command = (qw{sed -r -f}, $script, $path);
     my $bytes;
     run3(\@command, \undef, \$bytes);
-    my $status = ($? >> 8);
+    my $status = ($? >> $WAIT_STATUS_SHIFT);
 
     croak encode_utf8("Hook failed: sed -ri -f $script $path > $output: $!")
       if $status;
@@ -191,7 +192,7 @@ sub find_missing_prerequisites {
     # run dpkg-checkbuilddeps
     my $command = "dpkg-checkbuilddeps $temp";
     my ($missing, $status) = capture_merged { system($command); };
-    $status = ($status >> 8) & 255;
+    $status >>= $WAIT_STATUS_SHIFT;
 
     $missing = decode_utf8($missing)
       if length $missing;

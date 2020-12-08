@@ -25,10 +25,14 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
+
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $WIDELY_READABLE => 0644;
 
 sub visit_installed_files {
     my ($self, $file) = @_;
@@ -36,10 +40,11 @@ sub visit_installed_files {
     # /etc/emacs.*
     if (   $file->is_file
         && $file->name =~ m{^etc/emacs.*/\S}
-        && $file->operm != 0644) {
+        && $file->operm != $WIDELY_READABLE) {
 
         $self->hint('bad-permissions-for-etc-emacs-script',
-            sprintf('%s %04o != 0644', $file->name, $file->operm));
+            $file->name,
+            sprintf('%04o != %04o', $file->operm, $WIDELY_READABLE));
     }
 
     return;

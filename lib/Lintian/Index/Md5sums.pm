@@ -35,6 +35,8 @@ use namespace::clean;
 const my $EMPTY => q{};
 const my $NULL => qq{\0};
 
+const my $WAIT_STATUS_SHIFT => 8;
+
 =head1 NAME
 
 Lintian::Index::Md5sums - calculate checksums for index.
@@ -75,7 +77,7 @@ sub add_md5sums {
       md5sum --
     );
     run3(\@command, \$input, \$stdout, \$stderr);
-    my $status = ($? >> 8);
+    my $status = ($? >> $WAIT_STATUS_SHIFT);
 
     # allow processing of file names with non UTF-8 bytes
     $stderr = decode_utf8($stderr)

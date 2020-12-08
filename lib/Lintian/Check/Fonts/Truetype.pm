@@ -36,6 +36,11 @@ with 'Lintian::Check';
 const my $SPACE => q{ };
 const my $COMMA => q{,};
 
+const my $PERMISSIONS_MASK => 0x0f;
+const my $NEVER_EMBED_FLAG => 0x02;
+const my $PRINT_PREVIEW_ONLY_FLAG => 0x04;
+const my $EDIT_ONLY_FLAG => 0x08;
+
 sub visit_installed_files {
     my ($self, $file) = @_;
 
@@ -62,13 +67,13 @@ sub visit_installed_files {
 
     my @clauses;
 
-    my $permissions = $fs_type & 0x00f;
+    my $permissions = $fs_type & $PERMISSIONS_MASK;
     push(@clauses, 'never embed')
-      if $permissions & 0x02;
+      if $permissions & $NEVER_EMBED_FLAG;
     push(@clauses, 'preview/print only')
-      if $permissions & 0x04;
+      if $permissions & $PRINT_PREVIEW_ONLY_FLAG;
     push(@clauses, 'edit only')
-      if $permissions & 0x08;
+      if $permissions & $EDIT_ONLY_FLAG;
 
     my $terms;
     $terms = join($COMMA . $SPACE, @clauses)

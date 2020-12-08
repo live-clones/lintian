@@ -53,6 +53,10 @@ const my $EMPTY => q{};
 const my $SPACE => q{ };
 const my $SLASH => q{/};
 
+const my $MAXIMUM_SIZE_STANDARD_ICON => 32;
+const my $MAXIMUM_SIZE_32X32_ICON => 32;
+const my $MAXIMUM_SIZE_16X16_ICON => 16;
+
 # This is a list of all tags that should be in every menu item.
 my @req_tags = qw(needs section title command);
 
@@ -230,9 +234,9 @@ sub installable {
                     $self->hint('executable-desktop-file',
                         sprintf('%s %04o',$file, $file->operm));
                 }
-                if (index($file, 'template') == -1) {
-                    push(@desktop_files, $file);
-                }
+
+                push(@desktop_files, $file)
+                  unless $file->name =~ / template /msx;
             }
         }
     }
@@ -472,17 +476,17 @@ sub verify_line {
         }
     }
 
-    if (exists($vals{'icon'})) {
-        $self->verify_icon($menufile, $fullname, $linecount,$vals{'icon'}, 32);
-    }
-    if (exists($vals{'icon32x32'})) {
-        $self->verify_icon($menufile, $fullname, $linecount,
-            $vals{'icon32x32'}, 32);
-    }
-    if (exists($vals{'icon16x16'})) {
-        $self->verify_icon($menufile, $fullname, $linecount,
-            $vals{'icon16x16'}, 16);
-    }
+    $self->verify_icon($menufile, $fullname, $linecount,$vals{'icon'},
+        $MAXIMUM_SIZE_STANDARD_ICON)
+      if exists $vals{'icon'};
+
+    $self->verify_icon($menufile, $fullname, $linecount,
+        $vals{'icon32x32'}, $MAXIMUM_SIZE_32X32_ICON)
+      if exists $vals{'icon32x32'};
+
+    $self->verify_icon($menufile, $fullname, $linecount,
+        $vals{'icon16x16'}, $MAXIMUM_SIZE_16X16_ICON)
+      if exists $vals{'icon16x16'};
 
     # Check the needs tag.
     my $needs = lc($vals{'needs'}); # needs is case insensitive.

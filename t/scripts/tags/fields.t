@@ -44,6 +44,7 @@ use Lintian::Profile;
 
 const my $EMPTY => q{};
 const my $SLASH => q{/};
+const my $FIXED_TESTS_PER_FILE => 8;
 
 my @tagpaths = sort File::Find::Rule->file()->name('*.tag')->in('tags');
 
@@ -56,7 +57,7 @@ my @mandatory = qw(Tag Severity Check Explanation);
 my @disallowed = qw(Reference References Ref Info Certainty);
 
 # tests per desc
-my $perfile = 8 + scalar @mandatory + scalar @disallowed;
+my $perfile = $FIXED_TESTS_PER_FILE + scalar @mandatory + scalar @disallowed;
 
 # set the testing plan
 plan tests => $perfile * scalar @tagpaths;

@@ -557,10 +557,9 @@ sub installable {
             || (   $fname =~ m{^usr/lib/python3/.+\.cpython-\d+([a-z]+)\.so$}
                 && $1 !~ /d/)
         ) {
-            if (index($file->strings, 'numpy') > -1
-                and $file->strings =~ $NUMPY_REGEX) {
-                $uses_numpy_c_abi = 1;
-            }
+            $uses_numpy_c_abi = 1
+              if $file->strings =~ / numpy /msx
+              && $file->strings =~ $NUMPY_REGEX;
         }
 
         # Something other than detached debugging symbols in

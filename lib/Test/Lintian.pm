@@ -83,6 +83,7 @@ use Lintian::Tag;
 
 const my $EMPTY => q{};
 const my $COLON => q{:};
+const my $MAXIMUM_TAG_LENGTH => 68;
 
 my %severities = map { $_ => 1 } @Lintian::Tag::SEVERITIES;
 my %check_types = map { $_ => 1 } qw(binary changes source udeb);
@@ -222,7 +223,8 @@ sub test_check_desc {
             $tag = '<N/A>' if $tag eq $EMPTY;
             $builder->ok($tag =~ /^[\w0-9.+-]+$/, 'Tag has valid characters')
               or $builder->diag("$cname: $tag\n");
-            $builder->cmp_ok(length $tag, '<=', 68, 'Tag is not too long')
+            $builder->cmp_ok(length $tag, '<=', $MAXIMUM_TAG_LENGTH,
+                'Tag is not too long')
               or $builder->diag("$cname: $tag\n");
 
             # Severity

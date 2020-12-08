@@ -36,6 +36,9 @@ with 'Lintian::Check';
 
 const my $VERTICAL_BAR => q{|};
 
+# 276 is 255 bytes (maximal length for a filename) plus gzip overhead
+const my $MAXIMUM_EMPTY_GZIP_SIZE => 276;
+
 # a list of regex for detecting documentation file checked against basename (xi)
 my @DOCUMENTATION_FILE_REGEXES = qw{
   \.docx?$
@@ -167,7 +170,7 @@ sub visit_installed_files {
         # executable in /usr/share/doc ?
         if (   $file->is_file
             && $file->name !~ m{^usr/share/doc/(?:[^/]+/)?examples/}
-            && ($file->operm & 0111)) {
+            && $file->is_executable) {
 
             if ($file->is_script) {
                 $self->hint('script-in-usr-share-doc', $file->name);
@@ -191,13 +194,10 @@ sub visit_installed_files {
             }
         }
 
-        # gzipped zero byte files:
-        # 276 is 255 bytes (maximal length for a filename)
-        # + gzip overhead
-        if (    $file->name =~ m{\.gz$}
-            and $file->is_regular_file
-            and $file->size <= 276
-            and $file->file_info =~ m/gzip compressed/) {
+        if (   $file->name =~ / [.]gz $/msx
+            && $file->is_regular_file
+            && $file->size <= $MAXIMUM_EMPTY_GZIP_SIZE
+            && $file->file_info =~ / gzip \s compressed /msx) {
 
             open(my $fd, '<:gzip', $file->unpacked_path);
             my $f = <$fd>;

@@ -25,10 +25,14 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
+
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $READ_WRITE_PERMISSIONS => 0644;
 
 sub visit_installed_files {
     my ($self, $file) = @_;
@@ -46,8 +50,10 @@ sub visit_installed_files {
     # NB: cron ships ".placeholder" files in etc/cron.d,
     # which we shouldn't tag.
     $self->hint('bad-permissions-for-etc-cron.d-script',
-        sprintf('%s %04o != 0644', $file->name, $file->operm))
-      if $file->name =~ m{^etc/cron\.d/[^\.]} && $file->operm != 0644;
+        $file->name,
+        sprintf('%04o != %04o', $file->operm, $READ_WRITE_PERMISSIONS))
+      if $file->name =~ m{ ^ etc/cron\.d/ [^.] }msx
+      && $file->operm != $READ_WRITE_PERMISSIONS;
 
     return;
 }

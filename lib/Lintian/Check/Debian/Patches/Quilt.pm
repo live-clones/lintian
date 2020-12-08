@@ -154,7 +154,7 @@ sub source {
                   unless $line =~ m{^(?:Index: |=+$|diff .+|index |From: )};
 
                 $has_template_description = 1
-                  if index($line, $PATCH_DESC_TEMPLATE) != -1;
+                  if $line =~ / \Q$PATCH_DESC_TEMPLATE\E /msx;
             }
             close($patch_fd);
 

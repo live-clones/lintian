@@ -616,90 +616,75 @@ sub read_profile {
     $self->enable_tag($_) for @enable_tags;
     $self->disable_tag($_) for @disable_tags;
 
-    # section counter
-    my $position = 2;
+    my $section_number = 2;
 
     for my $section (@sections){
 
         my @valid_fields = qw(Tags Overridable Severity);
         my @unknown_fields = $section->extra(@valid_fields);
         croak encode_utf8(
-            "Unknown fields in section $position of profile $profile_name: "
+"Unknown fields in section $section_number of profile $profile_name: "
               . join($SPACE, @unknown_fields))
           if @unknown_fields;
 
         my @tags = $section->trimmed_list('Tags', qr/\s*,\s*/);
         croak encode_utf8(
-"Tags field missing or empty in section $position of profile $profile_name"
+"Tags field missing or empty in section $section_number of profile $profile_name"
         )unless @tags;
 
         my $severity = $section->unfolded_value('Severity');
         croak encode_utf8(
-"Profile $profile_name contains invalid severity $severity in section $position"
+"Profile $profile_name contains invalid severity $severity in section $section_number"
           )
           if length $severity && none { $severity eq $_ }
         @Lintian::Tag::SEVERITIES;
 
-        my $overridable
-          = $self->_parse_boolean($section->unfolded_value('Overridable'),
-            -1, $profile_name,$position);
+        my $overridable = $section->unfolded_value('Overridable') || 'yes';
+        if ($overridable !~ / ^ -? \d+ $ /msx) {
+            my $lowercase = lc $overridable;
+
+            if ($lowercase =~ / ^ y(?:es)? | true $ /msx) {
+                $overridable = 1;
+
+            } elsif ($lowercase =~ / ^ n[o]? | false $ /msx) {
+                $overridable = 0;
+
+            } else {
+                my $position = $section->position('Overridable');
+                croak encode_utf8(
+"$overridable is not a boolean value in profile $profile_name (line $position)"
+                );
+            }
+        }
 
         for my $tagname (@tags) {
 
             my $tag = $self->known_tags_by_name->{$tagname};
             croak encode_utf8(
-"Unknown tag $tagname in profile $profile_name (section $position)"
+"Unknown tag $tagname in profile $profile_name (section $section_number)"
             )unless defined $tag;
 
             croak encode_utf8(
-"Classification tag $tagname cannot take a severity (profile $profile_name, section $position"
+"Classification tag $tagname cannot take a severity (profile $profile_name, section $section_number"
             )if $tag->visibility eq 'classification';
 
             $tag->effective_severity($severity)
               if length $severity;
 
-            if ($overridable != -1) {
-                if ($overridable) {
-                    delete $self->non_overridable_tags->{$tagname};
-                } else {
-                    $self->non_overridable_tags->{$tagname} = 1;
-                }
+            if ($overridable) {
+                delete $self->non_overridable_tags->{$tagname};
+            } else {
+                $self->non_overridable_tags->{$tagname} = 1;
             }
         }
 
     } continue {
-        $position++;
+        $section_number++;
     }
 
     $self->our_vendor($self->profile_list->[0]);
 
     return;
-}
-
-# $self->_parse_boolean($text, $default, $profile, $position);
-#
-# Parse $text as a string representing a bool; if undefined return $default.
-# $profile and $position are the Profile name and section number - used for
-# error reporting.
-sub _parse_boolean {
-    my ($self, $text, $default, $profile, $position) = @_;
-
-    return $default
-      unless defined $text;
-
-    return $text == 0 ? 0 : 1
-      if $text =~ /^-?\d+$/;
-
-    $text = lc $text;
-
-    return 1
-      if $text eq 'true' or $text =~ /^y(?:es)?$/;
-
-    return 0
-      if $text eq 'false' or $text =~ /^no?$/;
-
-    croak encode_utf8(
-        "$text is not a boolean value in $profile (section $position)");
 }
 
 =item display_level_for_tag

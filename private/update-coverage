@@ -29,6 +29,7 @@ use Lintian::Deb822::Parser qw(read_dpkg_control);
 
 const my $EMPTY => q{};
 const my $SPACE => q{ };
+const my $PERCENTAGE => 100;
 
 $ENV{LINTIAN_BASE} = realpath(THISDIR . '/..')
   // die 'Cannot resolve LINTIAN_BASE';
@@ -105,15 +106,18 @@ for my $tagfile (glob('testset/tags.*')) {
 $ltc = $total - scalar keys %tags;
 $cltc = $check_total - scalar keys %checks;
 
-my $tcr = $total ? sprintf ' (%.02f%%)', ($tc / $total) * 100 : $EMPTY;
-my $ltcr = $total ? sprintf ' (%.02f%%)', ($ltc / $total) * 100 : $EMPTY;
+my $tcr = $total ? sprintf ' (%.02f%%)', ($tc / $total) * $PERCENTAGE : $EMPTY;
+my $ltcr
+  = $total
+  ? sprintf ' (%.02f%%)', ($ltc / $total) * $PERCENTAGE
+  : $EMPTY;
 my $ctcr
   = $check_total
-  ? sprintf ' (%.02f%%)', ($ctc / $check_total) * 100
+  ? sprintf ' (%.02f%%)', ($ctc / $check_total) * $PERCENTAGE
   : $EMPTY;
 my $cltcr
   = $check_total
-  ? sprintf ' (%.02f%%)', ($cltc / $check_total) * 100
+  ? sprintf ' (%.02f%%)', ($cltc / $check_total) * $PERCENTAGE
   : $EMPTY;
 # Open COVERAGE and print out a date stamp.
 open(my $coverage, '>', 't/COVERAGE') or die "Cannot create t/COVERAGE: $!\n";

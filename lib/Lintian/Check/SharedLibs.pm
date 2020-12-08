@@ -41,6 +41,8 @@ const my $EMPTY => q{};
 const my $SPACE => q{ };
 const my $SLASH => q{/};
 
+const my $WIDELY_READABLE => 0644;
+
 # not presently used
 #my $UNKNOWN_SHARED_LIBRARY_EXCEPTIONS
 #  = $self->profile->load_data('shared-libs/unknown-shared-library-exceptions');
@@ -83,9 +85,12 @@ sub installable {
         my $fileinfo = $file->file_info;
         if (   $fileinfo =~ m/^[^,]*\bELF\b/
             && $fileinfo =~ m/(?:shared object|pie executable)/) {
-            my $perm = $file->operm;
+
             my $debug = defined $objdump->{$file}{DEBUG};
-            if ($debug and $perm & 0111 and $file !~ m/\.so(?:\.|$)/) {
+            if (   $debug
+                && $file->is_executable
+                && $file->name !~ / [.]so (?: [.] | $ ) /msx) {
+
                 # position-independent executable
             } else {
                 $sharedobject{$file} = 1;
@@ -156,7 +161,7 @@ sub installable {
 
             # executable?
             my $perms = sprintf('%04o', $perm);
-            if ($perm & 0111) {
+            if ($cur_file->is_executable) {
                 # Yes.  But if the library has an INTERP section, it's
                 # designed to do something useful when executed, so don't
                 # report an error.  Also give ld.so a pass, since it's
@@ -164,7 +169,8 @@ sub installable {
                 $self->hint('shared-library-is-executable', $cur_file, $perms)
                   unless ($objdump->{$cur_file}{INTERP}
                     || $cur_file =~ m{^lib.*/ld-[\d.]+\.so$});
-            } elsif ($perm != 0644) {
+
+            } elsif ($perm != $WIDELY_READABLE) {
                 $self->hint('odd-permissions-on-shared-library',
                     $cur_file, $perms);
             }
@@ -193,9 +199,12 @@ sub installable {
 
                 my ($field, $value) = ($1, $2);
                 if ($field eq 'libdir') {
-                    # dirname with leading slash and without the trailing one.
-                    my $expected = $SLASH . substr($cur_file->dirname, 0, -1);
+
                     $value =~ s{/+$}{};
+
+                    # dirname with leading slash and without the trailing one.
+                    my $expected = $SLASH . $cur_file->dirname;
+                    $expected =~ s{ /$ }{}msx;
 
                     # python-central is a special case since the
                     # libraries are moved at install time.
@@ -305,10 +314,12 @@ sub installable {
                 if (defined $madir) {
                     # For i386-*, the triplet GCC uses can be i586-* or i686-*.
                     if ($madir =~ /^i386-/) {
-                        for my $n (5..6) {
-                            $madir =~ s/^i./i$n/;
-                            push @madirs, $madir;
-                        }
+                        my $five = $madir;
+                        $five =~ s/^ i. /i5/msx;
+                        my $six = $madir;
+                        $six =~ s/^ i. /i6/msx;
+                        push(@madirs, $five, $six);
+
                     } else {
                         push @madirs, $madir;
                     }
@@ -384,12 +395,12 @@ sub installable {
     }
     @shlibs = grep { !$unversioned_shlibs{$_} } keys %SONAME;
 
-    if ($#shlibs == -1) {
+    if (!@shlibs) {
         # no shared libraries included in package, thus shlibs control
         # file should not be present
-        if ($shlibsf) {
-            $self->hint('empty-shlibs');
-        }
+        $self->hint('empty-shlibs')
+          if $shlibsf;
+
     } else {
         # shared libraries included, thus shlibs control file has to exist
         if (not $shlibsf) {
@@ -472,12 +483,12 @@ sub installable {
 
     # 5th step: check symbols control file.  Add back in the unversioned shared
     # libraries, since they can still have symbols files.
-    if ($#shlibs == -1 and not %unversioned_shlibs) {
+    if (!@shlibs && !%unversioned_shlibs) {
         # no shared libraries included in package, thus symbols
         # control file should not be present
-        if ($symbolsf) {
-            $self->hint('empty-shared-library-symbols');
-        }
+        $self->hint('empty-shared-library-symbols')
+          if $symbolsf;
+
     } elsif (not $symbolsf) {
         if ($type ne 'udeb') {
             for my $shlib (@shlibs, keys %unversioned_shlibs) {

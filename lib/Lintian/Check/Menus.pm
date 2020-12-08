@@ -81,10 +81,10 @@ sub visit_installed_files {
     if ($file->is_file) { # file checks
          # menu file?
         if ($file =~ m{^usr/(lib|share)/menu/\S}) { # correct permissions?
-            if ($file->operm & 0111) {
-                $self->hint('executable-menu-file',
-                    sprintf('%s %04o', $file, $file->operm));
-            }
+
+            $self->hint('executable-menu-file',
+                sprintf('%s %04o', $file, $file->operm))
+              if $file->is_executable;
 
             return
               if $file =~ m{^usr/(?:lib|share)/menu/README$};

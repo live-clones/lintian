@@ -26,6 +26,8 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
+
 use Moo;
 use namespace::clean;
 
@@ -33,9 +35,11 @@ with 'Lintian::Check';
 
 # Threshold in kB of /usr/share to trigger this warning.  Consider that the
 # changelog alone can be quite big, and cannot be moved away.
-my $THRESHOLD_SIZE_SOFT = 4096;
-my $THRESHOLD_SIZE_HARD = 8192;
-my $THRESHOLD_PERCENTAGE = 50;
+const my $KIB_SIZE_FACTOR => 1024;
+const my $THRESHOLD_SIZE_SOFT => 4096;
+const my $THRESHOLD_SIZE_HARD => 8192;
+const my $PERCENT => 100;
+const my $THRESHOLD_PERCENTAGE => 50;
 
 has total_size => (is => 'rwp', default => 0);
 has usrshare_size => (is => 'rwp', default => 0);
@@ -69,10 +73,11 @@ sub breakdown_installed_files {
       if $self->total_size == 0;
 
     # convert the totals to kilobytes.
-    my $size = sprintf('%.0f', $self->total_size / 1024);
-    my $size_usrshare = sprintf('%.0f', $self->usrshare_size / 1024);
+    my $size = sprintf('%.0f', $self->total_size / $KIB_SIZE_FACTOR);
+    my $size_usrshare
+      = sprintf('%.0f', $self->usrshare_size / $KIB_SIZE_FACTOR);
     my $percentage
-      = sprintf('%.0f', 100 * $self->usrshare_size / $self->total_size);
+      = sprintf('%.0f', ($self->usrshare_size / $self->total_size) * $PERCENT);
 
     $self->hint(
         'arch-dep-package-has-big-usr-share',

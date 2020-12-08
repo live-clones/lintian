@@ -34,24 +34,36 @@ with 'Lintian::Check';
 
 const my $SLASH => q{/};
 
+const my $MAXIMUM_LOW_RESERVED => 99;
+const my $MAXIMUM_HIGH_RESERVED => 64_999;
+const my $MINIMUM_HIGH_RESERVED => 60_000;
+const my $NOBODY => 65_534;
+
 sub visit_installed_files {
     my ($self, $file) = @_;
 
-    if (
-        !(
-               $file->uid < 100
-            || $file->uid == 65_534
-            || ($file->uid >= 60_000 && $file->uid < 65_000))
-        || !(
-               $file->gid < 100
-            || $file->gid == 65_534
-            || ($file->gid >= 60_000 && $file->gid < 65_000))
-    ) {
-        $self->hint('wrong-file-owner-uid-or-gid', $file->name,
-            $file->uid . $SLASH . $file->gid);
-    }
+    $self->hint('wrong-file-owner-uid-or-gid', $file->name,
+        $file->uid . $SLASH . $file->gid)
+      if out_of_bounds($file->uid)
+      || out_of_bounds($file->gid);
 
     return;
+}
+
+sub out_of_bounds {
+    my ($id) = @_;
+
+    return 0
+      if $id <= $MAXIMUM_LOW_RESERVED;
+
+    return 0
+      if $id == $NOBODY;
+
+    return 0
+      if $id >= $MINIMUM_HIGH_RESERVED
+      && $id <= $MAXIMUM_HIGH_RESERVED;
+
+    return 1;
 }
 
 1;

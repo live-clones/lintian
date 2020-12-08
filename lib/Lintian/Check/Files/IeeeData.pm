@@ -68,7 +68,7 @@ sub visit_installed_files {
         =~ m{/(?:[^/]-)?(?:oui|iab)(?:\.(txt|idx|db))?(?:\.$regex)?\Z}x) {
 
         # see #785662
-        if (index($file->name,'oui') > -1 || index($file->name,'iab') > -1) {
+        if ($file->name =~ / oui /msx || $file->name =~ / iab /msx) {
 
             $self->hint('package-installs-ieee-data', $file->name)
               unless $self->processable->source eq 'ieee-data';

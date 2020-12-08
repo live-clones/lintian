@@ -50,6 +50,9 @@ use Unicode::UTF8 qw(encode_utf8);
 # record.
 const my $TAR_RECORD_SIZE => 20 * 512;
 
+# using 4096 * $TAR_RECORD_SIZE tripped up older kernels < 5.7
+const my $READ_CHUNK => 4 * 1024;
+
 const my $EMPTY => q{};
 
 =head1 NAME
@@ -173,9 +176,7 @@ sub unpack_and_index_piped_tar {
         for my $handle (@ready) {
 
             my $buffer;
-
-            # using 4096 * $TAR_RECORD_SIZE tripped up older kernels < 5.7
-            my $length = sysread($handle, $buffer, 4 * 1024);
+            my $length = sysread($handle, $buffer, $READ_CHUNK);
 
             die encode_utf8("Error from child: $!\n")
               unless defined $length;

@@ -32,10 +32,15 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
+
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $KEEP_EMPTY_FIELDS => -1;
+const my $LAST_ITEM => -1;
 
 # list of files to check for a trailing whitespace characters
 my %PROHIBITED_TRAILS = (
@@ -58,7 +63,7 @@ sub source {
           unless $file->is_valid_utf8;
 
         my $contents = $file->decoded_utf8;
-        my @lines = split(/\n/, $contents, -1);
+        my @lines = split(/\n/, $contents, $KEEP_EMPTY_FIELDS);
 
         my @trailing_whitespace;
         my @empty_at_end;
@@ -81,7 +86,8 @@ sub source {
         }
 
         # require a newline at end and remove it
-        if (scalar @empty_at_end && $empty_at_end[-1] == scalar @lines) {
+        if (scalar @empty_at_end && $empty_at_end[$LAST_ITEM] == scalar @lines)
+        {
             pop @empty_at_end;
         } else {
             $self->hint('no-newline-at-end', $file);

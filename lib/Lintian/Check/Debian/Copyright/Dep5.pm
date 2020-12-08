@@ -53,6 +53,9 @@ const my $ASTERISK => q{*};
 const my $LEFT_SQUARE => q{[};
 const my $RIGHT_SQUARE => q{]};
 
+const my $MINIMUM_CREATIVE_COMMMONS_LENGTH => 20;
+const my $LAST_ITEM => -1;
+
 const my %NEW_FIELD_NAMES        => (
     'Format-Specification' => 'Format',
     'Maintainer'           => 'Upstream-Contact',
@@ -331,7 +334,7 @@ sub check_dep5_copyright {
             $self->hint('incomplete-creative-commons-license',
                 $license_identifier,
                 '(line ' . $section->position('License') . ')')
-              if $num_lines < 20;
+              if $num_lines < $MINIMUM_CREATIVE_COMMMONS_LENGTH;
         }
     }
 
@@ -596,7 +599,7 @@ sub check_dep5_copyright {
         for my $name (@overwritten) {
 
             my $winning_wildcard
-              = @{$wildcards_same_section_by_file{$name}}[-1];
+              = @{$wildcards_same_section_by_file{$name}}[$LAST_ITEM];
             my $loosing_wildcard = $wildcard_by_file{$name};
 
             my $winner_depth = ($winning_wildcard =~ tr{/}{});
@@ -608,7 +611,8 @@ sub check_dep5_copyright {
         }
 
         # later matches have precendence; depends on section ordering
-        $wildcard_by_file{$_} = @{$wildcards_same_section_by_file{$_}}[-1]
+        $wildcard_by_file{$_}
+          = @{$wildcards_same_section_by_file{$_}}[$LAST_ITEM]
           for keys %wildcards_same_section_by_file;
 
         my @overmatched_same_section

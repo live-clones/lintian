@@ -43,6 +43,11 @@ with 'Lintian::Check';
 const my $EMPTY => q{};
 const my $SPACE => q{ };
 
+const my $MAXIMUM_TEMPLATE_SYNOPSIS => 75;
+const my $MAXIMUM_LINE_LENGTH => 80;
+const my $MAXIMUM_LINES => 20;
+const my $ITEM_NOT_FOUND => -1;
+
 # From debconf-devel(7), section 'THE TEMPLATES FILE', up to date with debconf
 # version 1.5.24.  Added indices for cdebconf (indicates sort order for
 # choices); debconf doesn't support it, but it ignores it, which is safe
@@ -367,7 +372,7 @@ sub installable {
                     $self->hint('malformed-title-in-templates',$name);
                 }
             }
-            if (length($short) > 75) {
+            if (length $short > $MAXIMUM_TEMPLATE_SYNOPSIS) {
                 $self->hint('too-long-short-description-in-templates',$name)
                   unless $self->processable->type eq 'udeb'
                   && $ttype eq 'text';
@@ -390,12 +395,12 @@ sub installable {
             if ($extended) {
                 my $lines = 0;
                 for my $string (split(/\n/, $extended)) {
-                    while (length($string) > 80) {
-                        my $pos = rindex($string, $SPACE, 80);
-                        if ($pos == -1) {
+                    while (length $string > $MAXIMUM_LINE_LENGTH) {
+                        my $pos= rindex($string, $SPACE, $MAXIMUM_LINE_LENGTH);
+                        if ($pos == $ITEM_NOT_FOUND) {
                             $pos = index($string, $SPACE);
                         }
-                        if ($pos == -1) {
+                        if ($pos == $ITEM_NOT_FOUND) {
                             $string = $EMPTY;
                         } else {
                             $string = substr($string, $pos + 1);
@@ -404,7 +409,7 @@ sub installable {
                     }
                     $lines++;
                 }
-                if ($lines > 20) {
+                if ($lines > $MAXIMUM_LINES) {
                     $self->hint('too-long-extended-description-in-templates',
                         $name);
                 }

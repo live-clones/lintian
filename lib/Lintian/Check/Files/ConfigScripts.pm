@@ -63,9 +63,9 @@ sub visit_installed_files {
         # some common stuff found in config file
         if (
             $block
-            and (  index($block,'flag')>-1
-                or index($block,'/include/') > -1
-                or index($block,'pkg-config')  > -1)
+            && (   $block =~ / flag /msx
+                || $block =~ m{ /include/ }msx
+                || $block =~ / pkg-config /msx)
         ) {
 
             $self->hint('old-style-config-script', $file->name);

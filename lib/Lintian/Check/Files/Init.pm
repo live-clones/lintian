@@ -25,12 +25,15 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use List::SomeUtils qw(none);
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $EXECUTABLE_PERMISSIONS => 0755;
 
 sub visit_installed_files {
     my ($self, $file) = @_;
@@ -41,12 +44,12 @@ sub visit_installed_files {
       if $file->name =~ m{^etc/init/\S};
 
     # /etc/init.d
-    $self->hint(
-        'non-standard-file-permissions-for-etc-init.d-script',
-        sprintf('%s %04o != 0755', $file->name, $file->operm))
+    $self->hint('non-standard-file-permissions-for-etc-init.d-script',
+        $file->name,
+        sprintf('%04o != %04o', $file->operm, $EXECUTABLE_PERMISSIONS))
       if $file->name =~ m{^etc/init\.d/\S}
       && $file->name !~ m{^etc/init\.d/(?:README|skeleton)$}
-      && $file->operm != 0755
+      && $file->operm != $EXECUTABLE_PERMISSIONS
       && $file->is_file;
 
     # /etc/rc.d && /etc/rc?.d

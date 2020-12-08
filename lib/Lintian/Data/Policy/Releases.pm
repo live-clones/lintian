@@ -40,6 +40,8 @@ use namespace::clean;
 
 const my $SLASH => q{/};
 
+const my $WAIT_STATUS_SHIFT => 8;
+
 =head1 NAME
 
 Lintian::Data::Policy::Releases - Lintian interface for policy releases
@@ -208,7 +210,7 @@ sub refresh {
     my $rfc822;
     my $stderr;
     run3(\@command, \undef, \$rfc822, \$stderr);
-    my $status = ($? >> 8);
+    my $status = ($? >> $WAIT_STATUS_SHIFT);
     die $stderr
       if $status;
 

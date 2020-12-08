@@ -25,10 +25,14 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
+
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $MAGIC_BYTE_SIZE => 4;
 
 sub visit_installed_files {
     my ($self, $file) = @_;
@@ -37,7 +41,7 @@ sub visit_installed_files {
     if (   $file->name =~ /\.class$/
         && $file->name !~ /(?:WEB-INF|demo|doc|example|sample|test)/) {
 
-        my $magic = $file->magic(4);
+        my $magic = $file->magic($MAGIC_BYTE_SIZE);
 
         $self->hint('package-installs-java-bytecode', $file->name)
           if $magic eq "\xCA\xFE\xBA\xBE";

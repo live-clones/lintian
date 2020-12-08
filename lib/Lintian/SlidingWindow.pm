@@ -27,18 +27,20 @@ use Const::Fast;
 use Unicode::UTF8 qw(encode_utf8);
 
 const my $EMPTY => q{};
+const my $DEFAULT_BLOCK_SIZE => 4096;
+const my $INVALID_BLOCK => -1;
 
 sub new {
     my ($class, $handle, $blocksub, $blocksize) = @_;
 
-    $blocksize //= 4096;
+    $blocksize //= $DEFAULT_BLOCK_SIZE;
 
     my $self = {
         '_handle'      => $handle,
         '_queue'       => [q{}, q{}],
         '_blocksize'   => $blocksize,
         '_blocksub'    => $blocksub,
-        '_blocknumber' => -1,
+        '_blocknumber' => $INVALID_BLOCK,
     };
 
     return bless($self, $class);
@@ -93,7 +95,7 @@ sub readwindow {
 
 sub blocknumber {
     my ($self) = @_;
-    if($self->{'_blocknumber'} == -1) {
+    if($self->{'_blocknumber'} == $INVALID_BLOCK) {
         return undef;
     }
     return $self->{'_blocknumber'};

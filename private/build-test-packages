@@ -76,6 +76,7 @@ const my $NEWLINE => qq{\n};
 const my $SLASH => q{/};
 const my $YES => q{yes};
 const my $NO => q{no};
+const my $WIDELY_READABLE => 022;
 
 my $processing_start = Time::Moment->from_string(gmtime->datetime . 'Z');
 
@@ -107,7 +108,7 @@ $ENV{LINTIAN_BASE} = realpath(THISDIR . '/..')
 my $debug;
 my $dump_logs = 1;
 my $force_rebuild;
-my $numjobs = -1;
+my $numjobs;
 my $outpath;
 my $verbose = 0;
 
@@ -163,8 +164,8 @@ say encode_utf8($EMPTY);
 # tie verbosity to debug
 $verbose = 1 + $debug if $debug;
 
-# can be 0 without value ("-j"), and -1 if option was not specified at all
-$numjobs = default_parallel() if $numjobs <= 0;
+# can be 0 without value ("-j"), or undef if option was not specified at all
+$numjobs ||= default_parallel();
 say encode_utf8("Running up to $numjobs tests concurrently")
   if $numjobs > 1 && $verbose >= 2;
 
@@ -335,7 +336,7 @@ my $build = IO::Async::Function->new(
         $ENV{'LC_ALL'} = 'C';
 
         # many tests create files via debian/rules
-        umask(022);
+        umask $WIDELY_READABLE;
 
         # get destination
         my $relative = path($specpath)->parent->relative("$testset/recipes");

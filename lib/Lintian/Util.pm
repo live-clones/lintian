@@ -79,6 +79,26 @@ const my $DOT => q{.};
 const my $DOUBLEDOT => q{..};
 const my $BACKSLASH => q{\\};
 
+const my $DEFAULT_READ_SIZE => 4096;
+const my $KIB_UNIT_FACTOR => 1024;
+const my $COMFORT_THRESHOLD => 1536;
+
+const my $OWNER_READ => 00400;
+const my $OWNER_WRITE => 00200;
+const my $OWNER_EXECUTE => 00100;
+const my $SETUID => 04000;
+const my $SETUID_OWNER_EXECUTE => 04100;
+const my $GROUP_READ => 00040;
+const my $GROUP_WRITE => 00020;
+const my $GROUP_EXECUTE => 00010;
+const my $SETGID => 02000;
+const my $SETGID_GROUP_EXECUTE => 02010;
+const my $WORLD_READ => 00004;
+const my $WORLD_WRITE => 00002;
+const my $WORLD_EXECUTE => 00001;
+const my $STICKY => 01000;
+const my $STICKY_WORLD_EXECUTE => 01001;
+
 # preload cache for common permission strings
 # call overhead o perm2oct was measurable on chromium-browser/32.0.1700.123-2
 # load time went from ~1.5s to ~0.1s; of 115363 paths, only 306 were uncached
@@ -168,7 +188,7 @@ sub drain_pipe {
     my ($fd) = @_;
     my $buffer;
 
-    1 while (read($fd, $buffer, 4096) > 0);
+    1 while (read($fd, $buffer, $DEFAULT_READ_SIZE) > 0);
 
     return 1;
 }
@@ -263,21 +283,21 @@ sub perm2oct {
         croak encode_utf8("$text does not appear to be a permission string");
     }
 
-    $octal += 00400 if $1 eq 'r';   # owner read
-    $octal += 00200 if $2 eq 'w';   # owner write
-    $octal += 00100 if $3 eq 'x';   # owner execute
-    $octal += 04000 if $3 eq 'S';   # setuid
-    $octal += 04100 if $3 eq 's';   # setuid + owner execute
-    $octal += 00040 if $4 eq 'r';   # group read
-    $octal += 00020 if $5 eq 'w';   # group write
-    $octal += 00010 if $6 eq 'x';   # group execute
-    $octal += 02000 if $6 eq 'S';   # setgid
-    $octal += 02010 if $6 eq 's';   # setgid + group execute
-    $octal += 00004 if $7 eq 'r';   # other read
-    $octal += 00002 if $8 eq 'w';   # other write
-    $octal += 00001 if $9 eq 'x';   # other execute
-    $octal += 01000 if $9 eq 'T';   # stickybit
-    $octal += 01001 if $9 eq 't';   # stickybit + other execute
+    $octal |= $OWNER_READ if $1 eq 'r';
+    $octal |= $OWNER_WRITE if $2 eq 'w';
+    $octal |= $OWNER_EXECUTE if $3 eq 'x';
+    $octal |= $SETUID if $3 eq 'S';
+    $octal |= $SETUID_OWNER_EXECUTE if $3 eq 's';
+    $octal |= $GROUP_READ if $4 eq 'r';
+    $octal |= $GROUP_WRITE if $5 eq 'w';
+    $octal |= $GROUP_EXECUTE if $6 eq 'x';
+    $octal |= $SETGID if $6 eq 'S';
+    $octal |= $SETGID_GROUP_EXECUTE if $6 eq 's';
+    $octal |= $WORLD_READ if $7 eq 'r';
+    $octal |= $WORLD_WRITE if $8 eq 'w';
+    $octal |= $WORLD_EXECUTE if $9 eq 'x';
+    $octal |= $STICKY if $9 eq 'T';
+    $octal |= $STICKY_WORLD_EXECUTE if $9 eq 't';
 
     $OCTAL_LOOKUP{$text} = $octal;
 
@@ -295,9 +315,9 @@ sub human_bytes {
 
     my $unit = shift @units;
 
-    while ($size > 1536 && @units) {
+    while ($size > $COMFORT_THRESHOLD && @units) {
 
-        $size /= 1024;
+        $size /= $KIB_UNIT_FACTOR;
         $unit = shift @units;
     }
 

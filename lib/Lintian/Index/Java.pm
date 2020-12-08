@@ -35,6 +35,9 @@ const my $NEWLINE => qq{\n};
 const my $SPACE => q{ };
 const my $DASH => q{-};
 
+const my $JAVA_MAGIC_SIZE => 8;
+const my $JAVA_MAGIC_BYTES => 0xCAFEBABE;
+
 =head1 NAME
 
 Lintian::Index::Java - java information.
@@ -181,14 +184,14 @@ sub parse_jar {
 
                 # Ensure we can read at least 8 bytes for the unpack.
                 next
-                  if length $contents < 8;
+                  if length $contents < $JAVA_MAGIC_SIZE;
 
                 # translation of the unpack
                 #  NN NN NN NN, nn nn, nn nn   - bytes read
                 #     $magic  , __ __, $major  - variables
                 my ($magic, undef, $major) = unpack('Nnn', $contents);
                 $jversion = $major
-                  if $magic == 0xCAFEBABE;
+                  if $magic == $JAVA_MAGIC_BYTES;
             }
             push(@lines, "$name: " . ($jversion // $DASH));
         }

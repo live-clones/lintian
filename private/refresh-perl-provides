@@ -33,6 +33,7 @@ use AptPkg::System '$_system';
 use AptPkg::Cache;
 
 const my $EMPTY => q{};
+const my $LAST_ITEM => -1;
 
 (my $self = $0) =~ s{.*/}{};
 
@@ -204,7 +205,7 @@ sub epoch_and_digits {
 
 sub bin_latest {
     my $p = shift;
-    return (sort bin_byversion @{$p->{VersionList}})[-1];
+    return (sort bin_byversion @{$p->{VersionList}})[$LAST_ITEM];
 }
 
 sub bin_byversion {

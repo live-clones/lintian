@@ -40,6 +40,10 @@ with 'Lintian::Check';
 const my $EMPTY => q{};
 const my $ARROW => q{ -> };
 
+const my $PYTHON3_MAJOR => 3;
+const my $PYTHON2_MIGRATION_MAJOR => 2;
+const my $PYTHON2_MIGRATION_MINOR => 6;
+
 my @FIELDS = qw(Depends Pre-Depends Recommends Suggests);
 my @IGNORE = qw(-dev$ -docs?$ -common$ -tools$);
 my @PYTHON2 = qw(python2 python2.7 python2-dev);
@@ -239,14 +243,13 @@ sub installable {
     }
 
     # Python 2 modules
-    if (    $pkg =~ /^python2?-/
-        and none { $pkg =~ /$_$/ } @IGNORE
-        and @entries == 1
-        and $entries[0]->Changes
-        !~ /\bpython ?2(?:\.x)? (?:variant|version)\b/im
-        and index($entries[0]->Changes, $pkg) == -1) {
-        $self->hint('new-package-should-not-package-python2-module', $pkg);
-    }
+    $self->hint('new-package-should-not-package-python2-module', $pkg)
+      if $pkg =~ / ^ python2? - /msx
+      && none { $pkg =~ / \Q$_\E$ /msx } @IGNORE
+      && @entries == 1
+      && $entries[0]->Changes
+      !~ / \b python [ ]? 2 (?:[.]x)? [ ] (?:variant|version) \b /imsx
+      && $entries[0]->Changes !~ / \Q$pkg\E /msx;
 
     # Python applications
     if ($pkg !~ /^python[23]?-/ and none { $_ eq $pkg } @PYTHON2) {
@@ -363,7 +366,7 @@ sub visit_installed_files {
         $pmin //= 0;
 
         next
-          if $pmaj < 2;
+          if $pmaj < $PYTHON2_MIGRATION_MAJOR;
 
         my ($module_name) = ($relative =~ m{^([^/]+)});
 
@@ -372,13 +375,14 @@ sub visit_installed_files {
 
         # for python 2.X, folder was python2.X and not python2
         $specified_python_libpath = $actual_python_libpath
-          if $pmaj < 3;
+          if $pmaj < $PYTHON3_MAJOR;
 
         my $specified_package_dir = 'dist-packages';
 
         # python 2.4 and 2.5
         $specified_package_dir = 'site-packages'
-          if $pmaj == 2 && $pmin < 6;
+          if $pmaj == $PYTHON2_MIGRATION_MAJOR
+          && $pmin < $PYTHON2_MIGRATION_MINOR;
 
         my $actual_module_path
           = $debug. $actual_python_libpath. "$actual_package_dir/$module_name";

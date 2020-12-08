@@ -30,6 +30,7 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use List::Compare;
 use List::SomeUtils qw(any);
 
@@ -37,6 +38,8 @@ use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $MAXIMUM_LENGTH => 5_000;
 
 my @ALLOWED_FIELDS = qw(
   Build-Ids
@@ -52,15 +55,14 @@ sub always {
     return
       if any { $self->processable->type eq $_ } qw(changes buildinfo);
 
-    my $maximum = 5_000;
-
     # all fields
     my @all = $self->processable->fields->names;
 
     # longer than maximum
-    my @long
-      = grep {length $self->processable->fields->untrimmed_value($_)> $maximum}
-      @all;
+    my @long= grep {
+        length $self->processable->fields->untrimmed_value($_)
+          > $MAXIMUM_LENGTH
+    }@all;
 
     # filter allowed fields
     my $allowedlc = List::Compare->new(\@long, \@ALLOWED_FIELDS);
@@ -70,7 +72,8 @@ sub always {
 
         my $length = length $self->processable->fields->value($name);
 
-        $self->hint('field-too-long', $name, "($length chars > $maximum)");
+        $self->hint('field-too-long', $name,
+            "($length chars > $MAXIMUM_LENGTH)");
     }
 
     return;

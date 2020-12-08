@@ -29,6 +29,7 @@ use Test::More tests => 8;
 
 const my $NEWLINE => qq{\n};
 const my $DOT => q{.};
+const my $WAIT_STATUS_SHIFT => 8;
 
 $ENV{'LINTIAN_BASE'} //= $DOT;
 
@@ -48,7 +49,7 @@ sub t {
         stdout => { into => \$output },
         on_finish => sub {
             my ($self, $exitcode) = @_;
-            my $status = ($exitcode >> 8);
+            my $status = ($exitcode >> $WAIT_STATUS_SHIFT);
             is($status, 0, 'exit status 0');
             is($output, $expected, 'expected output');
             $future->done('Done with spellintian');

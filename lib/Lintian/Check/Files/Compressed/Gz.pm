@@ -24,6 +24,7 @@ use v5.20;
 use warnings;
 use utf8;
 
+use Const::Fast;
 use Time::Piece;
 
 use Lintian::IPC::Run3 qw(safe_qx);
@@ -32,6 +33,9 @@ use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+# get timestamp of first member; https://tools.ietf.org/html/rfc1952.html#page-5
+const my $GZIP_HEADER_SIZE => 8;
 
 has changelog_timestamp => (is => 'rwp', default => 0);
 
@@ -67,8 +71,7 @@ sub visit_installed_files {
     # gzip files
     if ($file->file_info =~ /gzip compressed/) {
 
-# get timestamp of first member; https://tools.ietf.org/html/rfc1952.html#page-5
-        my $bytes = $file->magic(8);
+        my $bytes = $file->magic($GZIP_HEADER_SIZE);
         my (undef, $gziptime) = unpack('VV', $bytes);
 
         if (defined $gziptime && $gziptime != 0) {

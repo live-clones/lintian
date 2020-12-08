@@ -197,7 +197,7 @@ sub visit_installed_files {
             $self->hint('lengthy-symlink', $file->name,  $file->link);
         }
 
-        if ($#filecomponents == -1) {
+        unless (@filecomponents) {
             # we've reached the root directory
             if (   ($self->processable->type ne 'udeb')
                 && (!defined $linkcomponent)

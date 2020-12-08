@@ -65,7 +65,7 @@ sub visit_installed_files {
         # Ignore extra license files in examples, since various
         # package building software includes example packages with
         # licenses.
-        && ($file->operm & 0111) == 0
+        && !$file->is_executable
         && $file->name !~ m{ \. (?:
                   # Common "non-license" file extensions...
                    el|[ch]|cc|p[ylmc]|[hu]i|p_hi|html|php|rb|xpm

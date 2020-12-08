@@ -35,6 +35,10 @@ const my $SPACE => q{ };
 const my $COMMA => q{,};
 const my $NULL => qq{\0};
 
+const my $KEEP_EMPTY_FIELDS => -1;
+const my $GZIP_MAGIC_SIZE => 9;
+const my $GZIP_MAGIC_BYTES => 0x1f8b;
+
 =head1 NAME
 
 Lintian::Index::FileInfo - determine file type via magic.
@@ -83,7 +87,7 @@ sub add_fileinfo {
 
     $stdout =~ s/\0$//;
 
-    my @lines = split(/\0/, $stdout, -1);
+    my @lines = split(/\0/, $stdout, $KEEP_EMPTY_FIELDS);
 
     die encode_utf8('Did not get an even number lines from file command.')
       unless @lines % 2 == 0;
@@ -109,7 +113,7 @@ sub add_fileinfo {
 
     for my $file (@probably_compressed) {
 
-        my $buffer = $file->magic(9);
+        my $buffer = $file->magic($GZIP_MAGIC_SIZE);
         next
           unless length $buffer;
 
@@ -120,7 +124,7 @@ sub add_fileinfo {
 
         # gzip file magic
         next
-          unless $magic == 0x1f8b;
+          unless $magic == $GZIP_MAGIC_BYTES;
 
         my $text = 'gzip compressed data';
 

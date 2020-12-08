@@ -36,6 +36,8 @@ with 'Lintian::Check';
 const my $SPACE => q{ };
 const my $SLASH => q{/};
 
+const my $WIDELY_EXECUTABLE => 0111;
+
 sub octify {
     my (undef, $val) = @_;
     return oct($val);
@@ -93,7 +95,7 @@ sub installable {
         next if $file eq 'control';
 
         my $operm = $file->operm;
-        if ($operm & 0111 or $experm & 0111) {
+        if ($file->is_executable || $experm & $WIDELY_EXECUTABLE) {
             $has_ctrl_script = 1;
             $self->hint('ctrl-script', $file);
         }

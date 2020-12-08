@@ -47,6 +47,11 @@ const my $SLASH => q{/};
 const my $ASTERISK => q{*};
 const my $DOT => q{.};
 
+const my $BAD_MAINTAINER_COMMAND_FIELDS => 5;
+const my $UNVERSIONED_INTERPRETER_FIELDS => 2;
+const my $VERSIONED_INTERPRETER_FIELDS => 5;
+const my $MAXIMUM_LINES_ANALYZED => 54;
+
 # This is a map of all known interpreters.  The key is the interpreter
 # name (the binary invoked on the #! line).  The value is an anonymous
 # array of two elements.  The first argument is the path on a Debian
@@ -62,8 +67,32 @@ has INTERPRETERS => (
     default => sub {
         my ($self) = @_;
 
-        return $self->profile->load_data('scripts/interpreters',
-            qr/\s*=\>\s*/,\&_parse_interpreters);
+        my $unversioned = $self->profile->load_data(
+            'scripts/interpreters',
+            qr/ \s* => \s* /msx,
+            sub {
+                my ($interpreter, $remainder) = @_;
+
+                my ($folder, $prerequisites)= split(/ \s* , \s* /msx,
+                    $remainder, $UNVERSIONED_INTERPRETER_FIELDS);
+
+                $prerequisites ||= $interpreter;
+
+                if ($prerequisites eq '@NODEPS@') {
+                    $prerequisites = $EMPTY;
+
+                } elsif ($prerequisites =~ / @ /msx) {
+                    die
+"Unknown magic value $prerequisites for versioned interpreter $interpreter";
+                }
+
+                return {
+                    folder => $folder,
+                    prerequisites => $prerequisites
+                };
+            });
+
+        return $unversioned;
     });
 
 # The more complex case of interpreters that may have a version number.
@@ -102,8 +131,40 @@ has VERSIONED_INTERPRETERS => (
     default => sub {
         my ($self) = @_;
 
-        return $self->profile->load_data('scripts/versioned-interpreters',
-            qr/\s*=\>\s*/,\&_parse_versioned_interpreters);
+        my $versioned = $self->profile->load_data(
+            'scripts/versioned-interpreters',
+            qr/ \s* => \s* /msx,
+            sub {
+                my ($interpreter, $remainder) = @_;
+
+                my ($folder, $regex, $template, $version_list, $prerequisites)
+                  = split(/ \s* , \s* /msx,
+                    $remainder, $VERSIONED_INTERPRETER_FIELDS);
+
+                my @versions = split(/ \s+ /msx, $version_list);
+                $prerequisites ||= $interpreter;
+
+                if ($prerequisites eq '@NO_DEFAULT_DEPS@') {
+                    $prerequisites = $EMPTY;
+
+                } elsif ($prerequisites eq '@SKIP_UNVERSIONED@') {
+                    $prerequisites = undef;
+
+                } elsif ($prerequisites =~ / @ /msx) {
+                    die
+"Unknown magic value $prerequisites for versioned interpreter $interpreter";
+                }
+
+                return {
+                    folder => $folder,
+                    prerequisites => $prerequisites,
+                    regex => qr/^$regex$/,
+                    template => $template,
+                    versions => \@versions
+                };
+            });
+
+        return $versioned;
     });
 
 # When detecting commands inside shell scripts, use this regex to match the
@@ -115,7 +176,7 @@ my $LEADIN = qr/$LEADINSTR/;
 
 # date --date="Sat, 17 Jun 2017 20:22:36 -1000" +%s
 # <https://lists.debian.org/debian-announce/2017/msg00003.html>
-my $OLDSTABLE_RELEASE = 1_497_766_956;
+const my $OLDSTABLE_RELEASE_EPOCH => 1_497_766_956;
 
 #forbidden command in maintainer scripts
 has BAD_MAINT_CMD => (
@@ -128,44 +189,28 @@ has BAD_MAINT_CMD => (
             'scripts/maintainer-script-bad-command',
             qr/\s*\~\~/,
             sub {
-                my @sliptline = split(/\s*\~\~/, $_[1], 5);
-                if(scalar(@sliptline) != 5) {
-                    die
-"Syntax error in scripts/maintainer-script-bad-command: $.";
-                }
                 my ($incat,$inauto,$exceptinpackage,$inscript,$regexp)
-                  = @sliptline;
-                $regexp =~ s/\$[{]LEADIN[}]/$LEADINSTR/;
+                  = split(/ \s* ~~ /msx, $_[1],$BAD_MAINTAINER_COMMAND_FIELDS);
 
-                $incat //= $EMPTY;
-                $inauto //= $EMPTY;
+                die"Syntax error in scripts/maintainer-script-bad-command: $."
+                  if any { !defined }
+                ($incat,$inauto,$exceptinpackage,$inscript,$regexp);
 
                 # trim both ends
                 $incat =~ s/^\s+|\s+$//g;
                 $inauto =~ s/^\s+|\s+$//g;
-
-   # allow empty $exceptinpackage and set it synonymous to check in all package
-                $exceptinpackage //= $EMPTY;
-
-                # trim both ends
                 $exceptinpackage =~ s/^\s+|\s+$//g;
-
-                if (length($exceptinpackage) == 0) {
-                    $exceptinpackage = '\a\Z';
-                }
-           # allow empty $inscript and set to synonymous to check in all script
-                $inscript //= $EMPTY;
-
-                # trim both ends
                 $inscript =~ s/^\s+|\s+$//g;
 
-                if (length($inscript) == 0) {
-                    $inscript = $DOT . $ASTERISK;
-                }
+                $exceptinpackage ||= '\a\Z';
+
+                $inscript ||= $DOT . $ASTERISK;
+
+                $regexp =~ s/\$[{]LEADIN[}]/$LEADINSTR/;
+
                 return {
-                    # use not not to normalize boolean
-                    'ignore_automatically_added' => not(not($inauto)),
-                    'in_cat_string' => not(not($incat)),
+                    'ignore_automatically_added' => !!$inauto,
+                    'in_cat_string' => !!$incat,
                     'in_package' => qr/$exceptinpackage/x,
                     'in_script' => qr/$inscript/x,
                     'regexp' => qr/$regexp/x,
@@ -294,10 +339,16 @@ sub installable {
     # no dependency for install-menu, because the menu package specifically
     # says not to depend on it.
 
-    foreach my $file ($processable->installed->sorted_list) {
-        next if not $file->is_file;
-        $ELF{$file} = 1 if $file->file_info =~ /^[^,]*\bELF\b/;
-        next unless $file->operm & 0111;
+    for my $file ($processable->installed->sorted_list) {
+        next
+          unless $file->is_file;
+
+        $ELF{$file} = 1
+          if $file->file_info =~ / ^ [^,]* \b ELF \b /msx;
+
+        next
+          unless $file->is_executable;
+
         $executable{$file} = 1;
     }
 
@@ -316,9 +367,9 @@ sub installable {
         ? @{$processable->changelog->entries}
         : ()
     ) {
-        my $timestamp = $entry->Timestamp // $OLDSTABLE_RELEASE;
+        my $timestamp = $entry->Timestamp // $OLDSTABLE_RELEASE_EPOCH;
         $old_versions{$entry->Version} = $timestamp
-          if $timestamp < $OLDSTABLE_RELEASE;
+          if $timestamp < $OLDSTABLE_RELEASE_EPOCH;
     }
 
     for my $file ($processable->installed->sorted_list) {
@@ -460,23 +511,34 @@ sub installable {
         # check $INTERPRETERS and %versioned_interpreters.  If not
         # found there, see if it ends in a version number and the base
         # is found in $VERSIONED_INTERPRETERS
-        my $data = $self->INTERPRETERS->value($base);
+        my $interpreter_data = $self->INTERPRETERS->value($base);
+
         my $versioned = 0;
-        if (not defined $data) {
-            $data = $self->VERSIONED_INTERPRETERS->value($base);
-            undef $data if ($data and not defined($data->[1]));
-            if (not defined($data) and $base =~ /^(.*[^\d.-])-?[\d.]+$/) {
-                $data = $self->VERSIONED_INTERPRETERS->value($1);
-                undef $data unless ($data and $base =~ /$data->[2]/);
+        unless (defined $interpreter_data) {
+
+            $interpreter_data = $self->VERSIONED_INTERPRETERS->value($base);
+            undef $interpreter_data
+              if $interpreter_data
+              && !defined $interpreter_data->{prerequisites};
+
+            if (!defined $interpreter_data && $base =~ /^(.*[^\d.-])-?[\d.]+$/)
+            {
+                $interpreter_data = $self->VERSIONED_INTERPRETERS->value($1);
+                undef $interpreter_data
+                  unless $interpreter_data
+                  && $base =~ /$interpreter_data->{regex}/;
             }
-            $versioned = 1 if $data;
+
+            $versioned = 1
+              if defined $interpreter_data;
         }
-        if ($data) {
-            my $expected = $data->[0] . $SLASH . $base;
-            unless ($interpreter eq $expected or $calls_env) {
-                $self->script_tag(bad_interpreter_tag_name($expected),
-                    $filename, "(#!$interpreter != $expected)");
-            }
+        if ($interpreter_data) {
+            my $expected = $interpreter_data->{folder} . $SLASH . $base;
+
+            $self->script_tag(bad_interpreter_tag_name($expected),
+                $filename, "(#!$interpreter != $expected)")
+              unless $interpreter eq $expected || $calls_env;
+
         } elsif ($interpreter =~ m{^/usr/local/}) {
             $self->script_tag('interpreter-in-usr-local', $filename,
                 "#!$interpreter");
@@ -486,14 +548,14 @@ sub installable {
             $self->script_tag('script-uses-deprecated-nodejs-location',
                 $filename);
             # Check whether we have correct dependendies on nodejs regardless.
-            $data = $self->INTERPRETERS->value('node');
+            $interpreter_data = $self->INTERPRETERS->value('node');
         } elsif ($base =~ /^php/) {
             $self->script_tag('php-script-with-unusual-interpreter',
                 $filename, "$interpreter");
 
             # This allows us to still perform the dependencies checks
             # below even when an unusual interpreter has been found.
-            $data = $self->INTERPRETERS->value('php');
+            $interpreter_data = $self->INTERPRETERS->value('php');
         } else {
             my $pinter = 0;
             if ($interpreter =~ m{^/}) {
@@ -549,7 +611,7 @@ sub installable {
         # the loop so that we can use next for an early exit and
         # reduce the nesting.
         next
-          unless $data;
+          unless $interpreter_data;
 
         next
           unless $executable{$filename};
@@ -558,7 +620,7 @@ sub installable {
           if $in_docs;
 
         if (!$versioned) {
-            my $depends = $data->[1];
+            my $depends = $interpreter_data->{prerequisites};
             if (not defined $depends) {
                 $depends = $base;
             }
@@ -592,16 +654,18 @@ sub installable {
                 }
             }
         } elsif ($self->VERSIONED_INTERPRETERS->recognizes($base)) {
-            my @versions = @{ $data->[4] };
+            my @versions = @{ $interpreter_data->{versions} };
 
             my @depends;
             for my $version (@versions) {
-                my $d = $data->[3];
+                my $d = $interpreter_data->{template};
                 $d =~ s/\$1/$version/g;
                 push(@depends, $d);
             }
 
-            unshift(@depends, $data->[1]) if length $data->[1];
+            unshift(@depends, $interpreter_data->{prerequisites})
+              if length $interpreter_data->{prerequisites};
+
             my $depends = join(' | ',  @depends);
             unless ($all_parsed->implies($depends)) {
                 if ($base =~ /^(wish|tclsh)/) {
@@ -615,8 +679,8 @@ sub installable {
                 }
             }
         } else {
-            my ($version) = ($base =~ /$data->[2]/);
-            my $depends = $data->[3];
+            my ($version) = ($base =~ /$interpreter_data->{regex}/);
+            my $depends = $interpreter_data->{template};
             $depends =~ s/\$1/$version/g;
             unless ($all_parsed->implies($depends)) {
                 if ($base =~ /^(python|ruby)/) {
@@ -706,7 +770,7 @@ sub installable {
                 "control/$file","#!$interpreter");
         } elsif ($base eq 'sh' or $base eq 'bash' or $base eq 'perl') {
             my $expected
-              = ($self->INTERPRETERS->value($base))->[0] . $SLASH . $base;
+              = ($self->INTERPRETERS->value($base))->{folder} . $SLASH . $base;
             $self->hint(
                 bad_interpreter_tag_name($expected),
                 "#!$interpreter != $expected",
@@ -717,8 +781,8 @@ sub installable {
         } elsif ($file eq 'postrm') {
             $self->hint('forbidden-postrm-interpreter', "#!$interpreter");
         } elsif ($self->INTERPRETERS->recognizes($base)) {
-            my $data = $self->INTERPRETERS->value($base);
-            my $expected = $data->[0] . $SLASH . $base;
+            my $interpreter_data = $self->INTERPRETERS->value($base);
+            my $expected = $interpreter_data->{folder} . $SLASH . $base;
             unless ($interpreter eq $expected) {
                 $self->hint(
                     bad_interpreter_tag_name($expected),
@@ -732,8 +796,9 @@ sub installable {
             # Interpreters used by preinst scripts must be in
             # Pre-Depends.  Interpreters used by postinst or prerm
             # scripts must be in Depends.
-            if ($data->[1]) {
-                my $depends = Lintian::Relation->new->load($data->[1]);
+            if ($interpreter_data->{prerequisites}) {
+                my $depends = Lintian::Relation->new->load(
+                    $interpreter_data->{prerequisites});
                 if ($file eq 'preinst') {
                     unless ($processable->relation('Pre-Depends')
                         ->implies($depends)){
@@ -1157,7 +1222,9 @@ sub installable {
                     =~m{$LEADIN(?:/usr/bin/)?dpkg\s+--compare-versions\s+.*\b\Q$ver\E(?!\.)\b}
                 ) {
                     my $date= strftime('%Y-%m-%d', gmtime $old_versions{$ver});
-                    my $epoch= strftime('%Y-%m-%d', gmtime $OLDSTABLE_RELEASE);
+                    my $epoch
+                      = strftime('%Y-%m-%d', gmtime $OLDSTABLE_RELEASE_EPOCH);
+
                     $self->hint(
                         'maintainer-script-supports-ancient-package-version',
                         "$file:$.", $ver, "($date < $epoch)");
@@ -1456,7 +1523,7 @@ sub script_is_evil_and_wrong {
         next
           unless length $line;
         last
-          if ++$i > 55;
+          if ++$i >= $MAXIMUM_LINES_ANALYZED;
 
         if (
             $line =~ m<
@@ -1562,34 +1629,6 @@ sub unquote {
       if $replace_regex;
 
     return $string;
-}
-
-sub _parse_interpreters {
-    my ($interpreter, $value) = @_;
-    my ($path, $dep) = split m/\s*,\s*/, $value, 2;
-    $dep = $interpreter if not $dep;
-    if ($dep eq '@NODEPS@') {
-        $dep = $EMPTY;
-    } elsif ($dep =~ m/@/) {
-        die "Unknown magic value $dep for versioned interpreter $interpreter";
-    }
-    return [$path, $dep];
-}
-
-sub _parse_versioned_interpreters {
-    my ($interpreter, $value) = @_;
-    my ($path, $regex, $deptmp, $vers, $deprel) = split m/\s*,\s*/, $value, 5;
-    my @versions = split m/\s++/, $vers;
-    $deprel = $interpreter if not $deprel;
-    if ($deprel eq '@NO_DEFAULT_DEPS@') {
-        $deprel = $EMPTY;
-    } elsif ($deprel eq '@SKIP_UNVERSIONED@') {
-        $deprel = undef;
-    } elsif ($deprel =~ m/@/) {
-        die
-          "Unknown magic value $deprel for versioned interpreter $interpreter";
-    }
-    return [$path, $deprel, qr/^$regex$/, $deptmp, \@versions];
 }
 
 sub bad_interpreter_tag_name {

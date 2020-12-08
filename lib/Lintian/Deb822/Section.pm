@@ -27,6 +27,8 @@ use List::Compare;
 
 const my $EMPTY => q{};
 
+const my $UNKNOWN_POSITION => -1;
+
 use Moo;
 use namespace::clean;
 
@@ -233,7 +235,7 @@ sub store {
         $self->legend->{lc $exact} = $exact;
 
         # remove any old position
-        $self->positions->{$exact} = -1;
+        $self->positions->{$exact} = $UNKNOWN_POSITION;
     }
 
     $self->verbatim->{$exact} = $value;

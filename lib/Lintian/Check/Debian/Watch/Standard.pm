@@ -36,6 +36,9 @@ with 'Lintian::Check';
 
 const my $SPACE => q{ };
 
+const my @STANDARDS => (2, 3, 4);
+const my $NEWLY_SUPERSEEDED => 3;
+
 sub source {
     my ($self) = @_;
 
@@ -48,19 +51,18 @@ sub source {
       unless length $contents;
 
     # look for version
-    my @standards = ($contents =~ /^version\s*=\s*(\d+)\s*$/mg);
+    my @mentioned = ($contents =~ /^ version \s* = \s* (\d+) \s* $/gmsx);
 
-    unless (@standards) {
+    unless (@mentioned) {
         $self->hint('missing-debian-watch-file-standard');
         return;
     }
 
     $self->hint('multiple-debian-watch-file-standards',
-        join($SPACE, @standards))
-      if @standards > 1;
+        join($SPACE, @mentioned))
+      if @mentioned > 1;
 
-    my @available = (2, 3, 4);
-    my $standard_lc = List::Compare->new(\@standards, \@available);
+    my $standard_lc = List::Compare->new(\@mentioned, \@STANDARDS);
     my @unknown = $standard_lc->get_Lonly;
     my @known = $standard_lc->get_intersection;
 
@@ -73,10 +75,10 @@ sub source {
     $self->hint('debian-watch-file-standard', $highest);
 
     $self->hint('older-debian-watch-file-standard', $highest)
-      if $highest == 3;
+      if $highest == $NEWLY_SUPERSEEDED;
 
     $self->hint('obsolete-debian-watch-file-standard', $highest)
-      if $highest < 3;
+      if $highest < $NEWLY_SUPERSEEDED;
 
     return;
 }

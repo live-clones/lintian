@@ -34,6 +34,14 @@ with 'Lintian::Check';
 
 const my $SPACE => q{ };
 
+const my $MAIN_HEADER => 0x3c;
+const my $MAIN_HEADER_LENGTH_WORD_SIZE => 4;
+const my $OPTIONAL_HEADER => 0x18;
+const my $DLL_CHARACTERISTICS => 0x46;
+const my $ASLR_FLAG => 0x40;
+const my $DEP_NX_FLAG => 0x100;
+const my $UNSAFE_SEH_FLAG => 0x400;
+
 sub visit_installed_files {
     my ($self, $file) = @_;
 
@@ -51,16 +59,16 @@ sub visit_installed_files {
 
     eval {
         # offset to main header
-        seek($fd, 0x3c, 0)
+        seek($fd, $MAIN_HEADER, 0)
           or die "seek: $!";
 
-        read($fd, $buf, 4)
+        read($fd, $buf, $MAIN_HEADER_LENGTH_WORD_SIZE)
           or die "read: $!";
 
         my $pe_offset = unpack('V', $buf);
 
         # 0x18 is index to "Optional Header"; 0x46 to DLL Characteristics
-        seek($fd, $pe_offset + 0x18 + 0x46, 0)
+        seek($fd, $pe_offset + $OPTIONAL_HEADER + $DLL_CHARACTERISTICS, 0)
           or die "seek: $!";
 
         # get DLLCharacteristics value
@@ -70,9 +78,9 @@ sub visit_installed_files {
 
     my $characteristics = unpack('v', $buf);
     my %features = (
-        'ASLR' => $characteristics & 0x40,
-        'DEP/NX' => $characteristics & 0x100,
-        'SafeSEH' => ~$characteristics & 0x400,  # note negation
+        'ASLR' => $characteristics & $ASLR_FLAG,
+        'DEP/NX' => $characteristics & $DEP_NX_FLAG,
+        'SafeSEH' => ~$characteristics & $UNSAFE_SEH_FLAG,  # note negation
     );
 
     # Don't check for the x86-specific "SafeSEH" feature for code

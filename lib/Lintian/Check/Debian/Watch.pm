@@ -41,6 +41,11 @@ with 'Lintian::Check';
 
 const my $SPACE => q{ };
 
+const my $URL_ACTION_FIELDS => 4;
+const my $VERSION_ACTION_FIELDS => 3;
+
+const my $DMANGLES_AUTOMATICALLY => 4;
+
 sub source {
     my ($self) = @_;
 
@@ -173,7 +178,7 @@ sub source {
 
             $repack_dmangle_auto = 1
               if $option =~ /^dversionmangle\s*=.*(?:s\/\@DEB_EXT\@\/|auto)/
-              && $standard >= 4;
+              && $standard >= $DMANGLES_AUTOMATICALLY;
 
             $withgpgverification = 1
               if $option =~ /^pgpsigurlmangle\s*=\s*/
@@ -201,7 +206,8 @@ sub source {
 
         # This bit is as-is from uscan.pl:
         my ($base, $filepattern, $lastversion, $action)
-          = split($SPACE, $remainder, 4);
+          = split($SPACE, $remainder, $URL_ACTION_FIELDS);
+
         # Per #765995, $base might be undefined.
         if (defined $base) {
             if ($base =~ s{/([^/]*\([^/]*\)[^/]*)$}{/}) {
@@ -209,7 +215,8 @@ sub source {
                # separate filepattern field; we remove the filepattern from the
                # end of $base and rescan the rest of the line
                 $filepattern = $1;
-                (undef, $lastversion, $action) = split($SPACE, $remainder, 3);
+                (undef, $lastversion, $action)
+                  = split($SPACE, $remainder, $VERSION_ACTION_FIELDS);
             }
 
             $dversions{$lastversion} = 1
