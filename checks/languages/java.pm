@@ -28,7 +28,7 @@ use autodie;
 use File::Basename;
 use List::SomeUtils qw(any none);
 
-use Lintian::Util qw(normalize_link_target $PKGNAME_REGEX);
+use Lintian::Util qw(normalize_link_target $PKGNAME_REGEX $PKGVERSION_REGEX);
 
 use Moo;
 use namespace::clean;
@@ -103,8 +103,11 @@ sub installable {
 
         if ($file->name =~ m{^usr/share/java/[^/]+\.jar$}) {
             $has_public_jars = 1;
+
+            # java policy requires package version too; see Bug#976681
             $self->hint('bad-jar-name', $file)
-              unless basename($file->name) =~ /^$PKGNAME_REGEX\.jar$/;
+              unless basename($file->name)
+              =~ /^$PKGNAME_REGEX-$PKGVERSION_REGEX\.jar$/;
         }
         # check for common code files like .class or .clj (Clojure files)
         foreach my $class (grep { m/$CLASS_REGEX$/i } sort keys %{$files}){
