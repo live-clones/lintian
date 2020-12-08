@@ -28,6 +28,8 @@ use v5.20;
 use warnings;
 use utf8;
 
+use List::SomeUtils qw(none);
+
 use Moo;
 use namespace::clean;
 
@@ -47,11 +49,12 @@ sub source {
         return;
     }
 
-    my $testsuite = $self->processable->fields->value('Testsuite');
+    my @testsuites
+      = $self->processable->fields->trimmed_list('Testsuite', qr/,/);
 
-    unless ($testsuite eq 'autopkgtest-pkg-perl') {
+    if (none { $_ eq 'autopkgtest-pkg-perl' } @testsuites) {
 
-        $self->hint('no-team-tests', $testsuite);
+        $self->hint('no-team-tests');
         return;
     }
 
