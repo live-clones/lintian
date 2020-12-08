@@ -401,7 +401,7 @@ terminal_funcs = CORE::exec fatal_error internal_error Lintian::Util::internal_e
 
 [ValuesAndExpressions::ProhibitQuotesAsQuotelikeOperatorDelimiters]
 
-[-ValuesAndExpressions::ProhibitSpecialLiteralHeredocTerminator]
+[ValuesAndExpressions::ProhibitSpecialLiteralHeredocTerminator]
 
 [ValuesAndExpressions::ProhibitUnknownBackslash]
 
