@@ -23,7 +23,10 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use Unicode::UTF8 qw(encode_utf8);
+
+const my $EMPTY => q{};
 
 sub new {
     my ($class, $handle, $blocksub, $blocksize) = @_;
@@ -85,7 +88,7 @@ sub readwindow {
     }
     shift(@{$queue});
     push(@{$queue}, $window);
-    return join('', @{$queue});
+    return join($EMPTY, @{$queue});
 }
 
 sub blocknumber {

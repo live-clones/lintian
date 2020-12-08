@@ -23,9 +23,10 @@ use v5.20;
 use warnings;
 use utf8;
 
+use Const::Fast;
 use List::SomeUtils qw(any);
 
-use constant EMPTY => q{};
+const my $EMPTY => q{};
 
 use Moo;
 use namespace::clean;
@@ -78,7 +79,7 @@ sub matches_any {
     return 0
       unless length $keyword;
 
-    $modifiers //= EMPTY;
+    $modifiers //= $EMPTY;
 
     return 1
       if any { $keyword =~ /(?$modifiers)$_/ } $self->all;

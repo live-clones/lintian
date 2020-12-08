@@ -26,6 +26,7 @@ use utf8;
 use autodie;
 
 use Carp qw(croak confess);
+use Const::Fast;
 use File::Find::Rule;
 use List::Compare;
 use List::SomeUtils qw(any none uniq first_value);
@@ -40,11 +41,11 @@ use Lintian::Data;
 use Lintian::Deb822::File;
 use Lintian::Tag;
 
-use constant EMPTY => q{};
-use constant SPACE => q{ };
-
 use Moo;
 use namespace::clean;
+
+const my $EMPTY => q{};
+const my $SPACE => q{ };
 
 =head1 NAME
 
@@ -132,8 +133,8 @@ has known_tags_by_name => (
 
 has name => (
     is => 'rw',
-    coerce => sub { my ($string) = @_; return $string // EMPTY;},
-    default => EMPTY
+    coerce => sub { my ($string) = @_; return $string // $EMPTY;},
+    default => $EMPTY
 );
 
 has non_overridable_tags => (
@@ -259,7 +260,7 @@ sub load {
             die encode_utf8('These aliases of the tag '
                   . $tag->name
                   . ' are taken already: '
-                  . join(SPACE, @taken))
+                  . join($SPACE, @taken))
               if @taken;
 
             $self->known_aliases->{$_} = $tag->name for @{$tag->renamed_from};
@@ -505,7 +506,7 @@ sub read_profile {
     my $path = first_value { -e } @candidates;
 
     croak encode_utf8(
-        'Could not find a profile matching: ' . join(SPACE, @search_space))
+        'Could not find a profile matching: ' . join($SPACE, @search_space))
       unless length $path;
 
     my $deb822 = Lintian::Deb822::File->new;
@@ -547,7 +548,7 @@ sub read_profile {
       = qw(Profile Extends Enable-Tags-From-Check Disable-Tags-From-Check Enable-Tags Disable-Tags);
     my @unknown_header_fields = $header->extra(@valid_header_fields);
     croak encode_utf8("Unknown fields in header of profile $name: "
-          . join(SPACE, @unknown_header_fields))
+          . join($SPACE, @unknown_header_fields))
       if @unknown_header_fields;
 
     my @enable_checks
@@ -561,7 +562,7 @@ sub read_profile {
     $count{$_}++ for @allchecks;
     my @duplicate_checks = grep { $count{$_} > 1 } keys %count;
     die encode_utf8("These checks appear in profile $name more than once: "
-          . join(SPACE, @duplicate_checks))
+          . join($SPACE, @duplicate_checks))
       if @duplicate_checks;
 
     # make sure checks are loaded
@@ -614,7 +615,7 @@ sub read_profile {
     $count{$_}++ for @alltags;
     my @duplicate_tags = grep { $count{$_} > 1 } keys %count;
     die encode_utf8("These tags appear in in profile $name more than once: "
-          . join(SPACE, @duplicate_tags))
+          . join($SPACE, @duplicate_tags))
       if @duplicate_tags;
 
     push(@enable_tags, $self->known_checks_by_name->{$_}->tags)
@@ -635,7 +636,7 @@ sub read_profile {
         my @unknown_fields = $section->extra(@valid_fields);
         croak encode_utf8(
             "Unknown fields in section $position of profile $name: "
-              . join(SPACE, @unknown_fields))
+              . join($SPACE, @unknown_fields))
           if @unknown_fields;
 
         my @tags = $section->trimmed_list('Tags', qr/\s*,\s*/);

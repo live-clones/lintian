@@ -22,9 +22,10 @@ use v5.20;
 use warnings;
 use utf8;
 
+use Const::Fast;
 use List::Compare;
 
-use constant EMPTY => q{};
+const my $EMPTY => q{};
 
 use Moo;
 use namespace::clean;
@@ -119,7 +120,7 @@ If FIELD is passed but not present, then this method returns undef.
 sub unfolded_value {
     my ($self, $name) = @_;
 
-    return EMPTY
+    return $EMPTY
       unless length $name;
 
     my $lowercase = lc $name;
@@ -156,14 +157,14 @@ FIELD.
 sub value {
     my ($self, $name) = @_;
 
-    return EMPTY
+    return $EMPTY
       unless length $name;
 
     my $exact = $self->legend->{lc $name};
-    return EMPTY
+    return $EMPTY
       unless length $exact;
 
-    my $trimmed = $self->verbatim->{$exact} // EMPTY;
+    my $trimmed = $self->verbatim->{$exact} // $EMPTY;
 
     # trim both ends
     $trimmed =~ s/^\s+|\s+$//g;
@@ -181,14 +182,14 @@ FIELD.
 sub untrimmed_value {
     my ($self, $name) = @_;
 
-    return EMPTY
+    return $EMPTY
       unless length $name;
 
     my $exact = $self->legend->{lc $name};
-    return EMPTY
+    return $EMPTY
       unless length $exact;
 
-    return $self->verbatim->{$exact} // EMPTY;
+    return $self->verbatim->{$exact} // $EMPTY;
 }
 
 =item text (FIELD)
@@ -216,7 +217,7 @@ sub text {
 sub set {
     my ($self, $name, $value) = @_;
 
-    $value //= EMPTY;
+    $value //= $EMPTY;
 
     return
       unless length $name;

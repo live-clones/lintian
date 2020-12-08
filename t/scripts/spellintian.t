@@ -22,11 +22,12 @@
 use strict;
 use warnings;
 
+use Const::Fast;
 use IO::Async::Loop;
 use IO::Async::Process;
 use Test::More tests => 8;
 
-use constant NEWLINE => qq{\n};
+const my $NEWLINE => qq{\n};
 
 $ENV{'LINTIAN_BASE'} //= '.';
 
@@ -64,15 +65,18 @@ sub t {
 my $s = "A familar brown gnu allows\nto jump over the lazy dog.\n";
 
 t($s,
-    'familar -> familiar'. NEWLINE. '"allows to" -> "allows one to"'. NEWLINE);
+        'familar -> familiar'
+      . $NEWLINE
+      . '"allows to" -> "allows one to"'
+      . $NEWLINE);
 t(
     $s,
     'familar -> familiar'
-      . NEWLINE
+      . $NEWLINE
       . '"allows to" -> "allows one to"'
-      . NEWLINE
+      . $NEWLINE
       . 'gnu -> GNU'
-      . NEWLINE,
+      . $NEWLINE,
     '--picky'
 );
 

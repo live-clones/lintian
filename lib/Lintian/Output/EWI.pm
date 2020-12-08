@@ -22,19 +22,20 @@ use v5.20;
 use warnings;
 use utf8;
 
+use Const::Fast;
 use HTML::HTML5::Entities;
 use Term::ANSIColor ();
 use Text::Wrap;
 use Unicode::UTF8 qw(encode_utf8);
 
 # for tty hyperlinks
-use constant OSC_HYPERLINK => qq{\033]8;;};
-use constant OSC_DONE => qq{\033\\};
+const my $OSC_HYPERLINK => qq{\033]8;;};
+const my $OSC_DONE => qq{\033\\};
 
-use constant EMPTY => q{};
-use constant SPACE => q{ };
-use constant COLON => q{:};
-use constant NEWLINE => qq{\n};
+const my $EMPTY => q{};
+const my $SPACE => q{ };
+const my $COLON => q{:};
+const my $NEWLINE => qq{\n};
 
 use Moo;
 use namespace::clean;
@@ -134,8 +135,8 @@ sub print_hint {
     my $tag_name = $tag->name;
 
     my $information = $hint->context;
-    $information = SPACE . $self->_quote_print($information)
-      unless $information eq EMPTY;
+    $information = $SPACE . $self->_quote_print($information)
+      unless $information eq $EMPTY;
 
     # Limit the output so people do not drown in hints.  Some hints are
     # insanely noisy (hi static-library-has-unneeded-section)
@@ -181,17 +182,17 @@ sub print_hint {
         $self->msg($self->_quote_print($_))for @{ $override->{comments} };
     }
 
-    my $type = EMPTY;
-    $type = SPACE . $hint->processable->type
+    my $type = $EMPTY;
+    $type = $SPACE . $hint->processable->type
       unless $hint->processable->type eq 'binary';
 
     say encode_utf8($code
-          . COLON
-          . SPACE
+          . $COLON
+          . $SPACE
           . $hint->processable->name
           . $type
-          . COLON
-          . SPACE
+          . $COLON
+          . $SPACE
           . $output
           . $information);
 
@@ -224,8 +225,8 @@ sub _quote_print {
 sub osc_hyperlink {
     my ($self, $text, $target) = @_;
 
-    my $start = OSC_HYPERLINK . $target . OSC_DONE;
-    my $end = OSC_HYPERLINK . OSC_DONE;
+    my $start = $OSC_HYPERLINK . $target . $OSC_DONE;
+    my $end = $OSC_HYPERLINK . $OSC_DONE;
 
     return $start . $text . $end;
 }
@@ -272,11 +273,11 @@ sub describe_tags {
             chomp $description;
         }
 
-        my $output = 'N:' . NEWLINE;
-        $output .= $code . COLON . SPACE . $tag->name . NEWLINE;
-        $output .= 'N:' . NEWLINE;
-        $output .= $description . NEWLINE;
-        $output .= 'N:' . NEWLINE;
+        my $output = 'N:' . $NEWLINE;
+        $output .= $code . $COLON . $SPACE . $tag->name . $NEWLINE;
+        $output .= 'N:' . $NEWLINE;
+        $output .= $description . $NEWLINE;
+        $output .= 'N:' . $NEWLINE;
 
         print encode_utf8($output);
     }
@@ -300,7 +301,8 @@ sub indent_and_wrap {
 
             # do not wrap preformatted lines; indent only
             my @lines = split(/\n/, $paragraph);
-            my $indented_paragraph= join(NEWLINE, map { $indent . $_ } @lines);
+            my $indented_paragraph
+              = join($NEWLINE, map { $indent . $_ } @lines);
 
             push(@indented, $indented_paragraph);
 
@@ -320,7 +322,7 @@ sub indent_and_wrap {
         }
     }
 
-    my $formatted = join(NEWLINE . $indent . NEWLINE, @indented) . NEWLINE;
+    my $formatted = join($NEWLINE . $indent . $NEWLINE, @indented) . $NEWLINE;
 
     return $formatted;
 }

@@ -29,6 +29,7 @@ use warnings;
 use autodie;
 use v5.10;
 
+use Const::Fast;
 use File::Basename;
 use File::Find::Rule;
 use List::Compare;
@@ -43,9 +44,8 @@ use Test::Lintian::ConfigFile qw(read_config);
 use Test::Lintian::Output::EWI qw(to_universal);
 use Test::Lintian::Output::Universal qw(tag_name);
 
-use constant SPACE => q{ };
-use constant EMPTY => q{};
-use constant NEWLINE => qq{\n};
+const my $SPACE => q{ };
+const my $NEWLINE => qq{\n};
 
 my @known_missing = (qw(
       changed-by-invalid-for-derivative
@@ -108,14 +108,14 @@ for my $descpath (@descpaths) {
     my $universal = path($tagspath)->slurp_utf8;
 
     print "testcase->{testname}\n";
-    my @lines = split(NEWLINE, $universal);
+    my @lines = split(/$NEWLINE/, $universal);
     my @testfor = uniq map { tag_name($_) } @lines;
 
-    #    diag "Test-For: " . join(SPACE, @testfor);
+    #    diag "Test-For: " . join($SPACE, @testfor);
 
     if (exists $testcase->{check}) {
-        my @checks = split(SPACE, $testcase->{check});
-        #        diag "Checks: " . join(SPACE, @checks);
+        my @checks = split($SPACE, $testcase->{check});
+        #        diag "Checks: " . join($SPACE, @checks);
         my @related;
         push(@related, @{$checktags{$_} // []})for @checks;
         my $lc = List::Compare->new(\@testfor, \@related);

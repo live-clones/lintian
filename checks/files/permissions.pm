@@ -27,6 +27,8 @@ use autodie;
 
 use Path::Tiny;
 
+use constant EMPTY => q{};
+
 use Moo;
 use namespace::clean;
 
@@ -75,7 +77,8 @@ sub visit_installed_files {
         if ($file->operm & 06000) {
 
             # general: setuid/setgid files
-            my ($setuid, $setgid) = ('','');
+            my $setuid = EMPTY;
+            my $setgid = EMPTY;
 
             $setuid = $file->owner if $file->operm & 04000;
             $setgid = $file->group if $file->operm & 02000;

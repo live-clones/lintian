@@ -29,6 +29,8 @@ use autodie;
 use List::SomeUtils qw(any);
 use List::Util qw(first);
 
+use constant EMPTY => q{};
+
 use Moo;
 use namespace::clean;
 
@@ -57,7 +59,7 @@ sub source {
 
     # Get some data from the changelog file.
     my ($entry) = @{$processable->changelog->entries};
-    my $uploader = canonicalize($entry->Maintainer // '');
+    my $uploader = canonicalize($entry->Maintainer // EMPTY);
     my $changes = $entry->Changes;
     $changes =~ s/^(\s*\n)+//;
     my $firstline = first { /^\s*\*/ } split(/\n/, $changes);

@@ -24,11 +24,15 @@ use utf8;
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
+use Const::Fast;
+use List::SomeUtils qw(none);
+
 # from /usr/share/doc/libapt-pkg-perl/examples/apt-cache
 use AptPkg::Config '$_config';
 use AptPkg::System '$_system';
 use AptPkg::Cache;
-use List::SomeUtils qw(none);
+
+const my $EMPTY => q{};
 
 (my $self = $0) =~ s{.*/}{};
 
@@ -147,7 +151,7 @@ sub find_core_version {
 
 sub cpan_version_to_deb {
     my ($pkg, $cpan_version, $epoch, $digits) = @_;
-    $epoch ||= '';
+    $epoch ||= $EMPTY;
 
     # cpan_version
     #         digits
@@ -171,15 +175,15 @@ sub cpan_version_to_deb {
     my ($major, $prefix, $suffix) = ($cpan_version =~ $regex);
     die("no match with $cpan_version?") if !$major;
 
-    $suffix ||= '';
+    $suffix ||= $EMPTY;
     if (length($suffix) + length($prefix) == $digits) {
         $prefix .= $suffix;
-        $suffix = '';
+        $suffix = $EMPTY;
     }
     if (length($suffix) + length($prefix) < $digits) {
         $prefix .= '0' while length($prefix) < $digits;
     }
-    $suffix = ".$suffix" if $suffix ne '';
+    $suffix = ".$suffix" if $suffix ne $EMPTY;
     return $epoch.$major.$prefix.$suffix;
 }
 

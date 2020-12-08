@@ -26,6 +26,7 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use File::Basename;
 use List::SomeUtils qw(any none uniq);
 
@@ -35,6 +36,9 @@ use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $EMPTY => q{};
+const my $SPACE => q{ };
 
 # not presently used
 #my $UNKNOWN_SHARED_LIBRARY_EXCEPTIONS
@@ -322,7 +326,7 @@ sub installable {
                 for my $stem (@stems) {
                     push @alt,
                       map { "$stem/$_$basename" }
-                      ('', qw(64/ 32/ n32/ x32/ sf/ hf/));
+                      ($EMPTY, qw(64/ 32/ n32/ x32/ sf/ hf/));
                 }
             }
 
@@ -405,15 +409,15 @@ sub installable {
                 # We exclude udebs from the checks for correct shared library
                 # dependencies, since packages may contain dependencies on
                 # other udeb packages.
-                my $udeb = '';
+                my $udeb = $EMPTY;
                 $udeb = 'udeb: ' if s/^udeb:\s+//;
                 @words = split(/\s+/, $_);
-                my $shlibs_string = $udeb.$words[0].' '.$words[1];
+                my $shlibs_string = $udeb.$words[0].$SPACE.$words[1];
                 if ($shlibs_control{$shlibs_string}) {
                     $self->hint('duplicate-in-shlibs',$shlibs_string);
                 } else {
                     $shlibs_control{$shlibs_string} = 1;
-                    push(@shlibs_depends, join(' ', @words[2 .. $#words]))
+                    push(@shlibs_depends, join($SPACE, @words[2 .. $#words]))
                       unless $udeb;
                 }
             }
@@ -514,7 +518,7 @@ sub installable {
                         foreach my $subpart (split /\s*\|\s*/, $part) {
                             $subpart
                               =~ m{^(\S+)(\s*(?:\(\S+\s+\S+\)|#MINVER#))?$};
-                            ($dep_package, $dep) = ($1, $2 || '');
+                            ($dep_package, $dep) = ($1, $2 || $EMPTY);
                             if (defined $dep_package) {
                                 push @symbols_depends, $dep_package . $dep;
                             } else {
@@ -544,7 +548,7 @@ sub installable {
                 foreach my $part (split /\s*,\s*/) {
                     foreach my $subpart (split /\s*\|\s*/, $part) {
                         $subpart =~ m{^(\S+)(\s*(?:\(\S+\s+\S+\)|#MINVER#))?$};
-                        ($dep_package, $dep) = ($1, $2 || '');
+                        ($dep_package, $dep) = ($1, $2 || $EMPTY);
                         if (defined $dep_package) {
                             push @symbols_depends, $dep_package . $dep;
                         } else {
@@ -574,7 +578,7 @@ sub installable {
 
                 $symbol_count++;
                 my ($sym, $v, $dep_order) = ($1, $2, $3);
-                $dep_order ||= '';
+                $dep_order ||= $EMPTY;
 
                 if (($v eq $version) and ($version =~ /-/)) {
                     $full_version_sym ||= $sym;
@@ -600,7 +604,7 @@ sub installable {
         close($fd);
         if ($full_version_count) {
             $full_version_count--;
-            my $others = '';
+            my $others = $EMPTY;
             if ($full_version_count > 0) {
                 $others = " and $full_version_count others";
             }
@@ -610,7 +614,7 @@ sub installable {
         }
         if ($debian_revision_count) {
             $debian_revision_count--;
-            my $others = '';
+            my $others = $EMPTY;
             if ($debian_revision_count > 0) {
                 $others = " and $debian_revision_count others";
             }

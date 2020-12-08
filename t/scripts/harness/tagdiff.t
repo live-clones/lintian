@@ -23,14 +23,14 @@ use warnings;
 use autodie;
 
 use Capture::Tiny qw(capture_merged);
+use Const::Fast;
 use List::Util qw(none);
 use Path::Tiny;
 use Test::More;
 
-use constant LINESEP => qr/^/;
-use constant EMPTY => q{};
-use constant SPACE => q{ };
-use constant NEWLINE => qq{\n};
+const my $EMPTY => q{};
+const my $SPACE => q{ };
+const my $LINESEP => qr/^/;
 
 # the files below were generated from changelog-file-general on Feb 1, 2019
 
@@ -73,8 +73,8 @@ changelog-file-general (binary): latest-changelog-entry-without-new-date
 changelog-file-general (source): latest-debian-changelog-entry-without-new-date 
 EOSTR
 
-ok(tagdiff($original, $reordered) eq EMPTY, 'Reordered tags on the right');
-ok(tagdiff($reordered, $original) eq EMPTY, 'Reordered tags on the left');
+ok(tagdiff($original, $reordered) eq $EMPTY, 'Reordered tags on the right');
+ok(tagdiff($reordered, $original) eq $EMPTY, 'Reordered tags on the left');
 
 # lines missing
 my $missing =<<'EOSTR';
@@ -171,13 +171,13 @@ exit;
 sub complement {
     my ($diff) = @_;
 
-    return EMPTY
+    return $EMPTY
       unless length $diff;
 
-    my @lines = split(LINESEP, $diff);
+    my @lines = split($LINESEP, $diff);
     $_ = -$_ for @lines;
 
-    return join(EMPTY, reverse sort @lines);
+    return join($EMPTY, reverse sort @lines);
 }
 
 sub tagdiff {
@@ -193,7 +193,7 @@ sub tagdiff {
     my ($diff, $status) = capture_merged { system(@command); };
     $status = ($status >> 8) & 255;
 
-    die 'Error executing: ' . join(SPACE, @command) . ": $!"
+    die 'Error executing: ' . join($SPACE, @command) . ": $!"
       if none { $_ eq $status } (0, 1);
 
     return $diff;

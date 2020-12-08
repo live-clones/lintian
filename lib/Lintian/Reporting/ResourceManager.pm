@@ -25,11 +25,14 @@ use utf8;
 use autodie;
 
 use Carp qw(croak);
+use Const::Fast;
 use File::Basename qw(basename);
 use File::Copy qw(copy);
 use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Util qw(get_file_digest);
+
+const my $SPACE => q{ };
 
 =head1 NAME
 
@@ -129,7 +132,7 @@ sub install_resource {
         $resource = $opt->{'source_file'};
         if (index($basename, '/') > -1) {
             croak encode_utf8(
-                join(' ',
+                join($SPACE,
                     qq(Resource "${resource_name}" must not contain "/"),
                     'when source_file is given'));
         }
@@ -160,7 +163,7 @@ sub install_resource {
             "Cannot copy $resource to $resource_root/$install_name: $!");
     } else {
         croak encode_utf8(
-            join(' ',
+            join($SPACE,
                 "Unknown install method ${method}",
                 '- please use "move" or "copy"'));
     }

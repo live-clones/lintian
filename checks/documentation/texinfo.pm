@@ -28,6 +28,8 @@ use autodie;
 
 use Lintian::Util qw(open_gz normalize_link_target);
 
+use constant EMPTY => q{};
+
 use Moo;
 use namespace::clean;
 
@@ -45,7 +47,7 @@ sub binary {
     # Read package contents...
     foreach my $file ($info_dir->descendants) {
         # NB: file_info can be undef (e.g. symlinks)
-        my $file_info = $file->file_info // '';
+        my $file_info = $file->file_info // EMPTY;
         my $fname = $file->basename;
 
         next unless $file->is_symlink or $file->is_file;

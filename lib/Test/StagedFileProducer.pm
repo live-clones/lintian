@@ -70,6 +70,7 @@ use utf8;
 use autodie;
 
 use Carp;
+use Const::Fast;
 use File::Find::Rule;
 use File::Spec::Functions qw(abs2rel);
 use File::stat;
@@ -79,9 +80,8 @@ use Unicode::UTF8 qw(encode_utf8);
 
 use Test::Lintian::Helper qw(rfc822date);
 
-use constant EMPTY => q{};
-use constant SPACE => q{ };
-use constant NEWLINE => qq{\n};
+const my $EMPTY => q{};
+const my $SPACE => q{ };
 
 =head1 FUNCTIONS
 
@@ -221,14 +221,15 @@ sub _process_remaining_stages {
         # get good paths that will match those of File::Find
         @exclude = map { path($_)->realpath } @exclude;
 
-        say encode_utf8(EMPTY) if $self->{verbose};
+        say encode_utf8($EMPTY) if $self->{verbose};
 
         my @relative = sort map { abs2rel($_, $self->{path}) } @products;
-        say encode_utf8('Considering production of: ' . join(SPACE, @relative))
+        say encode_utf8(
+            'Considering production of: ' . join($SPACE, @relative))
           if $self->{verbose};
 
         say encode_utf8('Excluding: '
-              . join(SPACE, sort map { abs2rel($_, $self->{path}) } @exclude))
+              . join($SPACE, sort map { abs2rel($_, $self->{path}) } @exclude))
           if $self->{verbose};
 
         my %relevant = %{$self->{mtimes}};
@@ -241,7 +242,7 @@ sub _process_remaining_stages {
 #     if $self->{verbose};
 # }
 
-        say encode_utf8(EMPTY) if $self->{verbose};
+        say encode_utf8($EMPTY) if $self->{verbose};
 
         my $file_epoch = (max(values %relevant))//time;
         say encode_utf8(
@@ -264,7 +265,7 @@ sub _process_remaining_stages {
             'Rebuild threshold is         : '. rfc822date($threshold))
           if $self->{verbose};
 
-        say encode_utf8(EMPTY) if $self->{verbose};
+        say encode_utf8($EMPTY) if $self->{verbose};
 
         my $product_epoch
           = min(map { -e $_ ? stat($_)->mtime : 0 } @products);
@@ -280,7 +281,7 @@ sub _process_remaining_stages {
         # not producing if times are equal; resolution 1 sec
         if ($product_epoch < $threshold) {
 
-            say encode_utf8('Producing: ' . join(SPACE, @relative))
+            say encode_utf8('Producing: ' . join($SPACE, @relative))
               if $self->{verbose};
 
             $stage{build}->() if exists $stage{build};
@@ -291,7 +292,7 @@ sub _process_remaining_stages {
         } else {
 
             say encode_utf8(
-                'Skipping production of: ' . join(SPACE, @relative))
+                'Skipping production of: ' . join($SPACE, @relative))
               if $self->{verbose};
 
             $stage{skip}->() if exists $stage{skip};

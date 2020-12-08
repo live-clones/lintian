@@ -23,18 +23,18 @@ use v5.20;
 use warnings;
 use utf8;
 
+use Const::Fast;
 use Path::Tiny;
 use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Deb822::File;
 use Lintian::Tag ();
 
-use constant EMPTY => q{};
-use constant SPACE => q{ };
-use constant SLASH => q{/};
-
 use Moo;
 use namespace::clean;
+
+const my $EMPTY => q{};
+const my $SLASH => q{/};
 
 =head1 NAME
 
@@ -68,26 +68,26 @@ This class represents Lintian checks.
 
 has basedir => (
     is => 'rw',
-    coerce => sub { my ($string) = @_; return $string // EMPTY;},
-    default => EMPTY
+    coerce => sub { my ($string) = @_; return $string // $EMPTY;},
+    default => $EMPTY
 );
 
 has name => (
     is => 'rw',
-    coerce => sub { my ($string) = @_; return $string // EMPTY;},
-    default => EMPTY
+    coerce => sub { my ($string) = @_; return $string // $EMPTY;},
+    default => $EMPTY
 );
 
 has path => (
     is => 'rw',
-    coerce => sub { my ($string) = @_; return $string // EMPTY;},
-    default => EMPTY
+    coerce => sub { my ($string) = @_; return $string // $EMPTY;},
+    default => $EMPTY
 );
 
 has module => (
     is => 'rw',
-    coerce => sub { my ($string) = @_; return $string // EMPTY;},
-    default => EMPTY
+    coerce => sub { my ($string) = @_; return $string // $EMPTY;},
+    default => $EMPTY
 );
 
 has type => (
@@ -128,9 +128,9 @@ sub load {
     $module =~ s{[-.]}{_}g;
 
     $self->module("Lintian::$module");
-    $self->path($self->basedir . SLASH . $self->name . '.pm');
+    $self->path($self->basedir . $SLASH . $self->name . '.pm');
 
-    my $descpath = $self->basedir . SLASH . $self->name . '.desc';
+    my $descpath = $self->basedir . $SLASH . $self->name . '.desc';
     return
       unless -e $descpath;
 
@@ -215,7 +215,7 @@ sub get_tag {
       if defined $global;
 
     # try name spaced
-    my $prefixed = $self->name . SLASH . $tagname;
+    my $prefixed = $self->name . $SLASH . $tagname;
 
     my $name_spaced = $self->tag_table->{$prefixed};
     return undef

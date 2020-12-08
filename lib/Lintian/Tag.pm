@@ -25,22 +25,22 @@ use warnings;
 use utf8;
 
 use Carp qw(croak);
+use Const::Fast;
 use List::SomeUtils qw(none);
 use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Deb822::File;
 
-use constant EMPTY => q{};
-use constant SPACE => q{ };
-use constant SLASH => q{/};
-use constant COMMA => q{,};
-use constant LEFT_PARENTHESIS => q{(};
-use constant RIGHT_PARENTHESIS => q{)};
-
-use constant PARAGRAPH_BREAK => qq{\n\n};
-
 use Moo;
 use namespace::clean;
+
+const my $EMPTY => q{};
+const my $SPACE => q{ };
+const my $SLASH => q{/};
+const my $COMMA => q{,};
+const my $LEFT_PARENTHESIS => q{(};
+const my $RIGHT_PARENTHESIS => q{)};
+const my $PARAGRAPH_BREAK => qq{\n\n};
 
 # Ordered lists of severities, used for display level parsing.
 our @SEVERITIES= qw(classification pedantic info warning error);
@@ -91,8 +91,8 @@ metadata elements or to format the tag description.
 
 has name => (
     is => 'rw',
-    coerce => sub { my ($text) = @_; return ($text // EMPTY); },
-    default => EMPTY
+    coerce => sub { my ($text) = @_; return ($text // $EMPTY); },
+    default => $EMPTY
 );
 
 has visibility => (
@@ -101,13 +101,13 @@ has visibility => (
     coerce => sub {
         my ($text) = @_;
 
-        $text //= EMPTY;
+        $text //= $EMPTY;
         croak encode_utf8("Unknown tag severity $text")
           if none { $text eq $_ } @SEVERITIES;
 
         return $text;
     },
-    default => EMPTY
+    default => $EMPTY
 );
 
 has effective_severity => (
@@ -116,19 +116,19 @@ has effective_severity => (
     coerce => sub {
         my ($text) = @_;
 
-        $text //= EMPTY;
+        $text //= $EMPTY;
         croak encode_utf8("Unknown tag severity $text")
           if none { $text eq $_ } @SEVERITIES;
 
         return $text;
     },
-    default => EMPTY
+    default => $EMPTY
 );
 
 has check => (
     is => 'rw',
-    coerce => sub { my ($text) = @_; return ($text // EMPTY); },
-    default => EMPTY
+    coerce => sub { my ($text) = @_; return ($text // $EMPTY); },
+    default => $EMPTY
 );
 
 has name_spaced => (
@@ -145,8 +145,8 @@ has show_always => (
 
 has check_type => (
     is => 'rw',
-    coerce => sub { my ($text) = @_; return ($text // EMPTY); },
-    default => EMPTY
+    coerce => sub { my ($text) = @_; return ($text // $EMPTY); },
+    default => $EMPTY
 );
 
 has experimental => (
@@ -157,8 +157,8 @@ has experimental => (
 
 has explanation => (
     is => 'rw',
-    coerce => sub { my ($text) = @_; return ($text // EMPTY); },
-    default => EMPTY
+    coerce => sub { my ($text) = @_; return ($text // $EMPTY); },
+    default => $EMPTY
 );
 
 has see_also => (
@@ -197,7 +197,7 @@ sub load {
     $self->show_always($fields->value('Show-Always') eq 'yes');
 
     my $name = $fields->value('Tag');
-    $name = $self->check . SLASH . $name
+    $name = $self->check . $SLASH . $name
       if $self->name_spaced;
 
     $self->name($name);
@@ -271,7 +271,7 @@ sub markdown_description {
     push(@extras, 'Check: ' . $self->check)
       if length $self->check;
 
-    push(@extras, 'Renamed from: ' . join(SPACE, @{$self->renamed_from}))
+    push(@extras, 'Renamed from: ' . join($SPACE, @{$self->renamed_from}))
       if @{$self->renamed_from};
 
     push(@extras, 'This tag is experimental.')
@@ -281,7 +281,7 @@ sub markdown_description {
         'This tag is a classification. There is no issue in your package.')
       if $self->visibility eq 'classification';
 
-    $description .= PARAGRAPH_BREAK . $_ for @extras;
+    $description .= $PARAGRAPH_BREAK . $_ for @extras;
 
     return $description;
 }
@@ -295,14 +295,14 @@ sub markdown_reference_statement {
 
     my @references = @{$self->see_also};
 
-    return EMPTY
+    return $EMPTY
       unless @references;
 
     # remove and save last element
     my $last = pop @references;
 
-    my $text        = EMPTY;
-    my $oxfordcomma = (@references > 1 ? COMMA : EMPTY);
+    my $text        = $EMPTY;
+    my $oxfordcomma = (@references > 1 ? $COMMA : $EMPTY);
     $text = join(', ', @references) . "$oxfordcomma and "
       if @references;
 
@@ -378,14 +378,14 @@ sub markdown_from_manuals {
       = $self->profile->load_data('output/manual-references', qr/::/,
         \&load_manual_data);
 
-    return EMPTY
+    return $EMPTY
       unless $MANUALS->known($volume);
 
     my $entry = $MANUALS->value($volume);
 
     # start with the citation to the overall manual.
-    my $title = $entry->{''}{title};
-    my $url   = $entry->{''}{url};
+    my $title = $entry->{$EMPTY}{title};
+    my $url   = $entry->{$EMPTY}{url};
 
     my $markdown = markdown_hyperlink($title, $url);
 
@@ -411,10 +411,10 @@ sub markdown_from_manuals {
     my $section_url   = $entry->{$section}{url};
 
     $markdown
-      .= SPACE
-      . LEFT_PARENTHESIS
+      .= $SPACE
+      . $LEFT_PARENTHESIS
       . markdown_hyperlink($section_title, $section_url)
-      . RIGHT_PARENTHESIS;
+      . $RIGHT_PARENTHESIS;
 
     return $markdown;
 }

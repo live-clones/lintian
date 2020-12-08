@@ -23,16 +23,17 @@ use utf8;
 use autodie;
 
 use Archive::Zip qw( :ERROR_CODES :CONSTANTS );
+use Const::Fast;
 use Cwd;
 use Path::Tiny;
 
-use constant EMPTY => q{};
-use constant NEWLINE => qq{\n};
-use constant SPACE => q{ };
-use constant DASH => q{-};
-
 use Moo::Role;
 use namespace::clean;
+
+const my $EMPTY => q{};
+const my $NEWLINE => qq{\n};
+const my $SPACE => q{ };
+const my $DASH => q{-};
 
 =head1 NAME
 
@@ -189,7 +190,7 @@ sub parse_jar {
                 $jversion = $major
                   if $magic == 0xCAFEBABE;
             }
-            push(@lines, "$name: " . ($jversion // DASH));
+            push(@lines, "$name: " . ($jversion // $DASH));
         }
 
         if ($manifest) {
@@ -202,16 +203,16 @@ sub parse_jar {
               unless defined $zerr;
 
             if ($zerr == AZ_OK) {
-                my $partial = EMPTY;
+                my $partial = $EMPTY;
                 my $first = 1;
-                my @list = split(NEWLINE, $contents);
+                my @list = split($NEWLINE, $contents);
                 foreach my $line (@list) {
 
                     # remove DOS type line feeds
                     $line =~ s/\r//g;
 
                     if ($line =~ /^(\S+:)\s*(.*)/) {
-                        push(@lines, SPACE . SPACE . "$1 $2");
+                        push(@lines, $SPACE . $SPACE . "$1 $2");
                     }
                     if ($line =~ /^ (.*)/) {
                         push(@lines, $1);

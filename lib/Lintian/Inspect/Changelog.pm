@@ -23,14 +23,15 @@ use warnings;
 use utf8;
 
 use Carp;
+use Const::Fast;
 use Date::Parse;
 
 use Lintian::Inspect::Changelog::Entry;
 
-use constant EMPTY => q{};
-use constant SPACE => q{ };
-use constant ASTERISK => q{*};
-use constant UNKNOWN => q{unknown};
+const my $EMPTY => q{};
+const my $SPACE => q{ };
+const my $ASTERISK => q{*};
+const my $UNKNOWN => q{unknown};
 
 use Moo;
 use namespace::clean;
@@ -227,7 +228,7 @@ m/^ \-\- (?<name>.*) <(?<email>.*)>(?<sep>  ?)(?<date>(?:\w+\,\s*)?\d{1,2}\s+\w+
             $expect eq 'more change data or trailer'
               || push @{$self->errors},
               [$lineno,"found trailer where expected $expect", $literal];
-            if ($separator ne SPACE . SPACE) {
+            if ($separator ne $SPACE . $SPACE) {
                 push @{$self->errors},
                   [$lineno,'badly formatted trailer line', $literal];
             }
@@ -265,12 +266,12 @@ m/^ \-\- (?<name>.*) <(?<email>.*)>(?<sep>  ?)(?<date>(?:\w+\,\s*)?\d{1,2}\s+\w+
                     push @{$self->entries}, $entry;
 
                     $entry = Lintian::Inspect::Changelog::Entry->new;
-                    $entry->Source(UNKNOWN);
-                    $entry->Distribution(UNKNOWN);
-                    $entry->Urgency(UNKNOWN);
-                    $entry->Urgency_LC(UNKNOWN);
-                    $entry->Version(UNKNOWN . ($unknowncounter++));
-                    $entry->Urgency_Comment(EMPTY);
+                    $entry->Source($UNKNOWN);
+                    $entry->Distribution($UNKNOWN);
+                    $entry->Urgency($UNKNOWN);
+                    $entry->Urgency_LC($UNKNOWN);
+                    $entry->Version($UNKNOWN . ($unknowncounter++));
+                    $entry->Urgency_Comment($EMPTY);
                     $entry->ERROR([
                         $lineno,
                         "found change data where expected $expect",$_
@@ -278,7 +279,7 @@ m/^ \-\- (?<name>.*) <(?<email>.*)>(?<sep>  ?)(?<date>(?:\w+\,\s*)?\d{1,2}\s+\w+
                 }
               };
             $entry->{'Changes'} .= (" \n" x $blanklines)." $_\n";
-            if (!$entry->{Items} || $1 eq ASTERISK) {
+            if (!$entry->{Items} || $1 eq $ASTERISK) {
                 $entry->{Items} ||= [];
                 push @{$entry->{Items}}, "$_\n";
             } else {

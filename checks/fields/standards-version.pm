@@ -31,6 +31,8 @@ use Date::Parse qw(str2time);
 use List::Util qw(first);
 use POSIX qw(strftime);
 
+use constant EMPTY => q{};
+
 use Moo;
 use namespace::clean;
 
@@ -105,7 +107,7 @@ sub source {
         my ($entry) = @{$processable->changelog->entries};
         $pkgdate
           = ($entry && $entry->Timestamp) ? $entry->Timestamp : $CURRENT_DATE;
-        $dist = ($entry && $entry->Distribution)? $entry->Distribution : '';
+        $dist = ($entry && $entry->Distribution)? $entry->Distribution : EMPTY;
     } else {
         $pkgdate = $CURRENT_DATE;
     }

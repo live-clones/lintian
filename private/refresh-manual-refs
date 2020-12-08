@@ -30,6 +30,7 @@ use utf8;
 use autodie;
 use open qw(:std :encoding(UTF-8));
 
+use Const::Fast;
 use Cwd qw(realpath);
 use File::Basename qw(dirname);
 
@@ -42,6 +43,8 @@ use lib THISDIR . '/../lib';
 
 use List::SomeUtils qw(none);
 use POSIX qw(strftime);
+
+const my $EMPTY => q{};
 
 # For each manual, we need:
 #  * Location of the manual index on the local filesystem
@@ -129,8 +132,8 @@ my %manuals = (
         $index_re, $page_fields
     ],
     'doc-base' => [
-        '/usr/share/doc/doc-base/doc-base.html/index.html', '',
-        $index_re, $page_fields
+        '/usr/share/doc/doc-base/doc-base.html/index.html',
+        $EMPTY,$index_re, $page_fields
     ],
     'debconf-spec' => [
         '/usr/share/doc/debian-policy/debconf_specification.html',
@@ -183,7 +186,7 @@ sub extract_refs {
     while (<$page_fd>) {
         if (not $title and m/$title_re/) {
             $title = 1;
-            my @out = ($manual, '', $1, $url);
+            my @out = ($manual, $EMPTY, $1, $url);
             print {$fh} join('::', @out) . "\n";
         }
 
@@ -211,7 +214,7 @@ sub extract_refs {
             $ref{title} =~ s{<code[^>]*>(.*?)</code ?>}{<code>$1</code>}ig;
 
             $ref{url} = "$url$ref{url}";
-            $ref{url} = '' if not $url;
+            $ref{url} = $EMPTY if not $url;
 
             $ref{section} =~ s/^\#(.+)$/\L$1/;
             # Some manuals reuse section numbers for different references,

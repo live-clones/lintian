@@ -23,19 +23,19 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use IPC::Run3;
 use List::SomeUtils qw(first_index none);
 use Path::Tiny;
 
 use Lintian::IPC::Run3 qw(safe_qx);
 
-use constant EMPTY => q{};
-use constant NEWLINE => qq{\n};
-
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $SPACE => q{ };
 
 sub installable {
     my ($self) = @_;
@@ -133,7 +133,7 @@ sub installable {
             ) {
                 $self->hint(
                     'malformed-deb-archive',
-                    join(' ',
+                    join($SPACE,
                         "second (official) member $ctrl_member",
                         'not control.tar.(gz|xz)'));
                 $failed = 1;
@@ -158,7 +158,7 @@ sub installable {
                 # wasn't okay after all
                 $self->hint(
                     'malformed-deb-archive',
-                    join(' ',
+                    join($SPACE,
                         "third (official) member $data_member",
                         'not data.tar.(gz|xz|bz2|lzma)'));
                 $failed = 1;

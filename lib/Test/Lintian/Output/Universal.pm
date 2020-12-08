@@ -57,17 +57,16 @@ BEGIN {
 }
 
 use Carp;
+use Const::Fast;
 use List::SomeUtils qw(uniq);
 use List::Util qw(all);
 use Path::Tiny;
 use Unicode::UTF8 qw(encode_utf8);
 
-use constant SPACE => q{ };
-use constant EMPTY => q{};
-use constant COLON => q{:};
-use constant LPARENS => q{(};
-use constant RPARENS => q{)};
-use constant NEWLINE => qq{\n};
+const my $SPACE => q{ };
+const my $COLON => q{:};
+const my $LPARENS => q{(};
+const my $RPARENS => q{)};
 
 =head1 FUNCTIONS
 
@@ -163,8 +162,8 @@ sub universal_string {
       unless length $name;
 
     my $line
-      = $package . SPACE . LPARENS . $type . RPARENS . COLON . SPACE . $name;
-    $line .= SPACE . $details
+      = $package. $SPACE. $LPARENS. $type. $RPARENS. $COLON. $SPACE. $name;
+    $line .= $SPACE . $details
       if length $details;
 
     return $line;

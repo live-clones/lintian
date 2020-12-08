@@ -28,6 +28,7 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use Path::Tiny;
 
 use Lintian::Spelling
@@ -37,6 +38,9 @@ use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $EMPTY => q{};
+const my $SPACE => q{ };
 
 # Supported documentation formats for doc-base files.
 our %known_doc_base_formats
@@ -380,7 +384,7 @@ sub check_doc_base_field {
     # classes since otherwise we'd need to deal with wildcards inside
     # character classes and aren't there yet.
     if ($field eq 'Index' or $field eq 'Files') {
-        my @files = map { split(' ', $_) } @$vals;
+        my @files = map { split($SPACE, $_) } @$vals;
 
         if ($field eq 'Index' && @files > 1) {
             $self->hint('doc-base-index-references-multiple-files',
@@ -419,7 +423,7 @@ sub check_doc_base_field {
 
         # Format field.
     } elsif ($field eq 'Format') {
-        my $format = join(' ', @$vals);
+        my $format = join($SPACE, @$vals);
 
         # trim both ends
         $format =~ s/^\s+|\s+$//g;
@@ -436,7 +440,7 @@ sub check_doc_base_field {
 
         # Document field.
     } elsif ($field eq 'Document') {
-        $_ = join(' ', @$vals);
+        $_ = join($SPACE, @$vals);
 
         $self->hint('doc-base-invalid-document-field', "$dbfile:$line", $_)
           unless /^[a-z0-9+.-]+$/;
@@ -456,17 +460,17 @@ sub check_doc_base_field {
                 "${dbfile}:${line}");
             check_spelling(
                 $self->profile,
-                join(' ', @$vals),
+                join($SPACE, @$vals),
                 $group->spelling_exceptions,
                 $stag_emitter
             );
-            check_spelling_picky($self->profile, join(' ', @$vals),
+            check_spelling_picky($self->profile, join($SPACE, @$vals),
                 $stag_emitter);
         }
 
         # Section field.
     } elsif ($field eq 'Section') {
-        $_ = join(' ', @$vals);
+        $_ = join($SPACE, @$vals);
         unless ($SECTIONS->known($_)) {
             if (m{^App(?:lication)?s/(.+)$} && $SECTIONS->known($1)) {
                 $self->hint('doc-base-uses-applications-section',
@@ -506,14 +510,14 @@ sub check_doc_base_field {
                 $self->hint('doc-base-abstract-field-is-template',
                     "$dbfile:$line")
                   unless $pkg eq 'doc-base';
-            } elsif (/^(\s+)\.(\s*)$/ and ($1 ne ' ' or $2)) {
+            } elsif (/^(\s+)\.(\s*)$/ and ($1 ne $SPACE or $2)) {
                 $self->hint(
                     'doc-base-abstract-field-separator-extra-whitespace',
                     "$dbfile:" . ($line - $#{$vals} + $idx));
             } elsif (!$leadsp && /^(\s+)(\S)/) {
                 # The regexp should always match.
                 ($leadsp, $charafter) = ($1, $2);
-                $leadsp_ok = $leadsp eq ' ';
+                $leadsp_ok = $leadsp eq $SPACE;
             } elsif (!$leadsp_ok && /^(\s+)(\S)/) {
                 # The regexp should always match.
                 undef $charafter if $charafter && $charafter ne $2;
@@ -535,11 +539,11 @@ sub check_doc_base_field {
                 "${dbfile}:${line}");
             check_spelling(
                 $self->profile,
-                join(' ', @$vals),
+                join($SPACE, @$vals),
                 $group->spelling_exceptions,
                 $stag_emitter
             );
-            check_spelling_picky($self->profile, join(' ', @$vals),
+            check_spelling_picky($self->profile, join($SPACE, @$vals),
                 $stag_emitter);
         }
     }
@@ -616,7 +620,7 @@ sub delink {
     $file =~ s{/+}{/}g;                            # remove duplicated '/'
     return $file unless %$all_links;              # package doesn't symlinks
 
-    my $p1 = '';
+    my $p1 = $EMPTY;
     my $p2 = $file;
     my %used_links;
 
@@ -643,7 +647,7 @@ sub delink {
         if (defined $all_links->{$p1}) {
             return '!!! SYMLINK LOOP !!!' if defined $used_links{$p1};
             $p2 = $all_links->{$p1} . $p2;
-            $p1 = '';
+            $p1 = $EMPTY;
             $used_links{$p1} = 1;
         }
     }
@@ -651,7 +655,7 @@ sub delink {
     # After the loop $p2 should be empty and $p1 should contain the target
     # file.  In some rare cases when $file contains no slashes, $p1 will be
     # empty and $p2 will contain the result (which will be equal to $file).
-    return $p1 ne '' ? $p1 : $p2;
+    return $p1 ne $EMPTY ? $p1 : $p2;
 }
 
 sub check_script {
@@ -666,7 +670,7 @@ sub check_script {
 
     open(my $fd, '<', $spath->unpacked_path);
     $interp = <$fd>;
-    $interp = '' unless defined $interp;
+    $interp = $EMPTY unless defined $interp;
     if ($interp =~ m{^\#\!\s*/bin/$known_shells_regex}) {
         $interp = 'sh';
     } elsif ($interp =~ m{^\#\!\s*/usr/bin/perl}) {

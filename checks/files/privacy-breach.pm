@@ -311,7 +311,7 @@ sub check_tag_url_privacy_breach {
         if ($website =~ m{$regex}mxs) {
             unless (exists $privacybreachhash->{'tag-'.$breaker}) {
                 my $tag =  $value->{'tag'};
-                my $suggest = $value->{'suggest'} // '';
+                my $suggest = $value->{'suggest'} // EMPTY;
                 $privacybreachhash->{'tag-'.$breaker}= 1;
                 $self->hint($tag, $file, $suggest, "($url)");
             }

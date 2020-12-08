@@ -23,15 +23,14 @@ use warnings;
 use utf8;
 
 use Carp;
+use Const::Fast;
 use List::SomeUtils qw(all);
 use Unicode::UTF8 qw(encode_utf8);
 
-use constant SPACE => q{ };
-use constant EMPTY => q{};
-use constant COLON => q{:};
-use constant LPARENS => q{(};
-use constant RPARENS => q{)};
-use constant NEWLINE => qq{\n};
+const my $SPACE => q{ };
+const my $COLON => q{:};
+const my $LPARENS => q{(};
+const my $RPARENS => q{)};
 
 use Moo;
 use namespace::clean;
@@ -113,14 +112,14 @@ sub issue_hints {
 
             my $line
               = $processable->name
-              . SPACE
-              . LPARENS
+              . $SPACE
+              . $LPARENS
               . $processable->type
-              . RPARENS
-              . COLON
-              . SPACE
+              . $RPARENS
+              . $COLON
+              . $SPACE
               . $hint->tag->name;
-            $line .= SPACE . $details
+            $line .= $SPACE . $details
               if length $details;
 
             push(@lines, $line);

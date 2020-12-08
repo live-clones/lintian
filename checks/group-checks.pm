@@ -187,6 +187,10 @@ sub check_multiarch {
 package Lintian::group_checks::Graph;  ## no critic (Modules::ProhibitMultiplePackages)
 #>>>
 
+use Const::Fast;
+
+const my $EMPTY => q{};
+
 sub new {
     my ($type, $nodes, $edges) = @_;
     my $self = { nodes => $nodes, edges => $edges};
@@ -245,7 +249,7 @@ sub _tarjans_sc {
         # the "root" node - create the SSC.
         my $component = [];
         my $scc = $self->{scc};
-        my $elem = '';
+        my $elem = $EMPTY;
         do {
             $elem = pop @$stack;
             delete $on_stack->{$elem};

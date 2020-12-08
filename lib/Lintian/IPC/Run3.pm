@@ -39,6 +39,7 @@ BEGIN {
     );
 }
 
+use Const::Fast;
 use IPC::Run3;
 use Unicode::UTF8 qw(encode_utf8 decode_utf8);
 
@@ -49,11 +50,10 @@ use Lintian::Deb822::File;
 # be the defaults).  when we do full reads and writes of READ_SIZE (the
 # OS willing), the receiving end will never be with an incomplete
 # record.
-use constant TAR_RECORD_SIZE => 20 * 512;
+const my $TAR_RECORD_SIZE => 20 * 512;
 
-use constant EMPTY => q{};
-use constant COLON => q{:};
-use constant NEWLINE => qq{\n};
+const my $COLON => q{:};
+const my $NEWLINE => qq{\n};
 
 =head1 NAME
 
@@ -119,7 +119,7 @@ sub get_deb_info {
     my $dpkg_pid = open(my $from_dpkg, '-|', @dpkg_command)
       or die encode_utf8("Cannot run @dpkg_command: $!");
 
-    # would like to set buffer size to 4096 & TAR_RECORD_SIZE
+    # would like to set buffer size to 4096 & $TAR_RECORD_SIZE
 
     # get binary control file
     my $stdout;
@@ -135,7 +135,7 @@ sub get_deb_info {
     if ($status) {
 
         my $message= "Non-zero status $status from @tar_command";
-        $message .= COLON . NEWLINE . $stderr
+        $message .= $COLON . $NEWLINE . $stderr
           if length $stderr;
 
         die encode_utf8($message);

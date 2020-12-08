@@ -25,12 +25,14 @@ use warnings;
 use autodie;
 use utf8;
 
-use Lintian::Index;
+use Const::Fast;
 
-use constant SLASH => q{/};
+use Lintian::Index;
 
 use Moo::Role;
 use namespace::clean;
+
+const my $SLASH => q{/};
 
 =head1 NAME
 
@@ -61,7 +63,7 @@ has installed => (
         my ($self) = @_;
 
         my $index = Lintian::Index->new;
-        $index->basedir($self->basedir . SLASH . 'unpacked');
+        $index->basedir($self->basedir . $SLASH . 'unpacked');
 
         # binary packages are anchored to the system root
         # allow absolute paths and symbolic links

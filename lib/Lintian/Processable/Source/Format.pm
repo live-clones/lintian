@@ -24,12 +24,13 @@ use v5.20;
 use warnings;
 use utf8;
 
+use Const::Fast;
 use Path::Tiny;
-
-use constant UNDERSCORE => q{_};
 
 use Moo::Role;
 use namespace::clean;
+
+const my $UNDERSCORE => q{_};
 
 =head1 NAME
 
@@ -103,7 +104,7 @@ has native => (
         # strip epoch
         $version =~ s/^\d+://;
 
-        my $diffname = $self->name . UNDERSCORE . "$version.diff.gz";
+        my $diffname = $self->name . $UNDERSCORE . "$version.diff.gz";
 
         return 0
           if exists $self->files->{$diffname};

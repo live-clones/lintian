@@ -26,6 +26,7 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use File::Basename qw(dirname);
 use List::SomeUtils qw(any none);
 
@@ -33,6 +34,9 @@ use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $EMPTY => q{};
+const my $SPACE => q{ };
 
 # A list of valid LSB keywords.  The value is 0 if optional and 1 if required.
 my %lsb_keywords = (
@@ -320,12 +324,12 @@ sub check_init {
                       )
                       unless (defined($lsb_keywords{$keyword})
                         || $keyword =~ /^x-/);
-                    $lsb{$keyword} = defined($value) ? $value : '';
+                    $lsb{$keyword} = defined($value) ? $value : $EMPTY;
                     $last = $keyword;
                 } elsif ($l =~ /^\#(\t|  )/ && $last eq 'description') {
                     my $value = $l;
                     $value =~ s/^\#\s*//;
-                    $lsb{description} .= ' ' . $value;
+                    $lsb{description} .= $SPACE . $value;
                 } else {
                     $self->hint('init.d-script-has-bad-lsb-line',
                         "${initd_path}:$.");
@@ -409,7 +413,7 @@ sub check_init {
 
         # No script should start at one of the 2-5 runlevels but not at
         # all of them
-        my $start = join(' ', sort grep {$_ =~ /^[2-5]$/} keys %start);
+        my $start = join($SPACE, sort grep {$_ =~ /^[2-5]$/} keys %start);
         if (length($start) > 0 and $start ne '2 3 4 5') {
             my @missing = grep { !defined $start{$_} } qw(2 3 4 5);
             $self->hint('init.d-script-missing-start', $initd_path,@missing);
@@ -436,12 +440,12 @@ sub check_init {
 
         # Scripts that stop in any of 0, 1, or 6 probably should stop in all
         # of them, with some special exceptions.
-        my $stop = join(' ', sort keys %stop);
+        my $stop = join($SPACE, sort keys %stop);
         if (length($stop) > 0 and $stop ne '0 1 6') {
             my $base = $initd_path->basename;
             if (none { $base eq $_ } qw(killprocs sendsigs halt reboot)) {
                 my @missing = grep { !defined $stop{$_} } qw(0 1 6);
-                my $start = join(' ', sort keys %start);
+                my $start = join($SPACE, sort keys %start);
                 $self->hint('init.d-script-possible-missing-stop',
                     $initd_path,@missing)
                   unless $start eq 's';
@@ -468,7 +472,7 @@ sub check_init {
     # restructuring by pulling the regexes out as data tied to start/stop and
     # remote/local and then combining the loops.
     if (defined $lsb{'default-start'} && length($lsb{'default-start'})) {
-        my @required = split(' ', $lsb{'required-start'} || '');
+        my @required = split($SPACE, $lsb{'required-start'} || $EMPTY);
         if ($needs_fs) {
             if (none { /^\$(?:local_fs|remote_fs|all)\z/ } @required) {
                 $self->hint('init.d-script-missing-dependency-on-local_fs',
@@ -477,7 +481,7 @@ sub check_init {
         }
     }
     if (defined $lsb{'default-stop'} && length($lsb{'default-stop'})) {
-        my @required = split(' ', $lsb{'required-stop'} || '');
+        my @required = split($SPACE, $lsb{'required-stop'} || $EMPTY);
         if ($needs_fs) {
             if (
                 none { /^(?:\$(?:local|remote)_fs|\$all|umountn?fs)\z/ }

@@ -23,15 +23,14 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use Text::Markdown::Discount qw(markdown);
 use Text::Xslate;
 use Time::Duration;
 use Time::Moment;
 use Unicode::UTF8 qw(encode_utf8);
 
-use constant EMPTY => q{};
-use constant SPACE => q{ };
-use constant NEWLINE => qq{\n};
+const my $EMPTY => q{};
 
 use Path::Tiny;
 
@@ -63,7 +62,7 @@ Provides standalone HTML hint output.
 sub BUILD {
     my ($self, $args) = @_;
 
-    $self->delimiter(EMPTY);
+    $self->delimiter($EMPTY);
 
     return;
 }
@@ -203,7 +202,7 @@ sub describe_tags {
     for my $tag (@tags) {
 
         say encode_utf8('<p>Name: ' . $tag->name . '</p>');
-        say encode_utf8(EMPTY);
+        say encode_utf8($EMPTY);
 
         print encode_utf8(markdown($tag->markdown_description));
     }

@@ -51,6 +51,7 @@ BEGIN {
 
 use Capture::Tiny qw(capture_merged);
 use Carp;
+use Const::Fast;
 use Cwd qw(getcwd);
 use File::Basename;
 use File::Find::Rule;
@@ -61,10 +62,7 @@ use List::SomeUtils qw(any);
 use Path::Tiny;
 use Unicode::UTF8 qw(encode_utf8 decode_utf8);
 
-use constant NEWLINE => qq{\n};
-use constant SPACE => q{ };
-use constant EMPTY => q{};
-use constant SINGLEQ => q{'};
+const my $NEWLINE => qq{\n};
 
 =head1 FUNCTIONS
 
@@ -188,7 +186,7 @@ sub find_missing_prerequisites {
     push(@lines, "Build-Conflicts: $build_conflicts")
       if length $build_conflicts;
 
-    $temp->spew_utf8(join(NEWLINE, @lines) . NEWLINE);
+    $temp->spew_utf8(join($NEWLINE, @lines) . $NEWLINE);
 
     # run dpkg-checkbuilddeps
     my $command = "dpkg-checkbuilddeps $temp";

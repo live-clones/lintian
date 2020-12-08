@@ -40,6 +40,7 @@ use lib THISDIR . '/../lib';
 # substituted during package build
 my $LINTIAN_VERSION;
 
+use Const::Fast;
 use Cwd qw(getcwd);
 use File::BaseDir qw(config_home config_files data_home);
 use Getopt::Long ();
@@ -52,14 +53,12 @@ use Lintian::Output::JSON;
 use Lintian::Profile;
 use Lintian::Version qw(guess_version);
 
-use constant EMPTY => q{};
-use constant SPACE => q{ };
-use constant COLON => q{:};
-use constant NEWLINE => qq{\n};
+const my $EMPTY => q{};
+const my $SPACE => q{ };
 
 if (my $coverage_arg = $ENV{'LINTIAN_COVERAGE'}) {
-    my $p5opt = $ENV{'PERL5OPT'}//EMPTY;
-    $p5opt .= ' ' if $p5opt ne EMPTY;
+    my $p5opt = $ENV{'PERL5OPT'}//$EMPTY;
+    $p5opt .= $SPACE if $p5opt ne $EMPTY;
     $ENV{'PERL5OPT'} = "${p5opt} ${coverage_arg}";
 }
 

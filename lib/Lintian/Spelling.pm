@@ -26,14 +26,16 @@ use utf8;
 
 use Exporter qw(import);
 
-use constant DOUBLE_QUOTE => q{"};
-
 our @EXPORT_OK = qw(check_spelling check_spelling_picky
   $known_shells_regex
 );
 
 use Carp qw(croak);
+use Const::Fast;
 use Unicode::UTF8 qw(encode_utf8);
+
+const my $SPACE => q{ };
+const my $DOUBLE_QUOTE => q{"};
 
 =head1 NAME
 
@@ -129,7 +131,7 @@ sub check_spelling {
     # trim both ends
     $text =~ s/^\s+|\s+$//g;
 
-    for my $word (split(' ', $text)) {
+    for my $word (split($SPACE, $text)) {
         my $ends_with_punct = 0;
         my $q = $word =~ tr/"/"/;
         # Change quoting on "foo or foo" but not "foo".
@@ -183,8 +185,8 @@ sub check_spelling {
             $counter++;
             next if $seen{lc $word}++;
             $code_ref->(
-                DOUBLE_QUOTE . $word . DOUBLE_QUOTE,
-                DOUBLE_QUOTE . $correction . DOUBLE_QUOTE
+                $DOUBLE_QUOTE . $word . $DOUBLE_QUOTE,
+                $DOUBLE_QUOTE . $correction . $DOUBLE_QUOTE
             );
         }
     }

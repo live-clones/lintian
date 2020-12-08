@@ -24,8 +24,6 @@ use autodie;
 
 use Path::Tiny;
 
-use constant EMPTY => q{};
-
 use Moo::Role;
 use namespace::clean;
 

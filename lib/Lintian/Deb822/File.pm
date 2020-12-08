@@ -22,13 +22,14 @@ use v5.20;
 use warnings;
 use utf8;
 
+use Const::Fast;
 use Path::Tiny;
 use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Deb822::Parser qw(parse_dpkg_control_string);
 use Lintian::Deb822::Section;
 
-use constant EMPTY => q{};
+const my $EMPTY => q{};
 
 use Moo;
 use namespace::clean;
@@ -76,7 +77,7 @@ sub first_mention {
     # empty when field not present
     $earliest ||= $_->value($name) for @{$self->sections};
 
-    return ($earliest // EMPTY);
+    return ($earliest // $EMPTY);
 }
 
 =item last_mention
@@ -95,7 +96,7 @@ sub last_mention {
           if $section->declares($name);
     }
 
-    return ($latest // EMPTY);
+    return ($latest // $EMPTY);
 }
 
 =item read_file

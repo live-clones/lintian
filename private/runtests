@@ -33,6 +33,7 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use Cwd qw(realpath);
 use File::Basename qw(dirname);
 
@@ -77,12 +78,12 @@ use Test::Lintian::Prepare qw(filleval);
 use Test::Lintian::Run qw(logged_runner);
 use Test::ScriptAge qw(perl_modification_epoch our_modification_epoch);
 
-use constant SPACE => q{ };
-use constant INDENT => q{    };
-use constant NEWLINE => qq{\n};
-use constant EMPTY => q{};
-use constant YES => q{yes};
-use constant NO => q{no};
+const my $EMPTY => q{};
+const my $SPACE => q{ };
+const my $INDENT => $SPACE x 4;
+const my $NEWLINE => qq{\n};
+const my $YES => q{yes};
+const my $NO => q{no};
 
 # display output immediately
 STDOUT->autoflush;
@@ -202,7 +203,7 @@ my ($version) = $string =~ qr/^\S+\s+v(.+)$/;
 die encode_utf8('Cannot get Lintian version') unless length $version;
 say encode_utf8("Version under test is $version.");
 
-say encode_utf8(EMPTY);
+say encode_utf8($EMPTY);
 
 # set environment for coverage
 if (defined $coverage) {
@@ -213,11 +214,11 @@ if (defined $coverage) {
     my $args= '-MDevel::Cover=-silent,1,+ignore,^(.*/)?t/scripts/.+';
     $args .= ',+ignore,/usr/bin/.*,+ignore,(.*/)?Dpkg';
     $args .= ',-coverage,' . join(',-coverage,', @criteria);
-    $args .= ',' . $coverage if $coverage ne '';
+    $args .= ',' . $coverage if $coverage ne $EMPTY;
     $ENV{'LINTIAN_COVERAGE'} = $args;
 
-    $ENV{'HARNESS_PERL_SWITCHES'} //= EMPTY;
-    $ENV{'HARNESS_PERL_SWITCHES'} .= SPACE . $args;
+    $ENV{'HARNESS_PERL_SWITCHES'} //= $EMPTY;
+    $ENV{'HARNESS_PERL_SWITCHES'} .= $SPACE . $args;
 }
 
 # Devel::Cover + one cover_db + multiple processes is a recipe
@@ -233,7 +234,7 @@ $numjobs = default_parallel() if $numjobs <= 0;
 say encode_utf8("Running up to $numjobs tests concurrently")
   if $numjobs > 1 && $verbose >= 2;
 
-$ENV{'DUMP_LOGS'} = $dump_logs//NO ? YES : NO;
+$ENV{'DUMP_LOGS'} = $dump_logs//$NO ? $YES : $NO;
 
 # Disable translation support in dpkg as it is a considerable
 # unnecessary overhead.
@@ -272,14 +273,14 @@ $ENV{'HARNESS_EPOCH'}
   = max(our_modification_epoch, perl_modification_epoch, $harness_files_epoch);
 say encode_utf8('Harness modified on '. rfc822date($ENV{'HARNESS_EPOCH'}));
 
-say encode_utf8(EMPTY);
+say encode_utf8($EMPTY);
 
 # print environment
 my @vars = sort keys %ENV;
 say encode_utf8('Environment:') if @vars;
-for my $var (@vars) { say encode_utf8(INDENT . "$var=$ENV{$var}") }
+for my $var (@vars) { say encode_utf8($INDENT . "$var=$ENV{$var}") }
 
-say encode_utf8(EMPTY);
+say encode_utf8($EMPTY);
 
 my $status = 0;
 
@@ -322,7 +323,7 @@ push(@runscripts, @requiredscripts);
 @runscripts = map { abs2rel($_) } @runscripts;
 
 say encode_utf8('Running selected and required Perl test scripts.');
-say encode_utf8(EMPTY);
+say encode_utf8($EMPTY);
 
 # run scripts through harness
 $harness->aggregate_tests($aggregator, sort @runscripts);
@@ -333,7 +334,7 @@ unless (!@runscripts || $aggregator->all_passed || $keep_going) {
     exit 1;
 }
 
-say encode_utf8(EMPTY);
+say encode_utf8($EMPTY);
 
 # find test paths
 my @testpaths = find_selected_lintian_testpaths($testset, $onlyrun);
@@ -394,7 +395,7 @@ my $filleval = IO::Async::Function->new(
 
         # print something if there was an error
         die encode_utf8(
-            ($log // EMPTY) . "Preparation failed for $specpath: $error")
+            ($log // $EMPTY) . "Preparation failed for $specpath: $error")
           if $error;
 
         return $specpath;
@@ -420,7 +421,7 @@ my @workpaths
   @testpaths;
 
 # if ($platforms ne 'any') {
-#     my @wildcards = split(SPACE, $platforms);
+#     my @wildcards = split(/$SPACE/, $platforms);
 #     my @matches= map {
 #         decode_utf8(qx{dpkg-architecture -a $ENV{'DEB_HOST_ARCH'} -i $_; echo -n \$?})
 #     } @wildcards;
@@ -453,7 +454,7 @@ $harness->aggregate_tests($aggregator, sort @workscripts);
 $aggregator->stop;
 $formatter->summary($aggregator);
 
-say encode_utf8(EMPTY);
+say encode_utf8($EMPTY);
 
 my $processing_end = Time::Moment->from_string(gmtime->datetime . 'Z');
 my $duration = duration($processing_start->delta_seconds($processing_end));
@@ -479,7 +480,7 @@ if (is_interactive && !$unattended) {
         my $relative = abs2rel($workpath, $evalroot);
         my $testpath = abs2rel(rel2abs($relative, "$testset/recipes"));
 
-        say encode_utf8(EMPTY);
+        say encode_utf8($EMPTY);
         say encode_utf8(
             'Failed test: ' . colored($testpath, 'bold white on_blue'));
 
@@ -501,7 +502,7 @@ if (is_interactive && !$unattended) {
               unless -r $actualpath;
             my @command
               = ('diff', '-uN', "$testpath/eval/literal", $actualpath);
-            say encode_utf8(join(SPACE, @command));
+            say encode_utf8(join($SPACE, @command));
             system(@command);
 
         } else {
@@ -520,7 +521,7 @@ if (is_interactive && !$unattended) {
             my $decision = decode_utf8($decision_bytes);
 
             last
-              if $decision eq 'q' || $decision eq EMPTY;
+              if $decision eq 'q' || $decision eq $EMPTY;
 
             next
               unless $decision eq 'y' || $decision eq 'a';
@@ -564,7 +565,7 @@ if (is_interactive && !$unattended) {
         }
     }
 
-    say encode_utf8(NEWLINE . 'Accepted all remaining tag changes.')
+    say encode_utf8($NEWLINE . 'Accepted all remaining tag changes.')
       if $accept_all;
 
 } else {
@@ -582,7 +583,7 @@ if (is_interactive && !$unattended) {
         next
           unless -e $logpath;
 
-        say encode_utf8(EMPTY);
+        say encode_utf8($EMPTY);
         say encode_utf8("Log for test $scriptpath:");
 
         my $log = path($logpath)->slurp_utf8;
@@ -597,7 +598,7 @@ unless (scalar @runscripts - scalar @requiredscripts + scalar @workscripts
     exit 1;
 }
 
-say encode_utf8(EMPTY);
+say encode_utf8($EMPTY);
 
 exit $status;
 

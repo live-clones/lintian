@@ -70,6 +70,7 @@ our @EXPORT = qw(
 use parent 'Test::Builder::Module';
 
 use Cwd qw(realpath);
+use Const::Fast;
 use File::Basename qw(basename);
 use File::Find ();
 use List::SomeUtils qw{any};
@@ -80,6 +81,8 @@ use Lintian::Spelling qw(check_spelling);
 use Lintian::Deb822::Parser qw(parse_dpkg_control_string);
 use Lintian::Profile;
 use Lintian::Tag;
+
+const my $EMPTY => q{};
 
 my %severities = map { $_ => 1 } @Lintian::Tag::SEVERITIES;
 my %check_types = map { $_ => 1 } qw(binary changes source udeb);
@@ -172,16 +175,17 @@ sub test_check_desc {
             next;
         }
         my $content_type = 'Check';
-        my $cname = $header->{'Check-Script'}//'';
-        my $ctype = $header->{'Type'} // '';
+        my $cname = $header->{'Check-Script'}//$EMPTY;
+        my $ctype = $header->{'Type'} // $EMPTY;
         my $i = 1; # paragraph counter.
         $builder->ok(1, "Can parse check $desc_file");
 
-        $builder->isnt_eq($cname, '',"$content_type has a name ($desc_file)");
+        $builder->isnt_eq($cname, $EMPTY,
+            "$content_type has a name ($desc_file)");
 
         # From here on, we just use "$cname" as name of the check, so
         # we don't need to choose been it and $tname.
-        $cname = '<missing>' if $cname eq '';
+        $cname = '<missing>' if $cname eq $EMPTY;
         $tested += 2;
 
         if ($cname eq 'lintian') {
@@ -189,14 +193,15 @@ sub test_check_desc {
             # skip these two tests for this special case...
             $builder->skip("Special case, $reason");
             $builder->skip("Special case, $reason");
-        } elsif ($builder->isnt_eq($ctype, '', "$cname has a type")) {
+        } elsif ($builder->isnt_eq($ctype, $EMPTY, "$cname has a type")) {
             my @bad;
             # new lines are not allowed, map them to "\\n" for readability.
             $ctype =~ s/\n/\\n/g;
             foreach my $type (split /\s*+,\s*+/, $ctype) {
                 push @bad, $type unless exists $check_types{$type};
             }
-            $builder->is_eq(join(', ', @bad),'',"The type of $cname is valid");
+            $builder->is_eq(join(', ', @bad),
+                $EMPTY,"The type of $cname is valid");
         } else {
             $builder->skip(
                 "Cannot check type of $cname is valid (field is empty/missing)"
@@ -204,17 +209,17 @@ sub test_check_desc {
         }
 
         for my $tpara (@tagpara) {
-            my $tag = $tpara->{'Tag'}//'';
-            my $severity = $tpara->{'Severity'}//'';
-            my $explanation = $tpara->{'Explanation'} // '';
+            my $tag = $tpara->{'Tag'}//$EMPTY;
+            my $severity = $tpara->{'Severity'}//$EMPTY;
+            my $explanation = $tpara->{'Explanation'} // $EMPTY;
             my (@htmltags, %seen);
 
             $i++;
 
             # Tag name
-            $builder->isnt_eq($tag, '', "Tag in check $cname has a name")
+            $builder->isnt_eq($tag, $EMPTY, "Tag in check $cname has a name")
               or $builder->diag("$cname: Paragraph number $i\n");
-            $tag = '<N/A>' if $tag eq '';
+            $tag = '<N/A>' if $tag eq $EMPTY;
             $builder->ok($tag =~ /^[\w0-9.+-]+$/, 'Tag has valid characters')
               or $builder->diag("$cname: $tag\n");
             $builder->cmp_ok(length $tag, '<=', 68, 'Tag is not too long')
@@ -267,7 +272,7 @@ sub test_check_desc {
             @htmltags
               = grep { !exists $known_html_tags{$_} && !$seen{$_}++ }@htmltags;
             $builder->is_eq(join(', ', @htmltags),
-                '', 'Tag explanation has no unknown html tags')
+                $EMPTY, 'Tag explanation has no unknown html tags')
               or $builder->diag("$content_type $cname: $tag\n");
 
             $builder->ok($explanation !~ /[<>]/,
@@ -420,7 +425,8 @@ sub test_load_checks {
 
         eval {require $path;};
 
-        if (!$builder->is_eq($@//'', '', "Check $cname can be loaded")) {
+        if (!$builder->is_eq($@//$EMPTY, $EMPTY, "Check $cname can be loaded"))
+        {
             $builder->skip(
                 "Cannot check if $cname has a run sub due to load error");
             next;
@@ -566,7 +572,7 @@ sub test_tags_implemented {
         }
 
         $builder->is_eq(join(', ', @missing),
-            '',"$cname has all tags implemented");
+            $EMPTY,"$cname has all tags implemented");
     }
     return;
 }
@@ -625,7 +631,7 @@ sub _check_reference {
     my @issues;
 
     unless (%URLS) {
-        $MANUALS->known(''); # force it to load the manual refs
+        $MANUALS->known($EMPTY); # force it to load the manual refs
         foreach my $manid ($MANUALS->all) {
             my $table = $MANUALS->value($manid);
             foreach my $section (keys %{$table}) {

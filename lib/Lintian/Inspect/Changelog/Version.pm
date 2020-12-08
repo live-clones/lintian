@@ -23,12 +23,13 @@ use warnings;
 use utf8;
 
 use Carp;
+use Const::Fast;
 use Unicode::UTF8 qw(encode_utf8);
-
-use constant EMPTY => q{};
 
 use Moo;
 use namespace::clean;
+
+const my $EMPTY => q{};
 
 =head1 NAME
 
@@ -106,13 +107,13 @@ sub set {
     my ($epoch, $upstream, $maintainer_revision, $source_nmu, $binary_nmu)
       = ($literal =~ $pattern);
 
-    $epoch //= EMPTY;
-    $upstream //= EMPTY;
-    $maintainer_revision //= EMPTY;
-    $source_nmu //= EMPTY;
-    $binary_nmu //= EMPTY;
+    $epoch //= $EMPTY;
+    $upstream //= $EMPTY;
+    $maintainer_revision //= $EMPTY;
+    $source_nmu //= $EMPTY;
+    $binary_nmu //= $EMPTY;
 
-    my $source_nmu_string = EMPTY;
+    my $source_nmu_string = $EMPTY;
 
     $source_nmu_string = ($native ? "+nmu$source_nmu" : ".$source_nmu")
       if length $source_nmu;
@@ -120,13 +121,13 @@ sub set {
     my $debian_source = $maintainer_revision . $source_nmu_string;
 
     my $debian_no_epoch
-      = $debian_source . (length $binary_nmu ? "+b$binary_nmu" : EMPTY);
+      = $debian_source . (length $binary_nmu ? "+b$binary_nmu" : $EMPTY);
 
-    my $upstream_string = (length $upstream ? "$upstream-" : EMPTY);
+    my $upstream_string = (length $upstream ? "$upstream-" : $EMPTY);
 
     my $no_epoch= $upstream_string . $debian_no_epoch;
 
-    my $epoch_string = (length $epoch ? "$epoch:" : EMPTY);
+    my $epoch_string = (length $epoch ? "$epoch:" : $EMPTY);
 
     my $reconstructed= $epoch_string . $no_epoch;
 
@@ -155,8 +156,8 @@ sub set {
       = ($self->maintainer_revision =~ $backport_pattern);
 
     $debian_without_backport //= $maintainer_revision;
-    $backport_release //= EMPTY;
-    $backport_revision //= EMPTY;
+    $backport_release //= $EMPTY;
+    $backport_revision //= $EMPTY;
 
     $self->_set_debian_without_backport($debian_without_backport);
     $self->_set_backport_release($backport_release);
@@ -200,33 +201,33 @@ sub set {
 
 =cut
 
-has literal => (is => 'rwp', default => EMPTY);
+has literal => (is => 'rwp', default => $EMPTY);
 
-has epoch => (is => 'rwp', default => EMPTY);
+has epoch => (is => 'rwp', default => $EMPTY);
 
-has no_epoch => (is => 'rwp', default => EMPTY);
+has no_epoch => (is => 'rwp', default => $EMPTY);
 
-has upstream => (is => 'rwp', default => EMPTY);
+has upstream => (is => 'rwp', default => $EMPTY);
 
-has maintainer_revision => (is => 'rwp', default => EMPTY);
+has maintainer_revision => (is => 'rwp', default => $EMPTY);
 
-has debian_source => (is => 'rwp', default => EMPTY);
+has debian_source => (is => 'rwp', default => $EMPTY);
 
-has debian_no_epoch => (is => 'rwp', default => EMPTY);
+has debian_no_epoch => (is => 'rwp', default => $EMPTY);
 
-has source_nmu => (is => 'rwp', default => EMPTY);
+has source_nmu => (is => 'rwp', default => $EMPTY);
 
-has binary_nmu => (is => 'rwp', default => EMPTY);
+has binary_nmu => (is => 'rwp', default => $EMPTY);
 
-has without_source_nmu => (is => 'rwp', default => EMPTY);
+has without_source_nmu => (is => 'rwp', default => $EMPTY);
 
-has debian_without_backport => (is => 'rwp', default => EMPTY);
+has debian_without_backport => (is => 'rwp', default => $EMPTY);
 
-has backport_release => (is => 'rwp', default => EMPTY);
+has backport_release => (is => 'rwp', default => $EMPTY);
 
-has backport_revision => (is => 'rwp', default => EMPTY);
+has backport_revision => (is => 'rwp', default => $EMPTY);
 
-has without_backport => (is => 'rwp', default => EMPTY);
+has without_backport => (is => 'rwp', default => $EMPTY);
 
 =back
 

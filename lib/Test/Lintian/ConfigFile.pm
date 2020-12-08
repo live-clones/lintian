@@ -48,15 +48,16 @@ BEGIN {
 }
 
 use Carp;
+use Const::Fast;
 use List::SomeUtils qw(any);
 use Path::Tiny;
 use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Deb822::File;
 
-use constant SPACE => q{ };
-use constant COLON => q{:};
-use constant NEWLINE => qq{\n};
+const my $SPACE => q{ };
+const my $COLON => q{:};
+const my $NEWLINE => qq{\n};
 
 =head1 FUNCTIONS
 
@@ -106,12 +107,12 @@ sub write_config {
             qw(Test-For Test-Against)
         ) {
             push(@lines,
-                $name . COLON . SPACE . $testcase->value($name) . NEWLINE);
+                $name . $COLON . $SPACE . $testcase->value($name) . $NEWLINE);
             next;
         }
 
-        push(@lines, $name . COLON . NEWLINE);
-        push(@lines, SPACE . $_ . NEWLINE) for @elements;
+        push(@lines, $name . $COLON . $NEWLINE);
+        push(@lines, $SPACE . $_ . $NEWLINE) for @elements;
     }
 
     $desc->append_utf8(@lines);

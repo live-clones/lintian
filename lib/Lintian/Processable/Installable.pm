@@ -28,9 +28,6 @@ use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::IPC::Run3 qw(get_deb_info);
 
-use constant COLON => q{:};
-use constant SLASH => q{/};
-
 use Moo;
 use namespace::clean;
 

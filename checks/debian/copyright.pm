@@ -36,6 +36,8 @@ use Lintian::Deb822::Parser qw(parse_dpkg_control_string);
 use Lintian::IPC::Run3 qw(safe_qx);
 use Lintian::Spelling qw(check_spelling);
 
+use constant EMPTY => q{};
+
 use Moo;
 use namespace::clean;
 
@@ -510,7 +512,7 @@ sub check_names_texts {
 
     my $text_check;
 
-    if ((ref($action) || '') eq 'Regexp') {
+    if ((ref($action) || EMPTY) eq 'Regexp') {
         $text_check = sub {
             my ($textref) = @_;
             return ${$textref} =~ $action;

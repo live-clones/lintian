@@ -25,13 +25,15 @@ use v5.20;
 use warnings;
 use utf8;
 
-use constant EMPTY => q{};
-use constant UNKNOWN => q{unknown};
+use Const::Fast;
 
 use Moo;
 use namespace::clean;
 
-has Changes => (is => 'rw', default => EMPTY);
+const my $EMPTY => q{};
+const my $UNKNOWN => q{unknown};
+
+has Changes => (is => 'rw', default => $EMPTY);
 has Closes => (is => 'rw');
 has Date => (is => 'rw');
 has Distribution => (is => 'rw');
@@ -41,9 +43,9 @@ has Maintainer => (is => 'rw');
 has Source => (is => 'rw');
 has Timestamp => (is => 'rw');
 has Trailer => (is => 'rw');
-has Urgency => (is => 'rw', default => UNKNOWN);
-has Urgency_LC => (is => 'rw', default => UNKNOWN);
-has Urgency_Comment => (is => 'rw', default => EMPTY);
+has Urgency => (is => 'rw', default => $UNKNOWN);
+has Urgency_LC => (is => 'rw', default => $UNKNOWN);
+has Urgency_Comment => (is => 'rw', default => $EMPTY);
 has Version => (is => 'rw');
 has ERROR => (is => 'rw');
 

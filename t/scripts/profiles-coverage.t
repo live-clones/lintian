@@ -7,13 +7,14 @@
 use strict;
 use warnings;
 
+use Const::Fast;
 use File::Find::Rule;
 use Path::Tiny;
 use Test::More;
 
 use Lintian::Deb822::Parser qw(read_dpkg_control);
 
-use constant EMPTY => q{};
+const my $EMPTY => q{};
 
 my $known_tests = 0;
 
@@ -64,10 +65,10 @@ my @profilepaths
   = File::Find::Rule->file->name('*.profile')->in("$root/profiles");
 for my $profile (@profilepaths) {
     my ($header, @sections) = read_dpkg_control($profile);
-    my $en_checks = $header->{'Enable-Tags-From-Check'}//EMPTY;
-    my $dis_checks = $header->{'Disable-Tags-From-Check'}//EMPTY;
-    my $en_tag = $header->{'Enable-Tags'}//EMPTY;
-    my $dis_tag = $header->{'Disable-Tags'}//EMPTY;
+    my $en_checks = $header->{'Enable-Tags-From-Check'}//$EMPTY;
+    my $dis_checks = $header->{'Disable-Tags-From-Check'}//$EMPTY;
+    my $en_tag = $header->{'Enable-Tags'}//$EMPTY;
+    my $dis_tag = $header->{'Disable-Tags'}//$EMPTY;
 
     my @checks = trim_split($en_checks);
     foreach my $check (@checks) {
@@ -96,7 +97,7 @@ for my $profile (@profilepaths) {
     $known_tests += @checks + @tags + @disabled_checks + @disabled_tags;
 
     foreach my $section (@sections) {
-        my @sectiontags = trim_split($section->{'Tags'}//EMPTY);
+        my @sectiontags = trim_split($section->{'Tags'}//$EMPTY);
         ok(exists $TAGS{$_},
             "Tag $_ in section $section exists in profile $profile")
           for @sectiontags;

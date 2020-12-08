@@ -22,6 +22,7 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use IPC::Run3;
 use List::SomeUtils qw(none first_value);
 use Path::Tiny;
@@ -29,11 +30,11 @@ use Unicode::UTF8 qw(valid_utf8 decode_utf8 encode_utf8);
 
 use Lintian::Architecture::Analyzer;
 
-use constant EMPTY => q{};
-use constant SPACE => q{ };
-
 use Moo::Role;
 use namespace::clean;
+
+const my $EMPTY => q{};
+const my $SPACE => q{ };
 
 =head1 NAME
 
@@ -135,7 +136,7 @@ has overrides => (
             # trim both ends
             $remaining =~ s/^\s+|\s+$//g;
 
-            if ($remaining eq EMPTY) {
+            if ($remaining eq $EMPTY) {
                 # Throw away comments, as they are not attached to a tag
                 # also throw away the option of "carrying over" the last
                 # comment
@@ -169,7 +170,7 @@ has overrides => (
 
             # remove architecture list
             if ($remaining =~ s/^\[([^\]]*)\](?=\s|:)//) {
-                @architectures = split(SPACE, $1);
+                @architectures = split($SPACE, $1);
 
                 # both spaces or colon were unmatched lookhead
                 $remaining =~ s/^\s+//;
@@ -227,15 +228,15 @@ has overrides => (
                 @architectures
               );
 
-            my ($tagname, $context) = split(SPACE, $hint, 2);
+            my ($tagname, $context) = split($SPACE, $hint, 2);
 
             $self->hint('malformed-override',
                 "Cannot parse line $position: $line")
               unless length $tagname;
 
-            $context //= EMPTY;
+            $context //= $EMPTY;
 
-            if (($previous{tag} // EMPTY) eq $tagname
+            if (($previous{tag} // $EMPTY) eq $tagname
                 && !scalar @comments){
                 # There are no new comments, no "empty line" in between and
                 # this tag is the same as the last, so we "carry over" the
@@ -257,8 +258,8 @@ has overrides => (
             if ($context =~ m/\*/) {
                 # It is a pattern, pre-compute it
                 my $pattern = $context;
-                my $end = EMPTY; # Trailing "match anything" (if any)
-                my $pat = EMPTY; # The rest of the pattern
+                my $end = $EMPTY; # Trailing "match anything" (if any)
+                my $pat = $EMPTY; # The rest of the pattern
                  # Split does not help us if $pattern ends with *
                  # so we deal with that now
                 if ($pattern =~ s/\Q*\E+\z//){
@@ -268,7 +269,7 @@ has overrides => (
                 # Are there any * left (after the above)?
                 if ($pattern =~ m/\Q*\E/) {
                     # this works even if $text starts with a *, since
-                    # that is split as EMPTY, <text>
+                    # that is split as $EMPTY, <text>
                     my @pargs = split(m/\Q*\E++/, $pattern);
                     $pat = join('.*', map { quotemeta($_) } @pargs);
                 } else {

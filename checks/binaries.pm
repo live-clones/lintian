@@ -71,7 +71,7 @@ sub _embedded_libs {
     my ($opts, $regex) = split m/\|\|/, $some_val, 2;
     if (!$regex) {
         $regex = $opts;
-        $opts = '';
+        $opts = EMPTY;
     } else {
 
         # trim both ends
@@ -157,8 +157,8 @@ sub installable {
 
     my ($madir, %directories, $built_with_golang, $built_with_octave, %SONAME);
     my ($arch_hardening, $gnu_triplet_re, $ruby_triplet_re);
-    my $needs_libc = '';
-    my $needs_libcxx = '';
+    my $needs_libc = EMPTY;
+    my $needs_libcxx = EMPTY;
     my $needs_libc_file;
     my $needs_libcxx_file;
     my $needs_libc_count = 0;
@@ -656,7 +656,7 @@ sub installable {
                 # #719806)
                 if ($is_shared) {
                     $self->hint('library-not-linked-against-libc', $file)
-                      unless $needs_libcxx ne '';
+                      unless $needs_libcxx ne EMPTY;
                 } else {
                     $self->hint('program-not-linked-against-libc', $file);
                 }
@@ -695,7 +695,7 @@ sub installable {
             # Match libcXX or libcXX-*, but not libc3p0.
             my $re = qr/^\Q$needs_libc\E\b/;
             if (!$depends->matches($re)) {
-                my $others = '';
+                my $others = EMPTY;
                 $needs_libc_count--;
                 if ($needs_libc_count > 0) {
                     $others = " and $needs_libc_count others";
@@ -704,11 +704,11 @@ sub installable {
                     "needed by $needs_libc_file$others");
             }
         }
-        if ($needs_libcxx ne '') {
+        if ($needs_libcxx ne EMPTY) {
             # Match libstdc++XX or libcstdc++XX-*
             my $re = qr/^\Q$needs_libcxx\E\b/;
             if (!$depends->matches($re)) {
-                my $others = '';
+                my $others = EMPTY;
                 $needs_libcxx_count--;
                 if ($needs_libcxx_count > 0) {
                     $others = " and $needs_libcxx_count others";

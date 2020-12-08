@@ -28,10 +28,15 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
+
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $EMPTY => q{};
+const my $SPACE => q{ };
 
 sub source {
     my ($self) = @_;
@@ -75,7 +80,7 @@ sub source {
                 s{/\*[^*]*\*/}{}g;
             }
             next if (/^\s*$/); #ignore blank lines
-            push @patches, split(' ', $_);
+            push @patches, split($SPACE, $_);
         }
         close($fd);
 
@@ -94,7 +99,7 @@ sub source {
             next
               unless $patch_file->is_open_ok;
 
-            my $description = '';
+            my $description = $EMPTY;
             open(my $fd, '<', $patch_file->unpacked_path);
             while (<$fd>) {
                 # stop if something looking like a patch

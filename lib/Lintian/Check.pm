@@ -23,10 +23,12 @@ use v5.20;
 use warnings;
 use utf8;
 
-use constant UNDERSCORE => q{_};
+use Const::Fast;
 
 use Moo::Role;
 use namespace::clean;
+
+const my $UNDERSCORE => q{_};
 
 =head1 NAME
 
@@ -75,11 +77,11 @@ has profile => (is => 'rw');
 sub visit_files {
     my ($self, $index) = @_;
 
-    my $setup_hook = 'setup' . UNDERSCORE . $index . UNDERSCORE . 'files';
+    my $setup_hook = 'setup' . $UNDERSCORE . $index . $UNDERSCORE . 'files';
     $self->$setup_hook
       if $self->can($setup_hook);
 
-    my $visit_hook = 'visit' . UNDERSCORE . $index . UNDERSCORE . 'files';
+    my $visit_hook = 'visit' . $UNDERSCORE . $index . $UNDERSCORE . 'files';
     if ($self->can($visit_hook)) {
 
         my @items = $self->processable->$index->sorted_list;
@@ -96,7 +98,7 @@ sub visit_files {
     }
 
     my $breakdown_hook
-      ='breakdown' . UNDERSCORE . $index . UNDERSCORE . 'files';
+      ='breakdown' . $UNDERSCORE . $index . $UNDERSCORE . 'files';
     $self->$breakdown_hook
       if $self->can($breakdown_hook);
 

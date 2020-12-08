@@ -36,6 +36,8 @@ use Lintian::Spelling qw(check_spelling);
 use constant PATCH_DESC_TEMPLATE => 'TODO: Put a short summary on'
   . ' the line above and replace this paragraph';
 
+use constant EMPTY => q{};
+
 use Moo;
 use namespace::clean;
 
@@ -100,7 +102,7 @@ sub source {
             # trim both ends
             $patch =~ s/^\s+|\s+$//g;
 
-            next if $patch eq '';
+            next if $patch eq EMPTY;
             if ($patch =~ m{^(\S+)\s+(\S.*)$}) {
                 my $patch_options;
                 ($patch, $patch_options) = ($1, $2);
@@ -134,7 +136,7 @@ sub source {
             next
               unless $file->is_open_ok;
 
-            my $description = '';
+            my $description = EMPTY;
             my $has_template_description = 0;
 
             open(my $patch_fd, '<', $file->unpacked_path);

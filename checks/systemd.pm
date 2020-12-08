@@ -33,6 +33,8 @@ use File::Basename;
 use List::SomeUtils qw(any first_index);
 use Text::ParseWords qw(shellwords);
 
+use constant EMPTY => q{};
+
 use Moo;
 use namespace::clean;
 
@@ -422,7 +424,7 @@ sub service_file_lines {
         # trim right
         s/\s+$//;
 
-        next if $_ eq '';
+        next if $_ eq EMPTY;
 
         next if /^[#;\n]/;
 
@@ -471,7 +473,7 @@ sub extract_service_file_values {
         if (   defined($key)
             && $section eq $extract_section
             && $key eq $extract_key) {
-            if ($value eq '') {
+            if ($value eq EMPTY) {
                 # Empty assignment resets the list
                 @values = ();
             } else {

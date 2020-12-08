@@ -22,14 +22,15 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use Path::Tiny;
 
 use Lintian::Deb822::Parser qw(parse_dpkg_control_string);
 
-use constant EMPTY => q{};
-
 use Moo::Role;
 use namespace::clean;
+
+const my $EMPTY => q{};
 
 =head1 NAME
 
@@ -62,7 +63,7 @@ has objdump_info => (
         my ($self) = @_;
 
         my @objdump = map { $_->objdump } $self->installed->sorted_list;
-        my $concatenated = join(EMPTY, @objdump);
+        my $concatenated = join($EMPTY, @objdump);
 
         my @paragraphs = parse_dpkg_control_string($concatenated);
 
@@ -83,20 +84,20 @@ has objdump_info => (
               if defined $paragraph->{'Elf-Type'};
 
             for my $symd (split m/\s*\n\s*/,
-                $paragraph->{'Dynamic-Symbols'}//EMPTY){
+                $paragraph->{'Dynamic-Symbols'}//$EMPTY){
                 next
                   unless length $symd;
 
                 if ($symd =~ m/^\s*(\S+)\s+(?:(\S+)\s+)?(\S+)$/){
                     # $ver is not always there
                     my ($sec, $ver, $sym) = ($1, $2, $3);
-                    $ver //= EMPTY;
+                    $ver //= $EMPTY;
                     push @{ $info{'SYMBOLS'} }, [$sec, $ver, $sym];
                 }
             }
 
             for my $section (split m/\s*\n\s*/,
-                $paragraph->{'Section-Headers'}//EMPTY){
+                $paragraph->{'Section-Headers'}//$EMPTY){
                 next
                   unless length $section;
                 # NB: helpers/coll/objdump-info-helper discards most
@@ -111,7 +112,7 @@ has objdump_info => (
             }
 
             for my $data (split m/\s*\n\s*/,
-                $paragraph->{'Program-Headers'}//EMPTY){
+                $paragraph->{'Program-Headers'}//$EMPTY){
                 next
                   unless length $data;
 
@@ -130,7 +131,7 @@ has objdump_info => (
             }
 
             for my $data (split m/\s*\n\s*/,
-                $paragraph->{'Dynamic-Section'}//EMPTY){
+                $paragraph->{'Dynamic-Section'}//$EMPTY){
                 next
                   unless length $data;
 
@@ -138,7 +139,7 @@ has objdump_info => (
                 my ($header, $val) = split(m/\s++/, $data, 2);
                 if ($header eq 'RPATH' or $header eq 'RUNPATH') {
                     # RPATH is like PATH
-                    for my $rpathcomponent (split(/:/, $val // EMPTY)) {
+                    for my $rpathcomponent (split(/:/, $val // $EMPTY)) {
                         $info{$header}{$rpathcomponent} = 1;
                     }
 

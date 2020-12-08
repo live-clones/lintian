@@ -23,17 +23,17 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use IPC::Run3;
 use Path::Tiny;
 use Unicode::UTF8 qw(encode_utf8 decode_utf8);
 
-use constant EMPTY => q{};
-use constant COLON => q{:};
-use constant UNDERSCORE => q{_};
-use constant NEWLINE => qq{\n};
-
 use Moo::Role;
 use namespace::clean;
+
+const my $COLON => q{:};
+const my $UNDERSCORE => q{_};
+const my $NEWLINE => qq{\n};
 
 =head1 NAME
 
@@ -72,7 +72,7 @@ has diffstat => (
         $noepoch =~ s/^\d://;
 
         # look for a format 1.0 diff.gz near the input file
-        my $diffname = $self->name . UNDERSCORE . $noepoch . '.diff.gz';
+        my $diffname = $self->name . $UNDERSCORE . $noepoch . '.diff.gz';
         my $diffpath = path($self->path)->parent->child($diffname)->stringify;
 
         return {}
@@ -96,7 +96,7 @@ has diffstat => (
         if ($status) {
 
             my $message= "Non-zero status $status from @diffstat_command";
-            $message .= COLON . NEWLINE . $stderr
+            $message .= $COLON . $NEWLINE . $stderr
               if length $stderr;
 
             die encode_utf8($message);

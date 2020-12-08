@@ -27,9 +27,6 @@ use Unicode::UTF8 qw(decode_utf8);
 
 use Lintian::IPC::Run3 qw(safe_qx);
 
-use constant DOT => q{.};
-use constant GZ => q{gz};
-
 use Moo::Role;
 use namespace::clean;
 

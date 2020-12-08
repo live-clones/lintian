@@ -5,8 +5,11 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use IPC::Run3;
 use Pod::Simple::HTMLBatch;
+
+const my $EMPTY => q{};
 
 my (@input, $output, $lintian_version);
 
@@ -69,7 +72,7 @@ sub guess_version {
 
         chomp $guess;
         $version = $guess
-          if $guess ne '' && $guess =~ m{\A \d+\. }xsm;
+          if $guess ne $EMPTY && $guess =~ m{\A \d+\. }xsm;
 
         # Ignore git being missing (or even failing to work)
         # - the version being incorrect for non-release cases is

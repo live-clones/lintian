@@ -40,6 +40,7 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use File::Basename;
 use List::SomeUtils qw(any);
 
@@ -47,6 +48,9 @@ use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $EMPTY => q{};
+const my $SPACE => q{ };
 
 # This is a list of all tags that should be in every menu item.
 my @req_tags = qw(needs section title command);
@@ -239,7 +243,7 @@ sub installable {
 
         # README is a special case
         next if $menufile->basename eq 'README' && !$menufile->is_dir;
-        my $menufile_line ='';
+        my $menufile_line =$EMPTY;
         open(my $fd, '<', $menufile->unpacked_path);
         # line below is commented out in favour of the while loop
         # do { $_=<IN>; } while defined && (m/^\s* \#/ || m/^\s*$/);
@@ -261,7 +265,7 @@ sub installable {
         }
 
         # Parse entire file as a new format menu file.
-        my $line='';
+        my $line=$EMPTY;
         my $lc=0;
         do {
             $lc++;
@@ -276,7 +280,7 @@ sub installable {
             if (!($menufile_line =~ m/\\\s*?$/)) {
                 $self->verify_line($menufile, $fullname, $line,
                     $lc,\%desktop_cmds);
-                $line='';
+                $line=$EMPTY;
             }
         } while ($menufile_line = <$fd>);
         $self->verify_line($menufile, $fullname, $line,$lc,\%desktop_cmds);
@@ -799,7 +803,7 @@ sub verify_cmd {
     # dead-simple, but it's hopefully good enough for what will show up in
     # desktop files.  su-to-root and sux require -c options, kdesu optionally
     # allows one, and gksu has the command at the end of its arguments.
-    my @com = split(' ', $exec);
+    my @com = split($SPACE, $exec);
     my $cmd;
     if ($com[0] and $com[0] eq '/usr/sbin/su-to-root') {
         $self->hint('su-to-root-with-usr-sbin', $location);

@@ -49,6 +49,7 @@ BEGIN {
 }
 
 use Carp;
+use Const::Fast;
 use File::Spec::Functions qw(rel2abs splitpath catpath);
 use File::Find::Rule;
 use List::SomeUtils qw(uniq none);
@@ -62,10 +63,9 @@ use Test::Lintian::ConfigFile qw(read_config);
 
 my @LINTIAN_SUITES = qw(recipes);
 
-use constant DESC => 'desc';
-use constant TWO_SEPARATED_BY_COLON => qr/([^:]+):([^:]+)/;
-use constant EMPTY => q{};
-use constant SPACE => q{ };
+const my $EMPTY => q{};
+const my $DESC => 'desc';
+const my $SEPARATED_BY_COLON => qr/([^:]+):([^:]+)/;
 
 =head1 FUNCTIONS
 
@@ -100,13 +100,13 @@ sub find_selected_scripts {
 
     my @found;
 
-    my @selectors = split(m/\s*,\s*/, $onlyrun//EMPTY);
+    my @selectors = split(m/\s*,\s*/, $onlyrun//$EMPTY);
 
     if ((any { $_ eq 'suite:scripts' } @selectors) || !length $onlyrun) {
         @found = File::Find::Rule->file()->name('*.t')->in($scriptpath);
     } else {
         foreach my $selector (@selectors) {
-            my ($prefix, $lookfor) = ($selector =~ TWO_SEPARATED_BY_COLON);
+            my ($prefix, $lookfor) = ($selector =~ /$SEPARATED_BY_COLON/);
 
             next if defined $prefix && $prefix ne 'script';
             $lookfor = $selector unless defined $prefix;
@@ -159,7 +159,7 @@ sub find_selected_lintian_testpaths {
         foreach my $selector (@selectors) {
 
             foreach my $wanted (keys %{$filter}) {
-                my ($prefix, $lookfor) = ($selector =~ TWO_SEPARATED_BY_COLON);
+                my ($prefix, $lookfor) = ($selector =~ /$SEPARATED_BY_COLON/);
 
                 next if defined $prefix && $prefix ne $wanted;
 
@@ -211,7 +211,7 @@ sub find_selected_lintian_testpaths {
             }
 
             for my $testpath (find_all_testpaths($suitepath)) {
-                my $desc = read_config("$testpath/eval/" . DESC);
+                my $desc = read_config("$testpath/eval/" . $DESC);
 
                 next
                   unless $desc->declares('Check');
@@ -267,7 +267,7 @@ the test description (presently 'desc').
 
 sub find_all_testpaths {
     my ($directory) = @_;
-    my @descfiles = File::Find::Rule->file()->name(DESC)->in($directory);
+    my @descfiles = File::Find::Rule->file()->name($DESC)->in($directory);
 
     my @testpaths= map { path($_)->parent->parent->stringify }@descfiles;
 
@@ -288,7 +288,7 @@ sub find_testpaths_by_name {
 
     my @named = File::Find::Rule->directory()->name($name)->in($path);
     my @testpaths= grep { defined }
-      map { -e rel2abs('eval/' . DESC, $_) ? $_ : undef } @named;
+      map { -e rel2abs('eval/' . $DESC, $_) ? $_ : undef } @named;
 
     return @testpaths;
 }
@@ -303,9 +303,9 @@ located in TEST_PATH.
 sub find_all_tags {
     my ($testpath) = @_;
 
-    my $desc = read_config("$testpath/eval/" . DESC);
+    my $desc = read_config("$testpath/eval/" . $DESC);
 
-    return EMPTY
+    return $EMPTY
       unless $desc->declares('Check');
 
     my %tags;

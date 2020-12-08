@@ -53,6 +53,7 @@ BEGIN {
 }
 
 use Capture::Tiny qw(capture_merged);
+use Const::Fast;
 use Cwd qw(getcwd);
 use File::Basename qw(basename);
 use File::Spec::Functions qw(abs2rel rel2abs splitpath catpath);
@@ -77,17 +78,18 @@ use Test::Lintian::Hooks
   qw(find_missing_prerequisites sed_hook sort_lines calibrate);
 use Test::Lintian::Output::Universal qw(get_tagnames order);
 
-use constant SPACE => q{ };
-use constant SLASH => q{/};
-use constant EMPTY => q{};
-use constant NEWLINE => qq{\n};
-use constant YES => q{yes};
-use constant NO => q{no};
+const my $EMPTY => q{};
+const my $SPACE => q{ };
+const my $INDENT => $SPACE x 2;
+const my $SLASH => q{/};
+const my $NEWLINE => qq{\n};
+const my $YES => q{yes};
+const my $NO => q{no};
 
 # turn off the @@-style headers in Text::Diff
 no warnings 'redefine';
-sub Text::Diff::Unified::file_header { return EMPTY; }
-sub Text::Diff::Unified::hunk_header { return EMPTY; }
+sub Text::Diff::Unified::file_header { return $EMPTY; }
+sub Text::Diff::Unified::hunk_header { return $EMPTY; }
 
 =head1 FUNCTIONS
 
@@ -110,7 +112,7 @@ sub logged_runner {
     my $files = read_config($runfiles);
 
     # set path to logfile
-    my $logpath = $runpath . SLASH . $files->unfolded_value('Log');
+    my $logpath = $runpath . $SLASH . $files->unfolded_value('Log');
 
     my $log_bytes = capture_merged {
         try {
@@ -133,7 +135,8 @@ sub logged_runner {
 
     # print log and die on error
     if ($error) {
-        print encode_utf8($log) if length $log && $ENV{'DUMP_LOGS'}//NO eq YES;
+        print encode_utf8($log)
+          if length $log && $ENV{'DUMP_LOGS'}//$NO eq $YES;
         die encode_utf8("Runner died for $runpath: $error");
     }
 
@@ -153,7 +156,7 @@ sub runner {
     # set a predictable locale
     $ENV{'LC_ALL'} = 'C';
 
-    say encode_utf8(EMPTY);
+    say encode_utf8($EMPTY);
     say encode_utf8('------- Runner starts here -------');
 
     # bail out if runpath does not exist
@@ -172,14 +175,14 @@ sub runner {
 
     # read dynamic case data
     my $rundescpath
-      = $runpath . SLASH . $files->unfolded_value('Test-Specification');
+      = $runpath . $SLASH . $files->unfolded_value('Test-Specification');
     my $testcase = read_config($rundescpath);
 
     # get data age
     $spec_epoch = max(stat($rundescpath)->mtime, $spec_epoch);
     say encode_utf8('Specification is from : '. rfc822date($spec_epoch));
 
-    say encode_utf8(EMPTY);
+    say encode_utf8($EMPTY);
 
     # age of runner executable
     my $runner_epoch = $ENV{'RUNNER_EPOCH'}//time;
@@ -193,7 +196,7 @@ sub runner {
     my $threshold= max($spec_epoch, $runner_epoch, $harness_epoch);
     say encode_utf8('Rebuild threshold is : '. rfc822date($threshold));
 
-    say encode_utf8(EMPTY);
+    say encode_utf8($EMPTY);
 
     # age of Lintian executable
     my $lintian_epoch = $ENV{'LINTIAN_EPOCH'}//time;
@@ -229,7 +232,7 @@ sub runner {
     my $platforms = $testcase->unfolded_value('Test-Architectures');
     if ($platforms ne 'any') {
 
-        my @wildcards = split(SPACE, $platforms);
+        my @wildcards = split($SPACE, $platforms);
         my $match = 0;
         for my $wildcard (@wildcards) {
 
@@ -299,8 +302,8 @@ sub runner {
     }
 
     # put output back together
-    $output = EMPTY;
-    $output .= $_ . NEWLINE for @lines;
+    $output = $EMPTY;
+    $output .= $_ . $NEWLINE for @lines;
 
     die encode_utf8('No match strategy defined')
       unless $testcase->declares('Match-Strategy');
@@ -332,7 +335,7 @@ sub runner {
         return;
     }
 
-    diag $_ . NEWLINE for @errors;
+    diag $_ . $NEWLINE for @errors;
 
     ok($okay, "Lintian passes for $testname");
 
@@ -422,9 +425,9 @@ sub check_result {
     my @expectedlines = path($expectedpath)->lines;
     my @actuallines = path($actualpath)->lines;
 
-    push(@expectedlines, NEWLINE)
+    push(@expectedlines, $NEWLINE)
       unless @expectedlines;
-    push(@actuallines, NEWLINE)
+    push(@actuallines, $NEWLINE)
       unless @actuallines;
 
     my $match_strategy = $testcase->unfolded_value('Match-Strategy');
@@ -453,20 +456,20 @@ sub check_result {
 
             @difflines = reverse sort @difflines;
             my $tagdiff;
-            $tagdiff .= $_ . NEWLINE for @difflines;
-            path("$runpath/tagdiff")->spew_utf8($tagdiff // EMPTY);
+            $tagdiff .= $_ . $NEWLINE for @difflines;
+            path("$runpath/tagdiff")->spew_utf8($tagdiff // $EMPTY);
 
         } else {
             die encode_utf8("Unknown match strategy $match_strategy.");
         }
 
-        push(@errors, EMPTY);
+        push(@errors, $EMPTY);
 
         push(@errors, '--- ' . abs2rel($expectedpath));
         push(@errors, '+++ ' . abs2rel($actualpath));
         push(@errors, @difflines);
 
-        push(@errors, EMPTY);
+        push(@errors, $EMPTY);
     }
 
     # stop if the test is not about tags
@@ -526,8 +529,8 @@ sub check_result {
     # warn about unexpected tags
     if (@unexpected) {
         push(@errors, 'Unexpected tags:');
-        push(@errors, SPACE . SPACE . $_) for @unexpected;
-        push(@errors, EMPTY);
+        push(@errors, $INDENT . $_) for @unexpected;
+        push(@errors, $EMPTY);
     }
     # find tags not seen; result is sorted
     my @missing = List::Compare->new(\@test_for, \@actual)->get_Lonly;
@@ -535,8 +538,8 @@ sub check_result {
     # warn about missing tags
     if (@missing) {
         push(@errors, 'Missing tags:');
-        push(@errors, SPACE . SPACE . $_) for @missing;
-        push(@errors, EMPTY);
+        push(@errors, $INDENT . $_) for @missing;
+        push(@errors, $EMPTY);
     }
 
     return @errors;

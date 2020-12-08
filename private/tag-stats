@@ -13,6 +13,7 @@ use warnings;
 use utf8;
 use autodie qw(opendir closedir);
 
+use Const::Fast;
 use Cwd qw(realpath);
 use File::Basename qw(dirname);
 
@@ -25,6 +26,9 @@ use lib THISDIR . '/../lib';
 
 use Lintian::Deb822::Parser qw(read_dpkg_control);
 use Lintian::Tag;
+
+const my $SPACE => q{ };
+const my $INDENT => $SPACE x 4;
 
 $ENV{LINTIAN_BASE} = realpath(THISDIR . '/..')
   // die 'Cannot resolve LINTIAN_BASE';
@@ -71,7 +75,7 @@ print "Severity\n";
 foreach my $s (@severities) {
     my $tags = $stats{severity}{$s} // [];
     print "  $s: " . @{$tags} . "\n";
-    print '    ' . join("\n    ", sort @{$tags}) . "\n" if $verbose >= 3;
+    print $INDENT . join("\n    ", sort @{$tags}) . "\n" if $verbose >= 3;
 }
 
 foreach my $t (@types) {
@@ -79,7 +83,7 @@ foreach my $t (@types) {
     foreach my $s (@severities) {
         if (my $tags = $stats{type}{severity}{$t}{$s}) {
             print "  $s: " . @{$tags} . "\n";
-            print '    ' . join("\n    ", sort @{$tags}) . "\n"
+            print $INDENT . join("\n    ", sort @{$tags}) . "\n"
               if $verbose >= 2;
         }
     }
@@ -91,13 +95,13 @@ foreach my $s (@severities) {
         my $size = scalar keys %{$needs};
         my @list = sort keys %{$needs};
         print "  $s: $size\n";
-        print '    ' . join("\n    ", @list) . "\n" if $verbose >= 2;
+        print $INDENT . join("\n    ", @list) . "\n" if $verbose >= 2;
     }
 }
 
 if ($verbose >= 1 and exists $stats{severity}{unclassified}) {
     print "\nUnclassified tags\n";
-    print '  ' . join("\n  ", @{$stats{severity}{unclassified}}) . "\n";
+    print $SPACE x 2 . join("\n  ", @{$stats{severity}{unclassified}}) . "\n";
 }
 
 # Local Variables:

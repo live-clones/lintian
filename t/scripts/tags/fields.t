@@ -29,6 +29,7 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use File::Find::Rule;
 use IPC::Run3;
 use List::Util qw(all);
@@ -41,9 +42,8 @@ use Lintian::Deb822::File;
 use Lintian::Output::HTML;
 use Lintian::Profile;
 
-use constant EMPTY => q{};
-use constant SPACE => q{ };
-use constant SLASH => q{/};
+const my $EMPTY => q{};
+const my $SLASH => q{/};
 
 my @tagpaths = sort File::Find::Rule->file()->name('*.tag')->in('tags');
 
@@ -102,7 +102,7 @@ for my $tagpath (@tagpaths) {
 
     if ($fields->value('Name-Spaced') eq 'yes') {
 
-        $tagname = $checkname . SLASH . $tagname;
+        $tagname = $checkname . $SLASH . $tagname;
 
         # encapsulating directory is name of check
         my $subdir = path($tagpath)->parent->relative('tags');
@@ -155,7 +155,7 @@ for my $tagpath (@tagpaths) {
     my @tidy_command = qw(tidy -quiet);
     run3(\@tidy_command, \$html_description, \$tidy_out, \$tidy_err);
 
-    is($tidy_err, EMPTY,
+    is($tidy_err, $EMPTY,
         "No warnings from HTML Tidy for tag description in $tagname");
 }
 

@@ -44,7 +44,10 @@ our @EXPORT_OK = (qw(
 
 use Exporter qw(import);
 
+use Const::Fast;
 use Unicode::UTF8 qw(encode_utf8);
+
+const my $EMPTY => q{};
 
 =head1 NAME
 
@@ -410,7 +413,7 @@ sub visit_dpkg_paragraph_string {
         }
 
         # empty line?
-        if ($line eq '' || (!$debconf && $line =~ /^\s*$/)) {
+        if ($line eq $EMPTY || (!$debconf && $line =~ /^\s*$/)) {
             if ($open_section) { # end of current section
                  # pass the current section to the handler
                 $code->($section, $field_starts);
@@ -535,7 +538,7 @@ sub visit_dpkg_paragraph_string {
             $open_section = 1;
 
             my $tag = $1;
-            $section->{$tag} = '';
+            $section->{$tag} = $EMPTY;
             $field_starts->{$tag} = $position;
 
             $last_tag = $tag;

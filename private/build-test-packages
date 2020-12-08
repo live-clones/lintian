@@ -32,6 +32,7 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use Cwd qw(realpath);
 use File::Basename qw(dirname);
 
@@ -68,14 +69,13 @@ use Test::Lintian::Helper
 use Test::Lintian::Hooks qw(sed_hook sort_lines calibrate);
 use Test::Lintian::Prepare qw(prepare);
 
-use constant SPACE => q{ };
-use constant SLASH => q{/};
-use constant INDENT => q{    };
-use constant NEWLINE => qq{\n};
-use constant TAB => qq{\t};
-use constant EMPTY => q{};
-use constant YES => q{yes};
-use constant NO => q{no};
+const my $EMPTY => q{};
+const my $SPACE => q{ };
+const my $INDENT => $SPACE x 4;
+const my $NEWLINE => qq{\n};
+const my $SLASH => q{/};
+const my $YES => q{yes};
+const my $NO => q{no};
 
 my $processing_start = Time::Moment->from_string(gmtime->datetime . 'Z');
 
@@ -158,7 +158,7 @@ die encode_utf8("Test work directory $outpath is not a directory")
 # make sure outpath is absolute
 $outpath = path($outpath)->relative->stringify;
 
-say encode_utf8(EMPTY);
+say encode_utf8($EMPTY);
 
 # tie verbosity to debug
 $verbose = 1 + $debug if $debug;
@@ -168,7 +168,7 @@ $numjobs = default_parallel() if $numjobs <= 0;
 say encode_utf8("Running up to $numjobs tests concurrently")
   if $numjobs > 1 && $verbose >= 2;
 
-$ENV{'DUMP_LOGS'} = $dump_logs//NO ? YES : NO;
+$ENV{'DUMP_LOGS'} = $dump_logs//$NO ? $YES : $NO;
 
 # Disable translation support in dpkg as it is a considerable
 # unnecessary overhead.
@@ -196,14 +196,14 @@ say encode_utf8(
 "Using compat level $ENV{'DEFAULT_DEBHELPER_COMPAT'} as a default for packages built with debhelper."
 );
 
-say encode_utf8(EMPTY);
+say encode_utf8($EMPTY);
 
 # print environment
 my @vars = sort keys %ENV;
 say encode_utf8('Environment:') if @vars;
-for my $var (@vars) { say encode_utf8(INDENT . "$var=$ENV{$var}") }
+for my $var (@vars) { say encode_utf8($INDENT . "$var=$ENV{$var}") }
 
-say encode_utf8(EMPTY);
+say encode_utf8($EMPTY);
 
 my $status = 0;
 
@@ -296,7 +296,7 @@ my $prepare = IO::Async::Function->new(
 
         # print something if there was an error
         die encode_utf8(
-            ($log // EMPTY) . "Preparation failed for $specpath: $error")
+            ($log // $EMPTY) . "Preparation failed for $specpath: $error")
           if $error;
 
         return $specpath;
@@ -317,15 +317,15 @@ $loop->await($allprepared);
 
 my @failedprep = $allprepared->failed_futures;
 if (@failedprep) {
-    say encode_utf8(EMPTY);
+    say encode_utf8($EMPTY);
     say encode_utf8('Failed preparation tasks:');
-    say encode_utf8(NEWLINE . $_->failure) for @failedprep;
+    say encode_utf8($NEWLINE . $_->failure) for @failedprep;
     exit 1;
 } else {
     say encode_utf8('Package sources are ready.');
 }
 
-say encode_utf8(EMPTY);
+say encode_utf8($EMPTY);
 
 my $build = IO::Async::Function->new(
     code => sub {
@@ -389,7 +389,7 @@ my $build = IO::Async::Function->new(
         my $log = decode_utf8($log_bytes);
 
         # delete old runner log
-        my $betterlogpath = $buildpath . SLASH . $files->unfolded_value('Log');
+        my $betterlogpath= $buildpath . $SLASH . $files->unfolded_value('Log');
         unlink $betterlogpath if -e $betterlogpath;
 
        # move the early log for directory preparation to position of runner log
@@ -407,7 +407,7 @@ my $build = IO::Async::Function->new(
 
         # print log and die on error
         die encode_utf8(
-            ($log // EMPTY) . "Builder died for $buildpath: $error")
+            ($log // $EMPTY) . "Builder died for $buildpath: $error")
           if length $error;
 
         return $specpath;
@@ -430,21 +430,21 @@ $loop->await($allbuilt);
 
 my @failedbuilds = $allbuilt->failed_futures;
 if (@failedbuilds) {
-    say encode_utf8(EMPTY);
+    say encode_utf8($EMPTY);
     say encode_utf8('Failed build tasks:');
-    say encode_utf8(NEWLINE . $_->failure) for @failedbuilds;
+    say encode_utf8($NEWLINE . $_->failure) for @failedbuilds;
     exit 1;
 } else {
     say encode_utf8('All test packages are up to date.');
 }
 
-say encode_utf8(EMPTY);
+say encode_utf8($EMPTY);
 
 my $processing_end = Time::Moment->from_string(gmtime->datetime . 'Z');
 my $duration = duration($processing_start->delta_seconds($processing_end));
 say encode_utf8("Building the test packages took $duration.");
 
-say encode_utf8(EMPTY);
+say encode_utf8($EMPTY);
 
 exit 0;
 

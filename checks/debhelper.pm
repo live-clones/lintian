@@ -84,12 +84,12 @@ sub source {
     my $droot = $processable->patched->resolve_path('debian/');
     my ($drules, $dh_bd_version, $level);
 
-    my $seencommand = '';
-    my $needbuilddepends = '';
-    my $needdhexecbuilddepends = '';
-    my $needtomodifyscripts = '';
+    my $seencommand = EMPTY;
+    my $needbuilddepends = EMPTY;
+    my $needdhexecbuilddepends = EMPTY;
+    my $needtomodifyscripts = EMPTY;
     my $compat = 0;
-    my $seendhcleank = '';
+    my $seendhcleank = EMPTY;
     my (%missingbdeps, %missingbdeps_addons, $maybe_skipping, $dhcompatvalue);
     my $inclcdbs = 0;
 
@@ -347,7 +347,7 @@ sub source {
     }
 
     my @pkgs = $processable->debian_control->installables;
-    my $single_pkg = '';
+    my $single_pkg = EMPTY;
     $single_pkg
       =  $processable->debian_control->installable_package_type($pkgs[0])
       if scalar @pkgs == 1;
@@ -412,7 +412,7 @@ sub source {
             }
         }
         close($fd);
-        if ($compat ne '') {
+        if ($compat ne EMPTY) {
             my $compat_value = $compat;
             # Recommend people use debhelper-compat (introduced in debhelper
             # 11.1.5~alpha1) over debian/compat, except for experimental/beta
@@ -502,8 +502,8 @@ sub source {
             # They need to have #DEBHELPER# in their scripts.  Search
             # for scripts that look like maintainer scripts and make
             # sure the token is there.
-            my $binpkg = $1 || '';
-            my $seentag = '';
+            my $binpkg = $1 || EMPTY;
+            my $seentag = EMPTY;
             open(my $fd, '<', $file->unpacked_path);
             while (<$fd>) {
                 if (m/\#DEBHELPER\#/) {
@@ -789,7 +789,7 @@ sub check_dh_exec {
 sub _shebang_cmd {
     my ($path) = @_;
     my $magic;
-    my $cmd = '';
+    my $cmd = EMPTY;
     open(my $fd, '<', $path->unpacked_path);
     if (read($fd, $magic, 2)) {
         if ($magic eq '#!') {
@@ -798,7 +798,7 @@ sub _shebang_cmd {
             # It is beyond me why anyone would place a lincity data
             # file here...  but if they do, we will handle it
             # correctly.
-            $cmd = '' if $cmd =~ /^#!/;
+            $cmd = EMPTY if $cmd =~ /^#!/;
 
             # trim both ends
             $cmd =~ s/^\s+|\s+$//g;

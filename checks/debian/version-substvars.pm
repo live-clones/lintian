@@ -127,7 +127,7 @@ sub source {
                        \$[{]((?:Source-|source:|binary:)Version)[}] # subvar
                       /x;
 
-            my $gt = $2//'';
+            my $gt = $2//EMPTY;
             $pkg2 = $1;
             $substvar_strips_binNMU = ($3 eq 'source:Version');
 

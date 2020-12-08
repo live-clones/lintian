@@ -22,17 +22,18 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use Cwd;
 use IPC::Run3;
 use Unicode::UTF8 qw(encode_utf8 decode_utf8);
 
-use constant EMPTY => q{};
-use constant SPACE => q{ };
-use constant COMMA => q{,};
-use constant NULL => qq{\0};
-
 use Moo::Role;
 use namespace::clean;
+
+const my $EMPTY => q{};
+const my $SPACE => q{ };
+const my $COMMA => q{,};
+const my $NULL => qq{\0};
 
 =head1 NAME
 
@@ -62,8 +63,8 @@ sub add_fileinfo {
 
     my @files = grep { $_->is_file } $self->sorted_list;
 
-    my $input = EMPTY;
-    $input .= $_->name . NULL for @files;
+    my $input = $EMPTY;
+    $input .= $_->name . $NULL for @files;
 
     my $stdout;
 
@@ -125,10 +126,10 @@ sub add_fileinfo {
 
         # 2 for max compression; RFC1952 suggests this is a
         # flag and not a value, hence bit operation
-        $text .= COMMA . SPACE . 'max compression'
+        $text .= $COMMA . $SPACE . 'max compression'
           if $compression & 2;
 
-        my $new_type = $file->file_info . COMMA . SPACE . $text;
+        my $new_type = $file->file_info . $COMMA . $SPACE . $text;
         $file->file_info($new_type);
     }
 

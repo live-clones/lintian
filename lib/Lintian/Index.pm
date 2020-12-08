@@ -23,6 +23,7 @@ use utf8;
 use autodie;
 
 use Carp;
+use Const::Fast;
 use Cwd;
 use IPC::Run3;
 use List::SomeUtils qw(any);
@@ -35,10 +36,6 @@ use Lintian::IPC::Run3 qw(safe_qx);
 
 use Lintian::Util qw(perm2oct);
 
-use constant EMPTY => q{};
-use constant SPACE => q{ };
-use constant SLASH => q{/};
-
 use Moo;
 use namespace::clean;
 
@@ -49,6 +46,9 @@ with
   'Lintian::Index::Md5sums',
   'Lintian::Index::Objdump',
   'Lintian::Index::Strings';
+
+const my $EMPTY => q{};
+const my $SLASH => q{/};
 
 my %FILE_CODE2LPATH_TYPE = (
     '-' => Lintian::Index::Item::TYPE_FILE| Lintian::Index::Item::OPEN_IS_OK,
@@ -105,7 +105,7 @@ has catalog => (
         $root->index($self);
 
         my %catalog;
-        $catalog{''} = $root;
+        $catalog{$EMPTY} = $root;
 
         return \%catalog;
     });
@@ -123,7 +123,7 @@ has basedir => (
         path($folder)->mkpath({ chmod => 0777 })
           unless -e $folder;
     },
-    default => EMPTY
+    default => $EMPTY
 );
 
 has anchored => (is => 'rw', default => 0);
@@ -166,10 +166,10 @@ sub lookup {
     my ($self, $name) = @_;
 
     # get root dir by default
-    $name //= EMPTY;
+    $name //= $EMPTY;
 
     croak encode_utf8('Name is not a string')
-      unless ref $name eq EMPTY;
+      unless ref $name eq $EMPTY;
 
     my $found = $self->catalog->{$name};
 
@@ -255,10 +255,10 @@ sub create_from_basedir {
         $name =~ s{^\./+}{}s;
 
         # make sure directories end with a slash, except root
-        $name .= SLASH
+        $name .= $SLASH
           if length $name
           && $entry->perm =~ /^d/
-          && substr($name, -1) ne SLASH;
+          && substr($name, -1) ne $SLASH;
         $entry->name($name);
 
         $all{$entry->name} = $entry;
@@ -414,16 +414,16 @@ sub load {
 
             $current = $all{$parentname};
 
-        } while ($parentname ne EMPTY);
+        } while ($parentname ne $EMPTY);
     }
 
     # insert root for empty tarfies like suckless-tools_45.orig.tar.xz
-    unless (exists $all{''}) {
+    unless (exists $all{$EMPTY}) {
 
         my $root = Lintian::Index::Item->new;
         $root->index($self);
 
-        $root->name(EMPTY);
+        $root->name($EMPTY);
         $root->path_info($FILE_CODE2LPATH_TYPE{'d'} | 0755);
 
         # random but fixed date; hint, it's a good read. :)
@@ -431,7 +431,7 @@ sub load {
         $root->time('22:55:34');
         $root->faux(1);
 
-        $all{''} = $root;
+        $all{$EMPTY} = $root;
     }
 
     my @directories
@@ -461,7 +461,7 @@ sub load {
 
     # ensure root is not its own child; may create leaks like #695866
     die encode_utf8('Root directory is its own parent')
-      if defined $all{''} && defined $all{''}->parent_dir;
+      if defined $all{$EMPTY} && defined $all{$EMPTY}->parent_dir;
 
     # find all hard links
     my @hardlinks
@@ -494,7 +494,7 @@ sub load {
           if $preferred->name eq $master->name;
 
         # unset link for preferred
-        $preferred->link(EMPTY);
+        $preferred->link($EMPTY);
 
         # copy size from original
         $preferred->size($master->size);
@@ -554,20 +554,21 @@ sub merge_in {
 
     # do not transfer root
     $self->catalog->{$_->name} = $_
-      for grep { $_->name ne EMPTY } values %{$other->catalog};
+      for grep { $_->name ne $EMPTY } values %{$other->catalog};
 
     # add children that came from other root to current
-    my @other_childnames = keys %{$other->catalog->{''}->childnames};
+    my @other_childnames = keys %{$other->catalog->{$EMPTY}->childnames};
     for my $name (@other_childnames) {
 
-        $self->catalog->{''}->childnames->{$name} = $self->catalog->{$name};
+        $self->catalog->{$EMPTY}->childnames->{$name}
+          = $self->catalog->{$name};
     }
 
     # remove items from other index
     $other->catalog({});
 
     # unset other base directory
-    $other->basedir(EMPTY);
+    $other->basedir($EMPTY);
 
     return;
 }
@@ -583,7 +584,7 @@ sub capture_common_prefix {
 
     # do nothing in root
     return
-      if $new_basedir eq SLASH;
+      if $new_basedir eq $SLASH;
 
     my $segment = path($self->basedir)->basename;
     die encode_utf8('Common path segment has no length')
@@ -591,9 +592,9 @@ sub capture_common_prefix {
 
     my $prefix;
     if ($self->anchored) {
-        $prefix = SLASH . $segment;
+        $prefix = $SLASH . $segment;
     } else {
-        $prefix = $segment . SLASH;
+        $prefix = $segment . $SLASH;
     }
 
     my $new_root = Lintian::Index::Item->new;
@@ -601,7 +602,7 @@ sub capture_common_prefix {
     # associate new item with this index
     $new_root->index($self);
 
-    $new_root->name('');
+    $new_root->name($EMPTY);
     $new_root->childnames({ $segment => $prefix });
 
     # random but fixed date; hint, it's a good read. :)
@@ -633,7 +634,7 @@ sub capture_common_prefix {
         $new_catalog{$new_name} = $item;
     }
 
-    $new_catalog{''} = $new_root;
+    $new_catalog{$EMPTY} = $new_root;
     $new_catalog{$prefix}->parent_dir($new_root);
 
     $self->catalog(\%new_catalog);
@@ -651,7 +652,7 @@ sub capture_common_prefix {
 sub drop_common_prefix {
     my ($self) = @_;
 
-    my @childnames = keys %{$self->catalog->{''}->childnames};
+    my @childnames = keys %{$self->catalog->{$EMPTY}->childnames};
 
     die encode_utf8('Not exactly one top-level child')
       unless @childnames == 1;
@@ -660,20 +661,20 @@ sub drop_common_prefix {
     die encode_utf8('Common path segment has no length')
       unless length $segment;
 
-    my $new_root = $self->lookup($segment . SLASH);
+    my $new_root = $self->lookup($segment . $SLASH);
     die encode_utf8('New root is not a directory')
       unless $new_root->is_dir;
 
     my $prefix;
     if ($self->anchored) {
-        $prefix = SLASH . $segment;
+        $prefix = $SLASH . $segment;
     } else {
-        $prefix = $segment . SLASH;
+        $prefix = $segment . $SLASH;
     }
 
     my $regex = quotemeta($prefix);
 
-    delete $self->catalog->{''};
+    delete $self->catalog->{$EMPTY};
 
     my %new_catalog;
     for my $item (values %{$self->catalog}) {
@@ -697,8 +698,8 @@ sub drop_common_prefix {
         }
 
         # unsure this works, but orig not anchored
-        $new_name = EMPTY
-          if $new_name eq SLASH && $self->anchored;
+        $new_name = $EMPTY
+          if $new_name eq $SLASH && $self->anchored;
 
         $new_catalog{$new_name} = $item;
     }
@@ -706,7 +707,7 @@ sub drop_common_prefix {
     $self->catalog(\%new_catalog);
 
     # add dropped segment to base directory
-    $self->basedir($self->basedir . SLASH . $segment);
+    $self->basedir($self->basedir . $SLASH . $segment);
 
     $self->drop_basedir_segment;
 
@@ -726,11 +727,11 @@ sub drop_basedir_segment {
 
     my $parent_dir = path($self->basedir)->parent->stringify;
     die encode_utf8('Base directory has no parent')
-      if $parent_dir eq SLASH;
+      if $parent_dir eq $SLASH;
 
     my $grandparent_dir = path($parent_dir)->parent->stringify;
     die encode_utf8('Will not do anything in file system root')
-      if $grandparent_dir eq SLASH;
+      if $grandparent_dir eq $SLASH;
 
     # destroyed when object is lost
     my $tempdir_tiny

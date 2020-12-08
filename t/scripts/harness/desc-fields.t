@@ -40,9 +40,6 @@ use lib "$ENV{'LINTIAN_BASE'}/lib";
 use Lintian::Profile;
 use Test::Lintian::ConfigFile qw(read_config);
 
-use constant SPACE => q{ };
-use constant EMPTY => q{};
-
 my @descpaths = File::Find::Rule->file()->name('desc')->in('t/recipes');
 
 # mandatory fields

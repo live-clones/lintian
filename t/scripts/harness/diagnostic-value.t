@@ -38,9 +38,6 @@ use Test::More;
 use Test::Lintian::ConfigFile qw(read_config);
 use Test::Lintian::Output::Universal qw(tag_name);
 
-use constant SPACE => q{ };
-use constant EMPTY => q{};
-
 my @known_undeclared = qw(
 );
 

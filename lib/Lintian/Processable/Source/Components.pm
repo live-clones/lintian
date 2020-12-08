@@ -22,12 +22,13 @@ use v5.20;
 use warnings;
 use utf8;
 
+use Const::Fast;
 use Unicode::UTF8 qw(encode_utf8);
-
-use constant EMPTY => q{};
 
 use Moo::Role;
 use namespace::clean;
+
+const my $EMPTY => q{};
 
 =head1 NAME
 
@@ -96,7 +97,7 @@ has components => (
             if ($name
                 =~ /^(?:\Q$base\E\.orig(?:-(.*))?|\Q$baserev\E)\.tar\.(?:gz|bz2|lzma|xz)$/
             ) {
-                $components{$name} = $1 // EMPTY;
+                $components{$name} = $1 // $EMPTY;
             }
         }
 

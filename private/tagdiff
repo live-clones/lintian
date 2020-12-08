@@ -29,6 +29,7 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use Cwd qw(realpath);
 use File::Basename qw(dirname);
 
@@ -49,14 +50,13 @@ use Unicode::UTF8 qw(encode_utf8);
 
 use Test::Lintian::Output::Universal qw(order);
 
-use constant EMPTY => q{};
-use constant SPACE => q{ };
-use constant NEWLINE => qq{\n};
+const my $EMPTY => q{};
+const my $NEWLINE => qq{\n};
 
 no warnings 'redefine';
 
-sub Text::Diff::Unified::file_header { return EMPTY; }
-sub Text::Diff::Unified::hunk_header { return EMPTY; }
+sub Text::Diff::Unified::file_header { return $EMPTY; }
+sub Text::Diff::Unified::hunk_header { return $EMPTY; }
 
 # options
 Getopt::Long::Configure;
@@ -83,7 +83,7 @@ my @actual
 
 my $diff = diff(\@expected, \@actual, { CONTEXT => 0 });
 
-my @lines = split(NEWLINE, $diff);
+my @lines = split(/$NEWLINE/, $diff);
 chomp @lines;
 
 # sort before applying color
@@ -100,7 +100,7 @@ if (is_interactive) {
     s/^(\-.*)$/$red$1$reset/ for @lines;
 }
 
-print encode_utf8($_ . NEWLINE) for @lines;
+print encode_utf8($_ . $NEWLINE) for @lines;
 
 exit;
 

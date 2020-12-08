@@ -39,9 +39,6 @@ use lib "$ENV{'LINTIAN_BASE'}/lib";
 use Lintian::Profile;
 use Test::Lintian::ConfigFile qw(read_config);
 
-use constant SPACE => q{ };
-use constant EMPTY => q{};
-
 my $checkpath = 't/recipes/checks';
 
 # find all test specifications related to only one check

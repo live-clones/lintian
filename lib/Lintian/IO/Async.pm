@@ -40,6 +40,7 @@ BEGIN {
     );
 }
 
+use Const::Fast;
 use IO::Async::Loop;
 use IO::Async::Process;
 
@@ -51,11 +52,11 @@ use Lintian::Index::Item;
 # be the defaults).  when we do full reads and writes of READ_SIZE (the
 # OS willing), the receiving end will never be with an incomplete
 # record.
-use constant READ_SIZE => 4096 * 20 * 512;
+const my $READ_SIZE => 4096 * 20 * 512;
 
-use constant EMPTY => q{};
-use constant COLON => q{:};
-use constant NEWLINE => qq{\n};
+const my $EMPTY => q{};
+const my $COLON => q{:};
+const my $NEWLINE => qq{\n};
 
 =head1 NAME
 
@@ -150,7 +151,7 @@ sub get_deb_info {
 
             if ($status) {
                 my $message= "Non-zero status $status from @dpkgcommand";
-                $message .= COLON . NEWLINE . $dpkgerror
+                $message .= $COLON . $NEWLINE . $dpkgerror
                   if length $dpkgerror;
                 $dpkgfuture->fail($message);
                 return;
@@ -177,7 +178,7 @@ sub get_deb_info {
 
             if ($status) {
                 my $message = "Non-zero status $status from @tarcommand";
-                $message .= COLON . NEWLINE . $tarerror
+                $message .= $COLON . $NEWLINE . $tarerror
                   if length $tarerror;
                 $tarfuture->fail($message);
                 return;
@@ -187,16 +188,16 @@ sub get_deb_info {
             return;
         });
 
-    $tarprocess->stdin->configure(write_len => READ_SIZE);
+    $tarprocess->stdin->configure(write_len => $READ_SIZE);
 
     $dpkgprocess->stdout->configure(
-        read_len => READ_SIZE,
+        read_len => $READ_SIZE,
         on_read => sub {
             my ($stream, $buffref, $eof) = @_;
 
             if (length $$buffref) {
                 $tarprocess->stdin->write($$buffref);
-                $$buffref = EMPTY;
+                $$buffref = $EMPTY;
             }
 
             if ($eof) {
@@ -243,7 +244,7 @@ sub unpack_and_index_piped_tar {
             if ($status) {
                 my $message
                   = "Non-zero status $status from dpkg-deb for control";
-                $message .= COLON . NEWLINE . $deberror
+                $message .= $COLON . $NEWLINE . $deberror
                   if length $deberror;
                 $dpkgdeb->fail($message);
                 return;
@@ -269,7 +270,7 @@ sub unpack_and_index_piped_tar {
 
             if ($status) {
                 my $message = "Non-zero status $status from extract tar";
-                $message .= COLON . NEWLINE . $extracterror
+                $message .= $COLON . $NEWLINE . $extracterror
                   if length $extracterror;
                 $extractor->fail($message);
                 return;
@@ -297,7 +298,7 @@ sub unpack_and_index_piped_tar {
 
             if ($status) {
                 my $message = "Non-zero status $status from index tar";
-                $message .= COLON . NEWLINE . $namederror
+                $message .= $COLON . $NEWLINE . $namederror
                   if length $namederror;
                 $namedindexer->fail($message);
                 return;
@@ -322,7 +323,7 @@ sub unpack_and_index_piped_tar {
 
             if ($status) {
                 my $message = "Non-zero status $status from index tar";
-                $message .= COLON . NEWLINE . $numericerror
+                $message .= $COLON . $NEWLINE . $numericerror
                   if length $numericerror;
                 $numericindexer->fail($message);
                 return;
@@ -332,12 +333,12 @@ sub unpack_and_index_piped_tar {
             return;
         });
 
-    $extractprocess->stdin->configure(write_len => READ_SIZE,);
-    $namedindexprocess->stdin->configure(write_len => READ_SIZE,);
-    $numericindexprocess->stdin->configure(write_len => READ_SIZE,);
+    $extractprocess->stdin->configure(write_len => $READ_SIZE,);
+    $namedindexprocess->stdin->configure(write_len => $READ_SIZE,);
+    $numericindexprocess->stdin->configure(write_len => $READ_SIZE,);
 
     $debprocess->stdout->configure(
-        read_len => READ_SIZE,
+        read_len => $READ_SIZE,
         on_read => sub {
             my ($stream, $buffref, $eof) = @_;
 
@@ -346,7 +347,7 @@ sub unpack_and_index_piped_tar {
                 $namedindexprocess->stdin->write($$buffref);
                 $numericindexprocess->stdin->write($$buffref);
 
-                $$buffref = EMPTY;
+                $$buffref = $EMPTY;
             }
 
             if ($eof) {
@@ -370,7 +371,7 @@ sub unpack_and_index_piped_tar {
     # awaits, and dies on failure with message from failed constituent
     $composite->get;
 
-    my $extract_errors = ($deberror // EMPTY) . ($extracterror // EMPTY);
+    my $extract_errors = ($deberror // $EMPTY) . ($extracterror // $EMPTY);
     my $index_errors = $namederror;
 
     return ($named, $numeric, $extract_errors, $index_errors);

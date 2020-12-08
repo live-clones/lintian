@@ -24,20 +24,20 @@ use warnings;
 use utf8;
 use warnings::register;
 
+use Const::Fast;
 use Path::Tiny;
-
-use constant EMPTY => q{};
-use constant COLON => q{:};
-use constant SLASH => q{/};
-use constant UNDERSCORE => q{_};
-
-use constant EVIL_CHARACTERS => qr{[/&|;\$"'<>]};
 
 use Moo::Role;
 use MooX::Aliases;
 use namespace::clean;
 
 with 'Lintian::Hint::Bearer';
+
+const my $EMPTY => q{};
+const my $COLON => q{:};
+const my $SLASH => q{/};
+const my $UNDERSCORE => q{_};
+const my $EVIL_CHARACTERS => qr{[/&|;\$"'<>]};
 
 =encoding utf-8
 
@@ -117,8 +117,8 @@ Returns the base directory of this package inside the lab.
 
 =cut
 
-has path => (is => 'rw', default => EMPTY);
-has type => (is => 'rw', default => EMPTY);
+has path => (is => 'rw', default => $EMPTY);
+has type => (is => 'rw', default => $EMPTY);
 
 has architecture => (
     is => 'rw',
@@ -126,7 +126,7 @@ has architecture => (
         my ($value) = @_;
         return clean_field($value);
     },
-    default => EMPTY
+    default => $EMPTY
 );
 has name => (
     is => 'rw',
@@ -134,7 +134,7 @@ has name => (
         my ($value) = @_;
         return clean_field($value);
     },
-    default => EMPTY
+    default => $EMPTY
 );
 has source => (
     is => 'rw',
@@ -142,7 +142,7 @@ has source => (
         my ($value) = @_;
         return clean_field($value);
     },
-    default => EMPTY
+    default => $EMPTY
 );
 has source_version =>(
     is => 'rw',
@@ -150,7 +150,7 @@ has source_version =>(
         my ($value) = @_;
         return clean_field($value);
     },
-    default => EMPTY
+    default => $EMPTY
 );
 has version => (
     is => 'rw',
@@ -158,14 +158,14 @@ has version => (
         my ($value) = @_;
         return clean_field($value);
     },
-    default => EMPTY
+    default => $EMPTY
 );
 
 has tainted => (is => 'rw', default => 0);
 
 has fields => (is => 'rw', default => sub { Lintian::Deb822::Section->new; });
 
-has pooldir => (is => 'rw', default => EMPTY);
+has pooldir => (is => 'rw', default => $EMPTY);
 has basedir => (
     is => 'rw',
     lazy => 1,
@@ -183,10 +183,10 @@ has basedir => (
         my ($self) = @_;
 
         my $path
-          = $self->source. SLASH. $self->name. UNDERSCORE. $self->version;
-        $path .= UNDERSCORE . $self->architecture
+          = $self->source. $SLASH. $self->name. $UNDERSCORE. $self->version;
+        $path .= $UNDERSCORE . $self->architecture
           unless $self->type eq 'source';
-        $path .= UNDERSCORE . $self->type;
+        $path .= $UNDERSCORE . $self->type;
 
         # architectures can contain spaces in changes files
         $path =~ s/\s/-/g;
@@ -209,10 +209,10 @@ based on the type, name, version and architecture of the package.
 sub identifier {
     my ($self) = @_;
 
-    my $id = $self->type . COLON . $self->name . SLASH . $self->version;
+    my $id = $self->type . $COLON . $self->name . $SLASH . $self->version;
 
     # add architecture unless it is source
-    $id .= SLASH . $self->architecture
+    $id .= $SLASH . $self->architecture
       unless $self->type eq 'source';
 
     $id =~ s/\s+/_/g;
@@ -246,7 +246,7 @@ on the name and the version of the src-pkg.
 sub get_group_id {
     my ($self) = @_;
 
-    my $id = $self->source . SLASH . $self->source_version;
+    my $id = $self->source . $SLASH . $self->source_version;
 
     return $id;
 }
@@ -262,7 +262,7 @@ sub clean_field {
 
     # make sure none of the fields can cause traversal
     my $clean = $value;
-    $clean =~ s/${\EVIL_CHARACTERS}/_/g;
+    $clean =~ s/${$EVIL_CHARACTERS}/_/g;
 
     return $clean;
 }

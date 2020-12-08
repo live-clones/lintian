@@ -22,11 +22,13 @@ use v5.20;
 use warnings;
 use utf8;
 
-use constant EMPTY => q{};
-use constant SPACE => q{ };
+use Const::Fast;
 
 use Moo::Role;
 use namespace::clean;
+
+const my $EMPTY => q{};
+const my $SPACE => q{ };
 
 =head1 NAME
 
@@ -70,7 +72,7 @@ sub context {
     my @relevant = grep { length } @{$self->arguments};
 
     # concatenate with spaces
-    my $context = join(SPACE, @relevant) // EMPTY;
+    my $context = join($SPACE, @relevant) // $EMPTY;
 
     # escape newlines; maybe add others
     $context =~ s/\n/\\n/g;

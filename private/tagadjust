@@ -29,6 +29,7 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use Cwd qw(realpath);
 use File::Basename qw(dirname);
 
@@ -49,12 +50,8 @@ use Unicode::UTF8 qw(encode_utf8 decode_utf8);
 
 use Test::Lintian::Output::Universal qw(parse_line order);
 
-use constant EMPTY => q{};
-use constant SPACE => q{ };
-use constant COLON => q{:};
-use constant LPARENS => q{(};
-use constant RPARENS => q{)};
-use constant NEWLINE => qq{\n};
+const my $EMPTY => q{};
+const my $NEWLINE => qq{\n};
 
 # options
 my $interactive;
@@ -113,7 +110,7 @@ foreach my $line (@difflines) {
         my $decision = decode_utf8($decision_bytes);
 
         exit
-          if $decision eq 'q' || $decision eq EMPTY;
+          if $decision eq 'q' || $decision eq $EMPTY;
 
         next
           unless $decision eq 'y';
@@ -135,8 +132,8 @@ foreach my $line (@difflines) {
 exit unless $changed;
 
 # also sort output into preferred order
-my $joined = EMPTY;
-$joined .= $_ . NEWLINE
+my $joined = $EMPTY;
+$joined .= $_ . $NEWLINE
   for reverse sort { order($a) cmp order($b) } @tagslines;
 path($tagspath)->spew_utf8($joined);
 

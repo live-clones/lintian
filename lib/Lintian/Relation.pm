@@ -43,6 +43,11 @@ our (@EXPORT_OK, %EXPORT_TAGS);
 
 use Lintian::Relation::Version qw(:all);
 
+use Const::Fast;
+
+const my $EMPTY => q{};
+const my $SPACE => q{ };
+
 =head1 NAME
 
 Lintian::Relation - Lintian operations on dependencies and relationships
@@ -177,10 +182,10 @@ my $EMPTY_RELATION = bless(['AND'], 'Lintian::Relation');
 # internal format.
 sub new {
     my ($class, $relation) = @_;
-    $relation = '' unless defined($relation);
+    $relation = $EMPTY unless defined($relation);
     my @result;
     for my $element (split(/\s*,\s*/, $relation)) {
-        next if $element eq '';
+        next if $element eq $EMPTY;
         my @alternatives;
         for my $alternative (split(/\s*\|\s*/, $element)) {
             my $dep = $class->parse_element($alternative);
@@ -225,7 +230,7 @@ Lintian::Relation object is empty (always satisfied).
 
 sub new_norestriction {
     my ($class, $relation) = @_;
-    $relation = '' unless defined($relation);
+    $relation = $EMPTY unless defined($relation);
     $relation =~ s/\[[^,\]]*\]//g;
     # we have to make sure that the following does not match the less than
     # sign from a version comparison. We do this by doing a negative lookahead
@@ -444,8 +449,8 @@ sub implies_element {
     # If the names match, then the only difference is in the architecture or
     # version clauses.  First, check architecture.  The architectures for p
     # must be a superset of the architectures for q.
-    my @p_arches = split(' ', defined($$p[4]) ? $$p[4] : '');
-    my @q_arches = split(' ', defined($$q[4]) ? $$q[4] : '');
+    my @p_arches = split($SPACE, defined($$p[4]) ? $$p[4] : $EMPTY);
+    my @q_arches = split($SPACE, defined($$q[4]) ? $$q[4] : $EMPTY);
     if (@p_arches || @q_arches) {
         my $p_arch_neg = @p_arches && $p_arches[0] =~ /^!/;
         my $q_arch_neg = @q_arches && $q_arches[0] =~ /^!/;

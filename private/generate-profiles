@@ -18,6 +18,7 @@ use constant THISDIR => dirname realpath __FILE__;
 # use Lintian modules that belong to this program
 use lib THISDIR . '/../lib';
 
+use Const::Fast;
 use File::Find::Rule;
 use List::Compare;
 use List::Util qw(uniq);
@@ -28,12 +29,12 @@ use YAML::XS;
 
 use Lintian::Deb822::File;
 
-use constant EMPTY => q{};
-use constant SPACE => q{ };
-use constant COMMA => q{,};
-use constant HYPHEN => q{-};
-use constant INDENT => q{    };
-use constant NEWLINE => qq{\n};
+const my $EMPTY => q{};
+const my $SPACE => q{ };
+const my $INDENT => $SPACE x 4;
+const my $NEWLINE => qq{\n};
+const my $COMMA => q{,};
+const my $HYPHEN => q{-};
 
 $ENV{LINTIAN_BASE} = realpath(THISDIR . '/..')
   // die encode_utf8('Cannot resolve LINTIAN_BASE');
@@ -112,9 +113,9 @@ my @old_nonfatal_names = $old_nonfatal_lc->get_intersection;
 
 say encode_utf8('FTP Master uses old tag names for auto-rejection:')
   if @old_fatal_names || @old_nonfatal_names;
-say encode_utf8(INDENT . "-   [fatal]   $_  =>  $new_name{$_}")
+say encode_utf8($INDENT . "-   [fatal]   $_  =>  $new_name{$_}")
   for @old_fatal_names;
-say encode_utf8(INDENT . "- [non-fatal] $_  =>  $new_name{$_}")
+say encode_utf8($INDENT . "- [non-fatal] $_  =>  $new_name{$_}")
   for @old_nonfatal_names;
 
 my $new_fatal_lc
@@ -128,16 +129,16 @@ my @aware_nonfatal_names = $new_nonfatal_lc->get_intersection;
 
 say encode_utf8('They already know about those tags:')
   if @aware_fatal_names || @aware_nonfatal_names;
-say encode_utf8(INDENT . "-   [fatal]   $_") for @aware_fatal_names;
-say encode_utf8(INDENT . "- [non-fatal] $_") for @aware_nonfatal_names;
+say encode_utf8($INDENT . "-   [fatal]   $_") for @aware_fatal_names;
+say encode_utf8($INDENT . "- [non-fatal] $_") for @aware_nonfatal_names;
 
 my @unaware_fatal_names = $new_fatal_lc->get_Ronly;
 my @unaware_nonfatal_names = $new_nonfatal_lc->get_Ronly;
 
 say encode_utf8('The following tags have to be added:')
   if @unaware_fatal_names || @unaware_nonfatal_names;
-say encode_utf8(INDENT . "-   [fatal]   $_") for @unaware_fatal_names;
-say encode_utf8(INDENT . "- [non-fatal] $_") for @unaware_nonfatal_names;
+say encode_utf8($INDENT . "-   [fatal]   $_") for @unaware_fatal_names;
+say encode_utf8($INDENT . "- [non-fatal] $_") for @unaware_nonfatal_names;
 
 # replace old names
 @want_fatal = uniq map { $new_name{$_} // $_ } @want_fatal;
@@ -155,7 +156,7 @@ my @unknown = (@unknown_fatal, @unknown_nonfatal);
 say encode_utf8(
     'Warning, disregarding unknown tags for profile ftp-master-auto-reject:')
   if @unknown;
-say encode_utf8(INDENT . HYPHEN . SPACE . $_) for @unknown;
+say encode_utf8($INDENT . $HYPHEN . $SPACE . $_) for @unknown;
 
 say encode_utf8('Found '
       . scalar @fatal
@@ -200,18 +201,18 @@ EOSTR
 sub write_paragraph {
     my ($paragraph) = @_;
 
-    my $text = EMPTY;
+    my $text = $EMPTY;
 
     foreach my $field (sort keys %{$paragraph}) {
-        $text .= "$field:" . NEWLINE;
+        $text .= "$field:" . $NEWLINE;
 
         my @values = sort @{$paragraph->{$field}};
-        my $separator = (scalar @values > 1 ? COMMA : EMPTY);
+        my $separator = (scalar @values > 1 ? $COMMA : $EMPTY);
 
-        $text .= SPACE . $_ . $separator . NEWLINE for @values;
+        $text .= $SPACE . $_ . $separator . $NEWLINE for @values;
     }
 
-    $text .= NEWLINE
+    $text .= $NEWLINE
       if length $text;
 
     return $text;

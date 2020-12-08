@@ -22,17 +22,18 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use Cwd;
 use IPC::Run3;
 use Unicode::UTF8 qw(encode_utf8 decode_utf8);
 
 use Lintian::Util qw(read_md5sums);
 
-use constant EMPTY => q{};
-use constant NULL => qq{\0};
-
 use Moo::Role;
 use namespace::clean;
+
+const my $EMPTY => q{};
+const my $NULL => qq{\0};
 
 =head1 NAME
 
@@ -63,8 +64,8 @@ sub add_md5sums {
     # get the regular files in the index
     my @files = grep { $_->is_file } $self->sorted_list;
 
-    my $input = EMPTY;
-    $input .= $_->name . NULL for @files;
+    my $input = $EMPTY;
+    $input .= $_->name . $NULL for @files;
 
     my $stdout;
     my $stderr;

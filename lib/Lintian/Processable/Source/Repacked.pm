@@ -26,8 +26,6 @@ use utf8;
 
 use Lintian::Util qw($PKGREPACK_REGEX);
 
-use constant EMPTY => q{};
-
 use Moo::Role;
 use namespace::clean;
 

@@ -32,6 +32,8 @@ use autodie;
 
 use List::SomeUtils qw(any);
 
+use constant EMPTY => q{};
+
 use Moo;
 use namespace::clean;
 
@@ -68,8 +70,8 @@ my %VCS_CANONIFY = (
         if ($_[0] =~ m{https?\Q://anonscm.debian.org/viewvc/\E}xsm) {
             if ($_[0] =~ s{\?(.*[;\&])?op=log(?:[;\&](.*))?\Z}{}xsm) {
                 my (@keep) = ($1, $2, $3);
-                my $final = join('', grep {defined} @keep);
-                $_[0] .= '?' . $final if ($final ne '');
+                my $final = join(EMPTY, grep {defined} @keep);
+                $_[0] .= '?' . $final if ($final ne EMPTY);
                 $_[1] = 'vcs-field-bitrotted';
             }
         }
@@ -160,7 +162,7 @@ sub always {
 
     # team-maintained = maintainer or uploaders field contains a mailing list
     my $is_teammaintained = 0;
-    my $team_email = '';
+    my $team_email = EMPTY;
     # co-maintained = maintained by an informal group of people,
     # i. e. >= 1 uploader and not team-maintained
     my $is_comaintained = 0;

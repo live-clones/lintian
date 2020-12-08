@@ -4,10 +4,11 @@ use v5.20;
 use warnings;
 use utf8;
 
+use Const::Fast;
 use List::SomeUtils qw(any);
 use Path::Tiny;
 
-use constant EMPTY => q{};
+const my $EMPTY => q{};
 
 die 'Please specify exactly one argument'
   unless @ARGV == 1;
@@ -36,9 +37,9 @@ my @testlabels = qw(
   Todo
 );
 
-my $build = EMPTY;
-my $eval = EMPTY;
-my $comments = EMPTY;
+my $build = $EMPTY;
+my $eval = $EMPTY;
+my $comments = $EMPTY;
 
 while ($contents =~ s/\n(\#[^\n]*\n)/\n/) {
     $comments .= $1;

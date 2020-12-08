@@ -28,6 +28,8 @@ use autodie;
 use Lintian::Spelling qw(check_spelling);
 use Lintian::Util qw(open_gz);
 
+use constant EMPTY => q{};
+
 use Moo;
 use namespace::clean;
 
@@ -66,7 +68,7 @@ sub installable {
     my $processable = $self->processable;
     my $group = $self->group;
 
-    my $readme = '';
+    my $readme = EMPTY;
 
     my $fd = open_readme($pkg_name, $processable);
     return if not defined($fd);

@@ -37,6 +37,7 @@ BEGIN {
     );
 }
 
+use Const::Fast;
 use IPC::Open3;
 use IO::Select;
 use Symbol;
@@ -47,11 +48,9 @@ use Unicode::UTF8 qw(encode_utf8);
 # be the defaults).  when we do full reads and writes of READ_SIZE (the
 # OS willing), the receiving end will never be with an incomplete
 # record.
-use constant TAR_RECORD_SIZE => 20 * 512;
+const my $TAR_RECORD_SIZE => 20 * 512;
 
-use constant EMPTY => q{};
-use constant COLON => q{:};
-use constant NEWLINE => qq{\n};
+const my $EMPTY => q{};
 
 =head1 NAME
 
@@ -162,12 +161,12 @@ sub unpack_and_index_piped_tar {
 
     $select->add($numeric_stdout, $numeric_stderr);
 
-    my $named = EMPTY;
-    my $numeric = EMPTY;
+    my $named = $EMPTY;
+    my $numeric = $EMPTY;
 
-    my $produce_errors = EMPTY;
-    my $extract_errors = EMPTY;
-    my $named_errors = EMPTY;
+    my $produce_errors = $EMPTY;
+    my $extract_errors = $EMPTY;
+    my $named_errors = $EMPTY;
 
     while (my @ready = $select->can_read) {
 
@@ -175,7 +174,7 @@ sub unpack_and_index_piped_tar {
 
             my $buffer;
 
-            # using 4096 * TAR_RECORD_SIZE tripped up older kernels < 5.7
+            # using 4096 * $TAR_RECORD_SIZE tripped up older kernels < 5.7
             my $length = sysread($handle, $buffer, 4 * 1024);
 
             die encode_utf8("Error from child: $!\n")
@@ -231,7 +230,7 @@ sub unpack_and_index_piped_tar {
 
     waitpid($_, 0) for @pids;
 
-    my $tar_errors = ($produce_errors // EMPTY) . ($extract_errors // EMPTY);
+    my $tar_errors = ($produce_errors // $EMPTY) . ($extract_errors // $EMPTY);
     my $index_errors = $named_errors;
 
     return ($named, $numeric, $tar_errors, $index_errors);

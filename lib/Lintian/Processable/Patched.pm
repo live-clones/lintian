@@ -24,6 +24,7 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use Cwd;
 use IPC::Run3;
 use Path::Tiny;
@@ -32,13 +33,12 @@ use Unicode::UTF8 qw(encode_utf8 decode_utf8);
 use Lintian::Index;
 use Lintian::Index::Item;
 
-use constant EMPTY => q{};
-use constant COLON => q{:};
-use constant SLASH => q{/};
-use constant NEWLINE => qq{\n};
-
 use Moo::Role;
 use namespace::clean;
+
+const my $COLON => q{:};
+const my $SLASH => q{/};
+const my $NEWLINE => qq{\n};
 
 =head1 NAME
 
@@ -69,7 +69,7 @@ has patched => (
         my ($self) = @_;
 
         my $index = Lintian::Index->new;
-        $index->basedir($self->basedir . SLASH . 'unpacked');
+        $index->basedir($self->basedir . $SLASH . 'unpacked');
 
         # source packages can be unpacked anywhere; no anchored roots
         $index->anchored(0);
@@ -99,7 +99,7 @@ has patched => (
 
         if ($status) {
             my $message = "Non-zero status $status from @unpack_command";
-            $message .= COLON . NEWLINE . $unpack_errors
+            $message .= $COLON . $NEWLINE . $unpack_errors
               if length $unpack_errors;
 
             die encode_utf8($message);

@@ -49,6 +49,7 @@ BEGIN {
 }
 
 use Carp;
+use Const::Fast;
 use Cwd qw(getcwd);
 use File::Copy;
 use File::Find::Rule;
@@ -67,11 +68,10 @@ use Test::Lintian::Helper qw(rfc822date copy_dir_contents);
 use Test::Lintian::Templates
   qw(copy_skeleton_template_sets remove_surplus_templates fill_skeleton_templates);
 
-use constant EMPTY => q{};
-use constant SPACE => q{ };
-use constant SLASH => q{/};
-use constant COMMA => q{,};
-use constant NEWLINE => qq{\n};
+const my $EMPTY => q{};
+const my $SPACE => q{ };
+const my $SLASH => q{/};
+const my $COMMA => q{,};
 
 =head1 FUNCTIONS
 
@@ -106,13 +106,13 @@ sub prepare {
     #    $data_epoch= max($data_epoch, stat($defaultfilespath)->mtime);
 
     # read test data
-    my $descpath = $specpath . SLASH . $files->unfolded_value('Fill-Values');
+    my $descpath = $specpath . $SLASH . $files->unfolded_value('Fill-Values');
     my $desc = read_config($descpath);
     #    $data_epoch= max($data_epoch, stat($descpath)->mtime);
 
     # read test defaults
     my $descdefaultspath
-      = $defaultspath . SLASH . $files->unfolded_value('Fill-Values');
+      = $defaultspath . $SLASH . $files->unfolded_value('Fill-Values');
     my $defaults = read_config($descdefaultspath);
     #    $data_epoch= max($data_epoch, stat($descdefaultspath)->mtime);
 
@@ -257,13 +257,13 @@ sub prepare {
     # calculate build dependencies
     warn encode_utf8('Cannot override Build-Depends:')
       if $testcase->declares('Build-Depends');
-    combine_fields($testcase, 'Build-Depends', COMMA . SPACE,
+    combine_fields($testcase, 'Build-Depends', $COMMA . $SPACE,
         'Default-Build-Depends', 'Extra-Build-Depends');
 
     # calculate build conflicts
     warn encode_utf8('Cannot override Build-Conflicts:')
       if $testcase->declares('Build-Conflicts');
-    combine_fields($testcase, 'Build-Conflicts', COMMA . SPACE,
+    combine_fields($testcase, 'Build-Conflicts', $COMMA . $SPACE,
         'Default-Build-Conflicts', 'Extra-Build-Conflicts');
 
     # fill testcase with itself; do it twice to make sure all is done
@@ -272,7 +272,7 @@ sub prepare {
     $hashref = fill_hash_from_hash($hashref);
     write_hash_to_deb822_section($hashref, $testcase);
 
-    say encode_utf8(EMPTY);
+    say encode_utf8($EMPTY);
 
     # fill remaining templates
     fill_skeleton_templates($testcase->value('Fill-Targets'),
@@ -294,7 +294,7 @@ sub prepare {
     # set mtime for dynamic test data
     $rundesc->touch($data_epoch);
 
-    say encode_utf8(EMPTY);
+    say encode_utf8($EMPTY);
 
     # announce data age
     say encode_utf8('Data epoch is : '. rfc822date($data_epoch));
@@ -328,12 +328,12 @@ sub filleval {
 
     # read test data
     my $descpath
-      = $specpath . SLASH . $files->unfolded_value('Test-Specification');
+      = $specpath . $SLASH . $files->unfolded_value('Test-Specification');
     my $desc = read_config($descpath);
 
     # read test defaults
     my $descdefaultspath
-      = $defaultspath . SLASH . $files->unfolded_value('Test-Specification');
+      = $defaultspath . $SLASH . $files->unfolded_value('Test-Specification');
     my $defaults = read_config($descdefaultspath);
 
     # start with a shallow copy of defaults
@@ -401,7 +401,7 @@ sub filleval {
     $hashref = fill_hash_from_hash($hashref);
     write_hash_to_deb822_section($hashref, $testcase);
 
-    say encode_utf8(EMPTY);
+    say encode_utf8($EMPTY);
 
     # fill remaining templates
     fill_skeleton_templates($testcase->value('Fill-Targets'),
@@ -417,7 +417,7 @@ sub filleval {
       = path($evalpath)->child($files->unfolded_value('Test-Specification'));
     write_config($testcase, $rundesc->stringify);
 
-    say encode_utf8(EMPTY);
+    say encode_utf8($EMPTY);
 
     return;
 }
@@ -507,7 +507,7 @@ sub fill_hash_from_hash {
     # fill hash with itself
     for my $key (keys %origin) {
 
-        my $template = $origin{$key} // EMPTY;
+        my $template = $origin{$key} // $EMPTY;
         my $filler= Text::Template->new(TYPE => 'STRING', SOURCE => $template);
         croak encode_utf8(
             "Cannot read template $template: $Text::Template::ERROR")

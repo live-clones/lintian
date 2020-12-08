@@ -618,18 +618,18 @@ sub installable {
 sub count_choices {
     my ($choices) = @_;
     my @items;
-    my $item = '';
+    my $item = EMPTY;
     for my $chunk (split /(\\[, ]|,\s+)/, $choices) {
         if ($chunk =~ /^\\([, ])$/) {
             $item .= $1;
         } elsif ($chunk =~ /^,\s+$/) {
             push(@items, $item);
-            $item = '';
+            $item = EMPTY;
         } else {
             $item .= $chunk;
         }
     }
-    push(@items, $item) if $item ne '';
+    push(@items, $item) if $item ne EMPTY;
     return scalar(@items);
 }
 

@@ -25,6 +25,7 @@ use utf8;
 use autodie;
 
 use Carp qw(croak);
+use Const::Fast;
 use Devel::Size qw(total_size);
 use File::Spec;
 use List::Compare;
@@ -41,11 +42,10 @@ use Lintian::Processable::Changes;
 use Lintian::Processable::Source;
 use Lintian::Util qw(human_bytes);
 
-use constant EMPTY => q{};
-use constant SPACE => q{ };
-
 use Moo;
 use namespace::clean;
+
+const my $EMPTY => q{};
 
 # A private table of supported types.
 my %SUPPORTED_TYPES = (
@@ -130,8 +130,8 @@ Hash with active jobs.
 
 =cut
 
-has pooldir => (is => 'rw', default => EMPTY);
-has name => (is => 'rw', default => EMPTY);
+has pooldir => (is => 'rw', default => $EMPTY);
+has name => (is => 'rw', default => $EMPTY);
 
 has binary => (is => 'rw', default => sub{ {} });
 has buildinfo => (is => 'rw');
@@ -140,8 +140,8 @@ has source => (is => 'rw');
 has udeb => (is => 'rw', default => sub{ {} });
 
 has jobs => (is => 'rw', default => 1);
-has processing_start => (is => 'rw', default => EMPTY);
-has processing_end => (is => 'rw', default => EMPTY);
+has processing_start => (is => 'rw', default => $EMPTY);
+has processing_end => (is => 'rw', default => $EMPTY);
 
 has cache => (is => 'rw', default => sub { {} });
 has profile => (is => 'rw', default => sub { {} });
@@ -346,9 +346,8 @@ sub process {
             my $declared = $declared_overrides->{$hint->tag->name};
             if ($declared && !$hint->tag->show_always) {
 
-                # do not use EMPTY; hash keys literal
                 # empty context in specification matches all
-                my $override = $declared->{''};
+                my $override = $declared->{$EMPTY};
 
                 # matches context exactly
                 $override = $declared->{$hint->context}

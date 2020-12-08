@@ -36,6 +36,7 @@ Depends:
  libclass-xsaccessor-perl,
  libclone-perl,
  libconfig-tiny-perl,
+ libconst-fast-perl,
  libcpanel-json-xs-perl,
  libdata-dpath-perl,
  libdata-validate-domain-perl,

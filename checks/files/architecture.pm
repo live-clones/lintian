@@ -25,6 +25,8 @@ use warnings;
 use utf8;
 use autodie;
 
+use constant EMPTY => q{};
+
 use Moo;
 use namespace::clean;
 
@@ -64,7 +66,7 @@ sub visit_installed_files {
 
     if ($file->dirname =~ m{^(?:usr)?/lib/([^/]+)/$}) {
         $self->_set_arch_dep_files(1)
-          if $self->TRIPLETS->known($1 // '');
+          if $self->TRIPLETS->known($1 // EMPTY);
     }
 
     return;

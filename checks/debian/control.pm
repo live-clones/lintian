@@ -181,7 +181,7 @@ sub source {
             $self->hint(
                 'debian-control-has-empty-field',
                 "field \"$field\" in package $bin",
-            ) if $bfields->value($field) eq '';
+            ) if $bfields->value($field) eq EMPTY;
         }
         if ($bin =~ /[-]dbgsym$/) {
             $self->hint('debian-control-has-dbgsym-package', $bin);

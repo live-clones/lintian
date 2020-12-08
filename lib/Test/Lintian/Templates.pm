@@ -56,6 +56,7 @@ BEGIN {
 }
 
 use Carp;
+use Const::Fast;
 use List::Util qw(max);
 use File::Path qw(make_path);
 use File::Spec::Functions qw(rel2abs abs2rel);
@@ -68,12 +69,11 @@ use Unicode::UTF8 qw(encode_utf8);
 use Test::Lintian::ConfigFile qw(read_config);
 use Test::Lintian::Helper qw(copy_dir_contents);
 
-use constant NEWLINE => qq{\n};
-use constant SPACE => q{ };
-use constant DOT => q{.};
-use constant COMMA => q{,};
-use constant COLON => q{:};
-use constant EMPTY => q{};
+const my $EMPTY => q{};
+const my $SPACE => q{ };
+const my $DOT => q{.};
+const my $COMMA => q{,};
+const my $COLON => q{:};
 
 =head1 FUNCTIONS
 
@@ -92,7 +92,7 @@ sub copy_skeleton_template_sets {
     my ($instructions, $runpath, $testset)= @_;
 
     # populate working directory with specified template sets
-    foreach my $set (split(COMMA, $instructions)) {
+    for my $set (split($COMMA, $instructions)) {
 
         my ($relative, $name)
           =($set =~ qr/^\s*([^()\s]+)\s*\(([^()\s]+)\)\s*$/);
@@ -109,7 +109,7 @@ sub copy_skeleton_template_sets {
           unless -d $templatesetpath;
 
         say encode_utf8("Installing template set '$name'"
-              . ($relative ne DOT ? " to ./$relative." : EMPTY));
+              . ($relative ne $DOT ? " to ./$relative." : $EMPTY));
 
         # create directory
         my $destination = "$runpath/$relative";
@@ -155,7 +155,7 @@ instructions must be separated by commas.
 sub fill_skeleton_templates {
     my ($instructions, $testcase, $threshold, $runpath, $testset)= @_;
 
-    foreach my $target (split(COMMA, $instructions)) {
+    for my $target (split(/$COMMA/, $instructions)) {
 
         my ($relative, $name)
           =($target=~ qr/^\s*([^()\s]+)\s*(?:\(([^()\s]+)\))?\s*$/);
@@ -171,10 +171,10 @@ sub fill_skeleton_templates {
                 "Cannot find template whitelist '$name' at $whitelistpath")
               unless -e $whitelistpath;
 
-            say encode_utf8(EMPTY);
+            say encode_utf8($EMPTY);
 
             say encode_utf8('Generate files '
-                  . ($relative ne DOT ? "in ./$relative " : EMPTY)
+                  . ($relative ne $DOT ? "in ./$relative " : $EMPTY)
                   . "from templates using whitelist '$name'.");
             my $whitelist = read_config($whitelistpath);
 
@@ -182,10 +182,10 @@ sub fill_skeleton_templates {
             my $destination = "$runpath/$relative";
 
             say encode_utf8('Fill templates'
-                  . ($relative ne DOT ? " in ./$relative" : EMPTY)
-                  . COLON
-                  . SPACE
-                  . join(SPACE, @candidates));
+                  . ($relative ne $DOT ? " in ./$relative" : $EMPTY)
+                  . $COLON
+                  . $SPACE
+                  . join($SPACE, @candidates));
 
             foreach my $candidate (@candidates) {
                 my $generated = rel2abs($candidate, $destination);

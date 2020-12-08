@@ -41,9 +41,10 @@ use lib THISDIR . '/../lib';
 # substituted during package build
 my $LINTIAN_VERSION;
 
-use Cwd qw(getcwd);
 use Carp qw(croak verbose);
 use Config::Tiny;
+use Const::Fast;
+use Cwd qw(getcwd);
 use File::BaseDir qw(config_files data_home);
 use Getopt::Long ();
 use IO::Interactive qw(is_interactive);
@@ -61,12 +62,11 @@ use Lintian::Pool;
 use Lintian::Profile;
 use Lintian::Version qw(guess_version);
 
-use constant EMPTY => q{};
-use constant SPACE => q{ };
-use constant COMMA => q{,};
-use constant COLON => q{:};
-use constant SLASH => q{/};
-use constant NEWLINE => qq{\n};
+const my $EMPTY => q{};
+const my $SPACE => q{ };
+const my $NEWLINE => qq{\n};
+const my $COMMA => q{,};
+const my $SLASH => q{/};
 
 # only in GNOME; need original environment
 my $hyperlinks_capable = is_interactive && any { /\bGNOME\b/ } keys %ENV;
@@ -100,7 +100,7 @@ $ENV{PATH} //= '/bin:/usr/bin';
 
 # needed for tar
 $ENV{LC_ALL} = 'C';
-$ENV{TZ} = EMPTY;
+$ENV{TZ} = $EMPTY;
 
 $ENV{LINTIAN_BASE} = realpath(THISDIR . '/..')
   // die encode_utf8('Cannot resolve LINTIAN_BASE');
@@ -110,8 +110,8 @@ die encode_utf8('Unable to determine the version automatically!?')
   unless length $ENV{LINTIAN_VERSION};
 
 if (my $coverage_arg = $ENV{LINTIAN_COVERAGE}) {
-    my $p5opt = $ENV{PERL5OPT} // EMPTY;
-    $p5opt .= SPACE unless $p5opt eq EMPTY;
+    my $p5opt = $ENV{PERL5OPT} // $EMPTY;
+    $p5opt .= $SPACE unless $p5opt eq $EMPTY;
     $ENV{PERL5OPT} = "${p5opt} ${coverage_arg}";
 }
 
@@ -170,7 +170,7 @@ Getopt::Long::GetOptions(\%command_line, @getoptions)
   or die encode_utf8("error parsing options\n");
 
 my @basenames = map { path($_)->basename } @ARGV;
-$0 = join(SPACE, THISFILE, @basenames);
+$0 = join($SPACE, THISFILE, @basenames);
 
 if (exists $command_line{'version'}) {
     say encode_utf8("Lintian v$ENV{LINTIAN_VERSION}");
@@ -212,11 +212,11 @@ unless ($command_line{'no-user-dirs'}) {
     }
 
     # make path absolute for use elsewhere
-    $xdg_data_home = getcwd() . SLASH . $xdg_data_home
+    $xdg_data_home = getcwd() . $SLASH . $xdg_data_home
       if length $xdg_data_home && $xdg_data_home !~ m{^/};
 }
 
-my $LINTIAN_CFG = $command_line{cfg} // EMPTY;
+my $LINTIAN_CFG = $command_line{cfg} // $EMPTY;
 
 $LINTIAN_CFG ||= $ENV{LINTIAN_CFG}
   if length $ENV{LINTIAN_CFG} && -e $ENV{LINTIAN_CFG};
@@ -228,7 +228,7 @@ $LINTIAN_CFG ||= first_value { length $_ && -e $_ }
 my @RESTRICTED_CONFIG_DIRS
   = grep {length $_ && -d $_ }($xdg_data_home, $dot_data_home, '/etc/lintian');
 
-$LINTIAN_CFG = EMPTY
+$LINTIAN_CFG = $EMPTY
   if $command_line{'no-cfg'};
 
 my %config;
@@ -275,7 +275,7 @@ if (length $LINTIAN_CFG) {
       = List::Compare->new([keys %config], [@allowed, @ENV_FROM_CONFIG]);
     my @unknown = $knownlc->get_Lonly;
     die encode_utf8(
-        "Unknown setting in $LINTIAN_CFG: " . join(SPACE, @unknown) . NEWLINE)
+        "Unknown setting in $LINTIAN_CFG: ". join($SPACE, @unknown). $NEWLINE)
       if @unknown;
 }
 
@@ -347,7 +347,7 @@ for my $set (@MUTUAL_OPTIONS) {
 $selected{$_} = $command_line{$_} for keys %command_line;
 
 @{$selected{'display-level'}}
-  = split(/\s*,\s*/, join(COMMA, @{$selected{'display-level'}}));
+  = split(/\s*,\s*/, join($COMMA, @{$selected{'display-level'}}));
 
 my @display_level;
 
@@ -385,16 +385,16 @@ for my $level (@{$selected{'display-level'}}) {
 }
 
 @{$selected{'display-source'}}
-  = split(/\s*,\s*/, join(COMMA, @{$selected{'display-source'}}));
+  = split(/\s*,\s*/, join($COMMA, @{$selected{'display-source'}}));
 
 @{$selected{'check-part'}}
-  = split(/\s*,\s*/, join(COMMA, @{$selected{'check-part'}}));
+  = split(/\s*,\s*/, join($COMMA, @{$selected{'check-part'}}));
 @{$selected{'dont-check-part'}}
-  = split(/\s*,\s*/, join(COMMA, @{$selected{'dont-check-part'}}));
+  = split(/\s*,\s*/, join($COMMA, @{$selected{'dont-check-part'}}));
 
-@{$selected{tags}} = split(/\s*,\s*/, join(COMMA, @{$selected{tags}}));
+@{$selected{tags}} = split(/\s*,\s*/, join($COMMA, @{$selected{tags}}));
 @{$selected{'suppress-tags'}}
-  = split(/\s*,\s*/, join(COMMA, @{$selected{'suppress-tags'}}));
+  = split(/\s*,\s*/, join($COMMA, @{$selected{'suppress-tags'}}));
 
 if (length $selected{'tags-from-file'}) {
 
@@ -468,7 +468,7 @@ die encode_utf8("Cannot use profile together with --ftp-master-rejects.\n")
 $selected{profile} = 'debian/ftp-master-auto-reject'
   if $selected{'ftp-master-rejects'};
 
-@{$selected{'fail-on'}} = split(/,/, join(COMMA, @{$selected{'fail-on'}}));
+@{$selected{'fail-on'}} = split(/,/, join($COMMA, @{$selected{'fail-on'}}));
 my @known_fail_on = qw(
   error
   warning
@@ -500,7 +500,8 @@ for my $var (@ENV_FROM_CONFIG) {
     $selected{$var} = $ENV{$var} if $ENV{$var} && !defined $selected{$var};
 }
 
-my %output = map { split(/=/) } split(/,/, ($selected{'exp-output'} // EMPTY));
+my %output
+  = map { split(/=/) } split(/,/, ($selected{'exp-output'} // $EMPTY));
 for (keys %output) {
     if ($_ eq 'format') {
         if ($output{$_} eq 'html') {
@@ -522,14 +523,14 @@ my @from_file = $envlc->get_intersection;
 my @already = grep { defined $ENV{$_} } @from_file;
 warn encode_utf8(
         'The environment overrides these settings in the configuration file: '
-      . join(SPACE, @already)
-      . NEWLINE)
+      . join($SPACE, @already)
+      . $NEWLINE)
   if @already;
 
 my @not_yet = grep { !defined $ENV{$_} } @from_file;
 $OUTPUT->debug_msg(1,
     'Setting environment variables from configuration file: '
-      . join(SPACE, @not_yet))
+      . join($SPACE, @not_yet))
   if @not_yet;
 $ENV{$_} = $config{$_} for @not_yet;
 

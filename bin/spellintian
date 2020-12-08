@@ -26,6 +26,7 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use Cwd qw(realpath);
 use File::Basename qw(dirname);
 
@@ -39,6 +40,7 @@ use lib THISDIR . '/../lib';
 # substituted during package build
 my $LINTIAN_VERSION;
 
+use Const::Fast;
 use Cwd qw(getcwd);
 use File::BaseDir qw(config_home config_files data_home);
 use Getopt::Long ();
@@ -49,8 +51,8 @@ use Lintian::Spelling qw(check_spelling check_spelling_picky);
 use Lintian::Profile;
 use Lintian::Version qw(guess_version);
 
-use constant EMPTY => q{};
-use constant COLON => q{:};
+const my $EMPTY => q{};
+const my $SPACE => q{ };
 
 $SIG{__WARN__} = sub {
     my ($message) = @_;
@@ -62,8 +64,8 @@ $SIG{__WARN__} = sub {
 };
 
 if (my $coverage_arg = $ENV{'LINTIAN_COVERAGE'}) {
-    my $p5opt = $ENV{'PERL5OPT'} // EMPTY;
-    $p5opt .= ' ' if $p5opt ne EMPTY;
+    my $p5opt = $ENV{'PERL5OPT'} // $EMPTY;
+    $p5opt .= $SPACE if $p5opt ne $EMPTY;
     $ENV{'PERL5OPT'} = "${p5opt} ${coverage_arg}";
 }
 
@@ -170,7 +172,7 @@ EOF
 sub spellcheck {
     my ($profile, $path, $be_picky, $text) = @_;
 
-    my $prefix = $path ? "$path: " : EMPTY;
+    my $prefix = $path ? "$path: " : $EMPTY;
 
     my $spelling_error_handler = sub {
         my ($mistake, $correction) = @_;

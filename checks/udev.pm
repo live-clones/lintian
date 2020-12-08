@@ -26,6 +26,8 @@ use warnings;
 use utf8;
 use autodie qw(open);
 
+use constant EMPTY => q{};
+
 use Moo;
 use namespace::clean;
 
@@ -108,7 +110,7 @@ sub check_udev_rules {
     my $linenum = 0;
     my $cont;
     my $retval = 0;
-    my $in_goto = '';
+    my $in_goto = EMPTY;
     while (<$fd>) {
         chomp;
         $linenum++;
@@ -121,7 +123,7 @@ sub check_udev_rules {
             next;
         }
         next if /^#.*/; # Skip comments
-        $in_goto = '' if m/LABEL="[^"]+"/;
+        $in_goto = EMPTY if m/LABEL="[^"]+"/;
         $in_goto = $_ if m/SUBSYSTEM!="[^"]+"/ && m/GOTO="[^"]+"/;
         $retval |= $self->check_rule($file, $linenum, $in_goto, $_);
     }

@@ -12,6 +12,7 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use Cwd qw(realpath);
 use File::Basename qw(dirname);
 
@@ -25,6 +26,9 @@ use lib THISDIR . '/../lib';
 use POSIX qw(strftime);
 
 use Lintian::Deb822::Parser qw(read_dpkg_control);
+
+const my $EMPTY => q{};
+const my $SPACE => q{ };
 
 $ENV{LINTIAN_BASE} = realpath(THISDIR . '/..')
   // die 'Cannot resolve LINTIAN_BASE';
@@ -71,7 +75,7 @@ for my $desc (
         push(@legacy_in_new, [$testname, $tagfile]);
 
     } elsif (exists $data->{'Test-For'}) {
-        for my $tag (split(' ', $data->{'Test-For'})) {
+        for my $tag (split($SPACE, $data->{'Test-For'})) {
             my $check = $tags{$tag};
             delete $tags{$tag};
             if ($check) {
@@ -101,16 +105,16 @@ for my $tagfile (glob('testset/tags.*')) {
 $ltc = $total - scalar keys %tags;
 $cltc = $check_total - scalar keys %checks;
 
-my $tcr = $total ? sprintf ' (%.02f%%)', ($tc / $total) * 100 : '';
-my $ltcr = $total ? sprintf ' (%.02f%%)', ($ltc / $total) * 100 : '';
+my $tcr = $total ? sprintf ' (%.02f%%)', ($tc / $total) * 100 : $EMPTY;
+my $ltcr = $total ? sprintf ' (%.02f%%)', ($ltc / $total) * 100 : $EMPTY;
 my $ctcr
   = $check_total
   ? sprintf ' (%.02f%%)', ($ctc / $check_total) * 100
-  : '';
+  : $EMPTY;
 my $cltcr
   = $check_total
   ? sprintf ' (%.02f%%)', ($cltc / $check_total) * 100
-  : '';
+  : $EMPTY;
 # Open COVERAGE and print out a date stamp.
 open(my $coverage, '>', 't/COVERAGE') or die "Cannot create t/COVERAGE: $!\n";
 print {$coverage} 'Last generated ', strftime('%Y-%m-%d', gmtime), "\n";
@@ -152,7 +156,7 @@ sub print_tags {
         push(@untested, [$tags->{$tag}, $tag]);
     }
     @untested = sort { $a->[0] cmp $b->[0] || $a->[1] cmp $b->[1] } @untested;
-    my $last = '';
+    my $last = $EMPTY;
     for my $data (@untested) {
         my ($file, $tag) = @$data;
         if ($file ne $last) {

@@ -47,6 +47,7 @@ BEGIN {
 }
 
 use Carp;
+use Const::Fast;
 use Cwd;
 use IPC::Run3;
 use List::SomeUtils qw(any);
@@ -58,11 +59,7 @@ use Lintian::Util qw(utf8_clean_log);
 use Test::Lintian::ConfigFile qw(read_config);
 use Test::Lintian::Hooks qw(find_missing_prerequisites);
 
-use constant EMPTY => q{};
-use constant SPACE => q{ };
-use constant SLASH => q{/};
-use constant COMMA => q{,};
-use constant NEWLINE => qq{\n};
+const my $SLASH => q{/};
 
 =head1 FUNCTIONS
 
@@ -88,7 +85,7 @@ sub build_subject {
 
     # read dynamic case data
     my $rundescpath
-      = $sourcepath . SLASH . $files->unfolded_value('Fill-Values');
+      = $sourcepath . $SLASH . $files->unfolded_value('Fill-Values');
     my $testcase = read_config($rundescpath);
 
     # skip test if marked

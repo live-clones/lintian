@@ -22,6 +22,7 @@ use utf8;
 use autodie;
 
 use Carp qw(croak);
+use Const::Fast;
 use List::SomeUtils qw(any none);
 
 use Lintian::SlidingWindow;
@@ -30,6 +31,9 @@ use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $EMPTY => q{};
+const my $SPACE => q{ };
 
 our $PYTHON_DEPEND= 'python2:any | python2-dev:any';
 our $PYTHON3_DEPEND
@@ -305,12 +309,13 @@ sub source {
         for my $rule (@GLOBAL_CLEAN_DEPENDS) {
             if (/$rule->[1]/ and not $maybe_skipping) {
                 $needed_clean{$rule->[0]}
-                  = $rule->[2] || $needed_clean{$rule->[0]} || '';
+                  = $rule->[2] || $needed_clean{$rule->[0]} || $EMPTY;
             }
         }
         for my $rule (@GLOBAL_DEPENDS) {
             if (/$rule->[1]/ && !$maybe_skipping) {
-                $needed{$rule->[0]} = $rule->[2] || $needed{$rule->[0]} || '';
+                $needed{$rule->[0]}
+                  = $rule->[2] || $needed{$rule->[0]} || $EMPTY;
             }
         }
 
@@ -318,7 +323,7 @@ sub source {
         # present for the purposes of GNU make and therefore the Policy
         # requirement.
         if (/^(?:[^:]+\s)?\.PHONY(?:\s[^:]+)?:(.+)/s) {
-            my @targets = split(' ', $1);
+            my @targets = split($SPACE, $1);
             local $_ = undef;
             for (@targets) {
                 # Is it $(VAR) ?
@@ -350,9 +355,9 @@ sub source {
 
         if (!/^ifn?(?:eq|def)\s/ && m/^([^\s:][^:]*):+(.*)/s) {
             my ($target_names, $target_dependencies) = ($1, $2);
-            @current_targets = split ' ', $target_names;
+            @current_targets = split $SPACE, $target_names;
 
-            my @quoted = map { quotemeta } split(' ', $target_dependencies);
+            my @quoted = map { quotemeta } split($SPACE, $target_dependencies);
             s/\\\$\\\([^\):]+\\:([^=]+)\\=([^\)]+)\1\\\)/$2.*/g for @quoted;
             my @depends = map { qr/^$_$/ } @quoted;
 
@@ -417,13 +422,13 @@ sub source {
                     for my $rule (@RULE_CLEAN_DEPENDS) {
                         my ($dep, $pattern, $tagname) = @$rule;
                         next unless /$pattern/;
-                        $table->{$dep} = $tagname || $table->{$dep} || '';
+                        $table->{$dep} = $tagname || $table->{$dep} || $EMPTY;
                     }
                 }
                 if (m/^\s+(dh_\S+)\b/ and $debhelper_order{$1}) {
                     my $command = $1;
                     my ($package) = /\s(?:-p|--package=)(\S+)/;
-                    $package ||= '';
+                    $package ||= $EMPTY;
                     my $group = $debhelper_order{$command};
                     $debhelper_group{$package} ||= 0;
                     if ($group < $debhelper_group{$package}) {
@@ -453,7 +458,7 @@ sub source {
                 } else {
                     $typerule ||= '<N/A>';
                     croak(
-                        join(' ',
+                        join($SPACE,
                             'unknown type of policy rules:',
                             "$typerule (target: $target)"));
                 }
@@ -476,7 +481,7 @@ sub source {
     }
 
     foreach my $cmd (qw(dh_clean dh_fixperms)) {
-        foreach my $suffix ('', '-indep', '-arch') {
+        for my $suffix ($EMPTY, '-indep', '-arch') {
             my $line = $overridden{"$cmd$suffix"};
             $self->hint("override_$cmd-does-not-call-$cmd", "(line $line)")
               if $line

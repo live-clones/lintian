@@ -25,12 +25,16 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use List::SomeUtils qw(any);
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $EMPTY => q{};
+const my $SPACE => q{ };
 
 our %KNOWN_FORMATS = map { $_ => 1 }
   ('1.0', '2.0', '3.0 (quilt)', '3.0 (native)', '3.0 (git)', '3.0 (bzr)');
@@ -52,7 +56,7 @@ sub source {
         $format = <$fd>;
         chomp $format;
         close($fd);
-        $format_extra = '';
+        $format_extra = $EMPTY;
         die "unknown source format $format" unless $KNOWN_FORMATS{$format};
     } else {
         $self->hint('missing-debian-source-format');
@@ -60,7 +64,7 @@ sub source {
         $format_extra = 'implicit';
     }
     if ($format eq '1.0') {
-        $format_extra .= ' ' if $format_extra;
+        $format_extra .= $SPACE if $format_extra;
         if (keys %{$processable->diffstat}) {
             $format_extra .= 'non-native';
         } else {

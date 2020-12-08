@@ -351,9 +351,9 @@ sub installable {
 
             for my $d (@seen_obsolete_packages) {
                 my ($dep, $pkg_name) = @{$d};
-                my $replacement = $OBSOLETE_PACKAGES->value($pkg_name)// '';
+                my $replacement = $OBSOLETE_PACKAGES->value($pkg_name)// EMPTY;
                 $replacement = ' => ' . $replacement
-                  if $replacement ne '';
+                  if $replacement ne EMPTY;
                 if ($pkg_name eq $alternatives[0][0]
                     or scalar @seen_obsolete_packages== scalar @alternatives) {
                     $self->hint(
@@ -605,10 +605,10 @@ sub source {
                 for my $d (@seen_obsolete_packages) {
                     my ($dep, $pkg_name) = @{$d};
                     my $replacement = $OBSOLETE_PACKAGES->value($pkg_name)
-                      // '';
+                      // EMPTY;
 
                     $replacement = ' => ' . $replacement
-                      if $replacement ne '';
+                      if $replacement ne EMPTY;
                     if (   $pkg_name eq $alternatives[0][0]
                         or $all_obsolete) {
                         $self->hint('build-depends-on-obsolete-package',
@@ -712,11 +712,11 @@ sub source {
 sub _split_dep {
     my $dep = shift;
     my ($pkg, $dmarch, $version, $darch, $restr)
-      = ('', '', ['',''], [[], 0], []);
+      = (EMPTY, EMPTY, [EMPTY,EMPTY], [[], 0], []);
 
     if ($dep =~ s/^\s*([^<\s\[\(]+)\s*//) {
         ($pkg, $dmarch) = split(/:/, $1, 2);
-        $dmarch //= '';  # Ensure it is defined (in case there is no ":")
+        $dmarch //= EMPTY;  # Ensure it is defined (in case there is no ":")
     }
 
     if (length $dep) {

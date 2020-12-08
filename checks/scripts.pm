@@ -30,6 +30,7 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use List::SomeUtils qw(any);
 use POSIX qw(strftime);
 
@@ -37,12 +38,12 @@ use Lintian::IPC::Run3 qw(safe_qx);
 use Lintian::Relation;
 use Lintian::Spelling qw($known_shells_regex);
 
-use constant EMPTY => q{};
-
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $EMPTY => q{};
 
 # This is a map of all known interpreters.  The key is the interpreter
 # name (the binary invoked on the #! line).  The value is an anonymous
@@ -134,15 +135,15 @@ has BAD_MAINT_CMD => (
                   = @sliptline;
                 $regexp =~ s/\$[{]LEADIN[}]/$LEADINSTR/;
 
-                $incat //= EMPTY;
-                $inauto //= EMPTY;
+                $incat //= $EMPTY;
+                $inauto //= $EMPTY;
 
                 # trim both ends
                 $incat =~ s/^\s+|\s+$//g;
                 $inauto =~ s/^\s+|\s+$//g;
 
    # allow empty $exceptinpackage and set it synonymous to check in all package
-                $exceptinpackage //= EMPTY;
+                $exceptinpackage //= $EMPTY;
 
                 # trim both ends
                 $exceptinpackage =~ s/^\s+|\s+$//g;
@@ -151,7 +152,7 @@ has BAD_MAINT_CMD => (
                     $exceptinpackage = '\a\Z';
                 }
            # allow empty $inscript and set to synonymous to check in all script
-                $inscript //= EMPTY;
+                $inscript //= $EMPTY;
 
                 # trim both ends
                 $inscript =~ s/^\s+|\s+$//g;
@@ -392,7 +393,7 @@ sub installable {
         next
           if $filename =~ m{^usr/share/cargo/registry/};
 
-        if ($interpreter eq '') {
+        if ($interpreter eq $EMPTY) {
             $self->script_tag('script-without-interpreter', $filename);
             next;
         }
@@ -676,7 +677,7 @@ sub installable {
         $self->hint('maintainer-script-interpreter',
             "control/$file", $interpreter);
 
-        if ($interpreter eq '') {
+        if ($interpreter eq $EMPTY) {
             $self->hint('script-without-interpreter', "control/$file");
             next;
         }
@@ -777,9 +778,9 @@ sub installable {
             $saw_udevadm_guard, $saw_update_fonts
         );
         my %warned;
-        my $cat_string = '';
+        my $cat_string = $EMPTY;
 
-        my $previous_line = '';
+        my $previous_line = $EMPTY;
         my $in_automatic_section = 0;
         while (<$fd>) {
             if ($. == 1 && $shellscript && m{/$base\s*.*\s-\w*e\w*\b}) {
@@ -817,7 +818,7 @@ sub installable {
 
             chomp;
             $_ = $previous_line . $_;
-            $previous_line = '';
+            $previous_line = $EMPTY;
 
             # Don't consider the standard dh-make boilerplate to be code.  This
             # means ignoring the framework of a case statement, the labels, the
@@ -896,8 +897,8 @@ sub installable {
               if m{^\s*invoke-rc\.d\s+};
 
             if ($shellscript) {
-                if ($cat_string ne '' and m/^\Q$cat_string\E$/) {
-                    $cat_string = '';
+                if ($cat_string ne $EMPTY and m/^\Q$cat_string\E$/) {
+                    $cat_string = $EMPTY;
                 }
                 my $within_another_shell = 0;
                 if (
@@ -911,11 +912,11 @@ sub installable {
                 }
                 # if cat_string is set, we are in a HERE document and need not
                 # check for things
-                if (   $cat_string eq ''
+                if (   $cat_string eq $EMPTY
                     && $checkbashisms
                     && !$within_another_shell) {
                     my $found = 0;
-                    my $match = '';
+                    my $match = $EMPTY;
 
                  # since this test is ugly, I have to do it by itself
                  # detect source (.) trying to pass args to the command it runs
@@ -1397,7 +1398,7 @@ sub generic_check_bad_command {
         if ($incat == $findincatstring) {
             my $regex = $bad_cmd_data->{'regexp'};
             if ($line =~ m{$regex}) {
-                my $extrainfo = defined($1) ? "'$1'" : EMPTY;
+                my $extrainfo = defined($1) ? "'$1'" : $EMPTY;
                 my $inpackage = $bad_cmd_data->{'in_package'};
                 unless($pkg =~ m{$inpackage}) {
                     $self->hint($bad_cmd_tag, "$file:$lineno", $extrainfo);
@@ -1492,7 +1493,7 @@ sub check_script_syntax {
 sub remove_comments {
     local $_ = undef;
 
-    my $line = shift || '';
+    my $line = shift || $EMPTY;
     $_ = $line;
 
     # Remove quoted strings so we can more easily ignore comments
@@ -1530,7 +1531,7 @@ sub _parse_interpreters {
     my ($path, $dep) = split m/\s*,\s*/, $value, 2;
     $dep = $interpreter if not $dep;
     if ($dep eq '@NODEPS@') {
-        $dep = '';
+        $dep = $EMPTY;
     } elsif ($dep =~ m/@/) {
         die "Unknown magic value $dep for versioned interpreter $interpreter";
     }
@@ -1543,7 +1544,7 @@ sub _parse_versioned_interpreters {
     my @versions = split m/\s++/, $vers;
     $deprel = $interpreter if not $deprel;
     if ($deprel eq '@NO_DEFAULT_DEPS@') {
-        $deprel = '';
+        $deprel = $EMPTY;
     } elsif ($deprel eq '@SKIP_UNVERSIONED@') {
         $deprel = undef;
     } elsif ($deprel =~ m/@/) {

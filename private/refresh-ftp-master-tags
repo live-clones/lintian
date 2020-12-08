@@ -28,9 +28,12 @@ use autodie;
 require LWP::Simple;
 LWP::Simple->import(qw(get));
 
+use Const::Fast;
 use POSIX qw(strftime);
 
 use List::SomeUtils qw(uniq);
+
+const my $EMPTY => q{};
 
 our $YAML_URL = 'https://ftp-master.debian.org/static/lintian.tags';
 
@@ -70,7 +73,7 @@ print {$nonfatal} <<"EOH";
 # Last updated: $date
 
 EOH
-print {$nonfatal} join("\n", sort(uniq(@nonfatal)), '');
+print {$nonfatal} join("\n", sort(uniq(@nonfatal)), $EMPTY);
 close($nonfatal);
 open(my $fatal, '>', 'private/build-time-data/ftp-master-fatal');
 print {$fatal} <<"EOH";
@@ -81,7 +84,7 @@ print {$fatal} <<"EOH";
 # Last updated: $date
 
 EOH
-print {$fatal} join("\n", sort(uniq(@fatal)), '');
+print {$fatal} join("\n", sort(uniq(@fatal)), $EMPTY);
 close($fatal);
 
 # Local Variables:

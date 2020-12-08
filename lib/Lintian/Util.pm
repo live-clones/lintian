@@ -66,6 +66,7 @@ BEGIN {
 }
 
 use Carp qw(croak);
+use Const::Fast;
 use Cwd qw(abs_path);
 use Digest::MD5;
 use Digest::SHA;
@@ -77,13 +78,13 @@ use Lintian::Deb822::File;
 use Lintian::Inspect::Changelog;
 use Lintian::Relation::Version qw(versions_equal versions_comparator);
 
-use constant EMPTY => q{};
-use constant SPACE => q{ };
-use constant SLASH => q{/};
-use constant DOT => q{.};
-use constant DOUBLEDOT => q{..};
-use constant BACKSLASH => q{\\};
-use constant NEWLINE => qq{\n};
+const my $EMPTY => q{};
+const my $SPACE => q{ };
+const my $NEWLINE => qq{\n};
+const my $SLASH => q{/};
+const my $DOT => q{.};
+const my $DOUBLEDOT => q{..};
+const my $BACKSLASH => q{\\};
 
 # preload cache for common permission strings
 # call overhead o perm2oct was measurable on chromium-browser/32.0.1700.123-2
@@ -345,13 +346,13 @@ sub __open_gz_ext {
 sub locate_executable {
     my ($command) = @_;
 
-    return EMPTY
+    return $EMPTY
       unless exists $ENV{PATH};
 
     my @folders =  grep { length } split(/:/, $ENV{PATH});
     my $path = first_value { -x "$_/$command" } @folders;
 
-    return ($path // EMPTY);
+    return ($path // $EMPTY);
 }
 
 =item drop_relative_prefix(STRING)
@@ -378,7 +379,7 @@ sub version_from_changelog {
 
     my $changelog_path = "$package_path/debian/changelog";
 
-    return EMPTY
+    return $EMPTY
       unless -e $changelog_path;
 
     my $contents = path($changelog_path)->slurp_utf8;
@@ -390,7 +391,7 @@ sub version_from_changelog {
     return $entries[0]->{'Version'}
       if @entries;
 
-    return EMPTY;
+    return $EMPTY;
 }
 
 =item normalize_pkg_path(PATH)
@@ -428,7 +429,7 @@ target is not a symlink (or if it is, that it can be resolved safely).
 sub normalize_link_target {
     my ($path, $target) = @_;
 
-    if (substr($target, 0, 1) eq SLASH) {
+    if (substr($target, 0, 1) eq $SLASH) {
         # Link is absolute
         $path = $target;
     } else {
@@ -442,8 +443,8 @@ sub normalize_link_target {
 sub normalize_pkg_path {
     my ($path) = @_;
 
-    return EMPTY
-      if $path eq SLASH;
+    return $EMPTY
+      if $path eq $SLASH;
 
     my @dirty = split(m{/}, $path);
     my @clean = grep { length } @dirty;
@@ -451,10 +452,10 @@ sub normalize_pkg_path {
     my @final;
     for my $component (@clean) {
 
-        if ($component eq DOT) {
+        if ($component eq $DOT) {
             # do nothing
 
-        } elsif ($component eq DOUBLEDOT) {
+        } elsif ($component eq $DOUBLEDOT) {
             # are we out of bounds?
             my $discard = pop @final;
             return undef
@@ -466,7 +467,7 @@ sub normalize_pkg_path {
     }
 
     # empty if we end in the root
-    my $normalized = join(SLASH, @final);
+    my $normalized = join($SLASH, @final);
 
     return $normalized;
 }
@@ -530,13 +531,13 @@ sub unescape_md5sum_filename {
     for my $char (@array) {
 
         # start escape sequence
-        if ($char eq BACKSLASH && !$escaped) {
+        if ($char eq $BACKSLASH && !$escaped) {
             $escaped = 1;
             next;
         }
 
         # unescape newline
-        $char = NEWLINE
+        $char = $NEWLINE
           if $char eq 'n' && $escaped;
 
         # append character
@@ -610,15 +611,15 @@ sub utf8_clean_log {
 
     my $utf8_clean_word = sub {
         my ($word) = @_;
-        return utf8_clean_bytes($word, SLASH, $hex_sequence);
+        return utf8_clean_bytes($word, $SLASH, $hex_sequence);
     };
 
     my $utf8_clean_line = sub {
         my ($line) = @_;
-        return utf8_clean_bytes($line, SPACE, $utf8_clean_word);
+        return utf8_clean_bytes($line, $SPACE, $utf8_clean_word);
     };
 
-    return utf8_clean_bytes($bytes, NEWLINE, $utf8_clean_line);
+    return utf8_clean_bytes($bytes, $NEWLINE, $utf8_clean_line);
 }
 
 =item utf8_clean_bytes

@@ -147,7 +147,7 @@ sub source {
             next if /^\s*\#/;
             s/.*\]\s*//;
             #  Cannot check files which are not under debian/
-            next if $_ eq ''; #m,^\.\./, or
+            next if $_ eq EMPTY; #m,^\.\./, or
             my $po_path = $debian_dir->resolve_path($_);
             unless ($po_path and $po_path->is_file) {
                 $self->hint('missing-file-from-potfiles-in', $_);
@@ -270,7 +270,7 @@ sub source {
           unless ($basename =~ /^[a-z]{2,3}(_[A-Z]{2})?(?:\@[^\.]+)?\.po$/);
         next unless $po_path->is_open_ok;
         local ($/) = "\n\n";
-        $_ = '';
+        $_ = EMPTY;
         open(my $fd, '<', $po_path->unpacked_path);
         while (<$fd>) {
 
@@ -286,9 +286,9 @@ sub source {
             next;
         }
         s/"\n"//g;
-        my $charset = '';
+        my $charset = EMPTY;
         if (m/charset=(.*?)\\n/) {
-            $charset = ($1 eq 'CHARSET' ? '' : $1);
+            $charset = ($1 eq 'CHARSET' ? EMPTY : $1);
         }
         $self->hint('unknown-encoding-in-po-file', $po_path)
           unless length($charset);

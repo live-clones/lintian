@@ -28,9 +28,6 @@ use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Deb822::File;
 
-use constant COLON => q{:};
-use constant SLASH => q{/};
-
 use Moo;
 use namespace::clean;
 

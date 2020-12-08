@@ -50,13 +50,14 @@ BEGIN {
 }
 
 use Carp;
+use Const::Fast;
 use List::Util qw(all);
 use Unicode::UTF8 qw(encode_utf8);
 
 use Test::Lintian::Output::Universal qw(universal_string order);
 
-use constant EMPTY   => q{};
-use constant NEWLINE => qq{\n};
+const my $EMPTY   => q{};
+const my $NEWLINE => qq{\n};
 
 =head1 FUNCTIONS
 
@@ -74,7 +75,7 @@ sub to_universal {
 
     my @unsorted;
 
-    my @lines = split(NEWLINE, $ewi);
+    my @lines = split($NEWLINE, $ewi);
     chomp @lines;
 
     foreach my $line (@lines) {
@@ -98,8 +99,8 @@ sub to_universal {
 
     my @sorted = reverse sort { order($a) cmp order($b) } @unsorted;
 
-    my $universal = EMPTY;
-    $universal .= $_ . NEWLINE for @sorted;
+    my $universal = $EMPTY;
+    $universal .= $_ . $NEWLINE for @sorted;
 
     return $universal;
 }

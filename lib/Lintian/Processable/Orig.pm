@@ -22,6 +22,7 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use List::SomeUtils qw(uniq);
 use List::UtilsBy qw(sort_by);
 use Path::Tiny;
@@ -29,12 +30,12 @@ use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Index;
 
-use constant EMPTY => q{};
-use constant SPACE => q{ };
-use constant SLASH => q{/};
-
 use Moo::Role;
 use namespace::clean;
+
+const my $EMPTY => q{};
+const my $SPACE => q{ };
+const my $SLASH => q{/};
 
 =head1 NAME
 
@@ -71,7 +72,7 @@ has orig => (
         my ($self) = @_;
 
         my $index = Lintian::Index->new;
-        $index->basedir($self->basedir . SLASH . 'orig');
+        $index->basedir($self->basedir . $SLASH . 'orig');
 
         return $index
           if $self->native;
@@ -79,7 +80,7 @@ has orig => (
         # source packages can be unpacked anywhere; no anchored roots
         $index->anchored(0);
 
-        my $combined_errors = EMPTY;
+        my $combined_errors = $EMPTY;
 
         my %components = %{$self->components};
 
@@ -92,7 +93,7 @@ has orig => (
 
             # so far, all archives with components had an extra level
             my $component_dir = $index->basedir;
-            $component_dir .= SLASH . $component
+            $component_dir .= $SLASH . $component
               if length $component;
 
             my $subindex = Lintian::Index->new;
@@ -110,7 +111,8 @@ has orig => (
               unless $decompress;
 
             my @command
-              = (split(SPACE, $decompress), $self->basedir . SLASH . $tarball);
+              = (split($SPACE, $decompress),
+                $self->basedir . $SLASH . $tarball);
 
             my ($extract_errors, $index_errors)
               = $subindex->create_from_piped_tar(\@command);
@@ -127,7 +129,7 @@ has orig => (
 
                 $item->unpacked_path($target->unpacked_path);
                 $item->size($target->size);
-                $item->link(EMPTY);
+                $item->link($EMPTY);
 
                 # turn into a regular file
                 my $perm = $item->perm;

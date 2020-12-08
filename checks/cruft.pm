@@ -33,6 +33,7 @@ use utf8;
 use autodie;
 
 use Carp qw(croak);
+use Const::Fast;
 use File::Basename qw(basename);
 use List::SomeUtils qw(any first_value);
 use Path::Tiny;
@@ -41,23 +42,23 @@ use Lintian::Relation ();
 use Lintian::Util qw(normalize_pkg_path open_gz);
 use Lintian::SlidingWindow;
 
-# Half of the size used in the "sliding window" for detecting bad
-# licenses like GFDL with invariant sections.
-# NB: Keep in sync cruft-gfdl-fp-sliding-win/pre_build.
-# not less than 8192 for source missing
-use constant BLOCKSIZE => 16_384;
-
-# constant for very long line lengths
-use constant VERY_LONG_LINE_LENGTH => 512;
-use constant SAFE_LINE_LENGTH => 256;
-
-use constant EMPTY => q{};
-use constant SLASH => q{/};
-
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+# Half of the size used in the "sliding window" for detecting bad
+# licenses like GFDL with invariant sections.
+# NB: Keep in sync cruft-gfdl-fp-sliding-win/pre_build.
+# not less than 8192 for source missing
+const my $BLOCKSIZE => 16_384;
+
+# very long line lengths
+const my $VERY_LONG_LINE_LENGTH => 512;
+const my $SAFE_LINE_LENGTH => 256;
+
+const my $EMPTY => q{};
+const my $SLASH => q{/};
 
 # load data for md5sums based check
 sub _md5sum_based_lintian_data {
@@ -120,7 +121,7 @@ has WARN_FILE_TYPE => (
                 my ($regtype, $regname, $transformlist) = @sliptline;
 
                 # allow empty regname
-                $regname //= EMPTY;
+                $regname //= $EMPTY;
 
                 # trim both ends
                 $regname =~ s/^\s+|\s+$//g;
@@ -130,12 +131,12 @@ has WARN_FILE_TYPE => (
                 }
 
                 # build transform pair
-                $transformlist //= EMPTY;
+                $transformlist //= $EMPTY;
                 $transformlist =~ s/^\s+|\s+$//g;
 
                 my $syntaxerror = 'Syntax error in cruft/warn-file-type';
                 my @transformpairs;
-                unless($transformlist eq EMPTY) {
+                unless($transformlist eq $EMPTY) {
                     my @transforms = split(/\s*\&\&\s*/, $transformlist);
                     if(scalar(@transforms) > 0) {
                         foreach my $transform (@transforms) {
@@ -265,11 +266,11 @@ sub _get_license_check_file {
             }
             my ($keywords, $sentence, $regex, $firstregex, $callsub)
               = @splitline;
-            $keywords //= EMPTY;
-            $sentence //= EMPTY;
-            $regex //= EMPTY;
-            $firstregex //= EMPTY;
-            $callsub //= EMPTY;
+            $keywords //= $EMPTY;
+            $sentence //= $EMPTY;
+            $regex //= $EMPTY;
+            $firstregex //= $EMPTY;
+            $callsub //= $EMPTY;
 
             # trim both ends
             $keywords =~ s/^\s+|\s+$//g;
@@ -287,10 +288,10 @@ sub _get_license_check_file {
                 die "$syntaxerror No sentence on line $.";
             }
 
-            if($regex eq EMPTY) {
+            if($regex eq $EMPTY) {
                 $regex = '.*';
             }
-            if($firstregex eq EMPTY) {
+            if($firstregex eq $EMPTY) {
                 $firstregex = $regex;
             }
             my %ret = (
@@ -299,7 +300,7 @@ sub _get_license_check_file {
                 'regex' => qr/$regex/xsm,
                 'firstregex' => qr/$firstregex/xsm,
             );
-            unless($callsub eq EMPTY) {
+            unless($callsub eq $EMPTY) {
                 if(defined($LICENSE_CHECK_DISPATCH_TABLE{$callsub})) {
                     $ret{'callsub'} = $LICENSE_CHECK_DISPATCH_TABLE{$callsub};
                 } else {
@@ -347,17 +348,17 @@ has GFDL_FRAGMENTS => (
                 my ($gfdlsectionsregex,$secondpart) = @_;
 
                 # allow empty parameters
-                $gfdlsectionsregex //= EMPTY;
+                $gfdlsectionsregex //= $EMPTY;
 
                 # trim both ends
                 $gfdlsectionsregex =~ s/^\s+|\s+$//g;
 
-                $secondpart //= EMPTY;
+                $secondpart //= $EMPTY;
                 my ($acceptonlyinfile,$applytag)
                   = split(/\s*\~\~\s*/, $secondpart, 2);
 
-                $acceptonlyinfile //= EMPTY;
-                $applytag //= EMPTY;
+                $acceptonlyinfile //= $EMPTY;
+                $applytag //= $EMPTY;
 
                 # trim both ends
                 $acceptonlyinfile =~ s/^\s+|\s+$//g;
@@ -376,7 +377,7 @@ has GFDL_FRAGMENTS => (
                     'gfdlsectionsregex'   => qr/$gfdlsectionsregex/xis,
                     'acceptonlyinfile' => qr/$acceptonlyinfile/xs,
                 );
-                unless ($applytag eq EMPTY) {
+                unless ($applytag eq $EMPTY) {
                     $ret{'tag'} = $applytag;
                 }
 
@@ -838,7 +839,7 @@ sub full_text_check {
     my $skiphtml = 0;
 
     # some js file comments are really really long
-    my $sfd= Lintian::SlidingWindow->new($fd, \&lc_block, BLOCKSIZE);
+    my $sfd= Lintian::SlidingWindow->new($fd, \&lc_block, $BLOCKSIZE);
     my %licenseproblemhash;
 
     # we try to read this file in block and use a sliding window
@@ -947,7 +948,7 @@ sub check_html_cruft {
 sub check_js_script {
     my ($self, $item, $lcscript) = @_;
 
-    my $firstline = EMPTY;
+    my $firstline = $EMPTY;
     foreach (split /\n/, $lcscript) {
         if ($_ =~ m/^\s*$/) {
             next;
@@ -1009,7 +1010,7 @@ sub search_in_block0 {
             if($block =~ m/(?:\A|\v)\s*var\s+deployJava\s*=\s*function/xmsi) {
                 $self->hint('source-is-missing', $item->name)
                   unless $self->find_source($item,
-                    {'.txt' => '(?i)\.js$', '' => EMPTY});
+                    {'.txt' => '(?i)\.js$', $EMPTY => $EMPTY});
                 return;
             }
         }
@@ -1063,7 +1064,7 @@ sub warn_prebuilt_javascript{
             {
                 '.debug.js' => '(?i)\.js$',
                 '-debug.js' => '(?i)\.js$',
-                '' => EMPTY
+                $EMPTY => $EMPTY
             });
     } else  {
         # html file
@@ -1083,7 +1084,7 @@ sub _linelength_test_maxlength {
             return ($linelength,$1,substr($block,pos($block)));
         }
     }
-    return (0, EMPTY, $block);
+    return (0, $EMPTY, $block);
 }
 
 # strip C comment
@@ -1117,7 +1118,7 @@ sub detect_browserify {
     foreach my $browserifyregex ($self->BROWSERIFY_REGEX->all) {
         my $regex = $self->BROWSERIFY_REGEX->value($browserifyregex);
         if($block =~ m{$regex}) {
-            my $extra = (defined $1) ? 'code fragment:'.$1 : EMPTY;
+            my $extra = (defined $1) ? 'code fragment:'.$1 : $EMPTY;
             $self->hint('source-contains-browserified-javascript',
                 $item->name, $extra);
             last;
@@ -1134,14 +1135,14 @@ sub linelength_test {
     my $line;
     my $nextblock;
 
-    ($linelength)= _linelength_test_maxlength($block,VERY_LONG_LINE_LENGTH);
-    # first check if line >  VERY_LONG_LINE_LENGTH that is likely minification
-    # avoid problem by recursive regex with longline
+    ($linelength)= _linelength_test_maxlength($block,$VERY_LONG_LINE_LENGTH);
+   # first check if line >  $VERY_LONG_LINE_LENGTH that is likely minification
+   # avoid problem by recursive regex with longline
     if($linelength) {
         $self->hint(
             'very-long-line-length-in-source-file',
             $item->name,'line length is',
-            int($linelength),'characters (>'.VERY_LONG_LINE_LENGTH.')'
+            int($linelength),'characters (>'.$VERY_LONG_LINE_LENGTH.')'
         );
         # clean up jslint craps line
         $block =~ s{^\s*/[*][^\n]*[*]/\s*$}{}gm;
@@ -1166,11 +1167,11 @@ sub linelength_test {
 
         # retry very long line length test now: likely minified
         ($linelength)
-          = _linelength_test_maxlength($block,VERY_LONG_LINE_LENGTH);
+          = _linelength_test_maxlength($block,$VERY_LONG_LINE_LENGTH);
 
         if($linelength) {
             $self->warn_prebuilt_javascript($item, $linelength,
-                VERY_LONG_LINE_LENGTH);
+                $VERY_LONG_LINE_LENGTH);
             return 1;
         }
     }
@@ -1190,9 +1191,9 @@ sub linelength_test {
     $self->detect_browserify($item, $nextblock);
 
     while(length($nextblock)) {
-        # check line above > SAFE_LINE_LENGTH
+        # check line above > $SAFE_LINE_LENGTH
         ($linelength,$line,$nextblock)
-          = _linelength_test_maxlength($nextblock,SAFE_LINE_LENGTH);
+          = _linelength_test_maxlength($nextblock,$SAFE_LINE_LENGTH);
         # no long line
         unless($linelength) {
             return 0;
@@ -1200,7 +1201,7 @@ sub linelength_test {
         # compute number of ;
         if(($line =~ tr/;/;/) > 1) {
             $self->warn_prebuilt_javascript($item, $linelength,
-                SAFE_LINE_LENGTH);
+                $SAFE_LINE_LENGTH);
             return 1;
         }
     }
@@ -1222,8 +1223,8 @@ sub check_gfdl_license_problem {
         %matchedhash
     )= @_;
 
-    my $rawgfdlsections  = $matchedhash{rawgfdlsections}  || EMPTY;
-    my $rawcontextbefore = $matchedhash{rawcontextbefore} || EMPTY;
+    my $rawgfdlsections  = $matchedhash{rawgfdlsections}  || $EMPTY;
+    my $rawcontextbefore = $matchedhash{rawcontextbefore} || $EMPTY;
 
     # strip punctuation
     my $gfdlsections  = _strip_punct($rawgfdlsections);
@@ -1265,7 +1266,7 @@ sub check_gfdl_license_problem {
         defined(
             $licenseproblemhash->{'license-problem-gfdl-invariants-empty'})
     ) {
-        if ($gfdlsections eq EMPTY) {
+        if ($gfdlsections eq $EMPTY) {
             # lie in order to check more part
             $self->hint('license-problem-gfdl-invariants-empty', $name);
             $licenseproblemhash->{'license-problem-gfdl-invariants-empty'}= 1;

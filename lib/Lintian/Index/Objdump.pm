@@ -25,15 +25,17 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use Cwd;
 use IPC::Run3;
 use Path::Tiny;
 use Unicode::UTF8 qw(encode_utf8 decode_utf8);
 
-use constant EMPTY => q{};
-
 use Moo::Role;
 use namespace::clean;
+
+const my $EMPTY => q{};
+const my $SPACE => q{ };
 
 =head1 NAME
 
@@ -154,7 +156,7 @@ sub parse_per_file {
     my @dynamic_symbols;
     my %program_headers;
     my $truncated = 0;
-    my $elf_section = EMPTY;
+    my $elf_section = $EMPTY;
     my $static_lib_issues = 0;
 
     my $parsed = "Filename: $filename\n";
@@ -209,10 +211,10 @@ sub parse_per_file {
             $elf_section = 'DS';
 
         } elsif ($line =~ /^Symbol table/) {
-            $elf_section = EMPTY;
+            $elf_section = $EMPTY;
 
         } elsif ($line =~ /^\s*$/) {
-            $elf_section = EMPTY;
+            $elf_section = $EMPTY;
 
         } elsif ($line =~ /^\s*(\S+)\s*(?:(?:\S+\s+){4})\S+\s(...)/
             and $elf_section eq 'PH') {
@@ -225,9 +227,9 @@ sub parse_per_file {
             next
               if $header eq 'Type';
 
-            my $extra = EMPTY;
+            my $extra = $EMPTY;
 
-            my $newflags = EMPTY;
+            my $newflags = $EMPTY;
             $newflags .= ($flags =~ m/R/) ? 'r' : '-';
             $newflags .= ($flags =~ m/W/) ? 'w' : '-';
             $newflags .= ($flags =~ m/E/) ? 'x' : '-';
@@ -349,11 +351,11 @@ sub parse_per_file {
             $symbol_version = $2;
 
         } else {
-            $symbol_version = $symbol_versions[$symbol_number] // EMPTY;
+            $symbol_version = $symbol_versions[$symbol_number] // $EMPTY;
 
             if ($symbol_version eq '*local*' || $symbol_version eq '*global*'){
                 if ($section eq 'UND') {
-                    $symbol_version = '   ';
+                    $symbol_version = $SPACE x 4;
                 } else {
                     $symbol_version = 'Base';
                 }

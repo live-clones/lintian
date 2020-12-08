@@ -26,6 +26,8 @@ use warnings;
 use utf8;
 use autodie;
 
+use constant EMPTY => q{};
+
 use Moo;
 use namespace::clean;
 
@@ -95,13 +97,13 @@ sub check_policy {
     my @rules;
     # a small rubbish state machine: we want to match a <policy> containing
     # any <allow> or <deny> rule that is about sending
-    my $policy = '';
+    my $policy = EMPTY;
     while ($xml =~ m{(<policy[^>]*>)|(</policy\s*>)|(<(?:allow|deny)[^>]*>)}sg)
     {
         if (defined $1) {
             $policy = $1;
         } elsif (defined $2) {
-            $policy = '';
+            $policy = EMPTY;
         } else {
             push(@rules, $policy.$3);
         }

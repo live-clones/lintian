@@ -22,12 +22,14 @@ use warnings;
 use utf8;
 use autodie;
 
-use Lintian::Index;
+use Const::Fast;
 
-use constant SLASH => q{/};
+use Lintian::Index;
 
 use Moo::Role;
 use namespace::clean;
+
+const my $SLASH => q{/};
 
 =head1 NAME
 
@@ -58,7 +60,7 @@ has control => (
         my ($self) = @_;
 
         my $index = Lintian::Index->new;
-        $index->basedir($self->basedir . SLASH . 'control');
+        $index->basedir($self->basedir . $SLASH . 'control');
 
         # control files are not installed relative to the system root
         # disallow absolute paths and symbolic links

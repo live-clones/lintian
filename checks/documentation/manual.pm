@@ -189,9 +189,9 @@ sub visit_installed_files {
         close $fd;
         # Is it a .so link?
         if ($file->size < 256) {
-            my ($i, $first) = (0, '');
+            my ($i, $first) = (0, EMPTY);
             do {
-                $first = $manfile[$i++] || '';
+                $first = $manfile[$i++] || EMPTY;
             } while ($first =~ /^\.\\"/ && $manfile[$i]); #");
 
             unless ($first) {

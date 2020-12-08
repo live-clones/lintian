@@ -28,18 +28,19 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use List::SomeUtils qw(any firstval firstres);
 use Path::Tiny;
 
 use Lintian::Inspect::Changelog::Version;
 use Lintian::Util qw($PKGREPACK_REGEX);
 
-use constant EMPTY => q{};
-
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $SPACE => q{ };
 
 sub source {
     my ($self) = @_;
@@ -201,7 +202,7 @@ sub source {
 
         # This bit is as-is from uscan.pl:
         my ($base, $filepattern, $lastversion, $action)
-          = split(' ', $remainder, 4);
+          = split($SPACE, $remainder, 4);
         # Per #765995, $base might be undefined.
         if (defined $base) {
             if ($base =~ s{/([^/]*\([^/]*\)[^/]*)$}{/}) {
@@ -209,7 +210,7 @@ sub source {
                # separate filepattern field; we remove the filepattern from the
                # end of $base and rescan the rest of the line
                 $filepattern = $1;
-                (undef, $lastversion, $action) = split(' ', $remainder, 3);
+                (undef, $lastversion, $action) = split($SPACE, $remainder, 3);
             }
 
             $dversions{$lastversion} = 1

@@ -23,12 +23,11 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use Time::Piece;
 use JSON::MaybeXS;
 
-use constant EMPTY => q{};
-use constant SPACE => q{ };
-use constant NEWLINE => qq{\n};
+const my $EMPTY => q{};
 
 use Moo;
 use namespace::clean;
@@ -58,7 +57,7 @@ Provides JSON hint output.
 sub BUILD {
     my ($self, $args) = @_;
 
-    $self->delimiter(EMPTY);
+    $self->delimiter($EMPTY);
 
     return;
 }
