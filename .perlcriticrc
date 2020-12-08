@@ -236,7 +236,7 @@ functions = open opendir chdir read readdir readline closedir sysopen sysread sy
 
 [-InputOutput::RequireEncodingWithUTF8Layer]
 
-[-Miscellanea::ProhibitFormats]
+[Miscellanea::ProhibitFormats]
 
 [-Miscellanea::ProhibitTies]
 
