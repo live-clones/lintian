@@ -601,23 +601,33 @@ symlinks, even if the symlink points to a file.
 =cut
 
 sub is_symlink {
-    return $_[0]->path_info & TYPE_SYMLINK ? 1 : 0;
+    my ($self) = @_;
+
+    return $self->path_info & TYPE_SYMLINK ? 1 : 0;
 }
 
 sub is_hardlink {
-    return $_[0]->path_info & TYPE_HARDLINK ? 1 : 0;
+    my ($self) = @_;
+
+    return $self->path_info & TYPE_HARDLINK ? 1 : 0;
 }
 
 sub is_dir {
-    return $_[0]->path_info & TYPE_DIR ? 1 : 0;
+    my ($self) = @_;
+
+    return $self->path_info & TYPE_DIR ? 1 : 0;
 }
 
 sub is_file {
-    return $_[0]->path_info & (TYPE_FILE | TYPE_HARDLINK) ? 1 : 0;
+    my ($self) = @_;
+
+    return $self->path_info & (TYPE_FILE | TYPE_HARDLINK) ? 1 : 0;
 }
 
 sub is_regular_file {
-    return $_[0]->path_info & TYPE_FILE ? 1 : 0;
+    my ($self) = @_;
+
+    return $self->path_info & TYPE_FILE ? 1 : 0;
 }
 
 =item link_normalized
@@ -681,12 +691,27 @@ at least one bit denoting executability set (bitmask 0111).
 
 sub _any_bit_in_operm {
     my ($self, $bitmask) = @_;
+
     return ($self->path_info & $bitmask) ? 1 : 0;
 }
 
-sub is_readable   { return $_[0]->_any_bit_in_operm(0444); }
-sub is_writable   { return $_[0]->_any_bit_in_operm(0222); }
-sub is_executable { return $_[0]->_any_bit_in_operm(0111); }
+sub is_readable   {
+    my ($self) = @_;
+
+    return $self->_any_bit_in_operm(0444);
+}
+
+sub is_writable   {
+    my ($self) = @_;
+
+    return $self->_any_bit_in_operm(0222);
+}
+
+sub is_executable {
+    my ($self) = @_;
+
+    return $self->_any_bit_in_operm(0111);
+}
 
 =item unpacked_path
 

@@ -1020,9 +1020,12 @@ sub retrigger_signal {
 }
 
 sub interrupted {
-    $received_signal = $_[0];
+    my ($signal) = @_;
+
+    $received_signal = $signal;
     $SIG{$received_signal} = 'DEFAULT';
     print {$STATUS_FD} encode_utf8("ack-signal SIG${received_signal}\n");
+
     return _die_in_signal_handler();
 }
 

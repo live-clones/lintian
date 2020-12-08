@@ -219,7 +219,10 @@ This sub is a convenience wrapper around Digest::{MD5,SHA}.
 =cut
 
 sub get_file_checksum {
-    my $digest = get_file_digest(@_);
+    my @paths = @_;
+
+    my $digest = get_file_digest(@paths);
+
     return $digest->hexdigest;
 }
 

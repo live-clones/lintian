@@ -118,8 +118,7 @@ of matching something returned by File::Find::Rule.
 =cut
 
 sub exclude {
-    my $self = shift;
-    my @list = @_;
+    my ($self, @list) = @_;
 
     push(@{$self->{exclude}}, grep { defined } @list);
 
@@ -205,8 +204,7 @@ met before the present stage attempts to do its job.
 =cut
 
 sub _process_remaining_stages {
-    my $self = shift;
-    my @exclude = @_;
+    my ($self, @exclude) = @_;
 
     if (scalar @{$self->{stages}}) {
 

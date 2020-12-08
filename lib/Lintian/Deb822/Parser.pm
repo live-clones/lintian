@@ -165,7 +165,7 @@ sub read_dpkg_control {
 sub read_dpkg_control_lc {
     my ($file, $flags, $field_starts) = @_;
 
-    my @result = read_dpkg_control(@_);
+    my @result = read_dpkg_control($file, $flags, $field_starts);
 
     lowercase_field_names(\@result);
     lowercase_field_names($field_starts);
@@ -222,7 +222,7 @@ sub parse_dpkg_control_string {
 sub parse_dpkg_control_string_lc {
     my ($string, $flags, $field_starts) = @_;
 
-    my @result = parse_dpkg_control_string(@_);
+    my @result = parse_dpkg_control_string($string, $flags, $field_starts);
 
     lowercase_field_names(\@result);
     lowercase_field_names($field_starts);

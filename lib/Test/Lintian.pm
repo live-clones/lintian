@@ -96,11 +96,11 @@ my %URLS;
 
 =over 4
 
-=item test_check_desc([OPTS, ]CHECKS...)
+=item test_check_desc(OPTS, CHECKS...)
 
 Test check desc files (and the tags in them) for common errors.
 
-OPTS is an optional HASHREF containing key/value pairs, which are
+OPTS is a HASHREF containing key/value pairs, which are
 described below.
 
 CHECKS is a list of paths in which to check desc files.  Any given
@@ -141,18 +141,18 @@ translations.  Otherwise, they must be regular checks.
 =cut
 
 sub test_check_desc {
-    my ($opts, @dirs);
+    my ($opts, @dirs) = @_;
+
     my $builder = $CLASS->builder;
     my $colldir = '/usr/share/lintian/collection';
     my $find_opt = {'filter' => undef,};
     my $tested = 0;
 
-    if (ref $_[0] eq 'HASH') {
-        $opts = shift;
-        $find_opt->{'filter'} = $opts->{'filter'} if exists $opts->{'filter'};
-    }
+    $find_opt->{'filter'} = $opts->{'filter'}
+      if exists $opts->{'filter'};
+
     $opts //= {};
-    @dirs = @_;
+
     load_profile_for_test();
 
     my @descs = map { _find_check($find_opt, $_) } @dirs;
@@ -335,12 +335,12 @@ sub test_load_profiles {
     return;
 }
 
-=item test_load_checks([OPTS, ]DIR[, CHECKNAMES...])
+=item test_load_checks(OPTS, DIR[, CHECKNAMES...])
 
 Test that the Perl module implementation of the checks can be loaded
 and has a run sub.
 
-OPTS is an optional HASHREF containing key/value pairs, which are
+OPTS is a HASHREF containing key/value pairs, which are
 described below.
 
 DIR is the directory where the checks can be found.
@@ -383,15 +383,9 @@ only be processed if it has the proper extension (i.e. with I<.desc>).
 =cut
 
 sub test_load_checks {
-    my ($opts, $dir, @checknames);
-    my $builder = $CLASS->builder;
+    my ($opts, $dir, @checknames) = @_;
 
-    if ($_[0] and ref $_[0] eq 'HASH') {
-        ($opts, $dir, @checknames) = @_;
-    } else {
-        $opts = {};
-        ($dir, @checknames) = @_;
-    }
+    my $builder = $CLASS->builder;
 
     unless (@checknames) {
         my $find_opt = {'want-check-name' => 1,};
@@ -452,7 +446,7 @@ sub test_load_checks {
     return;
 }
 
-=item test_tags_implemented ([OPTS, ]DIR[, CHECKNAMES...])
+=item test_tags_implemented (OPTS, DIR[, CHECKNAMES...])
 
 Test a given check implements all the tags listed in its desc file.
 For planning purposes, each check counts as one test and the call
@@ -471,7 +465,7 @@ CHECKNAMES is a list of the check names.  If CHECKNAMES is given, only
 the checks in this list will be processed.  Otherwise, all the checks
 in DIR will be processed.
 
-The optional parameter OPTS is a hashref.  If passed it must be the
+The parameter OPTS is a hashref.  It must be the
 first argument.  The following key/value pairs are defined:
 
 =over 4
@@ -519,16 +513,10 @@ alternative to the exclude-pattern (above).
 =cut
 
 sub test_tags_implemented {
-    my ($opts, $dir, @checknames);
+    my ($opts, $dir, @checknames) = @_;
+
     my $pattern;
     my $builder = $CLASS->builder;
-
-    if ($_[0] and ref $_[0] eq 'HASH') {
-        ($opts, $dir, @checknames) = @_;
-    } else {
-        $opts = {};
-        ($dir, @checknames) = @_;
-    }
 
     unless (@checknames) {
         my $find_opt = {'want-check-name' => 1,};
