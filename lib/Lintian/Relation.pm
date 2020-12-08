@@ -273,7 +273,7 @@ sub logical_and {
         ++$rels;
         $last_rel = $rel;
         if ($rel->[0] eq 'AND') {
-            my @r = @$rel;
+            my @r = @{$rel};
             push @result, @r[1..$#r];
         } else {
             push @result, $rel;
@@ -333,9 +333,9 @@ sub duplicates {
     # the missing one of the pair to the existing set rather than creating a
     # new one.
     my (%dups, %seen);
-    for (my $i = 1; $i < @$self; $i++) {
+    for (my $i = 1; $i < @{$self}; $i++) {
         my $self_i = $self->[$i];
-        for (my $j = $i + 1; $j < @$self; $j++) {
+        for (my $j = $i + 1; $j < @{$self}; $j++) {
             my $self_j = $self->[$j];
             my $forward = $self->implies_array($self_i, $self_j);
             my $reverse = $self->implies_array($self_j, $self_i);
@@ -387,7 +387,7 @@ sub restriction_less {
             next;
         }
         next if $rel_type eq 'PRED-UNPARSABLE';
-        push(@worklist, @$current[1 .. $#$current]);
+        push(@worklist, @{$current}[1 .. $#{$current}]);
     }
     return $self if not $has_restrictions;
     return Lintian::Relation->new_norestriction($self->unparse);
@@ -421,7 +421,7 @@ sub implies_element {
     # If the names don't match, there is no relationship between them.
 
     return undef
-      if $$p[1] ne $$q[1];
+      if $p->[1] ne $q->[1];
 
     # the restriction formula forms a disjunctive normal form expression one
     # way to check whether A <dnf1> implies A <dnf2> is to check:
@@ -443,14 +443,14 @@ sub implies_element {
     # with build profiles we assume that one does not imply the other:
 
     return undef
-      if defined $$p[6]
-      or defined $$q[6];
+      if defined $p->[6]
+      || defined $q->[6];
 
     # If the names match, then the only difference is in the architecture or
     # version clauses.  First, check architecture.  The architectures for p
     # must be a superset of the architectures for q.
-    my @p_arches = split($SPACE, defined($$p[4]) ? $$p[4] : $EMPTY);
-    my @q_arches = split($SPACE, defined($$q[4]) ? $$q[4] : $EMPTY);
+    my @p_arches = split($SPACE, defined($p->[4]) ? $p->[4] : $EMPTY);
+    my @q_arches = split($SPACE, defined($q->[4]) ? $q->[4] : $EMPTY);
     if (@p_arches || @q_arches) {
         my $p_arch_neg = @p_arches && $p_arches[0] =~ /^!/;
         my $q_arch_neg = @q_arches && $q_arches[0] =~ /^!/;
@@ -532,15 +532,15 @@ sub implies_element {
     # "pkg:X" (for any valid value of X) seems to imply "pkg:any",
     # fixing that is a TODO (because version clauses complicates
     # matters)
-    if (defined $$p[5]) {
+    if (defined $p->[5]) {
         # Assume the identity to hold
         return undef
-          unless defined $$q[5] and $$p[5] eq $$q[5];
+          unless defined $q->[5] and $p->[5] eq $q->[5];
 
-    } elsif (defined $$q[5]) {
+    } elsif (defined $q->[5]) {
 
         return undef
-          unless $$q[5] eq 'any';
+          unless $q->[5] eq 'any';
 
         # pkg:any implies pkg (but the reverse is not true).
         #
@@ -553,78 +553,78 @@ sub implies_element {
     # than q's, or is equivalent.
 
     # If q has no version clause, then p's clause is always stronger.
-    return 1 if not defined $$q[2];
+    return 1 if not defined $q->[2];
 
     # If q does have a version clause, then p must also have one to have any
     # useful relationship.
     return undef
-      if not defined $$p[2];
+      if not defined $p->[2];
 
     # q wants an exact version, so p must provide that exact version.  p
     # disproves q if q's version is outside the range enforced by p.
-    if ($$q[2] eq '=') {
-        if ($$p[2] eq '<<') {
-            return versions_lte($$p[3], $$q[3]) ? 0 : undef;
-        } elsif ($$p[2] eq '<=') {
-            return versions_lt($$p[3], $$q[3]) ? 0 : undef;
-        } elsif ($$p[2] eq '>>') {
-            return versions_gte($$p[3], $$q[3]) ? 0 : undef;
-        } elsif ($$p[2] eq '>=') {
-            return versions_gt($$p[3], $$q[3]) ? 0 : undef;
-        } elsif ($$p[2] eq '=') {
-            return versions_equal($$p[3], $$q[3]) ? 1 : 0;
+    if ($q->[2] eq '=') {
+        if ($p->[2] eq '<<') {
+            return versions_lte($p->[3], $q->[3]) ? 0 : undef;
+        } elsif ($p->[2] eq '<=') {
+            return versions_lt($p->[3], $q->[3]) ? 0 : undef;
+        } elsif ($p->[2] eq '>>') {
+            return versions_gte($p->[3], $q->[3]) ? 0 : undef;
+        } elsif ($p->[2] eq '>=') {
+            return versions_gt($p->[3], $q->[3]) ? 0 : undef;
+        } elsif ($p->[2] eq '=') {
+            return versions_equal($p->[3], $q->[3]) ? 1 : 0;
         }
     }
 
     # A greater than clause may disprove a less than clause.  Otherwise, if
     # p's clause is <<, <=, or =, the version must be <= q's to imply q.
-    if ($$q[2] eq '<=') {
-        if ($$p[2] eq '>>') {
-            return versions_gte($$p[3], $$q[3]) ? 0 : undef;
-        } elsif ($$p[2] eq '>=') {
-            return versions_gt($$p[3], $$q[3]) ? 0 : undef;
-        } elsif ($$p[2] eq '=') {
-            return versions_lte($$p[3], $$q[3]) ? 1 : 0;
+    if ($q->[2] eq '<=') {
+        if ($p->[2] eq '>>') {
+            return versions_gte($p->[3], $q->[3]) ? 0 : undef;
+        } elsif ($p->[2] eq '>=') {
+            return versions_gt($p->[3], $q->[3]) ? 0 : undef;
+        } elsif ($p->[2] eq '=') {
+            return versions_lte($p->[3], $q->[3]) ? 1 : 0;
         } else {
-            return versions_lte($$p[3], $$q[3]) ? 1 : undef;
+            return versions_lte($p->[3], $q->[3]) ? 1 : undef;
         }
     }
 
     # Similar, but << is stronger than <= so p's version must be << q's
     # version if the p relation is <= or =.
-    if ($$q[2] eq '<<') {
-        if ($$p[2] eq '>>' or $$p[2] eq '>=') {
-            return versions_gte($$p[3], $$p[3]) ? 0 : undef;
-        } elsif ($$p[2] eq '<<') {
-            return versions_lte($$p[3], $$q[3]) ? 1 : undef;
-        } elsif ($$p[2] eq '=') {
-            return versions_lt($$p[3], $$q[3]) ? 1 : 0;
+    if ($q->[2] eq '<<') {
+        if ($p->[2] eq '>>' or $p->[2] eq '>=') {
+            return versions_gte($p->[3], $p->[3]) ? 0 : undef;
+        } elsif ($p->[2] eq '<<') {
+            return versions_lte($p->[3], $q->[3]) ? 1 : undef;
+        } elsif ($p->[2] eq '=') {
+            return versions_lt($p->[3], $q->[3]) ? 1 : 0;
         } else {
-            return versions_lt($$p[3], $$q[3]) ? 1 : undef;
+            return versions_lt($p->[3], $q->[3]) ? 1 : undef;
         }
     }
 
     # Same logic as above, only inverted.
-    if ($$q[2] eq '>=') {
-        if ($$p[2] eq '<<') {
-            return versions_lte($$p[3], $$q[3]) ? 0 : undef;
-        } elsif ($$p[2] eq '<=') {
-            return versions_lt($$p[3], $$q[3]) ? 0 : undef;
-        } elsif ($$p[2] eq '=') {
-            return versions_gte($$p[3], $$q[3]) ? 1 : 0;
+    if ($q->[2] eq '>=') {
+        if ($p->[2] eq '<<') {
+            return versions_lte($p->[3], $q->[3]) ? 0 : undef;
+        } elsif ($p->[2] eq '<=') {
+            return versions_lt($p->[3], $q->[3]) ? 0 : undef;
+        } elsif ($p->[2] eq '=') {
+            return versions_gte($p->[3], $q->[3]) ? 1 : 0;
         } else {
-            return versions_gte($$p[3], $$q[3]) ? 1 : undef;
+            return versions_gte($p->[3], $q->[3]) ? 1 : undef;
         }
     }
-    if ($$q[2] eq '>>') {
-        if ($$p[2] eq '<<' or $$p[2] eq '<=') {
-            return versions_lte($$p[3], $$q[3]) ? 0 : undef;
-        } elsif ($$p[2] eq '>>') {
-            return versions_gte($$p[3], $$q[3]) ? 1 : undef;
-        } elsif ($$p[2] eq '=') {
-            return versions_gt($$p[3], $$q[3]) ? 1 : 0;
+    if ($q->[2] eq '>>') {
+        if ($p->[2] eq '<<' or $p->[2] eq '<=') {
+            return versions_lte($p->[3], $q->[3]) ? 0 : undef;
+        } elsif ($p->[2] eq '>>') {
+            return versions_gte($p->[3], $q->[3]) ? 1 : undef;
+        } elsif ($p->[2] eq '=') {
+            return versions_gt($p->[3], $q->[3]) ? 1 : 0;
         } else {
-            return versions_gt($$p[3], $$q[3]) ? 1 : undef;
+            return versions_gt($p->[3], $q->[3]) ? 1 : undef;
         }
     }
 
@@ -647,13 +647,13 @@ sub implies_array {
             return $self->implies_element($p, $q);
         } elsif ($p0 eq 'AND') {
             $i = 1;
-            while ($i < @$p) {
+            while ($i < @{$p}) {
                 return 1 if $self->implies_array($p->[$i++], $q);
             }
             return 0;
         } elsif ($p0 eq 'OR') {
             $i = 1;
-            while ($i < @$p) {
+            while ($i < @{$p}) {
                 return 0 if not $self->implies_array($p->[$i++], $q);
             }
             return 1;
@@ -663,7 +663,7 @@ sub implies_array {
     } elsif ($q0 eq 'AND') {
         # Each of q's clauses must be deduced from p.
         $i = 1;
-        while ($i < @$q) {
+        while ($i < @{$q}) {
             return 0 if not $self->implies_array($p, $q->[$i++]);
         }
         return 1;
@@ -683,21 +683,21 @@ sub implies_array {
         # a|b|c, since a|b doesn't satisfy any of a, b, or c in isolation.
         if ($p0 eq 'PRED') {
             $i = 1;
-            while ($i < @$q) {
+            while ($i < @{$q}) {
                 return 1 if $self->implies_array($p, $q->[$i++]);
             }
             return 0;
         } elsif ($p0 eq 'AND') {
             $i = 1;
-            while ($i < @$p) {
+            while ($i < @{$p}) {
                 return 1 if $self->implies_array($p->[$i++], $q);
             }
             return 0;
         } elsif ($p0 eq 'OR') {
-            for ($i = 1; $i < @$p; $i++) {
+            for ($i = 1; $i < @{$p}; $i++) {
                 my $j = 1;
                 my $satisfies = 0;
-                while ($j < @$q) {
+                while ($j < @{$q}) {
                     if ($self->implies_array($p->[$i], $q->[$j++])) {
                         $satisfies = 1;
                         last;
@@ -781,36 +781,36 @@ sub implies_array_inverse {
         } elsif ($p0 eq 'AND') {
             # q's falsehood can be deduced from any of p's clauses
             $i = 1;
-            while ($i < @$p) {
-                return 1 if $self->implies_array_inverse($$p[$i++], $q);
+            while ($i < @{$p}) {
+                return 1 if $self->implies_array_inverse($p->[$i++], $q);
             }
             return 0;
         } elsif ($p0 eq 'OR') {
             # q's falsehood must be deduced from each of p's clauses
             $i = 1;
-            while ($i < @$p) {
-                return 0 if not $self->implies_array_inverse($$p[$i++], $q);
+            while ($i < @{$p}) {
+                return 0 if not $self->implies_array_inverse($p->[$i++], $q);
             }
             return 1;
         } elsif ($p0 eq 'NOT') {
-            return $self->implies_array($q, $$p[1]);
+            return $self->implies_array($q, $p->[1]);
         }
     } elsif ($q0 eq 'AND') {
         # Any of q's clauses must be falsified by p.
         $i = 1;
-        while ($i < @$q) {
-            return 1 if $self->implies_array_inverse($p, $$q[$i++]);
+        while ($i < @{$q}) {
+            return 1 if $self->implies_array_inverse($p, $q->[$i++]);
         }
         return 0;
     } elsif ($q0 eq 'OR') {
         # Each of q's clauses must be falsified by p.
         $i = 1;
-        while ($i < @$q) {
-            return 0 if not $self->implies_array_inverse($p, $$q[$i++]);
+        while ($i < @{$q}) {
+            return 0 if not $self->implies_array_inverse($p, $q->[$i++]);
         }
         return 1;
     } elsif ($q0 eq 'NOT') {
-        return $self->implies_array($p, $$q[1]);
+        return $self->implies_array($p, $q->[1]);
     }
 
     return 0;
@@ -862,7 +862,7 @@ sub unparse {
     } elsif ($rel_type eq 'AND' || $rel_type eq 'OR') {
         my $separator = ($relation->[0] eq 'AND') ? ', ' : ' | ';
         return join($separator,
-            map {$self->unparse($_);} @$relation[1 .. $#$relation]);
+            map {$self->unparse($_);} @{$relation}[1 .. $#{$relation}]);
     } elsif ($rel_type eq 'NOT') {
         return '! ' . $self->unparse($relation->[1]);
     } elsif ($rel_type eq 'PRED-UNPARSABLE') {
@@ -1026,7 +1026,7 @@ sub visit {
     } elsif ($rel_type eq 'AND'
         or $rel_type eq 'OR'
         or $rel_type eq 'NOT') {
-        for my $rel (@$relation[1 .. $#$relation]) {
+        for my $rel (@{$relation}[1 .. $#{$relation}]) {
             my $ret = scalar $self->visit($code, $flags, $rel);
             if ($ret && ($flags & VISIT_STOP_FIRST_MATCH)) {
                 return $ret;
@@ -1071,7 +1071,7 @@ sub unparsable_predicates {
             push(@unparsable, $current->[1]);
             next;
         }
-        push(@worklist, @$current[1 .. $#$current]);
+        push(@worklist, @{$current}[1 .. $#{$current}]);
     }
     @unparsable = sort(@unparsable);
     return @unparsable;

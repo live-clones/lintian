@@ -1098,7 +1098,7 @@ sub installable {
             }
             unless ($file eq 'postrm') {
                 for my $rule (@depends_needed) {
-                    my ($package, $regex) = @$rule;
+                    my ($package, $regex) = @{$rule};
                     if (    $pkg ne $package
                         and /$regex/
                         and not $warned{$package}) {

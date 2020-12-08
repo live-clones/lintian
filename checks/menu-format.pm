@@ -532,7 +532,7 @@ sub verify_line {
             $ok = 0 if not exists $root_data->{$sect};
         } else {
             # Using root menu when a subsection exists?
-            $ok = 0 if %$root_data;
+            $ok = 0 if %{$root_data};
         }
         unless ($ok) {
             $self->hint(
@@ -697,7 +697,7 @@ sub verify_desktop_file {
 
     # Now we can issue any pending tags.
     for my $pending (@pending) {
-        $self->hint(@$pending);
+        $self->hint(@{$pending});
     }
 
     # Test for important keys.

@@ -202,7 +202,7 @@ sub installable {
             for my $part_d (@alternatives) {
                 my ($d_pkg, $d_march, $d_version, undef, undef, $rest,
                     $part_d_orig)
-                  = @$part_d;
+                  = @{$part_d};
 
                 $self->hint('invalid-versioned-provides', $part_d_orig)
                   if ( $field eq 'Provides'
@@ -495,7 +495,7 @@ sub source {
                 for my $part_d (@alternatives) {
                     my ($d_pkg, undef, $d_version, $d_arch, $d_restr,
                         $rest,$part_d_orig)
-                      = @$part_d;
+                      = @{$part_d};
 
                     for my $arch (@{$d_arch->[0]}) {
                         if ($arch eq 'all'
@@ -633,11 +633,11 @@ sub source {
     for my $fields (@to_check) {
         my $relation
           = Lintian::Relation->logical_and(map { $processable->relation($_) }
-              @$fields);
+              @{$fields});
         my @dups = $relation->duplicates;
         for my $dup (@dups) {
             $self->hint('package-has-a-duplicate-build-relation',
-                join(', ', @$dup));
+                join(', ', @{$dup}));
         }
     }
 
@@ -724,7 +724,7 @@ sub _split_dep {
     if (length $dep) {
         if ($dep
             =~ s/\s* \( \s* (<<|<=|>=|>>|[=<>]) \s* ([^\s(]+) \s* \) \s*//x) {
-            @$version = ($1, $2);
+            @{$version} = ($1, $2);
         }
         if ($dep && $dep =~ s/\s*\[([^\]]+)\]\s*//) {
             my $t = $1;
@@ -737,7 +737,7 @@ sub _split_dep {
         }
         while ($dep && $dep =~ s/\s*<([^>]+)>\s*//) {
             my $t = $1;
-            push @$restr, [split /\s+/, $t];
+            push(@{$restr}, [split /\s+/, $t]);
         }
     }
 

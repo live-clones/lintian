@@ -54,12 +54,12 @@ sub source {
 
     foreach my $processable (@procs) {
         my $deps = $group->direct_dependencies($processable);
-        if (scalar @$deps > 0) {
+        if (scalar @{$deps} > 0) {
             # it depends on another package - it can cause
             # a circular dependency
             my $pname = $processable->name;
             push @nodes, $pname;
-            $edges{$pname} = [map { $_->name } @$deps];
+            $edges{$pname} = [map { $_->name } @{$deps}];
             $self->check_multiarch($processable, $deps);
         }
     }
@@ -70,10 +70,11 @@ sub source {
 
     $sccs = Lintian::group_checks::Graph->new(\@nodes, \%edges)->tarjans;
 
-    foreach my $comp (@$sccs) {
+    for my $comp (@{$sccs}) {
         # It takes two to tango... erh. make a circular dependency.
-        next if scalar @$comp < 2;
-        $self->hint('intra-source-package-circular-dependency', sort @$comp);
+        next if scalar @{$comp} < 2;
+
+        $self->hint('intra-source-package-circular-dependency', sort @{$comp});
     }
 
     return;
@@ -139,7 +140,7 @@ sub check_multiarch {
 
     my $ma = $processable->fields->value('Multi-Arch') || 'no';
     if ($ma eq 'same') {
-        foreach my $dep (@$deps) {
+        for my $dep (@{$deps}) {
             my $dma = $dep->fields->value('Multi-Arch') || 'no';
             if ($dma eq 'same' or $dma eq 'foreign') {
                 1; # OK
@@ -157,7 +158,7 @@ sub check_multiarch {
         # Debug package that isn't M-A: same, exploit that (non-debug)
         # dependencies is (almost certainly) a package for which the
         # debug carries debug symbols.
-        foreach my $dep (@$deps) {
+        for my $dep (@{$deps}) {
             my $dma = $dep->fields->value('Multi-Arch') || 'no';
             if ($dma eq 'same'
                 && ($dep->fields->value('Section') || 'none')
@@ -210,7 +211,7 @@ sub tarjans {
     #    0 => index
     #    1 => low_index
     $self->{node_info} = {};
-    foreach my $node (@$nodes) {
+    for my $node (@{$nodes}) {
         $self->_tarjans_sc($node)
           unless defined $self->{node_info}{$node};
     }
@@ -226,7 +227,7 @@ sub _tarjans_sc {
     $self->{node_info}{$node} = $ninfo;
     $index++;
     $self->{index} = $index;
-    push @$stack, $node;
+    push(@{$stack}, $node);
     $on_stack->{$node} = 1;
 
     foreach my $neighbour (@{ $self->{edges}{$node} }){
@@ -250,12 +251,15 @@ sub _tarjans_sc {
         my $component = [];
         my $scc = $self->{scc};
         my $elem = $EMPTY;
+
         do {
-            $elem = pop @$stack;
+            $elem = pop @{$stack};
             delete $on_stack->{$elem};
-            push @$component, $elem;
+            push(@{$component}, $elem);
+
         } until $node eq $elem;
-        push @$scc, $component;
+
+        push(@{$scc}, $component);
     }
     return;
 }

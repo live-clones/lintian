@@ -209,8 +209,10 @@ sub parse_dpkg_control_string {
 
     my $c = sub {
         my ($para, $line) = @_;
-        push @result, $para;
-        push @$field_starts, $line if defined $field_starts;
+
+        push(@result, $para);
+        push(@{$field_starts}, $line)
+          if defined $field_starts;
     };
 
     visit_dpkg_paragraph_string($c, $string, $flags);

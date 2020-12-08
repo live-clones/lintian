@@ -182,9 +182,10 @@ sub detect_generic_privacy_breach {
 
         my $orblockok = 0;
       ORBLOCK:
-        foreach my $keywordor (@$keywords) {
+        for my $keywordor (@{$keywords}) {
           ANDBLOCK:
-            foreach my $keyword (@$keywordor) {
+            for my $keyword (@{$keywordor}) {
+
                 my $thiskeyword = $matchedkeyword{$keyword};
                 if(!defined($thiskeyword)) {
                     if(index($block,$keyword) > -1) {

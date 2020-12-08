@@ -149,7 +149,7 @@ sub installable {
         }
 
         $datafiles = 0
-          if none { m/\.(?:xml|properties|x?html|xhp)$/i } keys %$files;
+          if none { /\.(?:xml|properties|x?html|xhp)$/i } keys %{$files};
 
         if($operm & 0111) {
             # Executable ?

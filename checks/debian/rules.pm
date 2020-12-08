@@ -420,7 +420,7 @@ sub source {
                     my $table = \%needed;
                     $table = \%needed_clean if $arch;
                     for my $rule (@RULE_CLEAN_DEPENDS) {
-                        my ($dep, $pattern, $tagname) = @$rule;
+                        my ($dep, $pattern, $tagname) = @{$rule};
                         next unless /$pattern/;
                         $table->{$dep} = $tagname || $table->{$dep} || $EMPTY;
                     }

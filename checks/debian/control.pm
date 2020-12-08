@@ -654,7 +654,7 @@ sub check_relation {
 
     for my $dup ($relation->duplicates) {
         $self->hint('duplicate-in-relation-field', 'in', $pkg,
-            "$field:", join(', ', @$dup));
+            "$field:", join(', ', @{$dup}));
     }
 
     $rawvalue =~ s/\n(\s)/$1/g;

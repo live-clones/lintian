@@ -56,7 +56,7 @@ for my $line (@yaml) {
         $current = \@fatal;
     } elsif ($line =~ /^\s*-\s+(\S+)\s*$/) {
         die "Tag listed outside of section\n" unless $current;
-        push(@$current, $1);
+        push(@{$current}, $1);
     } else {
         die "Unrecognized line: $line\n";
     }

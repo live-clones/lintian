@@ -197,7 +197,7 @@ sub process{
             $override_count{experimental} += scalar @override_experimental;
         }
 
-        $$exit_code_ref = 2
+        ${$exit_code_ref} = 2
           if $success && any { $reported_count{$_} } @{$option->{'fail-on'}};
 
         # discard disabled tags
@@ -243,7 +243,7 @@ sub process{
         push(@{$_->processable->hints}, $_) for @hints;
 
         # interruptions can leave processes behind (manpages); wait and reap
-        if ($$exit_code_ref == 1) {
+        if (${$exit_code_ref} == 1) {
             1 while waitpid(-1, WNOHANG) > 0;
         }
 
@@ -268,7 +268,7 @@ sub process{
                         $_->state,scalar(localtime($_->start)),
                         $_->cmndline))for @leftover;
 
-                $$exit_code_ref = 1;
+                ${$exit_code_ref} = 1;
                 die encode_utf8("Aborting.\n");
             }
         }
@@ -285,7 +285,7 @@ sub process{
         } else {
             print {$STATUS_FD}
               encode_utf8('error ' . $group->name . " ($total_tres)\n");
-            $$exit_code_ref = 1;
+            ${$exit_code_ref} = 1;
         }
         $OUTPUT->v_msg('Finished processing group ' . $group->name);
     }

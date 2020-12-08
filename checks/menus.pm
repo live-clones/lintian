@@ -384,7 +384,7 @@ sub check_doc_base_field {
     # classes since otherwise we'd need to deal with wildcards inside
     # character classes and aren't there yet.
     if ($field eq 'Index' or $field eq 'Files') {
-        my @files = map { split($SPACE, $_) } @$vals;
+        my @files = map { split($SPACE, $_) } @{$vals};
 
         if ($field eq 'Index' && @files > 1) {
             $self->hint('doc-base-index-references-multiple-files',
@@ -410,7 +410,7 @@ sub check_doc_base_field {
                     $regex =~ s{\\\?}{[^/]}g;
                     $regex .= '/?';
                 }
-                $found = grep { /^$regex\z/ } keys %$all_files;
+                $found = grep { /^$regex\z/ } keys %{$all_files};
             } else {
                 $found = $all_files->{$realfile} || $all_files->{"$realfile/"};
             }
@@ -423,7 +423,7 @@ sub check_doc_base_field {
 
         # Format field.
     } elsif ($field eq 'Format') {
-        my $format = join($SPACE, @$vals);
+        my $format = join($SPACE, @{$vals});
 
         # trim both ends
         $format =~ s/^\s+|\s+$//g;
@@ -440,7 +440,7 @@ sub check_doc_base_field {
 
         # Document field.
     } elsif ($field eq 'Document') {
-        $_ = join($SPACE, @$vals);
+        $_ = join($SPACE, @{$vals});
 
         $self->hint('doc-base-invalid-document-field', "$dbfile:$line", $_)
           unless /^[a-z0-9+.-]+$/;
@@ -453,24 +453,24 @@ sub check_doc_base_field {
 
         # Title field.
     } elsif ($field eq 'Title') {
-        if (@$vals) {
+        if (@{$vals}) {
             my $stag_emitter
               = $self->spelling_tag_emitter(
                 'spelling-error-in-doc-base-title-field',
                 "${dbfile}:${line}");
             check_spelling(
                 $self->profile,
-                join($SPACE, @$vals),
+                join($SPACE, @{$vals}),
                 $group->spelling_exceptions,
                 $stag_emitter
             );
-            check_spelling_picky($self->profile, join($SPACE, @$vals),
+            check_spelling_picky($self->profile, join($SPACE, @{$vals}),
                 $stag_emitter);
         }
 
         # Section field.
     } elsif ($field eq 'Section') {
-        $_ = join($SPACE, @$vals);
+        $_ = join($SPACE, @{$vals});
         unless ($SECTIONS->known($_)) {
             if (m{^App(?:lication)?s/(.+)$} && $SECTIONS->known($1)) {
                 $self->hint('doc-base-uses-applications-section',
@@ -532,18 +532,18 @@ sub check_doc_base_field {
         }
 
         # Check spelling.
-        if (@$vals) {
+        if (@{$vals}) {
             my $stag_emitter
               = $self->spelling_tag_emitter(
                 'spelling-error-in-doc-base-abstract-field',
                 "${dbfile}:${line}");
             check_spelling(
                 $self->profile,
-                join($SPACE, @$vals),
+                join($SPACE, @{$vals}),
                 $group->spelling_exceptions,
                 $stag_emitter
             );
-            check_spelling_picky($self->profile, join($SPACE, @$vals),
+            check_spelling_picky($self->profile, join($SPACE, @{$vals}),
                 $stag_emitter);
         }
     }
@@ -568,7 +568,7 @@ sub check_doc_base_file_section {
             && ($format eq 'html' || $format eq 'info')
             && !$sawfields->{'Index'});
     }
-    for my $field (sort keys %$knownfields) {
+    for my $field (sort keys %{$knownfields}) {
         $self->hint('doc-base-file-lacks-required-field',
             "$dbfile:$line", $field)
           if ($knownfields->{$field} == 1 && !$sawfields->{$field});
@@ -618,7 +618,8 @@ sub delink {
     my ($file, $all_links) = @_;
 
     $file =~ s{/+}{/}g;                            # remove duplicated '/'
-    return $file unless %$all_links;              # package doesn't symlinks
+    return $file
+      unless %{$all_links};              # package doesn't symlinks
 
     my $p1 = $EMPTY;
     my $p2 = $file;

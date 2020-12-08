@@ -233,7 +233,7 @@ sub always {
 
         my $uri = $processable->fields->unfolded_value($fieldname);
 
-        my @parts = &$splitter($uri);
+        my @parts = $splitter->($uri);
         if (not @parts or not $parts[0]) {
             $self->hint('vcs-field-uses-unknown-uri-format', $fieldname, $uri);
         } else {
@@ -263,7 +263,7 @@ sub always {
             my $tag = 'vcs-field-not-canonical';
 
             foreach my $canonify ($VCS_CANONIFY{$platform}) {
-                &$canonify($canonicalized, $tag);
+                $canonify->($canonicalized, $tag);
             }
 
             $self->hint($tag, $fieldname, $parts[0], $canonicalized)

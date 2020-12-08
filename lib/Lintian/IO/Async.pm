@@ -195,9 +195,9 @@ sub get_deb_info {
         on_read => sub {
             my ($stream, $buffref, $eof) = @_;
 
-            if (length $$buffref) {
-                $tarprocess->stdin->write($$buffref);
-                $$buffref = $EMPTY;
+            if (length ${$buffref}) {
+                $tarprocess->stdin->write(${$buffref});
+                ${$buffref} = $EMPTY;
             }
 
             if ($eof) {
@@ -342,12 +342,12 @@ sub unpack_and_index_piped_tar {
         on_read => sub {
             my ($stream, $buffref, $eof) = @_;
 
-            if (length $$buffref) {
-                $extractprocess->stdin->write($$buffref);
-                $namedindexprocess->stdin->write($$buffref);
-                $numericindexprocess->stdin->write($$buffref);
+            if (length ${$buffref}) {
+                $extractprocess->stdin->write(${$buffref});
+                $namedindexprocess->stdin->write(${$buffref});
+                $numericindexprocess->stdin->write(${$buffref});
 
-                $$buffref = $EMPTY;
+                ${$buffref} = $EMPTY;
             }
 
             if ($eof) {

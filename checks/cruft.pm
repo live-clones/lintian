@@ -1550,14 +1550,14 @@ sub license_check {
             }
         }
         # clean block now in order to normalise space and check a sentence
-        unless(defined($$cleanedblock)) {
-            $$cleanedblock = _clean_block($block);
+        unless(defined ${$cleanedblock}) {
+            ${$cleanedblock} = _clean_block($block);
         }
 
         my $foundsentence = 0;
         my @sentencelist =  @{$licenseproblemdata->{'sentence'}};
         foreach my $sentence (@sentencelist) {
-            if(index($$cleanedblock,$sentence) > -1){
+            if(index(${$cleanedblock}, $sentence) > -1){
                 $foundsentence = 1;
             }
         }
@@ -1569,9 +1569,9 @@ sub license_check {
           = $blocknumber
           ? $licenseproblemdata->{'regex'}
           : $licenseproblemdata->{'firstregex'};
-        unless($$cleanedblock =~ $regex) {
-            next LICENSE;
-        }
+
+        next LICENSE
+          unless ${$cleanedblock} =~ $regex;
 
         my $callsub = $licenseproblemdata->{'callsub'};
 
