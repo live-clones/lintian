@@ -32,7 +32,6 @@ use Const::Fast;
 use List::SomeUtils qw(any firstval firstres);
 use Path::Tiny;
 
-use Lintian::Inspect::Changelog::Version;
 use Lintian::Util qw($PKGREPACK_REGEX);
 
 use Moo;

@@ -333,13 +333,13 @@ my @MUTUAL_OPTIONS = (
 );
 
 # for precedence of command line
-for my $set (@MUTUAL_OPTIONS) {
+for my $exclusive (@MUTUAL_OPTIONS) {
 
-    if (any { defined $command_line{$_} } @{$set}) {
-        my @scalars = grep { ref $selected{$_} eq 'SCALAR' } @{$set};
+    if (any { defined $command_line{$_} } @{$exclusive}) {
+        my @scalars = grep { ref $selected{$_} eq 'SCALAR' } @{$exclusive};
         delete $selected{$_} for @scalars;
 
-        my @arrays = grep { ref $selected{$_} eq 'ARRAY' } @{$set};
+        my @arrays = grep { ref $selected{$_} eq 'ARRAY' } @{$exclusive};
         $selected{$_} = [] for @arrays;
     }
 }
@@ -827,7 +827,7 @@ sub _find_changes {
     my $changelog = Lintian::Inspect::Changelog->new;
     $changelog->parse($contents);
     my @entries = @{$changelog->entries};
-    my $last = @entries ? $entries[0] : undef;
+    my $latest = @entries ? $entries[0] : undef;
     my ($source, $version);
     my $changes;
     my @archs;
@@ -836,7 +836,7 @@ sub _find_changes {
     unshift(@dirs, $ENV{DEBRELEASE_DEBS_DIR})
       if exists $ENV{DEBRELEASE_DEBS_DIR};
 
-    if (not $last) {
+    if (not $latest) {
         my @errors = @{$changelog->errors};
         if (@errors) {
             warn encode_utf8("Cannot parse debian/changelog due to errors:\n");
@@ -848,8 +848,8 @@ sub _find_changes {
         }
         exit 1;
     }
-    $version = $last->Version;
-    $source = $last->Source;
+    $version = $latest->Version;
+    $source = $latest->Source;
     unless (defined $version && defined $source) {
         $version //= '<N/A>';
         $source //= '<N/A>';

@@ -40,7 +40,7 @@ Lintian::Inspect::Changelog::Version -- Parse a literal version string into its 
  use Lintian::Inspect::Changelog::Version;
 
  my $version = Lintian::Inspect::Changelog::Version->new;
- $version->set('1.2.3-4', undef);
+ $version->assign('1.2.3-4', undef);
 
 =head1 DESCRIPTION
 
@@ -62,14 +62,14 @@ Creates a new Lintian::Inspect::Changelog::Version object.
 
 =over 4
 
-=item set (LITERAL, NATIVE)
+=item assign (LITERAL, NATIVE)
 
-Set the various members in the Lintian::Inspect::Changelog::Version object
+Assign the various members in the Lintian::Inspect::Changelog::Version object
 using the LITERAL version string and the NATIVE boolean selector.
 
 =cut
 
-sub set {
+sub assign {
 
     my ($self, $literal, $native) = @_;
 

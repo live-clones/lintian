@@ -299,14 +299,14 @@ sub markdown_reference_statement {
       unless @references;
 
     # remove and save last element
-    my $last = pop @references;
+    my $final = pop @references;
 
     my $text        = $EMPTY;
     my $oxfordcomma = (@references > 1 ? $COMMA : $EMPTY);
     $text = join(', ', @references) . "$oxfordcomma and "
       if @references;
 
-    $text .= $last;
+    $text .= $final;
 
     return "Refer to $text for details.";
 }

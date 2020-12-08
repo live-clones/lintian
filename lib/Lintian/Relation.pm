@@ -341,18 +341,21 @@ sub duplicates {
             my $reverse = $self->implies_array($self_j, $self_i);
 
             if ($forward or $reverse) {
-                my $first = $self->unparse($self_i);
-                my $second = $self->unparse($self_j);
-                if ($seen{$first}) {
-                    $dups{$seen{$first}}{$second} = $j;
-                    $seen{$second} = $seen{$first};
-                } elsif ($seen{$second}) {
-                    $dups{$seen{$second}}{$first} = $i;
-                    $seen{$first} = $seen{$second};
+                my $one = $self->unparse($self_i);
+                my $two = $self->unparse($self_j);
+
+                if ($seen{$one}) {
+                    $dups{$seen{$one}}{$two} = $j;
+                    $seen{$two} = $seen{$one};
+
+                } elsif ($seen{$two}) {
+                    $dups{$seen{$two}}{$one} = $i;
+                    $seen{$one} = $seen{$two};
+
                 } else {
-                    $dups{$first} ||= {};
-                    $dups{$first}{$second} = $j;
-                    $seen{$second} = $first;
+                    $dups{$one} ||= {};
+                    $dups{$one}{$two} = $j;
+                    $seen{$two} = $one;
                 }
             }
         }

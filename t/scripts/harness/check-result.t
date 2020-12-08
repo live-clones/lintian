@@ -97,7 +97,7 @@ my $defaultspath = 't/defaults/desc';
 my $defaults = read_config($defaultspath);
 
 for my $name ($defaults->names) {
-    $testcase->set($name, $defaults->value($name))
+    $testcase->store($name, $defaults->value($name))
       unless $testcase->declares($name);
 }
 

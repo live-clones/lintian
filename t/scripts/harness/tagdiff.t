@@ -181,15 +181,15 @@ sub complement {
 }
 
 sub tagdiff {
-    my ($left, $right) = @_;
+    my ($left_contents, $right_contents) = @_;
 
-    my $leftpath = Path::Tiny->tempfile;
-    my $rightpath = Path::Tiny->tempfile;
+    my $left_tiny = Path::Tiny->tempfile;
+    my $right_tiny = Path::Tiny->tempfile;
 
-    $leftpath->spew($left);
-    $rightpath->spew($right);
+    $left_tiny->spew($left_contents);
+    $right_tiny->spew($right_contents);
 
-    my @command = ('tagdiff', $leftpath, $rightpath);
+    my @command = ('tagdiff', $left_tiny->stringify, $right_tiny->stringify);
     my ($diff, $status) = capture_merged { system(@command); };
     $status = ($status >> 8) & 255;
 

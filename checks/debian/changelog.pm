@@ -88,7 +88,7 @@ sub source {
     my $latest_version = Lintian::Inspect::Changelog::Version->new;
 
     try {
-        $latest_version->set($versionstring, $processable->native);
+        $latest_version->assign($versionstring, $processable->native);
 
     } catch {
         my $indicator= ($processable->native ? $EMPTY : 'non-') . 'native';
@@ -162,7 +162,7 @@ sub source {
 
         my $previous_version = Lintian::Inspect::Changelog::Version->new;
         try {
-            $previous_version->set($previous_entry->Version,
+            $previous_version->assign($previous_entry->Version,
                 $processable->native);
         } catch {
             my $indicator= ($processable->native ? $EMPTY : 'non-') . 'native';

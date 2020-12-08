@@ -210,11 +210,11 @@ sub text {
     return $text;
 }
 
-=item set (FIELD, VALUE)
+=item store (FIELD, VALUE)
 
 =cut
 
-sub set {
+sub store {
     my ($self, $name, $value) = @_;
 
     $value //= $EMPTY;

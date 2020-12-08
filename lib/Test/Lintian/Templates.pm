@@ -92,10 +92,10 @@ sub copy_skeleton_template_sets {
     my ($instructions, $runpath, $testset)= @_;
 
     # populate working directory with specified template sets
-    for my $set (split($COMMA, $instructions)) {
+    for my $placement (split($COMMA, $instructions)) {
 
         my ($relative, $name)
-          =($set =~ qr/^\s*([^()\s]+)\s*\(([^()\s]+)\)\s*$/);
+          =($placement =~ qr/^\s*([^()\s]+)\s*\(([^()\s]+)\)\s*$/);
 
         croak encode_utf8('No template destination specified in skeleton.')
           unless length $relative;

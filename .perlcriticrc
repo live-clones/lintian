@@ -283,7 +283,7 @@ functions = open opendir chdir read readdir readline closedir sysopen sysread sy
 
 [-NamingConventions::Capitalization]
 
-[-NamingConventions::ProhibitAmbiguousNames]
+[NamingConventions::ProhibitAmbiguousNames]
 
 [Objects::ProhibitIndirectSyntax]
 

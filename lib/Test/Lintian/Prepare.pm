@@ -118,7 +118,7 @@ sub prepare {
 
     # start with a shallow copy of defaults
     my $testcase = Lintian::Deb822::Section->new;
-    $testcase->set($_, $defaults->value($_)) for $defaults->names;
+    $testcase->store($_, $defaults->value($_)) for $defaults->names;
 
     die encode_utf8("Name missing for $specpath")
       unless $desc->declares('Testname');
@@ -164,7 +164,7 @@ sub prepare {
         my $skeletonpath = "$testset/skeletons/$skeletonname";
         my $skeleton = read_config($skeletonpath);
 
-        $testcase->set($_, $skeleton->value($_)) for $skeleton->names;
+        $testcase->store($_, $skeleton->value($_)) for $skeleton->names;
     }
 
     # populate working directory with specified template sets
@@ -192,25 +192,26 @@ sub prepare {
         for my $filepath (sort @filepaths) {
             my $fill_values = read_config($filepath);
 
-            $testcase->set($_, $fill_values->value($_))for $fill_values->names;
+            $testcase->store($_, $fill_values->value($_))
+              for $fill_values->names;
         }
     }
 
     # add individual settings after skeleton
-    $testcase->set($_, $desc->value($_)) for $desc->names;
+    $testcase->store($_, $desc->value($_)) for $desc->names;
 
     # record path to specification
-    $testcase->set('Spec-Path', $specpath);
+    $testcase->store('Spec-Path', $specpath);
 
     # record path to specification
-    $testcase->set('Source-Path', $sourcepath);
+    $testcase->store('Source-Path', $sourcepath);
 
     # add other helpful info to testcase
-    $testcase->set('Source', $testcase->unfolded_value('Testname'))
+    $testcase->store('Source', $testcase->unfolded_value('Testname'))
       unless $testcase->declares('Source');
 
     # record our effective data age as date, unless given
-    $testcase->set('Date', rfc822date($data_epoch))
+    $testcase->store('Date', rfc822date($data_epoch))
       unless $testcase->declares('Date');
 
     warn encode_utf8('Cannot override Architecture: in test '
@@ -219,16 +220,16 @@ sub prepare {
 
     die encode_utf8('DEB_HOST_ARCH is not set.')
       unless defined $ENV{'DEB_HOST_ARCH'};
-    $testcase->set('Host-Architecture', $ENV{'DEB_HOST_ARCH'});
+    $testcase->store('Host-Architecture', $ENV{'DEB_HOST_ARCH'});
 
     die encode_utf8('Could not get POLICY_VERSION.')
       unless defined $ENV{'POLICY_VERSION'};
-    $testcase->set('Standards-Version', $ENV{'POLICY_VERSION'})
+    $testcase->store('Standards-Version', $ENV{'POLICY_VERSION'})
       unless $testcase->declares('Standards-Version');
 
     die encode_utf8('Could not get DEFAULT_DEBHELPER_COMPAT.')
       unless defined $ENV{'DEFAULT_DEBHELPER_COMPAT'};
-    $testcase->set('Dh-Compat-Level', $ENV{'DEFAULT_DEBHELPER_COMPAT'})
+    $testcase->store('Dh-Compat-Level', $ENV{'DEFAULT_DEBHELPER_COMPAT'})
       unless $testcase->declares('Dh-Compat-Level');
 
     # add additional version components
@@ -238,19 +239,19 @@ sub prepare {
         my $upstream_version = $testcase->unfolded_value('Version');
         $upstream_version =~ s/-[^-]+$//;
         $upstream_version =~ s/(-|^)(\d+):/$1/;
-        $testcase->set('Upstream-Version', $upstream_version);
+        $testcase->store('Upstream-Version', $upstream_version);
 
         # version without epoch
         my $no_epoch = $testcase->unfolded_value('Version');
         $no_epoch =~ s/^\d+://;
-        $testcase->set('No-Epoch', $no_epoch);
+        $testcase->store('No-Epoch', $no_epoch);
 
         unless ($testcase->declares('Prev-Version')) {
             my $prev_version = '0.0.1';
             $prev_version .= '-1'
               unless $testcase->unfolded_value('Type') eq 'native';
 
-            $testcase->set('Prev-Version', $prev_version);
+            $testcase->store('Prev-Version', $prev_version);
         }
     }
 
@@ -338,7 +339,7 @@ sub filleval {
 
     # start with a shallow copy of defaults
     my $testcase = Lintian::Deb822::Section->new;
-    $testcase->set($_, $defaults->value($_)) for $defaults->names;
+    $testcase->store($_, $defaults->value($_)) for $defaults->names;
 
     die encode_utf8("Name missing for $specpath")
       unless $desc->declares('Testname');
@@ -347,7 +348,7 @@ sub filleval {
     my @oldrunners = File::Find::Rule->file->name('*.t')->in($evalpath);
     unlink(@oldrunners);
 
-    $testcase->set('Skeleton', $desc->value('Skeleton'))
+    $testcase->store('Skeleton', $desc->value('Skeleton'))
       unless $testcase->declares('Skeleton');
 
     my $skeletonname = $testcase->unfolded_value('Skeleton');
@@ -357,11 +358,11 @@ sub filleval {
         my $skeletonpath = "$testset/skeletons/$skeletonname";
         my $skeleton = read_config($skeletonpath);
 
-        $testcase->set($_, $skeleton->value($_)) for $skeleton->names;
+        $testcase->store($_, $skeleton->value($_)) for $skeleton->names;
     }
 
     # add individual settings after skeleton
-    $testcase->set($_, $desc->value($_)) for $desc->names;
+    $testcase->store($_, $desc->value($_)) for $desc->names;
 
     # populate working directory with specified template sets
     copy_skeleton_template_sets($testcase->value('Template-Sets'),
@@ -388,12 +389,13 @@ sub filleval {
         for my $filepath (sort @filepaths) {
             my $fill_values = read_config($filepath);
 
-            $testcase->set($_, $fill_values->value($_))for $fill_values->names;
+            $testcase->store($_, $fill_values->value($_))
+              for $fill_values->names;
         }
     }
 
     # add individual settings after skeleton
-    $testcase->set($_, $desc->value($_)) for $desc->names;
+    $testcase->store($_, $desc->value($_)) for $desc->names;
 
     # fill testcase with itself; do it twice to make sure all is done
     my $hashref = deb822_section_to_hash($testcase);
@@ -442,7 +444,7 @@ sub combine_fields {
 
     # combine
     for my $content (@contents) {
-        $testcase->set(
+        $testcase->store(
             $destination,
             join($delimiter,
                 grep { length }($testcase->value($destination),$content)));
@@ -486,7 +488,7 @@ sub write_hash_to_deb822_section {
         my $transformed = lc $name;
         $transformed =~ s/-/_/g;
 
-        $section->set($name, $hashref->{$transformed});
+        $section->store($name, $hashref->{$transformed});
     }
 
     return;

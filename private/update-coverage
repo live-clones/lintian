@@ -151,20 +151,24 @@ close($coverage);
 # names, print out a report to the provide output file handle.
 sub print_tags {
     my ($tags, $out) = @_;
+
     my @untested;
     for my $tag (keys %{$tags}) {
         push(@untested, [$tags->{$tag}, $tag]);
     }
-    @untested = sort { $a->[0] cmp $b->[0] || $a->[1] cmp $b->[1] } @untested;
-    my $last = $EMPTY;
-    for my $data (@untested) {
+
+    my @sorted = sort { $a->[0] cmp $b->[0] || $a->[1] cmp $b->[1] } @untested;
+
+    my $final = $EMPTY;
+    for my $data (@sorted) {
         my ($file, $tag) = @{$data};
-        if ($file ne $last) {
+        if ($file ne $final) {
             print {$out} "\n";
-            $last = $file;
+            $final = $file;
         }
         print {$out} "$file $tag\n";
     }
+
     return;
 }
 

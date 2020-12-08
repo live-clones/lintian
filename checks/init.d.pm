@@ -300,7 +300,7 @@ sub check_init {
                 next;
             }
             $lsb{BEGIN} = 1;
-            my $last;
+            my $final;
 
             # We have an LSB keyword section.  Parse it and save the data
             # in %lsb for analysis.
@@ -325,8 +325,8 @@ sub check_init {
                       unless (defined($lsb_keywords{$keyword})
                         || $keyword =~ /^x-/);
                     $lsb{$keyword} = defined($value) ? $value : $EMPTY;
-                    $last = $keyword;
-                } elsif ($l =~ /^\#(\t|  )/ && $last eq 'description') {
+                    $final = $keyword;
+                } elsif ($l =~ /^\#(\t|  )/ && $final eq 'description') {
                     my $value = $l;
                     $value =~ s/^\#\s*//;
                     $lsb{description} .= $SPACE . $value;

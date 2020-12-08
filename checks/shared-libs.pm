@@ -802,14 +802,14 @@ sub needs_ldconfig {
     my $ldconfig_dirs = $self->profile->load_data('shared-libs/ldconfig-dirs');
 
     my $dirname = dirname($file);
-    my $last;
+    my $encapsulator;
     do {
         $dirname =~ s{/([^/]+)$}{};
-        $last = $1;
+        $encapsulator = $1;
 
-    } while ($last && $HWCAP_DIRS->known($last));
+    } while ($encapsulator && $HWCAP_DIRS->known($encapsulator));
 
-    $dirname .= "/$last" if $last;
+    $dirname .= "/$encapsulator" if $encapsulator;
 
     # yes! so postinst must call ldconfig
     return 1
