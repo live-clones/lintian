@@ -47,7 +47,7 @@ const my $EMPTY => q{};
 # Still in the archive but shouldn't be the primary Emacs dependency.
 my @obsolete_emacs_versions = qw(21 22 23);
 my @emacs_flavors = ($EMPTY, qw(-el -gtk -nox -lucid));
-our %known_obsolete_emacs;
+my %known_obsolete_emacs;
 for my $version (@obsolete_emacs_versions) {
     for my $flavor (@emacs_flavors) {
 
@@ -56,7 +56,7 @@ for my $version (@obsolete_emacs_versions) {
     }
 }
 
-our %known_libstdcs = map { $_ => 1 } qw(
+my %known_libstdcs = map { $_ => 1 } qw(
   libstdc++2.9-glibc2.1
   libstdc++2.10
   libstdc++2.10-glibc2.2
@@ -68,7 +68,7 @@ our %known_libstdcs = map { $_ => 1 } qw(
   lib64stdc++6
 );
 
-our %known_tcls = map { $_ => 1 } qw(
+my %known_tcls = map { $_ => 1 } qw(
   tcl74
   tcl8.0
   tcl8.2
@@ -77,7 +77,7 @@ our %known_tcls = map { $_ => 1 } qw(
   tcl8.5
 );
 
-our %known_tclxs = map { $_ => 1 } qw(
+my %known_tclxs = map { $_ => 1 } qw(
   tclx76
   tclx8.0.4
   tclx8.2
@@ -85,7 +85,7 @@ our %known_tclxs = map { $_ => 1 } qw(
   tclx8.4
 );
 
-our %known_tks = map { $_ => 1 } qw(
+my %known_tks = map { $_ => 1 } qw(
   tk40
   tk8.0
   tk8.2
@@ -94,13 +94,13 @@ our %known_tks = map { $_ => 1 } qw(
   tk8.5
 );
 
-our %known_libpngs = map { $_ => 1 } qw(
+my %known_libpngs = map { $_ => 1 } qw(
   libpng12-0
   libpng2
   libpng3
 );
 
-our @known_java_pkg = map { qr/$_/ } (
+my @known_java_pkg = map { qr/$_/ } (
     'default-j(?:re|dk)(?:-headless)?',
     # java-runtime and javaX-runtime alternatives (virtual)
     'java\d*-runtime(?:-headless)?',

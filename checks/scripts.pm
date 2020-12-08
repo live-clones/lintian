@@ -36,7 +36,6 @@ use POSIX qw(strftime);
 
 use Lintian::IPC::Run3 qw(safe_qx);
 use Lintian::Relation;
-use Lintian::Spelling qw($known_shells_regex);
 
 use Moo;
 use namespace::clean;
@@ -437,7 +436,7 @@ sub installable {
         # Syntax-check most shell scripts, but don't syntax-check
         # scripts that end in .dpatch.  bash -n doesn't stop checking
         # at exit 0 and goes on to blow up on the patch itself.
-        if ($base =~ /^$known_shells_regex$/) {
+        if ($file->is_shell_script) {
             if (
                    -x $interpreter
                 && !script_is_evil_and_wrong($file)
@@ -755,11 +754,9 @@ sub installable {
         next
           unless $file->is_open_ok;
 
-        my $shellscript = $base =~ /^$known_shells_regex$/ ? 1 : 0;
-
         # Only syntax-check scripts we can check with bash.
         my $checkbashisms;
-        if ($shellscript) {
+        if ($file->is_shell_script) {
             $checkbashisms = $base eq 'sh' ? 1 : 0;
 
             $self->hint('maintainer-shell-script-fails-syntax-check', $file)
@@ -783,7 +780,9 @@ sub installable {
         my $previous_line = $EMPTY;
         my $in_automatic_section = 0;
         while (<$fd>) {
-            if ($. == 1 && $shellscript && m{/$base\s*.*\s-\w*e\w*\b}) {
+            if (   $. == 1
+                && $file->is_shell_script
+                && m{/$base\s*.*\s-\w*e\w*\b}) {
                 $saw_bange = 1;
             }
 
@@ -809,7 +808,7 @@ sub installable {
 
             # Concatenate lines containing continuation character (\)
             # at the end
-            if ($shellscript && /\\$/) {
+            if ($file->is_shell_script && /\\$/) {
                 s/\\//;
                 chomp;
                 $previous_line .= $_;
@@ -834,7 +833,7 @@ sub installable {
                 $has_code = 1;
             }
 
-            if ($shellscript
+            if ($file->is_shell_script
                 && /${LEADIN}set\s*(?:\s+-(?:-.*|[^e]+))*\s-\w*e/) {
                 $saw_sete = 1;
             }
@@ -896,20 +895,17 @@ sub installable {
             $saw_invoke = $.
               if m{^\s*invoke-rc\.d\s+};
 
-            if ($shellscript) {
+            if ($file->is_shell_script) {
                 if ($cat_string ne $EMPTY and m/^\Q$cat_string\E$/) {
                     $cat_string = $EMPTY;
                 }
+
                 my $within_another_shell = 0;
-                if (
-                    m{
-                      (?:^|\s+)(?:(?:/usr)?/bin/)?
-                      ($known_shells_regex)\s+-c\s*.+
-                    }xsm
-                    and $1 ne 'sh'
-                ) {
-                    $within_another_shell = 1;
-                }
+
+                $within_another_shell = 1
+                  if $file->interpreter !~ m{(?:^|/)sh$}
+                  && $file->interpreter_with_options =~ /\S+\s+-c/;
+
                 # if cat_string is set, we are in a HERE document and need not
                 # check for things
                 if (   $cat_string eq $EMPTY
@@ -1228,7 +1224,7 @@ m{$LEADIN(?:/usr/bin/)?dpkg\s+--compare-versions\s+.*\b\Q$ver\E(?!\.)\b}
         unless ($has_code) {
             $self->hint('maintainer-script-empty', $file);
         }
-        if ($shellscript && !$saw_sete) {
+        if ($file->is_shell_script && !$saw_sete) {
             if ($saw_bange) {
                 $self->hint('maintainer-script-without-set-e', $file);
             } else {

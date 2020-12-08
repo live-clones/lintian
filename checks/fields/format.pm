@@ -34,7 +34,7 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-our @supported_source_formats = (qr/1\.0/, qr/3\.0\s*\((quilt|native)\)/);
+my @supported_source_formats = (qr/1\.0/, qr/3\.0\s*\((quilt|native)\)/);
 
 sub source {
     my ($self) = @_;

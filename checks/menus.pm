@@ -31,8 +31,7 @@ use autodie;
 use Const::Fast;
 use Path::Tiny;
 
-use Lintian::Spelling
-  qw(check_spelling check_spelling_picky $known_shells_regex);
+use Lintian::Spelling qw(check_spelling check_spelling_picky);
 
 use Moo;
 use namespace::clean;
@@ -43,19 +42,20 @@ const my $EMPTY => q{};
 const my $SPACE => q{ };
 
 # Supported documentation formats for doc-base files.
-our %known_doc_base_formats
+my %known_doc_base_formats
   = map { $_ => 1 }qw(html text pdf postscript info dvi debiandoc-sgml);
 
 # Known fields for doc-base files.  The value is 1 for required fields and 0
 # for optional fields.
-our %KNOWN_DOCBASE_MAIN_FIELDS = (
+my %KNOWN_DOCBASE_MAIN_FIELDS = (
     'Document' => 1,
     'Title'    => 1,
     'Section'  => 1,
     'Abstract' => 0,
     'Author'   => 0
 );
-our %KNOWN_DOCBASE_FORMAT_FIELDS = (
+
+my %KNOWN_DOCBASE_FORMAT_FIELDS = (
     'Format'  => 1,
     'Files'   => 1,
     'Index'   => 0
@@ -664,28 +664,27 @@ sub check_script {
 
     my $pkg = $self->processable->name;
 
-    my ($no_check_menu, $no_check_installdocs, $interp);
+    my ($no_check_menu, $no_check_installdocs);
 
     # control files are regular files and not symlinks, pipes etc.
     return if not $spath or $spath->is_symlink or not $spath->is_open_ok;
 
+    # nothing to do for ELF
+    return
+      if $spath->is_elf;
+
     open(my $fd, '<', $spath->unpacked_path);
-    $interp = <$fd>;
-    $interp = $EMPTY unless defined $interp;
-    if ($interp =~ m{^\#\!\s*/bin/$known_shells_regex}) {
+
+    # discard hashbang line; will get from Index::Item
+    scalar readline $fd;
+
+    my $interp = $spath->interpreter || 'unknown';
+
+    if ($spath->is_shell_script) {
         $interp = 'sh';
-    } elsif ($interp =~ m{^\#\!\s*/usr/bin/perl}) {
+
+    } elsif ($interp =~ m{^/usr/bin/perl}) {
         $interp = 'perl';
-    } else {
-        if ($interp =~ m{^\#\!\s*(.+)}) {
-            $interp = $1;
-        } else { # hmm, doesn't seem to start with #!
-             # is it a binary? look for ELF header
-            if ($interp =~ m/^\177ELF/) {
-                return; # nothing to do here
-            }
-            $interp = 'unknown';
-        }
     }
 
     while (<$fd>) {

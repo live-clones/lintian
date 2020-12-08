@@ -423,7 +423,7 @@ sub process {
     if ($option->{'debug'} > 2) {
 
         # suppress warnings without reliable sizes
-        $Devel::Size::warn = 0;
+        local $Devel::Size::warn = 0;
 
         my $pivot = ($self->get_processables)[0];
         my $group_id = $pivot->source . '/' . $pivot->source_version;

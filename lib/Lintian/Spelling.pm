@@ -26,8 +26,9 @@ use utf8;
 
 use Exporter qw(import);
 
-our @EXPORT_OK = qw(check_spelling check_spelling_picky
-  $known_shells_regex
+our @EXPORT_OK = qw(
+  check_spelling
+  check_spelling_picky
 );
 
 use Carp qw(croak);
@@ -254,20 +255,6 @@ sub check_spelling_picky {
 
     return $counter;
 }
-
-=back
-
-=head1 VARIABLES
-
-=over 4
-
-=item $known_shells_regex
-
-Regular expression that matches names of any known shell.
-
-=cut
-
-our $known_shells_regex = qr/(?:[bd]?a|t?c|(?:pd|m)?k|z)?sh/;
 
 =back
 

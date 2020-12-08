@@ -342,6 +342,26 @@ has hashbang => (
         return $trimmed_bytes;
     });
 
+=item interpreter_with_options
+
+Returns the interpreter requested by a script with options
+after stripping C<env>.
+
+=cut
+
+has interpreter_with_options => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        my $with_options = $self->hashbang;
+
+        $with_options =~ s{^/usr/bin/env\s+}{};
+
+        return $with_options;
+    });
+
 =item interpreter
 
 Returns the interpreter requested by a script but strips C<env>.
@@ -354,9 +374,7 @@ has interpreter => (
     default => sub {
         my ($self) = @_;
 
-        my $interpreter = $self->hashbang;
-
-        $interpreter =~ s{^/usr/bin/env\s+}{};
+        my $interpreter = $self->interpreter_with_options;
 
         # keep base command without options
         $interpreter =~ s/^(\S+).*/$1/;
@@ -379,6 +397,30 @@ has calls_env => (
         # must return a boolean success value #943724
         return 1
           if $self->hashbang =~ m{^/usr/bin/env\s+};
+
+        return 0;
+    });
+
+=item C<is_shell_script>
+
+Returns true if file is a script requesting a recognized shell
+interpreter.
+
+=cut
+
+has is_shell_script => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        my $interpreter = $self->interpreter;
+
+        # keep basename
+        my ($basename) = ($interpreter =~ m{([^/]*)/?$}s);
+
+        return 1
+          if $basename =~ /^(?:[bd]?a|t?c|(?:pd|m)?k|z)?sh$/;
 
         return 0;
     });

@@ -26,8 +26,9 @@ use warnings;
 use utf8;
 
 use List::Util qw(none);
-
 use YAML::XS;
+
+# default changed to false in 0.81; enable then in .perlcriticrc
 $YAML::XS::LoadBlessed = 0;
 
 use Moo;
