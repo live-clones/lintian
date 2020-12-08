@@ -157,7 +157,7 @@ sub parse_per_file {
     my $elf_section = EMPTY;
     my $static_lib_issues = 0;
 
-    my $parsed .= "Filename: $filename\n";
+    my $parsed = "Filename: $filename\n";
 
     my @lines = split(/\n/, $from_readelf);
     while (defined(my $line = shift @lines)) {
