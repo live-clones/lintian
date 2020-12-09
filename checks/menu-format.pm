@@ -345,7 +345,7 @@ sub verify_line {
     # when we have no more matches, there should be no text left on
     # the line - if there is, it's a parse error.
     while (
-        $line =~ m/
+        $line =~ m{
            \s*?                 # allow whitespace between pairs
            (                    # capture what follows in $1, it's our tag
             [^\"\s=]            # a non-quote, non-whitespace, character
@@ -369,7 +369,7 @@ sub verify_line {
              *                  # match as many times as we can
             )
            )
-           /gcx
+           }gcx
     ) {
         my $tag = $1;
         my $value = $2;

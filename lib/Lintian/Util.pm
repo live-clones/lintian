@@ -144,11 +144,11 @@ characters.
 
 =cut
 
-our $PKGVERSION_REGEX = qr/
+our $PKGVERSION_REGEX = qr{
                  (?: \d+ : )?                # Optional epoch
                  [0-9][0-9A-Za-z.+:~]*       # Upstream version (with no hyphens)
                  (?: - [0-9A-Za-z.+:~]+ )*   # Optional debian revision (+ upstreams versions with hyphens)
-                          /xa;
+                          }xa;
 
 =back
 
@@ -261,11 +261,11 @@ sub perm2oct {
     #  file (-), block/character device (b & c), directory (d),
     #  hardlink (h), symlink (l), named pipe (p).
     if (
-        $text !~ m/^   [-bcdhlp]                # file type
+        $text !~ m{^   [-bcdhlp]                # file type
                     ([-r])([-w])([-xsS])     # user
                     ([-r])([-w])([-xsS])     # group
                     ([-r])([-w])([-xtT])     # other
-               /xsm
+               }xsm
     ) {
         croak encode_utf8("$text does not appear to be a permission string");
     }

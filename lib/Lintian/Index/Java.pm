@@ -67,10 +67,10 @@ sub add_java {
     # Newer versions seem to call them "Java Jar file".
     # Jessie also introduced "Java archive data (JAR)"...
     my @java_files = grep {
-        $_->file_info=~ /
+        $_->file_info=~ m{
             Java [ ] (?:Jar [ ] file|archive [ ] data)
             | Zip [ ] archive
-            | JAR /x;
+            | JAR }x;
     } @files;
 
     my @lines;

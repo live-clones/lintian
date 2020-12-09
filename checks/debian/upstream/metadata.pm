@@ -70,11 +70,11 @@ sub source {
     if ($@ || !defined $yaml) {
         my $message = $@;
         my ($reason, $document, $line, $column)= (
-            $message =~ /
+            $message =~ m{
                 \AYAML::XS::Load\sError:\sThe\sproblem:\n
                 \n\s++(.+)\n
                 \n
-                was\sfound\sat\sdocument:\s(\d+),\sline:\s(\d+),\scolumn:\s(\d+)\n/x
+                was\sfound\sat\sdocument:\s(\d+),\sline:\s(\d+),\scolumn:\s(\d+)\n}x
         );
 
         $message

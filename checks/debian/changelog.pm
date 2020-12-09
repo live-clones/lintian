@@ -651,8 +651,8 @@ sub binary {
 
         # check for bad intended distribution
         if (
-            $changes =~ /uploads? \s+ to \s+
-                            (?'intended'testing|unstable|experimental|sid)/xi
+            $changes =~ m{uploads? \s+ to \s+
+                            (?'intended'testing|unstable|experimental|sid)}xi
         ){
             my $intended = lc($+{intended});
             if($intended eq 'sid') {
@@ -754,9 +754,9 @@ sub check_dch {
 
         if (
                m/closes:\s*(((?:bug)?\#?\s?\d*)[[:alpha:]]\w*)/i
-            || m/closes:\s*(?:bug)?\#?\s?\d+
+            || m{closes:\s*(?:bug)?\#?\s?\d+
               (?:,\s*(?:bug)?\#?\s?\d+)*
-              (?:,\s*(((?:bug)?\#?\s?\d*)[[:alpha:]]\w*))/ix
+              (?:,\s*(((?:bug)?\#?\s?\d*)[[:alpha:]]\w*))}ix
         ) {
             $self->hint('wrong-bug-number-in-closes', $1,
                 "in the installed changelog (line $.)")

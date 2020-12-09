@@ -111,8 +111,8 @@ sub installable {
         while (<$fd>) {
             next if /$EXCLUDE_R/;
             s/\#.*$//;
-            next unless /^(?:.+;|^\s*system[\s\(\']+)?\s*update-rc\.d\s+
-            (?:$OPTS_R)*($INITD_NAME_REGEX)\s+($ACTION_R)/x;
+            next unless m{^(?:.+;|^\s*system[\s\(\']+)?\s*update-rc\.d\s+
+            (?:$OPTS_R)*($INITD_NAME_REGEX)\s+($ACTION_R)}x;
             my ($name,$opt) = ($1,$2);
             next if $opt eq 'remove';
             if ($initd_postinst{$name}++ == 1) {
@@ -133,9 +133,9 @@ sub installable {
         while (<$fd>) {
             next if /$EXCLUDE_R/;
             s/\#.*$//;
-            next unless m/update-rc\.d \s+
+            next unless m{update-rc\.d \s+
                        (?:$OPTS_R)*($INITD_NAME_REGEX) \s+
-                       ($ACTION_R)/x;
+                       ($ACTION_R)}x;
             my ($name,$opt) = ($1,$2);
             next if $opt eq 'remove';
             $self->hint('preinst-calls-updaterc.d', $name);

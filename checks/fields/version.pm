@@ -120,9 +120,9 @@ sub always {
         my $extra = $1;
         if (
             defined $extra
-            && $debian =~ /\A
+            && $debian =~ m{\A
                             (?:[^.]+ubuntu[^.]+)(?:\.\d+){1,3}(\..*)?
-                            \Z/xsm
+                            \Z}xsm
         ) {
             $ubuntu = 1;
             $extra = $1;

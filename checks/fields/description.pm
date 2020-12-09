@@ -234,9 +234,9 @@ sub installable {
     # for the old Homepage: convention in the body.
     unless ($processable->fields->declares('Homepage') or $flagged_homepage) {
         if (
-            $extended =~ /homepage|webpage|website|url|upstream|web\s+site
+            $extended =~ m{homepage|webpage|website|url|upstream|web\s+site
                          |home\s+page|further\s+information|more\s+info
-                         |official\s+site|project\s+home/xi
+                         |official\s+site|project\s+home}xi
             && $extended =~ m{\b(https?://[a-z0-9][^>\s]+)}i
         ) {
             $self->hint('description-possibly-contains-homepage', $1);

@@ -901,8 +901,8 @@ sub check_html_cruft {
     if($blocknumber == 0) {
         if(index($block,'<meta name="generator"') > -1) {
             if(
-                $block =~ /<meta \s+ name="generator" \s+
-                content="doxygen/smx
+                $block =~ m{<meta \s+ name="generator" \s+
+                content="doxygen}smx
                 # Identify and ignore documentation templates by looking
                 # for the use of various interpolated variables.
                 # <http://www.doxygen.nl/manual/config.html#cfg_html_header>
@@ -1276,23 +1276,23 @@ sub check_gfdl_license_problem {
 
     # official wording
     if(
-        $gfdlsections =~ m/\A
+        $gfdlsections =~ m{\A
                           with [ ] no [ ] invariant [ ] sections[ ]?,
                           [ ]? no [ ] front(?:[ ]?-[ ]?|[ ])cover [ ] texts[ ]?,?
                           [ ]? and [ ] no [ ] back(?:[ ]?-?[ ]?|[ ])cover [ ] texts
-                          \Z/xs
+                          \Z}xs
     ) {
         return 0;
     }
 
     # example are ok
     if (
-        $contextbefore =~ m/following [ ] is [ ] an [ ] example
+        $contextbefore =~ m{following [ ] is [ ] an [ ] example
                            (:?[ ] of [ ] the [ ] license [ ] notice [ ] to [ ] use
                             (?:[ ] after [ ] the [ ] copyright [ ] (?:line(?:\(s\)|s)?)?
                              (?:[ ] using [ ] all [ ] the [ ] features? [ ] of [ ] the [ ] gfdl)?
                             )?
-                           )? [ ]? [,:]? \Z/xs
+                           )? [ ]? [,:]? \Z}xs
     ){
         return 0;
     }
@@ -1405,19 +1405,19 @@ sub _clean_block {
 
     $text =~ s/\\url[{][^}]*?[}]/ /gxms;      # (la)?tex url
     $text =~ s/\\emph[{]/ /gxms;              # (la)?tex emph
-    $text =~ s/\\href[{][^}]*?[}]
-                     [{]([^}]*?)[}]/ $1 /gxms;# (la)?tex href
-    $text =~ s/\\hyperlink
+    $text =~ s<\\href[{][^}]*?[}]
+                     [{]([^}]*?)[}]>< $1 >gxms;# (la)?tex href
+    $text =~ s<\\hyperlink
                  [{][^}]*?[}]
-                 [{]([^}]*?)[}]/ $1 /gxms;    # (la)?tex hyperlink
+                 [{]([^}]*?)[}]>< $1 >gxms;    # (la)?tex hyperlink
     $text =~ s{-\\/}{-}gxms;                   # tex strange hyphen
     $text =~ s/\\char/ /gxms;                 # tex  char command
 
     # Texinfo comment with end section
-    $text =~ s/\@c(?:omment)?\h+
-                end \h+ ifman\s+/ /gxms;
-    $text =~ s/\@c(?:omment)?\s+
-                noman\s+/ /gxms;              # Texinfo comment no manual
+    $text =~ s{\@c(?:omment)?\h+
+                end \h+ ifman\s+}{ }gxms;
+    $text =~ s{\@c(?:omment)?\s+
+                noman\s+}{ }gxms;              # Texinfo comment no manual
 
     $text =~ s/\@c(?:omment)?\s+/ /gxms;      # Texinfo comment
 
@@ -1428,8 +1428,8 @@ sub _clean_block {
     $text =~ s/\@var[{]/ /gxms;                 # Texinfo emphasis
 
     $text =~ s/\@(?:small)?example\s+/ /gxms; # Texinfo example
-    $text =~ s/\@end \h+
-               (?:small)example\s+/ /gxms;    # Texinfo end example tag
+    $text =~ s{\@end \h+
+               (?:small)example\s+}{ }gxms;    # Texinfo end example tag
     $text =~ s/\@group\s+/ /gxms;             # Texinfo group
     $text =~ s/\@end\h+group\s+/ /gxms;       # Texinfo end group
 
@@ -1468,10 +1468,10 @@ sub _clean_block {
 
     # diff/patch lines (should be after html tag)
     $text =~ s/^[-\+!<>]/ /gxms;
-    $text =~ s/\@\@ \s*
+    $text =~ s{\@\@ \s*
                [-+] \d+,\d+ \s+
                [-+] \d+,\d+ \s*
-               \@\@/ /gxms;                   # patch line
+               \@\@}{ }gxms;                   # patch line
 
     # Texinfo end tag (could be more clever but brute force is fast)
     $text =~ s/}/ /gxms;

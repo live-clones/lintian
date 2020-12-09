@@ -90,10 +90,10 @@ sub source {
                     $self->hint('substvar-source-version-is-deprecated',$pkg1);
                 }
                 if (
-                    m/^($PKGNAME_REGEX)(?: :[-a-z0-9]+)? \s*   # pkg-name $1
+                    m{^($PKGNAME_REGEX)(?: :[-a-z0-9]+)? \s*   # pkg-name $1
                        \(\s*[\>\<]?[=\>\<]\s*                  # REL 
                         (\$[{](?:source:|binary:)(?:Upstream-)?Version[}]) # {subvar}
-                     /x
+                     }x
                 ) {
                     my $other = $1;
                     my $substvar = $2;
@@ -123,10 +123,10 @@ sub source {
                       ->value('Depends')))
         ) {
             next
-              unless m/($PKGNAME_REGEX)(?: :any)? \s*               # pkg-name
+              unless m{($PKGNAME_REGEX)(?: :any)? \s*               # pkg-name
                        \(\s*(\>)?=\s*                               # rel
                        \$[{]((?:Source-|source:|binary:)Version)[}] # subvar
-                      /x;
+                      }x;
 
             my $gt = $2//$EMPTY;
             $pkg2 = $1;

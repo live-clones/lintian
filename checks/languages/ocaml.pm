@@ -87,7 +87,7 @@ sub setup_installed_files {
     # is it a development package?
     $self->_set_is_dev_package(1)
       if (
-        $self->processable->name =~ m/
+        $self->processable->name =~ m{
            (?: -dev
               |\A camlp[45](?:-extra)?
               |\A ocaml  (?:
@@ -95,7 +95,7 @@ sub setup_installed_files {
                     |-interp
                     |-compiler-libs
                   )?
-           )\Z/xsm
+           )\Z}xsm
       );
 
     return;

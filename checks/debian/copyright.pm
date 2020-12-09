@@ -271,9 +271,9 @@ sub binary {
     if (
         length($contents) > 12_000
         and (
-            $contents =~m/  \b \QGNU GENERAL PUBLIC LICENSE\E \s*
+            $contents =~m{  \b \QGNU GENERAL PUBLIC LICENSE\E \s*
                     \QTERMS AND CONDITIONS FOR COPYING,\E \s*
-                    \QDISTRIBUTION AND MODIFICATION\E\b/mx
+                    \QDISTRIBUTION AND MODIFICATION\E\b}mx
             or (    $contents =~ m/\bGNU GENERAL PUBLIC LICENSE\s*Version 3/
                 and $contents =~ m/\bTERMS AND CONDITIONS\s/))
     ) {
@@ -418,8 +418,8 @@ qr/GNU (?:Lesser|Library) General Public License|(?-i:\bLGPL\b)/i
     if ($found && !$linked) {
         $self->hint('copyright-without-copyright-notice')
           unless $contents
-          =~ /(?:Copyright|Copr\.|©)(?:.*|[\(C\):\s]+)\b\d{4}\b
-               |\bpublic(?:\s+|-)domain\b/xi;
+          =~ m{(?:Copyright|Copr\.|©)(?:.*|[\(C\):\s]+)\b\d{4}\b
+               |\bpublic(?:\s+|-)domain\b}xi;
     }
 
     check_spelling(

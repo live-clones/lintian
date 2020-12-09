@@ -70,9 +70,9 @@ sub source {
         local $_ = $firstline;
         if (/\bnmu\b/i or /non-maintainer upload/i or m/LowThresholdNMU/i) {
             unless (
-                m/
+                m{
                         (?:ackno|\back\b|confir|incorporat).*
-                        (?:\bnmu\b|non-maintainer)/xi
+                        (?:\bnmu\b|non-maintainer)}xi
             ) {
                 $changelog_mentions_nmu = 1;
             }

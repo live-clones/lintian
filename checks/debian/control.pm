@@ -632,12 +632,12 @@ sub check_dev_depends {
             }
         } elsif (@depends == 2) {
             unless (
-                $versions[0] =~ m/^\s*<[=<]\s* \$\{
+                $versions[0] =~ m{^\s*<[=<]\s* \$\{
                         (?: (?:binary|source):(?:Upstream-)?Version
-                            |Source-Version)\}/xsm
-                && $versions[1] =~ m/^\s*>[=>]\s* \$\{
+                            |Source-Version)\}}xsm
+                && $versions[1] =~ m{^\s*>[=>]\s* \$\{
                         (?: (?:binary|source):(?:Upstream-)?Version
-                        |Source-Version)\}/xsm
+                        |Source-Version)\}}xsm
             ) {
                 $self->hint('weak-library-dev-dependency',
                     "$package on $depends[0], $depends[1]");
@@ -660,7 +660,7 @@ sub check_relation {
     $rawvalue =~ s/\n(\s)/$1/g;
     $rawvalue =~ s/\[[^\]]*\]//g;
     if (
-        $rawvalue =~ /(?:^|\s)
+        $rawvalue =~ m{(?:^|\s)
                    (
                 (?:\w[^\s,|\$\(]+|\$\{\S+:Depends\})\s*
                 (?:\([^\)]*\)\s*)?
@@ -669,7 +669,7 @@ sub check_relation {
                    (
                 (?:\w[^\s,|\$\(]+|\$\{\S+:Depends\})\s*
                 (?:\([^\)]*\)\s*)?
-                   )/x
+                   )}x
     ) {
         my ($prev, $next) = ($1, $2);
         for ($prev, $next) {

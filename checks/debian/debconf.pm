@@ -466,8 +466,8 @@ sub installable {
                     $potential_makedev->{$.} = 1;
                 }
                 if (
-                    m/\A \s*(?:db_input|db_text)\s+
-                     [\"\']? (\S+?) [\"\']? \s+ (\S+)\s/xsm
+                    m{\A \s*(?:db_input|db_text)\s+
+                     [\"\']? (\S+?) [\"\']? \s+ (\S+)\s}xsm
                 ) {
                     my ($priority, $template) = ($1, $2);
                     $templates_used{$self->get_template_name($template)}= 1;
@@ -485,8 +485,8 @@ sub installable {
                     }
                 }
                 if (
-                    m/ \A \s* (?:db_get|db_set(?:title)?) \s+ 
-                       [\"\']? (\S+?) [\"\']? (?:\s|\Z)/xsm
+                    m{ \A \s* (?:db_get|db_set(?:title)?) \s+ 
+                       [\"\']? (\S+?) [\"\']? (?:\s|\Z)}xsm
                 ) {
                     $templates_used{$self->get_template_name($1)} = 1;
                 }

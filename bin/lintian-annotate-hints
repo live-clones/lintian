@@ -150,12 +150,12 @@ while(my $bytes = <STDIN>) {
     if ($annotate) {
 
         next
-          unless $line =~ /^(?:                    # start optional part
+          unless $line =~ m{^(?:                    # start optional part
                     (?:\S+)?                       # Optionally starts with package name
                     (?: \s*+ \[[^\]]+?\])?         # optionally followed by an [arch-list] (like in B-D)
                     (?: \s*+ $type_re)?            # optionally followed by the type
                   :\s++)?                          # end optional part
-                ([\-\.a-zA-Z_0-9]+ (?:\s.+)?)$/x;  # <tag-name> [extra] -> $1
+                ([\-\.a-zA-Z_0-9]+ (?:\s.+)?)$}x;  # <tag-name> [extra] -> $1
 
         my $tagdata = $1;
         ($tag_name, undef) = split(/ /, $tagdata, 2);

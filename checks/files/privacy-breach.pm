@@ -248,11 +248,11 @@ sub check_tag_url_privacy_breach {
     # reparse fulltag for rel
     if ($tagattr eq 'link') {
         my $rel = $fulltag;
-        $rel =~ /<link
+        $rel =~ m{<link
                       (?:\s[^>]+)? \s+
                       rel="([^"\r\n]*)"
                       [^>]*
-                      >/xismog;
+                      >}xismog;
         my $relcontent = $1;
         if (defined($relcontent)) {
             # See, for example, https://www.w3schools.com/tags/att_link_rel.asp
@@ -275,11 +275,11 @@ sub check_tag_url_privacy_breach {
             return if ($allowed{$relcontent});
             if ($relcontent eq 'alternate') {
                 my $type = $fulltag;
-                $type =~ /<link
+                $type =~ m{<link
                       (?:\s[^>]+)? \s+
                       type="([^"\r\n]*)"
                       [^>]*
-                      >/xismog;
+                      >}xismog;
                 my $typecontent = $1;
                 if($typecontent eq 'application/rdf+xml') {
                     # see #79991

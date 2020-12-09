@@ -77,10 +77,10 @@ sub always {
     my $source = $fields->unfolded_value('Source');
 
     $self->hint('source-field-malformed', $source)
-      unless $source =~ /^ $PKGNAME_REGEX
+      unless $source =~ m{^ $PKGNAME_REGEX
                          \s*
                          # Optional Version e.g. (1.0)
-                         (?:\((?:\d+:)?(?:[-\.+:a-zA-Z0-9~]+?)(?:-[\.+a-zA-Z0-9~]+)?\))?\s*$/x;
+                         (?:\((?:\d+:)?(?:[-\.+:a-zA-Z0-9~]+?)(?:-[\.+a-zA-Z0-9~]+)?\))?\s*$}x;
 
     return;
 }

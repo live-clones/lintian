@@ -39,10 +39,10 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-const my $NUMPY_REGEX => qr/
+const my $NUMPY_REGEX => qr{
     \Qmodule compiled against ABI version \E (?:0x)?%x
     \Q but this version of numpy is \E (?:0x)?%x
-/x;
+}x;
 
 # Guile object files do not objdump/strip correctly, so exclude them
 # from a number of tests. (#918444)

@@ -250,10 +250,10 @@ sub source {
         }
 
         if (
-            /^
+            m{^
                 \s*(?:export\s+)?
                 (DEB_(?:HOST|BUILD|TARGET)_(?:ARCH|MULTIARCH|GNU)[A-Z_]*)\s*:?=
-            /x
+            }x
             && keys(%seen) == 0
         ) {
             $self->hint('debian-rules-sets-dpkg-architecture-variable',

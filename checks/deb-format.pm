@@ -128,8 +128,8 @@ sub installable {
             $failed = 1;
         } else {
             if (
-                $ctrl_member !~ m/\A
-                     control\.tar(?:\.(?:gz|xz))?  \Z/xsm
+                $ctrl_member !~ m{\A
+                     control\.tar(?:\.(?:gz|xz))?  \Z}xsm
             ) {
                 $self->hint(
                     'malformed-deb-archive',
@@ -152,8 +152,8 @@ sub installable {
             $failed = 1;
         } else {
             if (
-                $data_member !~ m/\A
-                     data\.tar(?:\.(?:gz|bz2|xz|lzma))?  \Z/xsm
+                $data_member !~ m{\A
+                     data\.tar(?:\.(?:gz|bz2|xz|lzma))?  \Z}xsm
             ) {
                 # wasn't okay after all
                 $self->hint(
