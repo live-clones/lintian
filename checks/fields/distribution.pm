@@ -69,7 +69,7 @@ sub changes {
 
     my $KNOWN_DISTS = $self->profile->load_data('changes-file/known-dists');
 
-    my @unknown = grep { !$KNOWN_DISTS->known($major{$_}) } @targets;
+    my @unknown = grep { !$KNOWN_DISTS->recognizes($major{$_}) } @targets;
     $self->hint('bad-distribution-in-changes-file', $_) for @unknown;
 
     my @new_version = qw(sid unstable experimental);

@@ -66,7 +66,7 @@ sub always {
 
     $self->hint('new-essential-package')
       if $essential eq 'yes'
-      && !$KNOWN_ESSENTIAL->known($self->processable->name);
+      && !$KNOWN_ESSENTIAL->recognizes($self->processable->name);
 
     return;
 }

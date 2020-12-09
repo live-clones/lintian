@@ -580,7 +580,7 @@ sub installable {
                     );
                 }
             }
-        } elsif ($self->VERSIONED_INTERPRETERS->known($base)) {
+        } elsif ($self->VERSIONED_INTERPRETERS->recognizes($base)) {
             my @versions = @{ $data->[4] };
 
             my @depends;
@@ -705,7 +705,7 @@ sub installable {
             $self->hint('forbidden-config-interpreter', "#!$interpreter");
         } elsif ($file eq 'postrm') {
             $self->hint('forbidden-postrm-interpreter', "#!$interpreter");
-        } elsif ($self->INTERPRETERS->known($base)) {
+        } elsif ($self->INTERPRETERS->recognizes($base)) {
             my $data = $self->INTERPRETERS->value($base);
             my $expected = $data->[0] . '/' . $base;
             unless ($interpreter eq $expected) {

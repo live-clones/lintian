@@ -146,7 +146,7 @@ sub always {
 
     my $name = $fields->value('Package');
     if (
-        $PERL_CORE_PROVIDES->known($name)
+        $PERL_CORE_PROVIDES->recognizes($name)
         && perl_core_has_version(
             $name, '>=', "$epoch:$upstream", $PERL_CORE_PROVIDES
         )

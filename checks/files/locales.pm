@@ -63,18 +63,18 @@ sub visit_installed_files {
         # special exception:
         if ($lwccode ne 'l10n') {
 
-            if ($self->INCORRECT_LOCALE_CODES->known($lwccode)) {
+            if ($self->INCORRECT_LOCALE_CODES->recognizes($lwccode)) {
                 $self->hint('incorrect-locale-code',"$lwccode ->",
                     $self->INCORRECT_LOCALE_CODES->value($lwccode));
 
-            } elsif ($self->INCORRECT_LOCALE_CODES->known($lcode)) {
+            } elsif ($self->INCORRECT_LOCALE_CODES->recognizes($lcode)) {
                 $self->hint('incorrect-locale-code',"$lcode ->",
                     $self->INCORRECT_LOCALE_CODES->value($lcode));
 
-            } elsif (!$self->LOCALE_CODES->known($lcode)) {
+            } elsif (!$self->LOCALE_CODES->recognizes($lcode)) {
                 $self->hint('unknown-locale-code', $lcode);
 
-            } elsif ($self->LOCALE_CODES->known($lcode)
+            } elsif ($self->LOCALE_CODES->recognizes($lcode)
                 && defined($self->LOCALE_CODES->value($lcode))) {
                 # If there's a key-value pair in the codes
                 # list it means the ISO 639-2 code is being

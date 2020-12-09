@@ -173,11 +173,11 @@ sub check_control_paragraph {
 
         $self->hint('unknown-runtime-tests-restriction',
             $restriction,'in line', $line)
-          unless $KNOWN_RESTRICTIONS->known($restriction);
+          unless $KNOWN_RESTRICTIONS->recognizes($restriction);
 
         $self->hint('obsolete-runtime-tests-restriction',
             $restriction,'in line', $line)
-          if $KNOWN_OBSOLETE_RESTRICTIONS->known($restriction);
+          if $KNOWN_OBSOLETE_RESTRICTIONS->recognizes($restriction);
     }
 
     my $directory = $section->unfolded_value('Tests-Directory')

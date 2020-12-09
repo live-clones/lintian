@@ -108,7 +108,7 @@ sub source {
                 my $base = $field;
                 $base =~ s/^XS-//;
                 $self->hint('xs-vcs-field-in-debian-control', $field)
-                  if $src_fields->known($base);
+                  if $src_fields->recognizes($base);
             }
 
             if ($field eq 'XS-Testsuite') {
@@ -450,7 +450,7 @@ sub source {
                     $profile =~ s/^!//;
                     $self->hint('invalid-profile-name-in-build-profiles-field',
                         $profile, $bin)
-                      unless $KNOWN_BUILD_PROFILES->known($profile)
+                      unless $KNOWN_BUILD_PROFILES->recognizes($profile)
                       or $profile =~ /^pkg\.[a-z0-9][a-z0-9+.-]+\../;
                 }
             }

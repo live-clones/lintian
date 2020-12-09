@@ -223,7 +223,7 @@ sub installable {
                 my $name = $sym;
                 my $hardened;
                 $hardened = 1 if $name =~ s/^__(\S+)_chk$/$1/;
-                if ($HARDENED_FUNCTIONS->known($name)) {
+                if ($HARDENED_FUNCTIONS->recognizes($name)) {
                     if ($hardened) {
                         push(@hardened_functions, $name);
                     } else {
@@ -234,7 +234,7 @@ sub installable {
             }
 
             unless (defined $has_lfs) {
-                if ($foo eq 'UND' and $LFS_SYMBOLS->known($sym)) {
+                if ($foo eq 'UND' and $LFS_SYMBOLS->recognizes($sym)) {
                     # Using a 32bit only interface call, some parts of the
                     # binary are built without LFS. If the symbol is defined
                     # within the binary then we ignore it
@@ -242,7 +242,7 @@ sub installable {
                 }
             }
 
-            if ($foo eq 'UND' and $OBSOLETE_CRYPT_FUNCTIONS->known($sym)) {
+            if ($foo eq 'UND' and $OBSOLETE_CRYPT_FUNCTIONS->recognizes($sym)){
                 # Using an obsolete DES encryption function.
                 my $tag = $OBSOLETE_CRYPT_FUNCTIONS->value($sym);
                 $self->hint($tag, $name);
@@ -420,7 +420,7 @@ sub installable {
 
         $objdump = $processable->objdump_info->{$fname};
 
-        if ($arch eq 'all' or not $ARCH_REGEX->known($arch)) {
+        if ($arch eq 'all' or not $ARCH_REGEX->recognizes($arch)) {
             # arch:all or unknown architecture - not much we can say here
             1;
         } else {
@@ -440,7 +440,7 @@ sub installable {
             } elsif ($fname =~ $GUILE_PATH_REGEX) {
                 # Guile binaries do not objdump/strip (etc.) correctly.
                 $bad = 0;
-            } elsif ($ARCH_64BIT_EQUIVS->known($arch)
+            } elsif ($ARCH_64BIT_EQUIVS->recognizes($arch)
                 && $fname =~ m{^lib/modules/}) {
                 my $arch64re
                   = $ARCH_REGEX->value($ARCH_64BIT_EQUIVS->value($arch));

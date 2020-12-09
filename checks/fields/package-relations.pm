@@ -185,7 +185,7 @@ sub installable {
             $self->hint('virtual-package-depends-without-real-package-depends',
                 "$field: $alternatives[0][0]")
               if (
-                   $VIRTUAL_PACKAGES->known($alternatives[0][0])
+                   $VIRTUAL_PACKAGES->recognizes($alternatives[0][0])
                 && ($field eq 'Depends' || $field eq 'Pre-Depends')
                 && ($pkg ne 'base-files' || $alternatives[0][0] ne 'awk')
                 # ignore phpapi- dependencies as adding an
@@ -215,7 +215,7 @@ sub installable {
                 $self->hint('breaks-without-version', $part_d_orig)
                   if ( $field eq 'Breaks'
                     && !$d_version->[0]
-                    && !$VIRTUAL_PACKAGES->known($d_pkg)
+                    && !$VIRTUAL_PACKAGES->recognizes($d_pkg)
                     && !$replaces->implies($part_d_orig));
 
                 $self->hint('conflicts-with-version', $part_d_orig)
@@ -240,12 +240,12 @@ sub installable {
                 $self->hint('bad-relation', "$field: $part_d_orig") if $rest;
 
                 push @seen_obsolete_packages, [$part_d_orig, $d_pkg]
-                  if ( $OBSOLETE_PACKAGES->known($d_pkg)
+                  if ( $OBSOLETE_PACKAGES->recognizes($d_pkg)
                     && $is_dep_field);
 
                 $self->hint('depends-on-metapackage', "$field: $part_d_orig")
-                  if (  $KNOWN_METAPACKAGES->known($d_pkg)
-                    and not $KNOWN_METAPACKAGES->known($pkg)
+                  if (  $KNOWN_METAPACKAGES->recognizes($d_pkg)
+                    and not $KNOWN_METAPACKAGES->recognizes($pkg)
                     and not $processable->is_pkg_class('any-meta')
                     and $is_dep_field);
 
@@ -255,7 +255,7 @@ sub installable {
                 $self->hint(
                     'depends-on-essential-package-without-using-version',
                     "$field: $part_d_orig")
-                  if ( $KNOWN_ESSENTIAL->known($d_pkg)
+                  if ( $KNOWN_ESSENTIAL->recognizes($d_pkg)
                     && !$d_version->[0]
                     && $is_dep_field
                     && $d_pkg ne 'diffutils'
@@ -321,7 +321,7 @@ sub installable {
 
                 $self->hint('binary-package-depends-on-toolchain-package',
                     "$field: $part_d_orig")
-                  if $KNOWN_TOOLCHAIN->known($d_pkg)
+                  if $KNOWN_TOOLCHAIN->recognizes($d_pkg)
                   and $is_dep_field
                   and not $pkg =~ m/^dh-/
                   and not $pkg =~ m/-(source|src)$/
@@ -489,7 +489,7 @@ sub source {
                 $self->hint(
                     'virtual-package-depends-without-real-package-depends',
                     "$field: $alternatives[0][0]")
-                  if ( $VIRTUAL_PACKAGES->known($alternatives[0][0])
+                  if ( $VIRTUAL_PACKAGES->recognizes($alternatives[0][0])
                     && $is_dep_field);
 
                 for my $part_d (@alternatives) {
@@ -513,7 +513,7 @@ sub source {
                                 'invalid-profile-name-in-source-relation',
                                 "$prof [$field: $part_d_orig]"
                               )
-                              unless $KNOWN_BUILD_PROFILES->known($prof)
+                              unless $KNOWN_BUILD_PROFILES->recognizes($prof)
                               or $prof =~ /^pkg\.[a-z0-9][a-z0-9+.-]+\../;
                         }
                     }
@@ -553,28 +553,28 @@ sub source {
 'build-depends-on-build-essential-package-without-using-version',
                         "$d_pkg [$field: $part_d_orig]"
                       )
-                      if ($known_build_essential->known($d_pkg)
+                      if ($known_build_essential->recognizes($d_pkg)
                         && !$d_version->[1]);
 
                     $self->hint(
 'build-depends-on-essential-package-without-using-version',
                         "$field: $part_d_orig"
                       )
-                      if ( $KNOWN_ESSENTIAL->known($d_pkg)
+                      if ( $KNOWN_ESSENTIAL->recognizes($d_pkg)
                         && !$d_version->[0]
                         && $d_pkg ne 'dash');
                     push @seen_obsolete_packages, [$part_d_orig, $d_pkg]
-                      if ( $OBSOLETE_PACKAGES->known($d_pkg)
+                      if ( $OBSOLETE_PACKAGES->recognizes($d_pkg)
                         && $is_dep_field);
 
                     $self->hint('build-depends-on-metapackage',
                         "$field: $part_d_orig")
-                      if (  $KNOWN_METAPACKAGES->known($d_pkg)
+                      if (  $KNOWN_METAPACKAGES->recognizes($d_pkg)
                         and $is_dep_field);
 
                     $self->hint('build-depends-on-non-build-package',
                         "$field: $part_d_orig")
-                      if (  $NO_BUILD_DEPENDS->known($d_pkg)
+                      if (  $NO_BUILD_DEPENDS->recognizes($d_pkg)
                         and $is_dep_field);
 
                     $self->hint('build-depends-on-1-revision',

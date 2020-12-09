@@ -61,7 +61,7 @@ sub always {
     my $KNOWN_PRIOS = $self->profile->load_data('fields/priorities');
 
     $self->hint('unknown-priority', $priority)
-      unless $KNOWN_PRIOS->known($priority);
+      unless $KNOWN_PRIOS->recognizes($priority);
 
     $self->hint('excessive-priority-for-library-package', $priority)
       if $self->processable->name =~ /^lib/

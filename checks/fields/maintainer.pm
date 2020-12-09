@@ -71,7 +71,7 @@ sub changes {
     $self->hint('inconsistent-maintainer',
         $changes_maintainer . ' (changes vs. source) ' .$source_maintainer)
       unless $changes_maintainer eq $source_maintainer
-      || !$KNOWN_DISTS->known($changes_distribution);
+      || !$KNOWN_DISTS->recognizes($changes_distribution);
 
     return;
 }

@@ -26,68 +26,10 @@ use utf8;
 use Const::Fast;
 use List::SomeUtils qw(any);
 
-const my $EMPTY => q{};
-
-use Moo;
+use Moo::Role;
 use namespace::clean;
 
-has set => (
-    is => 'rw',
-    coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
-    default => sub { {} });
-
-has keyorder => (
-    is => 'rw',
-    coerce => sub { my ($arrayref) = @_; return ($arrayref // []); },
-    default => sub { [] });
-
-# Query a data object for whether a particular keyword is valid.
-sub known {
-    my ($self, $keyword) = @_;
-
-    return 0
-      unless length $keyword;
-
-    return 1
-      if exists $self->set->{$keyword};
-
-    return 0;
-}
-
-# Return all known keywords (in no particular order).
-sub all {
-    my ($self) = @_;
-
-    return @{$self->keyorder};
-}
-
-# Query a data object for the value attached to a particular keyword.
-sub value {
-    my ($self, $keyword) = @_;
-
-    return undef
-      unless length $keyword;
-
-    return $self->set->{$keyword};
-}
-
-# Query a data object for whether a particular keyword matches any regex.
-# Accepts an optional second argument for regex modifiers.
-sub matches_any {
-    my ($self, $keyword, $modifiers) = @_;
-
-    return 0
-      unless length $keyword;
-
-    $modifiers //= $EMPTY;
-
-    return 1
-      if any { $keyword =~ /(?$modifiers)$_/ } $self->all;
-
-    return 0;
-}
-
-1;
+const my $EMPTY => q{};
 
 =head1 NAME
 
@@ -97,7 +39,7 @@ Lintian::Data - Lintian interface to query lists of keywords
 
     my $keyword;
     my $list = Lintian::Data->new('type');
-    if ($list->known($keyword)) {
+    if ($list->recognizes($keyword)) {
         # do something ...
     }
     my $hash = Lintian::Data->new('another-type', qr{\s++});
@@ -152,79 +94,95 @@ Where Perl semantics allow it, the sub can modify CURVALUE and the
 changes will be reflected in the result.  As an example, if CURVALUE
 is a hashref, new keys can be inserted etc.
 
-=head1 CLASS METHODS
-
-=over 4
-
-=item new(TYPE [,SEPARATOR[, CODE]])
-
-Creates a new Lintian::Data object for the given TYPE.  TYPE is a partial
-path relative to the F<data> directory and should correspond to a file in
-that directory.  The contents of that file will be loaded into memory and
-returned as part of the newly created object.  On error, new() throws an
-exception.
-
-If SEPARATOR is given, it will be used as a regular expression for splitting
-the lines into key/value pairs.
-
-If CODE is also given, it is assumed to be a sub that will pre-process
-the key/value pairs.  See the L</Interface for the CODE argument> above.
-
-A given file will only be loaded once.  If new() is called again with the
-same TYPE argument, the data previously loaded will be reused, avoiding
-multiple file reads.
-
-=item set_vendor(PROFILE)
-
-Specifies vendor profile.  It must be set before the first data file
-is loaded.
-
-=back
-
 =head1 INSTANCE METHODS
 
 =over 4
 
-=item all()
+=item dataset
+
+=item C<keyorder>
+
+=cut
+
+has dataset => (
+    is => 'rw',
+    coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
+    default => sub { {} });
+
+has keyorder => (
+    is => 'rw',
+    coerce => sub { my ($arrayref) = @_; return ($arrayref // []); },
+    default => sub { [] });
+
+=item all
 
 Returns all keywords listed in the data file as a list in original order.
 In a scalar context, returns the number of keywords.
+
+=cut
+
+sub all {
+    my ($self) = @_;
+
+    return @{$self->keyorder};
+}
+
+=item recognizes (KEY)
+
+Returns true if KEY was listed in the data file represented by this
+Lintian::Data instance and false otherwise.
+
+=cut
+
+sub recognizes {
+    my ($self, $key) = @_;
+
+    return 0
+      unless length $key;
+
+    return 1
+      if exists $self->dataset->{$key};
+
+    return 0;
+}
+
+=item value (KEY)
+
+Returns the value attached to KEY if it was listed in the data
+file represented by this Lintian::Data instance and the undefined value
+otherwise.
+
+=cut
+
+sub value {
+    my ($self, $key) = @_;
+
+    return undef
+      unless length $key;
+
+    return $self->dataset->{$key};
+}
 
 =item matches_any(KEYWORD[, MODIFIERS])
 
 Returns true if KEYWORD matches any regular expression listed in the
 data file. The optional MODIFIERS serve as modifiers on all regexes.
 
-=item known(KEYWORD)
+=cut
 
-Returns true if KEYWORD was listed in the data file represented by this
-Lintian::Data instance and false otherwise.
+sub matches_any {
+    my ($self, $wanted, $modifiers) = @_;
 
-=item value(KEYWORD)
+    return 0
+      unless length $wanted;
 
-Returns the value attached to KEYWORD if it was listed in the data
-file represented by this Lintian::Data instance and the undefined value
-otherwise. If SEPARATOR was not given, the value will '1'.
+    $modifiers //= $EMPTY;
 
-=back
+    return 1
+      if any { $wanted =~ /(?$modifiers)$_/ } $self->all;
 
-=head1 DIAGNOSTICS
-
-=over 4
-
-=item no data type specified
-
-new() was called without a TYPE argument.
-
-=item unknown data type %s
-
-The TYPE argument to new() did not correspond to a file in the F<data>
-directory of the Lintian root.
-
-=item undefined value for %s (type: %s)
-
-The CODE argument return undef for the KEY and no previous value for
-that KEY was available.
+    return 0;
+}
 
 =back
 

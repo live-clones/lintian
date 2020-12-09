@@ -16,14 +16,15 @@ sub _split_hash {
 my $PROFILE = Lintian::Profile->new;
 $PROFILE->load('debian/main', [$ENV{'LINTIAN_BASE'}]);
 
-my $HARDENING = $PROFILE->load_data('binaries/hardening-tags', qr/\s*\|\|\s*/, \&_split_hash);
+my $HARDENING = $PROFILE->load_data('binaries/hardening-tags', qr/\s*\|\|\s*/,
+    \&_split_hash);
 
 my ($expected, undef, $calibrated) = @ARGV;
 
 my $arch = `dpkg-architecture -qDEB_HOST_ARCH`;
 chomp $arch;
 
-die "Unknown architecture: $arch" unless $HARDENING->known ($arch);
+die "Unknown architecture: $arch" unless $HARDENING->recognizes($arch);
 
 open my $cfd, '>', $calibrated or die "open $calibrated: $!";
 open my $efd, '<', $expected or die "open $expected: $!";
@@ -32,7 +33,7 @@ while (my $line = <$efd>) {
     my $dp = 0;
     if ($line =~ m/^.: [^:]++: (hardening-\S+)/) {
         # It is a hardening flag, maybe it is not for this architecture
-        $dp = 1 if $HARDENING->value ($arch)->{$1};
+        $dp = 1 if $HARDENING->value($arch)->{$1};
     } else {
         # only calibrate hardening flags.
         $dp = 1;

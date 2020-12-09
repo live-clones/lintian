@@ -556,7 +556,7 @@ sub visit_patched_files {
             or $item->file_info =~ /^PDF Document\b/i
             or $item->file_info =~ /^Postscript Document\b/i) {
             $self->hint('license-problem-non-free-img-lenna', $item->name)
-              unless $self->LENNA_WHITELIST->known($item->md5sum);
+              unless $self->LENNA_WHITELIST->recognizes($item->md5sum);
         }
     }
 

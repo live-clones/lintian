@@ -210,7 +210,7 @@ sub binary {
 
     if ($contents =~ m{ (usr/share/common-licenses/ ( [^ \t]*? ) \.gz) }xsm) {
         my ($path, $license) = ($1, $2);
-        if ($KNOWN_COMMON_LICENSES->known($license)) {
+        if ($KNOWN_COMMON_LICENSES->recognizes($license)) {
             $self->hint('copyright-refers-to-compressed-license', $path);
         }
     }
@@ -460,7 +460,7 @@ sub depends_on {
     my $KNOWN_ESSENTIAL = $self->profile->load_data('fields/essential');
 
     return 1
-      if $KNOWN_ESSENTIAL->known($package);
+      if $KNOWN_ESSENTIAL->recognizes($package);
 
     my $strong = $processable->relation('strong');
     return 1

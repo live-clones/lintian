@@ -509,7 +509,7 @@ sub check_init {
                 $self->hint(
                     'init.d-script-depends-on-unknown-virtual-facility',
                     $initd_path, $dependency)
-                  unless ($VIRTUAL_FACILITIES->known($dependency));
+                  unless ($VIRTUAL_FACILITIES->recognizes($dependency));
             }
             if ($dependency =~ m/^\$all$/) {
                 $self->hint('init.d-script-depends-on-all-virtual-facility',

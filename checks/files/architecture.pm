@@ -52,7 +52,7 @@ sub visit_installed_files {
 
     if ($file->name =~ m{^(?:usr/)?lib/([^/]+)/$}) {
         my $subdir = $1;
-        if ($self->TRIPLETS->known($subdir)) {
+        if ($self->TRIPLETS->recognizes($subdir)) {
 
             $self->hint('triplet-dir-and-architecture-mismatch',
                 $file->name, 'is for',$self->TRIPLETS->value($subdir))
@@ -68,7 +68,7 @@ sub visit_installed_files {
 
     if ($file->dirname =~ m{^(?:usr)?/lib/([^/]+)/$}) {
         $self->_set_arch_dep_files(1)
-          if $self->TRIPLETS->known($1 // $EMPTY);
+          if $self->TRIPLETS->recognizes($1 // $EMPTY);
     }
 
     return;

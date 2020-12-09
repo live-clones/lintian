@@ -102,7 +102,7 @@ sub visit_installed_files {
     # file isn't one of the uninteresting ones, the
     # package isn't empty.
     return
-      if $self->STANDARD_FILES->known($file->basename);
+      if $self->STANDARD_FILES->recognizes($file->basename);
 
     # ignore all READMEs
     return

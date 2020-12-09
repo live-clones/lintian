@@ -117,7 +117,7 @@ sub source {
     # version with which they claim to comply.
     if (   defined $dist
         && $dist ne 'UNRELEASED'
-        && $STANDARDS->known($stdver)
+        && $STANDARDS->recognizes($stdver)
         && $STANDARDS->value($stdver) > $pkgdate) {
 
         my $package = strftime('%Y-%m-%d', gmtime $pkgdate);
@@ -134,7 +134,7 @@ sub source {
     $self->hint('standards-version', $version);
 
     my $tag = "$version (current is $CURRENT)";
-    if (not $STANDARDS->known($stdver)) {
+    if (not $STANDARDS->recognizes($stdver)) {
         # Unknown standards version.  Perhaps newer?
         if (
                ($major > $CURRENT[0])

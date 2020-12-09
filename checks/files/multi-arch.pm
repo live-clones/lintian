@@ -85,7 +85,7 @@ sub visit_installed_files {
 
     if ($file->name =~ m{^(?:usr/)?lib/(?:([^/]+)/)?lib[^/]*\.so$}) {
         $self->_set_has_public_shared_library(1)
-          if (!defined($1) || $self->TRIPLETS->known($1));
+          if (!defined($1) || $self->TRIPLETS->recognizes($1));
     }
 
     return;

@@ -218,12 +218,12 @@ sub source {
             my $targets = $KNOWN_MAKEFILES->value($makefile);
             if (defined $targets){
                 foreach my $target (split /\s*+,\s*+/, $targets){
-                    $seen{$target}++ if $POLICYRULES->known($target);
+                    $seen{$target}++ if $POLICYRULES->recognizes($target);
                 }
             } else {
                 $includes = 1;
             }
-            if ($DEPRECATED_MAKEFILES->known($makefile)){
+            if ($DEPRECATED_MAKEFILES->recognizes($makefile)){
                 $self->hint('debian-rules-uses-deprecated-makefile',
                     "line $.",$makefile);
             }
@@ -337,13 +337,13 @@ sub source {
 
                    # discards empty elements at end, effectively trimming right
                         for (split(/\s+/, $val)) {
-                            $seen{$_}++ if $POLICYRULES->known($_);
+                            $seen{$_}++ if $POLICYRULES->recognizes($_);
                         }
                         last;
                     }
                     # We don't know, so just mark the target as seen.
                 }
-                $seen{$_}++ if $POLICYRULES->known($_);
+                $seen{$_}++ if $POLICYRULES->recognizes($_);
             }
             next; #.PHONY implies the rest will not match
         }
@@ -382,13 +382,13 @@ sub source {
 
                    # discards empty elements at end, effectively trimming right
                             for (split(/\s+/, $val)) {
-                                $seen{$_}++ if $POLICYRULES->known($_);
+                                $seen{$_}++ if $POLICYRULES->recognizes($_);
                             }
                             last;
                         }
                         # We don't know, so just mark the target as seen.
                     }
-                    $seen{$target}++ if $POLICYRULES->known($target);
+                    $seen{$target}++ if $POLICYRULES->recognizes($target);
                 }
                 if (any { $target =~ /$_/ } @arch_rules) {
                     push(@arch_rules, @depends);

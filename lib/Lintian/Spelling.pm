@@ -246,7 +246,7 @@ sub check_spelling_picky {
 
     for my $word (split(/\s+/, $text)) {
         $word =~ s/^\(|[).,?!:;]+$//g;
-        if ($corrections_case->known($word)) {
+        if ($corrections_case->recognizes($word)) {
             $counter++;
             next if $seen{$word}++;
             $code_ref->($word, $corrections_case->value($word));

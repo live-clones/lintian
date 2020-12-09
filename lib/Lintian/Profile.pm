@@ -37,7 +37,7 @@ use Unicode::UTF8 qw(encode_utf8);
 use Dpkg::Vendor qw(get_current_vendor get_vendor_info);
 
 use Lintian::Check::Info;
-use Lintian::Data;
+use Lintian::Data::Generic;
 use Lintian::Deb822::File;
 use Lintian::Tag;
 
@@ -75,6 +75,8 @@ parents.  The last element of the list is the name of the profile
 itself, the second last is its parent and so on.
 
 Note: This list reference and its contents should not be modified.
+
+=item our_vendor
 
 =item $prof->name
 
@@ -151,6 +153,8 @@ has profile_list => (
     is => 'rw',
     coerce => sub { my ($arrayref) = @_; return ($arrayref // []); },
     default => sub { [] });
+
+has our_vendor => (is => 'rw');
 
 has saved_include_path => (
     is => 'rw',
@@ -540,9 +544,8 @@ sub read_profile {
     $self->read_profile($header->unfolded_value('Extends'))
       if $header->declares('Extends');
 
-    # Add the profile to the "chain" after loading its parent (if
-    # any).
-    push(@{$self->profile_list}, $name);
+    # prepend profile name after loading any parent
+    unshift(@{$self->profile_list}, $name);
 
     my @valid_header_fields
       = qw(Profile Extends Enable-Tags-From-Check Disable-Tags-From-Check Enable-Tags Disable-Tags);
@@ -681,6 +684,8 @@ sub read_profile {
     } continue {
         $position++;
     }
+
+    $self->our_vendor($self->profile_list->[0]);
 
     return;
 }
@@ -866,27 +871,23 @@ has data_cache => (
 =cut
 
 sub load_data {
-    my ($self, @args) = @_;
-
-    my $data_name = shift @args;
+    my ($self, $location, $separator, $accumulator) = @_;
 
     croak encode_utf8('no data type specified')
-      unless $data_name;
+      unless $location;
 
-    unless (exists $self->data_cache->{$data_name}) {
+    unless (exists $self->data_cache->{$location}) {
 
-        my @vendors = reverse @{ $self->profile_list };
+        my $cache = Lintian::Data::Generic->new;
+        $cache->separator($separator);
+        $cache->accumulator($accumulator);
 
-        my $data = Lintian::Data->new;
+        $self->open_data_file($location, $cache);
 
-        my $this_platform = $vendors[0];
-        $self->open_data_file($data_name, $this_platform, \@vendors, $data,
-            \@args);
-
-        $self->data_cache->{$data_name} = $data;
+        $self->data_cache->{$location} = $cache;
     }
 
-    return $self->data_cache->{$data_name};
+    return $self->data_cache->{$location};
 }
 
 =item open_data_file
@@ -895,19 +896,21 @@ sub load_data {
 
 # Open the (next) data file
 #
-# $self->_open_data_file ($data_name, $vendors, $start)
-# - $data_name is the data file (e.g. "common/architectures")
+# $self->_open_data_file ($location, $vendors, $start)
+# - $location is the data file (e.g. "common/architectures")
 # - $vendors is the listref return by _get_vendor_names
 # - $start is an index into $vendors (the first $vendor to try)
 sub open_data_file {
-    my ($self, $data_name, $platform, $vendors, $data, $args) = @_;
+    my ($self, $location, $cache, $remaining_vendors) = @_;
+
+    my @vendors = @{ $remaining_vendors // $self->profile_list };
 
     my $vendor;
     my $path;
 
-    while(defined($vendor = shift @{$vendors})) {
+    while(defined($vendor = pop @vendors)) {
 
-        my $vendorpart = "vendors/$vendor/data/$data_name";
+        my $vendorpart = "vendors/$vendor/data/$location";
         my @candidates = $self->include_path($vendorpart);
 
         $path = first_value { -r } @candidates;
@@ -917,12 +920,12 @@ sub open_data_file {
 
     unless (defined $path) {
 
-        my @candidates = $self->include_path("data/$data_name");
+        my @candidates = $self->include_path("data/$location");
         $path = first_value { -r } @candidates;
     }
 
     unless (defined $path) {
-        croak encode_utf8("Unknown data file: $data_name")
+        croak encode_utf8("Unknown data file: $location")
           unless $vendor;
         croak encode_utf8("No parent data file for $vendor");
     }
@@ -933,13 +936,11 @@ sub open_data_file {
     die encode_utf8($@)
       if length $@;
 
-    my $dataset = $data->set;
-    my $keyorder = $data->keyorder;
+    my $dataset = $cache->dataset;
+    my $keyorder = $cache->keyorder;
 
-    my ($separator, $code) = @{$args};
-
-    my $filename = $data_name;
-    $filename = $vendor . '/' . $data_name
+    my $filename = $location;
+    $filename = $vendor . '/' . $location
       if length $vendor;
 
     local $. = undef;
@@ -966,8 +967,7 @@ sub open_data_file {
                 delete $dataset->{$value};
 
             } elsif ($directive eq 'include-parent') {
-                $self->open_data_file($data_name, $platform, $vendors, $data,
-                    $args);
+                $self->open_data_file($location, $cache, \@vendors);
 
             } elsif ($directive eq 'if-vendor-is'
                 || $directive eq 'if-vendor-is-not') {
@@ -980,13 +980,16 @@ sub open_data_file {
                     "Missing command after vendor name for \@$directive")
                   unless length $remain;
 
-                my $actual_vendor = (split(m{/}, $platform, 2))[0];
+                my $actual_vendor = $self->our_vendor;
+                $actual_vendor =~ s{/.*$}{};
 
-                if ($directive eq 'if-vendor-is') {
-                    next if $actual_vendor ne $specified;
-                } else {
-                    next if $actual_vendor eq $specified;
-                }
+                next
+                  if $directive eq 'if-vendor-is'
+                  && $actual_vendor ne $specified;
+
+                next
+                  if $directive eq 'if-vendor-is-not'
+                  && $actual_vendor eq $specified;
 
                 $line = $remain;
                 redo;
@@ -998,32 +1001,29 @@ sub open_data_file {
             next;
         }
 
-        my ($key, $val);
-        if (defined $separator) {
+        my $key = $line;
+        my $remainder;
 
-            ($key, $val) = split(/$separator/, $line, 2);
+        ($key, $remainder) = split($cache->separator, $line, 2)
+          if defined $cache->separator;
 
-            if ($code) {
-                my $pval = $dataset->{$key};
-                $val = $code->($key, $val, $pval);
+        my $value;
+        if (defined $cache->accumulator) {
 
-                unless (defined $val) {
-                    next
-                      if defined $pval;
+            my $previous = $dataset->{$key};
+            $value = $cache->accumulator->($key, $remainder, $previous);
 
-                    croak encode_utf8(
-                        "undefined value for $key (data-name: $data_name)");
-                }
-            }
+            next
+              unless defined $value;
 
         } else {
-            ($key, $val) = ($line => 1);
+            $value = $remainder;
         }
 
         push(@{$keyorder}, $key)
           unless exists $dataset->{$key};
 
-        $dataset->{$key} = $val;
+        $dataset->{$key} = $value;
     }
 
     close($fd);

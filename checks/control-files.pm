@@ -70,8 +70,8 @@ sub installable {
         }
 
         # valid control file?
-        unless ($ctrl->known($file)) {
-            if ($ctrl_alt->known($file)) {
+        unless ($ctrl->recognizes($file)) {
+            if ($ctrl_alt->recognizes($file)) {
                 $self->hint('not-allowed-control-file', $file);
                 next;
             } else {

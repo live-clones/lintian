@@ -471,11 +471,11 @@ sub check_doc_base_field {
         # Section field.
     } elsif ($field eq 'Section') {
         $_ = join($SPACE, @{$vals});
-        unless ($SECTIONS->known($_)) {
-            if (m{^App(?:lication)?s/(.+)$} && $SECTIONS->known($1)) {
+        unless ($SECTIONS->recognizes($_)) {
+            if (m{^App(?:lication)?s/(.+)$} && $SECTIONS->recognizes($1)) {
                 $self->hint('doc-base-uses-applications-section',
                     "$dbfile:$line", $_);
-            } elsif (m{^(.+)/(?:[^/]+)$} && $SECTIONS->known($1)) {
+            } elsif (m{^(.+)/(?:[^/]+)$} && $SECTIONS->recognizes($1)) {
                 # allows creating a new subsection to a known section
             } else {
                 $self->hint('doc-base-unknown-section', "$dbfile:$line", $_);

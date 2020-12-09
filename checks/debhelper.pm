@@ -159,7 +159,7 @@ sub source {
             }
 
             # if command is passed -n, it does not modify the scripts
-            if ($maint_commands->known($dhcommand) and not m/\s+\-n\s+/) {
+            if ($maint_commands->recognizes($dhcommand) and not m/\s+\-n\s+/) {
                 $needtomodifyscripts = 1;
             }
 
@@ -167,10 +167,10 @@ sub source {
            # maintainer knows what they're doing and don't check build
            # dependencies.
             unless ($maybe_skipping) {
-                if ($dh_ver_deps->known($dhcommand)) {
+                if ($dh_ver_deps->recognizes($dhcommand)) {
                     my $dep = $dh_ver_deps->value($dhcommand);
                     $missingbdeps{$dep} = $dhcommand;
-                } elsif ($dh_commands_depends->known($dhcommand)) {
+                } elsif ($dh_commands_depends->recognizes($dhcommand)) {
                     my $dep = $dh_commands_depends->value($dhcommand);
                     $missingbdeps{$dep} = $dhcommand;
                 }
@@ -282,7 +282,7 @@ sub source {
                 $needbuilddepends = 1;
 
                 next
-                  if $dh_commands_depends->known($dhcommand);
+                  if $dh_commands_depends->recognizes($dhcommand);
 
                 # Unknown command, so check for likely misspellings
                 my $missingauto = firstval { "dh_auto_$cmd" eq $_ }
@@ -554,7 +554,7 @@ sub source {
 
             # Check whether this is a debhelper config file that takes
             # a list of filenames.
-            if ($filename_configs->known($base)) {
+            if ($filename_configs->recognizes($base)) {
                 next unless $file->is_open_ok;
                 if ($level < 9) {
                     # debhelper only use executable files in compat 9

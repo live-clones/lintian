@@ -91,7 +91,7 @@ sub always {
         $self->hint('section-is-dh_make-template');
     } else {
         $self->hint('unknown-section', $section)
-          unless $KNOWN_SECTIONS->known($fraction);
+          unless $KNOWN_SECTIONS->recognizes($fraction);
     }
 
     # Check package name <-> section.  oldlibs is a special case; let

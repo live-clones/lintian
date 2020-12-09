@@ -657,7 +657,7 @@ sub verify_desktop_file {
             $basetag =~ s/\[([^\]]+)\]$//;
             if (exists $vals{$tag}) {
                 $self->hint('duplicate-key-in-desktop', "$file:$. $tag");
-            } elsif ($self->DEPRECATED_DESKTOP_KEYS->known($basetag)) {
+            } elsif ($self->DEPRECATED_DESKTOP_KEYS->recognizes($basetag)) {
                 if ($basetag eq 'Encoding') {
                     push(
                         @pending,
@@ -673,8 +673,8 @@ sub verify_desktop_file {
                             "$file:$. $tag"
                         ]);
                 }
-            } elsif (not $self->KNOWN_DESKTOP_KEYS->known($basetag)
-                and not $self->KDE_DESKTOP_KEYS->known($basetag)
+            } elsif (not $self->KNOWN_DESKTOP_KEYS->recognizes($basetag)
+                and not $self->KDE_DESKTOP_KEYS->recognizes($basetag)
                 and not $basetag =~ /^X-/) {
                 push(@pending,
                     ['desktop-entry-contains-unknown-key', "$file:$. $tag"]);
@@ -751,7 +751,7 @@ sub verify_desktop_file {
                   unless $vals{'OnlyShowIn'};
                 $saw_main = 1;
                 $in_reserved = 1;
-            } elsif (not $self->ADD_CATEGORIES->known($cat)
+            } elsif (not $self->ADD_CATEGORIES->recognizes($cat)
                 and not $main_categories{$cat}) {
                 $self->hint('desktop-entry-invalid-category', "$cat $file");
             } elsif ($main_categories{$cat}) {

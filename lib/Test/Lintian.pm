@@ -631,7 +631,7 @@ sub _check_reference {
     my @issues;
 
     unless (%URLS) {
-        $MANUALS->known($EMPTY); # force it to load the manual refs
+        $MANUALS->recognizes($EMPTY); # force it to load the manual refs
         foreach my $manid ($MANUALS->all) {
             my $table = $MANUALS->value($manid);
             foreach my $section (keys %{$table}) {
@@ -652,7 +652,7 @@ sub _check_reference {
             push @issues, "replace \"$reference\" with \"$URLS{$reference}\"";
         } elsif ($reference =~ m/^([\w-]++)\s++(\S++)$/) {
             my ($manual, $section) = ($1, $2);
-            if ($MANUALS->known($manual)) {
+            if ($MANUALS->recognizes($manual)) {
                 push @issues, "unknown section \"$section\" in $manual"
                   unless exists $MANUALS->value($manual)->{$section};
             } else {

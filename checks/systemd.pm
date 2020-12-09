@@ -120,7 +120,7 @@ sub get_init_scripts {
         for my $init_script ($initd_path->children) {
             # sysv generator drops the .sh suffix
             my $basename = get_init_service_name($init_script);
-            next if $INIT_WHITELIST->known($basename);
+            next if $INIT_WHITELIST->recognizes($basename);
             next
               if $init_script->is_symlink
               && $init_script->link eq '/lib/init/upstart-job';

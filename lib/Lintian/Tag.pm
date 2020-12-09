@@ -379,7 +379,7 @@ sub markdown_from_manuals {
         \&load_manual_data);
 
     return $EMPTY
-      unless $MANUALS->known($volume);
+      unless $MANUALS->recognizes($volume);
 
     my $entry = $MANUALS->value($volume);
 
