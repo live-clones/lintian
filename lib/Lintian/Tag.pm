@@ -345,25 +345,6 @@ sub markdown_citation {
     return $markdown // $citation;
 }
 
-=item load_manual_data
-
-=cut
-
-sub load_manual_data {
-    my ($key, $rawvalue, $pval) = @_;
-
-    my ($section, $title, $url) = split m/::/, $rawvalue, 3;
-    my $ret;
-    if (not defined $pval) {
-        $ret = $pval = {};
-    }
-
-    $pval->{$section}{title} = $title;
-    $pval->{$section}{url} = $url;
-
-    return $ret;
-}
-
 =item markdown_from_manuals
 
 =cut
@@ -374,9 +355,7 @@ sub markdown_from_manuals {
     croak encode_utf8('No profile')
       unless defined $self->profile;
 
-    my $MANUALS
-      = $self->profile->load_data('output/manual-references', qr/::/,
-        \&load_manual_data);
+    my $MANUALS = $self->profile->manual_references;
 
     return $EMPTY
       unless $MANUALS->recognizes($volume);

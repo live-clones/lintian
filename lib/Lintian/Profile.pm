@@ -44,6 +44,8 @@ use Lintian::Tag;
 use Moo;
 use namespace::clean;
 
+with 'Lintian::Profile::Manual::References';
+
 const my $EMPTY => q{};
 const my $SPACE => q{ };
 

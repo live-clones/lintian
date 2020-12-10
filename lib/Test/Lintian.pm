@@ -617,9 +617,7 @@ sub load_profile_for_test {
     $PROFILE = Lintian::Profile->new;
     $PROFILE->load($profname, [@inc, $ENV{'LINTIAN_BASE'}]);
 
-    $MANUALS
-      = $PROFILE->load_data('output/manual-references', qr/::/,
-        \&Lintian::Tag::load_manual_data);
+    $MANUALS = $PROFILE->manual_references;
 
     $ENV{'LINTIAN_CONFIG_DIRS'} = join(':', @inc);
 
