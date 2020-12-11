@@ -104,8 +104,7 @@ sub get_latest_policy {
     my $profile = Lintian::Profile->new;
     $profile->load(undef, [$ENV{'LINTIAN_BASE'}]);
 
-    my $STANDARDS
-      = $profile->load_data('standards-version/release-dates', qr/\s+/);
+    my $STANDARDS = $profile->policy_releases;
     my @STANDARDS = reverse sort { $a->[1] <=> $b->[1] }
       map { [$_, $STANDARDS->value($_)] } $STANDARDS->all;
 
@@ -128,7 +127,7 @@ sub get_recommended_debhelper_version {
     my $profile = Lintian::Profile->new;
     $profile->load(undef, [$ENV{'LINTIAN_BASE'}]);
 
-    my $compat_level = $profile->load_data('debhelper/compat-level', qr/=/);
+    my $compat_level = $profile->debhelper_levels;
 
     return $compat_level->value('recommended');
 }

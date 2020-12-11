@@ -60,8 +60,7 @@ sub source {
     my $ANCIENT_DATE = $ANCIENT_DATE_DATA->value('ANCIENT')
       or die 'Cannot get ANCIENT_DATE';
 
-    my $STANDARDS
-      = $self->profile->load_data('standards-version/release-dates', qr/\s+/);
+    my $STANDARDS = $self->profile->policy_releases;
 
  # In addition to the normal Lintian::Data structure, we also want a list of
  # all standards and their release dates so that we can check things like the

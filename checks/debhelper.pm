@@ -59,8 +59,7 @@ sub source {
     my $maint_commands = $self->profile->load_data('debhelper/maint_commands');
     my $filename_configs
       = $self->profile->load_data('debhelper/filename-config-files');
-    my $compat_level
-      = $self->profile->load_data('debhelper/compat-level',qr/=/);
+    my $compat_level = $self->profile->debhelper_levels;
 
     my $dh_ver_deps
       = $self->profile->load_data('debhelper/dh_commands-manual', qr/\|\|/);

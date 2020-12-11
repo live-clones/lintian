@@ -44,7 +44,9 @@ use Lintian::Tag;
 use Moo;
 use namespace::clean;
 
-with 'Lintian::Profile::Manual::References';
+with 'Lintian::Profile::Debhelper::Levels',
+  'Lintian::Profile::Manual::References',
+  'Lintian::Profile::Policy::Releases';
 
 const my $EMPTY => q{};
 const my $SPACE => q{ };
