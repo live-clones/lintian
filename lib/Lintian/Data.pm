@@ -184,6 +184,113 @@ sub matches_any {
     return 0;
 }
 
+=item read_from_files
+
+=cut
+
+sub read_from_files {
+    my ($self, $lineage, $our_vendor) = @_;
+
+    my @remaining_lineage = @{$lineage // []};
+    return 0
+      unless @remaining_lineage;
+
+    my $path = shift @remaining_lineage;
+
+    open(my $fd, '<:utf8_strict', $path)
+      or die encode_utf8("Cannot open $path: $!");
+
+    local $. = undef;
+    while (my $line = <$fd>) {
+
+        # trim both ends
+        $line =~ s/^\s+|\s+$//g;
+
+        next
+          unless length $line;
+
+        next
+          if $line =~ m{^\#};
+
+        # a command
+        if ($line =~ s/^\@//) {
+
+            my ($directive, $value) = split(/\s+/, $line, 2);
+            if ($directive eq 'delete') {
+
+                croak encode_utf8(
+                    "Missing key after \@delete in $path at line $.")
+                  unless length $value;
+
+                @{$self->keyorder} = grep { $_ ne $value } @{$self->keyorder};
+                delete $self->dataset->{$value};
+
+            } elsif ($directive eq 'include-parent') {
+
+                $self->read_from_files(\@remaining_lineage)
+                  or croak encode_utf8("No ancestor data file for $path");
+
+            } elsif ($directive eq 'if-vendor-is'
+                || $directive eq 'if-vendor-is-not') {
+
+                my ($specified_vendor, $remain) = split(/\s+/, $value, 2);
+
+                croak encode_utf8("Missing vendor name after \@$directive")
+                  unless length $specified_vendor;
+                croak encode_utf8(
+                    "Missing command after vendor name for \@$directive")
+                  unless length $remain;
+
+                $our_vendor =~ s{/.*$}{};
+
+                next
+                  if $directive eq 'if-vendor-is'
+                  && $our_vendor ne $specified_vendor;
+
+                next
+                  if $directive eq 'if-vendor-is-not'
+                  && $our_vendor eq $specified_vendor;
+
+                $line = $remain;
+                redo;
+
+            } else {
+                croak encode_utf8(
+                    "Unknown operation \@$directive in $path at line $.");
+            }
+            next;
+        }
+
+        my $key = $line;
+        my $remainder;
+
+        ($key, $remainder) = split($self->separator, $line, 2)
+          if defined $self->separator;
+
+        my $value;
+        if (defined $self->accumulator) {
+
+            my $previous = $self->dataset->{$key};
+            $value = $self->accumulator->($key, $remainder, $previous);
+
+            next
+              unless defined $value;
+
+        } else {
+            $value = $remainder;
+        }
+
+        push(@{$self->keyorder}, $key)
+          unless exists $self->dataset->{$key};
+
+        $self->dataset->{$key} = $value;
+    }
+
+    close $fd;
+
+    return 1;
+}
+
 =back
 
 =head1 FILES

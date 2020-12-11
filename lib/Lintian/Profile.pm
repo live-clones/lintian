@@ -76,10 +76,10 @@ Returns a hash with old names that have new names.
 =item $prof->profile_list
 
 Returns a list ref of the (normalized) names of the profile and its
-parents.  The last element of the list is the name of the profile
-itself, the second last is its parent and so on.
+parents.  The first element of the list is the name of the profile
+itself, the second is its parent and so on.
 
-Note: This list reference and its contents should not be modified.
+Note: This list is a reference. The contents should not be modified.
 
 =item our_vendor
 
@@ -884,10 +884,12 @@ sub load_data {
     unless (exists $self->data_cache->{$location}) {
 
         my $cache = Lintian::Data::Generic->new;
+        $cache->location($location);
         $cache->separator($separator);
         $cache->accumulator($accumulator);
 
-        $self->open_data_file($location, $cache);
+        $self->populate_data($cache)
+          or croak encode_utf8('Unknown data file: ' . $cache->location);
 
         $self->data_cache->{$location} = $cache;
     }
@@ -895,145 +897,37 @@ sub load_data {
     return $self->data_cache->{$location};
 }
 
-=item open_data_file
+=item locate_files
 
 =cut
 
-# Open the (next) data file
-#
-# $self->_open_data_file ($location, $vendors, $start)
-# - $location is the data file (e.g. "common/architectures")
-# - $vendors is the listref return by _get_vendor_names
-# - $start is an index into $vendors (the first $vendor to try)
-sub open_data_file {
-    my ($self, $location, $cache, $remaining_vendors) = @_;
+sub locate_files {
+    my ($self, $relative) = @_;
 
-    my @vendors = @{ $remaining_vendors // $self->profile_list };
+    my @base_dirs;
+    for my $vendor (@{ $self->profile_list }) {
 
-    my $vendor;
-    my $path;
-
-    while(defined($vendor = pop @vendors)) {
-
-        my $vendorpart = "vendors/$vendor/data/$location";
-        my @candidates = $self->include_path($vendorpart);
-
-        $path = first_value { -r } @candidates;
-        last
-          if length $path;
+        push(@base_dirs, map { "$_/vendors/$vendor" } $self->include_path);
     }
 
-    unless (defined $path) {
+    push(@base_dirs, $self->include_path);
 
-        my @candidates = $self->include_path("data/$location");
-        $path = first_value { -r } @candidates;
-    }
+    my @candidates = map { "$_/$relative" } @base_dirs;
+    my @lineage = grep { -r } @candidates;
 
-    unless (defined $path) {
-        croak encode_utf8("Unknown data file: $location")
-          unless $vendor;
-        croak encode_utf8("No parent data file for $vendor");
-    }
+    return @lineage;
+}
 
-    my $fd;
+=item populate_data
 
-    eval {open($fd, '<:utf8_strict', $path);};
-    die encode_utf8($@)
-      if length $@;
+=cut
 
-    my $dataset = $cache->dataset;
-    my $keyorder = $cache->keyorder;
+sub populate_data {
+    my ($self, $cache) = @_;
 
-    my $filename = $location;
-    $filename = $vendor . '/' . $location
-      if length $vendor;
+    my @lineage = $self->locate_files('data/' . $cache->location);
 
-    local $. = undef;
-    while (my $line = <$fd>) {
-
-        # trim both ends
-        $line =~ s/^\s+|\s+$//g;
-
-        next
-          unless length $line;
-
-        next
-          if $line =~ m{^\#};
-
-        # a command
-        if ($line =~ s/^\@//) {
-
-            my ($directive, $value) = split(/\s+/, $line, 2);
-            if ($directive eq 'delete') {
-                croak encode_utf8(
-                    "Missing key after \@delete in $filename at line $.")
-                  unless length $value;
-                @{$keyorder} = grep { $_ ne $value } @{$keyorder};
-                delete $dataset->{$value};
-
-            } elsif ($directive eq 'include-parent') {
-                $self->open_data_file($location, $cache, \@vendors);
-
-            } elsif ($directive eq 'if-vendor-is'
-                || $directive eq 'if-vendor-is-not') {
-
-                my ($specified, $remain) = split(/\s+/, $value, 2);
-
-                croak encode_utf8("Missing vendor name after \@$directive")
-                  unless length $specified;
-                croak encode_utf8(
-                    "Missing command after vendor name for \@$directive")
-                  unless length $remain;
-
-                my $actual_vendor = $self->our_vendor;
-                $actual_vendor =~ s{/.*$}{};
-
-                next
-                  if $directive eq 'if-vendor-is'
-                  && $actual_vendor ne $specified;
-
-                next
-                  if $directive eq 'if-vendor-is-not'
-                  && $actual_vendor eq $specified;
-
-                $line = $remain;
-                redo;
-
-            } else {
-                croak encode_utf8(
-                    "Unknown operation \@$directive in $filename at line $.");
-            }
-            next;
-        }
-
-        my $key = $line;
-        my $remainder;
-
-        ($key, $remainder) = split($cache->separator, $line, 2)
-          if defined $cache->separator;
-
-        my $value;
-        if (defined $cache->accumulator) {
-
-            my $previous = $dataset->{$key};
-            $value = $cache->accumulator->($key, $remainder, $previous);
-
-            next
-              unless defined $value;
-
-        } else {
-            $value = $remainder;
-        }
-
-        push(@{$keyorder}, $key)
-          unless exists $dataset->{$key};
-
-        $dataset->{$key} = $value;
-    }
-
-    close($fd);
-
-    return;
+    return $cache->read_from_files(\@lineage, $self->our_vendor);
 }
 
 =back

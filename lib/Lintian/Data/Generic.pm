@@ -45,12 +45,15 @@ data files.
 
 =over 4
 
+=item location
+
 =item separator
 
 =item accumulator
 
 =cut
 
+has location => (is => 'rw');
 has separator => (is => 'rw');
 has accumulator => (is => 'rw');
 

@@ -54,7 +54,7 @@ has debhelper_levels => (
         my ($self) = @_;
 
         my $releases = Lintian::Data::Debhelper::Levels->new;
-        $self->open_data_file($releases->location, $releases);
+        $self->populate_data($releases);
 
         return $releases;
     });
