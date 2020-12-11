@@ -44,7 +44,8 @@ use Lintian::Tag;
 use Moo;
 use namespace::clean;
 
-with 'Lintian::Profile::Debhelper::Levels',
+with 'Lintian::Profile::Architectures',
+  'Lintian::Profile::Debhelper::Levels',
   'Lintian::Profile::Manual::References',
   'Lintian::Profile::Policy::Releases';
 

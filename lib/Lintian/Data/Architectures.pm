@@ -1,5 +1,5 @@
 # -*- perl -*-
-# Lintian::Architecture::Analyzer
+# Lintian::Data::Architectures
 
 # Copyright © 2011 Niels Thykier
 # Copyright © 2020 Felix Lechner
@@ -17,7 +17,7 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Lintian::Architecture::Analyzer;
+package Lintian::Data::Architectures;
 
 use v5.20;
 use warnings;
@@ -29,15 +29,17 @@ use Unicode::UTF8 qw(encode_utf8);
 use Moo;
 use namespace::clean;
 
+with 'Lintian::Data';
+
 =encoding utf-8
 
 =head1 NAME
 
-Lintian::Architecture::Analyzer -- Lintian API for handling architectures and wildcards
+Lintian::Data::Architectures -- Lintian API for handling architectures and wildcards
 
 =head1 SYNOPSIS
 
- use Lintian::Architecture::Analyzer;
+ use Lintian::Data::Architectures;
 
 =head1 DESCRIPTION
 
@@ -73,27 +75,28 @@ The following methods are exportable:
 
 =over 4
 
-=item profile
-=item C<spaced>
+=item location
+
+=item separator
+
+=item accumulator
+
 =item C<wildcards>
+
 =item C<names>
 
 =cut
 
-has profile => (is => 'rw');
-
-has spaced => (
+has location => (
     is => 'rw',
-    lazy => 1,
-    default => sub {
-        my ($self) = @_;
+    default => 'common/architectures'
+);
 
-        croak encode_utf8('No profile')
-          unless defined $self->profile;
+has separator => (
+    is => 'rw',
+    default => sub { qr/\s*+\Q||\E\s*+/ });
 
-        return $self->profile->load_data('common/architectures',
-            qr/\s*+\Q||\E\s*+/);
-    });
+has accumulator => (is => 'rw');
 
 # Valid architecture wildcards.
 has wildcards => (
@@ -105,9 +108,9 @@ has wildcards => (
 
         my %wildcards;
 
-        for my $hyphenated ($self->spaced->all) {
+        for my $hyphenated ($self->all) {
 
-            my $components = $self->spaced->value($hyphenated);
+            my $components = $self->value($hyphenated);
 
             # NB: "$os-$cpu" ne $hyphenated in some cases
             my ($os, $cpu) = split(/\s+/, $components);
@@ -133,9 +136,9 @@ has names => (
 
         my %names;
 
-        for my $hyphenated ($self->spaced->all) {
+        for my $hyphenated ($self->all) {
 
-            my $components = $self->spaced->value($hyphenated);
+            my $components = $self->value($hyphenated);
 
             my ($os, $cpu) = split(/\s+/, $components);
 
@@ -171,7 +174,7 @@ has names => (
         return \%names;
     });
 
-=item is_arch_wildcard ($wildcard)
+=item is_wildcard ($wildcard)
 
 Returns a truth value if $wildcard is a known architecture wildcard.
 
@@ -179,7 +182,7 @@ Note: 'any' is considered a wildcard and not an architecture.
 
 =cut
 
-sub is_arch_wildcard {
+sub is_wildcard {
     my ($self, $wildcard) = @_;
 
     return exists $self->wildcards->{$wildcard};
@@ -188,7 +191,7 @@ sub is_arch_wildcard {
 =item is_arch ($architecture)
 
 Returns a truth value if $architecture is (an alias of) a Debian machine
-architecture OR the special value "all".  It returns a false value for
+architecture.  It returns a false value for
 architecture wildcards (including "any") and unknown architectures.
 
 =cut
@@ -196,39 +199,7 @@ architecture wildcards (including "any") and unknown architectures.
 sub is_arch {
     my ($self, $architecture) = @_;
 
-    return 0
-      if $architecture eq 'any';
-
-    return 1
-      if exists $self->names->{$architecture};
-
-    return 1
-      if $architecture eq 'all';
-
-    return 0;
-}
-
-=item is_arch_or_wildcard ($architecture)
-
-Returns a truth value if $architecture is either an architecture or an
-architecture wildcard.
-
-Shorthand for:
-
- is_arch ($architecture) || is_arch_wildcard ($architecture)
-
-=cut
-
-sub is_arch_or_wildcard {
-    my ($self, $architecture) = @_;
-
-    return 1
-      if $self->is_arch($architecture);
-
-    return 1
-      if $self->is_arch_wildcard($architecture);
-
-    return 0;
+    return exists $self->names->{$architecture};
 }
 
 =item expand_arch_wildcard ($wildcard)
@@ -285,7 +256,10 @@ sub valid_wildcard {
     # strip any negative prefix
     $wildcard =~ s/^!//;
 
-    return $self->is_arch($wildcard) || $self->is_arch_wildcard($wildcard);
+    return
+         $self->is_arch($wildcard)
+      || $self->is_wildcard($wildcard)
+      || $wildcard eq 'all';
 }
 
 =item wildcard_matches
@@ -300,7 +274,7 @@ sub wildcard_matches {
 
     return $match_wanted
       if $wildcard eq $architecture
-      || ( $self->is_arch_wildcard($wildcard)
+      || ( $self->is_wildcard($wildcard)
         && $self->wildcard_includes_arch($wildcard, $architecture));
 
     return !$match_wanted;

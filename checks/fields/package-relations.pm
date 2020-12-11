@@ -34,7 +34,6 @@ use Const::Fast;
 use Dpkg::Version qw(version_check);
 use List::SomeUtils qw(any);
 
-use Lintian::Architecture::Analyzer;
 use Lintian::Relation qw(:constants);
 
 use Moo;
@@ -463,9 +462,6 @@ sub source {
       if ( $processable->fields->declares('Build-Depends-Arch')
         && $arch_dep_packages == 0);
 
-    my $analyzer = Lintian::Architecture::Analyzer->new;
-    $analyzer->profile($self->profile);
-
     my %depend;
     for my $field (
         qw(Build-Depends Build-Depends-Indep Build-Depends-Arch Build-Conflicts Build-Conflicts-Indep Build-Conflicts-Arch)
@@ -498,8 +494,15 @@ sub source {
                       = @{$part_d};
 
                     for my $arch (@{$d_arch->[0]}) {
-                        if ($arch eq 'all'
-                            || !$analyzer->is_arch_or_wildcard($arch)){
+                        if (
+                            $arch eq 'all'
+                            || (
+                                !$self->profile->architectures->is_arch($arch)
+                                && !$self->profile->architectures->is_wildcard(
+                                    $arch)
+                                && $arch ne 'all'
+                            )
+                        ){
                             $self->hint(
                                 'invalid-arch-string-in-source-relation',
                                 "$arch [$field: $part_d_orig]");
