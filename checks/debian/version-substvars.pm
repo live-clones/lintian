@@ -45,7 +45,7 @@ use autodie;
 use Const::Fast;
 use List::SomeUtils qw(any);
 
-use Lintian::Relation qw(:constants);
+use Lintian::Relation;
 use Lintian::Util qw($PKGNAME_REGEX);
 
 use Moo;
@@ -108,7 +108,7 @@ sub source {
                       or $other =~ /\$\{\S+\}/;
                 }
             };
-            $rel->visit($visitor, VISIT_PRED_FULL);
+            $rel->visit($visitor, Lintian::Relation::VISIT_PRED_FULL);
         }
 
         foreach (

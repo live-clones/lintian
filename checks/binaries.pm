@@ -31,7 +31,7 @@ use Const::Fast;
 use File::Spec;
 use List::SomeUtils qw(any);
 
-use Lintian::Relation qw(:constants);
+use Lintian::Relation;
 use Lintian::Spelling qw(check_spelling);
 
 use Moo;
@@ -687,7 +687,7 @@ sub installable {
     my $depends = $processable->relation('strong');
 
     # Check for a libc dependency.
-    if ($depends->empty) {
+    if ($depends->is_empty) {
         $self->hint('undeclared-elf-prerequisites', $_)for keys %needs_depends;
 
     } elsif (%needs_depends) {
@@ -727,7 +727,8 @@ sub installable {
         # It is a virtual package, so no version is allowed and
         # alternatives probably does not make sense here either.
         my $re = qr/^perlapi-[-\w.]+(?:\s*\[[^\]]+\])?$/;
-        unless ($depends->matches($re, VISIT_OR_CLAUSE_FULL)) {
+        unless (
+            $depends->matches($re, Lintian::Relation::VISIT_OR_CLAUSE_FULL)) {
             $self->hint('missing-dependency-on-perlapi');
         }
     }
@@ -736,8 +737,11 @@ sub installable {
     if ($has_php_ext) {
         # It is a virtual package, so no version is allowed and
         # alternatives probably does not make sense here either.
-        unless ($depends->matches(qr/^phpapi-[\d\w+]+$/, VISIT_OR_CLAUSE_FULL))
-        {
+        unless (
+            $depends->matches(
+                qr/^phpapi-[\d\w+]+$/, Lintian::Relation::VISIT_OR_CLAUSE_FULL
+            )
+        ){
             $self->hint('missing-dependency-on-phpapi');
         }
     }
@@ -748,7 +752,7 @@ sub installable {
         # We do not allow alternatives as it would mostly likely
         # defeat the purpose of this relation.  Also, we do not allow
         # versions for -abi as it is a virtual package.
-        my $vflags = VISIT_OR_CLAUSE_FULL;
+        my $vflags = Lintian::Relation::VISIT_OR_CLAUSE_FULL;
         $self->hint('missing-dependency-on-numpy-abi')
           unless $depends->matches(qr/^python3?-numpy-abi\d+$/, $vflags)
           or (  $depends->matches(qr/^python3-numpy \(>[>=][^\|]+$/, $vflags)

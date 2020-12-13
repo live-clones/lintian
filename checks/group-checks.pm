@@ -93,8 +93,8 @@ sub check_file_overlap {
         my $one = shift @remaining;
 
         my @provides_one = $one->fields->trimmed_list('Provides', qr{,});
-        my $relation_one
-          = Lintian::Relation->new(join(' |̈́ ', $one->name, @provides_one));
+        my $relation_one = Lintian::Relation->new->load(
+            join(' |̈́ ', $one->name, @provides_one));
 
         for my $two (@remaining) {
 
@@ -103,8 +103,8 @@ sub check_file_overlap {
               if $one->name eq $two->name;
 
             my @provides_two = $two->fields->trimmed_list('Provides', qr{,});
-            my $relation_two
-              = Lintian::Relation->new(join(' | ', $two->name, @provides_two));
+            my $relation_two = Lintian::Relation->new->load(
+                join(' | ', $two->name, @provides_two));
 
             # $two conflicts/replaces with $one
             next

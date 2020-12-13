@@ -354,9 +354,7 @@ sub installable {
     # Assume the version to be a non-native version to avoid
     # uninitialization warnings later.
     $version = '0-1' unless length $version;
-    $provides
-      = Lintian::Relation->logical_and($processable->relation('Provides'),
-        $provides);
+    $provides = $processable->relation('Provides')->logical_and($provides);
 
     my $shlibsf = $processable->control->lookup('shlibs');
     my $symbolsf = $processable->control->lookup('symbols');

@@ -299,8 +299,8 @@ sub installable {
     }
 
     my $all_parsed
-      = Lintian::Relation->logical_and($processable->relation('all'),
-        $processable->relation('Provides'),$pkg);
+      = $processable->relation('all')
+      ->logical_and($processable->relation('Provides'),$pkg);
     my $str_deps = $processable->relation('strong');
 
     my @x11_fonts
@@ -722,7 +722,7 @@ sub installable {
             # Pre-Depends.  Interpreters used by postinst or prerm
             # scripts must be in Depends.
             unless (not $data->[1]) {
-                my $depends = Lintian::Relation->new($data->[1]);
+                my $depends = Lintian::Relation->new->load($data->[1]);
                 if ($file eq 'preinst') {
                     unless ($processable->relation('Pre-Depends')
                         ->implies($depends)){

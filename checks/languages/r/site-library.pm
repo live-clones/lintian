@@ -25,7 +25,7 @@ use warnings;
 use utf8;
 use autodie;
 
-use Lintian::Relation qw(:constants);
+use Lintian::Relation;
 
 use Moo;
 use namespace::clean;
@@ -46,7 +46,8 @@ sub breakdown_installed_files {
 
     # no version allowed for virtual package; no alternatives
     $self->hint('requires-r-api')
-      unless $depends->matches(qr/^r-api-[\w\d+-.]+$/, VISIT_OR_CLAUSE_FULL);
+      unless $depends->matches(qr/^r-api-[\w\d+-.]+$/,
+        Lintian::Relation::VISIT_OR_CLAUSE_FULL);
 
     return;
 }

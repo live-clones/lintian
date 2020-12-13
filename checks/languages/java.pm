@@ -65,7 +65,7 @@ sub installable {
     my $has_public_jars = 0;
     my $jmajlow = '-';
 
-    my $depends = $processable->relation('strong')->unparse;
+    my $depends = $processable->relation('strong')->to_string;
     # Remove all libX-java-doc packages to avoid thinking they are java libs
     #  - note the result may not be a valid dependency listing
     $depends =~ s/lib[^\s,]+-java-doc//g;

@@ -33,7 +33,7 @@ use List::Util qw(first none);
 use Path::Tiny;
 
 use Lintian::Deb822::Parser qw(parse_dpkg_control_string);
-use Lintian::Relation ();
+use Lintian::Relation;
 
 use Moo;
 use namespace::clean;
@@ -45,7 +45,7 @@ const my $EMPTY => q{};
 # The list of libc packages, used for checking for a hard-coded dependency
 # rather than using ${shlibs:Depends}.
 my @LIBCS = qw(libc6 libc6.1 libc0.1 libc0.3);
-my $LIBCS = Lintian::Relation->new(join(' | ', @LIBCS));
+my $LIBCS = Lintian::Relation->new->load(join(' | ', @LIBCS));
 
 sub source {
     my ($self) = @_;
@@ -222,9 +222,11 @@ sub source {
     ) {
         next
           unless $processable->debian_control->source_fields->declares($field);
+
         my $raw = $processable->debian_control->source_fields->value($field);
         my $rel;
-        $rel = Lintian::Relation->new($raw);
+
+        $rel = Lintian::Relation->new->load($raw);
         $self->check_relation('source', $field, $raw, $rel);
     }
 

@@ -4,6 +4,7 @@
 # Copyright © 1998 Christian Schwarz and Richard Braakman
 # Copyright © 2004-2009 Russ Allbery <rra@debian.org>
 # Copyright © 2018 Chris Lamb <lamby@debian.org>
+# Copyright © 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -24,6 +25,14 @@ use v5.20;
 use warnings;
 use utf8;
 
+use Const::Fast;
+use List::SomeUtils qw(any);
+
+use Lintian::Relation::Version qw(:all);
+
+use Moo;
+use namespace::clean;
+
 use constant {
     VISIT_PRED_NAME => 0,
     VISIT_PRED_FULL => 1,
@@ -31,24 +40,15 @@ use constant {
     VISIT_STOP_FIRST_MATCH => 4,
 };
 
-use Exporter qw(import);
-our (@EXPORT_OK, %EXPORT_TAGS);
-%EXPORT_TAGS = (
-    constants => [
-        qw(VISIT_PRED_NAME VISIT_PRED_FULL VISIT_OR_CLAUSE_FULL
-          VISIT_STOP_FIRST_MATCH)
-    ],
-);
-@EXPORT_OK = (@{ $EXPORT_TAGS{constants} });
-
-use List::SomeUtils qw(any);
-
-use Lintian::Relation::Version qw(:all);
-
-use Const::Fast;
-
 const my $EMPTY => q{};
 const my $SPACE => q{ };
+const my $COLON => q{:};
+const my $LEFT_PARENS => q{(};
+const my $RIGHT_PARENS => q{)};
+const my $LEFT_SQUARE => q{[};
+const my $RIGHT_SQUARE => q{]};
+const my $LEFT_ANGLE => q{<};
+const my $RIGHT_ANGLE => q{>};
 
 =head1 NAME
 
@@ -78,19 +78,17 @@ as specified in Policy for build dependencies, are supported and also
 checked in the implication logic unless the new_noarch() constructor is
 used.  With that constructor, architecture restrictions are ignored.
 
-=head1 CLASS METHODS
+=head1 INSTANCE METHODS
 
 =over 4
 
-=item new(RELATION)
+=item trunk
 
-Creates a new Lintian::Relation object corresponding to the parsed
-relationship RELATION.  This object can then be used to ask questions
-about that relationship.  RELATION may be C<undef> or the empty string, in
-which case the returned Lintian::Relation object is empty (always
-satisfied).
+=cut
 
-=item parse_element
+has trunk => (is => 'rw', default => sub { ['AND'] });
+
+=item create_element
 
 =cut
 
@@ -98,10 +96,11 @@ satisfied).
 # relationship into the parsed form used for later processing.  We permit
 # substvars to be used as package names so that we can use these routines with
 # the unparsed debian/control file.
-sub parse_element {
-    my ($class, $element) = @_;
+sub create_element {
+    my ($string) = @_;
+
     if (
-        not $element =~ m{
+        $string !~ m{
         ^\s*                            # skip leading whitespace
         (                               # package name or substvar (1)
          (?:                            #  start of the name
@@ -134,12 +133,13 @@ sub parse_element {
         )?                              # end of optional restriction
     \s* $}x
     ) {
-        # store the element as-is, so we can unparse it.
-        return ['PRED-UNPARSABLE', $element];
+        # store the element as-is, so we can reconstitute it later
+        return ['PRED-UNPARSABLE', $string];
     }
 
     my ($pkgname, $march, $relop, $relver, $bdarch, $restr)
       = ($1, $2, $3, $4, $5, $6);
+
     my @array;
     if (not defined($relop)) {
         # If there's no version, we don't need to do any further processing.
@@ -176,46 +176,43 @@ sub parse_element {
     return \@array;
 }
 
-# Singleton "empty-relation" object.  Since these objects are immutable,
-# there is no reason for having multiple "empty" objects.
-my $EMPTY_RELATION = bless(['AND'], 'Lintian::Relation');
+=item load (RELATION)
 
-# Create a new Lintian::Relation object, parsing the argument into our
-# internal format.
-sub new {
-    my ($class, $relation) = @_;
-    $relation = $EMPTY unless defined($relation);
-    my @result;
-    for my $element (split(/\s*,\s*/, $relation)) {
-        next if $element eq $EMPTY;
-        my @alternatives;
-        for my $alternative (split(/\s*\|\s*/, $element)) {
-            my $dep = $class->parse_element($alternative);
-            next if not $dep;
-            push(@alternatives, $dep);
-        }
-        if (@alternatives == 1) {
-            push(@result, @alternatives);
-        } else {
-            push(@result, ['OR', @alternatives]);
-        }
+Creates a new Lintian::Relation object corresponding to the parsed
+relationship RELATION.  This object can then be used to ask questions
+about that relationship.  RELATION may be C<undef> or the empty string, in
+which case the returned Lintian::Relation object is empty (always
+satisfied).
+
+=cut
+
+sub load {
+    my ($self, $condition) = @_;
+
+    $condition //= $EMPTY;
+
+    my @trunk = ('AND');
+
+    my @requirements = grep { length } split(/\s*,\s*/, $condition);
+    for my $requirement (@requirements) {
+
+        my @alternatives = split(/\s*\|\s*/, $requirement);
+        my @elements
+          = grep { defined } map { create_element($_) } @alternatives;
+
+        push(@trunk, @elements)
+          if @elements == 1;
+
+        push(@trunk, ['OR', @elements])
+          if @elements > 1;
     }
 
-    if ($class eq 'Lintian::Relation') {
-        return $EMPTY_RELATION if not @result;
-    }
+    $self->trunk(\@trunk);
 
-    my $self;
-    if (@result == 1) {
-        $self = $result[0];
-    } else {
-        $self = ['AND', @result];
-    }
-    bless($self, $class);
     return $self;
 }
 
-=item new_norestriction(RELATION)
+=item load_norestriction (RELATION)
 
 Creates a new Lintian::Relation object corresponding to the parsed
 relationship RELATION, ignoring architecture restrictions and restriction
@@ -230,24 +227,32 @@ Lintian::Relation object is empty (always satisfied).
 
 =cut
 
-sub new_norestriction {
-    my ($class, $relation) = @_;
-    $relation = $EMPTY unless defined($relation);
-    $relation =~ s/\[[^,\]]*\]//g;
+sub load_norestriction {
+    my ($self, $condition) = @_;
+
+    $condition //= $EMPTY;
+
+    $condition =~ s/\[[^,\]]*\]//g;
+
     # we have to make sure that the following does not match the less than
     # sign from a version comparison. We do this by doing a negative lookahead
     # and a negative lookbehind for the "opening" triangular bracket
-    $relation =~ s/(?<!<)<(?![<=])[^,]*>//g;
-    return $class->new($relation);
+    $condition =~ s/(?<!<)<(?![<=])[^,]*>//g;
+
+    return $self->load($condition);
 }
 
-=item new_noarch(RELATION)
+=item load_noarch (RELATION)
 
 An alias for new_norestriction.
 
 =cut
 
-*new_noarch = \&new_norestriction;
+sub load_noarch {
+    my ($self, $condition) = @_;
+
+    return $self->load_norestriction($condition);
+}
 
 =item logical_and(RELATION, ...)
 
@@ -262,46 +267,42 @@ are Lintian::Relation objects already.
 =cut
 
 sub logical_and {
-    my ($class, @args) = @_;
-    my (@result, $last_rel, $rels);
-    foreach my $arg (@args) {
-        my $rel = $arg;
-        unless ($arg && ref $arg eq 'Lintian::Relation') {
-            # Optimize out empty entries.
-            next unless $arg;
-            $rel = Lintian::Relation->new($arg);
-        }
-        next if $rel->empty;
-        ++$rels;
-        $last_rel = $rel;
-        if ($rel->[0] eq 'AND') {
-            my @r = @{$rel};
-            push @result, @r[1..$#r];
+    my ($self, @conditions) = @_;
+
+    my @tree = ('AND');
+
+    # make sure to add $self
+    for my $condition (@conditions, $self) {
+
+        my $relation;
+
+        if (ref $condition eq $EMPTY) {
+            # allow string conditions
+            $relation = Lintian::Relation->new->load($condition);
+
         } else {
-            push @result, $rel;
+            $relation = $condition;
+        }
+
+        next
+          if $relation->is_empty;
+
+        if ($tree[0] eq 'AND' && $relation->trunk->[0] eq 'AND') {
+
+            my @anded = @{$relation->trunk};
+            shift @anded;
+            push(@tree, @anded);
+
+        } else {
+            push(@tree, $relation->trunk);
         }
     }
 
-    if ($class eq 'Lintian::Relation') {
-        return $EMPTY_RELATION if not @result;
-        return $last_rel if $rels == 1;
-    }
+    my $created = Lintian::Relation->new;
+    $created->trunk(\@tree);
 
-    my $self;
-    if (@result == 1) {
-        $self = $result[0];
-    } else {
-        $self = ['AND', @result];
-    }
-    bless($self, $class);
-    return $self;
+    return $created;
 }
-
-=back
-
-=head1 INSTANCE METHODS
-
-=over 4
 
 =item duplicates()
 
@@ -318,10 +319,9 @@ implication may not hold.
 sub duplicates {
     my ($self) = @_;
 
-    # There are no duplicates unless the top-level relationship is AND.
-    if ($self->[0] ne 'AND') {
-        return ();
-    }
+    # there are no duplicates unless the top-level relationship is AND.
+    return ()
+      unless $self->trunk->[0] eq 'AND';
 
     # The logic here is a bit complex in order to merge sets of duplicate
     # dependencies.  We want foo (<< 2), foo (>> 1), foo (= 1.5) to end up as
@@ -336,7 +336,7 @@ sub duplicates {
     # new one.
     my (%dups, %seen);
 
-    my @remaining = @{$self};
+    my @remaining = @{$self->trunk};
 
     # discard AND identifier
     shift @remaining;
@@ -354,8 +354,8 @@ sub duplicates {
             my $reverse = implies_array($branch_j, $branch_i);
 
             if ($forward or $reverse) {
-                my $one = $self->unparse($branch_i);
-                my $two = $self->unparse($branch_j);
+                my $one = $self->to_string($branch_i);
+                my $two = $self->to_string($branch_j);
 
                 if ($seen{$one}) {
                     $dups{$seen{$one}}{$two} = $j;
@@ -386,31 +386,19 @@ sub duplicates {
     } keys %dups;
 }
 
-=item restriction_less()
+=item restriction_less
 
-Returns a restriction-less variant of this relation (or this relation
-object if it has no restrictions).
+Returns a restriction-less variant of this relation.
 
 =cut
 
 sub restriction_less {
     my ($self) = @_;
-    my @worklist = ($self);
-    my $has_restrictions = 0;
-    while (my $current = pop(@worklist)) {
-        my $rel_type = $current->[0];
-        if ($rel_type eq 'PRED') {
-            if (defined($current->[4]) or defined($current->[6])) {
-                $has_restrictions = 1;
-                last;
-            }
-            next;
-        }
-        next if $rel_type eq 'PRED-UNPARSABLE';
-        push(@worklist, @{$current}[1 .. $#{$current}]);
-    }
-    return $self if not $has_restrictions;
-    return Lintian::Relation->new_norestriction($self->unparse);
+
+    my $unrestricted
+      = Lintian::Relation->new->load_norestriction($self->to_string);
+
+    return $unrestricted;
 }
 
 =item implies(RELATION)
@@ -747,11 +735,18 @@ sub implies_array {
 
 # The public interface.
 sub implies {
-    my ($self, $relation) = @_;
-    if (ref($relation) ne 'Lintian::Relation') {
-        $relation = Lintian::Relation->new($relation);
+    my ($self, $condition) = @_;
+
+    my $relation;
+    if (ref $condition eq $EMPTY) {
+        # allow string conditions
+        $relation = Lintian::Relation->new->load($condition);
+
+    } else {
+        $relation = $condition;
     }
-    return implies_array($self, $relation) // 0;
+
+    return implies_array($self->trunk, $relation->trunk) // 0;
 }
 
 =item implies_inverse(RELATION)
@@ -842,14 +837,21 @@ sub implies_array_inverse {
 
 # The public interface.
 sub implies_inverse {
-    my ($self, $relation) = @_;
-    if (ref($relation) ne 'Lintian::Relation') {
-        $relation = Lintian::Relation->new($relation);
+    my ($self, $condition) = @_;
+
+    my $relation;
+    if (ref $condition eq $EMPTY) {
+        # allow string conditions
+        $relation = Lintian::Relation->new->load($condition);
+
+    } else {
+        $relation = $condition;
     }
-    return implies_array_inverse($self, $relation) // 0;
+
+    return implies_array_inverse($self->trunk, $relation->trunk) // 0;
 }
 
-=item unparse()
+=item to_string
 
 Returns the textual form of a relationship.  This converts the internal
 form back into the textual representation and returns that, not the
@@ -859,43 +861,58 @@ internal failures (such as an object in an unexpected format).
 =cut
 
 # The second argument isn't part of the public API.  It's a partial relation
-# that's not a blessed object and is used by unparse() internally so that it
+# that's not a blessed object and is used by to_string() internally so that it
 # can recurse.
 #
 # We also support a NOT predicate.  This currently isn't ever generated by a
 # regular relation, but it may someday be useful.
-sub unparse {
-    my ($self, $partial) = @_;
-    my $relation = defined($partial) ? $partial : $self;
-    my $rel_type = $relation->[0];
-    if ($rel_type eq 'PRED') {
-        my $text = $relation->[1];
-        if (defined $relation->[5]) {
-            $text .= ":$relation->[5]";
-        }
-        if (defined $relation->[2]) {
-            $text .= " ($relation->[2] $relation->[3])";
-        }
-        if (defined $relation->[4]) {
-            $text .= " [$relation->[4]]";
-        }
-        if (defined $relation->[6]) {
-            $text .= " <$relation->[6]>";
-        }
-        return $text;
-    } elsif ($rel_type eq 'AND' || $rel_type eq 'OR') {
-        my $separator = ($relation->[0] eq 'AND') ? ', ' : ' | ';
-        return join($separator,
-            map {$self->unparse($_);} @{$relation}[1 .. $#{$relation}]);
-    } elsif ($rel_type eq 'NOT') {
-        return '! ' . $self->unparse($relation->[1]);
-    } elsif ($rel_type eq 'PRED-UNPARSABLE') {
-        # Return the original value
-        return $relation->[1];
+sub to_string {
+    my ($self, $branch) = @_;
+
+    my $tree = $branch // $self->trunk;
+
+    my $text;
+    if ($tree->[0] eq 'PRED') {
+
+        $text = $tree->[1];
+
+        $text .= $COLON . $tree->[5]
+          if length $tree->[5];
+
+        $text
+          .= $SPACE
+          . $LEFT_PARENS
+          . $tree->[2]
+          . $SPACE
+          . $tree->[3]
+          . $RIGHT_PARENS
+          if length $tree->[2];
+
+        $text .= $SPACE . $LEFT_SQUARE . $tree->[4] . $RIGHT_SQUARE
+          if length $tree->[4];
+
+        $text .= $SPACE . $LEFT_ANGLE . $tree->[6] . $RIGHT_ANGLE
+          if length $tree->[6];
+
+    } elsif ($tree->[0] eq 'AND' || $tree->[0] eq 'OR') {
+
+        my $connector = ($tree->[0] eq 'AND') ? ', ' : ' | ';
+        my @separated = map { $self->to_string($_) } @{$tree}[1 .. $#{$tree}];
+        $text = join($connector, @separated);
+
+    } elsif ($tree->[0] eq 'NOT') {
+        $text = '! ' . $self->to_string($tree->[1]);
+
+    } elsif ($tree->[0] eq 'PRED-UNPARSABLE') {
+        # return the original value
+        $text = $tree->[1];
+
     } else {
         require Carp;
-        Carp::confess("Case $relation->[0] not implemented");
+        Carp::confess("Case $tree->[0] not implemented");
     }
+
+    return $text;
 }
 
 =item matches (REGEX[, WHAT])
@@ -1005,12 +1022,12 @@ architecture part(s) are left out (if any).
 =item VISIT_PRED_FULL
 
 The full predicates are visited in turn.  The predicate will be
-normalized (by L</unparse>).
+normalized (by L</to_string>).
 
 =item VISIT_OR_CLAUSE_FULL
 
 CODE will be passed the full OR clauses of this relation.  The clauses
-will be normalized (by L</unparse>)
+will be normalized (by L</to_string>)
 
 Note: It will not visit the underlying predicates in the clause.
 
@@ -1033,24 +1050,33 @@ relation).
 # internally so that it can recurse.
 
 sub visit {
-    my ($self, $code, $flags, $partial) = @_;
-    my $relation = $partial // $self;
-    my $rel_type = $relation->[0];
+    my ($self, $code, $flags, $branch) = @_;
+
+    my $tree = $branch // $self->trunk;
+    my $rel_type = $tree->[0];
+
     $flags //= 0;
+
     if ($rel_type eq 'PRED') {
-        my $against = $relation->[1];
-        $against = $self->unparse($relation) if $flags & VISIT_PRED_FULL;
+        my $against = $tree->[1];
+        $against = $self->to_string($tree)
+          if $flags & VISIT_PRED_FULL;
+
         local $_ = $against;
         return scalar $code->($against);
+
     } elsif (($flags & VISIT_OR_CLAUSE_FULL) == VISIT_OR_CLAUSE_FULL
         and $rel_type eq 'OR') {
-        my $against = $self->unparse($relation);
+
+        my $against = $self->to_string($tree);
+
         local $_ = $against;
         return scalar $code->($against);
     } elsif ($rel_type eq 'AND'
         or $rel_type eq 'OR'
         or $rel_type eq 'NOT') {
-        for my $rel (@{$relation}[1 .. $#{$relation}]) {
+
+        for my $rel (@{$tree}[1 .. $#{$tree}]) {
             my $ret = scalar $self->visit($code, $flags, $rel);
             if ($ret && ($flags & VISIT_STOP_FIRST_MATCH)) {
                 return $ret;
@@ -1062,16 +1088,19 @@ sub visit {
     return 0;
 }
 
-=item empty
+=item is_empty
 
 Returns a truth value if this relation is empty (i.e. it contains no
 predicates).
 
 =cut
 
-sub empty {
+sub is_empty {
     my ($self) = @_;
-    return 1 if $self->[0] eq 'AND' and not $self->[1];
+
+    return 1
+      if $self->trunk->[0] eq 'AND' && !$self->trunk->[1];
+
     return 0;
 }
 
@@ -1086,8 +1115,10 @@ sorted by said representation.
 
 sub unparsable_predicates {
     my ($self) = @_;
-    my @worklist = ($self);
+
+    my @worklist = ($self->trunk);
     my @unparsable;
+
     while (my $current = pop(@worklist)) {
         my $rel_type = $current->[0];
         next if $rel_type eq 'PRED';
@@ -1097,8 +1128,10 @@ sub unparsable_predicates {
         }
         push(@worklist, @{$current}[1 .. $#{$current}]);
     }
-    @unparsable = sort(@unparsable);
-    return @unparsable;
+
+    my @sorted = sort @unparsable;
+
+    return @sorted;
 }
 
 =back

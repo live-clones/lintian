@@ -19,17 +19,19 @@ test_relation(
         '_gf',     # OR relation
     ],
     'unparsable' => ['_gf', 'pkg%any (>= 1.0)'],
-    'unparsed' => 'pkg%any (>= 1.0), pkgB | _gf, pkgC (>= 2.0)'
+    'reconstituted' => 'pkg%any (>= 1.0), pkgB | _gf, pkgC (>= 2.0)'
 );
 
 done_testing;
 
 sub test_relation {
     my ($str, %tests) = @_;
-    my $rel = Lintian::Relation->new($str);
+
+    my $rel = Lintian::Relation->new->load($str);
+
     my $tests = 0;
-    if (my $unparsed = $tests{'unparsed'}) {
-        is($rel->unparse, $unparsed, "Unparse $str");
+    if (my $reconstituted = $tests{'reconstituted'}) {
+        is($rel->to_string, $reconstituted, "Reconstitute $str");
         $tests++;
     }
     if (my $implications = $tests{'implied'}) {

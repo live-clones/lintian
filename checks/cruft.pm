@@ -38,7 +38,7 @@ use File::Basename qw(basename);
 use List::SomeUtils qw(any first_value);
 use Path::Tiny;
 
-use Lintian::Relation ();
+use Lintian::Relation;
 use Lintian::Util qw(normalize_pkg_path open_gz);
 use Lintian::SlidingWindow;
 
@@ -422,7 +422,7 @@ my @file_checks = (
 
 # Check if the package build-depends on autotools-dev, automake,
 # or libtool.
-my $LIBTOOL = Lintian::Relation->new('libtool | dh-autoreconf');
+my $LIBTOOL = Lintian::Relation->new->load('libtool | dh-autoreconf');
 has libtool_in_build_depends => (
     is => 'rw',
     lazy => 1,

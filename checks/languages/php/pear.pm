@@ -27,8 +27,6 @@ use autodie;
 
 use List::SomeUtils qw(none);
 
-use Lintian::Relation;
-
 use Moo;
 use namespace::clean;
 

@@ -32,7 +32,7 @@ use List::SomeUtils qw(any firstval);
 use List::UtilsBy qw(min_by);
 use Text::LevenshteinXS qw(distance);
 
-use Lintian::Relation qw(:constants);
+use Lintian::Relation;
 
 use Moo;
 use namespace::clean;
@@ -48,7 +48,7 @@ const my $UNDERSCORE => q{_};
 # from that derive the compatibility level....
 my $cdbscompat = 5;
 
-my $MISC_DEPENDS = Lintian::Relation->new('${misc:Depends}');
+my $MISC_DEPENDS = Lintian::Relation->new->load('${misc:Depends}');
 
 sub source {
     my ($self) = @_;
@@ -392,7 +392,9 @@ sub source {
         $self->hint('debhelper-compat-virtual-relation', $compatvirtual);
         return 1;
     };
-    $bdepends->visit($visit, VISIT_PRED_FULL | VISIT_STOP_FIRST_MATCH);
+    $bdepends->visit($visit,
+        Lintian::Relation::VISIT_PRED_FULL
+          | Lintian::Relation::VISIT_STOP_FIRST_MATCH);
 
     # Check the compat file.  Do this separately from looping over all
     # of the other files since we use the compat value when checking

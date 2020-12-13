@@ -70,7 +70,7 @@ my %valid_priorities = map { $_ => 1 } qw(low medium high critical);
 
 # All the packages that provide debconf functionality.  Anything using debconf
 # needs to have dependencies that satisfy one of these.
-my $ANY_DEBCONF = Lintian::Relation->new(
+my $ANY_DEBCONF = Lintian::Relation->new->load(
     join(
         ' | ', qw(debconf debconf-2.0 cdebconf
           cdebconf-udeb libdebconfclient0 libdebconfclient0-udeb)
@@ -174,11 +174,9 @@ sub installable {
     # Include self and provides as a package providing debconf presumably
     # satisfies its own use of debconf (if any).
     my $selfrelation
-      = Lintian::Relation->logical_and(
-        $self->processable->relation('Provides'),$selfrel);
+      = $self->processable->relation('Provides')->logical_and($selfrel);
     my $alldependencies
-      = Lintian::Relation->logical_and($self->processable->relation('strong'),
-        $selfrelation);
+      = $self->processable->relation('strong')->logical_and($selfrelation);
 
     # See if the package depends on dbconfig-common.  Packages that do
     # are allowed to have a config file with no templates, since they

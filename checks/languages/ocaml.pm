@@ -29,8 +29,6 @@ use Const::Fast;
 use File::Basename;
 use Path::Tiny;
 
-use Lintian::Relation ();
-
 use Moo;
 use namespace::clean;
 

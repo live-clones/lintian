@@ -29,7 +29,7 @@ use autodie;
 use Const::Fast;
 use List::SomeUtils qw(any none);
 
-use Lintian::Relation qw(:constants);
+use Lintian::Relation;
 use Lintian::Relation::Version qw(versions_lte);
 
 use Moo;
@@ -203,8 +203,9 @@ sub installable {
     my $pkg = $self->processable->name;
     my $processable = $self->processable;
 
-    my $deps = Lintian::Relation->logical_and($processable->relation('all'),
-        $processable->relation('Provides'), $pkg);
+    my $deps = $processable->relation('all')
+      ->logical_and($processable->relation('Provides'), $pkg);
+
     my @entries
       = $processable->changelog
       ? @{$processable->changelog->entries}
@@ -282,7 +283,8 @@ sub installable {
                         "$field: $rel"
                     ) if /^$prefix-/;
                 };
-                $processable->relation($field)->visit($visit, VISIT_PRED_NAME);
+                $processable->relation($field)
+                  ->visit($visit, Lintian::Relation::VISIT_PRED_NAME);
             }
         }
     }

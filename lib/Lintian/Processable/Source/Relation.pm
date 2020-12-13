@@ -124,17 +124,18 @@ sub binary_relation {
 
         if (length $alias{$lowercase}) {
             $relation
-              = Lintian::Relation->logical_and(
+              = Lintian::Relation->new->logical_and(
                 map { $self->binary_relation($package, $_) }
                   @{ $alias{$lowercase} });
 
         } else {
             croak encode_utf8("unknown relation field $name")
               unless $known{$lowercase};
+
             my $value
               = $self->debian_control->installable_fields($package)
               ->value($name);
-            $relation = Lintian::Relation->new($value);
+            $relation = Lintian::Relation->new->load($value);
         }
 
         $self->saved_binary_relations->{$package}{$lowercase} = $relation;
@@ -191,12 +192,12 @@ sub relation {
             my @fields
               = ("Build-$type", "Build-$type-Indep", "Build-$type-Arch");
             $relation
-              = Lintian::Relation->logical_and(map { $self->relation($_) }
+              = Lintian::Relation->new->logical_and(map { $self->relation($_) }
                   @fields);
 
         } elsif ($name =~ /^Build-(Depends|Conflicts)(?:-(?:Arch|Indep))?$/i){
             my $value = $self->fields->value($name);
-            $relation = Lintian::Relation->new($value);
+            $relation = Lintian::Relation->new->load($value);
 
         } else {
             croak encode_utf8("unknown relation field $name");

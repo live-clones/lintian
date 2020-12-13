@@ -29,7 +29,7 @@ use warnings;
 use utf8;
 use autodie;
 
-use Lintian::Relation qw(:constants);
+use Lintian::Relation;
 use Lintian::Util qw($PKGNAME_REGEX $PKGVERSION_REGEX);
 
 use Moo;
@@ -47,7 +47,7 @@ sub always {
 
     my $built_using = $processable->fields->value('Built-Using');
 
-    my $built_using_rel = Lintian::Relation->new($built_using);
+    my $built_using_rel = Lintian::Relation->new->load($built_using);
     $built_using_rel->visit(
         sub {
             if ($_ !~ /^$PKGNAME_REGEX \(= $PKGVERSION_REGEX\)$/) {
@@ -56,7 +56,8 @@ sub always {
             }
             return 0;
         },
-        VISIT_OR_CLAUSE_FULL | VISIT_STOP_FIRST_MATCH
+        Lintian::Relation::VISIT_OR_CLAUSE_FULL
+          | Lintian::Relation::VISIT_STOP_FIRST_MATCH
     );
 
     return;

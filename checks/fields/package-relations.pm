@@ -34,7 +34,7 @@ use Const::Fast;
 use Dpkg::Version qw(version_check);
 use List::SomeUtils qw(any);
 
-use Lintian::Relation qw(:constants);
+use Lintian::Relation;
 
 use Moo;
 use namespace::clean;
@@ -634,9 +634,8 @@ sub source {
         ['Build-Depends', 'Build-Depends-Arch']);
 
     for my $fields (@to_check) {
-        my $relation
-          = Lintian::Relation->logical_and(map { $processable->relation($_) }
-              @{$fields});
+        my $relation = Lintian::Relation->new->logical_and(
+            map { $processable->relation($_) }@{$fields});
         my @dups = $relation->duplicates;
         for my $dup (@dups) {
             $self->hint('package-has-a-duplicate-build-relation',
@@ -674,12 +673,14 @@ sub source {
     for my $dbg_proc (@dbg_pkgs) {
         my $deps = $processable->binary_relation($dbg_proc->name, 'strong');
         my $missing = 1;
-        $missing = 0 if $deps->matches($depregex, VISIT_PRED_NAME);
+        $missing = 0
+          if $deps->matches($depregex, Lintian::Relation::VISIT_PRED_NAME);
         if ($missing and $dbg_proc->is_pkg_class('transitional')) {
             # If it is a transitional package, allow it to depend
             # on another -dbg instead.
             $missing = 0
-              if $deps->matches(qr/-dbg \Z/xsm, VISIT_PRED_NAME);
+              if $deps->matches(qr/-dbg \Z/xsm,
+                Lintian::Relation::VISIT_PRED_NAME);
         }
         $self->hint('dbg-package-missing-depends', $dbg_proc->name)
           if $missing;
@@ -697,8 +698,9 @@ sub source {
     # matches() instead of implies() because of possible OR relation
     $self->hint('libmodule-build-perl-needs-to-be-in-build-depends')
       if $processable->relation('Build-Depends-Indep')
-      ->equals('libmodule-build-perl', VISIT_PRED_NAME)
-      && !$bdepends->equals('libmodule-build-perl', VISIT_PRED_NAME);
+      ->equals('libmodule-build-perl', Lintian::Relation::VISIT_PRED_NAME)
+      && !$bdepends->equals('libmodule-build-perl',
+        Lintian::Relation::VISIT_PRED_NAME);
 
     # libmodule-build-tiny-perl
     $self->hint('libmodule-build-tiny-perl-needs-to-be-in-build-depends')
@@ -753,13 +755,14 @@ sub check_field {
     my $processable = $self->processable;
 
     my $has_default_mta
-      = $processable->relation($field)->equals('default-mta', VISIT_PRED_NAME);
+      = $processable->relation($field)
+      ->equals('default-mta', Lintian::Relation::VISIT_PRED_NAME);
     my $has_mail_transport_agent = $processable->relation($field)
-      ->equals('mail-transport-agent', VISIT_PRED_NAME);
+      ->equals('mail-transport-agent', Lintian::Relation::VISIT_PRED_NAME);
 
     $self->hint('default-mta-dependency-not-listed-first',"$field: $data")
       if $processable->relation($field)
-      ->matches(qr/\|\s+default-mta/, VISIT_OR_CLAUSE_FULL);
+      ->matches(qr/\|\s+default-mta/, Lintian::Relation::VISIT_OR_CLAUSE_FULL);
 
     if ($has_default_mta) {
         $self->hint(

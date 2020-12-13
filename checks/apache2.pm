@@ -28,7 +28,7 @@ use autodie;
 
 use File::Basename;
 
-use Lintian::Relation qw(:constants);
+use Lintian::Relation;
 
 use Moo;
 use namespace::clean;
@@ -123,9 +123,8 @@ sub check_web_application_package {
       if $webapp ne "$pkg.conf"
       or $webapp =~ m/^local-./;
 
-    my $rel = Lintian::Relation->logical_and(
-        $processable->relation('strong'),
-        $processable->relation('Recommends'));
+    my $rel = $processable->relation('strong')
+      ->logical_and($processable->relation('Recommends'));
 
     # A web application must not depend on apache2-whatever
     my $visit = sub {
@@ -135,7 +134,7 @@ sub check_web_application_package {
         }
         return 0;
     };
-    $rel->visit($visit, VISIT_STOP_FIRST_MATCH);
+    $rel->visit($visit, Lintian::Relation::VISIT_STOP_FIRST_MATCH);
 
     # ... nor on apache2 only. Moreover, it should be in the form
     # apache2 | httpd but don't worry about versions, virtual package
@@ -168,9 +167,9 @@ sub check_module_package {
             $pkg, '!=',$expected_name);
     }
 
-    $rel = Lintian::Relation->logical_and(
-        $processable->relation('strong'),
-        $processable->relation('Recommends'));
+    $rel = $processable->relation('strong')
+      ->logical_and($processable->relation('Recommends'));
+
     if (!$rel->matches(qr/^apache2-api-\d+$/)) {
         $self->hint('apache2-module-does-not-depend-on-apache2-api');
     }

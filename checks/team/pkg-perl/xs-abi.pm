@@ -28,7 +28,7 @@ use utf8;
 
 use Dpkg::Version;
 
-use Lintian::Relation qw(:constants);
+use Lintian::Relation;
 
 use Moo;
 use namespace::clean;
@@ -59,7 +59,8 @@ sub setup_installed_files {
 
             return;
         },
-        VISIT_OR_CLAUSE_FULL | VISIT_STOP_FIRST_MATCH
+        Lintian::Relation::VISIT_OR_CLAUSE_FULL
+          | Lintian::Relation::VISIT_STOP_FIRST_MATCH
     );
 
     return

@@ -195,7 +195,7 @@ sub check_control_paragraph {
         # trim both sides
         $depends =~ s/^\s+|\s+$//g;
 
-        my $relation = Lintian::Relation->new($depends);
+        my $relation = Lintian::Relation->new->load($depends);
 
         # autopkgtest allows @ as predicate as an exception
         my @unparsable = grep { !exists $KNOWN_SPECIAL_DEPENDS{$_} }

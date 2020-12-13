@@ -2,8 +2,10 @@
 
 use strict;
 use warnings;
-use Lintian::Relation;
+
 use Test::More;
+
+use Lintian::Relation;
 
 my @TESTS = (
     # A, B, A->I(B), A->I_I(B), B->I(A), B->I_I(A), line
@@ -22,8 +24,11 @@ plan tests => scalar(@TESTS) * 4;
 
 for my $test (@TESTS) {
     my ($a_raw, $b_raw, $a_i_b, $a_ii_b, $b_i_a, $b_ii_a, $lno) = @{$test};
-    my $relation_a = Lintian::Relation->new($a_raw);
-    my $relation_b = Lintian::Relation->new($b_raw);
+
+    my $relation_a = Lintian::Relation->new->load($a_raw);
+
+    my $relation_b = Lintian::Relation->new->load($b_raw);
+
     is($relation_a->implies($relation_b),
         $a_i_b, "$a_raw implies $b_raw (case 1, line $lno)");
     is($relation_a->implies_inverse($relation_b),

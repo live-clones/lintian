@@ -115,13 +115,14 @@ sub relation {
 
         if (exists $alias{$lowercase}) {
             $relation
-              = Lintian::Relation->logical_and(map { $self->relation($_) }
+              = Lintian::Relation->new->logical_and(map { $self->relation($_) }
                   @{ $alias{$lowercase} });
         } else {
             croak encode_utf8("unknown relation field $name")
               unless $known{$lowercase};
+
             my $value = $self->fields->value($name);
-            $relation = Lintian::Relation->new($value);
+            $relation = Lintian::Relation->new->load($value);
         }
 
         $self->saved_relations->{$lowercase} = $relation;
