@@ -52,6 +52,7 @@ use Lintian::Version qw(guess_version);
 
 const my $EMPTY => q{};
 const my $SPACE => q{ };
+const my $NEW_PROGRAM_NAME => q{lintian-annotate-hints};
 
 if (my $coverage_arg = $ENV{'LINTIAN_COVERAGE'}) {
     my $p5opt = $ENV{'PERL5OPT'}//$EMPTY;
@@ -188,14 +189,14 @@ sub show_version {
     die encode_utf8('Unable to determine the version automatically!?')
       unless length $version;
 
-    say encode_utf8("annotate-lintian-hints v$version");
+    say encode_utf8("$NEW_PROGRAM_NAME v$version");
     exit;
 }
 
 sub show_help {
     my $message =<<"EOT";
-Usage: annotate-lintian-hints [log-file...] ...
-       annotate-lintian-hints --annotate [overrides ...]
+Usage: $NEW_PROGRAM_NAME [log-file...] ...
+       $NEW_PROGRAM_NAME --annotate [overrides ...]
 
 Options:
     -a, --annotate     display descriptions of tags in Lintian overrides

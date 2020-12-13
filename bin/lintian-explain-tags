@@ -55,6 +55,7 @@ use Lintian::Version qw(guess_version);
 
 const my $EMPTY => q{};
 const my $SPACE => q{ };
+const my $NEW_PROGRAM_NAME => q{lintian-explain-tags};
 
 if (my $coverage_arg = $ENV{'LINTIAN_COVERAGE'}) {
     my $p5opt = $ENV{'PERL5OPT'}//$EMPTY;
@@ -159,14 +160,14 @@ sub show_version {
     die encode_utf8('Unable to determine the version automatically!?')
       unless length $version;
 
-    say encode_utf8("annotate-lintian-hints v$version");
+    say encode_utf8("$NEW_PROGRAM_NAME v$version");
     exit;
 }
 
 sub show_help {
     my $message =<<"EOT";
-Usage: explain-lintian-tags [log-file...] ...
-       explain-lintian-tags [--tags] tag ...
+Usage: $NEW_PROGRAM_NAME [log-file...] ...
+       $NEW_PROGRAM_NAME [--tags] tag ...
 
 Options:
     -l, --list-tags    list all tags Lintian knows about
