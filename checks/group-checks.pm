@@ -87,13 +87,15 @@ sub check_file_overlap {
     my @remaining = @processables;
 
     # avoids checking the same combo twice
-    while(defined(my $one = shift @remaining)) {
+    while (@remaining > 1) {
+
+        # avoids checking the same combo twice
+        my $one = shift @remaining;
 
         my @provides_one = $one->fields->trimmed_list('Provides', qr{,});
         my $relation_one
           = Lintian::Relation->new(join(' |̈́ ', $one->name, @provides_one));
 
-        # avoids checking the same combo twice
         for my $two (@remaining) {
 
             # poor man's work-around for "Multi-arch: same"
