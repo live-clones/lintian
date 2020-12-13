@@ -337,8 +337,8 @@ sub duplicates {
         my $self_i = $self->[$i];
         for (my $j = $i + 1; $j < @{$self}; $j++) {
             my $self_j = $self->[$j];
-            my $forward = $self->implies_array($self_i, $self_j);
-            my $reverse = $self->implies_array($self_j, $self_i);
+            my $forward = implies_array($self_i, $self_j);
+            my $reverse = implies_array($self_j, $self_i);
 
             if ($forward or $reverse) {
                 my $one = $self->unparse($self_i);
@@ -419,7 +419,7 @@ RELATION instead of the string.
 # actually implies not q), return 0.  Otherwise, return undef.  The 0 return
 # is used by implies_element_inverse.
 sub implies_element {
-    my ($self, $p, $q) = @_;
+    my ($p, $q) = @_;
 
     # If the names don't match, there is no relationship between them.
 
@@ -641,33 +641,33 @@ sub implies_element {
 # This internal function does the heavy of AND, OR, and NOT logic.  It expects
 # two references to arrays instead of an object and a relation.
 sub implies_array {
-    my ($self, $p, $q) = @_;
+    my ($p, $q) = @_;
     my $i;
     my $q0 = $q->[0];
     my $p0 = $p->[0];
     if ($q0 eq 'PRED') {
         if ($p0 eq 'PRED') {
-            return $self->implies_element($p, $q);
+            return implies_element($p, $q);
         } elsif ($p0 eq 'AND') {
             $i = 1;
             while ($i < @{$p}) {
-                return 1 if $self->implies_array($p->[$i++], $q);
+                return 1 if implies_array($p->[$i++], $q);
             }
             return 0;
         } elsif ($p0 eq 'OR') {
             $i = 1;
             while ($i < @{$p}) {
-                return 0 if not $self->implies_array($p->[$i++], $q);
+                return 0 if not implies_array($p->[$i++], $q);
             }
             return 1;
         } elsif ($p0 eq 'NOT') {
-            return $self->implies_array_inverse($p->[1], $q);
+            return implies_array_inverse($p->[1], $q);
         }
     } elsif ($q0 eq 'AND') {
         # Each of q's clauses must be deduced from p.
         $i = 1;
         while ($i < @{$q}) {
-            return 0 if not $self->implies_array($p, $q->[$i++]);
+            return 0 if not implies_array($p, $q->[$i++]);
         }
         return 1;
     } elsif ($q0 eq 'OR') {
@@ -687,13 +687,13 @@ sub implies_array {
         if ($p0 eq 'PRED') {
             $i = 1;
             while ($i < @{$q}) {
-                return 1 if $self->implies_array($p, $q->[$i++]);
+                return 1 if implies_array($p, $q->[$i++]);
             }
             return 0;
         } elsif ($p0 eq 'AND') {
             $i = 1;
             while ($i < @{$p}) {
-                return 1 if $self->implies_array($p->[$i++], $q);
+                return 1 if implies_array($p->[$i++], $q);
             }
             return 0;
         } elsif ($p0 eq 'OR') {
@@ -701,7 +701,7 @@ sub implies_array {
                 my $j = 1;
                 my $satisfies = 0;
                 while ($j < @{$q}) {
-                    if ($self->implies_array($p->[$i], $q->[$j++])) {
+                    if (implies_array($p->[$i], $q->[$j++])) {
                         $satisfies = 1;
                         last;
                     }
@@ -710,13 +710,13 @@ sub implies_array {
             }
             return 1;
         } elsif ($p->[0] eq 'NOT') {
-            return $self->implies_array_inverse($p->[1], $q);
+            return implies_array_inverse($p->[1], $q);
         }
     } elsif ($q0 eq 'NOT') {
         if ($p0 eq 'NOT') {
-            return $self->implies_array($q->[1], $p->[1]);
+            return implies_array($q->[1], $p->[1]);
         }
-        return $self->implies_array_inverse($p, $q->[1]);
+        return implies_array_inverse($p, $q->[1]);
     } elsif ($q0 eq 'PRED-UNPARSABLE') {
         # Assume eqv. holds for unparsable elements.
         return 1 if $p0 eq $q0 and $p->[1] eq $q->[1];
@@ -730,7 +730,7 @@ sub implies {
     if (ref($relation) ne 'Lintian::Relation') {
         $relation = Lintian::Relation->new($relation);
     }
-    return $self->implies_array($self, $relation) // 0;
+    return implies_array($self, $relation) // 0;
 }
 
 =item implies_inverse(RELATION)
@@ -756,8 +756,8 @@ and pass that in as RELATION instead of the string.
 # implies not a.)  Due to the return value of implies_element(), we can let it
 # do most of the work.
 sub implies_element_inverse {
-    my ($self, $p, $q) = @_;
-    my $result = $self->implies_element($p, $q);
+    my ($p, $q) = @_;
+    my $result = implies_element($p, $q);
 
     return undef
       if not defined($result);
@@ -774,46 +774,46 @@ sub implies_element_inverse {
 # returns true iff the falsehood of the second can be deduced from the truth
 # of the first.
 sub implies_array_inverse {
-    my ($self, $p, $q) = @_;
+    my ($p, $q) = @_;
     my $i;
     my $q0 = $q->[0];
     my $p0 = $p->[0];
     if ($q0 eq 'PRED') {
         if ($p0 eq 'PRED') {
-            return $self->implies_element_inverse($p, $q);
+            return implies_element_inverse($p, $q);
         } elsif ($p0 eq 'AND') {
             # q's falsehood can be deduced from any of p's clauses
             $i = 1;
             while ($i < @{$p}) {
-                return 1 if $self->implies_array_inverse($p->[$i++], $q);
+                return 1 if implies_array_inverse($p->[$i++], $q);
             }
             return 0;
         } elsif ($p0 eq 'OR') {
             # q's falsehood must be deduced from each of p's clauses
             $i = 1;
             while ($i < @{$p}) {
-                return 0 if not $self->implies_array_inverse($p->[$i++], $q);
+                return 0 if not implies_array_inverse($p->[$i++], $q);
             }
             return 1;
         } elsif ($p0 eq 'NOT') {
-            return $self->implies_array($q, $p->[1]);
+            return implies_array($q, $p->[1]);
         }
     } elsif ($q0 eq 'AND') {
         # Any of q's clauses must be falsified by p.
         $i = 1;
         while ($i < @{$q}) {
-            return 1 if $self->implies_array_inverse($p, $q->[$i++]);
+            return 1 if implies_array_inverse($p, $q->[$i++]);
         }
         return 0;
     } elsif ($q0 eq 'OR') {
         # Each of q's clauses must be falsified by p.
         $i = 1;
         while ($i < @{$q}) {
-            return 0 if not $self->implies_array_inverse($p, $q->[$i++]);
+            return 0 if not implies_array_inverse($p, $q->[$i++]);
         }
         return 1;
     } elsif ($q0 eq 'NOT') {
-        return $self->implies_array($p, $q->[1]);
+        return implies_array($p, $q->[1]);
     }
 
     return 0;
@@ -825,7 +825,7 @@ sub implies_inverse {
     if (ref($relation) ne 'Lintian::Relation') {
         $relation = Lintian::Relation->new($relation);
     }
-    return $self->implies_array_inverse($self, $relation) // 0;
+    return implies_array_inverse($self, $relation) // 0;
 }
 
 =item unparse()
