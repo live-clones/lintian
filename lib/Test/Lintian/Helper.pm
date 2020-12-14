@@ -104,14 +104,14 @@ sub get_latest_policy {
     my $profile = Lintian::Profile->new;
     $profile->load(undef, [$ENV{'LINTIAN_BASE'}]);
 
-    my $STANDARDS = $profile->policy_releases;
-    my @STANDARDS = reverse sort { $a->[1] <=> $b->[1] }
-      map { [$_, $STANDARDS->value($_)] } $STANDARDS->all;
+    my $releases = $profile->policy_releases;
 
-    my $version = $STANDARDS[0][0]
-      // die encode_utf8('Could not get latest policy version.');
-    my $epoch = $STANDARDS[0][1]
-      // die encode_utf8('Could not get latest policy date.');
+    my $version = $releases->latest_version;
+    die encode_utf8('Could not get latest policy version.')
+      unless defined $version;
+    my $epoch = $releases->epoch($version);
+    die encode_utf8('Could not get latest policy date.')
+      unless defined $epoch;
 
     return ($version, $epoch);
 }

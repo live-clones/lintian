@@ -901,8 +901,7 @@ sub load_data {
         $cache->separator($separator);
         $cache->accumulator($accumulator);
 
-        my @search_space = $self->search_space('data');
-        $cache->load(\@search_space, $self->our_vendor);
+        $cache->load($self->data_paths, $self->our_vendor);
 
         $self->data_cache->{$location} = $cache;
     }

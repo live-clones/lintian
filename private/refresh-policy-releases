@@ -1,0 +1,85 @@
+#!/usr/bin/perl
+#
+# Copyright © 2020 Felix Lechner
+#
+# This program is free software.  It is distributed under the terms of
+# the GNU General Public License as published by the Free Software
+# Foundation; either version 2 of the License, or (at your option) any
+# later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+use v5.20;
+use warnings;
+use utf8;
+
+use Cwd qw(realpath);
+use File::Basename qw(dirname);
+
+# neither Path::This nor lib::relative are in Debian
+use constant THISFILE => realpath __FILE__;
+use constant THISDIR => dirname realpath __FILE__;
+
+# use Lintian modules that belong to this program
+use lib THISDIR . '/../lib';
+
+use Const::Fast;
+use Time::Moment;
+use Unicode::UTF8 qw(encode_utf8);
+
+use Lintian::Profile;
+
+const my $EMPTY => q{};
+
+$ENV{LINTIAN_BASE} = realpath(THISDIR . '/..')
+  // die encode_utf8('Cannot resolve LINTIAN_BASE');
+
+my $basedir = 'data';
+
+die encode_utf8("Basedir does not exist at $basedir\n")
+  unless -e $basedir;
+
+my $profile = Lintian::Profile->new;
+$profile->load;
+
+my $releases = $profile->policy_releases;
+$releases->refresh($basedir);
+
+# let profile reload from data search path
+undef $profile;
+undef $releases;
+
+my $validate_profile = Lintian::Profile->new;
+$validate_profile->load;
+
+my $validate_releases = $validate_profile->policy_releases;
+my $preamble = $validate_releases->preamble;
+
+say encode_utf8('Data file: ' . $validate_releases->location);
+say encode_utf8('Last updated: ' . $preamble->{'last-update'});
+
+say encode_utf8($EMPTY);
+
+for my $version (@{$validate_releases->ordered_versions}) {
+
+    my $epoch = $validate_releases->epoch($version);
+    my $timestamp = Time::Moment->from_epoch($epoch)->strftime('%c');
+    my $author = $validate_releases->author($version);
+
+    say encode_utf8("Policy $version is from $timestamp (Author: $author)");
+}
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et
