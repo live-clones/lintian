@@ -721,16 +721,6 @@ div.clear {
       <ul class="commentlist">
       </ul>
 
-      <span class="tinycode" id="code-E">E</span>
-      <span class="tinytag"><a href="https://lintian.debian.org/tags/possible-gpl-code-linked-with-openssl.html">possible-gpl-code-linked-with-openssl</a></span>
-      <span class="tinycontext"></span>
-
-    </li>
-    <li class="tagitem">
-
-      <ul class="commentlist">
-      </ul>
-
       <span class="tinycode" id="code-W">W</span>
       <span class="tinytag"><a href="https://lintian.debian.org/tags/no-manual-page.html">no-manual-page</a></span>
       <span class="tinycontext">usr/bin/script</span>

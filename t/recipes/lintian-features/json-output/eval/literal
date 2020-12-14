@@ -97,10 +97,6 @@
                      "severity" : "error"
                   },
                   {
-                     "name" : "possible-gpl-code-linked-with-openssl",
-                     "severity" : "error"
-                  },
-                  {
                      "context" : "usr/bin/script",
                      "name" : "no-manual-page",
                      "severity" : "warning"

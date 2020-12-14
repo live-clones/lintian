@@ -1,5 +1,5 @@
 Tag: possible-gpl-code-linked-with-openssl
-Severity: error
+Severity: classification
 Check: debian/copyright
 Explanation: This package appears to be covered by the GNU GPL but depends on
  the OpenSSL libssl package and does not mention a license exemption or
@@ -12,3 +12,6 @@ Explanation: This package appears to be covered by the GNU GPL but depends on
  linked with OpenSSL, is covered by the GNU GPL, please add a Lintian
  override for this tag. Lintian currently has no good way of
  distinguishing between that case and problematic packages.
+See-Also:
+ Bug#972181,
+ http://meetbot.debian.net/debian-ftp/2020/debian-ftp.2020-03-13-20.02.html
