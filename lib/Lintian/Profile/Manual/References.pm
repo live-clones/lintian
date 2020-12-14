@@ -54,7 +54,7 @@ has manual_references => (
         my ($self) = @_;
 
         my $manuals = Lintian::Data::Manual::References->new;
-        $self->populate_data($manuals);
+        $manuals->load($self->data_paths, $self->our_vendor);
 
         return $manuals;
     });

@@ -54,7 +54,7 @@ has architectures => (
         my ($self) = @_;
 
         my $architectures = Lintian::Data::Architectures->new;
-        $self->populate_data($architectures);
+        $architectures->load($self->data_paths, $self->our_vendor);
 
         return $architectures;
     });

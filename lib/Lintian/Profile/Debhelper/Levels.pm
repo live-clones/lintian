@@ -53,10 +53,10 @@ has debhelper_levels => (
     default => sub {
         my ($self) = @_;
 
-        my $releases = Lintian::Data::Debhelper::Levels->new;
-        $self->populate_data($releases);
+        my $levels = Lintian::Data::Debhelper::Levels->new;
+        $levels->load($self->data_paths, $self->our_vendor);
 
-        return $releases;
+        return $levels;
     });
 
 =back

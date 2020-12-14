@@ -53,7 +53,7 @@ has policy_releases => (
         my ($self) = @_;
 
         my $releases = Lintian::Data::Policy::Releases->new;
-        $self->populate_data($releases);
+        $releases->load($self->data_paths, $self->our_vendor);
 
         return $releases;
     });

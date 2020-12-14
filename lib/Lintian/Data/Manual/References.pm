@@ -28,8 +28,6 @@ use namespace::clean;
 
 with 'Lintian::Data';
 
-1;
-
 =head1 NAME
 
 Lintian::Data::Manual::References - Lintian interface for manual references

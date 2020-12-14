@@ -171,6 +171,19 @@ has saved_safe_include_path => (
     coerce => sub { my ($arrayref) = @_; return ($arrayref // []); },
     default => sub { [] });
 
+=item data_paths
+
+=cut
+
+# lazy evaluation as an attribute breaks the debhelper check, Bug#977332
+sub data_paths {
+    my ($self) = @_;
+
+    const my @data_paths => $self->search_space('data');
+
+    return \@data_paths;
+}
+
 has known_vendors => (
     is => 'rw',
     lazy => 1,
@@ -888,8 +901,8 @@ sub load_data {
         $cache->separator($separator);
         $cache->accumulator($accumulator);
 
-        $self->populate_data($cache)
-          or croak encode_utf8('Unknown data file: ' . $cache->location);
+        my @search_space = $self->search_space('data');
+        $cache->load(\@search_space, $self->our_vendor);
 
         $self->data_cache->{$location} = $cache;
     }
@@ -897,11 +910,11 @@ sub load_data {
     return $self->data_cache->{$location};
 }
 
-=item locate_files
+=item search_space
 
 =cut
 
-sub locate_files {
+sub search_space {
     my ($self, $relative) = @_;
 
     my @base_dirs;
@@ -913,21 +926,9 @@ sub locate_files {
     push(@base_dirs, $self->include_path);
 
     my @candidates = map { "$_/$relative" } @base_dirs;
-    my @lineage = grep { -r } @candidates;
+    my @search_space = grep { -e } @candidates;
 
-    return @lineage;
-}
-
-=item populate_data
-
-=cut
-
-sub populate_data {
-    my ($self, $cache) = @_;
-
-    my @lineage = $self->locate_files('data/' . $cache->location);
-
-    return $cache->read_from_files(\@lineage, $self->our_vendor);
+    return @search_space;
 }
 
 =back

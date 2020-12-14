@@ -30,6 +30,7 @@ use Moo::Role;
 use namespace::clean;
 
 const my $EMPTY => q{};
+const my $SLASH => q{/};
 
 =head1 NAME
 
@@ -184,18 +185,27 @@ sub matches_any {
     return 0;
 }
 
-=item read_from_files
+=item load
 
 =cut
 
-sub read_from_files {
-    my ($self, $lineage, $our_vendor) = @_;
+sub load {
+    my ($self, $search_space, $our_vendor) = @_;
 
-    my @remaining_lineage = @{$lineage // []};
+    my @remaining_lineage = @{$search_space // []};
     return 0
       unless @remaining_lineage;
 
-    my $path = shift @remaining_lineage;
+    my $directory = shift @remaining_lineage;
+
+    my $path = $directory . $SLASH . $self->location;
+    unless (-e $path) {
+
+        $self->load(\@remaining_lineage, $our_vendor)
+          or croak encode_utf8('Unknown data file: ' . $self->location);
+
+        return 1;
+    }
 
     open(my $fd, '<:utf8_strict', $path)
       or die encode_utf8("Cannot open $path: $!");
@@ -227,7 +237,7 @@ sub read_from_files {
 
             } elsif ($directive eq 'include-parent') {
 
-                $self->read_from_files(\@remaining_lineage)
+                $self->load(\@remaining_lineage, $our_vendor)
                   or croak encode_utf8("No ancestor data file for $path");
 
             } elsif ($directive eq 'if-vendor-is'
