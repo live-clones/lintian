@@ -177,6 +177,11 @@ sub visit_installed_files {
     $self->hint('nodejs-module', $pac->{name},$pac->{version} // 'undef',
         $file->name);
 
+    # Warn if version is 0.0.0-development
+    $self->hint('nodejs-missing-version-override',
+        $file->name, $pac->{name}, $pac->{version})
+      if $pac->{version} and $pac->{version} =~ /^0\.0\.0-dev/;
+
     # Warn if module name is not equal to nodejs directory
     if (($subpath eq '/') and ($dirname ne $pac->{name})) {
         $self->hint('nodejs-module-installed-in-bad-directory',

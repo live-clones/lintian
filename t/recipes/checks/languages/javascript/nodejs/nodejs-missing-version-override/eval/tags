@@ -1,0 +1,8 @@
+nodejs-missing-version-override (binary): nodejs-module-not-declared node-mongodb usr/share/nodejs/mongodb/package.json
+nodejs-missing-version-override (binary): nodejs-module-not-declared node-foo-bar usr/share/nodejs/@foo/bar/package.json
+nodejs-missing-version-override (binary): nodejs-module mongodb 0.0.0-development usr/share/nodejs/mongodb/package.json
+nodejs-missing-version-override (binary): nodejs-module bson 0.0.0-development usr/share/nodejs/mongodb/node_modules/bson/package.json
+nodejs-missing-version-override (binary): nodejs-module @foo/bar 0.0.0-development usr/share/nodejs/@foo/bar/package.json
+nodejs-missing-version-override (binary): nodejs-missing-version-override usr/share/nodejs/mongodb/package.json mongodb 0.0.0-development
+nodejs-missing-version-override (binary): nodejs-missing-version-override usr/share/nodejs/mongodb/node_modules/bson/package.json bson 0.0.0-development
+nodejs-missing-version-override (binary): nodejs-missing-version-override usr/share/nodejs/@foo/bar/package.json @foo/bar 0.0.0-development
