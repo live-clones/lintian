@@ -82,9 +82,9 @@ sub visit_installed_files {
         && !$dep->implies('libperl4-corelibs-perl | perl (<< 5.12.3-7)')) {
 
         open(my $fd, '<', $file->unpacked_path);
-        while (<$fd>) {
+        while (my $line = <$fd>) {
             if (
-                m{ (?:do|require)\s+['"] # do/require
+                $line =~ m{ (?:do|require)\s+['"] # do/require
 
                    # Huge list of perl4 modules...
                    (abbrev|assert|bigfloat|bigint|bigrat

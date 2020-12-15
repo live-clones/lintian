@@ -102,35 +102,51 @@ sub check_rule {
             'vendor/product matching missing SUBSYSTEM specifier'
         ));
     }
+
     return 0;
 }
 
 sub check_udev_rules {
     my ($self, $file) = @_;
 
-    open(my $fd, '<', $file->unpacked_path);
-    my $linenum = 0;
-    my $cont;
-    my $retval = 0;
+    my $contents = $file->decoded_utf8;
+    my @lines = split(/\n/, $contents);
+
+    my $continued = $EMPTY;
     my $in_goto = $EMPTY;
-    while (<$fd>) {
-        chomp;
-        $linenum++;
-        if (defined $cont) {
-            $_ = $cont . $_;
-            $cont = undef;
+    my $result = 0;
+
+    my $linenum = 1;
+    while (defined(my $line = shift @lines)) {
+
+        if (length $continued) {
+            $line = $continued . $line;
+            $continued = $EMPTY;
         }
-        if (/^(.*)\\$/) {
-            $cont = $1;
+
+        if ($line =~ /^(.*)\\$/) {
+            $continued = $1;
             next;
         }
-        next if /^#.*/; # Skip comments
-        $in_goto = $EMPTY if m/LABEL="[^"]+"/;
-        $in_goto = $_ if m/SUBSYSTEM!="[^"]+"/ && m/GOTO="[^"]+"/;
-        $retval |= $self->check_rule($file, $linenum, $in_goto, $_);
+
+        # Skip comments
+        next
+          if $line =~ /^#.*/;
+
+        $in_goto = $EMPTY
+          if $line =~ /LABEL="[^"]+"/;
+
+        $in_goto = $line
+          if $line =~ /SUBSYSTEM!="[^"]+"/
+          && $line =~ /GOTO="[^"]+"/;
+
+        $result |= $self->check_rule($file, $linenum, $in_goto, $line);
+
+    } continue {
+        $linenum++;
     }
-    close($fd);
-    return $retval;
+
+    return $result;
 }
 
 sub visit_installed_files {

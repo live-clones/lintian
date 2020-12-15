@@ -203,7 +203,7 @@ include =
 
 [Freenode::WarningsSwitch]
 
-[-Freenode::WhileDiamondDefaultAssignment]
+[Freenode::WhileDiamondDefaultAssignment]
 
 [InputOutput::ProhibitBacktickOperators]
 

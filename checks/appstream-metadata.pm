@@ -170,19 +170,23 @@ sub provides_user_device {
 
     my $retval = 0;
 
-    if (   m/plugdev/
-        || m/uaccess/
-        || m/MODE=\"0666\"/) {
+    if (   $rule =~ /plugdev/
+        || $rule =~ /uaccess/
+        || $rule =~ /MODE=\"0666\"/) {
+
         $retval = 1;
     }
+
     if ($rule =~ m/SUBSYSTEM=="usb"/) {
         my ($vmatch, $pmatch);
         if ($rule =~ m/ATTR\{idVendor\}=="([0-9a-fA-F]{4})"/) {
             $vmatch = 'v' . uc($1);
         }
+
         if ($rule =~ m/ATTR\{idProduct\}=="([0-9a-fA-F]{4})"/) {
             $pmatch = 'p' . uc($1);
         }
+
         if (defined $vmatch && defined $pmatch) {
             my $match = "usb:${vmatch}${pmatch}d";
             my $foundmatch;
@@ -209,21 +213,31 @@ sub check_udev_rules {
     my $linenum = 0;
     my $cont;
     my $retval = 0;
-    while (<$fd>) {
-        chomp;
+
+    while (my $line = <$fd>) {
+
+        chomp $line;
         $linenum++;
+
         if (defined $cont) {
-            $_ = $cont . $_;
+            $line = $cont . $line;
             $cont = undef;
         }
-        if (/^(.*)\\$/) {
+
+        if ($line =~ /^(.*)\\$/) {
             $cont = $1;
             next;
         }
-        next if /^#.*/; # Skip comments
-        $retval |= $self->provides_user_device($file, $linenum, $_, $data);
+
+        # skip comments
+        next
+          if $line =~ /^#.*/;
+
+        $retval |= $self->provides_user_device($file, $linenum, $line, $data);
     }
+
     close($fd);
+
     return $retval;
 }
 

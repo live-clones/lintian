@@ -519,9 +519,9 @@ sub installable {
                 'libperl4-corelibs-perl | perl (<< 5.12.3-7)')
         ) {
             open(my $fd, '<', $file->unpacked_path);
-            while (<$fd>) {
+            while (my $line = <$fd>) {
                 if (
-                    m{ (?:do|require)\s+['"] # do/require
+                    $line =~m{ (?:do|require)\s+['"] # do/require
 
                           # Huge list of perl4 modules...
                           (abbrev|assert|bigfloat|bigint|bigrat
@@ -779,106 +779,121 @@ sub installable {
 
         my $previous_line = $EMPTY;
         my $in_automatic_section = 0;
-        while (<$fd>) {
+        while (my $line = <$fd>) {
             if (   $. == 1
                 && $file->is_shell_script
-                && m{/$base\s*.*\s-\w*e\w*\b}) {
+                && $line =~ m{/$base\s*.*\s-\w*e\w*\b}) {
                 $saw_bange = 1;
             }
 
-            if (/\#DEBHELPER\#/) {
+            if ($line =~ /\#DEBHELPER\#/) {
                 $self->hint('maintainer-script-has-unexpanded-debhelper-token',
                     $file);
             }
 
             $in_automatic_section = 1
-              if /^# Automatically added by \S+\s*$/;
+              if $line =~ /^# Automatically added by \S+\s*$/;
 
             $in_automatic_section = 0
-              if $_ eq '# End automatically added section';
+              if $line eq '# End automatically added section';
 
             # skip empty lines
             next
-              if /^\s*$/;
+              if $line =~ /^\s*$/;
 
             # skip comment lines
             next
-              if /^\s*\#/;
-            $_ = remove_comments($_);
+              if $line =~ /^\s*\#/;
+            $line = remove_comments($line);
 
             # Concatenate lines containing continuation character (\)
             # at the end
-            if ($file->is_shell_script && /\\$/) {
-                s/\\//;
-                chomp;
-                $previous_line .= $_;
+            if ($file->is_shell_script && $line =~ /\\$/) {
+                $line =~ s/\\//;
+                chomp $line;
+                $previous_line .= $line;
                 next;
             }
 
-            chomp;
-            $_ = $previous_line . $_;
+            chomp $line;
+            $line = $previous_line . $line;
             $previous_line = $EMPTY;
 
             # Don't consider the standard dh-make boilerplate to be code.  This
             # means ignoring the framework of a case statement, the labels, the
             # echo complaining about unknown arguments, and an exit.
             unless ($has_code
-                || m/^\s*set\s+-\w+\s*$/
-                || m/^\s*case\s+\"?\$1\"?\s+in\s*$/
-                || m/^\s*(?:[a-z|-]+|\*)\)\s*$/
-                || m/^\s*[:;]+\s*$/
-                || m/^\s*echo\s+\"[^\"]+\"(?:\s*>&2)?\s*$/
-                || m/^\s*esac\s*$/
-                || m/^\s*exit\s+\d+\s*$/) {
+                || $line =~ /^\s*set\s+-\w+\s*$/
+                || $line =~ /^\s*case\s+\"?\$1\"?\s+in\s*$/
+                || $line =~ /^\s*(?:[a-z|-]+|\*)\)\s*$/
+                || $line =~ /^\s*[:;]+\s*$/
+                || $line =~ /^\s*echo\s+\"[^\"]+\"(?:\s*>&2)?\s*$/
+                || $line =~ /^\s*esac\s*$/
+                || $line =~ /^\s*exit\s+\d+\s*$/) {
+
                 $has_code = 1;
             }
 
-            if ($file->is_shell_script
-                && /${LEADIN}set\s*(?:\s+-(?:-.*|[^e]+))*\s-\w*e/) {
+            if (   $file->is_shell_script
+                && $line =~ /${LEADIN}set\s*(?:\s+-(?:-.*|[^e]+))*\s-\w*e/) {
                 $saw_sete = 1;
             }
 
-            if (m{$LEADIN(?:/usr/bin/)?dpkg-statoverride\s}) {
-                $saw_statoverride_add = $. if /--add/;
-                $saw_statoverride_list = 1 if /--list/;
+            if ($line =~ m{$LEADIN(?:/usr/bin/)?dpkg-statoverride\s}) {
+
+                $saw_statoverride_add = $.
+                  if $line =~ /--add/;
+
+                $saw_statoverride_list = 1
+                  if $line =~ /--list/;
             }
 
-            if (m{$LEADIN(?:/usr/bin/)?dpkg-maintscript-helper\s(\S+)}) {
+            if ($line=~ m{$LEADIN(?:/usr/bin/)?dpkg-maintscript-helper\s(\S+)})
+            {
                 my $cmd = $1;
-                $seen_helper_cmds{$cmd} = () unless $seen_helper_cmds{$cmd};
+                $seen_helper_cmds{$cmd} = ()
+                  unless $seen_helper_cmds{$cmd};
+
                 $seen_helper_cmds{$cmd}{$file} = 1;
             }
 
             $saw_update_fonts = 1
-              if
-              m{$LEADIN(?:/usr/bin/)?update-fonts-(?:alias|dir|scale)\s(\S+)};
+              if $line
+              =~ m{$LEADIN(?:/usr/bin/)?update-fonts-(?:alias|dir|scale)\s(\S+)};
 
-            $saw_udevadm_guard = 1 if m/\b(if|which|command)\s+.*udevadm/g;
-            if (m{$LEADIN(?:/bin/)?udevadm\s} && $saw_sete) {
+            $saw_udevadm_guard = 1
+              if $line =~ /\b(if|which|command)\s+.*udevadm/g;
+
+            if ($line =~ m{$LEADIN(?:/bin/)?udevadm\s} && $saw_sete) {
+
                 $self->hint('udevadm-called-without-guard', "$file:$.")
                   unless $saw_udevadm_guard
-                  or m/\|\|/
-                  or $str_deps->implies('udev');
+                  || $line =~ m{\|\|}
+                  || $str_deps->implies('udev');
             }
 
-            if (    m{[^\w](?:(?:/var)?/tmp|\$TMPDIR)/[^)\]\}\s]}
-                and not m/\bmks?temp\b/
-                and not m/\btempfile\b/
-                and not m/\bmkdir\b/
-                and not m/\bXXXXXX\b/
-                and not m/\$RANDOM/) {
+            if (   $line =~  m{[^\w](?:(?:/var)?/tmp|\$TMPDIR)/[^)\]\}\s]}
+                && $line !~ /\bmks?temp\b/
+                && $line !~ /\btempfile\b/
+                && $line !~ /\bmkdir\b/
+                && $line !~ /\bXXXXXX\b/
+                && $line !~ /\$RANDOM/) {
+
                 $self->hint(
 'possibly-insecure-handling-of-tmp-files-in-maintainer-script',
                     "$file:$."
                 ) unless $warned{tmp};
+
                 $warned{tmp} = 1;
             }
-            if (m/^\s*killall(?:\s|\z)/) {
+            if ($line =~ /^\s*killall(?:\s|\z)/) {
                 $self->hint('killall-is-dangerous', "$file:$.")
                   unless $warned{killall};
+
                 $warned{killall} = 1;
             }
-            if (m/^\s*mknod(?:\s|\z)/ and not m/\sp\s/) {
+
+            if ($line =~ /^\s*mknod(?:\s|\z)/ && $line !~ /\sp\s/) {
                 $self->hint('mknod-in-maintainer-script', "$file:$.");
             }
 
@@ -890,15 +905,15 @@ sub installable {
             # in the same script.  Lots of false negatives, but
             # hopefully not many false positives.
             $saw_init = $.
-              if m{^\s*/etc/init\.d/(?:\S+)\s+[\"\']?(?:\S+)[\"\']?};
+              if $line =~ m{^\s*/etc/init\.d/(?:\S+)\s+[\"\']?(?:\S+)[\"\']?};
 
             $saw_invoke = $.
-              if m{^\s*invoke-rc\.d\s+};
+              if $line =~ m{^\s*invoke-rc\.d\s+};
 
             if ($file->is_shell_script) {
-                if ($cat_string ne $EMPTY and m/^\Q$cat_string\E$/) {
-                    $cat_string = $EMPTY;
-                }
+                $cat_string = $EMPTY
+                  if $cat_string ne $EMPTY
+                  && $line =~ /^\Q$cat_string\E$/;
 
                 my $within_another_shell = 0;
 
@@ -918,11 +933,11 @@ sub installable {
                  # detect source (.) trying to pass args to the command it runs
                  # The first expression weeds out '. "foo bar"'
                     if (
-                            not $found
-                        and not m{\A \s*\.\s+
+                          !$found
+                        && $line !~  m{\A \s*\.\s+
                                    (?:\"[^\"]+\"|\'[^\']+\')\s*
                                    (?:[\&\|<;]|\d?>|\Z)}xsm
-                        and m/^\s*(\.\s+[^\s;\`:]+\s+([^\s;]+))/
+                        && $line =~ /^\s*(\.\s+[^\s;\`:]+\s+([^\s;]+))/
                     ) {
 
                         my $extra;
@@ -932,13 +947,13 @@ sub installable {
                           unless $extra =~ /^([\&\|<]|\d?>)/;
                     }
 
-                    my $line = $_;
+                    my $modified = $line;
 
                     unless ($found) {
                         for my $re (@bashism_single_quote_regexs) {
-                            if ($line =~ m/($re)/) {
+                            if ($modified =~ /($re)/) {
                                 $found = 1;
-                                ($match) = m/($re)/;
+                                ($match) = ($line =~ /($re)/);
                                 last;
                             }
                         }
@@ -951,7 +966,7 @@ sub installable {
                     # for heredoc delimiters later. Initially, remove any
                     # spaces between << and the delimiter to make the following
                     # updates to $cat_line easier.
-                    my $cat_line = $line;
+                    my $cat_line = $modified;
                     $cat_line =~ s/(<\<-?)\s+/$1/g;
 
                     # Remove single quoted strings, with the exception
@@ -970,15 +985,15 @@ sub installable {
                         # interested in them for their own sake and
                         # removing them makes finding the limits of
                         # the outer pair far easier.
-                        $line =~ s/(^|[^\\\'\"])\"\'\"/$1/g;
-                        $line =~ s/(^|[^\\\'\"])\'\"\'/$1/g;
+                        $modified =~ s/(^|[^\\\'\"])\"\'\"/$1/g;
+                        $modified =~ s/(^|[^\\\'\"])\'\"\'/$1/g;
 
-                        $line
+                        $modified
                           =~ s/(^|[^\\\"](?:\\\\)*)\'(?:\\.|[^\\\'])+\'/$1''/g;
                         for my $re (@bashism_string_regexs) {
-                            if ($line =~ m/($re)/) {
+                            if ($modified =~ /($re)/) {
                                 $found = 1;
-                                ($match) = m/($re)/;
+                                ($match) = ($line =~ /($re)/);
                                 last;
                             }
                         }
@@ -990,12 +1005,12 @@ sub installable {
                     $cat_line
                       =~ s/(^|[^<\\\'-](?:\\\\)*)\"(?:\\.|[^\\\"])+\"/$1""/g;
                     unless ($found) {
-                        $line
+                        $modified
                           =~ s/(^|[^\\\'](?:\\\\)*)\"(?:\\.|[^\\\"])+\"/$1""/g;
                         for my $re (@bashism_regexs) {
-                            if ($line =~ m/($re)/) {
+                            if ($modified =~ /($re)/) {
                                 $found = 1;
-                                ($match) = m/($re)/;
+                                ($match) = ($line =~ /($re)/);
                                 last;
                             }
                         }
@@ -1017,30 +1032,31 @@ sub installable {
                     }
                 }
                 if (!$cat_string) {
-                    $self->generic_check_bad_command($_, $file, $., 0,
+                    $self->generic_check_bad_command($line, $file, $., 0,
                         $in_automatic_section);
 
                     $saw_debconf = 1
-                      if m{/usr/share/debconf/confmodule};
+                      if $line =~ m{/usr/share/debconf/confmodule};
 
-                    if (m/^\s*read(?:\s|\z)/ && !$saw_debconf) {
+                    if ($line =~ /^\s*read(?:\s|\z)/ && !$saw_debconf) {
                         $self->hint('read-in-maintainer-script', "$file:$.");
                     }
 
                     $self->hint('multi-arch-same-package-calls-pycompile',
                         "$file:$.")
-                      if m/^\s*py3?compile(?:\s|\z)/
+                      if $line =~ /^\s*py3?compile(?:\s|\z)/
                       and ($processable->fields->value('Multi-Arch') || 'no')
                       eq 'same';
 
-                    if (m{>\s*/etc/inetd\.conf(?:\s|\Z)}) {
+                    if ($line =~ m{>\s*/etc/inetd\.conf(?:\s|\Z)}) {
                         $self->hint('maintainer-script-modifies-inetd-conf',
                             "$file:$.")
                           unless $processable->relation('Provides')
                           ->implies('inet-superserver');
                     }
 
-                    if (m{^\s*(?:cp|mv)\s+(?:.*\s)?/etc/inetd\.conf\s*$}) {
+                    if ($line
+                        =~ m{^\s*(?:cp|mv)\s+(?:.*\s)?/etc/inetd\.conf\s*$}) {
                         $self->hint('maintainer-script-modifies-inetd-conf',
                             "$file:$.")
                           unless $processable->relation('Provides')
@@ -1057,7 +1073,7 @@ sub installable {
                     # extract all backquoted expressions and check
                     # them separately, and then remove them from a
                     # copy of a string and then check it for bashisms.
-                    while (/\`([^\`]+)\`/g) {
+                    while ($line =~ /\`([^\`]+)\`/g) {
                         my $cmd = $1;
                         if (
                             $cmd =~ m{ $LEADIN
@@ -1070,7 +1086,7 @@ sub installable {
                               unless $in_automatic_section;
                         }
                     }
-                    my $cmd = $_;
+                    my $cmd = $line;
                     # check for test syntax
                     if(
                         $cmd =~ m{\[\s+
@@ -1095,14 +1111,17 @@ sub installable {
             unless ($file eq 'postrm') {
                 for my $rule (@depends_needed) {
                     my ($package, $regex) = @{$rule};
-                    if (    $pkg ne $package
-                        and /$regex/
-                        and not $warned{$package}) {
-                        if (   /-x\s+\S*$regex/
-                            || /(?:which|type)\s+$regex/
-                            || /command\s+.*?$regex/) {
+                    if (   $pkg ne $package
+                        && $line =~ /$regex/
+                        && !$warned{$package}) {
+
+                        if (   $line =~ /-x\s+\S*$regex/
+                            || $line =~ /(?:which|type)\s+$regex/
+                            || $line =~ /command\s+.*?$regex/) {
+
                             $warned{$package} = 1;
-                        } elsif (!/\|\|\s*true\b/) {
+
+                        } elsif ($line !~ /\|\|\s*true\b/) {
                             unless ($processable->relation('strong')
                                 ->implies($package)) {
                                 my $shortpackage = $package;
@@ -1118,47 +1137,52 @@ sub installable {
                 }
             }
 
-            $self->generic_check_bad_command($_, $file, $., 1,
+            $self->generic_check_bad_command($line, $file, $., 1,
                 $in_automatic_section);
 
             for my $ver (sort keys %old_versions) {
                 next if $ver =~ /^\d+$/;
-                if (
-m{$LEADIN(?:/usr/bin/)?dpkg\s+--compare-versions\s+.*\b\Q$ver\E(?!\.)\b}
+                if ($line
+                    =~m{$LEADIN(?:/usr/bin/)?dpkg\s+--compare-versions\s+.*\b\Q$ver\E(?!\.)\b}
                 ) {
                     my $date= strftime('%Y-%m-%d', gmtime $old_versions{$ver});
                     my $epoch= strftime('%Y-%m-%d', gmtime $OLDSTABLE_RELEASE);
                     $self->hint(
                         'maintainer-script-supports-ancient-package-version',
                         "$file:$.", $ver, "($date < $epoch)");
+
                     last;
                 }
             }
 
-            if (m{$LEADIN(?:/usr/sbin/)?update-inetd\s}) {
+            if ($line =~ m{$LEADIN(?:/usr/sbin/)?update-inetd\s}) {
+
                 $self->hint(
                     'maintainer-script-has-invalid-update-inetd-options',
                     "$file:$.", '(--pattern with --add)')
-                  if /--pattern/ && /--add/;
+                  if $line =~ /--pattern/
+                  && $line =~ /--add/;
+
                 $self->hint(
                     'maintainer-script-has-invalid-update-inetd-options',
                     "$file:$.", '(--group without --add)')
-                  if /--group/ && !/--add/;
+                  if $line =~ /--group/
+                  && $line !~ /--add/;
             }
 
             my $pdepends = $processable->relation('Pre-Depends');
             $self->hint('skip-systemd-native-flag-missing-pre-depends',
                 "$file:$.")
-              if m/invoke-rc.d\b.*--skip-systemd-native\b/
+              if $line =~ /invoke-rc.d\b.*--skip-systemd-native\b/
               && !$pdepends->implies('init-system-helpers (>= 1.54~)');
 
-            if (m{$LEADIN(?:/usr/sbin/)?dpkg-divert\s}
-                && !/--(?:help|list|truename|version)/) {
-                if (/--local/) {
+            if (   $line =~ m{$LEADIN(?:/usr/sbin/)?dpkg-divert\s}
+                && $line !~ /--(?:help|list|truename|version)/) {
+                if ($line =~ /--local/) {
                     $self->hint('package-uses-local-diversion', "$file:$.");
                 }
-                my $mode = /--remove/ ? 'remove' : 'add';
-                my ($divert) = /dpkg-divert\s*(.*)$/;
+                my $mode = $line =~ /--remove/ ? 'remove' : 'add';
+                my ($divert) = ($line =~ /dpkg-divert\s*(.*)$/);
                 $divert =~ s{\s*(?:\$[{]?[\w:=-]+[}]?)*\s*
                                 # options without arguments
                               --(?:add|quiet|remove|rename|test|local
@@ -1414,14 +1438,17 @@ sub script_is_evil_and_wrong {
     my $var = '0';
     my $backgrounded = 0;
     open(my $fd, '<', $path->unpacked_path);
-    local $_ = undef;
-    while (<$fd>) {
-        chomp;
-        next if m/^#/;
-        next unless length($_);
-        last if (++$i > 55);
+    while (my $line = <$fd>) {
+        chomp $line;
+        next
+          if $line =~ /^#/;
+        next
+          unless length $line;
+        last
+          if ++$i > 55;
+
         if (
-            m<
+            $line =~ m<
             # the exec should either be "eval"ed or a new statement
             (?:^\s*|\beval\s*[\'\"]|(?:;|&&|\b(?:then|else))\s*)
 
@@ -1445,11 +1472,14 @@ sub script_is_evil_and_wrong {
             .?(?:\$[{]1:?\+.?)?(?:\$[\@\*])?>x
         ) {
             $ret = 1;
+
             last;
-        } elsif (/^\s*(\w+)=\$0;/) {
+
+        } elsif ($line =~ /^\s*(\w+)=\$0;/) {
             $var = $1;
+
         } elsif (
-            m<
+            $line =~ m<
             # Match scripts which use "foo $0 $@ &\nexec true\n"
             # Program name
             \S+\s+
@@ -1461,9 +1491,10 @@ sub script_is_evil_and_wrong {
         ) {
 
             $backgrounded = 1;
+
         } elsif (
             $backgrounded
-            && m{
+            && $line =~ m{
             # the exec should either be "eval"ed or a new statement
             (?:^\s*|\beval\s*[\'\"]|(?:;|&&|\b(?:then|else))\s*)
             exec\s+true(?:\s|\Z)}x

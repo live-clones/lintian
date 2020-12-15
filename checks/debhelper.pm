@@ -119,18 +119,22 @@ sub source {
         $seen{$_} = 1 if $bdepends->implies("dh-sequence-$_");
     }
 
-    while (<$rules_fd>) {
-        while (s/\\$// && defined(my $cont = <$rules_fd>)) {
-            $_ .= $cont;
+    while (my $line = <$rules_fd>) {
+        while ($line =~ s/\\$// && defined(my $cont = <$rules_fd>)) {
+            $line .= $cont;
         }
-        if (/^ifn?(?:eq|def)\s/) {
+
+        if ($line =~ /^ifn?(?:eq|def)\s/) {
             $maybe_skipping++;
-        } elsif (/^endif\s/) {
+
+        } elsif ($line =~ /^endif\s/) {
             $maybe_skipping--;
         }
 
-        next if /^\s*\#/;
-        if (m/^$command_prefix_pattern(dh_(?!autoreconf)\S+)/) {
+        next
+          if $line =~ /^\s*\#/;
+
+        if ($line =~ /^$command_prefix_pattern(dh_(?!autoreconf)\S+)/) {
             my $dhcommand = $1;
             $build_systems{'debhelper'} = 1
               if not exists($build_systems{'dh'});
@@ -138,6 +142,7 @@ sub source {
             if ($dhcommand eq 'dh_installmanpages') {
                 $self->hint('dh_installmanpages-is-obsolete', "line $.");
             }
+
             if (   $dhcommand eq 'dh_autotools-dev_restoreconfig'
                 or $dhcommand eq 'dh_autotools-dev_updateconfig') {
                 $self->hint(
@@ -153,12 +158,13 @@ sub source {
                 $seen{$k} = 1 if $dhcommand eq "dh_$k";
             }
 
-            if ($dhcommand eq 'dh_clean' and m/\s+\-k(?:\s+.*)?$/s) {
+            if ($dhcommand eq 'dh_clean' && $line =~ /\s+\-k(?:\s+.*)?$/s) {
                 $seendhcleank = 1;
             }
 
             # if command is passed -n, it does not modify the scripts
-            if ($maint_commands->recognizes($dhcommand) and not m/\s+\-n\s+/) {
+            if (   $maint_commands->recognizes($dhcommand)
+                && $line !~ /\s+\-n\s+/) {
                 $needtomodifyscripts = 1;
             }
 
@@ -176,17 +182,20 @@ sub source {
             }
             $seencommand = 1;
             $needbuilddepends = 1;
-        } elsif (m{^(?:$command_prefix_pattern)dh\s+}) {
+
+        } elsif ($line =~ m{^(?:$command_prefix_pattern)dh\s+}) {
             $build_systems{'dh'} = 1;
             delete($build_systems{'debhelper'});
             $seen_dh = 1;
             $seencommand = 1;
-            $seen_dh_dynamic = 1 if m/\$[({]\w/;
-            $seen_dh_parallel = $. if m/--parallel/;
+            $seen_dh_dynamic = 1
+              if $line =~ /\$[({]\w/;
+            $seen_dh_parallel = $.
+              if $line =~ /--parallel/;
             $needbuilddepends = 1;
             $needtomodifyscripts = 1;
 
-            while (m/\s--with(?:=|\s+)(['"]?)(\S+)\1/g) {
+            while ($line =~ /\s--with(?:=|\s+)(['"]?)(\S+)\1/g) {
                 my $addon_list = $2;
                 for my $addon (split(/,/, $addon_list)) {
                     my $orig_addon = $addon;
@@ -218,8 +227,8 @@ sub source {
                 }
             }
 
-        } elsif (m{^include\s+/usr/share/cdbs/1/rules/debhelper.mk}
-            || m{^include\s+/usr/share/R/debian/r-cran.mk}) {
+        } elsif ($line =~ m{^include\s+/usr/share/cdbs/1/rules/debhelper.mk}
+            || $line =~ m{^include\s+/usr/share/R/debian/r-cran.mk}) {
 
             $build_systems{'cdbs-with-debhelper.mk'} = 1;
             delete($build_systems{'cdbs-without-debhelper.mk'});
@@ -230,20 +239,26 @@ sub source {
 
             # CDBS sets DH_COMPAT but doesn't export it.
             $dhcompatvalue = $cdbscompat;
-        } elsif (/^\s*export\s+DH_COMPAT\s*:?=\s*([^\s]+)/) {
+
+        } elsif ($line =~ /^\s*export\s+DH_COMPAT\s*:?=\s*([^\s]+)/) {
             $level = $1;
-        } elsif (/^\s*export\s+DH_COMPAT/) {
+
+        } elsif ($line =~ /^\s*export\s+DH_COMPAT/) {
             $level = $dhcompatvalue if $dhcompatvalue;
-        } elsif (/^\s*DH_COMPAT\s*:?=\s*([^\s]+)/) {
+
+        } elsif ($line =~ /^\s*DH_COMPAT\s*:?=\s*([^\s]+)/) {
             $dhcompatvalue = $1;
             # one can export and then set the value:
-            $level = $1 if ($level);
+            $level = $1
+              if $level;
 
-        } elsif (/^[^:]*(override|execute_(?:after|before))\s+(dh_[^:]*):/) {
+        } elsif (
+            $line =~ /^[^:]*(override|execute_(?:after|before))\s+(dh_[^:]*):/)
+        {
             $self->hint('typo-in-debhelper-override-target',
                 "$1 $2", '->', "$1_$2","(line $.)");
 
-        } elsif (/^([^:]*_dh_[^:]*):/) {
+        } elsif ($line =~ /^([^:]*_dh_[^:]*):/) {
             my $alltargets = $1;
             # can be multiple targets per rule.
             my @targets = split(/\s+/, $alltargets);
@@ -292,13 +307,13 @@ sub source {
                   if length $missingauto;
             }
 
-        } elsif (m{^include\s+/usr/share/cdbs/}) {
+        } elsif ($line =~ m{^include\s+/usr/share/cdbs/}) {
             $inclcdbs = 1;
             $build_systems{'cdbs-without-debhelper.mk'} = 1
               if not exists($build_systems{'cdbs-with-debhelper.mk'});
 
         } elsif (
-            m{
+            $line =~m{
               ^include \s+
                  /usr/share/(?:
                    dh-php/pkg-pecl\.mk
@@ -311,7 +326,7 @@ sub source {
             $build_systems{'dh'} = 1;
             delete($build_systems{'debhelper'});
         } elsif (
-            m{
+            $line =~m{
               ^include \s+
                  /usr/share/pkg-kde-tools/qt-kde-team/\d+/debian-qt-kde\.mk
               }xsm
@@ -401,19 +416,20 @@ sub source {
     # for brace expansion.
     if ($compat_file and $compat_file->is_open_ok) {
         open(my $fd, '<', $compat_file->unpacked_path);
-        while (<$fd>) {
+        while (my $line = <$fd>) {
             if ($. == 1) {
-                $compat = $_;
+                $compat = $line;
 
                 # trim both ends
                 $compat =~ s/^\s+|\s+$//g;
 
-            } elsif (m/^\d/) {
+            } elsif ($line =~ /^\d/) {
                 $self->hint('debhelper-compat-file-contains-multiple-levels',
                     "(line $.)");
             }
         }
         close($fd);
+
         if ($compat ne $EMPTY) {
             my $compat_value = $compat;
             # Recommend people use debhelper-compat (introduced in debhelper
@@ -498,22 +514,18 @@ sub source {
         next if $file->name eq $drules->name;
         my $basename = $file->basename;
         if ($basename =~ m/^(?:(.*)\.)?(?:post|pre)(?:inst|rm)$/) {
-            next unless $needtomodifyscripts;
-            next unless $file->is_open_ok;
+            next
+              unless $needtomodifyscripts;
 
             # They need to have #DEBHELPER# in their scripts.  Search
             # for scripts that look like maintainer scripts and make
             # sure the token is there.
             my $binpkg = $1 || $EMPTY;
             my $seentag = $EMPTY;
-            open(my $fd, '<', $file->unpacked_path);
-            while (<$fd>) {
-                if (m/\#DEBHELPER\#/) {
-                    $seentag = 1;
-                    last;
-                }
-            }
-            close($fd);
+
+            $seentag = 1
+              if $file->decoded_utf8 =~ /\#DEBHELPER\#/;
+
             if (!$seentag) {
                 my $binpkg_type
                   = $processable->debian_control->installable_package_type(
@@ -534,13 +546,14 @@ sub source {
         } elsif ($basename =~ m/^ex\.|\.ex$/i) {
             $self->hint('dh-make-template-in-source', $file);
         } elsif ($basename =~ m/^(?:(.*)\.)?maintscript$/) {
-            next unless $file->is_open_ok;
+            next
+              unless $file->is_open_ok;
             open(my $fd, '<', $file->unpacked_path);
-            while (<$fd>) {
-                if (m/--\s+"\$(?:@|{@})"\s*$/) {
-                    $self->hint('maintscript-includes-maint-script-parameters',
-                        $basename, "(line $.)");
-                }
+            while (my $line = <$fd>) {
+
+                $self->hint('maintscript-includes-maint-script-parameters',
+                    $basename, "(line $.)")
+                  if $line =~ /--\s+"\$(?:@|{@})"\s*$/;
             }
             close($fd);
         } elsif ($basename =~ m/^(?:.+\.)?debhelper(?:\.log)?$/){
@@ -586,13 +599,20 @@ sub source {
                 }
 
                 open(my $fd, '<', $file->unpacked_path);
-                local $_ = undef;
-                while (<$fd>) {
-                    next if /^\s*$/;
-                    next if (/^\#/ and $level >= 5);
-                    if (m/((?<!\\)\{(?:[^\s\\\}]*?,)+[^\\\}\s,]*,*\})/) {
+                while (my $line = <$fd>) {
+
+                    next
+                      if $line =~ /^\s*$/;
+
+                    next
+                      if $line =~ /^\#/
+                      && $level >= 5;
+
+                    if ($line =~ /((?<!\\)\{(?:[^\s\\\}]*?,)+[^\\\}\s,]*,*\})/)
+                    {
                         $self->hint('brace-expansion-in-debhelper-config-file',
                             $file,$1,"(line $.)");
+
                         last;
                     }
                 }
@@ -726,8 +746,8 @@ sub check_dh_exec {
 
     my ($dhe_subst, $dhe_install, $dhe_filter) = (0, 0, 0);
     open(my $fd, '<', $path->unpacked_path);
-    while (<$fd>) {
-        if (/\$\{([^\}]+)\}/) {
+    while (my $line = <$fd>) {
+        if ($line =~ /\$\{([^\}]+)\}/) {
             my $sv = $1;
             $dhe_subst = 1;
 
@@ -741,13 +761,21 @@ sub check_dh_exec {
                 $self->hint('dh-exec-subst-unknown-variable', $path, $sv);
             }
         }
-        $dhe_install = 1 if /[ \t]=>[ \t]/;
-        $dhe_filter = 1 if /\[[^\]]+\]/;
-        $dhe_filter = 1 if /<[^>]+>/;
 
-        if (  /^usr\/lib\/\$\{([^\}]+)\}\/?$/
-            ||/^usr\/lib\/\$\{([^\}]+)\}\/?\s+\/usr\/lib\/\$\{([^\}]+)\}\/?$/
-            ||/^usr\/lib\/\$\{([^\}]+)\}[^\s]+$/) {
+        $dhe_install = 1
+          if $line =~ /[ \t]=>[ \t]/;
+
+        $dhe_filter = 1
+          if $line =~ /\[[^\]]+\]/;
+
+        $dhe_filter = 1
+          if $line =~ /<[^>]+>/;
+
+        if (   $line =~ /^usr\/lib\/\$\{([^\}]+)\}\/?$/
+            || $line
+            =~ /^usr\/lib\/\$\{([^\}]+)\}\/?\s+\/usr\/lib\/\$\{([^\}]+)\}\/?$/
+            || $line =~ /^usr\/lib\/\$\{([^\}]+)\}[^\s]+$/) {
+
             my $sv = $1;
             my $dv = $2;
             my $dhe_useless = 0;
@@ -765,8 +793,9 @@ sub check_dh_exec {
                     $dhe_useless = 1;
                 }
             }
+
             if ($dhe_useless && $path =~ /debian\/.*(install|manpages)/) {
-                my $form = $_;
+                my $form = $line;
                 chomp($form);
                 $form = "\"$form\"";
                 $self->hint('dh-exec-useless-usage', $path, $form);

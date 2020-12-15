@@ -70,17 +70,30 @@ sub source {
         my @patches;
 
         open(my $fd, '<', $file->unpacked_path);
-        while(<$fd>) {
-            chomp;
-            next if (/^\#/); #ignore comments or CPP directive
-            s{//.*}{} if $list_uses_cpp; # remove C++ style comments
-            if ($list_uses_cpp && m{/\*}) {
+        while(my $line = <$fd>) {
+            chomp $line;
+
+            #ignore comments or CPP directive
+            next
+              if $line =~ /^\#/;
+
+            # remove C++ style comments
+            $line =~ s{//.*}{}
+              if $list_uses_cpp;
+
+            if ($list_uses_cpp && $line =~ m{/\*}) {
+
                 # remove C style comments
-                $_ .= <$fd> while($_ !~ m{\*/});
-                s{/\*[^*]*\*/}{}g;
+                $line .= <$fd> while ($line !~ m{\*/});
+
+                $line =~ s{/\*[^*]*\*/}{}g;
             }
-            next if (/^\s*$/); #ignore blank lines
-            push @patches, split($SPACE, $_);
+
+            #ignore blank lines
+            next
+              if $line =~ /^\s*$/;
+
+            push @patches, split($SPACE, $line);
         }
         close($fd);
 
@@ -101,16 +114,17 @@ sub source {
 
             my $description = $EMPTY;
             open(my $fd, '<', $patch_file->unpacked_path);
-            while (<$fd>) {
+            while (my $line = <$fd>) {
                 # stop if something looking like a patch
                 # starts:
-                last if /^---/;
+                last
+                  if $line =~ /^---/;
                 # note comment if we find a proper one
                 $description .= $1
-                  if (/^\#+\s*DP:\s*(\S.*)$/
-                    && $1 !~ /^no description\.?$/i);
+                  if $line =~ /^\#+\s*DP:\s*(\S.*)$/
+                  && $1 !~ /^no description\.?$/i;
                 $description .= $1
-                  if /^\# (?:Description|Subject): (.*)/;
+                  if $line =~ /^\# (?:Description|Subject): (.*)/;
             }
             close($fd);
 

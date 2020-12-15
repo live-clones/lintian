@@ -149,22 +149,25 @@ sub check_init_script {
         }
     }
     open(my $fh, '<', $file->unpacked_path);
-    while (<$fh>) {
+    while (my $line = <$fh>) {
 
         # trim left
-        s/^\s+//;
+        $line =~ s/^\s+//;
 
         $lsb_source_seen = 1
           if $. == 1
-          && m{\A [#]! \s* (?:/usr/bin/env)? \s* /lib/init/init-d-script}xsm;
-        if (m{#.*Default-Start:.*S}) {
-            $is_rcs_script = 1;
-        }
+          && $line
+          =~ m{\A [#]! \s* (?:/usr/bin/env)? \s* /lib/init/init-d-script}xsm;
 
-        next if /^#/;
+        $is_rcs_script = 1
+          if $line =~ m{#.*Default-Start:.*S};
+
+        next
+          if $line =~ /^#/;
 
         $lsb_source_seen = 1
-          if m{(?:\.|source)\s+/lib/(?:lsb/init-functions|init/init-d-script)};
+          if $line
+          =~ m{(?:\.|source)\s+/lib/(?:lsb/init-functions|init/init-d-script)};
     }
     close($fh);
 
@@ -408,28 +411,30 @@ sub service_file_lines {
       if $path->is_symlink and $path->link eq '/dev/null';
 
     open(my $fh, '<', $path->unpacked_path);
-    while (<$fh>) {
-        chomp;
+    while (my $line = <$fh>) {
+        chomp $line;
 
-        if (defined($continuation)) {
-            $_ = $continuation . $_;
+        if (defined $continuation) {
+            $line = $continuation . $line;
             $continuation = undef;
         }
 
-        if (/\\$/) {
-            $continuation = $_;
+        if ($line =~ /\\$/) {
+            $continuation = $line;
             $continuation =~ s/\\$/ /;
             next;
         }
 
         # trim right
-        s/\s+$//;
+        $line =~ s/\s+$//;
 
-        next if $_ eq $EMPTY;
+        next
+          if $line eq $EMPTY;
 
-        next if /^[#;\n]/;
+        next
+          if $line =~ /^[#;\n]/;
 
-        push @lines, $_;
+        push(@lines, $line);
     }
     close($fh);
 
@@ -505,15 +510,16 @@ sub check_maintainer_scripts {
           unless $file->is_open_ok;
 
         open(my $sfd, '<', $file->unpacked_path);
-        while (<$sfd>) {
+        while (my $line = <$sfd>) {
             # skip comments
-            next if substr($_, 0, $-[0]) =~ /#/;
+            next
+              if $line =~ /^#/;
 
             # systemctl should not be called in maintainer scripts at all,
             # except for systemctl daemon-reload calls.
-            if (m/^(?:.+;)?\s*systemctl\b/ && !/daemon-reload/) {
-                $self->hint('maintainer-script-calls-systemctl', "$file:$.");
-            }
+            $self->hint('maintainer-script-calls-systemctl', "$file:$.")
+              if $line =~ /^(?:.+;)?\s*systemctl\b/
+              && $line !~ /daemon-reload/;
         }
         close($sfd);
     }

@@ -244,14 +244,16 @@ sub installable {
         # README is a special case
         next if $menufile->basename eq 'README' && !$menufile->is_dir;
         my $menufile_line =$EMPTY;
+
         open(my $fd, '<', $menufile->unpacked_path);
         # line below is commented out in favour of the while loop
         # do { $_=<IN>; } while defined && (m/^\s* \#/ || m/^\s*$/);
-        while (<$fd>) {
-            if (m/^\s*\#/ || m/^\s*$/) {
+        while (my $line = <$fd>) {
+            if ($line =~ /^\s*\#/ || $line =~ /^\s*$/) {
                 next;
+
             } else {
-                $menufile_line = $_;
+                $menufile_line = $line;
                 last;
             }
         }

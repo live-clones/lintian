@@ -14,19 +14,27 @@ my (%caps, @keeps);
 die "Usage: $0 path/to/lintian/data.\n" unless $datadir;
 
 open(my $manpage, '-|', 'zcat', $man);
-while (<$manpage>) {
-    next unless /^\.S[SH] HARDWARE CAPABILITIES/i;
+while (my $line = <$manpage>) {
+    next
+      unless $line =~ /^\.S[SH] HARDWARE CAPABILITIES/i;
     last;
 }
-while (<$manpage>) {
-    next unless /^\.B/;
+
+while (my $line = <$manpage>) {
+    next
+      unless $line =~ /^\.B/;
     last;
 }
-while (<$manpage>) {
-    last if /^\.S[SH] /;
-    next if /^\./;
-    chomp;
-    $caps{$_} = 1 foreach split /,\s*/;
+
+while (my $line = <$manpage>) {
+    chomp $line;
+
+    last
+      if $line =~ /^\.S[SH] /;
+    next
+      if $line =~ /^\./;
+
+    $caps{$_} = 1 for split(/,\s*/, $line);
 }
 close($manpage);
 
@@ -35,10 +43,14 @@ my $date = strftime '%Y-%m-%d', gmtime;
 open(my $orig, '<', $path);
 while (my $line = <$orig>) {
     chomp $line;
-    next unless $line =~ m/^#\s*Keep:\s*(.*\S)\s*$/o;
+
+    next
+      unless $line =~ m/^#\s*Keep:\s*(.*\S)\s*$/;
+
     my $keep = $1;
     push @keeps, $keep;
-    foreach my $val (split /\s*,\s*/o, $keep) {
+
+    foreach my $val (split /\s*,\s*/, $keep) {
         $caps{$val} = 1;
     }
 }

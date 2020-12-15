@@ -117,10 +117,10 @@ sub source {
     my $options = $processable->patched->resolve_path('debian/source/options');
     if ($options and $options->is_open_ok) {
         open(my $fd, '<', $options->unpacked_path);
-        while (<$fd>) {
+        while (my $line = <$fd>) {
             $self->hint('custom-compression-in-debian-source-options',
                 $1, "(line $.)")
-              if m/^\s*(compression(?:-level)?\s*=\s+\S+)\n/;
+              if $line =~ /^\s*(compression(?:-level)?\s*=\s+\S+)\n/;
         }
         close($fd);
     }

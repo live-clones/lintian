@@ -203,17 +203,19 @@ sub source {
     my %variables;
     my $includes = 0;
 
-    while (<$rules_fd>) {
-        while (s/\\$// && defined(my $cont = <$rules_fd>)) {
-            $_ .= $cont;
+    while (my $line = <$rules_fd>) {
+
+        while ($line =~ s/\\$// && defined(my $cont = <$rules_fd>)) {
+            $line .= $cont;
         }
-        my $line = $_;
 
         $self->hint('debian-rules-is-dh_make-template')
           if $line =~ m/dh_make generated override targets/;
 
-        next if /^\s*\#/;
-        if (/^\s*[s-]?include\s+(\S++)/){
+        next
+          if $line =~ /^\s*\#/;
+
+        if ($line =~ /^\s*[s-]?include\s+(\S++)/){
             my $makefile = $1;
             my $targets = $KNOWN_MAKEFILES->value($makefile);
             if (defined $targets){
@@ -232,25 +234,27 @@ sub source {
         # Check for DH_COMPAT settings outside of any rule, which are now
         # deprecated.  It's a bit easier structurally to do this here than in
         # debhelper.
-        if (/^\s*(?:export\s+)?DH_COMPAT\s*:?=/ && keys(%seen) == 0) {
+        if ($line =~ /^\s*(?:export\s+)?DH_COMPAT\s*:?=/ && keys(%seen) == 0) {
             $self->hint('debian-rules-sets-DH_COMPAT', "line $.");
         }
 
         # Check for problems that can occur anywhere in debian/rules.
-        if (   m/^\t\s*-(?:\$[\(\{]MAKE[\}\)]|make)\s.*(?:dist)?clean/s
-            || m/^\t\s*(?:\$[\(\{]MAKE[\}\)]|make)\s(?:.*\s)?-(\w*)i.*(?:dist)?clean/s
+        if (   $line =~ /^\t\s*-(?:\$[\(\{]MAKE[\}\)]|make)\s.*(?:dist)?clean/s
+            || $line
+            =~ /^\t\s*(?:\$[\(\{]MAKE[\}\)]|make)\s(?:.*\s)?-(\w*)i.*(?:dist)?clean/s
         ) {
             # Ignore "-C<dir>" (#671537)
             $self->hint('debian-rules-ignores-make-clean-error',"line $.")
               unless $1 && $1 =~ /^C/;
         }
 
-        if (/^\s*(?:export\s+)?DEB_BUILD_OPTIONS\s*:?=/ && keys(%seen) == 0) {
+        if ($line =~ /^\s*(?:export\s+)?DEB_BUILD_OPTIONS\s*:?=/
+            && keys(%seen) == 0) {
             $self->hint('debian-rules-sets-DEB_BUILD_OPTIONS', "line $.");
         }
 
         if (
-            m{^
+            $line =~m{^
                 \s*(?:export\s+)?
                 (DEB_(?:HOST|BUILD|TARGET)_(?:ARCH|MULTIARCH|GNU)[A-Z_]*)\s*:?=
             }x
@@ -263,7 +267,7 @@ sub source {
         # check generic problem
         foreach my $bad_construct ($BAD_CONSTRUCT_IN_RULES->all) {
             my $badregex = $BAD_CONSTRUCT_IN_RULES->value($bad_construct);
-            if ($line =~ m/$badregex/) {
+            if ($line =~ /$badregex/) {
                 if (defined($+{info})) {
                     $self->hint($bad_construct, $+{info}, "(line $.)");
                 } else {
@@ -272,20 +276,20 @@ sub source {
             }
         }
 
-        if ($line =~ m/--as-needed/ and $line !~ m/--no-as-needed/) {
+        if ($line =~ /--as-needed/ && $line !~ /--no-as-needed/) {
             $self->hint('debian-rules-uses-as-needed-linker-flag',"line $.");
         }
 
-        #<<< no Perl tidy
         $self->hint(
-            'debian-rules-uses-supported-python-versions-without-python-all-build-depends',
-            $1, "(line $.)"
-        ) if $line =~ m/(py3versions\s+([\w\-\s]*--supported|-\w*s\w*))/
-          and not $build_all->implies($PYTHON3_ALL_DEPEND);
-        #>>>
+'debian-rules-uses-supported-python-versions-without-python-all-build-depends',
+            $1,
+            "(line $.)"
+          )
+          if $line =~ /(py3versions\s+([\w\-\s]*--supported|-\w*s\w*))/
+          && !$build_all->implies($PYTHON3_ALL_DEPEND);
 
         # General assignment - save the variable
-        if (/^\s*(?:\S+\s+)*?(\S+)\s*[:\?\+]?=\s*(.*+)?$/so) {
+        if ($line =~ /^\s*(?:\S+\s+)*?(\S+)\s*[:\?\+]?=\s*(.*+)?$/s) {
             # This is far too simple from a theoretical PoV, but should do
             # rather well.
             my ($var, $value) = ($1, $2);
@@ -297,23 +301,25 @@ sub source {
         }
 
         # Keep track of whether this portion of debian/rules may be optional
-        if (/^ifn?(?:eq|def)\s(.*)/) {
+        if ($line =~ /^ifn?(?:eq|def)\s(.*)/) {
             push(@conditionals, $1);
             $maybe_skipping++;
-        } elsif (/^endif\s/) {
+
+        } elsif ($line =~ /^endif\s/) {
             $maybe_skipping--;
         }
 
         # Check for strings anywhere in debian/rules that have implications for
         # our dependencies.
         for my $rule (@GLOBAL_CLEAN_DEPENDS) {
-            if (/$rule->[1]/ and not $maybe_skipping) {
+            if ($line =~ /$rule->[1]/ && !$maybe_skipping) {
                 $needed_clean{$rule->[0]}
                   = $rule->[2] || $needed_clean{$rule->[0]} || $EMPTY;
             }
         }
+
         for my $rule (@GLOBAL_DEPENDS) {
-            if (/$rule->[1]/ && !$maybe_skipping) {
+            if ($line =~ /$rule->[1]/ && !$maybe_skipping) {
                 $needed{$rule->[0]}
                   = $rule->[2] || $needed{$rule->[0]} || $EMPTY;
             }
@@ -322,12 +328,12 @@ sub source {
         # Listing a rule as a dependency of .PHONY is sufficient to make it
         # present for the purposes of GNU make and therefore the Policy
         # requirement.
-        if (/^(?:[^:]+\s)?\.PHONY(?:\s[^:]+)?:(.+)/s) {
+        if ($line =~ /^(?:[^:]+\s)?\.PHONY(?:\s[^:]+)?:(.+)/s) {
+
             my @targets = split($SPACE, $1);
-            local $_ = undef;
-            for (@targets) {
+            for my $target (@targets) {
                 # Is it $(VAR) ?
-                if (m/^\$[\(\{]([^\)\}]++)[\)\}]$/) {
+                if ($target =~ /^\$[\(\{]([^\)\}]++)[\)\}]$/) {
                     my $name = $1;
                     my $val = $variables{$name};
                     if ($val) {
@@ -337,28 +343,34 @@ sub source {
 
                    # discards empty elements at end, effectively trimming right
                         for (split(/\s+/, $val)) {
-                            $seen{$_}++ if $POLICYRULES->recognizes($_);
+                            $seen{$target}++
+                              if $POLICYRULES->recognizes($target);
                         }
                         last;
                     }
                     # We don't know, so just mark the target as seen.
                 }
-                $seen{$_}++ if $POLICYRULES->recognizes($_);
+                $seen{$target}++
+                  if $POLICYRULES->recognizes($target);
             }
-            next; #.PHONY implies the rest will not match
+
+            #.PHONY implies the rest will not match
+            next;
         }
 
-        if (!$includes
-            && m/dpkg-parsechangelog.*(?:Source|Version|Date|Timestamp)/s) {
+        if (  !$includes
+            && $line
+            =~ /dpkg-parsechangelog.*(?:Source|Version|Date|Timestamp)/s) {
             $self->hint('debian-rules-parses-dpkg-parsechangelog',"(line $.)");
         }
 
-        if (!/^ifn?(?:eq|def)\s/ && m/^([^\s:][^:]*):+(.*)/s) {
+        if ($line !~ /^ifn?(?:eq|def)\s/ && $line =~ /^([^\s:][^:]*):+(.*)/s) {
             my ($target_names, $target_dependencies) = ($1, $2);
             @current_targets = split $SPACE, $target_names;
 
             my @quoted = map { quotemeta } split($SPACE, $target_dependencies);
             s/\\\$\\\([^\):]+\\:([^=]+)\\=([^\)]+)\1\\\)/$2.*/g for @quoted;
+
             my @depends = map { qr/^$_$/ } @quoted;
 
             for my $target (@current_targets) {
@@ -395,46 +407,61 @@ sub source {
                 }
             }
             undef %debhelper_group;
-        } elsif (/^define /) {
+
+        } elsif ($line =~ /^define /) {
             # We don't want to think the body of the define is part of
             # the previous rule or we'll get false positives on tags
             # like binary-arch-rules-but-pkg-is-arch-indep.  Treat a
             # define as the end of the current rule, although that
             # isn't very accurate either.
             @current_targets = ();
+
         } else {
             # If we have non-empty, non-comment lines, store them for
             # all current targets and check whether debhelper programs
             # are called in a reasonable order.
-            if (m/^\s+[^\#]/) {
+            if ($line =~ /^\s+[^\#]/) {
                 my ($arch, $indep) = (0, 0);
                 for my $target (@current_targets) {
                     $rules_per_target{$target} ||= [];
-                    push @{$rules_per_target{$target}}, $_;
-                    $arch = 1 if (any { $target =~ /$_/ } @arch_rules);
-                    $indep = 1 if (any { $target eq $_ } @indep_rules);
-                    $indep = 1 if $target eq '%';
-                    $indep = 1 if $target =~ /^override_/;
+                    push(@{$rules_per_target{$target}}, $line);
+
+                    $arch = 1
+                      if any { $target =~ /$_/ } @arch_rules;
+
+                    $indep = 1
+                      if any { $target eq $_ } @indep_rules;
+
+                    $indep = 1
+                      if $target eq '%';
+
+                    $indep = 1
+                      if $target =~ /^override_/;
                 }
+
                 if (not $maybe_skipping and ($arch or $indep)) {
                     my $table = \%needed;
                     $table = \%needed_clean if $arch;
                     for my $rule (@RULE_CLEAN_DEPENDS) {
                         my ($dep, $pattern, $tagname) = @{$rule};
-                        next unless /$pattern/;
+                        next
+                          unless $line =~ /$pattern/;
                         $table->{$dep} = $tagname || $table->{$dep} || $EMPTY;
                     }
                 }
-                if (m/^\s+(dh_\S+)\b/ and $debhelper_order{$1}) {
+
+                if ($line =~ /^\s+(dh_\S+)\b/ && $debhelper_order{$1}) {
                     my $command = $1;
-                    my ($package) = /\s(?:-p|--package=)(\S+)/;
+                    my ($package) = ($line =~ /\s(?:-p|--package=)(\S+)/);
                     $package ||= $EMPTY;
                     my $group = $debhelper_order{$command};
                     $debhelper_group{$package} ||= 0;
+
                     if ($group < $debhelper_group{$package}) {
                         $self->hint(
                             'debian-rules-calls-debhelper-in-odd-order',
                             $command, "(line $.)");
+
                     } else {
                         $debhelper_group{$package} = $group;
                     }

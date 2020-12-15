@@ -92,24 +92,28 @@ sub source {
             }
 
             if (defined($package_xml) && $package_xml->is_regular_file) {
+
                 # Wild guess package type as in
                 # PEAR_PackageFile_v2::getPackageType()
                 open(my $package_xml_fd, '<', $package_xml->unpacked_path);
-                while (<$package_xml_fd>) {
+
+                while (my $line = <$package_xml_fd>) {
                     if (
-                        m{\A \s* <
+                        $line =~ m{\A \s* <
                            (php|extsrc|extbin|zendextsrc|zendextbin)
                            release \s* /? > }xsm
                     ) {
                         $package_type = $1;
                         last;
                     }
-                    if (/^\s*<bundle\s*\/?>/){
+                    if ($line =~ /^\s*<bundle\s*\/?>/){
                         $package_type = 'bundle';
                         last;
                     }
                 }
-                close($package_xml_fd);
+
+                close $package_xml_fd;
+
                 if ($package_type eq 'extsrc') { # PECL package
                     if (!$bdepends->implies('php-dev')) {
                         $self->hint('pecl-package-requires-build-dependency',
@@ -153,30 +157,36 @@ sub source {
             my $has_addon_phppear = 0;
             my $has_addon_phpcomposer= 0;
             my $has_addon_php = 0;
+
             open(my $rules_fd, '<', $rules->unpacked_path);
-            while (<$rules_fd>) {
-                while (s/\\$// && defined(my $cont = <$rules_fd>)) {
-                    $_ .= $cont;
+            while (my $line = <$rules_fd>) {
+
+                while ($line =~ s/\\$// && defined(my $cont = <$rules_fd>)) {
+                    $line .= $cont;
                 }
-                next if /^\s*\#/;
-                if (
-m/^\t\s*dh\s.*--buildsystem(?:=|\s+)(?:\S+,)*phppear(?:,\S+)*\s/
-                ) {
-                    $has_buildsystem_phppear = 1;
-                }
-                if (m/^\t\s*dh\s.*--with(?:=|\s+)(?:\S+,)*phppear(?:,\S+)*\s/){
-                    $has_addon_phppear = 1;
-                }
-                if (
-m/^\t\s*dh\s.*--with(?:=|\s+)(?:\S+,)*phpcomposer(?:,\S+)*\s/
-                ) {
-                    $has_addon_phpcomposer = 1;
-                }
-                if (m/^\t\s*dh\s.*--with(?:=|\s+)(?:\S+,)*php(?:,\S+)*\s/) {
-                    $has_addon_php = 1;
-                }
+
+                next
+                  if $line =~ /^\s*\#/;
+
+                $has_buildsystem_phppear = 1
+                  if $line
+                  =~ /^\t\s*dh\s.*--buildsystem(?:=|\s+)(?:\S+,)*phppear(?:,\S+)*\s/;
+
+                $has_addon_phppear = 1
+                  if $line
+                  =~ /^\t\s*dh\s.*--with(?:=|\s+)(?:\S+,)*phppear(?:,\S+)*\s/;
+
+                $has_addon_phpcomposer = 1
+                  if $line
+                  =~ /^\t\s*dh\s.*--with(?:=|\s+)(?:\S+,)*phpcomposer(?:,\S+)*\s/;
+
+                $has_addon_php = 1
+                  if $line
+                  =~ /^\t\s*dh\s.*--with(?:=|\s+)(?:\S+,)*php(?:,\S+)*\s/;
             }
+
             close($rules_fd);
+
             if (   defined($package_xml)
                 || defined($package2_xml)
                 || defined($channel_xml)) {

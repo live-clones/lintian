@@ -183,12 +183,13 @@ sub installable {
             $self->hint('sharedobject-in-library-directory-missing-soname',
                 $cur_file);
         } elsif ($cur_file =~ m/\.la$/ and not length $cur_file->link) {
-            local $_ = undef;
+
             open(my $fd, '<', $cur_file->unpacked_path);
-            while(<$fd>) {
+            while(my $line = <$fd>) {
                 next
-                  unless (m/^(libdir)='(.+?)'$/)
-                  or (m/^(dependency_libs)='(.+?)'$/);
+                  unless $line =~ /^(libdir)='(.+?)'$/
+                  || $line =~ /^(dependency_libs)='(.+?)'$/;
+
                 my ($field, $value) = ($1, $2);
                 if ($field eq 'libdir') {
                     # dirname with leading slash and without the trailing one.
@@ -201,9 +202,11 @@ sub installable {
                       if ($value
                         =~ m{^/usr/lib/python[\d.]+/(?:site|dist)-packages}
                         and $expected =~ m{^/usr/share/pyshared});
+
                     $self->hint('incorrect-libdir-in-la-file', $cur_file,
                         "$value != $expected")
                       unless($expected eq $value);
+
                 } elsif ($field eq 'dependency_libs'){
                     $self->hint('non-empty-dependency_libs-in-la-file',
                         $cur_file);
@@ -397,22 +400,29 @@ sub installable {
                       unless is_nss_plugin($shlib);
                 }
             }
+
         } elsif ($shlibsf->is_open_ok) {
             my (%shlibs_control_used, @shlibs_depends);
+
             open(my $fd, '<', $shlibsf->unpacked_path);
-            while (<$fd>) {
-                chop;
-                next if m/^\s*$/ or /^#/;
+            while (my $line = <$fd>) {
+                chop $line;
+                next
+                  if $line =~ /^\s*$/
+                  || $line =~ /^#/;
 
                 # We exclude udebs from the checks for correct shared library
                 # dependencies, since packages may contain dependencies on
                 # other udeb packages.
                 my $udeb = $EMPTY;
-                $udeb = 'udeb: ' if s/^udeb:\s+//;
-                @words = split(/\s+/, $_);
+                $udeb = 'udeb: '
+                  if $line =~ s/^udeb:\s+//;
+
+                @words = split(/\s+/, $line);
                 my $shlibs_string = $udeb.$words[0].$SPACE.$words[1];
                 if ($shlibs_control{$shlibs_string}) {
                     $self->hint('duplicate-in-shlibs',$shlibs_string);
+
                 } else {
                     $shlibs_control{$shlibs_string} = 1;
                     push(@shlibs_depends, join($SPACE, @words[2 .. $#words]))
@@ -420,6 +430,7 @@ sub installable {
                 }
             }
             close($fd);
+
             for my $shlib (@shlibs) {
                 my $shlib_name = $SONAME{$shlib};
                 $shlib_name = format_soname($shlib_name);
@@ -494,15 +505,17 @@ sub installable {
         my $symbol_count = 0;
 
         open(my $fd, '<', $symbolsf->unpacked_path);
-        while (<$fd>) {
-            chomp;
-            next if m/^\s*$/ or /^#/;
+        while (my $line = <$fd>) {
+            chomp $line;
+            next
+              if $line =~ /^\s*$/
+              || $line =~ /^#/;
 
-            if (m/^([^\s|*]\S+)\s\S+\s*(?:\(\S+\s+\S+\)|\#MINVER\#)?/) {
+            if ($line =~ /^([^\s|*]\S+)\s\S+\s*(?:\(\S+\s+\S+\)|\#MINVER\#)?/){
                 # soname, main dependency template
 
                 $soname = $1;
-                s/^\Q$soname\E\s*//;
+                $line =~ s/^\Q$soname\E\s*//;
                 $soname = format_soname($soname);
 
                 if ($symbols_control{$soname}) {
@@ -512,13 +525,16 @@ sub installable {
                     $symbols_control{$soname} = 1;
                     $warned = 0;
 
-                    foreach my $part (split /\s*,\s*/) {
-                        foreach my $subpart (split /\s*\|\s*/, $part) {
+                    for my $part (split(/\s*,\s*/, $line)) {
+                        for my $subpart (split /\s*\|\s*/, $part) {
+
                             $subpart
                               =~ m{^(\S+)(\s*(?:\(\S+\s+\S+\)|#MINVER#))?$};
                             ($dep_package, $dep) = ($1, $2 || $EMPTY);
+
                             if (defined $dep_package) {
                                 push @symbols_depends, $dep_package . $dep;
+
                             } else {
                                 $self->hint('syntax-error-in-symbols-file', $.)
                                   unless $warned;
@@ -531,7 +547,8 @@ sub installable {
                 $dep_templates = 0;
                 $symbol_count = 0;
                 undef %meta_info_seen;
-            } elsif (m/^\|\s+\S+\s*(?:\(\S+\s+\S+\)|#MINVER#)?/) {
+
+            } elsif ($line =~ /^\|\s+\S+\s*(?:\(\S+\s+\S+\)|#MINVER#)?/) {
                 # alternative dependency template
 
                 $warned = 0;
@@ -541,12 +558,13 @@ sub installable {
                     $warned = 1;
                 }
 
-                s/^\|\s*//;
+                $line =~ s/^\|\s*//;
 
-                foreach my $part (split /\s*,\s*/) {
-                    foreach my $subpart (split /\s*\|\s*/, $part) {
+                for my $part (split(/\s*,\s*/, $line)) {
+                    for my $subpart (split /\s*\|\s*/, $part) {
                         $subpart =~ m{^(\S+)(\s*(?:\(\S+\s+\S+\)|#MINVER#))?$};
                         ($dep_package, $dep) = ($1, $2 || $EMPTY);
+
                         if (defined $dep_package) {
                             push @symbols_depends, $dep_package . $dep;
                         } else {
@@ -558,17 +576,21 @@ sub installable {
                 }
 
                 $dep_templates++ unless $warned;
-            } elsif (m/^\*\s(\S+):\s\S+/) {
+
+            } elsif ($line =~ /^\*\s(\S+):\s\S+/) {
                 # meta-information
 
                 $self->hint('unknown-meta-field-in-symbols-file',"$1, line $.")
                   unless exists $symbols_meta_fields{$1};
+
                 $self->hint('syntax-error-in-symbols-file', $.)
                   unless defined $soname and $symbol_count == 0;
 
                 $meta_info_seen{$1} = 1;
-                $build_depends_seen = 1 if $1 eq 'Build-Depends-Package';
-            } elsif (m/^\s+(\S+)\s(\S+)(?:\s(\S+(?:\s\S+)?))?$/) {
+                $build_depends_seen = 1
+                  if $1 eq 'Build-Depends-Package';
+
+            } elsif ($line =~ /^\s+(\S+)\s(\S+)(?:\s(\S+(?:\s\S+)?))?$/) {
                 # Symbol definition
 
                 $self->hint('syntax-error-in-symbols-file', $.)
@@ -581,9 +603,11 @@ sub installable {
                 if (($v eq $version) and ($version =~ /-/)) {
                     $full_version_sym ||= $sym;
                     $full_version_count++;
+
                 } elsif (($v =~ /-/)
                     and (not $v =~ /~$/)
                     and ($v ne $version_wo_rev)) {
+
                     $debian_revision_sym ||= $sym;
                     $debian_revision_count++;
                 }
@@ -600,6 +624,7 @@ sub installable {
             }
         }
         close($fd);
+
         if ($full_version_count) {
             $full_version_count--;
             my $others = $EMPTY;

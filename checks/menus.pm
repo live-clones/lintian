@@ -107,15 +107,16 @@ sub visit_installed_files {
 
             if ($file->is_open_ok) {
                 open(my $fd, '<', $file->unpacked_path);
-                while (<$fd>) {
-                    chomp;
-                    if (/^!include menu.h/) {
+                while (my $line = <$fd>) {
+                    chomp $line;
+                    if ($line =~ /^!include menu.h/) {
                         $menumethod_includes_menu_h = 1;
                         last;
                     }
                 }
                 close($fd);
             }
+
             $self->hint('menu-method-lacks-include', $file)
               unless $menumethod_includes_menu_h
               or $self->processable->name eq 'menu';
@@ -687,9 +688,9 @@ sub check_script {
         $interp = 'perl';
     }
 
-    while (<$fd>) {
+    while (my $line = <$fd>) {
         # skip comments
-        s/\#.*$//;
+        $line =~ s/\#.*$//;
 
         ##
         # update-menus will satisfy the checks that the menu file
@@ -697,18 +698,16 @@ sub check_script {
         ##
 
         # does the script check whether update-menus exists?
-        if (   /-x\s+\S*update-menus/
-            or /(?:which|type)\s+update-menus/
-            or /command\s+.*?update-menus/) {
-            # yes, it does.
-            $pres->{'checks-for-updatemenus'} = 1;
-        }
+        $pres->{'checks-for-updatemenus'} = 1
+          if $line =~ /-x\s+\S*update-menus/
+          || $line =~ /(?:which|type)\s+update-menus/
+          || $line =~ /command\s+.*?update-menus/;
 
         # does the script call update-menus?
         # TODO this regex-magic should be moved to some lib for checking
         # whether a certain word is likely called as command... --Jeroen
         if (
-            m{ (?:^\s*|[;&|]\s*|(?:then|do|exec)\s+)
+            $line =~m{ (?:^\s*|[;&|]\s*|(?:then|do|exec)\s+)
                (?:\/usr\/bin\/)?update-menus
                (?:\s|[;&|<>]|\Z)}xsm
         ) {
@@ -725,25 +724,24 @@ sub check_script {
         }
 
         # does the script check whether install-docs exists?
-        if (   s/-x\s+\S*install-docs//
-            or /(?:which|type)\s+install-docs/
-            or s/command\s+.*?install-docs//) {
-            # yes, it does.
-            $pres->{'checks-for-installdocs'} = 1;
-        }
+        $pres->{'checks-for-installdocs'} = 1
+          if $line =~ s/-x\s+\S*install-docs//
+          || $line =~/(?:which|type)\s+install-docs/
+          || $line =~ s/command\s+.*?install-docs//;
 
         # does the script call install-docs?
         if (
-            m{ (?:^\s*|[;&|]\s*|(?:then|do)\s+)
+            $line =~ m{ (?:^\s*|[;&|]\s*|(?:then|do)\s+)
                (?:\/usr\/sbin\/)?install-docs
                (?:\s|[;&|<>]|\Z) }xsm
         ) {
             # yes, it does.  Does it remove or add a doc?
-            if (m/install-docs\s+(?:-r|--remove)\s/) {
+            if ($line =~ /install-docs\s+(?:-r|--remove)\s/) {
                 $pres->{'calls-installdocs-r'} = 1;
             } else {
                 $pres->{'calls-installdocs'} = 1;
             }
+
             # checked first?
             if (not $pres->{'checks-for-installdocs'}) {
                 $self->hint(
@@ -753,7 +751,9 @@ sub check_script {
             }
         }
     }
+
     close($fd);
+
     return;
 }
 

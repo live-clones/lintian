@@ -83,25 +83,31 @@ exit 0;
 
 sub parse_iso_xml {
     open(my $fd, '<', '/usr/share/xml/iso-codes/iso_639_3.xml');
-    local $_ = undef;
     local $/ = '/>';
-    while (<$fd>) {
+    while (my $line = <$fd>) {
         my $special = 0;
+
         # skip it if it is a "special" isotype (#692548, comment #10).  However
         # sometimes we "collect" these from iso-query.  If so, we have to
         # prune them from %CODES.
-        $special = 1 if m/\<iso_639_3_entry [^\>]* \btype=[\'\"]S?[\'\"]/x;
+        $special = 1
+          if $line =~ /\<iso_639_3_entry [^\>]* \btype=[\'\"]S?[\'\"]/x;
+
         # Extract the id of the entry.  We match the start of the tag
         # again to ensure we catch the id inside the tag.  (Our input
         # separator causes us to consume a lot of leading "stuff"
         # prior to the first entry being closed).
-        next unless m/\<iso_639_3_entry [^\>]* \bid=[\'\"]([^\'\"]+)[\'\"]/x;
+        next
+          unless $line
+          =~ /\<iso_639_3_entry [^\>]* \bid=[\'\"]([^\'\"]+)[\'\"]/x;
+
         my $id = lc $1;
 
         if ($special) {
             delete $CODES{$id};
         } else {
-            $CODES{$id} = undef unless exists $CODES{$id};
+            $CODES{$id} = undef
+              unless exists $CODES{$id};
         }
     }
 
@@ -111,17 +117,23 @@ sub parse_iso_xml {
 
 sub parse_iso_query {
     open(my $fd, '-|', 'isoquery', '-i', '639-2');
-    local $_ = undef;
-    while (<$fd>) {
-        next unless m/^(\S{3})\s+(?:\S{3}\s+)?(?:(\S{2})\s+)?/;
+    while (my $line = <$fd>) {
+
+        next
+          unless $line =~ /^(\S{3})\s+(?:\S{3}\s+)?(?:(\S{2})\s+)?/;
         my ($iso1, $iso2) = ($2, $1);
-        next if $iso2 eq 'zxx';
+        next
+          if $iso2 eq 'zxx';
         $iso2 = lc $iso2;
-        $CODES{$iso2} = undef unless exists $CODES{$iso2};
+
+        $CODES{$iso2} = undef
+          unless exists $CODES{$iso2};
+
         if (defined $iso1) {
             $iso1 = lc $iso1;
             $CODES{lc $iso2} = $iso1;
-            $CODES{$iso1} = undef unless exists $CODES{$iso1};
+            $CODES{$iso1} = undef
+              unless exists $CODES{$iso1};
         }
     }
     close($fd);

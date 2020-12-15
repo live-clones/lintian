@@ -83,25 +83,33 @@ sub source {
     my $bdepends = $processable->relation('Build-Depends-All');
     $seen_nodejs = 1 if $bdepends->implies('dh-sequence-nodejs');
 
-    while (<$rules_fd>) {
+    while (my $line = <$rules_fd>) {
+
         # reconstitute splitted lines
-        while (s/\\$// && defined(my $cont = <$rules_fd>)) {
-            $_ .= $cont;
+        while ($line =~ s/\\$// && defined(my $cont = <$rules_fd>)) {
+            $line .= $cont;
         }
+
         # skip comments
-        next if /^\s*\#/;
-        if (m{^(?:$command_prefix_pattern)dh\s+}) {
-            $seen_dh_dynamic = 1 if m/\$[({]\w/;
-            while (/\s--with(?:=|\s+)(['"]?)(\S+)\1/g) {
-                my $addon_list = $2;
-                for my $addon (split(/,/, $addon_list)) {
-                    $seen_nodejs = 1 if $addon eq 'nodejs';
-                }
+        next
+          if $line =~ /^\s*\#/;
+
+        if ($line =~ m{^(?:$command_prefix_pattern)dh\s+}) {
+            $seen_dh_dynamic = 1
+              if $line =~ /\$[({]\w/;
+
+            while ($line =~ /\s--with(?:=|\s+)(['"]?)(\S+)\1/g) {
+                my @addons = split(m{,}, $2);
+                $seen_nodejs = 1
+                  if any { $_ eq 'nodejs' } @addons;
             }
-        } elsif (/^([^:]*override_dh_[^:]*):/) {
-            $override_test = 1 if $1 eq 'auto_test';
+
+        } elsif ($line =~ /^([^:]*override_dh_[^:]*):/) {
+            $override_test = 1
+              if $1 eq 'auto_test';
         }
     }
+
     if(     $seen_nodejs
         and not $override_test
         and not $seen_dh_dynamic) {

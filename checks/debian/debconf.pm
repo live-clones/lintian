@@ -124,13 +124,17 @@ sub installable {
 
     my $usespreinst;
     my $preinst = $self->processable->control->lookup('preinst');
+
     if ($preinst and $preinst->is_file and $preinst->is_open_ok) {
+
         open(my $fd, '<', $preinst->unpacked_path);
-        while (<$fd>) {
-            s/\#.*//;    # Not perfect for Perl, but should be OK
-            if (   m{/usr/share/debconf/confmodule}
-                || m/(?:Debconf|Debian::DebConf)::Client::ConfModule/) {
+        while (my $line = <$fd>) {
+            $line =~ s/\#.*//;    # Not perfect for Perl, but should be OK
+
+            if (   $line =~ m{/usr/share/debconf/confmodule}
+                || $line =~ /(?:Debconf|Debian::DebConf)::Client::ConfModule/){
                 $usespreinst=1;
+
                 last;
             }
         }
@@ -165,8 +169,8 @@ sub installable {
     # Consider every package to depend on itself.
     my $selfrel;
     if ($self->processable->fields->declares('Version')) {
-        $_ = $self->processable->fields->value('Version');
-        $selfrel = $self->processable->name . " (= $_)";
+        my $version = $self->processable->fields->value('Version');
+        $selfrel = $self->processable->name . " (= $version)";
     } else {
         $selfrel = $self->processable->name;
     }
@@ -426,21 +430,30 @@ sub installable {
                 next;
             }
 
-            while (<$fd>) {
-                s/#.*//;    # Not perfect for Perl, but should be OK
-                next unless m/\S/;
-                while (s{\\$}{}) {
+            while (my $line = <$fd>) {
+
+                # not perfect for Perl, but should be OK
+                $line =~ s/#.*//;
+
+                next
+                  unless $line =~ /\S/;
+
+                while ($line =~ s{\\$}{}) {
                     my $next = <$fd>;
-                    last unless $next;
-                    $_ .= $next;
+                    last
+                      unless $next;
+                    $line .= $next;
                 }
-                if (   m{(?:\.|source)\s+/usr/share/debconf/confmodule}
-                    || m/(?:use|require)\s+Debconf::Client::ConfModule/) {
+
+                if ($line =~ m{(?:\.|source)\s+/usr/share/debconf/confmodule}
+                    || $line=~ /(?:use|require)\s+Debconf::Client::ConfModule/)
+                {
                     $usesconfmodule=1;
                 }
+
                 if (
-                    !$obsoleteconfmodule
-                    && m{(/usr/share/debconf/confmodule\.sh|
+                      !$obsoleteconfmodule
+                    && $line =~ m{(/usr/share/debconf/confmodule\.sh|
                    Debian::DebConf::Client::ConfModule)}x
                 ) {
                     my $cmod = $1;
@@ -448,30 +461,38 @@ sub installable {
                     $usesconfmodule = 1;
                     $obsoleteconfmodule = 1;
                 }
-                if ($file eq 'config' and m/db_input/) {
+
+                if ($file eq 'config' && $line =~ /db_input/) {
                     $config_calls_db_input = 1;
                 }
-                if (    $file eq 'postinst'
-                    and not $db_input
-                    and m/db_input/
-                    and not $config_calls_db_input) {
+
+                if (   $file eq 'postinst'
+                    && !$db_input
+                    && $line =~ /db_input/
+                    && !$config_calls_db_input) {
+
                     # TODO: Perl?
                     $self->hint('postinst-uses-db-input')
                       unless $self->processable->type eq 'udeb';
                     $db_input=1;
                 }
-                if (m{/dev/}) {
+
+                if ($line =~ m{/dev/}) {
                     $potential_makedev->{$.} = 1;
                 }
+
                 if (
-                    m{\A \s*(?:db_input|db_text)\s+
+                    $line =~m{\A \s*(?:db_input|db_text)\s+
                      [\"\']? (\S+?) [\"\']? \s+ (\S+)\s}xsm
                 ) {
                     my ($priority, $template) = ($1, $2);
                     $templates_used{$self->get_template_name($template)}= 1;
+
                     if ($priority !~ /^\$\S+$/) {
+
                         $self->hint('unknown-debconf-priority', "$file:$. $1")
                           unless ($valid_priorities{$priority});
+
                         $self->hint('possible-debconf-note-abuse',
                             "$file:$. $template")
                           if (
@@ -482,27 +503,33 @@ sub installable {
                             and ($priority eq 'low' || $priority eq 'medium'));
                     }
                 }
+
                 if (
-                    m{ \A \s* (?:db_get|db_set(?:title)?) \s+ 
+                    $line =~m{ \A \s* (?:db_get|db_set(?:title)?) \s+ 
                        [\"\']? (\S+?) [\"\']? (?:\s|\Z)}xsm
                 ) {
                     $templates_used{$self->get_template_name($1)} = 1;
                 }
+
                 # Try to handle Perl somewhat.
-                if (   m/^\s*(?:.*=\s*get|set)\s*\(\s*[\"\'](\S+?)[\"\']/
-                    || m/\b(?:metaget|settitle)\s*\(\s*[\"\'](\S+?)[\"\']/) {
+                if ($line =~ /^\s*(?:.*=\s*get|set)\s*\(\s*[\"\'](\S+?)[\"\']/
+                    || $line
+                    =~ /\b(?:metaget|settitle)\s*\(\s*[\"\'](\S+?)[\"\']/) {
                     $templates_used{$1} = 1;
                 }
-                if (m/^\s*db_register\s+[\"\']?(\S+?)[\"\']?\s+(\S+)\s/) {
+
+                if ($line=~ /^\s*db_register\s+[\"\']?(\S+?)[\"\']?\s+(\S+)\s/)
+                {
                     my ($template, $question) = ($1, $2);
                     push @{$template_aliases{$template}}, $question;
                 }
-                if (not $isdefault and m/db_fset.*isdefault/) {
+                if (!$isdefault && $line =~ /db_fset.*isdefault/) {
                     # TODO: Perl?
                     $self->hint('isdefault-flag-is-deprecated', $file);
                     $isdefault = 1;
                 }
-                if (not $db_purge and m/db_purge/) {    # TODO: Perl?
+
+                if (!$db_purge && $line =~ /db_purge/) {    # TODO: Perl?
                     $db_purge = 1;
                 }
             }
@@ -596,10 +623,13 @@ sub installable {
           unless $file->is_open_ok;
 
         open(my $fd, '<', $file->unpacked_path);
-        while (<$fd>) {
-            s/#.*//;    # Not perfect for Perl, but should be OK
-            if (   m{/usr/share/debconf/confmodule}
-                || m/(?:Debconf|Debian::DebConf)::Client::ConfModule/) {
+        while (my $line = <$fd>) {
+
+            $line =~ s/#.*//;    # Not perfect for Perl, but should be OK
+
+            if (   $line =~ m{/usr/share/debconf/confmodule}
+                || $line =~ /(?:Debconf|Debian::DebConf)::Client::ConfModule/){
+
                 $self->hint('debconf-is-not-a-registry', $file->name);
                 last;
             }

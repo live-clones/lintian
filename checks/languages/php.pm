@@ -37,18 +37,8 @@ sub visit_installed_files {
     if (   $file->is_file
         && $file->name =~ m{^etc/php/.*/mods-available/.+\.ini$}) {
 
-        open(my $fd, '<', $file->unpacked_path);
-        while (<$fd>) {
-            next
-              unless (m/^\s*#/);
-
-            $self->hint('obsolete-comments-style-in-php-ini', $file->name);
-
-            # only warn once per file:
-            last;
-        }
-
-        close($fd);
+        $self->hint('obsolete-comments-style-in-php-ini', $file->name)
+          if $file->decoded_utf8 =~ /^\s*#/m;
     }
 
     return;

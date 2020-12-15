@@ -68,28 +68,38 @@ sub source {
         if ($basename =~ m/^(.+\.)?templates(\..+)?$/) {
             if ($basename =~ m/templates\.\w\w(_\w\w)?$/) {
                 push(@lang_templates, $basename);
+
                 open(my $fd, '<', $path->unpacked_path);
-                while (<$fd>) {
+                while (my $line = <$fd>) {
+
                     $self->hint('untranslatable-debconf-templates',
                         "$basename: $.")
-                      if (m/^Description: (.+)/i and $1 !~/for internal use/);
+                      if $line =~ /^Description: (.+)/i
+                      && $1 !~/for internal use/;
                 }
                 close($fd);
+
             } else {
                 open(my $fd, '<', $path->unpacked_path);
                 my $in_template = 0;
                 my $saw_tl_note = 0;
-                while (<$fd>) {
-                    chomp;
+                while (my $line = <$fd>) {
+                    chomp $line;
+
                     $self->hint('translated-default-field', "$basename: $.")
-                      if (m{^_Default(?:Choice)?: [^\[]*$}) && !$saw_tl_note;
+                      if $line =~ m{^_Default(?:Choice)?: [^\[]*$}
+                      && !$saw_tl_note;
+
                     $self->hint('untranslatable-debconf-templates',
                         "$basename: $.")
-                      if (m/^Description: (.+)/i and $1 !~/for internal use/);
+                      if $line =~ /^Description: (.+)/i
+                      && $1 !~/for internal use/;
 
-                    if (/^#/) {
+                    if ($line =~ /^#/) {
                         # Is this a comment for the translators?
-                        $saw_tl_note = 1 if m/translators/i;
+                        $saw_tl_note = 1
+                          if $line =~ /translators/i;
+
                         next;
                     }
 
@@ -97,7 +107,7 @@ sub source {
                     # _Default(Choice) field, we don't care about it.
                     $saw_tl_note = 0;
 
-                    if (/^Template: (\S+)/i) {
+                    if ($line =~ /^Template: (\S+)/i) {
                         my $template = $1;
                         next
                           if $template eq 'shared/packages-wordlist'
@@ -108,14 +118,17 @@ sub source {
 
                         $in_template = 1;
 
-                    } elsif ($in_template and /^_?Description: (.+)/i) {
+                    } elsif ($in_template && $line =~ /^_?Description: (.+)/i){
                         my $description = $1;
-                        next if $description =~ /for internal use/;
+                        next
+                          if $description =~ /for internal use/;
                         $has_template = 1;
-                    } elsif ($in_template && !length($_)) {
+
+                    } elsif ($in_template && !length($line)) {
                         $in_template = 0;
                     }
                 }
+
                 close($fd);
             }
         }
@@ -142,19 +155,26 @@ sub source {
 
     if ($potfiles_in_path and $potfiles_in_path->is_open_ok) {
         open(my $fd, '<', $potfiles_in_path->unpacked_path);
-        while (<$fd>) {
-            chomp;
-            next if /^\s*\#/;
-            s/.*\]\s*//;
+        while (my $line = <$fd>) {
+            chomp $line;
+
+            next
+              if $line =~ /^\s*\#/;
+
+            $line =~ s/.*\]\s*//;
+
             #  Cannot check files which are not under debian/
-            next if $_ eq $EMPTY; #m,^\.\./, or
-            my $po_path = $debian_dir->resolve_path($_);
+            next
+              if $line eq $EMPTY; #m,^\.\./, or
+
+            my $po_path = $debian_dir->resolve_path($line);
             unless ($po_path and $po_path->is_file) {
-                $self->hint('missing-file-from-potfiles-in', $_);
+                $self->hint('missing-file-from-potfiles-in', $line);
                 $missing_files = 1;
             }
         }
         close($fd);
+
     } else {
         $self->hint('missing-potfiles-in');
         $missing_files = 1;
@@ -268,30 +288,27 @@ sub source {
         next unless $basename =~ m/\.po$/ || $po_path->is_dir;
         $self->hint('misnamed-po-file', $po_path)
           unless ($basename =~ /^[a-z]{2,3}(_[A-Z]{2})?(?:\@[^\.]+)?\.po$/);
-        next unless $po_path->is_open_ok;
-        local ($/) = "\n\n";
-        $_ = $EMPTY;
-        open(my $fd, '<', $po_path->unpacked_path);
-        while (<$fd>) {
+        next
+          unless $po_path->is_open_ok;
 
-            if (/Language\-Team:.*debian-i18n\@lists\.debian\.org/i) {
-                $self->hint('debconf-translation-using-general-list',
-                    $basename);
-            }
-            last if m/^msgstr/m;
-        }
-        close($fd);
-        unless ($_) {
+        my $bytes = $po_path->bytes;
+
+        $self->hint('debconf-translation-using-general-list', $basename)
+          if $bytes =~ /Language\-Team:.*debian-i18n\@lists\.debian\.org/i;
+
+        unless ($bytes =~ /^msgstr/m) {
+
             $self->hint('invalid-po-file', $po_path);
             next;
         }
-        s/"\n"//g;
-        my $charset = $EMPTY;
-        if (m/charset=(.*?)\\n/) {
-            $charset = ($1 eq 'CHARSET' ? $EMPTY : $1);
+
+        if ($bytes =~ /charset=(.*?)\\n/) {
+
+            my $charset = ($1 eq 'CHARSET' ? $EMPTY : $1);
+
+            $self->hint('unknown-encoding-in-po-file', $po_path)
+              unless length $charset;
         }
-        $self->hint('unknown-encoding-in-po-file', $po_path)
-          unless length($charset);
 
         my $error;
 

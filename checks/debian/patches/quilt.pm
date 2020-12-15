@@ -140,15 +140,21 @@ sub source {
             my $has_template_description = 0;
 
             open(my $patch_fd, '<', $file->unpacked_path);
-            while (<$patch_fd>) {
+            while (my $line = <$patch_fd>) {
+
                 # stop if something looking like a patch starts:
-                last if /^---/;
-                next if /^\s*$/;
+                last
+                  if $line =~ /^---/;
+
+                next
+                  if $line =~ /^\s*$/;
+
                 # Skip common "lead-in" lines
-                $description .= $_
-                  unless m{^(?:Index: |=+$|diff .+|index |From: )};
+                $description .= $line
+                  unless $line =~ m{^(?:Index: |=+$|diff .+|index |From: )};
+
                 $has_template_description = 1
-                  if index($_, $PATCH_DESC_TEMPLATE) != -1;
+                  if index($line, $PATCH_DESC_TEMPLATE) != -1;
             }
             close($patch_fd);
 
@@ -190,8 +196,9 @@ sub source {
             $known_files{$file->basename}++;
 
             open(my $fd, '<', $file->unpacked_path);
-            while (<$fd>) {
-                $known_files{$1}++ if m{^\s*(?:#+\s*)?(\S+)};
+            while (my $line = <$fd>) {
+                $known_files{$1}++
+                  if $line =~ m{^\s*(?:#+\s*)?(\S+)};
             }
             close($fd);
 

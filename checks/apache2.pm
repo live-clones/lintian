@@ -210,25 +210,23 @@ sub check_maintainer_scripts {
           unless $file->is_open_ok;
 
         open(my $sfd, '<', $file->unpacked_path);
-        while (<$sfd>) {
+        while (my $line = <$sfd>) {
 
             # skip comments
-            next if substr($_, 0, $-[0]) =~ /#/;
+            next
+              if $line =~ /^#/;
 
             # Do not allow reverse dependencies to call "a2enmod" and friends
             # directly
-            if (m/\b(a2(?:en|dis)(?:conf|site|mod))\b/) {
+            if ($line =~ /\b(a2(?:en|dis)(?:conf|site|mod))\b/) {
 
                 $self->hint('apache2-reverse-dependency-calls-wrapper-script',
                     $file,$1);
             }
 
             # Do not allow reverse dependencies to call "invoke-rc.d apache2
-            if (m/invoke-rc\.d\s+apache2/) {
-
-                $self->hint('apache2-reverse-dependency-calls-invoke-rc.d',
-                    $file);
-            }
+            $self->hint('apache2-reverse-dependency-calls-invoke-rc.d',$file)
+              if $line =~ /invoke-rc\.d\s+apache2/;
 
             # XXX: Check whether apache2-maintscript-helper is used
             # unconditionally e.g. not protected by a [ -e ], [ -x ] or so.
@@ -246,33 +244,40 @@ sub inspect_conf_file {
     my ($self, $conftype, $file) = @_;
 
     # Don't follow unsafe links
-    return if not $file->is_open_ok;
+    return
+      unless $file->is_open_ok;
+
     open(my $fd, '<', $file->unpacked_path);
     my $skip = 0;
-    while (<$fd>)  {
+    while (my $line = <$fd>)  {
         $skip++
-          if m{<\s*IfModule.*!\s*mod_authz_core}
-          or m{<\s*IfVersion\s+<\s*2\.3};
+          if $line =~ m{<\s*IfModule.*!\s*mod_authz_core}
+          || $line =~ m{<\s*IfVersion\s+<\s*2\.3};
 
         for my $directive ('Order', 'Satisfy', 'Allow', 'Deny',
             qr{</?Limit.*?>}xsm, qr{</?LimitExcept.*?>}xsm) {
-            if (m{\A \s* ($directive) (?:\s+|\Z)}xsm and not $skip) {
+
+            if ($line =~ m{\A \s* ($directive) (?:\s+|\Z)}xsm && !$skip) {
+
                 $self->hint('apache2-deprecated-auth-config',
                     $file, "(line $.)", $1);
             }
         }
 
-        if (m/^#\s*(Depends|Conflicts):\s+(.*?)\s*$/) {
+        if ($line =~ /^#\s*(Depends|Conflicts):\s+(.*?)\s*$/) {
             my ($field, $value) = ($1, $2);
+
             $self->hint('apache2-unsupported-dependency', $file, $field)
-              if $field eq 'Conflicts' and $conftype ne 'mods';
+              if $field eq 'Conflicts' && $conftype ne 'mods';
+
             my @dependencies = split(/[\n\s]+/, $value);
-            foreach my $dep (@dependencies) {
+            for my $dep (@dependencies) {
+
                 $self->hint('apache2-unparsable-dependency',
                     $file, "(line $.)", $dep)
-                  if $dep =~ m/[^\w\.]/
-                  or $dep =~ /^mod\_/
-                  or $dep =~ m/\.(?:conf|load)/;
+                  if $dep =~ /[^\w\.]/
+                  || $dep =~ /^mod\_/
+                  || $dep =~ /\.(?:conf|load)/;
             }
         }
 

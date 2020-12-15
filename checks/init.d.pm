@@ -108,13 +108,21 @@ sub installable {
     # read postinst control file
     if ($postinst and $postinst->is_file and $postinst->is_open_ok) {
         open(my $fd, '<', $postinst->unpacked_path);
-        while (<$fd>) {
-            next if /$EXCLUDE_R/;
-            s/\#.*$//;
-            next unless m{^(?:.+;|^\s*system[\s\(\']+)?\s*update-rc\.d\s+
+        while (my $line = <$fd>) {
+
+            next
+              if $line =~ /$EXCLUDE_R/;
+
+            $line =~ s/\#.*$//;
+
+            next
+              unless $line =~ m{^(?:.+;|^\s*system[\s\(\']+)?\s*update-rc\.d\s+
             (?:$OPTS_R)*($INITD_NAME_REGEX)\s+($ACTION_R)}x;
+
             my ($name,$opt) = ($1,$2);
-            next if $opt eq 'remove';
+            next
+              if $opt eq 'remove';
+
             if ($initd_postinst{$name}++ == 1) {
                 $self->hint('duplicate-updaterc.d-calls-in-postinst', $name);
                 next;
@@ -122,7 +130,7 @@ sub installable {
 
             $self->hint('output-of-updaterc.d-not-redirected-to-dev-null',
                 "$name postinst")
-              unless m{>\s*/dev/null};
+              unless $line =~ m{>\s*/dev/null};
         }
         close($fd);
     }
@@ -130,14 +138,21 @@ sub installable {
     # read preinst control file
     if ($preinst and $preinst->is_file and $preinst->is_open_ok) {
         open(my $fd, '<', $preinst->unpacked_path);
-        while (<$fd>) {
-            next if /$EXCLUDE_R/;
-            s/\#.*$//;
-            next unless m{update-rc\.d \s+
+        while (my $line = <$fd>) {
+
+            next
+              if $line =~ /$EXCLUDE_R/;
+
+            $line =~ s/\#.*$//;
+            next
+              unless $line =~ m{update-rc\.d \s+
                        (?:$OPTS_R)*($INITD_NAME_REGEX) \s+
                        ($ACTION_R)}x;
+
             my ($name,$opt) = ($1,$2);
-            next if $opt eq 'remove';
+            next
+              if $opt eq 'remove';
+
             $self->hint('preinst-calls-updaterc.d', $name);
         }
         close($fd);
@@ -146,11 +161,15 @@ sub installable {
     # read postrm control file
     if ($postrm and $postrm->is_file and $postrm->is_open_ok) {
         open(my $fd, '<', $postrm->unpacked_path);
-        while (<$fd>) {
-            next if /$EXCLUDE_R/;
-            s/\#.*$//;
+        while (my $line = <$fd>) {
+
             next
-              unless /update-rc\.d\s+($OPTS_R)*($INITD_NAME_REGEX)/;
+              if $line =~ /$EXCLUDE_R/;
+
+            $line =~ s/\#.*$//;
+
+            next
+              unless $line =~ /update-rc\.d\s+($OPTS_R)*($INITD_NAME_REGEX)/;
 
             my $name = $2;
 
@@ -161,7 +180,7 @@ sub installable {
 
             $self->hint('output-of-updaterc.d-not-redirected-to-dev-null',
                 "$name postrm")
-              unless m{>\s*/dev/null};
+              unless $line =~ m{>\s*/dev/null};
         }
         close($fd);
     }
@@ -169,10 +188,16 @@ sub installable {
     # read prerm control file
     if ($prerm and $prerm->is_file and $prerm->is_open_ok) {
         open(my $fd, '<', $prerm->unpacked_path);
-        while (<$fd>) {
-            next if /$EXCLUDE_R/;
-            s/\#.*$//;
-            next unless m/update-rc\.d\s+($OPTS_R)*($INITD_NAME_REGEX)/;
+        while (my $line = <$fd>) {
+
+            next
+              if $line =~ /$EXCLUDE_R/;
+
+            $line =~ s/\#.*$//;
+
+            next
+              unless $line =~ /update-rc\.d\s+($OPTS_R)*($INITD_NAME_REGEX)/;
+
             $self->hint('prerm-calls-updaterc.d', $2);
         }
         close($fd);
@@ -539,12 +564,15 @@ sub check_defaults {
     my $dir = $processable->installed->resolve_path('etc/default/');
     return unless $dir and $dir->is_dir;
     for my $path ($dir->children) {
-        return if not $path->is_open_ok;
+
+        return
+          unless $path->is_open_ok;
+
         open(my $fd, '<', $path->unpacked_path);
-        while (<$fd>) {
+        while (my $line = <$fd>) {
             $self->hint('init.d-script-should-always-start-service',
                 $path, "(line $.)")
-              if m/$ALWAYS_START/;
+              if $line =~ /$ALWAYS_START/;
         }
         close($fd);
     }

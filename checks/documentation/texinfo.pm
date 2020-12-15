@@ -102,17 +102,25 @@ sub binary {
                 # "gzip compressed data".  But for good measure.
                 next;
             }
+
             my $fd = open_gz($file->unpacked_path);
-            local $_ = undef;
             my ($section, $start, $end);
-            while (<$fd>) {
-                $section = 1 if /^INFO-DIR-SECTION\s+\S/;
-                $start   = 1 if /^START-INFO-DIR-ENTRY\b/;
-                $end     = 1 if /^END-INFO-DIR-ENTRY\b/;
+            while (my $line = <$fd>) {
+
+                $section = 1
+                  if $line =~ /^INFO-DIR-SECTION\s+\S/;
+
+                $start   = 1
+                  if $line =~ /^START-INFO-DIR-ENTRY\b/;
+
+                $end     = 1
+                  if $line =~ /^END-INFO-DIR-ENTRY\b/;
             }
             close($fd);
+
             $self->hint('info-document-missing-dir-section', $file)
               unless $section;
+
             $self->hint('info-document-missing-dir-entry', $file)
               unless $start && $end;
         }

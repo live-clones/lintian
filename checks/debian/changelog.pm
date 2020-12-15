@@ -743,18 +743,23 @@ sub check_dch {
     my ($prefix, $suffix);
     my $lineno = 0;
     my ($estart, $tstart) = (0, 0);
+
     open(my $fd, '<:utf8_strict', $path);
-    while (<$fd>) {
+    while (my $line = <$fd>) {
 
         unless ($tstart) {
             $lineno++;
-            $estart = 1 if m/^\S/;
-            $tstart = 1 if m/^\s+\S/;
+
+            $estart = 1
+              if $line =~ /^\S/;
+
+            $tstart = 1
+              if $line =~ /^\s+\S/;
         }
 
         if (
-               m/closes:\s*(((?:bug)?\#?\s?\d*)[[:alpha:]]\w*)/i
-            || m{closes:\s*(?:bug)?\#?\s?\d+
+               $line =~ /closes:\s*(((?:bug)?\#?\s?\d*)[[:alpha:]]\w*)/i
+            || $line =~ m{closes:\s*(?:bug)?\#?\s?\d+
               (?:,\s*(?:bug)?\#?\s?\d+)*
               (?:,\s*(((?:bug)?\#?\s?\d*)[[:alpha:]]\w*))}ix
         ) {
@@ -763,19 +768,20 @@ sub check_dch {
               if length $2;
         }
 
-        if (/^(.*)Local\ variables:(.*)$/i) {
+        if ($line =~ /^(.*)Local\ variables:(.*)$/i) {
             $prefix = $1;
             $suffix = $2;
         }
+
         # emacs allows whitespace between prefix and variable, hence \s*
-        if (   defined $prefix
-            && defined $suffix
-            && m/^\Q$prefix\E\s*add-log-mailing-address:.*\Q$suffix\E$/) {
-            $self->hint(
-                'debian-changelog-file-contains-obsolete-user-emacs-settings');
-        }
+        $self->hint(
+            'debian-changelog-file-contains-obsolete-user-emacs-settings')
+          if defined $prefix
+          && defined $suffix
+          && $line =~ /^\Q$prefix\E\s*add-log-mailing-address:.*\Q$suffix\E$/;
     }
     close($fd);
+
     return $lineno;
 }
 

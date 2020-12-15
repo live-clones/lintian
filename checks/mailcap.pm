@@ -50,33 +50,33 @@ sub visit_installed_files {
 
     my @continuation;
 
-    while (<$fd>) {
+    while (my $line = <$fd>) {
 
         unless (@continuation) {
             # skip blank lines
             next
-              if /^\s*$/;
+              if $line =~ /^\s*$/;
 
             # skip comments
             next
-              if /^\s*#/;
+              if $line =~ /^\s*#/;
         }
 
         # continuation line
-        if (s/\\$//) {
-            push(@continuation, {string => $_, position => $.});
+        if ($line =~ s/\\$//) {
+            push(@continuation, {string => $line, position => $.});
             next;
         }
 
-        push(@continuation, {string => $_, position => $.});
+        push(@continuation, {string => $line, position => $.});
 
-        my $line = $EMPTY;
-        $line .= $_->{string}for @continuation;
+        my $assembled = $EMPTY;
+        $assembled .= $_->{string} for @continuation;
 
         my $position = $continuation[0]->{position};
 
         my @quoted
-          = extract_multiple($line,
+          = extract_multiple($assembled,
             [sub { extract_delimited($_[0], q{"'}, '[^\'"]*') }],
             undef, 1);
 

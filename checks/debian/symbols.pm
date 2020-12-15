@@ -54,14 +54,15 @@ sub check_symbols_file {
       unless $file->is_file && $file->is_open_ok;
 
     open(my $fd, '<', $file->unpacked_path);
-    while (<$fd>) {
+    while (my $line = <$fd>) {
 
-        chop;
+        chop $line;
         next
-          if m/^\s*$/ or /^#/;
+          if $line =~ /^\s*$/
+          || $line =~ /^#/;
 
         # meta-information
-        if (m/^\*\s(\S+):\s+(\S+)/) {
+        if ($line =~ /^\*\s(\S+):\s+(\S+)/) {
 
             my $field = $1;
             my $value = $2;

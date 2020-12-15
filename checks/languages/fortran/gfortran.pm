@@ -55,15 +55,15 @@ sub visit_installed_files {
     my $module_version;
 
     my $fd = open_gz($file->unpacked_path);
-    while (<$fd>) {
+    while (my $line = <$fd>) {
         next
-          if /^\s*$/;
+          if $line =~ /^\s*$/;
 
-        ($module_version) = ($_ =~ /^GFORTRAN module version '(\d+)'/);
+        ($module_version) = ($line =~ /^GFORTRAN module version '(\d+)'/);
         last;
     }
 
-    close($fd);
+    close $fd;
 
     unless (length $module_version) {
         $self->hint('gfortran-module-does-not-declare-version', $file->name);
