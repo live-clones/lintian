@@ -90,8 +90,7 @@ my %PRESERVE_ENV = map { $_ => 1 } qw(
   XDG_DATA_HOME
 );
 
-my @disallowed
-  = grep { !exists $PRESERVE_ENV{$_} && $_ !~ /^LINTIAN_/ } keys %ENV;
+my @disallowed= grep { !exists $PRESERVE_ENV{$_} && !/^LINTIAN_/ } keys %ENV;
 
 delete $ENV{$_} for @disallowed;
 

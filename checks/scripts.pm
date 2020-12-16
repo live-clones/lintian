@@ -1389,7 +1389,7 @@ sub installable {
         if ($expand_diversions) {
             $self->hint('diversion-for-unknown-file', $divert, "$script:$line")
               unless (
-                any { $_ =~ m/$divertrx/ }
+                any { /$divertrx/ }
                 $processable->installed->sorted_list
               );
         } else {

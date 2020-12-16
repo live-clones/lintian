@@ -50,8 +50,9 @@ sub always {
     my $built_using_rel = Lintian::Relation->new->load($built_using);
     $built_using_rel->visit(
         sub {
-            if ($_ !~ /^$PKGNAME_REGEX \(= $PKGVERSION_REGEX\)$/) {
-                $self->hint('invalid-value-in-built-using-field', $_);
+            my ($package) = @_;
+            if ($package !~ /^$PKGNAME_REGEX \(= $PKGVERSION_REGEX\)$/) {
+                $self->hint('invalid-value-in-built-using-field', $package);
                 return 1;
             }
             return 0;

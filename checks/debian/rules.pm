@@ -519,11 +519,11 @@ sub source {
 
     if (my $line = $overridden{'dh_auto_test'}) {
         my @lines = grep {
-                  $_ !~ m{^\t\s*[\:\[]}
-              and $_ !~ m{^\s*$}
-              and $_ !~ m{\bdh_auto_test\b}
-              and $_
-              !~ m{^\t\s*[-@]?(?:(?:/usr)?/bin/)?(?:cp|chmod|echo|ln|mv|mkdir|rm|test|true)}
+                 !m{^\t\s*[\:\[]}
+              && !m{^\s*$}
+              && !m{\bdh_auto_test\b}
+              && !
+m{^\t\s*[-@]?(?:(?:/usr)?/bin/)?(?:cp|chmod|echo|ln|mv|mkdir|rm|test|true)}
         } @{$rules_per_target{'override_dh_auto_test'}};
         $self->hint('override_dh_auto_test-does-not-check-DEB_BUILD_OPTIONS',
             "(line $line)")

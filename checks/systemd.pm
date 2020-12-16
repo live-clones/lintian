@@ -466,9 +466,9 @@ sub extract_service_file_values {
         push(@lines, $line);
     }
 
-    for (@lines) {
+    for my $line (@lines) {
         # section header
-        if (/^\[([^\]]+)\]$/) {
+        if ($line =~ /^\[([^\]]+)\]$/) {
             $section = $1;
             next;
         }
@@ -478,7 +478,7 @@ sub extract_service_file_values {
             next;
         }
 
-        my ($key, $value) = ($_ =~ m{^(.*)\s*=\s*(.*)$});
+        my ($key, $value) = ($line =~ m{^(.*)\s*=\s*(.*)$});
         if (   defined($key)
             && $section eq $extract_section
             && $key eq $extract_key) {

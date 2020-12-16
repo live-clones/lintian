@@ -438,7 +438,7 @@ sub check_init {
 
         # No script should start at one of the 2-5 runlevels but not at
         # all of them
-        my $start = join($SPACE, sort grep {$_ =~ /^[2-5]$/} keys %start);
+        my $start = join($SPACE, sort grep { /^[2-5]$/ } keys %start);
         if (length($start) > 0 and $start ne '2 3 4 5') {
             my @missing = grep { !defined $start{$_} } qw(2 3 4 5);
             $self->hint('init.d-script-missing-start', $initd_path,@missing);

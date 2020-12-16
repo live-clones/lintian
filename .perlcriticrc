@@ -306,7 +306,7 @@ functions = open opendir chdir read readdir readline closedir sysopen sysread sy
 [RegularExpressions::ProhibitUnusualDelimiters]
 allow_all_brackets = 1
 
-[-RegularExpressions::ProhibitUselessTopic]
+[RegularExpressions::ProhibitUselessTopic]
 
 [RegularExpressions::RequireBracesForMultiline]
 allow_all_brackets = 1

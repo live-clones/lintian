@@ -949,14 +949,15 @@ sub check_js_script {
     my ($self, $item, $lcscript) = @_;
 
     my $firstline = $EMPTY;
-    foreach (split /\n/, $lcscript) {
-        if ($_ =~ m/^\s*$/) {
+    for my $line (split /\n/, $lcscript) {
+        if ($line =~ /^\s*$/) {
             next;
         }else {
-            $firstline=$_;
+            $firstline = $line;
             last;
         }
     }
+
     if ($firstline =~ m/.{0,20}((?:\bcopyright\b|[\(]c[\)]\s*\w|©).{0,50})/) {
         my $extract = $1;
         $extract =~ s/^\s+|\s+$//g;

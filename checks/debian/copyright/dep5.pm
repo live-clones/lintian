@@ -455,7 +455,7 @@ sub check_dep5_copyright {
         @shipped_items = $self->processable->orig->sorted_list;
 
         # remove ./debian folder from orig, if any
-        @shipped_items = grep { $_ !~ m{^debian/} } @shipped_items
+        @shipped_items = grep { !m{^debian/} } @shipped_items
           if $self->processable->fields->value('Format') eq '3.0 (quilt)';
 
         # add ./ debian folder from patched
@@ -682,7 +682,7 @@ sub check_dep5_copyright {
         my @xml_searchspace = keys %license_identifiers_by_file;
 
         # do not examine Lintian's test suite for appstream metadata
-        @xml_searchspace = grep { $_ !~ m{t/} } @xml_searchspace
+        @xml_searchspace = grep { !m{t/} } @xml_searchspace
           if $self->processable->name eq 'lintian';
 
         for my $name (@xml_searchspace) {
@@ -784,7 +784,7 @@ sub escape_errors {
     my ($escaped) = @_;
 
     my @sequences = ($escaped =~ m{\\.?}g);
-    my @illegal = grep { $_ !~ m{^\\[*?]$} } @sequences;
+    my @illegal = grep { !m{^\\[*?]$} } @sequences;
 
     return @illegal;
 }
