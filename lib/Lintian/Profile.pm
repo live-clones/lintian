@@ -631,8 +631,6 @@ sub read_profile {
         my @tagnames = @{$self->check_tagnames->{$check->name}};
         my @tags = map { $self->known_tags_by_name->{$_} } @tagnames;
 
-        $_->check_type($check->type) for @tags;
-
         $check->add_tag($_) for @tags;
     }
 

@@ -75,8 +75,6 @@ metadata elements or to format the tag description.
 
 =item show_always
 
-=item check_type
-
 =item experimental
 
 =item explanation
@@ -141,12 +139,6 @@ has show_always => (
     is => 'rw',
     coerce => sub { my ($boolean) = @_; return ($boolean // 0); },
     default => 0
-);
-
-has check_type => (
-    is => 'rw',
-    coerce => sub { my ($text) = @_; return ($text // $EMPTY); },
-    default => $EMPTY
 );
 
 has experimental => (

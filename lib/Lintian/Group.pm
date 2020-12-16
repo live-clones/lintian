@@ -307,12 +307,6 @@ sub process {
             my $checkname = $checkinfo->name;
             my $timer = [gettimeofday];
 
-            # The lintian check is done by this frontend and we
-            # also skip the check if it is not for this type of
-            # package.
-            next
-              if !$checkinfo->is_check_type($processable->type);
-
             my $procid = $processable->identifier;
             $OUTPUT->debug_msg(1, "Running check: $checkname on $procid  ...");
 

@@ -58,10 +58,6 @@ This class represents Lintian checks.
 
 =item module
 
-=item type
-
-=item type_table
-
 =item tag_table
 
 =cut
@@ -89,17 +85,6 @@ has module => (
     coerce => sub { my ($string) = @_; return $string // $EMPTY;},
     default => $EMPTY
 );
-
-has type => (
-    is => 'rw',
-    coerce => sub { my ($string) = @_; return $string // 'ALL';},
-    default => 'ALL'
-);
-
-has type_table => (
-    is => 'rw',
-    coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
-    default => sub { {} });
 
 has tag_table => (
     is => 'rw',
@@ -135,59 +120,7 @@ sub load {
 
     $self->module("Lintian::Check::$module");
 
-    my $descpath = $self->basedir . $SLASH . $self->name . '.desc';
-    return
-      unless -e $descpath;
-
-    my $deb822 = Lintian::Deb822::File->new;
-    my @sections = $deb822->read_file($descpath);
-    die encode_utf8("$descpath does not have exactly one paragraph")
-      unless scalar @sections == 1;
-
-    my $fields = $sections[0];
-
-    die encode_utf8("No name field in $descpath")
-      unless $fields->declares('Check-Script');
-
-    my $name = $fields->value('Check-Script');
-
-    die encode_utf8("Wrong name $name vs " . $self->name)
-      unless $name eq $self->name;
-
-    $self->type($fields->value('Type'));
-
-    my %type_table;
-    if ($self->type ne 'ALL') {
-        for my $type (split /\s*,\s*/, $self->type) {
-            $type_table{$type} = 1;
-        }
-    }
-
-    $self->type_table(\%type_table);
-
     return;
-}
-
-=item $cs->is_check_type ($type)
-
-Returns a truth value if this check can be applied to a $type package.
-
-Note if $cs->type return undef, this will return a truth value for all
-inputs.
-
-=cut
-
-sub is_check_type {
-    my ($self, $type) = @_;
-
-    # checks without specification lack an explicit type
-    return 1
-      unless length $self->type;
-
-    return 1
-      if $self->type  eq 'ALL';
-
-    return $self->type_table->{$type} // 0;
 }
 
 =item $cs->add_tag ($tag)
@@ -257,33 +190,16 @@ sub run_check {
 
     require $self->path;
 
-    if ($self->module->DOES('Lintian::Check')) {
+    return
+      unless $self->module->DOES('Lintian::Check');
 
-        my $check = $self->module->new;
-        $check->info($self);
-        $check->processable($processable);
-        $check->group($group);
-        $check->profile($group->profile);
+    my $check = $self->module->new;
+    $check->info($self);
+    $check->processable($processable);
+    $check->group($group);
+    $check->profile($group->profile);
 
-        $check->run;
-
-        return;
-    }
-
-    my @args
-      = ($processable->name,$processable->type,$processable,$processable,
-        $group);
-
-    if ($self->module->can('run')) {
-        $self->module->can('run')->(@args);
-        return;
-    }
-
-    $self->module->can($processable->type)->(@args)
-      if $self->module->can($processable->type);
-
-    $self->module->can('always')->(@args)
-      if $self->module->can('always');
+    $check->run;
 
     return;
 }
