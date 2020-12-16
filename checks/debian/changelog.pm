@@ -174,9 +174,10 @@ sub source {
         };
 
         if ($latest_timestamp && $previous_timestamp) {
+
             $self->hint('latest-debian-changelog-entry-without-new-date')
-              unless ($latest_timestamp - $previous_timestamp) > 0
-              || lc($latest_entry->Distribution) eq 'unreleased';
+              if $latest_timestamp <= $previous_timestamp
+              && lc($latest_entry->Distribution) ne 'unreleased';
         }
 
         if (defined $latest_version) {
@@ -593,9 +594,10 @@ sub binary {
             my $previous_timestamp = $previous_entry->Timestamp;
 
             if ($latest_timestamp && $previous_timestamp) {
+
                 $self->hint('latest-changelog-entry-without-new-date')
-                  unless (($latest_timestamp - $previous_timestamp) > 0
-                    or $latest_entry->Distribution eq 'UNRELEASED');
+                  if $latest_timestamp <= $previous_timestamp
+                  && $latest_entry->Distribution ne 'UNRELEASED';
             }
 
             my $latest_dist = lc $latest_entry->Distribution;

@@ -657,7 +657,7 @@ sub installable {
                 # #719806)
                 if ($is_shared) {
                     $self->hint('library-not-linked-against-libc', $file)
-                      unless $needs_libcxx ne $EMPTY;
+                      if $needs_libcxx eq $EMPTY;
                 } else {
                     $self->hint('program-not-linked-against-libc', $file);
                 }

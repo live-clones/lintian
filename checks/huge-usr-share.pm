@@ -66,7 +66,7 @@ sub breakdown_installed_files {
 
     # meaningless; prevents division by zero
     return
-      unless $self->total_size > 0;
+      if $self->total_size == 0;
 
     # convert the totals to kilobytes.
     my $size = sprintf('%.0f', $self->total_size / 1024);

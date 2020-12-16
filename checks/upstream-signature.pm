@@ -67,7 +67,7 @@ sub source {
     }
 
     # orig tarballs should be signed if upstream's public key is present
-    unless (!@keys || $self->processable->repacked || $gittag) {
+    if (@keys && !$self->processable->repacked && !$gittag) {
 
         for my $filename (@origtar) {
 

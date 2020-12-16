@@ -328,7 +328,7 @@ say encode_utf8($EMPTY);
 # run scripts through harness
 $harness->aggregate_tests($aggregator, sort @runscripts);
 
-unless (!@runscripts || $aggregator->all_passed || $keep_going) {
+if (@runscripts && !$aggregator->all_passed && !$keep_going) {
     $aggregator->stop;
     $formatter->summary($aggregator);
     exit 1;

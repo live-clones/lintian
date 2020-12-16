@@ -687,11 +687,14 @@ sub installable {
     # Compare the contents of the shlibs and symbols control files, but exclude
     # from this check shared libraries whose SONAMEs has no version.  Those can
     # only be represented in symbols files and aren't expected in shlibs files.
-    if (keys %shlibs_control and keys %symbols_control) {
+    if (keys %shlibs_control) {
         for my $key (keys %symbols_control) {
-            unless (exists $shlibs_control{$key} or $key !~ / /) {
-                $self->hint('symbols-for-undeclared-shared-library', $key);
-            }
+
+            next
+              unless $key =~ / /;
+
+            $self->hint('symbols-for-undeclared-shared-library', $key)
+              unless exists $shlibs_control{$key};
         }
     }
 

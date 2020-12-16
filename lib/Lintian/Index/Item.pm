@@ -295,7 +295,7 @@ sub magic {
     my ($self, $count) = @_;
 
     return $EMPTY
-      unless $self->size >= $count;
+      if $self->size < $count;
 
     my $magic;
 
@@ -898,7 +898,7 @@ sub follow {
 
     # catch recursive links
     return undef
-      unless $maxlinks > 0;
+      if $maxlinks <= 0;
 
     # reduce counter
     $maxlinks--;

@@ -542,9 +542,9 @@ sub source {
 
                     $self->hint('conflicting-negation-in-source-relation',
                         "$field: $part_d_orig")
-                      unless (not $d_arch
-                        or $d_arch->[1] == 0
-                        or $d_arch->[1] eq @{ $d_arch->[0] });
+                      if ( $d_arch
+                        && $d_arch->[1] != 0
+                        && $d_arch->[1] ne @{ $d_arch->[0] });
 
                     $self->hint('depends-on-packaging-dev', $field)
                       if ($d_pkg eq 'packaging-dev');

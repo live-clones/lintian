@@ -79,7 +79,7 @@ sub read_config {
     my $deb822 = Lintian::Deb822::File->new;
     my @sections = $deb822->read_file($configpath);
     die encode_utf8("$configpath does not have exactly one paragraph")
-      unless scalar @sections == 1;
+      unless @sections == 1;
 
     my $config = $sections[0];
 
@@ -102,17 +102,17 @@ sub write_config {
     for my $name (sort $testcase->names) {
 
         my @elements = $testcase->trimmed_list($name);
-        unless (
-            scalar @elements > 1 && any { lc($_) eq lc($name) }
-            qw(Test-For Test-Against)
-        ) {
-            push(@lines,
-                $name . $COLON . $SPACE . $testcase->value($name) . $NEWLINE);
+
+        # multi-line output for some fields
+        if (@elements > 1
+            && any { fc($_) eq fc($name) } qw(Test-For Test-Against)) {
+            push(@lines, $name . $COLON . $NEWLINE);
+            push(@lines, $SPACE . $_ . $NEWLINE) for @elements;
             next;
         }
 
-        push(@lines, $name . $COLON . $NEWLINE);
-        push(@lines, $SPACE . $_ . $NEWLINE) for @elements;
+        push(@lines,
+            $name . $COLON . $SPACE . $testcase->value($name) . $NEWLINE);
     }
 
     $desc->append_utf8(@lines);

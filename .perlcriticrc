@@ -91,7 +91,7 @@ include =
 
 [ControlStructures::ProhibitMutatingListFunctions]
 
-[-ControlStructures::ProhibitNegativeExpressionsInUnlessAndUntilConditions]
+[ControlStructures::ProhibitNegativeExpressionsInUnlessAndUntilConditions]
 
 [-ControlStructures::ProhibitPostfixControls]
 

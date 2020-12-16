@@ -46,7 +46,7 @@ sub visit_installed_files {
 
             $self->hint('icon-size-and-directory-name-mismatch',
                 $file->name,$file_width.'x'.$file_height)
-              unless $width_delta <= 2 && $height_delta <= 2;
+              if $width_delta > 2 || $height_delta > 2;
         }
     }
 

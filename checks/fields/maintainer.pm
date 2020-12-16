@@ -70,8 +70,8 @@ sub changes {
     # not for derivatives; https://wiki.ubuntu.com/DebianMaintainerField
     $self->hint('inconsistent-maintainer',
         $changes_maintainer . ' (changes vs. source) ' .$source_maintainer)
-      unless $changes_maintainer eq $source_maintainer
-      || !$KNOWN_DISTS->recognizes($changes_distribution);
+      if $changes_maintainer ne $source_maintainer
+      && $KNOWN_DISTS->recognizes($changes_distribution);
 
     return;
 }

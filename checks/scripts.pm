@@ -545,7 +545,15 @@ sub installable {
         # check dependencies.  This should be the last thing we do in
         # the loop so that we can use next for an early exit and
         # reduce the nesting.
-        next unless ($data and $executable{$filename} and not $in_docs);
+        next
+          unless $data;
+
+        next
+          unless $executable{$filename};
+
+        next
+          if $in_docs;
+
         if (!$versioned) {
             my $depends = $data->[1];
             if (not defined $depends) {
@@ -721,7 +729,7 @@ sub installable {
             # Interpreters used by preinst scripts must be in
             # Pre-Depends.  Interpreters used by postinst or prerm
             # scripts must be in Depends.
-            unless (not $data->[1]) {
+            if ($data->[1]) {
                 my $depends = Lintian::Relation->new->load($data->[1]);
                 if ($file eq 'preinst') {
                     unless ($processable->relation('Pre-Depends')

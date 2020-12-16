@@ -181,7 +181,7 @@ sub parse_jar {
 
                 # Ensure we can read at least 8 bytes for the unpack.
                 next
-                  unless length $contents >= 8;
+                  if length $contents < 8;
 
                 # translation of the unpack
                 #  NN NN NN NN, nn nn, nn nn   - bytes read

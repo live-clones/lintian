@@ -216,8 +216,15 @@ sub installable {
     for my $subdir (qw(applications xsessions)) {
         if (my $dir = $processable->installed->lookup("usr/share/$subdir/")) {
             for my $file ($dir->children) {
-                next unless $file->is_file;
-                next unless $file->basename =~ m/\.desktop$/ && !$file->is_dir;
+                next
+                  unless $file->is_file;
+
+                next
+                  if $file->is_dir;
+
+                next
+                  unless $file->basename =~ /\.desktop$/;
+
                 if ($file->is_executable) {
                     $self->hint('executable-desktop-file',
                         sprintf('%s %04o',$file, $file->operm));
@@ -447,11 +454,12 @@ sub verify_line {
     # Be sure the command is provided by the package.
     my ($okay, $command)
       = $self->verify_cmd($fullname, $linecount, $vals{'command'});
+
     $self->hint('menu-command-not-in-package', "$fullname:$linecount $command")
-      unless $okay
-      || !$command
-      || $tested_packages >= 2
-      ||$section =~ m{^(WindowManagers/Modules|FVWM Modules|Window Maker)};
+      if !$okay
+      && $command
+      && $tested_packages < 2
+      && $section !~ m{^(?:WindowManagers/Modules|FVWM Modules|Window Maker)};
 
     if (defined $command) {
         $command =~ s{^(?:usr/)?s?bin/}{};

@@ -311,14 +311,17 @@ sub check_systemd_service_file {
           unless $self->extract_service_file_values($file, 'Unit',
             'Documentation');
 
-        $self->hint('systemd-service-file-missing-install-key', $file,)
-          unless @wanted_by
-          || $self->extract_service_file_values($file, 'Install', 'RequiredBy')
-          || $self->extract_service_file_values($file, 'Install', 'Also')
-          || $is_oneshot
-          || !$is_standalone
-          || $file !~ m{^lib/systemd/[^\/]+/[^\/]+\.service$}
-          || $file =~ m{@\.service$};
+        if (   !@wanted_by
+            && !$is_oneshot
+            && $is_standalone
+            && $file =~ m{^lib/systemd/[^\/]+/[^\/]+\.service$}
+            && $file !~ m{@\.service$}) {
+
+            $self->hint('systemd-service-file-missing-install-key', $file)
+              unless $self->extract_service_file_values($file, 'Install',
+                'RequiredBy')
+              || $self->extract_service_file_values($file, 'Install', 'Also');
+        }
 
         my @pidfile
           = $self->extract_service_file_values($file,'Service','PIDFile');

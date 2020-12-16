@@ -108,10 +108,11 @@ sub source {
     my $KNOWN_FILES
       = $self->profile->load_data('debian-source-dir/known-files');
 
-    for my $path ($dsrc->children) {
-        my $file = $path->basename;
-        $self->hint('unknown-file-in-debian-source', $file)
-          unless $KNOWN_FILES->recognizes($file) && !$path->is_dir;
+    my @files = grep { !$_->is_dir } $dsrc->children;
+    for my $file (@files) {
+
+        $self->hint('unknown-file-in-debian-source', $file->basename)
+          unless $KNOWN_FILES->recognizes($file->basename);
     }
 
     my $options = $processable->patched->resolve_path('debian/source/options');

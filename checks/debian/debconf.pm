@@ -534,11 +534,11 @@ sub installable {
                 }
             }
 
-            if ($file eq 'postinst' or $file eq 'config') {
-                unless ($usesconfmodule) {
+            if ($self->processable->type ne 'udeb') {
+                if ($file eq 'config' || ($seenconfig && $file eq 'postinst')){
+
                     $self->hint("$file-does-not-load-confmodule")
-                      unless ($self->processable->type eq 'udeb'
-                        || ($file eq 'postinst' && !$seenconfig));
+                      unless $usesconfmodule;
                 }
             }
 
@@ -552,9 +552,11 @@ sub installable {
             }
 
             close($fd);
+
         } elsif ($file eq 'postinst') {
             $self->hint('postinst-does-not-load-confmodule')
-              unless ($self->processable->type eq 'udeb' || !$seenconfig);
+              if $self->processable->type ne 'udeb' && $seenconfig;
+
         } elsif ($file eq 'postrm') {
             # Make an exception for debconf providing packages as some of
             # them (incl. "debconf" itself) cleans up in prerm and have no

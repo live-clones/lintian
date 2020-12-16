@@ -71,7 +71,7 @@ sub visit_installed_files {
             $self->hint('old-style-config-script', $file->name);
 
             # could be ok but only if multi-arch: no
-            unless ($multiarch eq 'no' && $architecture ne 'all') {
+            if ($multiarch ne 'no' || $architecture eq 'all') {
 
                 # check multi-arch path
                 foreach my $wildcard ($self->MULTIARCH_DIRS->all) {

@@ -87,10 +87,10 @@ sub binary {
         }
         my $infoext = pop @fname_pieces;
         unless ($infoext && $infoext =~ /^info(-\d+)?$/) { # it's not foo.info
-            unless (!@fname_pieces) {
-                # it's not foo{,-{1,2,3,...}}
-                $self->hint('info-document-has-wrong-extension', $file);
-            }
+
+            # it's not foo{,-{1,2,3,...}}
+            $self->hint('info-document-has-wrong-extension', $file)
+              if @fname_pieces;
         }
 
         # If this is the main info file (no numeric extension). make

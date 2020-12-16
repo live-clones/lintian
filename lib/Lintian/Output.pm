@@ -118,7 +118,7 @@ has tag_display_limit => (is => 'rw', default => 4);
 has tty_hyperlinks => (is => 'rw', default => 0);
 has verbosity => (is => 'rw', default => 0);
 
-has debug => (is => 'rw', default => sub { {} });
+has debug => (is => 'rw', default => 0);
 has showdescription => (is => 'rw', default => sub { {} });
 
 has delimiter => (is => 'rw', default => '----');
@@ -165,7 +165,7 @@ sub v_msg {
     my ($self, @args) = @_;
 
     return
-      unless $self->verbosity > 0;
+      unless $self->verbosity;
 
     say encode_utf8("N: $_") for @args;
 
@@ -176,7 +176,7 @@ sub debug_msg {
     my ($self, $level, @args) = @_;
 
     return
-      unless $self->debug && ($self->debug >= $level);
+      if $self->debug < $level;
 
     say encode_utf8("N: $_") for @args;
 
