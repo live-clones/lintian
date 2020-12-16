@@ -19,7 +19,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::appstream_metadata;
+package Lintian::Check::appstream_metadata;
 
 # For .desktop files, the lintian check would be really easy: Check if
 # .desktop file is there, check if matching file exists in

@@ -18,7 +18,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::files::build_path;
+package Lintian::Check::files::build_path;
 
 use v5.20;
 use warnings;

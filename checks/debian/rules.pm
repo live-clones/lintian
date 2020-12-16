@@ -14,7 +14,7 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 
-package Lintian::debian::rules;
+package Lintian::Check::debian::rules;
 
 use v5.20;
 use warnings;

@@ -18,7 +18,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::desktop::x11;
+package Lintian::Check::desktop::x11;
 
 use v5.20;
 use warnings;

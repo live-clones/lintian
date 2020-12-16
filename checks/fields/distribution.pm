@@ -20,7 +20,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::fields::distribution;
+package Lintian::Check::fields::distribution;
 
 use v5.20;
 use warnings;

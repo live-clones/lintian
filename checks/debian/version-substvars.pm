@@ -35,7 +35,7 @@
 # Always warn on ${Source-Version} even if it doesn't break since the substvar
 # is now considered deprecated.
 
-package Lintian::debian::version_substvars;
+package Lintian::Check::debian::version_substvars;
 
 use v5.20;
 use warnings;

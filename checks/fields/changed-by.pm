@@ -20,7 +20,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::fields::changed_by;
+package Lintian::Check::fields::changed_by;
 
 use v5.20;
 use warnings;

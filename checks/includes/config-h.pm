@@ -18,7 +18,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::includes::config_h;
+package Lintian::Check::includes::config_h;
 
 use v5.20;
 use warnings;

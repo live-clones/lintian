@@ -18,7 +18,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::debian::po_debconf;
+package Lintian::Check::debian::po_debconf;
 
 use v5.20;
 use warnings;

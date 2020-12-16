@@ -18,7 +18,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::files::obsolete_paths;
+package Lintian::Check::files::obsolete_paths;
 
 use v5.20;
 use warnings;

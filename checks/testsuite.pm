@@ -18,7 +18,7 @@
 # You should have received a copy of the GNU General Public License
 # along with Lintian.  If not, see <http://www.gnu.org/licenses/>.
 
-package Lintian::testsuite;
+package Lintian::Check::testsuite;
 
 use v5.20;
 use warnings;

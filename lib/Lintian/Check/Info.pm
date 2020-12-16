@@ -127,7 +127,7 @@ sub load {
     # replace some characters with underscores
     $module =~ s{[-.]}{_}g;
 
-    $self->module("Lintian::$module");
+    $self->module("Lintian::Check::$module");
     $self->path($self->basedir . $SLASH . $self->name . '.pm');
 
     my $descpath = $self->basedir . $SLASH . $self->name . '.desc';

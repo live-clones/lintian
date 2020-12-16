@@ -33,7 +33,7 @@
 #  - Check all the escape characters supported by Exec.
 #  - Review desktop-file-validate to see what else we're missing.
 
-package Lintian::menu_format;
+package Lintian::Check::menu_format;
 
 use v5.20;
 use warnings;

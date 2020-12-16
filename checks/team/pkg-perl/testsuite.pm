@@ -22,7 +22,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::team::pkg_perl::testsuite;
+package Lintian::Check::team::pkg_perl::testsuite;
 
 use v5.20;
 use warnings;

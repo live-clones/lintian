@@ -19,7 +19,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::group_checks;
+package Lintian::Check::group_checks;
 
 use v5.20;
 use warnings;
@@ -68,7 +68,7 @@ sub source {
     # on some other package from this source.
     return if scalar @nodes < 2;
 
-    $sccs = Lintian::group_checks::Graph->new(\@nodes, \%edges)->tarjans;
+    $sccs= Lintian::Check::group_checks::Graph->new(\@nodes, \%edges)->tarjans;
 
     for my $comp (@{$sccs}) {
         # It takes two to tango... erh. make a circular dependency.
@@ -194,7 +194,7 @@ sub check_multiarch {
 ## the run sub somewhat sane.  Allow this "extra" package as
 ## it is not a proper subclass.
 #<<< no Perl tidy (it breaks the no critic comment)
-package Lintian::group_checks::Graph;  ## no critic (Modules::ProhibitMultiplePackages)
+package Lintian::Check::group_checks::Graph;  ## no critic (Modules::ProhibitMultiplePackages)
 #>>>
 
 use Const::Fast;

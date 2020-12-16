@@ -18,7 +18,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::files::compressed::lzo;
+package Lintian::Check::files::compressed::lzo;
 
 use v5.20;
 use warnings;

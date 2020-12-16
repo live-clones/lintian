@@ -19,7 +19,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::fonts::postscript::type1;
+package Lintian::Check::fonts::postscript::type1;
 
 use v5.20;
 use warnings;

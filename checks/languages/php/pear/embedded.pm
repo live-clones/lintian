@@ -19,7 +19,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::languages::php::pear::embedded;
+package Lintian::Check::languages::php::pear::embedded;
 
 use v5.20;
 use warnings;

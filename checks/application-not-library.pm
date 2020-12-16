@@ -18,7 +18,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::application_not_library;
+package Lintian::Check::application_not_library;
 
 use v5.20;
 use warnings;

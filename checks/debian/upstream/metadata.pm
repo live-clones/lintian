@@ -19,7 +19,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::debian::upstream::metadata;
+package Lintian::Check::debian::upstream::metadata;
 
 use v5.20;
 use warnings;

@@ -18,7 +18,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::files::symbolic_links::broken;
+package Lintian::Check::files::symbolic_links::broken;
 
 use v5.20;
 use warnings;

@@ -22,7 +22,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::fields::dm_upload_allowed;
+package Lintian::Check::fields::dm_upload_allowed;
 
 use v5.20;
 use warnings;

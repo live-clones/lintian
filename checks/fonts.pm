@@ -19,7 +19,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::fonts;
+package Lintian::Check::fonts;
 
 use v5.20;
 use warnings;
