@@ -77,7 +77,11 @@ has legend => (
 
         my %legend;
 
-        $legend{lc $_} = $_ for keys %{$self->verbatim};
+        for my $key (keys %{$self->verbatim}) {
+
+            my $lowercase = lc $key;
+            $legend{$lowercase} = $key;
+        }
 
         return \%legend;
     });

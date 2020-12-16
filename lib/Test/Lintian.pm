@@ -612,11 +612,11 @@ sub _find_check {
                 if (not $filter->($_)) {
                     # filtered out; if a dir - filter the
                     # entire dir.
-                    $File::Find::prune = 1 if -d $_;
+                    $File::Find::prune = 1 if -d;
                     return;
                 }
             }
-            return unless m/\.desc$/ and -e $_;
+            return unless m/\.desc$/ and -e;
             if ($regex) {
                 s/$regex//;
                 s/\.desc$//;

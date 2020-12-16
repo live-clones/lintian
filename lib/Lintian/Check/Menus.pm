@@ -392,7 +392,7 @@ sub check_doc_base_field {
     # classes since otherwise we'd need to deal with wildcards inside
     # character classes and aren't there yet.
     if ($field eq 'Index' or $field eq 'Files') {
-        my @files = map { split($SPACE, $_) } @{$vals};
+        my @files = map { split($SPACE) } @{$vals};
 
         if ($field eq 'Index' && @files > 1) {
             $self->hint('doc-base-index-references-multiple-files',

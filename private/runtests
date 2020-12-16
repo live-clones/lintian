@@ -205,7 +205,7 @@ my @lintianfiles
   = map { File::Find::Rule->file->in("$ENV{'LINTIAN_BASE'}/$_") }@lintianparts;
 push(@lintianfiles, Cwd::realpath($ENV{'LINTIAN_UNDER_TEST'}));
 $ENV{'LINTIAN_EPOCH'}
-  = max(map { -e $_ ? stat($_)->mtime : time } @lintianfiles);
+  = max(map { -e ? path($_)->stat->mtime : time } @lintianfiles);
 say encode_utf8('Lintian modified on '. rfc822date($ENV{'LINTIAN_EPOCH'}));
 
 my $lintian_error;
@@ -288,7 +288,7 @@ my @harnessparts
 my @harnessfiles
   = map { File::Find::Rule->file->in("$ENV{'LINTIAN_BASE'}/$_") }@harnessparts;
 my $harness_files_epoch
-  = max(map { -e $_ ? stat($_)->mtime : time } @harnessfiles);
+  = max(map { -e ? path($_)->stat->mtime : time } @harnessfiles);
 $ENV{'HARNESS_EPOCH'}
   = max(our_modification_epoch, perl_modification_epoch, $harness_files_epoch);
 say encode_utf8('Harness modified on '. rfc822date($ENV{'HARNESS_EPOCH'}));

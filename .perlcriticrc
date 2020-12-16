@@ -39,7 +39,7 @@ include =
 
 [BuiltinFunctions::ProhibitUniversalIsa]
 
-[-BuiltinFunctions::ProhibitUselessTopic]
+[BuiltinFunctions::ProhibitUselessTopic]
 
 [BuiltinFunctions::ProhibitVoidGrep]
 

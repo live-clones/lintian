@@ -11,8 +11,8 @@ relations (source): build-depends-on-build-essential-package-without-using-versi
 relations (source): build-depends-on-build-essential-package-without-using-version libc6-dev [Build-Depends: libc6-dev]
 relations (source): build-depends-on-build-essential Build-Depends-Indep
 relations (source): build-depends-on-1-revision Build-Depends-Indep: libfoo (>= 1.2-1)
-relations (source): build-conflicts-with-build-dependency debmake [!powerpc]
-relations (source): build-conflicts-with-build-dependency bar [alpha test]
+relations (source): build-conflicts-with-build-dependency Build-Conflicts-Indep debmake [!powerpc] [debian/control:14]
+relations (source): build-conflicts-with-build-dependency Build-Conflicts bar [alpha test] [debian/control:13]
 relations-multiple-libs (binary): package-depends-on-multiple-tk-versions tk8.2 tk8.3
 relations-multiple-libs (binary): package-depends-on-multiple-tcl-versions tcl8.0 tcl8.2
 relations-multiple-libs (binary): package-depends-on-multiple-libstdc-versions libstdc++2.10 libstdc++2.10-glibc2.2 libstdc++3.0

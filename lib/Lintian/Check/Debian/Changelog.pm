@@ -538,7 +538,7 @@ sub binary {
 
     # all versions from the changelog
     my %allversions
-      = map { $_ => 1 } grep { defined $_ } map { $_->Version } @entries;
+      = map { $_ => 1 } grep { defined } map { $_->Version } @entries;
 
     # checks applying to all entries
     for my $entry (@entries) {

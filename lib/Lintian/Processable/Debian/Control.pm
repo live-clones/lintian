@@ -62,7 +62,7 @@ has debian_control => (
         return $control
           unless defined $file;
 
-        $control->load($file->unpacked_path);
+        $control->load($file);
 
         return $control;
     });

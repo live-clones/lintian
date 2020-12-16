@@ -51,10 +51,13 @@ Lintian::Debian::Control provides access to fields in d/control.
 
 =over 4
 
+=item item
 =item source_fields
 =item installable_fields_by_name
 
 =cut
+
+has item => (is => 'rw');
 
 has source_fields => (
     is => 'rw',
@@ -76,28 +79,21 @@ has installable_fields_by_name => (
 =cut
 
 sub load {
-    my ($self, $path) = @_;
+    my ($self, $item) = @_;
 
     return
-      unless defined $path;
+      unless defined $item;
+
+    $self->item($item);
 
     return
-      unless -r $path;
-
-    my $bytes = path($path)->slurp;
-    return
-      unless length $bytes;
-
-    return
-      unless valid_utf8($bytes);
-
-    my $contents = decode_utf8($bytes);
+      unless -r $item->unpacked_path;
 
     my $deb822 = Lintian::Deb822->new;
 
     my @sections;
     try {
-        @sections = $deb822->parse_string($contents);
+        @sections = $deb822->read_file($item->unpacked_path);
 
     } catch {
         # If it is a syntax error, ignore it (we emit

@@ -648,17 +648,19 @@ sub source {
 
     # Make sure build dependencies and conflicts are consistent.
     my $build_all = $processable->relation('Build-Depends-All');
-    for (
-        $depend{'Build-Conflicts'},
-        $depend{'Build-Conflicts-Indep'},
-        $depend{'Build-Conflicts-Arch'}
-    ) {
-        next unless $_;
-        for my $conflict (split /\s*,\s*/, $_) {
-            if ($build_all->satisfies($conflict)) {
-                $self->hint('build-conflicts-with-build-dependency',$conflict);
-            }
-        }
+
+    for my $field (
+        qw{Build-Conflicts Build-Conflicts-Indep Build-Conflicts-Arch}) {
+
+        my @conflicts= $processable->fields->trimmed_list($field, qr{\s*,\s*});
+        my @contradictions = grep { $build_all->satisfies($_) } @conflicts;
+
+        my $position = $processable->fields->position($field);
+        my $pointer = $processable->debian_control->item->pointer($position);
+
+        $self->pointed_hint('build-conflicts-with-build-dependency',
+            $pointer, $field, $_)
+          for @contradictions;
     }
 
     my (@arch_dep_pkgs, @dbg_pkgs);

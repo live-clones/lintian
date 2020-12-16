@@ -169,7 +169,7 @@ sub run {
 
     # take an mtime inventory of all files in path
     $self->{mtimes}
-      = { map { $_ => stat($_)->mtime }
+      = { map { $_ => path($_)->stat->mtime }
           File::Find::Rule->file->in($self->{path}) };
 
     say encode_utf8(
@@ -267,7 +267,7 @@ sub _process_remaining_stages {
         say encode_utf8($EMPTY) if $self->{verbose};
 
         my $product_epoch
-          = min(map { -e $_ ? stat($_)->mtime : 0 } @products);
+          = min(map { -e ? path($_)->stat->mtime : 0 } @products);
         if($product_epoch) {
             say encode_utf8(
                 'Products modified on         : '. rfc822date($product_epoch))

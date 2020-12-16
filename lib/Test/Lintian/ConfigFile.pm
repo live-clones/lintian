@@ -104,7 +104,7 @@ sub write_config {
 
         # multi-line output for some fields
         if (@elements > 1
-            && any { fc($_) eq fc($name) } qw(Test-For Test-Against)) {
+            && any { fc eq fc($name) } qw(Test-For Test-Against)) {
             push(@lines, $name . $COLON . $NEWLINE);
             push(@lines, $SPACE . $_ . $NEWLINE) for @elements;
             next;

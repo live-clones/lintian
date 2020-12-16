@@ -295,7 +295,7 @@ sub lowercase_field_names {
 
         # magic marker should only appear in field starts
         my @fields = grep { $_ ne 'START-OF-PARAGRAPH' } keys %{$paragraph};
-        my @mixedcase = grep { $_ ne lc($_) } @fields;
+        my @mixedcase = grep { $_ ne lc } @fields;
 
         for my $old (@mixedcase) {
             $paragraph->{lc $old} = $paragraph->{$old};

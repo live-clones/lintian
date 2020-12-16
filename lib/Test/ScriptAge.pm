@@ -52,6 +52,7 @@ BEGIN {
 use File::stat;
 use File::Spec::Functions qw(rel2abs);
 use List::Util qw(max);
+use Path::Tiny;
 use Unicode::UTF8 qw(encode_utf8);
 
 =head1 FUNCTIONS
@@ -83,7 +84,7 @@ sub our_modification_epoch {
         warn encode_utf8(
             'Relative paths in running_epoch: '.join(', ', @relative));
     }
-    my @epochs = map { stat($_)->mtime } @paths;
+    my @epochs = map { path($_)->stat->mtime } @paths;
     return max @epochs;
 }
 
