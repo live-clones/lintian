@@ -27,7 +27,13 @@ my $checkdir = "$root/checks";
 my @modulepaths = File::Find::Rule->file->name('*.pm')->in($checkdir);
 for my $modulepath (@modulepaths) {
     my $relative = path($modulepath)->relative($checkdir)->stringify;
-    my ($name) = ($relative =~ qr/^(.*)\.pm$/);
+    my ($name) = ($relative =~ /^(.*)\.pm$/);
+
+    $name =~ s{([[:upper:]])}{-\L$1}g;
+    $name =~ s{^-}{};
+    $name =~ s{/-}{/}g;
+    $name = 'init.d'
+      if $name eq 'init-d';
 
     $CHECKS{$name} = [];
 }

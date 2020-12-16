@@ -121,14 +121,19 @@ sub load {
 
     my $module = $self->name;
 
+    # capitalize words
+    $module =~ s{^(.)}{\U$1};
+    $module =~ s{([\-._/])(.)}{$1\U$2}g;
+
+    # drop some characters, leaving camel-case
+    $module =~ s{[\-._]}{}g;
+
+    $self->path($self->basedir . $SLASH . $module . '.pm');
+
     # replace slashes with double colons
     $module =~ s{/}{::}g;
 
-    # replace some characters with underscores
-    $module =~ s{[-.]}{_}g;
-
     $self->module("Lintian::Check::$module");
-    $self->path($self->basedir . $SLASH . $self->name . '.pm');
 
     my $descpath = $self->basedir . $SLASH . $self->name . '.desc';
     return

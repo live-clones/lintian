@@ -298,7 +298,14 @@ sub load {
 
         for my $checkpath (@checkpaths) {
             my $relative = path($checkpath)->relative($checkdir)->stringify;
-            my ($check_name) = ($relative =~ qr/^(.*)\.pm$/);
+            my ($check_name) = ($relative =~ /^(.*)\.pm$/);
+
+            $check_name =~ s{([[:upper:]])}{-\L$1}g;
+            $check_name =~ s{^-}{};
+            $check_name =~ s{/-}{/}g;
+
+            $check_name = 'init.d'
+              if $check_name eq 'init-d';
 
             # ignore duplicates
             next
@@ -539,36 +546,36 @@ sub read_profile {
     croak encode_utf8("Profile has no header in $path")
       unless defined $header;
 
-    my $name = $header->unfolded_value('Profile');
+    my $profile_name = $header->unfolded_value('Profile');
     croak encode_utf8("Profile has no name in $path")
-      unless length $name;
+      unless length $profile_name;
 
     croak encode_utf8("Invalid Profile field in $path")
-      if $name =~ m{^/} || $name =~ m{\.};
+      if $profile_name =~ m{^/} || $profile_name =~ m{\.};
 
     # normalize name
-    $name .= '/main'
-      unless $name =~ m{/};
+    $profile_name .= '/main'
+      unless $profile_name =~ m{/};
 
-    croak encode_utf8("Recursive definition of $name")
-      if exists $self->parent_map->{$name};
+    croak encode_utf8("Recursive definition of $profile_name")
+      if exists $self->parent_map->{$profile_name};
 
     # Mark as being loaded.
-    $self->parent_map->{$name} = 0;
+    $self->parent_map->{$profile_name} = 0;
 
-    $self->name($name)
+    $self->name($profile_name)
       unless length $self->name;
 
     $self->read_profile($header->unfolded_value('Extends'))
       if $header->declares('Extends');
 
     # prepend profile name after loading any parent
-    unshift(@{$self->profile_list}, $name);
+    unshift(@{$self->profile_list}, $profile_name);
 
     my @valid_header_fields
       = qw(Profile Extends Enable-Tags-From-Check Disable-Tags-From-Check Enable-Tags Disable-Tags);
     my @unknown_header_fields = $header->extra(@valid_header_fields);
-    croak encode_utf8("Unknown fields in header of profile $name: "
+    croak encode_utf8("Unknown fields in header of profile $profile_name: "
           . join($SPACE, @unknown_header_fields))
       if @unknown_header_fields;
 
@@ -582,7 +589,8 @@ sub read_profile {
     my %count;
     $count{$_}++ for @allchecks;
     my @duplicate_checks = grep { $count{$_} > 1 } keys %count;
-    die encode_utf8("These checks appear in profile $name more than once: "
+    die encode_utf8(
+        "These checks appear in profile $profile_name more than once: "
           . join($SPACE, @duplicate_checks))
       if @duplicate_checks;
 
@@ -590,29 +598,30 @@ sub read_profile {
     my @needed_checks
       = grep { !exists $self->known_checks_by_name->{$_} } @allchecks;
 
-    for my $name (@needed_checks) {
+    for my $check_name (@needed_checks) {
         my $location;
         for my $directory ($self->_safe_include_path('checks')) {
 
-            if (-e "$directory/$name.desc") {
+            if (-e "$directory/$check_name.desc") {
                 $location = $directory;
                 last;
             }
         }
 
-        croak encode_utf8("Profile $name references unknown check $name")
+        croak encode_utf8(
+            "Profile $profile_name references unknown check $check_name")
           unless defined $location;
 
         # ignore duplicates
         next
-          if exists $self->known_checks_by_name->{$name};
+          if exists $self->known_checks_by_name->{$check_name};
 
         my $info = Lintian::Check::Info->new;
         $info->basedir($location);
-        $info->name($name);
+        $info->name($check_name);
         $info->load;
 
-        $self->known_checks_by_name->{$name} = $info;
+        $self->known_checks_by_name->{$check_name} = $info;
     }
 
     # associate tags with checks
@@ -635,7 +644,8 @@ sub read_profile {
     %count = ();
     $count{$_}++ for @alltags;
     my @duplicate_tags = grep { $count{$_} > 1 } keys %count;
-    die encode_utf8("These tags appear in in profile $name more than once: "
+    die encode_utf8(
+        "These tags appear in in profile $profile_name more than once: "
           . join($SPACE, @duplicate_tags))
       if @duplicate_tags;
 
@@ -656,35 +666,35 @@ sub read_profile {
         my @valid_fields = qw(Tags Overridable Severity);
         my @unknown_fields = $section->extra(@valid_fields);
         croak encode_utf8(
-            "Unknown fields in section $position of profile $name: "
+            "Unknown fields in section $position of profile $profile_name: "
               . join($SPACE, @unknown_fields))
           if @unknown_fields;
 
         my @tags = $section->trimmed_list('Tags', qr/\s*,\s*/);
         croak encode_utf8(
-            "Tags field missing or empty in section $position of profile $name"
+"Tags field missing or empty in section $position of profile $profile_name"
         )unless @tags;
 
         my $severity = $section->unfolded_value('Severity');
         croak encode_utf8(
-"Profile $name contains invalid severity $severity in section $position"
+"Profile $profile_name contains invalid severity $severity in section $position"
           )
           if length $severity && none { $severity eq $_ }
         @Lintian::Tag::SEVERITIES;
 
         my $overridable
           = $self->_parse_boolean($section->unfolded_value('Overridable'),
-            -1, $name,$position);
+            -1, $profile_name,$position);
 
         for my $tagname (@tags) {
 
             my $tag = $self->known_tags_by_name->{$tagname};
             croak encode_utf8(
-                "Unknown tag $tagname in $name (section $position)")
-              unless defined $tag;
+"Unknown tag $tagname in profile $profile_name (section $position)"
+            )unless defined $tag;
 
             croak encode_utf8(
-"Classification tag $tagname cannot take a severity (profile $name, section $position"
+"Classification tag $tagname cannot take a severity (profile $profile_name, section $position"
             )if $tag->visibility eq 'classification';
 
             $tag->effective_severity($severity)
