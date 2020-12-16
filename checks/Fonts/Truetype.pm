@@ -52,17 +52,17 @@ sub visit_installed_files {
 
     my $os2 = defined $font ? $font->{'OS/2'} : undef;
     my $table = defined $os2 ? $os2->read : undef;
-    my $fsType = defined $table ? $table->{fsType} : undef;
+    my $fs_type = defined $table ? $table->{fsType} : undef;
 
     $font->release
       if defined $font;
 
     return
-      unless defined $fsType;
+      unless defined $fs_type;
 
     my @clauses;
 
-    my $permissions = $fsType & 0x00f;
+    my $permissions = $fs_type & 0x00f;
     push(@clauses, 'never embed')
       if $permissions & 0x02;
     push(@clauses, 'preview/print only')

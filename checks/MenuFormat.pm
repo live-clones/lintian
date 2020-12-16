@@ -603,11 +603,11 @@ sub verify_icon {
 
     open(my $fd, '<', $iconfile->unpacked_path);
 
-    do { defined($line = <$fd>) or goto parse_error; }
+    do { defined($line = <$fd>) or goto PARSE_ERROR; }
       until ($line =~ /\/\*\s*XPM\s*\*\//);
 
     $parse = 'size line';
-    do { defined($line = <$fd>) or goto parse_error; }
+    do { defined($line = <$fd>) or goto PARSE_ERROR; }
       until ($line =~ /"\s*([0-9]+)\s*([0-9]+)\s*(?:[0-9]+)\s*(?:[0-9]+)\s*"/);
     my $width = $1 + 0;
     my $height = $2 + 0;
@@ -620,7 +620,7 @@ sub verify_icon {
     close($fd);
     return;
 
-  parse_error:
+  PARSE_ERROR:
     close($fd);
     $self->hint('menu-icon-cannot-be-parsed', "$icon: looking for $parse");
     return;

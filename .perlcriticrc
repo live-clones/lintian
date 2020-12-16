@@ -281,7 +281,7 @@ functions = open opendir chdir read readdir readline closedir sysopen sysread sy
 # We don't use package versions atm and even if we did, it probably
 # won't have full coverage anyway.
 
-[-NamingConventions::Capitalization]
+[NamingConventions::Capitalization]
 
 [NamingConventions::ProhibitAmbiguousNames]
 

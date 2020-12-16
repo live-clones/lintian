@@ -2,18 +2,19 @@
 
 use strict;
 use warnings;
+
 use Test::More tests => 2;
 
 use Lintian::Relation;
 
-my $relationA
+my $relation_a
   = Lintian::Relation->new->load_noarch('pkgA, pkgB, pkgC, pkgA | pkgD');
 
-my $relationB
+my $relation_b
   = Lintian::Relation->new->load_noarch('pkgA, pkgB, pkgC, pkgD | pkgE');
 
-is_deeply($relationA->duplicates, (['pkgA', 'pkgA | pkgD']), 'Duplicates');
-is($relationB->duplicates, 0, 'No duplicates');
+is_deeply($relation_a->duplicates, (['pkgA', 'pkgA | pkgD']), 'Duplicates');
+is($relation_b->duplicates, 0, 'No duplicates');
 
 # Local Variables:
 # indent-tabs-mode: nil

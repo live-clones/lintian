@@ -73,7 +73,7 @@ sub source {
     }
 
     foreach my $pkg1 ($processable->debian_control->installables) {
-        my ($pkg1_is_any, $pkg2, $pkg2_is_any, $substvar_strips_binNMU);
+        my ($pkg1_is_any, $pkg2, $pkg2_is_any, $substvar_strips_bin_nmu);
 
         $pkg1_is_any= ($processable->debian_control->installable_fields($pkg1)
               ->value('Architecture') ne 'all');
@@ -130,7 +130,7 @@ sub source {
 
             my $gt = $2//$EMPTY;
             $pkg2 = $1;
-            $substvar_strips_binNMU = ($3 eq 'source:Version');
+            $substvar_strips_bin_nmu = ($3 eq 'source:Version');
 
             if (
                 not $processable->debian_control->installable_fields($pkg2)
@@ -144,7 +144,7 @@ sub source {
                   ->value('Architecture') ne 'all');
 
             if ($pkg1_is_any) {
-                if ($pkg2_is_any and $substvar_strips_binNMU) {
+                if ($pkg2_is_any && $substvar_strips_bin_nmu) {
                     unless ($gt) {
                         # (b1) any -> any (= ${source:Version})
                         $self->hint('not-binnmuable-any-depends-any',
@@ -160,8 +160,8 @@ sub source {
                     # or  -- same --  (>= ${binary:Version}) [or S-V]
                     $self->hint('not-binnmuable-any-depends-all',
                         "$pkg1 -> $pkg2")
-                      if not $substvar_strips_binNMU;
-                    if ($substvar_strips_binNMU and not $gt) {
+                      if !$substvar_strips_bin_nmu;
+                    if ($substvar_strips_bin_nmu && !$gt) {
                         $self->hint('maybe-not-arch-all-binnmuable',
                             "$pkg1 -> $pkg2");
                     }

@@ -49,8 +49,8 @@ Lintian::Reporting::ResourceManager -- A simple resource manager for html_report
  $resMan->install_resource('path/to/my-image.png', { install_method => 'copy'} );
  # Move the resource
  $resMan->install_resource('path/to/generated-styles.css');
- print 'Image: ' . $resMan->resource_URL('my-image.png'), "\n";
- print 'CSS: ' . $resMan->resource_URL('generated-styles.css'), "\n";
+ print 'Image: ' . $resMan->resource_url('my-image.png'), "\n";
+ print 'CSS: ' . $resMan->resource_url('generated-styles.css'), "\n";
 
 =head1 DESCRIPTION
 
@@ -94,7 +94,7 @@ Installs RESOURCE into the html root.  The resource may be renamed
 (based on content etc.).
 
 Note that the basename of RESOURCE must be unique between all
-resources installed.  See L</resource_URL(RESOURCE_NAME)>.
+resources installed.  See L</resource_url(RESOURCE_NAME)>.
 
 If OPT is given, it must be a hashref with 0 or more of the following
 keys (and values).
@@ -172,7 +172,7 @@ sub install_resource {
     return;
 }
 
-=item resource_URL(RESOURCE_NAME)
+=item resource_url(RESOURCE_NAME)
 
 Returns the path (relative to the HTML root) to a resource installed
 via L</install_resource(RESOURCE)>, where RESOURCE_NAME is the
@@ -180,7 +180,7 @@ basename of the path given to install_resource.
 
 =cut
 
-sub resource_URL {
+sub resource_url {
     my ($self, $resource_name) = @_;
     croak encode_utf8("Unknown resource $resource_name")
       if not defined($self->{'_resource_cache'}{$resource_name});

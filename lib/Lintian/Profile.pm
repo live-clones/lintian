@@ -179,9 +179,9 @@ has saved_safe_include_path => (
 sub data_paths {
     my ($self) = @_;
 
-    const my @data_paths => $self->search_space('data');
+    const my @DATA_PATHS => $self->search_space('data');
 
-    return \@data_paths;
+    return \@DATA_PATHS;
 }
 
 has known_vendors => (
