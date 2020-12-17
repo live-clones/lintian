@@ -51,10 +51,9 @@ use File::stat;
 use Getopt::Long;
 use List::SomeUtils qw(any uniq);
 use List::Util qw(max);
-use IO::Async::Function;
-use IO::Async::Loop;
 use IO::Interactive qw(is_interactive);
 use IO::Prompt::Tiny qw(prompt);
+use MCE::Loop;
 use Path::Tiny;
 use TAP::Formatter::Console;
 use TAP::Formatter::File;
@@ -67,7 +66,7 @@ use Time::Piece;
 use Try::Tiny;
 use Unicode::UTF8 qw(encode_utf8 decode_utf8);
 
-use Lintian::IO::Async qw(safe_qx);
+use Lintian::IPC::Run3 qw(safe_qx);
 
 use Test::Lintian::ConfigFile qw(read_config);
 use Test::Lintian::Filter
@@ -348,75 +347,25 @@ my $buildroot = "$outpath/packages";
 # for built test packages
 my $evalroot = "$outpath/eval";
 
-# prepare test
-my $filleval = IO::Async::Function->new(
-    code => sub {
-        my ($specpath) = @_;
+$SIG{INT} = sub { MCE::Loop->finish; die encode_utf8("Caught a sigint $!") };
 
-        # label process
-        $0 = "Lintian prepare test: $specpath";
-
-        # calculate destination
-        my $relative = path($specpath)->relative("$testset/recipes");
-        my $buildpath = $relative->absolute($buildroot)->stringify;
-        my $evalpath = $relative->absolute($evalroot)->relative->stringify;
-
-        my $error;
-
-        # capture output
-        my $log_bytes = capture_merged {
-
-            try {
-
-                # remove destination
-                path($evalpath)->remove_tree
-                  if -e $evalpath;
-
-                path($evalpath)->mkpath;
-
-                # prepare
-                filleval("$specpath/eval", $evalpath, $testset);
-
-                my $traversal = Cwd::realpath("$buildpath/subject");
-
-                if (length $traversal) {
-                    die encode_utf8("Cannot link to subject in $buildpath")
-                      if system("cd $evalpath; ln -s $traversal subject");
-                }
-
-            }catch {
-                # catch any error
-                $error = $_;
-            };
-        };
-
-        my $log = decode_utf8($log_bytes);
-
-        # save log;
-        my $logfile = "$evalpath/log";
-        path($logfile)->spew_utf8($log) if $log;
-
-        # print something if there was an error
-        die encode_utf8(
-            ($log // $EMPTY) . "Preparation failed for $specpath: $error")
-          if $error;
-
-        return $specpath;
-    },
+my $mce_loop = MCE::Loop->init(
     max_workers => $numjobs,
-    max_worker_calls => 1,
+    chunk_size => 1,
+    flush_stdout => 1,
+    flush_stderr => 1,
 );
 
-my $loop = IO::Async::Loop->new;
-$loop->add($filleval);
+mce_loop {
+    my ($mce, $chunk_ref, $chunk_id) = @_;
 
-$SIG{INT} = sub { $filleval->stop; die encode_utf8("Caught a sigint $!") };
+    prepare_test($mce, $_);
+}
+sort @testpaths;
 
-my @filltasks = map {$filleval->call(args => [$_])} sort @testpaths;
+MCE::Loop->finish;
 
-my $allfilled = Future->wait_all(@filltasks);
-
-$loop->await($allfilled);
+$SIG{INT} = 'DEFAULT';
 
 # remap paths from testset to outpath to get work directories
 my @workpaths
@@ -606,6 +555,60 @@ say encode_utf8($EMPTY);
 exit $status;
 
 # program is done
+
+sub prepare_test {
+    my ($mce, $specpath) = @_;
+
+    # label process
+    $0 = "Lintian prepare test: $specpath";
+
+    # calculate destination
+    my $relative = path($specpath)->relative("$testset/recipes");
+    my $buildpath = $relative->absolute($buildroot)->stringify;
+    my $evalpath = $relative->absolute($evalroot)->relative->stringify;
+
+    my $error;
+
+    # capture output
+    my $log_bytes = capture_merged {
+
+        try {
+
+            # remove destination
+            path($evalpath)->remove_tree
+              if -e $evalpath;
+
+            path($evalpath)->mkpath;
+
+            # prepare
+            filleval("$specpath/eval", $evalpath, $testset);
+
+            my $traversal = Cwd::realpath("$buildpath/subject");
+
+            if (length $traversal) {
+                die encode_utf8("Cannot link to subject in $buildpath")
+                  if system("cd $evalpath; ln -s $traversal subject");
+            }
+
+        }catch {
+            # catch any error
+            $error = $_;
+        };
+    };
+
+    my $log = decode_utf8($log_bytes);
+
+    # save log;
+    my $logfile = "$evalpath/log";
+    path($logfile)->spew_utf8($log) if $log;
+
+    # print something if there was an error
+    die encode_utf8(
+        ($log // $EMPTY) . "Preparation failed for $specpath: $error")
+      if $error;
+
+    return $specpath;
+}
 
 =item default_parallel
 
