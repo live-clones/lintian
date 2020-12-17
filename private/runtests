@@ -88,6 +88,9 @@ const my $NO => q{no};
 # display output immediately
 STDOUT->autoflush;
 
+# something changes the default handler, see Bug#974575
+$SIG{WINCH} = 'DEFAULT';
+
 my $processing_start = Time::Moment->from_string(gmtime->datetime . 'Z');
 
 # whitelist the environment we permit to avoid things that mess up
