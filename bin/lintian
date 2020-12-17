@@ -69,7 +69,7 @@ const my $COMMA => q{,};
 const my $SLASH => q{/};
 
 # only in GNOME; need original environment
-my $hyperlinks_capable = is_interactive && any { /\bGNOME\b/ } keys %ENV;
+my $hyperlinks_capable = is_interactive && any { /^GNOME/ } keys %ENV;
 
 # Globally ignore SIGPIPE.  We'd rather deal with error returns from write
 # than randomly delivered signals.
