@@ -21,7 +21,7 @@ my $known_tests = 0;
 my $root = $ENV{'LINTIAN_BASE'} // q{.};
 
 my %CHECKS;
-my $checkdir = "$root/checks";
+my $checkdir = "$root/lib/Lintian/Check";
 
 # find all checks
 my @modulepaths = File::Find::Rule->file->name('*.pm')->in($checkdir);

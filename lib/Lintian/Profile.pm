@@ -293,7 +293,10 @@ sub load {
         }
     }
 
-    for my $check_base ($self->_safe_include_path('checks')) {
+    my @check_bases = (
+        "$ENV{LINTIAN_BASE}/lib/Lintian/Check",
+        $self->_safe_include_path('checks'));
+    for my $check_base (@check_bases) {
 
         next
           unless -d $check_base;

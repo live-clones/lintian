@@ -15,7 +15,13 @@ plan skip_all => 'Test::Pod::Coverage 1.08 required for this test'
 
 load_profile_for_test;
 
-all_pod_coverage_ok({ coverage_class => 'Pod::Coverage::TrustPod' });
+# exempt checks
+my @modules = grep { !/^Lintian::Check::/ } all_modules('lib');
+
+plan tests => scalar @modules;
+
+pod_coverage_ok($_, { coverage_class => 'Pod::Coverage::TrustPod' })
+  for @modules;
 
 # Local Variables:
 # indent-tabs-mode: nil
