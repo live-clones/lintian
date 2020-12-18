@@ -402,50 +402,36 @@ sub test_load_checks {
     $builder->skip('No desc files found')
       unless @checknames;
 
-    load_profile_for_test();
+    my $profile = load_profile_for_test();
 
     foreach my $checkname (@checknames) {
-        my $cs = Lintian::Check::Info->new;
-        $cs->basedir($dir);
-        $cs->name($checkname);
-        eval {$cs->load;};
-        if (my $err = $@) {
-            $err =~ s/ at .*? line \d+\s*\n//;
-            $builder->ok(0, "Cannot parse ${checkname}.desc");
-            $builder->diag("Error: $err\n");
-            $builder->skip("Cannot parse ${checkname}.desc");
-            next;
-        }
-        my $cname = $cs->name;
-        my $ppkg = $cname;
-        my $path = $cs->path;
-        my $err;
-        my $rs_ref = 'MISSING';
 
-        eval {require $path;};
-
-        if (!$builder->is_eq($@//$EMPTY, $EMPTY, "Check $cname can be loaded"))
-        {
+        my $path = $profile->check_path_by_name->{$checkname};
+        eval { require $path; };
+        if (
+            !$builder->is_eq(
+                $@//$EMPTY, $EMPTY, "Check $checkname can be loaded"
+            )
+        ){
             $builder->skip(
-                "Cannot check if $cname has a run sub due to load error");
+                "Cannot check if $checkname has entry points due to load error"
+            );
             next;
         }
 
-        $ppkg =~ s/[-.]/_/g;
-        $ppkg =~ s{/}{::}g;
-        $ppkg = "Lintian::$ppkg";
+        my $module = $profile->check_module_by_name->{$checkname};
 
-        if ($ppkg->can('run') && !$ppkg->DOES('Lintian::Check')) {
-            $builder->diag(
-                "Warning: check $ppkg uses old entry point ::run\n");
-        }
+        $builder->diag(
+            "Warning: check $checkname uses old entry point ::run\n")
+          if $module->can('run') && !$module->DOES('Lintian::Check');
 
         # setup and breakdown should only be used together with files
-        my $has_entrypoint = any { $ppkg->can($_) }
+        my $has_entrypoint = any { $module->can($_) }
         qw(source binary udeb installable changes always files);
 
-        if (!$builder->ok($has_entrypoint, "Check $cname has entry point")) {
-            $builder->diag("Expected package name is $ppkg\n");
+        if (!$builder->ok($has_entrypoint, "Check $checkname has entry point"))
+        {
+            $builder->diag("Expected package name is $module\n");
         }
     }
     return;
@@ -478,14 +464,18 @@ sub load_profile_for_test {
 
     # We have loaded a profile and are not asked to
     # load a specific one - then current one will do.
-    return if $PROFILE and not $profname;
+    return $PROFILE
+      if $PROFILE and not $profname;
 
     die encode_utf8("Cannot load two profiles.\n")
       if $PROFILE and $PROFILE->name ne $profname;
 
-    return if $PROFILE; # Already loaded? stop here
-     # We just need it for spell checking, so debian/main should
-     # do just fine...
+    # Already loaded? stop here
+    # We just need it for spell checking, so debian/main should
+    # do just fine...
+    return $PROFILE
+      if $PROFILE;
+
     $profname ||= 'debian/main';
 
     $PROFILE = Lintian::Profile->new;
@@ -495,7 +485,7 @@ sub load_profile_for_test {
 
     $ENV{'LINTIAN_CONFIG_DIRS'} = join(':', @inc);
 
-    return;
+    return $PROFILE;
 }
 
 sub _check_reference {
