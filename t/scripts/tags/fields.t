@@ -124,8 +124,10 @@ for my $tagpath (@tagpaths) {
     ok(!$fields->declares($_), "Field $_ does not exist in $tagpath")
       for @disallowed;
 
-    ok($profile->get_checkinfo($checkname),
-        "Tag $tagname is associated with a valid check");
+    ok(
+        length $profile->check_module_by_name->{$checkname},
+        "Tag $tagname is associated with a valid check"
+    );
 
     ok($fields->value('Renamed-From') !~ m{,},
         "Old tag names for $tagname are not separated by commas");

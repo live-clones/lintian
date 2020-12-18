@@ -36,7 +36,6 @@ use Unicode::UTF8 qw(encode_utf8);
 
 use Dpkg::Vendor qw(get_current_vendor get_vendor_info);
 
-use Lintian::Check::Info;
 use Lintian::Data::Generic;
 use Lintian::Deb822::File;
 use Lintian::Tag;
@@ -95,12 +94,17 @@ has known_aliases => (
     coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
     default => sub { {} });
 
-has known_checks_by_name => (
+has check_module_by_name => (
     is => 'rw',
     coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
     default => sub { {} });
 
-has check_tagnames => (
+has check_path_by_name => (
+    is => 'rw',
+    coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
+    default => sub { {} });
+
+has tagnames_for_check => (
     is => 'rw',
     coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
     default => sub { {} });
@@ -226,7 +230,7 @@ If $ipath is not given, a default one will be used.
 =cut
 
 sub load {
-    my ($self, $name, $include_path, $extra) = @_;
+    my ($self, $profile_name, $include_path, $extra) = @_;
 
     my @full_inc_path;
 
@@ -271,8 +275,8 @@ sub load {
               if exists $self->known_tags_by_name->{$tag->name};
 
             $self->known_tags_by_name->{$tag->name} = $tag;
-            $self->check_tagnames->{$tag->check} //= [];
-            push(@{$self->check_tagnames->{$tag->check}},$tag->name);
+            $self->tagnames_for_check->{$tag->check} //= [];
+            push(@{$self->tagnames_for_check->{$tag->check}},$tag->name);
 
             # record known aliases
             my @taken
@@ -289,43 +293,42 @@ sub load {
         }
     }
 
-    for my $checkdir ($self->_safe_include_path('checks')) {
+    for my $check_base ($self->_safe_include_path('checks')) {
 
         next
-          unless -d $checkdir;
+          unless -d $check_base;
 
-        my @checkpaths= File::Find::Rule->file->name('*.pm')->in($checkdir);
+        my @check_paths= File::Find::Rule->file->name('*.pm')->in($check_base);
 
-        for my $checkpath (@checkpaths) {
-            my $relative = path($checkpath)->relative($checkdir)->stringify;
-            my ($check_name) = ($relative =~ /^(.*)\.pm$/);
+        for my $absolute (@check_paths) {
 
-            $check_name =~ s{([[:upper:]])}{-\L$1}g;
-            $check_name =~ s{^-}{};
-            $check_name =~ s{/-}{/}g;
+            my $relative = path($absolute)->relative($check_base)->stringify;
+            $relative =~ s{\.pm$}{};
 
-            $check_name = 'init.d'
-              if $check_name eq 'init-d';
+            my $name = $relative;
+            $name =~ s{([[:upper:]])}{-\L$1}g;
+            $name =~ s{^-}{};
+            $name =~ s{/-}{/}g;
+
+            $name = 'init.d'
+              if $name eq 'init-d';
 
             # ignore duplicates
             next
-              if exists $self->known_checks_by_name->{$check_name};
+              if exists $self->check_module_by_name->{$name};
 
-            my $check = Lintian::Check::Info->new;
-            $check->basedir($checkdir);
-            $check->name($check_name);
-            $check->load;
+            $self->check_path_by_name->{$name} = $absolute;
 
-            $self->known_checks_by_name->{$check_name} = $check;
+            my $module = $relative;
+
+            # replace slashes with double colons
+            $module =~ s{/}{::}g;
+
+            $self->check_module_by_name->{$name} = "Lintian::Check::$module";
         }
     }
 
-    # add internal 'lintian' check to allow issuance of such tags
-    my $lintian = Lintian::Check::Info->new;
-    $lintian->name('lintian');
-    $self->known_checks_by_name->{lintian} = $lintian;
-
-    $self->read_profile($name);
+    $self->read_profile($profile_name);
 
     return;
 }
@@ -383,7 +386,7 @@ sub is_overridable {
 sub known_checks {
     my ($self) = @_;
 
-    return keys %{ $self->known_checks_by_name };
+    return keys %{ $self->check_module_by_name };
 }
 
 =item $prof->enabled_checks
@@ -394,19 +397,6 @@ sub enabled_checks {
     my ($self) = @_;
 
     return keys %{ $self->enabled_checks_by_name };
-}
-
-=item $prof->get_checkinfo ($name)
-
-Returns the Lintian::Check::Info for $name.
-Otherwise it returns undef.
-
-=cut
-
-sub get_checkinfo {
-    my ($self, $name) = @_;
-
-    return $self->known_checks_by_name->{$name};
 }
 
 =item $prof->enable_tag ($name)
@@ -596,43 +586,11 @@ sub read_profile {
 
     # make sure checks are loaded
     my @needed_checks
-      = grep { !exists $self->known_checks_by_name->{$_} } @allchecks;
+      = grep { !exists $self->check_module_by_name->{$_} } @allchecks;
 
-    for my $check_name (@needed_checks) {
-        my $location;
-        for my $directory ($self->_safe_include_path('checks')) {
-
-            if (-e "$directory/$check_name.desc") {
-                $location = $directory;
-                last;
-            }
-        }
-
-        croak encode_utf8(
-            "Profile $profile_name references unknown check $check_name")
-          unless defined $location;
-
-        # ignore duplicates
-        next
-          if exists $self->known_checks_by_name->{$check_name};
-
-        my $info = Lintian::Check::Info->new;
-        $info->basedir($location);
-        $info->name($check_name);
-        $info->load;
-
-        $self->known_checks_by_name->{$check_name} = $info;
-    }
-
-    # associate tags with checks
-    for my $check (values %{ $self->known_checks_by_name }) {
-
-        $self->check_tagnames->{$check->name} //= [];
-        my @tagnames = @{$self->check_tagnames->{$check->name}};
-        my @tags = map { $self->known_tags_by_name->{$_} } @tagnames;
-
-        $check->add_tag($_) for @tags;
-    }
+    croak encode_utf8("Profile $profile_name references unknown checks: "
+          . join($SPACE, @needed_checks))
+      if @needed_checks;
 
     my @enable_tags = $header->trimmed_list('Enable-Tags', qr/\s*,\s*/);
     my @disable_tags = $header->trimmed_list('Disable-Tags', qr/\s*,\s*/);
@@ -647,10 +605,10 @@ sub read_profile {
           . join($SPACE, @duplicate_tags))
       if @duplicate_tags;
 
-    push(@enable_tags, $self->known_checks_by_name->{$_}->tags)
+    push(@enable_tags, @{$self->tagnames_for_check->{$_} // []})
       for @enable_checks;
 
-    push(@disable_tags, $self->known_checks_by_name->{$_}->tags)
+    push(@disable_tags, @{$self->tagnames_for_check->{$_} // []})
       for @disable_checks;
 
     $self->enable_tag($_) for @enable_tags;

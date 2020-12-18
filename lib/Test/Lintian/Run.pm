@@ -491,14 +491,15 @@ sub check_result {
         $profile->load(undef, [$ENV{LINTIAN_BASE}]);
 
         # use tags related to checks declared
-        my @checks = $testcase->trimmed_list('Check');
-        foreach my $check (@checks) {
-            my $checkscript = $profile->get_checkinfo($check);
-            die encode_utf8("Unknown Lintian check $check")
-              unless defined $checkscript;
+        my @check_names = $testcase->trimmed_list('Check');
+        my @unknown
+          = grep { !exists $profile->check_module_by_name->{$_} } @check_names;
 
-            push(@related, $checkscript->tags);
-        }
+        die encode_utf8('Unknown Lintian checks: ' . join($SPACE, @unknown))
+          if @unknown;
+
+        push(@related, @{$profile->tagnames_for_check->{$_} // []})
+          for @check_names;
 
         @related = sort @related;
 

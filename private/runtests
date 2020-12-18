@@ -90,6 +90,10 @@ STDOUT->autoflush;
 # something changes the default handler, see Bug#974575
 $SIG{WINCH} = 'DEFAULT';
 
+# see https://stackoverflow.com/a/60761593
+$SIG{CHLD} ||= 'DEFAULT';
+$SIG{HUP} ||= 'DEFAULT';
+
 my $processing_start = Time::Moment->from_string(gmtime->datetime . 'Z');
 
 # whitelist the environment we permit to avoid things that mess up
@@ -266,7 +270,7 @@ say encode_utf8(
 
 # get harness date, including templates, skeletons and whitelists
 my @harnessparts
-  = ('bin', 't/runners', 't/templates', 't/skeletons', 't/whitelists');
+  = ('bin', 't/defaults', 't/templates', 't/skeletons', 't/whitelists');
 my @harnessfiles
   = map { File::Find::Rule->file->in("$ENV{'LINTIAN_BASE'}/$_") }@harnessparts;
 my $harness_files_epoch

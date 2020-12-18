@@ -297,27 +297,32 @@ sub process {
             }
         }
 
-        # Filter out the "lintian" check if present - it does no real harm,
-        # but it adds a bit of noise in the debug output.
-        my @checknames
-          = sort grep { $_ ne 'lintian' } $self->profile->enabled_checks;
-        my @checkinfos = map { $self->profile->get_checkinfo($_) } @checknames;
+        my @check_names = sort $self->profile->enabled_checks;
+        for my $name (@check_names) {
 
-        for my $checkinfo (@checkinfos) {
-            my $checkname = $checkinfo->name;
             my $timer = [gettimeofday];
-
             my $procid = $processable->identifier;
-            $OUTPUT->debug_msg(1, "Running check: $checkname on $procid  ...");
+            $OUTPUT->debug_msg(1, "Running check: $name on $procid  ...");
 
-            eval {$checkinfo->run_check($processable, $self);};
+            my $absolute = $self->profile->check_path_by_name->{$name};
+            require $absolute;
+
+            my $module = $self->profile->check_module_by_name->{$name};
+            my $check = $module->new;
+
+            $check->name($name);
+            $check->processable($processable);
+            $check->group($self);
+            $check->profile($self->profile);
+
+            eval { $check->run };
             my $err = $@;
             my $raw_res = tv_interval($timer);
 
             if ($err) {
                 my $message = $err;
                 $message
-                  .= "warning: cannot run $checkname check on package $procid\n";
+                  .= "warning: cannot run $name check on package $procid\n";
                 $message .= "skipping check of $procid\n";
                 warn encode_utf8($message);
 
@@ -327,9 +332,8 @@ sub process {
             }
 
             my $tres = sprintf('%.3fs', $raw_res);
-            $OUTPUT->debug_msg(1,
-                "Check script $checkname for $procid done ($tres)");
-            $OUTPUT->perf_log("$procid,check/$checkname,${raw_res}");
+            $OUTPUT->debug_msg(1,"Check $name for $procid done ($tres)");
+            $OUTPUT->perf_log("$procid,check/$name,${raw_res}");
         }
 
         my %used_overrides;

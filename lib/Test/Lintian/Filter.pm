@@ -64,6 +64,7 @@ use Test::Lintian::ConfigFile qw(read_config);
 my @LINTIAN_SUITES = qw(recipes);
 
 const my $EMPTY => q{};
+const my $SPACE => q{ };
 const my $DESC => 'desc';
 const my $SEPARATED_BY_COLON => qr/([^:]+):([^:]+)/;
 
@@ -241,11 +242,12 @@ sub find_selected_lintian_testpaths {
         }
 
         # guess what was meant by selection without prefix
-        foreach my $parameter (@filter_no_prefix) {
+        for my $parameter (@filter_no_prefix) {
             push(@insuite,find_testpaths_by_name($suitepath, $parameter));
 
-            my $checkscript = $profile->get_checkinfo($parameter);
-            if ($parameter eq 'legacy' || defined $checkscript) {
+            if ($parameter eq 'legacy'
+                || exists $profile->check_module_by_name->{$parameter}) {
+
                 push(@insuite,
                     find_testpaths_by_name($suitepath, "$parameter-*"));
             }
@@ -308,18 +310,19 @@ sub find_all_tags {
     return $EMPTY
       unless $desc->declares('Check');
 
-    my %tags;
-
     my $profile = Lintian::Profile->new;
     $profile->load(undef, [$ENV{LINTIAN_BASE}]);
 
-    my @checks = $desc->trimmed_list('Check');
-    for my $check (@checks) {
-        my $checkscript = $profile->get_checkinfo($check);
-        die encode_utf8("Unknown Lintian check $check")
-          unless defined $checkscript;
+    my @check_names = $desc->trimmed_list('Check');
+    my @unknown
+      = grep { !exists $profile->check_module_by_name->{$_} } @check_names;
 
-        $tags{$_} = 1 for $checkscript->tags;
+    die encode_utf8('Unknown Lintian checks: ' . join($SPACE, @unknown))
+      if @unknown;
+
+    my %tags;
+    for my $name (@check_names) {
+        $tags{$_} = 1 for @{$profile->tagnames_for_check->{$name}};
     }
 
     return keys %tags

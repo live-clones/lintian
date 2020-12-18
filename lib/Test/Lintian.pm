@@ -62,7 +62,6 @@ our @EXPORT = qw(
   test_check_desc
   test_load_checks
   test_load_profiles
-  test_tags_implemented
 
   program_name_to_perl_paths
 );
@@ -448,131 +447,6 @@ sub test_load_checks {
         if (!$builder->ok($has_entrypoint, "Check $cname has entry point")) {
             $builder->diag("Expected package name is $ppkg\n");
         }
-    }
-    return;
-}
-
-=item test_tags_implemented (OPTS, DIR[, CHECKNAMES...])
-
-Test a given check implements all the tags listed in its desc file.
-For planning purposes, each check counts as one test and the call
-itself do one additional check.  So if 10 checks are tested, the plan
-should account for 11 tests.
-
-This is a simple scan of the source code looking asserting that the
-tag names I<appear> (in the actual code part).  For a vast majority of
-Lintian's tags it is reliable enough to be useful.  However it has
-false-positives and false-negatives - the former can be handled via
-"exclude-pattern" (see below).
-
-The DIR argument is the directory in which to find the checks.
-
-CHECKNAMES is a list of the check names.  If CHECKNAMES is given, only
-the checks in this list will be processed.  Otherwise, all the checks
-in DIR will be processed.
-
-The parameter OPTS is a hashref.  It must be the
-first argument.  The following key/value pairs are defined:
-
-=over 4
-
-=item exclude-pattern
-
-The value is assumed to be a regex (or a string describing a regex).
-Any tag matching this regex will be excluded from this test and is
-assumed to be implemented (regardless of whether that is true or not).
-
-This is useful for avoiding false-positives with cases like:
-
-  foreach my $x (@y) {
-    tag "some-tag-for-$x", "blah blah $x"
-        unless f($x);
-  }
-
-=item filter
-
-If defined, it is a filter function that examines $_ (or its first
-argument) and returns a truth value if C<$_> should be considered or
-false otherwise.  C<$_> will be the path to the current file (or dir)
-in question; it may be relative or absolute.
-
-NB: filter is I<not> used if CHECKNAMES is given.
-
-CAVEAT: If the filter rejects a directory, none of the files in it will be
-considered either.  Even if the filter accepts a file, that file will
-only be processed if it has the proper extension (i.e. with I<.desc>).
-
-=back
-
-As mentioned, this test assert that the tag name appears in the code.
-Consider the following example:
-
- my $tagname = 'my-tag';
- $tagname = 'my-other-tag' if $condition;
-
-In this example, this test would conclude that 'my-tag' and
-'my-other-tag' are both implemented.
-
-Comment lines are I<not> ignored, so comments can be used as an
-alternative to the exclude-pattern (above).
-
-=cut
-
-sub test_tags_implemented {
-    my ($opts, $dir, @checknames) = @_;
-
-    my $pattern;
-    my $builder = $CLASS->builder;
-
-    unless (@checknames) {
-        my $find_opt = {'want-check-name' => 1,};
-        $find_opt->{'filter'} = $opts->{'filter'} if exists $opts->{'filter'};
-        @checknames = _find_check($find_opt, $dir);
-    } else {
-        $builder->skip('Given an explicit list of checks');
-    }
-
-    if (exists $opts->{'exclude-pattern'}) {
-        if (ref $opts->{'exclude-pattern'} eq 'Regexp') {
-            $pattern = $opts->{'exclude-pattern'};
-        } else {
-            $pattern = qr/$opts->{'exclude-pattern'}/;
-        }
-    }
-
-    foreach my $checkname (@checknames) {
-        my (@tags, $codestr, @missing);
-        my $cs = Lintian::Check::Info->new;
-        $cs->basedir($dir);
-        $cs->name($checkname);
-        eval {$cs->load;};
-        if (my $err = $@) {
-            $err =~ s/ at .*? line \d+\s*\n//;
-            $builder->ok(0, "Cannot parse ${checkname}.desc");
-            $builder->diag("Error: $err\n");
-            next;
-        }
-        my $cname = $cs->name;
-        my $check = $cs->path;
-
-        @tags = $cs->tags unless defined $pattern;
-        @tags = grep { !m/$pattern/ } $cs->tags
-          if defined $pattern;
-
-        # Any tags left to check?
-        unless (@tags) {
-            $builder->skip("All tags $cname are excluded");
-            next;
-        }
-
-        $codestr = path($check)->slurp_utf8;
-
-        for my $tag (@tags) {
-            push @missing, $tag unless $codestr =~ /\Q$tag/;
-        }
-
-        $builder->is_eq(join(', ', @missing),
-            $EMPTY,"$cname has all tags implemented");
     }
     return;
 }

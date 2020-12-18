@@ -86,12 +86,7 @@ $profile->load(undef, [$ENV{LINTIAN_BASE}]);
 my @known = uniq $profile->known_checks;
 
 my %checktags;
-for my $check (@known) {
-
-    # get all tags belonging to that check
-    my $script = $profile->get_checkinfo($check);
-    $checktags{$check} = [$script->tags];
-}
+$checktags{$_} = $profile->tagnames_for_check->{$_}for @known;
 
 my %seen;
 
