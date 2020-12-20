@@ -47,6 +47,9 @@ use POSIX qw(strftime);
 
 const my $EMPTY => q{};
 const my $NEWLINE => qq{\n};
+const my $ASTERISK => q{*};
+const my $DOLLAR => q{$};
+const my $DOUBLE_COLON => q{::};
 
 # For each manual, we need:
 #  * Location of the manual index on the local filesystem
@@ -233,7 +236,7 @@ sub extract_refs {
 
         if (!$title_done && $chunk =~ /$title_re/) {
             $title_done = 1;
-            my $line = join('::', $manual, $EMPTY, $1, $url);
+            my $line = join($DOUBLE_COLON, $manual, $EMPTY, $1, $url);
             print {$data_fd} encode_utf8($line . $NEWLINE);
         }
 
@@ -244,7 +247,7 @@ sub extract_refs {
             my $v = 1;
             for my $field (@{$fields}) {
 
-                $ref{$_} = eval '$' . $v for @{$field};
+                $ref{$_} = eval $DOLLAR . $v for @{$field};
 
             } continue {
                 $v++;
@@ -273,13 +276,13 @@ sub extract_refs {
             # numbers that clash with each other. Track if we've already
             # seen a section pointing to some other URL than the current one,
             # and uniquify it by appending as many asterisks as necessary.
-            $ref{section} .= '*'
+            $ref{section} .= $ASTERISK
               while (defined($seen_sections{$ref{section}})
                 && $seen_sections{$ref{section}} ne $ref{url});
             $seen_sections{$ref{section}} = $ref{url};
 
-            my $line
-              = join('::', $manual, $ref{section}, $ref{title}, $ref{url});
+            my $line= join($DOUBLE_COLON,
+                $manual, $ref{section}, $ref{title}, $ref{url});
             print {$data_fd} encode_utf8($line . $NEWLINE);
         }
     }

@@ -41,6 +41,8 @@ with 'Lintian::Check';
 
 const my $EMPTY => q{};
 const my $UNDERSCORE => q{_};
+const my $EQUAL => q{=};
+const my $HASHBANG => q{#!};
 
 # If there is no debian/compat file present but cdbs is being used, cdbs will
 # create one automatically.  Currently it always uses compatibility level 5.
@@ -63,12 +65,12 @@ sub source {
 
     my $dh_ver_deps
       = $self->profile->load_data('debhelper/dh_commands-manual', qr/\|\|/);
-    my $dh_addons = $self->profile->load_data('common/dh_addons', '=');
+    my $dh_addons = $self->profile->load_data('common/dh_addons', $EQUAL);
     my $dh_addons_manual
       = $self->profile->load_data('debhelper/dh_addons-manual', qr/\|\|/);
 
     my $dh_commands_depends
-      = $self->profile->load_data('debhelper/dh_commands', '=');
+      = $self->profile->load_data('debhelper/dh_commands', $EQUAL);
 
     my @KNOWN_DH_COMMANDS;
     for my $command ($dh_commands_depends->all) {
@@ -823,7 +825,7 @@ sub _shebang_cmd {
     my $cmd = $EMPTY;
     open(my $fd, '<', $path->unpacked_path);
     if (read($fd, $magic, 2)) {
-        if ($magic eq '#!') {
+        if ($magic eq $HASHBANG) {
             $cmd = <$fd>;
 
             # It is beyond me why anyone would place a lincity data

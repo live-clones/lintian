@@ -36,6 +36,7 @@ use namespace::clean;
 
 const my $EMPTY => q{};
 const my $SPACE => q{ };
+const my $HYPHEN => q{-};
 
 =head1 NAME
 
@@ -230,9 +231,9 @@ sub parse_per_file {
             my $extra = $EMPTY;
 
             my $newflags = $EMPTY;
-            $newflags .= ($flags =~ m/R/) ? 'r' : '-';
-            $newflags .= ($flags =~ m/W/) ? 'w' : '-';
-            $newflags .= ($flags =~ m/E/) ? 'x' : '-';
+            $newflags .= ($flags =~ /R/) ? 'r' : $HYPHEN;
+            $newflags .= ($flags =~ /W/) ? 'w' : $HYPHEN;
+            $newflags .= ($flags =~ /E/) ? 'x' : $HYPHEN;
 
             $program_headers{$header} = $newflags;
 

@@ -46,6 +46,7 @@ use Moo;
 use namespace::clean;
 
 const my $EMPTY => q{};
+const my $SLASH => q{/};
 
 # A private table of supported types.
 my %SUPPORTED_TYPES = (
@@ -424,7 +425,7 @@ sub process {
         local $Devel::Size::warn = 0;
 
         my $pivot = ($self->get_processables)[0];
-        my $group_id = $pivot->source . '/' . $pivot->source_version;
+        my $group_id = $pivot->source . $SLASH . $pivot->source_version;
         my $group_usage
           = human_bytes(total_size([map { $_ } $self->get_processables]));
         $OUTPUT->debug_msg(3, "Memory usage [group:$group_id]: $group_usage");

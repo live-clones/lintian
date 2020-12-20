@@ -166,7 +166,7 @@ sub get_deb_info {
     # get the control file
     my $tarerror;
     my $tarfuture = $loop->new_future;
-    my @tarcommand = ('tar', '--wildcards', '-xO', '-f', '-', '*control');
+    my @tarcommand = qw{tar --wildcards -xO -f - *control};
     my $tarprocess = IO::Async::Process->new(
         command => [@tarcommand],
         stdin => { via => 'pipe_write' },

@@ -49,9 +49,11 @@ with
 
 const my $EMPTY => q{};
 const my $SLASH => q{/};
+const my $HYPHEN => q{-};
 
 my %FILE_CODE2LPATH_TYPE = (
-    '-' => Lintian::Index::Item::TYPE_FILE| Lintian::Index::Item::OPEN_IS_OK,
+    $HYPHEN => Lintian::Index::Item::TYPE_FILE
+      | Lintian::Index::Item::OPEN_IS_OK,
     'h' => Lintian::Index::Item::TYPE_HARDLINK
       | Lintian::Index::Item::OPEN_IS_OK,
     'd' => Lintian::Index::Item::TYPE_DIR| Lintian::Index::Item::FS_PATH_IS_OK,

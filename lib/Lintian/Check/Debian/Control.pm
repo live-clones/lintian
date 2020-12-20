@@ -41,6 +41,7 @@ use namespace::clean;
 with 'Lintian::Check';
 
 const my $EMPTY => q{};
+const my $COLON => q{:};
 
 # The list of libc packages, used for checking for a hard-coded dependency
 # rather than using ${shlibs:Depends}.
@@ -486,7 +487,7 @@ sub source {
         foreach my $proc ($group->get_binary_processables) {
             my $pkg = $proc->name;
             foreach my $file ($proc->installed->sorted_list) {
-                my $owner = $file->owner . ':' . $file->group;
+                my $owner = $file->owner . $COLON . $file->group;
                 next if $owner eq 'root:root';
                 $self->hint('rules-silently-require-root',
                     $pkg, $file,"($owner)");

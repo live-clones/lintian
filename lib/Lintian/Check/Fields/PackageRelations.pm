@@ -42,6 +42,8 @@ use namespace::clean;
 with 'Lintian::Check';
 
 const my $EMPTY => q{};
+const my $EQUAL => q{=};
+const my $VERTICAL_BAR => q{|};
 
 # Still in the archive but shouldn't be the primary Emacs dependency.
 my @obsolete_emacs_versions = qw(21 22 23);
@@ -131,7 +133,7 @@ sub installable {
     my $KNOWN_TOOLCHAIN = $self->profile->load_data('fields/toolchain');
     my $KNOWN_METAPACKAGES = $self->profile->load_data('fields/metapackages');
 
-    my $DH_ADDONS = $self->profile->load_data('common/dh_addons', '=');
+    my $DH_ADDONS = $self->profile->load_data('common/dh_addons', $EQUAL);
     my %DH_ADDONS_VALUES = map { $DH_ADDONS->value($_) => 1 } $DH_ADDONS->all;
 
     my $OBSOLETE_PACKAGES
@@ -206,7 +208,7 @@ sub installable {
                 $self->hint('invalid-versioned-provides', $part_d_orig)
                   if ( $field eq 'Provides'
                     && $d_version->[0]
-                    && $d_version->[0] ne '=');
+                    && $d_version->[0] ne $EQUAL);
 
                 $self->hint('bad-provided-package-name', $d_pkg)
                   if $d_pkg !~ /^[a-z0-9][-+\.a-z0-9]+$/;
@@ -668,7 +670,7 @@ sub source {
             push @arch_dep_pkgs, $binpkg;
         }
     }
-    my $dstr = join('|', map { quotemeta($_) } @arch_dep_pkgs);
+    my $dstr = join($VERTICAL_BAR, map { quotemeta($_) } @arch_dep_pkgs);
     my $depregex = qr/^(?:$dstr)$/;
     for my $dbg_proc (@dbg_pkgs) {
         my $deps = $processable->binary_relation($dbg_proc->name, 'strong');

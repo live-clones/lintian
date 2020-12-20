@@ -64,8 +64,8 @@ sub add_strings {
           unless $file->file_info =~ /\bELF\b/;
 
         # prior implementations sometimes made the list unique
-        my $allstrings = decode_utf8(
-            safe_qx('strings', '--all', '--',$file->unpacked_path));
+        my $allstrings
+          = decode_utf8(safe_qx(qw{strings --all --}, $file->unpacked_path));
 
         $file->strings($allstrings);
     }

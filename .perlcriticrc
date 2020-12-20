@@ -397,7 +397,7 @@ terminal_funcs = CORE::exec fatal_error internal_error Lintian::Util::internal_e
 
 [ValuesAndExpressions::ProhibitMixedBooleanOperators]
 
-[-ValuesAndExpressions::ProhibitNoisyQuotes]
+[ValuesAndExpressions::ProhibitNoisyQuotes]
 
 [ValuesAndExpressions::ProhibitNullStatements]
 

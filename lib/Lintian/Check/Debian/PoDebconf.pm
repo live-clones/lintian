@@ -208,9 +208,11 @@ sub source {
         mkdir($tempdir);
         # Copy the templates dir because intltool-update might
         # write to it.
-        safe_qx('cp', '-a', '--reflink=auto', '--',$d_templates->unpacked_path,
-            $tempdir_templates)
-          if $d_templates;
+        safe_qx(
+            qw{cp -a --reflink=auto --},
+            $d_templates->unpacked_path,
+            $tempdir_templates
+        )if $d_templates;
 
         my $error;
         my %save = %ENV;

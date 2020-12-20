@@ -40,6 +40,9 @@ with 'Lintian::Check';
 
 const my $EMPTY => q{};
 const my $SPACE => q{ };
+const my $SLASH => q{/};
+const my $DOT => q{.};
+const my $QUESTION_MARK => q{?};
 
 # Supported documentation formats for doc-base files.
 my %known_doc_base_formats
@@ -409,7 +412,7 @@ sub check_doc_base_field {
                     next if $regex =~ /\[/;
                     $regex =~ s{\\\*}{[^/]*}g;
                     $regex =~ s{\\\?}{[^/]}g;
-                    $regex .= '/?';
+                    $regex .= $SLASH . $QUESTION_MARK;
                 }
                 $found = grep { /^$regex\z/ } keys %{$all_files};
             } else {
@@ -585,17 +588,24 @@ sub add_file_link_info {
     my $link = $processable->installed->lookup($file)->link;
     my $ishard = $processable->installed->lookup($file)->is_hardlink;
 
-    $file = '/' . $file unless $file =~ m{^/}; # make file absolute
+    # make name absolute
+    $file = $SLASH . $file
+      unless $file =~ m{^/};
+
     $file =~ s{/+}{/}g;                           # remove duplicated `/'
     $all_files->{$file} = 1;
 
     if (length $link) {
-        $link = './' . $link if $link !~ m{^/};
+
+        $link = $DOT . $SLASH . $link
+          if $link !~ m{^/};
+
         if ($ishard) {
             $link =~ s{^\./}{/};
         } elsif ($link !~ m{^/}) {            # not absolute link
             $link
-              = '/' . $link;                  # make sure link starts with '/'
+              = $SLASH
+              . $link;                  # make sure link starts with '/'
             $link =~ s{/+\./+}{/}g;                # remove all /./ parts
             my $dcount = 1;
             while ($link =~ s{^/+\.\./+}{/}) {     #\ count & remove

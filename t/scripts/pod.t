@@ -6,6 +6,7 @@
 use strict;
 use warnings;
 
+use Const::Fast;
 use Test::More;
 
 plan skip_all => 'Not needed for coverage of Lintian'
@@ -13,7 +14,9 @@ plan skip_all => 'Not needed for coverage of Lintian'
 
 eval 'use Test::Pod 1.00';
 
-my $dir = $ENV{'LINTIAN_BASE'} // '.';
+const my $DOT => q{.};
+
+my $dir = $ENV{'LINTIAN_BASE'} // $DOT;
 
 my @POD_SOURCES = grep { -e } (
     "$dir/lib",

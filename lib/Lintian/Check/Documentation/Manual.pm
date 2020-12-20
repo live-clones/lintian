@@ -38,7 +38,6 @@ use Text::ParseWords ();
 use Unicode::UTF8 qw(valid_utf8 decode_utf8);
 
 use Lintian::Spelling qw(check_spelling);
-use Lintian::Util qw(open_gz);
 
 use Moo;
 use namespace::clean;
@@ -47,6 +46,8 @@ with 'Lintian::Check';
 
 const my $EMPTY => q{};
 const my $COLON => q{:};
+const my $COMMA => q{,};
+const my $DOT => q{.};
 const my $NEWLINE => qq{\n};
 
 has local_manpages => (is => 'rw', default => sub { {} });
@@ -136,7 +137,7 @@ sub visit_installed_files {
     my $fn_section = pop @pieces;
     my $section_num = $fn_section;
     if (scalar @pieces && $section_num =~ s/^(\d).*$/$1/) {
-        my $bin = join('.', @pieces);
+        my $bin = join($DOT, @pieces);
         $self->local_manpages->{$bin} = []
           unless $self->local_manpages->{$bin};
         push @{$self->local_manpages->{$bin}},
@@ -180,7 +181,7 @@ sub visit_installed_files {
 
         my $fd;
         if ($file_info =~ m/gzip compressed/) {
-            $fd = open_gz($file->unpacked_path);
+            open($fd, '<:gzip', $file->unpacked_path);
         } else {
             open($fd, '<', $file->unpacked_path);
         }
@@ -374,7 +375,8 @@ sub visit_installed_files {
                 # more than one, they will be separated by a comma and
                 # a whitespace.  In case we find the comma, we advance
                 # $pkgname_idx.
-                while ((substr($th_fields[$pkgname_idx], -1) // $EMPTY) eq ',')
+                while (
+                    (substr($th_fields[$pkgname_idx], -1) // $EMPTY) eq $COMMA)
                 {
                     $pkgname_idx++;
                 }

@@ -81,6 +81,7 @@ const my $EMPTY => q{};
 const my $SPACE => q{ };
 const my $INDENT => $SPACE x 4;
 const my $NEWLINE => qq{\n};
+const my $COMMA => q{,};
 const my $YES => q{yes};
 const my $NO => q{no};
 
@@ -220,7 +221,7 @@ if (defined $coverage) {
     my $args= '-MDevel::Cover=-silent,1,+ignore,^(.*/)?t/scripts/.+';
     $args .= ',+ignore,/usr/bin/.*,+ignore,(.*/)?Dpkg';
     $args .= ',-coverage,' . join(',-coverage,', @criteria);
-    $args .= ',' . $coverage if $coverage ne $EMPTY;
+    $args .= $COMMA . $coverage if $coverage ne $EMPTY;
     $ENV{'LINTIAN_COVERAGE'} = $args;
 
     $ENV{'HARNESS_PERL_SWITCHES'} //= $EMPTY;

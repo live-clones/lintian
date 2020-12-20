@@ -37,6 +37,7 @@ use namespace::clean;
 with 'Lintian::Check';
 
 const my $EMPTY => q{};
+const my $HYPHEN => q{-};
 
 our $CLASS_REGEX = qr/\.(?:class|cljc?)/;
 
@@ -63,7 +64,7 @@ sub installable {
 
     my $missing_jarwrapper = 0;
     my $has_public_jars = 0;
-    my $jmajlow = '-';
+    my $jmajlow = $HYPHEN;
 
     my $depends = $processable->relation('strong')->to_string;
     # Remove all libX-java-doc packages to avoid thinking they are java libs
@@ -125,7 +126,7 @@ sub installable {
 
             # .class but no major version?
             next
-              if $mver eq '-';
+              if $mver eq $HYPHEN;
             if (   $mver <= $MAX_BYTECODE->value('min-bytecode-version') - 1
                 or $mver
                 > $MAX_BYTECODE->value('max-bytecode-existing-version')) {
@@ -140,7 +141,7 @@ sub installable {
             # Collect the "lowest" Class version used.  We assume that
             # mixed class formats implies special compat code for certain
             # JVM cases.
-            if ($jmajlow eq '-') {
+            if ($jmajlow eq $HYPHEN) {
                 # first;
                 $jmajlow = $mver;
             } else {
@@ -240,7 +241,7 @@ sub installable {
 
     $self->hint('missing-dep-on-jarwrapper') if $missing_jarwrapper;
 
-    if ($jmajlow ne '-') {
+    if ($jmajlow ne $HYPHEN) {
         # Byte code numbers:
         #  45-49 -> Java1 - Java5 (Always ok)
         #     50 -> Java6

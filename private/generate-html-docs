@@ -11,17 +11,15 @@ use Pod::Simple::HTMLBatch;
 
 const my $EMPTY => q{};
 
-my (@input, $output, $lintian_version);
-
-$output = pop @ARGV;
-@input = @ARGV;
+my $destination = pop @ARGV;
+my @input = @ARGV;
 
 push @input, './lib', './doc/tutorial' unless @input;
-$output //= './doc/api.html';
-$lintian_version = guess_version();
+$destination //= './doc/api.html';
+my $lintian_version = guess_version();
 
-if (!-d $output) {
-    mkdir $output or die "could not create directory: $!";
+if (!-d $destination) {
+    mkdir $destination or die "could not create directory: $!";
 }
 
 my $convert = Pod::Simple::HTMLBatch->new;
@@ -30,9 +28,9 @@ $convert->contents_page_start(header());
 # No footer - it contains a "current time" and is thus unreproducible
 $convert->contents_page_end(q{});
 $convert->css_flurry(0);
-$convert->batch_convert(\@input, $output);
+$convert->batch_convert(\@input, $destination);
 
-print "HTML version available at $output/index.html\n";
+print "HTML version available at $destination/index.html\n";
 
 sub header {
 
@@ -53,12 +51,17 @@ EOF
 sub guess_version {
     my $version;
     my $dist;
-    open(my $fd, '-|', 'dpkg-parsechangelog', '-c0');
-    while (my $line = <$fd>) {
+
+    my @dpkg_command = qw{dpkg-parsechangelog -c0};
+    my $output;
+
+    run3(\@dpkg_command, \undef, \$output);
+    my @lines = split(/\n/, $output);
+
+    while (defined(my $line = shift @lines)) {
         $version = $1 if $line =~ m{\A Version: \s*+ (\S++) \s* \Z}xsm;
         $dist = $1 if $line =~ m{\A Distribution: \s*+ (\S++) \s* \Z}xsm;
     }
-    close($fd);
 
     if ((not defined($dist) or $dist eq 'UNRELEASED') and -d '.git') {
 

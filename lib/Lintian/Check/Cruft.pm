@@ -39,7 +39,7 @@ use List::SomeUtils qw(any first_value);
 use Path::Tiny;
 
 use Lintian::Relation;
-use Lintian::Util qw(normalize_pkg_path open_gz);
+use Lintian::Util qw(normalize_pkg_path);
 use Lintian::SlidingWindow;
 
 use Moo;
@@ -58,7 +58,10 @@ const my $VERY_LONG_LINE_LENGTH => 512;
 const my $SAFE_LINE_LENGTH => 256;
 
 const my $EMPTY => q{};
-const my $SLASH => q{/};
+const my $ASTERISK => q{*};
+const my $DOLLAR => q{$};
+const my $DOT => q{.};
+const my $DOUBLE_DOT => q{..};
 
 # load data for md5sums based check
 sub _md5sum_based_lintian_data {
@@ -127,7 +130,7 @@ has WARN_FILE_TYPE => (
                 $regname =~ s/^\s+|\s+$//g;
 
                 if (length($regname) == 0) {
-                    $regname = '.*';
+                    $regname = $DOT . $ASTERISK;
                 }
 
                 # build transform pair
@@ -289,7 +292,7 @@ sub _get_license_check_file {
             }
 
             if($regex eq $EMPTY) {
-                $regex = '.*';
+                $regex = $DOT . $ASTERISK;
             }
             if($firstregex eq $EMPTY) {
                 $firstregex = $regex;
@@ -366,11 +369,11 @@ has GFDL_FRAGMENTS => (
 
                 # empty first field is everything
                 if (length($gfdlsectionsregex) == 0) {
-                    $gfdlsectionsregex = '.*';
+                    $gfdlsectionsregex = $DOT . $ASTERISK;
                 }
                 # empty regname is none
                 if (length($acceptonlyinfile) == 0) {
-                    $acceptonlyinfile = '.*';
+                    $acceptonlyinfile = $DOT . $ASTERISK;
                 }
 
                 my %ret = (
@@ -527,9 +530,11 @@ sub visit_patched_files {
         && $item->is_open_ok
         && $item->file_info =~ /gzip compressed data/
         && !$self->processable->patched->resolve_path('debian/README.source')){
-        my $fd = open_gz($item->unpacked_path);
+
+        open(my $fd, '<:gzip', $item->unpacked_path);
         read($fd, my $magic, 4);
         close($fd);
+
         $self->hint('r-data-without-readme-source', $item->name)
           if $magic eq 'RDX2';
     }
@@ -787,9 +792,9 @@ sub find_source {
 
     my @relative = (
         # likely in current dir
-        '.',
+        $DOT,
         # for binary object built by libtool
-        '..',
+        $DOUBLE_DOT,
         # maybe in src subdir
         './src',
         # maybe in ../src subdir
@@ -1070,7 +1075,7 @@ sub warn_prebuilt_javascript{
     } else  {
         # html file
         $self->hint('source-is-missing', $item->name, $extratext)
-          unless $self->find_source($item, {'.fragment.js' => '$'});
+          unless $self->find_source($item, {'.fragment.js' => $DOLLAR});
     }
     return;
 }

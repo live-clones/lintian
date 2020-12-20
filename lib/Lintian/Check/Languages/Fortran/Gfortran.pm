@@ -24,12 +24,14 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Lintian::Util qw(open_gz);
+use Const::Fast;
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $NEWLINE => qq{\n};
 
 sub visit_installed_files {
     my ($self, $file) = @_;
@@ -54,7 +56,9 @@ sub visit_installed_files {
 
     my $module_version;
 
-    my $fd = open_gz($file->unpacked_path);
+    open(my $fd, '<:gzip', $file->unpacked_path)
+      or die 'Cannot open gz file ' . $file->unpacked_path . $NEWLINE;
+
     while (my $line = <$fd>) {
         next
           if $line =~ /^\s*$/;

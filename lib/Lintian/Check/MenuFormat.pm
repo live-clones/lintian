@@ -51,6 +51,7 @@ with 'Lintian::Check';
 
 const my $EMPTY => q{};
 const my $SPACE => q{ };
+const my $SLASH => q{/};
 
 # This is a list of all tags that should be in every menu item.
 my @req_tags = qw(needs section title command);
@@ -449,7 +450,7 @@ sub verify_line {
     my $section = $vals{'section'};
     $section =~ tr:/:/:s;       # eliminate duplicate slashes. # Hallo emacs ;;
     $section =~ s{/$}{}         # remove trailing slash
-      unless $section eq '/'; # - except if $section is '/'
+      unless $section eq $SLASH; # - except if $section is '/'
 
     # Be sure the command is provided by the package.
     my ($okay, $command)

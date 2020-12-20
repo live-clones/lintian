@@ -35,6 +35,7 @@ use namespace::clean;
 with 'Lintian::Check';
 
 const my $EMPTY => q{};
+const my $ASTERISK => q{*};
 
 has wildcard_links => (is => 'rwp', default => sub{ [] });
 
@@ -64,7 +65,7 @@ sub visit_installed_files {
     # for other broken symlinks as people keep adding new special
     # cases and it is not worth it.
     push(@{$self->wildcard_links}, $file)
-      if index($file->link, '*') >= 0;
+      if index($file->link, $ASTERISK) >= 0;
 
     return;
 }

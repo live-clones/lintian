@@ -36,18 +36,11 @@ use Exporter qw(import);
 our @EXPORT_OK;
 
 BEGIN {
-    eval { require PerlIO::gzip };
-    if ($@) {
-        *open_gz = \&__open_gz_ext;
-    } else {
-        *open_gz = \&__open_gz_pio;
-    }
 
     @EXPORT_OK = (qw(
           get_file_checksum
           get_file_digest
           human_bytes
-          open_gz
           perm2oct
           locate_executable
           normalize_pkg_path
@@ -313,32 +306,6 @@ sub human_bytes {
     return $human;
 }
 
-=item open_gz (FILE)
-
-Opens a handle that reads from the GZip compressed FILE.
-
-On failure, this sub emits a trappable error.
-
-Note: The handle may be a pipe from an external processes.
-
-=cut
-
-# Preferred implementation of open_gz (used if the perlio layer
-# is available)
-sub __open_gz_pio {
-    my ($file) = @_;
-    open(my $fd, '<:gzip', $file);
-    return $fd;
-}
-
-# Starting on 7/27/20, lintian depends on libperlio-gzip-perl
-# Fallback implementation of open_gz
-sub __open_gz_ext {
-    my ($file) = @_;
-    open(my $fd, '-|', 'gzip', '-dc', $file);
-    return $fd;
-}
-
 =item locate_executable (CMD)
 
 =cut
@@ -497,8 +464,8 @@ sub is_ancestor_of {
     return 1 if $resolved_ancestor eq $resolved_file;
     # add a slash, "path/some-dir" is not "path/some-dir-2" and this
     # allows us to blindly match against the root dir.
-    $resolved_file .= '/';
-    $resolved_ancestor .= '/';
+    $resolved_file .= $SLASH;
+    $resolved_ancestor .= $SLASH;
 
     # If $resolved_file is contained within $resolved_ancestor, then
     # $resolved_ancestor will be a prefix of $resolved_file.

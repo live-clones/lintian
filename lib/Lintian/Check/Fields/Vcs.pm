@@ -39,6 +39,7 @@ use namespace::clean;
 with 'Lintian::Check';
 
 const my $EMPTY => q{};
+const my $QUESTION_MARK => q{?};
 
 my %VCS_EXTRACT = (
     Browser => sub { return @_;},
@@ -72,7 +73,10 @@ my %VCS_CANONIFY = (
             if ($_[0] =~ s{\?(.*[;\&])?op=log(?:[;\&](.*))?\Z}{}xsm) {
                 my (@keep) = ($1, $2, $3);
                 my $final = join($EMPTY, grep {defined} @keep);
-                $_[0] .= '?' . $final if ($final ne $EMPTY);
+
+                $_[0] .= $QUESTION_MARK . $final
+                  if $final ne $EMPTY;
+
                 $_[1] = 'vcs-field-bitrotted';
             }
         }

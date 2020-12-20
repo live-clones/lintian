@@ -34,6 +34,7 @@ use constant THISDIR => dirname realpath __FILE__;
 # use Lintian modules that belong to this program
 use lib THISDIR . '/../lib';
 
+use IPC::Run3;
 use POSIX qw(strftime);
 
 use Lintian::Util qw(locate_executable);
@@ -116,8 +117,13 @@ sub parse_iso_xml {
 }
 
 sub parse_iso_query {
-    open(my $fd, '-|', 'isoquery', '-i', '639-2');
-    while (my $line = <$fd>) {
+    my @command = qw{isoquery -i 639-2};
+    my $output;
+
+    run3(\@command, \undef, \$output);
+    my @lines = split(/\n/, $output);
+
+    while (defined(my $line = shift @lines)) {
 
         next
           unless $line =~ /^(\S{3})\s+(?:\S{3}\s+)?(?:(\S{2})\s+)?/;
@@ -136,7 +142,7 @@ sub parse_iso_query {
               unless exists $CODES{$iso1};
         }
     }
-    close($fd);
+
     return;
 }
 

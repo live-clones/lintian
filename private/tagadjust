@@ -52,6 +52,7 @@ use Test::Lintian::Output::Universal qw(parse_line order);
 
 const my $EMPTY => q{};
 const my $NEWLINE => qq{\n};
+const my $PLUS => q{+};
 
 # options
 my $interactive;
@@ -93,7 +94,7 @@ foreach my $line (@difflines) {
         my $command;
         my $color;
 
-        if ($sign eq '+') {
+        if ($sign eq $PLUS) {
             $command = 'Add';
             $color = 'bold bright_white on_green';
         } else {
@@ -116,7 +117,7 @@ foreach my $line (@difflines) {
           unless $decision eq 'y';
     }
 
-    if ($sign eq '+') {
+    if ($sign eq $PLUS) {
         # say encode_utf8("Adding: $stripped");
         push(@tagslines, $stripped);
     } else {

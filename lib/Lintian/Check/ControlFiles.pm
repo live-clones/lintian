@@ -34,6 +34,7 @@ use namespace::clean;
 with 'Lintian::Check';
 
 const my $SPACE => q{ };
+const my $SLASH => q{/};
 
 sub octify {
     my (undef, $val) = @_;
@@ -103,7 +104,7 @@ sub installable {
                 sprintf('%s %04o != %04o', $file, $operm, $experm));
         }
 
-        my $ownership = $file->owner . '/' . $file->group;
+        my $ownership = $file->owner . $SLASH . $file->group;
 
         # correct owner?
         unless ($file->identity eq 'root/root' || $file->identity eq '0/0') {

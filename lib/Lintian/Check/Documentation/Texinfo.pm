@@ -28,7 +28,7 @@ use autodie;
 
 use Const::Fast;
 
-use Lintian::Util qw(open_gz normalize_link_target);
+use Lintian::Util qw(normalize_link_target);
 
 use Moo;
 use namespace::clean;
@@ -103,7 +103,8 @@ sub binary {
                 next;
             }
 
-            my $fd = open_gz($file->unpacked_path);
+            open(my $fd, '<:gzip', $file->unpacked_path);
+
             my ($section, $start, $end);
             while (my $line = <$fd>) {
 
@@ -139,7 +140,8 @@ sub binary {
         # filename sought.
         #
         if ($file->is_file && $fname =~ /\.info(?:-\d+)?\.gz$/) {
-            my $fd = open_gz($file->unpacked_path);
+
+            open(my $fd, '<:gzip', $file->unpacked_path);
             while (my $line = <$fd>) {
                 while ($line =~ /[\0][\b]\[image src="((?:\\.|[^\"])+)"/smg) {
                     my $src = $1;

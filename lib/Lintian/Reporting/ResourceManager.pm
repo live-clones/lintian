@@ -33,6 +33,8 @@ use Unicode::UTF8 qw(encode_utf8);
 use Lintian::Util qw(get_file_digest);
 
 const my $SPACE => q{ };
+const my $SLASH => q{/};
+const my $EQUALS => q{=};
 
 =head1 NAME
 
@@ -130,7 +132,7 @@ sub install_resource {
     if ($opt && exists($opt->{'source_file'})) {
         $basename = $resource_name;
         $resource = $opt->{'source_file'};
-        if (index($basename, '/') > -1) {
+        if (index($basename, $SLASH) > -1) {
             croak encode_utf8(
                 join($SPACE,
                     qq(Resource "${resource_name}" must not contain "/"),
@@ -145,7 +147,7 @@ sub install_resource {
     $b64digest = $digest->b64digest;
 
     while (length($b64digest) % 4) {
-        $b64digest .= '=';
+        $b64digest .= $EQUALS;
     }
 
     croak encode_utf8("Resource name ${basename} already in use")

@@ -43,6 +43,7 @@ use constant {
 const my $EMPTY => q{};
 const my $SPACE => q{ };
 const my $COLON => q{:};
+const my $EQUAL => q{=};
 const my $LEFT_PARENS => q{(};
 const my $RIGHT_PARENS => q{)};
 const my $LEFT_SQUARE => q{[};
@@ -570,7 +571,7 @@ sub implies_element {
 
     # q wants an exact version, so p must provide that exact version.  p
     # disproves q if q's version is outside the range enforced by p.
-    if ($q->[2] eq '=') {
+    if ($q->[2] eq $EQUAL) {
         if ($p->[2] eq '<<') {
             return versions_lte($p->[3], $q->[3]) ? 0 : undef;
         } elsif ($p->[2] eq '<=') {
@@ -579,7 +580,7 @@ sub implies_element {
             return versions_gte($p->[3], $q->[3]) ? 0 : undef;
         } elsif ($p->[2] eq '>=') {
             return versions_gt($p->[3], $q->[3]) ? 0 : undef;
-        } elsif ($p->[2] eq '=') {
+        } elsif ($p->[2] eq $EQUAL) {
             return versions_equal($p->[3], $q->[3]) ? 1 : 0;
         }
     }
@@ -591,7 +592,7 @@ sub implies_element {
             return versions_gte($p->[3], $q->[3]) ? 0 : undef;
         } elsif ($p->[2] eq '>=') {
             return versions_gt($p->[3], $q->[3]) ? 0 : undef;
-        } elsif ($p->[2] eq '=') {
+        } elsif ($p->[2] eq $EQUAL) {
             return versions_lte($p->[3], $q->[3]) ? 1 : 0;
         } else {
             return versions_lte($p->[3], $q->[3]) ? 1 : undef;
@@ -605,7 +606,7 @@ sub implies_element {
             return versions_gte($p->[3], $p->[3]) ? 0 : undef;
         } elsif ($p->[2] eq '<<') {
             return versions_lte($p->[3], $q->[3]) ? 1 : undef;
-        } elsif ($p->[2] eq '=') {
+        } elsif ($p->[2] eq $EQUAL) {
             return versions_lt($p->[3], $q->[3]) ? 1 : 0;
         } else {
             return versions_lt($p->[3], $q->[3]) ? 1 : undef;
@@ -618,7 +619,7 @@ sub implies_element {
             return versions_lte($p->[3], $q->[3]) ? 0 : undef;
         } elsif ($p->[2] eq '<=') {
             return versions_lt($p->[3], $q->[3]) ? 0 : undef;
-        } elsif ($p->[2] eq '=') {
+        } elsif ($p->[2] eq $EQUAL) {
             return versions_gte($p->[3], $q->[3]) ? 1 : 0;
         } else {
             return versions_gte($p->[3], $q->[3]) ? 1 : undef;
@@ -629,7 +630,7 @@ sub implies_element {
             return versions_lte($p->[3], $q->[3]) ? 0 : undef;
         } elsif ($p->[2] eq '>>') {
             return versions_gte($p->[3], $q->[3]) ? 1 : undef;
-        } elsif ($p->[2] eq '=') {
+        } elsif ($p->[2] eq $EQUAL) {
             return versions_gt($p->[3], $q->[3]) ? 1 : 0;
         } else {
             return versions_gt($p->[3], $q->[3]) ? 1 : undef;

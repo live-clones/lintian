@@ -25,6 +25,7 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use JSON::MaybeXS;
 use List::SomeUtils qw(any);
 use Path::Tiny;
@@ -35,6 +36,9 @@ use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $SLASH => q{/};
+const my $DOT => q{.};
 
 sub source {
     my ($self) = @_;
@@ -191,7 +195,7 @@ sub visit_installed_files {
       if $pac->{version} and $pac->{version} =~ /^0\.0\.0-dev/;
 
     # Warn if module name is not equal to nodejs directory
-    if (($subpath eq '/') and ($dirname ne $pac->{name})) {
+    if ($subpath eq $SLASH && $dirname ne $pac->{name}) {
         $self->hint('nodejs-module-installed-in-bad-directory',
             $file->name, $pac->{name}, $dirname);
     } else {
@@ -202,8 +206,8 @@ sub visit_installed_files {
         $name =~ s{[/_\@]}{-}g;
         $name =~ s/-+/-/g;
         $self->hint('nodejs-module-not-declared', $name, $file->name)
-          if $subpath eq '/'
-          and not $provides->implies($name);
+          if $subpath eq $SLASH
+          && !$provides->implies($name);
     }
     return;
 }
@@ -219,7 +223,7 @@ sub path_exists {
     s/^\.\*$/.*\\w.*/ for @strings;
 
     my @elem = map { qr{^$_/?$} } grep { length } @strings;
-    my @dir = ('.');
+    my @dir = ($DOT);
 
     # Follow directories
   LOOP: while (my $re = shift @elem) {
@@ -242,7 +246,7 @@ sub path_exists {
 
             # If this is the last element of path, store current elements
             my $pwd = $dir[$i];
-            $dir[$i] .= '/' . shift(@tmp);
+            $dir[$i] .= $SLASH . shift @tmp;
 
             push @dir, map { "$pwd/$_" } @tmp if @tmp;
         }

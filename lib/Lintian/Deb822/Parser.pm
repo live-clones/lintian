@@ -48,6 +48,7 @@ use Const::Fast;
 use Unicode::UTF8 qw(encode_utf8);
 
 const my $EMPTY => q{};
+const my $NUMBER_SIGN => q{#};
 
 =head1 NAME
 
@@ -408,7 +409,7 @@ sub visit_dpkg_paragraph_string {
     while (defined($line = shift @lines)) {
         chomp $line;
 
-        if (substr($line, 0, 1) eq '#') {
+        if (substr($line, 0, 1) eq $NUMBER_SIGN) {
             next
               unless $flags & DCTRL_NO_COMMENTS;
             die encode_utf8("No comments allowed (line $position).\n");

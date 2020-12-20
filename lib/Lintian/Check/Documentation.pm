@@ -26,14 +26,15 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
 use List::SomeUtils qw(any);
-
-use Lintian::Util qw(open_gz);
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $VERTICAL_BAR => q{|};
 
 # a list of regex for detecting documentation file checked against basename (xi)
 my @DOCUMENTATION_FILE_REGEXES = qw{
@@ -78,7 +79,7 @@ has COMPRESS_FILE_EXTENSIONS_OR_ALL => (
     default => sub {
         my ($self) = @_;
 
-        my $text = join('|',
+        my $text = join($VERTICAL_BAR,
             map {$self->COMPRESS_FILE_EXTENSIONS->value($_) }
               $self->COMPRESS_FILE_EXTENSIONS->all);
 
@@ -197,9 +198,11 @@ sub visit_installed_files {
             and $file->is_regular_file
             and $file->size <= 276
             and $file->file_info =~ m/gzip compressed/) {
-            my $fd = open_gz($file->unpacked_path);
+
+            open(my $fd, '<:gzip', $file->unpacked_path);
             my $f = <$fd>;
             close($fd);
+
             unless (defined $f and length $f) {
                 $self->hint('zero-byte-file-in-doc-directory', $file->name);
             }

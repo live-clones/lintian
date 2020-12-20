@@ -59,11 +59,11 @@ use constant {
 };
 
 use overload (
-    '""' => \&_as_string,
+    q{""} => \&_as_string,
     'qr' => \&_as_regex_ref,
     'bool' => \&_bool,
-    '!' => \&_bool_not,
-    '.'  => \&_str_concat,
+    q{!} => \&_bool_not,
+    q{.} => \&_str_concat,
     'cmp' => \&_str_cmp,
     'eq' => \&_str_eq,
     'ne' => \&_str_ne,
@@ -74,9 +74,10 @@ const my $EMPTY => q{};
 const my $SPACE => q{ };
 const my $SLASH => q{/};
 const my $DOT => q{.};
-const my $DOUBLEDOT => q{..};
-const my $DOUBLEQUOTE => q{"};
+const my $DOUBLE_DOT => q{..};
+const my $DOUBLE_QUOTE => q{"};
 const my $BACKSLASH => q{\\};
+const my $HASHBANG => q{#!};
 
 =head1 NAME
 
@@ -124,7 +125,7 @@ sub get_quoted_filename {
 
     # extract quoted file name
     my ($delimited, $extra)
-      = extract_delimited($unknown, $DOUBLEQUOTE, $skip, $BACKSLASH);
+      = extract_delimited($unknown, $DOUBLE_QUOTE, $skip, $BACKSLASH);
 
     return (undef, undef)
       unless defined $delimited;
@@ -326,7 +327,7 @@ has hashbang => (
         my $magic;
 
         open(my $fd, '<', $self->unpacked_path);
-        if (read($fd, $magic, 2) && $magic eq '#!' && !eof($fd)) {
+        if (read($fd, $magic, 2) && $magic eq $HASHBANG && !eof($fd)) {
             $trimmed_bytes = <$fd>;
         }
         close $fd;
@@ -460,7 +461,7 @@ has is_script => (
           if $self->magic(6) eq '#!#!#!';
 
         return 0
-          unless $self->magic(2) eq '#!';
+          unless $self->magic(2) eq $HASHBANG;
 
         return 1;
     });
@@ -1027,7 +1028,7 @@ sub resolve_path {
           if $segment eq $DOT || !length $segment;
 
         # for double dot, go up a level
-        if ($segment eq $DOUBLEDOT) {
+        if ($segment eq $DOUBLE_DOT) {
             my $parent = $reference->parent_dir;
             return undef
               unless defined $parent;

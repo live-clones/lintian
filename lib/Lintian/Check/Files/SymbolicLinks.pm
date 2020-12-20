@@ -32,6 +32,10 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
+const my $SLASH => q{/};
+const my $DOT => q{.};
+const my $DOUBLE_DOT => q{..};
+const my $VERTICAL_BAR => q{|};
 const my $ARROW => q{->};
 
 has COMPRESS_FILE_EXTENSIONS => (
@@ -51,7 +55,7 @@ has COMPRESS_FILE_EXTENSIONS_OR_ALL => (
     default => sub {
         my ($self) = @_;
 
-        my $text = join('|',
+        my $text = join($VERTICAL_BAR,
             map {$self->COMPRESS_FILE_EXTENSIONS->value($_) }
               $self->COMPRESS_FILE_EXTENSIONS->all);
 
@@ -147,7 +151,7 @@ sub visit_installed_files {
 
         # Any other case is already definitely non-recursive
         $self->hint('symlink-is-self-recursive', $file->name, $file->link)
-          if $mylink eq '/';
+          if $mylink eq $SLASH;
 
     } else {
         # relative link, we can assume from here that the link
@@ -162,13 +166,13 @@ sub visit_installed_files {
         # handle `../' at beginning of $file->link
         my ($lastpop, $linkcomponent);
         while ($linkcomponent = shift @linkcomponents) {
-            if ($linkcomponent eq '.') {
+            if ($linkcomponent eq $DOT) {
                 $self->hint('symlink-contains-spurious-segments',
                     $file->name, $file->link)
-                  unless $mylink eq '.';
+                  unless $mylink eq $DOT;
                 next;
             }
-            last if $linkcomponent ne '..';
+            last if $linkcomponent ne $DOUBLE_DOT;
             if (@filecomponents) {
                 $lastpop = pop @filecomponents;
             } else {
@@ -206,7 +210,7 @@ sub visit_installed_files {
 
         # check additional segments for mistakes like `foo/../bar/'
         foreach (@linkcomponents) {
-            if ($_ eq '..' || $_ eq '.') {
+            if ($_ eq $DOUBLE_DOT || $_ eq $DOT) {
                 $self->hint('symlink-contains-spurious-segments',
                     $file->name, $file->link);
                 last;

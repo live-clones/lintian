@@ -34,6 +34,7 @@ with 'Lintian::Check';
 
 const my $EMPTY => q{};
 const my $SPACE => q{ };
+const my $PERCENT => q{%};
 
 our $PYTHON_DEPEND= 'python2:any | python2-dev:any';
 our $PYTHON3_DEPEND
@@ -433,7 +434,7 @@ sub source {
                       if any { $target eq $_ } @indep_rules;
 
                     $indep = 1
-                      if $target eq '%';
+                      if $target eq $PERCENT;
 
                     $indep = 1
                       if $target =~ /^override_/;

@@ -39,6 +39,7 @@ with 'Lintian::Check';
 
 const my $EMPTY => q{};
 const my $SPACE => q{ };
+const my $SLASH => q{/};
 
 # not presently used
 #my $UNKNOWN_SHARED_LIBRARY_EXCEPTIONS
@@ -193,7 +194,7 @@ sub installable {
                 my ($field, $value) = ($1, $2);
                 if ($field eq 'libdir') {
                     # dirname with leading slash and without the trailing one.
-                    my $expected = '/' . substr($cur_file->dirname, 0, -1);
+                    my $expected = $SLASH . substr($cur_file->dirname, 0, -1);
                     $value =~ s{/+$}{};
 
                     # python-central is a special case since the

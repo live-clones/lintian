@@ -8,6 +8,8 @@ use strict;
 use warnings;
 use autodie;
 
+use Const::Fast;
+use IPC::Run3;
 use POSIX qw(ENOENT);
 
 use
@@ -31,8 +33,10 @@ plan skip_all => 'Perl::Tidy 20180220 required to run this test' if $@;
 eval 'use PPIx::Regexp';
 diag('libppix-regexp-perl is needed to enable some checks') if $@;
 
+const my $DOT => q{.};
+
 my @test_paths = program_name_to_perl_paths($0);
-$ENV{'LINTIAN_BASE'} //= '.';
+$ENV{'LINTIAN_BASE'} //= $DOT;
 my $critic_profile = "$ENV{'LINTIAN_BASE'}/.perlcriticrc";
 Test::Perl::Critic->import(-profile => $critic_profile);
 
@@ -62,15 +66,13 @@ sub run_critic {
 sub should_skip {
     my $skip = 1;
 
-    open(my $fd, '-|', 'dpkg-parsechangelog', '-c0');
+    my @command = qw{dpkg-parsechangelog -c0};
+    my $output;
 
-    while (my $line = <$fd>) {
-        chomp $line;
-        $skip = 0
-          if $line eq 'Distribution: UNRELEASED';
-    }
+    run3(\@command, \undef, \$output);
 
-    close($fd);
+    $skip = 0
+      if $output =~ /^Distribution: UNRELEASED$/m;
 
     return $skip;
 }

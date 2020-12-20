@@ -119,9 +119,9 @@ sub check_web_application_package {
     my $processable = $self->processable;
 
     $self->hint('non-standard-apache2-configuration-name',
-        $webapp, '!=', "$pkg.conf")
+        "$webapp != $pkg.conf")
       if $webapp ne "$pkg.conf"
-      or $webapp =~ m/^local-./;
+      || $webapp =~ /^local-/;
 
     my $rel = $processable->relation('strong')
       ->logical_and($processable->relation('Recommends'));
@@ -162,10 +162,9 @@ sub check_module_package {
     my $rel;
 
     $expected_name =~ tr/_/-/;
-    if ($expected_name ne $pkg) {
-        $self->hint('non-standard-apache2-module-package-name',
-            $pkg, '!=',$expected_name);
-    }
+    $self->hint('non-standard-apache2-module-package-name',
+        "$pkg != $expected_name")
+      if $expected_name ne $pkg;
 
     $rel = $processable->relation('strong')
       ->logical_and($processable->relation('Recommends'));

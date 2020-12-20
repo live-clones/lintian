@@ -34,7 +34,10 @@ BEGIN {
 
 use AptPkg::Config '$_config';
 use Carp qw(croak);
+use Const::Fast;
 use Unicode::UTF8 qw(encode_utf8);
+
+const my $EQUAL => q{=};
 
 my $versioning = do {
     my $config = AptPkg::Config->new;
@@ -161,7 +164,7 @@ C<<< << >>>, or C<<< >> >>>, and false otherwise.
 
 sub versions_compare {
     my ($p, $op, $q) = @_;
-    if    ($op eq  '=') { return versions_equal($p, $q) }
+    if    ($op eq  $EQUAL) { return versions_equal($p, $q) }
     elsif ($op eq '<=') { return versions_lte($p, $q) }
     elsif ($op eq '>=') { return versions_gte($p, $q) }
     elsif ($op eq '<<') { return versions_lt($p, $q) }

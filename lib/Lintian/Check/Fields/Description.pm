@@ -38,7 +38,10 @@ with 'Lintian::Check';
 # Compared to a lower-case string, so it must be all lower-case
 const my $DH_MAKE_PERL_TEMPLATE =>
 'this description was automagically extracted from the module by dh-make-perl';
+
 const my $EMPTY => q{};
+const my $SLASH => q{/};
+const my $DOUBLE_COLON => q{::};
 
 sub spelling_tag_emitter {
     my ($self, @orig_args) = @_;
@@ -277,11 +280,11 @@ sub installable {
     if ($pkg =~ /^lib(.+)-perl$/) {
         my $mod = $1;
         my @mod_path_elements = split(/-/, $mod);
-        $mod = join('::', map {ucfirst} @mod_path_elements);
+        $mod = join($DOUBLE_COLON, map {ucfirst} @mod_path_elements);
         my $mod_lc = lc($mod);
 
         my $pm_found = 0;
-        my $pmpath = join('/', @mod_path_elements).'.pm';
+        my $pmpath = join($SLASH, @mod_path_elements).'.pm';
         my $pm     = $mod_path_elements[-1].'.pm';
 
         foreach my $filepath ($processable->installed->sorted_list) {

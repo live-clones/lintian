@@ -82,6 +82,7 @@ use Lintian::Profile;
 use Lintian::Tag;
 
 const my $EMPTY => q{};
+const my $COLON => q{:};
 
 my %severities = map { $_ => 1 } @Lintian::Tag::SEVERITIES;
 my %check_types = map { $_ => 1 } qw(binary changes source udeb);
@@ -483,7 +484,7 @@ sub load_profile_for_test {
 
     $MANUALS = $PROFILE->manual_references;
 
-    $ENV{'LINTIAN_CONFIG_DIRS'} = join(':', @inc);
+    $ENV{'LINTIAN_CONFIG_DIRS'} = join($COLON, @inc);
 
     return $PROFILE;
 }

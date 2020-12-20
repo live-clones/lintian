@@ -43,6 +43,9 @@ use namespace::clean;
 with 'Lintian::Check';
 
 const my $EMPTY => q{};
+const my $SLASH => q{/};
+const my $ASTERISK => q{*};
+const my $DOT => q{.};
 
 # This is a map of all known interpreters.  The key is the interpreter
 # name (the binary invoked on the #! line).  The value is an anonymous
@@ -157,7 +160,7 @@ has BAD_MAINT_CMD => (
                 $inscript =~ s/^\s+|\s+$//g;
 
                 if (length($inscript) == 0) {
-                    $inscript = '.*';
+                    $inscript = $DOT . $ASTERISK;
                 }
                 return {
                     # use not not to normalize boolean
@@ -469,7 +472,7 @@ sub installable {
             $versioned = 1 if $data;
         }
         if ($data) {
-            my $expected = $data->[0] . '/' . $base;
+            my $expected = $data->[0] . $SLASH . $base;
             unless ($interpreter eq $expected or $calls_env) {
                 $self->script_tag(bad_interpreter_tag_name($expected),
                     $filename, "(#!$interpreter != $expected)");
@@ -703,7 +706,7 @@ sub installable {
                 "control/$file","#!$interpreter");
         } elsif ($base eq 'sh' or $base eq 'bash' or $base eq 'perl') {
             my $expected
-              = ($self->INTERPRETERS->value($base))->[0] . '/' . $base;
+              = ($self->INTERPRETERS->value($base))->[0] . $SLASH . $base;
             $self->hint(
                 bad_interpreter_tag_name($expected),
                 "#!$interpreter != $expected",
@@ -715,7 +718,7 @@ sub installable {
             $self->hint('forbidden-postrm-interpreter', "#!$interpreter");
         } elsif ($self->INTERPRETERS->recognizes($base)) {
             my $data = $self->INTERPRETERS->value($base);
-            my $expected = $data->[0] . '/' . $base;
+            my $expected = $data->[0] . $SLASH . $base;
             unless ($interpreter eq $expected) {
                 $self->hint(
                     bad_interpreter_tag_name($expected),

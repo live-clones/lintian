@@ -25,10 +25,14 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
+
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $VERTICAL_BAR => q{|};
 
 has COMPRESS_FILE_EXTENSIONS => (
     is => 'rw',
@@ -47,7 +51,7 @@ has COMPRESS_FILE_EXTENSIONS_OR_ALL => (
     default => sub {
         my ($self) = @_;
 
-        my $text = join('|',
+        my $text = join($VERTICAL_BAR,
             map {$self->COMPRESS_FILE_EXTENSIONS->value($_) }
               $self->COMPRESS_FILE_EXTENSIONS->all);
 

@@ -65,6 +65,7 @@ my @LINTIAN_SUITES = qw(recipes);
 
 const my $EMPTY => q{};
 const my $SPACE => q{ };
+const my $VERTICAL_BAR => q{|};
 const my $DESC => 'desc';
 const my $SEPARATED_BY_COLON => qr/([^:]+):([^:]+)/;
 
@@ -335,7 +336,7 @@ sub find_all_tags {
         $temp->stringify);
     my @lines = $temp->lines_utf8({ chomp => 1 });
 
-    my $csv = Text::CSV->new({ sep_char => '|' });
+    my $csv = Text::CSV->new({ sep_char => $VERTICAL_BAR });
 
     my %expected;
     foreach my $line (@lines) {

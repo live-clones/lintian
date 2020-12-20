@@ -73,7 +73,7 @@ sub visit_installed_files {
             my $moreinfo = $obs_data->{'moreinfo'};
 
             $self->hint('package-installs-into-obsolete-dir',
-                $file->name, ':', $oldpath, '->', $newpath, $moreinfo);
+                $file->name,": $oldpath -> $newpath", $moreinfo);
         }
     }
 

@@ -28,8 +28,9 @@ use IO::Async::Process;
 use Test::More tests => 8;
 
 const my $NEWLINE => qq{\n};
+const my $DOT => q{.};
 
-$ENV{'LINTIAN_BASE'} //= '.';
+$ENV{'LINTIAN_BASE'} //= $DOT;
 
 my $cmd_path = "$ENV{LINTIAN_BASE}/bin/spellintian";
 my $spelling_data = 'data/spelling/corrections';

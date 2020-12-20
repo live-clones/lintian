@@ -54,6 +54,7 @@ const my $TAR_RECORD_SIZE => 20 * 512;
 
 const my $COLON => q{:};
 const my $NEWLINE => qq{\n};
+const my $OPEN_PIPE => q{-|};
 
 =head1 NAME
 
@@ -116,7 +117,7 @@ sub get_deb_info {
     # get control.tar.gz; dpkg-deb -f $file is slow; use tar instead
     my @dpkg_command = ('dpkg-deb', '--ctrl-tarfile', $path);
 
-    my $dpkg_pid = open(my $from_dpkg, '-|', @dpkg_command)
+    my $dpkg_pid = open(my $from_dpkg, $OPEN_PIPE, @dpkg_command)
       or die encode_utf8("Cannot run @dpkg_command: $!");
 
     # would like to set buffer size to 4096 & $TAR_RECORD_SIZE
@@ -124,7 +125,7 @@ sub get_deb_info {
     # get binary control file
     my $stdout;
     my $stderr;
-    my @tar_command = ('tar', '--wildcards', '-xO', '-f', '-', '*control');
+    my @tar_command = qw{tar --wildcards -xO -f - *control};
     run3(\@tar_command, $from_dpkg, \$stdout, \$stderr);
     my $status = ($? >> 8);
 

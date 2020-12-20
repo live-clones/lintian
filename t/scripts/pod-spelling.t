@@ -3,6 +3,8 @@ use strict;
 use warnings;
 use autodie;
 
+use Const::Fast;
+use IPC::Run3;
 use Test::More;
 
 plan skip_all => 'Not needed for coverage of Lintian'
@@ -18,6 +20,8 @@ use Test::Lintian;
 eval 'use Test::Spelling';
 plan skip_all => 'Pod spell checking requires Test::Spelling' if $@;
 
+const my $DOT => q{.};
+
 my @GOOD_WORDS;
 while (my $line = <DATA>) {
     $line =~ s/ \s* (?: [#] .* )? \Z//xsm;
@@ -30,7 +34,7 @@ add_stopwords(@GOOD_WORDS);
 # aspell if installed, too. This avoids a "Build-Conflicts: spell".
 set_spell_cmd('aspell list -l en -p /dev/null');
 
-chdir($ENV{'LINTIAN_BASE'}//'.')
+chdir($ENV{'LINTIAN_BASE'} // $DOT)
   or die("fatal error: could not chdir to $ENV{LINTIAN_BASE}: $!");
 
 my @CHECKS = glob('checks/*[!.]*[!c]');
@@ -42,8 +46,14 @@ sub check_aspell {
     # Ubuntu Precise has an old aspell-en, which does not recognise
     # "basic" stuff like "indices" or "extendable".
     my $ok = 0;
-    open(my $fd, '-|', 'dpkg', '-l');
-    while (my $line = <$fd>) {
+
+    my @command = qw{dpkg -l};
+    my $output;
+
+    run3(\@command, \undef, \$output);
+    my @lines = split(/\n/, $output);
+
+    while (defined(my $line = shift @lines)) {
         if ($line =~ m/^.i \s+ aspell-en \s+ (\S+) \s/xsm) {
             my $version = $1;
             require Lintian::Relation::Version;
@@ -53,7 +63,7 @@ sub check_aspell {
               ||diag("Found aspell-en $version, want 7.1-0~ or newer");
         }
     }
-    close($fd);
+
     return $ok;
 }
 

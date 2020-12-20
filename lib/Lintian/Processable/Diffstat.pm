@@ -34,6 +34,7 @@ use namespace::clean;
 const my $COLON => q{:};
 const my $UNDERSCORE => q{_};
 const my $NEWLINE => qq{\n};
+const my $OPEN_PIPE => q{-|};
 
 =head1 NAME
 
@@ -79,7 +80,7 @@ has diffstat => (
           unless -e $diffpath;
 
         my @gunzip_command = ('gunzip', '--stdout', $diffpath);
-        my $gunzip_pid = open(my $from_gunzip, '-|', @gunzip_command)
+        my $gunzip_pid = open(my $from_gunzip, $OPEN_PIPE, @gunzip_command)
           or die encode_utf8("Cannot run @gunzip_command: $!");
 
         my $stdout;

@@ -21,9 +21,12 @@
 use strict;
 use warnings;
 
+use Const::Fast;
 use Test::More import => ['done_testing'];
 
 use Test::Lintian;
+
+const my $DOT => q{.};
 
 # Test that all checks can be loaded (except lintian.desc, which is
 # a special case).
@@ -33,7 +36,7 @@ sub accept_filter {
 
 my $opts = {'filter' => \&accept_filter,};
 
-$ENV{'LINTIAN_BASE'} //= '.';
+$ENV{'LINTIAN_BASE'} //= $DOT;
 
 load_profile_for_test('debian/main', $ENV{'LINTIAN_BASE'});
 test_load_checks($opts, "$ENV{'LINTIAN_BASE'}/lib/Lintian/Check");

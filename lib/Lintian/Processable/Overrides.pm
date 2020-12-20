@@ -33,6 +33,8 @@ use namespace::clean;
 
 const my $EMPTY => q{};
 const my $SPACE => q{ };
+const my $ASTERISK => q{*};
+const my $DOT => q{.};
 
 =head1 NAME
 
@@ -266,7 +268,7 @@ has overrides => (
                  # Split does not help us if $pattern ends with *
                  # so we deal with that now
                 if ($pattern =~ s/\Q*\E+\z//){
-                    $end = '.*';
+                    $end = $DOT . $ASTERISK;
                 }
 
                 # Are there any * left (after the above)?
@@ -274,7 +276,7 @@ has overrides => (
                     # this works even if $text starts with a *, since
                     # that is split as $EMPTY, <text>
                     my @pargs = split(m/\Q*\E++/, $pattern);
-                    $pat = join('.*', map { quotemeta($_) } @pargs);
+                    $pat = join($DOT . $ASTERISK, map { quotemeta } @pargs);
                 } else {
                     $pat = $pattern;
                 }

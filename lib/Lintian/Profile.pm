@@ -50,6 +50,8 @@ with 'Lintian::Profile::Architectures',
 
 const my $EMPTY => q{};
 const my $SPACE => q{ };
+const my $HYPHEN => q{-};
+const my $EQUAL => q{=};
 
 =head1 NAME
 
@@ -766,7 +768,7 @@ an impossible constraint (like C<< > serious >>).
 sub _relation_subset {
     my ($self, $element, $rel, @list) = @_;
 
-    if ($rel eq '=') {
+    if ($rel eq $EQUAL) {
         return grep { $_ eq $element } @list;
     }
 
@@ -816,13 +818,13 @@ sub display {
         die encode_utf8('invalid display constraint ' . $error);
     }
 
-    if ($op eq '=') {
+    if ($op eq $EQUAL) {
         for my $s (@Lintian::Tag::SEVERITIES) {
             $self->display_level_lookup->{$s} = 0;
         }
     }
 
-    my $status = ($op eq '-' ? 0 : 1);
+    my $status = ($op eq $HYPHEN ? 0 : 1);
 
     my @severities;
     if ($severity) {

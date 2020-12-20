@@ -67,6 +67,12 @@ const my $SPACE => q{ };
 const my $NEWLINE => qq{\n};
 const my $COMMA => q{,};
 const my $SLASH => q{/};
+const my $DOT => q{.};
+const my $DOUBLE_DOT => q{..};
+const my $PLUS => q{+};
+const my $EQUAL => q{=};
+const my $HYPHEN => q{-};
+const my $OPEN_PIPE => q{-|};
 
 # only in GNOME; need original environment
 my $hyperlinks_capable = is_interactive && any { /^GNOME/ } keys %ENV;
@@ -350,17 +356,17 @@ $selected{$_} = $command_line{$_} for keys %command_line;
 
 my @display_level;
 
-push(@display_level,['=', '>=', 'warning'])
+push(@display_level,[$EQUAL, '>=', 'warning'])
   if $selected{'default-display-level'};
 
-push(@display_level, ['+', '>=', 'info'])
+push(@display_level, [$PLUS, '>=', 'info'])
   if $selected{'display-info'};
 
-push(@display_level, ['+', '=', 'pedantic'])
+push(@display_level, [$PLUS, $EQUAL, 'pedantic'])
   if $selected{'pedantic'};
 
 sub display_classificationtags {
-    push(@display_level, ['+', '=', 'classification']);
+    push(@display_level, [$PLUS, $EQUAL, 'classification']);
     return;
 }
 
@@ -377,8 +383,8 @@ for my $level (@{$selected{'display-level'}}) {
     }
 
     my $severity = $level;
-    $operator //= '=';
-    $relation //= '=';
+    $operator //= $EQUAL;
+    $relation //= $EQUAL;
 
     push(@display_level, [$operator, $relation, $severity]);
 }
@@ -632,7 +638,7 @@ my $PROFILE = Lintian::Profile->new;
 # dies on error
 $PROFILE->load($selected{profile}, \@CONFIG_DIRS,
     { 'restricted-search-dirs' => \@RESTRICTED_CONFIG_DIRS });
-$OUTPUT->v_msg('Using profile ' . $PROFILE->name . '.');
+$OUTPUT->v_msg('Using profile ' . $PROFILE->name . $DOT);
 
 # if tags are listed explicitly (--tags) then show them even if
 # they are pedantic/experimental etc.  However, for --check-part
@@ -647,7 +653,7 @@ if (@{$selected{'check-part'}} || @{$selected{tags}}) {
 
         # discard current display level; get everything
         @display_level
-          = (['+', '>=', 'pedantic'], ['+', '=', 'classification']);
+          = ([$PLUS, '>=', 'pedantic'], [$PLUS, $EQUAL, 'classification']);
 
         $PROFILE->enable_tag($_) for @{$selected{tags}};
 
@@ -831,7 +837,7 @@ sub _find_changes {
     my ($source, $version);
     my $changes;
     my @archs;
-    my @dirs = ('..', '../build-area', '/var/cache/pbuilder/result');
+    my @dirs = ($DOUBLE_DOT, '../build-area', '/var/cache/pbuilder/result');
 
     unshift(@dirs, $ENV{DEBRELEASE_DEBS_DIR})
       if exists $ENV{DEBRELEASE_DEBS_DIR};
@@ -871,7 +877,7 @@ sub _find_changes {
     push(@archs, decode_utf8($ENV{DEB_HOST_ARCH}))
       if exists $ENV{DEB_HOST_ARCH};
     # Maybe cross-built for something dpkg knows about...
-    open(my $foreign, '-|', 'dpkg', '--print-foreign-architectures');
+    open(my $foreign, $OPEN_PIPE, 'dpkg', '--print-foreign-architectures');
     while (my $bytes = <$foreign>) {
         my $line = decode_utf8($bytes);
         chomp($line);
@@ -928,7 +934,7 @@ sub open_file_or_fd {
     # in v2.26)
     no autodie qw(open);
     if ($mode eq '<') {
-        if ($to_open eq '-' || $to_open eq '&0') {
+        if ($to_open eq $HYPHEN || $to_open eq '&0') {
             $fd = \*STDIN;
         } elsif ($to_open =~ m/^\&\d+$/) {
             open($fd, '<&=', substr($to_open, 1))
@@ -939,7 +945,7 @@ sub open_file_or_fd {
         }
 
     } elsif ($mode eq '>') {
-        if ($to_open eq '-' || $to_open eq '&1') {
+        if ($to_open eq $HYPHEN || $to_open eq '&1') {
             $fd = \*STDOUT;
         } elsif ($to_open =~ m/^\&\d+$/) {
             open($fd, '>&=', substr($to_open, 1))

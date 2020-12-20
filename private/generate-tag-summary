@@ -17,9 +17,13 @@ use constant THISDIR => dirname realpath __FILE__;
 # use Lintian modules that belong to this program
 use lib THISDIR . '/../lib';
 
+use Const::Fast;
 use Getopt::Long;
+use IPC::Run3;
 
 use Lintian::IPC::Run3 qw(safe_qx);
+
+const my $PLUS => q{+};
 
 my (%added, %removed, %opt);
 
@@ -47,18 +51,23 @@ if (not $commit_range) {
     print "Assuming commit range to be: ${commit_range}\n";
 }
 
-open(my $fd, '-|', 'git', 'diff', $commit_range, '--', 'tags/*/*.tag');
-while (my $line = <$fd>) {
-    chomp($line);
-    next unless $line =~ m{ \A ([\+-]) Tag: \s*+ ([^ ]++) \s*+ \Z}xsm;
+my $output;
+my @command =(qw{git diff}, $commit_range, qw{-- tags/*/*.tag});
+run3(\@command, \undef, \$output);
+
+my @lines = split(/\n/, $output);
+while (defined(my $line = shift @lines)) {
+
+    next
+      unless $line =~ m{ \A ([\+-]) Tag: \s*+ ([^ ]++) \s*+ \Z}xsm;
+
     my ($change, $tag) = ($1, $2);
-    if ($change eq '+') {
+    if ($change eq $PLUS) {
         $added{$tag} = 1;
     } else {
         $removed{$tag} = 1;
     }
 }
-close($fd);
 
 for my $tag (keys(%added)) {
     if (exists($removed{$tag})) {
@@ -117,3 +126,9 @@ sub emit_tag_summary {
     }
     return;
 }
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

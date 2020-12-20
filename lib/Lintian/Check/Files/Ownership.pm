@@ -25,10 +25,14 @@ use warnings;
 use utf8;
 use autodie;
 
+use Const::Fast;
+
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $SLASH => q{/};
 
 sub visit_installed_files {
     my ($self, $file) = @_;
@@ -44,7 +48,7 @@ sub visit_installed_files {
             || ($file->gid >= 60_000 && $file->gid < 65_000))
     ) {
         $self->hint('wrong-file-owner-uid-or-gid', $file->name,
-            $file->uid . '/' . $file->gid);
+            $file->uid . $SLASH . $file->gid);
     }
 
     return;

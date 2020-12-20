@@ -39,6 +39,7 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
+const my $DOT => q{.};
 const my $DOUBLE_QUOTE => q{"};
 
 my %KNOWN_FEATURES = map { $_ => 1 } qw();
@@ -216,7 +217,7 @@ sub check_test_file {
     my ($self, $directory, $name, $position) = @_;
 
     # Special case with "Tests-Directory: ." (see #849880)
-    my $path = $directory eq '.' ? $name : "$directory/$name";
+    my $path = $directory eq $DOT ? $name : "$directory/$name";
 
     $self->hint('illegal-runtime-test-name', $name,'in line', $position)
       unless $name =~ m{^ [ [:alnum:] \+ \- \. / ]+ $}x;
