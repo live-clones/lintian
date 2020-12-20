@@ -187,7 +187,7 @@ include =
 
 [Freenode::OverloadOptions]
 
-[-Freenode::PackageMatchesFilename]
+[Freenode::PackageMatchesFilename]
 
 [Freenode::POSIXImports]
 
