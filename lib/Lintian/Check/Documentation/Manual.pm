@@ -34,7 +34,7 @@ use IPC::Run3;
 use List::Compare;
 use List::SomeUtils qw(any none);
 use Path::Tiny;
-use Text::ParseWords ();
+use Text::Balanced qw(extract_delimited);
 use Unicode::UTF8 qw(valid_utf8 decode_utf8);
 
 use Lintian::Spelling qw(check_spelling);
@@ -361,42 +361,59 @@ sub visit_installed_files {
         }
 
         # Now we search through the whole man page for some common errors
-        my $lc = 0;
+        my $position = 0;
         my $stag_emitter
           = $self->spelling_tag_emitter('typo-in-manual-page', $file);
         foreach my $line (@manfile) {
-            $lc++;
+            $position++;
             chomp $line;
-            next if $line =~ /^\.\\\"/; # comments .\"
-            if ($line =~ /^\.TH\s/) { # header
-                my @th_fields= Text::ParseWords::parse_line('\s+', 0, $line);
-                my $pkgname_idx = 1;
-                # Iterate over possible package names.  If there is
-                # more than one, they will be separated by a comma and
-                # a whitespace.  In case we find the comma, we advance
-                # $pkgname_idx.
-                while (
-                    (substr($th_fields[$pkgname_idx], -1) // $EMPTY) eq $COMMA)
-                {
-                    $pkgname_idx++;
+
+            next
+              if $line =~ /^\.\\\"/; # comments .\"
+
+            if ($line =~ /^\.TH\s/) {
+
+                # title header
+                my $consumed = $line;
+                $consumed =~ s/ [.]TH \s+ //msx;
+
+                my ($delimited, $after_names) = extract_delimited($consumed);
+                unless (length $delimited) {
+                    $consumed =~ s/ ^ \s* \S+ , //gmsx;
+                    $consumed =~ s/ ^ \s* \S+ //msx;
+                    $after_names = $consumed;
                 }
-                # We're now at the last package, so we should be able
-                # to obtain the manpage section number by incrementing
-                # 1 to the index.
-                my $th_section = $th_fields[++$pkgname_idx];
-                if ($th_section && (lc($fn_section) ne lc($th_section))) {
-                    $self->hint('wrong-manual-section',
-                        "$file:$lc $fn_section != $th_section");
+
+                my ($th_section) = extract_delimited($after_names);
+                if (length $th_section) {
+
+                    # drop initial delimiter
+                    $th_section =~ s/ ^. //msx;
+
+                    # drop final delimiter
+                    $th_section =~ s/ .$ //msx;
+
+                    # unescape
+                    $th_section =~ s/ [\\](.) /$1/gmsx;
+
+                } elsif (length $after_names
+                    && $after_names =~ / ^ \s* (\S+) /msx) {
+                    $th_section = $1;
                 }
+
+                $self->hint('wrong-manual-section',
+                    $file->name . ":$position $fn_section != $th_section")
+                  if length $th_section && fc($th_section) ne fc($fn_section);
             }
+
             if (   ($line =~ m{(/usr/(dict|doc|etc|info|man|adm|preserve)/)})
                 || ($line =~ m{(/var/(adm|catman|named|nis|preserve)/)})){
                 # FSSTND dirs in man pages
                 # regexes taken from checks/files
-                $self->hint('FSSTND-dir-in-manual-page', "$file:$lc $1");
+                $self->hint('FSSTND-dir-in-manual-page', "$file:$position $1");
             }
             if ($line eq '.SH "POD ERRORS"') {
-                $self->hint('pod-conversion-message', "$file:$lc");
+                $self->hint('pod-conversion-message', "$file:$position");
             }
             # Check for spelling errors if the manpage is English
             check_spelling($self->profile, $line,
