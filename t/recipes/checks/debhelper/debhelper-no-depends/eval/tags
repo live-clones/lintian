@@ -1,7 +1,7 @@
 debhelper-no-depends (source): weak-dependency-on-misc-depends debhelper-suggests
 debhelper-no-depends (source): package-uses-deprecated-debhelper-compat-version 9
 debhelper-no-depends (source): package-uses-debhelper-but-lacks-build-depends
-debhelper-no-depends (source): package-needs-versioned-debhelper-build-depends 9
+debhelper-no-depends (source): no-versioned-debhelper-prerequisite 9
 debhelper-no-depends (source): missing-build-dependency-for-dh_-command dh_strip_nondeterminism => dh-strip-nondeterminism
 debhelper-no-depends (source): missing-build-dependency-for-dh_-command dh_scour => scour
 debhelper-no-depends (source): missing-build-dependency-for-dh_-command dh_lisp => dh-lisp

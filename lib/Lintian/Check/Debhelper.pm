@@ -668,15 +668,11 @@ sub source {
           && !$bdepends_noarch->implies($pkg);
     }
 
-    $dh_bd_version = $level if not defined($dh_bd_version);
-    unless ($bdepends->implies("debhelper (>= ${dh_bd_version}~)")
-        or $bdepends->implies("debhelper-compat (= ${dh_bd_version})")){
-        my $tagname = 'package-needs-versioned-debhelper-build-depends';
-        my @extra = ($level);
-        $tagname = 'package-lacks-versioned-build-depends-on-debhelper'
-          if ($dh_bd_version <= $compat_level->value('pedantic'));
-        $self->hint($tagname, @extra);
-    }
+    $dh_bd_version //= $level;
+
+    $self->hint('no-versioned-debhelper-prerequisite', $dh_bd_version)
+      unless $bdepends->implies("debhelper (>= ${dh_bd_version}~)")
+      || $bdepends->implies("debhelper-compat (= ${dh_bd_version})");
 
     if ($level >= 10) {
         for my $pkg (qw(dh-autoreconf autotools-dev)) {
