@@ -163,7 +163,7 @@ Enable-Tags-From-Check:
  images/filenames,
  images/thumbnails,
  includes/config-h,
- init.d,
+ init-d,
  languages/fortran/gfortran,
  languages/java,
  languages/java/bytecode,

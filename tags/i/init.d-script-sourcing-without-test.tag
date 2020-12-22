@@ -1,6 +1,6 @@
 Tag: init.d-script-sourcing-without-test
 Severity: error
-Check: init.d
+Check: init-d
 Explanation: The given <code>/etc/init.d</code> script seems to be sourcing an
  <code>/etc/default/</code> file without checking for its existence first.
  Files in <code>/etc/default/</code> can be deleted by the administrator at

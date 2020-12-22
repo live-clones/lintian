@@ -1,2 +1,2 @@
 Testname: init.d-lsb-depends
-Check: init.d
+Check: init-d

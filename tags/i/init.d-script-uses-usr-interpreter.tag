@@ -1,6 +1,6 @@
 Tag: init.d-script-uses-usr-interpreter
 Severity: warning
-Check: init.d
+Check: init-d
 Explanation: The given <code>/etc/init.d</code> script specifies an interpreter in
  its shebang located under <code>/usr</code>.
  .

@@ -1,6 +1,6 @@
 Tag: init.d-script-should-always-start-service
 Severity: error
-Check: init.d
+Check: init-d
 Explanation: The specified file under <code>/etc/default/</code> includes a line
  such as <code>ENABLED=</code>, <code>DISABLED=</code>, <code>RUN=</code>, etc.
  .

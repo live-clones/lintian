@@ -1,6 +1,6 @@
 Tag: init.d-script-has-bad-lsb-line
 Severity: warning
-Check: init.d
+Check: init-d
 See-Also: https://wiki.debian.org/LSBInitScripts
 Explanation: This line in the LSB keyword section of an <code>/etc/init.d</code>
  script doesn't match the required formatting of that section. Note that

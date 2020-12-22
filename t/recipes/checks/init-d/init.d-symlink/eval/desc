@@ -2,4 +2,4 @@ Testname: init.d-symlink
 Test-Against:
  init.d-script-not-included-in-package
  init.d-script-not-marked-as-conffile
-Check: init.d
+Check: init-d

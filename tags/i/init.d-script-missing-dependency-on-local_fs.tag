@@ -1,6 +1,6 @@
 Tag: init.d-script-missing-dependency-on-local_fs
 Severity: error
-Check: init.d
+Check: init-d
 Explanation: The given init script seems to refer to <code>/var</code>, possibly
  using a file from there. Without a dependency on <code>$local&lowbar;fs</code> in
  Required-Start or Required-Stop, as appropriate, the init script might be
