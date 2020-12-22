@@ -32,8 +32,6 @@ for my $modulepath (@modulepaths) {
     $name =~ s{([[:upper:]])}{-\L$1}g;
     $name =~ s{^-}{};
     $name =~ s{/-}{/}g;
-    $name = 'init.d'
-      if $name eq 'init-d';
 
     $CHECKS{$name} = [];
 }

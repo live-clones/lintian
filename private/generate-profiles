@@ -40,7 +40,7 @@ $ENV{LINTIAN_BASE} = realpath(THISDIR . '/..')
   // die encode_utf8('Cannot resolve LINTIAN_BASE');
 
 # generate main profile
-my $checkdir = "$ENV{LINTIAN_BASE}/checks";
+my $checkdir = "$ENV{LINTIAN_BASE}/lib/Lintian/Check";
 my @modulepaths = File::Find::Rule->file->name('*.pm')->in($checkdir);
 
 my @allchecks;
@@ -48,11 +48,12 @@ for my $modulepath (@modulepaths) {
     my $relative = path($modulepath)->relative($checkdir)->stringify;
     my ($name) = ($relative =~ qr/^(.*)\.pm$/);
 
+    $name =~ s{([[:upper:]])}{-\L$1}g;
+    $name =~ s{^-}{};
+    $name =~ s{/-}{/}g;
+
     push(@allchecks, $name);
 }
-
-# add check for tags issued by internal infrastructure
-push(@allchecks, 'lintian');
 
 generate_profile(
     'debian', 'main',

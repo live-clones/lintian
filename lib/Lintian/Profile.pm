@@ -315,9 +315,6 @@ sub load {
             $name =~ s{^-}{};
             $name =~ s{/-}{/}g;
 
-            $name = 'init.d'
-              if $name eq 'init-d';
-
             # ignore duplicates
             next
               if exists $self->check_module_by_name->{$name};
