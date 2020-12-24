@@ -42,6 +42,17 @@ with 'Lintian::Check';
 const my $DOT => q{.};
 const my $DOUBLE_QUOTE => q{"};
 
+const my @KNOWN_FIELDS => qw(
+  Tests
+  Restrictions
+  Features
+  Depends
+  Tests-Directory
+  Test-Command
+  Architecture
+  Classes
+);
+
 my %KNOWN_FEATURES = map { $_ => 1 } qw();
 
 our $PYTHON3_ALL_DEPEND
@@ -126,8 +137,6 @@ sub source {
 sub check_control_paragraph {
     my ($self, $section) = @_;
 
-    my $KNOWN_FIELDS = $self->profile->load_data('testsuite/known-fields');
-
     $self->hint('no-tests')
       unless $section->declares('Tests') || $section->declares('Test-Command');
 
@@ -140,7 +149,7 @@ sub check_control_paragraph {
     my $test_command = $section->unfolded_value('Test-Command');
 
     my @lowercase_names = map { lc } $section->names;
-    my @lowercase_known = map { lc } $KNOWN_FIELDS->all;
+    my @lowercase_known = map { lc } @KNOWN_FIELDS;
 
     my $lc = List::Compare->new(\@lowercase_names, \@lowercase_known);
     my @lowercase_unknown = $lc->get_Lonly;
