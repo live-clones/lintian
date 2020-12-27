@@ -486,7 +486,7 @@ sub source {
       BINARY:
         foreach my $proc ($group->get_binary_processables) {
             my $pkg = $proc->name;
-            foreach my $file ($proc->installed->sorted_list) {
+            for my $file (@{$proc->installed->sorted_list}) {
                 my $owner = $file->owner . $COLON . $file->group;
                 next if $owner eq 'root:root';
                 $self->hint('rules-silently-require-root',

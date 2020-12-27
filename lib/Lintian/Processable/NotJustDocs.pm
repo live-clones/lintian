@@ -59,7 +59,7 @@ has not_just_docs => (
         my $quoted_name = quotemeta($self->name);
 
         my $empty = 1;
-        for my $item ($self->installed->sorted_list) {
+        for my $item (@{$self->installed->sorted_list}) {
 
             # ignore directories
             next

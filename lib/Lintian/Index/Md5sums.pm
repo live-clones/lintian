@@ -64,7 +64,7 @@ sub add_md5sums {
     chdir($self->basedir);
 
     # get the regular files in the index
-    my @files = grep { $_->is_file } $self->sorted_list;
+    my @files = grep { $_->is_file } @{$self->sorted_list};
 
     my $input = $EMPTY;
     $input .= $_->name . $NULL for @files;

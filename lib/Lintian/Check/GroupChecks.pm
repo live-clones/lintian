@@ -118,7 +118,7 @@ sub check_file_overlap {
             next
               if $one->relation('Replaces')->implies($two->name);
 
-            for my $one_file ($one->installed->sorted_list) {
+            for my $one_file (@{$one->installed->sorted_list}) {
 
                 my $name = $one_file->name;
 

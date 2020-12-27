@@ -35,7 +35,8 @@ with 'Lintian::Check';
 sub binary {
     my ($self) = @_;
 
-    my @files= grep { $_->is_file } $self->processable->installed->sorted_list;
+    my @files
+      = grep { $_->is_file } @{$self->processable->installed->sorted_list};
 
     # files /etc must be conffiles, with some exceptions).
     my @etcfiles = grep { $_->name =~ /^etc/ } @files;

@@ -53,7 +53,7 @@ Lintian::Index::Strings strings in binary files.
 sub add_strings {
     my ($self) = @_;
 
-    my @files = grep { $_->is_file } $self->sorted_list;
+    my @files = grep { $_->is_file } @{$self->sorted_list};
     for my $file (@files) {
 
         next

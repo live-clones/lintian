@@ -47,7 +47,7 @@ sub setup_installed_files {
     my ($self) = @_;
 
     my @timers = grep { m{^lib/systemd/system/[^\/]+\.timer$} }
-      $self->processable->installed->sorted_list;
+      @{$self->processable->installed->sorted_list};
     $self->_set_timers(\@timers);
 
     return;
@@ -201,7 +201,7 @@ sub get_systemd_service_files {
     my @res;
     my @potential
       = grep { m{/systemd/system/.*\.service$} }
-      $processable->installed->sorted_list;
+      @{$processable->installed->sorted_list};
 
     for my $file (@potential) {
         push(@res, $file) if $self->check_systemd_service_file($file);
@@ -499,7 +499,7 @@ sub check_maintainer_scripts {
 
     # get maintainer scripts
     my @control
-      = grep { $_->is_control } $self->processable->control->sorted_list;
+      = grep { $_->is_control } @{$self->processable->control->sorted_list};
 
     for my $file (@control) {
 
@@ -533,7 +533,7 @@ sub check_maintainer_scripts {
 sub check_systemd_socket_files {
     my ($self) = @_;
 
-    my @files = $self->processable->installed->sorted_list;
+    my @files = @{$self->processable->installed->sorted_list};
 
     foreach my $file (grep { m{/systemd/system/.*\.socket$} } @files) {
         my @xs

@@ -251,7 +251,7 @@ sub source {
 
     $self->hint('octal-permissions', $component, $_->octal_permissions,
         $_->name)
-      for $self->processable->patched->sorted_list;
+      for @{$self->processable->patched->sorted_list};
 
     return;
 }

@@ -122,7 +122,7 @@ has orig => (
               for split(/\n/, $combined_errors);
 
             # treat hard links like regular files
-            my @hardlinks = grep { $_->is_hardlink } $subindex->sorted_list;
+            my @hardlinks = grep { $_->is_hardlink } @{$subindex->sorted_list};
             for my $item (@hardlinks) {
 
                 my $target = $subindex->lookup($item->link);
@@ -141,7 +141,7 @@ has orig => (
                     | Lintian::Index::Item::TYPE_FILE);
             }
 
-            my @prefixes = $subindex->sorted_list;
+            my @prefixes = @{$subindex->sorted_list};
 
             # keep top level prefixes; no trailing slashes
             s{^([^/]+).*$}{$1}s for @prefixes;

@@ -60,7 +60,7 @@ has has_meta => (is => 'rwp', default => 0);
 sub setup_installed_files {
     my ($self) = @_;
 
-    for my $item ($self->processable->installed->sorted_list) {
+    for my $item (@{$self->processable->installed->sorted_list}) {
 
         my $ar_info = $item->ar_info;
         next

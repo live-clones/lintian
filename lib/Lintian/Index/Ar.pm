@@ -58,7 +58,8 @@ sub add_ar {
     chdir($self->basedir);
 
     my @archives
-      = grep { $_->name =~ /\.a$/ && $_->is_regular_file } $self->sorted_list;
+      = grep { $_->name =~ / [.]a $/msx && $_->is_regular_file }
+      @{$self->sorted_list};
 
     for my $archive (@archives) {
 

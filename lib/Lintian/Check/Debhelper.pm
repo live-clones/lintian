@@ -406,7 +406,7 @@ sub source {
         $self->hint('package-uses-dh-runit-but-lacks-breaks-substvar', $binpkg)
           if $seen{'runit'}
           && $strong->implies('runit')
-          && (any { m{^etc/sv/} } $proc->installed->sorted_list)
+          && (any { m{^ etc/sv/ }msx } @{$proc->installed->sorted_list})
           && !$breaks->implies('${runit:Breaks}');
     }
 

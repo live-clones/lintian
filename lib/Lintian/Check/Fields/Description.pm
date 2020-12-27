@@ -282,7 +282,7 @@ sub installable {
         my $pmpath = join($SLASH, @mod_path_elements).'.pm';
         my $pm     = $mod_path_elements[-1].'.pm';
 
-        foreach my $filepath ($processable->installed->sorted_list) {
+        for my $filepath (@{$processable->installed->sorted_list}) {
             if ($filepath =~ m{\Q$pmpath\E\z|/\Q$pm\E\z}i) {
                 $pm_found = 1;
                 last;

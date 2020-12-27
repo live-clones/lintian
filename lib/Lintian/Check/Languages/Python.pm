@@ -217,7 +217,7 @@ sub installable {
 
     # Check for missing dependencies
     if ($pkg !~ /-dbg$/) {
-        foreach my $file ($processable->installed->sorted_list) {
+        for my $file (@{$processable->installed->sorted_list}) {
             if (   $file->is_file
                 && $file
                 =~ m{^usr/lib/(?<version>python[23])[\d.]*/(?:site|dist)-packages}

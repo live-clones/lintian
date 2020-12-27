@@ -62,7 +62,7 @@ has objdump_info => (
     default => sub {
         my ($self) = @_;
 
-        my @objdump = map { $_->objdump } $self->installed->sorted_list;
+        my @objdump = map { $_->objdump } @{$self->installed->sorted_list};
         my $concatenated = join($EMPTY, @objdump);
 
         my @paragraphs = parse_dpkg_control_string($concatenated);

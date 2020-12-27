@@ -65,7 +65,7 @@ sub add_fileinfo {
     my $savedir = getcwd;
     chdir($self->basedir);
 
-    my @files = grep { $_->is_file } $self->sorted_list;
+    my @files = grep { $_->is_file } @{$self->sorted_list};
 
     my $input = $EMPTY;
     $input .= $_->name . $NULL for @files;

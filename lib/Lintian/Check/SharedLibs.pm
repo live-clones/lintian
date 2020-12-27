@@ -77,7 +77,7 @@ sub installable {
           if exists($objdump->{$file}{SONAME});
     }
 
-    foreach my $file ($processable->installed->sorted_list) {
+    for my $file (@{$processable->installed->sorted_list}) {
         $SHARED_LIB_PRESENT{$1} = 1
           if $file =~ /\/lib([^\/]+)\.so(?:\.\d+){0,3}$/;
         $STATIC_LIB_PRESENT{$1} = 1 if $file =~ m{/lib([^/]+)\.a$};
@@ -109,7 +109,7 @@ sub installable {
 
     # 2nd step: read package contents
 
-    for my $cur_file ($processable->installed->sorted_list) {
+    for my $cur_file (@{$processable->installed->sorted_list}) {
         # shared library?
 
         my $normalized_target;

@@ -88,10 +88,6 @@ Lintian::Processable::Orig::Index provides an interface to collected data about 
 
 Returns a reference to a hash with elements catalogued by path names.
 
-=item saved_sorted_list
-
-Returns a reference to a sorted array with path names.
-
 =item C<basedir>
 
 Returns the base directory for file references.
@@ -116,7 +112,6 @@ has catalog => (
 
         return \%catalog;
     });
-has saved_sorted_list => (is => 'rw', default => sub { [] });
 
 has basedir => (
     is => 'rw',
@@ -135,25 +130,21 @@ has basedir => (
 
 has anchored => (is => 'rw', default => 0);
 
-=item sorted_list
-
-=cut
-
-sub sorted_list {
-    my ($self) = @_;
-
-    unless (scalar @{ $self->saved_sorted_list }) {
+has sorted_list => (
+    is => 'ro',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
 
         my @sorted = sort { $a->name cmp $b->name } values %{$self->catalog};
 
         # remove automatic root dir; list is sorted
         shift @sorted;
 
-        $self->saved_sorted_list(\@sorted);
-    }
+        const my @IMMUTABLE => @sorted;
 
-    return @{ $self->saved_sorted_list };
-}
+        return \@IMMUTABLE;
+    });
 
 =item lookup (FILE)
 

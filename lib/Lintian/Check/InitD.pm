@@ -393,7 +393,7 @@ sub check_init {
                $l =~ m{^\s*\.\s+/lib/lsb/init-functions}
             && !$processable->relation('strong')->implies('lsb-base')
             && none { $_->basename =~ m/\.service$/ && !$_->is_dir }
-            $processable->installed->sorted_list
+            @{$processable->installed->sorted_list}
         ) {
             $self->hint('init.d-script-needs-depends-on-lsb-base',
                 $initd_path, "(line $.)");

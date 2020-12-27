@@ -339,7 +339,7 @@ sub installable {
     # no dependency for install-menu, because the menu package specifically
     # says not to depend on it.
 
-    for my $file ($processable->installed->sorted_list) {
+    for my $file (@{$processable->installed->sorted_list}) {
         next
           unless $file->is_file;
 
@@ -359,7 +359,7 @@ sub installable {
 
     my @x11_fonts
       = grep { m{^usr/share/fonts/X11/.*\.(?:afm|pcf|pfa|pfb)(?:\.gz)?$} }
-      $processable->installed->sorted_list;
+      @{$processable->installed->sorted_list};
 
     my %old_versions;
     for my $entry (
@@ -372,7 +372,7 @@ sub installable {
           if $timestamp < $OLDSTABLE_RELEASE_EPOCH;
     }
 
-    for my $file ($processable->installed->sorted_list) {
+    for my $file (@{$processable->installed->sorted_list}) {
 
         next
           unless $file->is_script;
@@ -722,7 +722,7 @@ sub installable {
 
     # get maintainer scripts
     my @control
-      = grep { $_->is_control } $self->processable->control->sorted_list;
+      = grep { $_->is_control } @{$self->processable->control->sorted_list};
 
     # Handle control scripts.  This is an edited version of the code for
     # normal scripts above, because there were just enough differences to
@@ -1460,8 +1460,7 @@ sub installable {
             $self->hint('diversion-for-unknown-file', $divert, "$script:$line")
               unless (
                 any { /$divertrx/ }
-                $processable->installed->sorted_list
-              );
+                @{$processable->installed->sorted_list});
         } else {
             $self->hint('diversion-for-unknown-file', $divert, "$script:$line")
               unless $processable->installed->lookup($divert);

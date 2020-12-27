@@ -67,7 +67,7 @@ sub add_objdump {
     my $savedir = getcwd;
     chdir($self->basedir);
 
-    my @files = grep { $_->is_file } $self->sorted_list;
+    my @files = grep { $_->is_file } @{$self->sorted_list};
 
     # must be ELF or static library
     my @with_objects = grep {

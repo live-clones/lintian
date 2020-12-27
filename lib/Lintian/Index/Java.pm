@@ -64,7 +64,7 @@ sub add_java {
     my $savedir = getcwd;
     chdir($self->basedir);
 
-    my @files = grep { $_->is_file } $self->sorted_list;
+    my @files = grep { $_->is_file } @{$self->sorted_list};
 
     # Wheezy's version of file calls "jar files" for "Zip archive".
     # Newer versions seem to call them "Java Jar file".

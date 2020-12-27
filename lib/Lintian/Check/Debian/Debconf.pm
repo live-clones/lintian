@@ -623,7 +623,7 @@ sub installable {
       || ($self->processable->type eq 'udeb');
 
     my @scripts
-      = grep { $_->is_script } $self->processable->installed->sorted_list;
+      = grep { $_->is_script } @{$self->processable->installed->sorted_list};
     foreach my $file (@scripts) {
 
         next

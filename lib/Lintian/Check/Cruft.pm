@@ -458,7 +458,7 @@ has group_ships_examples => (
         return 1
           if any { $_->name =~ m{-examples$} } @processables;
 
-        my @shipped = map { $_->installed->sorted_list } @processables;
+        my @shipped = map { @{$_->installed->sorted_list} } @processables;
 
         # Check each package for a directory (or symlink) called "examples".
         return 1
@@ -697,7 +697,7 @@ sub source {
     my $prefix;
     if ($self->processable->native) {
 
-        @added_by_debian = $self->processable->patched->sorted_list;
+        @added_by_debian = @{$self->processable->patched->sorted_list};
         $prefix = 'source-contains';
 
     } else {
@@ -705,7 +705,7 @@ sub source {
         my $orig = $self->processable->orig;
 
         @added_by_debian
-          = grep { !defined $orig->lookup($_->name) } $patched->sorted_list;
+          = grep { !defined $orig->lookup($_->name) } @{$patched->sorted_list};
 
         # remove root quilt control folder and all paths in it
         # created when 3.0 (quilt) source packages are unpacked
@@ -713,7 +713,7 @@ sub source {
           if $self->processable->source_format eq '3.0 (quilt)';
 
         my @common_items
-          = grep { defined $orig->lookup($_->name) } $patched->sorted_list;
+          = grep { defined $orig->lookup($_->name) } @{$patched->sorted_list};
         my @touched_by_debian
           = grep { $_->md5sum ne $orig->lookup($_->name)->md5sum }
           @common_items;

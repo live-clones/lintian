@@ -66,7 +66,7 @@ sub binary {
 
         # ignore if package contains no files
         return
-          unless $self->processable->installed->sorted_list;
+          unless @{$self->processable->installed->sorted_list};
 
         $self->hint('no-md5sums-control-file')
           unless $self->only_conffiles;
@@ -96,7 +96,8 @@ sub binary {
       = map { drop_relative_prefix($_) => $md5sums->{$_} } keys %{$md5sums};
 
     my @listed = keys %noprefix;
-    my @found = grep { $_->is_file} $self->processable->installed->sorted_list;
+    my @found
+      = grep { $_->is_file} @{$self->processable->installed->sorted_list};
 
     my $lc = List::Compare->new(\@listed, \@found);
 

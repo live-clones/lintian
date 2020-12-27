@@ -90,14 +90,14 @@ sub source {
     unless ($self->processable->native) {
 
         my @orig_non_utf8 = grep { !valid_utf8($_->name) }
-          $self->processable->orig->sorted_list;
+          @{$self->processable->orig->sorted_list};
 
         $self->hint('upstream-file-without-utf8-name', $_->name)
           for @orig_non_utf8;
     }
 
-    my @patched = map { $_->name } $self->processable->patched->sorted_list;
-    my @orig = map { $_->name } $self->processable->orig->sorted_list;
+    my @patched = map { $_->name } @{$self->processable->patched->sorted_list};
+    my @orig = map { $_->name } @{$self->processable->orig->sorted_list};
 
     my $lc= List::Compare->new(\@patched, \@orig);
     my @created = $lc->get_Lonly;

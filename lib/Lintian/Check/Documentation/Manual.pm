@@ -478,7 +478,7 @@ sub breakdown_installed_files {
     my %local_user_executables;
     my %local_admin_executables;
 
-    for my $file ($self->processable->installed->sorted_list) {
+    for my $file (@{$self->processable->installed->sorted_list}) {
 
         next
           unless $file->is_symlink || $file->is_file;
@@ -497,7 +497,7 @@ sub breakdown_installed_files {
 
     my @direct_reliants
       =@{$self->group->direct_reliants($self->processable) // []};
-    my@reliant_files = map { $_->installed->sorted_list } @direct_reliants;
+    my @reliant_files = map { @{$_->installed->sorted_list} } @direct_reliants;
 
     # for executables, look at packages relying on the current processable
     my %distant_executables;
@@ -518,7 +518,7 @@ sub breakdown_installed_files {
     my @direct_prerequisites
       =@{$self->group->direct_dependencies($self->processable) // []};
     my@prerequisite_files
-      = map { $_->installed->sorted_list } @direct_prerequisites;
+      = map { @{$_->installed->sorted_list} } @direct_prerequisites;
 
     # for manpages, look at packages the current processable relies upon
     my %distant_manpages;

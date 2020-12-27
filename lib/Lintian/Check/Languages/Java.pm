@@ -79,7 +79,7 @@ sub installable {
 
     # We first loop over jar files to find problems
 
-    for my $file ($processable->installed->sorted_list) {
+    for my $file (@{$processable->installed->sorted_list}) {
 
         my $java_info = $file->java_info;
         next

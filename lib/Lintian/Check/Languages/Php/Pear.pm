@@ -42,7 +42,7 @@ sub source {
     # Don't check package if it doesn't contain a .php file
     if (
         none { $_->basename =~ m/\.php$/i && !$_->is_dir }
-        $processable->patched->sorted_list
+        @{$processable->patched->sorted_list}
     ){
         return;
     }

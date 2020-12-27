@@ -52,7 +52,7 @@ has switched_locations => (
         my ($self) = @_;
 
         my @files
-          = grep { $_->is_file } $self->processable->installed->sorted_list;
+          = grep { $_->is_file } @{$self->processable->installed->sorted_list};
 
         my @commands = grep { $_->name =~ m{^(?:usr/)?s?bin/} } @files;
 

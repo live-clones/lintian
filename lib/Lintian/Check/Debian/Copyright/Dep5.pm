@@ -370,7 +370,7 @@ sub check_dep5_copyright {
     unless ($self->processable->native) {
 
         my @orig_files
-          = grep { $_->is_file } $self->processable->orig->sorted_list;
+          = grep { $_->is_file } @{$self->processable->orig->sorted_list};
         my @orig_names = map { $_->name } @orig_files;
 
         my @wildcards = $header->trimmed_list('Files-Excluded');
@@ -452,10 +452,10 @@ sub check_dep5_copyright {
     my @shipped_items;
 
     if ($self->processable->native) {
-        @shipped_items = $self->processable->patched->sorted_list;
+        @shipped_items = @{$self->processable->patched->sorted_list};
 
     } else {
-        @shipped_items = $self->processable->orig->sorted_list;
+        @shipped_items = @{$self->processable->orig->sorted_list};
 
         # remove ./debian folder from orig, if any
         @shipped_items = grep { !m{^debian/} } @shipped_items

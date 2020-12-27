@@ -93,7 +93,7 @@ sub visit_files {
     my $visit_hook = 'visit' . $UNDERSCORE . $index . $UNDERSCORE . 'files';
     if ($self->can($visit_hook)) {
 
-        my @items = $self->processable->$index->sorted_list;
+        my @items = @{$self->processable->$index->sorted_list};
 
         # do not look inside quilt directory
         @items = grep { $_->name !~ m{^\.pc/} } @items
@@ -138,7 +138,7 @@ sub run {
           if $self->can('setup');
 
         if ($self->can('files')) {
-            $self->files($_) for $self->processable->installed->sorted_list;
+            $self->files($_) for @{$self->processable->installed->sorted_list};
         }
 
         $self->breakdown

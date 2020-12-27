@@ -39,7 +39,7 @@ sub installable {
 
     # get maintainer scripts
     my @control
-      = grep { $_->is_control } $self->processable->control->sorted_list;
+      = grep { $_->is_control } @{$self->processable->control->sorted_list};
 
     for my $file (@control) {
 
