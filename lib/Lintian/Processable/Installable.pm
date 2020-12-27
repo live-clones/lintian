@@ -23,10 +23,12 @@ use warnings;
 use utf8;
 
 use Carp qw(croak);
+use Const::Fast;
+use IPC::Run3;
 use Path::Tiny;
-use Unicode::UTF8 qw(encode_utf8);
+use Unicode::UTF8 qw(encode_utf8 decode_utf8 valid_utf8);
 
-use Lintian::IPC::Run3 qw(get_deb_info);
+use Lintian::Deb822::File;
 
 use Moo;
 use namespace::clean;
@@ -44,6 +46,19 @@ with
   'Lintian::Processable::NotJustDocs',
   'Lintian::Processable::Overrides',
   'Lintian::Processable';
+
+# read up to 40kB at a time.  this happens to be 4096 "tar records"
+# (with a block-size of 512 and a block factor of 20, which appear to
+# be the defaults).  when we do full reads and writes of READ_SIZE (the
+# OS willing), the receiving end will never be with an incomplete
+# record.
+const my $TAR_RECORD_SIZE => 20 * 512;
+
+const my $COLON => q{:};
+const my $NEWLINE => qq{\n};
+const my $OPEN_PIPE => q{-|};
+
+const my $WAIT_STATUS_SHIFT => 8;
 
 =for Pod::Coverage BUILDARGS
 
@@ -85,11 +100,48 @@ sub init {
 
     $self->path($file);
 
-    my $section = get_deb_info($self->path)
-      or croak encode_utf8(
-        'could not read control data in ' . $self->path . ": $!");
+    # get control.tar.gz; dpkg-deb -f $file is slow; use tar instead
+    my @dpkg_command = ('dpkg-deb', '--ctrl-tarfile', $self->path);
 
-    $self->fields($section);
+    my $dpkg_pid = open(my $from_dpkg, $OPEN_PIPE, @dpkg_command)
+      or die encode_utf8("Cannot run @dpkg_command: $!");
+
+    # would like to set buffer size to 4096 & $TAR_RECORD_SIZE
+
+    # get binary control file
+    my $stdout_bytes;
+    my $stderr_bytes;
+    my @tar_command = qw{tar --wildcards -xO -f - *control};
+    run3(\@tar_command, $from_dpkg, \$stdout_bytes, \$stderr_bytes);
+    my $status = ($? >> $WAIT_STATUS_SHIFT);
+
+    if ($status) {
+
+        my $message= "Non-zero status $status from @tar_command";
+        $message .= $COLON . $NEWLINE . decode_utf8($stderr_bytes)
+          if length $stderr_bytes;
+
+        croak encode_utf8($message);
+    }
+
+    close $from_dpkg
+      or warn encode_utf8("close failed for handle from @dpkg_command: $!");
+
+    waitpid($dpkg_pid, 0);
+
+    croak encode_utf8('Nationally encoded control data in ' . $self->path)
+      unless valid_utf8($stdout_bytes);
+
+    my $stdout = decode_utf8($stdout_bytes);
+
+    my $deb822 = Lintian::Deb822::File->new;
+    my @sections = $deb822->parse_string($stdout);
+    croak encode_utf8(
+        'Not exactly one section with installable control data in '
+          . $self->path)
+      unless @sections == 1;
+
+    $self->fields($sections[0]);
 
     my $name = $self->fields->value('Package');
     my $version = $self->fields->value('Version');

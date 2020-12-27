@@ -422,8 +422,8 @@ sub check_result {
 
     my @errors;
 
-    my @expectedlines = path($expectedpath)->lines;
-    my @actuallines = path($actualpath)->lines;
+    my @expectedlines = path($expectedpath)->lines_utf8;
+    my @actuallines = path($actualpath)->lines_utf8;
 
     push(@expectedlines, $NEWLINE)
       unless @expectedlines;

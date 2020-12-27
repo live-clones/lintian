@@ -26,7 +26,6 @@ use utf8;
 use autodie;
 
 use Const::Fast;
-use Encode qw(decode);
 
 use Lintian::Spelling qw(check_spelling check_spelling_picky);
 
@@ -42,6 +41,8 @@ const my $DH_MAKE_PERL_TEMPLATE =>
 const my $EMPTY => q{};
 const my $SLASH => q{/};
 const my $DOUBLE_COLON => q{::};
+
+const my $MAXIMUM_WIDTH => 80;
 
 sub spelling_tag_emitter {
     my ($self, @orig_args) = @_;
@@ -123,13 +124,8 @@ sub installable {
             $self->hint('description-is-pkg-name', $synopsis);
         }
 
-        # We have to decode into UTF-8 to get the right length for the
-        # length check.  If the changelog uses a non-UTF-8 encoding,
-        # this will mangle it, but it doesn't matter for the length
-        # check.
-        if (length(decode('utf-8', $synopsis)) >= 80) {
-            $self->hint('synopsis-too-long');
-        }
+        $self->hint('synopsis-too-long')
+          if length $synopsis > $MAXIMUM_WIDTH;
     }
 
     my $PLANNED_FEATURES
@@ -181,9 +177,8 @@ sub installable {
                 "(line $position)");
         }
 
-        if (index(lc($line), $DH_MAKE_PERL_TEMPLATE) != -1) {
-            $self->hint('description-contains-dh-make-perl-template');
-        }
+        $self->hint('description-contains-dh-make-perl-template')
+          if lc($line) =~ / \Q$DH_MAKE_PERL_TEMPLATE\E /msx;
 
         my $first_person = $line;
         while ($first_person
@@ -210,7 +205,7 @@ sub installable {
         }
 
         $self->hint('extended-description-line-too-long', "line $position")
-          if length decode('utf-8', $line) > 80;
+          if length $line > $MAXIMUM_WIDTH;
 
     } continue {
         ++$position;

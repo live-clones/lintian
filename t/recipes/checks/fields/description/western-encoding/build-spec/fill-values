@@ -1,5 +1,0 @@
-Skeleton: upload-native
-Testname: western-encoding
-Source: foo++
-Version: 5
-Description: Description contains ISO-8859 high byte character.
