@@ -51,8 +51,6 @@ scripts (source): octal-permissions scripts_6ds-1ubuntu0.5.10.1.dsc  666 .pc/app
 scripts (source): octal-permissions scripts_6ds-1ubuntu0.5.10.1.dsc  666 .pc/.version
 scripts (source): octal-permissions scripts_6ds-1ubuntu0.5.10.1.dsc  666 .pc/.quilt_series
 scripts (source): octal-permissions scripts_6ds-1ubuntu0.5.10.1.dsc  666 .pc/.quilt_patches
-scripts (binary): setuid-binary usr/bin/suidperlfoo2 4751 root/root
-scripts (binary): setuid-binary usr/bin/suidperlfoo 4555 root/root
 scripts (binary): octal-permissions scripts_6ds-1ubuntu0.5.10.1_all.deb 4751 usr/bin/suidperlfoo2
 scripts (binary): octal-permissions scripts_6ds-1ubuntu0.5.10.1_all.deb 4555 usr/bin/suidperlfoo
 scripts (binary): octal-permissions scripts_6ds-1ubuntu0.5.10.1_all.deb  755 usr/src/scripts/gccbug.dpatch
@@ -106,8 +104,13 @@ scripts (binary): octal-permissions scripts_6ds-1ubuntu0.5.10.1_all.deb  644 usr
 scripts (binary): octal-permissions scripts_6ds-1ubuntu0.5.10.1_all.deb  644 usr/share/doc/scripts/changelog.Debian.gz
 scripts (binary): octal-permissions scripts_6ds-1ubuntu0.5.10.1_all.deb  644 etc/init.d/skeleton
 scripts (binary): octal-permissions scripts_6ds-1ubuntu0.5.10.1_all.deb  644 etc/X11/Xsession.d/xsession-test
+scripts (binary): non-standard-setuid-executable-perm usr/bin/suidperlfoo2 4751
 scripts (binary): non-standard-setuid-executable-perm usr/bin/suidperlfoo 4555
 scripts (binary): non-standard-executable-perm usr/bin/perl-bizarre-3 0754 != 0755
+scripts (binary): non-standard-executable-perm usr/bin/perl-bizarre-2 0750 != 0755
+scripts (binary): non-standard-executable-perm usr/bin/guile-bizarre 0705 != 0755
 scripts (binary): executable-is-not-world-readable usr/bin/suidperlfoo2 4751
 scripts (binary): executable-is-not-world-readable usr/bin/perl-bizarre-2 0750
 scripts (binary): executable-is-not-world-readable usr/bin/guile-bizarre 0705
+scripts (binary): elevated-privileges usr/bin/suidperlfoo2 4751 root/root
+scripts (binary): elevated-privileges usr/bin/suidperlfoo 4555 root/root

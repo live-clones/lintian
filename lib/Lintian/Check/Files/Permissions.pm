@@ -1,6 +1,7 @@
 # files/permissions -- lintian check script -*- perl -*-
 
 # Copyright © 1998 Christian Schwarz and Richard Braakman
+# Copyright © 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -34,6 +35,25 @@ use namespace::clean;
 with 'Lintian::Check';
 
 const my $EMPTY => q{};
+const my $NOT_EQUAL => q{!=};
+
+const my $STANDARD_EXECUTABLE => 0755;
+const my $SETGID_EXECUTABLE => 04754;
+const my $SET_USER_ID => 04000;
+const my $SET_GROUP_ID => 02000;
+
+const my $STANDARD_FILE => 0644;
+const my $BACKUP_NINJA_FILE => 0600;
+const my $SUDOERS_FILE => 0440;
+const my $GAME_DATA => 0664;
+
+const my $STANDARD_FOLDER => 0755;
+const my $GAME_FOLDER => 02775;
+const my $VAR_LOCAL_FOLDER => 02775;
+const my $VAR_LOCK_FOLDER => 01777;
+const my $USR_SRC_FOLDER => 02775;
+
+const my $WORLD_READABLE => 0444;
 
 has component => (is => 'rw');
 has linked_against_libvga => (is => 'rw');
@@ -75,141 +95,150 @@ sub visit_installed_files {
 
     if ($file->is_file) {
 
-        if ($file->operm & 06000) {
-
-            # general: setuid/setgid files
-            my $setuid = $EMPTY;
-            my $setgid = $EMPTY;
-
-            $setuid = $file->owner if $file->operm & 04000;
-            $setgid = $file->group if $file->operm & 02000;
-
-            # 1st special case: program is using svgalib:
-            if (exists $self->linked_against_libvga->{$file->name}) {
-                # setuid root is ok, so remove it
-
-                undef $setuid
-                  if $setuid eq 'root';
-            }
-
-            # 2nd special case: program is a setgid game
-            if (   $file->name =~ m{^usr/lib/games/\S+}
-                || $file->name =~ m{^usr/games/\S+}) {
-
-                # setgid games is ok, so remove it
-                undef $setgid
-                  if $setgid eq 'games';
-            }
-
-            # 3rd special case: allow anything with suid in the name
-            undef $setuid
-              if $self->processable->name =~ /-suid/;
-
-            # Check for setuid and setgid that isn't expected.
-            if ($setuid and $setgid) {
-                $self->hint('setuid-gid-binary', $file->name,
-                    sprintf('%04o %s',$file->operm,$file->identity));
-            } elsif ($setuid) {
-                $self->hint('setuid-binary', $file->name,
-                    sprintf('%04o %s',$file->operm,$file->identity));
-            } elsif ($setgid) {
-                $self->hint('setgid-binary', $file->name,
-                    sprintf('%04o %s',$file->operm,$file->identity));
-            }
-
-            # Check for permission problems other than the setuid status.
-            if (($file->operm & 0444) != 0444) {
-                $self->hint('executable-is-not-world-readable',
-                    $file->name,sprintf('%04o',$file->operm));
-            } elsif ($file->operm != 04755
-                && $file->operm != 02755
-                && $file->operm != 06755
-                && $file->operm != 04754) {
-
-                $self->hint('non-standard-setuid-executable-perm',
-                    $file->name,sprintf('%04o',$file->operm));
-            }
-        }elsif ($file->operm & 0111) {
-
-            # general: executable files
-            if ($file->identity eq 'root/games') {
-                if ($file->operm != 2755) {
-                    $self->hint('non-standard-game-executable-perm',
-                        $file->name,sprintf('%04o != 2755',$file->operm));
-                }
-            } else {
-                if (($file->operm & 0444) != 0444) {
-                    $self->hint('executable-is-not-world-readable',
-                        $file->name,sprintf('%04o',$file->operm));
-
-                } elsif ($file->operm != 0755) {
-                    $self->hint('non-standard-executable-perm',
-                        $file->name,sprintf('%04o != 0755',$file->operm));
-                }
-            }
-        }else {
-            # general: normal (non-executable) files
-
-            # special case first: game data
-            if (   $file->operm == 0664
-                && $file->identity eq 'root/games'
-                && $file->name =~ m{^var/(lib/)?games/\S+}) {
-                # everything is ok
-
-            } elsif ($file->name =~ m{^usr/lib/.*\.ali$}) {
-                # GNAT compiler wants read-only Ada library information.
-                $self->hint('bad-permissions-for-ali-file', $file->name)
-                  unless $file->operm == 0444;
-
-            } elsif ($file->operm == 0600 && $file->name =~ m{^etc/backup.d/}){
-                # backupninja expects configurations files to be 0600
-
-            } elsif ($file->name =~ m{^etc/sudoers.d/}) {
-                # sudo requires sudoers files to be mode 0440
-                $self->hint('bad-perm-for-file-in-etc-sudoers.d',
-                    $file->name,sprintf('%04o != 0440', $file->operm))
-                  unless $file->operm == 0440;
-
-            } elsif ($file->operm != 0644) {
-                $self->hint('non-standard-file-perm', $file->name,
-                    sprintf('%04o != 0644',$file->operm));
-            }
-        }
-
-    }elsif ($file->is_dir) {
-
-        # special cases first:
-        # game directory with setgid bit
-        if (   $file->name =~ m{^var/(?:lib/)?games/\S+}
-            && $file->operm == 02775
-            && $file->identity eq 'root/games') {
-            # do nothing, this is allowed, but not mandatory
-
-        } elsif ((
-                   $file->name eq 'tmp/'
-                or $file->name eq 'var/tmp/'
-                or $file->name eq 'var/lock/'
-            )
-            and $file->operm == 01777
-            and $file->identity eq 'root/root'
+        if (
+               $file->is_executable
+            && $file->identity eq 'root/games'
+            && (   !$file->is_setuid
+                || !$file->all_bits_set($STANDARD_EXECUTABLE))
         ) {
-            # actually shipping files here is warned about elsewhere
 
-        } elsif ($file->name eq 'usr/src/'
-            and $file->operm == 02775
-            and $file->identity eq 'root/src') {
-            # /usr/src as created by base-files is a special exception
+            $self->hint(
+                'non-standard-game-executable-perm',
+                $file->name,
+                $file->octal_permissions,
+                $NOT_EQUAL,
+                sprintf('%04o', $SET_USER_ID & $STANDARD_EXECUTABLE));
 
-        } elsif ($file->name eq 'var/local/'
-            and $file->operm == 02775
-            and $file->identity eq 'root/staff') {
-            # actually shipping files here is warned about elsewhere
-
-        }elsif ($file->operm != 0755) {
-            # otherwise, complain if it's not 0755.
-            $self->hint('non-standard-dir-perm', $file->name,
-                sprintf('%04o != 0755', $file->operm));
+            return;
         }
+
+        $self->hint('executable-is-not-world-readable',
+            $file->name, $file->octal_permissions)
+          if $file->is_executable
+          && !$file->all_bits_set($WORLD_READABLE);
+
+        if ($file->is_setuid || $file->is_setgid) {
+
+            $self->hint('non-standard-setuid-executable-perm',
+                $file->name, $file->octal_permissions)
+              unless (($file->operm & ~($SET_USER_ID | $SET_GROUP_ID))
+                == $STANDARD_EXECUTABLE)
+              || $file->operm == $SETGID_EXECUTABLE;
+        }
+
+        # allow anything with suid in the name
+        return
+          if ($file->is_setuid || $file->is_setgid)
+          && $self->processable->name =~ / -suid /msx;
+
+        # program is using svgalib
+        return
+             if $file->is_setuid
+          && !$file->is_setgid
+          && $file->owner eq 'root'
+          && exists $self->linked_against_libvga->{$file->name};
+
+        # program is a setgid game
+        return
+             if $file->is_setgid
+          && !$file->is_setuid
+          && $file->group eq 'games'
+          && $file->name =~ m{^ usr/ (?:lib/)? games/ \S+ }msx;
+
+        if ($file->is_setuid || $file->is_setgid) {
+            $self->hint(
+                'elevated-privileges', $file->name,
+                $file->octal_permissions, $file->identity
+            );
+
+            return;
+        }
+
+        if (   $file->is_executable
+            && $file->operm != $STANDARD_EXECUTABLE) {
+
+            $self->hint('non-standard-executable-perm',
+                $file->name, $file->octal_permissions, $NOT_EQUAL,
+                sprintf('%04o', $STANDARD_EXECUTABLE));
+
+            return;
+        }
+
+        if (!$file->is_executable) {
+
+            # game data
+            return
+                 if $file->operm == $GAME_DATA
+              && $file->identity eq 'root/games'
+              && $file->name =~ m{^ var/ (?:lib/)? games/ \S+ }msx;
+
+            # GNAT compiler wants read-only Ada library information.
+            if (   $file->name =~ m{^ usr/lib/ .* [.]ali $}msx
+                && $file->operm != $WORLD_READABLE) {
+
+                $self->hint('bad-permissions-for-ali-file', $file->name);
+
+                return;
+            }
+
+            # backupninja expects configurations files to be 0600
+            return
+              if $file->operm == $BACKUP_NINJA_FILE
+              && $file->name =~ m{^ etc/backup.d/ }msx;
+
+            # sudo requires sudoers files to be mode 0440
+            if (   $file->name =~ m{^ etc/sudoers.d/ }msx
+                && $file->operm != $SUDOERS_FILE) {
+
+                $self->hint(
+                    'bad-perm-for-file-in-etc-sudoers.d',$file->name,
+                    $file->octal_permissions, $NOT_EQUAL,
+                    sprintf('%04o', $SUDOERS_FILE));
+
+                return;
+            }
+
+            $self->hint(
+                'non-standard-file-perm', $file->name,
+                $file->octal_permissions, $NOT_EQUAL,
+                sprintf('%04o', $STANDARD_FILE)
+            )unless $file->operm == $STANDARD_FILE;
+        }
+
+    }
+
+    if ($file->is_dir) {
+
+        # game directory with setgid bit
+        return
+             if $file->operm == $GAME_FOLDER
+          && $file->identity eq 'root/games'
+          && $file->name =~ m{^ var/ (?:lib/)? games/ \S+ }msx;
+
+        # shipping files here triggers warnings elsewhere
+        return
+             if $file->operm == $VAR_LOCK_FOLDER
+          && $file->identity eq 'root/root'
+          && ( $file->name =~ m{^ (?:var/)? tmp/ }msx
+            || $file->name eq 'var/lock/');
+
+        # shipping files here triggers warnings elsewhere
+        return
+             if $file->operm == $VAR_LOCAL_FOLDER
+          && $file->identity eq 'root/staff'
+          && $file->name eq 'var/local/';
+
+        # /usr/src created by base-files
+        return
+             if $file->operm == $USR_SRC_FOLDER
+          && $file->identity eq 'root/src'
+          && $file->name eq 'usr/src/';
+
+        $self->hint(
+            'non-standard-dir-perm', $file->name,
+            $file->octal_permissions, $NOT_EQUAL,
+            sprintf('%04o', $STANDARD_FOLDER)
+        )unless $file->operm == $STANDARD_FOLDER;
     }
 
     return;
@@ -219,6 +248,7 @@ sub source {
     my ($self) = @_;
 
     my $component = path($self->processable->path)->basename;
+
     $self->hint(
         'octal-permissions', $component,
         sprintf('%4o', $_->operm),  $_->name

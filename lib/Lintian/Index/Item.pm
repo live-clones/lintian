@@ -79,6 +79,9 @@ const my $DOUBLE_QUOTE => q{"};
 const my $BACKSLASH => q{\\};
 const my $HASHBANG => q{#!};
 
+const my $SETUID => 04000;
+const my $SETGID => 02000;
+
 =head1 NAME
 
 Lintian::Index::Item - Lintian representation of a path entry in a package
@@ -517,6 +520,16 @@ sub operm {
     return $self->path_info & OPERM_MASK;
 }
 
+=item octal_permissions
+
+=cut
+
+sub octal_permissions {
+    my ($self) = @_;
+
+    return sprintf('%04o', $self->operm);
+}
+
 =item children
 
 Returns a list of children (as Lintian::File::Path objects) of this entry.
@@ -755,6 +768,36 @@ sub is_executable {
     my ($self) = @_;
 
     return $self->_any_bit_in_operm(0111);
+}
+
+=item all_bits_set
+
+=cut
+
+sub all_bits_set {
+    my ($self, $bits) = @_;
+
+    return ($self->operm & $bits) == $bits;
+}
+
+=item is_setuid
+
+=cut
+
+sub is_setuid {
+    my ($self) = @_;
+
+    return $self->operm & $SETUID;
+}
+
+=item is_setgid
+
+=cut
+
+sub is_setgid {
+    my ($self) = @_;
+
+    return $self->operm & $SETGID;
 }
 
 =item unpacked_path
