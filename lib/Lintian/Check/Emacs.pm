@@ -32,7 +32,7 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-const my $WIDELY_READABLE => 0644;
+const my $WIDELY_READABLE => oct(644);
 
 sub visit_installed_files {
     my ($self, $file) = @_;

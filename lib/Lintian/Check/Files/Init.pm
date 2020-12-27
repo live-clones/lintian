@@ -33,7 +33,9 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-const my $EXECUTABLE_PERMISSIONS => 0755;
+const my $NOT_EQUAL => q{!=};
+
+const my $EXECUTABLE_PERMISSIONS => oct(755);
 
 sub visit_installed_files {
     my ($self, $file) = @_;
@@ -44,9 +46,10 @@ sub visit_installed_files {
       if $file->name =~ m{^etc/init/\S};
 
     # /etc/init.d
-    $self->hint('non-standard-file-permissions-for-etc-init.d-script',
-        $file->name,
-        sprintf('%04o != %04o', $file->operm, $EXECUTABLE_PERMISSIONS))
+    $self->hint(
+        'non-standard-file-permissions-for-etc-init.d-script',$file->name,
+        $file->octal_permissions, $NOT_EQUAL,
+        sprintf('%04o', $EXECUTABLE_PERMISSIONS))
       if $file->name =~ m{^etc/init\.d/\S}
       && $file->name !~ m{^etc/init\.d/(?:README|skeleton)$}
       && $file->operm != $EXECUTABLE_PERMISSIONS

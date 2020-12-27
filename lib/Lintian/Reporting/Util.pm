@@ -66,7 +66,7 @@ our @EXPORT_OK = (qw(
       find_backlog
 ));
 
-const my $WIDELY_READABLE => 0644;
+const my $WIDELY_READABLE => oct(644);
 
 =item load_state_cache(STATE_DIR)
 

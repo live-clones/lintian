@@ -83,21 +83,21 @@ const my $DEFAULT_READ_SIZE => 4096;
 const my $KIB_UNIT_FACTOR => 1024;
 const my $COMFORT_THRESHOLD => 1536;
 
-const my $OWNER_READ => 00400;
-const my $OWNER_WRITE => 00200;
-const my $OWNER_EXECUTE => 00100;
-const my $SETUID => 04000;
-const my $SETUID_OWNER_EXECUTE => 04100;
-const my $GROUP_READ => 00040;
-const my $GROUP_WRITE => 00020;
-const my $GROUP_EXECUTE => 00010;
-const my $SETGID => 02000;
-const my $SETGID_GROUP_EXECUTE => 02010;
-const my $WORLD_READ => 00004;
-const my $WORLD_WRITE => 00002;
-const my $WORLD_EXECUTE => 00001;
-const my $STICKY => 01000;
-const my $STICKY_WORLD_EXECUTE => 01001;
+const my $OWNER_READ => oct(400);
+const my $OWNER_WRITE => oct(200);
+const my $OWNER_EXECUTE => oct(100);
+const my $SETUID => oct(4000);
+const my $SETUID_OWNER_EXECUTE => oct(4100);
+const my $GROUP_READ => oct(40);
+const my $GROUP_WRITE => oct(20);
+const my $GROUP_EXECUTE => oct(10);
+const my $SETGID => oct(2000);
+const my $SETGID_GROUP_EXECUTE => oct(2010);
+const my $WORLD_READ => oct(4);
+const my $WORLD_WRITE => oct(2);
+const my $WORLD_EXECUTE => oct(1);
+const my $STICKY => oct(1000);
+const my $STICKY_WORLD_EXECUTE => oct(1001);
 
 # preload cache for common permission strings
 # call overhead o perm2oct was measurable on chromium-browser/32.0.1700.123-2
@@ -252,8 +252,8 @@ a trappable error.
 Examples:
 
  # Good
- perm2oct('-rw-r--r--') == 0644
- perm2oct('-rwxr-xr-x') == 0755
+ perm2oct('-rw-r--r--') == oct(644)
+ perm2oct('-rwxr-xr-x') == oct(755)
 
  # Bad
  perm2oct('broken')      # too short to be recognised

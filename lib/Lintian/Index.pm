@@ -53,7 +53,8 @@ const my $HYPHEN => q{-};
 const my $NO_LIMIT => -1;
 
 const my $LINES_PER_FILE => 3;
-const my $WIDELY_READABLE_FOLDER => 0755;
+const my $WIDELY_READABLE_FOLDER => oct(755);
+const my $WORLD_WRITABLE_FOLDER => oct(777);
 
 my %FILE_CODE2LPATH_TYPE = (
     $HYPHEN => Lintian::Index::Item::TYPE_FILE
@@ -126,7 +127,7 @@ has basedir => (
           unless length $folder;
 
         # create directory
-        path($folder)->mkpath({ chmod => 0777 })
+        path($folder)->mkpath({ chmod => $WORLD_WRITABLE_FOLDER })
           unless -e $folder;
     },
     default => $EMPTY

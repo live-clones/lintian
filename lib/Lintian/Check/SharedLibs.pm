@@ -41,7 +41,7 @@ const my $EMPTY => q{};
 const my $SPACE => q{ };
 const my $SLASH => q{/};
 
-const my $WIDELY_READABLE => 0644;
+const my $WIDELY_READABLE => oct(644);
 
 # not presently used
 #my $UNKNOWN_SHARED_LIBRARY_EXCEPTIONS

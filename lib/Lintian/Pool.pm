@@ -40,6 +40,7 @@ use Moo;
 use namespace::clean;
 
 const my $ANY_CHILD => -1;
+const my $WORLD_WRITABLE_FOLDER => oct(777);
 
 =head1 NAME
 
@@ -84,7 +85,7 @@ has basedir => (
         my $absolute
           = Path::Tiny->tempdir(TEMPLATE => 'lintian-pool-XXXXXXXXXX');
 
-        $absolute->mkpath({mode => 0777});
+        $absolute->mkpath({mode => $WORLD_WRITABLE_FOLDER});
 
         return $absolute;
     });

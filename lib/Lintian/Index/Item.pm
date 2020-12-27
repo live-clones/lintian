@@ -82,19 +82,19 @@ const my $HASHBANG => q{#!};
 const my $MAXIMUM_LINK_DEPTH => 18;
 
 const my $BYTE_MAXIMUM => 255;
-const my $SINGLE_OCTAL_MASK => 07;
-const my $DUAL_OCTAL_MASK => 077;
+const my $SINGLE_OCTAL_MASK => oct(7);
+const my $DUAL_OCTAL_MASK => oct(77);
 
 const my $ELF_MAGIC_SIZE => 4;
 const my $LINCITY_MAGIC_SIZE => 6;
 const my $SHELL_SCRIPT_MAGIC_SIZE => 2;
 
-const my $READ_BITS => 0444;
-const my $WRITE_BITS => 0222;
-const my $EXECUTABLE_BITS => 0111;
+const my $READ_BITS => oct(444);
+const my $WRITE_BITS => oct(222);
+const my $EXECUTABLE_BITS => oct(111);
 
-const my $SETUID => 04000;
-const my $SETGID => 02000;
+const my $SETUID => oct(4000);
+const my $SETGID => oct(2000);
 
 =head1 NAME
 

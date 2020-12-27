@@ -37,7 +37,7 @@ const my $SLASH => q{/};
 const my $EQUALS => q{=};
 
 const my $BASE64_UNIT => 4;
-const my $WIDELY_READABLE_FOLDER => 0755;
+const my $WIDELY_READABLE_FOLDER => oct(755);
 
 =head1 NAME
 

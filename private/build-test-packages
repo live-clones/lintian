@@ -76,7 +76,8 @@ const my $NEWLINE => qq{\n};
 const my $SLASH => q{/};
 const my $YES => q{yes};
 const my $NO => q{no};
-const my $WIDELY_READABLE => 022;
+
+const my $WIDELY_READABLE => oct(22);
 
 my $processing_start = Time::Moment->from_string(gmtime->datetime . 'Z');
 

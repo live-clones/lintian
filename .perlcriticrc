@@ -387,7 +387,7 @@ terminal_funcs = CORE::exec fatal_error internal_error Lintian::Util::internal_e
 
 [ValuesAndExpressions::ProhibitInterpolationOfLiterals]
 
-[-ValuesAndExpressions::ProhibitLeadingZeros]
+[ValuesAndExpressions::ProhibitLeadingZeros]
 
 [ValuesAndExpressions::ProhibitLongChainsOfMethodCalls]
 

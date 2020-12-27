@@ -36,10 +36,11 @@ with 'Lintian::Check';
 const my $SPACE => q{ };
 const my $SLASH => q{/};
 
-const my $WIDELY_EXECUTABLE => 0111;
+const my $WIDELY_EXECUTABLE => oct(111);
 
 sub octify {
     my (undef, $val) = @_;
+
     return oct($val);
 }
 

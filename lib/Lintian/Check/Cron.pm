@@ -32,7 +32,7 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-const my $READ_WRITE_PERMISSIONS => 0644;
+const my $READ_WRITE_PERMISSIONS => oct(644);
 
 sub visit_installed_files {
     my ($self, $file) = @_;

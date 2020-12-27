@@ -37,23 +37,23 @@ with 'Lintian::Check';
 const my $EMPTY => q{};
 const my $NOT_EQUAL => q{!=};
 
-const my $STANDARD_EXECUTABLE => 0755;
-const my $SETGID_EXECUTABLE => 04754;
-const my $SET_USER_ID => 04000;
-const my $SET_GROUP_ID => 02000;
+const my $STANDARD_EXECUTABLE => oct(755);
+const my $SETGID_EXECUTABLE => oct(4754);
+const my $SET_USER_ID => oct(4000);
+const my $SET_GROUP_ID => oct(2000);
 
-const my $STANDARD_FILE => 0644;
-const my $BACKUP_NINJA_FILE => 0600;
-const my $SUDOERS_FILE => 0440;
-const my $GAME_DATA => 0664;
+const my $STANDARD_FILE => oct(644);
+const my $BACKUP_NINJA_FILE => oct(600);
+const my $SUDOERS_FILE => oct(440);
+const my $GAME_DATA => oct(664);
 
-const my $STANDARD_FOLDER => 0755;
-const my $GAME_FOLDER => 02775;
-const my $VAR_LOCAL_FOLDER => 02775;
-const my $VAR_LOCK_FOLDER => 01777;
-const my $USR_SRC_FOLDER => 02775;
+const my $STANDARD_FOLDER => oct(755);
+const my $GAME_FOLDER => oct(2775);
+const my $VAR_LOCAL_FOLDER => oct(2775);
+const my $VAR_LOCK_FOLDER => oct(1777);
+const my $USR_SRC_FOLDER => oct(2775);
 
-const my $WORLD_READABLE => 0444;
+const my $WORLD_READABLE => oct(444);
 
 has component => (is => 'rw');
 has linked_against_libvga => (is => 'rw');
@@ -181,12 +181,12 @@ sub visit_installed_files {
                 return;
             }
 
-            # backupninja expects configurations files to be 0600
+            # backupninja expects configurations files to be oct(600)
             return
               if $file->operm == $BACKUP_NINJA_FILE
               && $file->name =~ m{^ etc/backup.d/ }msx;
 
-            # sudo requires sudoers files to be mode 0440
+            # sudo requires sudoers files to be mode oct(440)
             if (   $file->name =~ m{^ etc/sudoers.d/ }msx
                 && $file->operm != $SUDOERS_FILE) {
 
