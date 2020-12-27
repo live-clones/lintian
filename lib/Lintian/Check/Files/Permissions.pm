@@ -90,7 +90,7 @@ sub visit_installed_files {
 
     $self->hint(
         'octal-permissions', $self->component,
-        sprintf('%4o', $file->operm),  $file->name
+        $file->octal_permissions, $file->name
     );
 
     if ($file->is_file) {
@@ -249,10 +249,9 @@ sub source {
 
     my $component = path($self->processable->path)->basename;
 
-    $self->hint(
-        'octal-permissions', $component,
-        sprintf('%4o', $_->operm),  $_->name
-    )for $self->processable->patched->sorted_list;
+    $self->hint('octal-permissions', $component, $_->octal_permissions,
+        $_->name)
+      for $self->processable->patched->sorted_list;
 
     return;
 }
