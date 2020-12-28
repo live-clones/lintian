@@ -240,7 +240,7 @@ functions = open opendir chdir read readdir readline closedir sysopen sysread sy
 
 [-Miscellanea::ProhibitTies]
 
-[-Miscellanea::ProhibitUnrestrictedNoCritic]
+[Miscellanea::ProhibitUnrestrictedNoCritic]
 
 [Miscellanea::ProhibitUselessNoCritic]
 
