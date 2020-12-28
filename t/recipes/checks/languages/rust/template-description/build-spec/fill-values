@@ -1,0 +1,6 @@
+Skeleton: source-native
+Testname: template-description
+Description: Debcargo's default description for Rust installables
+ This package contains the following binaries built from the Rust crate
+ "hyperfine":
+  - hyperfine

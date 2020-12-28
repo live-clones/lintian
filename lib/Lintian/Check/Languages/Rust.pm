@@ -30,6 +30,26 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
+sub source {
+    my ($self) = @_;
+
+    my $debian_control = $self->processable->debian_control;
+    for my $installable ($debian_control->installables) {
+
+        my $fields = $debian_control->installable_fields($installable);
+        my $extended = $fields->text('Description');
+
+        # drop synopsis
+        $extended =~ s/^ [^\n]* \n //sx;
+
+        $self->hint('rust-boilerplate', $installable)
+          if $extended
+          =~ /^ \QThis package contains the following binaries built from the Rust crate\E /isx;
+    }
+
+    return;
+}
+
 sub installable {
     my ($self) = @_;
 
