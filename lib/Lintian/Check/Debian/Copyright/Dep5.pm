@@ -764,7 +764,7 @@ sub check_dep5_copyright {
                   @{$sections_by_wildcard{$wildcard}});
 
             $self->pointed_hint('duplicate-globbing-patterns',
-                $copyright_file->pointer,$wildcard, '(lines $lines)');
+                $copyright_file->pointer,$wildcard, "(lines $lines)");
         }
 
         # do not issue next tag for duplicates or redundant wildcards

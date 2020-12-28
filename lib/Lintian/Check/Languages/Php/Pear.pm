@@ -24,8 +24,11 @@ use v5.20;
 use warnings;
 use utf8;
 
+use Const::Fast;
 use List::SomeUtils qw(none);
 use Unicode::UTF8 qw(encode_utf8);
+
+const my $DOLLAR => q{$};
 
 use Moo;
 use namespace::clean;
@@ -65,14 +68,18 @@ sub source {
             my $recommends
               = $processable->binary_relation($binary, 'Recommends');
             my $breaks = $processable->binary_relation($binary, 'Breaks');
-            if (!$depends->satisfies('${phppear:Debian-Depends}')) {
+            if (!$depends->satisfies($DOLLAR . '{phppear:Debian-Depends}')) {
                 $self->hint('pear-package-but-missing-dependency', 'Depends');
             }
-            if (!$recommends->satisfies('${phppear:Debian-Recommends}')) {
+            if (
+                !$recommends->satisfies(
+                    $DOLLAR . '{phppear:Debian-Recommends}'
+                )
+            ) {
                 $self->hint('pear-package-but-missing-dependency',
                     'Recommends');
             }
-            if (!$breaks->satisfies('${phppear:Debian-Breaks}')) {
+            if (!$breaks->satisfies($DOLLAR . '{phppear:Debian-Breaks}')) {
                 $self->hint('pear-package-but-missing-dependency', 'Breaks');
             }
 
@@ -82,13 +89,17 @@ sub source {
               ->untrimmed_value('Description');
 
             if ($description !~ /\$\{phppear:summary\}/) {
-                $self->hint('pear-package-not-using-substvar',
-                    '${phppear:summary}');
+                $self->hint(
+                    'pear-package-not-using-substvar',
+                    $DOLLAR . '{phppear:summary}'
+                );
             }
 
             if ($description !~ /\$\{phppear:description\}/) {
-                $self->hint('pear-package-not-using-substvar',
-                    '${phppear:description}');
+                $self->hint(
+                    'pear-package-not-using-substvar',
+                    $DOLLAR . '{phppear:description}'
+                );
             }
 
             if (defined($package_xml) && $package_xml->is_regular_file) {

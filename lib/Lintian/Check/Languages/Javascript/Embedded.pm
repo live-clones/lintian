@@ -30,7 +30,8 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-my %JS_MAGIC = ('libjs-bootstrap' => 'var (Carousel|Typeahead)',);
+my %JS_MAGIC
+  = ('libjs-bootstrap' => qr{ var [ ] (?: Carousel | Typeahead ) }x,);
 
 my $JS_EXT
   = qr{(?:(?i)[-._]?(?:compiled|lite|min|pack(?:ed)?|prod|umd|yc)?\.(js|css)(?:\.gz)?)$};

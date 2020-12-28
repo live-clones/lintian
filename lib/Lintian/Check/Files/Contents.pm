@@ -36,8 +36,6 @@ with 'Lintian::Check';
 
 const my $EMPTY => q{};
 const my $SLASH => q{/};
-const my $WORD_BOUNDARY => q{\b};
-const my $NON_WORD_BOUNDARY => q{\B};
 const my $ARROW => q{ -> };
 
 my $SENSIBLE_REGEX
@@ -109,13 +107,13 @@ sub check_item {
         my $correct = $switched_locations{$confused};
         $self->hint('bin-sbin-mismatch', $item->name,
             $confused . $ARROW . $correct)
-          if length $item->mentions_in_operation(
-            $NON_WORD_BOUNDARY. quotemeta($SLASH . $confused). $WORD_BOUNDARY);
+          if length $item->mentions_in_operation(qr{ \B / \Q$confused\E \b }x);
     }
 
     if (length $self->build_path) {
+        my $escaped_path = quotemeta($self->build_path);
         $self->hint('file-references-package-build-path', $item->name)
-          if $item->bytes_match(quotemeta($self->build_path));
+          if $item->bytes_match(qr{$escaped_path});
     }
 
     return;

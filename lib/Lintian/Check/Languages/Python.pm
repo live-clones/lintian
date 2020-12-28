@@ -31,17 +31,18 @@ use List::SomeUtils qw(any none);
 use Lintian::Relation;
 use Lintian::Relation::Version qw(versions_lte);
 
-use Moo;
-use namespace::clean;
-
-with 'Lintian::Check';
-
 const my $EMPTY => q{};
 const my $ARROW => q{ -> };
+const my $DOLLAR => q{$};
 
 const my $PYTHON3_MAJOR => 3;
 const my $PYTHON2_MIGRATION_MAJOR => 2;
 const my $PYTHON2_MIGRATION_MINOR => 6;
+
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 my @FIELDS = qw(Depends Pre-Depends Recommends Suggests);
 my @IGNORE = qw(-dev$ -docs?$ -common$ -tools$);
@@ -59,8 +60,8 @@ my %REQUIRED_DEPENDS = (
 );
 
 my %MISMATCHED_SUBSTVARS = (
-    '^python3-.+' => '${python:Depends}',
-    '^python2?-.+' => '${python3:Depends}',
+    '^python3-.+' => $DOLLAR . '{python:Depends}',
+    '^python2?-.+' => $DOLLAR . '{python3:Depends}',
 );
 
 has ALLOWED_PYTHON_FILES => (
@@ -100,7 +101,7 @@ sub source {
             # Don't trigger if we ship any Python 3 module
             next if any {
                 $processable->binary_relation($_, 'all')
-                  ->satisfies('${python3:Depends}')
+                  ->satisfies($DOLLAR . '{python3:Depends}')
             }
             @package_names;
             $self->hint('python-foo-but-no-python3-foo', $bin);

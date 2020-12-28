@@ -26,6 +26,10 @@ use v5.20;
 use warnings;
 use utf8;
 
+use Const::Fast;
+
+const my $DOLLAR => q{$};
+
 use Moo;
 use namespace::clean;
 
@@ -46,7 +50,7 @@ sub source {
         $self->hint(
             'gobject-introspection-package-missing-depends-on-gir-depends',
             $installable)
-          unless $relation->satisfies('${gir:Depends}');
+          unless $relation->satisfies($DOLLAR . '{gir:Depends}');
     }
 
     return;

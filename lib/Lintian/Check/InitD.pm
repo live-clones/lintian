@@ -30,13 +30,14 @@ use File::Basename qw(dirname);
 use List::SomeUtils qw(any none);
 use Unicode::UTF8 qw(encode_utf8);
 
+const my $EMPTY => q{};
+const my $SPACE => q{ };
+const my $DOLLAR => q{$};
+
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-const my $EMPTY => q{};
-const my $SPACE => q{ };
 
 # A list of valid LSB keywords.  The value is 0 if optional and 1 if required.
 my %lsb_keywords = (
@@ -61,17 +62,17 @@ my %lsb_keywords = (
 # mounted but not any other local file systems and therefore correctly depends
 # on checkroot.  There may be other similar situations.
 my %implied_dependencies = (
-    'mountall'   => '$local_fs',
-    'mountnfs'   => '$remote_fs',
+    'mountall'   => $DOLLAR . 'local_fs',
+    'mountnfs'   => $DOLLAR . 'remote_fs',
 
-    'hwclock'    => '$time',
-    'portmap'    => '$portmap',
-    'named'      => '$named',
-    'bind9'      => '$named',
-    'networking' => '$network',
-    'syslog'     => '$syslog',
-    'rsyslog'    => '$syslog',
-    'sysklogd'   => '$syslog'
+    'hwclock'    => $DOLLAR . 'time',
+    'portmap'    => $DOLLAR . 'portmap',
+    'named'      => $DOLLAR . 'named',
+    'bind9'      => $DOLLAR . 'named',
+    'networking' => $DOLLAR . 'network',
+    'syslog'     => $DOLLAR . 'syslog',
+    'rsyslog'    => $DOLLAR . 'syslog',
+    'sysklogd'   => $DOLLAR . 'syslog'
 );
 
 # Regex to match names of init.d scripts; it is a bit more lax than

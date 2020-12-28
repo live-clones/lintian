@@ -35,13 +35,9 @@ use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Relation;
 
-use Moo;
-use namespace::clean;
-
-with 'Lintian::Check';
-
 const my $EMPTY => q{};
 const my $SPACE => q{ };
+const my $DOLLAR => q{$};
 const my $UNDERSCORE => q{_};
 const my $HORIZONTAL_BAR => q{|};
 
@@ -66,7 +62,12 @@ const my $VERSIONED_PREREQUISITE_AVAILABLE => 11;
 const my $LEVENSHTEIN_TOLERANCE => 3;
 const my $MANY_OVERRIDES => 20;
 
-my $MISC_DEPENDS = Lintian::Relation->new->load('${misc:Depends}');
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
+
+my $MISC_DEPENDS = Lintian::Relation->new->load($DOLLAR . '{misc:Depends}');
 
 # Manually maintained list of dh_commands that requires a versioned
 # dependency *AND* are not provided by debhelper.  Commands provided
@@ -553,7 +554,7 @@ sub source {
           if $seen{'runit'}
           && $strong->satisfies('runit')
           && (any { m{^ etc/sv/ }msx } @{$installable->installed->sorted_list})
-          && !$breaks->satisfies('${runit:Breaks}');
+          && !$breaks->satisfies($DOLLAR . '{runit:Breaks}');
     }
 
     my $virtual_compat;
@@ -838,7 +839,7 @@ sub source {
 
             $python_depends{$installable_name} = 1
               if $self->processable->binary_relation($installable_name,'all')
-              ->satisfies('${python:Depends}');
+              ->satisfies($DOLLAR . '{python:Depends}');
         }
 
         $self->hint('python-depends-but-no-python-helper',
@@ -854,7 +855,7 @@ sub source {
 
             $python3_depends{$installable_name} = 1
               if $self->processable->binary_relation($installable_name,'all')
-              ->satisfies('${python3:Depends}');
+              ->satisfies($DOLLAR . '{python3:Depends}');
         }
 
         $self->hint('python3-depends-but-no-python3-helper',
@@ -869,7 +870,7 @@ sub source {
         for my $installable_name (@installable_names) {
             $seen_sphinxdoc = 1
               if $self->processable->binary_relation($installable_name,'all')
-              ->satisfies('${sphinxdoc:Depends}');
+              ->satisfies($DOLLAR . '{sphinxdoc:Depends}');
         }
 
         $self->pointed_hint('sphinxdoc-but-no-sphinxdoc-depends',

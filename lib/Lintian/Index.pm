@@ -35,6 +35,21 @@ use Lintian::IPC::Run3 qw(safe_qx);
 
 use Lintian::Util qw(perm2oct);
 
+const my $EMPTY => q{};
+const my $SPACE => q{ };
+const my $SLASH => q{/};
+const my $BACKSLASH => q{\\};
+const my $ZERO => q{0};
+const my $HYPHEN => q{-};
+const my $PERCENT => q{%};
+const my $NEWLINE => qq{\n};
+
+const my $WAIT_STATUS_SHIFT => 8;
+const my $NO_LIMIT => -1;
+const my $LINES_PER_FILE => 3;
+const my $WIDELY_READABLE_FOLDER => oct(755);
+const my $WORLD_WRITABLE_FOLDER => oct(777);
+
 use Moo;
 use namespace::clean;
 
@@ -45,17 +60,6 @@ with
   'Lintian::Index::Java',
   'Lintian::Index::Md5sums',
   'Lintian::Index::Strings';
-
-const my $EMPTY => q{};
-const my $SLASH => q{/};
-const my $HYPHEN => q{-};
-const my $NEWLINE => qq{\n};
-
-const my $WAIT_STATUS_SHIFT => 8;
-const my $NO_LIMIT => -1;
-const my $LINES_PER_FILE => 3;
-const my $WIDELY_READABLE_FOLDER => oct(755);
-const my $WORLD_WRITABLE_FOLDER => oct(777);
 
 my %FILE_CODE2LPATH_TYPE = (
     $HYPHEN => Lintian::Index::Item::TYPE_FILE
@@ -208,8 +212,17 @@ sub create_from_basedir {
         $self->identifier . ': Cannot change to directory ' . $self->basedir);
 
     # get times in UTC
+    my $TIME_STAMP
+      = $PERCENT . q{M} . $SPACE . $PERCENT . q{s} . $SPACE . $PERCENT . q{A+};
+    my $FILE_NAME = $PERCENT . q{p};
+    my $LINK_DESTINATION = $PERCENT . q{l};
+    my $NULL_BREAK = $BACKSLASH . $ZERO;
+
+    my @REQUESTED_FIELDS
+      = map { $_ . $NULL_BREAK } ($TIME_STAMP, $FILE_NAME, $LINK_DESTINATION);
+
     my @index_command
-      = ('env', 'TZ=UTC', 'find', '-printf', '%M %s %A+\0%p\0%l\0');
+      = ('env', 'TZ=UTC', 'find', '-printf', join($EMPTY, @REQUESTED_FIELDS));
     my $index_output;
     my $index_errors;
 

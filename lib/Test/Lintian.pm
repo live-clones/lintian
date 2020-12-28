@@ -261,7 +261,7 @@ sub test_check_desc {
 
             $builder->ok(
                 $explanation !~ /(\S\w)\. [^ ]/
-                  || $1 =~ '/^\.[ge]$/', # for 'e.g.'/'i.e.'
+                  || $1 =~ /^\.[ge]$/, # for 'e.g.'/'i.e.'
                 'Tag explanation uses two spaces after a full stop'
             ) or $builder->diag("$content_type $cname: $tag\n");
 

@@ -26,6 +26,10 @@ use v5.20;
 use warnings;
 use utf8;
 
+use Const::Fast;
+
+const my $DOLLAR => q{$};
+
 use Moo;
 use namespace::clean;
 
@@ -40,7 +44,7 @@ sub source {
         if ($bin =~ m/^gir1\.2-/) {
             if (
                 not $processable->binary_relation($bin, 'strong')
-                ->satisfies('${gir:Depends}')) {
+                ->satisfies($DOLLAR . '{gir:Depends}')) {
                 $self->hint(('typelib-missing-gir-depends', $bin));
             }
         }
@@ -64,7 +68,8 @@ sub installable {
     my $madir = $DEB_HOST_MULTIARCH->{$processable->architecture};
     # Slightly contrived, but it might be Architecture: all, in which
     # case this is the best we can do
-    $madir = '${DEB_HOST_MULTIARCH}' unless defined $madir;
+    $madir = $DOLLAR . '{DEB_HOST_MULTIARCH}'
+      unless defined $madir;
 
     if (my $xmldir
         = $processable->installed->resolve_path('usr/share/gir-1.0/')) {

@@ -35,14 +35,10 @@ use Unicode::UTF8 qw(encode_utf8);
 use Lintian::IPC::Run3 qw(safe_qx);
 use Lintian::Relation;
 
-use Moo;
-use namespace::clean;
-
-with 'Lintian::Check';
-
 const my $EMPTY => q{};
 const my $SPACE => q{ };
 const my $SLASH => q{/};
+const my $AT_SIGN => q{@};
 const my $ASTERISK => q{*};
 const my $DOT => q{.};
 const my $DOUBLE_QUOTE => q{"};
@@ -51,6 +47,11 @@ const my $NOT_EQUAL => q{!=};
 const my $BAD_MAINTAINER_COMMAND_FIELDS => 5;
 const my $UNVERSIONED_INTERPRETER_FIELDS => 2;
 const my $VERSIONED_INTERPRETER_FIELDS => 5;
+
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 # This is a map of all known interpreters.  The key is the interpreter
 # name (the binary invoked on the #! line).  The value is an anonymous
@@ -135,7 +136,8 @@ has VERSIONED_INTERPRETERS => (
                 my @versions = split(/ \s+ /msx, $version_list);
                 $prerequisites //= $EMPTY;
 
-                if ($prerequisites eq '@SKIP_UNVERSIONED@') {
+                if ($prerequisites eq $AT_SIGN . 'SKIP_UNVERSIONED' . $AT_SIGN)
+                {
                     $prerequisites = undef;
 
                 } elsif ($prerequisites =~ / @ /msx) {
