@@ -195,7 +195,7 @@ sub hint {
     unless (defined $tag) {
 
         warn encode_utf8(
-            'Unknown tag $tagname in check ' . $self->name . $DOT);
+            "Unknown tag $tagname in check " . $self->name . $DOT);
         return undef;
     }
 
