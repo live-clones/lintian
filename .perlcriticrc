@@ -101,7 +101,7 @@ include =
 
 [ControlStructures::ProhibitUntilBlocks]
 
-[-ControlStructures::ProhibitYadaOperator]
+[ControlStructures::ProhibitYadaOperator]
 
 [-Compatibility::ConstantPragmaHash]
 
