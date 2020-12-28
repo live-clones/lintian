@@ -242,7 +242,7 @@ functions = open opendir chdir read readdir readline closedir sysopen sysread sy
 
 [-Miscellanea::ProhibitUnrestrictedNoCritic]
 
-[-Miscellanea::ProhibitUselessNoCritic]
+[Miscellanea::ProhibitUselessNoCritic]
 
 [-Miscellanea::TextDomainPlaceholders]
 
