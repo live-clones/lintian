@@ -470,6 +470,16 @@ has group_ships_examples => (
 sub visit_patched_files {
     my ($self, $item) = @_;
 
+    # see Bug#972614
+    $self->hint('package-does-not-install-examples', $item)
+      if $item->basename eq 'examples'
+      && $item->dirname !~ m{(?:^|/)(?:vendor|third_party)/}
+      && $self->group->get_processables('binary')
+      && !$self->group_ships_examples;
+
+    return
+      unless $item->is_file;
+
     my $banned = $self->NON_DISTRIBUTABLE_FILES->value($item->md5sum);
     if (defined $banned) {
         my $usualname = $banned->{'name'};
@@ -505,11 +515,12 @@ sub visit_patched_files {
       if $item->name =~ m{^debian/(?:.+\.)?substvars$}s;
 
     # check full text problem
-    $self->full_text_check($item)
-      if $item->is_file;
+    $self->full_text_check($item);
 
     # waf is not allowed
-    if ($item->basename =~ /\bwaf$/) {
+    if (   $item->basename =~ / \b waf $/sx
+        && $item->is_open_ok) {
+
         my $marker = 0;
         open(my $fd, '<', $item->unpacked_path);
         while (my $line = <$fd>) {
@@ -530,12 +541,10 @@ sub visit_patched_files {
     $self->hint('source-contains-prebuilt-ms-help-file', $item->name)
       if  $item->basename =~ /\.chm$/i
       && $item->file_info eq 'MS Windows HtmlHelp Data'
-      && $item->is_open_ok
       && $item->bytes !~ / Halibut, /msx;
 
     # Ensure we have a README.source for R data files
     if (   $item->basename =~ /\.(?:rda|Rda|rdata|Rdata|RData)$/
-        && $item->is_file
         && $item->is_open_ok
         && $item->file_info =~ /gzip compressed data/
         && !$self->processable->patched->resolve_path('debian/README.source')){
@@ -549,8 +558,8 @@ sub visit_patched_files {
     }
 
     if (   $item->name =~ /configure\.(in|ac)$/
-        && $item->is_file
         && $item->is_open_ok) {
+
         open(my $fd, '<', $item->unpacked_path);
         while (my $line = <$fd>) {
             next if $line =~ m{^\s*dnl};
@@ -569,6 +578,7 @@ sub visit_patched_files {
             or $item->file_info =~ /\bbitmap\b/i
             or $item->file_info =~ /^PDF Document\b/i
             or $item->file_info =~ /^Postscript Document\b/i) {
+
             $self->hint('license-problem-non-free-img-lenna', $item->name)
               unless $self->LENNA_WHITELIST->recognizes($item->md5sum);
         }
@@ -578,14 +588,18 @@ sub visit_patched_files {
     foreach my $tag_filetype ($self->WARN_FILE_TYPE->all) {
         my $warn_data = $self->WARN_FILE_TYPE->value($tag_filetype);
         my $regtype = $warn_data->{'regtype'};
+
         if($item->file_info =~ m{$regtype}) {
             my $regname = $warn_data->{'regname'};
+
             if($item->name =~ m{$regname}) {
                 $self->hint($tag_filetype, $item->name);
+
                 if($warn_data->{'checkmissing'}) {
                     my %hash;
                     $hash{$_->[1]} = $_->[0]
                       for @{$warn_data->{'transform'} // []};
+
                     $self->hint('source-is-missing', $item->name)
                       unless $self->find_source($item, \%hash);
                 }
@@ -595,55 +609,34 @@ sub visit_patched_files {
 
     # here we check old upstream specification
     # debian/upstream should be a directory
-    if (   $item->name eq 'debian/upstream'
-        || $item->name eq 'debian/upstream-metadata.yaml') {
-        $self->hint('debian-upstream-obsolete-path', $item->name);
-    }
+    $self->hint('debian-upstream-obsolete-path', $item->name)
+      if $item->name eq 'debian/upstream'
+      || $item->name eq 'debian/upstream-metadata.yaml';
 
-    if (   $item->name eq 'debian/README.source'
-        && $item->is_file
-        && $item->is_open_ok) {
-        my $contents = $item->bytes;
-        if (
-            index($contents,
-                'You WILL either need to modify or delete this file') >= 0
-        ) {
-            $self->hint('readme-source-is-dh_make-template');
-        }
-    }
+    $self->hint('readme-source-is-dh_make-template')
+      if $item->name eq 'debian/README.source'
+      && $item->bytes
+      =~ / \QYou WILL either need to modify or delete this file\E /isx;
 
     if (   $item->name =~ m{^debian/(README.source|copyright|rules|control)$}
-        && $item->is_file
         && $item->is_open_ok) {
+
         open(my $fd, '<', $item->unpacked_path);
         while (my $line = <$fd>) {
             next unless $line =~ m/(?<!")(FIX_?ME)(?!")/;
             $self->hint('file-contains-fixme-placeholder',
                 $item->name . ":$. $1");
         }
+        close $fd;
     }
 
     # Find mentioning of usr/lib/perl5 inside the packaging
-    if ($item->name =~ m{^debian/}) {
-        my $short = $item->basename;
-
-        # Skip symlinks and other nasty stuff as well as
-        # debian/changelog
-        if (   $short ne 'changelog'
-            && $item->name !~ m{^debian/patches/.*$}
-            && $item->name !~ m{^debian/(?:.+\.)?install$}
-            && $item->is_file
-            && $item->is_open_ok) {
-            my $contents = $item->bytes;
-
-            # ignore comments
-            $contents =~ s/#.*$//m;
-            if (index($contents, 'usr/lib/perl5') >= 0) {
-                $self->hint('mentions-deprecated-usr-lib-perl5-directory',
-                    $short);
-            }
-        }
-    }
+    $self->hint('mentions-deprecated-usr-lib-perl5-directory', $item->name)
+      if $item->basename ne 'changelog'
+      && $item->name =~ m{^ debian/ }sx
+      && $item->name !~ m{^ debian/patches/ }sx
+      && $item->name !~ m{^ debian/ (?:.+\.)? install $}sx
+      && $item->bytes =~ m{^ [^#]* usr/lib/perl5 }msx;
 
     $self->hint('source-contains-prebuilt-doxygen-documentation',
         $item->dirname)
@@ -653,39 +646,34 @@ sub visit_patched_files {
     # Tests of autotools files are a special case.  Ignore
     # debian/config.cache as anyone doing that probably knows what
     # they're doing and is using it as part of the build.
-    if ($item->basename =~ m{\A config.(?:cache|log|status) \Z}xsm) {
-        if ($item->dirname ne 'debian') {
-            $self->hint('configure-generated-file-in-source', $item->name);
-        }
-    }elsif ($item->basename eq 'ltconfig'
-        and not $self->libtool_in_build_depends) {
-        $self->hint('ancient-libtool', $item->name);
-    }elsif ($item->basename eq 'ltmain.sh'
-        and not $self->libtool_in_build_depends){
+    $self->hint('configure-generated-file-in-source', $item->name)
+      if $item->basename =~ m{\A config.(?:cache|log|status) \Z}xsm
+      && $item->name !~ m{^ debian/ }sx;
+
+    $self->hint('ancient-libtool', $item->name)
+      if $item->basename eq 'ltconfig'
+      && $item->name !~ m{^ debian/ }sx
+      && !$self->libtool_in_build_depends;
+
+    if (   $item->basename eq 'ltmain.sh'
+        && $item->name !~ m{^ debian/ }sx
+        && !$self->libtool_in_build_depends) {
 
         if ($item->bytes =~ /^VERSION=[\"\']?(1\.(\d)\.(\d+)(?:-(\d))?)/m) {
             my ($version, $major, $minor, $debian)=($1, $2, $3, $4);
 
-            if (
-                $major < $ACCEPTABLE_LIBTOOL_MAJOR
-                || (   $major == $ACCEPTABLE_LIBTOOL_MAJOR
-                    && $minor < $ACCEPTABLE_LIBTOOL_MINOR)
-            ) {
-                $self->hint('ancient-libtool', $item->name, $version);
+            $debian //= 0;
 
-            } elsif ($minor == $ACCEPTABLE_LIBTOOL_MINOR
-                && (!$debian || $debian < $ACCEPTABLE_LIBTOOL_DEBIAN)) {
-                $self->hint('ancient-libtool', $item->name, $version);
-            }
+            $self->hint('ancient-libtool', $item->name, $version)
+              if $major < $ACCEPTABLE_LIBTOOL_MAJOR
+              || (
+                $major == $ACCEPTABLE_LIBTOOL_MAJOR
+                && (
+                    $minor < $ACCEPTABLE_LIBTOOL_MINOR
+                    || (   $minor == $ACCEPTABLE_LIBTOOL_MINOR
+                        && $debian < $ACCEPTABLE_LIBTOOL_DEBIAN)));
         }
     }
-
-    # see Bug#972614
-    $self->hint('package-does-not-install-examples', $item)
-      if $item->basename eq 'examples'
-      && $item->dirname !~ m{(?:^|/)(?:vendor|third_party)/}
-      && $self->group->get_processables('binary')
-      && !$self->group_ships_examples;
 
     return;
 }
