@@ -27,6 +27,8 @@ use autodie;
 
 use Carp qw(croak confess);
 use Const::Fast;
+use Cwd qw(realpath);
+use File::BaseDir qw(config_home config_files data_home);
 use File::Find::Rule;
 use List::Compare;
 use List::SomeUtils qw(any none uniq first_value);
@@ -184,12 +186,15 @@ has profile_list => (
 
 has our_vendor => (is => 'rw');
 
-has saved_include_path => (
+has include_dirs => (
     is => 'rw',
     coerce => sub { my ($arrayref) = @_; return ($arrayref // []); },
     default => sub { [] });
 
-has saved_safe_include_path => (
+# Temporary until aptdaemon (etc.) has been upgraded to handle
+# Lintian loading code from user dirs.
+# LP: #1162947
+has safe_include_dirs => (
     is => 'rw',
     coerce => sub { my ($arrayref) = @_; return ($arrayref // []); },
     default => sub { [] });
@@ -235,6 +240,30 @@ has known_vendors => (
         return \@vendors;
     });
 
+has user_dirs => (
+    is => 'ro',
+    lazy => 1,
+    coerce => sub { my ($arrayref) = @_; return ($arrayref // []); },
+    default => sub {
+        my ($self) = @_;
+
+        my @user_data;
+
+        # XDG user data
+        push(@user_data, data_home('lintian'));
+
+        # legacy per-user data
+        push(@user_data, "$ENV{HOME}/.lintian")
+          if length $ENV{HOME};
+
+        # system wide user data
+        push(@user_data, '/etc/lintian');
+
+        const my @IMMUTABLE => grep { length && -e } @user_data;
+
+        return \@IMMUTABLE;
+    });
+
 =item load ([$profname[, $ipath[, $extra]]])
 
 Loads a new profile.  $profname is the name of the profile and $ipath
@@ -249,32 +278,26 @@ If $ipath is not given, a default one will be used.
 =cut
 
 sub load {
-    my ($self, $profile_name, $include_path, $extra) = @_;
+    my ($self, $profile_name, $requested_dirs, $allow_user_dirs) = @_;
 
-    my @full_inc_path;
+    $requested_dirs //= [];
 
-    unless (defined $include_path) {
-        # Temporary fix (see _safe_include_path)
-        push(@full_inc_path, "$ENV{'HOME'}/.lintian")
-          if length $ENV{'HOME'};
+    my @distribution_dirs = ($ENV{LINTIAN_BASE} // '/usr/share/lintian');
 
-        push(@full_inc_path, '/etc/lintian');
+    const my @SAFE_INCLUDE_DIRS => (@{$requested_dirs}, @distribution_dirs);
+    $self->safe_include_dirs(\@SAFE_INCLUDE_DIRS);
 
-        # ENV{LINTIAN_BASE} replaces /usr/share/lintian if present.
-        $include_path = [$ENV{LINTIAN_BASE} // '/usr/share/lintian'];
+    my @all_dirs;
 
-        push(@full_inc_path, @{$include_path});
-    }
+    push(@all_dirs, @{$self->user_dirs})
+      if $allow_user_dirs && @{$self->user_dirs};
 
-    push(@full_inc_path, @{ $extra->{'restricted-search-dirs'} // [] })
-      if defined $extra;
+    push(@all_dirs, @{$self->safe_include_dirs});
 
-    push(@full_inc_path, @{$include_path});
+    const my @ALL_INCLUDE_DIRS => @all_dirs;
+    $self->include_dirs(\@ALL_INCLUDE_DIRS);
 
-    $self->saved_include_path(\@full_inc_path);
-    $self->saved_safe_include_path($include_path);
-
-    for my $tagdir ($self->_safe_include_path('tags')) {
+    for my $tagdir (map { "$_/tags" } @{$self->safe_include_dirs}) {
 
         next
           unless -d $tagdir;
@@ -312,9 +335,9 @@ sub load {
         }
     }
 
-    my @check_bases = (
-        "$ENV{LINTIAN_BASE}/lib/Lintian/Check",
-        $self->_safe_include_path('checks'));
+    # need realpath to resolve our symlink to Lintian::Check
+    my @check_bases = grep { defined }
+      map { realpath("$_/checks") } @{$self->safe_include_dirs};
     for my $check_base (@check_bases) {
 
         next
@@ -479,41 +502,6 @@ sub disable_tag {
     return;
 }
 
-=item $prof->include_path ([$path])
-
-Returns an array of paths to the (partial) Lintian roots, which are
-used by this profile.  The paths are ordered from "highest" to
-"lowest" priority (i.e. items in the earlier paths should shadow those
-in later ones).
-
-If $path is given, the array will contain the paths to the path in
-these roots denoted by $path.
-
-Paths returned are not guaranteed to exists.
-
-=cut
-
-sub include_path {
-    my ($self, $path) = @_;
-
-    return map { "$_/$path" } @{ $self->saved_include_path }
-      if defined $path;
-
-    return @{ $self->saved_include_path };
-}
-
-# Temporary until aptdaemon (etc.) has been upgraded to handle
-# Lintian loading code from user dirs.
-# LP: #1162947
-sub _safe_include_path {
-    my ($self, $path) = @_;
-
-    return map { "$_/$path" } @{ $self->saved_safe_include_path }
-      if defined $path;
-
-    return @{ $self->saved_safe_include_path };
-}
-
 =item read_profile
 
 =cut
@@ -537,8 +525,8 @@ sub read_profile {
     }
 
     my @candidates;
-    for my $include_path ($self->include_path('profiles')) {
-        push(@candidates, map { "$include_path/$_.profile" } @search_space);
+    for my $include_dir (map { "$_/profiles" } @{$self->include_dirs}) {
+        push(@candidates, map { "$include_dir/$_.profile" } @search_space);
     }
 
     my $path = first_value { -e } @candidates;
@@ -897,10 +885,10 @@ sub search_space {
     my @base_dirs;
     for my $vendor (@{ $self->profile_list }) {
 
-        push(@base_dirs, map { "$_/vendors/$vendor" } $self->include_path);
+        push(@base_dirs, map { "$_/vendors/$vendor" } @{$self->include_dirs});
     }
 
-    push(@base_dirs, $self->include_path);
+    push(@base_dirs, @{$self->include_dirs});
 
     my @candidates = map { "$_/$relative" } @base_dirs;
     my @search_space = grep { -e } @candidates;

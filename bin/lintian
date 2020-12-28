@@ -44,8 +44,7 @@ my $LINTIAN_VERSION;
 use Carp qw(croak verbose);
 use Config::Tiny;
 use Const::Fast;
-use Cwd qw(getcwd);
-use File::BaseDir qw(config_files data_home);
+use File::BaseDir qw(config_files);
 use Getopt::Long ();
 use IO::Interactive qw(is_interactive);
 use List::Compare;
@@ -198,42 +197,27 @@ $command_line{'show-overrides'} = 0
 $command_line{'tag-display-limit'} = 0
   if exists $command_line{'no-tag-display-limit'};
 
-my $xdg_config_file;
-my $dot_config_file;
-
-my $xdg_data_home;
-my $dot_data_home;
-
-unless ($command_line{'no-user-dirs'}) {
-
-    if (length $ENV{HOME} || length $ENV{XDG_CONFIG_HOME}) {
-
-        $xdg_config_file = config_files('lintian/lintianrc');
-        $xdg_data_home = data_home('lintian');
-    }
-
-    if (length $ENV{HOME}) {
-
-        $dot_config_file = "$ENV{HOME}/.lintianrc";
-        $dot_data_home = "$ENV{HOME}/.lintian";
-    }
-
-    # make path absolute for use elsewhere
-    $xdg_data_home = getcwd() . $SLASH . $xdg_data_home
-      if length $xdg_data_home && $xdg_data_home !~ m{^/};
-}
-
-my $LINTIAN_CFG = $command_line{cfg} // $EMPTY;
+my $LINTIAN_CFG = $command_line{cfg};
 
 $LINTIAN_CFG ||= $ENV{LINTIAN_CFG}
   if length $ENV{LINTIAN_CFG} && -e $ENV{LINTIAN_CFG};
 
-$LINTIAN_CFG ||= first_value { length $_ && -e $_ }
-($xdg_config_file, $dot_config_file, '/etc/lintianrc');
+unless ($command_line{'no-user-dirs'}) {
 
-# only absolute paths, for use elsewhere
-my @RESTRICTED_CONFIG_DIRS
-  = grep {length $_ && -d $_ }($xdg_data_home, $dot_data_home, '/etc/lintian');
+    my @user_configs;
+
+    # XDG user config
+    push(@user_configs, config_files('lintian/lintianrc'));
+
+    # legacy per-user config
+    push(@user_configs, "$ENV{HOME}/.lintianrc")
+      if length $ENV{HOME};
+
+    # system wide user config
+    push(@user_configs, '/etc/lintianrc');
+
+    $LINTIAN_CFG ||= first_value { length && -e } @user_configs;
+}
 
 $LINTIAN_CFG = $EMPTY
   if $command_line{'no-cfg'};
@@ -439,13 +423,7 @@ if (length $selected{'suppress-tags-from-file'}) {
     }
 }
 
-# only absolute paths
-my @CONFIG_DIRS = grep { -d }
-  grep { length }
-  map { realpath($_) } ($ENV{LINTIAN_BASE}, @{$selected{'include-dir'}});
-
 my @CLOSE_AT_END;
-my $OUTPUT = Lintian::Output::EWI->new;
 my $received_signal;
 my $exit_code = 0;
 my $STATUS_FD;
@@ -507,6 +485,8 @@ for my $var (@ENV_FROM_CONFIG) {
     $selected{$var} = $ENV{$var} if $ENV{$var} && !defined $selected{$var};
 }
 
+my $OUTPUT = Lintian::Output::EWI->new;
+
 my %output
   = map { split(/=/) } split(/,/, ($selected{'exp-output'} // $EMPTY));
 for (keys %output) {
@@ -523,6 +503,15 @@ for (keys %output) {
         }
     }
 }
+
+my $PROFILE = Lintian::Profile->new;
+
+# dies on error
+$PROFILE->load(
+    $selected{profile},
+    $selected{'include-dir'},
+    !$command_line{'no-user-dirs'});
+$OUTPUT->v_msg('Using profile ' . $PROFILE->name . $DOT);
 
 my $envlc = List::Compare->new([keys %config], \@ENV_FROM_CONFIG);
 my @from_file = $envlc->get_intersection;
@@ -634,13 +623,6 @@ if (defined $selected{LINTIAN_PROFILE}) {
     $selected{profile} //= $selected{LINTIAN_PROFILE};
     delete $selected{LINTIAN_PROFILE};
 }
-
-my $PROFILE = Lintian::Profile->new;
-
-# dies on error
-$PROFILE->load($selected{profile}, \@CONFIG_DIRS,
-    { 'restricted-search-dirs' => \@RESTRICTED_CONFIG_DIRS });
-$OUTPUT->v_msg('Using profile ' . $PROFILE->name . $DOT);
 
 # if tags are listed explicitly (--tags) then show them even if
 # they are pedantic/experimental etc.  However, for --check-part

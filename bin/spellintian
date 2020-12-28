@@ -41,8 +41,6 @@ use lib THISDIR . '/../lib';
 my $LINTIAN_VERSION;
 
 use Const::Fast;
-use Cwd qw(getcwd);
-use File::BaseDir qw(config_home config_files data_home);
 use Getopt::Long ();
 use Path::Tiny;
 use Unicode::UTF8 qw(encode_utf8 decode_utf8);
@@ -89,37 +87,8 @@ Getopt::Long::Configure('gnu_getopt');
 Getopt::Long::GetOptions(%options)
   or die encode_utf8("error parsing options\n");
 
-# only absolute paths
-my @RESTRICTED_CONFIG_DIRS;
-
-if ($user_dirs) {
-    my $data_home;
-    my $legacy_user_data;
-
-    $data_home = data_home('lintian')
-      if exists $ENV{'HOME'} || exists $ENV{'XDG_CONFIG_HOME'};
-
-    $legacy_user_data = "$ENV{HOME}/.lintian"
-      if exists $ENV{'HOME'};
-
-    if (defined $data_home && $data_home !~ m{^/}) {
-        # Turn the path into an absolute one.  Just in case
-        # someone sets a relative HOME dir.
-        my $cwd = getcwd();
-        $data_home = "$cwd/$data_home";
-    }
-
-    @RESTRICTED_CONFIG_DIRS = grep { -d }
-      grep { length } ($data_home, $legacy_user_data, '/etc/lintian');
-}
-
-# only absolute paths
-my @CONFIG_DIRS = grep { -d }
-  grep { length } map { realpath($_) } ($ENV{'LINTIAN_BASE'}, @INCLUDE_DIRS);
-
 my $PROFILE = Lintian::Profile->new;
-$PROFILE->load(undef, \@CONFIG_DIRS,
-    { 'restricted-search-dirs' => \@RESTRICTED_CONFIG_DIRS });
+$PROFILE->load(undef, \@INCLUDE_DIRS, $user_dirs);
 
 my $exit_code = 0;
 
