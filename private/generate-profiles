@@ -204,13 +204,12 @@ sub write_paragraph {
 
     my $text = $EMPTY;
 
-    foreach my $field (sort keys %{$paragraph}) {
+    for my $field (sort keys %{$paragraph}) {
         $text .= "$field:" . $NEWLINE;
 
         my @values = sort @{$paragraph->{$field}};
-        my $separator = (scalar @values > 1 ? $COMMA : $EMPTY);
 
-        $text .= $SPACE . $_ . $separator . $NEWLINE for @values;
+        $text .= $SPACE . $_ . $NEWLINE for @values;
     }
 
     $text .= $NEWLINE

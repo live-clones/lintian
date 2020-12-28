@@ -53,6 +53,23 @@ const my $SPACE => q{ };
 const my $HYPHEN => q{-};
 const my $EQUAL => q{=};
 
+const my $FIELD_SEPARATOR => qr/ \s+ | \s* , \s* /sx;
+
+const my @VALID_HEADER_FIELDS => qw(
+  Profile
+  Extends
+  Enable-Tags-From-Check
+  Disable-Tags-From-Check
+  Enable-Tags
+  Disable-Tags
+);
+
+const my @VALID_BODY_FIELDS => qw(
+  Tags
+  Overridable
+  Severity
+);
+
 =head1 NAME
 
 Lintian::Profile - Profile parser for Lintian
@@ -564,17 +581,26 @@ sub read_profile {
     # prepend profile name after loading any parent
     unshift(@{$self->profile_list}, $profile_name);
 
-    my @valid_header_fields
-      = qw(Profile Extends Enable-Tags-From-Check Disable-Tags-From-Check Enable-Tags Disable-Tags);
-    my @unknown_header_fields = $header->extra(@valid_header_fields);
+    my @have_comma
+      = grep { $header->value($_) =~ / , /sx } @VALID_HEADER_FIELDS;
+    for my $section (@sections) {
+        push(@have_comma,
+            grep { $section->value($_) =~ / , /sx } @VALID_BODY_FIELDS);
+    }
+
+    warn
+"Please use spaces as separators in field $_ instead of commas in profile $path\n"
+      for uniq @have_comma;
+
+    my @unknown_header_fields = $header->extra(@VALID_HEADER_FIELDS);
     croak encode_utf8("Unknown fields in header of profile $profile_name: "
           . join($SPACE, @unknown_header_fields))
       if @unknown_header_fields;
 
     my @enable_checks
-      = $header->trimmed_list('Enable-Tags-From-Check', qr/\s*,\s*/);
+      = $header->trimmed_list('Enable-Tags-From-Check', $FIELD_SEPARATOR);
     my @disable_checks
-      = $header->trimmed_list('Disable-Tags-From-Check', qr/\s*,\s*/);
+      = $header->trimmed_list('Disable-Tags-From-Check', $FIELD_SEPARATOR);
 
     # List::SomeUtils has 'duplicates' starting at 0.423
     my @allchecks = (@enable_checks, @disable_checks);
@@ -594,8 +620,8 @@ sub read_profile {
           . join($SPACE, @needed_checks))
       if @needed_checks;
 
-    my @enable_tags = $header->trimmed_list('Enable-Tags', qr/\s*,\s*/);
-    my @disable_tags = $header->trimmed_list('Disable-Tags', qr/\s*,\s*/);
+    my @enable_tags = $header->trimmed_list('Enable-Tags', $FIELD_SEPARATOR);
+    my @disable_tags = $header->trimmed_list('Disable-Tags', $FIELD_SEPARATOR);
 
     # List::SomeUtils has 'duplicates' starting at 0.423
     my @alltags = (@enable_tags, @disable_tags);
@@ -620,14 +646,13 @@ sub read_profile {
 
     for my $section (@sections){
 
-        my @valid_fields = qw(Tags Overridable Severity);
-        my @unknown_fields = $section->extra(@valid_fields);
+        my @unknown_fields = $section->extra(@VALID_BODY_FIELDS);
         croak encode_utf8(
 "Unknown fields in section $section_number of profile $profile_name: "
               . join($SPACE, @unknown_fields))
           if @unknown_fields;
 
-        my @tags = $section->trimmed_list('Tags', qr/\s*,\s*/);
+        my @tags = $section->trimmed_list('Tags', $FIELD_SEPARATOR);
         croak encode_utf8(
 "Tags field missing or empty in section $section_number of profile $profile_name"
         )unless @tags;
