@@ -18,8 +18,6 @@ Depends:
  gcc-mingw-w64-x86-64,
  gpg-agent,
  javahelper,
- libio-async-loop-epoll-perl (>= 0.20),
- libio-async-perl,
  libmce-perl,
  libperl-critic-freenode-perl,
  libperl-critic-pulp-perl,

@@ -23,8 +23,7 @@ use strict;
 use warnings;
 
 use Const::Fast;
-use IO::Async::Loop;
-use IO::Async::Process;
+use IPC::Run3;
 use Test::More tests => 8;
 
 const my $NEWLINE => qq{\n};
@@ -38,28 +37,14 @@ my $spelling_data = 'data/spelling/corrections';
 
 sub t {
     my ($input, $expected, @options) = @_;
+
+    my @command = ($cmd_path, @options);
     my $output;
+    run3(\@command, \$input, \$output);
 
-    my $loop = IO::Async::Loop->new;
-    my $future = $loop->new_future;
-
-    my $process = IO::Async::Process->new(
-        command => [$cmd_path, @options],
-        stdin => { from => $input },
-        stdout => { into => \$output },
-        on_finish => sub {
-            my ($self, $exitcode) = @_;
-            my $status = ($exitcode >> $WAIT_STATUS_SHIFT);
-            is($status, 0, 'exit status 0');
-            is($output, $expected, 'expected output');
-            $future->done('Done with spellintian');
-            return;
-        });
-
-    $loop->add($process);
-
-    # will await
-    $future->get;
+    my $status = ($? >> $WAIT_STATUS_SHIFT);
+    is($status, 0, 'exit status 0');
+    is($output, $expected, 'expected output');
 
     return;
 }

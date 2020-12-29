@@ -60,7 +60,7 @@ use Path::Tiny;
 use POSIX qw(locale_h strftime);
 use Unicode::UTF8 qw(encode_utf8 decode_utf8);
 
-use Lintian::IO::Async qw(safe_qx);
+use Lintian::IPC::Run3 qw(safe_qx);
 use Lintian::Profile;
 
 =head1 FUNCTIONS

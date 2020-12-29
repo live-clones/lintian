@@ -549,7 +549,6 @@ sub read_md5sums {
 
     my @lines = split(/\n/, $text);
 
-    # start with checksum; processing style inspired by IO::Async::Stream
     while (defined(my $line = shift @lines)) {
 
         next
