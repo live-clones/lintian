@@ -38,11 +38,6 @@ Lintian::Output - Lintian messaging handling
 
     my $out = Lintian::Output->new;
 
-    $out->verbosity(-1);
-    $out->msg("Something interesting");
-    $out->v_msg("Something less interesting");
-    $out->debug_msg(3, "Something very specific");
-
 =head1 DESCRIPTION
 
 Lintian::Output is used for all interaction between lintian and the user.
@@ -63,15 +58,6 @@ The following fields impact the behavior of Lintian::Output.
 =item color
 
 =item colors
-
-=item debug
-
-If set to a positive integer, will enable all debug messages issued with
-a level lower or equal to its value.
-
-=item perf_debug
-
-=item perf_log_fd
 
 =item proc_id2tag_count
 
@@ -111,14 +97,11 @@ has colors => (
             'O' => 'bright_black',
         }
     });
-has perf_debug => (is => 'rw', default => 0);
-has perf_log_fd => (is => 'rw', default => sub { \*STDOUT });
 has proc_id2tag_count => (is => 'rw', default => sub { {} });
 has tag_display_limit => (is => 'rw', default => 4);
 has tty_hyperlinks => (is => 'rw', default => 0);
 has verbosity => (is => 'rw', default => 0);
 
-has debug => (is => 'rw', default => 0);
 has showdescription => (is => 'rw', default => sub { {} });
 
 has delimiter => (is => 'rw', default => '----');
@@ -168,38 +151,6 @@ sub v_msg {
       unless $self->verbosity;
 
     say encode_utf8("N: $_") for @args;
-
-    return;
-}
-
-sub debug_msg {
-    my ($self, $level, @args) = @_;
-
-    return
-      if $self->debug < $level;
-
-    say encode_utf8("N: $_") for @args;
-
-    return;
-}
-
-=item  C<perf_log(@args)>
-
-Like "v_msg", except output is possibly sent to a dedicated log
-file.
-
-Will output the strings given in @args, one per line.  The lines will
-not be prefixed.  Will do nothing unless perf_debug is set to a
-positive integer.
-
-=cut
-
-sub perf_log {
-    my ($self, @args) = @_;
-
-    return unless $self->perf_debug;
-
-    say { $self->perf_log_fd } encode_utf8($_) for @args;
 
     return;
 }

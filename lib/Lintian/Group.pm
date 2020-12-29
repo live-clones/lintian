@@ -217,12 +217,15 @@ sub process {
 
         my $declared_overrides;
 
-        $OUTPUT->debug_msg(1,
-            'Base directory for processable: ' . $processable->basedir);
+        say {*STDERR}
+          encode_utf8(
+            'Base directory for processable: '. $processable->basedir)
+          if $option->{debug} >= 1;
 
         unless ($option->{'no-override'}) {
 
-            $OUTPUT->debug_msg(1, 'Loading overrides file (if any) ...');
+            say {*STDERR} encode_utf8('Loading overrides file (if any) ...')
+              if $option->{debug} >= 1;
 
             eval {$declared_overrides = $processable->overrides;};
             if (my $err = $@) {
@@ -305,7 +308,8 @@ sub process {
 
             my $timer = [gettimeofday];
             my $procid = $processable->identifier;
-            $OUTPUT->debug_msg(1, "Running check: $name on $procid  ...");
+            say {*STDERR} encode_utf8("Running check: $name on $procid  ...")
+              if $option->{debug} >= 1;
 
             my $absolute = $self->profile->check_path_by_name->{$name};
             require $absolute;
@@ -335,8 +339,10 @@ sub process {
             }
 
             my $tres = sprintf('%.3fs', $raw_res);
-            $OUTPUT->debug_msg(1,"Check $name for $procid done ($tres)");
-            $OUTPUT->perf_log("$procid,check/$name,${raw_res}");
+            say {*STDERR} encode_utf8("Check $name for $procid done ($tres)")
+              if $option->{debug} >= 1;
+            say {*STDERR} encode_utf8("$procid,check/$name,$raw_res")
+              if $option->{'perf-output'};
         }
 
         my %used_overrides;
@@ -417,9 +423,11 @@ sub process {
 
     my $raw_res = tv_interval($group_timer);
     my $tres = sprintf('%.3fs', $raw_res);
-    $OUTPUT->debug_msg(1,
-        'Checking all of group ' . $self->name . " done ($tres)");
-    $OUTPUT->perf_log($self->name . ",total-group-check,${raw_res}");
+    say {*STDERR}
+      encode_utf8('Checking all of group ' . $self->name . " done ($tres)")
+      if $option->{debug} >= 1;
+    say {*STDERR} encode_utf8($self->name . ",total-group-check,$raw_res")
+      if $option->{'perf-output'};
 
     if ($option->{'debug'} > 2) {
 
@@ -430,17 +438,20 @@ sub process {
         my $group_id = $pivot->source . $SLASH . $pivot->source_version;
         my $group_usage
           = human_bytes(total_size([map { $_ } $self->get_processables]));
-        $OUTPUT->debug_msg($EXTRA_VERBOSE,
-            "Memory usage [group:$group_id]: $group_usage");
+        say {*STDERR}
+          encode_utf8("Memory usage [group:$group_id]: $group_usage")
+          if $option->{debug} >= $EXTRA_VERBOSE;
 
         for my $processable ($self->get_processables) {
             my $id = $processable->identifier;
             my $usage = human_bytes(total_size($processable));
-            $OUTPUT->debug_msg($EXTRA_VERBOSE, "Memory usage [$id]: $usage");
+
+            say {*STDERR} encode_utf8("Memory usage [$id]: $usage")
+              if $option->{debug} >= $EXTRA_VERBOSE;
         }
     }
 
-    $self->clean_lab($OUTPUT);
+    $self->clean_lab($option);
 
     return $success;
 }
@@ -453,28 +464,35 @@ also get these unless we are keeping the lab.
 =cut
 
 sub clean_lab {
-    my ($self, $OUTPUT) = @_;
+    my ($self, $option) = @_;
 
     my $total = [gettimeofday];
 
     for my $processable ($self->get_processables) {
 
         my $proc_id = $processable->identifier;
-        $OUTPUT->debug_msg(1, "Auto removing: $proc_id ...");
+        say {*STDERR} encode_utf8("Auto removing: $proc_id ...")
+          if $option->{debug} >= 1;
+
         my $each = [gettimeofday];
 
         $processable->remove;
 
         my $raw_res = tv_interval($each);
-        $OUTPUT->debug_msg(1, "Auto removing: $proc_id done (${raw_res}s)");
-        $OUTPUT->perf_log("$proc_id,auto-remove entry,$raw_res");
+        say {*STDERR} encode_utf8("Auto removing: $proc_id done (${raw_res}s)")
+          if $option->{debug} >= 1;
+        say {*STDERR} encode_utf8("$proc_id,auto-remove entry,$raw_res")
+          if $option->{'perf-output'};
     }
 
     my $raw_res = tv_interval($total);
     my $tres = sprintf('%.3fs', $raw_res);
-    $OUTPUT->debug_msg(1,
-        'Auto-removal all for group ' . $self->name . " done ($tres)");
-    $OUTPUT->perf_log($self->name . ",total-group-auto-remove,$raw_res");
+    say {*STDERR}
+      encode_utf8(
+        'Auto-removal all for group ' . $self->name . " done ($tres)")
+      if $option->{debug} >= 1;
+    say {*STDERR}encode_utf8($self->name . ",total-group-auto-remove,$raw_res")
+      if $option->{'perf-output'};
 
     return;
 }
@@ -495,7 +513,7 @@ sub add_processable{
     my ($self, $processable) = @_;
 
     if ($processable->tainted) {
-        warn(
+        warn encode_utf8(
             sprintf(
                 "warning: tainted %1\$s package '%2\$s', skipping\n",
                 $processable->type, $processable->name

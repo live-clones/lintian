@@ -39,6 +39,8 @@ use Lintian::Group;
 use Moo;
 use namespace::clean;
 
+const my $SPACE => q{ };
+
 const my $ANY_CHILD => -1;
 const my $WORLD_WRITABLE_FOLDER => oct(777);
 
@@ -148,7 +150,7 @@ Process the pool.
 =cut
 
 sub process{
-    my ($self, $PROFILE, $exit_code_ref, $option, $STATUS_FD, $OUTPUT)= @_;
+    my ($self, $PROFILE, $exit_code_ref, $option, $OUTPUT)= @_;
 
     my %override_count;
     my %ignored_overrides;
@@ -277,21 +279,17 @@ sub process{
             }
         }
 
-        # remove group files
-        $group->clean_lab($OUTPUT);
-
         my $total_raw_res = tv_interval($total_start);
         my $total_tres = sprintf('%.3fs', $total_raw_res);
 
-        if ($success) {
-            print {$STATUS_FD}
-              encode_utf8('complete ' . $group->name . " ($total_tres)\n");
-        } else {
-            print {$STATUS_FD}
-              encode_utf8('error ' . $group->name . " ($total_tres)\n");
-            ${$exit_code_ref} = 1;
-        }
+        my $status = $success ? 'complete' : 'error';
+        say {*STDERR}
+          encode_utf8($status . $SPACE . $group->name . " ($total_tres)")
+          if $option->{'status-log'};
         $OUTPUT->v_msg('Finished processing group ' . $group->name);
+
+        ${$exit_code_ref} = 1
+          unless $success;
     }
 
     # pass everything, in case some groups or processables have no hints

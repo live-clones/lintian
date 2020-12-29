@@ -151,7 +151,6 @@ my @getoptions = qw(
   packages-from-file=s
   pedantic
   perf-debug
-  perf-output=s
   print-version
   profile=s
   quiet|q
@@ -423,14 +422,11 @@ if (length $selected{'suppress-tags-from-file'}) {
     }
 }
 
-my @CLOSE_AT_END;
-my $received_signal;
 my $exit_code = 0;
-my $STATUS_FD;
 
 # root permissions?
 # check if effective UID is 0
-warn encode_utf8("warning: running with root privileges is not recommended!\n")
+warn encode_utf8("running with root privileges is not recommended!\n")
   if $> == 0 && !$selected{'allow-root'};
 
 if ($selected{'ignore-lintian-env'}) {
@@ -440,7 +436,7 @@ if ($selected{'ignore-lintian-env'}) {
 # option --all and packages specified at the same time?
 if ($selected{'packages-from-file'} && $#ARGV+1 > 0) {
     warn encode_utf8(
-"warning: option --packages-from-file cannot be mixed with package parameters!\n"
+"option --packages-from-file cannot be mixed with package parameters!\n"
     );
     warn encode_utf8("(will ignore --packages-from-file option)\n");
 
@@ -524,10 +520,12 @@ warn encode_utf8(
   if @already;
 
 my @not_yet = grep { !defined $ENV{$_} } @from_file;
-$OUTPUT->debug_msg(1,
-    'Setting environment variables from configuration file: '
-      . join($SPACE, @not_yet))
-  if @not_yet;
+if (@not_yet) {
+    say {*STDERR}
+      encode_utf8('Setting environment variables from configuration file: '
+          . join($SPACE, @not_yet))
+      if $selected{debug} >= 1;
+}
 $ENV{$_} = $config{$_} for @not_yet;
 
 die encode_utf8("The color value must be one of auto, always, or never.\n")
@@ -559,7 +557,6 @@ if ($selected{debug}) {
 }
 
 $OUTPUT->verbosity($selected{verbose});
-$OUTPUT->debug($selected{debug});
 
 $OUTPUT->color(1)
   if $selected{color} eq 'always'
@@ -569,23 +566,6 @@ $OUTPUT->color(1)
 $OUTPUT->tty_hyperlinks($hyperlinks_capable&& $selected{hyperlinks} eq 'on');
 $OUTPUT->tag_display_limit($selected{'tag-display-limit'});
 $OUTPUT->showdescription($selected{info});
-
-$OUTPUT->perf_debug($selected{'perf-debug'});
-if (defined(my $perf_log = $selected{'perf-output'})) {
-    my $fd = open_file_or_fd($perf_log, '>');
-    $OUTPUT->perf_log_fd($fd);
-
-    push(@CLOSE_AT_END, [$fd, $perf_log]);
-}
-
-if (defined(my $status_log = $selected{'status-log'})) {
-    $STATUS_FD = open_file_or_fd($status_log, '>');
-    $STATUS_FD->autoflush;
-
-    push(@CLOSE_AT_END, [$STATUS_FD, $status_log]);
-} else {
-    open($STATUS_FD, '>', '/dev/null');
-}
 
 # check for arguments
 unless (@ARGV || $selected{'packages-from-file'}) {
@@ -604,22 +584,16 @@ unless (@ARGV || $selected{'packages-from-file'}) {
       unless $ok;
 }
 
-if ($selected{debug}) {
-    # Lintian::Output is now available
-    $OUTPUT->debug_msg(
-        1,
-        "Lintian v$ENV{LINTIAN_VERSION}",
-        "Lintian root directory: $ENV{LINTIAN_BASE}",
-        "Configuration file: $LINTIAN_CFG",
-        'UTF-8: ✓ (☃)',
-        $OUTPUT->delimiter,
-    );
+if ($selected{debug} >= 1) {
+    say {*STDERR} encode_utf8("Lintian v$ENV{LINTIAN_VERSION}");
+    say {*STDERR} encode_utf8("Lintian root directory: $ENV{LINTIAN_BASE}");
+    say {*STDERR} encode_utf8("Configuration file: $LINTIAN_CFG");
+    say {*STDERR} encode_utf8('UTF-8: ✓ (☃)');
 }
 
 if (defined $selected{LINTIAN_PROFILE}) {
     warn encode_utf8(
-"Warning: Please use 'profile' in config file; LINTIAN_PROFILE is obsolete.\n"
-    );
+        "Please use 'profile' in config file; LINTIAN_PROFILE is obsolete.\n");
     $selected{profile} //= $selected{LINTIAN_PROFILE};
     delete $selected{LINTIAN_PROFILE};
 }
@@ -677,10 +651,6 @@ if (@{$selected{'suppress-tags'}} && !@{$selected{tags}}) {
 
 # initialize display level settings; dies on error
 $PROFILE->display(@{$_}) for @display_level;
-
-$SIG{TERM} = \&interrupted;
-$SIG{INT} = \&interrupted;
-$SIG{QUIT} = \&interrupted;
 
 my @subjects;
 push(@subjects, @ARGV);
@@ -764,10 +734,7 @@ if ($pool->empty) {
     exit $exit_code;
 }
 
-$pool->process($PROFILE, \$exit_code, \%selected, $STATUS_FD, $OUTPUT);
-
-retrigger_signal()
-  if $received_signal;
+$pool->process($PROFILE, \$exit_code, \%selected, $OUTPUT);
 
 exit $exit_code;
 
@@ -961,63 +928,6 @@ sub default_jobs {
 
     # could be 2x
     return $cpus + 1;
-}
-
-sub END {
-
-    $SIG{INT} = 'DEFAULT';
-    $SIG{QUIT} = 'DEFAULT';
-
-    # Prevent LAB->close, $unpacker->kill_jobs etc. from affecting
-    # the exit code.
-    local $! = undef;
-    local $? = 0;
-    local $@ = undef;
-
-    my %already_closed;
-
-    for my $to_close (@CLOSE_AT_END) {
-
-        my ($fd, $filename) = @{$to_close};
-        my $fno = fileno($fd);
-
-        # Already closed?  Can happen with e.g.
-        #   --perf-output '&1' --status-log '&1'
-        next
-          unless defined $fno;
-
-        next
-          if $fno >= 0 && $already_closed{$fno}++;
-
-        eval {close $fd;};
-        if (my $err = $@) {
-            # Don't use L::Output here as it might be (partly) cleaned
-            # up.
-            warn encode_utf8("warning: closing ${filename} failed: $err\n");
-        }
-    }
-}
-
-sub _die_in_signal_handler {
-    die encode_utf8("N: Interrupted.\n");
-}
-
-sub retrigger_signal {
-    # Re-kill ourselves with the same signal to ensure that the exit
-    # code reflects that we died by a signal.
-    local $SIG{$received_signal} = \&_die_in_signal_handler;
-    $OUTPUT->debug_msg(2, "Retriggering signal SIG${received_signal}");
-    return kill($received_signal, $$);
-}
-
-sub interrupted {
-    my ($signal) = @_;
-
-    $received_signal = $signal;
-    $SIG{$received_signal} = 'DEFAULT';
-    print {$STATUS_FD} encode_utf8("ack-signal SIG${received_signal}\n");
-
-    return _die_in_signal_handler();
 }
 
 sub show_help {
