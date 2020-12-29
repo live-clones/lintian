@@ -1,8 +1,6 @@
 bin			usr/share/lintian
 data		  	usr/share/lintian
 lib	 		usr/share/lintian
-# the following line will be removed when libconfig-model-dpkg-perl stopped using Lintian::Data (see commit 818b3aad)
-lib/Lintian		usr/share/perl5
 .perlcriticrc		usr/share/lintian
 # the next line will be removed when libconfig-model-dpkg-perl stops using Lintian data (Bug#968000)
 private/latest-policy-version		usr/share/lintian/private
