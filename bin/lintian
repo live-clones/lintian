@@ -479,24 +479,9 @@ for my $var (@ENV_FROM_CONFIG) {
     $selected{$var} = $ENV{$var} if $ENV{$var} && !defined $selected{$var};
 }
 
-my $OUTPUT;
-
 my %output
   = map { split(/=/) } split(/,/, ($selected{'exp-output'} // $EMPTY));
 $selected{'output-format'} = lc($output{format} // 'ewi');
-if ($selected{'output-format'} eq 'html') {
-    require Lintian::Output::HTML;
-    $OUTPUT = Lintian::Output::HTML->new;
-} elsif ($selected{'output-format'} eq 'json') {
-    require Lintian::Output::JSON;
-    $OUTPUT = Lintian::Output::JSON->new;
-} elsif ($selected{'output-format'} eq 'universal') {
-    require Lintian::Output::Universal;
-    $OUTPUT = Lintian::Output::Universal->new;
-} else {
-    require Lintian::Output::EWI;
-    $OUTPUT = Lintian::Output::EWI->new;
-}
 
 my $PROFILE = Lintian::Profile->new;
 
@@ -538,6 +523,11 @@ if ($selected{color} eq 'never') {
 die encode_utf8("The hyperlink value must be on or off\n")
   unless any { $selected{hyperlinks} eq $_ } qw(on off);
 
+$selected{hyperlinks} = $hyperlinks_capable && $selected{hyperlinks} eq 'on';
+
+$selected{color} = $selected{color} eq 'always'
+  || ($selected{color} eq 'auto' && is_interactive);
+
 $selected{verbose} = 0
   if $selected{quiet};
 
@@ -554,15 +544,6 @@ if ($selected{debug}) {
         Carp::confess(map { encode_utf8($_) } @_);
     };
 }
-
-$OUTPUT->color(1)
-  if $selected{color} eq 'always'
-  || ($selected{color} eq 'auto'
-    && is_interactive);
-
-$OUTPUT->tty_hyperlinks($hyperlinks_capable&& $selected{hyperlinks} eq 'on');
-$OUTPUT->tag_display_limit($selected{'tag-display-limit'});
-$OUTPUT->showdescription($selected{info});
 
 # check for arguments
 unless (@ARGV || $selected{'packages-from-file'}) {
@@ -726,7 +707,7 @@ for my $path (@subjects) {
     }
 }
 
-$pool->process($PROFILE, \$exit_code, \%selected, $OUTPUT);
+$pool->process($PROFILE, \$exit_code, \%selected);
 
 exit $exit_code;
 

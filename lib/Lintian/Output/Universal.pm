@@ -27,15 +27,13 @@ use Const::Fast;
 use List::SomeUtils qw(all);
 use Unicode::UTF8 qw(encode_utf8);
 
+use Moo;
+use namespace::clean;
+
 const my $SPACE => q{ };
 const my $COLON => q{:};
 const my $LPARENS => q{(};
 const my $RPARENS => q{)};
-
-use Moo;
-use namespace::clean;
-
-with 'Lintian::Output';
 
 =head1 NAME
 

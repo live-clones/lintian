@@ -199,7 +199,7 @@ Process group.
 =cut
 
 sub process {
-    my ($self, $ignored_overrides, $option, $OUTPUT)= @_;
+    my ($self, $ignored_overrides, $option)= @_;
 
     my $groupname = $self->name;
     local $SIG{__WARN__}

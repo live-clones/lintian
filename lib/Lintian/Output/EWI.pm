@@ -28,6 +28,9 @@ use Term::ANSIColor ();
 use Text::Wrap;
 use Unicode::UTF8 qw(encode_utf8);
 
+use Moo;
+use namespace::clean;
+
 # for tty hyperlinks
 const my $OSC_HYPERLINK => qq{\033]8;;};
 const my $OSC_DONE => qq{\033\\};
@@ -37,10 +40,32 @@ const my $SPACE => q{ };
 const my $COLON => q{:};
 const my $NEWLINE => qq{\n};
 
-use Moo;
-use namespace::clean;
+const my %COLORS => (
+    'E' => 'red',
+    'W' => 'yellow',
+    'I' => 'cyan',
+    'P' => 'green',
+    'C' => 'blue',
+    'O' => 'bright_black',
+);
 
-with 'Lintian::Output';
+const my %CODE_PRIORITY => (
+    'E' => 30,
+    'W' => 40,
+    'I' => 50,
+    'P' => 60,
+    'X' => 70,
+    'C' => 80,
+    'O' => 90,
+);
+
+const my %TYPE_PRIORITY => (
+    'source' => 30,
+    'binary' => 40,
+    'udeb' => 50,
+    'changes' => 60,
+    'buildinfo' => 70,
+);
 
 =head1 NAME
 
@@ -58,6 +83,12 @@ Provides standard hint output.
 
 =over 4
 
+=item tag_count_by_processable
+
+=cut
+
+has tag_count_by_processable => (is => 'rw', default => sub { {} });
+
 =item issue_hints
 
 Print all hints passed in array. A separate arguments with processables
@@ -65,26 +96,8 @@ is necessary to report in case no hints were found.
 
 =cut
 
-my %code_priority = (
-    'E' => 30,
-    'W' => 40,
-    'I' => 50,
-    'P' => 60,
-    'X' => 70,
-    'C' => 80,
-    'O' => 90,
-);
-
-my %type_priority = (
-    'source' => 30,
-    'binary' => 40,
-    'udeb' => 50,
-    'changes' => 60,
-    'buildinfo' => 70,
-);
-
 sub issue_hints {
-    my ($self, $groups) = @_;
+    my ($self, $groups, $option) = @_;
 
     my @processables = map { $_->get_processables } @{$groups // []};
 
@@ -105,15 +118,15 @@ sub issue_hints {
 
     my @sorted = sort {
              defined $a->override <=> defined $b->override
-          || $code_priority{$a->tag->code} <=> $code_priority{$b->tag->code}
+          || $CODE_PRIORITY{$a->tag->code} <=> $CODE_PRIORITY{$b->tag->code}
           || $a->tag->name cmp $b->tag->name
-          || $type_priority{$a->processable->type}
-          <=> $type_priority{$b->processable->type}
+          || $TYPE_PRIORITY{$a->processable->type}
+          <=> $TYPE_PRIORITY{$b->processable->type}
           || $a->processable->name cmp $b->processable->name
           || $a->context cmp $b->context
     } @pending;
 
-    $self->print_hint($_) for @sorted;
+    $self->print_hint($_, $option) for @sorted;
 
     return;
 }
@@ -129,7 +142,7 @@ override info for this hint.
 =cut
 
 sub print_hint {
-    my ($self, $hint) = @_;
+    my ($self, $hint, $option) = @_;
 
     my $tag = $hint->tag;
     my $tag_name = $tag->name;
@@ -140,11 +153,12 @@ sub print_hint {
 
     # Limit the output so people do not drown in hints.  Some hints are
     # insanely noisy (hi static-library-has-unneeded-section)
-    my $limit = $self->tag_display_limit;
+    my $limit = $option->{'tag-display-limit'};
     if ($limit) {
 
-        my $proc_id = $hint->processable->identifier;
-        my $emitted_count= $self->proc_id2tag_count->{$proc_id}{$tag_name}++;
+        my $processable_id = $hint->processable->identifier;
+        my $emitted_count
+          = $self->tag_count_by_processable->{$processable_id}{$tag_name}++;
 
         return
           if $emitted_count >= $limit;
@@ -160,16 +174,16 @@ sub print_hint {
     my $code = $tag->code;
     $code = 'O' if defined $hint->override;
 
-    my $tag_color = $self->{colors}{$code};
+    my $tag_color = $COLORS{$code};
 
     # keep original color for tags marked experimental
     $code = 'X' if $tag->experimental;
 
     $text = Term::ANSIColor::colored($tag_name, $tag_color)
-      if $self->color;
+      if $option->{color};
 
     my $output;
-    if ($self->tty_hyperlinks && $self->color) {
+    if ($option->{hyperlinks} && $option->{color}) {
         my $target= 'https://lintian.debian.org/tags/' . $tag_name . '.html';
         $output .= $self->osc_hyperlink($text, $target);
     } else {
@@ -196,7 +210,7 @@ sub print_hint {
           . $information);
 
     $self->describe_tags($tag)
-      if $self->showdescription && !$self->issued_tag($tag->name);
+      if $option->{info} && !$self->issued_tag($tag->name);
 
     return;
 }

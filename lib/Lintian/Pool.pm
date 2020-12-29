@@ -149,7 +149,7 @@ Process the pool.
 =cut
 
 sub process{
-    my ($self, $PROFILE, $exit_code_ref, $option, $OUTPUT)= @_;
+    my ($self, $PROFILE, $exit_code_ref, $option)= @_;
 
     if ($self->empty) {
         say {*STDERR} encode_utf8('No packages selected.');
@@ -167,7 +167,7 @@ sub process{
         $group->profile($PROFILE);
         $group->jobs($option->{'jobs'});
 
-        my $success= $group->process(\%ignored_overrides, $option, $OUTPUT);
+        my $success= $group->process(\%ignored_overrides, $option);
 
         # associate all hints with processable
         for my $processable ($group->get_processables){
@@ -294,8 +294,23 @@ sub process{
           unless $success;
     }
 
+    my $OUTPUT;
+    if ($option->{'output-format'} eq 'html') {
+        require Lintian::Output::HTML;
+        $OUTPUT = Lintian::Output::HTML->new;
+    } elsif ($option->{'output-format'} eq 'json') {
+        require Lintian::Output::JSON;
+        $OUTPUT = Lintian::Output::JSON->new;
+    } elsif ($option->{'output-format'} eq 'universal') {
+        require Lintian::Output::Universal;
+        $OUTPUT = Lintian::Output::Universal->new;
+    } else {
+        require Lintian::Output::EWI;
+        $OUTPUT = Lintian::Output::EWI->new;
+    }
+
     # pass everything, in case some groups or processables have no hints
-    $OUTPUT->issue_hints([values %{$self->groups}]);
+    $OUTPUT->issue_hints([values %{$self->groups}], $option);
 
     my $errors = $override_count{error} // 0;
     my $warnings = $override_count{warning} // 0;

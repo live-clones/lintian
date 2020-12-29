@@ -27,12 +27,20 @@ use Const::Fast;
 use Time::Piece;
 use JSON::MaybeXS;
 
-const my $EMPTY => q{};
-
 use Moo;
 use namespace::clean;
 
-with 'Lintian::Output';
+const my $EMPTY => q{};
+
+const my %CODE_PRIORITY => (
+    'E' => 30,
+    'W' => 40,
+    'I' => 50,
+    'P' => 60,
+    'X' => 70,
+    'C' => 80,
+    'O' => 90,
+);
 
 =head1 NAME
 
@@ -56,16 +64,6 @@ Print all hints passed in array. A separate arguments with processables
 is necessary to report in case no hints were found.
 
 =cut
-
-my %code_priority = (
-    'E' => 30,
-    'W' => 40,
-    'I' => 50,
-    'P' => 60,
-    'X' => 70,
-    'C' => 80,
-    'O' => 90,
-);
 
 sub issue_hints {
     my ($self, $groups) = @_;
@@ -125,7 +123,7 @@ sub hintlist {
 
     my @sorted = sort {
                defined $a->override <=> defined $b->override
-          ||   $code_priority{$a->tag->code}<=> $code_priority{$b->tag->code}
+          ||   $CODE_PRIORITY{$a->tag->code}<=> $CODE_PRIORITY{$b->tag->code}
           || $a->tag->name cmp $b->tag->name
           || $a->context cmp $b->context
     } @{$arrayref // []};
