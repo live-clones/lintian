@@ -331,7 +331,7 @@ sub test_load_profiles {
 
         my $profile = Lintian::Profile->new;
 
-        eval {$profile->load($profname, \@inc);};
+        eval {$profile->load($profname, \@inc, 0);};
         my $err = $@;
 
         $builder->ok($profile, "$profname is loadable.")

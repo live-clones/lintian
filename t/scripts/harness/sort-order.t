@@ -48,7 +48,7 @@ my @descpaths = sort File::Find::Rule->file()->name('desc')->in($checkpath);
 plan tests => 3 * scalar @descpaths;
 
 my $profile = Lintian::Profile->new;
-$profile->load(undef, [$ENV{LINTIAN_BASE}]);
+$profile->load(undef, undef, 0);
 
 foreach my $descpath (@descpaths) {
 

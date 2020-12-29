@@ -80,7 +80,7 @@ my @known_missing = (qw(
 ));
 
 my $profile = Lintian::Profile->new;
-$profile->load(undef, [$ENV{LINTIAN_BASE}]);
+$profile->load(undef, undef, 0);
 
 # find known checks
 my @known = uniq $profile->known_checks;

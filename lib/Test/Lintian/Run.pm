@@ -490,7 +490,7 @@ sub check_result {
         && $testcase->unfolded_value('Check') ne 'all') {
 
         my $profile = Lintian::Profile->new;
-        $profile->load(undef, [$ENV{LINTIAN_BASE}]);
+        $profile->load(undef, undef, 0);
 
         # use tags related to checks declared
         my @check_names = $testcase->trimmed_list('Check');

@@ -63,7 +63,7 @@ my $perfile = $FIXED_TESTS_PER_FILE + scalar @mandatory + scalar @disallowed;
 plan tests => $perfile * scalar @tagpaths;
 
 my $profile = Lintian::Profile->new;
-$profile->load(undef, [$ENV{LINTIAN_BASE}]);
+$profile->load(undef, undef, 0);
 
 for my $tagpath (@tagpaths) {
 

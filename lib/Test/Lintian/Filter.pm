@@ -172,7 +172,7 @@ sub find_selected_lintian_testpaths {
     }
 
     my $profile = Lintian::Profile->new;
-    $profile->load(undef, [$ENV{LINTIAN_BASE}]);
+    $profile->load(undef, undef, 0);
 
     my @found;
     foreach my $suite (sort @LINTIAN_SUITES) {
@@ -312,7 +312,7 @@ sub find_all_tags {
       unless $desc->declares('Check');
 
     my $profile = Lintian::Profile->new;
-    $profile->load(undef, [$ENV{LINTIAN_BASE}]);
+    $profile->load(undef, undef, 0);
 
     my @check_names = $desc->trimmed_list('Check');
     my @unknown
