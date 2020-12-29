@@ -49,10 +49,9 @@ use File::Copy;
 use File::Find::Rule;
 use File::stat;
 use Getopt::Long;
-use IO::Async::Function;
-use IO::Async::Loop;
 use IPC::Run3;
 use List::Compare;
+use MCE::Loop;
 use Path::Tiny;
 use Time::Duration;
 use Time::Moment;
@@ -60,7 +59,7 @@ use Time::Piece;
 use Try::Tiny;
 use Unicode::UTF8 qw(encode_utf8 decode_utf8);
 
-use Lintian::IO::Async qw(safe_qx);
+use Lintian::IPC::Run3 qw(safe_qx);
 
 use Test::Lintian::Build qw(build_subject);
 use Test::Lintian::ConfigFile qw(read_config);
@@ -258,183 +257,52 @@ for my $folder (@obsoletesources, @obsoletepackages) {
 
 $ENV{PERL_PATH_TINY_NO_FLOCK} =1;
 
-my $prepare = IO::Async::Function->new(
-    code => sub {
-        my ($specpath) = @_;
-
-        # label process
-        $0 = "Lintian prepare test: $specpath";
-
-        # calculate destination
-        my $relative = path($specpath)->parent->relative("$testset/recipes");
-        my $sourcepath = $relative->absolute($sourceroot)->stringify;
-        my $buildpath = $relative->absolute($buildroot)->relative->stringify;
-
-        my $error;
-
-        # capture output
-        my $log_bytes =capture_merged {
-
-            try {
-
-                # remove destination
-                path($sourcepath)->remove_tree
-                  if -e $sourcepath;
-
-                # prepare
-                prepare($specpath, $sourcepath, $testset, $force_rebuild);
-
-            }catch {
-                # catch any error
-                $error = $_;
-            };
-        };
-
-        my $log = decode_utf8($log_bytes);
-
-        # save log;
-        my $logfile = "$sourcepath.log";
-        path($logfile)->spew_utf8($log) if $log;
-
-        # print something if there was an error
-        die encode_utf8(
-            ($log // $EMPTY) . "Preparation failed for $specpath: $error")
-          if $error;
-
-        return $specpath;
-    },
+$SIG{INT} = sub { MCE::Loop->finish; die encode_utf8("Caught a sigint $!") };
+my $mce_loop = MCE::Loop->init(
     max_workers => $numjobs,
-    max_worker_calls => 1,
+    chunk_size => 1,
+    flush_stdout => 1,
+    flush_stderr => 1,
 );
 
-my $loop = IO::Async::Loop->new;
-$loop->add($prepare);
+my @failedprep;
+mce_loop {
+    my ($mce, $chunk_ref, $chunk_id) = @_;
 
-$SIG{INT} = sub { $prepare->stop; die encode_utf8("Caught a sigint $!") };
-my @preptasks = map {$prepare->call(args => [$_])} sort @prepqueue;
+    prepare_build($mce, $_, \@failedprep);
+}
+sort @prepqueue;
 
-my $allprepared = Future->wait_all(@preptasks);
-
-$loop->await($allprepared);
-
-my @failedprep = $allprepared->failed_futures;
 if (@failedprep) {
     say encode_utf8($EMPTY);
     say encode_utf8('Failed preparation tasks:');
-    say encode_utf8($NEWLINE . $_->failure) for @failedprep;
+    say encode_utf8($NEWLINE . $_) for @failedprep;
+
+    MCE::Loop->finish;
     exit 1;
+
 } else {
     say encode_utf8('Package sources are ready.');
 }
 
 say encode_utf8($EMPTY);
 
-my $build = IO::Async::Function->new(
-    code => sub {
-        my ($specpath, $position, $total) = @_;
+my @failedbuilds;
+mce_loop {
+    my ($mce, $chunk_ref, $chunk_id) = @_;
 
-        # set a predictable locale
-        $ENV{'LC_ALL'} = 'C';
+    build_package($mce, $_, \@failedbuilds, $chunk_id, scalar @specpaths);
+}
+sort @specpaths;
 
-        # many tests create files via debian/rules
-        umask $WIDELY_READABLE;
+$SIG{INT} = 'DEFAULT';
+MCE::Loop->finish;
 
-        # get destination
-        my $relative = path($specpath)->parent->relative("$testset/recipes");
-        my $sourcepath = $relative->absolute($sourceroot)->relative->stringify;
-        my $buildpath = $relative->absolute($buildroot)->relative->stringify;
-
-        my $savedir = getcwd;
-        chdir $sourcepath;
-
-        my $sha1sums_bytes;
-        run3('find . -type f -print0 | sort -z | xargs -0 sha1sum',
-            \undef, \$sha1sums_bytes);
-
-        chdir $savedir;
-
-        my $sha1sums = decode_utf8($sha1sums_bytes);
-
-        my $checksum_path = "$buildpath/source-files.sha1sums";
-        if (-r $checksum_path) {
-            my $previous = path($checksum_path)->slurp_utf8;
-
-            # only rebuild if needed
-            return
-              if $sha1sums eq $previous;
-        }
-
-        $0 = "Lintian build test: $specpath [$position/$total]";
-        say encode_utf8("Building in $buildpath [$position/$total]");
-
-        path($buildpath)->remove_tree
-          if -e $buildpath;
-        path($buildpath)->mkpath;
-
-        # read dynamic file names
-        my $runfiles = "$sourcepath/files";
-        my $files = read_config($runfiles);
-
-        my $error;
-
-        my $log_bytes = capture_merged {
-
-            try {
-                # call runner
-                build_subject($sourcepath, $buildpath);
-            }catch {
-                # catch any error
-                $error = $_;
-            };
-        };
-
-        my $log = decode_utf8($log_bytes);
-
-        # delete old runner log
-        my $betterlogpath= $buildpath . $SLASH . $files->unfolded_value('Log');
-        unlink $betterlogpath if -e $betterlogpath;
-
-       # move the early log for directory preparation to position of runner log
-        my $earlylogpath = "$sourcepath.log";
-        move($earlylogpath, $betterlogpath) if -e $earlylogpath;
-
-        # append runner log to population log
-        path($betterlogpath)->append_utf8($log) if length $log;
-
-        # add error if there was one
-        path($betterlogpath)->append_utf8($error) if length $error;
-
-        path($checksum_path)->spew_utf8($sha1sums)
-          unless length $error;
-
-        # print log and die on error
-        die encode_utf8(
-            ($log // $EMPTY) . "Builder died for $buildpath: $error")
-          if length $error;
-
-        return $specpath;
-    },
-    max_workers => $numjobs,
-    max_worker_calls => 1,
-);
-
-$loop->add($build);
-
-$SIG{INT} = sub { $build->stop; die encode_utf8("Caught a sigint $!") };
-
-my $counter;
-my @buildtasks= map {$build->call(args => [$_, ++$counter, scalar @specpaths])}
-  sort @specpaths;
-
-my $allbuilt = Future->wait_all(@buildtasks);
-
-$loop->await($allbuilt);
-
-my @failedbuilds = $allbuilt->failed_futures;
 if (@failedbuilds) {
     say encode_utf8($EMPTY);
     say encode_utf8('Failed build tasks:');
-    say encode_utf8($NEWLINE . $_->failure) for @failedbuilds;
+    say encode_utf8($NEWLINE . $_) for @failedbuilds;
+
     exit 1;
 } else {
     say encode_utf8('All test packages are up to date.');
@@ -451,6 +319,136 @@ say encode_utf8($EMPTY);
 exit 0;
 
 # program is done
+
+sub prepare_build {
+    my ($mce, $specpath, $failures) = @_;
+
+    # label process
+    $0 = "Lintian prepare test: $specpath";
+
+    # calculate destination
+    my $relative = path($specpath)->parent->relative("$testset/recipes");
+    my $sourcepath = $relative->absolute($sourceroot)->stringify;
+    my $buildpath = $relative->absolute($buildroot)->relative->stringify;
+
+    my $error;
+
+    # capture output
+    my $log_bytes =capture_merged {
+
+        try {
+
+            # remove destination
+            path($sourcepath)->remove_tree
+              if -e $sourcepath;
+
+            # prepare
+            prepare($specpath, $sourcepath, $testset, $force_rebuild);
+
+        }catch {
+            # catch any error
+            $error = $_;
+        };
+    };
+
+    my $log = decode_utf8($log_bytes);
+
+    # save log;
+    my $logfile = "$sourcepath.log";
+    path($logfile)->spew_utf8($log) if $log;
+
+    # print something if there was an error
+    push(
+        @{$failures},
+        ($log // $EMPTY) . "Preparation failed for $specpath: $error"
+    )if $error;
+
+    return $specpath;
+}
+
+sub build_package {
+    my ($mce, $specpath, $failures, $position, $total) = @_;
+
+    # set a predictable locale
+    $ENV{'LC_ALL'} = 'C';
+
+    # many tests create files via debian/rules
+    umask $WIDELY_READABLE;
+
+    # get destination
+    my $relative = path($specpath)->parent->relative("$testset/recipes");
+    my $sourcepath = $relative->absolute($sourceroot)->relative->stringify;
+    my $buildpath = $relative->absolute($buildroot)->relative->stringify;
+
+    my $savedir = getcwd;
+    chdir $sourcepath;
+
+    my $sha1sums_bytes;
+    run3('find . -type f -print0 | sort -z | xargs -0 sha1sum',
+        \undef, \$sha1sums_bytes);
+
+    chdir $savedir;
+
+    my $sha1sums = decode_utf8($sha1sums_bytes);
+
+    my $checksum_path = "$buildpath/source-files.sha1sums";
+    if (-r $checksum_path) {
+        my $previous = path($checksum_path)->slurp_utf8;
+
+        # only rebuild if needed
+        return $specpath
+          if $sha1sums eq $previous;
+    }
+
+    $0 = "Lintian build test: $specpath [$position/$total]";
+    say encode_utf8("Building in $buildpath [$position/$total]");
+
+    path($buildpath)->remove_tree
+      if -e $buildpath;
+    path($buildpath)->mkpath;
+
+    # read dynamic file names
+    my $runfiles = "$sourcepath/files";
+    my $files = read_config($runfiles);
+
+    my $error;
+
+    my $log_bytes = capture_merged {
+
+        try {
+            # call runner
+            build_subject($sourcepath, $buildpath);
+        }catch {
+            # catch any error
+            $error = $_;
+        };
+    };
+
+    my $log = decode_utf8($log_bytes);
+
+    # delete old runner log
+    my $betterlogpath= $buildpath . $SLASH . $files->unfolded_value('Log');
+    unlink $betterlogpath if -e $betterlogpath;
+
+    # move the early log for directory preparation to position of runner log
+    my $earlylogpath = "$sourcepath.log";
+    move($earlylogpath, $betterlogpath) if -e $earlylogpath;
+
+    # append runner log to population log
+    path($betterlogpath)->append_utf8($log) if length $log;
+
+    # add error if there was one
+    path($betterlogpath)->append_utf8($error) if length $error;
+
+    path($checksum_path)->spew_utf8($sha1sums)
+      unless length $error;
+
+    # print log and die on error
+    push(@{$failures},($log // $EMPTY) . "Builder died for $buildpath: $error")
+      if length $error;
+
+    return $specpath;
+}
 
 =item default_parallel
 
