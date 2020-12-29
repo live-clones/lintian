@@ -206,7 +206,8 @@ sub process {
       = sub { warn encode_utf8("Warning in group $groupname: $_[0]") };
 
     $self->processing_start(gmtime->datetime . 'Z');
-    $OUTPUT->v_msg('Starting on group ' . $self->name);
+    say {*STDERR} encode_utf8('Starting on group ' . $self->name)
+      if $option->{debug};
     my $group_timer = [gettimeofday];
 
     my $success = 1;
@@ -220,12 +221,12 @@ sub process {
         say {*STDERR}
           encode_utf8(
             'Base directory for processable: '. $processable->basedir)
-          if $option->{debug} >= 1;
+          if $option->{debug};
 
         unless ($option->{'no-override'}) {
 
             say {*STDERR} encode_utf8('Loading overrides file (if any) ...')
-              if $option->{debug} >= 1;
+              if $option->{debug};
 
             eval {$declared_overrides = $processable->overrides;};
             if (my $err = $@) {
@@ -309,7 +310,7 @@ sub process {
             my $timer = [gettimeofday];
             my $procid = $processable->identifier;
             say {*STDERR} encode_utf8("Running check: $name on $procid  ...")
-              if $option->{debug} >= 1;
+              if $option->{debug};
 
             my $absolute = $self->profile->check_path_by_name->{$name};
             require $absolute;
@@ -340,7 +341,7 @@ sub process {
 
             my $tres = sprintf('%.3fs', $raw_res);
             say {*STDERR} encode_utf8("Check $name for $procid done ($tres)")
-              if $option->{debug} >= 1;
+              if $option->{debug};
             say {*STDERR} encode_utf8("$procid,check/$name,$raw_res")
               if $option->{'perf-output'};
         }
@@ -425,7 +426,7 @@ sub process {
     my $tres = sprintf('%.3fs', $raw_res);
     say {*STDERR}
       encode_utf8('Checking all of group ' . $self->name . " done ($tres)")
-      if $option->{debug} >= 1;
+      if $option->{debug};
     say {*STDERR} encode_utf8($self->name . ",total-group-check,$raw_res")
       if $option->{'perf-output'};
 
@@ -472,7 +473,7 @@ sub clean_lab {
 
         my $proc_id = $processable->identifier;
         say {*STDERR} encode_utf8("Auto removing: $proc_id ...")
-          if $option->{debug} >= 1;
+          if $option->{debug};
 
         my $each = [gettimeofday];
 
@@ -480,7 +481,7 @@ sub clean_lab {
 
         my $raw_res = tv_interval($each);
         say {*STDERR} encode_utf8("Auto removing: $proc_id done (${raw_res}s)")
-          if $option->{debug} >= 1;
+          if $option->{debug};
         say {*STDERR} encode_utf8("$proc_id,auto-remove entry,$raw_res")
           if $option->{'perf-output'};
     }
@@ -490,7 +491,7 @@ sub clean_lab {
     say {*STDERR}
       encode_utf8(
         'Auto-removal all for group ' . $self->name . " done ($tres)")
-      if $option->{debug} >= 1;
+      if $option->{debug};
     say {*STDERR}encode_utf8($self->name . ",total-group-auto-remove,$raw_res")
       if $option->{'perf-output'};
 

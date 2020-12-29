@@ -56,7 +56,6 @@ use Unicode::UTF8 qw(encode_utf8 decode_utf8);
 use Lintian::Deb822::Parser qw(parse_dpkg_control_string);
 use Lintian::Inspect::Changelog;
 use Lintian::IPC::Run3 qw(safe_qx);
-use Lintian::Output::EWI;
 use Lintian::Pool;
 use Lintian::Profile;
 use Lintian::Version qw(guess_version);
@@ -144,7 +143,6 @@ my @getoptions = qw(
   include-dir=s@
   info|i
   jobs|j=i
-  keep-lab
   no-cfg
   no-override|o
   no-tag-display-limit
@@ -481,23 +479,23 @@ for my $var (@ENV_FROM_CONFIG) {
     $selected{$var} = $ENV{$var} if $ENV{$var} && !defined $selected{$var};
 }
 
-my $OUTPUT = Lintian::Output::EWI->new;
+my $OUTPUT;
 
 my %output
   = map { split(/=/) } split(/,/, ($selected{'exp-output'} // $EMPTY));
-for (keys %output) {
-    if ($_ eq 'format') {
-        if ($output{$_} eq 'html') {
-            require Lintian::Output::HTML;
-            $OUTPUT = Lintian::Output::HTML->new;
-        } elsif ($output{$_} eq 'json') {
-            require Lintian::Output::JSON;
-            $OUTPUT = Lintian::Output::JSON->new;
-        } elsif ($output{$_} eq 'universal') {
-            require Lintian::Output::Universal;
-            $OUTPUT = Lintian::Output::Universal->new;
-        }
-    }
+$selected{'output-format'} = lc($output{format} // 'ewi');
+if ($selected{'output-format'} eq 'html') {
+    require Lintian::Output::HTML;
+    $OUTPUT = Lintian::Output::HTML->new;
+} elsif ($selected{'output-format'} eq 'json') {
+    require Lintian::Output::JSON;
+    $OUTPUT = Lintian::Output::JSON->new;
+} elsif ($selected{'output-format'} eq 'universal') {
+    require Lintian::Output::Universal;
+    $OUTPUT = Lintian::Output::Universal->new;
+} else {
+    require Lintian::Output::EWI;
+    $OUTPUT = Lintian::Output::EWI->new;
 }
 
 my $PROFILE = Lintian::Profile->new;
@@ -507,7 +505,8 @@ $PROFILE->load(
     $selected{profile},
     $selected{'include-dir'},
     !$command_line{'no-user-dirs'});
-$OUTPUT->v_msg('Using profile ' . $PROFILE->name . $DOT);
+say {*STDERR} encode_utf8('Using profile ' . $PROFILE->name . $DOT)
+  if $selected{debug};
 
 my $envlc = List::Compare->new([keys %config], \@ENV_FROM_CONFIG);
 my @from_file = $envlc->get_intersection;
@@ -524,7 +523,7 @@ if (@not_yet) {
     say {*STDERR}
       encode_utf8('Setting environment variables from configuration file: '
           . join($SPACE, @not_yet))
-      if $selected{debug} >= 1;
+      if $selected{debug};
 }
 $ENV{$_} = $config{$_} for @not_yet;
 
@@ -556,8 +555,6 @@ if ($selected{debug}) {
     };
 }
 
-$OUTPUT->verbosity($selected{verbose});
-
 $OUTPUT->color(1)
   if $selected{color} eq 'always'
   || ($selected{color} eq 'auto'
@@ -584,7 +581,7 @@ unless (@ARGV || $selected{'packages-from-file'}) {
       unless $ok;
 }
 
-if ($selected{debug} >= 1) {
+if ($selected{debug}) {
     say {*STDERR} encode_utf8("Lintian v$ENV{LINTIAN_VERSION}");
     say {*STDERR} encode_utf8("Lintian root directory: $ENV{LINTIAN_BASE}");
     say {*STDERR} encode_utf8("Configuration file: $LINTIAN_CFG");
@@ -727,11 +724,6 @@ for my $path (@subjects) {
         warn encode_utf8("Skipping $path: $@\n");
         $exit_code = 1;
     }
-}
-
-if ($pool->empty) {
-    $OUTPUT->v_msg('No packages selected.');
-    exit $exit_code;
 }
 
 $pool->process($PROFILE, \$exit_code, \%selected, $OUTPUT);

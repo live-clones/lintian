@@ -71,14 +71,6 @@ Whether to show the description of a tag when printing it.
 
 Get/Set the number of times a tag is emitted per processable.
 
-=item verbosity
-
-Determine how verbose the output should be.  "0" is the default value
-(tags and msg only), "-1" is quiet (tags only) and "1" is verbose
-(tags, msg and v_msg).
-
-=item C<delimiter>
-
 =back
 
 =cut
@@ -100,62 +92,8 @@ has colors => (
 has proc_id2tag_count => (is => 'rw', default => sub { {} });
 has tag_display_limit => (is => 'rw', default => 4);
 has tty_hyperlinks => (is => 'rw', default => 0);
-has verbosity => (is => 'rw', default => 0);
 
 has showdescription => (is => 'rw', default => sub { {} });
-
-has delimiter => (is => 'rw', default => '----');
-
-=head1 CLASS/INSTANCE METHODS
-
-These methods can be used both with and without an object.  If no object
-is given, they will fall back to the $Lintian::Output::GLOBAL object.
-
-=over 4
-
-=item C<msg(@args)>
-
-Will output the strings given in @args, one per line, each line prefixed
-with 'N: '.  Will do nothing if verbosity is less than 0.
-
-=item C<v_msg(@args)>
-
-Will output the strings given in @args, one per line, each line prefixed
-with 'N: '.  Will do nothing unless verbosity is greater than 0.
-
-=item C<debug_msg($level, @args)>
-
-$level should be a positive integer.
-
-Will output the strings given in @args, one per line, each line prefixed
-with 'N: '.  Will do nothing unless debug is set to a positive integer
->= $level.
-
-=cut
-
-sub msg {
-    my ($self, @args) = @_;
-
-    return
-      if $self->verbosity < 0;
-
-    say encode_utf8("N: $_") for @args;
-
-    return;
-}
-
-sub v_msg {
-    my ($self, @args) = @_;
-
-    return
-      unless $self->verbosity;
-
-    say encode_utf8("N: $_") for @args;
-
-    return;
-}
-
-=back
 
 =head1 SEE ALSO
 

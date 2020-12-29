@@ -50,18 +50,6 @@ Provides JSON hint output.
 
 =over 4
 
-=item BUILD
-
-=cut
-
-sub BUILD {
-    my ($self, $args) = @_;
-
-    $self->delimiter($EMPTY);
-
-    return;
-}
-
 =item issue_hints
 
 Print all hints passed in array. A separate arguments with processables

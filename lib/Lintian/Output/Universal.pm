@@ -95,15 +95,6 @@ sub issue_hints {
         $object = 'file'
           if $processable->type eq 'changes';
 
-        $self->v_msg(
-            $self->delimiter,
-            'Processing '. $processable->type. " $object ". $processable->name,
-            '(version '
-              . $processable->version
-              . ', arch '
-              . $processable->architecture . ') ...'
-        );
-
         my @subset = @{$hintlist{$processable} // []};
 
         for my $hint (@subset) {

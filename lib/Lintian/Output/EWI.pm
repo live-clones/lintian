@@ -176,10 +176,9 @@ sub print_hint {
         $output .= $text;
     }
 
-    my $override = $hint->override;
-    if ($override && @{ $override->{comments} }) {
-
-        $self->msg($self->_quote_print($_))for @{ $override->{comments} };
+    if ($hint->override) {
+        say encode_utf8('N: ' . $self->_quote_print($_))
+          for @{$hint->override->{comments}};
     }
 
     my $type = $EMPTY;
