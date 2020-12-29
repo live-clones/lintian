@@ -1,0 +1,63 @@
+#!/usr/bin/perl
+
+# Copyright © 2020 Felix Lechner
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+# The package libconfig-model-dpkg-perl is the only known and intended
+# user of this script. It was written in an attempt to further the
+# resolution of Bug#968011 and Bug#968000 an will go away soon.
+
+# PLEASE DO NOT USE THIS SCRIPT. YOU ARE USING AN UNSUPPORTED FEATURE.
+
+use v5.20;
+use warnings;
+use utf8;
+
+use Cwd qw(realpath);
+use File::Basename qw(dirname);
+use Unicode::UTF8 qw(encode_utf8);
+
+# neither Path::This nor lib::relative are in Debian
+use constant THISFILE => realpath __FILE__;
+use constant THISDIR => dirname realpath __FILE__;
+
+# use Lintian modules that belong to this program
+use lib THISDIR . '/../lib';
+
+use Lintian::Profile;
+
+$ENV{LINTIAN_BASE} = realpath(THISDIR . '/..');
+
+my $profile = Lintian::Profile->new;
+$profile->load;
+
+my $releases = $profile->policy_releases;
+
+my $version = $releases->latest_version;
+die encode_utf8('Could not get latest policy version.')
+  unless defined $version;
+
+say encode_utf8($version);
+
+exit;
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et
