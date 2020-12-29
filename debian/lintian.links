@@ -5,3 +5,6 @@ usr/share/lintian/bin/lintian-annotate-hints usr/bin/lintian-info
 usr/share/man/man1/lintian-annotate-hints.1.gz usr/share/man/man1/lintian-info.1.gz
 usr/share/lintian/bin/spellintian usr/bin/spellintian
 usr/share/doc/lintian/lintian.rst usr/share/doc/lintian/lintian.txt
+# needed to find our checks; it's the short path used by users
+# maybe profiles should also look in ./lib/Lintian/Check
+usr/share/lintian/lib/Lintian/Check usr/share/lintian/checks
