@@ -17,6 +17,10 @@ use Lintian::Deb822::File;
 const my $EMPTY => q{};
 const my $TESTS_PER_TAG => 3;
 
+# allow commas until all third-party profiles present in Lintian
+# installations, such as dpkg/main.profile, have been converted
+const my $FIELD_SEPARATOR => qr/ \s+ | \s* , \s* /sx;
+
 my $known_tests = 0;
 
 my $root = $ENV{'LINTIAN_BASE'} // q{.};
@@ -73,7 +77,8 @@ for my $profile (@profilepaths) {
     my $deb822 = Lintian::Deb822::File->new;
     my ($header, @sections) = $deb822->read_file($profile);
 
-    my @checks = $header->trimmed_list('Enable-Tags-From-Check');
+    my @checks
+      = $header->trimmed_list('Enable-Tags-From-Check', $FIELD_SEPARATOR);
     for my $check (@checks) {
         ok(exists $CHECKS{$check}, "Check $check exists in profile $profile");
 
@@ -81,7 +86,7 @@ for my $profile (@profilepaths) {
         $TAGS{$_}++ for @{$CHECKS{$check}};
     }
 
-    my @tags = $header->trimmed_list('Enable-Tags');
+    my @tags = $header->trimmed_list('Enable-Tags', $FIELD_SEPARATOR);
     for my $tag (@tags) {
         ok(exists $TAGS{$tag}, "Tag $tag exists in profile $profile");
 
@@ -89,18 +94,19 @@ for my $profile (@profilepaths) {
         $TAGS{$tag}++;
     }
 
-    my @disabled_checks = $header->trimmed_list('Disable-Tags-From-Check');
+    my @disabled_checks
+      = $header->trimmed_list('Disable-Tags-From-Check', $FIELD_SEPARATOR);
     ok(exists $CHECKS{$_}, "Disabled check $_ exists in profile $profile")
       for @disabled_checks;
 
-    my @disabled_tags = $header->trimmed_list('Disable-Tags');
+    my @disabled_tags= $header->trimmed_list('Disable-Tags', $FIELD_SEPARATOR);
     ok(exists $TAGS{$_}, "Tag $_ exists in profile $profile")
       for @disabled_tags;
 
     $known_tests += @checks + @tags + @disabled_checks + @disabled_tags;
 
     for my $section (@sections) {
-        my @sectiontags = $section->trimmed_list('Tags');
+        my @sectiontags = $section->trimmed_list('Tags', $FIELD_SEPARATOR);
         ok(exists $TAGS{$_},
             "Tag $_ in section $section exists in profile $profile")
           for @sectiontags;
