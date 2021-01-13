@@ -247,14 +247,32 @@ sub source {
                   if $latest_entry->Changes
                   =~ /^\s*\*\s+new\s+upstream\s+(?:\S+\s+)?release\b/im;
 
-                my $latest = $latest_version->maintainer_revision;
-                my $previous = $previous_version->maintainer_revision;
+                my $non_consecutive = 0;
+
+                $non_consecutive = 1
+                  if !length $latest_version->source_nmu
+                  && $latest_version->maintainer_revision =~ /^\d+$/
+                  && $previous_version->maintainer_revision =~ /^\d+$/
+                  && $latest_version->maintainer_revision
+                  != $previous_version->maintainer_revision + 1;
+
+                $non_consecutive = 1
+                  if $latest_version->maintainer_revision eq
+                  $previous_version->maintainer_revision
+                  && $latest_version->source_nmu =~ /^\d+$/
+                  && $previous_version->source_nmu =~ /^\d+$/
+                  && $latest_version->source_nmu
+                  != $previous_version->source_nmu + 1;
+
+                $non_consecutive = 1
+                  if $latest_version->source_nmu =~ /^\d+$/
+                  && !length $previous_version->source_nmu
+                  && $latest_version->source_nmu != 1;
+
                 $self->hint('non-consecutive-debian-revision',
                         $previous_version->literal . ' -> '
                       . $latest_version->literal)
-                  if $previous =~ /^\d+$/
-                  and $latest =~ /^\d+$/
-                  and $latest != $previous + 1;
+                  if $non_consecutive;
             }
 
             if ($latest_version->epoch ne $previous_version->epoch) {
