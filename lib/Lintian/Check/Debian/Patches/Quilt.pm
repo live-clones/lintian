@@ -158,11 +158,10 @@ sub source {
             }
             close($patch_fd);
 
-            $self->hint('quilt-patch-missing-description', $file->basename)
+            $self->hint('quilt-patch-missing-description', $file->name)
               unless length $description;
 
-            $self->hint('quilt-patch-using-template-description',
-                $file->basename)
+            $self->hint('quilt-patch-using-template-description', $file->name)
               if $has_template_description;
 
             $self->check_patch($file, $description);
@@ -244,7 +243,7 @@ sub check_patch {
 
     my @debian_files = ($output =~ m{^((?:\./)?debian/.*)$}ms);
 
-    $self->hint('patch-modifying-debian-files', $patch_file->basename, $_)
+    $self->hint('patch-modifying-debian-files', $patch_file->name, $_)
       for @debian_files;
 
     return;
