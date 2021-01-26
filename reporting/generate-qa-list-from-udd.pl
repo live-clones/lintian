@@ -48,7 +48,7 @@ unless (
 die('Please use -h for usage information.')
   if @ARGV > 0;
 
-my $source_selector = (length $select ? "s.source=\'$select\'" : 1);
+my $source_selector = (length $select ? "s.source=\'$select\'" : 'true');
 
 my $source_subquery =<<EOSTR;
 SELECT
@@ -106,7 +106,7 @@ GROUP BY
     _.information
 EOSTR
 
-my $deb_selector = (length $select ? "p.source=\'$select\'" : 1);
+my $deb_selector = (length $select ? "p.source=\'$select\'" : 'true');
 
 my $deb_subquery =<<EOSTR;
 SELECT
