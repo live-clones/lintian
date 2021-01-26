@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: script-in-root-bin
+Description: File installed in /bin
