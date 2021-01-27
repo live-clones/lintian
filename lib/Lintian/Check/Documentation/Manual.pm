@@ -580,6 +580,11 @@ sub breakdown_installed_files {
     my $local = List::Compare->new(\@related_commands, [keys %local_manpages]);
     my @surplus_manpages = $local->get_Ronly;
 
+    # filter out sub commands, underscore for libreswan; see Bug#947258
+    for my $command (@related_commands) {
+        @surplus_manpages = grep { !/^$command(?:\b|_)/ } @surplus_manpages;
+    }
+
     for my $manpage (map { @{$local_manpages{$_} // []} } @surplus_manpages) {
 
         my $file = $manpage->{file};
