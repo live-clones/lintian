@@ -133,30 +133,29 @@ sub visit_installed_files {
         $self->hint('compressed-documentation', $file->name);
     }
 
-    if ($file->is_file) {
+    if ($file->is_file
+        && any { $file->basename =~ m{$_}xi } @DOCUMENTATION_FILE_REGEXES) {
 
-        unless (
-               $file->name =~ m{^etc/}
-            || $file->name =~ m{^usr/share/(?:doc|help)/}
-            # No need for dh-r packages to automatically
-            # create overrides if we just allow them all to
-            # begin with.
-            || $file->dirname =~ 'usr/lib/R/site-library/'
-            # SNMP MIB files, see Bug#971427
-            || $file->dirname eq 'usr/share/snmp/mibs/'
-            # see Bug#904852
-            || $file->dirname =~ m{templates?(?:\.d)?/}
-            || (   $file->basename =~ m{\.txt$}
-                && $file->dirname =~ m{^usr/lib/python3/.*\.egg-info/}s)
-            || (   $file->basename =~ m{^README}xi
-                && $file->bytes =~ m{this directory}xi)
-        ) {
-
-            $self->hint('package-contains-documentation-outside-usr-share-doc',
-                $file->name)
-              if any { $file->basename =~ m{$_}xi }
-            @DOCUMENTATION_FILE_REGEXES;
-        }
+        $self->hint('package-contains-documentation-outside-usr-share-doc',
+            $file->name)
+          unless $file->name =~ m{^etc/}
+          || $file->name =~ m{^usr/share/(?:doc|help)/}
+          # see Bug#981268
+          # usr/lib/python3/dist-packages/*.dist-info/entry_points.txt
+          || $file->name =~ m{^ usr/lib/python3/dist-packages/
+                              .+ [.] dist-info/entry_points.txt $}sx
+          # No need for dh-r packages to automatically
+          # create overrides if we just allow them all to
+          # begin with.
+          || $file->dirname =~ 'usr/lib/R/site-library/'
+          # SNMP MIB files, see Bug#971427
+          || $file->dirname eq 'usr/share/snmp/mibs/'
+          # see Bug#904852
+          || $file->dirname =~ m{templates?(?:\.d)?/}
+          || ( $file->basename =~ m{\.txt$}
+            && $file->dirname =~ m{^usr/lib/python3/.*\.egg-info/}s)
+          || ( $file->basename =~ m{^README}xi
+            && $file->bytes =~ m{this directory}xi);
     }
 
     if ($file->name =~ m{^usr/share/doc/\S}) {
