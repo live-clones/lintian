@@ -64,19 +64,22 @@ sub source {
         }
 
         # Ensure all files referenced in debian/tests/pkg-js/files exist
-        $path
+        my $files
           = $processable->patched->resolve_path('debian/tests/pkg-js/files');
+        if (defined $files) {
 
-        my @files;
-        @files = path($path->unpacked_path)->lines
-          if defined $path;
+            my @patterns = path($files->unpacked_path)->lines;
 
-        # trim leading and trailing whitespace
-        s/^\s+|\s+$//g for @files;
+            # trim leading and trailing whitespace
+            s/^\s+|\s+$//g for @patterns;
 
-        my @notfound = grep { !$self->path_exists($_) } @files;
-        $self->hint('pkg-js-autopkgtest-file-does-not-exist', $_)for @notfound;
+            my @notfound = grep { !$self->path_exists($_) } @patterns;
+
+            $self->hint('pkg-js-autopkgtest-file-does-not-exist', $_)
+              for @notfound;
+        }
     }
+
     # debian/rules check
     my $droot = $processable->patched->resolve_path('debian/') or return;
     my $drules = $droot->child('rules') or return;
@@ -213,46 +216,15 @@ sub visit_installed_files {
 }
 
 sub path_exists {
-    my ($self, $expr) = @_;
+    my ($self, $expression) = @_;
 
-    my $processable = $self->processable;
+    # replace asterisks with proper regex wildcard
+    $expression =~ s{ [*] }{[^/]*}gsx;
 
-    # Split each line in path elements
-    my @strings = split(m{/}, $expr);
-    s/\*/.*/g for @strings;
-    s/^\.\*$/.*\\w.*/ for @strings;
+    return 1
+      if any { m{^ $expression /? $}sx }
+    @{$self->processable->patched->sorted_list};
 
-    my @elem = map { qr{^$_/?$} } grep { length } @strings;
-    my @dir = ($DOT);
-
-    # Follow directories
-  LOOP: while (my $re = shift @elem) {
-        foreach my $i (0 .. $#dir) {
-            my ($dir, @tmp);
-
-            next
-              unless
-              defined($dir = $processable->patched->resolve_path($dir[$i]));
-            next unless $dir->is_dir;
-            last LOOP
-              unless (
-                @tmp= map { $_->basename }
-                grep { $_->basename =~ $re } $dir->children
-              );
-
-            # Stop searching: at least one element found
-            return 1
-              unless @elem;
-
-            # If this is the last element of path, store current elements
-            my $pwd = $dir[$i];
-            $dir[$i] .= $SLASH . shift @tmp;
-
-            push @dir, map { "$pwd/$_" } @tmp if @tmp;
-        }
-    }
-
-    # No element found
     return 0;
 }
 
