@@ -117,7 +117,7 @@ sub source {
             my $command = $sections[0]->unfolded_value('Test-Command');
 
             $self->hint('no-op-testsuite')
-              if $command =~ m{(?:/bin/)?true};
+              if $command =~ m{^ \s* (?:/bin/)? true \s* $}sx;
         }
     }
 
