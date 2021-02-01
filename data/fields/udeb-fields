@@ -25,6 +25,7 @@ Origin
 Auto-Built-Package
 Build-Ids
 Built-Using
+X-Cargo-Built-Using
 
 # Special-case, original-maintainer is not ok in Debian, but we allow
 # it in any non-Debian profile by default.

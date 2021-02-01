@@ -1,3 +1,18 @@
+lintian (2.104.0) unstable; urgency=medium
+
+  [ Baptiste Beauplat ]
+    Recognize the recently-released Standards-Version 4.5.1 as a valid
+    policy version.
+
+  [ Sylvestre Ledru ]
+  * Accept field X-Cargo-Built-Using for installable packages; they are
+    used by Rust.
+
+  [ Paul Wise ]
+  * Add several spelling corrections.
+
+ -- Chris Lamb <lamby@debian.org>  Fri, 27 Nov 2020 09:20:48 +0000
+
 lintian (2.103.0~bpo10+1) buster-backports; urgency=medium
 
   * Rebuild for buster-backports.
