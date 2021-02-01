@@ -23,16 +23,11 @@ package Lintian::Check::Files::Architecture;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
-
-use Const::Fast;
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-const my $EMPTY => q{};
 
 has TRIPLETS => (
     is => 'rw',
@@ -43,33 +38,40 @@ has TRIPLETS => (
         return $self->profile->load_data('files/triplets', qr/\s++/);
     });
 
-has arch_dep_files => (is => 'rwp', default => 0);
+has depends_on_architecture => (is => 'rw', default => 0);
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
-    my $architecture = $self->processable->fields->value('Architecture');
+    # for directories
+    if ($item->name =~ m{^(?:usr/)?lib/([^/]+)/$}) {
 
-    if ($file->name =~ m{^(?:usr/)?lib/([^/]+)/$}) {
-        my $subdir = $1;
-        if ($self->TRIPLETS->recognizes($subdir)) {
+        my $potential_triplet = $1;
+
+        if ($self->TRIPLETS->recognizes($potential_triplet)) {
+
+            my $from_triplet = $self->TRIPLETS->value($potential_triplet);
 
             $self->hint('triplet-dir-and-architecture-mismatch',
-                $file->name, 'is for',$self->TRIPLETS->value($subdir))
-              unless ($architecture eq $self->TRIPLETS->value($subdir));
+                $item->name, 'is for', $from_triplet)
+              unless $from_triplet eq
+              $self->processable->fields->value('Architecture');
         }
     }
 
-    $self->_set_arch_dep_files(1)
-      if !$file->is_dir
-      && $file->name !~ m{^usr/share/}
-      && $file->file_info
-      && $file->file_info !~ m/\bASCII text\b/;
+    # for files
+    if ($item->dirname =~ m{^(?:usr)?/lib/([^/]+)/$}) {
 
-    if ($file->dirname =~ m{^(?:usr)?/lib/([^/]+)/$}) {
-        $self->_set_arch_dep_files(1)
-          if $self->TRIPLETS->recognizes($1 // $EMPTY);
+        my $potential_triplet = $1;
+
+        $self->depends_on_architecture(1)
+          if $self->TRIPLETS->recognizes($potential_triplet);
     }
+
+    $self->depends_on_architecture(1)
+      if $item->is_file
+      && $item->file_info !~ m/\bASCII text\b/
+      && $item->name !~ m{^usr/share/};
 
     return;
 }
@@ -77,16 +79,12 @@ sub visit_installed_files {
 sub breakdown_installed_files {
     my ($self) = @_;
 
-    my $architecture = $self->processable->fields->value('Architecture');
-
-    # check if package is empty
-    my $is_dummy = $self->processable->is_pkg_class('any-meta');
-
     $self->hint('package-contains-no-arch-dependent-files')
-      unless $is_dummy
-      || $self->arch_dep_files
-      || $architecture eq 'all'
-      || $self->processable->type eq 'udeb';
+      if !$self->depends_on_architecture
+      && $self->processable->fields->value('Architecture') ne 'all'
+      && $self->processable->type ne 'udeb'
+      && !$self->processable->is_transitional
+      && !$self->processable->is_meta_package;
 
     return;
 }

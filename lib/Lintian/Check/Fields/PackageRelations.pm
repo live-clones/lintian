@@ -245,10 +245,11 @@ sub installable {
                     && $is_dep_field);
 
                 $self->hint('depends-on-metapackage', "$field: $part_d_orig")
-                  if (  $KNOWN_METAPACKAGES->recognizes($d_pkg)
-                    and not $KNOWN_METAPACKAGES->recognizes($pkg)
-                    and not $processable->is_pkg_class('any-meta')
-                    and $is_dep_field);
+                  if ( $KNOWN_METAPACKAGES->recognizes($d_pkg)
+                    && !$KNOWN_METAPACKAGES->recognizes($pkg)
+                    && !$processable->is_transitional
+                    && !$processable->is_meta_package
+                    && $is_dep_field);
 
                 # diffutils is a special case since diff was
                 # renamed to diffutils, so a dependency on
@@ -272,7 +273,8 @@ sub installable {
                 $self->hint('depends-on-packaging-dev',$field)
                   if (($field =~ /^(?:Pre-)?Depends$/|| $field eq 'Recommends')
                     && $d_pkg eq 'packaging-dev'
-                    && !$processable->is_pkg_class('any-meta'));
+                    && !$processable->is_transitional
+                    && !$processable->is_meta_package);
 
                 $self->hint('needless-suggest-recommend-libservlet-java',
                     "$d_pkg")
@@ -323,11 +325,12 @@ sub installable {
                 $self->hint('binary-package-depends-on-toolchain-package',
                     "$field: $part_d_orig")
                   if $KNOWN_TOOLCHAIN->recognizes($d_pkg)
-                  and $is_dep_field
-                  and not $pkg =~ m/^dh-/
-                  and not $pkg =~ m/-(source|src)$/
-                  and not $processable->is_pkg_class('any-meta')
-                  and not $DH_ADDONS_VALUES{$pkg};
+                  && $is_dep_field
+                  && $pkg !~ /^dh-/
+                  && $pkg !~ /-(?:source|src)$/
+                  && !$processable->is_transitional
+                  && !$processable->is_meta_package
+                  && !$DH_ADDONS_VALUES{$pkg};
 
                 # default-jdk-doc must depend on openjdk-X-doc (or
                 # classpath-doc) to be useful; other packages
@@ -677,7 +680,7 @@ sub source {
         my $missing = 1;
         $missing = 0
           if $deps->matches($depregex, Lintian::Relation::VISIT_PRED_NAME);
-        if ($missing and $dbg_proc->is_pkg_class('transitional')) {
+        if ($missing && $dbg_proc->is_transitional) {
             # If it is a transitional package, allow it to depend
             # on another -dbg instead.
             $missing = 0

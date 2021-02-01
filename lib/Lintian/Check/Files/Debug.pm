@@ -37,7 +37,7 @@ sub visit_installed_files {
 
     if ($file->name =~ m{^usr/lib/debug/\S}) {
 
-        unless ($self->processable->is_pkg_class('debug')) {
+        unless ($self->processable->is_debug_package) {
 
             unless ($self->warned_debug_name) {
                 $self->hint('debug-suffix-not-dbg', $file->name);

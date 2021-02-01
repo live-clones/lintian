@@ -124,7 +124,7 @@ sub always {
           if $pkg !~ /-dbg(?:sym)?$/;
     }
 
-    if ($self->processable->is_pkg_class('transitional')) {
+    if ($self->processable->is_transitional) {
 
         my $priority = $self->processable->fields->unfolded_value('Priority');
 

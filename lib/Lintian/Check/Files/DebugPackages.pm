@@ -23,7 +23,6 @@ package Lintian::Check::Files::DebugPackages;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Moo;
 use namespace::clean;
@@ -33,14 +32,11 @@ with 'Lintian::Check';
 sub visit_installed_files {
     my ($self, $file) = @_;
 
-    my $processable = $self->processable;
-
-    if (   $file->is_file
-        && $file->name !~ /\.debug$/
-        && $processable->is_pkg_class('debug')
-        && $processable->is_pkg_class('auto-generated')) {
-        $self->hint('non-debug-file-in-debug-package', $file->name);
-    }
+    $self->hint('non-debug-file-in-debug-package', $file->name)
+      if $file->is_file
+      && $file->name !~ /\.debug$/
+      && $self->processable->is_debug_package
+      && $self->processable->is_auto_generated;
 
     return;
 }

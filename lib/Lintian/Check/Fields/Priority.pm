@@ -47,7 +47,7 @@ sub always {
     my $priority = $fields->unfolded_value('Priority');
 
     if ($self->processable->type eq 'source'
-        || !$self->processable->is_pkg_class('auto-generated')) {
+        || !$self->processable->is_auto_generated) {
 
         $self->hint('priority-extra-is-replaced-by-priority-optional')
           if $priority eq 'extra';

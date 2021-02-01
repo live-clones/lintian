@@ -42,14 +42,16 @@ has STANDARD_FILES => (
         return $self->profile->load_data('files/standard-files');
     });
 
-has is_dummy => (is => 'rwp');
-has is_empty => (is => 'rwp', default => 1);
+has is_dummy => (is => 'rw', default => 0);
+has is_empty => (is => 'rw', default => 1);
 
 sub setup_installed_files {
     my ($self) = @_;
 
     # check if package is empty
-    $self->_set_is_dummy($self->processable->is_pkg_class('any-meta'));
+    $self->is_dummy(1)
+      if $self->processable->is_transitional
+      || $self->processable->is_meta_package;
 
     return;
 }
@@ -84,13 +86,16 @@ sub visit_installed_files {
                              | bug/$ppkg(?:/(?:control|presubj|script))?
                              )\Z}xsm;
 
-        $self->_set_is_empty(0);
+        $self->is_empty(0);
+
         return;
     }
 
     # skip if /usr/share/doc/$pkg has files in a subdirectory
     if ($file->name =~ m{^usr/share/doc/\Q$pkg\E/[^/]+/}) {
-        $self->_set_is_empty(0);
+
+        $self->is_empty(0);
+
         return;
     }
 
@@ -120,7 +125,7 @@ sub visit_installed_files {
     return
       if $file->basename eq "buildinfo_${pkg_arch}.gz";
 
-    $self->_set_is_empty(0);
+    $self->is_empty(0);
 
     return;
 }

@@ -53,8 +53,8 @@ sub always {
 
     # Skip auto-generated packages (dbgsym)
     return
-      if ($type eq 'binary' or $type eq 'udeb')
-      and $processable->is_pkg_class('auto-generated');
+      if ($type eq 'binary' || $type eq 'udeb')
+      && $processable->is_auto_generated;
 
     if ($type eq 'binary' || $type eq 'source'){
         # Here we add length .deb / .dsc (in both cases +4)

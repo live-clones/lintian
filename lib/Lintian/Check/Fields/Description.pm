@@ -217,11 +217,14 @@ sub installable {
             # "debug symbols for pkg foo" is generally descriptive
             # enough.
             $self->hint('extended-description-is-empty')
-              if not $processable->is_pkg_class('debug');
+              unless $processable->is_debug_package;
+
         } elsif (@lines < 2 && $synopsis !~ /(?:dummy|transition)/i) {
             $self->hint('extended-description-is-probably-too-short')
-              unless $processable->is_pkg_class('any-meta')
-              or $pkg =~ m{-dbg\Z}xsm;
+              unless $processable->is_transitional
+              || $processable->is_meta_package
+              || $pkg =~ m{-dbg\Z}xsm;
+
         } elsif ($extended =~ /^ \.\s*\n|\n \.\s*\n \.\s*\n|\n \.\s*\n?$/) {
             $self->hint('extended-description-contains-empty-paragraph');
         }
@@ -259,7 +262,7 @@ sub installable {
             $synopsis,
             $self->spelling_tag_emitter(
                 'capitalization-error-in-description-synopsis')
-        )if not $processable->is_pkg_class('auto-generated');
+        ) unless $processable->is_auto_generated;
     }
 
     if ($extended) {

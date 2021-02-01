@@ -270,8 +270,9 @@ sub installable {
         }
     }
 
-    my $is_transitional = $processable->is_pkg_class('transitional');
-    if (!$has_public_jars && !$is_transitional && $pkg =~ /^lib[^\s,]+-java$/){
+    if (   !$has_public_jars
+        && !$self->processable->is_transitional
+        && $pkg =~ /^lib[^\s,]+-java$/){
 
         # Skip this if it installs a symlink in usr/share/java
         my $java_dir= $processable->installed->resolve_path('usr/share/java/');
