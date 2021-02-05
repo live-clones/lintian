@@ -181,6 +181,7 @@ Enable-Tags-From-Check:
  languages/python/bogus-prerequisites
  languages/python/dist-overrides
  languages/python/feedparser
+ languages/python/homepage
  languages/python/obsolete
  languages/python/scripts
  languages/r/site-library
