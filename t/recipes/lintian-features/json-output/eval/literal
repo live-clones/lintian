@@ -122,7 +122,7 @@
                      "severity" : "info"
                   },
                   {
-                     "context" : "usr/share/doc/json-output/examples/example #!/usr/bin/foo",
+                     "context" : "usr/share/doc/json-output/examples/example /usr/bin/foo",
                      "name" : "example-unusual-interpreter",
                      "severity" : "pedantic"
                   }

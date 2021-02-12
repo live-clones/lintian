@@ -1,12 +1,12 @@
-scripts-missing-dep (binary): wish-script-but-no-wish-dep usr/bin/wish-script #!/usr/bin/wish
-scripts-missing-dep (binary): tclsh-script-but-no-tclsh-dep usr/bin/tclsh-script #!/usr/bin/tclsh
-scripts-missing-dep (binary): ruby-script-but-no-ruby-dep usr/bin/ruby-script #!/usr/bin/ruby
-scripts-missing-dep (binary): python3-script-but-no-python3-dep usr/bin/python3-script #!/usr/bin/python3
-scripts-missing-dep (binary): python2-script-but-no-python2-dep usr/bin/python2-script #!/usr/bin/python2
-scripts-missing-dep (binary): php-script-but-no-php-cli-dep usr/bin/php-script #!/usr/bin/php
-scripts-missing-dep (binary): mawk-script-but-no-mawk-dep usr/bin/mawk-script #!/usr/bin/mawk
+scripts-missing-dep (binary): wish-script-but-no-wish-dep usr/bin/wish-script /usr/bin/wish
+scripts-missing-dep (binary): tclsh-script-but-no-tclsh-dep usr/bin/tclsh-script /usr/bin/tclsh
+scripts-missing-dep (binary): ruby-script-but-no-ruby-dep usr/bin/ruby-script /usr/bin/ruby
+scripts-missing-dep (binary): python3-script-but-no-python3-dep usr/bin/python3-script /usr/bin/python3
+scripts-missing-dep (binary): python2-script-but-no-python2-dep usr/bin/python2-script /usr/bin/python2
+scripts-missing-dep (binary): php-script-but-no-php-cli-dep usr/bin/php-script /usr/bin/php
+scripts-missing-dep (binary): mawk-script-but-no-mawk-dep usr/bin/mawk-script /usr/bin/mawk
 scripts-missing-dep (binary): maintainer-script-needs-depends-on-xfonts-utils postinst
 scripts-missing-dep (binary): maintainer-script-needs-depends-on-update-inetd postinst
 scripts-missing-dep (binary): maintainer-script-needs-depends-on-adduser postinst
 scripts-missing-dep (binary): maintainer-script-interpreter control/postinst /bin/sh
-scripts-missing-dep (binary): gawk-script-but-no-gawk-dep usr/bin/gawk-script #!/usr/bin/gawk
+scripts-missing-dep (binary): gawk-script-but-no-gawk-dep usr/bin/gawk-script /usr/bin/gawk

@@ -452,8 +452,7 @@ sub installable {
         }
 
         # Either they use an absolute path or they use '/usr/bin/env interp'.
-        $self->script_tag('interpreter-not-absolute', $filename,
-            "#!$interpreter")
+        $self->script_tag('interpreter-not-absolute', $filename,$interpreter)
           unless $is_absolute;
 
         my $bash_completion_regex
@@ -536,12 +535,12 @@ sub installable {
             my $expected = $interpreter_data->{folder} . $SLASH . $base;
 
             $self->script_tag(bad_interpreter_tag_name($expected),
-                $filename, "(#!$interpreter != $expected)")
+                $filename, "($interpreter != $expected)")
               unless $interpreter eq $expected || $calls_env;
 
         } elsif ($interpreter =~ m{^/usr/local/}) {
             $self->script_tag('interpreter-in-usr-local', $filename,
-                "#!$interpreter");
+                $interpreter);
         } elsif ($interpreter eq '/bin/env') {
             $self->script_tag('script-uses-bin-env', $filename);
         } elsif ($interpreter eq 'nodejs') {
@@ -551,7 +550,7 @@ sub installable {
             $interpreter_data = $self->INTERPRETERS->value('node');
         } elsif ($base =~ /^php/) {
             $self->script_tag('php-script-with-unusual-interpreter',
-                $filename, "$interpreter");
+                $filename, $interpreter);
 
             # This allows us to still perform the dependencies checks
             # below even when an unusual interpreter has been found.
@@ -571,8 +570,7 @@ sub installable {
                     }
                 }
             }
-            $self->script_tag('unusual-interpreter', $filename,
-                "#!$interpreter")
+            $self->script_tag('unusual-interpreter', $filename,$interpreter)
               unless $pinter;
 
         }
@@ -627,11 +625,11 @@ sub installable {
             if ($depends && !$all_parsed->implies($depends)) {
                 if ($base =~ /^php/) {
                     $self->hint('php-script-but-no-php-cli-dep',
-                        $filename,"#!$interpreter");
+                        $filename, $interpreter);
                 } elsif ($base =~ /^(python\d|ruby|[mg]awk)$/) {
                     $self->hint((
                         "$base-script-but-no-$base-dep",$filename,
-                        "#!$interpreter"
+                        $interpreter
                     ));
                 } elsif ($base eq 'csh' && $filename =~ m{^etc/csh/login\.d/}){
                     # Initialization files for csh.
@@ -647,10 +645,9 @@ sub installable {
                     && $all_parsed->matches(qr/^erlang-abi-[\d+\.]+$/)) {
                     # ABI-versioned virtual packages for erlang
                 } else {
-                    $self->hint(
-                        'missing-dep-for-interpreter', "$base => $depends",
-                        "($filename)", "#!$interpreter"
-                    );
+                    $self->hint('missing-dep-for-interpreter',
+                        "$base => $depends",
+                        "($filename)", $interpreter);
                 }
             }
         } elsif ($self->VERSIONED_INTERPRETERS->recognizes($base)) {
@@ -670,12 +667,11 @@ sub installable {
             unless ($all_parsed->implies($depends)) {
                 if ($base =~ /^(wish|tclsh)/) {
                     $self->hint("$1-script-but-no-$1-dep", $filename,
-                        "#!$interpreter");
+                        $interpreter);
                 } else {
-                    $self->hint(
-                        'missing-dep-for-interpreter', "$base => $depends",
-                        "($filename)", "#!$interpreter"
-                    );
+                    $self->hint('missing-dep-for-interpreter',
+                        "$base => $depends",
+                        "($filename)", $interpreter);
                 }
             }
         } else {
@@ -685,12 +681,11 @@ sub installable {
             unless ($all_parsed->implies($depends)) {
                 if ($base =~ /^(python|ruby)/) {
                     $self->hint("$1-script-but-no-$1-dep", $filename,
-                        "#!$interpreter");
+                        $interpreter);
                 } else {
-                    $self->hint(
-                        'missing-dep-for-interpreter', "$base => $depends",
-                        "($filename)", "#!$interpreter"
-                    );
+                    $self->hint('missing-dep-for-interpreter',
+                        "$base => $depends",
+                        "($filename)", $interpreter);
                 }
             }
         }
@@ -761,37 +756,36 @@ sub installable {
             next;
         }
 
-        $self->hint('interpreter-not-absolute', "control/$file",
-            "#!$interpreter")
+        $self->hint('interpreter-not-absolute', "control/$file",$interpreter)
           unless ($interpreter =~ m{^/});
 
         if ($interpreter =~ m{^/usr/local/}) {
             $self->hint('control-interpreter-in-usr-local',
-                "control/$file","#!$interpreter");
+                "control/$file", $interpreter);
         } elsif ($base eq 'sh' or $base eq 'bash' or $base eq 'perl') {
             my $expected
               = ($self->INTERPRETERS->value($base))->{folder} . $SLASH . $base;
             $self->hint(
                 bad_interpreter_tag_name($expected),
-                "#!$interpreter != $expected",
+                "$interpreter != $expected",
                 "(control/$file)"
             ) unless $interpreter eq $expected;
         } elsif ($file eq 'config') {
-            $self->hint('forbidden-config-interpreter', "#!$interpreter");
+            $self->hint('forbidden-config-interpreter', $interpreter);
         } elsif ($file eq 'postrm') {
-            $self->hint('forbidden-postrm-interpreter', "#!$interpreter");
+            $self->hint('forbidden-postrm-interpreter', $interpreter);
         } elsif ($self->INTERPRETERS->recognizes($base)) {
             my $interpreter_data = $self->INTERPRETERS->value($base);
             my $expected = $interpreter_data->{folder} . $SLASH . $base;
             unless ($interpreter eq $expected) {
                 $self->hint(
                     bad_interpreter_tag_name($expected),
-                    "#!$interpreter != $expected",
+                    "$interpreter != $expected",
                     "(control/$file)"
                 );
             }
             $self->hint('unusual-control-interpreter', "control/$file",
-                "#!$interpreter");
+                $interpreter);
 
             # Interpreters used by preinst scripts must be in
             # Pre-Depends.  Interpreters used by postinst or prerm
@@ -803,22 +797,19 @@ sub installable {
                     unless ($processable->relation('Pre-Depends')
                         ->implies($depends)){
                         $self->hint('preinst-interpreter-without-predepends',
-                            "#!$interpreter");
+                            $interpreter);
                     }
                 } else {
                     unless (
                         $processable->relation('strong')->implies($depends)) {
-                        $self->hint(
-                            'control-interpreter-without-depends',
-                            "control/$file",
-                            "#!$interpreter"
-                        );
+                        $self->hint('control-interpreter-without-depends',
+                            "control/$file",$interpreter);
                     }
                 }
             }
         } else {
             $self->hint('unknown-control-interpreter', "control/$file",
-                "#!$interpreter");
+                $interpreter);
             next; # no use doing further checks if it's not a known interpreter
         }
 
