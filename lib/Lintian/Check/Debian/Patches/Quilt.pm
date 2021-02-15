@@ -26,7 +26,6 @@ package Lintian::Check::Debian::Patches::Quilt;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Const::Fast;
 use List::SomeUtils qw(any);
@@ -92,7 +91,9 @@ sub source {
 
         my (@patch_names, @badopts);
 
-        open(my $series_fd, '<', $patch_series->unpacked_path);
+        open(my $series_fd, '<', $patch_series->unpacked_path)
+          or die 'Cannot open ' . $patch_series->unpacked_path;
+
         while (my $patch = <$series_fd>) {
             $patch =~ s/(?:^|\s+)#.*$//; # Strip comment
             if (rindex($patch,"\n") < 0) {
@@ -139,7 +140,9 @@ sub source {
             my $description = $EMPTY;
             my $has_template_description = 0;
 
-            open(my $patch_fd, '<', $file->unpacked_path);
+            open(my $patch_fd, '<', $file->unpacked_path)
+              or die 'Cannot open ' . $file->unpacked_path;
+
             while (my $line = <$patch_fd>) {
 
                 # stop if something looking like a patch starts:
@@ -194,7 +197,9 @@ sub source {
 
             $known_files{$file->basename}++;
 
-            open(my $fd, '<', $file->unpacked_path);
+            open(my $fd, '<', $file->unpacked_path)
+              or die 'Cannot open ' . $file->unpacked_path;
+
             while (my $line = <$fd>) {
                 $known_files{$1}++
                   if $line =~ m{^\s*(?:#+\s*)?(\S+)};

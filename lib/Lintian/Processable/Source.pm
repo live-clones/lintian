@@ -21,7 +21,6 @@ package Lintian::Processable::Source;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Carp qw(croak);
 use File::Spec;

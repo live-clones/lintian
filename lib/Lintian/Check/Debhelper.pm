@@ -24,7 +24,6 @@ package Lintian::Check::Debhelper;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Const::Fast;
 use List::Compare;
@@ -126,7 +125,8 @@ sub source {
 
     return unless $drules and $drules->is_open_ok;
 
-    open(my $rules_fd, '<', $drules->unpacked_path);
+    open(my $rules_fd, '<', $drules->unpacked_path)
+      or die 'Cannot open ' . $drules->unpacked_path;
 
     my $command_prefix_pattern = qr/\s+[@+-]?(?:\S+=\S+\s+)*/;
 
@@ -431,7 +431,10 @@ sub source {
     # of the other files since we use the compat value when checking
     # for brace expansion.
     if ($compat_file and $compat_file->is_open_ok) {
-        open(my $fd, '<', $compat_file->unpacked_path);
+
+        open(my $fd, '<', $compat_file->unpacked_path)
+          or die 'Cannot open ' . $compat_file->unpacked_path;
+
         while (my $line = <$fd>) {
             if ($. == 1) {
                 $compat = $line;
@@ -564,7 +567,10 @@ sub source {
         } elsif ($basename =~ m/^(?:(.*)\.)?maintscript$/) {
             next
               unless $file->is_open_ok;
-            open(my $fd, '<', $file->unpacked_path);
+
+            open(my $fd, '<', $file->unpacked_path)
+              or die 'Cannot open ' . $file->unpacked_path;
+
             while (my $line = <$fd>) {
 
                 $self->hint('maintscript-includes-maint-script-parameters',
@@ -614,7 +620,9 @@ sub source {
                     }
                 }
 
-                open(my $fd, '<', $file->unpacked_path);
+                open(my $fd, '<', $file->unpacked_path)
+                  or die 'Cannot open ' . $file->unpacked_path;
+
                 while (my $line = <$fd>) {
 
                     next
@@ -760,7 +768,10 @@ sub check_dh_exec {
       if $cmd =~ m{^/usr/lib/dh-exec/};
 
     my ($dhe_subst, $dhe_install, $dhe_filter) = (0, 0, 0);
-    open(my $fd, '<', $path->unpacked_path);
+
+    open(my $fd, '<', $path->unpacked_path)
+      or die 'Cannot open ' . $path->unpacked_path;
+
     while (my $line = <$fd>) {
         if ($line =~ /\$\{([^\}]+)\}/) {
             my $sv = $1;
@@ -836,7 +847,10 @@ sub _shebang_cmd {
     my ($path) = @_;
     my $magic;
     my $cmd = $EMPTY;
-    open(my $fd, '<', $path->unpacked_path);
+
+    open(my $fd, '<', $path->unpacked_path)
+      or die 'Cannot open ' . $path->unpacked_path;
+
     if (read($fd, $magic, 2)) {
         if ($magic eq $HASHBANG) {
             $cmd = <$fd>;

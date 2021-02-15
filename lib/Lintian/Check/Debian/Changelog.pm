@@ -24,7 +24,6 @@ package Lintian::Check::Debian::Changelog;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Const::Fast;
 use Data::Validate::Domain;
@@ -766,7 +765,9 @@ sub check_dch {
     my $lineno = 0;
     my ($estart, $tstart) = (0, 0);
 
-    open(my $fd, '<:utf8_strict', $path);
+    open(my $fd, '<:utf8_strict', $path)
+      or die 'Cannot open ' . $path;
+
     while (my $line = <$fd>) {
 
         unless ($tstart) {

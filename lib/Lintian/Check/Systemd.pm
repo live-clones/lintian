@@ -27,7 +27,6 @@ package Lintian::Check::Systemd;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Const::Fast;
 use File::Basename;
@@ -148,7 +147,10 @@ sub check_init_script {
             return;
         }
     }
-    open(my $fh, '<', $file->unpacked_path);
+
+    open(my $fh, '<', $file->unpacked_path)
+      or die 'Cannot open ' . $file->unpacked_path;
+
     while (my $line = <$fh>) {
 
         # trim left
@@ -413,7 +415,9 @@ sub service_file_lines {
     return ()
       if $path->is_symlink and $path->link eq '/dev/null';
 
-    open(my $fh, '<', $path->unpacked_path);
+    open(my $fh, '<', $path->unpacked_path)
+      or die 'Cannot open ' . $path->unpacked_path;
+
     while (my $line = <$fh>) {
         chomp $line;
 
@@ -512,7 +516,9 @@ sub check_maintainer_scripts {
         next
           unless $file->is_open_ok;
 
-        open(my $sfd, '<', $file->unpacked_path);
+        open(my $sfd, '<', $file->unpacked_path)
+          or die 'Cannot open ' . $file->unpacked_path;
+
         while (my $line = <$sfd>) {
             # skip comments
             next

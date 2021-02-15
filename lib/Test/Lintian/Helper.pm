@@ -39,7 +39,6 @@ Helper functions for preparing and running Lintian tests.
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Exporter qw(import);
 
@@ -154,8 +153,10 @@ sub copy_dir_contents {
           if -d $prospective && -e $path && !-d _;
 
         # remove files to be replaced by a directory
-        unlink($prospective)
-          if -e $prospective && !-d _ && -d $path;
+        if (-e $prospective && !-d _ && -d $path) {
+            unlink($prospective)
+              or die "Cannot unlink $prospective";
+        }
     }
 
     # 'cp -r' with a dot will error without files present

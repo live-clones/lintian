@@ -6,7 +6,6 @@
 
 use strict;
 use warnings;
-use autodie;
 
 use Const::Fast;
 use IPC::Run3;
@@ -52,8 +51,8 @@ sub run_critic {
     # For some reason, perltidy has started to leave behind a
     # "perltidy.LOG" which is rather annoying.  Lets have the tests
     # unconditionally kill those.
-    eval { unlink('perltidy.LOG'); };
-    if (my $err = $@) {
+    my $err = unlink('perltidy.LOG');
+    if ($err) {
         # Since this test is run in parallel, there is an
         # race-condition between checking for the file and actually
         # deleting.  So just remove the file and ignore ENOENT

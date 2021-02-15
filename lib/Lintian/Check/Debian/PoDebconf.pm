@@ -23,7 +23,6 @@ package Lintian::Check::Debian::PoDebconf;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Const::Fast;
 use Cwd qw(realpath);
@@ -69,7 +68,9 @@ sub source {
             if ($basename =~ m/templates\.\w\w(_\w\w)?$/) {
                 push(@lang_templates, $basename);
 
-                open(my $fd, '<', $path->unpacked_path);
+                open(my $fd, '<', $path->unpacked_path)
+                  or die 'Cannot open ' . $path->unpacked_path;
+
                 while (my $line = <$fd>) {
 
                     $self->hint('untranslatable-debconf-templates',
@@ -80,7 +81,9 @@ sub source {
                 close($fd);
 
             } else {
-                open(my $fd, '<', $path->unpacked_path);
+                open(my $fd, '<', $path->unpacked_path)
+                  or die 'Cannot open ' . $path->unpacked_path;
+
                 my $in_template = 0;
                 my $saw_tl_note = 0;
                 while (my $line = <$fd>) {
@@ -154,7 +157,10 @@ sub source {
     my $missing_files = 0;
 
     if ($potfiles_in_path and $potfiles_in_path->is_open_ok) {
-        open(my $fd, '<', $potfiles_in_path->unpacked_path);
+
+        open(my $fd, '<', $potfiles_in_path->unpacked_path)
+          or die 'Cannot open ' . $potfiles_in_path->unpacked_path;
+
         while (my $line = <$fd>) {
             chomp $line;
 
@@ -205,7 +211,9 @@ sub source {
         my $d_templates = $debian_dir->resolve_path('templates');
 
         # Create our extra level
-        mkdir($tempdir);
+        mkdir($tempdir)
+          or die 'Cannot create directory ' . $tempdir;
+
         # Copy the templates dir because intltool-update might
         # write to it.
         safe_qx(
@@ -224,7 +232,8 @@ sub source {
             # use of $debian_po is safe; we accessed two children by now.
             $ENV{srcdir} = $debian_po_dir->unpacked_path;
 
-            chdir($tempdir);
+            chdir($tempdir)
+              or die 'Cannot change directory ' . $tempdir;
 
             # generate a "test.pot" in a tempdir
             my @intltool = (
@@ -243,7 +252,8 @@ sub source {
             %ENV = %save;
 
             # restore working directory
-            chdir($cwd);
+            chdir($cwd)
+              or die 'Cannot change directory ' . $cwd;
         };
 
         # output could be helpful to user but is currently not printed

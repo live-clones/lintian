@@ -27,7 +27,6 @@
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Const::Fast;
 use File::Find::Rule;
@@ -140,7 +139,8 @@ for my $tagpath (@tagpaths) {
       unless defined $tag;
 
     my $html_description;
-    open(my $fh, '>:utf8_strict', \$html_description);
+    open(my $fh, '>:utf8_strict', \$html_description)
+      or die 'Cannot open scalar';
     select $fh;
 
     print "<!DOCTYPE html><head><title>$tagname</title></head><body>";

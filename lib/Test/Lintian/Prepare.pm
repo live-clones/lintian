@@ -37,7 +37,6 @@ tests are run. To do so, they use the specifications in the test set.
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Exporter qw(import);
 
@@ -155,7 +154,10 @@ sub prepare {
 
     # delete old test scripts
     my @oldrunners = File::Find::Rule->file->name('*.t')->in($sourcepath);
-    unlink(@oldrunners);
+    if (@oldrunners) {
+        unlink(@oldrunners)
+          or die "Cannot unlink @oldrunners";
+    }
 
     my $skeletonname = $desc->unfolded_value('Skeleton');
     if (length $skeletonname) {
@@ -346,7 +348,10 @@ sub filleval {
 
     # delete old test scripts
     my @oldrunners = File::Find::Rule->file->name('*.t')->in($evalpath);
-    unlink(@oldrunners);
+    if (@oldrunners) {
+        unlink(@oldrunners)
+          or die "Cannot unlink @oldrunners";
+    }
 
     $testcase->store('Skeleton', $desc->value('Skeleton'))
       unless $testcase->declares('Skeleton');

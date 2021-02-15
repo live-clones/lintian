@@ -21,7 +21,6 @@ package Lintian::SlidingWindow;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Const::Fast;
 use Unicode::UTF8 qw(encode_utf8);

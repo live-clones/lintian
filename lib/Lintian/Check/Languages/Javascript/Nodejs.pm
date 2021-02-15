@@ -23,7 +23,6 @@ package Lintian::Check::Languages::Javascript::Nodejs;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Const::Fast;
 use JSON::MaybeXS;
@@ -83,8 +82,12 @@ sub source {
     # debian/rules check
     my $droot = $processable->patched->resolve_path('debian/') or return;
     my $drules = $droot->child('rules') or return;
-    return unless $drules->is_open_ok;
-    open(my $rules_fd, '<', $drules->unpacked_path);
+    return
+      unless $drules->is_open_ok;
+
+    open(my $rules_fd, '<', $drules->unpacked_path)
+      or die 'Cannot open ' . $drules->unpacked_path;
+
     my $command_prefix_pattern = qr/\s+[@+-]?(?:\S+=\S+\s+)*/;
     my ($seen_nodejs,$override_test,$seen_dh_dynamic);
     my $bdepends = $processable->relation('Build-Depends-All');

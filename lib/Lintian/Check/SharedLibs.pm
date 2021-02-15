@@ -24,7 +24,6 @@ package Lintian::Check::SharedLibs;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Const::Fast;
 use File::Basename;
@@ -191,7 +190,9 @@ sub installable {
                 $cur_file);
         } elsif ($cur_file =~ m/\.la$/ and not length $cur_file->link) {
 
-            open(my $fd, '<', $cur_file->unpacked_path);
+            open(my $fd, '<', $cur_file->unpacked_path)
+              or die 'Cannot open ' . $cur_file->unpacked_path;
+
             while(my $line = <$fd>) {
                 next
                   unless $line =~ /^(libdir)='(.+?)'$/
@@ -416,7 +417,9 @@ sub installable {
         } elsif ($shlibsf->is_open_ok) {
             my (%shlibs_control_used, @shlibs_depends);
 
-            open(my $fd, '<', $shlibsf->unpacked_path);
+            open(my $fd, '<', $shlibsf->unpacked_path)
+              or die 'Cannot open ' . $shlibsf->unpacked_path;
+
             while (my $line = <$fd>) {
                 chop $line;
                 next
@@ -516,7 +519,9 @@ sub installable {
         my $warned = 0;
         my $symbol_count = 0;
 
-        open(my $fd, '<', $symbolsf->unpacked_path);
+        open(my $fd, '<', $symbolsf->unpacked_path)
+          or die 'Cannot open ' . $symbolsf->unpacked_path;
+
         while (my $line = <$fd>) {
             chomp $line;
             next
@@ -741,8 +746,11 @@ sub installable {
 
     if (my $triggers = $processable->control->resolve_path('triggers')) {
         if ($triggers->is_open_ok) {
+
             # Determine if the package had an ldconfig trigger
-            open(my $fd, '<', $triggers->unpacked_path);
+            open(my $fd, '<', $triggers->unpacked_path)
+              or die 'Cannot open ' . $triggers->unpacked_path;
+
             while (my $line = <$fd>) {
 
                 # trim both ends

@@ -24,7 +24,6 @@ package Lintian::Check::Documentation;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Const::Fast;
 use List::SomeUtils qw(any);
@@ -198,7 +197,9 @@ sub visit_installed_files {
             && $file->size <= $MAXIMUM_EMPTY_GZIP_SIZE
             && $file->file_info =~ / gzip \s compressed /msx) {
 
-            open(my $fd, '<:gzip', $file->unpacked_path);
+            open(my $fd, '<:gzip', $file->unpacked_path)
+              or die 'Cannot open ' . $file->unpacked_path;
+
             my $f = <$fd>;
             close($fd);
 

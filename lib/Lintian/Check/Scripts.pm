@@ -28,7 +28,6 @@ package Lintian::Check::Scripts;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Const::Fast;
 use List::SomeUtils qw(any);
@@ -581,7 +580,9 @@ sub installable {
             &&!$str_deps->implies(
                 'libperl4-corelibs-perl | perl (<< 5.12.3-7)')
         ) {
-            open(my $fd, '<', $file->unpacked_path);
+            open(my $fd, '<', $file->unpacked_path)
+              or die 'Cannot open ' . $file->unpacked_path;
+
             while (my $line = <$fd>) {
                 if (
                     $line =~m{ (?:do|require)\s+['"] # do/require
@@ -832,7 +833,8 @@ sub installable {
         }
 
         # now scan the file contents themselves
-        open(my $fd, '<', $file->unpacked_path);
+        open(my $fd, '<', $file->unpacked_path)
+          or die 'Cannot open ' . $file->unpacked_path;
 
         my (
             $saw_init, $saw_invoke,
@@ -1505,7 +1507,10 @@ sub script_is_evil_and_wrong {
     my $i = 0;
     my $var = '0';
     my $backgrounded = 0;
-    open(my $fd, '<', $path->unpacked_path);
+
+    open(my $fd, '<', $path->unpacked_path)
+      or die 'Cannot open ' . $path->unpacked_path;
+
     while (my $line = <$fd>) {
         chomp $line;
         next

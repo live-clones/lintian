@@ -20,7 +20,6 @@ package Lintian::Index::FileInfo;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Const::Fast;
 use Cwd;
@@ -63,7 +62,8 @@ sub add_fileinfo {
     my ($self) = @_;
 
     my $savedir = getcwd;
-    chdir($self->basedir);
+    chdir($self->basedir)
+      or die 'Cannot change to directory ' . $self->basedir;
 
     my @files = grep { $_->is_file } @{$self->sorted_list};
 
@@ -143,7 +143,8 @@ sub add_fileinfo {
       @files;
     $_->file_info('data') for @not_gzip;
 
-    chdir($savedir);
+    chdir($savedir)
+      or die "Cannot change to directory $savedir";
 
     return;
 }

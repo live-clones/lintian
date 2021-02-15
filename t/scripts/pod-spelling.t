@@ -1,7 +1,6 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
-use autodie;
 
 use Const::Fast;
 use IPC::Run3;

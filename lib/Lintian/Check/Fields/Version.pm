@@ -27,7 +27,6 @@ package Lintian::Check::Fields::Version;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Dpkg::Version qw(version_check);
 

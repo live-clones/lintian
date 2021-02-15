@@ -30,7 +30,6 @@
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Const::Fast;
 use Cwd qw(realpath);
@@ -381,13 +380,15 @@ sub build_package {
     my $buildpath = $relative->absolute($buildroot)->relative->stringify;
 
     my $savedir = getcwd;
-    chdir $sourcepath;
+    chdir $sourcepath
+      or die "Cannot change to directory $sourcepath";
 
     my $sha1sums_bytes;
     run3('find . -type f -print0 | sort -z | xargs -0 sha1sum',
         \undef, \$sha1sums_bytes);
 
-    chdir $savedir;
+    chdir $savedir
+      or die "Cannot change to directory $savedir";
 
     my $sha1sums = decode_utf8($sha1sums_bytes);
 
@@ -428,7 +429,10 @@ sub build_package {
 
     # delete old runner log
     my $betterlogpath= $buildpath . $SLASH . $files->unfolded_value('Log');
-    unlink $betterlogpath if -e $betterlogpath;
+    if (-e $betterlogpath) {
+        unlink $betterlogpath
+          or die "Cannot unlink $betterlogpath";
+    }
 
     # move the early log for directory preparation to position of runner log
     my $earlylogpath = "$sourcepath.log";

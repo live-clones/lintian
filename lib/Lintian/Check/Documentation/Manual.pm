@@ -24,7 +24,6 @@ package Lintian::Check::Documentation::Manual;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Const::Fast;
 use Cwd qw(getcwd);
@@ -188,10 +187,16 @@ sub visit_installed_files {
 
         my $fd;
         if ($file_info =~ m/gzip compressed/) {
-            open($fd, '<:gzip', $file->unpacked_path);
+
+            open($fd, '<:gzip', $file->unpacked_path)
+              or die 'Cannot open ' . $file->unpacked_path;
+
         } else {
-            open($fd, '<', $file->unpacked_path);
+
+            open($fd, '<', $file->unpacked_path)
+              or die 'Cannot open ' . $file->unpacked_path;
         }
+
         my @manfile = <$fd>;
         close $fd;
 
@@ -304,7 +309,8 @@ sub visit_installed_files {
             $localdir =~ s{^(.*)/man\d\b}{$1}s;
 
             my $savedir = getcwd;
-            chdir($localdir);
+            chdir($localdir)
+              or die 'Cannot change directory ' . $localdir;
 
             run3(\@command, \undef, \$stdout, \$stderr);
 
@@ -364,8 +370,8 @@ sub visit_installed_files {
                 $self->hint('groff-message', $file, $line);
             }
 
-            chdir($savedir);
-
+            chdir($savedir)
+              or die 'Cannot change directory ' . $savedir;
         }
 
         # Now we search through the whole man page for some common errors

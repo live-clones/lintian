@@ -26,7 +26,6 @@ package Lintian::Util;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Exporter qw(import);
 
@@ -208,7 +207,10 @@ This sub is a convenience wrapper around Digest::{MD5,SHA}.
 
 sub get_file_digest {
     my ($alg, $file) = @_;
-    open(my $fd, '<', $file);
+
+    open(my $fd, '<', $file)
+      or die "Cannot open $file";
+
     my $digest;
     if (lc($alg) eq 'md5') {
         $digest = Digest::MD5->new;
@@ -217,6 +219,7 @@ sub get_file_digest {
     }
     $digest->addfile($fd);
     close($fd);
+
     return $digest;
 }
 

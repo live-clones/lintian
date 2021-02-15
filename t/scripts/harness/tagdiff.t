@@ -20,7 +20,6 @@
 
 use strict;
 use warnings;
-use autodie;
 
 use Capture::Tiny qw(capture_merged);
 use Const::Fast;

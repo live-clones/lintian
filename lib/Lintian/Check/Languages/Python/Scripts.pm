@@ -23,7 +23,6 @@ package Lintian::Check::Languages::Python::Scripts;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Moo;
 use namespace::clean;

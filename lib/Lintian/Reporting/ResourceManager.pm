@@ -22,7 +22,6 @@ package Lintian::Reporting::ResourceManager;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Carp qw(croak);
 use Const::Fast;
@@ -161,20 +160,27 @@ sub install_resource {
         my $ext = $1;
         $install_name .= $ext;
     }
-    mkdir($resource_root, $WIDELY_READABLE_FOLDER) if not -d $resource_root;
+
+    if (!-d $resource_root) {
+        mkdir($resource_root, $WIDELY_READABLE_FOLDER)
+          or die "Cannot mkdir $resource_root";
+    }
+
+    my $target_file = "$resource_root/$install_name";
     if ($method eq 'move') {
-        rename($resource, "$resource_root/$install_name");
+        rename($resource, $target_file)
+          or die "Cannot rename $resource to $target_file";
+
     } elsif ($method eq 'copy') {
-        copy($resource, "$resource_root/$install_name")
-          or croak encode_utf8(
-            "Cannot copy $resource to $resource_root/$install_name: $!");
+        copy($resource, $target_file)
+          or croak encode_utf8("Cannot copy $resource to $target_file: $!");
     } else {
         croak encode_utf8(
             join($SPACE,
                 "Unknown install method ${method}",
                 '- please use "move" or "copy"'));
     }
-    $self->{'_resource_cache'}{$basename} = "resources/$install_name";
+    $self->{'_resource_cache'}{$basename} = $target_file;
     $self->{'_resource_integrity'}{$basename} = "sha256-${b64digest}";
     return;
 }

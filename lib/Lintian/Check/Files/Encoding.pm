@@ -23,7 +23,6 @@ package Lintian::Check::Files::Encoding;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use IO::Uncompress::Gunzip qw(gunzip $GunzipError);
 use Unicode::UTF8 qw(valid_utf8);

@@ -23,7 +23,6 @@ package Lintian::Check::Debian::SourceDir;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Const::Fast;
 use List::SomeUtils qw(any);
@@ -52,7 +51,10 @@ sub source {
     $format_file = $dsrc->child('format') if $dsrc;
 
     if ($format_file and $format_file->is_open_ok) {
-        open(my $fd, '<', $format_file->unpacked_path);
+
+        open(my $fd, '<', $format_file->unpacked_path)
+          or die 'Cannot open ' . $format_file->unpacked_path;
+
         $format = <$fd>;
         chomp $format;
         close($fd);
@@ -83,7 +85,10 @@ sub source {
     $git_pfile = $dsrc->child('git-patches');
 
     if ($git_pfile and $git_pfile->is_open_ok and $git_pfile->size != 0) {
-        open(my $git_patches_fd, '<', $git_pfile->unpacked_path);
+
+        open(my $git_patches_fd, '<', $git_pfile->unpacked_path)
+          or die 'Cannot open ' . $git_pfile->unpacked_path;
+
         if (any { !/^\s*+#|^\s*+$/} <$git_patches_fd>) {
             my $dpseries
               = $processable->patched->resolve_path('debian/patches/series');
@@ -92,7 +97,9 @@ sub source {
             if (not $dpseries or not $dpseries->is_open_ok) {
                 $self->hint('git-patches-not-exported');
             } else {
-                open(my $series_fd, '<', $dpseries->unpacked_path);
+                open(my $series_fd, '<', $dpseries->unpacked_path)
+                  or die 'Cannot open ' . $dpseries->unpacked_path;
+
                 my $comment_line = <$series_fd>;
                 my $count = grep { !/^\s*+\#|^\s*+$/ } <$series_fd>;
                 $self->hint('git-patches-not-exported')
@@ -117,7 +124,10 @@ sub source {
 
     my $options = $processable->patched->resolve_path('debian/source/options');
     if ($options and $options->is_open_ok) {
-        open(my $fd, '<', $options->unpacked_path);
+
+        open(my $fd, '<', $options->unpacked_path)
+          or die 'Cannot open ' . $options->unpacked_path;
+
         while (my $line = <$fd>) {
             $self->hint('custom-compression-in-debian-source-options',
                 $1, "(line $.)")

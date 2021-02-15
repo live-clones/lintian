@@ -24,7 +24,6 @@ package Lintian::Check::Debian::Debconf;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Const::Fast;
 use List::SomeUtils qw(none);
@@ -132,7 +131,9 @@ sub installable {
 
     if ($preinst and $preinst->is_file and $preinst->is_open_ok) {
 
-        open(my $fd, '<', $preinst->unpacked_path);
+        open(my $fd, '<', $preinst->unpacked_path)
+          or die 'Cannot open ' . $preinst->unpacked_path;
+
         while (my $line = <$fd>) {
             $line =~ s/\#.*//;    # Not perfect for Perl, but should be OK
 
@@ -427,7 +428,9 @@ sub installable {
         if ($path and $path->is_file and $path->is_open_ok) {
             my ($usesconfmodule, $obsoleteconfmodule, $db_input, $isdefault);
 
-            open(my $fd, '<', $path->unpacked_path);
+            open(my $fd, '<', $path->unpacked_path)
+              or die 'Cannot open ' . $path->unpacked_path;
+
             # Only check scripts.
             my $fl = <$fd>;
             unless ($fl && $fl =~ /^\#!/) {
@@ -629,7 +632,9 @@ sub installable {
         next
           unless $file->is_open_ok;
 
-        open(my $fd, '<', $file->unpacked_path);
+        open(my $fd, '<', $file->unpacked_path)
+          or die 'Cannot open ' . $file->unpacked_path;
+
         while (my $line = <$fd>) {
 
             $line =~ s/#.*//;    # Not perfect for Perl, but should be OK

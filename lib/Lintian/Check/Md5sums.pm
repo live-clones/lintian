@@ -25,7 +25,6 @@ package Lintian::Check::Md5sums;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use List::Compare;
 use Path::Tiny;

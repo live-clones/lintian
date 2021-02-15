@@ -3,7 +3,6 @@
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use IPC::Run3;
 use POSIX qw(strftime);
@@ -44,7 +43,9 @@ while (defined(my $line = shift @lines)) {
 
 my $path = "$datadir/shared-libs/hwcap-dirs";
 my $date = strftime '%Y-%m-%d', gmtime;
-open(my $orig, '<', $path);
+open(my $orig, '<', $path)
+  or die "Cannot open $path";
+
 while (my $line = <$orig>) {
     chomp $line;
 
@@ -60,7 +61,9 @@ while (my $line = <$orig>) {
 }
 close($orig);
 
-open(my $fp, '>', $path);
+open(my $fp, '>', $path)
+  or die "Cannot open $path";
+
 print {$fp} <<"EOF" ;
 # List of all known hwcap.
 #

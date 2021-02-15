@@ -23,7 +23,6 @@ package Lintian::Index::Objdump;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Const::Fast;
 use Cwd;
@@ -65,7 +64,8 @@ sub add_objdump {
     my ($self) = @_;
 
     my $savedir = getcwd;
-    chdir($self->basedir);
+    chdir($self->basedir)
+      or die 'Cannot change to directory ' . $self->basedir;
 
     my @files = grep { $_->is_file } @{$self->sorted_list};
 
@@ -143,7 +143,8 @@ sub add_objdump {
         $file->objdump($parsed);
     }
 
-    chdir($savedir);
+    chdir($savedir)
+      or die "Cannot change to directory $savedir";
 
     return;
 }

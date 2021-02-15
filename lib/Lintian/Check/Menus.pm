@@ -26,7 +26,6 @@ package Lintian::Check::Menus;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Const::Fast;
 use Path::Tiny;
@@ -109,7 +108,9 @@ sub visit_installed_files {
             $self->_set_menumethod_file($file->name);
 
             if ($file->is_open_ok) {
-                open(my $fd, '<', $file->unpacked_path);
+                open(my $fd, '<', $file->unpacked_path)
+                  or die 'Cannot open ' . $file->unpacked_path;
+
                 while (my $line = <$fd>) {
                     chomp $line;
                     if ($line =~ /^!include menu.h/) {
@@ -684,7 +685,8 @@ sub check_script {
     return
       if $spath->is_elf;
 
-    open(my $fd, '<', $spath->unpacked_path);
+    open(my $fd, '<', $spath->unpacked_path)
+      or die 'Cannot open ' . $spath->unpacked_path;
 
     # discard hashbang line; will get from Index::Item
     scalar readline $fd;

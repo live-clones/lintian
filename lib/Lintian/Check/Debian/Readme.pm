@@ -23,7 +23,6 @@ package Lintian::Check::Debian::Readme;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Const::Fast;
 
@@ -54,10 +53,14 @@ sub open_readme {
             my $path = $doc_dir->child($name);
             next if not $path or not $path->is_open_ok;
             if ($name =~ m/\.gz$/) {
-                open(my $fd, '<:gzip', $path->unpacked_path);
+                open(my $fd, '<:gzip', $path->unpacked_path)
+                  or die 'Cannot open ' . $path->unpacked_path;
+
                 return $fd;
             }
-            open(my $fd, '<', $path->unpacked_path);
+            open(my $fd, '<', $path->unpacked_path)
+              or die 'Cannot open ' . $path->unpacked_path;
+
             return $fd;
         }
     }

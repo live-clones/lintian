@@ -23,7 +23,6 @@ package Lintian::Check::Files::PrivacyBreach;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Const::Fast;
 
@@ -122,7 +121,8 @@ sub detect_privacy_breach {
     return
       unless $file->is_regular_file;
 
-    open(my $fd, '<:raw', $file->unpacked_path);
+    open(my $fd, '<:raw', $file->unpacked_path)
+      or die 'Cannot open ' . $file->unpacked_path;
 
     my $sfd = Lintian::SlidingWindow->new($fd,sub { $_=lc($_); },$BLOCKSIZE);
 

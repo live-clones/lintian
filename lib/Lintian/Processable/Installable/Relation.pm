@@ -24,7 +24,6 @@ package Lintian::Processable::Installable::Relation;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Carp qw(croak);
 use Unicode::UTF8 qw(encode_utf8);

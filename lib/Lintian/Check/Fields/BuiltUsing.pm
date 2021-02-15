@@ -27,7 +27,6 @@ package Lintian::Check::Fields::BuiltUsing;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Lintian::Relation;
 use Lintian::Util qw($PKGNAME_REGEX $PKGVERSION_REGEX);

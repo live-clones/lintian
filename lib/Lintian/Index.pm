@@ -20,7 +20,6 @@ package Lintian::Index;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Carp;
 use Const::Fast;
@@ -195,7 +194,8 @@ sub create_from_basedir {
     my ($self) = @_;
 
     my $savedir = getcwd;
-    chdir($self->basedir);
+    chdir($self->basedir)
+      or die 'Cannot change to directory ' . $self->basedir;
 
     # get times in UTC
     my @index_command
@@ -205,7 +205,8 @@ sub create_from_basedir {
 
     run3(\@index_command, \undef, \$index_output, \$index_errors);
 
-    chdir($savedir);
+    chdir($savedir)
+      or die "Cannot change to directory $savedir";
 
     # allow processing of file names with non UTF-8 bytes
     $index_errors = decode_utf8($index_errors)

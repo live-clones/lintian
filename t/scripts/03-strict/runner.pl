@@ -2,7 +2,6 @@
 
 use strict;
 use warnings;
-use autodie;
 
 use Const::Fast;
 use Test::More;
@@ -30,8 +29,12 @@ $ENV{'LINTIAN_INCLUDE_DIRS'} = $ENV{'LINTIAN_BASE'};
 
 if ($0 =~ m{^(?:.*/)?reporting\.t$}) {
     # html_reports loads ./config, so we have do chdir before checking it.
-    chdir("$ENV{'LINTIAN_BASE'}/reporting");
+    my $folder = "$ENV{LINTIAN_BASE}/reporting";
+    chdir($folder)
+      or die "Cannot change directory $folder";
+
     all_perl_files_ok($DOT);
+
 } else {
     my @test_paths = program_name_to_perl_paths($0);
     all_perl_files_ok(@test_paths);

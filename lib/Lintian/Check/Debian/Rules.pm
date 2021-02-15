@@ -19,7 +19,6 @@ package Lintian::Check::Debian::Rules;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Carp qw(croak);
 use Const::Fast;
@@ -169,7 +168,8 @@ sub source {
     # If the version field is missing, we assume a neutral non-native one.
     my $version = $processable->fields->value('Version') || '0-1';
 
-    open(my $rules_fd, '<', $rules->unpacked_path);
+    open(my $rules_fd, '<', $rules->unpacked_path)
+      or die 'Cannot open ' . $rules->unpacked_path;
 
     # Check for required #!/usr/bin/make -f opening line.  Allow -r or -e; a
     # strict reading of Policy doesn't allow either, but they seem harmless.
@@ -569,7 +569,9 @@ m{^\t\s*[-@]?(?:(?:/usr)?/bin/)?(?:cp|chmod|echo|ln|mv|mkdir|rm|test|true)}
         }
     }
 
-    open($rules_fd, '<', $rules->unpacked_path);
+    open($rules_fd, '<', $rules->unpacked_path)
+      or die 'Cannot open ' . $rules->unpacked_path;
+
     my $sfd = Lintian::SlidingWindow->new($rules_fd);
     my $block;
     while ($block = $sfd->readwindow) {

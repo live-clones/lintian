@@ -20,7 +20,6 @@ package Lintian::Index::Java;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Archive::Zip qw( :ERROR_CODES :CONSTANTS );
 use Const::Fast;
@@ -62,7 +61,8 @@ sub add_java {
     my ($self) = @_;
 
     my $savedir = getcwd;
-    chdir($self->basedir);
+    chdir($self->basedir)
+      or die 'Cannot change to directory ' . $self->basedir;
 
     my @files = grep { $_->is_file } @{$self->sorted_list};
 
@@ -120,7 +120,8 @@ sub add_java {
 
     $_->java_info($java_info{$_->name}) for @java_files;
 
-    chdir($savedir);
+    chdir($savedir)
+      or die "Cannot change to directory $savedir";
 
     return;
 }

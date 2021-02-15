@@ -40,7 +40,6 @@ Routines for dealing with templates in Lintian test specifications.
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Exporter qw(import);
 
@@ -136,7 +135,11 @@ sub remove_surplus_templates {
     foreach my $original (@originals) {
         my $relative = abs2rel($original, $source);
         my $template = rel2abs("$relative.in", $destination);
-        unlink($template) if -e $template;
+
+        if (-e $template) {
+            unlink($template)
+              or die "Cannot unlink $template";
+        }
     }
     return;
 }
@@ -312,7 +315,10 @@ sub fill_template {
     }
 
     # delete template
-    unlink($template) if -e $generated;
+    if (-e $generated) {
+        unlink($template)
+          or die "Cannot unlink $template";
+    }
 
     return;
 }

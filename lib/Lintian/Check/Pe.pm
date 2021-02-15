@@ -23,7 +23,6 @@ package Lintian::Check::Pe;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Const::Fast;
 
@@ -55,7 +54,8 @@ sub visit_installed_files {
       unless $file->is_open_ok;
 
     my $buf;
-    open(my $fd, '<', $file->unpacked_path);
+    open(my $fd, '<', $file->unpacked_path)
+      or die 'Cannot open ' . $file->unpacked_path;
 
     eval {
         # offset to main header

@@ -23,7 +23,6 @@ package Lintian::Check::Debian::Upstream::SigningKey;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use File::Temp;
 use List::Util qw(pairs);

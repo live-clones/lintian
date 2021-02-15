@@ -21,7 +21,6 @@ package Lintian::Processable::Changelog;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use File::Copy qw(copy);
 use List::SomeUtils qw(first_value);
@@ -124,7 +123,9 @@ has changelog_path => (
             }
             # Remove it if it not the Debian changelog.
             unless ($ok) {
-                unlink $changelogpath;
+                unlink $changelogpath
+                  or die "Cannot unlink $changelogpath";
+
                 undef $changelogpath;
             }
         }

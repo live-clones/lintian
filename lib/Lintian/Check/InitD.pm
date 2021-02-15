@@ -24,7 +24,6 @@ package Lintian::Check::InitD;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Const::Fast;
 use File::Basename qw(dirname);
@@ -107,7 +106,10 @@ sub installable {
 
     # read postinst control file
     if ($postinst and $postinst->is_file and $postinst->is_open_ok) {
-        open(my $fd, '<', $postinst->unpacked_path);
+
+        open(my $fd, '<', $postinst->unpacked_path)
+          or die 'Cannot open ' . $postinst->unpacked_path;
+
         while (my $line = <$fd>) {
 
             next
@@ -137,7 +139,10 @@ sub installable {
 
     # read preinst control file
     if ($preinst and $preinst->is_file and $preinst->is_open_ok) {
-        open(my $fd, '<', $preinst->unpacked_path);
+
+        open(my $fd, '<', $preinst->unpacked_path)
+          or die 'Cannot open ' . $preinst->unpacked_path;
+
         while (my $line = <$fd>) {
 
             next
@@ -160,7 +165,10 @@ sub installable {
 
     # read postrm control file
     if ($postrm and $postrm->is_file and $postrm->is_open_ok) {
-        open(my $fd, '<', $postrm->unpacked_path);
+
+        open(my $fd, '<', $postrm->unpacked_path)
+          or die 'Cannot open ' . $postrm->unpacked_path;
+
         while (my $line = <$fd>) {
 
             next
@@ -187,7 +195,10 @@ sub installable {
 
     # read prerm control file
     if ($prerm and $prerm->is_file and $prerm->is_open_ok) {
-        open(my $fd, '<', $prerm->unpacked_path);
+
+        open(my $fd, '<', $prerm->unpacked_path)
+          or die 'Cannot open ' . $prerm->unpacked_path;
+
         while (my $line = <$fd>) {
 
             next
@@ -300,7 +311,10 @@ sub check_init {
     my (%tag, %lsb);
     my $in_file_test = 0;
     my $needs_fs = 0;
-    open(my $fd, '<', $initd_path->unpacked_path);
+
+    open(my $fd, '<', $initd_path->unpacked_path)
+      or die 'Cannot open ' . $initd_path->unpacked_path;
+
     while (my $l = <$fd>) {
         if ($. == 1) {
             if ($l
@@ -568,7 +582,9 @@ sub check_defaults {
         return
           unless $path->is_open_ok;
 
-        open(my $fd, '<', $path->unpacked_path);
+        open(my $fd, '<', $path->unpacked_path)
+          or die 'Cannot open ' . $path->unpacked_path;
+
         while (my $line = <$fd>) {
             $self->hint('init.d-script-should-always-start-service',
                 $path, "(line $.)")

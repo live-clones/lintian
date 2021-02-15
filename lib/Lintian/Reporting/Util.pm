@@ -49,7 +49,6 @@ Most subs are imported only on request.
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Const::Fast;
 use Exporter qw(import);
@@ -132,8 +131,8 @@ sub save_state_cache {
     if (my $err = $@) {
         if (-e $tmp_path) {
             # Ignore error as we have a more important one
-            no autodie qw(unlink);
-            unlink($tmp_path);
+            unlink($tmp_path)
+              or warn "Cannot unlink $tmp_path";
         }
         die($err);
     }

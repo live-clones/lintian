@@ -22,7 +22,6 @@ package Lintian::Processable::Installed;
 
 use v5.20;
 use warnings;
-use autodie;
 use utf8;
 
 use Const::Fast;

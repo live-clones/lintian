@@ -26,7 +26,6 @@ package Lintian::Check::Debian::Patches::Dpatch;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Const::Fast;
 
@@ -69,7 +68,9 @@ sub source {
     for my $file (@list_files) {
         my @patches;
 
-        open(my $fd, '<', $file->unpacked_path);
+        open(my $fd, '<', $file->unpacked_path)
+          or die 'Cannot open ' . $file->unpacked_path;
+
         while(my $line = <$fd>) {
             chomp $line;
 
@@ -113,7 +114,9 @@ sub source {
               unless $patch_file->is_open_ok;
 
             my $description = $EMPTY;
-            open(my $fd, '<', $patch_file->unpacked_path);
+            open(my $fd, '<', $patch_file->unpacked_path)
+              or die 'Cannot open ' . $patch_file->unpacked_path;
+
             while (my $line = <$fd>) {
                 # stop if something looking like a patch
                 # starts:

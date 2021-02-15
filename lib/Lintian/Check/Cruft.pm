@@ -30,7 +30,6 @@ package Lintian::Check::Cruft;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Const::Fast;
 use File::Basename qw(basename);
@@ -522,7 +521,9 @@ sub visit_patched_files {
         && $item->is_open_ok) {
 
         my $marker = 0;
-        open(my $fd, '<', $item->unpacked_path);
+        open(my $fd, '<', $item->unpacked_path)
+          or die 'Cannot open ' . $item->unpacked_path;
+
         while (my $line = <$fd>) {
             next unless $line =~ m/^#/;
             if ($marker && $line =~ m/^#BZ[h0][0-9]/) {
@@ -549,8 +550,12 @@ sub visit_patched_files {
         && $item->file_info =~ /gzip compressed data/
         && !$self->processable->patched->resolve_path('debian/README.source')){
 
-        open(my $fd, '<:gzip', $item->unpacked_path);
-        read($fd, my $magic, $RDATA_MAGIC_LENGTH);
+        open(my $fd, '<:gzip', $item->unpacked_path)
+          or die 'Cannot open ' . $item->unpacked_path;
+
+        read($fd, my $magic, $RDATA_MAGIC_LENGTH)
+          or die 'Cannot read from ' . $item->unpacked_path;
+
         close($fd);
 
         $self->hint('r-data-without-readme-source', $item->name)
@@ -560,7 +565,9 @@ sub visit_patched_files {
     if (   $item->name =~ /configure\.(in|ac)$/
         && $item->is_open_ok) {
 
-        open(my $fd, '<', $item->unpacked_path);
+        open(my $fd, '<', $item->unpacked_path)
+          or die 'Cannot open ' . $item->unpacked_path;
+
         while (my $line = <$fd>) {
             next if $line =~ m{^\s*dnl};
             $self->hint(
@@ -621,7 +628,9 @@ sub visit_patched_files {
     if (   $item->name =~ m{^debian/(README.source|copyright|rules|control)$}
         && $item->is_open_ok) {
 
-        open(my $fd, '<', $item->unpacked_path);
+        open(my $fd, '<', $item->unpacked_path)
+          or die 'Cannot open ' . $item->unpacked_path;
+
         while (my $line = <$fd>) {
             next unless $line =~ m/(?<!")(FIX_?ME)(?!")/;
             $self->hint('file-contains-fixme-placeholder',
@@ -835,7 +844,9 @@ sub full_text_check {
         return;
     }
 
-    open(my $fd, '<:raw', $item->unpacked_path);
+    open(my $fd, '<:raw', $item->unpacked_path)
+      or die 'Cannot open ' . $item->unpacked_path;
+
     # check only text files
     unless (-T $fd) {
         close($fd);

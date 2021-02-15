@@ -10,7 +10,6 @@
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Const::Fast;
 use Cwd qw(realpath);
@@ -181,7 +180,9 @@ sub add_legacy_tags {
 
     $legacy_test{$testname} ||= [];
 
-    open(my $tag_fd, '<', $tagfile);
+    open(my $tag_fd, '<', $tagfile)
+      or die "Cannot open $tagfile";
+
     while (my $line = <$tag_fd>) {
         if ($line =~ /^.: \S+(?: (?:changes|source|udeb))?: (\S+)/) {
             my $tag = $1;

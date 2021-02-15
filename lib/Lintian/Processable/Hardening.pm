@@ -20,7 +20,6 @@ package Lintian::Processable::Hardening;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Path::Tiny;
 
@@ -63,7 +62,9 @@ sub hardening_info {
     my %hardening_info;
 
     if (-e $hardf) {
-        open(my $idx, '<:utf8_strict', $hardf);
+        open(my $idx, '<:utf8_strict', $hardf)
+          or die "Cannot open $hardf";
+
         while (my $line = <$idx>) {
             chomp($line);
 

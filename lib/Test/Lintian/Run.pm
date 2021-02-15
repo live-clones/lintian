@@ -40,7 +40,6 @@ Generic test runner for all Lintian test suites
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Exporter qw(import);
 

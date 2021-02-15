@@ -24,7 +24,6 @@ package Lintian::Check::GroupChecks;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use List::SomeUtils qw(any);
 

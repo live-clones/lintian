@@ -24,7 +24,6 @@ package Lintian::Deb822::Parser;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use constant {
     DCTRL_DEBCONF_TEMPLATE => 1,
@@ -143,7 +142,9 @@ autodie exceptions if open or close fails.
 sub read_dpkg_control {
     my ($file, $flags, $field_starts) = @_;
 
-    open(my $handle, '<:utf8_strict', $file);
+    open(my $handle, '<:utf8_strict', $file)
+      or die "Cannot open $file";
+
     local $/ = undef;
     my $string = <$handle>;
     close $handle;

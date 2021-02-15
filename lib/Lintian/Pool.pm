@@ -23,7 +23,6 @@ package Lintian::Pool;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Const::Fast;
 use Cwd qw(getcwd);
@@ -429,7 +428,8 @@ sub DEMOLISH {
     my ($self, $in_global_destruction) = @_;
 
     # change back to where we were; otherwise removal may fail
-    chdir($self->savedir);
+    chdir($self->savedir)
+      or die 'Cannot change to directory ' . $self->savedir;
 
     path($self->basedir)->remove_tree
       if length $self->basedir && -d $self->basedir;

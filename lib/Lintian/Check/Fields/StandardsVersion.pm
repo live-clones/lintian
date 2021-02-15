@@ -25,7 +25,6 @@ package Lintian::Check::Fields::StandardsVersion;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Const::Fast;
 use Date::Parse qw(str2time);

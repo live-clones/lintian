@@ -27,7 +27,6 @@ package Lintian::Check::Debian::Symbols;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Moo;
 use namespace::clean;
@@ -53,7 +52,9 @@ sub check_symbols_file {
     return
       unless $file->is_file && $file->is_open_ok;
 
-    open(my $fd, '<', $file->unpacked_path);
+    open(my $fd, '<', $file->unpacked_path)
+      or die 'Cannot open ' . $file->unpacked_path;
+
     while (my $line = <$fd>) {
 
         chop $line;

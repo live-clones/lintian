@@ -26,7 +26,6 @@
 
 use strict;
 use warnings;
-use autodie;
 use v5.10;
 
 use File::Find::Rule;

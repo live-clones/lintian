@@ -20,7 +20,6 @@
 
 use strict;
 use warnings;
-use autodie;
 
 use Path::Tiny;
 use Test::More;

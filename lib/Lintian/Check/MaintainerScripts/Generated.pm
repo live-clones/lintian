@@ -23,7 +23,6 @@ package Lintian::Check::MaintainerScripts::Generated;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use List::SomeUtils qw(uniq);
 use Path::Tiny;

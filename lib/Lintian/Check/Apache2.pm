@@ -24,7 +24,6 @@ package Lintian::Check::Apache2;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use File::Basename;
 
@@ -208,7 +207,9 @@ sub check_maintainer_scripts {
         next
           unless $file->is_open_ok;
 
-        open(my $sfd, '<', $file->unpacked_path);
+        open(my $sfd, '<', $file->unpacked_path)
+          or die 'Cannot open ' . $file->unpacked_path;
+
         while (my $line = <$sfd>) {
 
             # skip comments
@@ -246,7 +247,9 @@ sub inspect_conf_file {
     return
       unless $file->is_open_ok;
 
-    open(my $fd, '<', $file->unpacked_path);
+    open(my $fd, '<', $file->unpacked_path)
+      or die 'Cannot open ' . $file->unpacked_path;
+
     my $skip = 0;
     while (my $line = <$fd>)  {
         $skip++

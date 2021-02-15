@@ -20,7 +20,6 @@
 
 use strict;
 use warnings;
-use autodie;
 
 BEGIN {
     die('Cannot find LINTIAN_BASE')

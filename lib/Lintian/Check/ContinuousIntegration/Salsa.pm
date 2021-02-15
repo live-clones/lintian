@@ -23,7 +23,6 @@ package Lintian::Check::ContinuousIntegration::Salsa;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Data::DPath qw(dpath);
 use List::SomeUtils qw(any);

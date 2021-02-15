@@ -20,7 +20,6 @@ package Lintian::Index::Strings;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Path::Tiny;
 use Unicode::UTF8 qw(decode_utf8);

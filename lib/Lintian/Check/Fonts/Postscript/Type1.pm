@@ -24,7 +24,6 @@ package Lintian::Check::Fonts::Postscript::Type1;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Lintian::IPC::Run3 qw(safe_qx);
 

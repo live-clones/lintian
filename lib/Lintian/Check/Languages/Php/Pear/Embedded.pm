@@ -24,7 +24,6 @@ package Lintian::Check::Languages::Php::Pear::Embedded;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Moo;
 use namespace::clean;

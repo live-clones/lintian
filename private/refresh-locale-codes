@@ -22,7 +22,6 @@
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Cwd qw(realpath);
 use File::Basename qw(dirname);
@@ -56,7 +55,8 @@ parse_iso_xml();
 
 $outfile = "$DATADIR/files/locale-codes.new";
 
-open(my $out, '>', $outfile);
+open(my $out, '>', $outfile)
+  or die "Cannot open $outfile";
 
 print {$out} <<"EOF" ;
 # List of locale codes.  This is derived from the ISO 639-1, ISO
@@ -83,7 +83,10 @@ rename $outfile, "$DATADIR/files/locale-codes"
 exit 0;
 
 sub parse_iso_xml {
-    open(my $fd, '<', '/usr/share/xml/iso-codes/iso_639_3.xml');
+    my $iso_xml = '/usr/share/xml/iso-codes/iso_639_3.xml';
+    open(my $fd, '<', $iso_xml)
+      or die "Cannot open $iso_xml";
+
     local $/ = '/>';
     while (my $line = <$fd>) {
         my $special = 0;

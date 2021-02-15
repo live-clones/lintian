@@ -20,7 +20,6 @@ package Lintian::Index::Md5sums;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Const::Fast;
 use Cwd;
@@ -61,7 +60,8 @@ sub add_md5sums {
     my ($self) = @_;
 
     my $savedir = getcwd;
-    chdir($self->basedir);
+    chdir($self->basedir)
+      or die 'Cannot change to directory ' . $self->basedir;
 
     # get the regular files in the index
     my @files = grep { $_->is_file } @{$self->sorted_list};
@@ -90,7 +90,8 @@ sub add_md5sums {
 
     $_->md5sum($md5sums->{$_->name}) for @files;
 
-    chdir($savedir);
+    chdir($savedir)
+      or die "Cannot change to directory $savedir";
 
     return;
 }

@@ -38,7 +38,6 @@ package Lintian::Check::MenuFormat;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Const::Fast;
 use File::Basename;
@@ -257,7 +256,9 @@ sub installable {
         next if $menufile->basename eq 'README' && !$menufile->is_dir;
         my $menufile_line =$EMPTY;
 
-        open(my $fd, '<', $menufile->unpacked_path);
+        open(my $fd, '<', $menufile->unpacked_path)
+          or die 'Cannot open ' . $menufile->unpacked_path;
+
         # line below is commented out in favour of the while loop
         # do { $_=<IN>; } while defined && (m/^\s* \#/ || m/^\s*$/);
         while (my $line = <$fd>) {
@@ -606,7 +607,8 @@ sub verify_icon {
     my $parse = 'XPM header';
     my $line;
 
-    open(my $fd, '<', $iconfile->unpacked_path);
+    open(my $fd, '<', $iconfile->unpacked_path)
+      or die 'Cannot open ' . $iconfile->unpacked_path;
 
     do { defined($line = <$fd>) or goto PARSE_ERROR; }
       until ($line =~ /\/\*\s*XPM\s*\*\//);
@@ -638,7 +640,9 @@ sub verify_desktop_file {
     my $pkg = $self->processable->name;
 
     my ($saw_first, $warned_cr, %vals, @pending);
-    open(my $fd, '<', $file->unpacked_path);
+    open(my $fd, '<', $file->unpacked_path)
+      or die 'Cannot open ' . $file->unpacked_path;
+
     while (my $line = <$fd>) {
         chomp $line;
         next if ($line =~ m/^\s*\#/ or $line =~ m/^\s*$/);

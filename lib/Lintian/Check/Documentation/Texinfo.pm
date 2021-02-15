@@ -24,7 +24,6 @@ package Lintian::Check::Documentation::Texinfo;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Const::Fast;
 
@@ -103,7 +102,8 @@ sub binary {
                 next;
             }
 
-            open(my $fd, '<:gzip', $file->unpacked_path);
+            open(my $fd, '<:gzip', $file->unpacked_path)
+              or die 'Cannot open ' . $file->unpacked_path;
 
             my ($section, $start, $end);
             while (my $line = <$fd>) {
@@ -141,7 +141,9 @@ sub binary {
         #
         if ($file->is_file && $fname =~ /\.info(?:-\d+)?\.gz$/) {
 
-            open(my $fd, '<:gzip', $file->unpacked_path);
+            open(my $fd, '<:gzip', $file->unpacked_path)
+              or die 'Cannot open ' . $file->unpacked_path;
+
             while (my $line = <$fd>) {
                 while ($line =~ /[\0][\b]\[image src="((?:\\.|[^\"])+)"/smg) {
                     my $src = $1;

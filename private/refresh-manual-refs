@@ -27,7 +27,6 @@
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Const::Fast;
 use Cwd qw(realpath);
@@ -172,7 +171,8 @@ my %manuals = (
 }
 
 my $generated;
-open(my $memory_fd, '>', \$generated);
+open(my $memory_fd, '>', \$generated)
+  or die 'Cannot open scalar';
 
 for my $manual (sort keys %manuals) {
     my ($index, $url, $ref_re, $fields, $sub_re) = @{$manuals{$manual}};
@@ -223,7 +223,8 @@ exit;
 sub extract_refs {
     my ($data_fd, $manual, $title_done, $page, $url, $ref_re, $fields) = @_;
 
-    open(my $page_fd, '<:utf8_strict', $page);
+    open(my $page_fd, '<:utf8_strict', $page)
+      or die "Cannot open $page";
 
     # Read until there are 2 newlines. This hack is needed since some lines in
     # the Developer's Reference are cut in the middle of <a>...</a>.

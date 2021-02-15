@@ -26,7 +26,6 @@
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Cwd qw(realpath);
 use File::Basename qw(dirname);
@@ -801,7 +800,10 @@ sub _find_changes {
     push(@archs, decode_utf8($ENV{DEB_HOST_ARCH}))
       if exists $ENV{DEB_HOST_ARCH};
     # Maybe cross-built for something dpkg knows about...
-    open(my $foreign, $OPEN_PIPE, 'dpkg', '--print-foreign-architectures');
+    my @command = qw{dpkg --print-foreign-architectures};
+    open(my $foreign, $OPEN_PIPE, @command)
+      or die "Cannot open pipe to @command";
+
     while (my $bytes = <$foreign>) {
         my $line = decode_utf8($bytes);
         chomp($line);

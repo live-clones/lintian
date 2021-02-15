@@ -20,7 +20,6 @@ package Lintian::Index::Ar;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Cwd;
 use Path::Tiny;
@@ -55,7 +54,8 @@ sub add_ar {
     my ($self) = @_;
 
     my $savedir = getcwd;
-    chdir($self->basedir);
+    chdir($self->basedir)
+      or die 'Cannot change to directory ' . $self->basedir;
 
     my @archives
       = grep { $_->name =~ / [.]a $/msx && $_->is_regular_file }
@@ -87,7 +87,8 @@ sub add_ar {
         $archive->ar_info(\%ar_info);
     }
 
-    chdir($savedir);
+    chdir($savedir)
+      or die "Cannot change to directory $savedir";
 
     return;
 }

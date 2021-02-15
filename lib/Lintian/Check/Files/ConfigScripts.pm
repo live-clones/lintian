@@ -23,7 +23,6 @@ package Lintian::Check::Files::ConfigScripts;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Lintian::SlidingWindow;
 
@@ -56,7 +55,9 @@ sub visit_installed_files {
         # try to find some indication of
         # config file (read only one block)
 
-        open(my $fd, '<:raw', $file->unpacked_path);
+        open(my $fd, '<:raw', $file->unpacked_path)
+          or die 'Cannot open ' . $file->unpacked_path;
+
         my $sfd = Lintian::SlidingWindow->new($fd);
         my $block = $sfd->readwindow;
 

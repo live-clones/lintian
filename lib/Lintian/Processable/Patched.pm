@@ -22,7 +22,6 @@ package Lintian::Processable::Patched;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Const::Fast;
 use Cwd;
@@ -113,7 +112,8 @@ has patched => (
         my $index_errors = $index->create_from_basedir;
 
         my $savedir = getcwd;
-        chdir($index->basedir);
+        chdir($index->basedir)
+          or die 'Cannot change to directory ' . $index->basedir;
 
         # fix permissions
         my @permissions_command
@@ -125,7 +125,8 @@ has patched => (
         $permissions_errors = decode_utf8($permissions_errors)
           if length $permissions_errors;
 
-        chdir($savedir);
+        chdir($savedir)
+          or die "Cannot change to directory $savedir";
 
         $self->hint('unpack-message-for-source', $_)
           for

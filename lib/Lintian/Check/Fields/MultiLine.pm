@@ -27,7 +27,6 @@ package Lintian::Check::Fields::MultiLine;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Const::Fast;
 use List::Compare;

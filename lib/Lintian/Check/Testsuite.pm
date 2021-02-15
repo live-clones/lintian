@@ -23,7 +23,6 @@ package Lintian::Check::Testsuite;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Const::Fast;
 use List::Compare;
@@ -242,7 +241,9 @@ sub check_test_file {
         return;
     }
 
-    open(my $fd, '<', $file->unpacked_path);
+    open(my $fd, '<', $file->unpacked_path)
+      or die 'Cannot open ' . $file->unpacked_path;
+
     while (my $line = <$fd>) {
 
         $self->hint('uses-deprecated-adttmp', $path, "(line $.)")

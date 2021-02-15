@@ -37,7 +37,6 @@ tests that are supposed to run.
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Exporter qw(import);
 

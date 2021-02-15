@@ -36,7 +36,6 @@ tests are run. To do so, they use the specifications in the test set.
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Exporter qw(import);
 
@@ -122,7 +121,8 @@ sub build_subject {
     if (length $command) {
 
         my $savedir = Cwd::getcwd;
-        chdir($buildpath);
+        chdir($buildpath)
+          or die "Cannot change to directory $buildpath";
 
         my $combined_bytes;
 
@@ -130,7 +130,8 @@ sub build_subject {
         run3($command, \undef, \$combined_bytes, \$combined_bytes);
         my $status = ($? >> $WAIT_STATUS_SHIFT);
 
-        chdir($savedir);
+        chdir($savedir)
+          or die "Cannot change to directory $savedir";
 
         # sanitize log so it is UTF-8 from here on
         my $utf8_bytes = utf8_clean_log($combined_bytes);
