@@ -56,7 +56,6 @@ sub source {
     for my $manpage (@manpages) {
         open(my $fd, '<', $manpage->unpacked_path)
               or die 'Cannot open ' . $manpage->unpacked_path;
-        }
 
         my @manpage = <$fd>;
         close $fd;
