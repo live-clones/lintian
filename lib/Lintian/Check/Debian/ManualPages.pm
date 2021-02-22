@@ -25,6 +25,7 @@ use warnings;
 use utf8;
 
 use Lintian::Inspect::Changelog::Version;
+use Lintian::Relation::Version qw(versions_gt);
 
 use Moo;
 use namespace::clean;
@@ -80,7 +81,8 @@ sub source {
         my $version = $source =~ /(([0-9]+\.)+[0-9]+)$/ ? $1 : undef;
         next unless defined $version;
 
-        # TODO: compare $version and $latest_version->upstream
+        $self->hint('outdated-maintainer-manual-page', $manpage->name)
+          if versions_gt($latest_version->upstream, $version);
     }
 
     return;
