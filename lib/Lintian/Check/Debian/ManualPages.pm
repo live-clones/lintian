@@ -77,6 +77,8 @@ sub source {
         my(undef, $name, $section, $date, $source) = @header_parts;
         next unless defined $source;
 
+        # Version detection heuristic is primitive by design in order not
+        # to produce false-positives.
         my $version = $source =~ /(([0-9]+\.)+[0-9]+)$/ ? $1 : undef;
         next unless defined $version;
 
