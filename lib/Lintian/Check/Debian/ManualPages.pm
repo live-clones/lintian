@@ -51,7 +51,7 @@ sub source {
 
     my $versionstring = $self->processable->fields->value('Version');
     my $latest_version = Lintian::Inspect::Changelog::Version->new;
-    $latest_version->assign($versionstring);
+    $latest_version->assign($versionstring, $self->processable->native);
 
     for my $manpage (@manpages) {
         open(my $fd, '<', $manpage->unpacked_path)
