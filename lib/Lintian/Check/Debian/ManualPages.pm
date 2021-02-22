@@ -79,11 +79,13 @@ sub source {
 
         # Version detection heuristic is primitive by design in order not
         # to produce false-positives.
-        my $version = $source =~ /(([0-9]+\.)+[0-9]+)$/ ? $1 : undef;
-        next unless defined $version;
+        my $manpage_version = $source =~ /(([0-9]+\.)+[0-9]+)$/ ? $1 : undef;
+        next unless defined $manpage_version;
 
-        $self->hint('outdated-maintainer-manual-page', $manpage->name)
-          if versions_gt($latest_version->upstream, $version);
+        my $upstream_version = $latest_version->upstream;
+        $self->hint('outdated-maintainer-manual-page',
+            $manpage->name . " ($upstream_version > $manpage_version)")
+          if versions_gt($upstream_version, $manpage_version);
     }
 
     return;
