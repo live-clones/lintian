@@ -55,17 +55,17 @@ sub source {
 
     for my $manpage (@manpages) {
         open(my $fd, '<', $manpage->unpacked_path)
-              or die 'Cannot open ' . $manpage->unpacked_path;
+          or die 'Cannot open ' . $manpage->unpacked_path;
 
         my @manpage = <$fd>;
         close $fd;
 
-        my( $TH ) = grep { /^\.TH/ } @manpage;
+        my($TH) = grep { /^\.TH/ } @manpage;
         next unless defined $TH;
 
         my @header_parts;
-        while( $TH ) {
-            if( $TH =~ s/^"([^"]*)"\s*// || $TH =~ s/^(\S+)\s*// ) {
+        while($TH) {
+            if($TH =~ s/^"([^"]*)"\s*// || $TH =~ s/^(\S+)\s*//) {
                 push @header_parts, $1;
                 next;
             } else {
@@ -74,7 +74,7 @@ sub source {
                 $TH =~ s/^(.)//;
             }
         }
-        my( undef, $name, $section, $date, $source ) = @header_parts;
+        my(undef, $name, $section, $date, $source) = @header_parts;
         next unless defined $source;
 
         my $version = $source =~ /(([0-9]+\.)+[0-9]+)$/ ? $1 : undef;
