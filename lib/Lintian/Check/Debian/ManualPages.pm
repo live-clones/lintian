@@ -24,6 +24,8 @@ use v5.20;
 use warnings;
 use utf8;
 
+use Lintian::Inspect::Changelog::Version;
+
 use Moo;
 use namespace::clean;
 
@@ -45,6 +47,10 @@ sub source {
     my @manpages = grep { $_->basename =~ m{\.\d$} } @nopatches;
 
     $self->hint('maintainer-manual-page', $_->name) for @manpages;
+
+    my $versionstring = $self->processable->fields->value('Version');
+    my $latest_version = Lintian::Inspect::Changelog::Version->new;
+    $latest_version->assign($versionstring);
 
     for my $manpage (@manpages) {
         open(my $fd, '<', $manpage->unpacked_path)
@@ -71,9 +77,10 @@ sub source {
         my( undef, $name, $section, $date, $source ) = @header_parts;
         next unless defined $source;
 
-        if( $source =~ /(([0-9]+\.)+[0-9]+)$/ ) {
-            $version = $1;
-        }
+        my $version = $source =~ /(([0-9]+\.)+[0-9]+)$/ ? $1 : undef;
+        next unless defined $version;
+
+        # TODO: compare $version and $latest_version->upstream
     }
 
     return;
