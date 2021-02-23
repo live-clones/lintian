@@ -92,7 +92,7 @@ sub source {
             my $manpage_version = $1;
             $self->hint(
                 'outdated-maintainer-manual-page',
-                sprintf("%s (%s > %s)",
+                sprintf('%s (%s > %s)',
                     $manpage->name,$upstream_version,$manpage_version)
             ) if versions_gt($upstream_version, $manpage_version);
         }
@@ -102,7 +102,7 @@ sub source {
                 # Exact date, easy to handle
                 $self->hint(
                     'outdated-maintainer-manual-page',
-                    sprintf("%s (%s > %s)",
+                    sprintf('%s (%s > %s)',
                         $manpage->name,$first_entry->Date,$date)
                 ) if $first_entry->Timestamp > str2time($date);
             } else {
