@@ -52,6 +52,7 @@ sub source {
     my $versionstring = $self->processable->fields->value('Version');
     my $latest_version = Lintian::Inspect::Changelog::Version->new;
     $latest_version->assign($versionstring, $self->processable->native);
+    my $upstream_version = $latest_version->upstream;
 
     for my $manpage (@manpages) {
         open(my $fd, '<', $manpage->unpacked_path)
@@ -75,17 +76,15 @@ sub source {
             }
         }
         my(undef, $name, $section, $date, $source) = @header_parts;
-        next unless defined $source;
 
         # Version detection heuristic is primitive by design in order not
         # to produce false-positives.
-        my $manpage_version = $source =~ /(([0-9]+\.)+[0-9]+)$/ ? $1 : undef;
-        next unless defined $manpage_version;
-
-        my $upstream_version = $latest_version->upstream;
-        $self->hint('outdated-maintainer-manual-page',
-            $manpage->name . " ($upstream_version > $manpage_version)")
-          if versions_gt($upstream_version, $manpage_version);
+        if(defined $source && $source =~ /(([0-9]+\.)+[0-9]+)$/) {
+            my $manpage_version = $1;
+            $self->hint('outdated-maintainer-manual-page',
+                $manpage->name . " ($upstream_version > $manpage_version)")
+              if versions_gt($upstream_version, $manpage_version);
+        }
     }
 
     return;
