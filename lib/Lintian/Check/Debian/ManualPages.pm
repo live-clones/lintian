@@ -61,7 +61,7 @@ sub source {
         my $version = Lintian::Inspect::Changelog::Version->new;
         $version->assign($_->Version, $self->processable->native);
         versions_equal($upstream_version, $version->upstream)
-      }$self->processable->changelog->entries;
+      } @{$self->processable->changelog->entries};
 
     for my $manpage (@manpages) {
         open(my $fd, '<', $manpage->unpacked_path)
@@ -92,9 +92,9 @@ sub source {
             my $manpage_version = $1;
             $self->hint(
                 'outdated-maintainer-manual-page',
-                sprintf "%s (%s > %s)",
-                $manpage->name,$upstream_version,$manpage_version
-            )if versions_gt($upstream_version, $manpage_version);
+                sprintf("%s (%s > %s)",
+                    $manpage->name,$upstream_version,$manpage_version)
+            ) if versions_gt($upstream_version, $manpage_version);
         }
 
         if($date) {
@@ -102,9 +102,9 @@ sub source {
                 # Exact date, easy to handle
                 $self->hint(
                     'outdated-maintainer-manual-page',
-                    sprintf "%s (%s > %s)",
-                    $manpage->name,$first_entry->Date,$date
-                )if $first_entry->Timestamp > str2time($date);
+                    sprintf("%s (%s > %s)",
+                        $manpage->name,$first_entry->Date,$date)
+                ) if $first_entry->Timestamp > str2time($date);
             } else {
                 # Perfom some regularization of dates
                 my $date_cleaned = $date;
