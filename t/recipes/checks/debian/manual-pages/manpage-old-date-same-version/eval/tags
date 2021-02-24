@@ -1,0 +1,2 @@
+manpage-old-date-same-version (source): maintainer-manual-page debian/old-date.1
+manpage-old-date-same-version (source): outdated-maintainer-manual-page debian/old-date.1 (Mon, 01 Jan 2001 00:00:00 +0000 > 2000-01-01)

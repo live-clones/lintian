@@ -1,0 +1,17 @@
+[% $source %] (1.0-2) [% $distribution %]; urgency=low
+
+  * Lintian Test Suite.
+  * Test: [% $testname %]
+
+  * Suppress "should close ITP bug" messages.  (Closes: #123456)
+
+ -- [% $author %]  Tue, 01 Jan 2002 00:00:00 +0000
+
+[% $source %] (1.0-1) [% $distribution %]; urgency=low
+
+  * Lintian Test Suite.
+  * Test: [% $testname %]
+
+  * Suppress "should close ITP bug" messages.  (Closes: #123456)
+
+ -- [% $author %]  Mon, 01 Jan 2001 00:00:00 +0000
