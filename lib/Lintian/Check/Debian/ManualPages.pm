@@ -98,6 +98,7 @@ sub source {
         }
 
         if($date) {
+            my $date_cleaned = $date;
             if(defined str2time($date)) {
                 # Exact date, easy to handle
                 $self->hint(
@@ -105,12 +106,27 @@ sub source {
                     sprintf('%s (%s > %s)',
                         $manpage->name,$first_entry->Date,$date)
                 ) if $first_entry->Timestamp > str2time($date);
-            } else {
-                # Perfom some regularization of dates
-                my $date_cleaned = $date;
-                $date_cleaned =~ s/^([a-z]{3})[a-z]*,? ([0-9]{4})$/1 $1 $2/i;
-                $date_cleaned =~ s/^([0-9]{4}) ([a-z]{3})[a-z]*$/1 $2 $1/i;
-                # TODO: implement this branch
+            } elsif((
+                    $date_cleaned
+                    =~ s/^([a-z]{3})[a-z]*,? ([0-9]{4})$/1 $1 $2/i
+                    ||$date_cleaned
+                    =~ s/^([0-9]{4}) ([a-z]{3})[a-z]*$/1 $2 $1/i
+                )
+                && defined str2time($date_cleaned)
+            ) {
+                my(undef,undef,undef,undef,$month,$year)
+                  = strptime($date_cleaned);
+                $month += 2; # moving to 1-based and adding one more month
+                $year += 1900;
+                if($month == 13) {
+                    $month = 1;
+                    $year++;
+                }
+                $self->hint(
+                    'outdated-maintainer-manual-page',
+                    sprintf('%s (%s > %s)',
+                        $manpage->name,$first_entry->Date,$date)
+                ) if $first_entry->Timestamp > str2time("$year-$month-01");
             }
         }
     }
