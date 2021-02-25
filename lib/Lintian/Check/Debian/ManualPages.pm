@@ -24,6 +24,11 @@ use v5.20;
 use warnings;
 use utf8;
 
+use constant {
+    MONTHS_IN_YEAR => 12,
+    STRPTIME_YEAR_OFFSET => 1900,
+};
+
 use Date::Parse;
 
 use Lintian::Inspect::Changelog::Version;
@@ -117,8 +122,8 @@ sub source {
                 my(undef,undef,undef,undef,$month,$year)
                   = strptime($date_cleaned);
                 $month += 2; # moving to 1-based and adding one more month
-                $year += 1900;
-                if($month == 13) {
+                $year += STRPTIME_YEAR_OFFSET;
+                if($month > MONTHS_IN_YEAR) {
                     $month = 1;
                     $year++;
                 }
