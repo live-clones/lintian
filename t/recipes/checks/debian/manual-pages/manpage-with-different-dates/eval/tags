@@ -1,0 +1,6 @@
+manpage-with-different-dates (source): maintainer-manual-page debian/iso-date.1
+manpage-with-different-dates (source): maintainer-manual-page debian/my-date.1
+manpage-with-different-dates (source): maintainer-manual-page debian/ym-date.1
+manpage-with-different-dates (source): outdated-maintainer-manual-page debian/iso-date.1 (Tue, 01 Jan 2002 00:00:00 +0000 > 2000-01-01)
+manpage-with-different-dates (source): outdated-maintainer-manual-page debian/my-date.1 (Tue, 01 Jan 2002 00:00:00 +0000 > January 2000)
+manpage-with-different-dates (source): outdated-maintainer-manual-page debian/ym-date.1 (Tue, 01 Jan 2002 00:00:00 +0000 > 2000 January)
