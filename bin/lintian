@@ -73,8 +73,8 @@ const my $OPEN_PIPE => q{-|};
 
 const my $DEFAULT_TAG_LIMIT => 4;
 
-# only in GNOME; need original environment
-my $hyperlinks_capable = is_interactive && any { /^GNOME/ } keys %ENV;
+# place early, may need original environment to determine terminal blacklist
+my $hyperlinks_capable = is_interactive;
 
 # Globally ignore SIGPIPE.  We'd rather deal with error returns from write
 # than randomly delivered signals.
@@ -514,11 +514,12 @@ $ENV{$_} = $config{$_} for @not_yet;
 die encode_utf8("The color value must be one of auto, always, or never.\n")
   unless (any { $selected{color} eq $_ } qw(auto always never));
 
-if ($selected{color} eq 'never') {
-    $selected{hyperlinks} //= 'off';
-} else {
-    $selected{hyperlinks} //= 'on';
-}
+$selected{hyperlinks} //= 'off'
+  if $selected{color} eq 'never';
+
+# change to 'on' after gcc's terminal blacklist was implemented here
+$selected{hyperlinks} //= 'off';
+
 die encode_utf8("The hyperlink value must be on or off\n")
   unless any { $selected{hyperlinks} eq $_ } qw(on off);
 
