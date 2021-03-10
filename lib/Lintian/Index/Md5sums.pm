@@ -23,9 +23,9 @@ use utf8;
 
 use Const::Fast;
 use Cwd;
-use IPC::Run3;
 use Unicode::UTF8 qw(encode_utf8 decode_utf8);
 
+use Lintian::IPC::Run3 qw(xargs);
 use Lintian::Util qw(read_md5sums);
 
 use Moo::Role;
@@ -65,30 +65,31 @@ sub add_md5sums {
 
     # get the regular files in the index
     my @files = grep { $_->is_file } @{$self->sorted_list};
+    my @names = map { $_->name } @files;
 
-    my $input = $EMPTY;
-    $input .= $_->name . $NULL for @files;
+    my @command = qw(md5sum --);
 
-    my $stdout;
-    my $stderr;
+    my %md5sums;
 
-    my @command = qw(
-      xargs --null --no-run-if-empty
-      md5sum --
-    );
-    run3(\@command, \$input, \$stdout, \$stderr);
-    my $status = ($? >> $WAIT_STATUS_SHIFT);
+    xargs(
+        \@command,
+        \@names,
+        sub {
+            my ($stdout, $stderr, $status, @partial) = @_;
 
-    # allow processing of file names with non UTF-8 bytes
-    $stderr = decode_utf8($stderr)
-      if length $stderr;
+            $stderr = decode_utf8($stderr)
+              if length $stderr;
 
-    die encode_utf8("Cannot run @command: $stderr\n")
-      if $status;
+            die encode_utf8("Cannot run @command: $stderr\n")
+              if $status;
 
-    my ($md5sums, undef) = read_md5sums($stdout);
+            # undecoded split allows names with non UTF-8 bytes
+            my ($partial_sums, undef) = read_md5sums($stdout);
 
-    $_->md5sum($md5sums->{$_->name}) for @files;
+            $md5sums{$_} = $partial_sums->{$_}for @partial;
+        });
+
+    $_->md5sum($md5sums{$_->name}) for @files;
 
     chdir($savedir)
       or die "Cannot change to directory $savedir";

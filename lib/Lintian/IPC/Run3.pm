@@ -34,11 +34,15 @@ BEGIN {
 
     @EXPORT_OK = qw(
       safe_qx
+      xargs
     );
 }
 
 use Const::Fast;
 use IPC::Run3;
+
+const my $EMPTY => q{};
+const my $NULL => qq{\0};
 
 const my $WAIT_STATUS_SHIFT => 8;
 
@@ -81,6 +85,37 @@ sub safe_qx {
       if $?;
 
     return $stdout;
+}
+
+=item C<xargs>
+
+=cut
+
+sub xargs {
+    my ($command, $arguments, $processor) = @_;
+
+    $command //= [];
+    $arguments //= [];
+
+    return
+      unless @{$arguments};
+
+    my $input = $EMPTY;
+    $input .= $_ . $NULL for @{$arguments};
+
+    my $stdout;
+    my $stderr;
+
+    my @combined = (qw(xargs --null --no-run-if-empty), @{$command});
+
+    run3(\@combined, \$input, \$stdout, \$stderr);
+
+    my $exitcode = $?;
+    my $status = ($exitcode >> $WAIT_STATUS_SHIFT);
+
+    $processor->($stdout, $stderr, $status, @{$arguments});
+
+    return;
 }
 
 =back
