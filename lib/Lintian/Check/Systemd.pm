@@ -67,16 +67,6 @@ sub installable {
     my $pkg = $self->processable->name;
     my $processable = $self->processable;
 
-    # non-service checks
-    if (my $tmpfiles= $processable->installed->resolve_path('etc/tmpfiles.d/'))
-    {
-        for my $file ($tmpfiles->descendants) {
-            if ($file->is_file && $file->basename =~ m{\.conf$}) {
-                $self->hint('systemd-tmpfiles.d-outside-usr-lib', $file);
-            }
-        }
-    }
-
     my @init_scripts = $self->get_init_scripts;
     my @service_files = $self->get_systemd_service_files;
 

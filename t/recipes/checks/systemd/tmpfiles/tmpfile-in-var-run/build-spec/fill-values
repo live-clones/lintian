@@ -1,0 +1,5 @@
+Skeleton: upload-native
+Testname: tmpfile-in-var-run
+Description: Systemd places a teporary file in /var/run
+See-Also:
+ Bug#984678
