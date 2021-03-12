@@ -6,10 +6,12 @@ Explanation: Debian packages should not install files under
  <code>/etc/apt/sources.list.d/</code> or install an
  <code>/etc/apt/sources.list</code> file.
  . 
- Package sources are under the control of the local administrator and
- packages should not override local administrator choices.
+ The selection of installation sources is under the control of the
+ local administrator. Packages are generally not allowed to change
+ the administrator's choices.
  .
- Packages whose names end in <code>-apt-source</code> or
- <code>-archive-keyring</code> are permitted to install such files.
+ As a limited exception for the convenience of administrators,
+ packages whose names end in the clearly named
+ <code>-apt-source</code> are permitted to install such files.
 Renamed-From:
  package-install-apt-sources
