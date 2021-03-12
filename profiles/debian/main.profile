@@ -45,6 +45,7 @@ Enable-Tags-From-Check:
  debian/trailing-whitespace
  debian/upstream/metadata
  debian/upstream/signing-key
+ debian/variables
  debian/version-substvars
  debian/watch
  debian/watch/standard
