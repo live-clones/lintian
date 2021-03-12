@@ -229,7 +229,7 @@ if (length $LINTIAN_CFG) {
 
     # for keys appearing multiple times, now uses the last value
     my $object = Config::Tiny->read($LINTIAN_CFG, 'utf8');
-    my $error = $object->errstr;
+    my $error = Config::Tiny->errstr;
     die encode_utf8(
         "syntax error in configuration file $LINTIAN_CFG: $error\n")
       if length $error;
