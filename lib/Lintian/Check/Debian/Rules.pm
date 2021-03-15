@@ -196,7 +196,11 @@ sub source {
     # other files, since to chase all includes we'd have to have all
     # of its build dependencies installed.
     local $_ = undef;
+
     my $build_all = $processable->relation('Build-Depends-All');
+    my $build_all_norestriction
+      = $processable->relation_norestriction('Build-Depends-All');
+
     my @arch_rules = map { qr/^$_$/ } qw(clean binary-arch build-arch);
     my @indep_rules = qw(build build-indep binary-indep);
     my (@current_targets, %rules_per_target,  %debhelper_group);
@@ -557,11 +561,11 @@ m{^\t\s*[-@]?(?:(?:/usr)?/bin/)?(?:cp|chmod|echo|ln|mv|mkdir|rm|test|true)}
             }
         }
     }
-    my $noarch = $processable->relation_noarch('Build-Depends-All');
+
     for my $package (keys %needed) {
         my $tag = $needed{$package} || 'missing-build-dependency';
 
-        unless ($noarch->implies($package)) {
+        unless ($build_all_norestriction->implies($package)) {
             if ($tag eq 'missing-build-dependency') {
                 $self->hint($tag, $package);
             } else {

@@ -266,8 +266,8 @@ sub check_test_file {
                 "(line $.)"
               )
               if $options =~ /\s(?:-\w*s|--supported)/
-              && !$self->processable->relation_noarch('Build-Depends-All')
-              ->implies($PYTHON3_ALL_DEPEND);
+              && !$self->processable->relation_norestriction(
+                'Build-Depends-All')->implies($PYTHON3_ALL_DEPEND);
         }
     }
 

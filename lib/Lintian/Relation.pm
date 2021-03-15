@@ -86,8 +86,9 @@ name is the predicate "a package of this name is available".  A package
 name with a version clause is the predicate "a package of this name that
 satisfies this version clause is available."  Architecture restrictions,
 as specified in Policy for build dependencies, are supported and also
-checked in the implication logic unless the new_noarch() constructor is
-used.  With that constructor, architecture restrictions are ignored.
+checked in the implication logic unless the new_norestriction()
+constructor is used.  With that constructor, architecture restrictions
+are ignored.
 
 =head1 INSTANCE METHODS
 
@@ -253,18 +254,6 @@ sub load_norestriction {
     return $self->load($condition);
 }
 
-=item load_noarch (RELATION)
-
-An alias for new_norestriction.
-
-=cut
-
-sub load_noarch {
-    my ($self, $condition) = @_;
-
-    return $self->load_norestriction($condition);
-}
-
 =item logical_and(RELATION, ...)
 
 Creates a new Lintian::Relation object produced by AND'ing all the
@@ -421,8 +410,8 @@ RELATION may be either a string or another Lintian::Relation object.
 
 By default, architecture restrictions are honored in RELATION if it is a
 string.  If architecture restrictions should be ignored in RELATION,
-create a Lintian::Relation object with new_noarch() and pass that in as
-RELATION instead of the string.
+create a Lintian::Relation object with new_norestriction() and pass that
+in as RELATION instead of the string.
 
 =item implies_element
 
@@ -774,8 +763,8 @@ Lintian::Relation object.
 
 As with implies(), by default, architecture restrictions are honored in
 RELATION if it is a string.  If architecture restrictions should be
-ignored in RELATION, create a Lintian::Relation object with new_noarch()
-and pass that in as RELATION instead of the string.
+ignored in RELATION, create a Lintian::Relation object with
+new_norestriction() and pass that in as RELATION instead of the string.
 
 =item implies_element_inverse
 

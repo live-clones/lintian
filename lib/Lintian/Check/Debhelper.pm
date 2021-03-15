@@ -108,7 +108,8 @@ sub source {
     my (%missingbdeps, %missingbdeps_addons, $maybe_skipping, $dhcompatvalue);
     my $inclcdbs = 0;
 
-    my ($bdepends_noarch, $bdepends, %build_systems, $uses_autotools_dev_dh);
+    my ($bdepends_norestriction, $bdepends, %build_systems,
+        $uses_autotools_dev_dh);
     $bdepends = $processable->relation('Build-Depends-All');
     my $seen_dh = 0;
     my $seen_dh_dynamic = 0;
@@ -646,7 +647,8 @@ sub source {
         }
     }
 
-    $bdepends_noarch = $processable->relation_noarch('Build-Depends-All');
+    $bdepends_norestriction
+      = $processable->relation_norestriction('Build-Depends-All');
     $bdepends = $processable->relation('Build-Depends-All');
     if ($needbuilddepends) {
         $self->hint('package-uses-debhelper-but-lacks-build-depends')
@@ -670,7 +672,7 @@ sub source {
 
         $self->hint('missing-build-dependency-for-dh_-command',
             "$command => $dep")
-          unless ($bdepends_noarch->implies($dep));
+          unless ($bdepends_norestriction->implies($dep));
     }
 
     for my $dep (keys %missingbdeps_addons) {
@@ -678,17 +680,17 @@ sub source {
         my $addon = $missingbdeps_addons{$dep};
 
         $self->hint('missing-build-dependency-for-dh-addon', "$addon => $dep")
-          unless ($bdepends_noarch->implies($dep));
+          unless ($bdepends_norestriction->implies($dep));
 
         # As a special case, the python3 addon needs a dependency on
         # dh-python unless the -dev packages are used.
         my $pkg = 'dh-python';
         $self->hint('missing-build-dependency-for-dh-addon',"$addon => $pkg")
           if $addon eq 'python3'
-          && $bdepends_noarch->implies($dep)
-          && !$bdepends_noarch->implies(
+          && $bdepends_norestriction->implies($dep)
+          && !$bdepends_norestriction->implies(
             'python3-dev:any | python3-all-dev:any')
-          && !$bdepends_noarch->implies($pkg);
+          && !$bdepends_norestriction->implies($pkg);
     }
 
     $dh_bd_version //= $level;

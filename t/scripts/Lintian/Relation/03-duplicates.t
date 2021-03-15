@@ -8,10 +8,12 @@ use Test::More tests => 2;
 use Lintian::Relation;
 
 my $relation_a
-  = Lintian::Relation->new->load_noarch('pkgA, pkgB, pkgC, pkgA | pkgD');
+  = Lintian::Relation->new->load_norestriction(
+    'pkgA, pkgB, pkgC, pkgA | pkgD');
 
 my $relation_b
-  = Lintian::Relation->new->load_noarch('pkgA, pkgB, pkgC, pkgD | pkgE');
+  = Lintian::Relation->new->load_norestriction(
+    'pkgA, pkgB, pkgC, pkgD | pkgE');
 
 is_deeply($relation_a->duplicates, (['pkgA', 'pkgA | pkgD']), 'Duplicates');
 is($relation_b->duplicates, 0, 'No duplicates');

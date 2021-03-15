@@ -209,21 +209,21 @@ sub relation {
     return $relation;
 }
 
-=item relation_noarch (FIELD)
+=item relation_norestriction (FIELD)
 
 The same as L</relation (FIELD)>, but ignores architecture
 restrictions and build profile restrictions in the FIELD field.
 
-=item saved_relations_noarch
+=item saved_relations_norestriction
 
 =cut
 
-has saved_relations_noarch => (
+has saved_relations_norestriction => (
     is => 'rw',
     coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
     default => sub { {} });
 
-sub relation_noarch {
+sub relation_norestriction {
     my ($self, $name) = @_;
 
     return undef
@@ -231,11 +231,11 @@ sub relation_noarch {
 
     my $lowercase = lc $name;
 
-    my $relation = $self->saved_relations_noarch->{$lowercase};
+    my $relation = $self->saved_relations_norestriction->{$lowercase};
     unless (defined $relation) {
 
         $relation = $self->relation($name)->restriction_less;
-        $self->saved_relations_noarch->{$lowercase} = $relation;
+        $self->saved_relations_norestriction->{$lowercase} = $relation;
     }
 
     return $relation;
