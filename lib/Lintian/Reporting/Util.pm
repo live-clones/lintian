@@ -55,6 +55,7 @@ use Exporter qw(import);
 use File::Temp qw(tempfile);
 use List::Util qw(shuffle);
 use Path::Tiny;
+use Unicode::UTF8 qw(encode_utf8);
 use YAML::XS ();
 
 use Lintian::Relation::Version qw(versions_equal versions_comparator);
@@ -89,12 +90,13 @@ sub load_state_cache {
     # write stuff to STDERR and use die/croak, but it remains a
     # guess.
     if (my $err = $@) {
-        die("$state_file was invalid; please fix or remove it.\n$err");
+        die encode_utf8(
+            "$state_file was invalid; please fix or remove it.\n$err");
     }
     $state //= {};
 
     if (ref($state) ne 'HASH') {
-        die("$state_file was invalid; please fix or remove it.");
+        die encode_utf8("$state_file was invalid; please fix or remove it.");
     }
     return $state;
 }
@@ -119,22 +121,22 @@ sub save_state_cache {
     eval {
         print {$tmp_fd} encode_utf8(YAML::XS::Dump($state));
 
-        close($tmp_fd) or die("close $tmp_path: $!");
+        close($tmp_fd) or die encode_utf8("close $tmp_path: $!");
 
         # There is no secret in this.  Set it to 0644, so it does not
         # require sudo access on lintian.d.o to read the file.
         chmod($WIDELY_READABLE, $tmp_path);
 
         rename($tmp_path, $state_file)
-          or die("rename $tmp_path -> $state_file: $!");
+          or die encode_utf8("rename $tmp_path -> $state_file: $!");
     };
     if (my $err = $@) {
         if (-e $tmp_path) {
             # Ignore error as we have a more important one
             unlink($tmp_path)
-              or warn "Cannot unlink $tmp_path";
+              or warn encode_utf8("Cannot unlink $tmp_path");
         }
-        die($err);
+        die encode_utf8($err);
     }
     return 1;
 }

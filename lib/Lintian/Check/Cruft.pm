@@ -35,6 +35,7 @@ use Const::Fast;
 use File::Basename qw(basename);
 use List::SomeUtils qw(any none first_value);
 use Path::Tiny;
+use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Relation;
 use Lintian::Util qw(normalize_pkg_path);
@@ -84,7 +85,7 @@ sub _md5sum_based_lintian_data {
             my ($sha1, $sha256, $name, $reason, $link)
               = split(/ \s* ~~ \s* /msx, $_[1], $MD5SUM_DATA_FIELDS);
 
-            die "Syntax error in $filename $."
+            die encode_utf8("Syntax error in $filename $.")
               if any { !defined } ($sha1, $sha256, $name, $reason, $link);
 
             return {
@@ -132,7 +133,7 @@ has WARN_FILE_TYPE => (
                 my ($regtype, $regname, $transformlist)
                   = split(/ \s* ~~ \s* /msx, $_[1],$WARN_FILE_DATA_FIELDS);
 
-                die "Syntax error in cruft/warn-file-type $."
+                die encode_utf8("Syntax error in cruft/warn-file-type $.")
                   if !defined $regtype;
 
                 # allow empty regname
@@ -159,28 +160,32 @@ has WARN_FILE_TYPE => (
                             if($transform =~ m{^s/}) {
                                 $transform =~ m{^s/([^/]*?)/([^/]*?)/$};
                                 unless(defined($1) and defined($2)) {
-                                    die "$syntaxerror in transform regex $.";
+                                    die encode_utf8(
+                                        "$syntaxerror in transform regex $.");
                                 }
                                 push(@transformpairs,[$1,$2]);
                             } elsif ($transform =~ /^map\s*{/) {
                                 $transform
                                   =~ m{^map \s* \{ \s* 's/([^/]*?)/\'.\$_.'/' \s* \} \s* qw\(([^\)]*)\)}x;
                                 unless(defined($1) and defined($2)) {
-                                    die
-                                      "$syntaxerror in map transform regex $.";
+                                    die encode_utf8(
+"$syntaxerror in map transform regex $."
+                                    );
                                 }
                                 my $words = $2;
                                 my $match = $1;
                                 my @wordarray = split(/\s+/,$words);
                                 if(scalar(@wordarray) == 0) {
-                                    die
-"$syntaxerror in map transform regex : no qw arg $.";
+                                    die encode_utf8(
+"$syntaxerror in map transform regex : no qw arg $."
+                                    );
                                 }
                                 foreach my $word (@wordarray) {
                                     push(@transformpairs,[$match, $word]);
                                 }
                             } else {
-                                die "$syntaxerror in last field $.";
+                                die encode_utf8(
+                                    "$syntaxerror in last field $.");
                             }
                         }
                     }
@@ -277,7 +282,7 @@ sub _get_license_check_file {
             my ($keywords, $sentence, $regex, $firstregex, $callsub)
               = split(/ \s* ~~ \s* /msx, $_[1],$LICENSE_CHECK_DATA_FIELDS);
 
-            die "Syntax error in $filename:$."
+            die encode_utf8("Syntax error in $filename:$.")
               if any { !defined } ($keywords, $sentence);
 
             $regex //= $EMPTY;
@@ -293,11 +298,11 @@ sub _get_license_check_file {
 
             my @keywordlist = split(/\s*\&\&\s*/, $keywords);
             if(scalar(@keywordlist) < 1) {
-                die "$filename: No keywords on line $.";
+                die encode_utf8("$filename: No keywords on line $.");
             }
             my @sentencelist = split(/\s*\|\|\s*/, $sentence);
             if(scalar(@sentencelist) < 1) {
-                die "$filename: No sentence on line $.";
+                die encode_utf8("$filename: No sentence on line $.");
             }
 
             if($regex eq $EMPTY) {
@@ -316,7 +321,7 @@ sub _get_license_check_file {
                 if(defined($LICENSE_CHECK_DISPATCH_TABLE{$callsub})) {
                     $ret{'callsub'} = $LICENSE_CHECK_DISPATCH_TABLE{$callsub};
                 } else {
-                    die "$filename: Unknown sub $.";
+                    die encode_utf8("$filename: Unknown sub $.");
                 }
             }
             return \%ret;
@@ -522,7 +527,7 @@ sub visit_patched_files {
 
         my $marker = 0;
         open(my $fd, '<', $item->unpacked_path)
-          or die 'Cannot open ' . $item->unpacked_path;
+          or die encode_utf8('Cannot open ' . $item->unpacked_path);
 
         while (my $line = <$fd>) {
             next unless $line =~ m/^#/;
@@ -551,10 +556,10 @@ sub visit_patched_files {
         && !$self->processable->patched->resolve_path('debian/README.source')){
 
         open(my $fd, '<:gzip', $item->unpacked_path)
-          or die 'Cannot open ' . $item->unpacked_path;
+          or die encode_utf8('Cannot open ' . $item->unpacked_path);
 
         read($fd, my $magic, $RDATA_MAGIC_LENGTH)
-          or die 'Cannot read from ' . $item->unpacked_path;
+          or die encode_utf8('Cannot read from ' . $item->unpacked_path);
 
         close($fd);
 
@@ -566,7 +571,7 @@ sub visit_patched_files {
         && $item->is_open_ok) {
 
         open(my $fd, '<', $item->unpacked_path)
-          or die 'Cannot open ' . $item->unpacked_path;
+          or die encode_utf8('Cannot open ' . $item->unpacked_path);
 
         while (my $line = <$fd>) {
             next if $line =~ m{^\s*dnl};
@@ -629,7 +634,7 @@ sub visit_patched_files {
         && $item->is_open_ok) {
 
         open(my $fd, '<', $item->unpacked_path)
-          or die 'Cannot open ' . $item->unpacked_path;
+          or die encode_utf8('Cannot open ' . $item->unpacked_path);
 
         while (my $line = <$fd>) {
             next unless $line =~ m/(?<!")(FIX_?ME)(?!")/;
@@ -845,7 +850,7 @@ sub full_text_check {
     }
 
     open(my $fd, '<:raw', $item->unpacked_path)
-      or die 'Cannot open ' . $item->unpacked_path;
+      or die encode_utf8('Cannot open ' . $item->unpacked_path);
 
     # check only text files
     unless (-T $fd) {

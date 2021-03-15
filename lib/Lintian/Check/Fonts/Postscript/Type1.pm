@@ -25,6 +25,8 @@ use v5.20;
 use warnings;
 use utf8;
 
+use Unicode::UTF8 qw(decode_utf8);
+
 use Lintian::IPC::Run3 qw(safe_qx);
 
 use Moo;
@@ -41,7 +43,8 @@ sub visit_installed_files {
     return
       unless $item->file_info =~ m/PostScript Type 1 font program data/;
 
-    my $output = safe_qx('t1disasm', $item->unpacked_path);
+    my $bytes = safe_qx('t1disasm', $item->unpacked_path);
+    my $output = decode_utf8($bytes);
     my @lines = split(/\n/, $output);
 
     my $foundadobeline = 0;

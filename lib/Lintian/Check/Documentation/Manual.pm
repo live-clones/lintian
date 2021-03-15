@@ -34,7 +34,7 @@ use List::Compare;
 use List::SomeUtils qw(any none);
 use Path::Tiny;
 use Text::Balanced qw(extract_delimited);
-use Unicode::UTF8 qw(valid_utf8 decode_utf8);
+use Unicode::UTF8 qw(valid_utf8 decode_utf8 encode_utf8);
 
 use Lintian::Spelling qw(check_spelling);
 
@@ -189,12 +189,12 @@ sub visit_installed_files {
         if ($file_info =~ m/gzip compressed/) {
 
             open($fd, '<:gzip', $file->unpacked_path)
-              or die 'Cannot open ' . $file->unpacked_path;
+              or die encode_utf8('Cannot open ' . $file->unpacked_path);
 
         } else {
 
             open($fd, '<', $file->unpacked_path)
-              or die 'Cannot open ' . $file->unpacked_path;
+              or die encode_utf8('Cannot open ' . $file->unpacked_path);
         }
 
         my @manfile = <$fd>;
@@ -269,7 +269,7 @@ sub visit_installed_files {
                 $message .= $COLON . $NEWLINE . $stderr
                   if length $stderr;
 
-                warn $message;
+                warn encode_utf8($message);
 
             } else {
                 my $desc = $stdout;
@@ -310,7 +310,7 @@ sub visit_installed_files {
 
             my $savedir = getcwd;
             chdir($localdir)
-              or die 'Cannot change directory ' . $localdir;
+              or die encode_utf8('Cannot change directory ' . $localdir);
 
             run3(\@command, \undef, \$stdout, \$stderr);
 
@@ -371,7 +371,7 @@ sub visit_installed_files {
             }
 
             chdir($savedir)
-              or die 'Cannot change directory ' . $savedir;
+              or die encode_utf8('Cannot change directory ' . $savedir);
         }
 
         # Now we search through the whole man page for some common errors
@@ -443,7 +443,7 @@ sub visit_installed_files {
 
         my $path = $file->unpacked_path;
         gunzip($path => \$bytes)
-          or die "gunzip $path failed: $GunzipError";
+          or die encode_utf8("gunzip $path failed: $GunzipError");
 
     } elsif ($file->file_info =~ /^troff/ || $file->file_info =~ /text$/) {
         $bytes = $file->bytes;

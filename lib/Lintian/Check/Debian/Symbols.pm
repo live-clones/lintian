@@ -28,6 +28,8 @@ use v5.20;
 use warnings;
 use utf8;
 
+use Unicode::UTF8 qw(encode_utf8);
+
 use Moo;
 use namespace::clean;
 
@@ -53,7 +55,7 @@ sub check_symbols_file {
       unless $file->is_file && $file->is_open_ok;
 
     open(my $fd, '<', $file->unpacked_path)
-      or die 'Cannot open ' . $file->unpacked_path;
+      or die encode_utf8('Cannot open ' . $file->unpacked_path);
 
     while (my $line = <$fd>) {
 

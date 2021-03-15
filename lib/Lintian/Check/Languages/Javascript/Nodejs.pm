@@ -28,6 +28,7 @@ use Const::Fast;
 use JSON::MaybeXS;
 use List::SomeUtils qw(any);
 use Path::Tiny;
+use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Relation;
 
@@ -86,7 +87,7 @@ sub source {
       unless $drules->is_open_ok;
 
     open(my $rules_fd, '<', $drules->unpacked_path)
-      or die 'Cannot open ' . $drules->unpacked_path;
+      or die encode_utf8('Cannot open ' . $drules->unpacked_path);
 
     my $command_prefix_pattern = qr/\s+[@+-]?(?:\S+=\S+\s+)*/;
     my ($seen_nodejs,$override_test,$seen_dh_dynamic);

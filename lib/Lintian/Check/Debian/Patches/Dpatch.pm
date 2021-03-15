@@ -28,6 +28,7 @@ use warnings;
 use utf8;
 
 use Const::Fast;
+use Unicode::UTF8 qw(encode_utf8);
 
 use Moo;
 use namespace::clean;
@@ -69,7 +70,7 @@ sub source {
         my @patches;
 
         open(my $fd, '<', $file->unpacked_path)
-          or die 'Cannot open ' . $file->unpacked_path;
+          or die encode_utf8('Cannot open ' . $file->unpacked_path);
 
         while(my $line = <$fd>) {
             chomp $line;
@@ -115,7 +116,7 @@ sub source {
 
             my $description = $EMPTY;
             open(my $fd, '<', $patch_file->unpacked_path)
-              or die 'Cannot open ' . $patch_file->unpacked_path;
+              or die encode_utf8('Cannot open ' . $patch_file->unpacked_path);
 
             while (my $line = <$fd>) {
                 # stop if something looking like a patch

@@ -53,8 +53,8 @@ Lintian::Reporting::ResourceManager -- A simple resource manager for html_report
  $resMan->install_resource('path/to/my-image.png', { install_method => 'copy'} );
  # Move the resource
  $resMan->install_resource('path/to/generated-styles.css');
- print 'Image: ' . $resMan->resource_url('my-image.png'), "\n";
- print 'CSS: ' . $resMan->resource_url('generated-styles.css'), "\n";
+ print encode_utf8('Image: ' . $resMan->resource_url('my-image.png'), "\n");
+ print encode_utf8('CSS: ' . $resMan->resource_url('generated-styles.css'), "\n");
 
 =head1 DESCRIPTION
 
@@ -163,13 +163,13 @@ sub install_resource {
 
     if (!-d $resource_root) {
         mkdir($resource_root, $WIDELY_READABLE_FOLDER)
-          or die "Cannot mkdir $resource_root";
+          or die encode_utf8("Cannot mkdir $resource_root");
     }
 
     my $target_file = "$resource_root/$install_name";
     if ($method eq 'move') {
         rename($resource, $target_file)
-          or die "Cannot rename $resource to $target_file";
+          or die encode_utf8("Cannot rename $resource to $target_file");
 
     } elsif ($method eq 'copy') {
         copy($resource, $target_file)

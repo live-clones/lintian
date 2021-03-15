@@ -51,12 +51,12 @@ Lintian::Relation::Version - Comparison operators on Debian versions
 
 =head1 SYNOPSIS
 
-    print "yes\n" if versions_equal('1.0', '1.00');
-    print "yes\n" if versions_gte('1.1', '1.0');
-    print "no\n" if versions_lte('1.1', '1.0');
-    print "yes\n" if versions_gt('1.1', '1.0');
-    print "no\n" if versions_lt('1.1', '1.1');
-    print "yes\n" if versions_compare('1.1', '<=', '1.1');
+    print encode_utf8("yes\n") if versions_equal('1.0', '1.00');
+    print encode_utf8("yes\n") if versions_gte('1.1', '1.0');
+    print encode_utf8("no\n") if versions_lte('1.1', '1.0');
+    print encode_utf8("yes\n") if versions_gt('1.1', '1.0');
+    print encode_utf8("no\n") if versions_lt('1.1', '1.1');
+    print encode_utf8("yes\n") if versions_compare('1.1', '<=', '1.1');
 
 =head1 DESCRIPTION
 

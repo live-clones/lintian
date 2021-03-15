@@ -26,6 +26,7 @@ use utf8;
 
 use Const::Fast;
 use List::SomeUtils qw(any);
+use Unicode::UTF8 qw(encode_utf8);
 
 use Moo;
 use namespace::clean;
@@ -53,13 +54,14 @@ sub source {
     if ($format_file and $format_file->is_open_ok) {
 
         open(my $fd, '<', $format_file->unpacked_path)
-          or die 'Cannot open ' . $format_file->unpacked_path;
+          or die encode_utf8('Cannot open ' . $format_file->unpacked_path);
 
         $format = <$fd>;
         chomp $format;
         close($fd);
         $format_extra = $EMPTY;
-        die "unknown source format $format" unless $KNOWN_FORMATS{$format};
+        die encode_utf8("unknown source format $format")
+          unless $KNOWN_FORMATS{$format};
     } else {
         $self->hint('missing-debian-source-format');
         $format = '1.0';
@@ -87,7 +89,7 @@ sub source {
     if ($git_pfile and $git_pfile->is_open_ok and $git_pfile->size != 0) {
 
         open(my $git_patches_fd, '<', $git_pfile->unpacked_path)
-          or die 'Cannot open ' . $git_pfile->unpacked_path;
+          or die encode_utf8('Cannot open ' . $git_pfile->unpacked_path);
 
         if (any { !/^\s*+#|^\s*+$/} <$git_patches_fd>) {
             my $dpseries
@@ -98,7 +100,8 @@ sub source {
                 $self->hint('git-patches-not-exported');
             } else {
                 open(my $series_fd, '<', $dpseries->unpacked_path)
-                  or die 'Cannot open ' . $dpseries->unpacked_path;
+                  or
+                  die encode_utf8('Cannot open ' . $dpseries->unpacked_path);
 
                 my $comment_line = <$series_fd>;
                 my $count = grep { !/^\s*+\#|^\s*+$/ } <$series_fd>;
@@ -126,7 +129,7 @@ sub source {
     if ($options and $options->is_open_ok) {
 
         open(my $fd, '<', $options->unpacked_path)
-          or die 'Cannot open ' . $options->unpacked_path;
+          or die encode_utf8('Cannot open ' . $options->unpacked_path);
 
         while (my $line = <$fd>) {
             $self->hint('custom-compression-in-debian-source-options',

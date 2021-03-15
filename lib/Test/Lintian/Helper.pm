@@ -155,7 +155,7 @@ sub copy_dir_contents {
         # remove files to be replaced by a directory
         if (-e $prospective && !-d _ && -d $path) {
             unlink($prospective)
-              or die "Cannot unlink $prospective";
+              or die encode_utf8("Cannot unlink $prospective");
         }
     }
 

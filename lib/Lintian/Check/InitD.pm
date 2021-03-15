@@ -28,6 +28,7 @@ use utf8;
 use Const::Fast;
 use File::Basename qw(dirname);
 use List::SomeUtils qw(any none);
+use Unicode::UTF8 qw(encode_utf8);
 
 use Moo;
 use namespace::clean;
@@ -108,7 +109,7 @@ sub installable {
     if ($postinst and $postinst->is_file and $postinst->is_open_ok) {
 
         open(my $fd, '<', $postinst->unpacked_path)
-          or die 'Cannot open ' . $postinst->unpacked_path;
+          or die encode_utf8('Cannot open ' . $postinst->unpacked_path);
 
         while (my $line = <$fd>) {
 
@@ -141,7 +142,7 @@ sub installable {
     if ($preinst and $preinst->is_file and $preinst->is_open_ok) {
 
         open(my $fd, '<', $preinst->unpacked_path)
-          or die 'Cannot open ' . $preinst->unpacked_path;
+          or die encode_utf8('Cannot open ' . $preinst->unpacked_path);
 
         while (my $line = <$fd>) {
 
@@ -167,7 +168,7 @@ sub installable {
     if ($postrm and $postrm->is_file and $postrm->is_open_ok) {
 
         open(my $fd, '<', $postrm->unpacked_path)
-          or die 'Cannot open ' . $postrm->unpacked_path;
+          or die encode_utf8('Cannot open ' . $postrm->unpacked_path);
 
         while (my $line = <$fd>) {
 
@@ -197,7 +198,7 @@ sub installable {
     if ($prerm and $prerm->is_file and $prerm->is_open_ok) {
 
         open(my $fd, '<', $prerm->unpacked_path)
-          or die 'Cannot open ' . $prerm->unpacked_path;
+          or die encode_utf8('Cannot open ' . $prerm->unpacked_path);
 
         while (my $line = <$fd>) {
 
@@ -313,7 +314,7 @@ sub check_init {
     my $needs_fs = 0;
 
     open(my $fd, '<', $initd_path->unpacked_path)
-      or die 'Cannot open ' . $initd_path->unpacked_path;
+      or die encode_utf8('Cannot open ' . $initd_path->unpacked_path);
 
     while (my $l = <$fd>) {
         if ($. == 1) {
@@ -583,7 +584,7 @@ sub check_defaults {
           unless $path->is_open_ok;
 
         open(my $fd, '<', $path->unpacked_path)
-          or die 'Cannot open ' . $path->unpacked_path;
+          or die encode_utf8('Cannot open ' . $path->unpacked_path);
 
         while (my $line = <$fd>) {
             $self->hint('init.d-script-should-always-start-service',

@@ -25,6 +25,7 @@ use warnings;
 use utf8;
 
 use Const::Fast;
+use Unicode::UTF8 qw(encode_utf8);
 
 use Moo;
 use namespace::clean;
@@ -55,25 +56,25 @@ sub visit_installed_files {
 
     my $buf;
     open(my $fd, '<', $file->unpacked_path)
-      or die 'Cannot open ' . $file->unpacked_path;
+      or die encode_utf8('Cannot open ' . $file->unpacked_path);
 
     eval {
         # offset to main header
         seek($fd, $MAIN_HEADER, 0)
-          or die "seek: $!";
+          or die encode_utf8("seek: $!");
 
         read($fd, $buf, $MAIN_HEADER_LENGTH_WORD_SIZE)
-          or die "read: $!";
+          or die encode_utf8("read: $!");
 
         my $pe_offset = unpack('V', $buf);
 
         # 0x18 is index to "Optional Header"; 0x46 to DLL Characteristics
         seek($fd, $pe_offset + $OPTIONAL_HEADER + $DLL_CHARACTERISTICS, 0)
-          or die "seek: $!";
+          or die encode_utf8("seek: $!");
 
         # get DLLCharacteristics value
         read($fd, $buf, 2)
-          or die "read: $!";
+          or die encode_utf8("read: $!");
     };
 
     my $characteristics = unpack('v', $buf);

@@ -29,6 +29,7 @@ use Cwd qw(realpath);
 use File::Temp();
 use IPC::Run3;
 use Try::Tiny;
+use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::IPC::Run3 qw(safe_qx);
 
@@ -69,7 +70,7 @@ sub source {
                 push(@lang_templates, $basename);
 
                 open(my $fd, '<', $path->unpacked_path)
-                  or die 'Cannot open ' . $path->unpacked_path;
+                  or die encode_utf8('Cannot open ' . $path->unpacked_path);
 
                 while (my $line = <$fd>) {
 
@@ -82,7 +83,7 @@ sub source {
 
             } else {
                 open(my $fd, '<', $path->unpacked_path)
-                  or die 'Cannot open ' . $path->unpacked_path;
+                  or die encode_utf8('Cannot open ' . $path->unpacked_path);
 
                 my $in_template = 0;
                 my $saw_tl_note = 0;
@@ -159,7 +160,8 @@ sub source {
     if ($potfiles_in_path and $potfiles_in_path->is_open_ok) {
 
         open(my $fd, '<', $potfiles_in_path->unpacked_path)
-          or die 'Cannot open ' . $potfiles_in_path->unpacked_path;
+          or
+          die encode_utf8('Cannot open ' . $potfiles_in_path->unpacked_path);
 
         while (my $line = <$fd>) {
             chomp $line;
@@ -212,7 +214,7 @@ sub source {
 
         # Create our extra level
         mkdir($tempdir)
-          or die 'Cannot create directory ' . $tempdir;
+          or die encode_utf8('Cannot create directory ' . $tempdir);
 
         # Copy the templates dir because intltool-update might
         # write to it.
@@ -233,7 +235,7 @@ sub source {
             $ENV{srcdir} = $debian_po_dir->unpacked_path;
 
             chdir($tempdir)
-              or die 'Cannot change directory ' . $tempdir;
+              or die encode_utf8('Cannot change directory ' . $tempdir);
 
             # generate a "test.pot" in a tempdir
             my @intltool = (
@@ -241,7 +243,7 @@ sub source {
                 '--gettext-package=test','--pot'
             );
             safe_qx(@intltool);
-            die "system @intltool failed: $?"
+            die encode_utf8("system @intltool failed: $?")
               if $?;
 
         }catch {
@@ -253,7 +255,7 @@ sub source {
 
             # restore working directory
             chdir($cwd)
-              or die 'Cannot change directory ' . $cwd;
+              or die encode_utf8('Cannot change directory ' . $cwd);
         };
 
         # output could be helpful to user but is currently not printed
@@ -273,7 +275,7 @@ sub source {
                 $test_pot, $templ_pot_path->unpacked_path
             );
             safe_qx(@testleft);
-            die "system @testleft failed: $?"
+            die encode_utf8("system @testleft failed: $?")
               if $?;
 
             # is this not equivalent to the previous command? - FL
@@ -282,7 +284,7 @@ sub source {
                 $templ_pot_path->unpacked_path, $test_pot
             );
             safe_qx(@testright);
-            die "system @testright failed: $?"
+            die encode_utf8("system @testright failed: $?")
               if $?;
 
         }catch {

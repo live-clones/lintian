@@ -25,6 +25,7 @@ use warnings;
 use utf8;
 
 use Const::Fast;
+use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::SlidingWindow;
 
@@ -71,7 +72,7 @@ sub visit_installed_files {
           if $prefix eq 'lib';
 
         open(my $fd, '<:raw', $file->unpacked_path)
-          or die 'Cannot open ' . $file->unpacked_path;
+          or die encode_utf8('Cannot open ' . $file->unpacked_path);
 
         my $sfd = Lintian::SlidingWindow->new($fd);
 

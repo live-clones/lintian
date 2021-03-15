@@ -25,6 +25,8 @@ use warnings;
 use utf8;
 use autodie qw(open);
 
+use Unicode::UTF8 qw(encode_utf8);
+
 use Moo;
 use namespace::clean;
 
@@ -38,9 +40,9 @@ sub _parse_trigger_types {
         $values{$k} = $v;
     }
     if (exists($values{'implicit-await'})) {
-        die
+        die encode_utf8(
 "Invalid trigger-types: $key is defined as implicit-await but not await"
-          if $values{'implicit-await'} and not $values{'await'};
+        )if $values{'implicit-await'} and not $values{'await'};
     }
     return \%values;
 }

@@ -26,6 +26,7 @@ use Const::Fast;
 use IPC::Run3;
 use List::SomeUtils qw(first_index none);
 use Path::Tiny;
+use Unicode::UTF8 qw(decode_utf8);
 
 use Lintian::IPC::Run3 qw(safe_qx);
 
@@ -202,13 +203,17 @@ sub installable {
     # supports a newer format but it's not permitted in the archive
     # yet.
     if (not defined($failed)) {
-        my $output = safe_qx('ar', 'p', $deb_path, 'debian-binary');
+        my $bytes = safe_qx('ar', 'p', $deb_path, 'debian-binary');
         if ($? != 0) {
             $self->hint('malformed-deb-archive',
                 'cannot read debian-binary member');
-        } elsif ($output !~ /^2\.\d+\n/) {
-            my ($version) = split(m/\n/, $output);
-            $self->hint('malformed-deb-archive', "version $version not 2.0");
+        } else {
+            my $output = decode_utf8($bytes);
+            if ($output !~ /^2\.\d+\n/) {
+                my ($version) = split(m/\n/, $output);
+                $self->hint('malformed-deb-archive',
+                    "version $version not 2.0");
+            }
         }
     }
 

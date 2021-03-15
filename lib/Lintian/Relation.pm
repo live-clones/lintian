@@ -25,8 +25,10 @@ use v5.20;
 use warnings;
 use utf8;
 
+use Carp qw(confess);
 use Const::Fast;
 use List::SomeUtils qw(any);
+use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Relation::Version qw(:all);
 
@@ -66,8 +68,8 @@ Lintian::Relation - Lintian operations on dependencies and relationships
 =head1 SYNOPSIS
 
     my $depends = Lintian::Relation->new('foo | bar, baz');
-    print "yes\n" if $depends->implies('baz');
-    print "no\n" if $depends->implies('foo');
+    print encode_utf8("yes\n") if $depends->implies('baz');
+    print encode_utf8("no\n") if $depends->implies('foo');
 
 =head1 DESCRIPTION
 
@@ -923,8 +925,7 @@ sub to_string {
         $text = $tree->[$NAME];
 
     } else {
-        require Carp;
-        Carp::confess("Case $tree->[$BRANCH_TYPE] not implemented");
+        confess encode_utf8("Case $tree->[$BRANCH_TYPE] not implemented");
     }
 
     return $text;

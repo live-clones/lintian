@@ -32,6 +32,7 @@ use Const::Fast;
 use File::Basename;
 use List::SomeUtils qw(any first_index);
 use Text::ParseWords qw(shellwords);
+use Unicode::UTF8 qw(encode_utf8);
 
 use Moo;
 use namespace::clean;
@@ -139,7 +140,7 @@ sub check_init_script {
     }
 
     open(my $fh, '<', $file->unpacked_path)
-      or die 'Cannot open ' . $file->unpacked_path;
+      or die encode_utf8('Cannot open ' . $file->unpacked_path);
 
     while (my $line = <$fh>) {
 
@@ -406,7 +407,7 @@ sub service_file_lines {
       if $path->is_symlink and $path->link eq '/dev/null';
 
     open(my $fh, '<', $path->unpacked_path)
-      or die 'Cannot open ' . $path->unpacked_path;
+      or die encode_utf8('Cannot open ' . $path->unpacked_path);
 
     while (my $line = <$fh>) {
         chomp $line;
@@ -507,7 +508,7 @@ sub check_maintainer_scripts {
           unless $file->is_open_ok;
 
         open(my $sfd, '<', $file->unpacked_path)
-          or die 'Cannot open ' . $file->unpacked_path;
+          or die encode_utf8('Cannot open ' . $file->unpacked_path);
 
         while (my $line = <$sfd>) {
             # skip comments

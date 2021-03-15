@@ -33,7 +33,7 @@ use List::Util qw(first);
 use List::SomeUtils qw(any all uniq);
 use Path::Tiny;
 use Try::Tiny;
-use Unicode::UTF8 qw(valid_utf8 decode_utf8);
+use Unicode::UTF8 qw(valid_utf8 decode_utf8 encode_utf8);
 
 use Lintian::Inspect::Changelog;
 use Lintian::Inspect::Changelog::Version;
@@ -766,7 +766,7 @@ sub check_dch {
     my ($estart, $tstart) = (0, 0);
 
     open(my $fd, '<:utf8_strict', $path)
-      or die 'Cannot open ' . $path;
+      or die encode_utf8('Cannot open ' . $path);
 
     while (my $line = <$fd>) {
 

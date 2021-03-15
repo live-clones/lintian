@@ -16,6 +16,7 @@ use autodie qw(opendir closedir);
 use Const::Fast;
 use Cwd qw(realpath);
 use File::Basename qw(dirname);
+use Unicode::UTF8 qw(encode_utf8);
 
 # neither Path::This nor lib::relative are in Debian
 use constant THISFILE => realpath __FILE__;
@@ -32,7 +33,7 @@ const my $INDENT => $SPACE x 4;
 const my $EXTRA_VERBOSE => 3;
 
 $ENV{LINTIAN_BASE} = realpath(THISDIR . '/..')
-  // die 'Cannot resolve LINTIAN_BASE';
+  // die encode_utf8('Cannot resolve LINTIAN_BASE');
 
 my @severities = reverse qw(pedantic info warning error);
 my @types = qw(E W I P);
@@ -72,38 +73,40 @@ for my $check (readdir($checkdir)) {
 
 closedir($checkdir);
 
-print "Severity\n";
+print encode_utf8("Severity\n");
 foreach my $s (@severities) {
     my $tags = $stats{severity}{$s} // [];
-    print "  $s: " . @{$tags} . "\n";
-    print $INDENT . join("\n    ", sort @{$tags}) . "\n"
+    print encode_utf8("  $s: " . @{$tags} . "\n");
+    print encode_utf8($INDENT . join("\n    ", sort @{$tags}) . "\n")
       if $verbose >= $EXTRA_VERBOSE;
 }
 
 foreach my $t (@types) {
-    print "\nType $t Severity\n";
+    print encode_utf8("\nType $t Severity\n");
     foreach my $s (@severities) {
         if (my $tags = $stats{type}{severity}{$t}{$s}) {
-            print "  $s: " . @{$tags} . "\n";
-            print $INDENT . join("\n    ", sort @{$tags}) . "\n"
+            print encode_utf8("  $s: " . @{$tags} . "\n");
+            print encode_utf8($INDENT . join("\n    ", sort @{$tags}) . "\n")
               if $verbose >= 2;
         }
     }
 }
 
-print "\nCollections\n";
+print encode_utf8("\nCollections\n");
 foreach my $s (@severities) {
     if (my $needs = $stats{needs}{$s}) {
         my $size = scalar keys %{$needs};
         my @list = sort keys %{$needs};
-        print "  $s: $size\n";
-        print $INDENT . join("\n    ", @list) . "\n" if $verbose >= 2;
+        print encode_utf8("  $s: $size\n");
+        print encode_utf8($INDENT . join("\n    ", @list) . "\n")
+          if $verbose >= 2;
     }
 }
 
 if ($verbose >= 1 and exists $stats{severity}{unclassified}) {
-    print "\nUnclassified tags\n";
-    print $SPACE x 2 . join("\n  ", @{$stats{severity}{unclassified}}) . "\n";
+    print encode_utf8("\nUnclassified tags\n");
+    print encode_utf8(
+        $SPACE x 2 . join("\n  ", @{$stats{severity}{unclassified}}) . "\n");
 }
 
 # Local Variables:

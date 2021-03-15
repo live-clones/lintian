@@ -429,7 +429,7 @@ sub DEMOLISH {
 
     # change back to where we were; otherwise removal may fail
     chdir($self->savedir)
-      or die 'Cannot change to directory ' . $self->savedir;
+      or die encode_utf8('Cannot change to directory ' . $self->savedir);
 
     path($self->basedir)->remove_tree
       if length $self->basedir && -d $self->basedir;

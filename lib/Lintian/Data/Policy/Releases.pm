@@ -23,17 +23,18 @@ use v5.20;
 use warnings;
 use utf8;
 
+use Carp qw(croak);
 use Const::Fast;
 use Date::Parse qw(str2time);
 use List::SomeUtils qw(first_value);
 use IPC::Run3;
 use HTTP::Tiny;
+use JSON::MaybeXS;
 use List::SomeUtils qw(minmax);
 use List::UtilsBy qw(rev_nsort_by);
-use JSON::MaybeXS;
 use Path::Tiny;
 use Time::Piece;
-use Unicode::UTF8 qw(decode_utf8);
+use Unicode::UTF8 qw(decode_utf8 encode_utf8);
 
 use Moo;
 use namespace::clean;
@@ -197,7 +198,7 @@ sub refresh {
       = 'https://salsa.debian.org/dbnpolicy/policy/-/raw/master/debian/changelog?inline=false';
 
     my $response = HTTP::Tiny->new->get($changelog_url);
-    die "Failed to get $changelog_url!\n"
+    die encode_utf8("Failed to get $changelog_url!\n")
       unless $response->{success};
 
     my $tempfile_tiny = Path::Tiny->tempfile;
@@ -211,6 +212,8 @@ sub refresh {
     my $stderr;
     run3(\@command, \undef, \$rfc822, \$stderr);
     my $status = ($? >> $WAIT_STATUS_SHIFT);
+
+    # already in UTF-8
     die $stderr
       if $status;
 

@@ -25,6 +25,7 @@ use Archive::Zip qw( :ERROR_CODES :CONSTANTS );
 use Const::Fast;
 use Cwd;
 use Path::Tiny;
+use Unicode::UTF8 qw(encode_utf8);
 
 use Moo::Role;
 use namespace::clean;
@@ -62,7 +63,7 @@ sub add_java {
 
     my $savedir = getcwd;
     chdir($self->basedir)
-      or die 'Cannot change to directory ' . $self->basedir;
+      or die encode_utf8('Cannot change to directory ' . $self->basedir);
 
     my @files = grep { $_->is_file } @{$self->sorted_list};
 
@@ -121,7 +122,7 @@ sub add_java {
     $_->java_info($java_info{$_->name}) for @java_files;
 
     chdir($savedir)
-      or die "Cannot change to directory $savedir";
+      or die encode_utf8("Cannot change to directory $savedir");
 
     return;
 }

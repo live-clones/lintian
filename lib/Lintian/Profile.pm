@@ -24,7 +24,7 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Carp qw(croak confess);
+use Carp qw(croak);
 use Const::Fast;
 use Cwd qw(realpath);
 use File::BaseDir qw(config_home config_files data_home);

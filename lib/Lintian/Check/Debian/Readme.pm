@@ -25,6 +25,7 @@ use warnings;
 use utf8;
 
 use Const::Fast;
+use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Spelling qw(check_spelling);
 
@@ -54,12 +55,12 @@ sub open_readme {
             next if not $path or not $path->is_open_ok;
             if ($name =~ m/\.gz$/) {
                 open(my $fd, '<:gzip', $path->unpacked_path)
-                  or die 'Cannot open ' . $path->unpacked_path;
+                  or die encode_utf8('Cannot open ' . $path->unpacked_path);
 
                 return $fd;
             }
             open(my $fd, '<', $path->unpacked_path)
-              or die 'Cannot open ' . $path->unpacked_path;
+              or die encode_utf8('Cannot open ' . $path->unpacked_path);
 
             return $fd;
         }

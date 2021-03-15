@@ -32,6 +32,7 @@ use utf8;
 use Const::Fast;
 use List::SomeUtils qw(any);
 use POSIX qw(strftime);
+use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::IPC::Run3 qw(safe_qx);
 use Lintian::Relation;
@@ -81,8 +82,9 @@ has INTERPRETERS => (
                     $prerequisites = $EMPTY;
 
                 } elsif ($prerequisites =~ / @ /msx) {
-                    die
-"Unknown magic value $prerequisites for versioned interpreter $interpreter";
+                    die encode_utf8(
+"Unknown magic value $prerequisites for versioned interpreter $interpreter"
+                    );
                 }
 
                 return {
@@ -150,8 +152,9 @@ has VERSIONED_INTERPRETERS => (
                     $prerequisites = undef;
 
                 } elsif ($prerequisites =~ / @ /msx) {
-                    die
-"Unknown magic value $prerequisites for versioned interpreter $interpreter";
+                    die encode_utf8(
+"Unknown magic value $prerequisites for versioned interpreter $interpreter"
+                    );
                 }
 
                 return {
@@ -191,7 +194,9 @@ has BAD_MAINT_CMD => (
                 my ($incat,$inauto,$exceptinpackage,$inscript,$regexp)
                   = split(/ \s* ~~ /msx, $_[1],$BAD_MAINTAINER_COMMAND_FIELDS);
 
-                die"Syntax error in scripts/maintainer-script-bad-command: $."
+                die encode_utf8(
+                    "Syntax error in scripts/maintainer-script-bad-command: $."
+                  )
                   if any { !defined }
                 ($incat,$inauto,$exceptinpackage,$inscript,$regexp);
 
@@ -581,7 +586,7 @@ sub installable {
                 'libperl4-corelibs-perl | perl (<< 5.12.3-7)')
         ) {
             open(my $fd, '<', $file->unpacked_path)
-              or die 'Cannot open ' . $file->unpacked_path;
+              or die encode_utf8('Cannot open ' . $file->unpacked_path);
 
             while (my $line = <$fd>) {
                 if (
@@ -834,7 +839,7 @@ sub installable {
 
         # now scan the file contents themselves
         open(my $fd, '<', $file->unpacked_path)
-          or die 'Cannot open ' . $file->unpacked_path;
+          or die encode_utf8('Cannot open ' . $file->unpacked_path);
 
         my (
             $saw_init, $saw_invoke,
@@ -1302,7 +1307,7 @@ sub installable {
                     push @{$removed_diversions{$divert}},
                       {'script' => $file, 'line' => $.};
                 } else {
-                    die "\$mode has unknown value: $mode";
+                    die encode_utf8("mode has unknown value: $mode");
                 }
             }
         }
@@ -1509,7 +1514,7 @@ sub script_is_evil_and_wrong {
     my $backgrounded = 0;
 
     open(my $fd, '<', $path->unpacked_path)
-      or die 'Cannot open ' . $path->unpacked_path;
+      or die encode_utf8('Cannot open ' . $path->unpacked_path);
 
     while (my $line = <$fd>) {
         chomp $line;

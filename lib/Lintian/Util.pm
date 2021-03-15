@@ -209,7 +209,7 @@ sub get_file_digest {
     my ($alg, $file) = @_;
 
     open(my $fd, '<', $file)
-      or die "Cannot open $file";
+      or die encode_utf8("Cannot open $file");
 
     my $digest;
     if (lc($alg) eq 'md5') {

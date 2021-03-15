@@ -25,6 +25,7 @@ use warnings;
 use utf8;
 
 use List::SomeUtils qw(none);
+use Unicode::UTF8 qw(encode_utf8);
 
 use Moo;
 use namespace::clean;
@@ -95,7 +96,8 @@ sub source {
                 # Wild guess package type as in
                 # PEAR_PackageFile_v2::getPackageType()
                 open(my $package_xml_fd, '<', $package_xml->unpacked_path)
-                  or die 'Cannot open ' . $package_xml->unpacked_path;
+                  or die encode_utf8(
+                    'Cannot open ' . $package_xml->unpacked_path);
 
                 while (my $line = <$package_xml_fd>) {
                     if (
@@ -159,7 +161,7 @@ sub source {
             my $has_addon_php = 0;
 
             open(my $rules_fd, '<', $rules->unpacked_path)
-              or die 'Cannot open ' . $rules->unpacked_path;
+              or die encode_utf8('Cannot open ' . $rules->unpacked_path);
 
             while (my $line = <$rules_fd>) {
 

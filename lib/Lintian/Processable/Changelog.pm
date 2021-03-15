@@ -25,7 +25,7 @@ use utf8;
 use File::Copy qw(copy);
 use List::SomeUtils qw(first_value);
 use Path::Tiny;
-use Unicode::UTF8 qw(valid_utf8 decode_utf8);
+use Unicode::UTF8 qw(valid_utf8 decode_utf8 encode_utf8);
 
 use Lintian::IPC::Run3 qw(safe_qx);
 
@@ -124,7 +124,7 @@ has changelog_path => (
             # Remove it if it not the Debian changelog.
             unless ($ok) {
                 unlink $changelogpath
-                  or die "Cannot unlink $changelogpath";
+                  or die encode_utf8("Cannot unlink $changelogpath");
 
                 undef $changelogpath;
             }

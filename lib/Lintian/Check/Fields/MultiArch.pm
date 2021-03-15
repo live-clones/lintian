@@ -30,6 +30,7 @@ use utf8;
 
 use Const::Fast;
 use List::SomeUtils qw(uniq any);
+use Unicode::UTF8 qw(decode_utf8);
 
 use Lintian::IPC::Run3 qw(safe_qx);
 
@@ -56,10 +57,11 @@ sub source {
           ->value('Architecture');
         my @arches   = split(
             $SPACE,
-            safe_qx(
-                'dpkg-architecture', '--match-wildcard',
-                $wildcard,           '--list-known'
-            ));
+            decode_utf8(
+                safe_qx(
+                    'dpkg-architecture', '--match-wildcard',
+                    $wildcard,           '--list-known'
+                )));
 
         # include original wildcard
         push(@arches, $wildcard);

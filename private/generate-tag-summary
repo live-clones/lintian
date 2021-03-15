@@ -8,6 +8,7 @@ use utf8;
 
 use Cwd qw(realpath);
 use File::Basename qw(dirname);
+use Unicode::UTF8 qw(decode_utf8 encode_utf8);
 
 # neither Path::This nor lib::relative are in Debian
 use constant THISFILE => realpath __FILE__;
@@ -35,22 +36,24 @@ Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev',
 
 # process commandline options
 Getopt::Long::GetOptions(%opthash)
-  or die("error parsing options\n");
+  or die encode_utf8("error parsing options\n");
 
 my ($commit_range) = @ARGV;
 if (not $commit_range) {
-    my $describe = safe_qx(qw(git describe --abbrev=0));
+    my $bytes = safe_qx(qw(git describe --abbrev=0));
     my $status = $? >> $WAIT_STATUS_SHIFT;
 
-    die "git describe failed with code $status\n"
+    die encode_utf8("git describe failed with code $status\n")
       if $status;
 
+    my $describe = decode_utf8($bytes);
     chomp($describe);
+
     if (not $describe) {
-        die "git describe did not return anything.\n";
+        die encode_utf8("git describe did not return anything.\n");
     }
     $commit_range = "${describe}..HEAD";
-    print "Assuming commit range to be: ${commit_range}\n";
+    print encode_utf8("Assuming commit range to be: ${commit_range}\n");
 }
 
 my $output;
@@ -81,7 +84,7 @@ for my $tag (keys(%added)) {
 }
 
 if (not %added and not %removed) {
-    print {*STDERR} "No tags were added or removed\n";
+    print {*STDERR} encode_utf8("No tags were added or removed\n");
 }
 
 if ($opt{'in-place'}) {
@@ -89,11 +92,11 @@ if ($opt{'in-place'}) {
 
     my $infile = 'debian/changelog';
     open(my $in_fd, '<', $infile)
-      or die "Cannot open $infile";
+      or die encode_utf8("Cannot open $infile");
 
     my $outfile = 'debian/changelog.tmp';
     open(my $out_fd, '>', $outfile)
-      or die "Cannot open $outfile";
+      or die encode_utf8("Cannot open $outfile");
 
     while (my $line = <$in_fd>) {
         chomp $line;
@@ -101,19 +104,20 @@ if ($opt{'in-place'}) {
             emit_tag_summary($out_fd);
             $matched++;
         } else {
-            print {$out_fd} $line . "\n";
+            print {$out_fd} encode_utf8($line . "\n");
         }
     }
     close($out_fd);
     close($in_fd);
     if ($matched != 1) {
-        die("changelog did not match WIP placeholder exactly once\n");
+        die encode_utf8(
+            "changelog did not match WIP placeholder exactly once\n");
     }
 
     rename($outfile, $infile)
-      or die "Cannot rename $outfile to $infile";
+      or die encode_utf8("Cannot rename $outfile to $infile");
 
-    print "Updated $infile\n";
+    print encode_utf8("Updated $infile\n");
 
 } else {
     emit_tag_summary(\*STDOUT);
@@ -123,18 +127,18 @@ sub emit_tag_summary {
     my ($fd) = @_;
 
     if (%added or %removed) {
-        print {$fd} "  * Summary of tag changes:\n";
+        print {$fd} encode_utf8("  * Summary of tag changes:\n");
     }
     if (%added) {
-        print {$fd} "    + Added:\n";
+        print {$fd} encode_utf8("    + Added:\n");
         for my $tag (sort(keys(%added))) {
-            print {$fd} "      - $tag\n";
+            print {$fd} encode_utf8("      - $tag\n");
         }
     }
     if (%removed) {
-        print {$fd} "    + Removed:\n";
+        print {$fd} encode_utf8("    + Removed:\n");
         for my $tag (sort(keys(%removed))) {
-            print {$fd} "      - $tag\n";
+            print {$fd} encode_utf8("      - $tag\n");
         }
     }
     return;

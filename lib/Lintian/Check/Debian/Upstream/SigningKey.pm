@@ -26,6 +26,7 @@ use utf8;
 
 use File::Temp;
 use List::Util qw(pairs);
+use Unicode::UTF8 qw(decode_utf8);
 
 use Lintian::IPC::Run3 qw(safe_qx);
 
@@ -75,13 +76,15 @@ sub source {
             '--status-fd', '2',
             '--with-colons', '--list-packets',
             $key_locations{$key_name});
-        my $output = safe_qx(@command);
+        my $bytes = safe_qx(@command);
 
         if ($?) {
             $self->hint('public-upstream-key-unusable',
                 $key_name,'cannot be processed');
             next;
         }
+
+        my $output = decode_utf8($bytes);
 
         # remove comments
         $output =~ s/^#[^\n]*$//mg;

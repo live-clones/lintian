@@ -23,6 +23,7 @@ use utf8;
 use Carp qw(croak);
 use Const::Fast;
 use List::SomeUtils qw(any none);
+use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::SlidingWindow;
 
@@ -169,7 +170,7 @@ sub source {
     my $version = $processable->fields->value('Version') || '0-1';
 
     open(my $rules_fd, '<', $rules->unpacked_path)
-      or die 'Cannot open ' . $rules->unpacked_path;
+      or die encode_utf8('Cannot open ' . $rules->unpacked_path);
 
     # Check for required #!/usr/bin/make -f opening line.  Allow -r or -e; a
     # strict reading of Policy doesn't allow either, but they seem harmless.
@@ -570,7 +571,7 @@ m{^\t\s*[-@]?(?:(?:/usr)?/bin/)?(?:cp|chmod|echo|ln|mv|mkdir|rm|test|true)}
     }
 
     open($rules_fd, '<', $rules->unpacked_path)
-      or die 'Cannot open ' . $rules->unpacked_path;
+      or die encode_utf8('Cannot open ' . $rules->unpacked_path);
 
     my $sfd = Lintian::SlidingWindow->new($rules_fd);
     my $block;

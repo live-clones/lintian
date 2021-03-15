@@ -65,7 +65,7 @@ sub add_objdump {
 
     my $savedir = getcwd;
     chdir($self->basedir)
-      or die 'Cannot change to directory ' . $self->basedir;
+      or die encode_utf8('Cannot change to directory ' . $self->basedir);
 
     my @files = grep { $_->is_file } @{$self->sorted_list};
 
@@ -144,7 +144,7 @@ sub add_objdump {
     }
 
     chdir($savedir)
-      or die "Cannot change to directory $savedir";
+      or die encode_utf8("Cannot change to directory $savedir");
 
     return;
 }

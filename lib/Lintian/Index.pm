@@ -195,7 +195,7 @@ sub create_from_basedir {
 
     my $savedir = getcwd;
     chdir($self->basedir)
-      or die 'Cannot change to directory ' . $self->basedir;
+      or die encode_utf8('Cannot change to directory ' . $self->basedir);
 
     # get times in UTC
     my @index_command
@@ -206,7 +206,7 @@ sub create_from_basedir {
     run3(\@index_command, \undef, \$index_output, \$index_errors);
 
     chdir($savedir)
-      or die "Cannot change to directory $savedir";
+      or die encode_utf8("Cannot change to directory $savedir");
 
     # allow processing of file names with non UTF-8 bytes
     $index_errors = decode_utf8($index_errors)

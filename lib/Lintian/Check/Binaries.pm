@@ -29,6 +29,7 @@ use utf8;
 use Const::Fast;
 use File::Spec;
 use List::SomeUtils qw(any);
+use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Relation;
 use Lintian::Spelling qw(check_spelling);
@@ -84,15 +85,17 @@ sub _embedded_libs {
             } elsif ($opt eq 'source-regex') {
                 $result->{$opt} = qr/$val/;
             } else {
-                die
-"Unknown option $opt used for $key (in binaries/embedded-libs)";
+                die encode_utf8(
+                    "Unknown option $opt for $key (in binaries/embedded-libs)"
+                );
             }
         }
     }
 
     if (defined $result->{'source'} and $result->{'source-regex'}) {
-        die
-"Both source and source-regex used for $key (in binaries/embedded-libs)";
+        die encode_utf8(
+"Both source and source-regex used for $key (in binaries/embedded-libs)"
+        );
     } else {
         $result->{'source'} = $key unless defined $result->{'source'};
     }
@@ -394,7 +397,8 @@ sub installable {
             foreach my $obj (@{ $objdump->{'objects'} }) {
                 my $libobj = $processable->objdump_info->{"${file}(${obj})"};
                 # Shouldn't happen, but...
-                die "object ($file $obj) in static lib is missing!?"
+                die encode_utf8(
+                    "object ($file $obj) in static lib is missing!?")
                   unless defined $libobj;
 
                 if (any { exists($libobj->{'SH'}{$_}) } @DEBUG_SECTIONS) {

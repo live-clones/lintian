@@ -28,6 +28,8 @@ use v5.20;
 use warnings;
 use utf8;
 
+use Unicode::UTF8 qw(encode_utf8);
+
 use Lintian::Util qw($PKGNAME_REGEX);
 
 use Moo;
@@ -51,7 +53,8 @@ sub source {
     my ($base) = ($filename =~ m{[\a|/]([^/]+)$});
     my ($stem) = ($base =~ /^([^_]+)_/);
 
-    die "Source field does not match package name $source != $stem"
+    die encode_utf8(
+        "Source field does not match package name $source != $stem")
       if $source ne $stem;
 
     $self->hint('source-field-malformed', $source)

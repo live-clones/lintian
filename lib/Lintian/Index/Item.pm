@@ -908,7 +908,8 @@ sub _check_access {
         # NB: We are deliberately vague here to avoid suggesting
         # whether $path exists.  In some cases (e.g. lintian.d.o)
         # the output is readily available to wider public.
-        confess('Attempt to access through broken or unsafe symlink: '
+        confess encode_utf8(
+            'Attempt to access through broken or unsafe symlink: '
               . $self->name);
     }
 
@@ -927,7 +928,8 @@ sub _check_open {
     # Leave "_path_access" here as _check_access marks it either as
     # "UNSAFE_PATH" or "FS_PATH_IS_OK"
 
-    confess 'Opening of irregular file not supported: ' . $self->name
+    confess encode_utf8(
+        'Opening of irregular file not supported: ' . $self->name)
       unless $self->is_file || ($self->is_symlink && -e $self->unpacked_path);
 
     $self->path_info($self->path_info | OPEN_IS_OK);

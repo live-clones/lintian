@@ -61,7 +61,7 @@ Lintian::Deb822::Parser - Lintian's generic Deb822 parser functions
  eval { @paragraphs = read_dpkg_control('some/debian/ctrl/file'); };
  if ($@) {
     # syntax error etc.
-    die "ctrl/file: $@";
+    die encode_utf8("ctrl/file: $@");
  }
  
  foreach my $para (@paragraphs) {
@@ -143,7 +143,7 @@ sub read_dpkg_control {
     my ($file, $flags, $field_starts) = @_;
 
     open(my $handle, '<:utf8_strict', $file)
-      or die "Cannot open $file";
+      or die encode_utf8("Cannot open $file");
 
     local $/ = undef;
     my $string = <$handle>;

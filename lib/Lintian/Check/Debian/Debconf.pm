@@ -28,6 +28,7 @@ use utf8;
 use Const::Fast;
 use List::SomeUtils qw(none);
 use Path::Tiny;
+use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Deb822::File;
 use Lintian::Deb822::Parser qw(:constants);
@@ -132,7 +133,7 @@ sub installable {
     if ($preinst and $preinst->is_file and $preinst->is_open_ok) {
 
         open(my $fd, '<', $preinst->unpacked_path)
-          or die 'Cannot open ' . $preinst->unpacked_path;
+          or die encode_utf8('Cannot open ' . $preinst->unpacked_path);
 
         while (my $line = <$fd>) {
             $line =~ s/\#.*//;    # Not perfect for Perl, but should be OK
@@ -429,7 +430,7 @@ sub installable {
             my ($usesconfmodule, $obsoleteconfmodule, $db_input, $isdefault);
 
             open(my $fd, '<', $path->unpacked_path)
-              or die 'Cannot open ' . $path->unpacked_path;
+              or die encode_utf8('Cannot open ' . $path->unpacked_path);
 
             # Only check scripts.
             my $fl = <$fd>;
@@ -633,7 +634,7 @@ sub installable {
           unless $file->is_open_ok;
 
         open(my $fd, '<', $file->unpacked_path)
-          or die 'Cannot open ' . $file->unpacked_path;
+          or die encode_utf8('Cannot open ' . $file->unpacked_path);
 
         while (my $line = <$fd>) {
 

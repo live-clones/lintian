@@ -26,6 +26,7 @@ use warnings;
 use utf8;
 
 use File::Basename;
+use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Relation;
 
@@ -208,7 +209,7 @@ sub check_maintainer_scripts {
           unless $file->is_open_ok;
 
         open(my $sfd, '<', $file->unpacked_path)
-          or die 'Cannot open ' . $file->unpacked_path;
+          or die encode_utf8('Cannot open ' . $file->unpacked_path);
 
         while (my $line = <$sfd>) {
 
@@ -248,7 +249,7 @@ sub inspect_conf_file {
       unless $file->is_open_ok;
 
     open(my $fd, '<', $file->unpacked_path)
-      or die 'Cannot open ' . $file->unpacked_path;
+      or die encode_utf8('Cannot open ' . $file->unpacked_path);
 
     my $skip = 0;
     while (my $line = <$fd>)  {

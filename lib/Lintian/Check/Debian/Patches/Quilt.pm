@@ -29,6 +29,7 @@ use utf8;
 
 use Const::Fast;
 use List::SomeUtils qw(any);
+use Unicode::UTF8 qw(decode_utf8 encode_utf8);
 
 use Lintian::IPC::Run3 qw(safe_qx);
 use Lintian::Spelling qw(check_spelling);
@@ -92,7 +93,7 @@ sub source {
         my (@patch_names, @badopts);
 
         open(my $series_fd, '<', $patch_series->unpacked_path)
-          or die 'Cannot open ' . $patch_series->unpacked_path;
+          or die encode_utf8('Cannot open ' . $patch_series->unpacked_path);
 
         while (my $patch = <$series_fd>) {
             $patch =~ s/(?:^|\s+)#.*$//; # Strip comment
@@ -141,7 +142,7 @@ sub source {
             my $has_template_description = 0;
 
             open(my $patch_fd, '<', $file->unpacked_path)
-              or die 'Cannot open ' . $file->unpacked_path;
+              or die encode_utf8('Cannot open ' . $file->unpacked_path);
 
             while (my $line = <$patch_fd>) {
 
@@ -198,7 +199,7 @@ sub source {
             $known_files{$file->basename}++;
 
             open(my $fd, '<', $file->unpacked_path)
-              or die 'Cannot open ' . $file->unpacked_path;
+              or die encode_utf8('Cannot open ' . $file->unpacked_path);
 
             while (my $line = <$fd>) {
                 $known_files{$1}++
@@ -244,7 +245,8 @@ sub check_patch {
     # patches that modify files in the debian/* directory, but as of
     # 2010-01-01, all cases where the first level of the patch path is
     # "debian/" in the archive are false positives.
-    my $output = safe_qx('lsdiff', '--strip=1', $patch_file->unpacked_path);
+    my $bytes = safe_qx('lsdiff', '--strip=1', $patch_file->unpacked_path);
+    my $output = decode_utf8($bytes);
 
     my @debian_files = ($output =~ m{^((?:\./)?debian/.*)$}ms);
 

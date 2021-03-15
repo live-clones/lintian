@@ -156,7 +156,7 @@ sub prepare {
     my @oldrunners = File::Find::Rule->file->name('*.t')->in($sourcepath);
     if (@oldrunners) {
         unlink(@oldrunners)
-          or die "Cannot unlink @oldrunners";
+          or die encode_utf8("Cannot unlink @oldrunners");
     }
 
     my $skeletonname = $desc->unfolded_value('Skeleton');
@@ -350,7 +350,7 @@ sub filleval {
     my @oldrunners = File::Find::Rule->file->name('*.t')->in($evalpath);
     if (@oldrunners) {
         unlink(@oldrunners)
-          or die "Cannot unlink @oldrunners";
+          or die encode_utf8("Cannot unlink @oldrunners");
     }
 
     $testcase->store('Skeleton', $desc->value('Skeleton'))

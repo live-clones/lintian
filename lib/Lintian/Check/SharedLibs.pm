@@ -28,6 +28,7 @@ use utf8;
 use Const::Fast;
 use File::Basename;
 use List::SomeUtils qw(any none uniq);
+use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Relation;
 
@@ -191,7 +192,7 @@ sub installable {
         } elsif ($cur_file =~ m/\.la$/ and not length $cur_file->link) {
 
             open(my $fd, '<', $cur_file->unpacked_path)
-              or die 'Cannot open ' . $cur_file->unpacked_path;
+              or die encode_utf8('Cannot open ' . $cur_file->unpacked_path);
 
             while(my $line = <$fd>) {
                 next
@@ -231,7 +232,7 @@ sub installable {
     for my $shlib_file (keys %SONAME) {
         # file found?
         if (not $processable->installed->lookup($shlib_file)) {
-            die "shlib $shlib_file not found in package (should not happen!)";
+            die encode_utf8("shlib $shlib_file not found");
         }
 
         my ($dir, $shlib_name) = $shlib_file =~ m{(.*)/([^/]+)$};
@@ -418,7 +419,7 @@ sub installable {
             my (%shlibs_control_used, @shlibs_depends);
 
             open(my $fd, '<', $shlibsf->unpacked_path)
-              or die 'Cannot open ' . $shlibsf->unpacked_path;
+              or die encode_utf8('Cannot open ' . $shlibsf->unpacked_path);
 
             while (my $line = <$fd>) {
                 chop $line;
@@ -520,7 +521,7 @@ sub installable {
         my $symbol_count = 0;
 
         open(my $fd, '<', $symbolsf->unpacked_path)
-          or die 'Cannot open ' . $symbolsf->unpacked_path;
+          or die encode_utf8('Cannot open ' . $symbolsf->unpacked_path);
 
         while (my $line = <$fd>) {
             chomp $line;
@@ -749,7 +750,7 @@ sub installable {
 
             # Determine if the package had an ldconfig trigger
             open(my $fd, '<', $triggers->unpacked_path)
-              or die 'Cannot open ' . $triggers->unpacked_path;
+              or die encode_utf8('Cannot open ' . $triggers->unpacked_path);
 
             while (my $line = <$fd>) {
 

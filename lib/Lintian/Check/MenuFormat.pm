@@ -42,6 +42,7 @@ use utf8;
 use Const::Fast;
 use File::Basename;
 use List::SomeUtils qw(any);
+use Unicode::UTF8 qw(encode_utf8);
 
 use Moo;
 use namespace::clean;
@@ -257,7 +258,7 @@ sub installable {
         my $menufile_line =$EMPTY;
 
         open(my $fd, '<', $menufile->unpacked_path)
-          or die 'Cannot open ' . $menufile->unpacked_path;
+          or die encode_utf8('Cannot open ' . $menufile->unpacked_path);
 
         # line below is commented out in favour of the while loop
         # do { $_=<IN>; } while defined && (m/^\s* \#/ || m/^\s*$/);
@@ -608,7 +609,7 @@ sub verify_icon {
     my $line;
 
     open(my $fd, '<', $iconfile->unpacked_path)
-      or die 'Cannot open ' . $iconfile->unpacked_path;
+      or die encode_utf8('Cannot open ' . $iconfile->unpacked_path);
 
     do { defined($line = <$fd>) or goto PARSE_ERROR; }
       until ($line =~ /\/\*\s*XPM\s*\*\//);
@@ -641,7 +642,7 @@ sub verify_desktop_file {
 
     my ($saw_first, $warned_cr, %vals, @pending);
     open(my $fd, '<', $file->unpacked_path)
-      or die 'Cannot open ' . $file->unpacked_path;
+      or die encode_utf8('Cannot open ' . $file->unpacked_path);
 
     while (my $line = <$fd>) {
         chomp $line;

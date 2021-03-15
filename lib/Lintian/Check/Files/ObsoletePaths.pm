@@ -24,6 +24,8 @@ use v5.20;
 use warnings;
 use utf8;
 
+use Unicode::UTF8 qw(encode_utf8);
+
 use Moo;
 use namespace::clean;
 
@@ -42,7 +44,7 @@ has OBSOLETE_PATHS => (
                 my @sliptline =  split(/\s*\~\~\s*/, $_[1], 2);
 
                 if (scalar(@sliptline) != 2) {
-                    die "Syntax error in files/obsolete-paths $.";
+                    die encode_utf8("Syntax error in files/obsolete-paths $.");
                 }
 
                 my ($newdir, $moreinfo) =  @sliptline;

@@ -23,7 +23,7 @@ use utf8;
 
 use Cwd;
 use Path::Tiny;
-use Unicode::UTF8 qw(decode_utf8);
+use Unicode::UTF8 qw(decode_utf8 encode_utf8);
 
 use Lintian::IPC::Run3 qw(safe_qx);
 
@@ -55,7 +55,7 @@ sub add_ar {
 
     my $savedir = getcwd;
     chdir($self->basedir)
-      or die 'Cannot change to directory ' . $self->basedir;
+      or die encode_utf8('Cannot change to directory ' . $self->basedir);
 
     my @archives
       = grep { $_->name =~ / [.]a $/msx && $_->is_regular_file }
@@ -88,7 +88,7 @@ sub add_ar {
     }
 
     chdir($savedir)
-      or die "Cannot change to directory $savedir";
+      or die encode_utf8("Cannot change to directory $savedir");
 
     return;
 }

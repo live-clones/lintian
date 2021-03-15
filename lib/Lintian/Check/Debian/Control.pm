@@ -30,6 +30,7 @@ use Const::Fast;
 use List::SomeUtils qw(any);
 use List::Util qw(first none);
 use Path::Tiny;
+use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Deb822::Parser qw(parse_dpkg_control_string);
 use Lintian::Relation;
@@ -150,7 +151,7 @@ sub source {
         chomp $@;
         $@ =~ s/^internal error: //;
         $@ =~ s/^syntax error in //;
-        die "syntax error in debian/control: $@";
+        die encode_utf8("syntax error in debian/control: $@");
     }
 
     for my $field ($processable->debian_control->source_fields->names) {

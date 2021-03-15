@@ -30,7 +30,7 @@ use utf8;
 use Const::Fast;
 use List::SomeUtils qw(any all none uniq);
 use Path::Tiny;
-use Unicode::UTF8 qw[valid_utf8 decode_utf8];
+use Unicode::UTF8 qw(valid_utf8 decode_utf8 encode_utf8);
 
 use Lintian::Deb822::Parser qw(parse_dpkg_control_string);
 use Lintian::IPC::Run3 qw(safe_qx);
@@ -182,7 +182,8 @@ sub binary {
         "usr/share/doc/$package/copyright.gz");
     if (defined $compressed) {
 
-        my $contents = safe_qx('gunzip', '-c', $compressed->unpacked_path);
+        my $bytes = safe_qx('gunzip', '-c', $compressed->unpacked_path);
+        my $contents = decode_utf8($bytes);
 
         my $extracted
           = path($self->processable->basedir)->child('copyright')->stringify;

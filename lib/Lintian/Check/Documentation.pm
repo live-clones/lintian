@@ -27,6 +27,7 @@ use utf8;
 
 use Const::Fast;
 use List::SomeUtils qw(any);
+use Unicode::UTF8 qw(encode_utf8);
 
 use Moo;
 use namespace::clean;
@@ -198,7 +199,7 @@ sub visit_installed_files {
             && $file->file_info =~ / gzip \s compressed /msx) {
 
             open(my $fd, '<:gzip', $file->unpacked_path)
-              or die 'Cannot open ' . $file->unpacked_path;
+              or die encode_utf8('Cannot open ' . $file->unpacked_path);
 
             my $f = <$fd>;
             close($fd);

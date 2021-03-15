@@ -22,6 +22,7 @@ use warnings;
 use utf8;
 
 use Path::Tiny;
+use Unicode::UTF8 qw(encode_utf8);
 
 use Moo::Role;
 use namespace::clean;
@@ -63,7 +64,7 @@ sub hardening_info {
 
     if (-e $hardf) {
         open(my $idx, '<:utf8_strict', $hardf)
-          or die "Cannot open $hardf";
+          or die encode_utf8("Cannot open $hardf");
 
         while (my $line = <$idx>) {
             chomp($line);

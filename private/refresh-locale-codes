@@ -25,6 +25,7 @@ use utf8;
 
 use Cwd qw(realpath);
 use File::Basename qw(dirname);
+use Unicode::UTF8 qw(encode_utf8);
 
 # neither Path::This nor lib::relative are in Debian
 use constant THISFILE => realpath __FILE__;
@@ -41,7 +42,7 @@ use Lintian::Util qw(locate_executable);
 my ($DATADIR) = @ARGV;
 my (%CODES, $outfile);
 
-die "Usage: $0 <path-to-data-dir>\n"
+die encode_utf8("Usage: $0 <path-to-data-dir>\n")
   unless defined $DATADIR and -d $DATADIR;
 
 check_requirements();
@@ -56,9 +57,9 @@ parse_iso_xml();
 $outfile = "$DATADIR/files/locale-codes.new";
 
 open(my $out, '>', $outfile)
-  or die "Cannot open $outfile";
+  or die encode_utf8("Cannot open $outfile");
 
-print {$out} <<"EOF" ;
+print {$out} encode_utf8(<<"EOF");
 # List of locale codes.  This is derived from the ISO 639-1, ISO
 # 639-2, and ISO 639-3 standards.
 # If a language has 639-1 and 639-2 codes, the -1 code is also included
@@ -70,22 +71,22 @@ EOF
 
 foreach my $code (sort keys %CODES) {
     my $alt = $CODES{$code};
-    print {$out} $code;
-    print {$out} " $alt" if defined $alt;
-    print {$out} "\n";
+    print {$out} encode_utf8($code);
+    print {$out} encode_utf8(" $alt") if defined $alt;
+    print {$out} encode_utf8("\n");
 }
 
 close($out);
 
 rename $outfile, "$DATADIR/files/locale-codes"
-  or die "rename $outfile -> $DATADIR/files/locale-codes: $!";
+  or die encode_utf8("rename $outfile -> $DATADIR/files/locale-codes: $!");
 
 exit 0;
 
 sub parse_iso_xml {
     my $iso_xml = '/usr/share/xml/iso-codes/iso_639_3.xml';
     open(my $fd, '<', $iso_xml)
-      or die "Cannot open $iso_xml";
+      or die encode_utf8("Cannot open $iso_xml");
 
     local $/ = '/>';
     while (my $line = <$fd>) {
@@ -158,8 +159,8 @@ sub check_requirements {
 
     return unless @missing;
 
-    print {*STDERR} "Missing requirements:\n";
-    print {*STDERR} "\t", join("\n\t", @missing), "\n";
+    print {*STDERR} encode_utf8("Missing requirements:\n");
+    print {*STDERR} encode_utf8("\t", join("\n\t", @missing), "\n");
     exit 1;
 }
 

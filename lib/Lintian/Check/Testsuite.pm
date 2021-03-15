@@ -28,6 +28,7 @@ use Const::Fast;
 use List::Compare;
 use List::SomeUtils qw(any none);
 use Path::Tiny;
+use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Deb822::File;
 use Lintian::Deb822::Parser qw(DCTRL_COMMENTS_AT_EOL);
@@ -89,7 +90,7 @@ sub source {
     $self->hint('missing-tests-control')
       if (any { $_ eq 'autopkgtest' } @testsuites) && !defined $tests_control;
 
-    die 'debian tests control is not a regular file'
+    die encode_utf8('debian tests control is not a regular file')
       if defined $tests_control && !$tests_control->is_regular_file;
 
     if (defined $tests_control && $tests_control->is_valid_utf8) {
@@ -242,7 +243,7 @@ sub check_test_file {
     }
 
     open(my $fd, '<', $file->unpacked_path)
-      or die 'Cannot open ' . $file->unpacked_path;
+      or die encode_utf8('Cannot open ' . $file->unpacked_path);
 
     while (my $line = <$fd>) {
 

@@ -146,7 +146,7 @@ sub add_fileinfo {
     $_->file_info('data') for @not_gzip;
 
     chdir($savedir)
-      or die "Cannot change to directory $savedir";
+      or die encode_utf8("Cannot change to directory $savedir");
 
     return;
 }

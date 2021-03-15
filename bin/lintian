@@ -40,7 +40,7 @@ use lib THISDIR . '/../lib';
 # substituted during package build
 my $LINTIAN_VERSION;
 
-use Carp qw(croak verbose);
+use Carp qw(croak confess verbose);
 use Config::Tiny;
 use Const::Fast;
 use File::BaseDir qw(config_files);
@@ -541,7 +541,7 @@ if ($selected{debug}) {
     $selected{verbose} = 1;
     $ENV{LINTIAN_DEBUG} = $selected{debug};
     $SIG{__DIE__} = sub {
-        Carp::confess(map { encode_utf8($_) } @_);
+        confess(map { encode_utf8($_) } @_);
     };
 }
 
@@ -803,7 +803,7 @@ sub _find_changes {
     # Maybe cross-built for something dpkg knows about...
     my @command = qw{dpkg --print-foreign-architectures};
     open(my $foreign, $OPEN_PIPE, @command)
-      or die "Cannot open pipe to @command";
+      or die encode_utf8("Cannot open pipe to @command");
 
     while (my $bytes = <$foreign>) {
         my $line = decode_utf8($bytes);

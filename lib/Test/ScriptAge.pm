@@ -25,10 +25,10 @@ Test::ScriptAge -- routines relating to the age of Perl scripts
 =head1 SYNOPSIS
 
   my $executable_epoch = Test::ScriptAge::our_modification_epoch();
-  print 'This script was last modified at ' . localtime($executable_epoch) . "\n";
+  print encode_utf8('This script was last modified at ' . localtime($executable_epoch) . "\n");
 
   my $perl_epoch = Test::ScriptAge::perl_modification_epoch();
-  print 'Perl was last modified at ' . localtime($perl_epoch) . "\n";
+  print encode_utf8('Perl was last modified at ' . localtime($perl_epoch) . "\n");
 
 =head1 DESCRIPTION
 

@@ -25,7 +25,7 @@ use warnings;
 use utf8;
 
 use IO::Uncompress::Gunzip qw(gunzip $GunzipError);
-use Unicode::UTF8 qw(valid_utf8);
+use Unicode::UTF8 qw(valid_utf8 encode_utf8);
 
 use Moo;
 use namespace::clean;
@@ -107,7 +107,7 @@ sub visit_installed_files {
 
         my $path = $item->unpacked_path;
         gunzip($path => \$bytes)
-          or die "gunzip $path failed: $GunzipError";
+          or die encode_utf8("gunzip $path failed: $GunzipError");
 
         $self->hint('national-encoding', $item->name)
           unless valid_utf8($bytes);

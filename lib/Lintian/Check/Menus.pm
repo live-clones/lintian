@@ -29,6 +29,7 @@ use utf8;
 
 use Const::Fast;
 use Path::Tiny;
+use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Spelling qw(check_spelling check_spelling_picky);
 
@@ -109,7 +110,7 @@ sub visit_installed_files {
 
             if ($file->is_open_ok) {
                 open(my $fd, '<', $file->unpacked_path)
-                  or die 'Cannot open ' . $file->unpacked_path;
+                  or die encode_utf8('Cannot open ' . $file->unpacked_path);
 
                 while (my $line = <$fd>) {
                     chomp $line;
@@ -686,7 +687,7 @@ sub check_script {
       if $spath->is_elf;
 
     open(my $fd, '<', $spath->unpacked_path)
-      or die 'Cannot open ' . $spath->unpacked_path;
+      or die encode_utf8('Cannot open ' . $spath->unpacked_path);
 
     # discard hashbang line; will get from Index::Item
     scalar readline $fd;

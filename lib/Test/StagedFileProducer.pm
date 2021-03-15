@@ -35,10 +35,10 @@ Test::StagedFileProducer -- mtime-based file production engine
   $producer->add_stage(
         products => [$output],
         build =>sub {
-            printf "Building $output.\n";
+            print encode_utf8("Building $output.\n");
         },
         skip =>sub {
-            printf "Skipping $output.\n";
+            print encode_utf8("Skipping $output.\n");
         }
   );
 

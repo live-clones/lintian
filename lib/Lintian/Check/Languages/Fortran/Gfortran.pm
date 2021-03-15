@@ -25,6 +25,7 @@ use warnings;
 use utf8;
 
 use Const::Fast;
+use Unicode::UTF8 qw(encode_utf8);
 
 use Moo;
 use namespace::clean;
@@ -57,7 +58,8 @@ sub visit_installed_files {
     my $module_version;
 
     open(my $fd, '<:gzip', $file->unpacked_path)
-      or die 'Cannot open gz file ' . $file->unpacked_path . $NEWLINE;
+      or die encode_utf8(
+        'Cannot open gz file ' . $file->unpacked_path . $NEWLINE);
 
     while (my $line = <$fd>) {
         next

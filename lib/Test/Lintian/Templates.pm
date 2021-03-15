@@ -138,7 +138,7 @@ sub remove_surplus_templates {
 
         if (-e $template) {
             unlink($template)
-              or die "Cannot unlink $template";
+              or die encode_utf8("Cannot unlink $template");
         }
     }
     return;
@@ -317,7 +317,7 @@ sub fill_template {
     # delete template
     if (-e $generated) {
         unlink($template)
-          or die "Cannot unlink $template";
+          or die encode_utf8("Cannot unlink $template");
     }
 
     return;

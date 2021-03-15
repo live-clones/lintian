@@ -7,6 +7,7 @@ use utf8;
 use Const::Fast;
 use IPC::Run3;
 use Pod::Simple::HTMLBatch;
+use Unicode::UTF8 qw(encode_utf8);
 
 const my $EMPTY => q{};
 
@@ -18,7 +19,8 @@ $destination //= './doc/api.html';
 my $lintian_version = guess_version();
 
 if (!-d $destination) {
-    mkdir $destination or die "could not create directory: $!";
+    mkdir $destination
+      or die encode_utf8("could not create directory: $!");
 }
 
 my $convert = Pod::Simple::HTMLBatch->new;
@@ -29,7 +31,7 @@ $convert->contents_page_end(q{});
 $convert->css_flurry(0);
 $convert->batch_convert(\@input, $destination);
 
-print "HTML version available at $destination/index.html\n";
+print encode_utf8("HTML version available at $destination/index.html\n");
 
 sub header {
 

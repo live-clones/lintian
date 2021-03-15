@@ -26,6 +26,7 @@ use utf8;
 
 use Const::Fast;
 use List::SomeUtils qw(none);
+use Unicode::UTF8 qw(encode_utf8);
 
 # from /usr/share/doc/libapt-pkg-perl/examples/apt-cache
 use AptPkg::Config '$_config';
@@ -71,7 +72,7 @@ $perl_version =~ s/^(5)\.0*([1-9][0-9])\d+/$1.$2/;
 my @core_packages = (qw(perl-base perl), "perl-modules-$perl_version");
 
 # check we have a cache of Debian sid packages available
-warn(
+warn encode_utf8(
     join(q{ },
         'Warning: this list should only be updated on a system',
         'with an up to date APT cache of the Debian unstable distribution'))
@@ -84,7 +85,7 @@ warn(
     }
     @{$cache->files});
 
-print <<"EOF";
+print encode_utf8(<<"EOF");
 # virtual packages provided by the Perl core packages that also have a
 # separate binary package available
 #
@@ -99,7 +100,8 @@ EOF
 
 for my $pkg (@core_packages) {
     my $cached_versions = $cache->{$pkg}
-      or die("no such binary package found in the APT cache: $pkg");
+      or
+      die encode_utf8("no such binary package found in the APT cache: $pkg");
     my $latest = bin_latest($cached_versions);
 
     for my $provides (@{$latest->{ProvidesList}}) {
@@ -121,7 +123,7 @@ for my $pkg (@core_packages) {
 
         next if !$debian_version;
 
-        print "$name $debian_version\n";
+        print encode_utf8("$name $debian_version\n");
     }
 }
 
@@ -174,7 +176,7 @@ sub cpan_version_to_deb {
     my $regex = qr/^(\d+\.)(\d+)(?:_(\d+))?$/;
     $regex = $manual_split{$pkg} if exists $manual_split{$pkg};
     my ($major, $prefix, $suffix) = ($cpan_version =~ $regex);
-    die("no match with $cpan_version?") if !$major;
+    die encode_utf8("no match with $cpan_version?") if !$major;
 
     $suffix ||= $EMPTY;
     if (length($suffix) + length($prefix) == $digits) {

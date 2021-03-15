@@ -30,6 +30,7 @@ use Const::Fast;
 use Date::Parse qw(str2time);
 use List::Util qw(first);
 use POSIX qw(strftime);
+use Unicode::UTF8 qw(encode_utf8);
 
 use Moo;
 use namespace::clean;
@@ -54,12 +55,12 @@ sub source {
         qr{\s*<\s*},
         sub {
             my $date = str2time($_[1])
-              or die "Cannot parse ANCIENT_DATE: $!";
+              or die encode("Cannot parse ANCIENT_DATE: $!");
             return $date;
         });
 
     my $ANCIENT_DATE = $ANCIENT_DATE_DATA->value('ANCIENT')
-      or die 'Cannot get ANCIENT_DATE';
+      or die encode_utf8('Cannot get ANCIENT_DATE');
 
     my $policy_releases = $self->profile->policy_releases;
 

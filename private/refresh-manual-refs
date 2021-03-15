@@ -172,7 +172,7 @@ my %manuals = (
 
 my $generated;
 open(my $memory_fd, '>', \$generated)
-  or die 'Cannot open scalar';
+  or die encode_utf8('Cannot open scalar');
 
 for my $manual (sort keys %manuals) {
     my ($index, $url, $ref_re, $fields, $sub_re) = @{$manuals{$manual}};
@@ -224,7 +224,7 @@ sub extract_refs {
     my ($data_fd, $manual, $title_done, $page, $url, $ref_re, $fields) = @_;
 
     open(my $page_fd, '<:utf8_strict', $page)
-      or die "Cannot open $page";
+      or die encode_utf8("Cannot open $page");
 
     # Read until there are 2 newlines. This hack is needed since some lines in
     # the Developer's Reference are cut in the middle of <a>...</a>.

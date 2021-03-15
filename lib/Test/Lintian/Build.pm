@@ -122,7 +122,7 @@ sub build_subject {
 
         my $savedir = Cwd::getcwd;
         chdir($buildpath)
-          or die "Cannot change to directory $buildpath";
+          or die encode_utf8("Cannot change to directory $buildpath");
 
         my $combined_bytes;
 
@@ -131,7 +131,7 @@ sub build_subject {
         my $status = ($? >> $WAIT_STATUS_SHIFT);
 
         chdir($savedir)
-          or die "Cannot change to directory $savedir";
+          or die encode_utf8("Cannot change to directory $savedir");
 
         # sanitize log so it is UTF-8 from here on
         my $utf8_bytes = utf8_clean_log($combined_bytes);

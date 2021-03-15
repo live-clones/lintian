@@ -113,7 +113,7 @@ has patched => (
 
         my $savedir = getcwd;
         chdir($index->basedir)
-          or die 'Cannot change to directory ' . $index->basedir;
+          or die encode_utf8('Cannot change to directory ' . $index->basedir);
 
         # fix permissions
         my @permissions_command
@@ -126,7 +126,7 @@ has patched => (
           if length $permissions_errors;
 
         chdir($savedir)
-          or die "Cannot change to directory $savedir";
+          or die encode_utf8("Cannot change to directory $savedir");
 
         $self->hint('unpack-message-for-source', $_)
           for

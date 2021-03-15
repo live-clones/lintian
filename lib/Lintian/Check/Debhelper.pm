@@ -30,6 +30,7 @@ use List::Compare;
 use List::SomeUtils qw(any firstval);
 use List::UtilsBy qw(min_by);
 use Text::LevenshteinXS qw(distance);
+use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Relation;
 
@@ -126,7 +127,7 @@ sub source {
     return unless $drules and $drules->is_open_ok;
 
     open(my $rules_fd, '<', $drules->unpacked_path)
-      or die 'Cannot open ' . $drules->unpacked_path;
+      or die encode_utf8('Cannot open ' . $drules->unpacked_path);
 
     my $command_prefix_pattern = qr/\s+[@+-]?(?:\S+=\S+\s+)*/;
 
@@ -433,7 +434,7 @@ sub source {
     if ($compat_file and $compat_file->is_open_ok) {
 
         open(my $fd, '<', $compat_file->unpacked_path)
-          or die 'Cannot open ' . $compat_file->unpacked_path;
+          or die encode_utf8('Cannot open ' . $compat_file->unpacked_path);
 
         while (my $line = <$fd>) {
             if ($. == 1) {
@@ -569,7 +570,7 @@ sub source {
               unless $file->is_open_ok;
 
             open(my $fd, '<', $file->unpacked_path)
-              or die 'Cannot open ' . $file->unpacked_path;
+              or die encode_utf8('Cannot open ' . $file->unpacked_path);
 
             while (my $line = <$fd>) {
 
@@ -621,7 +622,7 @@ sub source {
                 }
 
                 open(my $fd, '<', $file->unpacked_path)
-                  or die 'Cannot open ' . $file->unpacked_path;
+                  or die encode_utf8('Cannot open ' . $file->unpacked_path);
 
                 while (my $line = <$fd>) {
 
@@ -770,7 +771,7 @@ sub check_dh_exec {
     my ($dhe_subst, $dhe_install, $dhe_filter) = (0, 0, 0);
 
     open(my $fd, '<', $path->unpacked_path)
-      or die 'Cannot open ' . $path->unpacked_path;
+      or die encode_utf8('Cannot open ' . $path->unpacked_path);
 
     while (my $line = <$fd>) {
         if ($line =~ /\$\{([^\}]+)\}/) {
@@ -849,7 +850,7 @@ sub _shebang_cmd {
     my $cmd = $EMPTY;
 
     open(my $fd, '<', $path->unpacked_path)
-      or die 'Cannot open ' . $path->unpacked_path;
+      or die encode_utf8('Cannot open ' . $path->unpacked_path);
 
     if (read($fd, $magic, 2)) {
         if ($magic eq $HASHBANG) {
