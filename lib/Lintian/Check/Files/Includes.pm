@@ -24,52 +24,38 @@ use v5.20;
 use warnings;
 use utf8;
 
+use Const::Fast;
+use List::SomeUtils qw{any};
+
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
 
-has GENERIC_HEADER_FILES => (
-    is => 'rw',
-    lazy => 1,
-    default => sub {
-        my ($self) = @_;
-
-        return $self->profile->load_data('files/generic-header-files');
-    });
-
-has header_dirs => (is => 'rwp');
-
-sub setup_installed_files {
-    my ($self) = @_;
-
-    my %header_dirs = ('usr/include/' => 1);
-
-    my $MULTIARCH_DIRS
-      = $self->profile->load_data('common/multiarch-dirs', qr/\s++/);
-
-    foreach my $arch ($MULTIARCH_DIRS->all) {
-        my $dir = $MULTIARCH_DIRS->value($arch);
-        $header_dirs{"usr/include/$dir/"} = 1;
-    }
-
-    $self->_set_header_dirs(\%header_dirs);
-
-    return;
-}
+# case insensitive regular expressions for overly generic paths
+const my @GENERIC_PATHS => ('^ util[s]? [.]h $');
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
-    # only look at files in header locations
     return
-      unless exists $self->header_dirs->{$file->dirname};
+      unless $item->is_file;
 
-    if (   $file->is_file
-        && $self->GENERIC_HEADER_FILES->matches_any($file->basename, 'i')) {
+    my $consumed = $item->name;
+    return
+      unless $consumed =~ s{^usr/include/}{};
 
-        $self->hint('header-has-overly-generic-name', $file->name);
+    my $MULTIARCH_DIRS
+      = $self->profile->load_data('common/multiarch-dirs', qr/\s+/);
+
+    for my $tuple (values %{$MULTIARCH_DIRS->dataset}) {
+
+        last
+          if $consumed =~ s{^$tuple/}{};
     }
+
+    $self->hint('header-has-overly-generic-name', $item->name)
+      if any { $consumed =~ m{ $_ }isx } @GENERIC_PATHS;
 
     return;
 }
