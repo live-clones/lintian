@@ -11,6 +11,7 @@ Build-Depends:
  libfile-basedir-perl,
  libipc-run3-perl,
  libpath-tiny-perl,
+ libunicode-utf8-perl,
  python3-docutils,
 Standards-Version: 4.5.1
 Rules-Requires-Root: no
