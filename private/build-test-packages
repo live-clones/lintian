@@ -72,6 +72,8 @@ const my $SPACE => q{ };
 const my $INDENT => $SPACE x 4;
 const my $NEWLINE => qq{\n};
 const my $SLASH => q{/};
+const my $COLON => q{:};
+const my $ARROW => q{>>>};
 const my $YES => q{yes};
 const my $NO => q{no};
 
@@ -155,9 +157,6 @@ path($outpath)->mkpath
 die encode_utf8("Test work directory $outpath is not a directory")
   unless -d $outpath;
 
-# make sure outpath is absolute
-$outpath = path($outpath)->relative->stringify;
-
 say encode_utf8($EMPTY);
 
 # tie verbosity to debug
@@ -207,46 +206,43 @@ say encode_utf8($EMPTY);
 
 my $status = 0;
 
-# find spec paths
-my @descfiles
-  = sort File::Find::Rule->file()->name('fill-values')->in("$testset/recipes");
+my $recipe_root = "$testset/recipes";
 
-my @specpaths = map { path($_)->parent->absolute->stringify } @descfiles;
+# find build specifications
+my @recipes = map { path($_)->parent->stringify }
+  sort File::Find::Rule->relative->name('build-spec')->in($recipe_root);
 
 # prepare output directories
 say encode_utf8(
-    'Preparing the sources for '. scalar @specpaths. ' test packages.')
-  if @specpaths;
-
-my @prepqueue = map { path($_)->relative->stringify } @specpaths;
+    'Preparing the sources for '. scalar @recipes. ' test packages.')
+  if @recipes;
 
 # for filled templates
-my $sourceroot = "$outpath/package-sources";
+my $source_root = "$outpath/package-sources";
 
 # for built test packages
-my $buildroot = "$outpath/packages";
+my $build_root = "$outpath/packages";
 
-my @relative
-  = map { path($_)->parent->relative("$testset/recipes") } @specpaths;
-my @sourcepaths = map {$_->absolute($sourceroot)->stringify } @relative;
-my @buildpaths = map {$_->absolute($buildroot)->stringify } @relative;
+my @source_paths
+  = map { path($_)->absolute($source_root)->stringify } @recipes;
+my @build_paths = map { path($_)->absolute($build_root)->stringify } @recipes;
 
 # remove obsolete package sources
-my @foundsources = map { path($_)->parent->absolute->stringify; }
-  File::Find::Rule->file->name('fill-values')->in($sourceroot);
-my $sourcelc = List::Compare->new('--unsorted', \@foundsources, \@sourcepaths);
-my @obsoletesources = $sourcelc->get_Lonly;
-path($_)->remove_tree for @obsoletesources;
+my @found_sources = map { path($_)->parent->absolute->stringify; }
+  File::Find::Rule->file->name('fill-values')->in($source_root);
+my $sourcelc = List::Compare->new(\@found_sources, \@source_paths);
+my @obsolete_sources = $sourcelc->get_Lonly;
+path($_)->remove_tree for @obsolete_sources;
 
 # remove obsolete built packages
-my @foundpackages = map { path($_)->parent->absolute->stringify; }
-  File::Find::Rule->file->name('source-files.sha1sums')->in($buildroot);
-my $packagelc= List::Compare->new('--unsorted', \@foundpackages, \@buildpaths);
-my @obsoletepackages = $packagelc->get_Lonly;
-path($_)->remove_tree for @obsoletepackages;
+my @found_builds = map { path($_)->parent->absolute->stringify; }
+  File::Find::Rule->file->name('source-files.sha1sums')->in($build_root);
+my $packagelc= List::Compare->new(\@found_builds, \@build_paths);
+my @obsolete_builds = $packagelc->get_Lonly;
+path($_)->remove_tree for @obsolete_builds;
 
 # remove empty directories
-for my $folder (@obsoletesources, @obsoletepackages) {
+for my $folder (@obsolete_sources, @obsolete_builds) {
     my $candidate = path($folder)->parent;
     while ($candidate->exists && !$candidate->children) {
         rmdir $candidate->stringify;
@@ -264,18 +260,24 @@ my $mce_loop = MCE::Loop->init(
     flush_stderr => 1,
 );
 
-my @failedprep;
-mce_loop {
+my %failedprep = mce_loop {
     my ($mce, $chunk_ref, $chunk_id) = @_;
 
-    prepare_build($mce, $_, \@failedprep);
+    prepare_build($mce, $_);
 }
-sort @prepqueue;
+@recipes;
 
-if (@failedprep) {
+if (%failedprep) {
     say encode_utf8($EMPTY);
     say encode_utf8('Failed preparation tasks:');
-    say encode_utf8($NEWLINE . $_) for @failedprep;
+    for my $recipe (sort keys %failedprep) {
+        say encode_utf8($EMPTY);
+        say encode_utf8($ARROW
+              . $SPACE
+              . path("$recipe_root/$recipe")->relative->stringify
+              . $COLON);
+        print encode_utf8($failedprep{$recipe});
+    }
 
     MCE::Loop->finish;
     exit 1;
@@ -286,21 +288,27 @@ if (@failedprep) {
 
 say encode_utf8($EMPTY);
 
-my @failedbuilds;
-mce_loop {
+my %failedbuilds = mce_loop {
     my ($mce, $chunk_ref, $chunk_id) = @_;
 
-    build_package($mce, $_, \@failedbuilds, $chunk_id, scalar @specpaths);
+    build_package($mce, $_, $chunk_id, scalar @recipes);
 }
-sort @specpaths;
+@recipes;
 
 $SIG{INT} = 'DEFAULT';
 MCE::Loop->finish;
 
-if (@failedbuilds) {
+if (%failedbuilds) {
     say encode_utf8($EMPTY);
     say encode_utf8('Failed build tasks:');
-    say encode_utf8($NEWLINE . $_) for @failedbuilds;
+    for my $recipe (sort keys %failedbuilds) {
+        say encode_utf8($EMPTY);
+        say encode_utf8($ARROW
+              . $SPACE
+              . path("$recipe_root/$recipe")->relative->stringify
+              . $COLON);
+        print encode_utf8($failedbuilds{$recipe});
+    }
 
     exit 1;
 } else {
@@ -320,15 +328,13 @@ exit 0;
 # program is done
 
 sub prepare_build {
-    my ($mce, $specpath, $failures) = @_;
+    my ($mce, $recipe) = @_;
 
     # label process
-    $0 = "Lintian prepare test: $specpath";
+    $0 = "Lintian prepare test: $recipe";
 
-    # calculate destination
-    my $relative = path($specpath)->parent->relative("$testset/recipes");
-    my $sourcepath = $relative->absolute($sourceroot)->stringify;
-    my $buildpath = $relative->absolute($buildroot)->relative->stringify;
+    # destination
+    my $source_path = "$source_root/$recipe";
 
     my $error;
 
@@ -338,11 +344,12 @@ sub prepare_build {
         try {
 
             # remove destination
-            path($sourcepath)->remove_tree
-              if -e $sourcepath;
+            path($source_path)->remove_tree
+              if -e $source_path;
 
             # prepare
-            prepare($specpath, $sourcepath, $testset, $force_rebuild);
+            prepare("$recipe_root/$recipe/build-spec",
+                $source_path, $testset, $force_rebuild);
 
         }catch {
             # catch any error
@@ -353,20 +360,17 @@ sub prepare_build {
     my $log = decode_utf8($log_bytes);
 
     # save log;
-    my $logfile = "$sourcepath.log";
+    my $logfile = "$source_path.log";
     path($logfile)->spew_utf8($log) if $log;
 
-    # print something if there was an error
-    push(
-        @{$failures},
-        ($log // $EMPTY) . "Preparation failed for $specpath: $error"
-    )if $error;
+    $mce->gather($recipe, $error)
+      if length $error;
 
-    return $specpath;
+    return;
 }
 
 sub build_package {
-    my ($mce, $specpath, $failures, $position, $total) = @_;
+    my ($mce, $recipe, $position, $total) = @_;
 
     # set a predictable locale
     $ENV{'LC_ALL'} = 'C';
@@ -375,13 +379,12 @@ sub build_package {
     umask $WIDELY_READABLE;
 
     # get destination
-    my $relative = path($specpath)->parent->relative("$testset/recipes");
-    my $sourcepath = $relative->absolute($sourceroot)->relative->stringify;
-    my $buildpath = $relative->absolute($buildroot)->relative->stringify;
+    my $source_path = "$source_root/$recipe";
+    my $build_path = "$build_root/$recipe";
 
     my $savedir = getcwd;
-    chdir $sourcepath
-      or die encode_utf8("Cannot change to directory $sourcepath");
+    chdir $source_path
+      or die encode_utf8("Cannot change to directory $source_path");
 
     my $sha1sums_bytes;
     run3('find . -type f -print0 | sort -z | xargs -0 sha1sum',
@@ -392,24 +395,27 @@ sub build_package {
 
     my $sha1sums = decode_utf8($sha1sums_bytes);
 
-    my $checksum_path = "$buildpath/source-files.sha1sums";
+    my $checksum_path = "$build_path/source-files.sha1sums";
     if (-r $checksum_path) {
         my $previous = path($checksum_path)->slurp_utf8;
 
         # only rebuild if needed
-        return $specpath
+        # also need to look for build subject
+        return
           if $sha1sums eq $previous;
     }
 
-    $0 = "Lintian build test: $specpath [$position/$total]";
-    say encode_utf8("Building in $buildpath [$position/$total]");
+    $0 = "Lintian build test: $recipe [$position/$total]";
+    say encode_utf8('Building in '
+          . path($build_path)->relative->stringify
+          . " [$position/$total]");
 
-    path($buildpath)->remove_tree
-      if -e $buildpath;
-    path($buildpath)->mkpath;
+    path($build_path)->remove_tree
+      if -e $build_path;
+    path($build_path)->mkpath;
 
     # read dynamic file names
-    my $runfiles = "$sourcepath/files";
+    my $runfiles = "$source_path/files";
     my $files = read_config($runfiles);
 
     my $error;
@@ -418,7 +424,7 @@ sub build_package {
 
         try {
             # call runner
-            build_subject($sourcepath, $buildpath);
+            build_subject($source_path, $build_path);
         }catch {
             # catch any error
             $error = $_;
@@ -428,14 +434,14 @@ sub build_package {
     my $log = decode_utf8($log_bytes);
 
     # delete old runner log
-    my $betterlogpath= $buildpath . $SLASH . $files->unfolded_value('Log');
+    my $betterlogpath= $build_path . $SLASH . $files->unfolded_value('Log');
     if (-e $betterlogpath) {
         unlink $betterlogpath
           or die encode_utf8("Cannot unlink $betterlogpath");
     }
 
     # move the early log for directory preparation to position of runner log
-    my $earlylogpath = "$sourcepath.log";
+    my $earlylogpath = "$source_path.log";
     move($earlylogpath, $betterlogpath) if -e $earlylogpath;
 
     # append runner log to population log
@@ -447,11 +453,10 @@ sub build_package {
     path($checksum_path)->spew_utf8($sha1sums)
       unless length $error;
 
-    # print log and die on error
-    push(@{$failures},($log // $EMPTY) . "Builder died for $buildpath: $error")
+    $mce->gather(path($build_path)->relative->stringify, $error)
       if length $error;
 
-    return $specpath;
+    return;
 }
 
 =item default_parallel
