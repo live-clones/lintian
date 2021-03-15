@@ -41,8 +41,7 @@ sub source {
     my $KNOWN_SOURCE_FIELDS= $self->profile->load_data('common/source-fields');
     my @unknown= $self->processable->fields->extra($KNOWN_SOURCE_FIELDS->all);
 
-    my $dscfile = path($self->processable->path)->basename;
-    $self->hint('unknown-field', $dscfile, $_)for @unknown;
+    $self->hint('unknown-field', $_)for @unknown;
 
     return;
 }
@@ -53,8 +52,7 @@ sub binary {
     my $KNOWN_BINARY_FIELDS= $self->profile->load_data('fields/binary-fields');
     my @unknown= $self->processable->fields->extra($KNOWN_BINARY_FIELDS->all);
 
-    my $debfile = path($self->processable->path)->basename;
-    $self->hint('unknown-field', $debfile, $_)for @unknown;
+    $self->hint('unknown-field', $_)for @unknown;
 
     return;
 }
@@ -65,8 +63,7 @@ sub udeb {
     my $KNOWN_UDEB_FIELDS = $self->profile->load_data('fields/udeb-fields');
     my @unknown = $self->processable->fields->extra($KNOWN_UDEB_FIELDS->all);
 
-    my $udebfile = path($self->processable->path)->basename;
-    $self->hint('unknown-field', $udebfile, $_)for @unknown;
+    $self->hint('unknown-field', $_)for @unknown;
 
     return;
 }
