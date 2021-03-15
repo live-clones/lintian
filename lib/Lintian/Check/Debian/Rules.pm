@@ -292,7 +292,7 @@ sub source {
             "(line $.)"
           )
           if $line =~ /(py3versions\s+([\w\-\s]*--supported|-\w*s\w*))/
-          && !$build_all->implies($PYTHON3_ALL_DEPEND);
+          && !$build_all_norestriction->implies($PYTHON3_ALL_DEPEND);
 
         # General assignment - save the variable
         if ($line =~ /^\s*(?:\S+\s+)*?(\S+)\s*[:\?\+]?=\s*(.*+)?$/s) {
