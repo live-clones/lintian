@@ -59,10 +59,9 @@ sub installable {
     my @girs;
     my @typelibs;
 
-    my $MA_DIRS = $self->profile->load_data('common/multiarch-dirs', qr/\s++/);
-
     my $section = $processable->fields->value('Section') || 'NONE';
-    my $madir = $MA_DIRS->value($processable->architecture);
+    my $DEB_HOST_MULTIARCH= $self->profile->architectures->deb_host_multiarch;
+    my $madir = $DEB_HOST_MULTIARCH->{$processable->architecture};
     # Slightly contrived, but it might be Architecture: all, in which
     # case this is the best we can do
     $madir = '${DEB_HOST_MULTIARCH}' unless defined $madir;

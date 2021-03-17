@@ -23,8 +23,10 @@ use v5.20;
 use warnings;
 use utf8;
 
+use Carp qw(croak);
 use Const::Fast;
 use List::SomeUtils qw(any);
+use Unicode::UTF8 qw(encode_utf8);
 
 use Moo::Role;
 use namespace::clean;

@@ -62,7 +62,7 @@ sub installable {
     my $processable = $self->processable;
     my $group = $self->group;
 
-    my $ldconfig_dirs = $self->profile->load_data('shared-libs/ldconfig-dirs');
+    my @ldconfig_folders = @{$self->profile->architectures->ldconfig_folders};
 
     my ($must_call_ldconfig, %SONAME, %SHARED_LIB_PRESENT,
         %STATIC_LIB_PRESENT, %sharedobject);
@@ -185,10 +185,12 @@ sub installable {
             } elsif ($objdump->{$cur_file}{'PH'}{STACK}{flags} ne 'rw-'){
                 $self->hint('executable-stack-in-shared-library', $cur_file);
             }
-        } elsif ($ldconfig_dirs->recognizes(dirname($cur_file))
+
+        } elsif ((any { dirname($cur_file) eq $_ } @ldconfig_folders)
             && exists $sharedobject{$cur_file}) {
             $self->hint('sharedobject-in-library-directory-missing-soname',
                 $cur_file);
+
         } elsif ($cur_file =~ m/\.la$/ and not length $cur_file->link) {
 
             open(my $fd, '<', $cur_file->unpacked_path)
@@ -238,10 +240,11 @@ sub installable {
         my ($dir, $shlib_name) = $shlib_file =~ m{(.*)/([^/]+)$};
 
         # not a public shared library, skip it
-        next unless $ldconfig_dirs->recognizes($dir);
+        next
+          unless any { $dir eq $_ } @ldconfig_folders;
 
-        my $MA_DIRS
-          = $self->profile->load_data('common/multiarch-dirs', qr/\s++/);
+        my $DEB_HOST_MULTIARCH
+          = $self->profile->architectures->deb_host_multiarch;
 
         # symlink found?
         my $link_file = "$dir/$SONAME{$shlib_file}";
@@ -311,7 +314,7 @@ sub installable {
                 # acceptable...
                 my $gcc_ver = $1;
                 my $basename = basename($link_file);
-                my $madir = $MA_DIRS->value($processable->architecture);
+                my $madir = $DEB_HOST_MULTIARCH->{$processable->architecture};
                 my @madirs;
                 if (defined $madir) {
                     # For i386-*, the triplet GCC uses can be i586-* or i686-*.
@@ -387,12 +390,12 @@ sub installable {
     # they're in private directories, assume they're plugins or
     # private libraries and are safe.
     my %unversioned_shlibs;
-    for (keys %SONAME) {
-        my $soname = format_soname($SONAME{$_});
+    for my $key (keys %SONAME) {
+        my $soname = format_soname($SONAME{$key});
         if ($soname !~ / /) {
-            $unversioned_shlibs{$_} = 1;
-            $self->hint('shared-library-lacks-version', $_, $soname)
-              if $ldconfig_dirs->recognizes(dirname($_));
+            $unversioned_shlibs{$key} = 1;
+            $self->hint('shared-library-lacks-version', $key, $soname)
+              if any { dirname($key) eq $_ } @ldconfig_folders;
         }
     }
     @shlibs = grep { !$unversioned_shlibs{$_} } keys %SONAME;
@@ -409,7 +412,9 @@ sub installable {
             if ($type ne 'udeb') {
                 for my $shlib (@shlibs) {
                     # skip it if it's not a public shared library
-                    next unless $ldconfig_dirs->recognizes(dirname($shlib));
+                    next
+                      unless any { dirname($shlib) eq $_ } @ldconfig_folders;
+
                     $self->hint('no-shlibs', $shlib)
                       unless is_nss_plugin($shlib);
                 }
@@ -454,7 +459,9 @@ sub installable {
                 $shlibs_control_used{'udeb: '.$shlib_name} = 1;
                 unless (exists $shlibs_control{$shlib_name}) {
                     # skip it if it's not a public shared library
-                    next unless $ldconfig_dirs->recognizes(dirname($shlib));
+                    next
+                      unless any { dirname($shlib) eq $_ } @ldconfig_folders;
+
                     # no!!
                     $self->hint('ships-undeclared-shared-library',
                         $shlib_name, 'for',$shlib)
@@ -497,7 +504,9 @@ sub installable {
         if ($type ne 'udeb') {
             for my $shlib (@shlibs, keys %unversioned_shlibs) {
                 # skip it if it's not a public shared library
-                next unless $ldconfig_dirs->recognizes(dirname($shlib));
+                next
+                  unless any { dirname($shlib) eq $_ } @ldconfig_folders;
+
                 # Skip Objective C libraries as instance/class methods do not
                 # appear in the symbol table
                 next if any { @{$_}[2] =~ m/^__objc_/ }
@@ -671,7 +680,9 @@ sub installable {
             $symbols_control_used{'udeb: '.$shlib_name} = 1;
             unless (exists $symbols_control{$shlib_name}) {
                 # skip it if it's not a public shared library
-                next unless $ldconfig_dirs->recognizes(dirname($shlib));
+                next
+                  unless any { dirname($shlib) eq $_ } @ldconfig_folders;
+
                 $self->hint('shared-library-symbols-not-tracked',
                     $shlib_name,'for', $shlib)
                   unless is_nss_plugin($shlib);
@@ -846,7 +857,7 @@ sub needs_ldconfig {
    # may be located in subdirectories of the standard ldconfig search path with
    # one of the following names.
     my $HWCAP_DIRS = $self->profile->load_data('shared-libs/hwcap-dirs');
-    my $ldconfig_dirs = $self->profile->load_data('shared-libs/ldconfig-dirs');
+    my @ldconfig_folders = @{$self->profile->architectures->ldconfig_folders};
 
     my $dirname = dirname($file);
     my $encapsulator;
@@ -860,7 +871,7 @@ sub needs_ldconfig {
 
     # yes! so postinst must call ldconfig
     return 1
-      if $ldconfig_dirs->recognizes($dirname);
+      if any { $dirname eq $_ } @ldconfig_folders;
 
     return 0;
 }

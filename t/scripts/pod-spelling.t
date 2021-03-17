@@ -127,6 +127,7 @@ INHANDLE OUTHANDLES UTC timestamp faux tagname READMEs Testname
 debhelper compat dh buildpackage uaccess udev AppStream plugdev dbgsym
 buildinfo dfsg
 
+Buildflags
 __END__
 
 # Local Variables:

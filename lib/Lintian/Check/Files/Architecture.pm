@@ -35,7 +35,12 @@ has TRIPLETS => (
     default => sub {
         my ($self) = @_;
 
-        return $self->profile->load_data('files/triplets', qr/\s++/);
+        my $DEB_HOST_MULTIARCH
+          = $self->profile->architectures->deb_host_multiarch;
+        my %triplets = map { $DEB_HOST_MULTIARCH->{$_} => $_ }
+          keys %{$DEB_HOST_MULTIARCH};
+
+        return \%triplets;
     });
 
 has depends_on_architecture => (is => 'rw', default => 0);
@@ -48,9 +53,9 @@ sub visit_installed_files {
 
         my $potential_triplet = $1;
 
-        if ($self->TRIPLETS->recognizes($potential_triplet)) {
+        if (exists $self->TRIPLETS->{$potential_triplet}) {
 
-            my $from_triplet = $self->TRIPLETS->value($potential_triplet);
+            my $from_triplet = $self->TRIPLETS->{$potential_triplet};
 
             $self->hint('triplet-dir-and-architecture-mismatch',
                 $item->name, 'is for', $from_triplet)
@@ -65,7 +70,7 @@ sub visit_installed_files {
         my $potential_triplet = $1;
 
         $self->depends_on_architecture(1)
-          if $self->TRIPLETS->recognizes($potential_triplet);
+          if exists $self->TRIPLETS->{$potential_triplet};
     }
 
     $self->depends_on_architecture(1)

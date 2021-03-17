@@ -29,22 +29,18 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-has MULTIARCH_DIRS => (
-    is => 'rw',
-    lazy => 1,
-    default => sub {
-        my ($self) = @_;
-
-        return $self->profile->load_data('common/multiarch-dirs', qr/\s++/);
-    });
-
 has TRIPLETS => (
     is => 'rw',
     lazy => 1,
     default => sub {
         my ($self) = @_;
 
-        return $self->profile->load_data('files/triplets', qr/\s++/);
+        my $DEB_HOST_MULTIARCH
+          = $self->profile->architectures->deb_host_multiarch;
+        my %triplets = map { $DEB_HOST_MULTIARCH->{$_} => $_ }
+          keys %{$DEB_HOST_MULTIARCH};
+
+        return \%triplets;
     });
 
 my %PATH_DIRECTORIES = map { $_ => 1 } qw(
@@ -59,7 +55,8 @@ sub visit_installed_files {
     my $architecture = $self->processable->fields->value('Architecture');
     my $multiarch = $self->processable->fields->value('Multi-Arch') || 'no';
 
-    my $multiarch_dir = $self->MULTIARCH_DIRS->value($architecture);
+    my $DEB_HOST_MULTIARCH= $self->profile->architectures->deb_host_multiarch;
+    my $multiarch_dir = $DEB_HOST_MULTIARCH->{$architecture};
 
     if (   !$file->is_dir
         && defined $multiarch_dir
@@ -84,7 +81,7 @@ sub visit_installed_files {
 
     if ($file->name =~ m{^(?:usr/)?lib/(?:([^/]+)/)?lib[^/]*\.so$}) {
         $self->_set_has_public_shared_library(1)
-          if (!defined($1) || $self->TRIPLETS->recognizes($1));
+          if (!defined($1) || exists $self->TRIPLETS->{$1});
     }
 
     return;

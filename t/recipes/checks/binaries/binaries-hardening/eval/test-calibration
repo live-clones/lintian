@@ -7,33 +7,34 @@ use lib "$ENV{LINTIAN_BASE}/lib";
 
 use Lintian::Profile;
 
-sub _split_hash {
-    my (undef, $val) = @_;
-    my $hash = {};
-    map { $hash->{$_} = 1 } split m/\s*,\s*/o, $val;
-    return $hash;
-}
 my $PROFILE = Lintian::Profile->new;
 $PROFILE->load('debian/main', [$ENV{'LINTIAN_BASE'}]);
 
-my $HARDENING = $PROFILE->load_data('binaries/hardening-tags', qr/\s*\|\|\s*/,
-    \&_split_hash);
+my %recommended_hardening_features
+  = %{$PROFILE->hardening_buildflags->recommended_features};
 
 my ($expected, undef, $calibrated) = @ARGV;
 
 my $arch = `dpkg-architecture -qDEB_HOST_ARCH`;
 chomp $arch;
 
-die "Unknown architecture: $arch" unless $HARDENING->recognizes($arch);
+die "Unknown architecture: $arch"
+  unless exists $recommended_hardening_features{$arch};
 
 open my $cfd, '>', $calibrated or die "open $calibrated: $!";
 open my $efd, '<', $expected or die "open $expected: $!";
 
 while (my $line = <$efd>) {
     my $dp = 0;
-    if ($line =~ m/^.: [^:]++: (hardening-\S+)/) {
-        # It is a hardening flag, maybe it is not for this architecture
-        $dp = 1 if $HARDENING->value($arch)->{$1};
+    if ($line =~ m/^.: [^:]+: hardening-no-(\S+)/) {
+
+        # hardening flag, but maybe not for this architecture
+        my $feature = $1;
+
+        my %renames = ('fortify-functions' => 'fortify');
+        my $renamed_feature = $renames{$feature} // $feature;
+
+        $dp = 1 if $recommended_hardening_features{$arch}{$renamed_feature};
     } else {
         # only calibrate hardening flags.
         $dp = 1;
@@ -44,3 +45,9 @@ while (my $line = <$efd>) {
 
 close $efd;
 close $cfd or die "close $expected: $!";
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

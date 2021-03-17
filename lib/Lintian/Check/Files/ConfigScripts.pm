@@ -33,15 +33,6 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-has MULTIARCH_DIRS => (
-    is => 'rw',
-    lazy => 1,
-    default => sub {
-        my ($self) = @_;
-
-        return $self->profile->load_data('common/multiarch-dirs', qr/\s++/);
-    });
-
 sub visit_installed_files {
     my ($self, $file) = @_;
 
@@ -77,8 +68,9 @@ sub visit_installed_files {
             if ($multiarch ne 'no' || $architecture eq 'all') {
 
                 # check multi-arch path
-                foreach my $wildcard ($self->MULTIARCH_DIRS->all) {
-                    my $madir= $self->MULTIARCH_DIRS->value($wildcard);
+                my $DEB_HOST_MULTIARCH
+                  = $self->profile->architectures->deb_host_multiarch;
+                for my $madir (values %{$DEB_HOST_MULTIARCH}) {
 
                     next
                       unless $block =~ m{\W\Q$madir\E(\W|$)}xms;

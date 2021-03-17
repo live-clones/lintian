@@ -105,13 +105,6 @@ sub _embedded_libs {
     return $result;
 }
 
-sub _split_hash {
-    my (undef, $val) = @_;
-    my $hash = {};
-    map { $hash->{$_} = 1 } split /\s*,\s*/, $val;
-    return $hash;
-}
-
 sub lib_soname_path {
     my ($dir, @paths) = @_;
 
@@ -145,10 +138,6 @@ sub installable {
       = $self->profile->load_data('binaries/arch-regex', qr/\s*\~\~/,
         sub { return qr/$_[1]/ });
 
-    my $HARDENING
-      = $self->profile->load_data('binaries/hardening-tags', qr/\s*\|\|\s*/,
-        \&_split_hash);
-
     my $HARDENED_FUNCTIONS
       = $self->profile->load_data('binaries/hardened-functions');
 
@@ -159,7 +148,7 @@ sub installable {
         qr/\s*\|\|\s*/);
 
     my ($madir, %directories, $built_with_golang, $built_with_octave, %SONAME);
-    my ($arch_hardening, $gnu_triplet_re, $ruby_triplet_re);
+    my ($gnu_triplet_re, $ruby_triplet_re);
     my $needs_libc = $EMPTY;
     my $needs_libcxx = $EMPTY;
     my $needs_libc_file;
@@ -175,7 +164,10 @@ sub installable {
     my $multiarch = $processable->fields->value('Multi-Arch') || 'no';
     my $srcpkg = $processable->source;
 
-    $arch_hardening = $HARDENING->value($arch)
+    my $hardening_buildflags = $self->profile->hardening_buildflags;
+    my %recommended_hardening_features;
+    %recommended_hardening_features
+      = map { $_ => 1 } @{$hardening_buildflags->recommended_features->{$arch}}
       if $arch ne 'all';
 
     my $src = $group->source;
@@ -272,7 +264,7 @@ sub installable {
         if (    %unharded_functions
             and not @hardened_functions
             and not $built_with_golang
-            and $arch_hardening->{'hardening-no-fortify-functions'}) {
+            and $recommended_hardening_features{fortify}) {
             $self->hint('hardening-no-fortify-functions', $name);
         }
 
@@ -296,15 +288,13 @@ sub installable {
       = $self->profile->load_data('binaries/embedded-libs', qr/\s*+\|\|/,
         \&_embedded_libs);
 
-    my $MULTIARCH_DIRS
-      = $self->profile->load_data('common/multiarch-dirs', qr/\s++/);
-
     # For the package naming check, filter out SONAMEs where all the
     # files are at paths other than /lib, /usr/lib and /usr/lib/<MA-DIR>.
     # This avoids false positives with plugins like Apache modules,
     # which may have their own SONAMEs but which don't matter for the
     # purposes of this check.  Also filter out nsswitch modules
-    $madir = $MULTIARCH_DIRS->value($arch);
+    my $DEB_HOST_MULTIARCH= $self->profile->architectures->deb_host_multiarch;
+    $madir = $DEB_HOST_MULTIARCH->{$arch};
     if (not defined($madir)) {
         # In the case that the architecture is "all" or unknown (or we do
         # not know the multi-arch path for a known architecture) , we assume
@@ -665,19 +655,19 @@ sub installable {
                 }
             }
 
-            if (    $arch_hardening->{'hardening-no-relro'}
+            if (    $recommended_hardening_features{relro}
                 and not $built_with_golang
                 and not $objdump->{'PH'}{'RELRO'}) {
                 $self->hint('hardening-no-relro', $file);
             }
 
-            if (    $arch_hardening->{'hardening-no-bindnow'}
+            if (    $recommended_hardening_features{bindnow}
                 and not $built_with_golang
                 and not exists($objdump->{'FLAGS_1'}{'NOW'})) {
                 $self->hint('hardening-no-bindnow', $file);
             }
 
-            if (    $arch_hardening->{'hardening-no-pie'}
+            if (    $recommended_hardening_features{pie}
                 and not $built_with_golang
                 and $objdump->{'ELF-TYPE'} eq 'EXEC') {
                 $self->hint('hardening-no-pie', $file);

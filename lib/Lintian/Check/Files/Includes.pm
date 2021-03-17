@@ -45,10 +45,10 @@ sub visit_installed_files {
     return
       unless $consumed =~ s{^usr/include/}{};
 
-    my $MULTIARCH_DIRS
-      = $self->profile->load_data('common/multiarch-dirs', qr/\s+/);
+    my @multiarch_folders
+      = values %{$self->profile->architectures->deb_host_multiarch};
 
-    for my $tuple (values %{$MULTIARCH_DIRS->dataset}) {
+    for my $tuple (@multiarch_folders) {
 
         last
           if $consumed =~ s{^$tuple/}{};

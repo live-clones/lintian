@@ -36,15 +36,6 @@ with 'Lintian::Check';
 
 const my $EMPTY => q{};
 
-has MULTIARCH_DIRS => (
-    is => 'rw',
-    lazy => 1,
-    default => sub {
-        my ($self) = @_;
-
-        return $self->profile->load_data('common/multiarch-dirs', qr/\s++/);
-    });
-
 has PKG_CONFIG_BAD_REGEX => (
     is => 'rw',
     lazy => 1,
@@ -85,14 +76,12 @@ sub visit_installed_files {
             # check if pkgconfig file include path point to
             # arch specific dir
 
-          MULTI_ARCH_DIR:
-            foreach my $wildcard ($self->MULTIARCH_DIRS->all) {
+            my $DEB_HOST_MULTIARCH
+              = $self->profile->architectures->deb_host_multiarch;
+            for my $madir (values %{$DEB_HOST_MULTIARCH}) {
 
-                my $madir = $self->MULTIARCH_DIRS->value($wildcard);
-
-                if ($pkg_config_arch eq $madir) {
-                    next MULTI_ARCH_DIR;
-                }
+                next
+                  if $pkg_config_arch eq $madir;
 
                 if ($block =~ m{\W\Q$madir\E(\W|$)}xms) {
 
@@ -100,11 +89,10 @@ sub visit_installed_files {
                         $file->name,
                         'full text contains architecture specific dir',$madir);
 
-                    last MULTI_ARCH_DIR;
+                    last;
                 }
             }
 
-          PKG_CONFIG_TABOO:
             foreach my $taboo ($self->PKG_CONFIG_BAD_REGEX->all) {
 
                 my $regex = $self->PKG_CONFIG_BAD_REGEX->value($taboo);

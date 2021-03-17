@@ -1,8 +1,8 @@
 # -*- perl -*-
-# Lintian::Data::Architectures
 
-# Copyright © 2011 Niels Thykier
-# Copyright © 2020 Felix Lechner
+# Copyright © 2011-2012 Niels Thykier <niels@thykier.net>
+#  - Based on a shell script by Raphael Geissert <atomo64@gmail.com>
+# Copyright © 2020-2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -24,12 +24,19 @@ use warnings;
 use utf8;
 
 use Carp qw(croak);
-use Unicode::UTF8 qw(encode_utf8);
+use Const::Fast;
+use JSON::MaybeXS;
+use List::SomeUtils qw(first_value);
+use Path::Tiny;
+use Time::Piece;
+use Unicode::UTF8 qw(decode_utf8 encode_utf8);
+
+use Lintian::IPC::Run3 qw(safe_qx);
 
 use Moo;
 use namespace::clean;
 
-with 'Lintian::Data';
+const my $SLASH => q{/};
 
 =encoding utf-8
 
@@ -50,36 +57,18 @@ so it may be out of date (use private/refresh-archs to update it).
 Generally all architecture names are in the format "$os-$architecture" and
 wildcards are "$os-any" or "any-$cpu", though there are exceptions:
 
-=over 4
-
-=item * "all" is the "architecture independent" architecture.
-
-Source: Policy §5.6.8 (v3.9.3)
-
-=item * "any" is a wildcard matching any architecture except "all".
-
-Source: Policy §5.6.8 (v3.9.3)
-
-=item * All other cases of "$architecture" are short for "linux-$architecture"
-
-Source: Policy §11.1 (v3.9.3)
-
-=back
-
 Note that the architecture and cpu name are not always identical
 (example architecture "armhf" has cpu name "arm").
 
-=head1 FUNCTIONS
-
-The following methods are exportable:
+=head1 INSTANCE METHODS
 
 =over 4
 
 =item location
 
-=item separator
+=item preamble
 
-=item accumulator
+=item host_variables
 
 =item C<wildcards>
 
@@ -89,14 +78,65 @@ The following methods are exportable:
 
 has location => (
     is => 'rw',
-    default => 'common/architectures'
+    default => 'architectures/host.json'
 );
 
-has separator => (
-    is => 'rw',
-    default => sub { qr/\s*+\Q||\E\s*+/ });
+has preamble => (is => 'rw');
+has host_variables => (is => 'rw');
 
-has accumulator => (is => 'rw');
+has deb_host_multiarch => (
+    is => 'rw',
+    lazy => 1,
+    coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
+    default => sub {
+        my ($self) = @_;
+
+        my %deb_host_multiarch;
+
+        $deb_host_multiarch{$_}
+          = $self->host_variables->{$_}{DEB_HOST_MULTIARCH}
+          for keys %{$self->host_variables};
+
+        return \%deb_host_multiarch;
+    });
+
+# The list of directories searched by default by the dynamic linker.
+# Packages installing shared libraries into these directories must call
+# ldconfig, must have shlibs files, and must ensure those libraries have
+# proper SONAMEs.
+#
+# Directories listed here must not have leading slashes.
+#
+# On the topic of multi-arch dirs.  Hopefully including the ones not
+# native to the local platform won't hurt.
+#
+# See Bug#469301 and Bug#464796 for more details.
+#
+has ldconfig_folders => (
+    is => 'rw',
+    lazy => 1,
+    coerce => sub { my ($arrayref) = @_; return ($arrayref // {}); },
+    default => sub {
+        my ($self) = @_;
+
+        my @multiarch = values %{$self->deb_host_multiarch};
+        my @ldconfig_folders = map { ("lib/$_", "usr/lib/$_") } @multiarch;
+
+        my @always = qw{
+          lib
+          lib32
+          lib64
+          libx32
+          usr/lib
+          usr/lib32
+          usr/lib64
+          usr/libx32
+          usr/local/lib
+        };
+        push(@ldconfig_folders, @always);
+
+        return \@ldconfig_folders;
+    });
 
 # Valid architecture wildcards.
 has wildcards => (
@@ -108,12 +148,13 @@ has wildcards => (
 
         my %wildcards;
 
-        for my $hyphenated ($self->all) {
+        for my $hyphenated (keys %{$self->host_variables}) {
 
-            my $components = $self->value($hyphenated);
+            my $variables = $self->host_variables->{$hyphenated};
 
             # NB: "$os-$cpu" ne $hyphenated in some cases
-            my ($os, $cpu) = split(/\s+/, $components);
+            my $os = $variables->{DEB_HOST_ARCH_OS};
+            my $cpu = $variables->{DEB_HOST_ARCH_CPU};
 
    # map $os-any (e.g. "linux-any") and any-$architecture (e.g. "any-amd64") to
    # the relevant architectures.
@@ -136,14 +177,15 @@ has names => (
 
         my %names;
 
-        for my $hyphenated ($self->all) {
+        for my $hyphenated (keys %{$self->host_variables}) {
 
-            my $components = $self->value($hyphenated);
+            my $variables = $self->host_variables->{$hyphenated};
 
-            my ($os, $cpu) = split(/\s+/, $components);
+            $names{$hyphenated} = $hyphenated;
 
             # NB: "$os-$cpu" ne $hyphenated in some cases
-            $names{$hyphenated} = $hyphenated;
+            my $os = $variables->{DEB_HOST_ARCH_OS};
+            my $cpu = $variables->{DEB_HOST_ARCH_CPU};
 
             if ($os eq 'linux') {
 
@@ -278,6 +320,91 @@ sub wildcard_matches {
         && $self->wildcard_includes_arch($wildcard, $architecture));
 
     return !$match_wanted;
+}
+
+=item load
+
+=cut
+
+sub load {
+    my ($self, $search_space, $our_vendor) = @_;
+
+    my @candidates = map { $_ . $SLASH . $self->location } @{$search_space};
+    my $path = first_value { -e } @candidates;
+
+    croak encode_utf8('Unknown data file: ' . $self->location)
+      unless length $path;
+
+    my $json = path($path)->slurp;
+    my $data = decode_json($json);
+
+    $self->preamble($data->{preamble});
+    $self->host_variables($data->{'variables'});
+
+    return;
+}
+
+=item refresh
+
+=cut
+
+sub refresh {
+    my ($self, $basedir) = @_;
+
+    local $ENV{LC_ALL} = 'C';
+    delete local $ENV{DEB_HOST_ARCH};
+
+    my $version_output= decode_utf8(safe_qx('dpkg-architecture', '--version'));
+    my ($dpkg_version) = split(/\n/, $version_output);
+
+    # retain only the version number
+    $dpkg_version =~ s/^.*\s(\S+)[.]$/$1/s;
+
+    my @architectures
+      = split(/\n/, decode_utf8(safe_qx('dpkg-architecture', '-L')));
+    chomp for @architectures;
+
+    my %variables;
+    for my $architecture (@architectures) {
+
+        my @lines
+          = split(/\n/,
+            decode_utf8(safe_qx('dpkg-architecture', "-a$architecture")));
+
+        for my $line (@lines) {
+            my ($key, $value) = split(/=/, $line, 2);
+
+            $variables{$architecture}{$key} = $value
+              if $key =~ /^DEB_HOST_/;
+        }
+    }
+
+    my %preamble;
+    $preamble{title} = 'DEB_HOST_* Variables From Dpkg';
+    $preamble{'dpkg-version'} = $dpkg_version;
+    $preamble{'last-update'} = gmtime->datetime . 'Z';
+
+    my %all;
+    $all{preamble} = \%preamble;
+    $all{'variables'} = \%variables;
+
+    # convert to UTF-8 prior to encoding in JSON
+    my $encoder = JSON->new;
+    $encoder->canonical;
+    $encoder->utf8;
+    $encoder->pretty;
+
+    my $json = $encoder->encode(\%all);
+
+    my $datapath = "$basedir/" . $self->location;
+    my $parentdir = path($datapath)->parent->stringify;
+    path($parentdir)->mkpath
+      unless -e $parentdir;
+
+    # already in UTF-8
+    path($datapath)->spew($json);
+
+    return 1;
 }
 
 =back
