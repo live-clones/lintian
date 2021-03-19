@@ -228,13 +228,14 @@ sub refresh {
         my $timestamp = $moment->strftime('%Y-%m-%dT%H:%M:%S%Z');
 
         my @closes = sort { $a <=> $b } $section->trimmed_list('Closes');
+        my @changes = split(/\n/, $section->text('Changes'));
 
         my %release;
         $release{version} = $section->value('Version');
         $release{timestamp} = $timestamp;
         $release{epoch} = $epoch;
         $release{closes} = \@closes;
-        $release{changes} = $section->text('Changes');
+        $release{changes} = \@changes;
         $release{author} = $section->value('Maintainer');
 
         push(@releases, \%release);
