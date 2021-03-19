@@ -1,9 +1,5 @@
 {
-   "preamble" : {
-      "dpkg-version" : "1.20.9",
-      "title" : "DEB_HOST_* Variables from Dpkg"
-   },
-   "variables" : {
+   "host_variables" : {
       "aix-alpha" : {
          "DEB_HOST_ARCH" : "aix-alpha",
          "DEB_HOST_ARCH_ABI" : "base",
@@ -7011,5 +7007,9 @@
          "DEB_HOST_GNU_TYPE" : "x86_64-linux-gnux32",
          "DEB_HOST_MULTIARCH" : "x86_64-linux-gnux32"
       }
+   },
+   "preamble" : {
+      "cargo" : "host_variables",
+      "title" : "DEB_HOST_* Variables from Dpkg"
    }
 }

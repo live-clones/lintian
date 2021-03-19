@@ -23,19 +23,21 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Carp qw(croak);
 use Const::Fast;
-use JSON::MaybeXS;
 use List::SomeUtils qw(first_value);
-use Path::Tiny;
-use Unicode::UTF8 qw(decode_utf8 encode_utf8);
+use Unicode::UTF8 qw(decode_utf8);
 
 use Lintian::IPC::Run3 qw(safe_qx);
+
+const my $EMPTY => q{};
+const my $SLASH => q{/};
+
+const my $HOST_VARIABLES => q{host_variables};
 
 use Moo;
 use namespace::clean;
 
-const my $SLASH => q{/};
+with 'Lintian::Data::PreambledJSON';
 
 =encoding utf-8
 
@@ -67,8 +69,6 @@ Note that the architecture and cpu name are not always identical
 
 =item location
 
-=item preamble
-
 =item host_variables
 
 =item C<wildcards>
@@ -87,8 +87,10 @@ has location => (
     default => 'architectures/host.json'
 );
 
-has preamble => (is => 'rw');
-has host_variables => (is => 'rw');
+has host_variables => (
+    is => 'rw',
+    default => sub { {} },
+    coerce => sub { my ($hashref) = @_; return ($hashref // {}); });
 
 has deb_host_multiarch => (
     is => 'rw',
@@ -370,14 +372,10 @@ sub load {
     my @candidates = map { $_ . $SLASH . $self->location } @{$search_space};
     my $path = first_value { -e } @candidates;
 
-    croak encode_utf8('Unknown data file: ' . $self->location)
-      unless length $path;
+    my $host_variables;
+    $self->read_file($path, \$host_variables);
 
-    my $json = path($path)->slurp;
-    my $data = decode_json($json);
-
-    $self->preamble($data->{preamble});
-    $self->host_variables($data->{'variables'});
+    $self->host_variables($host_variables);
 
     return;
 }
@@ -392,17 +390,11 @@ sub refresh {
     local $ENV{LC_ALL} = 'C';
     delete local $ENV{DEB_HOST_ARCH};
 
-    my $version_output= decode_utf8(safe_qx(qw{dpkg-architecture --version}));
-    my ($dpkg_version) = split(/\n/, $version_output);
-
-    # retain only the version number
-    $dpkg_version =~ s/^.*\s(\S+)[.]$/$1/s;
-
     my @architectures
       = split(/\n/, decode_utf8(safe_qx(qw{dpkg-architecture --list-known})));
     chomp for @architectures;
 
-    my %variables;
+    my %host_variables;
     for my $architecture (@architectures) {
 
         my @lines= split(
@@ -413,34 +405,15 @@ sub refresh {
         for my $line (@lines) {
             my ($key, $value) = split(/=/, $line, 2);
 
-            $variables{$architecture}{$key} = $value
+            $host_variables{$architecture}{$key} = $value
               if $key =~ /^DEB_HOST_/;
         }
     }
 
-    my %preamble;
-    $preamble{title} = $self->title;
-    $preamble{'dpkg-version'} = $dpkg_version;
+    $self->cargo('host_variables');
 
-    my %all;
-    $all{preamble} = \%preamble;
-    $all{'variables'} = \%variables;
-
-    # convert to UTF-8 prior to encoding in JSON
-    my $encoder = JSON->new;
-    $encoder->canonical;
-    $encoder->utf8;
-    $encoder->pretty;
-
-    my $json = $encoder->encode(\%all);
-
-    my $datapath = "$basedir/" . $self->location;
-    my $parentdir = path($datapath)->parent->stringify;
-    path($parentdir)->mkpath
-      unless -e $parentdir;
-
-    # already in UTF-8
-    path($datapath)->spew($json);
+    my $data_path = "$basedir/" . $self->location;
+    $self->write_file($HOST_VARIABLES, \%host_variables, $data_path);
 
     return 1;
 }

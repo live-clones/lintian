@@ -1,5 +1,6 @@
 {
    "preamble" : {
+      "cargo" : "releases",
       "title" : "Debian Policy Releases"
    },
    "releases" : [
