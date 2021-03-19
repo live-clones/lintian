@@ -66,6 +66,7 @@ Depends:
  libproc-processtable-perl,
  libsereal-decoder-perl,
  libsereal-encoder-perl,
+ libsort-version-perl,
  libtext-glob-perl,
  libtext-levenshteinxs-perl,
  libtext-markdown-discount-perl,

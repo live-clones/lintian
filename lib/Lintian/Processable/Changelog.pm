@@ -141,14 +141,14 @@ has changelog_path => (
 For binary:
 
 Returns the changelog of the binary package as a Parse::DebianChangelog
-object, or undef if the changelog doesn't exist.  The changelog-file
+object, or an empty object if the changelog doesn't exist.  The changelog-file
 collection script must have been run to create the changelog file, which
 this method expects to find in F<changelog>.
 
 For source:
 
 Returns the changelog of the source package as a Parse::DebianChangelog
-object, or C<undef> if the changelog cannot be resolved safely.
+object, or an empty object if the changelog cannot be resolved safely.
 
 =cut
 
@@ -158,19 +158,17 @@ has changelog => (
     default => sub {
         my ($self) = @_;
 
+        my $changelog = Lintian::Inspect::Changelog->new;
+
         my $dch = $self->changelog_path;
-        return
+        return $changelog
           unless $dch;
 
         my $bytes = path($dch)->slurp;
-        return
+        return $changelog
           unless valid_utf8($bytes);
 
-        # check for UTF-8
-        my $contents = decode_utf8($bytes);
-
-        my $changelog = Lintian::Inspect::Changelog->new;
-        $changelog->parse($contents);
+        $changelog->parse(decode_utf8($bytes));
 
         return $changelog;
     });

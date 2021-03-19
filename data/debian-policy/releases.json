@@ -1,9 +1,19 @@
 {
    "preamble" : {
-      "last-update" : "2020-12-14T13:45:12Z",
+      "last-update" : "2021-03-19T05:12:41Z",
       "title" : "Debian Policy Releases"
    },
    "releases" : [
+      {
+         "author" : "Sean Whitton <spwhitton@spwhitton.name>",
+         "changes" : "\ndebian-policy (4.5.1.1) UNRELEASED; urgency=medium\n\n  * 4.4: Fix changelog format: needs an extra space before sign-off\n    (Closes: #976301).\n    Thanks to Anatoli Babenia for reporting the problem.",
+         "closes" : [
+            976301.0
+         ],
+         "epoch" : 1611089265,
+         "timestamp" : "2021-01-19T20:47:45Z",
+         "version" : "4.5.1.1"
+      },
       {
          "author" : "Sean Whitton <spwhitton@spwhitton.name>",
          "changes" : "\ndebian-policy (4.5.1.0) unstable; urgency=medium\n\n  * Policy: Relax requirements on copying copyright notices into d/copyright\n    Wording: Sean Whitton <spwhitton@spwhitton.name>\n    Seconded: Scott Kitterman <debian@kitterman.com>\n    Seconded: Joerg Jaspert <joerg@debian.org>\n    Closes: #955005\n  * Policy: Forbid vendor-specific series files\n    Wording: Sean Whitton <spwhitton@spwhitton.name>\n    Seconded: gregor herrmann <gregoa@debian.org>\n    Seconded: Graham Inggs <ginggs@debian.org>\n    Closes: #959909\n  * Policy: Clarification about colons in version numbers\n    Wording: Sean Whitton <spwhitton@spwhitton.name>\n    Seconded: Mattia Rizzolo <mattia@debian.org>\n    Seconded: Holger Levsen <holger@layer-acht.org>\n    Closes: #971023\n  * Replace `/usr/share/package/copyright` -> `/usr/share/PACKAGE/copyright`.\n    Thanks to Guillem Jover for the suggestion.\n  * Fix manpage section in reference to systemd.unit(5) (Closes: #973491).\n    Thanks to Martin Schwarz for the report.\n  * Makefile: Always use UTC date (Closes: #974911).\n    Thanks to Vagrant Cascadian for the patch.",

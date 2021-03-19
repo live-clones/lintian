@@ -57,6 +57,13 @@ sub source {
     my $fields = $self->processable->fields;
     my $debian_control = $self->processable->debian_control;
 
+    #my $all_udeb = 1;
+    #$all_udeb = 0
+    #  if any {
+    #      $debian_control->installable_package_type($_) ne 'udeb'
+    #  }
+    #  $debian_control->installables;
+
     my @missing_dsc = grep { !$fields->declares($_) } @DSC;
 
     my $dscfile = path($self->processable->path)->basename;

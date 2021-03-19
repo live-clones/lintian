@@ -28,8 +28,9 @@ use utf8;
 
 use Const::Fast;
 use Date::Parse qw(str2time);
-use List::Util qw(first);
+use List::SomeUtils qw(any first_value);
 use POSIX qw(strftime);
+use Sort::Versions;
 use Unicode::UTF8 qw(encode_utf8);
 
 use Moo;
@@ -38,145 +39,121 @@ use namespace::clean;
 with 'Lintian::Check';
 
 const my $EMPTY => q{};
+const my $DOT => q{.};
 
 const my $MAXIMUM_COMPONENTS_ANALYZED => 3;
+
+const my $DATE_ONLY => '%Y-%m-%d';
+const my $DATE_AND_TIME => '%Y-%m-%d %H:%M:%S UTC';
 
 sub source {
     my ($self) = @_;
 
-    my $processable = $self->processable;
-
     return
-      unless $processable->fields->declares('Standards-Version');
+      unless $self->processable->fields->declares('Standards-Version');
+
+    my $compliance_standard
+      = $self->processable->fields->value('Standards-Version');
+
+    my @compliance_components = split(/[.]/, $compliance_standard);
+    if (@compliance_components < $MAXIMUM_COMPONENTS_ANALYZED
+        || any { !/^\d+$/ } @compliance_components) {
+
+        $self->hint('invalid-standards-version', $compliance_standard);
+        return;
+    }
+
+    $self->hint('standards-version', $compliance_standard);
+
+    my ($compliance_major, $compliance_minor, $compliance_patch)
+      = @compliance_components;
+    my $compliance_normalized
+      = $compliance_major. $DOT. $compliance_minor. $DOT. $compliance_patch;
 
     my $policy_releases = $self->profile->policy_releases;
-
- # In addition to the normal Lintian::Data structure, we also want a list of
- # all standards and their release dates so that we can check things like the
- # release date of the standard released after the one a package declared.  Do
- # that by pulling all data out of the Lintian::Data structure and sorting it
- # by release date.  We can also use this to get the current standards version.
     my $latest_standard = $policy_releases->latest_version;
 
-    # catalogued versions are presently normalized to four components
-    $latest_standard =~ s{\.0$}{};
-
     my ($latest_major, $latest_minor, $latest_patch)
-      = split(m{ [.] }msx, $latest_standard, $MAXIMUM_COMPONENTS_ANALYZED);
+      = split(/[.]/, $latest_standard, $MAXIMUM_COMPONENTS_ANALYZED);
 
-    my $release_epoch = $policy_releases->epoch($latest_standard);
+    # a fourth digit is a non-normative change in policy
+    my $latest_normalized
+      = $latest_major . $DOT . $latest_minor . $DOT . $latest_patch;
 
-    # udebs aren't required to conform to policy, so they don't need
-    # Standards-Version. (If they have it, though, it should be valid.)
-    my $version = $processable->fields->value('Standards-Version');
+    my $changelog_epoch;
+    my $distribution;
 
-    my $all_udeb = 1;
-    $all_udeb = 0
-      if first {
-        $processable->debian_control->installable_package_type($_) ne 'udeb'
-    }
-    $processable->debian_control->installables;
-
-    # Check basic syntax and strip off the fourth digit.  People are allowed to
-    # include the fourth digit if they want, but it indicates a non-normative
-    # change in Policy and is therefore meaningless in the Standards-Version
-    # field.
-    unless ($version =~ m/^\s*(\d+\.\d+\.\d+)(?:\.\d+)?\s*$/) {
-        $self->hint('invalid-standards-version', $version);
-        return;
-    }
-    my $stdver = $1;
-    my ($major, $minor, $patch) = $stdver =~ m/^(\d+)\.(\d+)\.(\d+)/;
-
-    # To do some date checking, we have to get the package date from
-    # the changelog file.  If we can't find the changelog file, assume
-    # that the package was released today, since that activates the
-    # most tags.
-    my ($pkgdate, $dist);
-    if (defined $processable->changelog) {
-        my ($entry) = @{$processable->changelog->entries};
-        $pkgdate
-          = ($entry && $entry->Timestamp) ? $entry->Timestamp : $release_epoch;
-        $dist= ($entry && $entry->Distribution)? $entry->Distribution : $EMPTY;
-    } else {
-        $pkgdate = $release_epoch;
+    my ($entry) = @{$self->processable->changelog->entries};
+    if (defined $entry) {
+        $changelog_epoch = $entry->Timestamp;
+        $distribution = $entry->Distribution;
     }
 
-    # Check for packages dated prior to the date of release of the standards
-    # version with which they claim to comply.
-    if (   defined $dist
-        && $dist ne 'UNRELEASED'
-        && $policy_releases->is_known($stdver)
-        && $policy_releases->epoch($stdver) > $pkgdate) {
+    # assume recent date if there is no changelog; activates most tags
+    $changelog_epoch //= $policy_releases->epoch($latest_standard);
+    $distribution //= $EMPTY;
 
-        my $package = strftime('%Y-%m-%d', gmtime $pkgdate);
-        my $release
-          = strftime('%Y-%m-%d', gmtime $policy_releases->epoch($stdver));
-        if ($package eq $release) {
-            # Increase the precision if required
-            my $fmt = '%Y-%m-%d %H:%M:%S UTC';
-            $package = strftime($fmt, gmtime $pkgdate);
-            $release = strftime($fmt, gmtime $policy_releases->epoch($stdver));
-        }
-        $self->hint('timewarp-standards-version', "($package < $release)");
-    }
+    unless ($policy_releases->is_known($compliance_standard)) {
 
-    $self->hint('standards-version', $version);
+        # could be newer
+        if (versioncmp($compliance_standard, $latest_standard) == 1) {
 
-    if (not $policy_releases->is_known($stdver)) {
-        # Unknown standards version.  Perhaps newer?
-        if (
-               $major > $latest_major
-            || ($major == $latest_major && $minor > $latest_minor)
-            || (   $major == $latest_major
-                && $minor == $latest_minor
-                && $patch > $latest_patch)
-        ) {
             $self->hint('newer-standards-version',
-                "$version (current is $latest_standard)")
-              unless $dist =~ /backports/;
+                "$compliance_standard (current is $latest_standard)")
+              unless $distribution =~ /backports/;
+
         } else {
-            $self->hint('invalid-standards-version', $version);
+            $self->hint('invalid-standards-version', $compliance_standard);
         }
 
-    } elsif ($stdver eq $latest_standard) {
-        # Current standard.  Nothing more to check.
         return;
-
-    } else {
-        # Otherwise, we need to see if the standard that this package
-        # declares is both new enough to not be ancient and was the
-        # current standard at the time the package was uploaded.
-        #
-        # A given standards version is considered obsolete if the
-        # version following it has been out for at least two years (so
-        # the current version is never obsolete).
-        my $rdate = $policy_releases->epoch($stdver);
-        my $released = strftime('%Y-%m-%d', gmtime $rdate);
-        my $context
-          = "$version (released $released) (current is $latest_standard)";
-
-        # We have to get the package date from the changelog file.  If we
-        # can't find the changelog file, always issue the tag.
-        unless (defined $processable->changelog) {
-            $self->hint('out-of-date-standards-version', $context);
-            return;
-        }
-
-        my ($entry) = @{$processable->changelog->entries};
-        my $timestamp= ($entry && $entry->Timestamp) ? $entry->Timestamp : 0;
-
-        for my $standard (@{$policy_releases->ordered_versions}) {
-
-            last
-              if $standard eq $stdver;
-
-            if ($policy_releases->epoch($standard) < $timestamp) {
-                $self->hint('out-of-date-standards-version', $context);
-                last;
-            }
-        }
     }
+
+    my $compliance_epoch = $policy_releases->epoch($compliance_standard);
+
+    my $changelog_date = strftime($DATE_ONLY, gmtime $changelog_epoch);
+    my $compliance_date = strftime($DATE_ONLY, gmtime $compliance_epoch);
+
+    my $changelog_timestamp= strftime($DATE_AND_TIME, gmtime $changelog_epoch);
+    my $compliance_timestamp
+      = strftime($DATE_AND_TIME, gmtime $compliance_epoch);
+
+    # catch packages dated prior to release of their standard
+    if ($compliance_epoch > $changelog_epoch) {
+
+        # show precision if needed
+        my $warp_illustration = "($changelog_date < $compliance_date)";
+        $warp_illustration = "($changelog_timestamp < $compliance_timestamp)"
+          if $changelog_date eq $compliance_date;
+
+        $self->hint('timewarp-standards-version', $warp_illustration)
+          unless $distribution eq 'UNRELEASED';
+    }
+
+    return
+      if $compliance_standard eq $latest_standard;
+
+    my @newer_versions = List::SomeUtils::before {
+        $policy_releases->epoch($_) < $compliance_epoch
+    }
+    @{$policy_releases->ordered_versions};
+
+    # a fourth digit is a non-normative change in policy
+    my @newer_normative_versions
+      = grep { !/^ \d+ [.] \d+ [.] \d+ [.] [^0] $/sx } @newer_versions;
+
+    my @newer_normative_epochs
+      = map { $policy_releases->epoch($_) } @newer_normative_versions;
+
+    my @normative_epochs_then_known
+      = grep { $_ <= $changelog_epoch } @newer_normative_epochs;
+
+    my $outdated_illustration
+      = "$compliance_standard (released $compliance_date) (current is $latest_standard)";
+
+    # use normative to prevent tag changes on minor new policy edits
+    $self->hint('out-of-date-standards-version', $outdated_illustration)
+      if @normative_epochs_then_known;
 
     return;
 }
