@@ -49,19 +49,6 @@ sub source {
     return
       unless $processable->fields->declares('Standards-Version');
 
-    # Any Standards Version released before this day is "ancient"
-    my $ANCIENT_DATE_DATA = $self->profile->load_data(
-        'standards-version/ancient-date',
-        qr{\s*<\s*},
-        sub {
-            my $date = str2time($_[1])
-              or die encode("Cannot parse ANCIENT_DATE: $!");
-            return $date;
-        });
-
-    my $ANCIENT_DATE = $ANCIENT_DATE_DATA->value('ANCIENT')
-      or die encode_utf8('Cannot get ANCIENT_DATE');
-
     my $policy_releases = $self->profile->policy_releases;
 
  # In addition to the normal Lintian::Data structure, we also want a list of
@@ -169,30 +156,24 @@ sub source {
         my $context
           = "$version (released $released) (current is $latest_standard)";
 
-        if ($rdate < $ANCIENT_DATE) {
-            $self->hint('ancient-standards-version', $context);
+        # We have to get the package date from the changelog file.  If we
+        # can't find the changelog file, always issue the tag.
+        unless (defined $processable->changelog) {
+            $self->hint('out-of-date-standards-version', $context);
+            return;
+        }
 
-        } else {
-            # We have to get the package date from the changelog file.  If we
-            # can't find the changelog file, always issue the tag.
-            unless (defined $processable->changelog) {
+        my ($entry) = @{$processable->changelog->entries};
+        my $timestamp= ($entry && $entry->Timestamp) ? $entry->Timestamp : 0;
+
+        for my $standard (@{$policy_releases->ordered_versions}) {
+
+            last
+              if $standard eq $stdver;
+
+            if ($policy_releases->epoch($standard) < $timestamp) {
                 $self->hint('out-of-date-standards-version', $context);
-                return;
-            }
-
-            my ($entry) = @{$processable->changelog->entries};
-            my $timestamp
-              = ($entry && $entry->Timestamp) ? $entry->Timestamp : 0;
-
-            for my $standard (@{$policy_releases->ordered_versions}) {
-
-                last
-                  if $standard eq $stdver;
-
-                if ($policy_releases->epoch($standard) < $timestamp) {
-                    $self->hint('out-of-date-standards-version', $context);
-                    last;
-                }
+                last;
             }
         }
     }
