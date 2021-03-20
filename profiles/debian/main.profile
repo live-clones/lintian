@@ -207,6 +207,7 @@ Enable-Tags-From-Check:
  shared-libs
  systemd
  systemd/tmpfiles
+ team/pkg-java/maintainer
  team/pkg-js/deprecated
  team/pkg-js/testsuite
  team/pkg-js/vcs
