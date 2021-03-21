@@ -78,6 +78,7 @@ Enable-Tags-From-Check:
  fields/length
  fields/mail-address
  fields/maintainer
+ fields/maintainer/team
  fields/multi-arch
  fields/multi-line
  fields/origin
