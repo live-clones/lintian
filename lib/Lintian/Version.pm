@@ -81,8 +81,12 @@ sub version_from_git {
     return $EMPTY
       unless -d $git_path;
 
-    my $guess = decode_utf8(safe_qx('git', "--git-dir=$git_path", 'describe'));
-    chomp $guess;
+    my $describe
+      = decode_utf8(safe_qx('git', "--git-dir=$git_path", 'describe'));
+    chomp $describe;
+
+    my ($guess, $step, $commit) = split(/-/, $describe);
+    $guess =~ s/ [.] 0 $/.$step+$commit/sx;
 
     return ($guess // $EMPTY);
 }
