@@ -130,17 +130,14 @@ sub source {
           unless $distribution eq 'UNRELEASED';
     }
 
-    return
-      if $compliance_standard eq $latest_standard;
-
     my @newer_versions = List::SomeUtils::before {
-        $policy_releases->epoch($_) < $compliance_epoch
+        $policy_releases->epoch($_) <= $compliance_epoch
     }
     @{$policy_releases->ordered_versions};
 
     # a fourth digit is a non-normative change in policy
     my @newer_normative_versions
-      = grep { !/^ \d+ [.] \d+ [.] \d+ [.] [^0] $/sx } @newer_versions;
+      = grep { /^ \d+ [.] \d+ [.] \d+ (?:[.] 0)? $/sx } @newer_versions;
 
     my @newer_normative_epochs
       = map { $policy_releases->epoch($_) } @newer_normative_versions;
