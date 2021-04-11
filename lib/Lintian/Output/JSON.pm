@@ -91,7 +91,7 @@ sub issue_hints {
 
             my %file_output;
             $file_output{path} = $processable->path;
-            $file_output{tags} = $self->hintlist($processable->hints);
+            $file_output{hints} = $self->hintlist($processable->hints);
 
             push(@allfiles_output, \%file_output);
         }
@@ -132,12 +132,12 @@ sub hintlist {
         my %hint;
         push(@hints, \%hint);
 
-        $hint{name} = $input->tag->name;
+        $hint{tag} = $input->tag->name;
 
         $hint{context} = $input->context
           if length $input->context;
 
-        $hint{severity} = $input->tag->effective_severity;
+        $hint{visibility} = $input->tag->effective_severity;
         $hint{experimental} = 'yes'
           if $input->tag->experimental;
 
