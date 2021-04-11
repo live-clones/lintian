@@ -74,7 +74,8 @@ sub source {
     my @additional = map { $_ . '.copyright' } @installables;
 
     my @candidates = ('copyright', @additional);
-    my @files = grep { defined } map { $debian_dir->child($_) } @candidates;
+    my @files = grep { defined $_ && !$_->is_symlink }
+      map { $debian_dir->child($_) } @candidates;
 
     # another check complains about legacy encoding, if needed
     my @valid_utf8 = grep { $_->is_valid_utf8 } @files;
@@ -88,13 +89,13 @@ sub source {
 # format URI. This is checked later in check_dep5_copyright.
 # return undef is not dep5 and '' if unknown version
 sub find_dep5_version {
-    my ($self, $original_uri) = @_;
+    my ($self, $file, $original_uri) = @_;
 
     my $uri = $original_uri;
     my $version;
 
     if ($uri =~ /\b(?:rev=REVISION|VERSIONED_FORMAT_URL)\b/) {
-        $self->hint('boilerplate-copyright-format-uri', $uri);
+        $self->hint('boilerplate-copyright-format-uri', $file->name, $uri);
         return undef;
     }
 
@@ -145,7 +146,7 @@ sub find_dep5_version {
         return $version;
     }
 
-    $self->hint('unknown-copyright-format-uri', $original_uri);
+    $self->hint('unknown-copyright-format-uri', $file->name, $original_uri);
 
     return undef;
 }
@@ -160,7 +161,8 @@ sub check_dep5_copyright {
         if ($contents
             =~ m{^Format:.*/doc/packaging-manuals/copyright-format/1.0/?$}m) {
 
-            $self->hint('repackaged-source-not-advertised')
+            $self->hint('repackaged-source-not-advertised',
+                $copyright_file->name)
               unless $self->processable->repacked
               || $self->processable->native;
 
@@ -194,32 +196,34 @@ sub check_dep5_copyright {
     $first_para =~ s/\n\n.*/\n/s;    #;; hi emacs
     $first_para =~ s/\n?[ \t]+/ /g;
 
-    $first_para =~ /^Format(?:-Specification)?:\s*(.*)/mi;
-    my $uri = $1;
-
-    unless (length $uri) {
-        $self->hint('unknown-copyright-format-uri');
+    if ($first_para !~ /^Format(?:-Specification)?:\s*(\S+)\s*$/mi) {
+        $self->hint('unknown-copyright-format-uri', $copyright_file->name);
         return;
     }
+
+    my $uri = $1;
 
     # strip fragment identifier
     $uri =~ s/^([^#\s]+)#/$1/;
 
-    my $version = $self->find_dep5_version($uri);
+    my $version = $self->find_dep5_version($copyright_file, $uri);
     return
       unless defined $version;
 
     if ($version =~ /wiki/) {
-        $self->hint('wiki-copyright-format-uri', $uri);
+        $self->hint('wiki-copyright-format-uri', $copyright_file->name, $uri);
 
     } elsif ($version =~ /svn$/) {
-        $self->hint('unversioned-copyright-format-uri', $uri);
+        $self->hint('unversioned-copyright-format-uri',
+            $copyright_file->name, $uri);
 
     } elsif (versions_compare($version, '<<', $LAST_SIGNIFICANT_DEP5_CHANGE)) {
-        $self->hint('out-of-date-copyright-format-uri', $uri);
+        $self->hint('out-of-date-copyright-format-uri',
+            $copyright_file->name, $uri);
 
     } elsif ($uri =~ m{^http://www\.debian\.org/}) {
-        $self->hint('insecure-copyright-format-uri', $uri);
+        $self->hint('insecure-copyright-format-uri',
+            $copyright_file->name, $uri);
     }
 
     return
@@ -253,7 +257,8 @@ sub check_dep5_copyright {
     for my $section (@license_sections) {
 
         $self->hint('tab-in-license-text',
-            'debian/copyright (starting at line '
+                $copyright_file->name
+              . ' (starting at line '
               . $section->position('License') . ')')
           if $section->untrimmed_value('License') =~ /\t/;
 
@@ -280,14 +285,17 @@ sub check_dep5_copyright {
         $license_identifier_by_section{$section->position}
           = $license_identifier;
 
-        $self->hint(
-            'empty-short-license-in-dep5-copyright',
-            '(line ' . $section->position('License') . ')'
-        )unless length $license_identifier;
+        $self->hint('empty-short-license-in-dep5-copyright',
+            $copyright_file->name,
+            '(line ' . $section->position('License') . ')')
+          unless length $license_identifier;
 
-        $self->hint('pipe-symbol-used-as-license-disjunction',
-            $license_identifier,'(line '. $section->position('License') . ')')
-          if $license_identifier =~ m{\s+\|\s+};
+        $self->hint(
+            'pipe-symbol-used-as-license-disjunction',
+            $copyright_file->name,
+            $license_identifier,
+            '(line '. $section->position('License') . ')'
+        )if $license_identifier =~ m{\s+\|\s+};
 
         for my $name (@license_names) {
             if ($name =~ /\s/) {
@@ -295,23 +303,32 @@ sub check_dep5_copyright {
                 if($name =~ /[^ ]+ \s+ with \s+ (.*)/x) {
                     my $exceptiontext = $1;
                     unless ($exceptiontext =~ /[^ ]+ \s+ exception/x) {
-                        $self->hint('bad-exception-format-in-dep5-copyright',
+                        $self->hint(
+                            'bad-exception-format-in-dep5-copyright',
+                            $copyright_file->name,
                             $name,
-                            '(line ' . $section->position('License') . ')');
+                            '(line ' . $section->position('License') . ')'
+                        );
                     }
 
                 }else {
-                    $self->hint('space-in-std-shortname-in-dep5-copyright',
-                        $name,'(line ' . $section->position('License') . ')');
+                    $self->hint(
+                        'space-in-std-shortname-in-dep5-copyright',
+                        $copyright_file->name,
+                        $name,
+                        '(line ' . $section->position('License') . ')'
+                    );
                 }
             }
 
             $self->hint('invalid-short-name-in-dep5-copyright',
+                $copyright_file->name,
                 $name,'(line ' . $section->position('License') . ')')
               if $name =~ m{^(?:agpl|gpl|lgpl)[^-]?\d(?:\.\d)?\+?$}
               || $name =~ m{^bsd(?:[^-]?[234][^-]?(?:clause|cluase))?$};
 
             $self->hint('license-problem-undefined-license',
+                $copyright_file->name,
                 $name,'(line ' . $section->position('License') . ')')
               if $name eq $HYPHEN
               || $name
@@ -330,10 +347,12 @@ sub check_dep5_copyright {
 
             my $num_lines = $license_text =~ tr/\n//;
 
-            $self->hint('incomplete-creative-commons-license',
+            $self->hint(
+                'incomplete-creative-commons-license',
+                $copyright_file->name,
                 $license_identifier,
-                '(line ' . $section->position('License') . ')')
-              if $num_lines < $MINIMUM_CREATIVE_COMMMONS_LENGTH;
+                '(line ' . $section->position('License') . ')'
+            )if $num_lines < $MINIMUM_CREATIVE_COMMMONS_LENGTH;
         }
     }
 
@@ -345,6 +364,7 @@ sub check_dep5_copyright {
           if $name eq 'public-domain';
 
         $self->hint('dep5-copyright-license-name-not-unique',
+            $copyright_file->name,
             $name,'(line ' . $_->position('License') . ')')
           for @{$found_standalone{$name}};
     }
@@ -356,13 +376,15 @@ sub check_dep5_copyright {
 
         $self->hint(
             'obsolete-field-in-dep5-copyright',
+            $copyright_file->name,
             $old_name,
             $NEW_FIELD_NAMES{$old_name},
             '(line ' . $header->position($old_name) . ')'
         );
     }
 
-    $self->hint('copyright-excludes-files-in-native-package')
+    $self->hint('copyright-excludes-files-in-native-package',
+        $copyright_file->name)
       if $header->declares('Files-Excluded')
       && $self->processable->native;
 
@@ -377,7 +399,8 @@ sub check_dep5_copyright {
         for my $wildcard (@wildcards) {
 
             my @offenders = escape_errors($wildcard);
-            $self->hint('invalid-escape-sequence-in-dep5-copyright', $_)
+            $self->hint('invalid-escape-sequence-in-dep5-copyright',
+                $copyright_file->name, $_)
               for @offenders;
 
             next
@@ -407,23 +430,26 @@ sub check_dep5_copyright {
 
             for my $name (@unwanted) {
 
-                $self->hint('source-includes-file-in-files-excluded', $name)
+                $self->hint('source-includes-file-in-files-excluded',
+                    $copyright_file->name, $name)
                   unless $name =~ m{^(?:debian|\.pc)/};
             }
         }
     }
 
     $self->hint('missing-field-in-dep5-copyright',
-        'Format','(line ' . $header->position . ')')
+        $copyright_file->name,'Format','(line ' . $header->position . ')')
       if none { $header->declares($_) } qw(Format Format-Specification);
 
     my $debian_control = $self->processable->debian_control;
-    $self->hint('missing-explanation-for-contrib-or-non-free-package')
+    $self->hint('missing-explanation-for-contrib-or-non-free-package',
+        $copyright_file->name)
       if ($debian_control->source_fields->value('Section'))
       =~ m{^(?:contrib|non-free)(?:/.+)?$}
       && none { $header->declares($_) } qw(Comment Disclaimer);
 
-    $self->hint('missing-explanation-for-repacked-upstream-tarball')
+    $self->hint('missing-explanation-for-repacked-upstream-tarball',
+        $copyright_file->name)
       if $self->processable->repacked
       && $header->value('Source') =~ m{^https?://}
       && none { $header->declares($_) } qw(Comment Files-Excluded);
@@ -434,17 +460,16 @@ sub check_dep5_copyright {
           && !$_->declares('Files')
     } @followers;
 
-    $self->hint(
-        'ambiguous-paragraph-in-dep5-copyright',
-        'paragraph at line ' . $_->position
-    ) for @ambiguous_sections;
+    $self->hint('ambiguous-paragraph-in-dep5-copyright',
+        $copyright_file->name,'paragraph at line ' . $_->position)
+      for @ambiguous_sections;
 
     my @unknown_sections
       = grep {!$_->declares('License')&& !$_->declares('Files')} @followers;
 
     $self->hint(
         'unknown-paragraph-in-dep5-copyright',
-        'paragraph at line',
+        $copyright_file->name,'paragraph at line',
         $_->position
     ) for @unknown_sections;
 
@@ -479,8 +504,9 @@ sub check_dep5_copyright {
 
         $self->hint(
             'comma-separated-files-in-dep5-copyright',
-            'paragraph at line',
-            $_->position('Files')) for @fields_with_comma;
+            $copyright_file->name,'paragraph at line',
+            $copyright_file->name,$_->position('Files')
+        ) for @fields_with_comma;
     }
 
     # only attempt to evaluate globbing if commas could be legal
@@ -491,20 +517,26 @@ sub check_dep5_copyright {
     for my $section (@files_sections) {
 
         $self->hint('missing-field-in-dep5-copyright',
+            $copyright_file->name,
             'Files','(empty field, line ' . $section->position('Files') . ')')
           if $section->value('Files') =~ /^\s*$/;
 
         $self->hint('missing-field-in-dep5-copyright',
+            $copyright_file->name,
             'License', '(paragraph at line ' . $section->position . ')')
           unless $section->declares('License');
 
         $self->hint('missing-field-in-dep5-copyright',
+            $copyright_file->name,
             'Copyright','(paragraph at line ' . $section->position . ')')
           unless $section->declares('Copyright');
 
-        $self->hint('missing-field-in-dep5-copyright',
+        $self->hint(
+            'missing-field-in-dep5-copyright',
+            $copyright_file->name,
             'Copyright',
-            '(empty field, line ' . $section->position('Copyright') . ')')
+            '(empty field, line ' . $section->position('Copyright') . ')'
+          )
           if $section->declares('Copyright')
           && $section->value('Copyright') =~ /^\s*$/;
     }
@@ -547,12 +579,13 @@ sub check_dep5_copyright {
 
         $self->hint(
             'global-files-wildcard-not-first-paragraph-in-dep5-copyright',
-            '(line ' . $section->position('Files') . ')')
+            $copyright_file->name,'(line ' . $section->position('Files') . ')')
           if (any { $_ eq $ASTERISK } @wildcards) && $section_count > 0;
 
         # stand-alone license paragraph
         $self->hint(
             'missing-license-text-in-dep5-copyright',
+            $copyright_file->name,
             $section->untrimmed_value('License'),
             '(line ' . $section->position('License') . ')'
           )
@@ -569,10 +602,10 @@ sub check_dep5_copyright {
 
             my @offenders = escape_errors($wildcard);
 
-            $self->hint(
-                'invalid-escape-sequence-in-dep5-copyright',
-                $_. ' (paragraph at line '. $section->position. ')'
-            ) for @offenders;
+            $self->hint('invalid-escape-sequence-in-dep5-copyright',
+                $copyright_file->name,
+                $_. ' (paragraph at line '. $section->position. ')')
+              for @offenders;
 
             next
               if @offenders;
@@ -605,7 +638,8 @@ sub check_dep5_copyright {
             my $looser_depth = ($loosing_wildcard =~ tr{/}{});
 
             $self->hint('globbing-patterns-out-of-order',
-                $loosing_wildcard, $winning_wildcard)
+                $copyright_file->name,
+                $loosing_wildcard, $winning_wildcard, $name)
               if $looser_depth > $winner_depth;
         }
 
@@ -620,6 +654,7 @@ sub check_dep5_copyright {
 
         $self->hint(
             'redundant-globbing-patterns',
+            $copyright_file->name,
             $LEFT_SQUARE
               . join($SPACE, @{$wildcards_same_section_by_file{$_}})
               . $RIGHT_SQUARE,
@@ -639,7 +674,11 @@ sub check_dep5_copyright {
         my @duplicate_wildcards= grep { @{$sections_by_wildcard{$_}} > 1 }
           keys %sections_by_wildcard;
         for my $wildcard (@duplicate_wildcards) {
-            $self->hint('duplicate-globbing-patterns', $wildcard, 'in lines',
+            $self->hint(
+                'duplicate-globbing-patterns',
+                $copyright_file->name,
+                $wildcard,
+                'in lines',
                 map { $_->position('Files') }
                   @{$sections_by_wildcard{$wildcard}});
         }
@@ -654,10 +693,10 @@ sub check_dep5_copyright {
         my @matches_nothing = $wildcard_lc->get_Lonly;
 
         for my $wildcard (@matches_nothing) {
-            $self->hint(
-                'wildcard-matches-nothing-in-dep5-copyright',
-                "$wildcard (line " . $_->position('Files') . ')'
-            ) for @{$sections_by_wildcard{$wildcard}};
+            $self->hint('wildcard-matches-nothing-in-dep5-copyright',
+                $copyright_file->name,
+                "$wildcard (line " . $_->position('Files') . ')')
+              for @{$sections_by_wildcard{$wildcard}};
         }
 
         my %sections_by_file;
@@ -721,7 +760,7 @@ sub check_dep5_copyright {
             my @mismatched = grep { $_ ne $seen } @wanted;
 
             $self->hint('inconsistent-appstream-metadata-license',
-                $name, "($seen != $_)")
+                $copyright_file->name,$name, "($seen != $_)")
               for @mismatched;
         }
 
@@ -733,7 +772,9 @@ sub check_dep5_copyright {
         my @not_covered
           = grep { !@{$sections_by_file{$_} // []} } @license_needed;
 
-        $self->hint('file-without-copyright-information',$_) for @not_covered;
+        $self->hint('file-without-copyright-information',
+            $copyright_file->name, $_)
+          for @not_covered;
 
         my @all_positions
           = map { $_->position }
@@ -744,7 +785,7 @@ sub check_dep5_copyright {
         my @unused_positions = $unused_lc->get_Lonly;
 
         $self->hint('unused-file-paragraph-in-dep5-copyright',
-            "paragraph at line $_")
+            $copyright_file->name,"paragraph at line $_")
           for @unused_positions;
     }
 
@@ -755,21 +796,25 @@ sub check_dep5_copyright {
     my @unused_standalone = $standalone_lc->get_Ronly;
 
     $self->hint('missing-license-paragraph-in-dep5-copyright',
-        $_,'(line '. $required_standalone{$_}->position('License') . ')')
+        $copyright_file->name,$_,
+        '(line '. $required_standalone{$_}->position('License') . ')')
       for @missing_standalone;
 
     for my $name (grep { $_ ne 'public-domain' } @unused_standalone) {
 
         $self->hint('unused-license-paragraph-in-dep5-copyright',
+            $copyright_file->name,
             $name,'(line ' . $_->position('License') . ')')
           for @{$found_standalone{$name}};
     }
 
     for my $name (@matched_standalone) {
-        $self->hint('dep5-file-paragraph-references-header-paragraph',
+        $self->hint(
+            'dep5-file-paragraph-references-header-paragraph',
+            $copyright_file->name,
             $name,
-            '(line '. $required_standalone{$name}->position('Files') . ')')
-          if all { $_ == $header } @{$found_standalone{$name}};
+            '(line '. $required_standalone{$name}->position('Files') . ')'
+        )if all { $_ == $header } @{$found_standalone{$name}};
     }
 
     # license files do not require their own entries in d/copyright.
@@ -777,7 +822,8 @@ sub check_dep5_copyright {
       = List::Compare->new(\@notice_names, [keys %sections_by_wildcard]);
     my @listed_licences = $license_lc->get_intersection;
 
-    $self->hint('license-file-listed-in-debian-copyright',$_)
+    $self->hint('license-file-listed-in-debian-copyright',
+        $copyright_file->name, $_)
       for @listed_licences;
 
     return;

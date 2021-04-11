@@ -775,6 +775,7 @@ sub check_dh_exec {
     open(my $fd, '<', $path->unpacked_path)
       or die encode_utf8('Cannot open ' . $path->unpacked_path);
 
+    my $position = 1;
     while (my $line = <$fd>) {
         if ($line =~ /\$\{([^\}]+)\}/) {
             my $sv = $1;
@@ -787,7 +788,8 @@ sub check_dh_exec {
                       |GNU_ (?:CPU|SYSTEM|TYPE)|MULTIARCH
              ) \Z}xsm
             ) {
-                $self->hint('dh-exec-subst-unknown-variable', $path, $sv);
+                $self->hint('dh-exec-subst-unknown-variable',
+                    "$path:$position", $sv);
             }
         }
 
@@ -827,10 +829,13 @@ sub check_dh_exec {
                 my $form = $line;
                 chomp($form);
                 $form = "\"$form\"";
-                $self->hint('dh-exec-useless-usage', $path, $form);
+                $self->hint('dh-exec-useless-usage', "$path:$position", $form);
             }
         }
+    } continue {
+        ++$position;
     }
+
     close($fd);
 
     if (!($dhe_subst || $dhe_install || $dhe_filter)) {

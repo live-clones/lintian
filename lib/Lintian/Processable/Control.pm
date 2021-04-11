@@ -22,6 +22,7 @@ use warnings;
 use utf8;
 
 use Const::Fast;
+use List::SomeUtils qw(uniq);
 
 use Lintian::Index;
 
@@ -69,7 +70,7 @@ has control => (
           = $index->create_from_piped_tar(\@command);
 
         $self->hint('unpack-message-for-deb-control', $_)
-          for split(/\n/, $extract_errors . $index_errors);
+          for uniq split(/\n/, $extract_errors . $index_errors);
 
         return $index;
     });

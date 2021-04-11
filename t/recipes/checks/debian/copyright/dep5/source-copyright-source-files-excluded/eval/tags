@@ -1,5 +1,5 @@
-source-copyright-source-files-excluded (source): source-includes-file-in-files-excluded exclude-this
-source-copyright-source-files-excluded (source): source-includes-file-in-files-excluded exclude-dir/filename-2
-source-copyright-source-files-excluded (source): source-includes-file-in-files-excluded exclude-dir/filename
-source-copyright-source-files-excluded (source): source-includes-file-in-files-excluded exclude-dir-2/filename
-source-copyright-source-files-excluded (source): source-includes-file-in-files-excluded .matches
+source-copyright-source-files-excluded (source): source-includes-file-in-files-excluded debian/copyright exclude-this
+source-copyright-source-files-excluded (source): source-includes-file-in-files-excluded debian/copyright exclude-dir/filename-2
+source-copyright-source-files-excluded (source): source-includes-file-in-files-excluded debian/copyright exclude-dir/filename
+source-copyright-source-files-excluded (source): source-includes-file-in-files-excluded debian/copyright exclude-dir-2/filename
+source-copyright-source-files-excluded (source): source-includes-file-in-files-excluded debian/copyright .matches

@@ -349,7 +349,8 @@ sub verify_line {
     my %tested_packages = map { $_ => 1 } split(/\s*,\s*/, $pkg_test);
     my $tested_packages = scalar keys %tested_packages;
     unless (exists $tested_packages{$pkg}) {
-        $self->hint('pkg-not-in-package-test', "$pkg_test $fullname");
+        $self->hint('pkg-not-in-package-test',
+            "$pkg_test $fullname:$linecount");
     }
     $line =~ s/^\?package\(.*?\)://;
 

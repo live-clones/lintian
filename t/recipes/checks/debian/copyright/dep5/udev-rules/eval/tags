@@ -1,1 +1,1 @@
-udev-rules (source): inconsistent-appstream-metadata-license debian/udev-rules.metadata.xml (mit != gpl-2+)
+udev-rules (source): inconsistent-appstream-metadata-license debian/copyright debian/udev-rules.metadata.xml (mit != gpl-2+)

@@ -238,24 +238,24 @@ sub always {
 
         my @parts = $splitter->($uri);
         if (not @parts or not $parts[0]) {
-            $self->hint('vcs-field-uses-unknown-uri-format', $fieldname, $uri);
+            $self->hint('vcs-field-uses-unknown-uri-format', $platform, $uri);
         } else {
             if (    $VCS_RECOMMENDED_URIS{$platform}
                 and $parts[0] !~ $VCS_RECOMMENDED_URIS{$platform}) {
                 if (    $VCS_VALID_URIS{$platform}
                     and $parts[0] =~ $VCS_VALID_URIS{$platform}) {
                     $self->hint('vcs-field-uses-not-recommended-uri-format',
-                        $fieldname, $uri);
+                        $platform, $uri);
                 } else {
                     $self->hint('vcs-field-uses-unknown-uri-format',
-                        $fieldname,$uri);
+                        $platform,$uri);
                 }
             }
 
-            $self->hint('vcs-field-has-unexpected-spaces', $fieldname, $uri)
+            $self->hint('vcs-field-has-unexpected-spaces', $platform, $uri)
               if (any { $_ and /\s/} @parts);
 
-            $self->hint('vcs-field-uses-insecure-uri', $fieldname, $uri)
+            $self->hint('vcs-field-uses-insecure-uri', $platform, $uri)
               if $parts[0] =~ m{^(?:git|(?:nosmart\+)?http|svn)://}
               || $parts[0] =~ m{^(?:lp|:pserver):};
         }
@@ -269,7 +269,7 @@ sub always {
                 $canonify->($canonicalized, $tag);
             }
 
-            $self->hint($tag, $fieldname, $parts[0], $canonicalized)
+            $self->hint($tag, $platform, $parts[0], $canonicalized)
               unless $canonicalized eq $parts[0];
         }
 
@@ -280,7 +280,7 @@ sub always {
 
         } else {
             $self->hint('vcs', lc $platform);
-            $self->hint('vcs-uri', $uri);
+            $self->hint('vcs-uri', $platform, $uri);
             $seen_vcs{$platform}++;
 
             foreach my $regex ($KNOWN_VCS_HOSTERS->all) {
@@ -302,7 +302,7 @@ sub always {
 
         if ($uri =~ m{//(.+)\.debian\.org/}) {
             $self->hint('vcs-obsolete-in-debian-infrastructure',
-                $fieldname, $uri)
+                $platform, $uri)
               unless $1 =~ m{^(?:salsa|.*\.dgit)$};
 
         }
@@ -323,11 +323,11 @@ sub always {
             }
         }
 
-        $self->hint('old-dpmt-vcs')
+        $self->hint('old-dpmt-vcs', $platform)
           if $maintainer =~ m{python-modules-team\@lists\.alioth\.debian\.org}
           and $uri !~ m{salsa.debian.org/python-team/packages/.+};
 
-        $self->hint('old-papt-vcs')
+        $self->hint('old-papt-vcs', $platform)
           if $maintainer =~ m{python-apps-team\@lists\.alioth\.debian\.org}
           and $uri !~ m{salsa.debian.org/python-team/packages/.+};
     }

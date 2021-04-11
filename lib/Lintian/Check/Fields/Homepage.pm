@@ -36,37 +36,21 @@ with 'Lintian::Check';
 sub source {
     my ($self) = @_;
 
-    my $fields = $self->processable->fields;
+    return
+      if $self->processable->native;
 
-    unless ($fields->declares('Homepage')) {
+    my $debian_control = $self->processable->debian_control;
 
-        my $homepage = $fields->unfolded_value('Homepage');
+    my @binaries_with_homepage_field
+      = grep { $debian_control->installable_fields($_)->declares('Homepage') }
+      $debian_control->installables;
 
-        return
-          if $self->processable->native;
+    $self->hint('homepage-in-binary-package', $_)
+      for @binaries_with_homepage_field;
 
-        my $debian_control = $self->processable->debian_control;
-
-        my $binary_has_homepage_field = 0;
-        for my $binary ($debian_control->installables) {
-
-            if ($debian_control->installable_fields($binary)
-                ->declares('Homepage')) {
-
-                $binary_has_homepage_field = 1;
-                last;
-            }
-        }
-
-        if ($binary_has_homepage_field) {
-            $self->hint('homepage-in-binary-package');
-
-        } else {
-            $self->hint('no-homepage-field');
-        }
-
-        return;
-    }
+    $self->hint('no-homepage-field')
+      unless @binaries_with_homepage_field
+      || $self->processable->fields->declares('Homepage');
 
     return;
 }

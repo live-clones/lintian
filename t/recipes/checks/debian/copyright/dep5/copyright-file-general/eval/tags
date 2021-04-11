@@ -1,5 +1,5 @@
-copyright-file-general (source): wiki-copyright-format-uri http://wiki.debian.org/Proposals/CopyrightFormat?recall=184
-copyright-file-general (source): unknown-copyright-format-uri
+copyright-file-general (source): wiki-copyright-format-uri debian/copyright-crln.copyright http://wiki.debian.org/Proposals/CopyrightFormat?recall=184
+copyright-file-general (source): unknown-copyright-format-uri debian/copyright-no-errors.copyright
 copyright-file-general (source): no-dep5-copyright debian/copyright-w3c.copyright
 copyright-file-general (source): no-dep5-copyright debian/copyright-versionless.copyright
 copyright-file-general (source): no-dep5-copyright debian/copyright-poor-common-licenses.copyright

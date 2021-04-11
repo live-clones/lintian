@@ -376,8 +376,6 @@ sub visit_installed_files {
 
         # Now we search through the whole man page for some common errors
         my $position = 0;
-        my $stag_emitter
-          = $self->spelling_tag_emitter('typo-in-manual-page', $file);
         foreach my $line (@manfile) {
             $position++;
             chomp $line;
@@ -430,6 +428,9 @@ sub visit_installed_files {
                 $self->hint('pod-conversion-message', "$file:$position");
             }
             # Check for spelling errors if the manpage is English
+            my $stag_emitter
+              = $self->spelling_tag_emitter('typo-in-manual-page', $file,
+                "line $position");
             check_spelling($self->profile, $line,
                 $self->group->spelling_exceptions,
                 $stag_emitter, 0)

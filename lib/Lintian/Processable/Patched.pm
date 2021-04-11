@@ -25,6 +25,7 @@ use utf8;
 
 use Const::Fast;
 use Cwd;
+use List::SomeUtils qw(uniq);
 use IPC::Run3;
 use Path::Tiny;
 use Unicode::UTF8 qw(encode_utf8 decode_utf8);
@@ -129,7 +130,7 @@ has patched => (
           or die encode_utf8("Cannot change to directory $savedir");
 
         $self->hint('unpack-message-for-source', $_)
-          for
+          for uniq
           split(/\n/, $unpack_errors . $index_errors . $permissions_errors);
 
         return $index;

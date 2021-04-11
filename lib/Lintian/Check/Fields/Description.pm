@@ -143,31 +143,36 @@ sub installable {
             my $firstline = lc $line;
             my $lsyn = lc $synopsis;
             if ($firstline =~ /^\Q$lsyn\E$/) {
-                $self->hint('description-synopsis-is-duplicated');
+                $self->hint('description-synopsis-is-duplicated',
+                    "line $position");
             } else {
                 $firstline =~ s/[^a-zA-Z0-9]+//g;
                 $lsyn =~ s/[^a-zA-Z0-9]+//g;
                 if ($firstline eq $lsyn) {
-                    $self->hint('description-synopsis-is-duplicated');
+                    $self->hint('description-synopsis-is-duplicated',
+                        "line $position");
                 }
             }
         }
 
         if ($line =~ /^ \.\s*\S/ || $line =~ /^ \s+\.\s*$/) {
-            $self->hint('description-contains-invalid-control-statement');
+            $self->hint('description-contains-invalid-control-statement',
+                "line $position");
         } elsif ($line =~ /^ [\-\*]/) {
        # Print it only the second time.  Just one is not enough to be sure that
        # it's a list, and after the second there's no need to repeat it.
-            $self->hint('possible-unindented-list-in-extended-description')
+            $self->hint('possible-unindented-list-in-extended-description',
+                "line $position")
               if $unindented_list++ == 2;
         }
 
         if ($line =~ /\t/) {
-            $self->hint('description-contains-tabs') unless $tabs++;
+            $self->hint('description-contains-tabs', "line $position")
+              unless $tabs++;
         }
 
         if ($line =~ m{^\s*Homepage: <?https?://}i) {
-            $self->hint('description-contains-homepage');
+            $self->hint('description-contains-homepage', "line $position");
             $flagged_homepage = 1;
         }
 
@@ -176,29 +181,33 @@ sub installable {
                 "(line $position)");
         }
 
-        $self->hint('description-contains-dh-make-perl-template')
+        $self->hint('description-contains-dh-make-perl-template',
+            "line $position")
           if lc($line) =~ / \Q$DH_MAKE_PERL_TEMPLATE\E /msx;
 
         my $first_person = $line;
+        my %seen;
         while ($first_person
             =~ m/(?:^|\s)(I|[Mm]y|[Oo]urs?|mine|myself|me|us|[Ww]e)(?:$|\s)/) {
             my $word = $1;
             $first_person =~ s/\Q$word//;
             $self->hint('using-first-person-in-description',
-                "line $position: $word");
+                "line $position: $word")
+              unless $seen{$word}++;
         }
 
         if ($position == 1) {
             # checks for the first line of the extended description:
             if ($line =~ /^ \s/) {
-                $self->hint('description-starts-with-leading-spaces');
+                $self->hint('description-starts-with-leading-spaces',
+                    "line $position");
             }
             if ($line =~ /^\s*missing\s*$/i) {
-                $self->hint('description-is-debmake-template')
+                $self->hint('description-is-debmake-template',"line $position")
                   unless $template++;
             } elsif (
                 $line =~ /<insert long description, indented with spaces>/) {
-                $self->hint('description-is-dh_make-template')
+                $self->hint('description-is-dh_make-template',"line $position")
                   unless $template++;
             }
         }

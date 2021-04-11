@@ -1,4 +1,4 @@
-fields-orphaned-package-not-maintained-in-debian-infrastructure (source): vcs-uri https://github.com/user/project
+fields-orphaned-package-not-maintained-in-debian-infrastructure (source): vcs-uri Git https://github.com/user/project
 fields-orphaned-package-not-maintained-in-debian-infrastructure (source): vcs git
 fields-orphaned-package-not-maintained-in-debian-infrastructure (source): package-is-maintained-by-individual
 fields-orphaned-package-not-maintained-in-debian-infrastructure (source): orphaned-package-not-maintained-in-debian-infrastructure Vcs-Git https://github.com/user/project

@@ -118,7 +118,7 @@ has orig => (
 
             $combined_errors .= $extract_errors . $index_errors;
             $self->hint('unpack-message-for-orig', $_)
-              for split(/\n/, $combined_errors);
+              for uniq split(/\n/, $combined_errors);
 
             # treat hard links like regular files
             my @hardlinks = grep { $_->is_hardlink } @{$subindex->sorted_list};

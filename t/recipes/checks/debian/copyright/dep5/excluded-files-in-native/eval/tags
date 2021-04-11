@@ -1,1 +1,1 @@
-excluded-files-in-native (source): copyright-excludes-files-in-native-package
+excluded-files-in-native (source): copyright-excludes-files-in-native-package debian/copyright

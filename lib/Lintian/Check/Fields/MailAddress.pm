@@ -34,6 +34,7 @@ use Const::Fast;
 use Data::Validate::Domain;
 use Email::Address::XS;
 use List::SomeUtils qw(any all);
+use List::UtilsBy qw(uniq_by);
 
 use Moo;
 use namespace::clean;
@@ -62,12 +63,19 @@ sub always {
 
     my %parsed;
     for my $role (@singles_present, @groups_present) {
+
         my $value = $self->processable->fields->value($role);
         $parsed{$role} = [Email::Address::XS->parse($value)];
     }
 
     for my $role (keys %parsed) {
-        $self->check_single_address($role, $_) for @{$parsed{$role}};
+
+        my @invalid = grep { !$_->is_valid } @{$parsed{$role}};
+        $self->hint('malformed-contact', $role, $_->original)for @invalid;
+
+        my @valid = grep { $_->is_valid } @{$parsed{$role}};
+        my @unique = uniq_by { $_->format } @valid;
+        $self->check_single_address($role, $_) for @unique;
     }
 
     for my $role (@singles_present) {
@@ -92,11 +100,6 @@ sub always {
 
 sub check_single_address {
     my ($self, $role, $parsed) = @_;
-
-    unless ($parsed->is_valid) {
-        $self->hint('malformed-contact', $role, $parsed->original);
-        return;
-    }
 
     $self->hint('mail-contact', $role, $parsed->format);
 

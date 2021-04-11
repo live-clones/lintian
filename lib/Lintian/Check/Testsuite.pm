@@ -137,7 +137,7 @@ sub source {
 sub check_control_paragraph {
     my ($self, $section) = @_;
 
-    $self->hint('no-tests')
+    $self->hint('no-tests', 'line ' . $section->position)
       unless $section->declares('Tests') || $section->declares('Test-Command');
 
     $self->hint(
