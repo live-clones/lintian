@@ -28,7 +28,7 @@ use Const::Fast;
 use Cwd;
 use IPC::Run3;
 use Path::Tiny;
-use Unicode::UTF8 qw(encode_utf8 decode_utf8);
+use Unicode::UTF8 qw(encode_utf8 valid_utf8 decode_utf8);
 
 use Moo::Role;
 use namespace::clean;
@@ -82,18 +82,23 @@ sub add_objdump {
             qw{readelf --wide --segments --dynamic --section-details --symbols --version-info},
             $file->name
         );
-        my $combined;
+        my $combined_bytes;
 
-        run3(\@command, \undef, \$combined, \$combined);
+        run3(\@command, \undef, \$combined_bytes, \$combined_bytes);
 
-        $combined = decode_utf8($combined)
-          if length $combined;
+        next
+          unless length $combined_bytes;
+
+        die encode_utf8("Output from '@command' is not valid UTF-8")
+          unless valid_utf8($combined_bytes);
+
+        my $combined_output = decode_utf8($combined_bytes);
 
         # each object file in an archive gets its own File section
-        my @per_files = split(/^(File): (.*)$/m, $combined);
+        my @per_files = split(/^(File): (.*)$/m, $combined_output);
         shift @per_files while @per_files && $per_files[0] ne 'File';
 
-        @per_files = ($combined)
+        @per_files = ($combined_output)
           unless @per_files;
 
         # Special case - readelf will not prefix the output with "File:
