@@ -22,13 +22,15 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Carp;
+use Const::Fast;
 use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Hint::Standard;
 
 use Moo::Role;
 use namespace::clean;
+
+const my $SPACE => q{ };
 
 =head1 NAME
 
@@ -50,10 +52,12 @@ A class for collecting Lintian tags as they are found
 =over 4
 
 =item profile
+=item context_tracker
 
 =cut
 
 has profile => (is => 'rw');
+has context_tracker => (is => 'rw', default => sub { {} });
 
 =item hint (ARGS)
 
@@ -65,13 +69,25 @@ sub hint {
     my ($self, $tagname, @context_components) = @_;
 
     my $tag = $self->profile->get_tag($tagname);
+    unless (defined $tag) {
 
-    croak encode_utf8("tried to issue unknown tag: $tagname")
-      unless defined $tag;
+        warn encode_utf8("tried to issue unknown tag: $tagname\n");
+        return;
+    }
 
     # skip disabled tags
     return
       unless $self->profile->tag_is_enabled($tagname);
+
+    my $context_string = join($SPACE, @context_components);
+    if (exists $self->context_tracker->{$tagname}{$context_string}) {
+
+        warn encode_utf8(
+            "tried to issue duplicate hint: $tagname $context_string\n");
+        return;
+    }
+
+    $self->context_tracker->{$tagname}{$context_string} = 1;
 
     my $hint = Lintian::Hint::Standard->new;
 
