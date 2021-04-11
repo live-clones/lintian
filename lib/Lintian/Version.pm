@@ -86,7 +86,7 @@ sub version_from_git {
     chomp $describe;
 
     my ($guess, $step, $commit) = split(/-/, $describe);
-    $guess =~ s/ [.] 0 $/.$step+$commit/sx;
+    $guess =~ s/ [.] 0 $/.$step/sx;
 
     return ($guess // $EMPTY);
 }
