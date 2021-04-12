@@ -97,6 +97,13 @@ sub source {
         return;
     }
 
+    my $KNOWN_METADATA_FIELDS = $self->profile->load_data('fields/upstream-metadata-fields');
+    for my $fieldname (keys %{$yaml}) {
+        unless (grep(/^$fieldname$/, @{$KNOWN_METADATA_FIELDS})) {
+            $self->hint('unknown-upstream-metadata-field', $fieldname);
+        }
+    }
+
     $self->hint('upstream-metadata-field-present', $_) for keys %{$yaml};
 
     $self->hint('upstream-metadata-missing-repository')

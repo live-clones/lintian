@@ -1,0 +1,4 @@
+Skeleton: upload-non-native
+Testname: field-unknown
+Description: Tests for unknown fields in upstream metadata
+Extra-Build-Depends: libyaml-libyaml-perl (>= 0.69)
