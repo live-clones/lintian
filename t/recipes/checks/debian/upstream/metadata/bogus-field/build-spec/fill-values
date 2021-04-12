@@ -1,0 +1,4 @@
+Skeleton: upload-non-native
+Testname: bogus-field
+Description: Upstream metadata contains a field named 'Bogus'
+Extra-Build-Depends: libyaml-libyaml-perl (>= 0.69)

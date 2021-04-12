@@ -2,6 +2,7 @@
 
 # Copyright © 2016 Petter Reinholdtsen
 # Copyright © 2020 Chris Lamb <lamby@debian.org>
+# Copyright © 2021 Jelmer Vernooĳ
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -26,6 +27,7 @@ use warnings;
 use utf8;
 
 use Const::Fast;
+use List::Compare;
 use List::Util qw(none);
 use YAML::XS;
 
@@ -39,6 +41,37 @@ with 'Lintian::Check';
 
 # Need 0.69 for $LoadBlessed (#861958)
 const my $HAS_LOAD_BLESSED => 0.69;
+
+# taken from https://wiki.debian.org/UpstreamMetadata
+my @known_fields = qw(
+  Archive
+  ASCL-Id
+  Bug-Database
+  Bug-Submit
+  Cite-As
+  Changelog
+  CPE
+  Documentation
+  Donation
+  FAQ
+  Funding
+  Gallery
+  Other-References
+  Reference
+  Registration
+  Registry
+  Repository
+  Repository-Browse
+  Screenshots
+  Security-Contact
+  Webservice
+);
+
+# tolerated for packages not using DEP-5 copyright
+my @tolerated_fields = qw(
+  Name
+  Contact
+);
 
 sub source {
     my ($self) = @_;
@@ -98,6 +131,12 @@ sub source {
     }
 
     $self->hint('upstream-metadata-field-present', $_) for keys %{$yaml};
+
+    my $lc
+      = List::Compare->new([keys %{$yaml}],[@known_fields, @tolerated_fields]);
+    my @invalid_fields = $lc->get_Lonly;
+
+    $self->hint('upstream-metadata-field-unknown', $_)for @invalid_fields;
 
     $self->hint('upstream-metadata-missing-repository')
       if none { defined $yaml->{$_} } qw(Repository Repository-Browse);
