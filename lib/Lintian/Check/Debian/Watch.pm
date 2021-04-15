@@ -38,6 +38,7 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
+const my $EMPTY => q{};
 const my $SPACE => q{ };
 
 const my $URL_ACTION_FIELDS => 4;
@@ -88,38 +89,22 @@ sub source {
     $self->hint('debian-watch-contains-dh_make-template', $templatestring)
       if length $templatestring;
 
-    # strip comments
-    $contents =~ s/^\s*\#.*$//mg;
-
-    # strip empty lines
-    $contents =~ s/^\s*$//mg;
-
-    # strip leading spaces
-    $contents =~ s/^\s*//mg;
-
-    # merge continuation lines
-    $contents =~ s/\\\n//g;
-
     # remove backslash at end; uscan will catch it
     $contents =~ s/(?<!\\)\\$//;
-
-    return
-      unless length $contents;
 
     my $standard;
 
     my @lines = split(/\n/, $contents);
 
-    # look for version
-    my @actions;
+    # look for watch file version
     for my $line (@lines) {
 
-        my ($here) = ($line =~ /^version\s*=\s*(\d+)\s*$/);
-        $standard = $here
-          if length $here;
-
-        push(@actions, $line)
-          unless length $here;
+        if ($line =~ /^\s*version\s*=\s*(\d+)\s*$/) {
+            if (length $1) {
+                $standard = $1;
+                last;
+            }
+        }
     }
 
     return
@@ -136,7 +121,32 @@ sub source {
     my $withgpgverification = 0;
     my %dversions;
 
-    for my $line (@actions) {
+    my $position = 1;
+    my $continued = $EMPTY;
+    for my $line (@lines) {
+
+        # strip leading spaces
+        $line =~ s/^\s*//;
+
+        # strip comments, if any
+        $line =~ s/^\#.*$//;
+
+        next
+          unless length $line;
+
+        $line = $continued . $line
+          if length $continued;
+
+        # merge continuation lines
+        if ($line =~ s/\\$//) {
+            $continued .= $line;
+            next;
+        }
+
+        $continued = $EMPTY;
+
+        next
+          if $line =~ /^version\s*=\s*\d+\s*$/;
 
         my $remainder = $line;
 
@@ -200,7 +210,7 @@ sub source {
           || $remainder =~ m{https?://(?:www\.)?(?:sourceforge|sf)\.net
                   /projects/.+/files}xsm;
 
-        $self->hint('debian-watch-uses-insecure-uri',$1)
+        $self->hint('debian-watch-uses-insecure-uri', $1, "(line $position)")
           if $remainder =~ m{((?:http|ftp):(?!//sf.net/)\S+)};
 
         # This bit is as-is from uscan.pl:
@@ -246,10 +256,20 @@ sub source {
           && !$prerelease_umangle;
 
         my $upstream_url = $remainder;
+
         # Keep only URL part
         $upstream_url =~ s/(.*?\S)\s.*$/$1/;
-        $self->hint('debian-watch-upstream-component', $upstream_url)
-          if any { /^component=/ } @options;
+
+        for my $option (@options) {
+            if ($option =~ /^ component = (.+) $/x) {
+                my $component = $1;
+                $self->hint('debian-watch-upstream-component',
+                    $upstream_url, $component, "(line $position)");
+            }
+        }
+
+    } continue {
+        ++$position;
     }
 
     $self->hint('debian-watch-line-invalid', $_)for @errors;

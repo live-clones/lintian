@@ -129,7 +129,8 @@ sub check_web_application_package {
     # A web application must not depend on apache2-whatever
     my $visit = sub {
         if (m/^apache2(?:\.2)?-(?:common|data|bin)$/) {
-            $self->hint('web-application-depends-on-apache2-data-package', $_);
+            $self->hint('web-application-depends-on-apache2-data-package',
+                $_, $webapp);
             return 1;
         }
         return 0;
@@ -139,9 +140,8 @@ sub check_web_application_package {
     # ... nor on apache2 only. Moreover, it should be in the form
     # apache2 | httpd but don't worry about versions, virtual package
     # don't support that
-    if ($rel->implies('apache2')) {
-        $self->hint('web-application-works-only-with-apache');
-    }
+    $self->hint('web-application-works-only-with-apache', $webapp)
+      if $rel->implies('apache2');
 
     $self->inspect_conf_file($pkgtype, $file);
     return;

@@ -1,10 +1,10 @@
-watch-file-general (source): debian-watch-uses-insecure-uri http://sourceforge.net/projects/synce/files
-watch-file-general (source): debian-watch-uses-insecure-uri http://sourceforge.net/project/showfiles.php?group_id=100501
-watch-file-general (source): debian-watch-uses-insecure-uri http://qa.debian.org/watch/sf.php?project=foo
-watch-file-general (source): debian-watch-uses-insecure-uri http://insecure.com
-watch-file-general (source): debian-watch-uses-insecure-uri http://githubredir.debian.net/github/username/project
-watch-file-general (source): debian-watch-uses-insecure-uri http://ftp.sf.net/foo/foo_bar(.+)\.Z
-watch-file-general (source): debian-watch-uses-insecure-uri ftp://upload.sourceforge.net/pub/sourceforge/s/so/soprano/
+watch-file-general (source): debian-watch-uses-insecure-uri http://sourceforge.net/projects/synce/files (line 15)
+watch-file-general (source): debian-watch-uses-insecure-uri http://sourceforge.net/project/showfiles.php?group_id=100501 (line 14)
+watch-file-general (source): debian-watch-uses-insecure-uri http://qa.debian.org/watch/sf.php?project=foo (line 5)
+watch-file-general (source): debian-watch-uses-insecure-uri http://insecure.com (line 28)
+watch-file-general (source): debian-watch-uses-insecure-uri http://githubredir.debian.net/github/username/project (line 24)
+watch-file-general (source): debian-watch-uses-insecure-uri http://ftp.sf.net/foo/foo_bar(.+)\.Z (line 8)
+watch-file-general (source): debian-watch-uses-insecure-uri ftp://upload.sourceforge.net/pub/sourceforge/s/so/soprano/ (line 12)
 watch-file-general (source): debian-watch-not-mangling-version https://secure.com /(.*).tar.gz
 watch-file-general (source): debian-watch-not-mangling-version http://sourceforge.net/projects/synce/files http://downloads.sourceforge.net/.+/kcemirror-(.+).tar.gz.*
 watch-file-general (source): debian-watch-not-mangling-version http://sourceforge.net/project/showfiles.php?group_id=100501 .*/octaviz/octaviz-([\d\.]+).tar.gz.*

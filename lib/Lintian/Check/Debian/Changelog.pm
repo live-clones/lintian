@@ -418,21 +418,21 @@ sub binary {
     # If the version is missing, we assume it to be non-native
     # as it is the most likely case.
     my $source = $processable->fields->value('Source');
-    my $version;
+    my $source_version;
     if ($processable->fields->declares('Source') && $source =~ m/\((.*)\)/) {
-        $version = $1;
+        $source_version = $1;
     } else {
-        $version = $processable->fields->value('Version');
+        $source_version = $processable->fields->value('Version');
     }
-    if (defined $version) {
-        $native_pkg = ($version !~ m/-/);
+    if (defined $source_version) {
+        $native_pkg = ($source_version !~ m/-/);
     } else {
         # We do not know, but assume it to non-native as it is
         # the most likely case.
         $native_pkg = 0;
     }
-    $version = $processable->fields->value('Version') || '0-1';
-    $foreign_pkg = (!$native_pkg && $version !~ m/-0\./);
+    $source_version = $processable->fields->value('Version') || '0-1';
+    $foreign_pkg = (!$native_pkg && $source_version !~ m/-0\./);
     # A version of 1.2.3-0.1 could be either, so in that
     # case, both vars are false
 
@@ -540,12 +540,20 @@ sub binary {
 
     # checks applying to all entries
     for my $entry (@entries) {
+
+        my $position = $entry->position;
+        my $version = $entry->Version;
+
         if (length $entry->Maintainer) {
             my ($parsed) = Email::Address::XS->parse($entry->Maintainer);
 
             unless ($parsed->is_valid) {
-                $self->hint('bogus-mail-host-in-debian-changelog',
-                    $entry->Maintainer);
+                $self->hint(
+                    'bogus-mail-host-in-debian-changelog',
+                    $entry->Maintainer,
+                    "version $version",
+                    "(line $position)"
+                );
                 next;
             }
 
@@ -553,12 +561,21 @@ sub binary {
                 all { length }
                 ($parsed->address, $parsed->user, $parsed->host)
             ) {
-                $self->hint('bogus-mail-host-in-debian-changelog',
-                    $parsed->format);
+                $self->hint(
+                    'bogus-mail-host-in-debian-changelog',
+                    $parsed->format,
+                    "version $version",
+                    "(line $position)"
+                );
                 next;
             }
 
-            $self->hint('bogus-mail-host-in-debian-changelog',$parsed->address)
+            $self->hint(
+                'bogus-mail-host-in-debian-changelog',
+                $parsed->address,
+                "version $version",
+                "(line $position)"
+              )
               unless is_domain($parsed->host,
                 {domain_disable_tld_validation => 1});
         }

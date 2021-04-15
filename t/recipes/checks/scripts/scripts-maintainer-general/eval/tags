@@ -68,11 +68,11 @@ scripts-maintainer-general (binary): maintainer-script-calls-gconftool postinst:
 scripts-maintainer-general (binary): maintainer-script-calls-chown-improperly postinst:84 'chown -R root.root'
 scripts-maintainer-general (binary): maintainer-script-calls-chown-improperly postinst:14 'chown root.root'
 scripts-maintainer-general (binary): install-info-used-in-maintainer-script postinst:105
-scripts-maintainer-general (binary): command-with-path-in-maintainer-script postinst:91 /usr/bin/baz
-scripts-maintainer-general (binary): command-with-path-in-maintainer-script postinst:181 /usr/sbin/dpkg-state-override
-scripts-maintainer-general (binary): command-with-path-in-maintainer-script postinst:178 /usr/sbin/dpkg-divert
-scripts-maintainer-general (binary): command-with-path-in-maintainer-script postinst:177 /usr/sbin/dpkg-divert
-scripts-maintainer-general (binary): command-with-path-in-maintainer-script postinst:176 /usr/sbin/dpkg-divert
-scripts-maintainer-general (binary): command-with-path-in-maintainer-script postinst:155 /usr/bin/gconftool-2
-scripts-maintainer-general (binary): command-with-path-in-maintainer-script postinst:118 /usr/bin/foo
-scripts-maintainer-general (binary): command-with-path-in-maintainer-script postinst:117 /usr/bin/foo
+scripts-maintainer-general (binary): command-with-path-in-maintainer-script postinst:91 (plain script) /usr/bin/baz
+scripts-maintainer-general (binary): command-with-path-in-maintainer-script postinst:181 (in test syntax) /usr/sbin/dpkg-state-override
+scripts-maintainer-general (binary): command-with-path-in-maintainer-script postinst:178 (in backticks) /usr/sbin/dpkg-divert
+scripts-maintainer-general (binary): command-with-path-in-maintainer-script postinst:177 (in backticks) /usr/sbin/dpkg-divert
+scripts-maintainer-general (binary): command-with-path-in-maintainer-script postinst:176 (in backticks) /usr/sbin/dpkg-divert
+scripts-maintainer-general (binary): command-with-path-in-maintainer-script postinst:155 (plain script) /usr/bin/gconftool-2
+scripts-maintainer-general (binary): command-with-path-in-maintainer-script postinst:118 (in backticks) /usr/bin/foo
+scripts-maintainer-general (binary): command-with-path-in-maintainer-script postinst:117 (in backticks) /usr/bin/foo

@@ -319,6 +319,7 @@ sub visit_installed_files {
 
             my @lines = split(/\n/, $stderr);
 
+            my $position = 1;
             for my $line (@lines) {
 
                 chomp $line;
@@ -367,11 +368,14 @@ sub visit_installed_files {
                 $line =~ s/^[^:]+: //;
                 $line =~ s/^<standard input>://;
 
-                $self->hint('groff-message', $file, $line);
+                $self->hint('groff-message', $file, "(line $position)", $line);
+            } continue {
+                ++$position;
             }
 
             chdir($savedir)
               or die encode_utf8('Cannot change directory ' . $savedir);
+
         }
 
         # Now we search through the whole man page for some common errors

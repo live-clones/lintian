@@ -117,7 +117,7 @@ has orig => (
               = $subindex->create_from_piped_tar(\@command);
 
             $combined_errors .= $extract_errors . $index_errors;
-            $self->hint('unpack-message-for-orig', $_)
+            $self->hint('unpack-message-for-orig', $tarball, $_)
               for uniq split(/\n/, $combined_errors);
 
             # treat hard links like regular files

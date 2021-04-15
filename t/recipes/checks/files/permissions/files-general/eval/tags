@@ -104,7 +104,7 @@ files-general (binary): octal-permissions files-general_1.0_all.deb 0644 usr/sha
 files-general (binary): octal-permissions files-general_1.0_all.deb 0644 usr/share/hal/foo.fdi
 files-general (binary): octal-permissions files-general_1.0_all.deb 0644 usr/share/glib-2.0/schemas/gschemas.compiled
 files-general (binary): octal-permissions files-general_1.0_all.deb 0644 usr/share/games/icons/hicolor/22x22/lintian-22x22.png
-files-general (binary): octal-permissions files-general_1.0_all.deb 0644 usr/share/foo/ws 
+files-general (binary): octal-permissions files-general_1.0_all.deb 0644 usr/share/foo/ws
 files-general (binary): octal-permissions files-general_1.0_all.deb 0644 usr/share/foo/gschemas.compiled
 files-general (binary): octal-permissions files-general_1.0_all.deb 0644 usr/share/foo/foo.doctree
 files-general (binary): octal-permissions files-general_1.0_all.deb 0644 usr/share/foo/file~

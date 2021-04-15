@@ -5,4 +5,4 @@ files-tar-traps (binary): file-in-unusual-dir strangename/strangename/a\\b
 files-tar-traps (binary): file-in-unusual-dir strangename/strangename/\\
 files-tar-traps (binary): file-in-unusual-dir strangename/strangename/\.\./\.\./\.\.
 files-tar-traps (binary): file-in-unusual-dir strangename/strangename/\
-files-tar-traps (binary): file-in-unusual-dir strangename/strangename/'\ 
+files-tar-traps (binary): file-in-unusual-dir strangename/strangename/'\

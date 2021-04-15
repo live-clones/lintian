@@ -145,6 +145,8 @@ m/^(?<Source>\w[-+0-9a-z.]*) \((?<Version>[^\(\) \t]+)\)(?<Distribution>(?:\s+[-
                 $entry = Lintian::Inspect::Changelog::Entry->new;
             }
 
+            $entry->position($lineno);
+
             $entry->Header($literal);
 
             $entry->Source($source);

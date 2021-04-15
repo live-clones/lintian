@@ -135,5 +135,5 @@ maintainer-scripts (binary): maintainer-script-calls-chown-improperly postinst:3
 maintainer-scripts (binary): maintainer-script-calls-chown-improperly postinst:166 'chown -R root.root'
 maintainer-scripts (binary): install-info-used-in-maintainer-script postinst:28
 maintainer-scripts (binary): forbidden-config-interpreter /usr/bin/python
-maintainer-scripts (binary): command-with-path-in-maintainer-script preinst:12 /bin/egrep
-maintainer-scripts (binary): command-with-path-in-maintainer-script postinst:172 /usr/bin/baz
+maintainer-scripts (binary): command-with-path-in-maintainer-script preinst:12 (plain script) /bin/egrep
+maintainer-scripts (binary): command-with-path-in-maintainer-script postinst:172 (plain script) /usr/bin/baz

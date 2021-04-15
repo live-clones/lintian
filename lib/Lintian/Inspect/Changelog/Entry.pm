@@ -48,6 +48,7 @@ has Urgency_LC => (is => 'rw', default => $UNKNOWN);
 has Urgency_Comment => (is => 'rw', default => $EMPTY);
 has Version => (is => 'rw');
 has ERROR => (is => 'rw');
+has position => (is => 'rw');
 
 =head1 NAME
 
@@ -126,6 +127,8 @@ Timestamp (Date expressed in seconds since the epoch)
 
 Last parse error related to this entry in the format described
 at Parse::DebianChangelog::get_parse_errors.
+
+=item position
 
 =back
 

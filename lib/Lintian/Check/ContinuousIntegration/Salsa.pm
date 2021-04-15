@@ -82,7 +82,8 @@ sub visit_patched_files {
 
                 } elsif ($element_type eq 'HASH') {
                     # new Gitlab style with desciptors
-                    push(@includes, $element->{file});
+                    push(@includes, $element->{file})
+                      if exists $element->{file};
                 }
             }
         }

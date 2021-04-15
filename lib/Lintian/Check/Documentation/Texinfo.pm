@@ -27,6 +27,7 @@ use utf8;
 
 use Const::Fast;
 use Unicode::UTF8 qw(encode_utf8);
+use List::SomeUtils qw(uniq);
 
 use Lintian::Util qw(normalize_link_target);
 
@@ -145,16 +146,28 @@ sub binary {
             open(my $fd, '<:gzip', $file->unpacked_path)
               or die encode_utf8('Cannot open ' . $file->unpacked_path);
 
+            my $position = 1;
             while (my $line = <$fd>) {
+
+                my @missing;
                 while ($line =~ /[\0][\b]\[image src="((?:\\.|[^\"])+)"/smg) {
+
                     my $src = $1;
                     $src =~ s/\\(.)/$1/g;   # unbackslash
-                    $processable->installed->lookup(
-                        normalize_link_target('usr/share/info', $src))
-                      or $self->hint('info-document-missing-image-file',
-                        $file, $src);
+
+                    push(@missing, $src)
+                      unless $processable->installed->lookup(
+                        normalize_link_target('usr/share/info', $src));
                 }
+
+                $self->hint('info-document-missing-image-file',
+                    $file, "(line $position)", $_)
+                  for uniq @missing;
+
+            } continue {
+                ++$position;
             }
+
             close($fd);
         }
     }

@@ -10,7 +10,7 @@ filenames (binary): file-in-unusual-dir files/Maelstrom Sounce.r121
 filenames (binary): file-in-unusual-dir files/.cvsignore
 filenames (binary): file-in-unusual-dir files/.arch-inventory
 filenames (binary): file-in-unusual-dir files/.#Maelstrom Sound.1.1.1
-filenames (binary): file-in-unusual-dir files/'\ 
+filenames (binary): file-in-unusual-dir files/'\
 filenames (binary): file-in-unusual-dir files/".tif
 filenames (binary): file-in-unusual-dir files/ .tif
 filenames (binary): dir-or-file-in-var-www var/www/foo

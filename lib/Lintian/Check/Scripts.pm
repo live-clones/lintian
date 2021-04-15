@@ -1156,8 +1156,8 @@ sub installable {
                         ) {
                             $self->hint(
                                 'command-with-path-in-maintainer-script',
-                                "$file:$. $1")
-                              unless $in_automatic_section;
+                                "$file:$. (in backticks) $1"
+                            )unless $in_automatic_section;
                         }
                     }
                     my $cmd = $line;
@@ -1168,17 +1168,19 @@ sub installable {
                           (/(?:usr/)?s?bin/[\w.+-]+)
                           \s+ \]}xsm
                     ){
-                        $self->hint('command-with-path-in-maintainer-script',
-                            "$file:$. $1")
-                          unless $in_automatic_section;
+                        $self->hint(
+                            'command-with-path-in-maintainer-script',
+                            "$file:$. (in test syntax) $1"
+                        )unless $in_automatic_section;
                     }
 
                     $cmd =~ s/\`[^\`]+\`//g;
                     if ($cmd =~ m{$LEADIN(/(?:usr/)?s?bin/[\w.+-]+)(?:\s|;|$)})
                     {
-                        $self->hint('command-with-path-in-maintainer-script',
-                            "$file:$. $1")
-                          unless $in_automatic_section;
+                        $self->hint(
+                            'command-with-path-in-maintainer-script',
+                            "$file:$. (plain script) $1"
+                        )unless $in_automatic_section;
                     }
                 }
             }
