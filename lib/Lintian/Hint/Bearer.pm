@@ -68,6 +68,9 @@ Store found tags for later processing.
 sub hint {
     my ($self, $tagname, @context_components) = @_;
 
+    # trim both ends of each item
+    s/^\s+|\s+$//g for @context_components;
+
     my $tag = $self->profile->get_tag($tagname);
     unless (defined $tag) {
 
