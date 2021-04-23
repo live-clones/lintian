@@ -80,6 +80,8 @@ sub issue_hints {
 
         my %group_output;
         $group_output{'group-id'} = $group->name;
+        $group_output{'source-name'} = $group->source_name;
+        $group_output{'source-version'} = $group->source_version;
 
         push(@allgroups_output, \%group_output);
 

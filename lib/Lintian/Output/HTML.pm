@@ -86,9 +86,8 @@ sub issue_hints {
         my %group_output;
 
         $group_output{'group-id'} = $group->name;
-        my ($name, $version)  = split(m{/}, $group->name, 2);
-        $group_output{'name'} = $name;
-        $group_output{'version'} = $version;
+        $group_output{name} = $group->source_name;
+        $group_output{version} = $group->source_version;
 
         my $start = Time::Moment->from_string($group->processing_start);
         my $end = Time::Moment->from_string($group->processing_end);

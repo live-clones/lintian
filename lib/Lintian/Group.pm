@@ -45,7 +45,7 @@ use Moo;
 use namespace::clean;
 
 const my $EMPTY => q{};
-const my $SLASH => q{/};
+const my $UNDERSCORE => q{_};
 
 const my $EXTRA_VERBOSE => 3;
 
@@ -83,9 +83,9 @@ and one changes or buildinfo package per set, but multiple binary packages
 
 Returns or sets the pool directory used by this group.
 
-=item $group->name
+=item $group->source_name
 
-Returns a unique identifier for the group based on source and version.
+=item $group->source_version
 
 =item $group->binary
 
@@ -133,7 +133,8 @@ Hash with active jobs.
 =cut
 
 has pooldir => (is => 'rw', default => $EMPTY);
-has name => (is => 'rw', default => $EMPTY);
+has source_name => (is => 'rw', default => $EMPTY);
+has source_version => (is => 'rw', default => $EMPTY);
 
 has binary => (is => 'rw', default => sub{ {} });
 has buildinfo => (is => 'rw');
@@ -147,6 +148,21 @@ has processing_end => (is => 'rw', default => $EMPTY);
 
 has cache => (is => 'rw', default => sub { {} });
 has profile => (is => 'rw', default => sub { {} });
+
+=item $group->name
+
+Returns a unique identifier for the group based on source and version.
+
+=cut
+
+sub name {
+    my ($self) = @_;
+
+    return $EMPTY
+      unless length $self->source_name && length $self->source_version;
+
+    return $self->source_name . $UNDERSCORE . $self->source_version;
+}
 
 =item add_processable_from_file
 
@@ -435,7 +451,7 @@ sub process {
         local $Devel::Size::warn = 0;
 
         my $pivot = ($self->get_processables)[0];
-        my $group_id = $pivot->source . $SLASH . $pivot->source_version;
+        my $group_id = $pivot->source . $UNDERSCORE . $pivot->source_version;
         my $group_usage
           = human_bytes(total_size([map { $_ } $self->get_processables]));
         say {*STDERR}
@@ -521,12 +537,14 @@ sub add_processable{
         return 0;
     }
 
-    return 0
-      if length $self->name
-      && $self->name ne $processable->get_group_id;
+    $self->source_name($processable->source)
+      unless length $self->source_name;
+    $self->source_version($processable->source_version)
+      unless length $self->source_version;
 
-    $self->name($processable->get_group_id)
-      unless length $self->name;
+    return 0
+      if $self->source_name ne $processable->source
+      || $self->source_version ne $processable->source_version;
 
     croak encode_utf8('Please set pool directory first.')
       unless $self->pooldir;

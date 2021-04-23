@@ -209,10 +209,10 @@ based on the type, name, version and architecture of the package.
 sub identifier {
     my ($self) = @_;
 
-    my $id = $self->type . $COLON . $self->name . $SLASH . $self->version;
+    my $id = $self->type . $COLON . $self->name . $UNDERSCORE . $self->version;
 
     # add architecture unless it is source
-    $id .= $SLASH . $self->architecture
+    $id .= $UNDERSCORE . $self->architecture
       unless $self->type eq 'source';
 
     $id =~ s/\s+/_/g;
@@ -234,21 +234,6 @@ sub remove {
       if -e $self->basedir;
 
     return;
-}
-
-=item get_group_id
-
-Calculates an appropriate group id for the package. It is based
-on the name and the version of the src-pkg.
-
-=cut
-
-sub get_group_id {
-    my ($self) = @_;
-
-    my $id = $self->source . $SLASH . $self->source_version;
-
-    return $id;
 }
 
 =item clean_field
