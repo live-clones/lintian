@@ -61,6 +61,10 @@ if (my $coverage_arg = $ENV{'LINTIAN_COVERAGE'}) {
 $ENV{LINTIAN_BASE} = realpath(THISDIR . '/..')
   // die encode_utf8('Cannot resolve LINTIAN_BASE');
 
+$ENV{LINTIAN_VERSION} = $LINTIAN_VERSION // guess_version($ENV{LINTIAN_BASE});
+die encode_utf8('Unable to determine the version automatically!?')
+  unless length $ENV{LINTIAN_VERSION};
+
 my $annotate;
 my @INCLUDE_DIRS;
 my $profile_name;
@@ -153,12 +157,8 @@ while(my $bytes = <STDIN>) {
 exit;
 
 sub show_version {
-    my $version = $LINTIAN_VERSION // guess_version($ENV{LINTIAN_BASE});
+    say encode_utf8("$NEW_PROGRAM_NAME v$ENV{LINTIAN_VERSION}");
 
-    die encode_utf8('Unable to determine the version automatically!?')
-      unless length $version;
-
-    say encode_utf8("$NEW_PROGRAM_NAME v$version");
     exit;
 }
 

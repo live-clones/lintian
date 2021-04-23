@@ -187,6 +187,8 @@ sub describe_tags {
         $dictionary{'Renamed-From'} = $tag->renamed_from
           if @{$tag->renamed_from};
 
+        $dictionary{'Lintian-Version'} = $ENV{LINTIAN_VERSION};
+
         push(@array, \%dictionary);
     }
 

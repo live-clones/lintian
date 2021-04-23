@@ -69,6 +69,10 @@ if (my $coverage_arg = $ENV{'LINTIAN_COVERAGE'}) {
 $ENV{LINTIAN_BASE} = realpath(THISDIR . '/..')
   // die encode_utf8('Cannot resolve LINTIAN_BASE');
 
+$ENV{LINTIAN_VERSION} = $LINTIAN_VERSION // guess_version($ENV{LINTIAN_BASE});
+die encode_utf8('Unable to determine the version automatically!?')
+  unless length $ENV{LINTIAN_VERSION};
+
 my @INCLUDE_DIRS;
 my $picky = 0;
 my $user_dirs = 1;
@@ -112,12 +116,8 @@ for my $path (@ARGV) {
 exit $exit_code;
 
 sub show_version {
-    my $version = $LINTIAN_VERSION // guess_version($ENV{LINTIAN_BASE});
+    say encode_utf8("spellintian v$ENV{LINTIAN_VERSION}");
 
-    die encode_utf8('Unable to determine the version automatically!?')
-      unless length $version;
-
-    say encode_utf8("spellintian v$version");
     exit;
 }
 
