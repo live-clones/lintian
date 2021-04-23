@@ -131,17 +131,19 @@ sub source {
         # strip comments, if any
         $line =~ s/^\#.*$//;
 
-        next
-          unless length $line;
-
-        $line = $continued . $line
-          if length $continued;
+        unless (length $line) {
+            $continued = $EMPTY;
+            next;
+        }
 
         # merge continuation lines
         if ($line =~ s/\\$//) {
             $continued .= $line;
             next;
         }
+
+        $line = $continued . $line
+          if length $continued;
 
         $continued = $EMPTY;
 
