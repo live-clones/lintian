@@ -35,7 +35,7 @@ sub visit_installed_files {
     # /usr/share/cmake-*
     $self->hint('package-contains-cmake-private-file', $file->name)
       if $file->name =~ m{^usr/share/cmake-\d+\.\d+/.+}
-      && $self->processable->source ne 'cmake';
+      && $self->processable->source_name ne 'cmake';
 
     return;
 }

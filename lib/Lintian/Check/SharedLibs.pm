@@ -306,7 +306,7 @@ sub installable {
 
             push @alt, $link_file;
 
-            if ($processable->source =~ /^gcc-(\d+(?:.\d+)?)$/) {
+            if ($processable->source_name =~ /^gcc-(\d+(?:.\d+)?)$/) {
                 # gcc has a lot of bi-arch libs and puts the dev symlink
                 # in slightly different directories (to be co-installable
                 # with itself I guess).  Allegedly, clang (etc.) have to
@@ -734,7 +734,7 @@ sub installable {
                 $self->hint(
                     'maintscript-calls-ldconfig', 'preinst'
                       # Assume it is needed if glibc does it
-                ) if $processable->source ne 'glibc';
+                ) if $processable->source_name ne 'glibc';
             }
         }
     }
@@ -750,7 +750,7 @@ sub installable {
                     # glibc (notably libc-bin) needs to call ldconfig in
                     # order to implement the "ldconfig" trigger.
                     $self->hint('maintscript-calls-ldconfig', 'postinst')
-                      if $processable->source ne 'glibc';
+                      if $processable->source_name ne 'glibc';
                 }
             }
         }
@@ -800,7 +800,7 @@ sub installable {
                 $self->hint(
                     'maintscript-calls-ldconfig', 'prerm'
                       # Assume it is needed if glibc does it
-                ) if $processable->source ne 'glibc';
+                ) if $processable->source_name ne 'glibc';
             }
         }
     }
@@ -814,7 +814,7 @@ sub installable {
                 $self->hint(
                     'maintscript-calls-ldconfig', 'postrm'
                       # Assume it is needed if glibc does it
-                ) if $processable->source ne 'glibc';
+                ) if $processable->source_name ne 'glibc';
             }
         }
     }

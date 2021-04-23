@@ -35,7 +35,7 @@ sub visit_installed_files {
     if ($file->name =~ m{^usr/share/vim/vim(?:current|\d\d)/([^/]+)}){
         my $is_vimhelp
           = $1 eq 'doc' && $self->processable->name =~ /^vimhelp-\w+$/;
-        my $is_vim = $self->processable->source =~ /vim/;
+        my $is_vim = $self->processable->source_name =~ /vim/;
 
         $self->hint('vim-addon-within-vim-runtime-path', $file->name)
           unless $is_vim or $is_vimhelp;

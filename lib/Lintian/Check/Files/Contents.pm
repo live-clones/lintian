@@ -86,7 +86,7 @@ sub check_item {
       unless $item->is_file;
 
     unless ($self->processable->relation('all')->implies('sensible-utils')
-        || $self->processable->source eq 'sensible-utils') {
+        || $self->processable->source_name eq 'sensible-utils') {
 
         my $sensible = $item->mentions_in_operation($SENSIBLE_REGEX);
         $self->hint('missing-depends-on-sensible-utils',$sensible, $item->name)
@@ -94,7 +94,7 @@ sub check_item {
     }
 
     unless ($self->processable->fields->value('Section') eq 'debian-installer'
-        || any { $_ eq $self->processable->source } qw(base-files dpkg)) {
+        || any { $_ eq $self->processable->source_name } qw(base-files dpkg)) {
 
         $self->hint('uses-dpkg-database-directly', $item->name)
           if length $item->mentions_in_operation(qr{/var/lib/dpkg});

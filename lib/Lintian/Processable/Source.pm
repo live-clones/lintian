@@ -99,7 +99,7 @@ sub init {
     my $architecture = 'source';
 
     # it is its own source package
-    my $source = $name;
+    my $source_name = $name;
     my $source_version = $version;
 
     croak encode_utf8($self->path . ' is missing Source field')
@@ -108,7 +108,7 @@ sub init {
     $self->name($name);
     $self->version($version);
     $self->architecture($architecture);
-    $self->source($source);
+    $self->source_name($source_name);
     $self->source_version($source_version);
 
     # make sure none of these fields can cause traversal
@@ -116,7 +116,7 @@ sub init {
       if $self->name ne $name
       || $self->version ne $version
       || $self->architecture ne $architecture
-      || $self->source ne $source
+      || $self->source_name ne $source_name
       || $self->source_version ne $source_version;
 
     return;

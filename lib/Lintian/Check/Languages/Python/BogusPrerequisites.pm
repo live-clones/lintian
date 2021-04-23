@@ -32,7 +32,7 @@ with 'Lintian::Check';
 sub installable {
     my ($self) = @_;
 
-    $self->what_is_python($self->processable->source,
+    $self->what_is_python($self->processable->source_name,
         qw{Depends Pre-Depends Recommends});
 
     return;

@@ -146,7 +146,7 @@ sub init {
     my $name = $self->fields->value('Package');
     my $version = $self->fields->value('Version');
     my $architecture = $self->fields->value('Architecture');
-    my $source = $self->fields->value('Source');
+    my $source_name = $self->fields->value('Source');
 
     my $source_version = $version;
 
@@ -157,19 +157,19 @@ sub init {
     }
 
     # source may be left out if same as $name
-    $source = $name
-      unless length $source;
+    $source_name = $name
+      unless length $source_name;
 
     # source probably contains the version in parentheses
-    if ($source =~ m/(\S++)\s*\(([^\)]+)\)/){
-        $source = $1;
+    if ($source_name =~ m/(\S++)\s*\(([^\)]+)\)/){
+        $source_name = $1;
         $source_version = $2;
     }
 
     $self->name($name);
     $self->version($version);
     $self->architecture($architecture);
-    $self->source($source);
+    $self->source_name($source_name);
     $self->source_version($source_version);
 
     # make sure none of these fields can cause traversal
@@ -177,7 +177,7 @@ sub init {
       if $self->name ne $name
       || $self->version ne $version
       || $self->architecture ne $architecture
-      || $self->source ne $source
+      || $self->source_name ne $source_name
       || $self->source_version ne $source_version;
 
     return;

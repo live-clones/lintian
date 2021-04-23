@@ -451,7 +451,8 @@ sub process {
         local $Devel::Size::warn = 0;
 
         my $pivot = ($self->get_processables)[0];
-        my $group_id = $pivot->source . $UNDERSCORE . $pivot->source_version;
+        my $group_id
+          = $pivot->source_name . $UNDERSCORE . $pivot->source_version;
         my $group_usage
           = human_bytes(total_size([map { $_ } $self->get_processables]));
         say {*STDERR}
@@ -537,13 +538,13 @@ sub add_processable{
         return 0;
     }
 
-    $self->source_name($processable->source)
+    $self->source_name($processable->source_name)
       unless length $self->source_name;
     $self->source_version($processable->source_version)
       unless length $self->source_version;
 
     return 0
-      if $self->source_name ne $processable->source
+      if $self->source_name ne $processable->source_name
       || $self->source_version ne $processable->source_version;
 
     croak encode_utf8('Please set pool directory first.')
@@ -765,7 +766,7 @@ has spelling_exceptions => (
 
         for my $processable ($self->get_processables) {
 
-            my @names = ($processable->name, $processable->source);
+            my @names = ($processable->name, $processable->source_name);
             push(@names, $processable->debian_control->installables)
               if $processable->type eq 'source';
 

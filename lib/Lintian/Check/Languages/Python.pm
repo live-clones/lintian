@@ -333,8 +333,8 @@ sub visit_installed_files {
         && $file->name !~ m{^usr/lib/python\d\.\d/(?:site|dist)-packages/}){
 
         $self->hint('third-party-package-in-python-dir', $file->name)
-          unless $self->processable->source =~ m/^python(?:\d\.\d)?$/
-          || $self->processable->source =~ m{\A python\d?-
+          unless $self->processable->source_name =~ m/^python(?:\d\.\d)?$/
+          || $self->processable->source_name =~ m{\A python\d?-
                                (?:stdlib-extensions|profiler|old-doctools) \Z}xsm;
     }
 

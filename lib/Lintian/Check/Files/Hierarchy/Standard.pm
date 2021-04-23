@@ -91,7 +91,7 @@ sub visit_installed_files {
                 # allow (e.g.) "lib64" packages to still use
                 # these dirs, since their use appears to be by
                 # intention.
-                unless ($self->processable->source =~ m/^e?glibc$/
+                unless ($self->processable->source_name =~ m/^e?glibc$/
                     or $self->processable->name =~ m/^lib$libsuffix/) {
 
                     $self->hint('non-multi-arch-lib-dir', $file->name);
@@ -212,7 +212,7 @@ sub visit_installed_files {
 
             # see comments for ^usr/lib(?'libsuffix'64|x?32)
             $self->hint('non-multi-arch-lib-dir', $file->name)
-              unless $self->processable->source =~ m/^e?glibc$/
+              unless $self->processable->source_name =~ m/^e?glibc$/
               || $self->processable->name =~ m/^lib$libsuffix/;
 
         } else {

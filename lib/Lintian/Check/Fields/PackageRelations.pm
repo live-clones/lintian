@@ -307,7 +307,7 @@ sub installable {
                   )
                   if $d_pkg =~ /^perl-modules/
                   && $field ne 'Replaces'
-                  && $processable->source ne 'perl';
+                  && $processable->source_name ne 'perl';
 
                 $self->hint('depends-exclusively-on-makedev', $field,)
                   if ( $field eq 'Depends'
@@ -605,7 +605,7 @@ sub source {
                           # perl-modules-5.xx (>> 5.20)
                       )
                       if $d_pkg =~ /^perl-modules/
-                      && $processable->source ne 'perl';
+                      && $processable->source_name ne 'perl';
                 }
 
                 my $all_obsolete = 0;

@@ -162,7 +162,7 @@ sub installable {
 
     my $arch = $processable->fields->value('Architecture');
     my $multiarch = $processable->fields->value('Multi-Arch') || 'no';
-    my $srcpkg = $processable->source;
+    my $srcpkg = $processable->source_name;
 
     my $hardening_buildflags = $self->profile->hardening_buildflags;
     my %recommended_hardening_features;
@@ -519,9 +519,10 @@ sub installable {
         foreach my $emlib ($EMBEDDED_LIBRARIES->all) {
             my $ldata = $EMBEDDED_LIBRARIES->value($emlib);
             if ($ldata->{'source-regex'}) {
-                next if $processable->source =~ m/^$ldata->{'source-regex'}$/;
+                next
+                  if $processable->source_name=~ m/^$ldata->{'source-regex'}$/;
             } else {
-                next if $processable->source eq $ldata->{'source'};
+                next if $processable->source_name eq $ldata->{'source'};
             }
             if ($file->strings =~ $ldata->{'match'}) {
                 $self->hint('embedded-library', "$fname: $ldata->{'libname'}");

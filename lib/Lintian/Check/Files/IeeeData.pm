@@ -70,7 +70,7 @@ sub visit_installed_files {
         if ($file->name =~ / oui /msx || $file->name =~ / iab /msx) {
 
             $self->hint('package-installs-ieee-data', $file->name)
-              unless $self->processable->source eq 'ieee-data';
+              unless $self->processable->source_name eq 'ieee-data';
         }
     }
 

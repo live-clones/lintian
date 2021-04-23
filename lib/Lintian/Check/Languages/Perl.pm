@@ -72,7 +72,7 @@ sub visit_installed_files {
 
         # check if it's the "perl" package itself
         $self->hint('perl-module-in-core-directory', $file)
-          unless $self->processable->source eq 'perl';
+          unless $self->processable->source_name eq 'perl';
     }
 
     # perl modules using old libraries

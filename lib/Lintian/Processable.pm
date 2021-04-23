@@ -89,7 +89,7 @@ is used in case the data needs to be extracted from the package.
 Returns the architecture(s) of the package. May return multiple values
 from changes processables.  For source processables it is "source".
 
-=item $proc->source
+=item $proc->source_name
 
 Returns the name of the source package.
 
@@ -136,7 +136,7 @@ has name => (
     },
     default => $EMPTY
 );
-has source => (
+has source_name => (
     is => 'rw',
     coerce => sub {
         my ($value) = @_;
@@ -183,7 +183,11 @@ has basedir => (
         my ($self) = @_;
 
         my $path
-          = $self->source. $SLASH. $self->name. $UNDERSCORE. $self->version;
+          = $self->source_name
+          . $SLASH
+          . $self->name
+          . $UNDERSCORE
+          . $self->version;
         $path .= $UNDERSCORE . $self->architecture
           unless $self->type eq 'source';
         $path .= $UNDERSCORE . $self->type;

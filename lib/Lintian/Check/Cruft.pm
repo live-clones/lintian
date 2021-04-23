@@ -655,7 +655,7 @@ sub visit_patched_files {
     $self->hint('source-contains-prebuilt-doxygen-documentation',
         $item->dirname)
       if $item->basename =~ m{^doxygen.(?:png|sty)$}
-      and $self->processable->source ne 'doxygen';
+      and $self->processable->source_name ne 'doxygen';
 
     # Tests of autotools files are a special case.  Ignore
     # debian/config.cache as anyone doing that probably knows what
@@ -728,7 +728,7 @@ sub source {
 
     # ignore lintian test set; should use automatic loop in the future
     @added_by_debian = grep { $_->name !~ m{^t/} } @added_by_debian
-      if $self->processable->source eq 'lintian';
+      if $self->processable->source_name eq 'lintian';
 
     my @directories = grep { $_->is_dir } @added_by_debian;
     for my $directory (@directories) {
@@ -1393,7 +1393,7 @@ sub php_source_whitelist {
     }
 
     return 0
-      if $self->processable->source =~ /^php\d*(?:\.\d+)?$/xms;
+      if $self->processable->source_name =~ /^php\d*(?:\.\d+)?$/xms;
 
     $self->hint($licenseproblem, $name);
 
@@ -1550,7 +1550,7 @@ sub license_check {
     my $ret = 0;
 
     # avoid to check lintian
-    if($self->processable->source eq 'lintian') {
+    if($self->processable->source_name eq 'lintian') {
         return $ret;
     }
   LICENSE:

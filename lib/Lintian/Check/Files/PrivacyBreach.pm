@@ -344,7 +344,7 @@ sub visit_installed_files {
     if (   $file->is_file
         && $file->name =~ m/\.(?:x?html?\d?|js|xht|xml|css)$/i) {
 
-        if(     $self->processable->source eq 'josm'
+        if(     $self->processable->source_name eq 'josm'
             and $file->basename eq 'defaultpresets.xml') {
             # false positive
 

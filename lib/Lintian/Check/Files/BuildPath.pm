@@ -43,8 +43,8 @@ sub visit_installed_files {
     my ($self, $file) = @_;
 
     # build directory
-    unless ($self->processable->source eq 'sbuild'
-        || $self->processable->source eq 'pbuilder') {
+    unless ($self->processable->source_name eq 'sbuild'
+        || $self->processable->source_name eq 'pbuilder') {
 
         foreach my $buildpath ($self->BUILD_PATH_REGEX->all) {
             my $regex = $self->BUILD_PATH_REGEX->value($buildpath);
