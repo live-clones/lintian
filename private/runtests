@@ -44,10 +44,15 @@ use constant THISDIR => dirname realpath __FILE__;
 use lib THISDIR . '/../lib';
 
 use Capture::Tiny qw(capture_merged);
+use Cwd qw(getcwd);
+use File::Copy;
+use File::Find::Rule;
 use File::Path qw(make_path);
 use File::Spec::Functions qw(abs2rel rel2abs splitpath splitdir);
 use File::stat;
 use Getopt::Long;
+use IPC::Run3;
+use List::Compare;
 use List::SomeUtils qw(any uniq);
 use List::Util qw(max);
 use IO::Interactive qw(is_interactive);
@@ -67,12 +72,14 @@ use Unicode::UTF8 qw(encode_utf8 decode_utf8);
 
 use Lintian::IPC::Run3 qw(safe_qx);
 
+use Test::Lintian::Build qw(build_subject);
 use Test::Lintian::ConfigFile qw(read_config);
 use Test::Lintian::Filter
   qw(find_selected_scripts find_selected_lintian_testpaths);
 use Test::Lintian::Helper
   qw(rfc822date cache_dpkg_architecture_values get_latest_policy get_recommended_debhelper_version);
-use Test::Lintian::Prepare qw(filleval);
+use Test::Lintian::Hooks qw(sed_hook sort_lines calibrate);
+use Test::Lintian::Prepare qw(filleval prepare);
 use Test::Lintian::Run qw(logged_runner);
 use Test::ScriptAge qw(perl_modification_epoch our_modification_epoch);
 
@@ -80,9 +87,14 @@ const my $EMPTY => q{};
 const my $SPACE => q{ };
 const my $INDENT => $SPACE x 4;
 const my $NEWLINE => qq{\n};
+const my $SLASH => q{/};
 const my $COMMA => q{,};
+const my $COLON => q{:};
+const my $ARROW => q{>>>};
 const my $YES => q{yes};
 const my $NO => q{no};
+
+const my $WIDELY_READABLE => oct(22);
 
 # display output immediately
 STDOUT->autoflush;
@@ -125,6 +137,7 @@ $ENV{LINTIAN_BASE}
 my $coverage;
 my $debug;
 my $dump_logs = 1;
+my $force_rebuild;
 my $numjobs;
 my $keep_going;
 my $onlyrun;
@@ -135,6 +148,7 @@ my $verbose = 0;
 Getopt::Long::Configure('bundling');
 unless (
     Getopt::Long::GetOptions(
+        'B|force-rebuild'  => \$force_rebuild,
         'c|coverage:s'     => \$coverage,
         'd|debug+'         => \$debug,
         'j|jobs:i'         => \$numjobs,
@@ -340,10 +354,128 @@ if (@runscripts && !$aggregator->all_passed && !$keep_going) {
     exit 1;
 }
 
-say encode_utf8($EMPTY);
+my @testpaths = find_selected_lintian_testpaths($testset, $onlyrun);
+
+my $recipe_root = "$testset/recipes";
 
 # find test paths
-my @testpaths = find_selected_lintian_testpaths($testset, $onlyrun);
+my @recipes = map { path($_)->relative($recipe_root)->stringify }@testpaths;
+
+# prepare output directories
+say encode_utf8(
+    'Preparing the sources for '. scalar @recipes. ' test packages.')
+  if @recipes;
+
+# for filled templates
+my $source_root = "$outpath/package-sources";
+
+# for built test packages
+my $build_root = "$outpath/packages";
+
+# find build specifications
+my @all_recipes = map { path($_)->parent->stringify }
+  sort File::Find::Rule->relative->name('build-spec')->in($recipe_root);
+
+my @source_paths
+  = map { path($_)->absolute($source_root)->stringify } @all_recipes;
+my @build_paths
+  = map { path($_)->absolute($build_root)->stringify } @all_recipes;
+
+# remove obsolete package sources
+my @found_sources = map { path($_)->parent->absolute->stringify; }
+  File::Find::Rule->file->name('fill-values')->in($source_root);
+my $sourcelc = List::Compare->new(\@found_sources, \@source_paths);
+my @obsolete_sources = $sourcelc->get_Lonly;
+path($_)->remove_tree for @obsolete_sources;
+
+# remove obsolete built packages
+my @found_builds = map { path($_)->parent->absolute->stringify; }
+  File::Find::Rule->file->name('source-files.sha1sums')->in($build_root);
+my $packagelc= List::Compare->new(\@found_builds, \@build_paths);
+my @obsolete_builds = $packagelc->get_Lonly;
+path($_)->remove_tree for @obsolete_builds;
+
+# remove empty directories
+for my $folder (@obsolete_sources, @obsolete_builds) {
+    my $candidate = path($folder)->parent;
+    while ($candidate->exists && !$candidate->children) {
+        rmdir $candidate->stringify;
+        $candidate = $candidate->parent;
+    }
+}
+
+$ENV{PERL_PATH_TINY_NO_FLOCK} =1;
+
+$SIG{INT} = sub { MCE::Loop->finish; die encode_utf8("Caught a sigint $!") };
+my $mce_loop = MCE::Loop->init(
+    max_workers => $numjobs,
+    chunk_size => 1,
+    flush_stdout => 1,
+    flush_stderr => 1,
+);
+
+my %failedprep = mce_loop {
+    my ($mce, $chunk_ref, $chunk_id) = @_;
+
+    prepare_build($mce, $_);
+}
+@recipes;
+
+if (%failedprep) {
+    say encode_utf8($EMPTY);
+    say encode_utf8('Failed preparation tasks:');
+    for my $recipe (sort keys %failedprep) {
+        say encode_utf8($EMPTY);
+        say encode_utf8($ARROW
+              . $SPACE
+              . path("$recipe_root/$recipe")->relative->stringify
+              . $COLON);
+        print encode_utf8($failedprep{$recipe});
+    }
+
+    MCE::Loop->finish;
+    exit 1;
+
+} else {
+    say encode_utf8('Package sources are ready.');
+}
+
+say encode_utf8($EMPTY);
+
+my %failedbuilds = mce_loop {
+    my ($mce, $chunk_ref, $chunk_id) = @_;
+
+    build_package($mce, $_, $chunk_id, scalar @recipes);
+}
+@recipes;
+
+$SIG{INT} = 'DEFAULT';
+MCE::Loop->finish;
+
+if (%failedbuilds) {
+    say encode_utf8($EMPTY);
+    say encode_utf8('Failed build tasks:');
+    for my $recipe (sort keys %failedbuilds) {
+        say encode_utf8($EMPTY);
+        say encode_utf8($ARROW
+              . $SPACE
+              . path("$recipe_root/$recipe")->relative->stringify
+              . $COLON);
+        print encode_utf8($failedbuilds{$recipe});
+    }
+
+    exit 1;
+} else {
+    say encode_utf8('All test packages are up to date.');
+}
+
+say encode_utf8($EMPTY);
+
+my $build_end = Time::Moment->from_string(gmtime->datetime . 'Z');
+my $build_duration = duration($processing_start->delta_seconds($build_end));
+say encode_utf8("Building the test packages took $build_duration.");
+
+say encode_utf8($EMPTY);
 
 # for built test packages
 my $buildroot = "$outpath/packages";
@@ -352,13 +484,6 @@ my $buildroot = "$outpath/packages";
 my $evalroot = "$outpath/eval";
 
 $SIG{INT} = sub { MCE::Loop->finish; die encode_utf8("Caught a sigint $!") };
-
-my $mce_loop = MCE::Loop->init(
-    max_workers => $numjobs,
-    chunk_size => 1,
-    flush_stdout => 1,
-    flush_stderr => 1,
-);
 
 mce_loop {
     my ($mce, $chunk_ref, $chunk_id) = @_;
@@ -412,9 +537,9 @@ $formatter->summary($aggregator);
 
 say encode_utf8($EMPTY);
 
-my $processing_end = Time::Moment->from_string(gmtime->datetime . 'Z');
-my $duration = duration($processing_start->delta_seconds($processing_end));
-say encode_utf8("The test suite ran for $duration.");
+my $test_end = Time::Moment->from_string(gmtime->datetime . 'Z');
+my $test_duration = duration($processing_start->delta_seconds($test_end));
+say encode_utf8("The test suite ran for $test_duration.");
 
 $status = 1
   unless $aggregator->all_passed;
@@ -559,6 +684,138 @@ say encode_utf8($EMPTY);
 exit $status;
 
 # program is done
+
+sub prepare_build {
+    my ($mce, $recipe) = @_;
+
+    # label process
+    $0 = "Lintian prepare test: $recipe";
+
+    # destination
+    my $source_path = "$source_root/$recipe";
+
+    my $error;
+
+    # capture output
+    my $log_bytes =capture_merged {
+
+        try {
+
+            # remove destination
+            path($source_path)->remove_tree
+              if -e $source_path;
+
+            # prepare
+            prepare("$recipe_root/$recipe/build-spec",
+                $source_path, $testset, $force_rebuild);
+
+        }catch {
+            # catch any error
+            $error = $_;
+        };
+    };
+
+    my $log = decode_utf8($log_bytes);
+
+    # save log;
+    my $logfile = "$source_path.log";
+    path($logfile)->spew_utf8($log) if $log;
+
+    $mce->gather($recipe, $error)
+      if length $error;
+
+    return;
+}
+
+sub build_package {
+    my ($mce, $recipe, $position, $total) = @_;
+
+    # set a predictable locale
+    $ENV{'LC_ALL'} = 'C';
+
+    # many tests create files via debian/rules
+    umask $WIDELY_READABLE;
+
+    # get destination
+    my $source_path = "$source_root/$recipe";
+    my $build_path = "$build_root/$recipe";
+
+    my $savedir = getcwd;
+    chdir $source_path
+      or die encode_utf8("Cannot change to directory $source_path");
+
+    my $sha1sums_bytes;
+    run3('find . -type f -print0 | sort -z | xargs -0 sha1sum',
+        \undef, \$sha1sums_bytes);
+
+    chdir $savedir
+      or die encode_utf8("Cannot change to directory $savedir");
+
+    my $sha1sums = decode_utf8($sha1sums_bytes);
+
+    my $checksum_path = "$build_path/source-files.sha1sums";
+    if (-r $checksum_path) {
+        my $previous = path($checksum_path)->slurp_utf8;
+
+        # only rebuild if needed
+        # also need to look for build subject
+        return
+          if $sha1sums eq $previous;
+    }
+
+    $0 = "Lintian build test: $recipe [$position/$total]";
+    say encode_utf8('Building in '
+          . path($build_path)->relative->stringify
+          . " [$position/$total]");
+
+    path($build_path)->remove_tree
+      if -e $build_path;
+    path($build_path)->mkpath;
+
+    # read dynamic file names
+    my $runfiles = "$source_path/files";
+    my $files = read_config($runfiles);
+
+    my $error;
+
+    my $log_bytes = capture_merged {
+
+        try {
+            # call runner
+            build_subject($source_path, $build_path);
+        }catch {
+            # catch any error
+            $error = $_;
+        };
+    };
+
+    my $log = decode_utf8($log_bytes);
+
+    # delete old runner log
+    my $betterlogpath= $build_path . $SLASH . $files->unfolded_value('Log');
+    if (-e $betterlogpath) {
+        unlink $betterlogpath
+          or die encode_utf8("Cannot unlink $betterlogpath");
+    }
+
+    # move the early log for directory preparation to position of runner log
+    my $earlylogpath = "$source_path.log";
+    move($earlylogpath, $betterlogpath) if -e $earlylogpath;
+
+    # append runner log to population log
+    path($betterlogpath)->append_utf8($log) if length $log;
+
+    # add error if there was one
+    path($betterlogpath)->append_utf8($error) if length $error;
+
+    path($checksum_path)->spew_utf8($sha1sums)
+      unless length $error;
+
+    $mce->gather(path($build_path)->relative->stringify, $error)
+      if length $error;
+
+    return;
+}
 
 sub prepare_test {
     my ($mce, $specpath) = @_;
