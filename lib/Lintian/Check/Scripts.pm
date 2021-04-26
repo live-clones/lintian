@@ -1263,7 +1263,7 @@ sub installable {
                 my ($divert) = ($line =~ /dpkg-divert\s*(.*)$/);
                 $divert =~ s{\s*(?:\$[{]?[\w:=-]+[}]?)*\s*
                                 # options without arguments
-                              --(?:add|quiet|remove|rename|test|local
+                              --(?:add|quiet|remove|rename|no-rename|test|local
                                 # options with arguments
                                 |(?:admindir|divert|package) \s+ \S+)
                               \s*}{}gxsm;
