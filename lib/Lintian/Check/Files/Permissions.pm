@@ -87,11 +87,6 @@ sub setup_installed_files {
 sub visit_installed_files {
     my ($self, $file) = @_;
 
-    $self->hint(
-        'octal-permissions', $self->component,
-        $file->octal_permissions, $file->name
-    );
-
     if ($file->is_file) {
 
         if (
@@ -239,18 +234,6 @@ sub visit_installed_files {
             sprintf('%04o', $STANDARD_FOLDER)
         )unless $file->operm == $STANDARD_FOLDER;
     }
-
-    return;
-}
-
-sub source {
-    my ($self) = @_;
-
-    my $component = path($self->processable->path)->basename;
-
-    $self->hint('octal-permissions', $component, $_->octal_permissions,
-        $_->name)
-      for @{$self->processable->patched->sorted_list};
 
     return;
 }
