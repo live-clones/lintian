@@ -151,7 +151,7 @@ sub hintlist {
 
         $hint{name} = $input->tag->name;
 
-        $hint{url} = "https://lintian.debian.org/tags/$hint{name}.html";
+        $hint{url} = "https://lintian.debian.org/tags/$hint{name}";
 
         $hint{context} = $input->context
           if length $input->context;

@@ -184,7 +184,7 @@ sub print_hint {
 
     my $output;
     if ($option->{hyperlinks} && $option->{color}) {
-        my $target= 'https://lintian.debian.org/tags/' . $tag_name . '.html';
+        my $target= 'https://lintian.debian.org/tags/' . $tag_name;
         $output .= $self->osc_hyperlink($text, $target);
     } else {
         $output .= $text;
