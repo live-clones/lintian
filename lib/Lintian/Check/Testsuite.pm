@@ -145,9 +145,6 @@ sub check_control_paragraph {
         'paragraph starting at line', $section->position
     ) if $section->declares('Tests') && $section->declares('Test-Command');
 
-    my $tests_field = $section->unfolded_value('Tests');
-    my $test_command = $section->unfolded_value('Test-Command');
-
     my @lowercase_names = map { lc } $section->names;
     my @lowercase_known = map { lc } @KNOWN_FIELDS;
 
@@ -159,8 +156,7 @@ sub check_control_paragraph {
         'in line', $section->position($_))
       for @unknown;
 
-    my $features_field = $section->unfolded_value('Features');
-    my @features= grep { length } split(/\s*,\s*|\s+/, $features_field);
+    my @features = $section->trimmed_list('Features', qr/ \s* , \s* | \s+ /x);
     for my $feature (@features) {
 
         $self->hint('unknown-runtime-tests-feature',
@@ -174,9 +170,8 @@ sub check_control_paragraph {
     my $KNOWN_OBSOLETE_RESTRICTIONS
       = $self->profile->load_data('testsuite/known-obsolete-restrictions');
 
-    my $restrictions_field = $section->unfolded_value('Restrictions');
     my @restrictions
-      = grep { length } split(/\s*,\s*|\s+/, $restrictions_field);
+      = $section->trimmed_list('Restrictions', qr/ \s* , \s* | \s+ /x);
     for my $restriction (@restrictions) {
 
         my $line = $section->position('Restrictions');
@@ -190,10 +185,18 @@ sub check_control_paragraph {
           if $KNOWN_OBSOLETE_RESTRICTIONS->recognizes($restriction);
     }
 
+    my $test_command = $section->unfolded_value('Test-Command');
+
+    # trim both sides
+    $test_command =~ s/^\s+|\s+$//g;
+
+    $self->hint('backgrounded-test-command', $test_command)
+      if $test_command =~ / & $/x;
+
     my $directory = $section->unfolded_value('Tests-Directory')
       || 'debian/tests';
 
-    my @tests = grep { length } split(/\s*,\s*|\s+/, $tests_field);
+    my @tests = $section->trimmed_list('Tests', qr/ \s* , \s* | \s+ /x);
 
     $self->check_test_file($directory, $_, $section->position('Tests'))
       for @tests;
