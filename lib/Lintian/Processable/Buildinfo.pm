@@ -23,7 +23,6 @@ use warnings;
 use utf8;
 
 use Carp qw(croak);
-use Path::Tiny;
 use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Deb822::File;
@@ -65,9 +64,6 @@ Initializes a new object from FILE.
 
 sub init {
     my ($self, $file) = @_;
-
-    croak encode_utf8("File $file is not an absolute, resolved path")
-      unless $file eq path($file)->realpath->stringify;
 
     croak encode_utf8("File $file does not exist")
       unless -e $file;

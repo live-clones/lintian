@@ -654,26 +654,22 @@ if ($selected{'packages-from-file'}){
 
 my $pool = Lintian::Pool->new;
 
-for my $path (@subjects) {
-    die encode_utf8("$path is not a readable file\n") unless -r $path;
+for my $subject (@subjects) {
+    die encode_utf8("$subject is not a readable file\n") unless -r $subject;
 
     # in ubuntu, automatic dbgsym packages end with .ddeb
     die encode_utf8(
-"bad package file name $path (neither .deb, .udeb, .ddeb, .changes, .dsc or .buildinfo file)\n"
-    )unless $path =~ /\.(?:[u|d]?deb|dsc|changes|buildinfo)$/;
-
-    my $absolute = realpath($path);
-    die encode_utf8("Cannot resolve $path: $!")
-      unless $absolute;
+"bad package file name $subject (neither .deb, .udeb, .ddeb, .changes, .dsc or .buildinfo file)\n"
+    ) unless $subject =~ /\.(?:[u|d]?deb|dsc|changes|buildinfo)$/;
 
     eval {
         # create a new group
         my $group = Lintian::Group->new;
         $group->pooldir($pool->basedir);
 
-        my $processable = $group->add_processable_from_file($absolute);
+        my $processable = $group->add_processable_from_file($subject);
 
-        my $parent = path($absolute)->parent->stringify;
+        my $parent = path($subject)->parent->stringify;
 
         my @files;
 
@@ -702,7 +698,7 @@ for my $path (@subjects) {
         $pool->add_group($group);
     };
     if ($@) {
-        warn encode_utf8("Skipping $path: $@\n");
+        warn encode_utf8("Skipping $subject: $@\n");
         $exit_code = 1;
     }
 }

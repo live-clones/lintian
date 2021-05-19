@@ -29,7 +29,6 @@ use Devel::Size qw(total_size);
 use File::Spec;
 use List::Compare;
 use List::SomeUtils qw(none uniq firstval);
-use Path::Tiny;
 use POSIX qw(ENOENT);
 use Time::HiRes qw(gettimeofday tv_interval);
 use Time::Piece;
@@ -169,38 +168,37 @@ sub name {
 =cut
 
 sub add_processable_from_file {
-    my ($self, $file) = @_;
+    my ($self, $path) = @_;
 
-    my $absolute = path($file)->realpath->stringify;
-    croak encode_utf8("Cannot resolve $file: $!")
-      unless $absolute;
+    croak encode_utf8("Cannot resolve $path: $!")
+      unless -e $path;
 
     my $processable;
 
-    if ($file =~ /\.dsc$/) {
+    if ($path =~ /\.dsc$/) {
         $processable = Lintian::Processable::Source->new;
 
-    } elsif ($file =~ /\.buildinfo$/) {
+    } elsif ($path =~ /\.buildinfo$/) {
         $processable = Lintian::Processable::Buildinfo->new;
 
-    } elsif ($file =~ /\.d?deb$/) {
+    } elsif ($path =~ /\.d?deb$/) {
         # in ubuntu, automatic dbgsym packages end with .ddeb
         $processable = Lintian::Processable::Installable->new;
         $processable->type('binary');
 
-    } elsif ($file =~ /\.udeb$/) {
+    } elsif ($path =~ /\.udeb$/) {
         $processable = Lintian::Processable::Installable->new;
         $processable->type('udeb');
 
-    } elsif ($file =~ /\.changes$/) {
+    } elsif ($path =~ /\.changes$/) {
         $processable = Lintian::Processable::Changes->new;
 
     } else {
-        croak encode_utf8("$file is not a known type of package");
+        croak encode_utf8("$path is not a known type of package");
     }
 
     $processable->pooldir($self->pooldir);
-    $processable->init($absolute);
+    $processable->init($path);
 
     $self->add_processable($processable);
 

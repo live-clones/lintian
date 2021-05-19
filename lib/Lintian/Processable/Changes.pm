@@ -66,9 +66,6 @@ Initializes a new object from FILE.
 sub init {
     my ($self, $file) = @_;
 
-    croak encode_utf8("File $file is not an absolute, resolved path")
-      unless $file eq path($file)->realpath->stringify;
-
     croak encode_utf8("File $file does not exist")
       unless -e $file;
 
