@@ -1,5 +1,5 @@
 Tag: maybe-not-arch-all-binnmuable
-Severity: pedantic
+Severity: classification
 Check: debian/version-substvars
 Experimental: yes
 Explanation: Tag to attempt to measure the number of packages that might
