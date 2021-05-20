@@ -25,6 +25,7 @@ use utf8;
 
 use Carp qw(croak);
 use Const::Fast;
+use Cwd;
 use Devel::Size qw(total_size);
 use File::Spec;
 use List::Compare;
@@ -217,6 +218,8 @@ sub process {
     my $groupname = $self->name;
     local $SIG{__WARN__}
       = sub { warn encode_utf8("Warning in group $groupname: $_[0]") };
+
+    my $savedir = getcwd;
 
     $self->processing_start(gmtime->datetime . 'Z');
     say {*STDERR} encode_utf8('Starting on group ' . $self->name)
@@ -465,6 +468,10 @@ sub process {
               if $option->{debug} >= $EXTRA_VERBOSE;
         }
     }
+
+    # change to known folder; ealier failures could prevent removal below
+    chdir $savedir
+      or warn encode_utf8("Cannot change to directory $savedir");
 
     $self->clean_lab($option);
 
