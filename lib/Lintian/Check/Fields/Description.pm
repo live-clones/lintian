@@ -67,9 +67,6 @@ sub installable {
 
     my $full_description= $processable->fields->untrimmed_value('Description');
 
-    $self->hint('odd-mark-in-description', 'comma not followed by whitespace')
-      if $full_description =~ /,[^\s\d]/;
-
     $full_description =~ m/^([^\n]*)\n(.*)$/s;
     my ($synopsis, $extended) = ($1, $2);
     unless (defined $synopsis) {
@@ -105,6 +102,11 @@ sub installable {
         if ($synopsis =~ m/\t/) {
             $self->hint('description-contains-tabs') unless $tabs++;
         }
+
+        $self->hint('odd-mark-in-description',
+            'comma not followed by whitespace (synopsis)')
+          if $synopsis =~ /,[^\s\d]/;
+
         if ($synopsis =~ m/^missing\s*$/i) {
             $self->hint('description-is-debmake-template') unless $template++;
         } elsif ($synopsis =~ m/<insert up to 60 chars description>/) {
@@ -180,6 +182,10 @@ sub installable {
             $self->hint('description-mentions-planned-features',
                 "(line $position)");
         }
+
+        $self->hint('odd-mark-in-description',
+            "comma not followed by whitespace (line $position)")
+          if $line =~ /,[^\s\d]/;
 
         $self->hint('description-contains-dh-make-perl-template',
             "line $position")
