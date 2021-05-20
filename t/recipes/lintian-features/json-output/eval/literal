@@ -1,8 +1,8 @@
 {
    "groups" : [
       {
-         "group-id" : "json-output_1.0+dsfg-1.1",
-         "input-files" : [
+         "group_id" : "json-output_1.0+dsfg-1.1",
+         "input_files" : [
             {
                "hints" : [
                   {
@@ -137,9 +137,9 @@
                "path" : "PATH"
             }
          ],
-         "source-name" : "json-output",
-         "source-version" : "1.0+dsfg-1.1"
+         "source_name" : "json-output",
+         "source_version" : "1.0+dsfg-1.1"
       }
    ],
-   "lintian-version" : "VERSION"
+   "lintian_version" : "VERSION"
 }

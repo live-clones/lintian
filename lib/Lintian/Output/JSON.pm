@@ -71,7 +71,7 @@ sub issue_hints {
 
     my %output;
 
-    $output{'lintian-version'} = $ENV{LINTIAN_VERSION};
+    $output{lintian_version} = $ENV{LINTIAN_VERSION};
 
     my @allgroups_output;
     $output{groups} = \@allgroups_output;
@@ -79,14 +79,14 @@ sub issue_hints {
     for my $group (sort { $a->name cmp $b->name } @{$groups}) {
 
         my %group_output;
-        $group_output{'group-id'} = $group->name;
-        $group_output{'source-name'} = $group->source_name;
-        $group_output{'source-version'} = $group->source_version;
+        $group_output{group_id} = $group->name;
+        $group_output{source_name} = $group->source_name;
+        $group_output{source_version} = $group->source_version;
 
         push(@allgroups_output, \%group_output);
 
         my @allfiles_output;
-        $group_output{'input-files'} = \@allfiles_output;
+        $group_output{input_files} = \@allfiles_output;
 
         for my $processable (sort {$a->path cmp $b->path}
             $group->get_processables) {
@@ -148,7 +148,7 @@ sub hintlist {
             $hint{override} = 'yes';
 
             my @comments = @{ $input->override->{comments} // [] };
-            $hint{'override-comments'} = \@comments
+            $hint{override_comments} = \@comments
               if @comments;
         }
     }
@@ -169,25 +169,25 @@ sub describe_tags {
 
         my %dictionary;
 
-        $dictionary{Name} = $tag->name;
-        $dictionary{'Name-Spaced'} = $tag->name_spaced
+        $dictionary{name} = $tag->name;
+        $dictionary{name_spaced} = $tag->name_spaced
           if length $tag->name_spaced;
-        $dictionary{'Show-Always'} = $tag->show_always
+        $dictionary{show_always} = $tag->show_always
           if length $tag->show_always;
 
-        $dictionary{Explanation} = $tag->explanation;
-        $dictionary{'See-Also'} = $tag->see_also
+        $dictionary{explanation} = $tag->explanation;
+        $dictionary{see_also} = $tag->see_also
           if @{$tag->see_also};
 
-        $dictionary{Check} = $tag->check;
-        $dictionary{Visibility} = $tag->visibility;
-        $dictionary{Experimental} = $tag->experimental
+        $dictionary{check} = $tag->check;
+        $dictionary{visibility} = $tag->visibility;
+        $dictionary{experimental} = $tag->experimental
           if length $tag->experimental;
 
-        $dictionary{'Renamed-From'} = $tag->renamed_from
+        $dictionary{renamed_from} = $tag->renamed_from
           if @{$tag->renamed_from};
 
-        $dictionary{'Lintian-Version'} = $ENV{LINTIAN_VERSION};
+        $dictionary{lintian_version} = $ENV{LINTIAN_VERSION};
 
         push(@array, \%dictionary);
     }
