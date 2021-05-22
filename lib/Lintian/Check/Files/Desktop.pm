@@ -41,10 +41,6 @@ sub visit_installed_files {
     # /usr/local/share/:/usr/share/, according to the
     # basedir-spec on fd.org. As distributor, we should only
     # allow /usr/share.
-    #
-    # KDE hasn't moved its files from /usr/share/applnk, so
-    # don't warn about this yet until KDE adopts the new
-    # location.
 
     $self->hint('desktop-file-in-wrong-dir', $file->name)
       if $file->name =~ m{^usr/share/gnome/apps/.*\.desktop$};
