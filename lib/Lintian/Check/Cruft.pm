@@ -7,7 +7,7 @@
 # Copyright © 2007 Russ Allbery
 # Copyright © 2013-2018 Bastien ROUCARIÈS
 # Copyright © 2017-2020 Chris Lamb <lamby@debian.org>
-# Copyright © 2020 Felix Lechner
+# Copyright © 2020-2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -808,12 +808,15 @@ sub check_html_cruft {
     }
 
     while(($indexscript = index($blockscript, '<script')) > $ITEM_NOT_FOUND) {
+
         $blockscript = substr($blockscript,$indexscript);
+
         # sourced script ok
         if ($blockscript =~ m{\A<script\s+[^>]*?src="[^"]+?"[^>]*?>}sm) {
             $blockscript = substr($blockscript,$+[0]);
             next;
         }
+
         # extract script
         if ($blockscript =~ m{<script[^>]*?>(.*?)</script>}sm) {
             $blockscript = substr($blockscript,$+[0]);
@@ -822,6 +825,7 @@ sub check_html_cruft {
             }
             next;
         }
+
         # here we know that we have partial script. Do the check nevertheless
         # first check if we have the full <script> tag and do the check
         # if we get <script src="  "
@@ -830,8 +834,10 @@ sub check_html_cruft {
             $blockscript = substr($blockscript,$+[0]);
             $self->check_js_script($item, $blockscript);
         }
+
         return 0;
     }
+
     return 1;
 }
 
@@ -862,11 +868,13 @@ sub check_js_script {
 # check if file is javascript but not minified
 sub _is_javascript_but_not_minified {
     my ($self, $name) = @_;
+
     my $isjsfile = ($name =~ m/\.js$/) ? 1 : 0;
     if($isjsfile) {
         my $minjsregexp = $self->_minified_javascript_name_regexp();
         $isjsfile = ($name =~ m{$minjsregexp}) ? 0 : 1;
     }
+
     return $isjsfile;
 }
 
@@ -919,6 +927,7 @@ sub search_in_block0 {
         # now search hidden minified
         $self->linelength_test($item, $block);
     }
+
     # search link rel header
     if ($block =~ / \Q rel="copyright" \E /msx) {
         my $href = $block;
@@ -936,17 +945,19 @@ sub search_in_block0 {
             }
         }
     }
+
     return;
 }
 
 # warn about prebuilt javascript and check missing source
 sub warn_prebuilt_javascript{
-    my ($self, $item, $linelength,$cutoff) = @_;
+    my ($self, $item, $linelength, $position, $cutoff) = @_;
 
-    my $extratext
-      =  'line length is '.int($linelength)." characters (>$cutoff)";
+    my $extratext= "line $position is $linelength characters long (>$cutoff)";
+
     $self->hint('source-contains-prebuilt-javascript-object',
         $item->name,$extratext);
+
     # Check for missing source.  It will check
     # for the source file in well known directories
     if ($item->basename =~ m{\.js$}i) {
@@ -968,15 +979,24 @@ sub warn_prebuilt_javascript{
 
 # detect if max line of block is > cutoff
 # return false if file is minified
-sub _linelength_test_maxlength {
-    my ($block, $cutoff) = @_;
-    while($block =~ /([^\n]+)\n?/g){
-        my $linelength = length($1);
-        if($linelength > $cutoff) {
-            return ($linelength,$1,substr($block,pos($block)));
-        }
+sub linelength_test_maxlength {
+    my ($self, $text) = @_;
+
+    my @lines = split(/\n+/, $text);
+    my $maximum = 0;
+
+    my $position = 1;
+    for my $line (@lines) {
+
+        my $linelength = length $line;
+        $maximum = $linelength
+          if $maximum < $linelength;
+
+    } continue {
+        ++$position;
     }
-    return (0, $EMPTY, $block);
+
+    return ($maximum, $position);
 }
 
 # strip C comment
@@ -1023,19 +1043,16 @@ sub detect_browserify {
 sub linelength_test {
     my ($self, $item, $block) = @_;
 
-    my $linelength = 0;
-    my $line;
     my $nextblock;
 
-    ($linelength)= _linelength_test_maxlength($block,$VERY_LONG_LINE_LENGTH);
+    my ($maximum, $position) = $self->linelength_test_maxlength($block);
    # first check if line >  $VERY_LONG_LINE_LENGTH that is likely minification
    # avoid problem by recursive regex with longline
-    if($linelength) {
-        $self->hint(
-            'very-long-line-length-in-source-file',
-            $item->name,'line length is',
-            int($linelength),'characters (>'.$VERY_LONG_LINE_LENGTH.')'
+    if ($maximum > $VERY_LONG_LINE_LENGTH) {
+        $self->hint('very-long-line-length-in-source-file',$item->name,
+"line $position is $maximum characters long (>$VERY_LONG_LINE_LENGTH)"
         );
+
         # clean up jslint craps line
         $block =~ s{^\s*/[*][^\n]*[*]/\s*$}{}gm;
         $block =~ s{^\s*//[^\n]*$}{}gm;
@@ -1058,11 +1075,10 @@ sub linelength_test {
         $self->detect_browserify($item, $block);
 
         # retry very long line length test now: likely minified
-        ($linelength)
-          = _linelength_test_maxlength($block,$VERY_LONG_LINE_LENGTH);
+        ($maximum, $position)= $self->linelength_test_maxlength($block);
 
-        if($linelength) {
-            $self->warn_prebuilt_javascript($item, $linelength,
+        if ($maximum > $VERY_LONG_LINE_LENGTH) {
+            $self->warn_prebuilt_javascript($item, $maximum, $position,
                 $VERY_LONG_LINE_LENGTH);
             return 1;
         }
@@ -1083,20 +1099,41 @@ sub linelength_test {
     $self->detect_browserify($item, $nextblock);
 
     while(length($nextblock)) {
+
         # check line above > $SAFE_LINE_LENGTH
-        ($linelength,$line,$nextblock)
-          = _linelength_test_maxlength($nextblock,$SAFE_LINE_LENGTH);
-        # no long line
-        unless($linelength) {
-            return 0;
+        my $line = $EMPTY;
+        my $linelength = 0;
+
+        my $nextposition = 0;
+        while ($nextblock =~ /([^\n]+)\n?/g) {
+
+            $line = $1;
+            $linelength = length($line);
+
+            if ($linelength > $SAFE_LINE_LENGTH) {
+                $nextblock = substr($nextblock, pos($nextblock));
+
+                last;
+            }
+
+            $linelength = 0;
+
+        } continue {
+            ++$nextposition;
         }
+
+        # no long line
+        return 0
+          unless $linelength;
+
         # compute number of ;
         if(($line =~ tr/;/;/) > 1) {
-            $self->warn_prebuilt_javascript($item, $linelength,
+            $self->warn_prebuilt_javascript($item, $linelength, $nextposition,
                 $SAFE_LINE_LENGTH);
             return 1;
         }
     }
+
     return 0;
 }
 
