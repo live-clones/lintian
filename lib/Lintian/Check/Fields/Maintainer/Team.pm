@@ -35,7 +35,7 @@ const my $ARROW => q{ » };
 
 my %team_names = (
     'debian-go@lists.debian.org' => 'golang',
-    'pkg-clojure-maintainers@lists.alioth.debian.org' => 'clojure',
+    'debian-clojure@lists.debian.org' => 'clojure',
     'pkg-java-maintainers@lists.alioth.debian.org' => 'java',
     'pkg-javascript-maintainers@lists.alioth.debian.org' => 'javascript',
     'pkg-perl-maintainers@lists.alioth.debian.org' => 'perl',
