@@ -862,7 +862,10 @@ sub full_text_check {
     my $skiphtml = 0;
 
     # some js file comments are really really long
-    my $sfd= Lintian::SlidingWindow->new($fd, \&lc_block, $LARGE_BLOCK_SIZE);
+    my $sfd = Lintian::SlidingWindow->new;
+    $sfd->handle($fd);
+    $sfd->blocksize($LARGE_BLOCK_SIZE);
+
     my %licenseproblemhash;
 
     # we try to read this file in block and use a sliding window
@@ -871,6 +874,7 @@ sub full_text_check {
     # per file
   BLOCK:
     while (my $block = $sfd->readwindow) {
+        my $lowercase = lc($block);
         my ($cleanedblock, %matchedkeyword);
         my $blocknumber = $sfd->blocknumber;
 
@@ -880,7 +884,7 @@ sub full_text_check {
         if(
             $self->license_check(
                 $item->name,$item->basename,
-                $self->NON_DISTRIBUTABLE_LICENSES,$block,
+                $self->NON_DISTRIBUTABLE_LICENSES,$lowercase,
                 $blocknumber,\$cleanedblock,
                 \%matchedkeyword,\%licenseproblemhash
             )
@@ -895,19 +899,18 @@ sub full_text_check {
         }
 
         $self->license_check($item->name,$item->basename,
-            $self->NON_FREE_LICENSES,$block,
-            $blocknumber,\$cleanedblock, \%matchedkeyword,
-            \%licenseproblemhash);
+            $self->NON_FREE_LICENSES,$lowercase,
+            $blocknumber,\$cleanedblock,\%matchedkeyword,\%licenseproblemhash);
 
         # check html
         if($ishtml && !$skiphtml) {
-            if($self->check_html_cruft($item, $block,$blocknumber) < 0) {
+            if($self->check_html_cruft($item, $lowercase,$blocknumber) < 0) {
                 $skiphtml = 1;
             }
         }
         # check only in block 0
         if($blocknumber == 0) {
-            $self->search_in_block0($item, $block);
+            $self->search_in_block0($item, $lowercase);
         }
     }
     close($fd);
@@ -1533,10 +1536,6 @@ sub _strip_punct() {
     $text =~ s/^\s+|\s+$//g;
 
     return $text;
-}
-
-sub lc_block {
-    return $_ = lc($_);
 }
 
 # check bad license

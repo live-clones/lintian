@@ -265,7 +265,8 @@ sub bytes_match {
       unless length $regex;
 
     open(my $fd, '<:raw', $self->unpacked_path);
-    my $sfd = Lintian::SlidingWindow->new($fd);
+    my $sfd = Lintian::SlidingWindow->new;
+    $sfd->handle($fd);
 
     my $match;
     while (my $block = $sfd->readwindow) {

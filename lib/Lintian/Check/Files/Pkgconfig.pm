@@ -65,7 +65,8 @@ sub visit_installed_files {
         open(my $fd, '<:raw', $file->unpacked_path)
           or die encode_utf8('Cannot open ' . $file->unpacked_path);
 
-        my $sfd = Lintian::SlidingWindow->new($fd);
+        my $sfd = Lintian::SlidingWindow->new;
+        $sfd->handle($fd);
 
       BLOCK:
         while (my $block = $sfd->readwindow) {

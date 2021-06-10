@@ -1,7 +1,7 @@
 # -*- perl -*-
-# Lintian::Data -- interface to match using a sliding window algorithm
 
 # Copyright © 2013 Bastien ROUCARIÈS
+# Copyright © 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -25,79 +25,30 @@ use utf8;
 use Const::Fast;
 use Unicode::UTF8 qw(encode_utf8);
 
-const my $EMPTY => q{};
+use Moo;
+use namespace::clean;
+
 const my $DEFAULT_BLOCK_SIZE => 4096;
-const my $INVALID_BLOCK => -1;
 
-sub new {
-    my ($class, $handle, $blocksub, $blocksize) = @_;
-
-    $blocksize //= $DEFAULT_BLOCK_SIZE;
-
-    my $self = {
-        '_handle'      => $handle,
-        '_queue'       => [q{}, q{}],
-        '_blocksize'   => $blocksize,
-        '_blocksub'    => $blocksub,
-        '_blocknumber' => $INVALID_BLOCK,
-    };
-
-    return bless($self, $class);
-}
+has handle => (is => 'rw');
+has blocksize => (is => 'rw', default => $DEFAULT_BLOCK_SIZE);
+has blocknumber => (is => 'rw', default => -1);
 
 sub readwindow {
     my ($self) = @_;
-    my ($window, $queue);
-    my $first = $self->{'_blocknumber'} < 0;
-    {
-        # This path is too hot for autodie at its current performance
-        # (at the time of writing, that would be autodie/2.23).
-        # - Benchmark chromium-browser/32.0.1700.123-2/source
-        no autodie qw(read);
-        my $blocksize = $self->{'_blocksize'};
-        # Read twice the amount in the first window and split that
-        # into "two parts".  That way we avoid half a block followed
-        # by a full block with the first half being identical to the
-        # previous one.
-        $blocksize *= 2 if $first;
-        my $res = read($self->{'_handle'}, $window, $blocksize);
-        if (not $res) {
-            die encode_utf8("read failed: $!\n") if not defined($res);
-            return;
-        }
-    }
 
-    if(defined($self->{'_blocksub'})) {
-        local $_ = $window;
-        $self->{'_blocksub'}->();
-        $window = $_;
-    }
+    my $window;
 
-    $self->{'_blocknumber'}++;
+    my $count = read($self->handle, $window, $self->blocksize);
+    die encode_utf8("read failed: $!\n")
+      unless defined $count;
 
-    $queue = $self->{'_queue'};
-    if ($first && $self->{'_blocksize'} < length($window)) {
-        # Split the first block into two windows.  We assume here that
-        # if the two halves are not of equal length, then it is
-        # because the file is shorter than 2*blocksize.  In this case,
-        # make the second half the shorter (it shouldn't matter and it
-        # is easier to do this way).
-        my $blocksize = $self->{'_blocksize'};
-        $queue->[0] = substr($window, 0, $blocksize);
-        $queue->[1] = substr($window, $blocksize);
-        return $window;
-    }
-    shift(@{$queue});
-    push(@{$queue}, $window);
-    return join($EMPTY, @{$queue});
-}
+    return undef
+      unless $count;
 
-sub blocknumber {
-    my ($self) = @_;
-    if($self->{'_blocknumber'} == $INVALID_BLOCK) {
-        return undef;
-    }
-    return $self->{'_blocknumber'};
+    $self->blocknumber($self->blocknumber + 1);
+
+    return $window;
 }
 
 =head1 NAME
@@ -150,9 +101,11 @@ Each window consists of up to two blocks of BLOCKSIZE characters.
 
 Return a new block of sliding window. Return undef at end of file.
 
+=item C<blocksize>
+
 =item blocknumber
 
-return the number of block read by the instance. Return undef if no block has been read.
+=item handle
 
 =back
 

@@ -577,7 +577,9 @@ m{^\t\s*[-@]?(?:(?:/usr)?/bin/)?(?:cp|chmod|echo|ln|mv|mkdir|rm|test|true)}
     open($rules_fd, '<', $rules->unpacked_path)
       or die encode_utf8('Cannot open ' . $rules->unpacked_path);
 
-    my $sfd = Lintian::SlidingWindow->new($rules_fd);
+    my $sfd = Lintian::SlidingWindow->new;
+    $sfd->handle($rules_fd);
+
     my $block;
     while ($block = $sfd->readwindow) {
         foreach my $tag ($BAD_MULTILINE_CONSTRUCT_IN_RULES->all) {

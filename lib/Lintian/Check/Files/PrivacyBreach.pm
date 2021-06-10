@@ -125,22 +125,26 @@ sub detect_privacy_breach {
     open(my $fd, '<:raw', $file->unpacked_path)
       or die encode_utf8('Cannot open ' . $file->unpacked_path);
 
-    my $sfd = Lintian::SlidingWindow->new($fd,sub { $_=lc($_); },$BLOCKSIZE);
+    my $sfd = Lintian::SlidingWindow->new;
+    $sfd->handle($fd);
+    $sfd->blocksize($BLOCKSIZE);
 
     while (my $block = $sfd->readwindow) {
 
+        my $lowercase = lc($block);
+
         # strip comments
         for my $x (qw(<!--(?!\[if).*?--\s*> /\*(?!@cc_on).*?\*/)) {
-            $block =~ s/$x//gs;
+            $lowercase =~ s/$x//gs;
         }
 
         # try generic fragment tagging
         foreach my $keyword ($self->PRIVACY_BREAKER_FRAGMENTS->all) {
-            if ($block =~ / \Q$keyword\E /msx) {
+            if ($lowercase =~ / \Q$keyword\E /msx) {
                 my $keyvalue
                   = $self->PRIVACY_BREAKER_FRAGMENTS->value($keyword);
                 my $regex = $keyvalue->{'regex'};
-                if ($block =~ m{($regex)}) {
+                if ($lowercase =~ m{($regex)}) {
                     my $capture = $1;
                     my $breaker_tag = $keyvalue->{'tag'};
                     unless (exists $privacybreachhash{'tag-'.$breaker_tag}){
@@ -157,10 +161,10 @@ sub detect_privacy_breach {
             data="ftp data="// poster="http poster="ftp poster="// <link @import)
         ) {
             next
-              unless $block =~ / \Q$x\E /msx;
+              unless $lowercase =~ / \Q$x\E /msx;
 
-            $self->detect_generic_privacy_breach($block,\%privacybreachhash,
-                $file);
+            $self->detect_generic_privacy_breach($lowercase,
+                \%privacybreachhash,$file);
 
             last;
         }
