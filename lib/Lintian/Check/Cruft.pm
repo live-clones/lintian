@@ -39,7 +39,6 @@ use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Relation;
 use Lintian::Util qw(normalize_pkg_path);
-use Lintian::SlidingWindow;
 
 use Moo;
 use namespace::clean;
@@ -227,13 +226,7 @@ sub _get_license_check_file {
         $filename,
         qr/\s*\~\~\s*/,
         sub {
-            my %LICENSE_CHECK_DISPATCH_TABLE= (
-                'license-problem-gfdl-invariants' =>
-                  \&check_gfdl_license_problem,
-                'rfc-whitelist-filename' =>\&rfc_whitelist_filename,
-                'php-source-whitelist' => \&php_source_whitelist,
-                #'print-group'          => sub { print($1)},
-            );
+
             my ($keywords, $sentence, $regex, $firstregex, $callsub)
               = split(/ \s* ~~ \s* /msx, $_[1],$LICENSE_CHECK_DATA_FIELDS);
 
@@ -252,35 +245,44 @@ sub _get_license_check_file {
             $callsub =~ s/^\s+|\s+$//g;
 
             my @keywordlist = split(/\s*\&\&\s*/, $keywords);
-            if(scalar(@keywordlist) < 1) {
-                die encode_utf8("$filename: No keywords on line $.");
-            }
-            my @sentencelist = split(/\s*\|\|\s*/, $sentence);
-            if(scalar(@sentencelist) < 1) {
-                die encode_utf8("$filename: No sentence on line $.");
-            }
 
-            if($regex eq $EMPTY) {
-                $regex = $DOT . $ASTERISK;
-            }
-            if($firstregex eq $EMPTY) {
-                $firstregex = $regex;
-            }
+            die encode_utf8("$filename: No keywords on line $.")
+              if @keywordlist < 1;
+
+            my @sentencelist = split(/\s*\|\|\s*/, $sentence);
+
+            die encode_utf8("$filename: No sentence on line $.")
+              if @sentencelist < 1;
+
+            $firstregex ||= $regex;
+            $firstregex ||= $DOT . $ASTERISK;
+
+            # prefer firstregex previously used for block 0
             my %ret = (
-                'keywords' =>  \@keywordlist,
+                'keywords' => \@keywordlist,
                 'sentence' => \@sentencelist,
-                'regex' => qr/$regex/xsm,
-                'firstregex' => qr/$firstregex/xsm,
+                'regex' => qr/$firstregex/xsm,
             );
-            unless($callsub eq $EMPTY) {
-                if(defined($LICENSE_CHECK_DISPATCH_TABLE{$callsub})) {
+
+            my %LICENSE_CHECK_DISPATCH_TABLE= (
+                'license-problem-gfdl-invariants' =>
+                  \&check_gfdl_license_problem,
+                'rfc-whitelist-filename' =>\&rfc_whitelist_filename,
+                'php-source-whitelist' => \&php_source_whitelist,
+                #'print-group'          => sub { print($1)},
+            );
+
+            unless ($callsub eq $EMPTY) {
+                if (defined($LICENSE_CHECK_DISPATCH_TABLE{$callsub})) {
                     $ret{'callsub'} = $LICENSE_CHECK_DISPATCH_TABLE{$callsub};
                 } else {
                     die encode_utf8("$filename: Unknown sub $.");
                 }
             }
+
             return \%ret;
         });
+
     return $data;
 }
 
@@ -750,97 +752,58 @@ sub full_text_check {
         return;
     }
 
-    open(my $fd, '<:raw', $item->unpacked_path)
-      or die encode_utf8('Cannot open ' . $item->unpacked_path);
-
-    # check only text files
-    unless (-T $fd) {
-        close($fd);
-        return;
-    }
-
-    my $ishtml = ($item->basename =~ /\.(?:x?html?\d?|xht)$/i);
-    my $skiphtml = 0;
-
-    # some js file comments are really really long
-    my $sfd = Lintian::SlidingWindow->new;
-    $sfd->handle($fd);
-    $sfd->blocksize($LARGE_BLOCK_SIZE);
+    my $contents = $item->decoded_utf8;
+    return
+      unless length $contents;
 
     my %licenseproblemhash;
 
-    # we try to read this file in block and use a sliding window
-    # for efficiency.  We store two blocks in @queue and the whole
-    # string to match in $block. Please emit license tags only once
-    # per file
-  BLOCK:
-    while (my $block = $sfd->readwindow) {
-        my $lowercase = lc($block);
-        my ($cleanedblock, %matchedkeyword);
-        my $blocknumber = $sfd->blocknumber;
+    my $lowercase = lc($contents);
+    my ($cleanedblock, %matchedkeyword);
 
-        # Check for non-distributable files - this
-        # applies even to non-free, as we still need
-        # permission to distribute those.
-        if(
-            $self->license_check(
-                $item->name,$item->basename,
-                $self->NON_DISTRIBUTABLE_LICENSES,$lowercase,
-                $blocknumber,\$cleanedblock,
-                \%matchedkeyword,\%licenseproblemhash
-            )
-        ){
-            last BLOCK;
-        }
+    # Check for non-distributable files - this
+    # applies even to non-free, as we still need
+    # permission to distribute those.
+    return
+      if $self->license_check($item->name,$item->basename,
+        $self->NON_DISTRIBUTABLE_LICENSES,
+        $lowercase,\$cleanedblock,\%matchedkeyword,\%licenseproblemhash);
 
-        # Skip the rest of the license checks for non-free
-        # sections.
-        if ($self->processable->is_non_free) {
-            next BLOCK;
-        }
+    return
+      if !$self->processable->is_non_free
+      && $self->license_check($item->name,$item->basename,
+        $self->NON_FREE_LICENSES,$lowercase,\$cleanedblock,\%matchedkeyword,
+        \%licenseproblemhash);
 
-        $self->license_check($item->name,$item->basename,
-            $self->NON_FREE_LICENSES,$lowercase,
-            $blocknumber,\$cleanedblock,\%matchedkeyword,\%licenseproblemhash);
+    $self->check_html_cruft($item, $lowercase)
+      if $item->basename =~ /\.(?:x?html?\d?|xht)$/i;
 
-        # check html
-        if($ishtml && !$skiphtml) {
-            if($self->check_html_cruft($item, $lowercase,$blocknumber) < 0) {
-                $skiphtml = 1;
-            }
-        }
-        # check only in block 0
-        if($blocknumber == 0) {
-            $self->search_in_block0($item, $lowercase);
-        }
-    }
-    close($fd);
+    $self->search_in_block0($item, $lowercase);
+
     return;
 }
 
 # check javascript in html file
 sub check_html_cruft {
-    my ($self, $item, $block, $blocknumber) = @_;
+    my ($self, $item, $block) = @_;
 
     my $blockscript = $block;
     my $indexscript;
 
-    if ($blocknumber == 0) {
-        if ($block =~ / \Q<meta name="generator"\E /msx) {
-            if(
-                $block =~ m{<meta \s+ name="generator" \s+
-                content="doxygen}smx
-                # Identify and ignore documentation templates by looking
-                # for the use of various interpolated variables.
-                # <http://www.doxygen.nl/manual/config.html#cfg_html_header>
-                && $block
-                !~ /\$(?:doxygenversion|projectname|projectnumber|projectlogo)\b/
-            ){
-                $self->hint('source-contains-prebuilt-doxygen-documentation',
-                    $item);
+    if ($block =~ / \Q<meta name="generator"\E /msx) {
+        if(
+            $block =~ m{<meta \s+ name="generator" \s+
+                       content="doxygen}smx
+            # Identify and ignore documentation templates by looking
+            # for the use of various interpolated variables.
+            # <http://www.doxygen.nl/manual/config.html#cfg_html_header>
+            && $block
+            !~ /\$(?:doxygenversion|projectname|projectnumber|projectlogo)\b/
+        ){
+            $self->hint('source-contains-prebuilt-doxygen-documentation',
+                $item);
 
-                return $SKIP_HTML;
-            }
+            return $SKIP_HTML;
         }
     }
 
@@ -1147,9 +1110,8 @@ sub tag_gfdl {
 sub check_gfdl_license_problem {
     my (
         $self, $name,$basename,
-        $block,$blocknumber,$cleanedblock,
-        $matchedkeyword,$licenseproblemhash,$licenseproblem,
-        %matchedhash
+        $block, $cleanedblock,$matchedkeyword,
+        $licenseproblemhash,$licenseproblem,%matchedhash
     )= @_;
 
     my $rawgfdlsections  = $matchedhash{rawgfdlsections}  || $EMPTY;
@@ -1261,9 +1223,8 @@ sub check_gfdl_license_problem {
 sub rfc_whitelist_filename {
     my (
         $self, $name,$basename,
-        $block,$blocknumber,$cleanedblock,
-        $matchedkeyword,$licenseproblemhash,$licenseproblem,
-        %matchedhash
+        $block, $cleanedblock,$matchedkeyword,
+        $licenseproblemhash,$licenseproblem,%matchedhash
     )= @_;
 
     return 0 if $name eq 'debian/copyright';
@@ -1283,9 +1244,8 @@ sub rfc_whitelist_filename {
 sub php_source_whitelist {
     my (
         $self, $name,$basename,
-        $block,$blocknumber,$cleanedblock,
-        $matchedkeyword,$licenseproblemhash,$licenseproblem,
-        %matchedhash
+        $block, $cleanedblock,$matchedkeyword,
+        $licenseproblemhash,$licenseproblem,%matchedhash
     )= @_;
 
     my $copyright_path
@@ -1441,11 +1401,9 @@ sub _strip_punct() {
 
 # check bad license
 sub license_check {
-    my (
-        $self, $name,$basename,
-        $licensesdatas, $block,$blocknumber,
-        $cleanedblock,$matchedkeyword,$licenseproblemhash
-    )= @_;
+    my ($self, $name,$basename,$licensesdatas, $block,
+        $cleanedblock,$matchedkeyword,$licenseproblemhash)
+      = @_;
 
     my $ret = 0;
 
@@ -1482,10 +1440,7 @@ sub license_check {
           if none { ${$cleanedblock} =~ / \Q$_\E /msx }
         @{$licenseproblemdata->{'sentence'}};
 
-        my $regex
-          = $blocknumber
-          ? $licenseproblemdata->{'regex'}
-          : $licenseproblemdata->{'firstregex'};
+        my $regex= $licenseproblemdata->{'regex'};
 
         next LICENSE
           unless ${$cleanedblock} =~ $regex;
@@ -1493,23 +1448,25 @@ sub license_check {
         my $callsub = $licenseproblemdata->{'callsub'};
 
         if(defined $callsub) {
-            my $subresult= $self->$callsub(
-                $name,$basename,$block,
-                $blocknumber,$cleanedblock,$matchedkeyword,
-                $licenseproblemhash,$licenseproblem,%+
-            );
+            my $subresult
+              = $self->$callsub($name,$basename,$block,
+                $cleanedblock,$matchedkeyword,
+                $licenseproblemhash,$licenseproblem,%+);
             if($subresult) {
                 $licenseproblemhash->{$licenseproblem} = 1;
                 $ret = 1;
+
                 next LICENSE;
             }
         }else {
             $self->hint($licenseproblem, $name);
             $licenseproblemhash->{$licenseproblem} = 1;
             $ret = 1;
+
             next LICENSE;
         }
     }
+
     return $ret;
 }
 
