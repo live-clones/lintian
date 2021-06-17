@@ -1,6 +1,6 @@
-# files/non-free -- lintian check script -*- perl -*-
-
-# Copyright © 1998 Christian Schwarz and Richard Braakman
+# files/banned -- lintian check script -*- perl -*-
+#
+# based on debhelper check,
 # Copyright © 1999 Joey Hess
 # Copyright © 2000 Sean 'Shaleh' Perry
 # Copyright © 2002 Josip Rodin
@@ -25,7 +25,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::Check::Files::NonFree;
+package Lintian::Check::Files::Banned;
 
 use v5.20;
 use warnings;
@@ -65,13 +65,14 @@ sub _md5sum_based_lintian_data {
         });
 }
 
-has NON_FREE_FILES => (
+has NON_DISTRIBUTABLE_FILES => (
     is => 'rw',
     lazy => 1,
     default => sub {
         my ($self) = @_;
 
-        return $self->_md5sum_based_lintian_data('cruft/non-free-files');
+        return $self->_md5sum_based_lintian_data(
+            'cruft/non-distributable-files');
     });
 
 sub visit_patched_files {
@@ -80,48 +81,18 @@ sub visit_patched_files {
     return
       unless $item->is_file;
 
-    # skip packages that declare non-free contents
-    return
-      if $self->processable->is_non_free;
-
-    my $nonfree = $self->NON_FREE_FILES->value($item->md5sum);
-    if (defined $nonfree) {
-        my $usualname = $nonfree->{'name'};
-        my $reason = $nonfree->{'reason'};
-        my $link = $nonfree->{'link'};
+    my $banned = $self->NON_DISTRIBUTABLE_FILES->value($item->md5sum);
+    if (defined $banned) {
+        my $usualname = $banned->{'name'};
+        my $reason = $banned->{'reason'};
+        my $link = $banned->{'link'};
 
         $self->hint(
-            'license-problem-md5sum-non-free-file',
+            'license-problem-md5sum-non-distributable-file',
             $item->name, "usual name is $usualname.",
             $reason, "See also $link."
         );
     }
-
-    return;
-}
-
-# A list of known non-free flash executables
-my @flash_nonfree = (
-    qr/(?i)dewplayer(?:-\w+)?\.swf$/,
-    qr/(?i)(?:mp3|flv)player\.swf$/,
-    # Situation needs to be clarified:
-    #    qr,(?i)multipleUpload\.swf$,
-    #    qr,(?i)xspf_jukebox\.swf$,
-);
-
-sub visit_installed_files {
-    my ($self, $file) = @_;
-
-    return
-      unless $file->is_file;
-
-    # skip packages that declare non-free contents
-    return
-      if $self->processable->is_non_free;
-
-    # non-free .swf files
-    $self->hint('non-free-flash', $file->name)
-      if any { $file->name =~ m{/$_} } @flash_nonfree;
 
     return;
 }

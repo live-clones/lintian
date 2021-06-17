@@ -103,6 +103,7 @@ Enable-Tags-From-Check:
  fields/version
  filename-length
  files/architecture
+ files/banned
  files/bugs
  files/build-path
  files/compressed

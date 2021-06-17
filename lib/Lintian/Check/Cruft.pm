@@ -64,7 +64,6 @@ const my $DOLLAR => q{$};
 const my $DOT => q{.};
 const my $DOUBLE_DOT => q{..};
 
-const my $MD5SUM_DATA_FIELDS => 5;
 const my $WARN_FILE_DATA_FIELDS => 4;
 const my $LICENSE_CHECK_DATA_FIELDS => 5;
 
@@ -74,50 +73,6 @@ const my $ACCEPTABLE_LIBTOOL_MINOR => 2;
 const my $ACCEPTABLE_LIBTOOL_DEBIAN => 2;
 const my $ITEM_NOT_FOUND => -1;
 const my $SKIP_HTML => -1;
-
-# load data for md5sums based check
-sub _md5sum_based_lintian_data {
-    my ($self, $filename) = @_;
-    return $self->profile->load_data(
-        $filename,
-        qr/\s*\~\~\s*/,
-        sub {
-            my ($sha1, $sha256, $name, $reason, $link)
-              = split(/ \s* ~~ \s* /msx, $_[1], $MD5SUM_DATA_FIELDS);
-
-            die encode_utf8("Syntax error in $filename $.")
-              if any { !defined } ($sha1, $sha256, $name, $reason, $link);
-
-            return {
-                'sha1'   => $sha1,
-                'sha256' => $sha256,
-                'name'   => $name,
-                'reason' => $reason,
-                'link'   => $link,
-            };
-        });
-}
-
-# forbidden files
-has NON_DISTRIBUTABLE_FILES => (
-    is => 'rw',
-    lazy => 1,
-    default => sub {
-        my ($self) = @_;
-
-        return $self->_md5sum_based_lintian_data(
-            'cruft/non-distributable-files');
-    });
-
-# non free files
-has NON_FREE_FILES => (
-    is => 'rw',
-    lazy => 1,
-    default => sub {
-        my ($self) = @_;
-
-        return $self->_md5sum_based_lintian_data('cruft/non-free-files');
-    });
 
 # prebuilt-file or forbidden file type
 has WARN_FILE_TYPE => (
@@ -455,32 +410,6 @@ sub visit_patched_files {
 
     return
       unless $item->is_file;
-
-    my $banned = $self->NON_DISTRIBUTABLE_FILES->value($item->md5sum);
-    if (defined $banned) {
-        my $usualname = $banned->{'name'};
-        my $reason = $banned->{'reason'};
-        my $link = $banned->{'link'};
-
-        $self->hint(
-            'license-problem-md5sum-non-distributable-file',
-            $item->name, "usual name is $usualname.",
-            $reason, "See also $link."
-        );
-    }
-
-    my $nonfree = $self->NON_FREE_FILES->value($item->md5sum);
-    if (defined $nonfree) {
-        my $usualname = $nonfree->{'name'};
-        my $reason = $nonfree->{'reason'};
-        my $link = $nonfree->{'link'};
-
-        $self->hint(
-            'license-problem-md5sum-non-free-file',
-            $item->name, "usual name is $usualname.",
-            $reason, "See also $link."
-        );
-    }
 
     # Check for CMake cache files.  These embed the source path and hence
     # will cause FTBFS on buildds, so they should never be present

@@ -1,6 +1,6 @@
 Tag: license-problem-md5sum-non-distributable-file
 Severity: error
-Check: cruft
+Check: files/banned
 Explanation: The following file is not distributable even in the non-free
  archive.
  .

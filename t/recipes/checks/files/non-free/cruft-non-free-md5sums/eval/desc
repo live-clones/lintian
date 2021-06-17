@@ -1,2 +1,2 @@
 Testname: cruft-non-free-md5sums
-Check: cruft
+Check: files/non-free
