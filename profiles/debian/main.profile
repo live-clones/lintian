@@ -60,6 +60,7 @@ Enable-Tags-From-Check:
  documentation/texinfo
  emacs
  emacs/elpa
+ examples
  fields/architecture
  fields/bugs
  fields/built-using

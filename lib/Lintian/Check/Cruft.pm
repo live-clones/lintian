@@ -450,36 +450,8 @@ has libtool_in_build_depends => (
           ->implies($LIBTOOL);
     });
 
-has group_ships_examples => (
-    is => 'rw',
-    lazy => 1,
-    default => sub {
-        my ($self) = @_;
-
-        my @processables = $self->group->get_processables('binary');
-
-        # assume shipped examples if there is a package so named
-        return 1
-          if any { $_->name =~ m{-examples$} } @processables;
-
-        my @shipped = map { @{$_->installed->sorted_list} } @processables;
-
-        # Check each package for a directory (or symlink) called "examples".
-        return 1
-          if any { m{^usr/share/doc/(.+/)?examples/?$} } @shipped;
-
-        return 0;
-    });
-
 sub visit_patched_files {
     my ($self, $item) = @_;
-
-    # see Bug#972614
-    $self->hint('package-does-not-install-examples', $item)
-      if $item->basename eq 'examples'
-      && $item->dirname !~ m{(?:^|/)(?:vendor|third_party)/}
-      && $self->group->get_processables('binary')
-      && !$self->group_ships_examples;
 
     return
       unless $item->is_file;
