@@ -239,7 +239,7 @@ sub installable {
             if ($foo eq 'UND' and $OBSOLETE_CRYPT_FUNCTIONS->recognizes($sym)){
                 # Using an obsolete DES encryption function.
                 my $tag = $OBSOLETE_CRYPT_FUNCTIONS->value($sym);
-                $self->hint($tag, $name);
+                $self->hint($tag, $name, $sym);
             }
 
             next if $is_profiled;
