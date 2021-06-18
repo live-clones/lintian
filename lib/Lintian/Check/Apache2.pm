@@ -66,7 +66,7 @@ sub visit_installed_files {
     }
 
     # Package appears to be a binary module
-    if ($file =~ m{^usr/lib/apache2/modules/(.*)\.so}) {
+    if ($file =~ m{^usr/lib/apache2/modules/(.*)\.so$}) {
         $self->check_module_package($1);
         $self->_set_seen_apache2_special_file(1);
     }
