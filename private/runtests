@@ -354,6 +354,8 @@ if (@runscripts && !$aggregator->all_passed && !$keep_going) {
     exit 1;
 }
 
+say encode_utf8($EMPTY);
+
 my @testpaths = find_selected_lintian_testpaths($testset, $onlyrun);
 
 my $recipe_root = "$testset/recipes";
