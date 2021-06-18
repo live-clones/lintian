@@ -229,6 +229,10 @@ sub process {
     my $success = 1;
     for my $processable ($self->get_processables){
 
+        my $path = $processable->path;
+        local $SIG{__WARN__}
+          = sub { warn encode_utf8("Warning in processable $path: $_[0]") };
+
         # needed to read tag specifications
         $processable->profile($self->profile);
 
