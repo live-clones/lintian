@@ -211,6 +211,7 @@ sub check_maintainer_scripts {
         open(my $sfd, '<', $file->unpacked_path)
           or die encode_utf8('Cannot open ' . $file->unpacked_path);
 
+        my $position = 1;
         while (my $line = <$sfd>) {
 
             # skip comments
@@ -222,17 +223,21 @@ sub check_maintainer_scripts {
             if ($line =~ /\b(a2(?:en|dis)(?:conf|site|mod))\b/) {
 
                 $self->hint('apache2-reverse-dependency-calls-wrapper-script',
-                    $file,$1);
+                    "$file:$position", $1);
             }
 
             # Do not allow reverse dependencies to call "invoke-rc.d apache2
-            $self->hint('apache2-reverse-dependency-calls-invoke-rc.d',$file)
+            $self->hint('apache2-reverse-dependency-calls-invoke-rc.d',
+                "$file:$position")
               if $line =~ /invoke-rc\.d\s+apache2/;
 
             # XXX: Check whether apache2-maintscript-helper is used
             # unconditionally e.g. not protected by a [ -e ], [ -x ] or so.
             # That's going to be complicated. Or not possible without grammar
             # parser.
+
+        } continue {
+            ++$position;
         }
 
         close($sfd);
