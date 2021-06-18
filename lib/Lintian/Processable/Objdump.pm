@@ -22,6 +22,7 @@ use warnings;
 use utf8;
 
 use Const::Fast;
+use List::SomeUtils qw(uniq);
 use Path::Tiny;
 
 use Lintian::Deb822::Parser qw(parse_dpkg_control_string);
@@ -158,22 +159,24 @@ has objdump_info => (
             if ($paragraph->{'Filename'} =~ m{^(.+)\(([^/\)]+)\)$}) {
 
                 # object file in a static lib.
-                my ($lib, $obj) = ($1, $2);
-                my $libentry = $objdump_info{$lib};
-                if (not defined $libentry) {
-                    $libentry = {
-                        'filename' => $lib,
-                        'objects'  => [$obj],
-                    };
-                    $objdump_info{$lib} = $libentry;
+                my $archive = $1;
+                my $object = $2;
 
-                } else {
-                    push @{ $libentry->{'objects'} }, $obj;
-                }
+                $objdump_info{$archive} //= {
+                    'filename' => $archive,
+                    'objects'  => [],
+                };
+
+                push(@{ $objdump_info{$archive}->{'objects'} }, $object);
             }
 
             $objdump_info{$paragraph->{'Filename'}} = \%info;
         }
+
+        # make object lists unique
+        $objdump_info{$_}->{'objects'}
+          = [uniq @{ $objdump_info{$_}->{'objects'} }]
+          for keys %objdump_info;
 
         return \%objdump_info;
     });
