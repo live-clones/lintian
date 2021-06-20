@@ -2,6 +2,7 @@
 #
 # Copyright © 2006 Adeodato Simó
 # Copyright © 2019 Chris Lamb <lamby@debian.org>
+# Copyright © 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -42,7 +43,7 @@ use warnings;
 use utf8;
 
 use Const::Fast;
-use List::SomeUtils qw(any);
+use List::SomeUtils qw(any uniq);
 
 use Lintian::Relation;
 use Lintian::Util qw($PKGNAME_REGEX);
@@ -53,126 +54,139 @@ use namespace::clean;
 with 'Lintian::Check';
 
 const my $EMPTY => q{};
+const my $EQUAL => q{=};
 
 sub source {
     my ($self) = @_;
 
     my $debian_control = $self->processable->debian_control;
 
-    my @dep_fields
-      = qw(Depends Pre-Depends Recommends Suggests Conflicts Replaces);
+    my @provides;
+    push(@provides,
+        $debian_control->installable_fields($_)
+          ->trimmed_list('Provides', qr/\s*,\s*/))
+      for $debian_control->installables;
 
-    my @provided;
-    for my $pkg ($debian_control->installables) {
-        my $val= $debian_control->installable_fields($pkg)->value('Provides');
-        $val =~ s/^\s+|\s+$//g;
-        push(@provided, split(/\s*,\s*/, $val));
-    }
+    for my $installable ($debian_control->installables) {
 
-    for my $pkg1 ($debian_control->installables) {
-        my ($pkg1_is_any, $pkg2, $pkg2_is_any, $substvar_strips_bin_nmu);
+        my $installable_control
+          = $debian_control->installable_fields($installable);
 
-        $pkg1_is_any
-          = ($debian_control->installable_fields($pkg1)->value('Architecture')
-              ne 'all');
+        for my $field (
+            qw(Depends Pre-Depends Recommends Suggests Conflicts Replaces)) {
 
-        for my $field (@dep_fields) {
             next
-              unless $debian_control->installable_fields($pkg1)
-              ->declares($field);
-            my $rel = $self->processable->binary_relation($pkg1, $field);
-            my $svid = 0;
+              unless $installable_control->declares($field);
+
+            my $position = $installable_control->position($field);
+
+            my $relation
+              = $self->processable->binary_relation($installable, $field);
+
+            $self->hint('substvar-source-version-is-deprecated',
+                $installable, $field, "(line $position)")
+              if $relation->matches(qr/\$[{]Source-Version[}]/);
+
+            my %external;
             my $visitor = sub {
-                if (/\$[{]Source-Version[}]/ and not $svid) {
-                    $svid++;
-                    $self->hint('substvar-source-version-is-deprecated',$pkg1);
-                }
+                my ($value) = @_;
+
                 if (
-                    m{^($PKGNAME_REGEX)(?: :[-a-z0-9]+)? \s*   # pkg-name $1
+                    $value
+                    =~m{^($PKGNAME_REGEX)(?: :[-a-z0-9]+)? \s*   # pkg-name $1
                        \(\s*[\>\<]?[=\>\<]\s*                  # REL 
                         (\$[{](?:source:|binary:)(?:Upstream-)?Version[}]) # {subvar}
                      }x
                 ) {
                     my $other = $1;
                     my $substvar = $2;
+
+                    $external{$substvar} //= [];
+                    push(@{ $external{$substvar} }, $other);
+                }
+            };
+            $relation->visit($visitor, Lintian::Relation::VISIT_PRED_FULL);
+
+            for my $substvar (keys %external) {
+                for my $other (uniq @{ $external{$substvar} }) {
+
                     # We can't test dependencies on packages whose names are
                     # formed via substvars expanded during the build.  Assume
                     # those maintainers know what they're doing.
-                    my $position = $debian_control->installable_fields($pkg1)
-                      ->position($field);
                     $self->hint(
                         'version-substvar-for-external-package',
-                        $field, "(line $position)",
-                        $substvar, "$pkg1 -> $other"
+                        $field,"(line $position)",
+                        $substvar,"$installable -> $other"
                       )
                       unless $debian_control->installable_fields($other)
                       ->declares('Architecture')
-                      or any { "$other (= $substvar)" eq $_ } @provided
-                      or $other =~ /\$\{\S+\}/;
+                      || (any { "$other (= $substvar)" eq $_ } @provides)
+                      || $other =~ /\$\{\S+\}/;
                 }
-            };
-            $rel->visit($visitor, Lintian::Relation::VISIT_PRED_FULL);
+            }
         }
 
-        for (
-            split(
-                m/,/,
-                (
-                    $debian_control->installable_fields($pkg1)
-                      ->value('Pre-Depends')
+        my @pre_depends
+          = $installable_control->trimmed_list('Pre-Depends', qr/\s*,\s*/);
+        my @depends
+          = $installable_control->trimmed_list('Depends', qr/\s*,\s*/);
 
-                      .', '
-                      . $debian_control->installable_fields($pkg1)
-                      ->value('Depends')))
-        ) {
+        for my $versioned (uniq(@pre_depends, @depends)) {
+
             next
-              unless m{($PKGNAME_REGEX)(?: :any)? \s*               # pkg-name
-                       \(\s*(\>)?=\s*                               # rel
+              unless $versioned
+              =~m{($PKGNAME_REGEX)(?: :any)? \s*               # pkg-name
+                       \(\s*([>]?=)\s*                               # rel
                        \$[{]((?:Source-|source:|binary:)Version)[}] # subvar
                       }x;
 
-            my $gt = $2//$EMPTY;
-            $pkg2 = $1;
-            $substvar_strips_bin_nmu = ($3 eq 'source:Version');
+            my $prerequisite = $1;
+            my $operator = $2;
+            my $substvar = $3;
 
-            if (
-                not $debian_control->installable_fields($pkg2)
-                ->declares('Architecture')) {
-                # external relation or subst var package - either way,
-                # handled above.
-                next;
-            }
-            $pkg2_is_any
-              = ($debian_control->installable_fields($pkg2)
-                  ->value('Architecture') ne 'all');
+            my $prerequisite_control
+              = $debian_control->installable_fields($prerequisite);
 
-            if ($pkg1_is_any) {
-                if ($pkg2_is_any && $substvar_strips_bin_nmu) {
-                    unless ($gt) {
-                        # (b1) any -> any (= ${source:Version})
-                        $self->hint('not-binnmuable-any-depends-any',
-                            "$pkg1 -> $pkg2");
-                    } else {
-                        # any -> any (>= ${source:Version})
-                        # technically this can be "binNMU'ed", though it is
-                        # a bit weird.
-                        1;
-                    }
-                } elsif (not $pkg2_is_any) {
-                    # (b2) any -> all ( = ${binary:Version}) [or S-V]
-                    # or  -- same --  (>= ${binary:Version}) [or S-V]
-                    $self->hint('not-binnmuable-any-depends-all',
-                        "$pkg1 -> $pkg2")
-                      if !$substvar_strips_bin_nmu;
-                    if ($substvar_strips_bin_nmu && !$gt) {
-                        $self->hint('maybe-not-arch-all-binnmuable',
-                            "$pkg1 -> $pkg2");
-                    }
-                }
-            } elsif ($pkg2_is_any && !$gt) {
-                # (b3) all -> any (= ${either-of-them})
-                $self->hint('not-binnmuable-all-depends-any',"$pkg1 -> $pkg2");
-            }
+            # external relation or subst var package; handled above
+            next
+              unless $prerequisite_control->declares('Architecture');
+
+            my $prerequisite_is_all
+              = ($prerequisite_control->value('Architecture') eq 'all');
+            my $installable_is_all
+              = ($installable_control->value('Architecture') eq 'all');
+
+            my $context = "$installable -> $prerequisite";
+
+            # (b1) any -> any (= ${source:Version})
+            $self->hint('not-binnmuable-any-depends-any', $context)
+              if !$installable_is_all
+              && !$prerequisite_is_all
+              && $operator eq $EQUAL
+              && $substvar eq 'source:Version';
+
+            # (b2) any -> all (= ${binary:Version}) [or S-V]
+            $self->hint('maybe-not-arch-all-binnmuable', $context)
+              if !$installable_is_all
+              && $prerequisite_is_all
+              && $operator eq $EQUAL
+              && $substvar eq 'source:Version';
+
+            # (b2) any -> all (* ${binary:Version}) [or S-V]
+            $self->hint('not-binnmuable-any-depends-all', $context)
+              if !$installable_is_all
+              && $prerequisite_is_all
+              && $substvar ne 'source:Version';
+
+            # (b3) all -> any (= ${either-of-them})
+            $self->hint('not-binnmuable-all-depends-any', $context)
+              if $installable_is_all
+              && !$prerequisite_is_all
+              && $operator eq $EQUAL;
+
+            # any -> any (>= ${source:Version})
+            # technically this can be "binNMU'ed", though it is
+            # a bit weird.
         }
     }
 
