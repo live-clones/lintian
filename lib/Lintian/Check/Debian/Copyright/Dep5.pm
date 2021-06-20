@@ -396,6 +396,7 @@ sub check_dep5_copyright {
 
         my @wildcards = $header->trimmed_list('Files-Excluded');
 
+        my @unwanted;
         for my $wildcard (@wildcards) {
 
             my @offenders = escape_errors($wildcard);
@@ -426,14 +427,14 @@ sub check_dep5_copyright {
             my $dulled = $wildcard;
             $dulled =~ s/([{}\[\]])/\\$1/g;
 
-            my @unwanted = match_glob($dulled, @orig_names);
+            push(@unwanted, match_glob($dulled, @orig_names));
+        }
 
-            for my $name (@unwanted) {
+        for my $name (uniq @unwanted) {
 
-                $self->hint('source-includes-file-in-files-excluded',
-                    $copyright_file->name, $name)
-                  unless $name =~ m{^(?:debian|\.pc)/};
-            }
+            $self->hint('source-includes-file-in-files-excluded',
+                $copyright_file->name, $name)
+              unless $name =~ m{^(?:debian|\.pc)/};
         }
     }
 
