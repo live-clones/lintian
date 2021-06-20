@@ -1,7 +1,7 @@
-binary (binary): unquoted-string-in-menu-item usr/share/menu/binary needs:2
-binary (binary): unquoted-string-in-menu-item usr/share/menu/binary needs:1
-binary (binary): unquoted-string-in-menu-item usr/lib/menu/binary needs:2
-binary (binary): unquoted-string-in-menu-item usr/lib/menu/binary needs:1
+binary (binary): unquoted-string-in-menu-item usr/share/menu/binary:2 needs
+binary (binary): unquoted-string-in-menu-item usr/share/menu/binary:1 needs
+binary (binary): unquoted-string-in-menu-item usr/lib/menu/binary:2 needs
+binary (binary): unquoted-string-in-menu-item usr/lib/menu/binary:1 needs
 binary (binary): su-wrapper-without--c usr/share/menu/binary:3 sux
 binary (binary): su-wrapper-without--c usr/share/menu/binary:2 su-to-root
 binary (binary): su-wrapper-without--c usr/lib/menu/binary:3 sux

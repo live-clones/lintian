@@ -11,20 +11,20 @@ menu-section (binary): command-in-menu-file-and-desktop-file pargs-section usr/s
 menu-section (binary): command-in-menu-file-and-desktop-file pargs-section usr/share/menu/menu-section:15
 menu-section (binary): command-in-menu-file-and-desktop-file pargs-section usr/share/menu/menu-section:12
 menu-none (binary): menu-item-uses-icon-none usr/share/menu/menu-none:4
-menu-none (binary): menu-icon-uses-relative-path non-existent32.xpm
-menu-none (binary): menu-icon-uses-relative-path non-existent16.xpm
-menu-none (binary): menu-icon-uses-relative-path non-existent.xpm
-menu-none (binary): menu-icon-missing usr/share/menu-none/non-existent32.xpm
-menu-none (binary): menu-icon-missing usr/share/menu-none/non-existent16.xpm
-menu-none (binary): menu-icon-missing usr/share/menu-none/non-existent.xpm
-menu-none (binary): menu-icon-missing non-existent32.xpm
-menu-none (binary): menu-icon-missing non-existent16.xpm
-menu-none (binary): menu-icon-missing non-existent.xpm
+menu-none (binary): menu-icon-uses-relative-path usr/share/menu/menu-none:16 non-existent32.xpm
+menu-none (binary): menu-icon-uses-relative-path usr/share/menu/menu-none:16 non-existent16.xpm
+menu-none (binary): menu-icon-uses-relative-path usr/share/menu/menu-none:16 non-existent.xpm
+menu-none (binary): menu-icon-missing usr/share/menu/menu-none:16 non-existent32.xpm
+menu-none (binary): menu-icon-missing usr/share/menu/menu-none:16 non-existent16.xpm
+menu-none (binary): menu-icon-missing usr/share/menu/menu-none:16 non-existent.xpm
+menu-none (binary): menu-icon-missing usr/share/menu/menu-none:10 usr/share/menu-none/non-existent32.xpm
+menu-none (binary): menu-icon-missing usr/share/menu/menu-none:10 usr/share/menu-none/non-existent16.xpm
+menu-none (binary): menu-icon-missing usr/share/menu/menu-none:10 usr/share/menu-none/non-existent.xpm
 menu-cmd (binary): menu-icon-too-big usr/share/pixmaps/too-large.xpm: 256x256 > 32x32
-menu-cmd (binary): menu-icon-not-in-xpm-format usr/share/pixmaps/pargs.png
+menu-cmd (binary): menu-icon-not-in-xpm-format usr/share/menu/menu-cmd:4 usr/share/pixmaps/pargs.png
 menu-cmd (binary): menu-icon-cannot-be-parsed usr/share/pixmaps/broken.xpm: looking for XPM header
 menu-cmd (binary): menu-command-not-in-package usr/share/menu/menu-cmd:4 usr/bin/not-here
 menu-broken (binary): unparsable-menu-item usr/share/menu/menu-broken:12
 menu-broken (binary): pkg-not-in-package-test wrong-package usr/share/menu/menu-broken:7
-menu-broken (binary): duplicate-tag-in-menu usr/share/menu/menu-broken longtitle:12
+menu-broken (binary): duplicate-tag-in-menu usr/share/menu/menu-broken:12 longtitle
 menu-broken (binary): bad-test-in-menu-item usr/share/menu/menu-broken:4
