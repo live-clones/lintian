@@ -101,8 +101,8 @@ sub installable {
     for my $udevrule (@udevrules) {
         if ($self->check_udev_rules($udevrule, $modaliases)
             && !$found_modalias) {
-            $self->hint(
-                ('appstream-metadata-missing-modalias-provide', $udevrule));
+            $self->hint('appstream-metadata-missing-modalias-provide',
+                $udevrule);
         }
     }
     return;
@@ -198,7 +198,8 @@ sub provides_user_device {
             if (!$foundmatch) {
                 $self->hint((
                     'appstream-metadata-missing-modalias-provide',
-                    $udevrulefile, "match rule $match*"
+                    "$udevrulefile:$linenum",
+                    "match rule $match*"
                 ));
             }
         }
