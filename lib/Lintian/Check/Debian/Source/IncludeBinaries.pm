@@ -45,6 +45,7 @@ sub source {
     my @lines = path($file->unpacked_path)->lines({ chomp => 1 });
 
     # format described in dpkg-source (1)
+    my $position = 1;
     for my $line (@lines) {
 
         next
@@ -56,8 +57,12 @@ sub source {
         # trim both ends
         $line =~ s/^\s+|\s+$//g;
 
-        $self->hint('unused-entry-in-debian-source-include-binaries', $line)
+        $self->hint('unused-entry-in-debian-source-include-binaries',
+            $line, "(line $position)")
           unless $self->processable->patched->resolve_path($line);
+
+    } continue {
+        ++$position;
     }
 
     return;
