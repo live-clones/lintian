@@ -25,8 +25,6 @@ use Const::Fast;
 use List::SomeUtils qw(any none);
 use Unicode::UTF8 qw(encode_utf8);
 
-use Lintian::SlidingWindow;
-
 use Moo;
 use namespace::clean;
 
@@ -131,23 +129,28 @@ my %debhelper_order = (
 sub source {
     my ($self) = @_;
 
-    my $processable = $self->processable;
+    my $debian_dir = $self->processable->patched->resolve_path('debian');
 
-    my $debian_dir = $processable->patched->resolve_path('debian');
     my $rules;
-    $rules = $debian_dir->child('rules') if $debian_dir;
+    $rules = $debian_dir->child('rules')
+      if defined $debian_dir;
 
-    return if not $rules;
+    return
+      unless defined $rules;
 
     # Policy could be read as allowing debian/rules to be a symlink to
     # some other file, and in a native Debian package it could be a
-    # symlink to a file that we didn't unpack.  Warn if it's a symlink
-    # (dpkg-source does as well) and skip all the tests if we then
-    # can't read it.
-    if ($rules->is_symlink) {
-        $self->hint('debian-rules-is-symlink');
-        return unless $rules->is_open_ok;
-    }
+    # symlink to a file that we didn't unpack.
+    $self->hint('debian-rules-is-symlink')
+      if $rules->is_symlink;
+
+    # dereference symbolic links
+    $rules = $rules->follow;
+
+    return
+      unless defined $rules;
+
+    $self->hint('debian-rules-not-executable') unless $rules->is_executable;
 
     my $KNOWN_MAKEFILES
       = $self->profile->load_data('rules/known-makefiles', '\|\|');
@@ -155,32 +158,15 @@ sub source {
       = $self->profile->load_data('rules/deprecated-makefiles');
     my $POLICYRULES= $self->profile->load_data('rules/policy-rules', qr/\s++/);
 
-    # forbidden construct in rules
-    my $BAD_CONSTRUCT_IN_RULES
-      = $self->profile->load_data('rules/rules-should-not-use', qr/\s*~~\s*/,
-        sub { return qr/$_[1]/xs });
-
-    my $BAD_MULTILINE_CONSTRUCT_IN_RULES
-      = $self->profile->load_data('rules/rules-should-not-use-multiline',
-        qr/\s*~~\s*/,sub { return qr/$_[1]/xsm });
-
-    my $architecture = $processable->fields->value('Architecture');
+    my $architecture = $self->processable->fields->value('Architecture');
 
     # If the version field is missing, we assume a neutral non-native one.
-    my $version = $processable->fields->value('Version') || '0-1';
-
-    open(my $rules_fd, '<', $rules->unpacked_path)
-      or die encode_utf8('Cannot open ' . $rules->unpacked_path);
+    my $version = $self->processable->fields->value('Version') || '0-1';
 
     # Check for required #!/usr/bin/make -f opening line.  Allow -r or -e; a
     # strict reading of Policy doesn't allow either, but they seem harmless.
-    my $start = <$rules_fd>;
-    $start //= q{};
     $self->hint('debian-rules-not-a-makefile')
-      unless $start =~ m{^\#!\s*/usr/bin/make\s+-[re]?f[re]?\s*$};
-
-    # Check if debian/rules is marked as executable.
-    $self->hint('debian-rules-not-executable') unless $rules->is_executable;
+      unless $rules->hashbang =~ m{^/usr/bin/make\s+-[re]?f[re]?$};
 
     # Holds which dependencies are required.  The keys in %needed and
     # %needed_clean are the dependencies; the values are the tags to use or the
@@ -197,9 +183,9 @@ sub source {
     # of its build dependencies installed.
     local $_ = undef;
 
-    my $build_all = $processable->relation('Build-Depends-All');
+    my $build_all = $self->processable->relation('Build-Depends-All');
     my $build_all_norestriction
-      = $processable->relation_norestriction('Build-Depends-All');
+      = $self->processable->relation_norestriction('Build-Depends-All');
 
     my @arch_rules = map { qr/^$_$/ } qw(clean binary-arch build-arch);
     my @indep_rules = qw(build build-indep binary-indep);
@@ -209,17 +195,32 @@ sub source {
     my %variables;
     my $includes = 0;
 
-    while (my $line = <$rules_fd>) {
+    my $contents = $rules->decoded_utf8;
+    return
+      unless length $contents;
 
-        while ($line =~ s/\\$// && defined(my $cont = <$rules_fd>)) {
-            $line .= $cont;
-        }
+    my @lines = split(/\n/, $contents);
+
+    my $continued = $EMPTY;
+    my $position = 1;
+
+    for my $line (@lines) {
 
         $self->hint('debian-rules-is-dh_make-template')
           if $line =~ m/dh_make generated override targets/;
 
         next
           if $line =~ /^\s*\#/;
+
+        if (length $continued) {
+            $line = $continued . $line;
+            $continued = $EMPTY;
+        }
+
+        if ($line =~ s/\\$//) {
+            $continued = $line;
+            next;
+        }
 
         if ($line =~ /^\s*[s-]?include\s+(\S++)/){
             my $makefile = $1;
@@ -233,63 +234,101 @@ sub source {
             }
             if ($DEPRECATED_MAKEFILES->recognizes($makefile)){
                 $self->hint('debian-rules-uses-deprecated-makefile',
-                    "line $.",$makefile);
+                    "line $position",$makefile);
             }
         }
 
-        # Check for DH_COMPAT settings outside of any rule, which are now
-        # deprecated.  It's a bit easier structurally to do this here than in
-        # debhelper.
-        if ($line =~ /^\s*(?:export\s+)?DH_COMPAT\s*:?=/ && keys(%seen) == 0) {
-            $self->hint('debian-rules-sets-DH_COMPAT', "line $.");
+        # problems occurring only outside targets
+        unless (%seen) {
+
+          # Check for DH_COMPAT settings outside of any rule, which are now
+          # deprecated.  It's a bit easier structurally to do this here than in
+          # debhelper.
+            $self->hint('debian-rules-sets-DH_COMPAT', "line $position")
+              if $line =~ /^\s*(?:export\s+)?DH_COMPAT\s*:?=/;
+
+            $self->hint('debian-rules-sets-DEB_BUILD_OPTIONS',"line $position")
+              if $line =~ /^\s*(?:export\s+)?DEB_BUILD_OPTIONS\s*:?=/;
+
+            if (
+                $line =~m{^
+                \s*(?:export\s+)?
+                (DEB_(?:HOST|BUILD|TARGET)_(?:ARCH|MULTIARCH|GNU)[A-Z_]*)\s*:?=
+            }x
+            ) {
+                $self->hint('debian-rules-sets-dpkg-architecture-variable',
+                    "$1 (line $position)");
+            }
+
         }
 
-        # Check for problems that can occur anywhere in debian/rules.
         if (   $line =~ /^\t\s*-(?:\$[\(\{]MAKE[\}\)]|make)\s.*(?:dist)?clean/s
             || $line
             =~ /^\t\s*(?:\$[\(\{]MAKE[\}\)]|make)\s(?:.*\s)?-(\w*)i.*(?:dist)?clean/s
         ) {
+            my $flags = $1 // $EMPTY;
+
             # Ignore "-C<dir>" (#671537)
-            $self->hint('debian-rules-ignores-make-clean-error',"line $.")
-              unless $1 && $1 =~ /^C/;
+            $self->hint('debian-rules-ignores-make-clean-error',
+                "line $position")
+              unless $flags =~ /^C/;
         }
 
-        if ($line =~ /^\s*(?:export\s+)?DEB_BUILD_OPTIONS\s*:?=/
-            && keys(%seen) == 0) {
-            $self->hint('debian-rules-sets-DEB_BUILD_OPTIONS', "line $.");
+        if ($line
+            =~ m{dh_strip\b.*(--(?:ddeb|dbgsym)-migration=(?:'[^']*'|\S*))}) {
+            $self->hint('debug-symbol-migration-possibly-complete',
+                $1, "(line $position)");
         }
 
-        if (
-            $line =~m{^
-                \s*(?:export\s+)?
-                (DEB_(?:HOST|BUILD|TARGET)_(?:ARCH|MULTIARCH|GNU)[A-Z_]*)\s*:?=
-            }x
-            && keys(%seen) == 0
-        ) {
-            $self->hint('debian-rules-sets-dpkg-architecture-variable',
-                "$1 (line $.)");
+        $self->hint('debian-rules-passes-version-info-to-dh_shlibdeps',
+            "line $position")
+          if $line =~ m{dh_shlibdeps\b.*(?:--version-info|-V)\b};
+
+        $self->hint('debian-rules-updates-control-automatically',
+            "line $position")
+          if $line =~ m{^\s*DEB_AUTO_UPDATE_DEBIAN_CONTROL\s*=\s*yes};
+
+        $self->hint('debian-rules-uses-deb-build-opts', "line $position")
+          if $line =~ m{\$[\(\{]DEB_BUILD_OPTS[\)\}]};
+
+        if ($line =~ m{^\s*DH_EXTRA_ADDONS\s*=\s*(.*)$}) {
+            $self->hint('debian-rules-should-not-use-DH_EXTRA_ADDONS',
+                $1, "(line $position)");
         }
 
-        # check generic problem
-        foreach my $bad_construct ($BAD_CONSTRUCT_IN_RULES->all) {
-            my $badregex = $BAD_CONSTRUCT_IN_RULES->value($bad_construct);
-            if ($line =~ /$badregex/) {
-                if (defined($+{info})) {
-                    $self->hint($bad_construct, $+{info}, "(line $.)");
-                } else {
-                    $self->hint($bad_construct, "line $.");
-                }
-            }
+        $self->hint('debian-rules-uses-wrong-environment-variable',
+            "line $position")
+          if $line =~ m{\bDEB_[^_ \t]+FLAGS_(?:SET|APPEND)\b};
+
+        $self->hint('debian-rules-calls-pwd', "line $position")
+          if $line =~ m{\$[\(\{]PWD[\)\}]};
+
+        $self->hint('debian-rules-should-not-use-sanitize-all-buildflag',
+            "line $position")
+          if $line
+          =~ m{^\s*(?:export\s+)?DEB_BUILD_MAINT_OPTIONS\s*:?=.*\bsanitize=\+all\b};
+
+        $self->hint('debian-rules-uses-special-shell-variable',
+            "line $position")
+          if $line =~ m{\$[\(\{]_[\)\}]};
+
+        if ($line =~ m{(dh_builddeb\b.*--.*-[zZS].*)$}) {
+            $self->hint('custom-compression-in-debian-rules',
+                $1, "(line $position)");
         }
 
-        if ($line =~ /--as-needed/ && $line !~ /--no-as-needed/) {
-            $self->hint('debian-rules-uses-as-needed-linker-flag',"line $.");
+        if ($line =~ m{(py3versions\s+([\w\-\s]*--installed|-\w*i\w*))}) {
+            $self->hint('debian-rules-uses-installed-python-versions',
+                $1, "(line $position)");
         }
+
+        $self->hint('debian-rules-uses-as-needed-linker-flag',"line $position")
+          if $line =~ /--as-needed/ && $line !~ /--no-as-needed/;
 
         $self->hint(
 'debian-rules-uses-supported-python-versions-without-python-all-build-depends',
             $1,
-            "(line $.)"
+            "(line $position)"
           )
           if $line =~ /(py3versions\s+([\w\-\s]*--supported|-\w*s\w*))/
           && !$build_all_norestriction->implies($PYTHON3_ALL_DEPEND);
@@ -300,7 +339,8 @@ sub source {
             # rather well.
             my ($var, $value) = ($1, $2);
             $variables{$var} = $value;
-            $self->hint('unnecessary-source-date-epoch-assignment',"(line $.)")
+            $self->hint('unnecessary-source-date-epoch-assignment',
+                "(line $position)")
               if $var eq 'SOURCE_DATE_EPOCH'
               and not $build_all->implies(
                 'dpkg-dev (>= 1.18.8) | debhelper (>= 10.10)');
@@ -367,7 +407,8 @@ sub source {
         if (  !$includes
             && $line
             =~ /dpkg-parsechangelog.*(?:Source|Version|Date|Timestamp)/s) {
-            $self->hint('debian-rules-parses-dpkg-parsechangelog',"(line $.)");
+            $self->hint('debian-rules-parses-dpkg-parsechangelog',
+                "(line $position)");
         }
 
         if ($line !~ /^ifn?(?:eq|def)\s/ && $line =~ /^([^\s:][^:]*):+(.*)/s) {
@@ -380,7 +421,7 @@ sub source {
             my @depends = map { qr/^$_$/ } @quoted;
 
             for my $target (@current_targets) {
-                $overridden{$1} = $. if $target =~ m/override_(.+)/;
+                $overridden{$1} = $position if $target =~ m/override_(.+)/;
                 if ($target =~ /%/) {
                     my $pattern = quotemeta $target;
                     $pattern =~ s/\\%/.*/g;
@@ -466,7 +507,7 @@ sub source {
                     if ($group < $debhelper_group{$package}) {
                         $self->hint(
                             'debian-rules-calls-debhelper-in-odd-order',
-                            $command, "(line $.)");
+                            $command, "(line $position)");
 
                     } else {
                         $debhelper_group{$package} = $group;
@@ -474,13 +515,18 @@ sub source {
                 }
             }
         }
+
+    } continue {
+        ++$position;
     }
-    close($rules_fd);
 
     unless ($includes) {
+
         # Make sure all the required rules were seen.
         for my $target ($POLICYRULES->all) {
+
             unless ($seen{$target}) {
+
                 my $typerule = $POLICYRULES->value($target);
                 if($typerule eq 'required') {
                     $self->hint('debian-rules-missing-required-target',
@@ -515,16 +561,16 @@ sub source {
 
     foreach my $cmd (qw(dh_clean dh_fixperms)) {
         for my $suffix ($EMPTY, '-indep', '-arch') {
-            my $line = $overridden{"$cmd$suffix"};
-            $self->hint("override_$cmd-does-not-call-$cmd", "(line $line)")
-              if $line
+            my $pointer = $overridden{"$cmd$suffix"};
+            $self->hint("override_$cmd-does-not-call-$cmd", "(line $pointer)")
+              if $pointer
               and none { m/^\t\s*-?($cmd\b|\$\(overridden_command\))/ }
             @{$rules_per_target{"override_$cmd$suffix"}};
         }
     }
 
-    if (my $line = $overridden{'dh_auto_test'}) {
-        my @lines = grep {
+    if (my $pointer = $overridden{'dh_auto_test'}) {
+        my @rules = grep {
                  !m{^\t\s*[\:\[]}
               && !m{^\s*$}
               && !m{\bdh_auto_test\b}
@@ -532,8 +578,8 @@ sub source {
 m{^\t\s*[-@]?(?:(?:/usr)?/bin/)?(?:cp|chmod|echo|ln|mv|mkdir|rm|test|true)}
         } @{$rules_per_target{'override_dh_auto_test'}};
         $self->hint('override_dh_auto_test-does-not-check-DEB_BUILD_OPTIONS',
-            "(line $line)")
-          if @lines and none { m/(DEB_BUILD_OPTIONS|nocheck)/ } @conditionals;
+            "(line $pointer)")
+          if @rules and none { m/(DEB_BUILD_OPTIONS|nocheck)/ } @conditionals;
     }
 
     $self->hint('debian-rules-contains-unnecessary-get-orig-source-target')
@@ -542,52 +588,57 @@ m{^\t\s*[-@]?(?:(?:/usr)?/bin/)?(?:cp|chmod|echo|ln|mv|mkdir|rm|test|true)}
     # Make sure that all the required build dependencies are there.  Don't
     # issue missing-build-dependency errors for debhelper, since there's
     # another test that does that and it would just be a duplicate.
-    my $build_regular = $processable->relation('Build-Depends');
-    my $build_indep   = $processable->relation('Build-Depends-Indep');
+    my $build_regular = $self->processable->relation('Build-Depends');
+    my $build_indep   = $self->processable->relation('Build-Depends-Indep');
+
     for my $package (keys %needed_clean) {
+
         delete $needed{$package};
-        my $tag = $needed_clean{$package} || 'missing-build-dependency';
+
         unless ($build_regular->implies($package)) {
+
             if ($build_indep->implies($package)) {
                 $self->hint(
                     'missing-build-depends-for-clean-target-in-debian-rules',
                     $package);
+
             } else {
-                if ($tag eq 'missing-build-dependency') {
-                    $self->hint($tag, $package) if $package ne 'debhelper';
-                } else {
+
+                my $tag = $needed_clean{$package};
+
+                if (length $tag) {
                     $self->hint($tag);
+
+                } else {
+                    $self->hint('missing-build-dependency', $package)
+                      if $package ne 'debhelper';
                 }
             }
         }
     }
 
     for my $package (keys %needed) {
-        my $tag = $needed{$package} || 'missing-build-dependency';
 
         unless ($build_all_norestriction->implies($package)) {
-            if ($tag eq 'missing-build-dependency') {
-                $self->hint($tag, $package);
-            } else {
+
+            my $tag = $needed{$package};
+
+            if (length $tag) {
                 $self->hint($tag);
+
+            } else {
+                $self->hint('missing-build-dependency', $package);
             }
         }
     }
 
-    open($rules_fd, '<', $rules->unpacked_path)
-      or die encode_utf8('Cannot open ' . $rules->unpacked_path);
-
-    my $sfd = Lintian::SlidingWindow->new;
-    $sfd->handle($rules_fd);
-
-    my $block;
-    while ($block = $sfd->readwindow) {
-        foreach my $tag ($BAD_MULTILINE_CONSTRUCT_IN_RULES->all) {
-            my $regex = $BAD_MULTILINE_CONSTRUCT_IN_RULES->value($tag);
-            $self->hint($tag) if $block =~ m/$regex/;
-        }
-    }
-    close($rules_fd);
+    $self->hint('debian-rules-should-not-set-CFLAGS-from-noopt')
+      if $contents
+      =~ m{^ ifn?eq \s+ [(] , \$ [(] findstring \s+ noopt , \$ [(] DEB_BUILD_OPTIONS [)] [)] [)] \n+
+                        \t+ CFLAGS \s+ \+ = \s+ -O[02] \n+
+                        else \n+
+                        \t+ CFLAGS \s+ \+ = \s+ -O[02] \n+
+                        endif $}xsm;
 
     return;
 }
