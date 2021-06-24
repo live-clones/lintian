@@ -459,9 +459,12 @@ sub verify_line {
           if $desktop_cmds->{$command};
     }
 
-    $self->verify_icon($vals{'icon'},$MAXIMUM_SIZE_STANDARD_ICON, $pointer);
-    $self->verify_icon($vals{'icon32x32'}, $MAXIMUM_SIZE_32X32_ICON, $pointer);
-    $self->verify_icon($vals{'icon16x16'}, $MAXIMUM_SIZE_16X16_ICON, $pointer);
+    $self->verify_icon('icon', $vals{'icon'},$MAXIMUM_SIZE_STANDARD_ICON,
+        $pointer);
+    $self->verify_icon('icon32x32', $vals{'icon32x32'},
+        $MAXIMUM_SIZE_32X32_ICON, $pointer);
+    $self->verify_icon('icon16x16', $vals{'icon16x16'},
+        $MAXIMUM_SIZE_16X16_ICON, $pointer);
 
     # needs is case insensitive
     my $needs = lc($vals{'needs'});
@@ -536,23 +539,23 @@ sub verify_line {
 }
 
 sub verify_icon {
-    my ($self, $name, $size, $pointer)= @_;
+    my ($self, $tag, $name, $size, $pointer)= @_;
 
     return
       unless length $name;
 
     if ($name eq 'none') {
 
-        $self->hint('menu-item-uses-icon-none', $pointer);
+        $self->hint('menu-item-uses-icon-none', $pointer, $tag);
         return;
     }
 
-    $self->hint('menu-icon-uses-relative-path', $pointer, $name)
+    $self->hint('menu-icon-uses-relative-path', $pointer, $tag, $name)
       unless $name =~ s{^/+}{};
 
     if ($name !~ /\.xpm$/i) {
 
-        $self->hint('menu-icon-not-in-xpm-format', $pointer, $name);
+        $self->hint('menu-icon-not-in-xpm-format', $pointer, $tag, $name);
         return;
     }
 
@@ -572,7 +575,7 @@ sub verify_icon {
 
     if (!defined $iconfile || !$iconfile->is_open_ok) {
 
-        $self->hint('menu-icon-missing', $pointer, $name);
+        $self->hint('menu-icon-missing', $pointer, $tag, $name);
         return;
     }
 
@@ -593,7 +596,7 @@ sub verify_icon {
     my $height = $2 + 0;
 
     if ($width > $size || $height > $size) {
-        $self->hint('menu-icon-too-big',
+        $self->hint('menu-icon-too-big', $pointer, $tag,
             "$name: ${width}x${height} > ${size}x${size}");
     }
 
@@ -603,7 +606,8 @@ sub verify_icon {
 
   PARSE_ERROR:
     close($fd);
-    $self->hint('menu-icon-cannot-be-parsed', "$name: looking for $parse");
+    $self->hint('menu-icon-cannot-be-parsed', $pointer, $tag,
+        "$name: looking for $parse");
 
     return;
 }
