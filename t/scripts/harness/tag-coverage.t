@@ -90,7 +90,8 @@ $checktags{$_} = $profile->tag_names_for_check->{$_}for @known;
 
 my %seen;
 
-my @descpaths = File::Find::Rule->file()->name('desc')->in('t/recipes');
+# require tags tested in their check; otherwise path could be t/recipes
+my @descpaths = File::Find::Rule->file()->name('desc')->in('t/recipes/checks');
 for my $descpath (@descpaths) {
 
     my $testcase = read_config($descpath);

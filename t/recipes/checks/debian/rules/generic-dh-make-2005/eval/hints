@@ -1,0 +1,4 @@
+generic-dh-make-2005 (source): debian-rules-should-not-set-CFLAGS-from-noopt
+generic-dh-make-2005 (source): debian-rules-missing-recommended-target build-indep
+generic-dh-make-2005 (source): debian-rules-missing-recommended-target build-arch
+generic-dh-make-2005 (source): debian-rules-ignores-make-clean-error (line 47)

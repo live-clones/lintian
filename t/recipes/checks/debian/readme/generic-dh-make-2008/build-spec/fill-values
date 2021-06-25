@@ -1,0 +1,7 @@
+Testname: generic-dh-make-2008
+Skeleton: upload-builder-only
+Author: Russ Allbery <rra@debian.org>
+Package-Architecture: any
+Dh-Compat-Level: 7
+Description: Generic dh_make template generated in 2008
+Default-Build-Depends: debhelper (>= [% $dh_compat_level %]~)
