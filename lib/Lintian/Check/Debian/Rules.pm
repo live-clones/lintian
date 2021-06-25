@@ -358,17 +358,17 @@ sub source {
         # Check for strings anywhere in debian/rules that have implications for
         # our dependencies.
         for my $rule (@GLOBAL_CLEAN_DEPENDS) {
-            if ($line =~ /$rule->[1]/ && !$maybe_skipping) {
-                $needed_clean{$rule->[0]}
-                  = $rule->[2] || $needed_clean{$rule->[0]} || $EMPTY;
-            }
+
+            my $tag = $rule->[2] || 'missing-build-dependency';
+            $needed_clean{$tag} = $rule->[0]
+              if $line =~ /$rule->[1]/ && !$maybe_skipping;
         }
 
         for my $rule (@GLOBAL_DEPENDS) {
-            if ($line =~ /$rule->[1]/ && !$maybe_skipping) {
-                $needed{$rule->[0]}
-                  = $rule->[2] || $needed{$rule->[0]} || $EMPTY;
-            }
+
+            my $tag = $rule->[2] || 'missing-build-dependency';
+            $needed{$tag} = $rule->[0]
+              if $line =~ /$rule->[1]/ && !$maybe_skipping;
         }
 
         # Listing a rule as a dependency of .PHONY is sufficient to make it
@@ -489,11 +489,15 @@ sub source {
                 if (not $maybe_skipping and ($arch or $indep)) {
                     my $table = \%needed;
                     $table = \%needed_clean if $arch;
+
                     for my $rule (@RULE_CLEAN_DEPENDS) {
                         my ($dep, $pattern, $tagname) = @{$rule};
+
                         next
                           unless $line =~ /$pattern/;
-                        $table->{$dep} = $tagname || $table->{$dep} || $EMPTY;
+
+                        $tagname ||= 'missing-build-dependency';
+                        $table->{$tagname} = $dep;
                     }
                 }
 
@@ -591,43 +595,43 @@ m{^\t\s*[-@]?(?:(?:/usr)?/bin/)?(?:cp|chmod|echo|ln|mv|mkdir|rm|test|true)}
     my $build_regular = $self->processable->relation('Build-Depends');
     my $build_indep   = $self->processable->relation('Build-Depends-Indep');
 
-    for my $package (keys %needed_clean) {
+    for my $tag (keys %needed_clean) {
 
-        delete $needed{$package};
+        my $prerequisite = $needed_clean{$tag};
+        delete $needed{$tag};
 
-        unless ($build_regular->implies($package)) {
+        unless ($build_regular->implies($prerequisite)) {
 
-            if ($build_indep->implies($package)) {
+            if ($build_indep->implies($prerequisite)) {
+
                 $self->hint(
                     'missing-build-depends-for-clean-target-in-debian-rules',
-                    $package);
+                    $prerequisite);
 
             } else {
 
-                my $tag = $needed_clean{$package};
-
-                if (length $tag) {
-                    $self->hint($tag);
+                if ($tag eq 'missing-build-dependency') {
+                    $self->hint($tag, $prerequisite)
+                      if $prerequisite ne 'debhelper';
 
                 } else {
-                    $self->hint('missing-build-dependency', $package)
-                      if $package ne 'debhelper';
+                    $self->hint($tag);
                 }
             }
         }
     }
 
-    for my $package (keys %needed) {
+    for my $tag (keys %needed) {
 
-        unless ($build_all_norestriction->implies($package)) {
+        my $prerequisite = $needed{$tag};
 
-            my $tag = $needed{$package};
+        unless ($build_all_norestriction->implies($prerequisite)) {
 
-            if (length $tag) {
-                $self->hint($tag);
+            if ($tag eq 'missing-build-dependency') {
+                $self->hint($tag, $prerequisite);
 
             } else {
-                $self->hint('missing-build-dependency', $package);
+                $self->hint($tag);
             }
         }
     }
