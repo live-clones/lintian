@@ -321,7 +321,7 @@ sub magic {
     my $magic;
 
     open(my $fd, '<', $self->unpacked_path);
-    die encode_utf8("Could not read $count bytes from ", $self->name)
+    die encode_utf8("Could not read $count bytes from " . $self->name)
       unless read($fd, $magic, $count) == $count;
     close $fd;
 
@@ -947,6 +947,9 @@ Return dereferenced link if applicable
 sub follow {
     my ($self, $maxlinks) = @_;
 
+    return $self
+      unless length $self->link;
+
     return $self->dereferenced
       if defined $self->dereferenced;
 
@@ -974,7 +977,7 @@ sub follow {
         $reference = $self->parent_dir;
     }
 
-    return undef
+    croak encode_utf8('No parent reference for link in ' . $self->name)
       unless defined $reference;
 
     # follow link
