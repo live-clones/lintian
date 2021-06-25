@@ -49,12 +49,6 @@ my $ANYPYTHON_DEPEND
 my $PYTHON3_ALL_DEPEND
   = 'python3-all:any | python3-all-dev:any | python3-all-dbg:any';
 
-my %TAG_FOR_MISSING_PREREQUISITE = (
-    $PYTHON_DEPEND => 'missing-python-build-dependency',
-    $PYTHON3_DEPEND => 'missing-python-build-dependency',
-    $ANYPYTHON_DEPEND => 'missing-python-build-dependency',
-);
-
 my %TAG_FOR_POLICY_TARGET = (
     build => 'debian-rules-missing-required-target',
     binary => 'debian-rules-missing-required-target',
@@ -610,17 +604,7 @@ m{^\t\s*[-@]?(?:(?:/usr)?/bin/)?(?:cp|chmod|echo|ln|mv|mkdir|rm|test|true)}
     my @still_missing
       = grep { !$build_all_norestriction->implies($_) }$combined_lc->get_Lonly;
 
-    for my $prerequisite (@still_missing) {
-
-        my $tag = $TAG_FOR_MISSING_PREREQUISITE{$prerequisite};
-
-        if (length $tag) {
-            $self->hint($tag);
-
-        } else {
-            $self->hint('missing-build-dependency', $prerequisite);
-        }
-    }
+    $self->hint('rules-require-build-prerequisite', $_)for @still_missing;
 
     $self->hint('debian-rules-should-not-set-CFLAGS-from-noopt')
       if $contents

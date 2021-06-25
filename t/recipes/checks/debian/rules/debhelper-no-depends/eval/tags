@@ -1,1 +1,1 @@
-debhelper-no-depends (source): missing-build-dependency debhelper | debhelper-compat
+debhelper-no-depends (source): rules-require-build-prerequisite debhelper | debhelper-compat

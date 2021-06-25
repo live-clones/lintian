@@ -1,1 +1,1 @@
-fields (source): missing-build-dependency debhelper | debhelper-compat
+fields (source): rules-require-build-prerequisite debhelper | debhelper-compat

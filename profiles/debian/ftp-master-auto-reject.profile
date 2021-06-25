@@ -71,7 +71,6 @@ Enable-Tags:
  malformed-deb-archive
  manual-page-with-generic-name
  md5sum-mismatch
- missing-build-dependency
  missing-dependency-on-libc
  missing-dependency-on-perlapi
  mknod-in-maintainer-script
@@ -99,6 +98,7 @@ Enable-Tags:
  python-module-has-overly-generic-name
  quilt-series-without-trailing-newline
  required-field
+ rules-require-build-prerequisite
  section-is-dh_make-template
  shipped-file-without-utf8-name
  source-contains-prebuilt-ms-help-file
