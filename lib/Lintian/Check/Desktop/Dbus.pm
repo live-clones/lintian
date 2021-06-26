@@ -2,6 +2,7 @@
 #
 # Copyright © 2012 Arno Töll
 # Copyright © 2014 Collabora Ltd.
+# Copyright © 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -26,6 +27,7 @@ use warnings;
 use utf8;
 
 use Const::Fast;
+use List::UtilsBy qw(uniq_by);
 
 use Moo;
 use namespace::clean;
@@ -37,48 +39,31 @@ const my $EMPTY => q{};
 sub installable {
     my ($self) = @_;
 
-    my $pkg = $self->processable->name;
-    my $type = $self->processable->type;
-    my $processable = $self->processable;
+    my $index = $self->processable->installed;
 
     my @files;
-    foreach my $suffix (qw(session system)) {
-        if (
-            my $dir= $processable->installed->resolve_path(
-                "usr/share/dbus-1/${suffix}.d")
-        ) {
-            push @files, $dir->children;
-        }
-        foreach my $prefix (qw(etc/dbus-1 usr/share/dbus-1)) {
-            if (my $dir
-                = $processable->installed->resolve_path(
-                    "${prefix}/${suffix}.d")){
-                push @files, $dir->children;
-            }
+    for my $prefix (qw(etc/dbus-1 usr/share/dbus-1)) {
+        for my $suffix (qw(session system)) {
+
+            my $folder = $index->resolve_path("${prefix}/${suffix}.d");
+            next
+              unless defined $folder;
+
+            push(@files, $folder->children);
         }
     }
 
-    foreach my $file (@files) {
-        next unless $file->is_open_ok;
-        $self->check_policy($file);
+    my @unique = uniq_by { $_->name } @files;
+
+    $self->check_policy($_)for @unique;
+
+    if (my $folder= $index->resolve_path('usr/share/dbus-1/services')) {
+
+        $self->check_service($_, session => 1)for $folder->children;
     }
 
-    if (my $dir
-        = $processable->installed->resolve_path('usr/share/dbus-1/services')) {
-        foreach my $file ($dir->children) {
-            next unless $file->is_open_ok;
-            $self->check_service($file, session => 1);
-        }
-    }
-
-    if (
-        my $dir= $processable->installed->resolve_path(
-            'usr/share/dbus-1/system-services')
-    ) {
-        foreach my $file ($dir->children) {
-            next unless $file->is_open_ok;
-            $self->check_service($file);
-        }
+    if (my $folder= $index->resolve_path('usr/share/dbus-1/system-services')) {
+        $self->check_service($_)for $folder->children;
     }
 
     return;
@@ -89,7 +74,9 @@ my $PROPERTIES = 'org.freedesktop.DBus.Properties';
 sub check_policy {
     my ($self, $file) = @_;
 
-    my $xml = $file->bytes;
+    my $xml = $file->decoded_utf8;
+    return
+      unless length $xml;
 
     # Parsing XML via regexes is evil, but good enough here...
     # note that we are parsing the entire file as one big string,
@@ -109,7 +96,9 @@ sub check_policy {
             push(@rules, $policy.$3);
         }
     }
-    foreach my $rule (@rules) {
+
+    my $position = 1;
+    for my $rule (@rules) {
         # normalize whitespace a bit so we can report it sensibly:
         # typically it will now look like
         # <policy context="default"><allow send_destination="com.example.Foo"/>
@@ -123,9 +112,10 @@ sub check_policy {
                 # skip it: it's probably the "agent" pattern (as seen in
                 # e.g. BlueZ), and cannot normally be a security flaw
                 # because root can do anything anyway
+
             } else {
-                $self->hint(
-                    ('dbus-policy-without-send-destination', $file, $rule));
+                $self->hint('dbus-policy-without-send-destination',
+                    $file, "(rule $position)", $rule);
 
                 if (   $rule =~ m{send_interface=}
                     && $rule !~ m{send_interface=['"]\Q${PROPERTIES}\E['"]}) {
@@ -137,18 +127,21 @@ sub check_policy {
                     #
                     # Properties doesn't count as an effective limitation,
                     # because it's a sort of meta-interface.
+
                 } elsif ($rule =~ m{<allow}) {
                     # Looks like CVE-2014-8148 or similar. This is really bad;
                     # emit an additional tag.
-                    $self->hint(
-                        ('dbus-policy-excessively-broad', $file, $rule));
+                    $self->hint('dbus-policy-excessively-broad',
+                        $file, "(rule $position)", $rule);
                 }
             }
         }
 
-        if ($rule =~ m{at_console=['"]true}) {
-            $self->hint(('dbus-policy-at-console', $file, $rule));
-        }
+        $self->hint('dbus-policy-at-console', $file, "(rule $position)", $rule)
+          if $rule =~ m{at_console=['"]true};
+
+    } continue {
+        ++$position;
     }
 
     return;
@@ -157,22 +150,23 @@ sub check_policy {
 sub check_service {
     my ($self, $file, %kwargs) = @_;
 
-    my $basename = $file->basename;
-    my $text = $file->bytes;
+    my $text = $file->decoded_utf8;
+    return
+      unless length $text;
 
     while ($text =~ m{^Name=(.*)$}gm) {
+
         my $name = $1;
-        if ($basename ne "${name}.service") {
-            if ($kwargs{session}) {
-                $self->hint((
-                    'dbus-session-service-wrong-name',
-                    "${name}.service", $file
-                ));
-            } else {
-                $self->hint(
-                    ('dbus-system-service-wrong-name',"${name}.service", $file)
-                );
-            }
+
+        next
+          if $file->basename eq "${name}.service";
+
+        if ($kwargs{session}) {
+            $self->hint('dbus-session-service-wrong-name',
+                "${name}.service", $file);
+        } else {
+            $self->hint(
+                ('dbus-system-service-wrong-name',"${name}.service", $file));
         }
     }
 
