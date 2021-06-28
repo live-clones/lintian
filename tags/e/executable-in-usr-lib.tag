@@ -12,3 +12,15 @@ Explanation: The package ships an executable file in /usr/lib.
 See-Also: policy 9.1.1,
  https://refspecs.linuxfoundation.org/FHS_3.0/fhs/ch04s07.html,
  Bug#954149
+
+Screen: emacs/elpa/scripts
+Petitioners: David Bremner <bremner@debian.org>
+Reason: The <tt>emacsen-common</tt> package places installation
+ and removal scripts, which for ELPA packages are executable,
+ in the folder <tt>/usr/lib/emacsen-common/packages<tt>.
+ .
+ About four hundred installation packages are affected. All of
+ them declare <tt>emacsen-common</tt> as an installation
+ prerequisite.
+See-Also:
+ Bug#974175
