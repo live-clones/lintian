@@ -50,9 +50,9 @@ for my $tag_path (@tag_paths) {
     my $deb822 = Lintian::Deb822::File->new;
     my @sections = $deb822->read_file($tag_path);
 
-    BAIL_OUT("$tag_path does not have exactly one paragraph")
-      if (scalar(@sections) != 1);
-    my $header = $sections[0];
+    BAIL_OUT("$tag_path does not have at least one paragraph")
+      unless @sections;
+    my $header = shift @sections;
 
     ok($header->declares('Tag'), "Field Tag exists in $tag_path");
     ok($header->declares('Check'), "Field Check exists in $tag_path");

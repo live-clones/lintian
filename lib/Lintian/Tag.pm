@@ -26,7 +26,8 @@ use utf8;
 
 use Carp qw(croak);
 use Const::Fast;
-use List::SomeUtils qw(none);
+use Email::Address::XS;
+use List::SomeUtils qw(none first_value);
 use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Deb822::File;
@@ -163,6 +164,11 @@ has renamed_from => (
     coerce => sub { my ($arrayref) = @_; return ($arrayref // []); },
     default => sub { [] });
 
+has screens => (
+    is => 'rw',
+    coerce => sub { my ($arrayref) = @_; return ($arrayref // []); },
+    default => sub { [] });
+
 has profile => (is => 'rw');
 
 =item load(PATH)
@@ -179,10 +185,8 @@ sub load {
 
     my $deb822 = Lintian::Deb822::File->new;
     my @sections = $deb822->read_file($tagpath);
-    croak encode_utf8("$tagpath does not have exactly one paragraph")
-      unless scalar @sections == 1;
 
-    my $fields = $sections[0];
+    my $fields = shift @sections;
 
     $self->check($fields->value('Check'));
     $self->name_spaced($fields->value('Name-Spaced') eq 'yes');
@@ -199,11 +203,8 @@ sub load {
 
     $self->explanation($fields->text('Explanation') || $fields->text('Info'));
 
-    my @see_also
-      = split(/,/, $fields->value('See-Also') || $fields->value('Ref'));
-
-    # trim both ends of each
-    s/^\s+|\s+$//g for @see_also;
+    my @see_also = $fields->trimmed_list('See-Also', qr{,})
+      || $fields->trimmed_list('Ref', qr{,});
 
     my @markdown = map { $self->markdown_citation($_) } @see_also;
     $self->see_also(\@markdown);
@@ -214,6 +215,45 @@ sub load {
       unless length $self->name;
 
     $self->effective_severity($self->visibility);
+
+    my @screens;
+    for my $section (@sections) {
+
+        my $screen_name = $section->value('Screen');
+
+        my $relative = $screen_name;
+        $relative =~ s{^([[:lower:]])}{\U$1};
+        $relative =~ s{/([[:lower:]])}{/\U$1}g;
+        $relative =~ s{-([[:lower:]])}{\U$1}g;
+
+        my @candidates = map { "$_/screens/$relative.pm" }
+          @{$self->profile->safe_include_dirs};
+
+        my $absolute = first_value { -e } @candidates;
+        require $absolute;
+
+        my $module = $relative;
+        $module =~ s{/}{::}g;
+
+        my $screen = "Lintian::Screen::$module"->new;
+
+        $screen->name($screen_name);
+
+        my @petitioners
+          = Email::Address::XS->parse($section->value('Petitioners'));
+        $screen->petitioners(\@petitioners);
+
+        $screen->reason($section->text('Reason'));
+
+        my @see_also_screen = $section->trimmed_list('See-Also', qr{,});
+        my @markdown_screen
+          = map { $self->markdown_citation($_) } @see_also_screen;
+        $screen->see_also(\@markdown_screen);
+
+        push(@screens, $screen);
+    }
+
+    $self->screens(\@screens);
 
     return;
 }

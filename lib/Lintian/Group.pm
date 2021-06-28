@@ -29,7 +29,7 @@ use Cwd;
 use Devel::Size qw(total_size);
 use File::Spec;
 use List::Compare;
-use List::SomeUtils qw(none uniq firstval);
+use List::SomeUtils qw(any none uniq firstval);
 use POSIX qw(ENOENT);
 use Time::HiRes qw(gettimeofday tv_interval);
 use Time::Piece;
@@ -45,6 +45,7 @@ use Moo;
 use namespace::clean;
 
 const my $EMPTY => q{};
+const my $SPACE => q{ };
 const my $UNDERSCORE => q{_};
 
 const my $EXTRA_VERBOSE => 3;
@@ -365,6 +366,37 @@ sub process {
             say {*STDERR} encode_utf8("$procid,check/$name,$raw_res")
               if $option->{'perf-output'};
         }
+
+        my @crossing;
+
+        my $hints = $processable->hints;
+        $processable->hints([]);
+
+        for my $hint (@{$hints}) {
+
+            next
+              if $hint->tag->show_always;
+
+            my @matches = grep { $_->suppress($processable, $hint->context) }
+              @{$hint->tag->screens};
+            next
+              unless @matches;
+
+            my @sorted = sort { $a->name cmp $b->hame } @matches;
+
+            push(@crossing,
+                    $hint->tag->name
+                  . $SPACE
+                  . join($SPACE, map { $_->name } @sorted))
+              if @sorted > 1;
+
+            my $mask = $sorted[0];
+            $hint->mask($mask);
+        }
+
+        $processable->hints($hints);
+
+        $processable->hint('crossing-screens', $_) for @crossing;
 
         my %used_overrides;
 

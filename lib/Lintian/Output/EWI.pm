@@ -47,6 +47,7 @@ const my %COLORS => (
     'P' => 'green',
     'C' => 'blue',
     'O' => 'bright_black',
+    'M' => 'bright_black',
 );
 
 const my %CODE_PRIORITY => (
@@ -57,6 +58,7 @@ const my %CODE_PRIORITY => (
     'X' => 70,
     'C' => 80,
     'O' => 90,
+    'M' => 100,
 );
 
 const my %TYPE_PRIORITY => (
@@ -173,6 +175,7 @@ sub print_hint {
 
     my $code = $tag->code;
     $code = 'O' if defined $hint->override;
+    $code = 'M' if defined $hint->mask;
 
     my $tag_color = $COLORS{$code};
 
@@ -194,6 +197,9 @@ sub print_hint {
         say encode_utf8('N: ' . $self->_quote_print($_))
           for @{$hint->override->{comments}};
     }
+
+    say encode_utf8('N: screen ' . $hint->mask->name)
+      if defined $hint->mask;
 
     my $type = $EMPTY;
     $type = $SPACE . $hint->processable->type

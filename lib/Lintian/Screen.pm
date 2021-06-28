@@ -1,4 +1,4 @@
-# Copyright © 2019 Felix Lechner
+# Copyright © 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,71 +16,48 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::Hint;
+package Lintian::Screen;
 
 use v5.20;
 use warnings;
 use utf8;
 
-use Const::Fast;
-
 use Moo::Role;
 use namespace::clean;
 
-const my $EMPTY => q{};
-const my $SPACE => q{ };
-
 =head1 NAME
 
-Lintian::Hint -- Common facilities for Lintian tags found and to be issued
+Lintian::Screen -- Common facilities for Lintian screens
 
 =head1 SYNOPSIS
 
  use Moo;
  use namespace::clean;
 
- with 'Lintian::Hint';
+ with('Lintian::Screen');
 
 =head1 DESCRIPTION
 
-Common facilities for Lintian tags found and to be issued
+A class for masking Lintian tags after they are issued
 
 =head1 INSTANCE METHODS
 
 =over 4
 
-=item arguments
-=item tag
-=item override
-=item mask
-=item processable
+=item name
 
-=item context
+=item petitioners
 
-Calculate the string representation commonly referred to as 'context'.
+=item reason
+
+=item see_also
 
 =cut
 
-has arguments => (is => 'rw', default => sub { [] });
-has tag => (is => 'rw');
-has override => (is => 'rw');
-has mask => (is => 'rw');
-has processable => (is => 'rw');
-
-sub context {
-    my ($self) = @_;
-
-    # skip empty arguments
-    my @relevant = grep { length } @{$self->arguments};
-
-    # concatenate with spaces
-    my $context = join($SPACE, @relevant) // $EMPTY;
-
-    # escape newlines; maybe add others
-    $context =~ s/\n/\\n/g;
-
-    return $context;
-}
+has name => (is => 'rw', default => sub { {} });
+has petitioners => (is => 'rw', default => sub { {} });
+has reason => (is => 'rw', default => sub { {} });
+has see_also => (is => 'rw', default => sub { {} });
 
 =back
 

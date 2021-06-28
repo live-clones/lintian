@@ -31,7 +31,7 @@ use utf8;
 use Const::Fast;
 use File::Find::Rule;
 use IPC::Run3;
-use List::Util qw(all);
+use List::SomeUtils qw(true);
 use Path::Tiny;
 use Test::More;
 
@@ -66,25 +66,33 @@ $profile->load(undef, undef, 0);
 
 for my $tagpath (@tagpaths) {
 
-    # test for duplicate fields
-    my %count;
+    my $contents = path($tagpath)->slurp_utf8;
+    my @parts = split(m{\n\n}, $contents);
 
-    my @lines = path($tagpath)->lines;
-    for my $line (@lines) {
-        my ($field) = $line =~ qr/^(\S+):/;
-        $count{$field} += 1
-          if defined $field;
+    # test for duplicate fields
+    my $duplicates = 0;
+
+    for my $part (@parts) {
+        my %count;
+
+        my @lines = split(/\n/, $part);
+        for my $line (@lines) {
+            my ($field) = $line =~ qr/^(\S+):/;
+            $count{$field} += 1
+              if defined $field;
+        }
+
+        $duplicates += true { $count{$_} > 1 } keys %count;
     }
 
-    ok((all { $count{$_} == 1 } keys %count),
-        "No duplicate fields in $tagpath");
+    is($duplicates, 0, "No duplicate fields in $tagpath");
 
     my $deb822 = Lintian::Deb822::File->new;
 
     my @sections = $deb822->read_file($tagpath);
-    is(scalar @sections, 1, "Tag in $tagpath has exactly one section");
+    ok(@sections >= 1, "Tag in $tagpath has at least one section");
 
-    my $fields = $sections[0] // {};
+    my $fields = shift @sections;
 
     # tag has a name
     my $tagname = $fields->value('Tag');
