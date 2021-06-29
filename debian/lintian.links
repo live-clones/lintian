@@ -8,3 +8,5 @@ usr/share/doc/lintian/lintian.rst usr/share/doc/lintian/lintian.txt
 # needed to find our checks; it's the short path used by users
 # maybe profiles should also look in ./lib/Lintian/Check
 usr/share/lintian/lib/Lintian/Check usr/share/lintian/checks
+# or ./lib/Lintian/Screen
+usr/share/lintian/lib/Lintian/Screen usr/share/lintian/screens
