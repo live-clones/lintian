@@ -14,3 +14,10 @@ Explanation: The given maintainer script calls ldconfig. However, explicit
  disappear once the package is rebuilt with a newer version of
  debhelper.
 See-Also: https://lists.debian.org/debian-devel/2015/08/msg00412.html
+
+Screen: glibc/control/ldconfig
+Petitioners: Debian Lintian Maintainers <lintian-maint@debian.org>
+Reason: The packages built from <tt>glibc</tt> (notably <tt>libc-bin</tt>)
+ need to call ldconfig in order to implement the <tt>ldconfig</tt> trigger.
+ .
+ Transferred from the check.

@@ -8,4 +8,4 @@ libfdshf1 (binary): distant-prerequisite-in-shlibs libforeign1
 libeshf1 (binary): symbols-file-missing-build-depends-package-field
 libeshf1 (binary): ships-undeclared-shared-library libeshf 1 for usr/lib/libeshf.so.1.0.1
 libdupshf1 (binary): symbols-file-missing-build-depends-package-field
-libdupshf1 (binary): duplicate-in-shlibs libdupshf 1
+libdupshf1 (binary): duplicate-in-shlibs (line 2) libdupshf 1

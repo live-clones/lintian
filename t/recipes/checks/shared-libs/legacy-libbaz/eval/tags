@@ -22,7 +22,7 @@ libbaz1 (binary): lacks-unversioned-link-to-shared-library usr/lib/libfoo2.so.1.
 libbaz1 (binary): lacks-unversioned-link-to-shared-library usr/lib/libbaz3.so.1.0.3b usr/lib/libbaz3.so
 libbaz1 (binary): lacks-unversioned-link-to-shared-library usr/lib/libbaz.so usr/lib/libbaz.so
 libbaz1 (binary): lacks-ldconfig-trigger usr/lib/libfoo2.so.1.0.3b
-libbaz1 (binary): duplicate-in-shlibs udeb: libdoesntexist2 1.0
-libbaz1 (binary): duplicate-in-shlibs libdoesntexist2 1.0
+libbaz1 (binary): duplicate-in-shlibs (line 8) udeb: libdoesntexist2 1.0
+libbaz1 (binary): duplicate-in-shlibs (line 2) libdoesntexist2 1.0
 libbaz1 (binary): distant-prerequisite-in-shlibs libbaz2
 libbaz1 (binary): distant-prerequisite-in-shlibs libbaz1 (>> 1-1)
