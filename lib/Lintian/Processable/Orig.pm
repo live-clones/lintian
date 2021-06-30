@@ -160,7 +160,8 @@ has orig => (
 
                     # shortens paths; keeps same base directory
                     $subindex->drop_common_prefix
-                      unless $common eq $component;
+                      if $common ne $component
+                      || length $component;
                 }
             }
 
