@@ -38,22 +38,19 @@ use namespace::clean;
 with 'Lintian::Check';
 
 const my $EMPTY => q{};
-const my $SPACE => q{ };
 
-has architecture => (is => 'rw', default => $EMPTY);
+has installable_architecture => (is => 'rw', default => $EMPTY);
 has have_r_package_not_arch_all => (is => 'rw', default => 0);
 
 sub setup_installed_files {
     my ($self) = @_;
 
-    my $unsplit = $self->processable->fields->unfolded_value('Architecture');
-
-    my @architectures = split($SPACE, $unsplit);
-
+    my @installable_architectures
+      = $self->processable->fields->trimmed_list('Architecture');
     return
-      unless @architectures;
+      unless @installable_architectures;
 
-    $self->architecture($architectures[0]);
+    $self->installable_architecture($installable_architectures[0]);
 
     return;
 }
@@ -66,7 +63,7 @@ sub visit_installed_files {
       && !$file->is_dir
       && $self->processable->name =~ /^r-(?:cran|bioc|other)-/
       && $file->bytes =~ m/NeedsCompilation: no/m
-      && $self->architecture ne 'all';
+      && $self->installable_architecture ne 'all';
 
     return;
 }
@@ -83,33 +80,30 @@ sub breakdown_installed_files {
 sub installable {
     my ($self) = @_;
 
-    my $pkg = $self->processable->name;
-    my $processable = $self->processable;
-
-    my $unsplit = $processable->fields->unfolded_value('Architecture');
-
-    my @architectures = split($SPACE, $unsplit);
-
+    my @installable_architectures
+      = $self->processable->fields->trimmed_list('Architecture');
     return
-      unless @architectures;
+      unless @installable_architectures;
 
-    for my $architecture (@architectures) {
-        $self->hint('arch-wildcard-in-binary-package', $architecture)
-          if $self->profile->architectures->is_wildcard($architecture);
+    for my $installable_architecture (@installable_architectures) {
+        $self->hint('arch-wildcard-in-binary-package',
+            $installable_architecture)
+          if $self->profile->architectures->is_wildcard(
+            $installable_architecture);
     }
 
-    $self->hint('too-many-architectures') if @architectures > 1;
+    $self->hint('too-many-architectures', sort @installable_architectures)
+      if @installable_architectures > 1;
 
-    my $architecture = $architectures[0];
-
-    return
-      if $architecture eq 'all';
+    my $installable_architecture = $installable_architectures[0];
 
     $self->hint('aspell-package-not-arch-all')
-      if $pkg =~ /^aspell-[a-z]{2}(?:-.*)?$/;
+      if $self->processable->name =~ /^aspell-[a-z]{2}(?:-.*)?$/
+      && $installable_architecture ne 'all';
 
     $self->hint('documentation-package-not-architecture-independent')
-      if $pkg =~ /-docs?$/;
+      if $self->processable->name =~ /-docs?$/
+      && $installable_architecture ne 'all';
 
     return;
 }
@@ -117,33 +111,34 @@ sub installable {
 sub always {
     my ($self) = @_;
 
-    my $type = $self->processable->type;
-    my $processable = $self->processable;
+    my @installable_architectures
+      = $self->processable->fields->trimmed_list('Architecture');
+    for my $installable_architecture (@installable_architectures) {
 
-    my $unsplit = $processable->fields->unfolded_value('Architecture');
-    my @architectures = split($SPACE, $unsplit);
-
-    for my $architecture (@architectures) {
-
-        $self->hint('unknown-architecture', $architecture)
-          unless $self->profile->architectures->is_arch($architecture)
-          || $self->profile->architectures->is_wildcard($architecture)
-          || $architecture eq 'all'
-          || ($architecture eq 'source'
-            && ($type eq 'changes' || $type eq 'buildinfo'));
+        $self->hint('unknown-architecture', $installable_architecture)
+          unless $self->profile->architectures->is_arch(
+            $installable_architecture)
+          || $self->profile->architectures->is_wildcard(
+            $installable_architecture)
+          || $installable_architecture eq 'all'
+          || (
+            $installable_architecture eq 'source'
+            && (   $self->processable->type eq 'changes'
+                || $self->processable->type eq 'buildinfo'));
     }
 
-    # check for magic architecture combinations
-    if (@architectures > 1) {
+    # check for magic installable architecture combinations
+    if (@installable_architectures > 1) {
 
         my $magic_error = 0;
 
-        if (any { $_ eq 'all' } @architectures) {
+        if (any { $_ eq 'all' } @installable_architectures) {
             $magic_error++
-              unless any { $type eq $_ } qw(source changes buildinfo);
+              unless any { $self->processable->type eq $_ }
+            qw(source changes buildinfo);
         }
 
-        my $anylc = List::Compare->new(\@architectures, ['any']);
+        my $anylc = List::Compare->new(\@installable_architectures, ['any']);
         if ($anylc->get_intersection) {
 
             my @errorset = $anylc->get_Lonly;
@@ -151,7 +146,8 @@ sub always {
             # Allow 'all' to be present in source packages as well
             # (#626775)
             @errorset = grep { $_ ne 'all' } @errorset
-              if any { $type eq $_ } qw(source changes buildinfo);
+              if any { $self->processable->type eq $_ }
+            qw(source changes buildinfo);
 
             $magic_error++
               if @errorset;
@@ -159,11 +155,6 @@ sub always {
 
         $self->hint('magic-arch-in-arch-list') if $magic_error;
     }
-
-    # Used for later tests.
-    my $arch_indep = 0;
-    $arch_indep = 1
-      if @architectures == 1 && $architectures[0] eq 'all';
 
     return;
 }
