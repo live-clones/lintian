@@ -86,8 +86,8 @@ for my $tagpath (@descfiles) {
 
     my $deb822 = Lintian::Deb822::File->new;
     my @sections = $deb822->read_file($tagpath);
-    die encode_utf8("Tag in $tagpath does not have exactly one paragraph")
-      unless scalar @sections == 1;
+    die encode_utf8("Tag in $tagpath does not have at least one paragraph")
+      unless @sections;
 
     my $fields = $sections[0];
 
