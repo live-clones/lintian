@@ -188,6 +188,7 @@ Enable-Tags-From-Check:
  languages/python/homepage
  languages/python/obsolete
  languages/python/scripts
+ languages/r/architecture
  languages/r/site-library
  languages/ruby
  languages/rust

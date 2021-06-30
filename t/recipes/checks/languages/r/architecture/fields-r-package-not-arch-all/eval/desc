@@ -1,2 +1,2 @@
 Testname: fields-r-package-not-arch-all
-Check: fields/architecture
+Check: languages/r/architecture

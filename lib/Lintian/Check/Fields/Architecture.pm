@@ -40,42 +40,6 @@ with 'Lintian::Check';
 const my $EMPTY => q{};
 
 has installable_architecture => (is => 'rw', default => $EMPTY);
-has have_r_package_not_arch_all => (is => 'rw', default => 0);
-
-sub setup_installed_files {
-    my ($self) = @_;
-
-    my @installable_architectures
-      = $self->processable->fields->trimmed_list('Architecture');
-    return
-      unless @installable_architectures;
-
-    $self->installable_architecture($installable_architectures[0]);
-
-    return;
-}
-
-sub visit_installed_files {
-    my ($self, $file) = @_;
-
-    $self->have_r_package_not_arch_all(1)
-      if $file->name =~ m{^usr/lib/R/.*/DESCRIPTION}
-      && !$file->is_dir
-      && $self->processable->name =~ /^r-(?:cran|bioc|other)-/
-      && $file->bytes =~ m/NeedsCompilation: no/m
-      && $self->installable_architecture ne 'all';
-
-    return;
-}
-
-sub breakdown_installed_files {
-    my ($self) = @_;
-
-    $self->hint('r-package-not-arch-all')
-      if $self->have_r_package_not_arch_all;
-
-    return;
-}
 
 sub installable {
     my ($self) = @_;
