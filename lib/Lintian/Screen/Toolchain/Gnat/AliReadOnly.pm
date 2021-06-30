@@ -27,27 +27,6 @@ use namespace::clean;
 
 with 'Lintian::Screen';
 
-=head1 NAME
-
-Lintian::Screen::Toolchain::Gnat::AliReadOnly
-
-=head1 SYNOPSIS
-
- use Moo;
- use namespace::clean;
-
-=head1 DESCRIPTION
-
-Screen out hints provoked by C<GNAT> read-only file permissions.
-
-=head1 INSTANCE METHODS
-
-=over 4
-
-=item suppress
-
-=cut
-
 sub suppress {
     my ($self, $processable, $context) = @_;
 
@@ -61,18 +40,6 @@ sub suppress {
 
     return 0;
 }
-
-=back
-
-=head1 AUTHOR
-
-Originally written by Felix Lechner <felix.lechner@lease-up.com> for Lintian.
-
-=head1 SEE ALSO
-
-lintian(1)
-
-=cut
 
 1;
 

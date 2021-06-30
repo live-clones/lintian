@@ -15,8 +15,8 @@ plan skip_all => 'Test::Pod::Coverage 1.08 required for this test'
 
 load_profile_for_test;
 
-# exempt checks
-my @modules = grep { !/^Lintian::Check::/ } all_modules('lib');
+# exempt checks and screens
+my @modules = grep { !/^Lintian::(?:Check|Screen)::/ } all_modules('lib');
 
 plan tests => scalar @modules;
 
