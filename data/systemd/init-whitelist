@@ -1,9 +1,3 @@
-# These are not really init scripts...
-README
-skeleton
-rc
-rcS
-
 # Names provided/masked by systemd
 # Generated from the systemd links
 # sed -n -e 's|^.\+[[:space:]]\+/lib/systemd/system/\([^/]\+\)\.service$|\1|p' debian/systemd.links
