@@ -152,15 +152,31 @@ has wildcards => (
 
             my $variables = $self->host_variables->{$hyphenated};
 
-            # NB: "$os-$cpu" ne $hyphenated in some cases
+            # NB: "$os-$cpu" is not always equal to $hyphenated
+            my $abi = $variables->{DEB_HOST_ARCH_ABI};
+            my $libc = $variables->{DEB_HOST_ARCH_LIBC};
             my $os = $variables->{DEB_HOST_ARCH_OS};
             my $cpu = $variables->{DEB_HOST_ARCH_CPU};
 
    # map $os-any (e.g. "linux-any") and any-$architecture (e.g. "any-amd64") to
    # the relevant architectures.
-            $wildcards{"$os-any"}{$hyphenated} = 1;
-            $wildcards{"any-$cpu"}{$hyphenated} = 1;
             $wildcards{'any'}{$hyphenated} = 1;
+            $wildcards{"any-$cpu"}{$hyphenated} = 1;
+            $wildcards{"$os-any"}{$hyphenated} = 1;
+            $wildcards{"any-any-$cpu"}{$hyphenated} = 1;
+            $wildcards{"any-$os-any"}{$hyphenated} = 1;
+            $wildcards{"any-$os-$cpu"}{$hyphenated} = 1;
+            $wildcards{"$libc-any-any"}{$hyphenated} = 1;
+            $wildcards{"$libc-any-$cpu"}{$hyphenated} = 1;
+            $wildcards{"$libc-$os-any"}{$hyphenated} = 1;
+            $wildcards{"any-$libc-$os-$cpu"}{$hyphenated} = 1;
+            $wildcards{"$abi-any-any-any"}{$hyphenated} = 1;
+            $wildcards{"$abi-any-any-$cpu"}{$hyphenated} = 1;
+            $wildcards{"$abi-any-$os-any"}{$hyphenated} = 1;
+            $wildcards{"$abi-any-$os-$cpu"}{$hyphenated} = 1;
+            $wildcards{"$abi-$libc-any-any"}{$hyphenated} = 1;
+            $wildcards{"$abi-$libc-any-$cpu"}{$hyphenated} = 1;
+            $wildcards{"$abi-$libc-$os-any"}{$hyphenated} = 1;
         }
 
         return \%wildcards;
