@@ -161,14 +161,26 @@ has wildcards => (
    # map $os-any (e.g. "linux-any") and any-$architecture (e.g. "any-amd64") to
    # the relevant architectures.
             $wildcards{'any'}{$hyphenated} = 1;
+
+            $wildcards{'any-any'}{$hyphenated} = 1;
             $wildcards{"any-$cpu"}{$hyphenated} = 1;
             $wildcards{"$os-any"}{$hyphenated} = 1;
+
+            $wildcards{'any-any-any'}{$hyphenated} = 1;
             $wildcards{"any-any-$cpu"}{$hyphenated} = 1;
             $wildcards{"any-$os-any"}{$hyphenated} = 1;
             $wildcards{"any-$os-$cpu"}{$hyphenated} = 1;
             $wildcards{"$libc-any-any"}{$hyphenated} = 1;
             $wildcards{"$libc-any-$cpu"}{$hyphenated} = 1;
             $wildcards{"$libc-$os-any"}{$hyphenated} = 1;
+
+            $wildcards{'any-any-any-any'}{$hyphenated} = 1;
+            $wildcards{"any-any-any-$cpu"}{$hyphenated} = 1;
+            $wildcards{"any-any-$os-any"}{$hyphenated} = 1;
+            $wildcards{"any-any-$os-$cpu"}{$hyphenated} = 1;
+            $wildcards{"any-$libc-any-any"}{$hyphenated} = 1;
+            $wildcards{"any-$libc-any-$cpu"}{$hyphenated} = 1;
+            $wildcards{"any-$libc-$os-any"}{$hyphenated} = 1;
             $wildcards{"any-$libc-$os-$cpu"}{$hyphenated} = 1;
             $wildcards{"$abi-any-any-any"}{$hyphenated} = 1;
             $wildcards{"$abi-any-any-$cpu"}{$hyphenated} = 1;
