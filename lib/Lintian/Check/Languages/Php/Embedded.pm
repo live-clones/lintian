@@ -39,7 +39,7 @@ my %PHP_FILES = (
 qr{(?i)/phpsysinfo\.dtd|/class\.(?:Linux|(?:Open|Net|Free|)BSD)\.inc\.php$},
     'php-openid'           => qr{/Auth/(?:OpenID|Yadis/Yadis)\.php$},
     'libphp-snoopy'        => qr{(?i)/Snoopy\.class\.(?:php|inc)$},
-    'libmarkdown-php'      => qr{(?i)/markdown\.php$},
+    'php-markdown'         => qr{(?i)/markdown\.php$},
     'php-geshi'            => qr{(?i)/geshi\.php$},
     'libphp-pclzip'        =>qr{(?i)/(?:class[.-])?pclzip\.(?:inc|lib)?\.php$},
     'libphp-phplayersmenu' => qr{(?i)/.*layersmenu.*/(lib/)?PHPLIB\.php$},
