@@ -80,7 +80,7 @@ sub always {
     for my $installable_architecture (@installable_architectures) {
 
         $self->hint('unknown-architecture', $installable_architecture)
-          unless $self->profile->architectures->is_arch(
+          unless $self->profile->architectures->is_release_architecture(
             $installable_architecture)
           || $self->profile->architectures->is_wildcard(
             $installable_architecture)

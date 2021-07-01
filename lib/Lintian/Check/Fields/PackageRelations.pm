@@ -498,19 +498,15 @@ sub source {
                       = @{$part_d};
 
                     for my $arch (@{$d_arch->[0]}) {
-                        if (
-                            $arch eq 'all'
-                            || (
-                                !$self->profile->architectures->is_arch($arch)
-                                && !$self->profile->architectures->is_wildcard(
-                                    $arch)
-                                && $arch ne 'all'
-                            )
-                        ){
-                            $self->hint(
-                                'invalid-arch-string-in-source-relation',
-                                "$arch [$field: $part_d_orig]");
-                        }
+                        $self->hint('invalid-arch-string-in-source-relation',
+                            $arch, "[$field: $part_d_orig]")
+                          if $arch eq 'all'
+                          || (
+                            !$self->profile->architectures
+                            ->is_release_architecture(
+                                $arch)
+                            && !$self->profile->architectures->is_wildcard(
+                                $arch));
                     }
 
                     for my $restrlist (@{$d_restr}) {

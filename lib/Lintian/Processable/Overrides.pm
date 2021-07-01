@@ -199,7 +199,7 @@ has overrides => (
             }
 
             my @invalid
-              = grep { !$self->profile->architectures->valid_wildcard($_) }
+              = grep { !$self->profile->architectures->valid_restriction($_) }
               @architectures;
             $self->hint('malformed-override',
                 "Unknown architecture wildcard $_ in line $position")
@@ -226,7 +226,7 @@ has overrides => (
               if @architectures
               && (
                 $negations xor none {
-                    $self->profile->architectures->wildcard_matches($_,
+                    $self->profile->architectures->restriction_matches($_,
                         $self->architecture)
                 }
                 @architectures

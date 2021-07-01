@@ -230,7 +230,7 @@ sub is_wildcard {
     return exists $self->wildcards->{$wildcard};
 }
 
-=item is_arch ($architecture)
+=item is_release_architecture ($architecture)
 
 Returns a truth value if $architecture is (an alias of) a Debian machine
 architecture.  It returns a false value for
@@ -238,13 +238,13 @@ architecture wildcards (including "any") and unknown architectures.
 
 =cut
 
-sub is_arch {
+sub is_release_architecture {
     my ($self, $architecture) = @_;
 
     return exists $self->names->{$architecture};
 }
 
-=item expand_arch_wildcard ($wildcard)
+=item expand_wildcard ($wildcard)
 
 Returns a list of architectures that this wildcard expands to.  No
 order is guaranteed (even between calls).  Returned values must not be
@@ -259,13 +259,13 @@ so the returned list may use (e.g.) "amd64" for "linux-amd64".
 
 =cut
 
-sub expand_arch_wildcard {
+sub expand_wildcard {
     my ($self, $wildcard) = @_;
 
     return keys %{ $self->wildcards->{$wildcard} // {} };
 }
 
-=item wildcard_includes_arch ($wildcard, $architecture)
+=item wildcard_includes ($wildcard, $architecture)
 
 Returns a truth value if $architecture is included in the list of
 architectures that $wildcard expands to.
@@ -279,7 +279,7 @@ aliases.
 
 =cut
 
-sub wildcard_includes_arch {
+sub wildcard_includes {
     my ($self, $wildcard, $architecture) = @_;
 
     $architecture = $self->names->{$architecture}
@@ -288,36 +288,38 @@ sub wildcard_includes_arch {
     return exists $self->wildcards->{$wildcard}{$architecture};
 }
 
-=item valid_wildcard
+=item valid_restriction
 
 =cut
 
-sub valid_wildcard {
-    my ($self, $wildcard) = @_;
+sub valid_restriction {
+    my ($self, $restriction) = @_;
 
     # strip any negative prefix
-    $wildcard =~ s/^!//;
+    $restriction =~ s/^!//;
 
     return
-         $self->is_arch($wildcard)
-      || $self->is_wildcard($wildcard)
-      || $wildcard eq 'all';
+         $self->is_release_architecture($restriction)
+      || $self->is_wildcard($restriction)
+      || $restriction eq 'all';
 }
 
-=item wildcard_matches
+=item restriction_matches
 
 =cut
 
-sub wildcard_matches {
-    my ($self, $wildcard, $architecture) = @_;
+sub restriction_matches {
+    my ($self, $restriction, $architecture) = @_;
 
     # look for negative prefix and strip
-    my $match_wanted = !($wildcard =~ s/^!//);
+    my $match_wanted = !($restriction =~ s/^!//);
 
     return $match_wanted
-      if $wildcard eq $architecture
-      || ( $self->is_wildcard($wildcard)
-        && $self->wildcard_includes_arch($wildcard, $architecture));
+      if $restriction eq $architecture;
+
+    return $match_wanted
+      if $self->is_wildcard($restriction)
+      && $self->wildcard_includes($restriction, $architecture);
 
     return !$match_wanted;
 }
@@ -354,22 +356,23 @@ sub refresh {
     local $ENV{LC_ALL} = 'C';
     delete local $ENV{DEB_HOST_ARCH};
 
-    my $version_output= decode_utf8(safe_qx('dpkg-architecture', '--version'));
+    my $version_output= decode_utf8(safe_qx(qw{dpkg-architecture --version}));
     my ($dpkg_version) = split(/\n/, $version_output);
 
     # retain only the version number
     $dpkg_version =~ s/^.*\s(\S+)[.]$/$1/s;
 
     my @architectures
-      = split(/\n/, decode_utf8(safe_qx('dpkg-architecture', '-L')));
+      = split(/\n/, decode_utf8(safe_qx(qw{dpkg-architecture --list-known})));
     chomp for @architectures;
 
     my %variables;
     for my $architecture (@architectures) {
 
-        my @lines
-          = split(/\n/,
-            decode_utf8(safe_qx('dpkg-architecture', "-a$architecture")));
+        my @lines= split(
+            /\n/,
+            decode_utf8(
+                safe_qx(qw{dpkg-architecture --host-arch}, $architecture)));
 
         for my $line (@lines) {
             my ($key, $value) = split(/=/, $line, 2);
