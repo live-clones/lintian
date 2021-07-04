@@ -35,6 +35,8 @@ use namespace::clean;
 const my $OSC_HYPERLINK => qq{\033]8;;};
 const my $OSC_DONE => qq{\033\\};
 
+const my $DESCRIPTION_INDENTATION => 4;
+
 const my $EMPTY => q{};
 const my $SPACE => q{ };
 const my $COLON => q{:};
@@ -171,6 +173,9 @@ sub print_hint {
           if $emitted_count >= $limit-1;
     }
 
+    say encode_utf8('N:')
+      if $option->{info};
+
     my $text = $tag_name;
 
     my $code = $tag->code;
@@ -215,8 +220,11 @@ sub print_hint {
           . $output
           . $information);
 
-    $self->describe_tags([$tag], $option->{'output-width'})
-      if $option->{info} && !$self->issued_tag($tag->name);
+    if ($option->{info}) {
+
+        $self->describe_tag($tag, $option->{'output-width'})
+          unless $self->issued_tag($tag->name);
+    }
 
     return;
 }
@@ -278,38 +286,60 @@ sub issued_tag {
 sub describe_tags {
     my ($self, $tags, $columns) = @_;
 
-    my $code = 'N';
-    my $description = 'N:   Unknown tag.';
     for my $tag (@{$tags}) {
 
-        if (defined $tag) {
+        my $name;
+        my $code;
 
+        if (defined $tag) {
+            $name = $tag->name;
             $code = $tag->code;
 
-            my $plain_text= markdown_to_plain($tag->markdown_description);
-            $description = indent_and_wrap($plain_text, 'N:   ', $columns);
-
-            chomp $description;
+        } else {
+            $name = 'unknown-tag';
+            $code = 'N';
         }
 
-        my $output = 'N:' . $NEWLINE;
-        $output .= $code . $COLON . $SPACE . $tag->name . $NEWLINE;
-        $output .= 'N:' . $NEWLINE;
-        $output .= $description . $NEWLINE;
-        $output .= 'N:' . $NEWLINE;
+        say encode_utf8('N:');
+        say encode_utf8("$code: $name");
 
-        print encode_utf8($output);
+        $self->describe_tag($tag, $columns);
     }
 
     return;
 }
 
-=item indent_and_wrap
+=item describe_tag
 
 =cut
 
-sub indent_and_wrap {
-    my ($text, $indent, $columns) = @_;
+sub describe_tag {
+    my ($self, $tag, $columns) = @_;
+
+    my $PREFIX = q{N:} . $SPACE x $DESCRIPTION_INDENTATION;
+
+    my $description;
+
+    if (defined $tag) {
+        $description = markdown_to_plain($tag->markdown_description);
+
+    } else {
+        $description = 'Unknown tag.';
+    }
+
+    my @wrapped = prefix_and_wrap($description, $columns - length $PREFIX);
+
+    say encode_utf8($PREFIX . $_) for @wrapped;
+
+    return;
+}
+
+=item prefix_and_wrap
+
+=cut
+
+sub prefix_and_wrap {
+    my ($text, $columns) = @_;
 
     local $Text::Wrap::columns = $columns
       if defined $columns;
@@ -319,37 +349,26 @@ sub indent_and_wrap {
 
     my @paragraphs = split(/\n{2,}/, $text);
 
-    my @indented;
+    my @wrapped;
     for my $paragraph (@paragraphs) {
 
-        if ($paragraph =~ /^\s/) {
+        # do not wrap preformatted paragraphs
+        unless ($paragraph =~ /^\s/) {
 
-            # do not wrap preformatted lines; indent only
-            my @lines = split(/\n/, $paragraph);
-            my $indented_paragraph
-              = join($NEWLINE, map { $indent . $_ } @lines);
-
-            push(@indented, $indented_paragraph);
-
-        } else {
             # reduce whitespace throughout, including newlines
             $paragraph =~ s/\s+/ /g;
 
             # trim beginning and end of each line
             $paragraph =~ s/^\s+|\s+$//mg;
 
-            # do not wrap long words like urls, see #719769
-            local $Text::Wrap::huge = 'overflow';
-
-            my $wrapped_paragraph = wrap($indent, $indent, $paragraph);
-
-            push(@indented, $wrapped_paragraph);
+            $paragraph = wrap($EMPTY, $EMPTY, $paragraph);
         }
+
+        push(@wrapped, $EMPTY);
+        push(@wrapped, split(/\n/, $paragraph));
     }
 
-    my $formatted = join($NEWLINE . $indent . $NEWLINE, @indented) . $NEWLINE;
-
-    return $formatted;
+    return @wrapped;
 }
 
 =item markdown_to_plain

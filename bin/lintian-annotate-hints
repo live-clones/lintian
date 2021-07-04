@@ -109,6 +109,7 @@ while(my $bytes = <STDIN>) {
     my $line = decode_utf8($bytes);
     chomp $line;
 
+    say encode_utf8('N:');
     say encode_utf8($line);
 
     next
@@ -162,7 +163,7 @@ while(my $bytes = <STDIN>) {
     next
       unless defined $tag;
 
-    $output->describe_tags([$tag], $TERMINAL_WIDTH);
+    $output->describe_tag($tag, $TERMINAL_WIDTH);
 }
 
 exit;
