@@ -43,6 +43,7 @@ my $LINTIAN_VERSION;
 use Const::Fast;
 use Getopt::Long ();
 use List::SomeUtils qw(any);
+use Term::ReadKey;
 use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Output::EWI;
@@ -53,7 +54,10 @@ use Lintian::Version qw(guess_version);
 
 const my $EMPTY => q{};
 const my $SPACE => q{ };
+
 const my $NEW_PROGRAM_NAME => q{lintian-explain-tags};
+
+my ($TERMINAL_WIDTH, undef, undef, undef) = GetTerminalSize();
 
 if (my $coverage_arg = $ENV{'LINTIAN_COVERAGE'}) {
     my $p5opt = $ENV{'PERL5OPT'}//$EMPTY;
@@ -80,6 +84,7 @@ my %options = (
     'help|h' => \&show_help,
     'include-dir=s' => \@INCLUDE_DIRS,
     'list-tags|l' => \$list_tags,
+    'output-width=i' => \$TERMINAL_WIDTH,
     'profile=s' => \$profile_name,
     'tags|tag|t' => \$tags,
     'user-dirs!' => \$user_dirs,
@@ -123,7 +128,7 @@ my @available = grep { defined} map { $profile->get_tag($_) } @selected;
 
 my @sorted = sort { lc($a->name) cmp lc($b->name) } @available;
 
-$output->describe_tags(@sorted);
+$output->describe_tags(\@sorted, $TERMINAL_WIDTH);
 
 exit any { !defined $profile->get_tag($_) } @selected;
 
@@ -141,8 +146,9 @@ Usage: $NEW_PROGRAM_NAME [log-file...] ...
 Options:
     -l, --list-tags    list all tags Lintian knows about
     -t, --tag, --tags  display tag descriptions
-    --profile X        use vendor profile X to determine severities
     --include-dir DIR  check for Lintian data in DIR
+    --profile X        use vendor profile X to determine severities
+    --output-width NUM set output width instead of probing terminal
     --[no-]user-dirs   whether to include profiles from user directories
     --version          show version info and exit
 EOT

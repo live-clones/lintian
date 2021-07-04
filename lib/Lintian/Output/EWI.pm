@@ -215,7 +215,7 @@ sub print_hint {
           . $output
           . $information);
 
-    $self->describe_tags($tag)
+    $self->describe_tags([$tag], $option->{'output-width'})
       if $option->{info} && !$self->issued_tag($tag->name);
 
     return;
@@ -276,18 +276,18 @@ sub issued_tag {
 =cut
 
 sub describe_tags {
-    my ($self, @tags) = @_;
+    my ($self, $tags, $columns) = @_;
 
-    for my $tag (@tags) {
-        my $code = 'N';
-        my $description = 'N:   Unknown tag.';
+    my $code = 'N';
+    my $description = 'N:   Unknown tag.';
+    for my $tag (@{$tags}) {
 
         if (defined $tag) {
 
             $code = $tag->code;
 
             my $plain_text= markdown_to_plain($tag->markdown_description);
-            $description = indent_and_wrap($plain_text, 'N:   ');
+            $description = indent_and_wrap($plain_text, 'N:   ', $columns);
 
             chomp $description;
         }
@@ -309,7 +309,13 @@ sub describe_tags {
 =cut
 
 sub indent_and_wrap {
-    my ($text, $indent) = @_;
+    my ($text, $indent, $columns) = @_;
+
+    local $Text::Wrap::columns = $columns
+      if defined $columns;
+
+    # do not wrap long words such as urls; see #719769
+    local $Text::Wrap::huge = 'overflow';
 
     my @paragraphs = split(/\n{2,}/, $text);
 

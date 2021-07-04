@@ -50,6 +50,7 @@ use List::Compare;
 use List::SomeUtils qw(any none first_value);
 use Path::Tiny;
 use POSIX qw(:sys_wait_h);
+use Term::ReadKey;
 use Unicode::UTF8 qw(encode_utf8 decode_utf8);
 
 use Lintian::Deb822::Parser qw(parse_dpkg_control_string);
@@ -79,6 +80,8 @@ my $hyperlinks_capable = is_interactive;
 # Globally ignore SIGPIPE.  We'd rather deal with error returns from write
 # than randomly delivered signals.
 $SIG{PIPE} = 'IGNORE';
+
+my ($TERMINAL_WIDTH, undef, undef, undef) = GetTerminalSize();
 
 my %PRESERVE_ENV = map { $_ => 1 } qw(
   DEBRELEASE_DEBS_DIR
@@ -145,6 +148,7 @@ my @getoptions = qw(
   no-cfg
   no-override|o
   no-tag-display-limit
+  output-width=i
   packages-from-file=s
   pedantic
   perf-debug
@@ -306,6 +310,7 @@ my %selected = (
     'fail-on'           => [],
     'include-dir'       => [],
     'jobs'              => default_jobs(),
+    'output-width'      => $TERMINAL_WIDTH,
     'tags'              => [],
     'suppress-tags'     => [],
     'user-dirs'         => 1,
@@ -934,6 +939,7 @@ Behavior options:
     -I, --display-info        display "I:" tags (normally suppressed)
     -L, --display-level       display tags with the specified level
     -o, --no-override         ignore overrides
+    --output-width NUM        set output width instead of probing terminal
     --pedantic                display "P:" tags (normally suppressed)
     --profile X               Use the profile X or use vendor X checks
     --show-overrides          output tags that have been overridden

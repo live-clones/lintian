@@ -42,6 +42,7 @@ my $LINTIAN_VERSION;
 
 use Const::Fast;
 use Getopt::Long ();
+use Term::ReadKey;
 use Unicode::UTF8 qw(encode_utf8 decode_utf8);
 
 use Lintian::Output::EWI;
@@ -50,7 +51,10 @@ use Lintian::Version qw(guess_version);
 
 const my $EMPTY => q{};
 const my $SPACE => q{ };
+
 const my $NEW_PROGRAM_NAME => q{lintian-annotate-hints};
+
+my ($TERMINAL_WIDTH, undef, undef, undef) = GetTerminalSize();
 
 if (my $coverage_arg = $ENV{'LINTIAN_COVERAGE'}) {
     my $p5opt = $ENV{'PERL5OPT'}//$EMPTY;
@@ -74,6 +78,7 @@ my %options = (
     'annotate|a' => \$annotate,
     'help|h' => \&show_help,
     'include-dir=s' => \@INCLUDE_DIRS,
+    'output-width=i' => \$TERMINAL_WIDTH,
     'profile=s' => \$profile_name,
     'user-dirs!' => \$user_dirs,
     'version' => \&show_version,
@@ -157,7 +162,7 @@ while(my $bytes = <STDIN>) {
     next
       unless defined $tag;
 
-    $output->describe_tags($tag);
+    $output->describe_tags([$tag], $TERMINAL_WIDTH);
 }
 
 exit;
@@ -175,8 +180,9 @@ Usage: $NEW_PROGRAM_NAME [log-file...] ...
 
 Options:
     -a, --annotate     display descriptions of tags in Lintian overrides
-    --profile X        use vendor profile X to determine severities
     --include-dir DIR  check for Lintian data in DIR
+    --profile X        use vendor profile X to determine severities
+    --output-width NUM set output width instead of probing terminal
     --[no-]user-dirs   whether to include profiles from user directories
     --version          show version info and exit
 EOT

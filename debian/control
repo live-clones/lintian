@@ -67,6 +67,7 @@ Depends:
  libsereal-decoder-perl,
  libsereal-encoder-perl,
  libsort-versions-perl,
+ libterm-readkey-perl,
  libtext-glob-perl,
  libtext-levenshteinxs-perl,
  libtext-markdown-discount-perl,

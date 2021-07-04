@@ -161,11 +161,11 @@ sub hintlist {
 =cut
 
 sub describe_tags {
-    my ($self, @tags) = @_;
+    my ($self, $tags) = @_;
 
     my @array;
 
-    for my $tag (@tags) {
+    for my $tag (@{$tags}) {
 
         my %dictionary;
 

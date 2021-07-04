@@ -180,9 +180,9 @@ sub hintlist {
 =cut
 
 sub describe_tags {
-    my ($self, @tags) = @_;
+    my ($self, $tags) = @_;
 
-    for my $tag (@tags) {
+    for my $tag (@{$tags}) {
 
         say encode_utf8('<p>Name: ' . $tag->name . '</p>');
         say encode_utf8($EMPTY);
