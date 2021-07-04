@@ -203,8 +203,9 @@ sub load {
 
     $self->explanation($fields->text('Explanation') || $fields->text('Info'));
 
-    my @see_also = $fields->trimmed_list('See-Also', qr{,})
-      || $fields->trimmed_list('Ref', qr{,});
+    my @see_also = $fields->trimmed_list('See-Also', qr{,});
+    @see_also = $fields->trimmed_list('Ref', qr{,})
+      unless @see_also;
 
     my @markdown = map { $self->markdown_citation($_) } @see_also;
     $self->see_also(\@markdown);
