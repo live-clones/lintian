@@ -92,39 +92,37 @@ my $output = Lintian::Output::EWI->new;
 # - captures the version and the architectures
 my $verarchre = qr{(?: \s* \(( [^)]++ )\) \s* \[ ( [^]]++ ) \])}x;
 
-# matches the full deal:
-#    1  222 3333  4444444   5555   666  777
-# -  T: pkg type (version) [arch]: tag [...]
-#           ^^^^^^^^^^^^^^^^^^^^^
-# Where the marked part(s) are optional values.  The numbers above
-# the example are the capture groups.
-my $TAG_REGEX
-  = qr/([EWIXOPC]): (\S+)(?: (\S+)(?:$verarchre)?)?: (\S+)(?:\s+(.*))?/;
-
 my $type_re = qr/(?:binary|changes|source|udeb)/;
 
 my %already_displayed;
 
 # Otherwise, read input files or STDIN, watch for tags, and add
 # descriptions whenever we see one, can, and haven't already
-# explained that tag.  Strip off color and HTML sequences.
+# explained that tag.
 while(my $bytes = <STDIN>) {
+
     my $line = decode_utf8($bytes);
-    print encode_utf8($line);
     chomp $line;
+
+    say encode_utf8($line);
 
     next
       if $line =~ /^\s*$/;
 
+    # strip color
     $line =~ s/\e[\[\d;]*m//g;
+
+    # strip HTML
     $line =~ s/<span style=\"[^\"]+\">//g;
     $line =~ s{</span>}{}g;
 
     my $tag_name;
     if ($annotate) {
 
+        # used for override files only; combine if possible
+
         next
-          unless $line =~ m{^(?:                    # start optional part
+          unless $line =~ m{^(?:                   # start optional part
                     (?:\S+)?                       # Optionally starts with package name
                     (?: \s*+ \[[^\]]+?\])?         # optionally followed by an [arch-list] (like in B-D)
                     (?: \s*+ $type_re)?            # optionally followed by the type
@@ -134,11 +132,19 @@ while(my $bytes = <STDIN>) {
         my $tagdata = $1;
         ($tag_name, undef) = split(/ /, $tagdata, 2);
 
-    } elsif ($line =~ /^${TAG_REGEX}$/) {
+    } elsif ($line
+        =~ m{^([^N]): (\S+)(?: (\S+)(?:$verarchre)?)?: (\S+)(?:\s+(.*))?$}) {
+
+        # matches the full deal:
+        #    1  222 3333  4444444   5555   666  777
+        # -  T: pkg type (version) [arch]: tag [...]
+        #           ^^^^^^^^^^^^^^^^^^^^^
+        # Where the marked part(s) are optional values.  The numbers above
+        # the example are the capture groups.
 
         my $pkg_type = $3 // 'binary';
 
-        $tag_name = $5;
+        $tag_name = $6;
 
     } else {
         next;
