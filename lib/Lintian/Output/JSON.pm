@@ -39,6 +39,7 @@ const my %CODE_PRIORITY => (
     'X' => 70,
     'C' => 80,
     'O' => 90,
+    'M' => 100,
 );
 
 =head1 NAME
@@ -120,7 +121,7 @@ sub issue_hints {
 sub hintlist {
     my ($self, $arrayref) = @_;
 
-    my @hints;
+    my @hint_dictionaries;
 
     my @sorted = sort {
                defined $a->override <=> defined $b->override
@@ -131,29 +132,32 @@ sub hintlist {
 
     for my $input (@sorted) {
 
-        my %hint;
-        push(@hints, \%hint);
+        my %hint_dictionary;
+        push(@hint_dictionaries, \%hint_dictionary);
 
-        $hint{tag} = $input->tag->name;
+        $hint_dictionary{tag} = $input->tag->name;
 
-        $hint{context} = $input->context
+        $hint_dictionary{context} = $input->context
           if length $input->context;
 
-        $hint{visibility} = $input->tag->effective_severity;
-        $hint{experimental} = 'yes'
+        $hint_dictionary{visibility} = $input->tag->effective_severity;
+        $hint_dictionary{experimental} = 'yes'
           if $input->tag->experimental;
+
+        $hint_dictionary{mask} = $input->mask->name
+          if defined $input->mask;
 
         if ($input->override) {
 
-            $hint{override} = 'yes';
+            $hint_dictionary{override} = 'yes';
 
             my @comments = @{ $input->override->{comments} // [] };
-            $hint{override_comments} = \@comments
+            $hint_dictionary{override_comments} = \@comments
               if @comments;
         }
     }
 
-    return \@hints;
+    return \@hint_dictionaries;
 }
 
 =item describe_tags
@@ -163,33 +167,52 @@ sub hintlist {
 sub describe_tags {
     my ($self, $tags) = @_;
 
-    my @array;
+    my @tag_dictionaries;
 
     for my $tag (@{$tags}) {
 
-        my %dictionary;
+        my %tag_dictionary;
+        push(@tag_dictionaries, \%tag_dictionary);
 
-        $dictionary{name} = $tag->name;
-        $dictionary{name_spaced} = $tag->name_spaced
+        $tag_dictionary{name} = $tag->name;
+        $tag_dictionary{name_spaced} = $tag->name_spaced
           if length $tag->name_spaced;
-        $dictionary{show_always} = $tag->show_always
+        $tag_dictionary{show_always} = $tag->show_always
           if length $tag->show_always;
 
-        $dictionary{explanation} = $tag->explanation;
-        $dictionary{see_also} = $tag->see_also
+        $tag_dictionary{explanation} = $tag->explanation;
+        $tag_dictionary{see_also} = $tag->see_also
           if @{$tag->see_also};
 
-        $dictionary{check} = $tag->check;
-        $dictionary{visibility} = $tag->visibility;
-        $dictionary{experimental} = $tag->experimental
+        $tag_dictionary{check} = $tag->check;
+        $tag_dictionary{visibility} = $tag->visibility;
+        $tag_dictionary{experimental} = $tag->experimental
           if length $tag->experimental;
 
-        $dictionary{renamed_from} = $tag->renamed_from
+        $tag_dictionary{renamed_from} = $tag->renamed_from
           if @{$tag->renamed_from};
 
-        $dictionary{lintian_version} = $ENV{LINTIAN_VERSION};
+        my @screen_dictionaries;
 
-        push(@array, \%dictionary);
+        for my $screen (@{$tag->screens}) {
+
+            my %screen_dictionary;
+            push(@screen_dictionaries, \%screen_dictionary);
+
+            $screen_dictionary{name} = $screen->name;
+
+            my @petitioner_emails = map { $_->format } @{$screen->petitioners};
+            $screen_dictionary{petitioners} = \@petitioner_emails;
+
+            $screen_dictionary{reason} = $screen->reason;
+
+            $screen_dictionary{see_also} = $screen->see_also
+              if @{$screen->see_also};
+        }
+
+        $tag_dictionary{screens} = \@screen_dictionaries;
+
+        $tag_dictionary{lintian_version} = $ENV{LINTIAN_VERSION};
     }
 
     # convert to UTF-8 prior to encoding in JSON
@@ -199,9 +222,9 @@ sub describe_tags {
     $encoder->pretty;
 
     # encode single tags without array bracketing
-    my $object = \@array;
-    $object = $array[0]
-      if scalar @array == 1;
+    my $object = \@tag_dictionaries;
+    $object = shift @tag_dictionaries
+      if @tag_dictionaries == 1;
 
     my $json = $encoder->encode($object);
 
