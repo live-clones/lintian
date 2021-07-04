@@ -42,6 +42,7 @@ my $LINTIAN_VERSION;
 
 use Const::Fast;
 use Getopt::Long ();
+use IO::Interactive qw(is_interactive);
 use List::SomeUtils qw(any);
 use Term::ReadKey;
 use Unicode::UTF8 qw(encode_utf8);
@@ -57,7 +58,9 @@ const my $SPACE => q{ };
 
 const my $NEW_PROGRAM_NAME => q{lintian-explain-tags};
 
-my ($TERMINAL_WIDTH, undef, undef, undef) = GetTerminalSize();
+my $TERMINAL_WIDTH;
+($TERMINAL_WIDTH, undef, undef, undef) = GetTerminalSize()
+  if is_interactive;
 
 if (my $coverage_arg = $ENV{'LINTIAN_COVERAGE'}) {
     my $p5opt = $ENV{'PERL5OPT'}//$EMPTY;

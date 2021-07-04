@@ -81,7 +81,9 @@ my $hyperlinks_capable = is_interactive;
 # than randomly delivered signals.
 $SIG{PIPE} = 'IGNORE';
 
-my ($TERMINAL_WIDTH, undef, undef, undef) = GetTerminalSize();
+my $TERMINAL_WIDTH;
+($TERMINAL_WIDTH, undef, undef, undef) = GetTerminalSize()
+  if is_interactive;
 
 my %PRESERVE_ENV = map { $_ => 1 } qw(
   DEBRELEASE_DEBS_DIR
