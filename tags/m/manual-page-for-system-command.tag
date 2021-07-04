@@ -10,4 +10,7 @@ Explanation: The command in <code>/sbin</code> or <code>/usr/sbin</code> are sys
  user in which case it should be moved to <code>/bin</code> or
  <code>/usr/bin</code>, or alternatively the manual page should be moved to
  section 8 instead, ie. <code>/usr/share/man/man8</code>.
-See-Also: hier(7)
+See-Also:
+ Bug#348864,
+ Bug#253011,
+ hier(7)
