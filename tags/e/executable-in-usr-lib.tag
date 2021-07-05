@@ -15,12 +15,12 @@ See-Also: policy 9.1.1,
 
 Screen: emacs/elpa/scripts
 Petitioners: David Bremner <bremner@debian.org>
-Reason: The <tt>emacsen-common</tt> package places installation
+Reason: The <code>emacsen-common</code> package places installation
  and removal scripts, which for ELPA packages are executable,
- in the folder <tt>/usr/lib/emacsen-common/packages<tt>.
+ in the folder <code>/usr/lib/emacsen-common/packages</code>.
  .
  About four hundred installation packages are affected. All of
- them declare <tt>emacsen-common</tt> as an installation
+ them declare <code>emacsen-common</code> as an installation
  prerequisite.
 See-Also:
  Bug#974175

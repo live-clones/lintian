@@ -17,7 +17,7 @@ See-Also: https://lists.debian.org/debian-devel/2015/08/msg00412.html
 
 Screen: glibc/control/ldconfig
 Petitioners: Debian Lintian Maintainers <lintian-maint@debian.org>
-Reason: The packages built from <tt>glibc</tt> (notably <tt>libc-bin</tt>)
- need to call ldconfig in order to implement the <tt>ldconfig</tt> trigger.
+Reason: The packages built from <code>glibc</code> (notably <code>libc-bin</code>)
+ need to call ldconfig in order to implement the <code>ldconfig</code> trigger.
  .
  Transferred from the check.

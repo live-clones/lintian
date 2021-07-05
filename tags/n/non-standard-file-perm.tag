@@ -8,14 +8,14 @@ See-Also: policy 10.9
 Screen: toolchain/gnat/ali-read-only
 Petitioners: Nicolas Boulenguez <nicolas@debian.org>
 Reason: In GNAT, the compiler also deals with dependencies and rebuild order.
- The <tt>.ali</tt> files contain the dependency information required to detect
- if a <tt>.o</tt> is more recent than the closure of all sources it depends
+ The <code>.ali</code> files contain the dependency information required to detect
+ if a <code>.o</code> is more recent than the closure of all sources it depends
  upon, or if it should be rebuilt.
  .
- By convention, a read-only <tt>.ali</tt> file tells <tt>GNAT</tt> to fail if
- the <tt>.o</tt> is obsolete or unavailable, instead of attempting to rebuild.
- This is recommended for packaged libraries (the <tt>.so</tt> or <tt>.a</tt>
- are available but not the <tt>.o</tt> files).
+ By convention, a read-only <code>.ali</code> file tells <code>GNAT</code> to fail if
+ the <code>.o</code> is obsolete or unavailable, instead of attempting to rebuild.
+ This is recommended for packaged libraries (the <code>.so</code> or <code>.a</code>
+ are available but not the <code>.o</code> files).
  .
  This convention may seem bizarre according to modern standards, but it
  has been in use for 25 years, so Adacore would probably need a
@@ -23,9 +23,9 @@ Reason: In GNAT, the compiler also deals with dependencies and rebuild order.
  .
  See also Debian Policy 8.4, which explicitly requires this:
  .
- If the package provides Ada Library Information (<tt>*.ali</tt>) files for use
- with <tt>GNAT</tt>, these files must be installed read-only (mode 0444) so that
- <tt>GNAT>/tt> will not attempt to recompile them. This overrides the normal
+ If the package provides Ada Library Information (<code>&ast;.ali</code>) files for use
+ with <code>GNAT</code>, these files must be installed read-only (mode 0444) so that
+ <code>GNAT</code> will not attempt to recompile them. This overrides the normal
  file mode requirements given in "Permissions and owners."
 See-Also:
  policy 8.4,
