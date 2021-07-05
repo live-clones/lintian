@@ -38,10 +38,8 @@ use namespace::clean;
 const my $EMPTY => q{};
 const my $SPACE => q{ };
 const my $SLASH => q{/};
-const my $COMMA => q{,};
 const my $LEFT_PARENTHESIS => q{(};
 const my $RIGHT_PARENTHESIS => q{)};
-const my $PARAGRAPH_BREAK => qq{\n\n};
 
 # Ordered lists of severities, used for display level parsing.
 our @SEVERITIES= qw(classification pedantic info warning error);
@@ -282,66 +280,6 @@ sub code {
     my ($self) = @_;
 
     return $CODES{$self->effective_severity};
-}
-
-=item markdown_description
-
-=cut
-
-sub markdown_description {
-    my ($self) = @_;
-
-    my $description = $self->explanation;
-
-    my @extras;
-
-    my $references = $self->markdown_reference_statement;
-    push(@extras, $references)
-      if length $references;
-
-    push(@extras, 'Severity: '. $self->visibility);
-
-    push(@extras, 'Check: ' . $self->check)
-      if length $self->check;
-
-    push(@extras, 'Renamed from: ' . join($SPACE, @{$self->renamed_from}))
-      if @{$self->renamed_from};
-
-    push(@extras, 'This tag is experimental.')
-      if $self->experimental;
-
-    push(@extras,
-        'This tag is a classification. There is no issue in your package.')
-      if $self->visibility eq 'classification';
-
-    $description .= $PARAGRAPH_BREAK . $_ for @extras;
-
-    return $description;
-}
-
-=item markdown_reference_statement
-
-=cut
-
-sub markdown_reference_statement {
-    my ($self) = @_;
-
-    my @references = @{$self->see_also};
-
-    return $EMPTY
-      unless @references;
-
-    # remove and save last element
-    my $final = pop @references;
-
-    my $text        = $EMPTY;
-    my $oxfordcomma = (@references > 1 ? $COMMA : $EMPTY);
-    $text = join(', ', @references) . "$oxfordcomma and "
-      if @references;
-
-    $text .= $final;
-
-    return "Refer to $text for details.";
 }
 
 =item markdown_citation

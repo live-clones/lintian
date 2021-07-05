@@ -33,7 +33,12 @@ use Unicode::UTF8 qw(encode_utf8);
 use Moo;
 use namespace::clean;
 
+with 'Lintian::Output::Grammar';
+
 const my $EMPTY => q{};
+const my $SPACE => q{ };
+const my $NEWLINE => qq{\n};
+const my $PARAGRAPH_BREAK => $NEWLINE x 2;
 
 const my %CODE_PRIORITY => (
     'E' => 30,
@@ -187,10 +192,63 @@ sub describe_tags {
         say encode_utf8('<p>Name: ' . $tag->name . '</p>');
         say encode_utf8($EMPTY);
 
-        print encode_utf8(markdown($tag->markdown_description));
+        print encode_utf8(markdown($self->markdown_description($tag)));
     }
 
     return;
+}
+
+=item markdown_description
+
+=cut
+
+sub markdown_description {
+    my ($self, $tag) = @_;
+
+    my $description = $tag->explanation;
+
+    my @extras;
+
+    if (@{$tag->see_also}) {
+
+        my $references
+          = 'Please refer to '
+          . $self->oxford_enumeration('and', @{$tag->see_also})
+          . ' for details.';
+
+        push(@extras, $references);
+    }
+
+    push(@extras, 'Severity: '. $tag->visibility);
+
+    push(@extras, 'Check: ' . $tag->check)
+      if length $tag->check;
+
+    push(@extras, 'Renamed from: ' . join($SPACE, @{$tag->renamed_from}))
+      if @{$tag->renamed_from};
+
+    push(@extras, 'This tag is experimental.')
+      if $tag->experimental;
+
+    push(@extras,
+        'This tag is a classification. There is no issue in your package.')
+      if $tag->visibility eq 'classification';
+
+    for my $screen (@{$tag->screens}) {
+
+        my $screen_description = 'Screen: ' . $screen->name . $NEWLINE;
+        $screen_description
+          .= 'Petitioners: ' . join(', ', @{$screen->petitioners}) . $NEWLINE;
+        $screen_description .= 'Reason: ' . $screen->reason . $NEWLINE;
+
+        $screen_description .= 'See-Also: ' . $NEWLINE;
+
+        push(@extras, $screen_description);
+    }
+
+    $description .= $PARAGRAPH_BREAK . $_ for @extras;
+
+    return $description;
 }
 
 =back

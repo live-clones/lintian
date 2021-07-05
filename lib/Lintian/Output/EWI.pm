@@ -1,4 +1,5 @@
 # Copyright © 2008 Frank Lichtenheld <frank@lichtenheld.de>
+# Copyright © 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -31,16 +32,30 @@ use Unicode::UTF8 qw(encode_utf8);
 use Moo;
 use namespace::clean;
 
+with 'Lintian::Output::Grammar';
+
 # for tty hyperlinks
 const my $OSC_HYPERLINK => qq{\033]8;;};
 const my $OSC_DONE => qq{\033\\};
 
-const my $DESCRIPTION_INDENTATION => 4;
-
 const my $EMPTY => q{};
 const my $SPACE => q{ };
 const my $COLON => q{:};
+const my $DOT => q{.};
 const my $NEWLINE => qq{\n};
+const my $PARAGRAPH_BREAK => $NEWLINE x 2;
+
+const my $YES => q{yes};
+const my $NO => q{no};
+
+const my $COMMENT_PREFIX => q{N:} . $SPACE;
+
+const my $DESCRIPTION_INDENTATION => 2;
+const my $DESCRIPTION_PREFIX => $COMMENT_PREFIX
+  . $SPACE x $DESCRIPTION_INDENTATION;
+
+const my $SCREEN_INDENTATION => 4;
+const my $SCREEN_PREFIX => $COMMENT_PREFIX . $SPACE x $SCREEN_INDENTATION;
 
 const my %COLORS => (
     'E' => 'red',
@@ -316,59 +331,122 @@ sub describe_tags {
 sub describe_tag {
     my ($self, $tag, $columns) = @_;
 
-    my $PREFIX = q{N:} . $SPACE x $DESCRIPTION_INDENTATION;
-
-    my $description;
-
-    if (defined $tag) {
-        $description = markdown_to_plain($tag->markdown_description);
-
-    } else {
-        $description = 'Unknown tag.';
-    }
-
-    my @wrapped = prefix_and_wrap($description, $columns - length $PREFIX);
-
-    say encode_utf8($PREFIX . $_) for @wrapped;
-
-    return;
-}
-
-=item prefix_and_wrap
-
-=cut
-
-sub prefix_and_wrap {
-    my ($text, $columns) = @_;
-
-    local $Text::Wrap::columns = $columns
-      if defined $columns;
+    local $Text::Wrap::columns = $columns;
 
     # do not wrap long words such as urls; see #719769
     local $Text::Wrap::huge = 'overflow';
 
-    my @paragraphs = split(/\n{2,}/, $text);
+    my $wrapped = $COMMENT_PREFIX . $NEWLINE;
 
-    my @wrapped;
-    for my $paragraph (@paragraphs) {
+    if (defined $tag) {
 
-        # do not wrap preformatted paragraphs
-        unless ($paragraph =~ /^\s/) {
+        my $plain_explanation = markdown_to_plain($tag->explanation,
+            $columns - length $DESCRIPTION_PREFIX);
 
-            # reduce whitespace throughout, including newlines
-            $paragraph =~ s/\s+/ /g;
+        $wrapped .= $DESCRIPTION_PREFIX . $_ . $NEWLINE
+          for split(/\n/, $plain_explanation);
 
-            # trim beginning and end of each line
-            $paragraph =~ s/^\s+|\s+$//mg;
+        if (@{$tag->see_also}) {
 
-            $paragraph = wrap($EMPTY, $EMPTY, $paragraph);
+            $wrapped .= $COMMENT_PREFIX . $NEWLINE;
+
+            my $markdown
+              = 'Please refer to '
+              . $self->oxford_enumeration('and', @{$tag->see_also})
+              . ' for details.'
+              . $NEWLINE;
+            my $plain = markdown_to_plain($markdown,
+                $columns - length $DESCRIPTION_PREFIX);
+
+            $wrapped .= $DESCRIPTION_PREFIX . $_ . $NEWLINE
+              for split(/\n/, $plain);
         }
 
-        push(@wrapped, $EMPTY);
-        push(@wrapped, split(/\n/, $paragraph));
+        $wrapped .= $COMMENT_PREFIX . $NEWLINE;
+
+        my $visibility_prefix = 'Visibility: ';
+        $wrapped.= wrap(
+            $DESCRIPTION_PREFIX . $visibility_prefix,
+            $DESCRIPTION_PREFIX . $SPACE x length $visibility_prefix,
+            $tag->visibility . $NEWLINE
+        );
+
+        $wrapped .= wrap($DESCRIPTION_PREFIX, $DESCRIPTION_PREFIX,
+            'Show-Always: '. ($tag->show_always ? $YES : $NO) . $NEWLINE);
+
+        my $check_prefix = 'Check: ';
+        $wrapped .= wrap(
+            $DESCRIPTION_PREFIX . $check_prefix,
+            $DESCRIPTION_PREFIX . $SPACE x length $check_prefix,
+            $tag->check . $NEWLINE
+        );
+
+        if (@{$tag->renamed_from}) {
+
+            $wrapped .= wrap($DESCRIPTION_PREFIX, $DESCRIPTION_PREFIX,
+                    'Renamed from: '
+                  . join($SPACE, @{$tag->renamed_from})
+                  . $NEWLINE);
+        }
+
+        $wrapped
+          .= wrap($DESCRIPTION_PREFIX, $DESCRIPTION_PREFIX,
+            'This tag is experimental.' . $NEWLINE)
+          if $tag->experimental;
+
+        $wrapped .= wrap($DESCRIPTION_PREFIX, $DESCRIPTION_PREFIX,
+            'This tag is a classification. There is no issue in your package.'
+              . $NEWLINE)
+          if $tag->visibility eq 'classification';
+
+        for my $screen (@{$tag->screens}) {
+
+            $wrapped .= $COMMENT_PREFIX . $NEWLINE;
+
+            $wrapped
+              .= wrap($DESCRIPTION_PREFIX, $DESCRIPTION_PREFIX,
+                'Screen: ' . $screen->name . $NEWLINE);
+
+            $wrapped .= wrap($SCREEN_PREFIX, $SCREEN_PREFIX,
+                    'Petitioners: '
+                  . join(', ', @{$screen->petitioners})
+                  . $NEWLINE);
+
+            my $combined = $screen->reason . $NEWLINE;
+            if (@{$screen->see_also}) {
+                $combined .= $NEWLINE;
+                $combined
+                  .= 'Read more in '
+                  . $self->oxford_enumeration('and', @{$tag->see_also})
+                  . $DOT
+                  . $NEWLINE;
+            }
+
+            my $reason_prefix = 'Reason: ';
+            my $plain = markdown_to_plain($combined,
+                $columns - length($SCREEN_PREFIX . $reason_prefix));
+
+            my @lines = split(/\n/, $plain);
+            $wrapped
+              .= $SCREEN_PREFIX . $reason_prefix . (shift @lines) . $NEWLINE;
+            $wrapped
+              .= $SCREEN_PREFIX
+              . $SPACE x (length $reason_prefix)
+              . $_
+              . $NEWLINE
+              for @lines;
+        }
+
+    } else {
+        $wrapped
+          .= wrap($DESCRIPTION_PREFIX, $DESCRIPTION_PREFIX, 'Unknown tag.');
     }
 
-    return @wrapped;
+    $wrapped .= $COMMENT_PREFIX . $NEWLINE;
+
+    print encode_utf8($wrapped);
+
+    return;
 }
 
 =item markdown_to_plain
@@ -376,7 +454,7 @@ sub prefix_and_wrap {
 =cut
 
 sub markdown_to_plain {
-    my ($markdown) = @_;
+    my ($markdown, $columns) = @_;
 
     # use angular brackets for emphasis
     $markdown =~ s{<i>|<em>}{&lt;}g;
@@ -394,7 +472,40 @@ sub markdown_to_plain {
     # substitute HTML entities
     my $plain = decode_entities($markdown);
 
-    return $plain;
+    local $Text::Wrap::columns = $columns
+      if defined $columns;
+
+    # do not wrap long words such as urls; see #719769
+    local $Text::Wrap::huge = 'overflow';
+
+    my @paragraphs = split(/\n{2,}/, $plain);
+
+    my @lines;
+    for my $paragraph (@paragraphs) {
+
+        # do not wrap preformatted paragraphs
+        unless ($paragraph =~ /^\s/) {
+
+            # reduce whitespace throughout, including newlines
+            $paragraph =~ s/\s+/ /g;
+
+            # trim beginning and end of each line
+            $paragraph =~ s/^\s+|\s+$//mg;
+
+            $paragraph = wrap($EMPTY, $EMPTY, $paragraph);
+        }
+
+        push(@lines, $EMPTY);
+        push(@lines, split(/\n/, $paragraph));
+    }
+
+    # drop leading blank line
+    shift @lines;
+
+    my $wrapped;
+    $wrapped .= $_ . $NEWLINE for @lines;
+
+    return $wrapped;
 }
 
 =back
