@@ -223,4 +223,5 @@ Enable-Tags-From-Check:
  upstream-signature
  usrmerge
  vim
+ vim/addons
 
