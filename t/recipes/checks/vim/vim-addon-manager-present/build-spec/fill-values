@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Source: vim-foo
+Testname: vim-addon-manager-present
+Author: Debian Vim Maintainers <team+vim@tracker.debian.org>
