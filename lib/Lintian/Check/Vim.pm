@@ -44,6 +44,17 @@ sub visit_installed_files {
     return;
 }
 
+sub installable {
+    my ($self) = @_;
+    my $is_vim = $self->processable->name =~ /vim/;
+    my $depends = $self->processable->fields->value('Depends');
+
+    $self->hint('vim-addon-manager-obsolete')
+      if $is_vim and $depends =~ m{vim-addon-manager};
+
+    return;
+}
+
 1;
 
 # Local Variables:
