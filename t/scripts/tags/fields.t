@@ -59,10 +59,14 @@ my @disallowed = qw(Reference References Ref Info Certainty);
 my $perfile = $FIXED_TESTS_PER_FILE + scalar @mandatory + scalar @disallowed;
 
 # set the testing plan
-plan tests => $perfile * scalar @tagpaths;
+plan tests => 1 + $perfile * scalar @tagpaths;
 
 my $profile = Lintian::Profile->new;
 $profile->load(undef, undef, 0);
+
+my @descpaths = sort File::Find::Rule->file()->name('*.desc')->in('tags');
+diag "Illegal desc file name $_" for @descpaths;
+is(scalar @descpaths, 0, 'No tags have the old *.desc name');
 
 for my $tagpath (@tagpaths) {
 
