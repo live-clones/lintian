@@ -52,7 +52,7 @@ Common facilities for Lintian tags found and to be issued
 =item arguments
 =item tag
 =item override
-=item mask
+=item screen
 =item processable
 
 =item context
@@ -64,7 +64,7 @@ Calculate the string representation commonly referred to as 'context'.
 has arguments => (is => 'rw', default => sub { [] });
 has tag => (is => 'rw');
 has override => (is => 'rw');
-has mask => (is => 'rw');
+has screen => (is => 'rw');
 has processable => (is => 'rw');
 
 sub context {

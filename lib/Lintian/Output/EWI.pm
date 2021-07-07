@@ -195,7 +195,7 @@ sub print_hint {
 
     my $code = $tag->code;
     $code = 'O' if defined $hint->override;
-    $code = 'M' if defined $hint->mask;
+    $code = 'M' if defined $hint->screen;
 
     my $tag_color = $COLORS{$code};
 
@@ -218,8 +218,8 @@ sub print_hint {
           for @{$hint->override->{comments}};
     }
 
-    say encode_utf8('N: screen ' . $hint->mask->name)
-      if defined $hint->mask;
+    say encode_utf8('N: masked by screen ' . $hint->screen->name)
+      if defined $hint->screen;
 
     my $type = $EMPTY;
     $type = $SPACE . $hint->processable->type

@@ -382,7 +382,7 @@ sub process {
             next
               unless @matches;
 
-            my @sorted = sort { $a->name cmp $b->hame } @matches;
+            my @sorted = sort { $a->name cmp $b->name } @matches;
 
             push(@crossing,
                     $hint->tag->name
@@ -390,8 +390,8 @@ sub process {
                   . join($SPACE, map { $_->name } @sorted))
               if @sorted > 1;
 
-            my $mask = $sorted[0];
-            $hint->mask($mask);
+            my $screen = $sorted[0];
+            $hint->screen($screen);
         }
 
         $processable->hints($hints);

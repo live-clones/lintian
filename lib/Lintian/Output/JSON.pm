@@ -130,28 +130,28 @@ sub hintlist {
           || $a->context cmp $b->context
     } @{$arrayref // []};
 
-    for my $input (@sorted) {
+    for my $hint (@sorted) {
 
         my %hint_dictionary;
         push(@hint_dictionaries, \%hint_dictionary);
 
-        $hint_dictionary{tag} = $input->tag->name;
+        $hint_dictionary{tag} = $hint->tag->name;
 
-        $hint_dictionary{context} = $input->context
-          if length $input->context;
+        $hint_dictionary{context} = $hint->context
+          if length $hint->context;
 
-        $hint_dictionary{visibility} = $input->tag->effective_severity;
+        $hint_dictionary{visibility} = $hint->tag->effective_severity;
         $hint_dictionary{experimental} = 'yes'
-          if $input->tag->experimental;
+          if $hint->tag->experimental;
 
-        $hint_dictionary{mask} = $input->mask->name
-          if defined $input->mask;
+        $hint_dictionary{screen} = $hint->screen->name
+          if defined $hint->screen;
 
-        if ($input->override) {
+        if ($hint->override) {
 
             $hint_dictionary{override} = 'yes';
 
-            my @comments = @{ $input->override->{comments} // [] };
+            my @comments = @{ $hint->override->{comments} // [] };
             $hint_dictionary{override_comments} = \@comments
               if @comments;
         }
