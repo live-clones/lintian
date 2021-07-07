@@ -192,14 +192,13 @@ sub process{
         } @hints;
 
         my %reported_count;
-        $reported_count{$_->tag->effective_severity}++ for @reported_trusted;
+        $reported_count{$_->tag->visibility}++ for @reported_trusted;
         $reported_count{experimental} += scalar @reported_experimental;
         $reported_count{override} += scalar @override;
 
         unless ($option->{'no-override'} || $option->{'show-overrides'}) {
 
-            $override_count{$_->tag->effective_severity}++
-              for @override_trusted;
+            $override_count{$_->tag->visibility}++ for @override_trusted;
             $override_count{experimental} += scalar @override_experimental;
         }
 

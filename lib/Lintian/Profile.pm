@@ -69,7 +69,6 @@ const my @VALID_HEADER_FIELDS => qw(
 const my @VALID_BODY_FIELDS => qw(
   Tags
   Overridable
-  Severity
 );
 
 =head1 NAME
@@ -645,13 +644,6 @@ sub read_profile {
 "Tags field missing or empty in section $section_number of profile $profile_name"
         )unless @tags;
 
-        my $severity = $section->unfolded_value('Severity');
-        croak encode_utf8(
-"Profile $profile_name contains invalid severity $severity in section $section_number"
-          )
-          if length $severity && none { $severity eq $_ }
-        @Lintian::Tag::SEVERITIES;
-
         my $overridable = $section->unfolded_value('Overridable') || 'yes';
         if ($overridable !~ / ^ -? \d+ $ /msx) {
             my $lowercase = lc $overridable;
@@ -671,18 +663,6 @@ sub read_profile {
         }
 
         for my $tagname (@tags) {
-
-            my $tag = $self->known_tags_by_name->{$tagname};
-            croak encode_utf8(
-"Unknown tag $tagname in profile $profile_name (section $section_number)"
-            )unless defined $tag;
-
-            croak encode_utf8(
-"Classification tag $tagname cannot take a severity (profile $profile_name, section $section_number"
-            )if $tag->visibility eq 'classification';
-
-            $tag->effective_severity($severity)
-              if length $severity;
 
             if ($overridable) {
                 delete $self->non_overridable_tags->{$tagname};
@@ -711,7 +691,7 @@ sub display_level_for_tag {
     croak encode_utf8("Unknown tag $tagname")
       unless defined $tag;
 
-    return $self->display_level_lookup->{$tag->effective_severity};
+    return $self->display_level_lookup->{$tag->visibility};
 }
 
 =item tag_is_enabled(TAG)
@@ -727,32 +707,32 @@ sub tag_is_enabled {
     return 0;
 }
 
-=item display(OPERATION, RELATION, SEVERITY)
+=item display(OPERATION, RELATION, VISIBILITY)
 
-Configure which tags are displayed by severity.  OPERATION
+Configure which tags are displayed by visibility.  OPERATION
 is C<+> to display the indicated tags, C<-> to not display the indicated
 tags, or C<=> to not display any tags except the indicated ones.  RELATION
 is one of C<< < >>, C<< <= >>, C<=>, C<< >= >>, or C<< > >>.  The
-OPERATION will be applied to all values of severity that
-match the given RELATION on the SEVERITY argument.  If
+OPERATION will be applied to all values of visibility that
+match the given RELATION on the VISIBILITY argument.  If
 either of those arguments are undefined, the action applies to any value
 for that variable.  For example:
 
     $tags->display('=', '>=', 'error');
 
 turns off display of all tags and then enables display of any tag of
-severity error or higher.
+visibility error or higher.
 
     $tags->display('+', '>', 'warning');
 
-adds to the current configuration display of all tags with a severity
+adds to the current configuration display of all tags with a visibility
 higher than warning.
 
     $tags->display('-', '=', 'info');
 
-turns off display of tags of severity info.
+turns off display of tags of visibility info.
 
-This method throws an exception on errors, such as an unknown severity or
+This method throws an exception on errors, such as an unknown visibility or
 an impossible constraint (like C<< > serious >>).
 
 =cut
@@ -793,48 +773,49 @@ sub _relation_subset {
     return @list[($found + 1) .. $#list];
 }
 
-# Given the operation, relation, and severity, produce a
+# Given the operation, relation, and visibility, produce a
 # human-readable representation of the display level string for errors.
 sub _format_level {
-    my ($self, $op, $rel, $severity) = @_;
+    my ($self, $op, $rel, $visibility) = @_;
 
-    if (not defined $severity) {
+    if (not defined $visibility) {
         return "$op $rel";
     } else {
-        return "$op $rel $severity (severity)";
+        return "$op $rel $visibility (visibility)";
     }
 }
 
 sub display {
-    my ($self, $op, $rel, $severity) = @_;
+    my ($self, $op, $rel, $visibility) = @_;
 
     unless ($op =~ /^[+=-]\z/ and $rel =~ /^(?:[<>]=?|=)\z/) {
-        my $error = $self->_format_level($op, $rel, $severity);
+        my $error = $self->_format_level($op, $rel, $visibility);
         die encode_utf8('invalid display constraint ' . $error);
     }
 
     if ($op eq $EQUAL) {
-        for my $s (@Lintian::Tag::SEVERITIES) {
+        for my $s (@Lintian::Tag::VISIBILITIES) {
             $self->display_level_lookup->{$s} = 0;
         }
     }
 
     my $status = ($op eq $HYPHEN ? 0 : 1);
 
-    my @severities;
-    if ($severity) {
-        @severities
-          = $self->_relation_subset($severity, $rel,@Lintian::Tag::SEVERITIES);
+    my @visibilities;
+    if ($visibility) {
+        @visibilities
+          = $self->_relation_subset($visibility, $rel,
+            @Lintian::Tag::VISIBILITIES);
     } else {
-        @severities = @Lintian::Tag::SEVERITIES;
+        @visibilities = @Lintian::Tag::VISIBILITIES;
     }
 
-    unless (@severities) {
-        my $error = $self->_format_level($op, $rel, $severity);
+    unless (@visibilities) {
+        my $error = $self->_format_level($op, $rel, $visibility);
         die encode_utf8('invalid display constraint ' . $error);
     }
 
-    for my $s (@severities) {
+    for my $s (@visibilities) {
         $self->display_level_lookup->{$s} = $status;
     }
 

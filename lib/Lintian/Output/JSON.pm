@@ -140,7 +140,7 @@ sub hintlist {
         $hint_dictionary{context} = $hint->context
           if length $hint->context;
 
-        $hint_dictionary{visibility} = $hint->tag->effective_severity;
+        $hint_dictionary{visibility} = $hint->tag->visibility;
         $hint_dictionary{experimental} = 'yes'
           if $hint->tag->experimental;
 

@@ -41,8 +41,8 @@ const my $SLASH => q{/};
 const my $LEFT_PARENTHESIS => q{(};
 const my $RIGHT_PARENTHESIS => q{)};
 
-# Ordered lists of severities, used for display level parsing.
-our @SEVERITIES= qw(classification pedantic info warning error);
+# Ordered lists of visibilities, used for display level parsing.
+our @VISIBILITIES= qw(classification pedantic info warning error);
 
 =head1 NAME
 
@@ -65,8 +65,6 @@ metadata elements or to format the tag description.
 =item name
 
 =item visibility
-
-=item effective_severity
 
 =item check
 
@@ -99,23 +97,8 @@ has visibility => (
         my ($text) = @_;
 
         $text //= $EMPTY;
-        croak encode_utf8("Unknown tag severity $text")
-          if none { $text eq $_ } @SEVERITIES;
-
-        return $text;
-    },
-    default => $EMPTY
-);
-
-has effective_severity => (
-    is => 'rw',
-    lazy => 1,
-    coerce => sub {
-        my ($text) = @_;
-
-        $text //= $EMPTY;
-        croak encode_utf8("Unknown tag severity $text")
-          if none { $text eq $_ } @SEVERITIES;
+        croak encode_utf8("Unknown tag visibility $text")
+          if none { $text eq $_ } @VISIBILITIES;
 
         return $text;
     },
@@ -213,8 +196,6 @@ sub load {
     croak encode_utf8("No Tag field in $tagpath")
       unless length $self->name;
 
-    $self->effective_severity($self->visibility);
-
     my @screens;
     for my $section (@sections) {
 
@@ -260,14 +241,14 @@ sub load {
 =item code()
 
 Returns the one-letter code for the tag.  This will be a letter chosen
-from C<E>, C<W>, C<I>, or C<P>, based on the tag severity, and
+from C<E>, C<W>, C<I>, or C<P>, based on the tag visibility, and
 other attributes (such as whether experimental is set).  This code will
 never be C<O> or C<X>; overrides and experimental tags are handled
 separately.
 
 =cut
 
-# Map severity levels to tag codes.
+# Map visibility levels to tag codes.
 our %CODES = (
     'error' => 'E',
     'warning' => 'W',
@@ -279,7 +260,7 @@ our %CODES = (
 sub code {
     my ($self) = @_;
 
-    return $CODES{$self->effective_severity};
+    return $CODES{$self->visibility};
 }
 
 =item markdown_citation

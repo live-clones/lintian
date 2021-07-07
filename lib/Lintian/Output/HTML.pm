@@ -161,8 +161,8 @@ sub hintlist {
         $hint{context} = $input->context
           if length $input->context;
 
-        $hint{severity} = $input->tag->effective_severity;
-        $hint{code} = uc substr($hint{severity}, 0, 1);
+        $hint{visibility} = $input->tag->visibility;
+        $hint{code} = uc substr($hint{visibility}, 0, 1);
 
         $hint{experimental} = 'yes'
           if $input->tag->experimental;
@@ -219,7 +219,7 @@ sub markdown_description {
         push(@extras, $references);
     }
 
-    push(@extras, 'Severity: '. $tag->visibility);
+    push(@extras, 'Visibility: '. $tag->visibility);
 
     push(@extras, 'Check: ' . $tag->check)
       if length $tag->check;

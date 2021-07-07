@@ -85,7 +85,7 @@ const my $EMPTY => q{};
 const my $COLON => q{:};
 const my $MAXIMUM_TAG_LENGTH => 68;
 
-my %severities = map { $_ => 1 } @Lintian::Tag::SEVERITIES;
+my %visibilities = map { $_ => 1 } @Lintian::Tag::VISIBILITIES;
 my %check_types = map { $_ => 1 } qw(binary changes source udeb);
 my %known_html_tags = map { $_ => 1 } qw(a em i tt);
 
@@ -211,7 +211,7 @@ sub test_check_desc {
 
         for my $tpara (@tagpara) {
             my $tag = $tpara->{'Tag'}//$EMPTY;
-            my $severity = $tpara->{'Severity'}//$EMPTY;
+            my $visibility = $tpara->{'Severity'}//$EMPTY;
             my $explanation = $tpara->{'Explanation'} // $EMPTY;
             my (@htmltags, %seen);
 
@@ -227,10 +227,10 @@ sub test_check_desc {
                 'Tag is not too long')
               or $builder->diag("$cname: $tag\n");
 
-            # Severity
-            $builder->ok($severity && exists $severities{$severity},
-                'Tag has valid severity')
-              or $builder->diag("$cname: $tag severity: $severity\n");
+            # Visibility
+            $builder->ok($visibility && exists $visibilities{$visibility},
+                'Tag has valid visibility')
+              or $builder->diag("$cname: $tag visibility: $visibility\n");
 
             # Explanation
             my $mistakes = 0;
