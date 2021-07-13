@@ -65,6 +65,36 @@ const my $MANY_OVERRIDES => 20;
 
 my $MISC_DEPENDS = Lintian::Relation->new->load('${misc:Depends}');
 
+# Manually maintained list of dependencies needed for dh addons. This overrides
+# information from data/common/dh_addons (the latter file is automatically
+# generated).
+my %DH_ADDON_MANUAL_PREREQUISITES = (
+    ada_library => 'dh-ada-library | dh-sequence-ada-library',
+    apache2 => 'dh-apache2 | apache2-dev',
+    autoreconf =>
+      'dh-autoreconf | debhelper (>= 9.20160403~) | debhelper-compat',
+    cli => 'cli-common-dev | dh-sequence-cli',
+    dwz => 'debhelper | debhelper-compat | dh-sequence-dwz',
+    installinitramfs =>
+      'debhelper | debhelper-compat | dh-sequence-installinitramfs',
+    gnome => 'gnome-pkg-tools | dh-sequence-gnome',
+    lv2config => 'lv2core',
+    nodejs => 'pkg-js-tools | dh-sequence-nodejs',
+    perl_dbi => 'libdbi-perl | dh-sequence-perl-dbi',
+    perl_imager => 'libimager-perl | dh-sequence-perl-imager',
+    pgxs => 'postgresql-server-dev-all | postgresql-all',
+    pgxs_loop => 'postgresql-server-dev-all | postgresql-all',
+    pypy => 'dh-python | dh-sequence-pypy',
+    python2 => 'python2:any | python2-dev:any | dh-sequence-python2',
+    python3 =>
+'python3:any | python3-all:any | python3-dev:any | python3-all-dev:any | dh-sequence-python3',
+    scour => 'scour | python-scour | dh-sequence-scour',
+    sphinxdoc =>
+      'sphinx | python-sphinx | python3-sphinx | dh-sequence-sphinxdoc',
+    systemd =>
+'debhelper (>= 9.20160709~) | debhelper-compat | dh-sequence-systemd | dh-systemd',
+);
+
 sub source {
     my ($self) = @_;
 
@@ -79,8 +109,6 @@ sub source {
     my $dh_ver_deps
       = $self->profile->load_data('debhelper/dh_commands-manual', qr/\|\|/);
     my $dh_addons = $self->profile->load_data('common/dh_addons', $EQUAL);
-    my $dh_addons_manual
-      = $self->profile->load_data('debhelper/dh_addons-manual', qr/\|\|/);
 
     my $dh_commands_depends
       = $self->profile->load_data('debhelper/dh_commands', $EQUAL);
@@ -217,7 +245,7 @@ sub source {
                 for my $addon (split(/,/, $addon_list)) {
                     my $orig_addon = $addon;
                     $addon =~ y,-,_,;
-                    my $depends = $dh_addons_manual->value($addon)
+                    my $depends = $DH_ADDON_MANUAL_PREREQUISITES{$addon}
                       || $dh_addons->value($addon);
                     if ($addon eq 'autotools_dev') {
                         $self->hint(
