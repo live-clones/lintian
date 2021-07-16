@@ -50,6 +50,19 @@ sub source {
     return;
 }
 
+sub binary {
+    my ($self) = @_;
+
+    my @prerequisites
+      = $self->processable->fields->trimmed_list('Depends', qr/,/);
+
+    my @ruby_interpreter = grep { / \b ruby-interpreter \b /x } @prerequisites;
+
+    $self->hint('ruby-interpreter-is-deprecated', $_)for @ruby_interpreter;
+
+    return;
+}
+
 1;
 
 # Local Variables:
