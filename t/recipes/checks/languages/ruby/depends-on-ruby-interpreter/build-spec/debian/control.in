@@ -1,0 +1,11 @@
+Source: depends-on-ruby-interpreter
+Section: unknown
+Priority: optional
+Maintainer: Antonio Terceiro <terceiro@debian.org>
+Build-Depends: gem2deb (>= 1.0), debhelper-compat (= 13)
+
+Package: depends-on-ruby-interpreter
+Architecture: all
+Depends: ruby | ruby-interpreter, ruby-foobar, ${shlibs:Depends}, ${misc:Depends}
+Description: <insert up to 60 chars description>
+ <insert long description, indented with spaces>

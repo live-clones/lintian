@@ -50,6 +50,19 @@ sub source {
     return;
 }
 
+sub binary {
+    my ($self) = @_;
+
+    my $fields = $self->processable->fields;
+    if ($fields->declares('Depends')) {
+        my @dependencies = split(/\s*,\s*/, $fields->value('Depends'));
+        for my $dependency (@dependencies) {
+            $self->hint('ruby-interpreter-is-deprecated', $dependency)
+                if $dependency =~ /ruby-interpreter/;
+        }
+    }
+}
+
 1;
 
 # Local Variables:
