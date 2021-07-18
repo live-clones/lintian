@@ -136,9 +136,7 @@ sub source {
     my (%missingbdeps, %missingbdeps_addons, $maybe_skipping, $dhcompatvalue);
     my $inclcdbs = 0;
 
-    my ($bdepends_norestriction, $bdepends, %build_systems,
-        $uses_autotools_dev_dh);
-    $bdepends = $processable->relation('Build-Depends-All');
+    my (%build_systems, $uses_autotools_dev_dh);
     my $seen_dh = 0;
     my $seen_dh_dynamic = 0;
     my $seen_dh_systemd = 0;
@@ -160,8 +158,12 @@ sub source {
 
     my $command_prefix_pattern = qr/\s+[@+-]?(?:\S+=\S+\s+)*/;
 
+    my $bdepends_norestriction
+      = $processable->relation_norestriction('Build-Depends-All');
+    my $bdepends = $processable->relation('Build-Depends-All');
+
     foreach (qw(python2 python3)) {
-        $seen{$_} = 1 if $bdepends->implies("dh-sequence-$_");
+        $seen{$_} = 1 if $bdepends_norestriction->implies("dh-sequence-$_");
     }
 
     while (my $line = <$rules_fd>) {
@@ -675,9 +677,6 @@ sub source {
         }
     }
 
-    $bdepends_norestriction
-      = $processable->relation_norestriction('Build-Depends-All');
-    $bdepends = $processable->relation('Build-Depends-All');
     if ($needbuilddepends) {
         $self->hint('package-uses-debhelper-but-lacks-build-depends')
           unless $bdepends->implies('debhelper')
