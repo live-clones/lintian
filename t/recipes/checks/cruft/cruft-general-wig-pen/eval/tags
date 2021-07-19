@@ -1,5 +1,3 @@
-cruft-general-wig-pen (source): source-contains-debian-substvars debian/substvars
-cruft-general-wig-pen (source): source-contains-cmake-cache-file debian/CMakeCache.txt
 cruft-general-wig-pen (source): debian-adds-svn-control-dir debian/.svn/
 cruft-general-wig-pen (source): debian-adds-svn-conflict-file debian/foo.r1352
 cruft-general-wig-pen (source): debian-adds-svn-commit-file debian/svn-commit.tmp

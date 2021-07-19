@@ -146,6 +146,21 @@ sub source {
     return;
 }
 
+sub visit_patched_files {
+    my ($self, $item) = @_;
+
+    return
+      unless $item->is_file;
+
+    # here we check old upstream specification
+    # debian/upstream should be a directory
+    $self->hint('debian-upstream-obsolete-path', $item->name)
+      if $item->name eq 'debian/upstream'
+      || $item->name eq 'debian/upstream-metadata.yaml';
+
+    return;
+}
+
 1;
 
 # Local Variables:

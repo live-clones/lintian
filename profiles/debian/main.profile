@@ -7,7 +7,10 @@ Enable-Tags-From-Check:
  apt
  binaries
  build-systems/automake
+ build-systems/autotools
+ build-systems/autotools/libtool
  build-systems/cmake
+ build-systems/waf
  changes-file
  conffiles
  continuous-integration/salsa
@@ -41,6 +44,7 @@ Enable-Tags-From-Check:
  debian/rules/dh-sequencer
  debian/source-dir
  debian/source/include-binaries
+ debian/substvars
  debian/symbols
  debian/trailing-whitespace
  debian/upstream/metadata
@@ -54,7 +58,9 @@ Enable-Tags-From-Check:
  desktop/gnome/gir
  desktop/icons
  desktop/x11
+ dh-make
  documentation
+ documentation/doxygen
  documentation/examples
  documentation/manual
  documentation/texinfo
@@ -104,6 +110,8 @@ Enable-Tags-From-Check:
  filename-length
  files/architecture
  files/banned
+ files/banned/compiled-help
+ files/banned/lenna
  files/bugs
  files/build-path
  files/compressed
@@ -176,6 +184,7 @@ Enable-Tags-From-Check:
  languages/javascript/nodejs
  languages/ocaml
  languages/perl
+ languages/perl/perl5
  languages/perl/yapp
  languages/php
  languages/php/embedded
@@ -188,6 +197,7 @@ Enable-Tags-From-Check:
  languages/python/homepage
  languages/python/obsolete
  languages/python/scripts
+ languages/r
  languages/r/architecture
  languages/r/site-library
  languages/ruby

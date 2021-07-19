@@ -1,6 +1,6 @@
 Tag: configure-generated-file-in-source
 Severity: warning
-Check: cruft
+Check: build-systems/autotools
 Explanation: Leaving config.cache/status causes autobuilders problems.
  config.cache and config.status are produced by GNU autoconf's configure
  scripts. If they are left in the source package, autobuilders may pick

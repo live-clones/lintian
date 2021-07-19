@@ -1,6 +1,13 @@
 # build-systems/cmake -- lintian check script -*- perl -*-
 
 # Copyright © 1998 Christian Schwarz and Richard Braakman
+# Copyright © 1999 Joey Hess
+# Copyright © 2000 Sean 'Shaleh' Perry
+# Copyright © 2002 Josip Rodin
+# Copyright © 2007 Russ Allbery
+# Copyright © 2013-2018 Bastien ROUCARIÈS
+# Copyright © 2017-2020 Chris Lamb <lamby@debian.org>
+# Copyright © 2020-2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -29,12 +36,29 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
+sub visit_patched_files {
+    my ($self, $item) = @_;
+
+    return
+      unless $item->is_file;
+
+    # Check for CMake cache files.  These embed the source path and hence
+    # will cause FTBFS on buildds, so they should never be present
+    $self->hint('source-contains-cmake-cache-file', $item->name)
+      if $item->basename eq 'CMakeCache.txt';
+
+    return;
+}
+
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
+
+    return
+      unless $item->is_file;
 
     # /usr/share/cmake-*
-    $self->hint('package-contains-cmake-private-file', $file->name)
-      if $file->name =~ m{^usr/share/cmake-\d+\.\d+/.+}
+    $self->hint('package-contains-cmake-private-file', $item->name)
+      if $item->name =~ m{^usr/share/cmake-\d+\.\d+/.+}
       && $self->processable->source_name ne 'cmake';
 
     return;

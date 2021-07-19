@@ -1,6 +1,3 @@
-cruft-general-quilt (source): source-contains-debian-substvars debian/substvars
-cruft-general-quilt (source): source-contains-debian-substvars debian/somepackage.substvars
-cruft-general-quilt (source): source-contains-cmake-cache-file debian/CMakeCache.txt
 cruft-general-quilt (source): debian-adds-svn-control-dir debian/.svn/
 cruft-general-quilt (source): debian-adds-svn-conflict-file debian/foo.r1352
 cruft-general-quilt (source): debian-adds-svn-commit-file debian/svn-commit.tmp

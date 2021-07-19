@@ -1,6 +1,6 @@
 Tag: source-contains-waf-binary
 Severity: error
-Check: cruft
+Check: build-systems/waf
 Explanation: The source tarball contains a waf binary. This file is a Python
  script with an embedded bzip2 archive, which is uncompressed and unpacked
  at runtime.
