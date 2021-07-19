@@ -63,92 +63,10 @@ const my $DOLLAR => q{$};
 const my $DOT => q{.};
 const my $DOUBLE_DOT => q{..};
 
-const my $WARN_FILE_DATA_FIELDS => 4;
 const my $LICENSE_CHECK_DATA_FIELDS => 5;
 
 const my $ITEM_NOT_FOUND => -1;
 const my $SKIP_HTML => -1;
-
-# prebuilt-file or forbidden file type
-has WARN_FILE_TYPE => (
-    is => 'rw',
-    lazy => 1,
-    default => sub {
-        my ($self) = @_;
-
-        return $self->profile->load_data(
-            'cruft/warn-file-type',
-            qr/\s*\~\~\s*/,
-            sub {
-                my ($regtype, $regname, $transformlist)
-                  = split(/ \s* ~~ \s* /msx, $_[1],$WARN_FILE_DATA_FIELDS);
-
-                die encode_utf8("Syntax error in cruft/warn-file-type $.")
-                  if !defined $regtype;
-
-                # allow empty regname
-                $regname //= $EMPTY;
-
-                # trim both ends
-                $regname =~ s/^\s+|\s+$//g;
-
-                if (length($regname) == 0) {
-                    $regname = $DOT . $ASTERISK;
-                }
-
-                # build transform pair
-                $transformlist //= $EMPTY;
-                $transformlist =~ s/^\s+|\s+$//g;
-
-                my $syntaxerror = 'Syntax error in cruft/warn-file-type';
-                my @transformpairs;
-                unless($transformlist eq $EMPTY) {
-                    my @transforms = split(/\s*\&\&\s*/, $transformlist);
-                    if(scalar(@transforms) > 0) {
-                        foreach my $transform (@transforms) {
-                            # regex transform
-                            if($transform =~ m{^s/}) {
-                                $transform =~ m{^s/([^/]*?)/([^/]*?)/$};
-                                unless(defined($1) and defined($2)) {
-                                    die encode_utf8(
-                                        "$syntaxerror in transform regex $.");
-                                }
-                                push(@transformpairs,[$1,$2]);
-                            } elsif ($transform =~ /^map\s*{/) {
-                                $transform
-                                  =~ m{^map \s* \{ \s* 's/([^/]*?)/\'.\$_.'/' \s* \} \s* qw\(([^\)]*)\)}x;
-                                unless(defined($1) and defined($2)) {
-                                    die encode_utf8(
-"$syntaxerror in map transform regex $."
-                                    );
-                                }
-                                my $words = $2;
-                                my $match = $1;
-                                my @wordarray = split(/\s+/,$words);
-                                if(scalar(@wordarray) == 0) {
-                                    die encode_utf8(
-"$syntaxerror in map transform regex : no qw arg $."
-                                    );
-                                }
-                                foreach my $word (@wordarray) {
-                                    push(@transformpairs,[$match, $word]);
-                                }
-                            } else {
-                                die encode_utf8(
-                                    "$syntaxerror in last field $.");
-                            }
-                        }
-                    }
-                }
-
-                return {
-                    'regtype'   => qr/$regtype/x,
-                    'regname' => qr/$regname/x,
-                    'checkmissing' => (not not scalar(@transformpairs)),
-                    'transform' => \@transformpairs,
-                };
-            });
-    });
 
 # prebuilt-file or forbidden file type
 has RFC_WHITELIST => (
@@ -163,32 +81,6 @@ has RFC_WHITELIST => (
                 return qr/$_[0]/xms;
             });
     });
-
-# prebuilt-file or forbidden copyright
-has BAD_LINK_COPYRIGHT => (
-    is => 'rw',
-    lazy => 1,
-    default => sub {
-        my ($self) = @_;
-
-        return $self->profile->load_data(
-            'cruft/bad-link-copyright',
-            qr/\s*\~\~\s*/,
-            sub {
-                return qr/$_[1]/xms;
-            });
-    });
-
-# get javascript name
-sub _minified_javascript_name_regexp {
-    my ($self) = @_;
-    my $jsv
-      = $self->WARN_FILE_TYPE->value(
-        'source-contains-prebuilt-javascript-object');
-    return defined($jsv)
-      ? $jsv->{'regname'}
-      : qr/(?i)[-._](?:min|pack(?:ed)?)\.js$/;
-}
 
 # get browserified regexp
 has BROWSERIFY_REGEX => (
@@ -205,93 +97,104 @@ has BROWSERIFY_REGEX => (
             });
     });
 
-sub _get_license_check_file {
-    my ($self, $filename) = @_;
+my %NVIDIA_LICENSE = (
+    keywords => [qw{license intellectual retain property}],
+    sentences =>[
+'retain all intellectual property and proprietary rights in and to this software and related documentation'
+    ]);
 
-    my $data = $self->profile->load_data(
-        $filename,
-        qr/\s*\~\~\s*/,
-        sub {
+my %NON_FREE_LICENSES = (
+# first field is tag
+# second field is a list of keywords in lower case
+# third field are lower case sentences to match the license. Notes that space are normalized before and formatting removed
+# fourth field is a regex to use to match the license, use lower case and [ ] for space.
+# 5th field is a function to call if the field 2th to 5th match.
+# (see dispatch table %LICENSE_CHECK_DISPATCH_TABLE
 
-            my ($keywords, $sentence, $regex, $firstregex, $callsub)
-              = split(/ \s* ~~ \s* /msx, $_[1],$LICENSE_CHECK_DATA_FIELDS);
-
-            die encode_utf8("Syntax error in $filename:$.")
-              if any { !defined } ($keywords, $sentence);
-
-            $regex //= $EMPTY;
-            $firstregex //= $EMPTY;
-            $callsub //= $EMPTY;
-
-            # trim both ends
-            $keywords =~ s/^\s+|\s+$//g;
-            $sentence =~ s/^\s+|\s+$//g;
-            $regex =~ s/^\s+|\s+$//g;
-            $firstregex =~ s/^\s+|\s+$//g;
-            $callsub =~ s/^\s+|\s+$//g;
-
-            my @keywordlist = split(/\s*\&\&\s*/, $keywords);
-
-            die encode_utf8("$filename: No keywords on line $.")
-              if @keywordlist < 1;
-
-            my @sentencelist = split(/\s*\|\|\s*/, $sentence);
-
-            die encode_utf8("$filename: No sentence on line $.")
-              if @sentencelist < 1;
-
-            $firstregex ||= $regex;
-            $firstregex ||= $DOT . $ASTERISK;
-
-            # prefer firstregex previously used for block 0
-            my %ret = (
-                'keywords' => \@keywordlist,
-                'sentence' => \@sentencelist,
-                'regex' => qr/$firstregex/xsm,
-            );
-
-            my %LICENSE_CHECK_DISPATCH_TABLE= (
-                'license-problem-gfdl-invariants' =>
-                  \&check_gfdl_license_problem,
-                'rfc-whitelist-filename' =>\&rfc_whitelist_filename,
-                'php-source-whitelist' => \&php_source_whitelist,
-                #'print-group'          => sub { print($1)},
-            );
-
-            unless ($callsub eq $EMPTY) {
-                if (defined($LICENSE_CHECK_DISPATCH_TABLE{$callsub})) {
-                    $ret{'callsub'} = $LICENSE_CHECK_DISPATCH_TABLE{$callsub};
-                } else {
-                    die encode_utf8("$filename: Unknown sub $.");
-                }
-            }
-
-            return \%ret;
-        });
-
-    return $data;
-}
-
-# get usual non distributable license
-has NON_DISTRIBUTABLE_LICENSES => (
-    is => 'rw',
-    lazy => 1,
-    default => sub {
-        my ($self) = @_;
-
-        return $self->_get_license_check_file(
-            'cruft/non-distributable-license');
-    });
-
-# get non free license
-# get usual non distributable license
-has NON_FREE_LICENSES => (
-    is => 'rw',
-    lazy => 1,
-    default => sub {
-        my ($self) = @_;
-
-        return $self->_get_license_check_file('cruft/non-free-license');
+    # json license
+    'license-problem-json-evil' => {
+        keywords => [qw{software evil good}],
+        sentences => ['software shall be used for good'],
+        regex =>
+qr{software [ ] shall [ ] be [ ] used [ ] for [ ] good [ ]? ,? [ ]? not [ ] evil}msx
+    },
+    # non free RFC old version
+    'license-problem-non-free-RFC' => {
+        keywords => [qw{document purpose translate language}],
+        sentences => ['this document itself may not be modified in any way'],
+        regex =>
+qr/this [ ] document [ ] itself [ ] may [ ] not [ ] be [ ] modified [ ] in [ ] any [ ] way [ ]?, [ ]? such [ ] as [ ] by [ ] removing [ ] the [ ] copyright [ ] notice [ ] or [ ] references [ ] to [ ] .{0,256} [ ]? except [ ] as [ ] needed [ ] for [ ] the [ ] purpose [ ] of [ ] developing [ ] .{0,128} [ ]? in [ ] which [ ] case [ ] the [ ] procedures [ ] for [ ] copyrights [ ] defined [ ] in [ ] the [ ] .{0,128} [ ]? process [ ] must [ ] be [ ] followed[ ]?,[ ]? or [ ] as [ ] required [ ] to [ ] translate [ ] it [ ] into [ ] languages [ ]/msx,
+        callsub => 'rfc_whitelist_filename'
+    },
+    'license-problem-non-free-RFC-BCP78' => {
+        keywords => [qw{license document bcp restriction}],
+        sentences => ['bcp 78'],
+        regex =>
+qr{this [ ] document [ ] is [ ] subject [ ] to [ ] (?:the [ ] rights [ ]?, [ ] licenses [ ] and [ ]restrictions [ ] contained [ ] in [ ])? bcp [ ] 78}msx,
+        callsub => 'rfc_whitelist_filename'
+    },
+# check GFDL block - The ".{0,1024}"-part in the regex
+# will contain the "no invariants etc."  part if
+# it is a good use of the license.  We include it
+# here to ensure that we do not emit a false positive
+# if the "redeeming" part is in the next block
+# keyword document is here in order to benefit for other license keyword and a shortcut for documentation
+    'license-problem-gfdl-invariants' => {
+        keywords => [qw{license document gnu copy documentation}],
+        sentences => ['gnu free documentation license'],
+        regex =>
+qr/(?'rawcontextbefore'(?:(?:(?!a [ ] copy [ ] of [ ] the [ ] license [ ] is).){1024}|\A(?:(?!a [ ] copy [ ] of [ ] the [ ] license [ ] is).){0,1024}|(?:[ ] copy [ ] of [ ] the [ ] license [ ] is.{0,1024}?))) gnu [ ] free [ ] documentation [ ] license (?'rawgfdlsections'(?:(?!gnu [ ] free [ ] documentation [ ] license).){0,1024}?) (?:a [ ] copy [ ] of [ ] the [ ] license [ ] is|this [ ] document [ ] is [ ] distributed)/msx,
+        callsub => 'check_gfdl_license_problem'
+    },
+    # php license
+    'license-problem-php-license' => {
+        keywords => [qw{www.php.net group\@php.net phpfoo conjunction php}],
+        sentences => ['this product includes php'],
+        regex => qr{php [ ] license [ ]?[,;][ ]? version [ ] 3(?:\.\d+)?}msx,
+        callsub => 'php_source_whitelist'
+    },
+    'license-problem-bad-php-license' => {
+        keywords => [qw{www.php.net add-on conjunction}],
+        sentences => ['this product includes php'],
+        regex => qr{php [ ] license [ ]?[,;][ ]? version [ ] 2(?:\.\d+)?}msx,
+        callsub => 'php_source_whitelist'
+    },
+    # cc by nc sa note that " is replaced by [ ]
+    'license-problem-cc-by-nc-sa' => {
+        keywords => [qw{license by-nc-sa creativecommons.org}],
+        sentences => [
+            '://creativecommons.org/licenses/by-nc-sa',
+            'under attribution-noncommercial'
+        ],
+        regex =>
+qr{(?:license [ ] rdf:[^=:]+=[ ]* (?:ht|f)tps?://(?:[^/.]\.)??creativecommons\.org/licenses/by-nc-sa/\d+(?:\.\d+)?(?:/[[:alpha:]]+)?/? [ ]* >|available [ ] under [ ] attribution-noncommercial)}msx
+    },
+    # not really a license but warn it: visual c++ generated file
+    'source-contains-autogenerated-visual-c++-file' => {
+        keywords => [qw{microsoft visual generated}],
+        sentences => ['microsoft visual c++ generated'],
+        regex =>
+qr{microsoft [ ] visual [ ] c[+][+] [ ] generated (?![ ] by [ ] freeze\.py)}msx
+    },
+    # not really a license but warn about it: gperf generated file
+    'source-contains-autogenerated-gperf-data' => {
+        keywords => [qw{code produced gperf version}],
+        sentences => ['code produced by gperf version'],
+        regex =>
+          qr{code [ ] produced [ ] by [ ] gperf [ ] version [ ] \d+\.\d+}msx
+    },
+    # warn about copy of ieee-data
+    'source-contains-data-from-ieee-data-oui-db' => {
+        keywords => [qw{struck scitex racore}],
+        sentences => ['dr. b. struck'],
+        regex => qr{dr. [ ] b. [ ] struck}msx
+    },
+    # warn about unicode license for utf for convert utf
+    'license-problem-convert-utf-code' => {
+        keywords => [qw{fall-through bytestowrite utf-8}],
+        sentences => ['the fall-through switches in utf-8 reading'],
+        regex =>
+qr{the [ ] fall-through [ ] switches [ ] in [ ] utf-8 [ ] reading [ ] code [ ] save}msx
     });
 
 # get usual data about admissible/not admissible GFDL invariant part of license
@@ -386,30 +289,78 @@ sub visit_patched_files {
     return
       unless $item->is_file;
 
-    # check full text problem
-    $self->full_text_check($item);
+    # license string in debian/changelog are probably just change
+    # Ignore these strings in d/README.{Debian,source}.  If they
+    # appear there it is probably just "file XXX got removed
+    # because of license Y".
+    $self->full_text_check($item)
+      unless $item->name eq 'debian/changelog'
+      && $item->name eq 'debian/README.Debian'
+      && $item->name eq 'debian/README.source';
 
-    # warn by file type
-    foreach my $tag_filetype ($self->WARN_FILE_TYPE->all) {
-        my $warn_data = $self->WARN_FILE_TYPE->value($tag_filetype);
-        my $regtype = $warn_data->{'regtype'};
+    # prebuilt-file or forbidden file type
+    $self->hint('source-contains-prebuilt-wasm-binary', $item->name)
+      if $item->file_info =~ m{^WebAssembly \s \(wasm\) \s binary \s module}x;
 
-        if($item->file_info =~ m{$regtype}) {
-            my $regname = $warn_data->{'regname'};
+    $self->hint('source-contains-prebuilt-windows-binary', $item->name)
+      if $item->file_info
+      =~ m{\b(?:PE(?:32|64)|(?:MS-DOS|COM)\s executable)\b}x;
 
-            if($item->name =~ m{$regname}) {
-                $self->hint($tag_filetype, $item->name);
+    $self->hint('source-contains-prebuilt-silverlight-object', $item->name)
+      if $item->file_info =~ m{^Zip \s archive \s data}x
+      && $item->name =~ m{(?i)\.xac$}x;
 
-                if($warn_data->{'checkmissing'}) {
-                    my %hash;
-                    $hash{$_->[1]} = $_->[0]
-                      for @{$warn_data->{'transform'} // []};
+    if ($item->file_info =~ m{^python \s \d(\.\d+)? \s byte-compiled}x) {
 
-                    $self->hint('source-is-missing', $item->name)
-                      unless $self->find_source($item, \%hash);
-                }
-            }
-        }
+        $self->hint('source-contains-prebuilt-python-object', $item->name);
+
+        $self->hint('source-is-missing', $item->name)
+          unless $self->find_source($item,
+            {'.py' => '(?i)(?:\.cpython-\d{2}|\.pypy)?\.py[co]$'});
+    }
+
+    if ($item->file_info =~ m{\bELF\b}x) {
+        $self->hint('source-contains-prebuilt-binary', $item->name);
+
+        my %patterns = map {
+            $_  =>
+'(?i)(?:[\.-](?:bin|elf|e|hs|linux\d+|oo?|or|out|so(?:\.\d+)*)|static|_o\.golden)?$'
+        } qw(.asm .c .cc .cpp .cxx .f .F .i .ml .rc .S);
+
+        $self->hint('source-is-missing', $item->name)
+          unless $self->find_source($item, \%patterns);
+    }
+
+    if ($item->file_info =~ m{^Macromedia \s Flash}x) {
+
+        $self->hint('source-contains-prebuilt-flash-object', $item->name);
+
+        $self->hint('source-is-missing', $item->name)
+          unless $self->find_source($item, {'.as' => '(?i)\.swf$'});
+    }
+
+    if (   $item->file_info =~ m{^Composite \s Document \s File}x
+        && $item->name =~ m{(?i)\.fla$}x) {
+
+        $self->hint('source-contains-prebuilt-flash-project', $item->name);
+
+        $self->hint('source-is-missing', $item->name)
+          unless $self->find_source($item, {'.as' => '(?i)\.fla$'});
+    }
+
+    # do not forget to change also $JS_EXT in file.pm
+    if ($item->name
+        =~ m{(?i)[-._](?:compiled|compressed|lite|min|pack(?:ed)?|prod|umd|yc)\.js$}x
+    ) {
+
+        $self->hint('source-contains-prebuilt-javascript-object', $item->name);
+        my %patterns = map {
+            $_ =>
+'(?i)(?:[-._](?:compiled|compressed|lite|min|pack(?:ed)?|prod|umd|yc))?\.js$'
+        } qw(.js _orig.js .js.orig .src.js -src.js .debug.js -debug.js -nc.js);
+
+        $self->hint('source-is-missing', $item->name)
+          unless $self->find_source($item, \%patterns);
     }
 
     return;
@@ -562,70 +513,132 @@ sub find_source {
 sub full_text_check {
     my ($self, $item) = @_;
 
-    # license string in debian/changelog are probably just change
-    # Ignore these strings in d/README.{Debian,source}.  If they
-    # appear there it is probably just "file XXX got removed
-    # because of license Y".
-    if (   $item->name eq 'debian/changelog'
-        or $item->name eq 'debian/README.Debian'
-        or $item->name eq 'debian/README.source') {
-        return;
-    }
-
     my $contents = $item->decoded_utf8;
     return
       unless length $contents;
 
-    my %licenseproblemhash;
-
     my $lowercase = lc($contents);
-    my ($cleanedblock, %matchedkeyword);
+    my $clean = clean_text($lowercase);
 
     # Check for non-distributable files - this
     # applies even to non-free, as we still need
     # permission to distribute those.
+    # nvdia opencv infamous license
     return
-      if $self->license_check($item->name,$item->basename,
-        $self->NON_DISTRIBUTABLE_LICENSES,
-        $lowercase,\$cleanedblock,\%matchedkeyword,\%licenseproblemhash);
+      if $self->check_for_single_bad_license($item, $lowercase, $clean,
+        'license-problem-nvidia-intellectual',
+        \%NVIDIA_LICENSE);
 
-    return
-      if !$self->processable->is_non_free
-      && $self->license_check($item->name,$item->basename,
-        $self->NON_FREE_LICENSES,$lowercase,\$cleanedblock,\%matchedkeyword,
-        \%licenseproblemhash);
+    unless ($self->processable->is_non_free) {
+
+        for my $tag_name (keys %NON_FREE_LICENSES) {
+
+            return
+              if $self->check_for_single_bad_license($item, $lowercase, $clean,
+                $tag_name, $NON_FREE_LICENSES{$tag_name});
+        }
+    }
 
     $self->check_html_cruft($item, $lowercase)
       if $item->basename =~ /\.(?:x?html?\d?|xht)$/i;
 
-    $self->search_in_block0($item, $lowercase);
+    if ($self->_is_javascript_but_not_minified($item->name)) {
+        # exception sphinx documentation
+        if ($item->basename eq 'searchindex.js') {
+            if ($lowercase =~ m/\A\s*search\.setindex\s* \s* \(\s*\{/xms) {
+
+                $self->hint('source-contains-prebuilt-sphinx-documentation',
+                    $item->dirname);
+                return;
+            }
+        }
+
+        if ($item->basename eq 'search_index.js') {
+            if ($lowercase =~ m/\A\s*var\s*search_index\s*=/xms) {
+
+                $self->hint('source-contains-prebuilt-pandoc-documentation',
+                    $item->dirname);
+                return;
+            }
+        }
+        # false positive in dx package at least
+        elsif ($item->basename eq 'srchidx.js') {
+
+            return
+              if $lowercase=~ m/\A\s*profiles \s* = \s* new \s* Array\s*\(/xms;
+        }
+        # see #745152
+        # Be robust check also .js
+        elsif ($item->basename eq 'deployJava.js') {
+            if ($lowercase
+                =~ m/(?:\A|\v)\s*var\s+deployJava\s*=\s*function/xmsi) {
+
+                $self->hint('source-is-missing', $item->name)
+                  unless $self->find_source($item,
+                    {'.txt' => '(?i)\.js$', $EMPTY => $EMPTY});
+
+                return;
+            }
+        }
+        # https://github.com/rafaelp/css_browser_selector is actually the
+        # original source. (#874381)
+        elsif ($lowercase =~ m/css_browser_selector\(/) {
+
+            return;
+        }
+        # Avoid false-positives in Jush's syntax highlighting definition files.
+        elsif ($lowercase =~ m/jush\.tr\./) {
+
+            return;
+        }
+
+        # now search hidden minified
+        $self->warn_long_lines($item, $lowercase);
+    }
+
+    # search link rel header
+    if ($lowercase =~ / \Q rel="copyright" \E /msx) {
+
+        my $href = $lowercase;
+        $href =~ m{<link \s+
+                  rel="copyright" \s+
+                  href="([^"]+)" \s*/? \s*>}xmsi;
+
+        my $url = $1 // $EMPTY;
+
+        $self->hint('license-problem-cc-by-nc-sa', $item->name)
+          if $url =~ m{^https?://creativecommons.org/licenses/by-nc-sa/};
+    }
 
     return;
 }
 
 # check javascript in html file
 sub check_html_cruft {
-    my ($self, $item, $block) = @_;
+    my ($self, $item, $lowercase) = @_;
 
-    my $blockscript = $block;
+    my $blockscript = $lowercase;
     my $indexscript;
 
-    while(($indexscript = index($blockscript, '<script')) > $ITEM_NOT_FOUND) {
+    while (($indexscript = index($blockscript, '<script')) > $ITEM_NOT_FOUND) {
 
         $blockscript = substr($blockscript,$indexscript);
 
         # sourced script ok
         if ($blockscript =~ m{\A<script\s+[^>]*?src="[^"]+?"[^>]*?>}sm) {
+
             $blockscript = substr($blockscript,$+[0]);
             next;
         }
 
         # extract script
         if ($blockscript =~ m{<script[^>]*?>(.*?)</script>}sm) {
+
             $blockscript = substr($blockscript,$+[0]);
-            if($self->check_js_script($item, $1)) {
-                return 0;
-            }
+
+            return 0
+              if $self->check_js_script($item, $1);
+
             next;
         }
 
@@ -634,6 +647,7 @@ sub check_html_cruft {
         # if we get <script src="  "
         # then skip
         if ($blockscript =~ /\A<script[^>]*?>/sm) {
+
             $blockscript = substr($blockscript,$+[0]);
             $self->check_js_script($item, $blockscript);
         }
@@ -650,22 +664,26 @@ sub check_js_script {
 
     my $firstline = $EMPTY;
     for my $line (split /\n/, $lcscript) {
+
         if ($line =~ /^\s*$/) {
             next;
-        }else {
+
+        } else {
             $firstline = $line;
             last;
         }
     }
 
     if ($firstline =~ m/.{0,20}((?:\bcopyright\b|[\(]c[\)]\s*\w|©).{0,50})/) {
+
         my $extract = $1;
         $extract =~ s/^\s+|\s+$//g;
+
         $self->hint('embedded-script-includes-copyright-statement',
             $item->name,'extract of copyright statement:',$extract);
     }
 
-    return $self->linelength_test($item, $lcscript);
+    return $self->warn_long_lines($item, $lcscript);
 }
 
 # check if file is javascript but not minified
@@ -673,86 +691,15 @@ sub _is_javascript_but_not_minified {
     my ($self, $name) = @_;
 
     my $isjsfile = ($name =~ m/\.js$/) ? 1 : 0;
-    if($isjsfile) {
-        my $minjsregexp = $self->_minified_javascript_name_regexp();
+    if ($isjsfile) {
+        my $minjsregexp
+          = qr/(?i)[-._](?:compiled|compressed|lite|min|pack(?:ed)?|prod|umd|yc)\.js$/;
         $isjsfile = ($name =~ m{$minjsregexp}) ? 0 : 1;
     }
 
     return $isjsfile;
 }
 
-# search something in block $0
-sub search_in_block0 {
-    my ($self, $item, $block) = @_;
-
-    if($self->_is_javascript_but_not_minified($item->name)) {
-        # exception sphinx documentation
-        if($item->basename eq 'searchindex.js') {
-            if($block =~ m/\A\s*search\.setindex\s* \s* \(\s*\{/xms) {
-                $self->hint('source-contains-prebuilt-sphinx-documentation',
-                    $item->dirname);
-                return;
-            }
-        }
-        if($item->basename eq 'search_index.js') {
-            if($block =~ m/\A\s*var\s*search_index\s*=/xms) {
-                $self->hint('source-contains-prebuilt-pandoc-documentation',
-                    $item->dirname);
-                return;
-            }
-        }
-        # false positive in dx package at least
-        elsif($item->basename eq 'srchidx.js') {
-            if($block =~ m/\A\s*profiles \s* = \s* new \s* Array\s*\(/xms) {
-                return;
-            }
-        }
-        # see #745152
-        # Be robust check also .js
-        elsif($item->basename eq 'deployJava.js') {
-            if($block =~ m/(?:\A|\v)\s*var\s+deployJava\s*=\s*function/xmsi) {
-                $self->hint('source-is-missing', $item->name)
-                  unless $self->find_source($item,
-                    {'.txt' => '(?i)\.js$', $EMPTY => $EMPTY});
-                return;
-            }
-        }
-        # https://github.com/rafaelp/css_browser_selector is actually the
-        # original source. (#874381)
-        elsif ($block =~ m/css_browser_selector\(/) {
-            return;
-        }
-        # Avoid false-positives in Jush's syntax highlighting definition files.
-        elsif ($block =~ m/jush\.tr\./) {
-            return;
-        }
-
-        # now search hidden minified
-        $self->linelength_test($item, $block);
-    }
-
-    # search link rel header
-    if ($block =~ / \Q rel="copyright" \E /msx) {
-        my $href = $block;
-        $href =~ m{<link \s+
-                  rel="copyright" \s+
-                  href="([^"]+)" \s*/? \s*>}xmsi;
-        if(defined($1)) {
-            my $copyrighttarget = $1;
-            foreach my $badcopyrighttag ($self->BAD_LINK_COPYRIGHT->all) {
-                my $regex=  $self->BAD_LINK_COPYRIGHT->value($badcopyrighttag);
-                if($copyrighttarget =~ m{$regex}) {
-                    $self->hint($badcopyrighttag, $item->name);
-                    last;
-                }
-            }
-        }
-    }
-
-    return;
-}
-
-# warn about prebuilt javascript and check missing source
 sub warn_prebuilt_javascript{
     my ($self, $item, $linelength, $position, $cutoff) = @_;
 
@@ -764,6 +711,7 @@ sub warn_prebuilt_javascript{
     # Check for missing source.  It will check
     # for the source file in well known directories
     if ($item->basename =~ m{\.js$}i) {
+
         $self->hint('source-is-missing', $item->name, $extratext)
           unless $self->find_source(
             $item,
@@ -772,17 +720,17 @@ sub warn_prebuilt_javascript{
                 '-debug.js' => '(?i)\.js$',
                 $EMPTY => $EMPTY
             });
+
     } else  {
         # html file
         $self->hint('source-is-missing', $item->name, $extratext)
           unless $self->find_source($item, {'.fragment.js' => $DOLLAR});
     }
+
     return;
 }
 
-# detect if max line of block is > cutoff
-# return false if file is minified
-sub linelength_test_maxlength {
+sub maximum_line_length {
     my ($self, $text) = @_;
 
     my @lines = split(/\n+/, $text);
@@ -806,9 +754,10 @@ sub linelength_test_maxlength {
 # warning block is at more 8192 char in order to be too slow
 # and in order to avoid regex recursion
 sub _strip_c_comments {
-    my ($block) = @_;
+    my ($lowercase) = @_;
+
     # from perl faq strip comments
-    $block =~ s{
+    $lowercase =~ s{
                 # Strip /* */ comments
                 /\* [^*]*+ \*++ (?: [^/*][^*]*+\*++ ) */
                 # Strip // comments (C++ style)
@@ -822,99 +771,83 @@ sub _strip_c_comments {
                     | .[^/"'\\]*+
                    )
                }{defined $1 ? $1 : ""}xgse;
-    return $block;
+
+    return $lowercase;
 }
 
 # detect browserified javascript (comment are removed here and code is stripped)
 sub detect_browserify {
-    my ($self, $item, $block) = @_;
+    my ($self, $item, $lowercase) = @_;
 
-    $block =~ s/\n/ /msg;
-    foreach my $browserifyregex ($self->BROWSERIFY_REGEX->all) {
+    $lowercase =~ s/\n/ /msg;
+    for my $browserifyregex ($self->BROWSERIFY_REGEX->all) {
+
         my $regex = $self->BROWSERIFY_REGEX->value($browserifyregex);
-        if($block =~ m{$regex}) {
+        if ($lowercase =~ m{$regex}) {
+
             my $extra = (defined $1) ? 'code fragment:'.$1 : $EMPTY;
             $self->hint('source-contains-browserified-javascript',
                 $item->name, $extra);
+
             last;
         }
     }
     return;
 }
 
-# try to detect non human source based on line length
-sub linelength_test {
-    my ($self, $item, $block) = @_;
+sub warn_long_lines {
+    my ($self, $item, $lowercase) = @_;
 
-    my $nextblock;
-
-    my ($maximum, $position) = $self->linelength_test_maxlength($block);
+    my ($maximum, $position) = $self->maximum_line_length($lowercase);
    # first check if line >  $VERY_LONG_LINE_LENGTH that is likely minification
    # avoid problem by recursive regex with longline
     if ($maximum > $VERY_LONG_LINE_LENGTH) {
+
         $self->hint('very-long-line-length-in-source-file',$item->name,
 "line $position is $maximum characters long (>$VERY_LONG_LINE_LENGTH)"
         );
 
         # clean up jslint craps line
-        $block =~ s{^\s*/[*][^\n]*[*]/\s*$}{}gm;
-        $block =~ s{^\s*//[^\n]*$}{}gm;
-        $block =~ s/^\s+//gm;
-
-        # try to remove comments in first 8192 block (license...)
-        my $block8192 = substr($block, 0, $SMALL_BLOCK_SIZE);
-        $block8192 = _strip_c_comments($block8192);
-        $block
-          = length($block) > $SMALL_BLOCK_SIZE
-          ? $block8192.substr($block, $SMALL_BLOCK_SIZE)
-          : $block8192;
-
-        # strip empty line
-        $block =~ s/^\s*\n//mg;
-        # remove last \n
-        $block =~ s/\n\Z//m;
-
-        # detect browserification
-        $self->detect_browserify($item, $block);
-
-        # retry very long line length test now: likely minified
-        ($maximum, $position)= $self->linelength_test_maxlength($block);
-
-        if ($maximum > $VERY_LONG_LINE_LENGTH) {
-            $self->warn_prebuilt_javascript($item, $maximum, $position,
-                $VERY_LONG_LINE_LENGTH);
-            return 1;
-        }
+        $lowercase =~ s{^\s*/[*][^\n]*[*]/\s*$}{}gm;
+        $lowercase =~ s{^\s*//[^\n]*$}{}gm;
+        $lowercase =~ s/^\s+//gm;
     }
-    # Now try to be more clever and work only on the 8192 character
-    # in order to avoid regexp recursion problems
-    my $strip = substr($block, 0, $SMALL_BLOCK_SIZE);
-    # strip indention
-    $strip =~ s/^\s+//mg;
-    $strip = _strip_c_comments($block);
+
+    # strip indentation
+    $lowercase =~ s/^\s+//mg;
+    $lowercase = _strip_c_comments($lowercase);
     # strip empty line
-    $strip =~ s/^\s*\n//mg;
+    $lowercase =~ s/^\s*\n//mg;
     # remove last \n
-    $strip =~ s/\n\Z//m;
-    $nextblock = $strip;
+    $lowercase =~ s/\n\Z//m;
 
-    # detect browserified
-    $self->detect_browserify($item, $nextblock);
+    # detect browserification
+    $self->detect_browserify($item, $lowercase);
 
-    while(length($nextblock)) {
+    # retry very long line length test now: likely minified
+    ($maximum, $position)= $self->maximum_line_length($lowercase);
+
+    if ($maximum > $VERY_LONG_LINE_LENGTH) {
+
+        $self->warn_prebuilt_javascript($item, $maximum, $position,
+            $VERY_LONG_LINE_LENGTH);
+        return 1;
+    }
+
+    while (length $lowercase) {
 
         # check line above > $SAFE_LINE_LENGTH
         my $line = $EMPTY;
         my $linelength = 0;
 
         my $nextposition = 0;
-        while ($nextblock =~ /([^\n]+)\n?/g) {
+        while ($lowercase =~ /([^\n]+)\n?/g) {
 
             $line = $1;
             $linelength = length($line);
 
             if ($linelength > $SAFE_LINE_LENGTH) {
-                $nextblock = substr($nextblock, pos($nextblock));
+                $lowercase = substr($lowercase, pos($lowercase));
 
                 last;
             }
@@ -930,7 +863,8 @@ sub linelength_test {
           unless $linelength;
 
         # compute number of ;
-        if(($line =~ tr/;/;/) > 1) {
+        if (($line =~ tr/;/;/) > 1) {
+
             $self->warn_prebuilt_javascript($item, $linelength, $nextposition,
                 $SAFE_LINE_LENGTH);
             return 1;
@@ -942,17 +876,15 @@ sub linelength_test {
 
 sub tag_gfdl {
     my ($self, $applytag, $name, $gfdlsections) = @_;
+
     $self->hint($applytag, $name, 'invariant part is:', $gfdlsections);
+
     return;
 }
 
 # return True in case of license problem
 sub check_gfdl_license_problem {
-    my (
-        $self, $name,$basename,
-        $block, $cleanedblock,$matchedkeyword,
-        $licenseproblemhash,$licenseproblem,%matchedhash
-    )= @_;
+    my ($self, $item, $tag_name, %matchedhash) = @_;
 
     my $rawgfdlsections  = $matchedhash{rawgfdlsections}  || $EMPTY;
     my $rawcontextbefore = $matchedhash{rawcontextbefore} || $EMPTY;
@@ -993,16 +925,12 @@ sub check_gfdl_license_problem {
                        this [ ] document [ ] under [ ] the [ ] terms [ ] of [ ] the\Z}{}xsmo;
 
     # Treat ambiguous empty text
-    unless(
-        defined(
-            $licenseproblemhash->{'license-problem-gfdl-invariants-empty'})
-    ) {
-        if ($gfdlsections eq $EMPTY) {
-            # lie in order to check more part
-            $self->hint('license-problem-gfdl-invariants-empty', $name);
-            $licenseproblemhash->{'license-problem-gfdl-invariants-empty'}= 1;
-            return 0;
-        }
+    if ($gfdlsections eq $EMPTY) {
+
+        # lie in order to check more part
+        $self->hint('license-problem-gfdl-invariants-empty', $item->name);
+
+        return 0;
     }
 
     # official wording
@@ -1030,81 +958,77 @@ sub check_gfdl_license_problem {
 
     # GFDL license, assume it is bad unless it
     # explicitly states it has no "bad sections".
-    foreach my $gfdl_fragment ($self->GFDL_FRAGMENTS->all) {
+    for my $gfdl_fragment ($self->GFDL_FRAGMENTS->all) {
+
         my $gfdl_data = $self->GFDL_FRAGMENTS->value($gfdl_fragment);
         my $gfdlsectionsregex = $gfdl_data->{'gfdlsectionsregex'};
         if ($gfdlsections =~ m{$gfdlsectionsregex}) {
+
             my $acceptonlyinfile = $gfdl_data->{'acceptonlyinfile'};
-            if ($name =~ m{$acceptonlyinfile}) {
+            if ($item->name =~ m{$acceptonlyinfile}) {
+
                 my $applytag = $gfdl_data->{'tag'};
-                if(defined($applytag)) {
-                    unless(defined($licenseproblemhash->{$applytag})) {
-                        # lie will allow checking more blocks
-                        $self->tag_gfdl($applytag, $name, $gfdlsections);
-                        $licenseproblemhash->{$applytag} = 1;
-                        return 0;
-                    }
-                }
+
+                # lie will allow checking more blocks
+                $self->tag_gfdl($applytag, $item->name, $gfdlsections)
+                  if defined $applytag;
+
                 return 0;
-            }else {
+
+            } else {
                 $self->tag_gfdl('license-problem-gfdl-invariants',
-                    $name, $gfdlsections);
+                    $item->name, $gfdlsections);
                 return 1;
             }
         }
     }
 
-    # catch all clause
-    $self->tag_gfdl('license-problem-gfdl-invariants', $name, $gfdlsections);
+    # catch all
+    $self->tag_gfdl('license-problem-gfdl-invariants',
+        $item->name, $gfdlsections);
+
     return 1;
 }
 
-# whitelist good rfc
 sub rfc_whitelist_filename {
-    my (
-        $self, $name,$basename,
-        $block, $cleanedblock,$matchedkeyword,
-        $licenseproblemhash,$licenseproblem,%matchedhash
-    )= @_;
+    my ($self, $item, $tag_name, %matchedhash) = @_;
 
-    return 0 if $name eq 'debian/copyright';
-    my $lcname = lc($basename);
+    return 0
+      if $item->name eq 'debian/copyright';
 
-    foreach my $rfc_regexp ($self->RFC_WHITELIST->all) {
-        my $regex = $self->RFC_WHITELIST->value($rfc_regexp);
-        if($lcname =~ m/$regex/xms) {
-            return 0;
-        }
-    }
-    $self->hint($licenseproblem, $name);
+    my $lcname = lc($item->basename);
+
+    my @values
+      = map { $self->RFC_WHITELIST->value($_) } $self->RFC_WHITELIST->all;
+
+    return 0
+      if any { $lcname =~ m/ $_ /xms } @values;
+
+    $self->hint($tag_name, $item->name);
+
     return 1;
 }
 
-# whitelist php source
 sub php_source_whitelist {
-    my (
-        $self, $name,$basename,
-        $block, $cleanedblock,$matchedkeyword,
-        $licenseproblemhash,$licenseproblem,%matchedhash
-    )= @_;
+    my ($self, $item, $tag_name, %matchedhash) = @_;
 
     my $copyright_path
       = $self->processable->patched->resolve_path('debian/copyright');
-    if (    $copyright_path
-        and $copyright_path->bytes
-        =~ m{^Source: https?://pecl.php.net/package/.*$}m) {
-        return 0;
-    }
+
+    return 0
+      if defined $copyright_path
+      && $copyright_path->bytes
+      =~ m{^Source: https?://pecl.php.net/package/.*$}m;
 
     return 0
       if $self->processable->source_name =~ /^php\d*(?:\.\d+)?$/xms;
 
-    $self->hint($licenseproblem, $name);
+    $self->hint($tag_name, $item->name);
 
     return 1;
 }
 
-sub _clean_block {
+sub clean_text {
     my ($text) = @_;
 
     # be paranoiac replace gnu with texinfo by gnu
@@ -1239,75 +1163,30 @@ sub _strip_punct() {
     return $text;
 }
 
-# check bad license
-sub license_check {
-    my ($self, $name,$basename,$licensesdatas, $block,
-        $cleanedblock,$matchedkeyword,$licenseproblemhash)
-      = @_;
+sub check_for_single_bad_license {
+    my ($self, $item, $lowercase, $clean, $tag_name, $license_data) = @_;
 
-    my $ret = 0;
+    # do fast keyword search
+    # could make more sense as 'return 1 unless all' but does not work
+    return 0
+      if none { $lowercase =~ / \Q$_\E /msx } @{$license_data->{keywords}};
 
-    # avoid to check lintian
-    if($self->processable->source_name eq 'lintian') {
-        return $ret;
-    }
-  LICENSE:
-    foreach my $licenseproblem ($licensesdatas->all) {
-        my $licenseproblemdata = $licensesdatas->value($licenseproblem);
-        if(defined($licenseproblemhash->{$licenseproblem})) {
-            next LICENSE;
-        }
-        # do fast keyword search
-        my @keywordslist = @{$licenseproblemdata->{'keywords'}};
-        foreach my  $keyword (@keywordslist) {
-            my $thiskeyword = $matchedkeyword->{$keyword};
-            if(not defined($thiskeyword)) {
-                if ($block =~ / \Q$keyword\E /msx) {
-                    $matchedkeyword->{$keyword} = 1;
-                }else {
-                    $matchedkeyword->{$keyword} = 0;
-                    next LICENSE;
-                }
-            } elsif ($thiskeyword == 0) {
-                next LICENSE;
-            }
-        }
+    return 0
+      if none { $clean =~ / \Q$_\E /msx }
+    @{$license_data->{sentences}};
 
-        # clean block now in order to normalise space and check a sentence
-        ${$cleanedblock} //= _clean_block($block);
+    my $regex = $license_data->{regex};
+    return 0
+      if defined $regex && $clean !~ $regex;
 
-        next LICENSE
-          if none { ${$cleanedblock} =~ / \Q$_\E /msx }
-        @{$licenseproblemdata->{'sentence'}};
+    my $callsub = $license_data->{callsub};
+    if (!defined $callsub) {
 
-        my $regex= $licenseproblemdata->{'regex'};
-
-        next LICENSE
-          unless ${$cleanedblock} =~ $regex;
-
-        my $callsub = $licenseproblemdata->{'callsub'};
-
-        if(defined $callsub) {
-            my $subresult
-              = $self->$callsub($name,$basename,$block,
-                $cleanedblock,$matchedkeyword,
-                $licenseproblemhash,$licenseproblem,%+);
-            if($subresult) {
-                $licenseproblemhash->{$licenseproblem} = 1;
-                $ret = 1;
-
-                next LICENSE;
-            }
-        }else {
-            $self->hint($licenseproblem, $name);
-            $licenseproblemhash->{$licenseproblem} = 1;
-            $ret = 1;
-
-            next LICENSE;
-        }
+        $self->hint($tag_name, $item->name);
+        return 1;
     }
 
-    return $ret;
+    return $self->$callsub($item, $tag_name, %+);
 }
 
 1;
