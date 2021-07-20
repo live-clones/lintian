@@ -25,7 +25,7 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Unicode::UTF8 qw(encode_utf8 valid_utf8 decode_utf8);
+use Encode qw(decode);
 
 use Lintian::IPC::Run3 qw(safe_qx);
 
@@ -46,10 +46,9 @@ sub visit_installed_files {
     my @command = ('t1disasm', $item->unpacked_path);
     my $bytes = safe_qx(@command);
 
-    die encode_utf8("Output from '@command' is not valid UTF-8")
-      unless valid_utf8($bytes);
+    # iso-8859-1 works too, but the Font 1 standard could be older
+    my $output = decode('cp1252', $bytes, Encode::FB_CROAK);
 
-    my $output = decode_utf8($bytes);
     my @lines = split(/\n/, $output);
 
     my $foundadobeline = 0;

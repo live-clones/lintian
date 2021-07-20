@@ -45,6 +45,7 @@ Depends:
  libdevel-size-perl,
  libdigest-sha-perl,
  libdpkg-perl,
+ libencode-perl,
  libemail-address-xs-perl,
  libfile-basedir-perl,
  libfile-find-rule-perl,
