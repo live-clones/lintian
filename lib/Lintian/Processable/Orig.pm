@@ -79,8 +79,6 @@ has orig => (
         # source packages can be unpacked anywhere; no anchored roots
         $index->anchored(0);
 
-        my $combined_errors = $EMPTY;
-
         my %components = %{$self->components};
 
         # keep sort order; root is missing below otherwise
@@ -113,12 +111,10 @@ has orig => (
               = (split($SPACE, $decompress),
                 $self->basedir . $SLASH . $tarball);
 
-            my ($extract_errors, $index_errors)
-              = $subindex->create_from_piped_tar(\@command);
+            my $errors = $subindex->create_from_piped_tar(\@command);
 
-            $combined_errors .= $extract_errors . $index_errors;
             $self->hint('unpack-message-for-orig', $tarball, $_)
-              for uniq split(/\n/, $combined_errors);
+              for uniq split(/\n/, $errors);
 
             # treat hard links like regular files
             my @hardlinks = grep { $_->is_hardlink } @{$subindex->sorted_list};

@@ -70,11 +70,10 @@ has installed => (
         $index->anchored(1);
 
         my @command = (qw(dpkg-deb --fsys-tarfile), $self->path);
-        my ($extract_errors, $index_errors)
-          = $index->create_from_piped_tar(\@command);
+        my $errors = $index->create_from_piped_tar(\@command);
 
         $self->hint('unpack-message-for-deb-data', $_)
-          for uniq split(/\n/, $extract_errors . $index_errors);
+          for uniq split(/\n/, $errors);
 
         return $index;
     });

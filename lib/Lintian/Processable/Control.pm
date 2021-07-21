@@ -66,11 +66,10 @@ has control => (
         # disallow absolute paths and symbolic links
 
         my @command = (qw(dpkg-deb --ctrl-tarfile), $self->path);
-        my ($extract_errors, $index_errors)
-          = $index->create_from_piped_tar(\@command);
+        my $errors = $index->create_from_piped_tar(\@command);
 
         $self->hint('unpack-message-for-deb-control', $_)
-          for uniq split(/\n/, $extract_errors . $index_errors);
+          for uniq split(/\n/, $errors);
 
         return $index;
     });

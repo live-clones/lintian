@@ -268,7 +268,7 @@ sub create_from_basedir {
 
     $self->load;
 
-    return ($index_errors);
+    return $index_errors;
 }
 
 =item create_from_piped_tar
@@ -317,11 +317,15 @@ sub create_from_piped_tar {
         $catalog{$entry->name}->gid($entry->group);
     }
 
+    # tar produces spurious root entry when stripping slashes from member names
+    delete $catalog{$SLASH}
+      unless $self->anchored;
+
     $self->catalog(\%catalog);
 
     $self->load;
 
-    return ($extract_errors, $index_errors);
+    return $extract_errors . $index_errors;
 }
 
 =item load
