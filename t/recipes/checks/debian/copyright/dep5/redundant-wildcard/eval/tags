@@ -1,1 +1,1 @@
-redundant-wildcard (source): redundant-globbing-patterns debian/copyright [* debian/patches/*] for debian/patches/a.patch
+redundant-wildcard (source): redundant-globbing-patterns debian/copyright (section 0) [* debian/patches/*] for debian/patches/a.patch

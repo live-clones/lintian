@@ -656,8 +656,9 @@ sub check_dep5_copyright {
         $self->hint(
             'redundant-globbing-patterns',
             $copyright_file->name,
+            "(section $section_count)",
             $LEFT_SQUARE
-              . join($SPACE, @{$wildcards_same_section_by_file{$_}})
+              . join($SPACE, sort @{$wildcards_same_section_by_file{$_}})
               . $RIGHT_SQUARE,
             "for $_"
         ) for @overmatched_same_section;
