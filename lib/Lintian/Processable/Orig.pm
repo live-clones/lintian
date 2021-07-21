@@ -154,10 +154,14 @@ has orig => (
                 my $conflict = $subindex->lookup($common);
                 unless (defined $conflict) {
 
-                    # shortens paths; keeps same base directory
-                    $subindex->drop_common_prefix
-                      if $common ne $component
-                      || length $component;
+                    if ($common ne $component || length $component) {
+
+                        # shortens paths; keeps same base directory
+                        my $sub_errors = $subindex->drop_common_prefix;
+
+                        $self->hint('unpack-message-for-orig', $tarball, $_)
+                          for uniq split(/\n/, $sub_errors);
+                    }
                 }
             }
 

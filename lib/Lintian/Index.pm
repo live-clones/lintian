@@ -49,8 +49,10 @@ with
 const my $EMPTY => q{};
 const my $SLASH => q{/};
 const my $HYPHEN => q{-};
-const my $NO_LIMIT => -1;
+const my $NEWLINE => qq{\n};
 
+const my $WAIT_STATUS_SHIFT => 8;
+const my $NO_LIMIT => -1;
 const my $LINES_PER_FILE => 3;
 const my $WIDELY_READABLE_FOLDER => oct(755);
 const my $WORLD_WRITABLE_FOLDER => oct(777);
@@ -557,9 +559,21 @@ sub merge_in {
     # associate all new items with this index
     $_->index($self) for values %{$other->catalog};
 
-    # do not transfer root
-    $self->catalog->{$_->name} = $_
-      for grep { $_->name ne $EMPTY } values %{$other->catalog};
+    for my $item (values %{$other->catalog}) {
+
+        # do not transfer root
+        next
+          if $item->name eq $EMPTY;
+
+        # duplicates on disk are dropped with basedir segments
+        $self->catalog->{$item->name} = $item;
+
+        # when adding folder, delete potential file entry
+        my $noslash = $item->name;
+        if ($noslash =~ s{/$}{}) {
+            delete $self->catalog->{$noslash};
+        }
+    }
 
     # add children that came from other root to current
     my @other_childnames = keys %{$other->catalog->{$EMPTY}->childnames};
@@ -657,6 +671,8 @@ sub capture_common_prefix {
 sub drop_common_prefix {
     my ($self) = @_;
 
+    my $errors = $EMPTY;
+
     my @childnames = keys %{$self->catalog->{$EMPTY}->childnames};
 
     die encode_utf8('Not exactly one top-level child')
@@ -714,9 +730,9 @@ sub drop_common_prefix {
     # add dropped segment to base directory
     $self->basedir($self->basedir . $SLASH . $segment);
 
-    $self->drop_basedir_segment;
+    my $other_errors = $self->drop_basedir_segment;
 
-    return;
+    return $errors . $other_errors;
 }
 
 =item drop_basedir_segment
@@ -725,6 +741,8 @@ sub drop_common_prefix {
 
 sub drop_basedir_segment {
     my ($self) = @_;
+
+    my $errors = $EMPTY;
 
     my $obsolete = path($self->basedir)->basename;
     die encode_utf8('Base directory has no name')
@@ -744,37 +762,67 @@ sub drop_basedir_segment {
 
     my $tempdir = $tempdir_tiny->stringify;
 
-    # addresses Perl unicode bug
-    utf8::downgrade $tempdir;
-
     # avoids conflict in case of repeating path segments
     for my $child (path($self->basedir)->children) {
         my $old_name = $child->stringify;
 
-        # addresses Perl unicode bug
+        # Perl unicode bug
         utf8::downgrade $old_name;
+        utf8::downgrade $tempdir;
 
         my @command = ('mv', $old_name, $tempdir);
-        system(@command);
+        my $stderr;
+        run3(\@command, \undef, \undef, \$stderr);
+        my $status = ($? >> $WAIT_STATUS_SHIFT);
+
+        # already in UTF-8
+        die $stderr
+          if $status;
     }
 
     rmdir $self->basedir;
     $self->basedir($parent_dir);
 
-    # addresses Perl unicode bug
-    utf8::downgrade $parent_dir;
-
     for my $child ($tempdir_tiny->children) {
         my $old_name = $child->stringify;
 
-        # addresses Perl unicode bug
+        my $target_dir = $parent_dir . $SLASH . $child->basename;
+
+        # Perl unicode bug
+        utf8::downgrade $target_dir;
+
+        if (-e $target_dir) {
+
+            # catalog items were dropped when index was merged
+            my @command = (qw{rm -rf}, $target_dir);
+            my $stderr;
+            run3(\@command, \undef, \undef, \$stderr);
+            my $status = ($? >> $WAIT_STATUS_SHIFT);
+
+            # already in UTF-8
+            die $stderr
+              if $status;
+
+            my $display_dir
+              = path($parent_dir)->basename . $SLASH . $child->basename;
+            $errors .= "removed existing $display_dir" . $NEWLINE;
+        }
+
+        # Perl unicode bug
         utf8::downgrade $old_name;
+        utf8::downgrade $parent_dir;
 
         my @command = ('mv', $old_name, $parent_dir);
-        system(@command);
+        my $stderr;
+        run3(\@command, \undef, \undef, \$stderr);
+        my $status = ($? >> $WAIT_STATUS_SHIFT);
+
+        # already in UTF-8
+        die $stderr
+          if $status;
     }
 
-    return;
+    return $errors;
 }
 
 =back
