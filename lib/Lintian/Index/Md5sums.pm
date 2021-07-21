@@ -32,9 +32,10 @@ use Moo::Role;
 use namespace::clean;
 
 const my $EMPTY => q{};
-const my $NULL => qq{\0};
+const my $NEWLINE => qq{\n};
 
 const my $WAIT_STATUS_SHIFT => 8;
+const my $NULL => qq{\0};
 
 =head1 NAME
 
@@ -63,6 +64,8 @@ sub add_md5sums {
     chdir($self->basedir)
       or die encode_utf8('Cannot change to directory ' . $self->basedir);
 
+    my $errors = $EMPTY;
+
     # get the regular files in the index
     my @files = grep { $_->is_file } @{$self->sorted_list};
     my @names = map { $_->name } @files;
@@ -80,8 +83,10 @@ sub add_md5sums {
             $stderr = decode_utf8($stderr)
               if length $stderr;
 
-            die encode_utf8("Cannot run @command: $stderr\n")
-              if $status;
+            if ($status) {
+                $errors .= "Cannot run @command: $stderr" . $NEWLINE;
+                return;
+            }
 
             # undecoded split allows names with non UTF-8 bytes
             my ($partial_sums, undef) = read_md5sums($stdout);
@@ -94,7 +99,7 @@ sub add_md5sums {
     chdir($savedir)
       or die encode_utf8("Cannot change to directory $savedir");
 
-    return;
+    return $errors;
 }
 
 =back

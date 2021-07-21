@@ -268,9 +268,9 @@ sub create_from_basedir {
 
     $self->catalog(\%all);
 
-    $self->load;
+    my $load_errors = $self->load;
 
-    return $index_errors;
+    return $index_errors . $load_errors;
 }
 
 =item create_from_piped_tar
@@ -325,9 +325,9 @@ sub create_from_piped_tar {
 
     $self->catalog(\%catalog);
 
-    $self->load;
+    my $load_errors = $self->load;
 
-    return $extract_errors . $index_errors;
+    return $extract_errors . $index_errors . $load_errors;
 }
 
 =item load
@@ -336,6 +336,8 @@ sub create_from_piped_tar {
 
 sub load {
     my ($self) = @_;
+
+    my $errors = $EMPTY;
 
     my %all = %{$self->catalog};
 
@@ -530,15 +532,15 @@ sub load {
 
     $self->catalog(\%all);
 
-    $self->add_md5sums;
-    $self->add_fileinfo;
+    $errors .= $self->add_md5sums;
+    $errors .= $self->add_fileinfo;
 
-    $self->add_ar;
-    $self->add_java;
-    $self->add_objdump;
-    $self->add_strings;
+    $errors .= $self->add_ar;
+    $errors .= $self->add_java;
+    $errors .= $self->add_objdump;
+    $errors .= $self->add_strings;
 
-    return;
+    return $errors;
 }
 
 =item merge_in

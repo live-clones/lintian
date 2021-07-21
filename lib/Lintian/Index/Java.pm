@@ -65,6 +65,8 @@ sub add_java {
     chdir($self->basedir)
       or die encode_utf8('Cannot change to directory ' . $self->basedir);
 
+    my $errors = $EMPTY;
+
     my @files = grep { $_->is_file } @{$self->sorted_list};
 
     # Wheezy's version of file calls "jar files" for "Zip archive".
@@ -124,7 +126,7 @@ sub add_java {
     chdir($savedir)
       or die encode_utf8("Cannot change to directory $savedir");
 
-    return;
+    return $errors;
 }
 
 =item parse_jar

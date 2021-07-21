@@ -33,6 +33,7 @@ use namespace::clean;
 const my $EMPTY => q{};
 const my $SPACE => q{ };
 const my $COMMA => q{,};
+const my $NEWLINE => qq{\n};
 
 const my $KEEP_EMPTY_FIELDS => -1;
 const my $GZIP_MAGIC_SIZE => 9;
@@ -65,6 +66,8 @@ sub add_fileinfo {
     chdir($self->basedir)
       or die 'Cannot change to directory ' . $self->basedir;
 
+    my $errors = $EMPTY;
+
     my @files = grep { $_->is_file } @{$self->sorted_list};
     my @names = map { $_->name } @files;
 
@@ -86,17 +89,23 @@ sub add_fileinfo {
 
             my @lines = split(/\0/, $stdout, $KEEP_EMPTY_FIELDS);
 
-            die encode_utf8(
-                'Did not get an even number lines from file command.')
-              unless @lines % 2 == 0;
+            unless (@lines % 2 == 0) {
+                $errors
+                  .= 'Did not get an even number lines from file command.'
+                  . $NEWLINE;
+                return;
+            }
 
             while(defined(my $path = shift @lines)) {
 
                 my $type = shift @lines;
 
-                die encode_utf8(
-                    "syntax error in file-info output: '$path' '$type'")
-                  unless length $path && length $type;
+                unless (length $path && length $type) {
+                    $errors
+                      .= "syntax error in file-info output: '$path' '$type'"
+                      . $NEWLINE;
+                    next;
+                }
 
                 # drop relative prefix, if present
                 $path =~ s{^\./}{};
@@ -148,7 +157,7 @@ sub add_fileinfo {
     chdir($savedir)
       or die encode_utf8("Cannot change to directory $savedir");
 
-    return;
+    return $errors;
 }
 
 =back

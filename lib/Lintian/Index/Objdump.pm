@@ -37,6 +37,7 @@ const my $EMPTY => q{};
 const my $SPACE => q{ };
 const my $INDENT => $SPACE x 4;
 const my $HYPHEN => q{-};
+const my $NEWLINE => qq{\n};
 
 const my $LINES_PER_FILE => 3;
 
@@ -67,6 +68,8 @@ sub add_objdump {
     chdir($self->basedir)
       or die encode_utf8('Cannot change to directory ' . $self->basedir);
 
+    my $errors = $EMPTY;
+
     my @files = grep { $_->is_file } @{$self->sorted_list};
 
     # must be ELF or static library
@@ -89,8 +92,11 @@ sub add_objdump {
         next
           unless length $combined_bytes;
 
-        die encode_utf8("Output from '@command' is not valid UTF-8")
-          unless valid_utf8($combined_bytes);
+        unless (valid_utf8($combined_bytes)) {
+
+            $errors .= "Output from '@command' is not valid UTF-8" . $NEWLINE;
+            next;
+        }
 
         my $combined_output = decode_utf8($combined_bytes);
 
@@ -113,30 +119,41 @@ sub add_objdump {
             unshift(@per_files, 'File');
         }
 
-        die encode_utf8(
-"Parsed data from readelf is not a multiple of $LINES_PER_FILE for $file"
-        )unless @per_files % $LINES_PER_FILE == 0;
+        unless (@per_files % $LINES_PER_FILE == 0) {
+
+            $errors
+              .= "Parsed data from readelf is not a multiple of $LINES_PER_FILE for $file"
+              . $NEWLINE;
+            next;
+        }
 
         my $parsed;
         while (defined(my $fixed = shift @per_files)) {
 
-            die encode_utf8("Unknown output from readelf for $file")
-              unless $fixed eq 'File';
-
             my $recorded_name = shift @per_files;
-            die encode_utf8("No file name from readelf for $file")
-              unless length $file;
+            my $per_file = shift @per_files;
+
+            unless ($fixed eq 'File') {
+                $errors .= "Unknown output from readelf for $file" . $NEWLINE;
+                next;
+            }
+
+            unless (length $recorded_name) {
+                $errors .= "No file name from readelf for $file" . $NEWLINE;
+                next;
+            }
 
             my ($container, $member) = ($recorded_name =~ /^(.*)\(([^)]+)\)$/);
 
             $container = $recorded_name
               unless defined $container && defined $member;
 
-            die encode_utf8(
-                "Container not same as file name ($container vs $file)")
-              unless $container eq $file->name;
-
-            my $per_file = shift @per_files;
+            unless ($container eq $file->name) {
+                $errors
+                  .= "Container not same as file name ($container vs $file)"
+                  . $NEWLINE;
+                next;
+            }
 
             # ignore empty archives, such as in musl-dev_1.2.1-1_amd64.deb
             next
@@ -151,7 +168,7 @@ sub add_objdump {
     chdir($savedir)
       or die encode_utf8("Cannot change to directory $savedir");
 
-    return;
+    return $errors;
 }
 
 =item parse_per_file
@@ -169,7 +186,7 @@ sub parse_per_file {
     my $elf_section = $EMPTY;
     my $static_lib_issues = 0;
 
-    my $parsed = "Filename: $filename\n";
+    my $parsed = "Filename: $filename" . $NEWLINE;
 
     my @lines = split(/\n/, $from_readelf);
     while (defined(my $line = shift @lines)) {
@@ -183,7 +200,7 @@ sub parse_per_file {
         ) {
        # Various errors for corrupt / broken files.  Note, readelf may spit out
        # multiple errors per file, hence the "unless".
-            $parsed .= "Broken: yes\n"
+            $parsed .= 'Broken: yes' . $NEWLINE
               unless $truncated++;
 
             next;
@@ -199,20 +216,20 @@ sub parse_per_file {
             next;
 
         } elsif ($line =~ /^Elf file type is (\S+)/) {
-            $parsed .= "Elf-Type: $1\n";
+            $parsed .= "Elf-Type: $1" . $NEWLINE;
             next;
 
         } elsif ($line =~ /^Program Headers:/) {
             $elf_section = 'PH';
-            $parsed .= "Program-Headers:\n";
+            $parsed .= 'Program-Headers:' . $NEWLINE;
 
         } elsif ($line =~ /^Section Headers:/) {
             $elf_section = 'SH';
-            $parsed .= "Section-Headers:\n";
+            $parsed .= 'Section-Headers:' . $NEWLINE;
 
         } elsif ($line =~ /^Dynamic section at offset .*:/) {
             $elf_section = 'DS';
-            $parsed .= "Dynamic-Section:\n";
+            $parsed .= 'Dynamic-Section:' . $NEWLINE;
 
         } elsif ($line =~ /^Version symbols section /) {
             $elf_section = 'VS';
@@ -261,7 +278,7 @@ sub parse_per_file {
                 }
             }
 
-            $parsed .= "  $header flags=${newflags}$extra\n";
+            $parsed .= "  $header flags=${newflags}$extra" . $NEWLINE;
 
             next;
 
@@ -272,7 +289,7 @@ sub parse_per_file {
             $sections[$1] = $section;
 
             # We need sections as well (e.g. for incomplete stripping)
-            $parsed .= " $section\n"
+            $parsed .= $SPACE . $section . $NEWLINE
               if $section =~ /^(?:\.comment$|\.note$|\.z?debug_)/;
 
         } elsif ($line
@@ -309,7 +326,7 @@ sub parse_per_file {
             $keep = 1
               if $value =~ s/^(?:Shared library|Library soname): \[(.*)\]/$1/;
 
-            $parsed .= "  $type   $value\n"
+            $parsed .= "  $type   $value" . $NEWLINE
               if $keep;
 
         } elsif (
@@ -344,11 +361,11 @@ sub parse_per_file {
 
             # The headers declare a dynamic section but it's
             # empty.
-            $parsed .= "Bad-Dynamic-Table: Yes\n";
+            $parsed .= 'Bad-Dynamic-Table: Yes' . $NEWLINE;
         }
     }
 
-    $parsed .= "Dynamic-Symbols:\n"
+    $parsed .= 'Dynamic-Symbols:' . $NEWLINE
       if @dynamic_symbols;
 
     for my $dynamic_symbol (@dynamic_symbols) {
@@ -388,10 +405,10 @@ sub parse_per_file {
         next
           unless $section eq 'UND' || $section eq '.text';
 
-        $parsed .= " $section $symbol_version $symbol_name\n";
+        $parsed .= " $section $symbol_version $symbol_name" . $NEWLINE;
     }
 
-    $parsed .= "\n";
+    $parsed .= $NEWLINE;
 
     return $parsed;
 }

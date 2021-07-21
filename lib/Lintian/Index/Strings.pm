@@ -21,6 +21,7 @@ use v5.20;
 use warnings;
 use utf8;
 
+use Const::Fast;
 use Path::Tiny;
 use Unicode::UTF8 qw(decode_utf8);
 
@@ -28,6 +29,8 @@ use Lintian::IPC::Run3 qw(safe_qx);
 
 use Moo::Role;
 use namespace::clean;
+
+const my $EMPTY => q{};
 
 =head1 NAME
 
@@ -52,6 +55,8 @@ Lintian::Index::Strings strings in binary files.
 sub add_strings {
     my ($self) = @_;
 
+    my $errors = $EMPTY;
+
     my @files = grep { $_->is_file } @{$self->sorted_list};
     for my $file (@files) {
 
@@ -69,7 +74,7 @@ sub add_strings {
         $file->strings($allstrings);
     }
 
-    return;
+    return $errors;
 }
 
 =back
