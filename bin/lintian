@@ -57,6 +57,10 @@ use Lintian::Deb822::Parser qw(parse_dpkg_control_string);
 use Lintian::Inspect::Changelog;
 use Lintian::IPC::Run3 qw(safe_qx);
 use Lintian::Pool;
+use Lintian::Processable::Installable;
+use Lintian::Processable::Buildinfo;
+use Lintian::Processable::Changes;
+use Lintian::Processable::Source;
 use Lintian::Profile;
 use Lintian::Version qw(guess_version);
 
@@ -673,8 +677,10 @@ for my $subject (@subjects) {
         # create a new group
         my $group = Lintian::Group->new;
         $group->pooldir($pool->basedir);
+        $group->profile($PROFILE);
 
-        my $processable = $group->add_processable_from_file($subject);
+        my $processable = create_processable_from_file($subject);
+        $group->add_processable($processable);
 
         my $parent = path($subject)->parent->stringify;
 
@@ -699,7 +705,8 @@ for my $subject (@subjects) {
               || $basename =~ /\.dsc$/
               || $basename =~ /\.buildinfo$/;
 
-            $group->add_processable_from_file("$parent/$basename");
+            my $additional = create_processable_from_file("$parent/$basename");
+            $group->add_processable($additional);
         }
 
         $pool->add_group($group);
@@ -713,6 +720,45 @@ for my $subject (@subjects) {
 $pool->process($PROFILE, \$exit_code, \%selected);
 
 exit $exit_code;
+
+=item create_processable_from_file
+
+=cut
+
+sub create_processable_from_file {
+    my ($path) = @_;
+
+    croak encode_utf8("Cannot resolve $path: $!")
+      unless -e $path;
+
+    my $processable;
+
+    if ($path =~ /\.dsc$/) {
+        $processable = Lintian::Processable::Source->new;
+
+    } elsif ($path =~ /\.buildinfo$/) {
+        $processable = Lintian::Processable::Buildinfo->new;
+
+    } elsif ($path =~ /\.d?deb$/) {
+        # in ubuntu, automatic dbgsym packages end with .ddeb
+        $processable = Lintian::Processable::Installable->new;
+        $processable->type('binary');
+
+    } elsif ($path =~ /\.udeb$/) {
+        $processable = Lintian::Processable::Installable->new;
+        $processable->type('udeb');
+
+    } elsif ($path =~ /\.changes$/) {
+        $processable = Lintian::Processable::Changes->new;
+
+    } else {
+        croak encode_utf8("$path is not a known type of package");
+    }
+
+    $processable->init_from_file($path);
+
+    return $processable;
+}
 
 =item parse_boolean (STR)
 

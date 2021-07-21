@@ -35,10 +35,6 @@ use Time::HiRes qw(gettimeofday tv_interval);
 use Time::Piece;
 use Unicode::UTF8 qw(encode_utf8);
 
-use Lintian::Processable::Installable;
-use Lintian::Processable::Buildinfo;
-use Lintian::Processable::Changes;
-use Lintian::Processable::Source;
 use Lintian::Util qw(human_bytes);
 
 use Moo;
@@ -165,48 +161,6 @@ sub name {
     return $self->source_name . $UNDERSCORE . $self->source_version;
 }
 
-=item add_processable_from_file
-
-=cut
-
-sub add_processable_from_file {
-    my ($self, $path) = @_;
-
-    croak encode_utf8("Cannot resolve $path: $!")
-      unless -e $path;
-
-    my $processable;
-
-    if ($path =~ /\.dsc$/) {
-        $processable = Lintian::Processable::Source->new;
-
-    } elsif ($path =~ /\.buildinfo$/) {
-        $processable = Lintian::Processable::Buildinfo->new;
-
-    } elsif ($path =~ /\.d?deb$/) {
-        # in ubuntu, automatic dbgsym packages end with .ddeb
-        $processable = Lintian::Processable::Installable->new;
-        $processable->type('binary');
-
-    } elsif ($path =~ /\.udeb$/) {
-        $processable = Lintian::Processable::Installable->new;
-        $processable->type('udeb');
-
-    } elsif ($path =~ /\.changes$/) {
-        $processable = Lintian::Processable::Changes->new;
-
-    } else {
-        croak encode_utf8("$path is not a known type of package");
-    }
-
-    $processable->pooldir($self->pooldir);
-    $processable->init($path);
-
-    $self->add_processable($processable);
-
-    return $processable;
-}
-
 =item process
 
 Process group.
@@ -233,9 +187,6 @@ sub process {
         my $path = $processable->path;
         local $SIG{__WARN__}
           = sub { warn encode_utf8("Warning in processable $path: $_[0]") };
-
-        # needed to read tag specifications
-        $processable->profile($self->profile);
 
         my $declared_overrides;
 
@@ -567,7 +518,7 @@ added.
 
 =cut
 
-sub add_processable{
+sub add_processable {
     my ($self, $processable) = @_;
 
     if ($processable->tainted) {
@@ -590,6 +541,14 @@ sub add_processable{
 
     croak encode_utf8('Please set pool directory first.')
       unless $self->pooldir;
+
+    $processable->pooldir($self->pooldir);
+
+    # needed to read tag specifications and error reporting
+    croak encode_utf8('Please set profile first.')
+      unless $self->profile;
+
+    $processable->profile($self->profile);
 
     croak encode_utf8('Not a supported type (' . $processable->type . ')')
       unless exists $SUPPORTED_TYPES{$processable->type};

@@ -45,7 +45,7 @@ Lintian::Processable::Changes -- A changes file Lintian can process
  use Lintian::Processable::Changes;
 
  my $processable = Lintian::Processable::Changes->new;
- $processable->init('path');
+ $processable->init_from_file('path');
 
 =head1 DESCRIPTION
 
@@ -57,13 +57,13 @@ represents all the files in a changes or buildinfo file.
 
 =over 4
 
-=item init (FILE)
+=item init_from_file (PATH)
 
-Initializes a new object from FILE.
+Initializes a new object from PATH.
 
 =cut
 
-sub init {
+sub init_from_file {
     my ($self, $file) = @_;
 
     croak encode_utf8("File $file does not exist")
