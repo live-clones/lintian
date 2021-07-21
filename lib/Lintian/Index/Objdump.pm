@@ -92,13 +92,15 @@ sub add_objdump {
         next
           unless length $combined_bytes;
 
-        unless (valid_utf8($combined_bytes)) {
+        my $combined_output;
 
+        if (valid_utf8($combined_bytes)) {
+            $combined_output = decode_utf8($combined_bytes);
+
+        } else {
+            $combined_output = $combined_bytes;
             $errors .= "Output from '@command' is not valid UTF-8" . $NEWLINE;
-            next;
         }
-
-        my $combined_output = decode_utf8($combined_bytes);
 
         # each object file in an archive gets its own File section
         my @per_files = split(/^(File): (.*)$/m, $combined_output);
