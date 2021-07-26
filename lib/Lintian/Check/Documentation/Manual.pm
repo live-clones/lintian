@@ -380,6 +380,7 @@ sub visit_installed_files {
 
         # Now we search through the whole man page for some common errors
         my $position = 0;
+        my $seen_python_traceback;
         foreach my $line (@manfile) {
             $position++;
             chomp $line;
@@ -430,6 +431,11 @@ sub visit_installed_files {
             }
             if ($line eq '.SH "POD ERRORS"') {
                 $self->hint('pod-conversion-message', "$file:$position");
+            }
+            if ($line =~ /Traceback \(most recent call last\):/) {
+                $self->hint('python-traceback-in-manpage', $file)
+                  unless $seen_python_traceback;
+                $seen_python_traceback = 1;
             }
             # Check for spelling errors if the manpage is English
             my $stag_emitter
