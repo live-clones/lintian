@@ -1,6 +1,6 @@
 {
    "preamble" : {
-      "last-update" : "2021-03-19T05:15:35Z",
+      "last-update" : "2021-08-18T17:05:15Z",
       "title" : "Debian Policy Releases"
    },
    "releases" : [
@@ -8,18 +8,48 @@
          "author" : "Sean Whitton <spwhitton@spwhitton.name>",
          "changes" : [
             "",
-            "debian-policy (4.5.1.1) UNRELEASED; urgency=medium",
+            "debian-policy (4.6.0.0) unstable; urgency=medium",
             "",
+            "  [ Sean Whitton ]",
+            "  * Policy: Allow manpages to be included in the dependencies of packages",
+            "    Wording: Helmut Grohne <helmut@subdivi.de>",
+            "    Seconded: Russ Allbery <rra@debian.org>",
+            "    Seconded: Christoph Berg <myon@debian.org>",
+            "    Seconded: Sean Whitton <spwhitton@spwhitton.name>",
+            "    Closes: #983657",
+            "  * Policy: Support for subpaths in Vcs-Git",
+            "    Wording: Russ Allbery <rra@debian.org>",
+            "    Seconded: Sean Whitton <spwhitton@spwhitton.name>",
+            "    Seconded: Mattia Rizzolo <mattia@debian.org>",
+            "    Closes: #932696",
             "  * 4.4: Fix changelog format: needs an extra space before sign-off",
             "    (Closes: #976301).",
-            "    Thanks to Anatoli Babenia for reporting the problem."
+            "    Thanks to Anatoli Babenia for reporting the problem.",
+            "  * autopkgtest: Update variable name ADTTMP->AUTOPKGTEST_TMP (Closes: #989581).",
+            "    Thanks to Fabrice Bauzac-Stehly for reporting the problem.",
+            "",
+            "  [ Russ Allbery ]",
+            "  * Policy: Add new encouraged keyword, make keywords consistent",
+            "    Wording: Russ Allbery <rra@debian.org>",
+            "    Seconded: Sam Hartman <hartmans@debian.org>",
+            "    Seconded: Sean Whitton <spwhitton@spwhitton.name>",
+            "    Closes: #944920",
+            "  * Clarify that no package may install files in /usr/lib64.  The previous",
+            "    wording implied this restriction only applied to 64-bit packages.",
+            "  * Reserve the /etc/rcn.d directories for the init-system-helpers package",
+            "    rather than the sysvinit package, reflecting a change already made in",
+            "    the archive."
          ],
          "closes" : [
-            976301.0
+            932696,
+            944920,
+            976301,
+            983657,
+            989581
          ],
-         "epoch" : 1611089265,
-         "timestamp" : "2021-01-19T20:47:45Z",
-         "version" : "4.5.1.1"
+         "epoch" : 1629256002,
+         "timestamp" : "2021-08-18T03:06:42Z",
+         "version" : "4.6.0.0"
       },
       {
          "author" : "Sean Whitton <spwhitton@spwhitton.name>",
