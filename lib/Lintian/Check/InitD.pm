@@ -601,19 +601,20 @@ sub visit_installed_files {
 
     # check for missing init.d script when alternative init system is present
 
-    if (   $item =~ m{etc/sv/([^/]+)/run$}
-        || $item =~ m{lib/systemd/system/([^/@]+)\.service}) {
+    if (   $item =~ m{etc/sv/(?<svc>[^/]+)/run$}
+        || $item =~ m{(?<usr>usr/)?lib/systemd/system/(?<svc>[^/@]+)\.service})
+    {
 
-        my $service = $1;
+        my ($usr, $service) = ($+{usr} // $EMPTY, $+{svc});
 
         $self->hint('package-supports-alternative-init-but-no-init.d-script',
             $item)
           unless $self->processable->installed->resolve_path(
             "etc/init.d/${service}")
           or $self->processable->installed->resolve_path(
-            "lib/systemd/system/${service}.path")
+            "${usr}lib/systemd/system/${service}.path")
           or $self->processable->installed->resolve_path(
-            "lib/systemd/system/${service}.timer");
+            "${usr}lib/systemd/system/${service}.timer");
     }
 
     if ($item =~ m{etc/sv/([^/]+)/$}) {

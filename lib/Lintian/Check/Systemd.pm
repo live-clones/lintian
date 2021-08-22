@@ -116,7 +116,7 @@ sub setup_installed_files {
 
     $self->services($self->get_systemd_service_names(\@service_files));
 
-    my @timers = grep { m{^lib/systemd/system/[^\/]+\.timer$} }
+    my @timers = grep { m{^(?:usr/)?lib/systemd/system/[^\/]+\.timer$} }
       @{$self->processable->installed->sorted_list};
     $self->timers(\@timers);
 
@@ -288,11 +288,8 @@ sub get_systemd_service_names {
 sub check_systemd_service_file {
     my ($self, $file) = @_;
 
-    $self->hint('systemd-service-file-outside-lib', $file)
-      if $file =~ m{^etc/systemd/system/};
-
-    $self->hint('systemd-service-file-outside-lib', $file)
-      if $file =~ m{^usr/lib/systemd/system/};
+    $self->hint('systemd-service-in-odd-location', $file)
+      if $file =~ m{^(?:lib|etc)/systemd/system/};
 
     unless ($file->is_open_ok
         || ($file->is_symlink && $file->link eq '/dev/null')) {
@@ -328,15 +325,15 @@ sub check_systemd_service_file {
         # We are a "standalone" service file if we have no .path or .timer
         # equivalent.
         my $is_standalone = 1;
-        if ($file =~ m{^lib/systemd/system/([^/]*?)@?\.service$}) {
+        if ($file =~ m{^(usr/)?lib/systemd/system/([^/]*?)@?\.service$}) {
 
-            my $service = $1;
+            my ($usr, $service) = ($1 // $EMPTY, $2);
 
             $is_standalone = 0
               if $self->processable->installed->resolve_path(
-                "lib/systemd/system/${service}.path")
+                "${usr}lib/systemd/system/${service}.path")
               || $self->processable->installed->resolve_path(
-                "lib/systemd/system/${service}.timer");
+                "${usr}lib/systemd/system/${service}.timer");
         }
 
         for my $target (@wanted_by) {
@@ -355,7 +352,7 @@ sub check_systemd_service_file {
         if (   !@wanted_by
             && !$is_oneshot
             && $is_standalone
-            && $file =~ m{^lib/systemd/[^\/]+/[^\/]+\.service$}
+            && $file =~ m{^(?:usr/)?lib/systemd/[^\/]+/[^\/]+\.service$}
             && $file !~ m{@\.service$}) {
 
             $self->hint('systemd-service-file-missing-install-key', $file)
