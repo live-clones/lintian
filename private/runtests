@@ -813,7 +813,7 @@ sub build_package {
     path($checksum_path)->spew_utf8($sha1sums)
       unless length $error;
 
-    $mce->gather(path($build_path)->relative->stringify, $error)
+    $mce->gather(path($build_path)->relative->stringify, $error . $log)
       if length $error;
 
     return;
