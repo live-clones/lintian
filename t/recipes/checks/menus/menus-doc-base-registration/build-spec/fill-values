@@ -1,3 +1,5 @@
 Skeleton: upload-native
 Testname: menus-doc-base-registration
 Description: Test some doc-base registration related tags
+# doc-base installation paths now include the package name, see Bug#980903
+Extra-Build-Depends: debhelper (>= 13.4)

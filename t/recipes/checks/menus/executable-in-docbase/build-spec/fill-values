@@ -1,3 +1,5 @@
 Testname: executable-in-docbase
 Skeleton: upload-native
 Description: Test with an executable file in /usr/share/doc-base
+# doc-base installation paths now include the package name, see Bug#980903
+Extra-Build-Depends: debhelper (>= 13.4)

@@ -1,3 +1,5 @@
 Skeleton: upload-native
 Testname: menus-doc-base-general
 Description: Test some doc-base related tags
+# doc-base installation paths now include the package name, see Bug#980903
+Extra-Build-Depends: debhelper (>= 13.4)
