@@ -1,9 +1,25 @@
 {
    "preamble" : {
-      "last-update" : "2021-08-18T17:05:15Z",
+      "last-update" : "2021-08-23T02:12:23Z",
       "title" : "Debian Policy Releases"
    },
    "releases" : [
+      {
+         "author" : "Sean Whitton <spwhitton@spwhitton.name>",
+         "changes" : [
+            "",
+            "debian-policy (4.6.0.1) unstable; urgency=medium",
+            "",
+            "  * Fix header of upgrading checklist entry for last release (Closes: #992414).",
+            "    Thanks to Scott Talbert and Drew Parsons for reporting the problem."
+         ],
+         "closes" : [
+            992414.0
+         ],
+         "epoch" : 1629318110,
+         "timestamp" : "2021-08-18T20:21:50Z",
+         "version" : "4.6.0.1"
+      },
       {
          "author" : "Sean Whitton <spwhitton@spwhitton.name>",
          "changes" : [
