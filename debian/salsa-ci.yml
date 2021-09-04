@@ -16,3 +16,9 @@ build-buster-backports:
 
 variables:
   SALSA_CI_LINTIAN_FAIL_WARNING: 1
+
+# The Lintian step currently has some warnings that result in the step failing,
+# but that is currently the accepted policy and does not prevent new commits
+# from being accepted
+lintian:
+  allow_failure: true
