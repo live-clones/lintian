@@ -334,9 +334,8 @@ sub load {
         }
     }
 
-    # need realpath to resolve our symlink to Lintian::Check
-    my @check_bases = grep { defined }
-      map { realpath("$_/checks") } @{$self->safe_include_dirs};
+    my @check_bases =map { ("$_/lib/Lintian/Check", "$_/checks") }
+      @{$self->safe_include_dirs};
     for my $check_base (@check_bases) {
 
         next

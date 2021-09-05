@@ -206,8 +206,9 @@ sub load {
         $relative =~ s{/([[:lower:]])}{/\U$1}g;
         $relative =~ s{-([[:lower:]])}{\U$1}g;
 
-        my @candidates = map { "$_/screens/$relative.pm" }
-          @{$self->profile->safe_include_dirs};
+        my @candidates = map {
+            ("$_/lib/Lintian/Screen/$relative.pm", "$_/screens/relative.pm")
+        } @{$self->profile->safe_include_dirs};
 
         my $absolute = first_value { -e } @candidates;
         require $absolute;
