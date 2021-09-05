@@ -608,7 +608,7 @@ sub utf8_clean_log {
         return utf8_clean_bytes($line, $SPACE, $utf8_clean_word);
     };
 
-    return utf8_clean_bytes($bytes, $NEWLINE, $utf8_clean_line);
+    return utf8_clean_bytes($bytes, $NEWLINE, $utf8_clean_line) . $NEWLINE;
 }
 
 =item utf8_clean_bytes
