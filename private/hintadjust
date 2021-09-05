@@ -1,0 +1,163 @@
+#!/usr/bin/perl
+
+# Copyright © 2019 Felix Lechner
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+# The harness for Lintian's test suite.  For detailed information on
+# the test suite layout and naming conventions, see t/tests/README.
+# For more information about running tests, see
+# doc/tutorial/Lintian/Tutorial/TestSuite.pod
+#
+
+use v5.20;
+use warnings;
+use utf8;
+
+use Const::Fast;
+use Cwd qw(realpath);
+use File::Basename qw(dirname);
+
+# neither Path::This nor lib::relative are in Debian
+use constant THISFILE => realpath __FILE__;
+use constant THISDIR => dirname realpath __FILE__;
+
+# use Lintian modules that belong to this program
+use lib THISDIR . '/../lib';
+
+use Getopt::Long;
+use IO::Interactive qw(is_interactive);
+use IO::Prompt::Tiny qw(prompt);
+use List::Util qw(all);
+use Path::Tiny;
+use Term::ANSIColor;
+use Unicode::UTF8 qw(encode_utf8 decode_utf8);
+
+use Test::Lintian::Output::Universal qw(parse_line order);
+
+const my $EMPTY => q{};
+const my $NEWLINE => qq{\n};
+const my $PLUS => q{+};
+
+# options
+my $interactive;
+
+Getopt::Long::Configure;
+unless (
+    Getopt::Long::GetOptions(
+        'i|interactive'  => \$interactive,
+        'help|h'         => sub {usage(); exit;},
+    )
+) {
+    usage();
+    die;
+}
+
+# check arguments and options
+die encode_utf8("Please use -h for usage information.\n")
+  if scalar @ARGV != 2;
+
+# get arguments
+my ($diffpath, $hintspath) = @ARGV;
+
+my @difflines = path($diffpath)->lines_utf8;
+chomp @difflines;
+
+my @hintslines = path($hintspath)->lines_utf8;
+chomp @hintslines;
+
+my $changed;
+
+foreach my $line (@difflines) {
+    my ($sign, $stripped) = $line =~ qr/^([+-])(.*)$/;
+
+    die encode_utf8("$diffpath is not a hintdiff file")
+      unless length $sign && defined $stripped;
+
+    if ($interactive) {
+
+        my $command;
+        my $color;
+
+        if ($sign eq $PLUS) {
+            $command = 'Add';
+            $color = 'bold bright_white on_green';
+        } else {
+            $command = 'Remove';
+            $color = 'bold bright_white on_red';
+        }
+
+        my $colored = $stripped;
+        $colored = colored($stripped, $color)
+          if is_interactive;
+
+        my $decision_bytes
+          = prompt(encode_utf8("$colored - $command (y/n/q)?"));
+        my $decision = decode_utf8($decision_bytes);
+
+        exit
+          if $decision eq 'q' || $decision eq $EMPTY;
+
+        next
+          unless $decision eq 'y';
+    }
+
+    if ($sign eq $PLUS) {
+        # say encode_utf8("Adding: $stripped");
+        push(@hintslines, $stripped);
+    } else {
+        # say encode_utf8("Removing: $stripped");
+        # remove the first match only
+        my $found = 0;
+        @hintslines = grep {$_ ne $stripped || $found++} @hintslines;
+    }
+
+    $changed = 1;
+}
+
+exit unless $changed;
+
+# also sort output into preferred order
+my $joined = $EMPTY;
+$joined .= $_ . $NEWLINE
+  for reverse sort { order($a) cmp order($b) } @hintslines;
+path($hintspath)->spew_utf8($joined);
+
+exit;
+
+sub usage {
+    my $message =<<"END";
+Usage: $0 -i <hintdiff-file> <hints-file>
+
+    --interactive, -i  Apply <hintdiff-file> interactively
+
+    Applies <hintdiff-file> to <hintsfile> so that the new file represents the
+    changes. Please use hintdiff to create the file with the changes.
+
+    The hints are then sorted in the order preferred for universal hints.
+END
+
+    print encode_utf8($message);
+
+    return;
+}
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

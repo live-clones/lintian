@@ -549,7 +549,7 @@ $status = 1
 if (is_interactive && !$unattended) {
     my @failed = $aggregator->failed;
     say encode_utf8(
-        'Offering to re-calibrate the tags expected in tests that failed.')
+        'Offering to re-calibrate the hints expected in tests that failed.')
       if @failed;
 
     my $accept_all;
@@ -569,9 +569,9 @@ if (is_interactive && !$unattended) {
 
         my $match_strategy = $testcase->unfolded_value('Match-Strategy');
 
-        if ($match_strategy eq 'tags') {
+        if ($match_strategy eq 'hints') {
 
-            my $diffpath = "$workpath/tagdiff";
+            my $diffpath = "$workpath/hintdiff";
             next
               unless -r $diffpath;
 
@@ -613,27 +613,27 @@ if (is_interactive && !$unattended) {
               if $decision eq 'a';
         }
 
-        if ($match_strategy eq 'tags') {
+        if ($match_strategy eq 'hints') {
 
-            # create tags if needed; helps when writing new tests
-            my $tagspath = "$testpath/eval/tags";
-            path($tagspath)->touch
-              unless -e $tagspath;
+            # create hints if needed; helps when writing new tests
+            my $hintspath = "$testpath/eval/hints";
+            path($hintspath)->touch
+              unless -e $hintspath;
 
-            my $diffpath = "$workpath/tagdiff";
+            my $diffpath = "$workpath/hintdiff";
             next
               unless -r $diffpath;
 
-            my @adjustargs = ($diffpath, $tagspath);
+            my @adjustargs = ($diffpath, $hintspath);
             unshift(@adjustargs, '-i')
               unless $accept_all;
 
-            die encode_utf8("Cannot run tagadjust for $testpath")
-              if system('tagadjust', @adjustargs);
+            die encode_utf8("Cannot run hintadjust for $testpath")
+              if system('hintadjust', @adjustargs);
 
-            # also copy the new tags to workpath; no need to rebuild
-            die encode_utf8("Cannot copy updated tags to $workpath")
-              if system('cp', $tagspath, "$workpath/tags");
+            # also copy the new hints to workpath; no need to rebuild
+            die encode_utf8("Cannot copy updated hints to $workpath")
+              if system('cp', $hintspath, "$workpath/hints");
 
         } elsif ($match_strategy eq 'literal') {
 
@@ -648,7 +648,7 @@ if (is_interactive && !$unattended) {
         }
     }
 
-    say encode_utf8($NEWLINE . 'Accepted all remaining tag changes.')
+    say encode_utf8($NEWLINE . 'Accepted all remaining hint changes.')
       if $accept_all;
 
 } else {

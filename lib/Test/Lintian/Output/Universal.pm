@@ -20,18 +20,18 @@ package Test::Lintian::Output::Universal;
 
 =head1 NAME
 
-Test::Lintian::Output::Universal -- routines to process universal tags
+Test::Lintian::Output::Universal -- routines to process universal hints
 
 =head1 SYNOPSIS
 
   use Test::Lintian::Output::Universal qw(get_tagnames);
 
-  my $filepath = "path to a universal tag file";
+  my $filepath = "path to a universal hint file";
   my @tags = get_tagnames($filepath);
 
 =head1 DESCRIPTION
 
-Helper routines to deal with universal tags and tag files. This is an
+Helper routines to deal with universal hints and hint files. This is an
 abstract format that has the minimum information found in all Lintian
 output formats.
 
@@ -73,7 +73,7 @@ const my $RPARENS => q{)};
 
 =item get_tagnames(PATH)
 
-Gets all the tag names mentioned in universal tag file located
+Gets all the tag names mentioned in universal hint file located
 at PATH.
 
 =cut

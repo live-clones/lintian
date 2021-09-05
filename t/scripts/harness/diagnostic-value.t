@@ -46,10 +46,10 @@ my @testpaths;
 for my $descpath (@descpaths) {
 
     my $testpath = path($descpath)->parent->parent->stringify;
-    my $tagspath = "$testpath/eval/tags";
+    my $hintspath = "$testpath/eval/hints";
 
     push(@testpaths, $testpath)
-      if -r $tagspath;
+      if -r $hintspath;
 }
 
 # set the testing plan
@@ -59,12 +59,12 @@ my @undeclared;
 for my $testpath (@testpaths) {
 
     my $descpath = "$testpath/eval/desc";
-    my $tagspath = "$testpath/eval/tags";
+    my $hintspath = "$testpath/eval/hints";
 
     my $testcase = read_config($descpath);
     my @testagainst = uniq $testcase->trimmed_list('Test-Against');
 
-    my @lines = path($tagspath)->lines_utf8({ chomp => 1 });
+    my @lines = path($hintspath)->lines_utf8({ chomp => 1 });
     my @testfor = uniq map { tag_name($_) } @lines;
 
     my @combined = (@testfor, @testagainst);

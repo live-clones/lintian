@@ -96,11 +96,11 @@ for my $descpath (@descpaths) {
     my $testcase = read_config($descpath);
 
     my $testpath = dirname($descpath);
-    my $tagspath = "$testpath/tags";
+    my $hintspath = "$testpath/hints";
 
-    next unless -r $tagspath;
+    next unless -r $hintspath;
 
-    my $universal = path($tagspath)->slurp_utf8;
+    my $universal = path($hintspath)->slurp_utf8;
 
     print "testcase->{testname}\n";
     my @lines = split(/$NEWLINE/, $universal);

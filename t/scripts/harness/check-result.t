@@ -59,7 +59,7 @@ EOSTR
 my $descpath = $testpath->child('desc');
 $descpath->spew($desctext);
 
-# expected tags
+# expected hints
 my $expectedtext =<<'EOSTR';
 distribution-multiple-bad (changes): multiple-distributions-in-changes-file stable foo-backportss bar foo
 distribution-multiple-bad (changes): bad-distribution-in-changes-file foo-backportss
@@ -69,10 +69,10 @@ distribution-multiple-bad (changes): backports-upload-has-incorrect-version-numb
 distribution-multiple-bad (changes): backports-changes-missing
 EOSTR
 
-my $expected = $testpath->child('tags');
+my $expected = $testpath->child('hints');
 $expected->spew($expectedtext);
 
-# actual tags with one line missing
+# actual hints with one line missing
 my $nomatchtext =<<'EOSTR';
 distribution-multiple-bad (changes): multiple-distributions-in-changes-file stable foo-backportss bar foo
 distribution-multiple-bad (changes): bad-distribution-in-changes-file foo-backportss
@@ -81,11 +81,11 @@ distribution-multiple-bad (changes): backports-upload-has-incorrect-version-numb
 distribution-multiple-bad (changes): backports-changes-missing
 EOSTR
 
-my $nomatch = $testpath->child('tags.nomatch');
+my $nomatch = $testpath->child('hints.nomatch');
 $nomatch->spew($nomatchtext);
 
-# copy of the expected tags
-my $match = $testpath->child('tags.match');
+# copy of the expected hints
+my $match = $testpath->child('hints.match');
 $match->spew($expected->slurp);
 
 # read test case
@@ -103,13 +103,13 @@ for my $name ($defaults->names) {
 # test plan
 plan tests => 2;
 
-# check when tags match
+# check when hints match
 ok(!scalar check_result($testcase, $testpath, $expected, $match),
-    'Same tags match');
+    'Same hints match');
 
-# check tags do not match
+# check hints do not match
 ok(scalar check_result($testcase, $testpath, $expected, $nomatch),
-    'Different tags do not match');
+    'Different hints do not match');
 
 # Local Variables:
 # indent-tabs-mode: nil

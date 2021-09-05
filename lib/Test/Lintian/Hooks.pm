@@ -139,7 +139,7 @@ sub calibrate {
     if (-x $hook) {
         system($hook, $expected, $actual, $calibrated) == 0
           or croak encode_utf8("Hook $hook failed on $actual: $!");
-        croak encode_utf8("No calibrated tags created in $calibrated")
+        croak encode_utf8("No calibrated hints created in $calibrated")
           unless -e $calibrated;
         return $calibrated;
     }

@@ -20,19 +20,19 @@ package Test::Lintian::Output::EWI;
 
 =head1 NAME
 
-Test::Lintian::Output::EWI -- routines to process EWI tags
+Test::Lintian::Output::EWI -- routines to process EWI hints
 
 =head1 SYNOPSIS
 
   use Path::Tiny;
   use Test::Lintian::Output::EWI qw(to_universal);
 
-  my $ewi = path("path to an EWI tag file")->slurp_utf8;
+  my $ewi = path("path to an EWI hint file")->slurp_utf8;
   my $universal = to_universal($ewi);
 
 =head1 DESCRIPTION
 
-Helper routines to deal with C<EWI> tags and tag files
+Helper routines to deal with C<EWI> hints and hint files
 
 =cut
 
@@ -64,7 +64,7 @@ const my $NEWLINE => qq{\n};
 
 =item to_universal(STRING)
 
-Converts the C<EWI> tag data contained in STRING to universal tags.
+Converts the C<EWI> hint data contained in STRING to universal hints.
 They are likewise delivered in a multi-line string.
 
 =cut
@@ -79,7 +79,7 @@ sub to_universal {
 
     foreach my $line (@lines) {
 
-        # no tag in this line
+        # no hint in this line
         next if $line =~ /^N: /;
 
         # look for "EWI: package[ type]: name details"

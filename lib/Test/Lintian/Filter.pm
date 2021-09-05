@@ -328,10 +328,10 @@ sub find_all_tags {
     return keys %tags
       unless $desc->declares('Test-Against');
 
-    # read tags from specification
+    # read hints from specification
     my $temp = Path::Tiny->tempfile;
-    die encode_utf8("tagextract failed: $!")
-      if system('private/tagextract', '-f', 'EWI', "$testpath/tags",
+    die encode_utf8("hintextract failed: $!")
+      if system('private/hintextract', '-f', 'EWI', "$testpath/hints",
         $temp->stringify);
     my @lines = $temp->lines_utf8({ chomp => 1 });
 

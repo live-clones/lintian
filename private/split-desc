@@ -95,7 +95,7 @@ path($fillvalues)->append($comments);
 path($desc)->append($comments);
 
 my @move
-  = qw(tags literal skip post-test test-calibration tag-list suppress lintian-include-dir);
+  = qw(hints literal skip post-test test-calibration tag-list suppress lintian-include-dir);
 
 for my $transfer (@move) {
 

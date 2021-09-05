@@ -314,8 +314,8 @@ sub runner {
     if ($match_strategy eq 'literal') {
         push(@errors, check_literal($testcase, $runpath, $output));
 
-    } elsif ($match_strategy eq 'tags') {
-        push(@errors, check_tags($testcase, $runpath, $output));
+    } elsif ($match_strategy eq 'hints') {
+        push(@errors, check_hints($testcase, $runpath, $output));
 
     } else {
         die encode_utf8("Unknown match strategy $match_strategy.");
@@ -364,46 +364,46 @@ sub check_literal {
     if (-e $script) {
         sed_hook($script, $raw, $actual);
     } else {
-        die encode_utf8("Could not copy actual tags $raw to $actual: $!")
+        die encode_utf8("Could not copy actual hints $raw to $actual: $!")
           if system('cp', '-p', $raw, $actual);
     }
 
     return check_result($testcase, $runpath, $expected, $actual);
 }
 
-=item check_tags
+=item check_hints
 
 =cut
 
-sub check_tags {
+sub check_hints {
     my ($testcase, $runpath, $output) = @_;
 
-    # create expected tags if there are none; helps when calibrating new tests
-    my $expected = "$runpath/tags";
+    # create expected hints if there are none; helps when calibrating new tests
+    my $expected = "$runpath/hints";
     path($expected)->touch
       unless -e $expected;
 
-    my $raw = "$runpath/tags.actual";
+    my $raw = "$runpath/hints.actual";
     path($raw)->spew_utf8($output);
 
     # run a sed-script if it exists
-    my $actual = "$runpath/tags.actual.parsed";
+    my $actual = "$runpath/hints.actual.parsed";
     my $sedscript = "$runpath/post-test";
     if (-e $sedscript) {
         sed_hook($sedscript, $raw, $actual);
     } else {
-        die encode_utf8("Could not copy actual tags $raw to $actual: $!")
+        die encode_utf8("Could not copy actual hints $raw to $actual: $!")
           if system('cp', '-p', $raw, $actual);
     }
 
-    # calibrate tags; may write to $actual
-    my $calibrated = "$runpath/tags.specified.calibrated";
+    # calibrate hints; may write to $actual
+    my $calibrated = "$runpath/hints.specified.calibrated";
     my $calscript = "$runpath/test-calibration";
     if(-x $calscript) {
         calibrate($calscript, $actual, $expected, $calibrated);
     } else {
         die encode_utf8(
-            "Could not copy expected tags $expected to $calibrated: $!")
+            "Could not copy expected hints $expected to $calibrated: $!")
           if system('cp', '-p', $expected, $calibrated);
     }
 
@@ -412,9 +412,9 @@ sub check_tags {
 
 =item check_result(DESC, EXPECTED, ACTUAL)
 
-This routine checks if the EXPECTED tags match the calibrated ACTUAL for the
+This routine checks if the EXPECTED hints match the calibrated ACTUAL for the
 test described by DESC. For some additional checks, also need the ORIGINAL
-tags before calibration. Returns a list of errors, if there are any.
+hints before calibration. Returns a list of errors, if there are any.
 
 =cut
 
@@ -433,7 +433,7 @@ sub check_result {
 
     my $match_strategy = $testcase->unfolded_value('Match-Strategy');
 
-    if ($match_strategy eq 'tags') {
+    if ($match_strategy eq 'hints') {
         @expectedlines
           = reverse sort { order($a) cmp order($b) } @expectedlines;
         @actuallines
@@ -451,14 +451,14 @@ sub check_result {
         if ($match_strategy eq 'literal') {
             push(@errors, 'Literal output does not match');
 
-        } elsif ($match_strategy eq 'tags') {
+        } elsif ($match_strategy eq 'hints') {
 
-            push(@errors, 'Tags do not match');
+            push(@errors, 'Hints do not match');
 
             @difflines = reverse sort @difflines;
-            my $tagdiff;
-            $tagdiff .= $_ . $NEWLINE for @difflines;
-            path("$runpath/tagdiff")->spew_utf8($tagdiff // $EMPTY);
+            my $hintdiff;
+            $hintdiff .= $_ . $NEWLINE for @difflines;
+            path("$runpath/hintdiff")->spew_utf8($hintdiff // $EMPTY);
 
         } else {
             die encode_utf8("Unknown match strategy $match_strategy.");
@@ -473,9 +473,9 @@ sub check_result {
         push(@errors, $EMPTY);
     }
 
-    # stop if the test is not about tags
+    # stop if the test is not about hints
     return @errors
-      unless $match_strategy eq 'tags';
+      unless $match_strategy eq 'hints';
 
     # get expected tags
     my @expected = sort +get_tagnames($expectedpath);

@@ -1,0 +1,119 @@
+#!/usr/bin/perl
+
+# Copyright © 2019 Felix Lechner
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+# The harness for Lintian's test suite.  For detailed information on
+# the test suite layout and naming conventions, see t/tests/README.
+# For more information about running tests, see
+# doc/tutorial/Lintian/Tutorial/TestSuite.pod
+#
+
+use v5.20;
+use warnings;
+use utf8;
+
+use Cwd qw(realpath);
+use File::Basename qw(dirname);
+
+# neither Path::This nor lib::relative are in Debian
+use constant THISFILE => realpath __FILE__;
+use constant THISDIR => dirname realpath __FILE__;
+
+# use Lintian modules that belong to this program
+use lib THISDIR . '/../lib';
+
+use Getopt::Long;
+use List::Util qw(all);
+use Path::Tiny;
+use Unicode::UTF8 qw(encode_utf8);
+
+use Test::Lintian::Output::EWI;
+
+# options
+my $target_format;
+
+Getopt::Long::Configure;
+unless (
+    Getopt::Long::GetOptions(
+        'f|format=s'  => \$target_format,
+        'help|h'      => sub {usage(); exit;},
+    )
+) {
+    usage();
+    die;
+}
+
+# check arguments and options
+die encode_utf8("Please use -h for usage information.\n")
+  if scalar @ARGV < 1 || scalar @ARGV > 2;
+
+# get arguments
+my ($inpath, $outpath) = @ARGV;
+
+die encode_utf8("File $inpath does not exist.\n")
+  unless -e $inpath;
+
+my $original_text = path($inpath)->slurp_utf8;
+my $converted = to_universal($target_format, $original_text);
+
+if (defined $outpath) {
+    path($outpath)->spew_utf8($converted);
+}else {
+    print encode_utf8($converted);
+}
+
+exit;
+
+sub to_universal {
+    my ($format, $text) = @_;
+
+    if ($format eq 'EWI') {
+        return Test::Lintian::Output::EWI::to_universal($text);
+    }
+
+    die encode_utf8("Unknown format: $format\n");
+}
+
+sub usage {
+    my $message =<<"END";
+Usage: $0 -f <format> <in-file> <out-file>
+
+    --format, -f <format>  Format of Lintian output file <in-file>
+
+    Extracts hint information from a variety of Lintian output formats. The
+    output format is a simplified EWI format without letter code. Other
+    notable differences are that the binary package type is always displayed.
+
+    The hints are sorted in a reverse order, but with the package type pulled
+    to the front. That way package types are grouped. Source packages are at
+    the top.
+
+    Prints to stdout when no <out-file> is given.
+END
+
+    print encode_utf8($message);
+
+    return;
+}
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et
