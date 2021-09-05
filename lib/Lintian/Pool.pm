@@ -331,7 +331,7 @@ sub process{
         my $text = quantity($total, 'hint') . ' overridden';
         $text
           .= $SPACE
-          . $RIGHT_PARENS
+          . $LEFT_PARENS
           . join($COMMA . $SPACE, @details)
           . $RIGHT_PARENS
           if @details;
