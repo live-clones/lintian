@@ -22,6 +22,7 @@ use warnings;
 use utf8;
 
 use Const::Fast;
+use List::Compare;
 use Path::Tiny;
 
 use Moo;
@@ -30,6 +31,8 @@ use namespace::clean;
 const my $SPACE => q{ };
 const my $SLASH => q{/};
 const my $NEWLINE => qq{\n};
+
+const my @KNOWN_INSTRUCTIONS => qw(remove-on-upgrade);
 
 =head1 NAME
 
@@ -47,11 +50,11 @@ Lintian::Conffiles provides an interface to control data for conffiles.
 
 =over 4
 
-=item attributes
+=item instructions
 
 =cut
 
-has attributes => (is => 'rw', default => sub { {} });
+has instructions => (is => 'rw', default => sub { {} });
 
 =item parse
 
@@ -85,12 +88,17 @@ sub parse {
             $processable->hint('relative-conffile', $path, "(line $position)");
         }
 
-        if (exists $self->attributes->{$path}) {
+        my $lc = List::Compare->new(\@words, \@KNOWN_INSTRUCTIONS);
+        $processable->hint('unknown-conffile-instruction',
+            $_,"(line $position)")
+          for $lc->get_Lonly;
+
+        if (exists $self->instructions->{$path}) {
             $processable->hint('duplicate-conffile', $path,"(line $position)");
             next;
         }
 
-        $self->attributes->{$path} = \@words;
+        $self->instructions->{$path} = \@words;
 
     } continue {
         ++$position;
@@ -108,7 +116,7 @@ Returns a list of absolute filenames found for conffiles.
 sub all {
     my ($self) = @_;
 
-    return keys %{$self->attributes};
+    return keys %{$self->instructions};
 }
 
 =item is_known (FILE)
@@ -128,7 +136,7 @@ sub is_known {
     my ($self, $relative) = @_;
 
     return 1
-      if exists $self->attributes->{$relative};
+      if exists $self->instructions->{$relative};
 
     return 0;
 }

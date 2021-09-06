@@ -1,0 +1,4 @@
+Skeleton: upload-non-native
+Testname: instruction-chicken-soup
+Package-Architecture: all
+Description: Instruction 'chicken-soup' in DEBIAN/conffiles
