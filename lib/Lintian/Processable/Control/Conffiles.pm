@@ -21,14 +21,10 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Const::Fast;
-use Path::Tiny;
+use Lintian::Conffiles;
 
 use Moo::Role;
 use namespace::clean;
-
-const my $SPACE => q{ };
-const my $SLASH => q{/};
 
 =head1 NAME
 
@@ -46,83 +42,23 @@ Lintian::Processable::Control::Conffiles provides an interface to control data f
 
 =over 4
 
-=item conffile_attributes
+=item conffiles
 
 =cut
 
-has conffile_attributes => (
+has conffiles => (
     is => 'rw',
     lazy => 1,
     default => sub {
         my ($self) = @_;
 
-        # read conffiles if it exists and is a file
-        my $cf = $self->control->resolve_path('conffiles');
-        return {}
-          unless $cf && $cf->is_file && $cf->is_open_ok;
+        my $file = $self->control->resolve_path('conffiles');
 
-        my @lines = path($cf->unpacked_path)->lines_utf8;
+        my $conffiles = Lintian::Conffiles->new;
+        $conffiles->parse($file, $self);
 
-        # dpkg strips whitespace (using isspace) from the right hand
-        # side of the file name.
-
-        # trim right
-        s/\s+$// for @lines;
-
-        my %attributes;
-
-        my @not_empty = grep { length } @lines;
-        for my $line (@not_empty) {
-
-            my @words = split($SPACE, $line);
-            my $absolute = pop @words;
-
-            # list contains absolute paths, unlike lookup
-            $attributes{$absolute} = \@words;
-        }
-
-        return \%attributes;
+        return $conffiles;
     });
-
-=item conffiles
-
-Returns a list of absolute filenames found for conffiles.
-
-=cut
-
-sub conffiles {
-    my ($self) = @_;
-
-    return keys %{$self->conffile_attributes};
-}
-
-=item is_conffile (FILE)
-
-Returns a truth value if FILE is listed in the conffiles control file.
-If the control file is not present or FILE is not listed in it, it
-returns C<undef>.
-
-Note that FILE should be the filename relative to the package root
-(even though the control file uses absolute paths).  If the control
-file does relative paths, they are assumed to be relative to the
-package root as well (and used without warning).
-
-=cut
-
-sub is_conffile {
-    my ($self, $file) = @_;
-
-    my $relative = $file;
-    $relative =~ s{^/+}{};
-
-    # make sure there is a leading slash
-    my $absolute = $SLASH . $relative;
-
-    return 1
-      if exists $self->conffile_attributes->{$absolute};
-
-    return 0;
-}
 
 =back
 

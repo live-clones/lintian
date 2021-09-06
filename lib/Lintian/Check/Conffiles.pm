@@ -42,26 +42,14 @@ sub binary {
     for my $file (@etcfiles) {
 
         $self->hint('file-in-etc-not-marked-as-conffile', $file)
-          unless $self->processable->is_conffile($file->name)
+          unless $self->processable->conffiles->is_known($file->name)
           || $file =~ m{/README$}
           || $file eq 'etc/init.d/skeleton'
           || $file eq 'etc/init.d/rc'
           || $file eq 'etc/init.d/rcS';
     }
 
-    my %count;
-    for my $absolute ($self->processable->conffiles) {
-
-        # all paths should be absolute
-        $self->hint('relative-conffile', $absolute)
-          unless $absolute =~ m{^/};
-
-        # strip the leading slash
-        my $relative = $absolute;
-        $relative =~ s{^/+}{};
-
-        $count{$relative} //= 0;
-        $count{$relative}++;
+    for my $relative ($self->processable->conffiles->all) {
 
         my $shipped = $self->processable->installed->lookup($relative);
         if (defined $shipped) {
@@ -83,11 +71,6 @@ sub binary {
                 $self->hint('non-etc-file-marked-as-conffile', $relative);
             }
         }
-    }
-
-    for my $path (keys %count) {
-        $self->hint('duplicate-conffile', $path)
-          if $count{$path} > 1;
     }
 
     return;

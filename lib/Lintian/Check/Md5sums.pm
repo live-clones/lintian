@@ -52,7 +52,7 @@ sub visit_installed_files {
       unless $file->is_regular_file;
 
     $self->only_conffiles(0)
-      unless $self->processable->is_conffile($file);
+      unless $self->processable->conffiles->is_known($file->name);
 
     return;
 }
@@ -107,7 +107,7 @@ sub binary {
     for my $name ($lc->get_Ronly) {
 
         $self->hint('file-missing-in-md5sums', $name)
-          unless $self->processable->is_conffile($name)
+          unless $self->processable->conffiles->is_known($name)
           || $name =~ m{^var/lib/[ai]spell/.};
     }
 

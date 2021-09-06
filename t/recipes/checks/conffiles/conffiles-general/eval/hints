@@ -1,8 +1,8 @@
-conffiles-general (binary): relative-conffile etc/foo
+conffiles-general (binary): relative-conffile etc/foo (line 6)
 conffiles-general (binary): non-etc-file-marked-as-conffile var/cache/foo
 conffiles-general (binary): file-in-usr-marked-as-conffile usr/share/foo
 conffiles-general (binary): file-in-etc-rc.d-marked-as-conffile etc/rc2.d/file
-conffiles-general (binary): duplicate-conffile etc/foo
+conffiles-general (binary): duplicate-conffile etc/foo (line 6)
 conffiles-general (binary): conffile-is-not-in-package var/cache/foo
 conffiles-general (binary): conffile-is-not-in-package usr/share/foo
 conffiles-general (binary): conffile-is-not-in-package etc/rc2.d/file
