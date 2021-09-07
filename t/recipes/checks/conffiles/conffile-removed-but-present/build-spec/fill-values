@@ -1,0 +1,4 @@
+Skeleton: upload-non-native
+Testname: conffile-removed-but-present
+Package-Architecture: all
+Description: Instruction 'remove-on-upgrade' in DEBIAN/conffiles but file shipped

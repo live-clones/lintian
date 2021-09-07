@@ -26,51 +26,69 @@ use v5.20;
 use warnings;
 use utf8;
 
+use List::SomeUtils qw(any none);
+
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
 
+sub visit_installed_files {
+    my ($self, $item) = @_;
+
+    return
+      if $self->processable->type =~ 'udeb';
+
+    my $conffiles = $self->processable->conffiles;
+
+    unless ($item->is_file) {
+        $self->hint('conffile-has-bad-file-type', $item)
+          if $conffiles->is_known($item->name);
+        return;
+    }
+
+    # files /etc must be conffiles, with some exceptions).
+    $self->hint('file-in-etc-not-marked-as-conffile', $item)
+      if $item->name =~ m{^etc/}
+      && !$conffiles->is_known($item->name)
+      && $item->name !~ m{/README$}
+      && $item->name !~ m{^ etc/init[.]d/ (?: skeleton | rc S? ) $}x;
+
+    $self->hint('file-in-etc-rc.d-marked-as-conffile', $item)
+      if $conffiles->is_known($item->name)
+      && $item->name =~ m{^etc/rc.\.d/};
+
+    if ($conffiles->is_known($item->name) && $item->name !~ m{^etc/}) {
+
+        if ($item->name =~ m{^usr/}) {
+            $self->hint('file-in-usr-marked-as-conffile', $item);
+
+        } else {
+            $self->hint('non-etc-file-marked-as-conffile', $item);
+        }
+    }
+
+    return;
+}
+
 sub binary {
     my ($self) = @_;
 
-    my @files
-      = grep { $_->is_file } @{$self->processable->installed->sorted_list};
+    my $conffiles = $self->processable->conffiles;
 
-    # files /etc must be conffiles, with some exceptions).
-    my @etcfiles = grep { $_->name =~ /^etc/ } @files;
-    for my $file (@etcfiles) {
+    for my $relative ($conffiles->all) {
 
-        $self->hint('file-in-etc-not-marked-as-conffile', $file)
-          unless $self->processable->conffiles->is_known($file->name)
-          || $file =~ m{/README$}
-          || $file eq 'etc/init.d/skeleton'
-          || $file eq 'etc/init.d/rc'
-          || $file eq 'etc/init.d/rcS';
-    }
-
-    for my $relative ($self->processable->conffiles->all) {
+        my @instructions = @{$conffiles->instructions->{$relative}};
+        my $should_exist = none { $_ eq 'remove-on-upgrade' } @instructions;
+        my $may_not_exist = any { $_ eq 'remove-on-upgrade' } @instructions;
 
         my $shipped = $self->processable->installed->lookup($relative);
-        if (defined $shipped) {
-            $self->hint('conffile-has-bad-file-type', $shipped)
-              unless $shipped->is_file;
 
-        } else {
-            $self->hint('conffile-is-not-in-package', $relative);
-        }
+        $self->hint('missing-conffile', $relative)
+          if $should_exist && !defined $shipped;
 
-        $self->hint('file-in-etc-rc.d-marked-as-conffile', $relative)
-          if $relative =~ m{^etc/rc.\.d/};
-
-        if ($relative !~ m{^etc/}) {
-            if ($relative =~ m{^usr/}) {
-                $self->hint('file-in-usr-marked-as-conffile', $relative);
-
-            } else {
-                $self->hint('non-etc-file-marked-as-conffile', $relative);
-            }
-        }
+        $self->hint('unexpected-conffile', $relative)
+          if $may_not_exist && defined $shipped;
     }
 
     return;
