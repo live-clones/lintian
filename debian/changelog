@@ -1,8 +1,205 @@
-lintian (2.104.0+git) UNRELEASED; urgency=medium
+lintian (2.105.0) unstable; urgency=medium
 
-  * WIP (generated at release time: please do not add entries below).
+  * Summary of tag changes:
+    + Added:
+      - backgrounded-test-command
+      - crossing-screens
+      - duplicate-p3dist-override
+      - elevated-privileges
+      - illegal-variable
+      - misplaced-systemd-tmpfiles
+      - missing-conffile
+      - no-versioned-debhelper-prerequisite
+      - nodejs-missing-version-override
+      - obsolete-vim-addon-manager
+      - pypi-homepage
+      - python-traceback-in-manpage
+      - ruby-interpreter-is-deprecated
+      - rubygem-homepage
+      - rules-require-build-prerequisite
+      - rust-boilerplate
+      - source-contains-editor-backup-file
+      - source-contains-patch-failure-file
+      - source-contains-quilt-control-dir
+      - superficial-tests
+      - systemd-service-in-odd-location
+      - systemd-tmpfile-in-var-run
+      - unexpected-conffile
+      - unknown-conffile-instruction
+      - unmerged-usr
+      - upstream-metadata-field-unknown
+      - wrong-team
+    + Removed:
+      - ancient-standards-version
+      - conffile-is-not-in-package
+      - missing-build-dependency
+      - missing-python-build-dependency
+      - octal-permissions
+      - package-lacks-versioned-build-depends-on-debhelper
+      - package-needs-versioned-debhelper-build-depends
+      - setgid-binary
+      - setuid-binary
+      - setuid-gid-binary
+      - systemd-service-file-outside-lib
+      - systemd-tmpfiles.d-outside-usr-lib
 
- -- Chris Lamb <lamby@debian.org>  Fri, 27 Nov 2020 09:22:02 +0000
+  [ Chris Lamb ]
+  * Check for Python tracebacks in manual pages,  usually caused by failing
+    help2man calls (and cause reproducibility issues).
+  * Correct confusion between left and right parens that was leading to
+    output such as ")2 errors)".
+  * Bump Standards-Version to 4.6.0.1.
+
+  [ Felix Lechner ]
+  * Implement usr-merge; flag files shipped in /bin, /sbin or /lib.
+  * Flag systemd temporary files placed in /var/run. (Closes: #984678)
+  * Do not repeat tag name when annotating hints. (Closes: #969398)
+  * Refuse to read installable control data in national encodings.
+  * Stop shipping modules in system path. (Closes: #968011)
+    - Provide a dedicated, non-public executable to obtain the latest
+      policy version from Lintian data. (See: #978672)
+  * Flag the use of DEB_BUILD_MULTIARCH in some Debian files.
+    (Closes: #983219)
+  * For team-maintained packages, flag names in another team's name space.
+  * Provide a generalized method to grant exemptions to package families
+    (screens).
+    - Exempt ELPA packaging scripts for Emacs modules from
+      executable-in-usr-lib. (Closes: #974175)
+    - Exempt GNAT's read-only .ali files from non-standard-file-perm.
+      (Closes: #986400)
+  * Treat NMU edge cases for non-consecutive-debian-revision.
+    (Closes: #942013)
+  * Recommend the newer php-markdown over libmarkdown-php when embedded.
+    (Closes: #898867)
+  * Convert possible-gpl-code-linked-with-openssl to a classification tag.
+    (Closes: #972181)
+  * Turn maybe-not-arch-all-binnmuable into a classification tag.
+  * Combine, rename two confusing debhelper tags. (Closes: #977332)
+  * Warn when trying to issue duplicate hints; provide more context to
+    disambiguate similar hints.
+  * Add --output-width; wrap EWI tag descriptions to width of output
+    terminal otherwise.
+  * Assume that all interactive terminals are hyperlink-capable, but change
+    default to off.
+  * Send all debugging and status information to STDERR.
+  * Drop support for custom visibility levels in profiles.
+  * Prefer spaces over commas as field separators in profiles.
+  * Build test packages automatically when running tests.
+    (Closes: #927476, #935907)
+  * Use semantic versioning for the output of '--version'; omit Git hash
+    from Lintian version strings.
+  * Refer to new website in output.
+  * Update manual references for the first time in almost two years.
+  * Update the JSON data file for Debian policy releases; include all up
+    to 4.6.0.1.
+  * Drop UTF-8 PerlIO layers for STDOUT and STDERR from almost all
+    executables and the test suite. (Closes: #972876, #972878)
+  * Do not pretend to show hashbang in hint context for unusual
+    interpreters. (Closes: #982630)
+  * Treat Testsuite field as a comma-separated list for the teams pkg-perl
+    and pkg-js. (Closes: #9768010)
+  * Use current program names in help messages and version announcements.
+    (Closes: #977261)
+  * Allow tilde in names of installed JAR archives. (Closes: #976681)
+  * Flag source packages that declare only tests with the 'superficial'
+    restriction. (Closes: #932870)
+  * Ignore SIGWINCH in the test suite. (Closes: #974575)
+  * For manual pages, extract section information correctly from .TH
+    header. (Closes: #962601)
+  * Recognize Architecture and Classes as valid fields in d/tests/control.
+    (Closes: #977976)
+  * Restructure tags for file permissions; combine tags for setuid/setgid
+    executables.
+  * Detect Rust boilerplate in package descriptions. (See: !344)
+  * Do not fail on dangling symlinks when looking for obsolete, missing or
+    invalid content. (Closes: #978534)
+  * Always print full path to patch files. (Closes: #980247)
+  * Tolerate manual pages for subcommands when main command is documented.
+    (Closes: #947258)
+  * Tighten regex for no-op-testsuite to stop false positives.
+    (Closes: #980824)
+  * Allow environment prefix when recognizing 'dh' sequencer.
+    (Closes: #981712)
+  * Ignore build profiles when requiring dh helper for Python
+    prerequisites. (Closes: #991242)
+  * Ignore build profiles when flagging use of py3versions in d/rules.
+    (Closes: #978144)
+  * Do not flag Python3 entry point definitions as out-of-place
+    documentation. (Closes: #981268)
+  * Flag duplicates in d/py3dist-overrides. (Closes: #980987)
+  * Flag PyPI homepages in source control files. (Closes: #981932)
+  * Flag Rubygem homepages in source control files. (Closes: #981935)
+  * Accept the virtual package dh-sequence-dkms as B-D for 'dh
+    --with-dkms'. (Closes: #982834)
+  * Drop reference to archive keyring from package-installs-apt-sources.
+    (Closes: #983598)
+  * Read error message from Config::Tiny via the advertised mechanism.
+    (Closes: #985064)
+  * Add 'utils.h' to the list of overly generic headers. (Closes: #982322)
+  * Drop package file names from tag context for unknown-field.
+    (Closes: #980560)
+  * Flag backgrounded Test-Commands in autopkgtest declarations.
+    (Closes: #988591)
+  * For multi-component sources, always drop common prefixes for
+    sub-components. (Closes: #976643)
+  * Accept more than two components in architecture wildcards for package
+    relationships. (Closes: #981163)
+  * Add Breaks: lintian-brush (<< 0.88) to debian/control due to failing
+    autopkgtests.
+  * Implement two perltidy policies.
+  * Implement 87 perlcritic policies; disregard four others.
+  * Ignore special attributes like 'remove-on-upgrade' in DEBIAN/conffiles.
+    (Closes: #993531, #993711)
+  * Read checks separately from ./lib and ./checks; forego symbolic link.
+    (Closes: #993651)
+
+  [ Simon McVittie ]
+  * Update lists of registered build-profile names
+
+  [ Paul Wise ]
+  * spelling: Add several corrections
+  * Upgrade superficial-tests tag to warning
+
+  [ Xavier Guimard ]
+  * Verify that nodejs module does not use semantic-release
+  * Fix and simplify search when parsing pkg-js-autopkgtest files.
+    (Closes: #981279)
+
+  [ Emmanuel Bourg ]
+  * Detect obsolete Servlet API 3.1. (See: !348)
+
+  [ Alexandre Rossi ]
+  * Recognize empty and very small files as architecture-independent.
+
+  [ Jelmer Vernooĳ ]
+  * Fix typo: valgring => valgrind.
+  * Fix archive section mapping for rust development packages.
+  * Check upstream field names in upstream metadata. (Closes: #969762)
+
+  [ gregor herrmann ]
+  * Add another spelling correction.
+
+  [ Victor Westerhuis ]
+  * Add --no-rename as a recognized option for dpkg-divert.
+
+  [ Brian Murray ]
+  * Recognize Ubuntu's next release, named 'impish', among the known-dists.
+
+  [ Louis-Philippe Véronneau ]
+  * Add check for obsolete installation prerequisite vim-addon-manager.
+
+  [ Fatih Altun ]
+  * Add profile for Pardus Linux
+
+  [ Antonio Terceiro ]
+  * Stop suggesting ruby-interpreter as a prerequisite. (See: !365)
+  * Warn about the outdated prerequisite ruby-interpreter. (See: !365)
+
+  [ Peter Pentchev ]
+  * Adjust to debhelper's new install location for systemd service files.
+    (Closes: #992465)
+
+ -- Chris Lamb <lamby@debian.org>  Tue, 07 Sep 2021 09:43:56 +0000
 
 lintian (2.104.0) unstable; urgency=medium
 
