@@ -3,8 +3,8 @@ Severity: error
 Check: debian/copyright/dep5
 Renamed-From:
  copyright-excludes-files-in-native-package
-Explanation: The Debian copyright notes excluded files with the <code>Excluded-Files</code> field,
- but the package is native.
+Explanation: The given Debian <code>copyright</code> file notes excluded files with
+ the <code>Files-Excluded</code> field, but the package is native.
  .
  Native packages cannot be repackaged. Please remove the field from
- <code>debian/copyright</code> or make the package non-native.
+ the given <code>copyright</code> file or make the package non-native.
