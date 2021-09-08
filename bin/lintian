@@ -77,6 +77,7 @@ const my $HYPHEN => q{-};
 const my $OPEN_PIPE => q{-|};
 
 const my $DEFAULT_TAG_LIMIT => 4;
+const my $DEFAULT_OUTPUT_WIDTH => 80;
 
 # place early, may need original environment to determine terminal blacklist
 my $hyperlinks_capable = is_interactive;
@@ -88,6 +89,7 @@ $SIG{PIPE} = 'IGNORE';
 my $TERMINAL_WIDTH;
 ($TERMINAL_WIDTH, undef, undef, undef) = GetTerminalSize()
   if is_interactive;
+$TERMINAL_WIDTH //= $DEFAULT_OUTPUT_WIDTH;
 
 my %PRESERVE_ENV = map { $_ => 1 } qw(
   DEBRELEASE_DEBS_DIR
