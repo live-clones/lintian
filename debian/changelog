@@ -103,7 +103,7 @@ lintian (2.105.0) unstable; urgency=medium
   * Do not pretend to show hashbang in hint context for unusual
     interpreters. (Closes: #982630)
   * Treat Testsuite field as a comma-separated list for the teams pkg-perl
-    and pkg-js. (Closes: #9768010)
+    and pkg-js. (Closes: #976801)
   * Use current program names in help messages and version announcements.
     (Closes: #977261)
   * Allow tilde in names of installed JAR archives. (Closes: #976681)
