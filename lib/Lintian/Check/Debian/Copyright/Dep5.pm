@@ -383,60 +383,6 @@ sub check_dep5_copyright {
         );
     }
 
-    $self->hint('excludes-files-in-native-package',$copyright_file->name)
-      if $header->declares('Files-Excluded')
-      && $self->processable->native;
-
-    unless ($self->processable->native) {
-
-        my @orig_files
-          = grep { $_->is_file } @{$self->processable->orig->sorted_list};
-        my @orig_names = map { $_->name } @orig_files;
-
-        my @wildcards = $header->trimmed_list('Files-Excluded');
-
-        my @unwanted;
-        for my $wildcard (@wildcards) {
-
-            my @offenders = escape_errors($wildcard);
-            $self->hint('invalid-escape-sequence-in-dep5-copyright',
-                $copyright_file->name, $_)
-              for @offenders;
-
-            next
-              if @offenders;
-
-            # also match dir/filename for Files-Excluded: dir
-            unless ($wildcard =~ /\*/ || $wildcard =~ /\?/) {
-
-                my $candidate = $wildcard;
-                $candidate .= $SLASH
-                  unless $candidate =~ m{/$};
-
-                my $item = $self->processable->orig->lookup($candidate);
-
-                $wildcard = $candidate . $ASTERISK
-                  if defined $item && $item->is_dir;
-            }
-
-            local $Text::Glob::strict_leading_dot = 0;
-            local $Text::Glob::strict_wildcard_slash = 0;
-
-            # disable Text::Glob character classes and alternations
-            my $dulled = $wildcard;
-            $dulled =~ s/([{}\[\]])/\\$1/g;
-
-            push(@unwanted, match_glob($dulled, @orig_names));
-        }
-
-        for my $name (uniq @unwanted) {
-
-            $self->hint('source-ships-excluded-file',
-                $copyright_file->name, $name)
-              unless $name =~ m{^(?:debian|\.pc)/};
-        }
-    }
-
     $self->hint('missing-field-in-dep5-copyright',
         $copyright_file->name,'Format','(line ' . $header->position . ')')
       if none { $header->declares($_) } qw(Format Format-Specification);
@@ -493,6 +439,101 @@ sub check_dep5_copyright {
 
     my @shipped_names
       = sort map { $_->name } grep { $_->is_file } @shipped_items;
+
+    my @excluded;
+    for my $wildcard ($header->trimmed_list('Files-Excluded')) {
+
+        my @offenders = escape_errors($wildcard);
+        $self->hint('invalid-escape-sequence-in-dep5-copyright',
+            $copyright_file->name, $_)
+          for @offenders;
+
+        next
+          if @offenders;
+
+        # also match dir/filename for Files-Excluded: dir
+        unless ($wildcard =~ /\*/ || $wildcard =~ /\?/) {
+
+            my $candidate = $wildcard;
+            $candidate .= $SLASH
+              unless $candidate =~ m{/$};
+
+            my $item = $self->processable->orig->lookup($candidate);
+
+            $wildcard = $candidate . $ASTERISK
+              if defined $item && $item->is_dir;
+        }
+
+        local $Text::Glob::strict_leading_dot = 0;
+        local $Text::Glob::strict_wildcard_slash = 0;
+
+        # disable Text::Glob character classes and alternations
+        my $dulled = $wildcard;
+        $dulled =~ s/([{}\[\]])/\\$1/g;
+
+        my @match = match_glob($dulled, @shipped_names);
+        my $position = $header->position('Files-Excluded');
+        $self->hint('superfluous-file-pattern', $copyright_file->name,
+            $wildcard,"(Files-Excluded, line $position)")
+          unless @match;
+
+        push(@excluded, @match);
+    }
+
+    my @included;
+    for my $wildcard ($header->trimmed_list('Files-Included')) {
+
+        my @offenders = escape_errors($wildcard);
+        $self->hint('invalid-escape-sequence-in-dep5-copyright',
+            $copyright_file->name, $_)
+          for @offenders;
+
+        next
+          if @offenders;
+
+        # also match dir/filename for Files-Excluded: dir
+        unless ($wildcard =~ /\*/ || $wildcard =~ /\?/) {
+
+            my $candidate = $wildcard;
+            $candidate .= $SLASH
+              unless $candidate =~ m{/$};
+
+            my $item = $self->processable->orig->lookup($candidate);
+
+            $wildcard = $candidate . $ASTERISK
+              if defined $item && $item->is_dir;
+        }
+
+        local $Text::Glob::strict_leading_dot = 0;
+        local $Text::Glob::strict_wildcard_slash = 0;
+
+        # disable Text::Glob character classes and alternations
+        my $dulled = $wildcard;
+        $dulled =~ s/([{}\[\]])/\\$1/g;
+
+        my @match = match_glob($dulled, @shipped_names);
+        my $position = $header->position('Files-Included');
+        $self->hint('superfluous-file-pattern', $copyright_file->name,
+            $wildcard,"(Files-Included, line $position)")
+          unless @match;
+
+        push(@included, @match);
+    }
+
+    my $lc = List::Compare->new(\@included, \@excluded);
+    my @affirmed = $lc->get_Lonly;
+    my @unwanted = $lc->get_Ronly;
+
+    # already unique
+    $self->hint('file-included-already', $copyright_file->name, $_)
+      for @affirmed;
+
+    # already unique
+    for my $name (@unwanted) {
+
+        $self->hint('source-ships-excluded-file',$copyright_file->name, $name)
+          unless $name =~ m{^(?:debian|\.pc)/};
+    }
 
     my @notice_names= grep { m{(^|/)(COPYING[^/]*|LICENSE)$} } @shipped_names;
     my @quilt_names = grep { m{^\.pc/} } @shipped_names;
@@ -694,10 +735,12 @@ sub check_dep5_copyright {
         my @matches_nothing = $wildcard_lc->get_Lonly;
 
         for my $wildcard (@matches_nothing) {
-            $self->hint('wildcard-matches-nothing-in-dep5-copyright',
-                $copyright_file->name,
-                "$wildcard (line " . $_->position('Files') . ')')
-              for @{$sections_by_wildcard{$wildcard}};
+            for my $section (@{$sections_by_wildcard{$wildcard}}) {
+
+                my $position = $section->position('Files');
+                $self->hint('superfluous-file-pattern',$copyright_file->name,
+                    $wildcard, "(Files, line $position)");
+            }
         }
 
         my %sections_by_file;
@@ -776,18 +819,6 @@ sub check_dep5_copyright {
         $self->hint('file-without-copyright-information',
             $copyright_file->name, $_)
           for @not_covered;
-
-        my @all_positions
-          = map { $_->position }
-          uniq map { @{$_} } values %sections_by_wildcard;
-        my @used_positions
-          = map { $_->position } uniq map { @{$_} } values %sections_by_file;
-        my $unused_lc = List::Compare->new(\@all_positions, \@used_positions);
-        my @unused_positions = $unused_lc->get_Lonly;
-
-        $self->hint('unused-file-paragraph-in-dep5-copyright',
-            $copyright_file->name,"paragraph at line $_")
-          for @unused_positions;
     }
 
     my $standalone_lc= List::Compare->new([keys %required_standalone],

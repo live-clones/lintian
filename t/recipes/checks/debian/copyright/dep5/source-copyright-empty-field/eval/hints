@@ -1,7 +1,5 @@
-source-copyright-empty-field (source): wildcard-matches-nothing-in-dep5-copyright debian/copyright m4/ (line 77)
-source-copyright-empty-field (source): wildcard-matches-nothing-in-dep5-copyright debian/copyright * (line 7)
-source-copyright-empty-field (source): unused-file-paragraph-in-dep5-copyright debian/copyright paragraph at line 77
-source-copyright-empty-field (source): unused-file-paragraph-in-dep5-copyright debian/copyright paragraph at line 7
+source-copyright-empty-field (source): superfluous-file-pattern debian/copyright m4/ (Files, line 77)
+source-copyright-empty-field (source): superfluous-file-pattern debian/copyright * (Files, line 7)
 source-copyright-empty-field (source): missing-license-text-in-dep5-copyright debian/copyright GPL-2+ (line 97)
 source-copyright-empty-field (source): missing-license-text-in-dep5-copyright debian/copyright (line 95)
 source-copyright-empty-field (source): missing-field-in-dep5-copyright debian/copyright Files (empty field, line 43)

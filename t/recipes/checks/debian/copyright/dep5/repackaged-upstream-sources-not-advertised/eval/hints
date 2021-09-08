@@ -1,1 +1,2 @@
+repackaged-upstream-sources-not-advertised (source): superfluous-file-pattern debian/copyright gone (Files-Excluded, line 5)
 repackaged-upstream-sources-not-advertised (source): repackaged-source-not-advertised debian/copyright

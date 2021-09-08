@@ -1,2 +1,1 @@
-file-does-not-exist (source): wildcard-matches-nothing-in-dep5-copyright debian/copyright file-does-not-exist (line 8)
-file-does-not-exist (source): unused-file-paragraph-in-dep5-copyright debian/copyright paragraph at line 8
+file-does-not-exist (source): superfluous-file-pattern debian/copyright file-does-not-exist (Files, line 8)

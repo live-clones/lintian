@@ -1,19 +1,11 @@
-source-copyright-undefined (source): wildcard-matches-nothing-in-dep5-copyright debian/copyright debian/g (line 51)
-source-copyright-undefined (source): wildcard-matches-nothing-in-dep5-copyright debian/copyright debian/f (line 45)
-source-copyright-undefined (source): wildcard-matches-nothing-in-dep5-copyright debian/copyright debian/e (line 39)
-source-copyright-undefined (source): wildcard-matches-nothing-in-dep5-copyright debian/copyright debian/d (line 33)
-source-copyright-undefined (source): wildcard-matches-nothing-in-dep5-copyright debian/copyright debian/c (line 27)
-source-copyright-undefined (source): wildcard-matches-nothing-in-dep5-copyright debian/copyright debian/b (line 22)
-source-copyright-undefined (source): wildcard-matches-nothing-in-dep5-copyright debian/copyright debian/a (line 17)
-source-copyright-undefined (source): wildcard-matches-nothing-in-dep5-copyright debian/copyright * (line 6)
-source-copyright-undefined (source): unused-file-paragraph-in-dep5-copyright debian/copyright paragraph at line 6
-source-copyright-undefined (source): unused-file-paragraph-in-dep5-copyright debian/copyright paragraph at line 51
-source-copyright-undefined (source): unused-file-paragraph-in-dep5-copyright debian/copyright paragraph at line 45
-source-copyright-undefined (source): unused-file-paragraph-in-dep5-copyright debian/copyright paragraph at line 39
-source-copyright-undefined (source): unused-file-paragraph-in-dep5-copyright debian/copyright paragraph at line 33
-source-copyright-undefined (source): unused-file-paragraph-in-dep5-copyright debian/copyright paragraph at line 27
-source-copyright-undefined (source): unused-file-paragraph-in-dep5-copyright debian/copyright paragraph at line 22
-source-copyright-undefined (source): unused-file-paragraph-in-dep5-copyright debian/copyright paragraph at line 17
+source-copyright-undefined (source): superfluous-file-pattern debian/copyright debian/g (Files, line 51)
+source-copyright-undefined (source): superfluous-file-pattern debian/copyright debian/f (Files, line 45)
+source-copyright-undefined (source): superfluous-file-pattern debian/copyright debian/e (Files, line 39)
+source-copyright-undefined (source): superfluous-file-pattern debian/copyright debian/d (Files, line 33)
+source-copyright-undefined (source): superfluous-file-pattern debian/copyright debian/c (Files, line 27)
+source-copyright-undefined (source): superfluous-file-pattern debian/copyright debian/b (Files, line 22)
+source-copyright-undefined (source): superfluous-file-pattern debian/copyright debian/a (Files, line 17)
+source-copyright-undefined (source): superfluous-file-pattern debian/copyright * (Files, line 6)
 source-copyright-undefined (source): space-in-std-shortname-in-dep5-copyright debian/copyright undefined license (line 42)
 source-copyright-undefined (source): space-in-std-shortname-in-dep5-copyright debian/copyright common public license - v 1.0 (line 54)
 source-copyright-undefined (source): license-problem-undefined-license debian/copyright unknown (line 14)

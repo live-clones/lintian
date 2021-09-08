@@ -1,9 +1,6 @@
-source-copyright-wildcard-matching (source): wildcard-matches-nothing-in-dep5-copyright debian/copyright invalid-escape\n (line 19)
-source-copyright-wildcard-matching (source): wildcard-matches-nothing-in-dep5-copyright debian/copyright i-do-not-exist (line 14)
-source-copyright-wildcard-matching (source): wildcard-matches-nothing-in-dep5-copyright debian/copyright file?with?commas (line 6)
-source-copyright-wildcard-matching (source): wildcard-matches-nothing-in-dep5-copyright debian/copyright deb* (line 6)
-source-copyright-wildcard-matching (source): unused-file-paragraph-in-dep5-copyright debian/copyright paragraph at line 6
-source-copyright-wildcard-matching (source): unused-file-paragraph-in-dep5-copyright debian/copyright paragraph at line 19
-source-copyright-wildcard-matching (source): unused-file-paragraph-in-dep5-copyright debian/copyright paragraph at line 14
+source-copyright-wildcard-matching (source): superfluous-file-pattern debian/copyright invalid-escape\n (Files, line 19)
+source-copyright-wildcard-matching (source): superfluous-file-pattern debian/copyright i-do-not-exist (Files, line 14)
+source-copyright-wildcard-matching (source): superfluous-file-pattern debian/copyright file?with?commas (Files, line 6)
+source-copyright-wildcard-matching (source): superfluous-file-pattern debian/copyright deb* (Files, line 6)
 source-copyright-wildcard-matching (source): invalid-escape-sequence-in-dep5-copyright debian/copyright \n (paragraph at line 19)
 source-copyright-wildcard-matching (source): file-without-copyright-information debian/copyright i-have-no-copyright-information

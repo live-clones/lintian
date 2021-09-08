@@ -1,3 +1,7 @@
+source-copyright-source-files-excluded (source): superfluous-file-pattern debian/copyright recreated-file (Files-Excluded, line 2)
+source-copyright-source-files-excluded (source): superfluous-file-pattern debian/copyright lib/* (Files-Excluded, line 2)
+source-copyright-source-files-excluded (source): superfluous-file-pattern debian/copyright */js/jquery.js (Files-Excluded, line 2)
+source-copyright-source-files-excluded (source): superfluous-file-pattern debian/copyright */exclude-dir (Files-Excluded, line 2)
 source-copyright-source-files-excluded (source): source-ships-excluded-file debian/copyright exclude-this
 source-copyright-source-files-excluded (source): source-ships-excluded-file debian/copyright exclude-dir/filename-2
 source-copyright-source-files-excluded (source): source-ships-excluded-file debian/copyright exclude-dir/filename

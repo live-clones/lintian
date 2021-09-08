@@ -1,0 +1,4 @@
+source-copyright-incomplete-creative-commons-unrel (source): superfluous-file-pattern debian/copyright flycheck.svg (Files, line 18)
+source-copyright-incomplete-creative-commons-unrel (source): superfluous-file-pattern debian/copyright doc/*.py (Files, line 14)
+source-copyright-incomplete-creative-commons-unrel (source): superfluous-file-pattern debian/copyright doc/* (Files, line 10)
+source-copyright-incomplete-creative-commons-unrel (source): superfluous-file-pattern debian/copyright * (Files, line 5)
