@@ -2,11 +2,18 @@ Tag: unmerged-usr
 Severity: classification
 Check: files/hierarchy/merged-usr
 Explanation: The named file is being installed in a legacy location.
- Modern Debian systems install this file under <code>/usr</code>.
+ Many competiting distributions install this file under <code>/usr</code>.
+ Debian would like to do the same, but the best way to get there is
+ presently unclear.
  .
- Please move this file to a suitable place under the "merged /usr"
- scheme. Please consult the provided references as to where that
- might be.
+ Please coordinate with the release team before you change this path to
+ the new location. There is a growing body of evidence that uncoordinated
+ action by individual package maintainers or teams may not be the best
+ path forward.
+ .
+ Debian's Technical Committee voted on February 1, 2021 that the
+ <code>bookworm</code> release should support only the merged-usr root
+ filesystem layout, thus dropping support for the non-merged-usr layout.
 See-Also:
  https://wiki.debian.org/UsrMerge,
  https://wiki.debian.org/Teams/Dpkg/MergedUsr,
