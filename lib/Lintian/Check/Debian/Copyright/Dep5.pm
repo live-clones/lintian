@@ -383,8 +383,7 @@ sub check_dep5_copyright {
         );
     }
 
-    $self->hint('copyright-excludes-files-in-native-package',
-        $copyright_file->name)
+    $self->hint('excludes-files-in-native-package',$copyright_file->name)
       if $header->declares('Files-Excluded')
       && $self->processable->native;
 
