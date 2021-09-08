@@ -1,6 +1,8 @@
-Tag: source-includes-file-in-files-excluded
+Tag: source-ships-excluded-file
 Severity: error
 Check: debian/copyright/dep5
+Renamed-From:
+ source-includes-file-in-files-excluded
 Explanation: A file specified in the <code>Files-Excluded</code> field in
  debian/copyright exists in the source tree.
  .

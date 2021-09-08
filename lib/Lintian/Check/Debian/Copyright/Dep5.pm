@@ -432,7 +432,7 @@ sub check_dep5_copyright {
 
         for my $name (uniq @unwanted) {
 
-            $self->hint('source-includes-file-in-files-excluded',
+            $self->hint('source-ships-excluded-file',
                 $copyright_file->name, $name)
               unless $name =~ m{^(?:debian|\.pc)/};
         }
