@@ -45,8 +45,11 @@ sub source {
       = grep { $debian_control->installable_fields($_)->declares('Homepage') }
       $debian_control->installables;
 
-    $self->hint('homepage-in-binary-package', $_)
-      for @binaries_with_homepage_field;
+    if (!$self->processable->fields->declares('Homepage')) {
+
+        $self->hint('homepage-in-binary-package', $_)
+          for @binaries_with_homepage_field;
+    }
 
     $self->hint('no-homepage-field')
       unless @binaries_with_homepage_field
