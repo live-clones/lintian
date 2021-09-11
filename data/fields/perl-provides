@@ -7,7 +7,7 @@
 #   debian/rules refresh-perl-provides
 # in the lintian source tree
 #
-# last updated for PERL_VERSION=5.032000
+# last updated for PERL_VERSION=5.032001
 libsocket-perl 2.029
 libio-socket-ip-perl 0.39
 libversion-perl 1:0.9924
@@ -17,7 +17,7 @@ libtest-harness-perl 3.42
 libpod-simple-perl 3.40
 libmodule-metadata-perl 1.000037
 libmodule-load-conditional-perl 0.70
-libmodule-corelist-perl 5.20200620
+libmodule-corelist-perl 5.20210123
 libmath-bigint-perl 1.999818
 libjson-pp-perl 4.04000
 libio-compress-perl 2.093
@@ -29,5 +29,7 @@ libencode-perl 3.06
 libdigest-sha-perl 6.02
 libcpan-meta-yaml-perl 0.018
 libcpan-meta-requirements-perl 2.140
+libcpan-meta-perl 2.150010
 libcompress-raw-zlib-perl 2.093
 libcompress-raw-bzip2-perl 2.093
+libautodie-perl 2.32
