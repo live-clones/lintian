@@ -28,6 +28,8 @@ use v5.20;
 use warnings;
 use utf8;
 
+use Const::Fast;
+use Path::Tiny;
 use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Util qw($PKGNAME_REGEX);
@@ -36,6 +38,8 @@ use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $UNDERSCORE => q{_};
 
 sub source {
     my ($self) = @_;
@@ -49,9 +53,8 @@ sub source {
 
     my $source = $fields->unfolded_value('Source');
 
-    my $filename = $self->processable->path;
-    my ($base) = ($filename =~ m{[\a|/]([^/]+)$});
-    my ($stem) = ($base =~ /^([^_]+)_/);
+    my $basename = path($self->processable->path)->basename;
+    my ($stem) = split($UNDERSCORE, $basename, 2);
 
     die encode_utf8(
         "Source field does not match package name $source != $stem")
