@@ -1,8 +1,30 @@
-lintian (2.105.0+git) UNRELEASED; urgency=medium
+lintian (2.106.0) unstable; urgency=medium
 
-  * WIP (generated at release time: please do not add entries below).
+  * Summary of tag changes:
+    + Added:
+      - file-included-already
+      - source-ships-excluded-file
+      - superfluous-file-pattern
+    + Removed:
+      - copyright-excludes-files-in-native-package
+      - source-includes-file-in-files-excluded
+      - unused-file-paragraph-in-dep5-copyright
+      - wildcard-matches-nothing-in-dep5-copyright
 
- -- Chris Lamb <lamby@debian.org>  Tue, 07 Sep 2021 10:52:28 +0100
+  [ Felix Lechner ]
+  * Drop recommendation to implement usr-merge for individual packages.
+    (Closes: #993955)
+  * Use default output width of 80 characters. (Closes: #993908)
+  * Issue homepage-in-binary-package only when there is none in the source.
+    (Closes: #993975)
+  * Implement Files-Included field in DEP-5 copyright files.
+    (Closes: #993758)
+  * Parse path to source .dsc using a more robust method. (Closes: #994088)
+
+  [ gregor herrmann ]
+  * Refresh data/fields/perl-provides.
+
+ -- Chris Lamb <lamby@debian.org>  Mon, 13 Sep 2021 09:55:19 +0000
 
 lintian (2.105.0) unstable; urgency=medium
 
