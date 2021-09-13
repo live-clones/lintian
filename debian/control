@@ -97,6 +97,7 @@ Suggests:
  libtext-template-perl,
 Breaks:
  funny-manpages (<< 1.3-5.1),
+ libconfig-model-dpkg-perl (<< 2.151),
  lintian-brush (<< 0.88),
  pkg-js-tools (<< 0.9.4),
  pkg-perl-tools (<< 0.53),
