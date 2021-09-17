@@ -220,7 +220,7 @@ Causes B<lintian> to exit with a program status of 2 for the given
 conditions. This option can be a comma-separated list, or it may be
 specified multiple times.
 
-The default is B<error>. Also, 'warning' does not imply 'error'.
+The default is B<none>. Also, 'warning' does not imply 'error'.
 Please specify both if you want both.
 
 =item B<-i>, B<--info>
