@@ -20,7 +20,6 @@
 
 use strict;
 use warnings;
-use autodie;
 
 BEGIN {
     die('Cannot find LINTIAN_BASE')
@@ -30,6 +29,7 @@ BEGIN {
 use File::Basename qw(basename);
 use File::Temp;
 use File::stat;
+use IPC::Run3;
 use List::Util qw(max);
 use Test::More;
 
@@ -49,7 +49,7 @@ my $specpath = $tempdir->child('spec')->child($TESTNAME);
 $specpath->mkpath;
 
 # test description
-my $desctext =<<EOSTR;
+my $desctext =<<"EOSTR";
 Testname: $TESTNAME
 Version: 1.0-2
 Skeleton: upload-native
@@ -60,6 +60,7 @@ Description: Test checks related to non-pic code
 Test-For: shlib-with-non-pic-code
 Check: shared-libs
 EOSTR
+
 my $descpath = $specpath->child('fill-values');
 $descpath->spew($desctext);
 
@@ -90,7 +91,13 @@ is(
 isnt($testcase->unfolded_value('Test-Architectures'),
     'any', 'Correct test architectures');
 for my $testarch (@testarches) {
-    my @known = qx{dpkg-architecture --list-known --match-wildcard $testarch};
+    my @command
+      = (qw{dpkg-architecture --list-known --match-wildcard}, $testarch);
+    my $output;
+
+    run3(\@command, \undef, \$output);
+    my @known = grep { length } split(/\n/, $output);
+
     cmp_ok(scalar @known, '>', 1, "Known test architecture $testarch");
 }
 
@@ -117,7 +124,7 @@ is(
 
 is($testcase->unfolded_value('Test-For'),
     'shlib-with-non-pic-code','Correct Test-For');
-ok(!$testcase->exists('Test-Against'), 'Correct Test-Against');
+ok(!$testcase->declares('Test-Against'), 'Correct Test-Against');
 
 is($testcase->unfolded_value('Standards-Version'),
     $ENV{'POLICY_VERSION'}, 'Correct policy version');

@@ -1,0 +1,13 @@
+source-copyright-dep5-general (source): unused-license-paragraph-in-dep5-copyright debian/copyright expat (line 96)
+source-copyright-dep5-general (source): unknown-paragraph-in-dep5-copyright debian/copyright paragraph at line 6
+source-copyright-dep5-general (source): obsolete-field-in-dep5-copyright debian/copyright Upstream-Maintainer Upstream-Contact (line 3)
+source-copyright-dep5-general (source): missing-license-text-in-dep5-copyright debian/copyright GPL-3 (line 94)
+source-copyright-dep5-general (source): missing-license-text-in-dep5-copyright debian/copyright BSD-3 (line 23)
+source-copyright-dep5-general (source): missing-license-paragraph-in-dep5-copyright debian/copyright mit (line 19)
+source-copyright-dep5-general (source): missing-license-paragraph-in-dep5-copyright debian/copyright gpl-3 (line 16)
+source-copyright-dep5-general (source): missing-field-in-dep5-copyright debian/copyright License (paragraph at line 12)
+source-copyright-dep5-general (source): missing-field-in-dep5-copyright debian/copyright Copyright (paragraph at line 15)
+source-copyright-dep5-general (source): comma-separated-files-in-dep5-copyright debian/copyright paragraph at line debian/copyright 8
+source-copyright-dep5-general (source): bad-exception-format-in-dep5-copyright debian/copyright gpl-3 with font (line 58)
+source-copyright-dep5-general (source): bad-exception-format-in-dep5-copyright debian/copyright gpl-3 with font (line 27)
+source-copyright-dep5-general (source): ambiguous-paragraph-in-dep5-copyright debian/copyright paragraph at line 22

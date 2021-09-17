@@ -7,7 +7,7 @@ use Test::More tests => 12;
 use Lintian::Relation;
 
 my $orig = 'pkgA:any, pkgB, pkgC:i386';
-my $relation = Lintian::Relation->new($orig);
+my $relation = Lintian::Relation->new->load($orig);
 
 ok($relation->implies('pkgA:any'),   'identity implies [pkgA]');
 
@@ -26,13 +26,16 @@ TODO: {
     ok($relation->implies('pkgC:any'),   'arch any implies [pkgC]');
 }
 
-is($relation->unparse, $orig,          'unparse eq original');
+is($relation->to_string, $orig,          'reconstituted eq original');
 
-my @dups1 =  Lintian::Relation->new('pkgD, pkgD:any')->duplicates;
-my @dups2 =  Lintian::Relation->new('pkgD:i386, pkgD:any')->duplicates;
-my @dups3 =  Lintian::Relation->new('pkgD:i386, pkgD')->duplicates;
+my @dups1 = Lintian::Relation->new->load('pkgD, pkgD:any')->duplicates;
+
+my @dups2 = Lintian::Relation->new->load('pkgD:i386, pkgD:any')->duplicates;
+
+my @dups3 = Lintian::Relation->new->load('pkgD:i386, pkgD')->duplicates;
+
 my @dups4
-  =  Lintian::Relation->new('pkgD:i386, pkgD:i386 (>= 1.0)')->duplicates;
+  = Lintian::Relation->new->load('pkgD:i386, pkgD:i386 (>= 1.0)')->duplicates;
 
 is_deeply(\@dups1,[['pkgD', 'pkgD:any']],'pkgD and pkgD:any are dups');
 

@@ -1,0 +1,7 @@
+scripts (source): debian-watch-uses-insecure-uri http://qa.debian.org/watch/sf.php?project=foo (line 5)
+scripts (source): debian-watch-uses-insecure-uri http://ftp.sf.net/foo/foo_bar(.+)\.Z (line 8)
+scripts (source): debian-watch-mangles-debian-version-improperly opts="uversionmangle=s/$/ds/" http://qa.debian.org/watch/sf.php?project=foo scripts\.([\d.]+)\.tar\.gz debian uupdate
+scripts (source): debian-watch-lacks-sourceforge-redirector http://ftp.sf.net/foo/foo_bar(.+)\.Z 5 uupdate
+scripts (source): debian-watch-file-uses-deprecated-sf-redirector-method http://qa.debian.org/watch/sf.php?project=foo scripts\.([\d.]+)\.tar\.gz debian uupdate
+scripts (source): debian-watch-file-specifies-old-upstream-version 5
+scripts (source): debian-watch-does-not-check-gpg-signature

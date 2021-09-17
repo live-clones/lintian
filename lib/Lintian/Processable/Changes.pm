@@ -24,12 +24,9 @@ use utf8;
 
 use Carp qw(croak);
 use Path::Tiny;
-use Unicode::UTF8 qw(valid_utf8 decode_utf8);
+use Unicode::UTF8 qw(valid_utf8 decode_utf8 encode_utf8);
 
 use Lintian::Deb822::File;
-
-use constant COLON => q{:};
-use constant SLASH => q{/};
 
 use Moo;
 use namespace::clean;
@@ -48,7 +45,7 @@ Lintian::Processable::Changes -- A changes file Lintian can process
  use Lintian::Processable::Changes;
 
  my $processable = Lintian::Processable::Changes->new;
- $processable->init('path');
+ $processable->init_from_file('path');
 
 =head1 DESCRIPTION
 
@@ -60,19 +57,16 @@ represents all the files in a changes or buildinfo file.
 
 =over 4
 
-=item init (FILE)
+=item init_from_file (PATH)
 
-Initializes a new object from FILE.
+Initializes a new object from PATH.
 
 =cut
 
-sub init {
+sub init_from_file {
     my ($self, $file) = @_;
 
-    croak "File $file is not an absolute, resolved path"
-      unless $file eq path($file)->realpath->stringify;
-
-    croak "File $file does not exist"
+    croak encode_utf8("File $file does not exist")
       unless -e $file;
 
     $self->path($file);
@@ -91,7 +85,8 @@ sub init {
 
     my $primary = Lintian::Deb822::File->new;
     my @sections = $primary->parse_string($contents)
-      or croak $self->path. ' is not a valid '. $self->type . ' file';
+      or croak encode_utf8(
+        $self->path. ' is not a valid '. $self->type . ' file');
 
     $self->fields($sections[0]);
 
@@ -101,17 +96,17 @@ sub init {
 
     unless (length $name) {
         $name = $self->guess_name($self->path);
-        croak 'Cannot determine the name from ' . $self->path
+        croak encode_utf8('Cannot determine the name from ' . $self->path)
           unless length $name;
     }
 
-    my $source = $name;
+    my $source_name = $name;
     my $source_version = $version;
 
     $self->name($name);
     $self->version($version);
     $self->architecture($architecture);
-    $self->source($source);
+    $self->source_name($source_name);
     $self->source_version($source_version);
 
     # make sure none of these fields can cause traversal
@@ -119,7 +114,7 @@ sub init {
       if $self->name ne $name
       || $self->version ne $version
       || $self->architecture ne $architecture
-      || $self->source ne $source
+      || $self->source_name ne $source_name
       || $self->source_version ne $source_version;
 
     return;

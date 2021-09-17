@@ -1,6 +1,6 @@
 Tag: r-package-not-arch-all
 Severity: warning
-Check: fields/architecture
+Check: languages/r/architecture
 Explanation: The package for an <code>R</code> language package ships a
  <code>DESCRIPTION</code> file that states <code>NeedsCompilation: No</code>
  but is not marked <code>Architecture: all</code>.

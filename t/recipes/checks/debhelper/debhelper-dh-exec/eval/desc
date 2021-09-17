@@ -1,4 +1,4 @@
 Testname: debhelper-dh-exec
 Options: --suppress-tags
- package-needs-versioned-debhelper-build-depends
+ no-versioned-debhelper-prerequisite
 Check: debhelper

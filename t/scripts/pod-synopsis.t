@@ -3,9 +3,12 @@
 use strict;
 use warnings;
 
+use Const::Fast;
 use Test::More;
 
 use Test::Lintian;
+
+const my $DOT => q{.};
 
 load_profile_for_test;
 
@@ -16,7 +19,7 @@ plan skip_all => 'Test::Pod required for testing' if $@;
 eval 'use Test::Synopsis';
 plan skip_all => 'Test::Synopsis required for testing' if $@;
 
-$ENV{'LINTIAN_BASE'} //= '.';
+$ENV{'LINTIAN_BASE'} //= $DOT;
 
 my @pod_files = all_pod_files("$ENV{'LINTIAN_BASE'}/lib");
 plan tests => scalar(@pod_files);

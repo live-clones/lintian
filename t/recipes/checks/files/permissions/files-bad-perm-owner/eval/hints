@@ -1,0 +1,12 @@
+binary (binary): non-standard-setuid-executable-perm usr/bin/script-wuid 4744
+binary (binary): non-standard-file-perm usr/share/doc/binary/read-only 0444 != 0644
+binary (binary): non-standard-executable-perm usr/bin/script-wexec 0775 != 0755
+binary (binary): non-standard-executable-perm usr/bin/script-ro 0751 != 0755
+binary (binary): non-standard-executable-perm etc/init.d/binary 0765 != 0755
+binary (binary): non-standard-dir-perm usr/share/doc/binary/ 0744 != 0755
+binary (binary): executable-is-not-world-readable usr/bin/script-ro 0751
+binary (binary): elevated-privileges usr/bin/script-wuid 4744 root/root
+binary (binary): elevated-privileges usr/bin/script-uid 4755 root/root
+binary (binary): elevated-privileges usr/bin/script-ugid 6755 root/root
+binary (binary): elevated-privileges usr/bin/script-gid 2755 root/root
+binary (binary): bad-permissions-for-ali-file usr/lib/some-where/sample.ali

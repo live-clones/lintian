@@ -20,7 +20,6 @@
 
 use strict;
 use warnings;
-use autodie;
 
 BEGIN {
     die('Cannot find LINTIAN_BASE')
@@ -47,7 +46,7 @@ my $testpath = $tempdir->child($TESTNAME);
 $testpath->mkpath;
 
 # test description
-my $desctext =<<EOSTR;
+my $desctext =<<"EOSTR";
 Testname: $TESTNAME
 Sequence: 2500
 Version: 1.0
@@ -56,11 +55,12 @@ Check:
  changes-file
 References: Debian Bug #514853
 EOSTR
+
 my $descpath = $testpath->child('desc');
 $descpath->spew($desctext);
 
-# expected tags
-my $expectedtext =<<EOSTR;
+# expected hints
+my $expectedtext =<<'EOSTR';
 distribution-multiple-bad (changes): multiple-distributions-in-changes-file stable foo-backportss bar foo
 distribution-multiple-bad (changes): bad-distribution-in-changes-file foo-backportss
 distribution-multiple-bad (changes): bad-distribution-in-changes-file foo
@@ -68,22 +68,24 @@ distribution-multiple-bad (changes): bad-distribution-in-changes-file bar
 distribution-multiple-bad (changes): backports-upload-has-incorrect-version-number 1.0
 distribution-multiple-bad (changes): backports-changes-missing
 EOSTR
-my $expected = $testpath->child('tags');
+
+my $expected = $testpath->child('hints');
 $expected->spew($expectedtext);
 
-# actual tags with one line missing
-my $nomatchtext =<<EOSTR;
+# actual hints with one line missing
+my $nomatchtext =<<'EOSTR';
 distribution-multiple-bad (changes): multiple-distributions-in-changes-file stable foo-backportss bar foo
 distribution-multiple-bad (changes): bad-distribution-in-changes-file foo-backportss
 distribution-multiple-bad (changes): bad-distribution-in-changes-file bar
 distribution-multiple-bad (changes): backports-upload-has-incorrect-version-number 1.0
 distribution-multiple-bad (changes): backports-changes-missing
 EOSTR
-my $nomatch = $testpath->child('tags.nomatch');
+
+my $nomatch = $testpath->child('hints.nomatch');
 $nomatch->spew($nomatchtext);
 
-# copy of the expected tags
-my $match = $testpath->child('tags.match');
+# copy of the expected hints
+my $match = $testpath->child('hints.match');
 $match->spew($expected->slurp);
 
 # read test case
@@ -94,20 +96,20 @@ my $defaultspath = 't/defaults/desc';
 my $defaults = read_config($defaultspath);
 
 for my $name ($defaults->names) {
-    $testcase->set($name, $defaults->value($name))
-      unless $testcase->exists($name);
+    $testcase->store($name, $defaults->value($name))
+      unless $testcase->declares($name);
 }
 
 # test plan
 plan tests => 2;
 
-# check when tags match
+# check when hints match
 ok(!scalar check_result($testcase, $testpath, $expected, $match),
-    'Same tags match');
+    'Same hints match');
 
-# check tags do not match
+# check hints do not match
 ok(scalar check_result($testcase, $testpath, $expected, $nomatch),
-    'Different tags do not match');
+    'Different hints do not match');
 
 # Local Variables:
 # indent-tabs-mode: nil

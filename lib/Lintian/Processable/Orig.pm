@@ -20,20 +20,21 @@ package Lintian::Processable::Orig;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
-use List::MoreUtils qw(uniq);
+use Const::Fast;
+use List::SomeUtils qw(uniq);
 use List::UtilsBy qw(sort_by);
 use Path::Tiny;
+use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Index;
 
-use constant EMPTY => q{};
-use constant SPACE => q{ };
-use constant SLASH => q{/};
-
 use Moo::Role;
 use namespace::clean;
+
+const my $EMPTY => q{};
+const my $SPACE => q{ };
+const my $SLASH => q{/};
 
 =head1 NAME
 
@@ -70,15 +71,13 @@ has orig => (
         my ($self) = @_;
 
         my $index = Lintian::Index->new;
-        $index->basedir($self->basedir . SLASH . 'orig');
+        $index->basedir($self->basedir . $SLASH . 'orig');
 
         return $index
           if $self->native;
 
         # source packages can be unpacked anywhere; no anchored roots
         $index->anchored(0);
-
-        my $combined_errors = EMPTY;
 
         my %components = %{$self->components};
 
@@ -91,7 +90,7 @@ has orig => (
 
             # so far, all archives with components had an extra level
             my $component_dir = $index->basedir;
-            $component_dir .= SLASH . $component
+            $component_dir .= $SLASH . $component
               if length $component;
 
             my $subindex = Lintian::Index->new;
@@ -101,32 +100,31 @@ has orig => (
             $index->anchored(0);
 
             my ($extension) = ($tarball =~ /\.([^.]+)$/);
-            die "Source component $tarball has no file exension\n"
+            die encode_utf8("Source component $tarball has no file exension\n")
               unless length $extension;
 
             my $decompress = $DECOMPRESS_COMMAND{lc $extension};
-            die "Don't know how to decompress $tarball"
+            die encode_utf8("Don't know how to decompress $tarball")
               unless $decompress;
 
             my @command
-              = (split(SPACE, $decompress), $self->basedir . SLASH . $tarball);
+              = (split($SPACE, $decompress),
+                $self->basedir . $SLASH . $tarball);
 
-            my ($extract_errors, $index_errors)
-              = $subindex->create_from_piped_tar(\@command);
+            my $errors = $subindex->create_from_piped_tar(\@command);
 
-            $combined_errors .= $extract_errors . $index_errors;
-            $self->hint('unpack-message-for-orig', $_)
-              for split(/\n/, $combined_errors);
+            $self->hint('unpack-message-for-orig', $tarball, $_)
+              for uniq split(/\n/, $errors);
 
             # treat hard links like regular files
-            my @hardlinks = grep { $_->is_hardlink } $subindex->sorted_list;
+            my @hardlinks = grep { $_->is_hardlink } @{$subindex->sorted_list};
             for my $item (@hardlinks) {
 
                 my $target = $subindex->lookup($item->link);
 
                 $item->unpacked_path($target->unpacked_path);
                 $item->size($target->size);
-                $item->link(EMPTY);
+                $item->link($EMPTY);
 
                 # turn into a regular file
                 my $perm = $item->perm;
@@ -138,7 +136,7 @@ has orig => (
                     | Lintian::Index::Item::TYPE_FILE);
             }
 
-            my @prefixes = $subindex->sorted_list;
+            my @prefixes = @{$subindex->sorted_list};
 
             # keep top level prefixes; no trailing slashes
             s{^([^/]+).*$}{$1}s for @prefixes;
@@ -156,9 +154,14 @@ has orig => (
                 my $conflict = $subindex->lookup($common);
                 unless (defined $conflict) {
 
-                    # shortens paths; keeps same base directory
-                    $subindex->drop_common_prefix
-                      unless $common eq $component;
+                    if ($common ne $component || length $component) {
+
+                        # shortens paths; keeps same base directory
+                        my $sub_errors = $subindex->drop_common_prefix;
+
+                        $self->hint('unpack-message-for-orig', $tarball, $_)
+                          for uniq split(/\n/, $sub_errors);
+                    }
                 }
             }
 

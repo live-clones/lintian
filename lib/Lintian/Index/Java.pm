@@ -20,19 +20,23 @@ package Lintian::Index::Java;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Archive::Zip qw( :ERROR_CODES :CONSTANTS );
+use Const::Fast;
 use Cwd;
 use Path::Tiny;
-
-use constant EMPTY => q{};
-use constant NEWLINE => qq{\n};
-use constant SPACE => q{ };
-use constant DASH => q{-};
+use Unicode::UTF8 qw(encode_utf8);
 
 use Moo::Role;
 use namespace::clean;
+
+const my $EMPTY => q{};
+const my $NEWLINE => qq{\n};
+const my $SPACE => q{ };
+const my $DASH => q{-};
+
+const my $JAVA_MAGIC_SIZE => 8;
+const my $JAVA_MAGIC_BYTES => 0xCAFEBABE;
 
 =head1 NAME
 
@@ -58,31 +62,34 @@ sub add_java {
     my ($self) = @_;
 
     my $savedir = getcwd;
-    chdir($self->basedir);
+    chdir($self->basedir)
+      or die encode_utf8('Cannot change to directory ' . $self->basedir);
 
-    my @files = grep { $_->is_file } $self->sorted_list;
+    my $errors = $EMPTY;
+
+    my @files = grep { $_->is_file } @{$self->sorted_list};
 
     # Wheezy's version of file calls "jar files" for "Zip archive".
     # Newer versions seem to call them "Java Jar file".
     # Jessie also introduced "Java archive data (JAR)"...
     my @java_files = grep {
-        $_->file_info=~ /
+        $_->file_info=~ m{
             Java [ ] (?:Jar [ ] file|archive [ ] data)
             | Zip [ ] archive
-            | JAR /x;
+            | JAR }x;
     } @files;
 
     my @lines;
     for my $file (@java_files) {
 
         push(@lines, parse_jar($file->name))
-          if $file->name =~ m#\S+\.jar$#i;
+          if $file->name =~ /\S+\.jar$/i;
     }
 
     my $file;
     my $file_list;
     my $manifest = 0;
-    local $_;
+    local $_ = undef;
 
     my %java_info;
 
@@ -90,25 +97,25 @@ sub add_java {
         chomp $line;
         next if $line =~ /^\s*$/;
 
-        if ($line =~ m#^-- ERROR:\s*(\S.++)$#o) {
+        if ($line =~ /^-- ERROR:\s*(\S.+)$/) {
             $java_info{$file}{error} = $1;
 
-        } elsif ($line =~ m#^-- MANIFEST: (?:\./)?(?:.+)$#o) {
+        } elsif ($line =~ m{^-- MANIFEST: (?:\./)?(?:.+)$}) {
             # TODO: check $file == $1 ?
             $java_info{$file}{manifest} = {};
             $manifest = $java_info{$file}{manifest};
             $file_list = 0;
 
-        } elsif ($line =~ m#^-- (?:\./)?(.+)$#o) {
+        } elsif ($line =~ m{^-- (?:\./)?(.+)$}) {
             $file = $1;
             $java_info{$file}{files} = {};
             $file_list = $java_info{$file}{files};
             $manifest = 0;
         } else {
-            if ($manifest && $line =~ m#^  (\S+):\s(.*)$#o) {
+            if ($manifest && $line =~ m{^  (\S+):\s(.*)$}) {
                 $manifest->{$1} = $2;
             } elsif ($file_list) {
-                my ($fname, $clmajor) = ($line =~ m#^([^-].*):\s*([-\d]+)$#);
+                my ($fname, $clmajor) = ($line =~ m{^([^-].*):\s*([-\d]+)$});
                 $file_list->{$fname} = $clmajor;
             }
         }
@@ -116,9 +123,10 @@ sub add_java {
 
     $_->java_info($java_info{$_->name}) for @java_files;
 
-    chdir($savedir);
+    chdir($savedir)
+      or die encode_utf8("Cannot change to directory $savedir");
 
-    return;
+    return $errors;
 }
 
 =item parse_jar
@@ -163,7 +171,7 @@ sub parse_jar {
 
             # store for later processing
             $manifest = $member
-              if $name =~ m@^META-INF/MANIFEST.MF$@oi;
+              if $name =~ m{^META-INF/MANIFEST.MF$}i;
 
             # add version if we can find it
             my $jversion;
@@ -180,16 +188,16 @@ sub parse_jar {
 
                 # Ensure we can read at least 8 bytes for the unpack.
                 next
-                  unless length $contents >= 8;
+                  if length $contents < $JAVA_MAGIC_SIZE;
 
                 # translation of the unpack
                 #  NN NN NN NN, nn nn, nn nn   - bytes read
                 #     $magic  , __ __, $major  - variables
                 my ($magic, undef, $major) = unpack('Nnn', $contents);
                 $jversion = $major
-                  if $magic == 0xCAFEBABE;
+                  if $magic == $JAVA_MAGIC_BYTES;
             }
-            push(@lines, "$name: " . ($jversion // DASH));
+            push(@lines, "$name: " . ($jversion // $DASH));
         }
 
         if ($manifest) {
@@ -198,20 +206,20 @@ sub parse_jar {
             my ($contents, $zerr) = $manifest->contents;
 
        # bug in Archive::Zip; seen in android-platform-libcore_10.0.0+r36-1.dsc
-            return
+            return ()
               unless defined $zerr;
 
             if ($zerr == AZ_OK) {
-                my $partial = EMPTY;
+                my $partial = $EMPTY;
                 my $first = 1;
-                my @list = split(NEWLINE, $contents);
+                my @list = split($NEWLINE, $contents);
                 foreach my $line (@list) {
 
                     # remove DOS type line feeds
                     $line =~ s/\r//g;
 
                     if ($line =~ /^(\S+:)\s*(.*)/) {
-                        push(@lines, SPACE . SPACE . "$1 $2");
+                        push(@lines, $SPACE . $SPACE . "$1 $2");
                     }
                     if ($line =~ /^ (.*)/) {
                         push(@lines, $1);

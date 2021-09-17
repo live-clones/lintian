@@ -1,0 +1,10 @@
+scripts (binary): non-standard-setuid-executable-perm usr/bin/suidperlfoo2 4751
+scripts (binary): non-standard-setuid-executable-perm usr/bin/suidperlfoo 4555
+scripts (binary): non-standard-executable-perm usr/bin/perl-bizarre-3 0754 != 0755
+scripts (binary): non-standard-executable-perm usr/bin/perl-bizarre-2 0750 != 0755
+scripts (binary): non-standard-executable-perm usr/bin/guile-bizarre 0705 != 0755
+scripts (binary): executable-is-not-world-readable usr/bin/suidperlfoo2 4751
+scripts (binary): executable-is-not-world-readable usr/bin/perl-bizarre-2 0750
+scripts (binary): executable-is-not-world-readable usr/bin/guile-bizarre 0705
+scripts (binary): elevated-privileges usr/bin/suidperlfoo2 4751 root/root
+scripts (binary): elevated-privileges usr/bin/suidperlfoo 4555 root/root

@@ -22,29 +22,29 @@ package Lintian::Group;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Carp qw(croak);
+use Const::Fast;
+use Cwd;
 use Devel::Size qw(total_size);
 use File::Spec;
 use List::Compare;
-use List::MoreUtils qw(none uniq firstval);
-use Path::Tiny;
+use List::SomeUtils qw(any none uniq firstval);
 use POSIX qw(ENOENT);
 use Time::HiRes qw(gettimeofday tv_interval);
 use Time::Piece;
+use Unicode::UTF8 qw(encode_utf8);
 
-use Lintian::Processable::Installable;
-use Lintian::Processable::Buildinfo;
-use Lintian::Processable::Changes;
-use Lintian::Processable::Source;
 use Lintian::Util qw(human_bytes);
-
-use constant EMPTY => q{};
-use constant SPACE => q{ };
 
 use Moo;
 use namespace::clean;
+
+const my $EMPTY => q{};
+const my $SPACE => q{ };
+const my $UNDERSCORE => q{_};
+
+const my $EXTRA_VERBOSE => 3;
 
 # A private table of supported types.
 my %SUPPORTED_TYPES = (
@@ -80,9 +80,9 @@ and one changes or buildinfo package per set, but multiple binary packages
 
 Returns or sets the pool directory used by this group.
 
-=item $group->name
+=item $group->source_name
 
-Returns a unique identifier for the group based on source and version.
+=item $group->source_version
 
 =item $group->binary
 
@@ -129,8 +129,9 @@ Hash with active jobs.
 
 =cut
 
-has pooldir => (is => 'rw', default => EMPTY);
-has name => (is => 'rw', default => EMPTY);
+has pooldir => (is => 'rw', default => $EMPTY);
+has source_name => (is => 'rw', default => $EMPTY);
+has source_version => (is => 'rw', default => $EMPTY);
 
 has binary => (is => 'rw', default => sub{ {} });
 has buildinfo => (is => 'rw');
@@ -139,53 +140,25 @@ has source => (is => 'rw');
 has udeb => (is => 'rw', default => sub{ {} });
 
 has jobs => (is => 'rw', default => 1);
-has processing_start => (is => 'rw', default => EMPTY);
-has processing_end => (is => 'rw', default => EMPTY);
+has processing_start => (is => 'rw', default => $EMPTY);
+has processing_end => (is => 'rw', default => $EMPTY);
 
 has cache => (is => 'rw', default => sub { {} });
 has profile => (is => 'rw', default => sub { {} });
 
-=item add_processable_from_file
+=item $group->name
+
+Returns a unique identifier for the group based on source and version.
 
 =cut
 
-sub add_processable_from_file {
-    my ($self, $file) = @_;
+sub name {
+    my ($self) = @_;
 
-    my $absolute = path($file)->realpath->stringify;
-    croak "Cannot resolve $file: $!"
-      unless $absolute;
+    return $EMPTY
+      unless length $self->source_name && length $self->source_version;
 
-    my $processable;
-
-    if ($file =~ /\.dsc$/) {
-        $processable = Lintian::Processable::Source->new;
-
-    } elsif ($file =~ /\.buildinfo$/) {
-        $processable = Lintian::Processable::Buildinfo->new;
-
-    } elsif ($file =~ /\.d?deb$/) {
-        # in ubuntu, automatic dbgsym packages end with .ddeb
-        $processable = Lintian::Processable::Installable->new;
-        $processable->type('binary');
-
-    } elsif ($file =~ /\.udeb$/) {
-        $processable = Lintian::Processable::Installable->new;
-        $processable->type('udeb');
-
-    } elsif ($file =~ /\.changes$/) {
-        $processable = Lintian::Processable::Changes->new;
-
-    } else {
-        croak "$file is not a known type of package";
-    }
-
-    $processable->pooldir($self->pooldir);
-    $processable->init($absolute);
-
-    $self->add_processable($processable);
-
-    return $processable;
+    return $self->source_name . $UNDERSCORE . $self->source_version;
 }
 
 =item process
@@ -195,33 +168,41 @@ Process group.
 =cut
 
 sub process {
-    my ($self, $ignored_overrides, $option, $OUTPUT)= @_;
+    my ($self, $ignored_overrides, $option)= @_;
 
     my $groupname = $self->name;
-    local $SIG{__WARN__} = sub { warn "Warning in group $groupname: $_[0]" };
+    local $SIG{__WARN__}
+      = sub { warn encode_utf8("Warning in group $groupname: $_[0]") };
+
+    my $savedir = getcwd;
 
     $self->processing_start(gmtime->datetime . 'Z');
-    $OUTPUT->v_msg('Starting on group ' . $self->name);
-    my $timer = [gettimeofday];
+    say {*STDERR} encode_utf8('Starting on group ' . $self->name)
+      if $option->{debug};
+    my $group_timer = [gettimeofday];
 
     my $success = 1;
     for my $processable ($self->get_processables){
 
-        # needed to read tag specifications
-        $processable->profile($self->profile);
+        my $path = $processable->path;
+        local $SIG{__WARN__}
+          = sub { warn encode_utf8("Warning in processable $path: $_[0]") };
 
         my $declared_overrides;
 
-        $OUTPUT->debug_msg(1,
-            'Base directory for processable: ' . $processable->basedir);
+        say {*STDERR}
+          encode_utf8(
+            'Base directory for processable: '. $processable->basedir)
+          if $option->{debug};
 
         unless ($option->{'no-override'}) {
 
-            $OUTPUT->debug_msg(1, 'Loading overrides file (if any) ...');
+            say {*STDERR} encode_utf8('Loading overrides file (if any) ...')
+              if $option->{debug};
 
             eval {$declared_overrides = $processable->overrides;};
             if (my $err = $@) {
-                die $err if not ref $err or $err->errno != ENOENT;
+                die encode_utf8($err) if not ref $err or $err->errno != ENOENT;
             }
 
             my %alias = %{$self->profile->known_aliases};
@@ -295,35 +276,35 @@ sub process {
             }
         }
 
-        # Filter out the "lintian" check if present - it does no real harm,
-        # but it adds a bit of noise in the debug output.
-        my @checknames
-          = sort grep { $_ ne 'lintian' } $self->profile->enabled_checks;
-        my @checkinfos = map { $self->profile->get_checkinfo($_) } @checknames;
+        my @check_names = sort $self->profile->enabled_checks;
+        for my $name (@check_names) {
 
-        for my $checkinfo (@checkinfos) {
-            my $checkname = $checkinfo->name;
             my $timer = [gettimeofday];
-
-            # The lintian check is done by this frontend and we
-            # also skip the check if it is not for this type of
-            # package.
-            next
-              if !$checkinfo->is_check_type($processable->type);
-
             my $procid = $processable->identifier;
-            $OUTPUT->debug_msg(1, "Running check: $checkname on $procid  ...");
+            say {*STDERR} encode_utf8("Running check: $name on $procid  ...")
+              if $option->{debug};
 
-            eval {$checkinfo->run_check($processable, $self);};
+            my $absolute = $self->profile->check_path_by_name->{$name};
+            require $absolute;
+
+            my $module = $self->profile->check_module_by_name->{$name};
+            my $check = $module->new;
+
+            $check->name($name);
+            $check->processable($processable);
+            $check->group($self);
+            $check->profile($self->profile);
+
+            eval { $check->run };
             my $err = $@;
             my $raw_res = tv_interval($timer);
 
             if ($err) {
                 my $message = $err;
                 $message
-                  .= "warning: cannot run $checkname check on package $procid\n";
+                  .= "warning: cannot run $name check on package $procid\n";
                 $message .= "skipping check of $procid\n";
-                warn $message;
+                warn encode_utf8($message);
 
                 $success = 0;
 
@@ -331,10 +312,42 @@ sub process {
             }
 
             my $tres = sprintf('%.3fs', $raw_res);
-            $OUTPUT->debug_msg(1,
-                "Check script $checkname for $procid done ($tres)");
-            $OUTPUT->perf_log("$procid,check/$checkname,${raw_res}");
+            say {*STDERR} encode_utf8("Check $name for $procid done ($tres)")
+              if $option->{debug};
+            say {*STDERR} encode_utf8("$procid,check/$name,$raw_res")
+              if $option->{'perf-output'};
         }
+
+        my @crossing;
+
+        my $hints = $processable->hints;
+        $processable->hints([]);
+
+        for my $hint (@{$hints}) {
+
+            next
+              if $hint->tag->show_always;
+
+            my @matches = grep { $_->suppress($processable, $hint->context) }
+              @{$hint->tag->screens};
+            next
+              unless @matches;
+
+            my @sorted = sort { $a->name cmp $b->name } @matches;
+
+            push(@crossing,
+                    $hint->tag->name
+                  . $SPACE
+                  . join($SPACE, map { $_->name } @sorted))
+              if @sorted > 1;
+
+            my $screen = $sorted[0];
+            $hint->screen($screen);
+        }
+
+        $processable->hints($hints);
+
+        $processable->hint('crossing-screens', $_) for @crossing;
 
         my %used_overrides;
 
@@ -344,9 +357,8 @@ sub process {
             my $declared = $declared_overrides->{$hint->tag->name};
             if ($declared && !$hint->tag->show_always) {
 
-                # do not use EMPTY; hash keys literal
                 # empty context in specification matches all
-                my $override = $declared->{''};
+                my $override = $declared->{$EMPTY};
 
                 # matches context exactly
                 $override = $declared->{$hint->context}
@@ -413,31 +425,42 @@ sub process {
 
     $self->processing_end(gmtime->datetime . 'Z');
 
-    my $raw_res = tv_interval($timer);
+    my $raw_res = tv_interval($group_timer);
     my $tres = sprintf('%.3fs', $raw_res);
-    $OUTPUT->debug_msg(1,
-        'Checking all of group ' . $self->name . " done ($tres)");
-    $OUTPUT->perf_log($self->name . ",total-group-check,${raw_res}");
+    say {*STDERR}
+      encode_utf8('Checking all of group ' . $self->name . " done ($tres)")
+      if $option->{debug};
+    say {*STDERR} encode_utf8($self->name . ",total-group-check,$raw_res")
+      if $option->{'perf-output'};
 
     if ($option->{'debug'} > 2) {
 
         # suppress warnings without reliable sizes
-        $Devel::Size::warn = 0;
+        local $Devel::Size::warn = 0;
 
         my $pivot = ($self->get_processables)[0];
-        my $group_id = $pivot->source . '/' . $pivot->source_version;
+        my $group_id
+          = $pivot->source_name . $UNDERSCORE . $pivot->source_version;
         my $group_usage
           = human_bytes(total_size([map { $_ } $self->get_processables]));
-        $OUTPUT->debug_msg(3, "Memory usage [group:$group_id]: $group_usage");
+        say {*STDERR}
+          encode_utf8("Memory usage [group:$group_id]: $group_usage")
+          if $option->{debug} >= $EXTRA_VERBOSE;
 
         for my $processable ($self->get_processables) {
             my $id = $processable->identifier;
             my $usage = human_bytes(total_size($processable));
-            $OUTPUT->debug_msg(3, "Memory usage [$id]: $usage");
+
+            say {*STDERR} encode_utf8("Memory usage [$id]: $usage")
+              if $option->{debug} >= $EXTRA_VERBOSE;
         }
     }
 
-    $self->clean_lab($OUTPUT);
+    # change to known folder; ealier failures could prevent removal below
+    chdir $savedir
+      or warn encode_utf8("Cannot change to directory $savedir");
+
+    $self->clean_lab($option);
 
     return $success;
 }
@@ -450,28 +473,35 @@ also get these unless we are keeping the lab.
 =cut
 
 sub clean_lab {
-    my ($self, $OUTPUT) = @_;
+    my ($self, $option) = @_;
 
     my $total = [gettimeofday];
 
     for my $processable ($self->get_processables) {
 
         my $proc_id = $processable->identifier;
-        $OUTPUT->debug_msg(1, "Auto removing: $proc_id ...");
+        say {*STDERR} encode_utf8("Auto removing: $proc_id ...")
+          if $option->{debug};
+
         my $each = [gettimeofday];
 
         $processable->remove;
 
         my $raw_res = tv_interval($each);
-        $OUTPUT->debug_msg(1, "Auto removing: $proc_id done (${raw_res}s)");
-        $OUTPUT->perf_log("$proc_id,auto-remove entry,$raw_res");
+        say {*STDERR} encode_utf8("Auto removing: $proc_id done (${raw_res}s)")
+          if $option->{debug};
+        say {*STDERR} encode_utf8("$proc_id,auto-remove entry,$raw_res")
+          if $option->{'perf-output'};
     }
 
     my $raw_res = tv_interval($total);
     my $tres = sprintf('%.3fs', $raw_res);
-    $OUTPUT->debug_msg(1,
-        'Auto-removal all for group ' . $self->name . " done ($tres)");
-    $OUTPUT->perf_log($self->name . ",total-group-auto-remove,$raw_res");
+    say {*STDERR}
+      encode_utf8(
+        'Auto-removal all for group ' . $self->name . " done ($tres)")
+      if $option->{debug};
+    say {*STDERR}encode_utf8($self->name . ",total-group-auto-remove,$raw_res")
+      if $option->{'perf-output'};
 
     return;
 }
@@ -488,11 +518,11 @@ added.
 
 =cut
 
-sub add_processable{
+sub add_processable {
     my ($self, $processable) = @_;
 
     if ($processable->tainted) {
-        warn(
+        warn encode_utf8(
             sprintf(
                 "warning: tainted %1\$s package '%2\$s', skipping\n",
                 $processable->type, $processable->name
@@ -500,21 +530,31 @@ sub add_processable{
         return 0;
     }
 
+    $self->source_name($processable->source_name)
+      unless length $self->source_name;
+    $self->source_version($processable->source_version)
+      unless length $self->source_version;
+
     return 0
-      if length $self->name
-      && $self->name ne $processable->get_group_id;
+      if $self->source_name ne $processable->source_name
+      || $self->source_version ne $processable->source_version;
 
-    $self->name($processable->get_group_id)
-      unless length $self->name;
-
-    croak 'Please set pool directory first.'
+    croak encode_utf8('Please set pool directory first.')
       unless $self->pooldir;
 
-    croak 'Not a supported type (' . $processable->type . ')'
+    $processable->pooldir($self->pooldir);
+
+    # needed to read tag specifications and error reporting
+    croak encode_utf8('Please set profile first.')
+      unless $self->profile;
+
+    $processable->profile($self->profile);
+
+    croak encode_utf8('Not a supported type (' . $processable->type . ')')
       unless exists $SUPPORTED_TYPES{$processable->type};
 
     if ($processable->type eq 'changes') {
-        die 'Cannot add another ' . $processable->type . ' file'
+        die encode_utf8('Cannot add another ' . $processable->type . ' file')
           if $self->changes;
         $self->changes($processable);
 
@@ -524,13 +564,13 @@ sub add_processable{
           unless $self->buildinfo;
 
     } elsif ($processable->type eq 'source'){
-        die 'Cannot add another source package'
+        die encode_utf8('Cannot add another source package')
           if $self->source;
         $self->source($processable);
 
     } else {
         my $type = $processable->type;
-        die 'Unknown type ' . $type
+        die encode_utf8('Unknown type ' . $type)
           unless $type eq 'binary' || $type eq 'udeb';
 
         # check for duplicate; should be rewritten with arrays
@@ -569,7 +609,7 @@ sub get_processables {
         return values %{$self->$type}
           if $type eq 'binary'
           or $type eq 'udeb';
-        die "Unknown type of processable: $type";
+        die encode_utf8("Unknown type of processable: $type");
     }
     # We return changes, dsc, buildinfo, debs and udebs in that order,
     # because that is the order lintian used to process a changes
@@ -726,7 +766,7 @@ has spelling_exceptions => (
 
         for my $processable ($self->get_processables) {
 
-            my @names = ($processable->name, $processable->source);
+            my @names = ($processable->name, $processable->source_name);
             push(@names, $processable->debian_control->installables)
               if $processable->type eq 'source';
 

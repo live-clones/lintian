@@ -1,5 +1,5 @@
 E: runtests-options source: invalid-standards-version 1.2.3
 E: runtests-options: new-essential-package
 W: runtests-options: empty-binary-package
-W: runtests-options source: package-needs-versioned-debhelper-build-depends 13
+W: runtests-options source: no-versioned-debhelper-prerequisite 13
 P: runtests-options source: uses-debhelper-compat-file

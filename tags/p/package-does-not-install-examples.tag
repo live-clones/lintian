@@ -1,6 +1,6 @@
 Tag: package-does-not-install-examples
 Severity: pedantic
-Check: cruft
+Check: examples
 Explanation: The original source tarball contains the specified examples
  directory. However, no examples are installed in any binary packages.
  .
@@ -10,4 +10,5 @@ Explanation: The original source tarball contains the specified examples
  .
  Lintian looks for any directory called <code>examples</code> under
  <code>/usr/share/doc</code> in all binary packages.
-See-Also: dh_installexamples(1)
+See-Also:
+ dh_installexamples(1)

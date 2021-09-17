@@ -1,0 +1,5 @@
+binaries-obsolete-des (binary): obsolete-des-encryption usr/bin/uses-setkey_r setkey_r
+binaries-obsolete-des (binary): obsolete-des-encryption usr/bin/uses-setkey setkey
+binaries-obsolete-des (binary): obsolete-des-encryption usr/bin/uses-encrypt_r encrypt_r
+binaries-obsolete-des (binary): obsolete-des-encryption usr/bin/uses-encrypt encrypt
+binaries-obsolete-des (binary): obsolete-crypt-alias usr/bin/uses-fcrypt fcrypt

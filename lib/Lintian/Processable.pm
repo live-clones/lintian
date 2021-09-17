@@ -24,21 +24,20 @@ use warnings;
 use utf8;
 use warnings::register;
 
-use Carp qw(croak);
+use Const::Fast;
 use Path::Tiny;
-
-use constant EMPTY => q{};
-use constant COLON => q{:};
-use constant SLASH => q{/};
-use constant UNDERSCORE => q{_};
-
-use constant EVIL_CHARACTERS => qr,[/&|;\$"'<>],;
 
 use Moo::Role;
 use MooX::Aliases;
 use namespace::clean;
 
 with 'Lintian::Hint::Bearer';
+
+const my $EMPTY => q{};
+const my $COLON => q{:};
+const my $SLASH => q{/};
+const my $UNDERSCORE => q{_};
+const my $EVIL_CHARACTERS => qr{[/&|;\$"'<>]};
 
 =encoding utf-8
 
@@ -49,13 +48,6 @@ Lintian::Processable -- An (abstract) object that Lintian can process
 =head1 SYNOPSIS
 
  use Lintian::Processable;
- 
- # Instantiate via Lintian::Processable
- my $proc = Lintian::Processable->new;
- $proc->init_from_file('lintian_2.5.0_all.deb');
- my $package = $proc->pkg_name;
- my $version = $proc->pkg_version;
- # etc.
 
 =head1 DESCRIPTION
 
@@ -90,7 +82,7 @@ is used in case the data needs to be extracted from the package.
 Returns the architecture(s) of the package. May return multiple values
 from changes processables.  For source processables it is "source".
 
-=item $proc->source
+=item $proc->source_name
 
 Returns the name of the source package.
 
@@ -118,8 +110,8 @@ Returns the base directory of this package inside the lab.
 
 =cut
 
-has path => (is => 'rw', default => EMPTY);
-has type => (is => 'rw', default => EMPTY);
+has path => (is => 'rw', default => $EMPTY);
+has type => (is => 'rw', default => $EMPTY);
 
 has architecture => (
     is => 'rw',
@@ -127,7 +119,7 @@ has architecture => (
         my ($value) = @_;
         return clean_field($value);
     },
-    default => EMPTY
+    default => $EMPTY
 );
 has name => (
     is => 'rw',
@@ -135,15 +127,15 @@ has name => (
         my ($value) = @_;
         return clean_field($value);
     },
-    default => EMPTY
+    default => $EMPTY
 );
-has source => (
+has source_name => (
     is => 'rw',
     coerce => sub {
         my ($value) = @_;
         return clean_field($value);
     },
-    default => EMPTY
+    default => $EMPTY
 );
 has source_version =>(
     is => 'rw',
@@ -151,7 +143,7 @@ has source_version =>(
         my ($value) = @_;
         return clean_field($value);
     },
-    default => EMPTY
+    default => $EMPTY
 );
 has version => (
     is => 'rw',
@@ -159,14 +151,14 @@ has version => (
         my ($value) = @_;
         return clean_field($value);
     },
-    default => EMPTY
+    default => $EMPTY
 );
 
 has tainted => (is => 'rw', default => 0);
 
 has fields => (is => 'rw', default => sub { Lintian::Deb822::Section->new; });
 
-has pooldir => (is => 'rw', default => EMPTY);
+has pooldir => (is => 'rw', default => $EMPTY);
 has basedir => (
     is => 'rw',
     lazy => 1,
@@ -184,10 +176,14 @@ has basedir => (
         my ($self) = @_;
 
         my $path
-          = $self->source. SLASH. $self->name. UNDERSCORE. $self->version;
-        $path .= UNDERSCORE . $self->architecture
+          = $self->source_name
+          . $SLASH
+          . $self->name
+          . $UNDERSCORE
+          . $self->version;
+        $path .= $UNDERSCORE . $self->architecture
           unless $self->type eq 'source';
-        $path .= UNDERSCORE . $self->type;
+        $path .= $UNDERSCORE . $self->type;
 
         # architectures can contain spaces in changes files
         $path =~ s/\s/-/g;
@@ -210,10 +206,10 @@ based on the type, name, version and architecture of the package.
 sub identifier {
     my ($self) = @_;
 
-    my $id = $self->type . COLON . $self->name . SLASH . $self->version;
+    my $id = $self->type . $COLON . $self->name . $UNDERSCORE . $self->version;
 
     # add architecture unless it is source
-    $id .= SLASH . $self->architecture
+    $id .= $UNDERSCORE . $self->architecture
       unless $self->type eq 'source';
 
     $id =~ s/\s+/_/g;
@@ -237,21 +233,6 @@ sub remove {
     return;
 }
 
-=item get_group_id
-
-Calculates an appropriate group id for the package. It is based
-on the name and the version of the src-pkg.
-
-=cut
-
-sub get_group_id {
-    my ($self) = @_;
-
-    my $id = $self->source . SLASH . $self->source_version;
-
-    return $id;
-}
-
 =item clean_field
 
 Cleans a field of evil characters to prevent traversal or worse.
@@ -263,7 +244,7 @@ sub clean_field {
 
     # make sure none of the fields can cause traversal
     my $clean = $value;
-    $clean =~ s,${\EVIL_CHARACTERS},_,g;
+    $clean =~ s/${$EVIL_CHARACTERS}/_/g;
 
     return $clean;
 }
@@ -313,7 +294,7 @@ L<Lintian::Processable::Installable>
 
 L<Lintian::Processable::Buildinfo>
 
-L<Lintian::Processable::Changes>,
+L<Lintian::Processable::Changes>
 
 L<Lintian::Processable::Source>
 

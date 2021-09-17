@@ -20,7 +20,6 @@
 
 use strict;
 use warnings;
-use autodie;
 
 BEGIN {
     die('Cannot find LINTIAN_BASE')
@@ -47,11 +46,12 @@ my $specpath = $tempdir->child('spec')->child($TESTNAME);
 $specpath->mkpath;
 
 # test description
-my $desctext =<<EOSTR;
+my $desctext =<<"EOSTR";
 Testname: $TESTNAME
 Version: 1
 Skeleton: upload-native
 EOSTR
+
 my $descpath = $specpath->child('fill-values');
 $descpath->spew($desctext);
 
@@ -63,7 +63,7 @@ prepare($specpath->stringify, $runpath->stringify, 't');
 # test plan
 plan tests => 1;
 
-ok(!-f $runpath->child('debian')->child('watch')->stringify,
+ok(!-e $runpath->child('debian')->child('watch')->stringify,
     'No watch file present');
 
 # Local Variables:

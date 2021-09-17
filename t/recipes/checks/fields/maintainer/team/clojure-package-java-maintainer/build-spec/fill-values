@@ -1,0 +1,5 @@
+Skeleton: source-native
+Testname: clojure-package-java-maintainer
+Source: cool-clojure-package
+Author: Debian Java Maintainers <pkg-java-maintainers@lists.alioth.debian.org>
+Description: Source name contains clojure (but not java) and is Java Team maintained

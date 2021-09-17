@@ -77,7 +77,7 @@ has changelog_version => (
 
         my $version = Lintian::Inspect::Changelog::Version->new;
         try {
-            $version->set($versionstring, $self->native);
+            $version->assign($versionstring, $self->native);
         };
 
         return $version;

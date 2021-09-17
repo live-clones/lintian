@@ -1,4 +1,5 @@
-# Copyright © 2019 Felix Lechner <felix.lechner@lease-up.com>
+# Copyright © 2012 Niels Thykier <niels@thykier.net>
+# Copyright © 2019-2020 Felix Lechner <felix.lechner@lease-up.com>
 # Copyright © 2017-2018 Chris Lamb <lamby@debian.org>
 #
 # This program is free software; you can redistribute it and/or modify
@@ -23,10 +24,17 @@ use v5.20;
 use warnings;
 use utf8;
 
-use constant UNDERSCORE => q{_};
+use Carp;
+use Const::Fast;
+use Unicode::UTF8 qw(encode_utf8);
 
 use Moo::Role;
 use namespace::clean;
+
+const my $EMPTY => q{};
+const my $SLASH => q{/};
+const my $DOT => q{.};
+const my $UNDERSCORE => q{_};
 
 =head1 NAME
 
@@ -47,6 +55,8 @@ A class for collecting Lintian tags as they are issued
 
 =over 4
 
+=item name
+
 =item processable
 
 Get processable underlying this check.
@@ -55,15 +65,19 @@ Get processable underlying this check.
 
 Get group that the processable is in.
 
-=item info
-
-Check::Info structure for this check.
+=item profile
 
 =cut
 
+has name => (
+    is => 'rw',
+    coerce => sub { my ($string) = @_; return $string // $EMPTY;},
+    default => $EMPTY
+);
+
 has processable => (is => 'rw', default => sub { {} });
 has group => (is => 'rw', default => sub { {} });
-has info => (is => 'rw');
+has profile => (is => 'rw');
 
 =item visit_files
 
@@ -72,14 +86,14 @@ has info => (is => 'rw');
 sub visit_files {
     my ($self, $index) = @_;
 
-    my $setup_hook = 'setup' . UNDERSCORE . $index . UNDERSCORE . 'files';
+    my $setup_hook = 'setup' . $UNDERSCORE . $index . $UNDERSCORE . 'files';
     $self->$setup_hook
       if $self->can($setup_hook);
 
-    my $visit_hook = 'visit' . UNDERSCORE . $index . UNDERSCORE . 'files';
+    my $visit_hook = 'visit' . $UNDERSCORE . $index . $UNDERSCORE . 'files';
     if ($self->can($visit_hook)) {
 
-        my @items = $self->processable->$index->sorted_list;
+        my @items = @{$self->processable->$index->sorted_list};
 
         # do not look inside quilt directory
         @items = grep { $_->name !~ m{^\.pc/} } @items
@@ -93,7 +107,7 @@ sub visit_files {
     }
 
     my $breakdown_hook
-      ='breakdown' . UNDERSCORE . $index . UNDERSCORE . 'files';
+      ='breakdown' . $UNDERSCORE . $index . $UNDERSCORE . 'files';
     $self->$breakdown_hook
       if $self->can($breakdown_hook);
 
@@ -124,7 +138,7 @@ sub run {
           if $self->can('setup');
 
         if ($self->can('files')) {
-            $self->files($_) for $self->processable->installed->sorted_list;
+            $self->files($_) for @{$self->processable->installed->sorted_list};
         }
 
         $self->breakdown
@@ -143,6 +157,30 @@ sub run {
     return;
 }
 
+=item find_tag
+
+=cut
+
+sub find_tag {
+    my ($self, $tagname) = @_;
+
+    croak encode_utf8('No tag name')
+      unless length $tagname;
+
+    # try local name space
+    my $tag = $self->profile->get_tag($self->name . $SLASH . $tagname);
+
+    warn encode_utf8("Using tag $tagname as name spaced in "
+          . $self->name
+          . ' while not so declared.')
+      if defined $tag && !$tag->name_spaced;
+
+    # try global name space
+    $tag ||= $self->profile->get_tag($tagname);
+
+    return $tag;
+}
+
 =item hint
 
 Tag the processable associated with this check
@@ -150,25 +188,29 @@ Tag the processable associated with this check
 =cut
 
 sub hint {
-    my ($self, @arguments) = @_;
+    my ($self, $tagname, @context) = @_;
 
-    return
-      unless @arguments;
+    my $tag = $self->find_tag($tagname);
 
-    my $tagname = $arguments[0];
-
-    my $tag = $self->info->get_tag($tagname);
     unless (defined $tag) {
 
-        warn 'Check ' . $self->info->name . " has no tag $tagname.";
-
-        return;
+        warn encode_utf8(
+            "Unknown tag $tagname in check " . $self->name . $DOT);
+        return undef;
     }
 
-    # could be name-spaced
-    $arguments[0] = $tag->name;
+    unless ($tag->check eq $self->name) {
 
-    return $self->processable->hint(@arguments);
+        warn encode_utf8('Check '
+              . $self->name
+              . " has no tag $tagname (but "
+              . $tag->check
+              . ' does).');
+        return undef;
+    }
+
+    # pull name from tag; could be name-spaced
+    return $self->processable->hint($tag->name, @context);
 }
 
 =back

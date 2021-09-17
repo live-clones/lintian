@@ -20,26 +20,25 @@ package Test::Lintian::Output::EWI;
 
 =head1 NAME
 
-Test::Lintian::Output::EWI -- routines to process C<EWI> tags
+Test::Lintian::Output::EWI -- routines to process EWI hints
 
 =head1 SYNOPSIS
 
   use Path::Tiny;
   use Test::Lintian::Output::EWI qw(to_universal);
 
-  my $ewi = path("path to an EWI tag file")->slurp_utf8;
+  my $ewi = path("path to an EWI hint file")->slurp_utf8;
   my $universal = to_universal($ewi);
 
 =head1 DESCRIPTION
 
-Helper routines to deal with C<EWI> tags and tag files
+Helper routines to deal with C<EWI> hints and hint files
 
 =cut
 
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Exporter qw(import);
 
@@ -50,12 +49,14 @@ BEGIN {
 }
 
 use Carp;
+use Const::Fast;
 use List::Util qw(all);
+use Unicode::UTF8 qw(encode_utf8);
 
 use Test::Lintian::Output::Universal qw(universal_string order);
 
-use constant EMPTY   => q{};
-use constant NEWLINE => qq{\n};
+const my $EMPTY   => q{};
+const my $NEWLINE => qq{\n};
 
 =head1 FUNCTIONS
 
@@ -63,7 +64,7 @@ use constant NEWLINE => qq{\n};
 
 =item to_universal(STRING)
 
-Converts the C<EWI> tag data contained in STRING to universal tags.
+Converts the C<EWI> hint data contained in STRING to universal hints.
 They are likewise delivered in a multi-line string.
 
 =cut
@@ -73,12 +74,12 @@ sub to_universal {
 
     my @unsorted;
 
-    my @lines = split(NEWLINE, $ewi);
+    my @lines = split($NEWLINE, $ewi);
     chomp @lines;
 
     foreach my $line (@lines) {
 
-        # no tag in this line
+        # no hint in this line
         next if $line =~ /^N: /;
 
         # look for "EWI: package[ type]: name details"
@@ -88,7 +89,7 @@ sub to_universal {
         # for binary packages, the type field is empty
         $type //= 'binary';
 
-        croak "Cannot parse line $line"
+        croak encode_utf8("Cannot parse line $line")
           unless all { length } ($code, $package, $type, $name);
 
         my $converted = universal_string($package, $type, $name, $details);
@@ -97,8 +98,8 @@ sub to_universal {
 
     my @sorted = reverse sort { order($a) cmp order($b) } @unsorted;
 
-    my $universal = EMPTY;
-    $universal .= $_ . NEWLINE for @sorted;
+    my $universal = $EMPTY;
+    $universal .= $_ . $NEWLINE for @sorted;
 
     return $universal;
 }

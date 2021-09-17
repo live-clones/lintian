@@ -1,6 +1,6 @@
 Tag: r-data-without-readme-source
 Severity: error
-Check: cruft
+Check: languages/r
 Explanation: Many modules packaged for the R Project for Statistical Computing contain
  data files with names as &ast;.rda, &ast;.Rda, &ast;.rdata, &ast;.Rdata, etc.
  .

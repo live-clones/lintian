@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!/usr/bin/perl
 
 use v5.20;
 use warnings;
@@ -24,13 +24,19 @@ use utf8;
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
+use Const::Fast;
+use List::SomeUtils qw(none);
+use Unicode::UTF8 qw(encode_utf8);
+
 # from /usr/share/doc/libapt-pkg-perl/examples/apt-cache
 use AptPkg::Config '$_config';
 use AptPkg::System '$_system';
 use AptPkg::Cache;
-use List::MoreUtils qw(none);
 
-(my $self = $0) =~ s#.*/##;
+const my $EMPTY => q{};
+const my $LAST_ITEM => -1;
+
+(my $self = $0) =~ s{.*/}{};
 
 # initialise the global config object with the default values and
 # setup the $_system object
@@ -57,18 +63,16 @@ my %manual_split
 use Module::CoreList;
 my $versioning = $_system->versioning;
 
-# we look at packages provided by these (with V being the version)
-my @core_packages = (qw(perl-base perl perl-modules-V));
-
 my $perl_version = $];
 
 # Map 5.022002 into 5.22
 $perl_version =~ s/^(5)\.0*([1-9][0-9])\d+/$1.$2/;
 
-@core_packages = map { s/V/$perl_version/; $_ } @core_packages;
+# we look at packages provided by these
+my @core_packages = (qw(perl-base perl), "perl-modules-$perl_version");
 
 # check we have a cache of Debian sid packages available
-warn(
+warn encode_utf8(
     join(q{ },
         'Warning: this list should only be updated on a system',
         'with an up to date APT cache of the Debian unstable distribution'))
@@ -81,7 +85,7 @@ warn(
     }
     @{$cache->files});
 
-print <<EOF;
+print encode_utf8(<<"EOF");
 # virtual packages provided by the Perl core packages that also have a
 # separate binary package available
 #
@@ -96,7 +100,8 @@ EOF
 
 for my $pkg (@core_packages) {
     my $cached_versions = $cache->{$pkg}
-      or die("no such binary package found in the APT cache: $pkg");
+      or
+      die encode_utf8("no such binary package found in the APT cache: $pkg");
     my $latest = bin_latest($cached_versions);
 
     for my $provides (@{$latest->{ProvidesList}}) {
@@ -118,7 +123,7 @@ for my $pkg (@core_packages) {
 
         next if !$debian_version;
 
-        print "$name $debian_version\n";
+        print encode_utf8("$name $debian_version\n");
     }
 }
 
@@ -126,7 +131,9 @@ for my $pkg (@core_packages) {
 sub find_core_version {
     my $module = shift;
     my $ret;
-    return if $module =~ /^perl(5|api)/;
+
+    return undef
+      if $module =~ /^perl(5|api)/;
 
     if (exists $module_name{$module}) {
         $module = $module_name{$module};
@@ -147,7 +154,7 @@ sub find_core_version {
 
 sub cpan_version_to_deb {
     my ($pkg, $cpan_version, $epoch, $digits) = @_;
-    $epoch ||= '';
+    $epoch ||= $EMPTY;
 
     # cpan_version
     #         digits
@@ -169,17 +176,17 @@ sub cpan_version_to_deb {
     my $regex = qr/^(\d+\.)(\d+)(?:_(\d+))?$/;
     $regex = $manual_split{$pkg} if exists $manual_split{$pkg};
     my ($major, $prefix, $suffix) = ($cpan_version =~ $regex);
-    die("no match with $cpan_version?") if !$major;
+    die encode_utf8("no match with $cpan_version?") if !$major;
 
-    $suffix ||= '';
+    $suffix ||= $EMPTY;
     if (length($suffix) + length($prefix) == $digits) {
         $prefix .= $suffix;
-        $suffix = '';
+        $suffix = $EMPTY;
     }
     if (length($suffix) + length($prefix) < $digits) {
         $prefix .= '0' while length($prefix) < $digits;
     }
-    $suffix = ".$suffix" if $suffix ne '';
+    $suffix = ".$suffix" if $suffix ne $EMPTY;
     return $epoch.$major.$prefix.$suffix;
 }
 
@@ -200,7 +207,7 @@ sub epoch_and_digits {
 
 sub bin_latest {
     my $p = shift;
-    return (sort bin_byversion @{$p->{VersionList}})[-1];
+    return (sort bin_byversion @{$p->{VersionList}})[$LAST_ITEM];
 }
 
 sub bin_byversion {

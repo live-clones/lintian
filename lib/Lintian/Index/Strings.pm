@@ -20,17 +20,17 @@ package Lintian::Index::Strings;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
+use Const::Fast;
 use Path::Tiny;
+use Unicode::UTF8 qw(decode_utf8);
 
 use Lintian::IPC::Run3 qw(safe_qx);
 
-use constant DOT => q{.};
-use constant GZ => q{gz};
-
 use Moo::Role;
 use namespace::clean;
+
+const my $EMPTY => q{};
 
 =head1 NAME
 
@@ -55,23 +55,26 @@ Lintian::Index::Strings strings in binary files.
 sub add_strings {
     my ($self) = @_;
 
-    my @files = grep { $_->is_file } $self->sorted_list;
+    my $errors = $EMPTY;
+
+    my @files = grep { $_->is_file } @{$self->sorted_list};
     for my $file (@files) {
 
         next
-          if $file->name =~ m,^usr/lib/debug/,;
+          if $file->name =~ m{^usr/lib/debug/};
 
         # skip non-binaries
         next
           unless $file->file_info =~ /\bELF\b/;
 
         # prior implementations sometimes made the list unique
-        my $allstrings= safe_qx('strings', '--all', '--',$file->unpacked_path);
+        my $allstrings
+          = decode_utf8(safe_qx(qw{strings --all --}, $file->unpacked_path));
 
         $file->strings($allstrings);
     }
 
-    return;
+    return $errors;
 }
 
 =back

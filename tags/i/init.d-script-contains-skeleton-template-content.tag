@@ -1,6 +1,6 @@
 Tag: init.d-script-contains-skeleton-template-content
 Severity: error
-Check: init.d
+Check: init-d
 Explanation: The given init script appears to contain content from the
  <code>/etc/init.d/skeleton</code> example.
  .

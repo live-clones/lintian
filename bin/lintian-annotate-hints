@@ -27,34 +27,50 @@ use v5.20;
 use warnings;
 use utf8;
 
+use Cwd qw(realpath);
+use File::Basename qw(dirname);
+
+# neither Path::This nor lib::relative are in Debian
+use constant THISFILE => realpath __FILE__;
+use constant THISDIR => dirname realpath __FILE__;
+
 # use Lintian modules that belong to this program
-use FindBin;
-use lib "$FindBin::RealBin/../lib";
+use lib THISDIR . '/../lib';
 
 # substituted during package build
 my $LINTIAN_VERSION;
 
-use Cwd qw(getcwd realpath);
-use File::BaseDir qw(config_home config_files data_home);
-use File::Basename;
+use Const::Fast;
 use Getopt::Long ();
+use IO::Interactive qw(is_interactive);
+use Term::ReadKey;
+use Unicode::UTF8 qw(encode_utf8 decode_utf8);
 
 use Lintian::Output::EWI;
 use Lintian::Profile;
 use Lintian::Version qw(guess_version);
 
-use constant EMPTY => q{};
+const my $EMPTY => q{};
+const my $SPACE => q{ };
 
-binmode(STDOUT, ':encoding(UTF-8)');
+const my $NEW_PROGRAM_NAME => q{lintian-annotate-hints};
+
+my $TERMINAL_WIDTH;
+($TERMINAL_WIDTH, undef, undef, undef) = GetTerminalSize()
+  if is_interactive;
 
 if (my $coverage_arg = $ENV{'LINTIAN_COVERAGE'}) {
-    my $p5opt = $ENV{'PERL5OPT'}//EMPTY;
-    $p5opt .= ' ' if $p5opt ne EMPTY;
+    my $p5opt = $ENV{'PERL5OPT'}//$EMPTY;
+    $p5opt .= $SPACE if $p5opt ne $EMPTY;
     $ENV{'PERL5OPT'} = "${p5opt} ${coverage_arg}";
 }
 
-$ENV{LINTIAN_BASE} = realpath("$FindBin::RealBin/..")
-  // die 'Cannot resolve LINTIAN_BASE';
+$ENV{LINTIAN_BASE} = realpath(THISDIR . '/..')
+  // die encode_utf8('Cannot resolve LINTIAN_BASE');
+
+$ENV{LINTIAN_VERSION} = $LINTIAN_VERSION // guess_version($ENV{LINTIAN_BASE});
+die encode_utf8('Unable to determine the version automatically!?')
+  unless length $ENV{LINTIAN_VERSION};
 
 my $annotate;
 my @INCLUDE_DIRS;
@@ -65,6 +81,7 @@ my %options = (
     'annotate|a' => \$annotate,
     'help|h' => \&show_help,
     'include-dir=s' => \@INCLUDE_DIRS,
+    'output-width=i' => \$TERMINAL_WIDTH,
     'profile=s' => \$profile_name,
     'user-dirs!' => \$user_dirs,
     'version' => \&show_version,
@@ -72,54 +89,16 @@ my %options = (
 
 Getopt::Long::Configure('gnu_getopt');
 Getopt::Long::GetOptions(%options)
-  or die "error parsing options\n";
-
-# only absolute paths
-my @RESTRICTED_CONFIG_DIRS;
-
-if ($user_dirs) {
-    my $data_home;
-    my $legacy_user_data;
-
-    $data_home = data_home('lintian')
-      if exists $ENV{'HOME'} || exists $ENV{'XDG_CONFIG_HOME'};
-
-    $legacy_user_data = "$ENV{HOME}/.lintian"
-      if exists $ENV{'HOME'};
-
-    if (defined($data_home) and $data_home !~ m@^/@) {
-        # Turn the path into an absolute one.  Just in case
-        # someone sets a relative HOME dir.
-        my $cwd = getcwd();
-        $data_home = "${cwd}/${data_home}";
-    }
-
-    @RESTRICTED_CONFIG_DIRS = grep { -d }
-      grep { length } ($data_home, $legacy_user_data, '/etc/lintian');
-}
-
-# only absolute paths
-my @CONFIG_DIRS = grep { -d }
-  grep { length } map { realpath($_) } ($ENV{'LINTIAN_BASE'}, @INCLUDE_DIRS);
+  or die encode_utf8("error parsing options\n");
 
 my $profile = Lintian::Profile->new;
-$profile->load($profile_name, \@CONFIG_DIRS,
-    { 'restricted-search-dirs' => \@RESTRICTED_CONFIG_DIRS });
+$profile->load($profile_name, \@INCLUDE_DIRS, $user_dirs);
 
 my $output = Lintian::Output::EWI->new;
 
 # Matches something like:  (1:2.0-3) [arch1 arch2]
 # - captures the version and the architectures
-my $verarchre = qr,(?: \s* \(( [^)]++ )\) \s* \[ ( [^]]++ ) \]),xo;
-
-# matches the full deal:
-#    1  222 3333  4444444   5555   666  777
-# -  T: pkg type (version) [arch]: tag [...]
-#           ^^^^^^^^^^^^^^^^^^^^^
-# Where the marked part(s) are optional values.  The numbers above
-# the example are the capture groups.
-my $TAG_REGEX
-  = qr/([EWIXOPC]): (\S+)(?: (\S+)(?:$verarchre)?)?: (\S+)(?:\s+(.*))?/;
+my $verarchre = qr{(?: \s* \(( [^)]++ )\) \s* \[ ( [^]]++ ) \])}x;
 
 my $type_re = qr/(?:binary|changes|source|udeb)/;
 
@@ -127,38 +106,57 @@ my %already_displayed;
 
 # Otherwise, read input files or STDIN, watch for tags, and add
 # descriptions whenever we see one, can, and haven't already
-# explained that tag.  Strip off color and HTML sequences.
-for my $line (<STDIN>) {
-    print $line;
+# explained that tag.
+while(my $bytes = <STDIN>) {
+
+    my $line = decode_utf8($bytes);
     chomp $line;
+
+    say encode_utf8('N:');
+    say encode_utf8($line);
 
     next
       if $line =~ /^\s*$/;
 
+    # strip color
     $line =~ s/\e[\[\d;]*m//g;
+
+    # strip HTML
     $line =~ s/<span style=\"[^\"]+\">//g;
-    $line =~ s,</span>,,g;
+    $line =~ s{</span>}{}g;
 
     my $tag_name;
     if ($annotate) {
 
+        # used for override files only; combine if possible
+
         next
-          unless $line =~ /^(?:                    # start optional part
+          unless $line =~ m{^(?:                   # start optional part
                     (?:\S+)?                       # Optionally starts with package name
                     (?: \s*+ \[[^\]]+?\])?         # optionally followed by an [arch-list] (like in B-D)
                     (?: \s*+ $type_re)?            # optionally followed by the type
                   :\s++)?                          # end optional part
-                ([\-\.a-zA-Z_0-9]+ (?:\s.+)?)$/x;  # <tag-name> [extra] -> $1
+                ([\-\.a-zA-Z_0-9]+ (?:\s.+)?)$}x;  # <tag-name> [extra] -> $1
 
         my $tagdata = $1;
         ($tag_name, undef) = split(/ /, $tagdata, 2);
 
-    } else {
-        my @parts = split_tag($line);
-        next
-          unless @parts;
+    } elsif ($line
+        =~ m{^([^N]): (\S+)(?: (\S+)(?:$verarchre)?)?: (\S+)(?:\s+(.*))?$}) {
 
-        $tag_name = $parts[5];
+        # matches the full deal:
+        #    1  222 3333  4444444   5555   666  777
+        # -  T: pkg type (version) [arch]: tag [...]
+        #           ^^^^^^^^^^^^^^^^^^^^^
+        # Where the marked part(s) are optional values.  The numbers above
+        # the example are the capture groups.
+
+        my $pkg_type = $3 // 'binary';
+
+        $tag_name = $6;
+
+    } else {
+        next;
     }
 
     next
@@ -168,48 +166,33 @@ for my $line (<STDIN>) {
     next
       unless defined $tag;
 
-    $output->describe_tags($tag);
+    $output->describe_tag($tag, $TERMINAL_WIDTH);
 }
 
 exit;
 
-=item split_tag
-
-=cut
-
-sub split_tag {
-    my ($line) = @_;
-
-    return
-      unless $line =~ /^${TAG_REGEX}$/;
-
-    my $pkg_type = $3 // 'binary';
-
-    return ($1, $2, $pkg_type, $4, $5, $6, $7);
-}
-
 sub show_version {
-    my $version = $LINTIAN_VERSION // guess_version($ENV{LINTIAN_BASE});
+    say encode_utf8("$NEW_PROGRAM_NAME v$ENV{LINTIAN_VERSION}");
 
-    die 'Unable to determine the version automatically!?'
-      unless length $version;
-
-    say "annotate-lintian-hints v$version";
     exit;
 }
 
 sub show_help {
-    print <<"EOT";
-Usage: annotate-lintian-hints [log-file...] ...
-       annotate-lintian-hints --annotate [overrides ...]
+    my $message =<<"EOT";
+Usage: $NEW_PROGRAM_NAME [log-file...] ...
+       $NEW_PROGRAM_NAME --annotate [overrides ...]
 
 Options:
     -a, --annotate     display descriptions of tags in Lintian overrides
-    --profile X        use vendor profile X to determine severities
     --include-dir DIR  check for Lintian data in DIR
+    --profile X        use vendor profile X to determine severities
+    --output-width NUM set output width instead of probing terminal
     --[no-]user-dirs   whether to include profiles from user directories
     --version          show version info and exit
 EOT
+
+    print encode_utf8($message);
+
     exit;
 }
 

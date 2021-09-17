@@ -26,7 +26,6 @@ package Lintian::Util;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Exporter qw(import);
 
@@ -36,18 +35,11 @@ use Exporter qw(import);
 our @EXPORT_OK;
 
 BEGIN {
-    eval { require PerlIO::gzip };
-    if ($@) {
-        *open_gz = \&__open_gz_ext;
-    } else {
-        *open_gz = \&__open_gz_pio;
-    }
 
     @EXPORT_OK = (qw(
           get_file_checksum
           get_file_digest
           human_bytes
-          open_gz
           perm2oct
           locate_executable
           normalize_pkg_path
@@ -56,6 +48,8 @@ BEGIN {
           drain_pipe
           drop_relative_prefix
           read_md5sums
+          utf8_clean_log
+          utf8_clean_bytes
           version_from_changelog
           $PKGNAME_REGEX
           $PKGREPACK_REGEX
@@ -64,34 +58,56 @@ BEGIN {
 }
 
 use Carp qw(croak);
+use Const::Fast;
 use Cwd qw(abs_path);
 use Digest::MD5;
 use Digest::SHA;
-use List::MoreUtils qw(first_value);
+use List::SomeUtils qw(first_value);
 use Path::Tiny;
-use Unicode::UTF8 qw(valid_utf8);
+use Unicode::UTF8 qw(valid_utf8 encode_utf8);
 
 use Lintian::Deb822::File;
 use Lintian::Inspect::Changelog;
 use Lintian::Relation::Version qw(versions_equal versions_comparator);
 
-use constant EMPTY => q{};
-use constant SPACE => q{ };
-use constant SLASH => q{/};
-use constant DOT => q{.};
-use constant DOUBLEDOT => q{..};
-use constant BACKSLASH => q{\\};
-use constant NEWLINE => qq{\n};
+const my $EMPTY => q{};
+const my $SPACE => q{ };
+const my $NEWLINE => qq{\n};
+const my $SLASH => q{/};
+const my $DOT => q{.};
+const my $DOUBLEDOT => q{..};
+const my $BACKSLASH => q{\\};
+
+const my $DEFAULT_READ_SIZE => 4096;
+const my $KIB_UNIT_FACTOR => 1024;
+const my $COMFORT_THRESHOLD => 1536;
+
+const my $OWNER_READ => oct(400);
+const my $OWNER_WRITE => oct(200);
+const my $OWNER_EXECUTE => oct(100);
+const my $SETUID => oct(4000);
+const my $SETUID_OWNER_EXECUTE => oct(4100);
+const my $GROUP_READ => oct(40);
+const my $GROUP_WRITE => oct(20);
+const my $GROUP_EXECUTE => oct(10);
+const my $SETGID => oct(2000);
+const my $SETGID_GROUP_EXECUTE => oct(2010);
+const my $WORLD_READ => oct(4);
+const my $WORLD_WRITE => oct(2);
+const my $WORLD_EXECUTE => oct(1);
+const my $STICKY => oct(1000);
+const my $STICKY_WORLD_EXECUTE => oct(1001);
 
 # preload cache for common permission strings
 # call overhead o perm2oct was measurable on chromium-browser/32.0.1700.123-2
 # load time went from ~1.5s to ~0.1s; of 115363 paths, only 306 were uncached
-my %OCTAL_LOOKUP = map { $_ => perm2oct($_) } (
-    '-rw-r--r--', # standard (non-executable) file
-    '-rwxr-xr-x', # standard executable file
-    'drwxr-xr-x', # standard dir perm
-    'drwxr-sr-x', # standard dir perm with suid (lintian-lab on lintian.d.o)
-    'lrwxrwxrwx', # symlinks
+# standard file, executable file, standard dir, dir with suid, symlink
+my %OCTAL_LOOKUP = map { $_ => perm2oct($_) } qw(
+  -rw-r--r--
+  -rwxr-xr-x
+  drwxr-xr-x
+  drwxr-sr-x
+  lrwxrwxrwx
 );
 
 =head1 NAME
@@ -140,11 +156,11 @@ characters.
 
 =cut
 
-our $PKGVERSION_REGEX = qr/
+our $PKGVERSION_REGEX = qr{
                  (?: \d+ : )?                # Optional epoch
                  [0-9][0-9A-Za-z.+:~]*       # Upstream version (with no hyphens)
                  (?: - [0-9A-Za-z.+:~]+ )*   # Optional debian revision (+ upstreams versions with hyphens)
-                          /xa;
+                          }xa;
 
 =back
 
@@ -171,7 +187,7 @@ sub drain_pipe {
     my ($fd) = @_;
     my $buffer;
 
-    1 while (read($fd, $buffer, 4096) > 0);
+    1 while (read($fd, $buffer, $DEFAULT_READ_SIZE) > 0);
 
     return 1;
 }
@@ -191,7 +207,10 @@ This sub is a convenience wrapper around Digest::{MD5,SHA}.
 
 sub get_file_digest {
     my ($alg, $file) = @_;
-    open(my $fd, '<', $file);
+
+    open(my $fd, '<', $file)
+      or die encode_utf8("Cannot open $file");
+
     my $digest;
     if (lc($alg) eq 'md5') {
         $digest = Digest::MD5->new;
@@ -200,6 +219,7 @@ sub get_file_digest {
     }
     $digest->addfile($fd);
     close($fd);
+
     return $digest;
 }
 
@@ -216,7 +236,10 @@ This sub is a convenience wrapper around Digest::{MD5,SHA}.
 =cut
 
 sub get_file_checksum {
-    my $digest = get_file_digest(@_);
+    my @paths = @_;
+
+    my $digest = get_file_digest(@paths);
+
     return $digest->hexdigest;
 }
 
@@ -232,8 +255,8 @@ a trappable error.
 Examples:
 
  # Good
- perm2oct('-rw-r--r--') == 0644
- perm2oct('-rwxr-xr-x') == 0755
+ perm2oct('-rw-r--r--') == oct(644)
+ perm2oct('-rwxr-xr-x') == oct(755)
 
  # Bad
  perm2oct('broken')      # too short to be recognised
@@ -254,30 +277,30 @@ sub perm2oct {
     #  file (-), block/character device (b & c), directory (d),
     #  hardlink (h), symlink (l), named pipe (p).
     if (
-        $text !~ m/^   [-bcdhlp]                # file type
+        $text !~ m{^   [-bcdhlp]                # file type
                     ([-r])([-w])([-xsS])     # user
                     ([-r])([-w])([-xsS])     # group
                     ([-r])([-w])([-xtT])     # other
-               /xsm
+               }xsm
     ) {
-        croak "$text does not appear to be a permission string";
+        croak encode_utf8("$text does not appear to be a permission string");
     }
 
-    $octal += 00400 if $1 eq 'r';   # owner read
-    $octal += 00200 if $2 eq 'w';   # owner write
-    $octal += 00100 if $3 eq 'x';   # owner execute
-    $octal += 04000 if $3 eq 'S';   # setuid
-    $octal += 04100 if $3 eq 's';   # setuid + owner execute
-    $octal += 00040 if $4 eq 'r';   # group read
-    $octal += 00020 if $5 eq 'w';   # group write
-    $octal += 00010 if $6 eq 'x';   # group execute
-    $octal += 02000 if $6 eq 'S';   # setgid
-    $octal += 02010 if $6 eq 's';   # setgid + group execute
-    $octal += 00004 if $7 eq 'r';   # other read
-    $octal += 00002 if $8 eq 'w';   # other write
-    $octal += 00001 if $9 eq 'x';   # other execute
-    $octal += 01000 if $9 eq 'T';   # stickybit
-    $octal += 01001 if $9 eq 't';   # stickybit + other execute
+    $octal |= $OWNER_READ if $1 eq 'r';
+    $octal |= $OWNER_WRITE if $2 eq 'w';
+    $octal |= $OWNER_EXECUTE if $3 eq 'x';
+    $octal |= $SETUID if $3 eq 'S';
+    $octal |= $SETUID_OWNER_EXECUTE if $3 eq 's';
+    $octal |= $GROUP_READ if $4 eq 'r';
+    $octal |= $GROUP_WRITE if $5 eq 'w';
+    $octal |= $GROUP_EXECUTE if $6 eq 'x';
+    $octal |= $SETGID if $6 eq 'S';
+    $octal |= $SETGID_GROUP_EXECUTE if $6 eq 's';
+    $octal |= $WORLD_READ if $7 eq 'r';
+    $octal |= $WORLD_WRITE if $8 eq 'w';
+    $octal |= $WORLD_EXECUTE if $9 eq 'x';
+    $octal |= $STICKY if $9 eq 'T';
+    $octal |= $STICKY_WORLD_EXECUTE if $9 eq 't';
 
     $OCTAL_LOOKUP{$text} = $octal;
 
@@ -291,45 +314,19 @@ sub perm2oct {
 sub human_bytes {
     my ($size) = @_;
 
-    my @units = ('B', 'kiB', 'MiB', 'GiB');
+    my @units = qw(B kiB MiB GiB);
 
     my $unit = shift @units;
 
-    while ($size > 1536 && @units) {
+    while ($size > $COMFORT_THRESHOLD && @units) {
 
-        $size /= 1024;
+        $size /= $KIB_UNIT_FACTOR;
         $unit = shift @units;
     }
 
     my $human = sprintf('%.0f %s', $size, $unit);
 
     return $human;
-}
-
-=item open_gz (FILE)
-
-Opens a handle that reads from the GZip compressed FILE.
-
-On failure, this sub emits a trappable error.
-
-Note: The handle may be a pipe from an external processes.
-
-=cut
-
-# Preferred implementation of open_gz (used if the perlio layer
-# is available)
-sub __open_gz_pio {
-    my ($file) = @_;
-    open(my $fd, '<:gzip', $file);
-    return $fd;
-}
-
-# Starting on 7/27/20, lintian depends on libperlio-gzip-perl
-# Fallback implementation of open_gz
-sub __open_gz_ext {
-    my ($file) = @_;
-    open(my $fd, '-|', 'gzip', '-dc', $file);
-    return $fd;
 }
 
 =item locate_executable (CMD)
@@ -339,13 +336,13 @@ sub __open_gz_ext {
 sub locate_executable {
     my ($command) = @_;
 
-    return EMPTY
+    return $EMPTY
       unless exists $ENV{PATH};
 
     my @folders =  grep { length } split(/:/, $ENV{PATH});
     my $path = first_value { -x "$_/$command" } @folders;
 
-    return ($path // EMPTY);
+    return ($path // $EMPTY);
 }
 
 =item drop_relative_prefix(STRING)
@@ -372,8 +369,8 @@ sub version_from_changelog {
 
     my $changelog_path = "$package_path/debian/changelog";
 
-    return EMPTY
-      unless -f $changelog_path;
+    return $EMPTY
+      unless -e $changelog_path;
 
     my $contents = path($changelog_path)->slurp_utf8;
     my $changelog = Lintian::Inspect::Changelog->new;
@@ -384,7 +381,7 @@ sub version_from_changelog {
     return $entries[0]->{'Version'}
       if @entries;
 
-    return EMPTY;
+    return $EMPTY;
 }
 
 =item normalize_pkg_path(PATH)
@@ -413,8 +410,7 @@ target is the root dir and C<undef> if the path cannot be normalized
 without escaping the package root.
 
 B<CAVEAT>: This function is I<not always sufficient> to test if it is
-safe to open a given symlink.  Use
-L<is_ancestor_of|Lintian::Util/is_ancestor_of(PARENTDIR, PATH)> for
+safe to open a given symlink. Use C<is_ancestor_of(PARENTDIR, PATH)> for
 that.  If you must use this function, remember to check that the
 target is not a symlink (or if it is, that it can be resolved safely).
 
@@ -423,7 +419,7 @@ target is not a symlink (or if it is, that it can be resolved safely).
 sub normalize_link_target {
     my ($path, $target) = @_;
 
-    if (substr($target, 0, 1) eq SLASH) {
+    if (substr($target, 0, 1) eq $SLASH) {
         # Link is absolute
         $path = $target;
     } else {
@@ -437,8 +433,8 @@ sub normalize_link_target {
 sub normalize_pkg_path {
     my ($path) = @_;
 
-    return EMPTY
-      if $path eq SLASH;
+    return $EMPTY
+      if $path eq $SLASH;
 
     my @dirty = split(m{/}, $path);
     my @clean = grep { length } @dirty;
@@ -446,13 +442,13 @@ sub normalize_pkg_path {
     my @final;
     for my $component (@clean) {
 
-        if ($component eq DOT) {
+        if ($component eq $DOT) {
             # do nothing
 
-        } elsif ($component eq DOUBLEDOT) {
+        } elsif ($component eq $DOUBLEDOT) {
             # are we out of bounds?
             my $discard = pop @final;
-            return
+            return undef
               unless defined $discard;
 
         } else {
@@ -461,7 +457,7 @@ sub normalize_pkg_path {
     }
 
     # empty if we end in the root
-    my $normalized = join(SLASH, @final);
+    my $normalized = join($SLASH, @final);
 
     return $normalized;
 }
@@ -478,15 +474,21 @@ will cause a trappable error.
 
 sub is_ancestor_of {
     my ($ancestor, $file) = @_;
-    my $resolved_file = abs_path($file)// croak("resolving $file failed: $!");
-    my $resolved_ancestor = abs_path($ancestor)
-      // croak("resolving $ancestor failed: $!");
+
+    my $resolved_file = abs_path($file);
+    croak encode_utf8("resolving $file failed: $!")
+      unless defined $resolved_file;
+
+    my $resolved_ancestor = abs_path($ancestor);
+    croak encode_utf8("resolving $ancestor failed: $!")
+      unless defined $resolved_ancestor;
+
     my $len;
     return 1 if $resolved_ancestor eq $resolved_file;
     # add a slash, "path/some-dir" is not "path/some-dir-2" and this
     # allows us to blindly match against the root dir.
-    $resolved_file .= '/';
-    $resolved_ancestor .= '/';
+    $resolved_file .= $SLASH;
+    $resolved_ancestor .= $SLASH;
 
     # If $resolved_file is contained within $resolved_ancestor, then
     # $resolved_ancestor will be a prefix of $resolved_file.
@@ -519,13 +521,13 @@ sub unescape_md5sum_filename {
     for my $char (@array) {
 
         # start escape sequence
-        if ($char eq BACKSLASH && !$escaped) {
+        if ($char eq $BACKSLASH && !$escaped) {
             $escaped = 1;
             next;
         }
 
         # unescape newline
-        $char = NEWLINE
+        $char = $NEWLINE
           if $char eq 'n' && $escaped;
 
         # append character
@@ -536,7 +538,7 @@ sub unescape_md5sum_filename {
     }
 
     # do not stop inside an escape sequence
-    die 'Name terminated inside an escape sequence'
+    die encode_utf8('Name terminated inside an escape sequence')
       if $escaped;
 
     return $path;
@@ -550,7 +552,6 @@ sub read_md5sums {
 
     my @lines = split(/\n/, $text);
 
-    # start with checksum; processing style inspired by IO::Async::Stream
     while (defined(my $line = shift @lines)) {
 
         next
@@ -583,6 +584,56 @@ sub read_md5sums {
     }
 
     return (\%checksums, \@errors);
+}
+
+=item utf8_clean_log
+
+=cut
+
+sub utf8_clean_log {
+    my ($bytes) = @_;
+
+    my $hex_sequence = sub {
+        my ($unclean_bytes) = @_;
+        return '{hex:' . sprintf('%vX', $unclean_bytes) . '}';
+    };
+
+    my $utf8_clean_word = sub {
+        my ($word) = @_;
+        return utf8_clean_bytes($word, $SLASH, $hex_sequence);
+    };
+
+    my $utf8_clean_line = sub {
+        my ($line) = @_;
+        return utf8_clean_bytes($line, $SPACE, $utf8_clean_word);
+    };
+
+    return utf8_clean_bytes($bytes, $NEWLINE, $utf8_clean_line) . $NEWLINE;
+}
+
+=item utf8_clean_bytes
+
+=cut
+
+sub utf8_clean_bytes {
+    my ($bytes, $separator, $utf8_clean_part) = @_;
+
+    my @utf8_clean_parts;
+
+    my $regex = quotemeta($separator);
+    my @parts = split(/$regex/, $bytes);
+
+    for my $part (@parts) {
+
+        if (valid_utf8($part)) {
+            push(@utf8_clean_parts, $part);
+
+        } else {
+            push(@utf8_clean_parts, $utf8_clean_part->($part));
+        }
+    }
+
+    return join($separator, @utf8_clean_parts);
 }
 
 =back

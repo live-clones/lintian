@@ -4,21 +4,23 @@ use v5.20;
 use warnings;
 use utf8;
 
-use List::MoreUtils qw(any);
+use Const::Fast;
+use List::SomeUtils qw(any);
 use Path::Tiny;
+use Unicode::UTF8 qw(encode_utf8);
 
-use constant EMPTY => q{};
+const my $EMPTY => q{};
 
-die 'Please specify exactly one argument'
+die encode_utf8('Please specify exactly one argument')
   unless @ARGV == 1;
 
 my $path = $ARGV[0];
 
-#print "Splitting $path\n";
+#print encode_utf8("Splitting $path\n");
 
 my $contents = path($path)->slurp;
 
-#print $contents;
+#print encode_utf8($contents);
 
 my @testlabels = qw(
   Check
@@ -36,9 +38,9 @@ my @testlabels = qw(
   Todo
 );
 
-my $build = EMPTY;
-my $eval = EMPTY;
-my $comments = EMPTY;
+my $build = $EMPTY;
+my $eval = $EMPTY;
+my $comments = $EMPTY;
 
 while ($contents =~ s/\n(\#[^\n]*\n)/\n/) {
     $comments .= $1;
@@ -49,7 +51,7 @@ while ($contents =~ s/^([^:]+\:[^\n]*\n(?: [^\n]+\n)*)//) {
     my $field = $1;
 
     my ($label) = ($field =~ /^([^:]+)\:/);
-    #  print "Found $label\n";
+    #  print encode_utf8("Found $label\n");
 
     if ($label eq 'Testname') {
         $eval .= $field;
@@ -65,7 +67,7 @@ while ($contents =~ s/^([^:]+\:[^\n]*\n(?: [^\n]+\n)*)//) {
     }
 }
 
-die 'Unknown data at the end'
+die encode_utf8('Unknown data at the end')
   if length $contents;
 
 path($path)->remove;
@@ -93,7 +95,7 @@ path($fillvalues)->append($comments);
 path($desc)->append($comments);
 
 my @move
-  = qw(tags literal skip post-test test-calibration tag-list suppress lintian-include-dir);
+  = qw(hints literal skip post-test test-calibration tag-list suppress lintian-include-dir);
 
 for my $transfer (@move) {
 
@@ -104,5 +106,5 @@ for my $transfer (@move) {
       if -e $sourcepath;
 }
 
-#print "Build:\n$build\n";
-#print "Eval:\n$eval\n";
+#print encode_utf8("Build:\n$build\n");
+#print encode_utf8("Eval:\n$eval\n");

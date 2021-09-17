@@ -40,7 +40,6 @@ Routines for dealing with templates in Lintian test specifications.
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Exporter qw(import);
 
@@ -56,6 +55,7 @@ BEGIN {
 }
 
 use Carp;
+use Const::Fast;
 use List::Util qw(max);
 use File::Path qw(make_path);
 use File::Spec::Functions qw(rel2abs abs2rel);
@@ -63,16 +63,16 @@ use File::Find::Rule;
 use File::stat;
 use Path::Tiny;
 use Text::Template;
+use Unicode::UTF8 qw(encode_utf8);
 
 use Test::Lintian::ConfigFile qw(read_config);
 use Test::Lintian::Helper qw(copy_dir_contents);
 
-use constant NEWLINE => qq{\n};
-use constant SPACE => q{ };
-use constant DOT => q{.};
-use constant COMMA => q{,};
-use constant COLON => q{:};
-use constant EMPTY => q{};
+const my $EMPTY => q{};
+const my $SPACE => q{ };
+const my $DOT => q{.};
+const my $COMMA => q{,};
+const my $COLON => q{:};
 
 =head1 FUNCTIONS
 
@@ -91,23 +91,24 @@ sub copy_skeleton_template_sets {
     my ($instructions, $runpath, $testset)= @_;
 
     # populate working directory with specified template sets
-    foreach my $set (split(COMMA, $instructions)) {
+    for my $placement (split($COMMA, $instructions)) {
 
         my ($relative, $name)
-          =($set =~ qr/^\s*([^()\s]+)\s*\(([^()\s]+)\)\s*$/);
+          =($placement =~ qr/^\s*([^()\s]+)\s*\(([^()\s]+)\)\s*$/);
 
-        croak 'No template destination specified in skeleton.'
+        croak encode_utf8('No template destination specified in skeleton.')
           unless length $relative;
 
-        croak 'No template set specified in skeleton.'
+        croak encode_utf8('No template set specified in skeleton.')
           unless length $name;
 
         my $templatesetpath = "$testset/templates/$name";
-        croak "Cannot find template set '$name' at $templatesetpath."
+        croak encode_utf8(
+            "Cannot find template set '$name' at $templatesetpath.")
           unless -d $templatesetpath;
 
-        say "Installing template set '$name'"
-          . ($relative ne DOT ? " to ./$relative." : EMPTY);
+        say encode_utf8("Installing template set '$name'"
+              . ($relative ne $DOT ? " to ./$relative." : $EMPTY));
 
         # create directory
         my $destination = "$runpath/$relative";
@@ -134,7 +135,11 @@ sub remove_surplus_templates {
     foreach my $original (@originals) {
         my $relative = abs2rel($original, $source);
         my $template = rel2abs("$relative.in", $destination);
-        unlink($template) if -f $template;
+
+        if (-e $template) {
+            unlink($template)
+              or die encode_utf8("Cannot unlink $template");
+        }
     }
     return;
 }
@@ -153,36 +158,37 @@ instructions must be separated by commas.
 sub fill_skeleton_templates {
     my ($instructions, $testcase, $threshold, $runpath, $testset)= @_;
 
-    foreach my $target (split(COMMA, $instructions)) {
+    for my $target (split(/$COMMA/, $instructions)) {
 
         my ($relative, $name)
           =($target=~ qr/^\s*([^()\s]+)\s*(?:\(([^()\s]+)\))?\s*$/);
 
-        croak 'No fill destination specified in skeleton.'
+        croak encode_utf8('No fill destination specified in skeleton.')
           unless length $relative;
 
         if (length $name) {
 
             # template set
             my $whitelistpath = "$testset/whitelists/$name";
-            croak "Cannot find template whitelist '$name' at $whitelistpath"
-              unless -f $whitelistpath;
+            croak encode_utf8(
+                "Cannot find template whitelist '$name' at $whitelistpath")
+              unless -e $whitelistpath;
 
-            say EMPTY;
+            say encode_utf8($EMPTY);
 
-            say 'Generate files '
-              . ($relative ne DOT ? "in ./$relative " : EMPTY)
-              . "from templates using whitelist '$name'.";
+            say encode_utf8('Generate files '
+                  . ($relative ne $DOT ? "in ./$relative " : $EMPTY)
+                  . "from templates using whitelist '$name'.");
             my $whitelist = read_config($whitelistpath);
 
             my @candidates = $whitelist->trimmed_list('May-Generate');
             my $destination = "$runpath/$relative";
 
-            say 'Fill templates'
-              . ($relative ne DOT ? " in ./$relative" : EMPTY)
-              . COLON
-              . SPACE
-              . join(SPACE, @candidates);
+            say encode_utf8('Fill templates'
+                  . ($relative ne $DOT ? " in ./$relative" : $EMPTY)
+                  . $COLON
+                  . $SPACE
+                  . join($SPACE, @candidates));
 
             foreach my $candidate (@candidates) {
                 my $generated = rel2abs($candidate, $destination);
@@ -190,20 +196,20 @@ sub fill_skeleton_templates {
 
                 # fill template if needed
                 fill_template($template, $generated, $testcase, $threshold)
-                  if -f $template;
+                  if -e $template;
             }
 
         }else {
 
             # single file
-            say "Filling template: $relative";
+            say encode_utf8("Filling template: $relative");
 
             my $generated = rel2abs($relative, $runpath);
             my $template = "$generated.in";
 
             # fill template if needed
             fill_template($template, $generated, $testcase, $threshold)
-              if -f $template;
+              if -e $template;
         }
     }
     return;
@@ -221,8 +227,8 @@ preserve files when no generation is necessary.
 sub fill_whitelisted_templates {
     my ($directory, $whitelistpath, $data, $data_epoch) = @_;
 
-    croak "No whitelist found at $whitelistpath"
-      unless -f $whitelistpath;
+    croak encode_utf8("No whitelist found at $whitelistpath")
+      unless -e $whitelistpath;
 
     my $whitelist = read_config($whitelistpath);
     my @list = $whitelist->trimmed_list('May-Generate');
@@ -233,7 +239,7 @@ sub fill_whitelisted_templates {
 
         # fill template if needed
         fill_template($template, $generated, $data, $data_epoch)
-          if -f $template;
+          if -e $template;
     }
     return;
 }
@@ -270,9 +276,9 @@ sub fill_template {
     my ($template, $generated, $data, $data_epoch, $delimiters) = @_;
 
     my $generated_epoch
-      = length $generated  && -f $generated ? stat($generated)->mtime : 0;
+      = length $generated  && -e $generated ? stat($generated)->mtime : 0;
     my $template_epoch
-      = length $template && -f $template ? stat($template)->mtime : time;
+      = length $template && -e $template ? stat($template)->mtime : time;
     my $threshold = max($template_epoch, $data_epoch//time);
 
     if ($generated_epoch <= $threshold) {
@@ -282,30 +288,37 @@ sub fill_template {
             DELIMITERS => ['[%', '%]'],
             SOURCE => $template
         );
-        croak("Cannot read template $template: $Text::Template::ERROR")
+        croak encode_utf8(
+            "Cannot read template $template: $Text::Template::ERROR")
           unless $filler;
 
         open(my $handle, '>', $generated)
-          or croak "Could not open file $generated: $!";
+          or croak encode_utf8("Could not open file $generated: $!");
         $filler->fill_in(
             OUTPUT => $handle,
             HASH => $data,
             DELIMITERS => $delimiters
           )
-          or croak("Could not create file $generated from template $template");
-        close($handle)
-          or carp "Could not close file $generated: $!";
+          or croak encode_utf8(
+            "Could not create file $generated from template $template");
+        close $handle
+          or carp encode_utf8("Could not close file $generated: $!");
 
         # transfer file permissions from template to generated file
-        my $stat = stat($template) or croak "stat $template failed: $!";
-        chmod $stat->mode, $generated or croak "chmod $generated failed: $!";
+        my $stat = stat($template)
+          or croak encode_utf8("stat $template failed: $!");
+        chmod $stat->mode, $generated
+          or croak encode_utf8("chmod $generated failed: $!");
 
         # set mtime to $threshold
         path($generated)->touch($threshold);
     }
 
     # delete template
-    unlink($template) if -f $generated;
+    if (-e $generated) {
+        unlink($template)
+          or die encode_utf8("Cannot unlink $template");
+    }
 
     return;
 }

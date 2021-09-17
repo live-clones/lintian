@@ -20,9 +20,8 @@ package Lintian::Processable::Control::Conffiles;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
-use constant EMPTY => q{};
+use Lintian::Conffiles;
 
 use Moo::Role;
 use namespace::clean;
@@ -45,82 +44,21 @@ Lintian::Processable::Control::Conffiles provides an interface to control data f
 
 =item conffiles
 
-Returns a list of absolute filenames found for conffiles.
-
 =cut
 
-sub conffiles {
-    my ($self) = @_;
+has conffiles => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
 
-    return @{$self->{'conffiles'}}
-      if exists $self->{'conffiles'};
+        my $file = $self->control->resolve_path('conffiles');
 
-    $self->{'conffiles'} = [];
+        my $conffiles = Lintian::Conffiles->new;
+        $conffiles->parse($file, $self);
 
-    # read conffiles if it exists and is a file
-    my $cf = $self->control->resolve_path('conffiles');
-    return
-      unless $cf && $cf->is_file && $cf->is_open_ok;
-
-    open(my $fd, '<', $cf->unpacked_path);
-    while (my $absolute = <$fd>) {
-
-        chomp $absolute;
-
-        # dpkg strips whitespace (using isspace) from the right hand
-        # side of the file name.
-
-        # trim right
-        $absolute =~ s/\s+$//;
-
-        next
-          if $absolute eq EMPTY;
-
-        # list contains absolute paths, unlike lookup
-        push(@{$self->{conffiles}}, $absolute);
-    }
-
-    close($fd);
-
-    return @{$self->{conffiles}};
-}
-
-=item is_conffile (FILE)
-
-Returns a truth value if FILE is listed in the conffiles control file.
-If the control file is not present or FILE is not listed in it, it
-returns C<undef>.
-
-Note that FILE should be the filename relative to the package root
-(even though the control file uses absolute paths).  If the control
-file does relative paths, they are assumed to be relative to the
-package root as well (and used without warning).
-
-=cut
-
-sub is_conffile {
-    my ($self, $file) = @_;
-
-    unless (exists $self->{'conffiles_lookup'}) {
-
-        $self->{'conffiles_lookup'} = {};
-
-        for my $absolute ($self->conffiles) {
-
-            # strip the leading slash
-            my $relative = $absolute;
-            $relative =~ s,^/++,,;
-
-            # look up happens with a relative path
-            $self->{conffiles_lookup}{$relative} = 1;
-        }
-    }
-
-    return 1
-      if exists $self->{conffiles_lookup}{$file};
-
-    return 0;
-}
+        return $conffiles;
+    });
 
 =back
 

@@ -22,8 +22,6 @@ use v5.20;
 use warnings;
 use utf8;
 
-use constant EMPTY => q{};
-
 use Moo::Role;
 use namespace::clean;
 
@@ -61,7 +59,7 @@ has not_just_docs => (
         my $quoted_name = quotemeta($self->name);
 
         my $empty = 1;
-        for my $item ($self->installed->sorted_list) {
+        for my $item (@{$self->installed->sorted_list}) {
 
             # ignore directories
             next

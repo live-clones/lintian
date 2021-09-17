@@ -1,0 +1,1 @@
+debhelper-no-depends (source): rules-require-build-prerequisite debhelper | debhelper-compat

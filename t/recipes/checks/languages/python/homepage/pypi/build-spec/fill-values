@@ -1,0 +1,4 @@
+Skeleton: source-native
+Testname: pypi
+Description: Homepage points to PyPI
+Homepage: https://pypi.org/project/some-name/

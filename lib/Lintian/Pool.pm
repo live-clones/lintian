@@ -23,19 +23,30 @@ package Lintian::Pool;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
+use Const::Fast;
 use Cwd qw(getcwd);
-use List::MoreUtils qw(any);
+use List::SomeUtils qw(any);
 use Time::HiRes qw(gettimeofday tv_interval);
 use Path::Tiny;
 use POSIX qw(:sys_wait_h);
 use Proc::ProcessTable;
+use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Group;
 
 use Moo;
 use namespace::clean;
+
+const my $SPACE => q{ };
+const my $COMMA => q{,};
+const my $SEMICOLON => q{;};
+const my $LEFT_PARENS => q{(};
+const my $RIGHT_PARENS => q{)};
+const my $PLURAL_S => q{s};
+
+const my $ANY_CHILD => -1;
+const my $WORLD_WRITABLE_FOLDER => oct(777);
 
 =head1 NAME
 
@@ -80,20 +91,14 @@ has basedir => (
         my $absolute
           = Path::Tiny->tempdir(TEMPLATE => 'lintian-pool-XXXXXXXXXX');
 
-        $absolute->mkpath({mode => 0777});
+        $absolute->mkpath({mode => $WORLD_WRITABLE_FOLDER});
 
         return $absolute;
     });
-has keep => (is => 'rw', default => 0);
 
 =item $pool->basedir
 
 Returns the base directory for the pool. Most likely it's a temporary directory.
-
-=item $pool->keep
-
-Returns or accepts a boolean value that indicates whether the lab should be
-removed when Lintian finishes. Used for debugging.
 
 =item $pool->add_group($group)
 
@@ -143,14 +148,16 @@ Process the pool.
 =cut
 
 sub process{
-    my ($self, $PROFILE, $exit_code_ref, $option, $STATUS_FD, $OUTPUT)= @_;
+    my ($self, $PROFILE, $exit_code_ref, $option)= @_;
+
+    if ($self->empty) {
+        say {*STDERR} encode_utf8('No packages selected.');
+        return;
+    }
 
     my %override_count;
     my %ignored_overrides;
     my $unused_overrides = 0;
-
-    # do not remove lab if so selected
-    $self->keep($option->{'keep-lab'} // 0);
 
     for my $group (values %{$self->groups}) {
 
@@ -159,7 +166,7 @@ sub process{
         $group->profile($PROFILE);
         $group->jobs($option->{'jobs'});
 
-        my $success= $group->process(\%ignored_overrides, $option, $OUTPUT);
+        my $success= $group->process(\%ignored_overrides, $option);
 
         # associate all hints with processable
         for my $processable ($group->get_processables){
@@ -185,18 +192,17 @@ sub process{
         } @hints;
 
         my %reported_count;
-        $reported_count{$_->tag->effective_severity}++ for @reported_trusted;
+        $reported_count{$_->tag->visibility}++ for @reported_trusted;
         $reported_count{experimental} += scalar @reported_experimental;
         $reported_count{override} += scalar @override;
 
         unless ($option->{'no-override'} || $option->{'show-overrides'}) {
 
-            $override_count{$_->tag->effective_severity}++
-              for @override_trusted;
+            $override_count{$_->tag->visibility}++ for @override_trusted;
             $override_count{experimental} += scalar @override_experimental;
         }
 
-        $$exit_code_ref = 2
+        ${$exit_code_ref} = 2
           if $success && any { $reported_count{$_} } @{$option->{'fail-on'}};
 
         # discard disabled tags
@@ -242,8 +248,8 @@ sub process{
         push(@{$_->processable->hints}, $_) for @hints;
 
         # interruptions can leave processes behind (manpages); wait and reap
-        if ($$exit_code_ref == 1) {
-            1 while waitpid(-1, WNOHANG) > 0;
+        if (${$exit_code_ref} == 1) {
+            1 while waitpid($ANY_CHILD, WNOHANG) > 0;
         }
 
         if ($option->{debug}) {
@@ -252,97 +258,102 @@ sub process{
 
             # announce left over processes, see commit 3bbcc3b
             if (@leftover) {
-                warn "\nSome processes were left over (maybe unreaped):\n";
+                warn encode_utf8(
+                    "\nSome processes were left over (maybe unreaped):\n");
 
-                my $FORMAT = "    %-12s %-12s %-8s %-24s %s\n";
-                printf($FORMAT, 'PID', 'TTY', 'STATUS', 'START', 'COMMAND');
+                my $FORMAT = '    %-12s %-12s %-8s %-24s %s';
+                say encode_utf8(
+                    sprintf(
+                        $FORMAT,'PID', 'TTY', 'STATUS', 'START', 'COMMAND'
+                    ));
 
-                printf($FORMAT,
-                    $_->pid,$_->ttydev,$_->state,scalar(localtime($_->start)),
-                    $_->cmndline)
-                  for @leftover;
+                say encode_utf8(
+                    sprintf($FORMAT,
+                        $_->pid,$_->ttydev,
+                        $_->state,scalar(localtime($_->start)),
+                        $_->cmndline))for @leftover;
 
-                $$exit_code_ref = 1;
-                die "Aborting.\n";
+                ${$exit_code_ref} = 1;
+                die encode_utf8("Aborting.\n");
             }
         }
-
-        # remove group files
-        $group->clean_lab($OUTPUT);
 
         my $total_raw_res = tv_interval($total_start);
         my $total_tres = sprintf('%.3fs', $total_raw_res);
 
-        if ($success) {
-            print {$STATUS_FD} 'complete ' . $group->name . " ($total_tres)\n";
-        } else {
-            print {$STATUS_FD} 'error ' . $group->name . " ($total_tres)\n";
-            $$exit_code_ref = 1;
-        }
-        $OUTPUT->v_msg('Finished processing group ' . $group->name);
+        my $status = $success ? 'complete' : 'error';
+        say {*STDERR}
+          encode_utf8($status . $SPACE . $group->name . " ($total_tres)")
+          if $option->{'status-log'};
+        say {*STDERR} encode_utf8('Finished processing group ' . $group->name)
+          if $option->{debug};
+
+        ${$exit_code_ref} = 1
+          unless $success;
+    }
+
+    my $OUTPUT;
+    if ($option->{'output-format'} eq 'html') {
+        require Lintian::Output::HTML;
+        $OUTPUT = Lintian::Output::HTML->new;
+    } elsif ($option->{'output-format'} eq 'json') {
+        require Lintian::Output::JSON;
+        $OUTPUT = Lintian::Output::JSON->new;
+    } elsif ($option->{'output-format'} eq 'universal') {
+        require Lintian::Output::Universal;
+        $OUTPUT = Lintian::Output::Universal->new;
+    } else {
+        require Lintian::Output::EWI;
+        $OUTPUT = Lintian::Output::EWI->new;
     }
 
     # pass everything, in case some groups or processables have no hints
-    $OUTPUT->issue_hints([values %{$self->groups}]);
+    $OUTPUT->issue_hints([values %{$self->groups}], $option);
 
-    unless ($option->{'no-override'}
-        || $option->{'show-overrides'}) {
+    my $errors = $override_count{error} // 0;
+    my $warnings = $override_count{warning} // 0;
+    my $info = $override_count{info} // 0;
+    my $total = $errors + $warnings + $info;
 
-        my $errors = $override_count{error} // 0;
-        my $warnings = $override_count{warning} // 0;
-        my $info = $override_count{info} // 0;
-        my $total = $errors + $warnings + $info;
+    if (   $option->{'output-format'} eq 'ewi'
+        && !$option->{'no-override'}
+        && !$option->{'show-overrides'}
+        && ($total > 0 || $unused_overrides > 0)) {
 
-        if ($total > 0 or $unused_overrides > 0) {
+        my @details;
+        push(@details, quantity($errors, 'error'))
+          if $errors;
+        push(@details, quantity($warnings, 'warning'))
+          if $warnings;
+        push(@details, "$info info")
+          if $info;
 
-            my $text
-              = ($total == 1)
-              ? "$total hint overridden"
-              : "$total hints overridden";
+        my $text = quantity($total, 'hint') . ' overridden';
+        $text
+          .= $SPACE
+          . $LEFT_PARENS
+          . join($COMMA . $SPACE, @details)
+          . $RIGHT_PARENS
+          if @details;
+        $text
+          .= $SEMICOLON
+          . $SPACE
+          . quantity($unused_overrides, 'unused override');
 
-            my @output;
-
-            if ($errors) {
-                push(@output,
-                    ($errors == 1) ? "$errors error" : "$errors errors");
-            }
-
-            if ($warnings) {
-                push(@output,
-                    ($warnings == 1)
-                    ? "$warnings warning"
-                    : "$warnings warnings");
-            }
-
-            if ($info) {
-                push(@output, "$info info");
-            }
-
-            if (@output) {
-                $text .= ' (' . join(', ', @output). ')';
-            }
-
-            if ($unused_overrides == 1) {
-                $text .= "; $unused_overrides unused override";
-            } elsif ($unused_overrides > 1) {
-                $text .= "; $unused_overrides unused overrides";
-            }
-
-            $OUTPUT->msg($text);
-        }
+        say encode_utf8("N: $text");
     }
 
-    if (keys %ignored_overrides) {
-        $OUTPUT->msg(
-'Some overrides were ignored, since the tags were marked non-overridable.'
-        );
-        if ($option->{'verbose'}) {
-            $OUTPUT->v_msg(
-'The following tags had at least one override but are non-overridable:'
+    if ($option->{'output-format'} eq 'ewi' && %ignored_overrides) {
+        say encode_utf8('N: Some overrides were ignored.');
+
+        if ($option->{verbose}) {
+            say encode_utf8(
+'N: The following tags had at least one override but are mandatory:'
             );
-            $OUTPUT->v_msg("  - $_") for sort keys %ignored_overrides;
+            say encode_utf8("N:   - $_") for sort keys %ignored_overrides;
+
         } else {
-            $OUTPUT->msg('Use --verbose for more information.');
+            say encode_utf8('N: Use --verbose for more information.');
         }
     }
 
@@ -350,6 +361,20 @@ sub process{
       if length $self->basedir && -d $self->basedir;
 
     return;
+}
+
+=item quantity
+
+=cut
+
+sub quantity {
+    my ($count, $unit) = @_;
+
+    my $text = $count . $SPACE . $unit;
+    $text .= $PLURAL_S
+      unless $count == 1;
+
+    return $text;
 }
 
 =item $pool->get_group_names
@@ -362,6 +387,7 @@ Do not modify the list nor its contents.
 
 sub get_group_names{
     my ($self) = @_;
+
     return keys %{ $self->groups };
 }
 
@@ -374,6 +400,7 @@ if there is no group called $name.
 
 sub get_group{
     my ($self, $group) = @_;
+
     return $self->groups->{$group};
 }
 
@@ -385,6 +412,7 @@ Returns true if the pool is empty.
 
 sub empty{
     my ($self) = @_;
+
     return scalar keys %{$self->groups} == 0;
 }
 
@@ -399,7 +427,8 @@ sub DEMOLISH {
     my ($self, $in_global_destruction) = @_;
 
     # change back to where we were; otherwise removal may fail
-    chdir($self->savedir);
+    chdir($self->savedir)
+      or die encode_utf8('Cannot change to directory ' . $self->savedir);
 
     path($self->basedir)->remove_tree
       if length $self->basedir && -d $self->basedir;

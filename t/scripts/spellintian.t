@@ -22,41 +22,29 @@
 use strict;
 use warnings;
 
-use IO::Async::Loop;
-use IO::Async::Process;
+use Const::Fast;
+use IPC::Run3;
 use Test::More tests => 8;
 
-use constant NEWLINE => qq{\n};
+const my $NEWLINE => qq{\n};
+const my $DOT => q{.};
+const my $WAIT_STATUS_SHIFT => 8;
 
-$ENV{'LINTIAN_BASE'} //= '.';
+$ENV{'LINTIAN_BASE'} //= $DOT;
 
 my $cmd_path = "$ENV{LINTIAN_BASE}/bin/spellintian";
 my $spelling_data = 'data/spelling/corrections';
 
 sub t {
     my ($input, $expected, @options) = @_;
+
+    my @command = ($cmd_path, @options);
     my $output;
+    run3(\@command, \$input, \$output);
 
-    my $loop = IO::Async::Loop->new;
-    my $future = $loop->new_future;
-
-    my $process = IO::Async::Process->new(
-        command => [$cmd_path, @options],
-        stdin => { from => $input },
-        stdout => { into => \$output },
-        on_finish => sub {
-            my ($self, $exitcode) = @_;
-            my $status = ($exitcode >> 8);
-            is($status, 0, 'exit status 0');
-            is($output, $expected, 'expected output');
-            $future->done('Done with spellintian');
-            return;
-        });
-
-    $loop->add($process);
-
-    # will await
-    $future->get;
+    my $status = ($? >> $WAIT_STATUS_SHIFT);
+    is($status, 0, 'exit status 0');
+    is($output, $expected, 'expected output');
 
     return;
 }
@@ -64,15 +52,18 @@ sub t {
 my $s = "A familar brown gnu allows\nto jump over the lazy dog.\n";
 
 t($s,
-    'familar -> familiar'. NEWLINE. '"allows to" -> "allows one to"'. NEWLINE);
+        'familar -> familiar'
+      . $NEWLINE
+      . '"allows to" -> "allows one to"'
+      . $NEWLINE);
 t(
     $s,
     'familar -> familiar'
-      . NEWLINE
+      . $NEWLINE
       . '"allows to" -> "allows one to"'
-      . NEWLINE
+      . $NEWLINE
       . 'gnu -> GNU'
-      . NEWLINE,
+      . $NEWLINE,
     '--picky'
 );
 

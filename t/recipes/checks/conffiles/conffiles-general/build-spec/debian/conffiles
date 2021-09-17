@@ -4,4 +4,6 @@
 /usr/share/foo
 /var/cache/foo
 etc/foo
-
+/etc/thin-air
+/usr/gone
+/var/bye

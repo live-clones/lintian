@@ -20,14 +20,16 @@ package Lintian::Processable::Control;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
+
+use Const::Fast;
+use List::SomeUtils qw(uniq);
 
 use Lintian::Index;
 
-use constant SLASH => q{/};
-
 use Moo::Role;
 use namespace::clean;
+
+const my $SLASH => q{/};
 
 =head1 NAME
 
@@ -58,17 +60,16 @@ has control => (
         my ($self) = @_;
 
         my $index = Lintian::Index->new;
-        $index->basedir($self->basedir . SLASH . 'control');
+        $index->basedir($self->basedir . $SLASH . 'control');
 
         # control files are not installed relative to the system root
         # disallow absolute paths and symbolic links
 
         my @command = (qw(dpkg-deb --ctrl-tarfile), $self->path);
-        my ($extract_errors, $index_errors)
-          = $index->create_from_piped_tar(\@command);
+        my $errors = $index->create_from_piped_tar(\@command);
 
         $self->hint('unpack-message-for-deb-control', $_)
-          for split(/\n/, $extract_errors . $index_errors);
+          for uniq split(/\n/, $errors);
 
         return $index;
     });

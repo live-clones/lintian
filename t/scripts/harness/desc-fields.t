@@ -26,11 +26,11 @@
 
 use strict;
 use warnings;
-use autodie;
 use v5.10;
 
+use Const::Fast;
 use File::Find::Rule;
-use List::MoreUtils qw(uniq);
+use List::SomeUtils qw(uniq);
 use List::Util qw(all);
 use Path::Tiny;
 use Test::More;
@@ -40,8 +40,7 @@ use lib "$ENV{'LINTIAN_BASE'}/lib";
 use Lintian::Profile;
 use Test::Lintian::ConfigFile qw(read_config);
 
-use constant SPACE => q{ };
-use constant EMPTY => q{};
+const my $FIXED_TESTS_PER_FILE => 6;
 
 my @descpaths = File::Find::Rule->file()->name('desc')->in('t/recipes');
 
@@ -52,13 +51,13 @@ my @mandatory = qw(Testname);
 my @disallowed = qw(Test-For Checks References Reference Ref);
 
 # tests per desc
-my $perfile = 6 + scalar @mandatory + scalar @disallowed;
+my $perfile = $FIXED_TESTS_PER_FILE + scalar @mandatory + scalar @disallowed;
 
 # set the testing plan
 my $known_tests = $perfile * scalar @descpaths;
 
 my $profile = Lintian::Profile->new;
-$profile->load(undef, [$ENV{LINTIAN_BASE}]);
+$profile->load(undef, undef, 0);
 
 for my $descpath (@descpaths) {
 
@@ -88,31 +87,29 @@ for my $descpath (@descpaths) {
         $name, "Test name matches encapsulating directory in $testpath");
 
     # mandatory fields
-    ok($testcase->exists($_), "Field $_ exists in $name") for @mandatory;
+    ok($testcase->declares($_), "Field $_ exists in $name") for @mandatory;
 
     # disallowed fields
-    ok(!$testcase->exists($_), "Field $_ does not exist in $name")
+    ok(!$testcase->declares($_), "Field $_ does not exist in $name")
       for @disallowed;
 
     # no test-against without check
-    ok(!$testcase->exists('Test-Against') || $testcase->exists('Check'),
+    ok(!$testcase->declares('Test-Against') || $testcase->declares('Check'),
         "No Test-Against without Check in $name");
 
     # get checks
-    my @checks = $testcase->trimmed_list('Check');
+    my @check_names = $testcase->trimmed_list('Check');
 
     # no duplicates in checks
     is(
-        (scalar @checks),
-        (scalar uniq @checks),
+        (scalar @check_names),
+        (scalar uniq @check_names),
         "No duplicates in Check in $name"
     );
 
     # listed checks exist
-    ok(
-        (all { $profile->get_checkinfo($_) } @checks),
-        "All checks mentioned in $testpath exist"
-    );
+    ok((all { length $profile->check_module_by_name->{$_} } @check_names),
+        "All checks mentioned in $testpath exist");
 
     # no duplicates in tags against
     my @against = $testcase->trimmed_list('Test-Against');
@@ -124,10 +121,9 @@ for my $descpath (@descpaths) {
 
     # listed test-against belong to listed checks
     $known_tests += scalar @against;
-    my @checkinfos = grep { defined }
-      map { $profile->get_checkinfo($_) } (@checks, 'lintian');
-    my %relatedtags= map { $_ => 1 }
-      map { $_->tags } @checkinfos;
+    my @tags = map { @{$profile->tagnames_for_check->{$_} // []} }
+      (@check_names, 'lintian');
+    my %relatedtags = map { $_ => 1 } @tags;
     for my $tag (@against) {
         ok(
             exists $relatedtags{$tag},

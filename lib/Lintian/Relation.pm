@@ -4,6 +4,7 @@
 # Copyright © 1998 Christian Schwarz and Richard Braakman
 # Copyright © 2004-2009 Russ Allbery <rra@debian.org>
 # Copyright © 2018 Chris Lamb <lamby@debian.org>
+# Copyright © 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -24,6 +25,16 @@ use v5.20;
 use warnings;
 use utf8;
 
+use Carp qw(confess);
+use Const::Fast;
+use List::SomeUtils qw(any);
+use Unicode::UTF8 qw(encode_utf8);
+
+use Lintian::Relation::Version qw(:all);
+
+use Moo;
+use namespace::clean;
+
 use constant {
     VISIT_PRED_NAME => 0,
     VISIT_PRED_FULL => 1,
@@ -31,17 +42,24 @@ use constant {
     VISIT_STOP_FIRST_MATCH => 4,
 };
 
-use Exporter qw(import);
-our (@EXPORT_OK, %EXPORT_TAGS);
-%EXPORT_TAGS = (
-    constants => [
-        qw(VISIT_PRED_NAME VISIT_PRED_FULL VISIT_OR_CLAUSE_FULL
-          VISIT_STOP_FIRST_MATCH)
-    ],
-);
-@EXPORT_OK = (@{ $EXPORT_TAGS{constants} });
+const my $EMPTY => q{};
+const my $SPACE => q{ };
+const my $COLON => q{:};
+const my $EQUAL => q{=};
+const my $LEFT_PARENS => q{(};
+const my $RIGHT_PARENS => q{)};
+const my $LEFT_SQUARE => q{[};
+const my $RIGHT_SQUARE => q{]};
+const my $LEFT_ANGLE => q{<};
+const my $RIGHT_ANGLE => q{>};
 
-use Lintian::Relation::Version qw(:all);
+const my $BRANCH_TYPE => 0;
+const my $NAME => 1;
+const my $OPERATOR => 2;
+const my $VERSION => 3;
+const my $BD_ARCHITECTURE => 4;
+const my $MACHINE_ARCHITECTURE => 5;
+const my $RESTRICTIONS => 6;
 
 =head1 NAME
 
@@ -50,8 +68,8 @@ Lintian::Relation - Lintian operations on dependencies and relationships
 =head1 SYNOPSIS
 
     my $depends = Lintian::Relation->new('foo | bar, baz');
-    print "yes\n" if $depends->implies('baz');
-    print "no\n" if $depends->implies('foo');
+    print encode_utf8("yes\n") if $depends->implies('baz');
+    print encode_utf8("no\n") if $depends->implies('foo');
 
 =head1 DESCRIPTION
 
@@ -68,22 +86,21 @@ name is the predicate "a package of this name is available".  A package
 name with a version clause is the predicate "a package of this name that
 satisfies this version clause is available."  Architecture restrictions,
 as specified in Policy for build dependencies, are supported and also
-checked in the implication logic unless the new_noarch() constructor is
-used.  With that constructor, architecture restrictions are ignored.
+checked in the implication logic unless the new_norestriction()
+constructor is used.  With that constructor, architecture restrictions
+are ignored.
 
-=head1 CLASS METHODS
+=head1 INSTANCE METHODS
 
 =over 4
 
-=item new(RELATION)
+=item trunk
 
-Creates a new Lintian::Relation object corresponding to the parsed
-relationship RELATION.  This object can then be used to ask questions
-about that relationship.  RELATION may be C<undef> or the empty string, in
-which case the returned Lintian::Relation object is empty (always
-satisfied).
+=cut
 
-=item parse_element
+has trunk => (is => 'rw', default => sub { ['AND'] });
+
+=item create_element
 
 =cut
 
@@ -91,10 +108,11 @@ satisfied).
 # relationship into the parsed form used for later processing.  We permit
 # substvars to be used as package names so that we can use these routines with
 # the unparsed debian/control file.
-sub parse_element {
-    my ($class, $element) = @_;
+sub create_element {
+    my ($string) = @_;
+
     if (
-        not $element =~ /
+        $string !~ m{
         ^\s*                            # skip leading whitespace
         (                               # package name or substvar (1)
          (?:                            #  start of the name
@@ -111,7 +129,7 @@ sub parse_element {
         (?:[:]([a-z0-9-]+))?            # optional Multi-arch arch specification (2)
         (?:                             # start of optional version
          \s* \(                         # open parenthesis for version part
-         \s* (<<|<=|=|>=|>>|<|>)        # relation part (3)
+         \s* (<<|<=|>=|>>|[=<>])        # relation part (3)
          \s* ([^\)]+)                   # version (4)
          \s* \)                         # closing parenthesis
         )?                              # end of optional version
@@ -125,14 +143,15 @@ sub parse_element {
           \s* ([^,]+)                   # don't parse restrictions now
           \s* >                         # closing bracket
         )?                              # end of optional restriction
-    \s* $/x
+    \s* $}x
     ) {
-        # store the element as-is, so we can unparse it.
-        return ['PRED-UNPARSABLE', $element];
+        # store the element as-is, so we can reconstitute it later
+        return ['PRED-UNPARSABLE', $string];
     }
 
     my ($pkgname, $march, $relop, $relver, $bdarch, $restr)
       = ($1, $2, $3, $4, $5, $6);
+
     my @array;
     if (not defined($relop)) {
         # If there's no version, we don't need to do any further processing.
@@ -169,46 +188,43 @@ sub parse_element {
     return \@array;
 }
 
-# Singleton "empty-relation" object.  Since these objects are immutable,
-# there is no reason for having multiple "empty" objects.
-my $EMPTY_RELATION = bless(['AND'], 'Lintian::Relation');
+=item load (RELATION)
 
-# Create a new Lintian::Relation object, parsing the argument into our
-# internal format.
-sub new {
-    my ($class, $relation) = @_;
-    $relation = '' unless defined($relation);
-    my @result;
-    for my $element (split(/\s*,\s*/, $relation)) {
-        next if $element eq '';
-        my @alternatives;
-        for my $alternative (split(/\s*\|\s*/, $element)) {
-            my $dep = $class->parse_element($alternative);
-            next if not $dep;
-            push(@alternatives, $dep);
-        }
-        if (@alternatives == 1) {
-            push(@result, @alternatives);
-        } else {
-            push(@result, ['OR', @alternatives]);
-        }
+Creates a new Lintian::Relation object corresponding to the parsed
+relationship RELATION.  This object can then be used to ask questions
+about that relationship.  RELATION may be C<undef> or the empty string, in
+which case the returned Lintian::Relation object is empty (always
+satisfied).
+
+=cut
+
+sub load {
+    my ($self, $condition) = @_;
+
+    $condition //= $EMPTY;
+
+    my @trunk = ('AND');
+
+    my @requirements = grep { length } split(/\s*,\s*/, $condition);
+    for my $requirement (@requirements) {
+
+        my @alternatives = split(/\s*\|\s*/, $requirement);
+        my @elements
+          = grep { defined } map { create_element($_) } @alternatives;
+
+        push(@trunk, @elements)
+          if @elements == 1;
+
+        push(@trunk, ['OR', @elements])
+          if @elements > 1;
     }
 
-    if ($class eq 'Lintian::Relation') {
-        return $EMPTY_RELATION if not @result;
-    }
+    $self->trunk(\@trunk);
 
-    my $self;
-    if (@result == 1) {
-        $self = $result[0];
-    } else {
-        $self = ['AND', @result];
-    }
-    bless($self, $class);
     return $self;
 }
 
-=item new_norestriction(RELATION)
+=item load_norestriction (RELATION)
 
 Creates a new Lintian::Relation object corresponding to the parsed
 relationship RELATION, ignoring architecture restrictions and restriction
@@ -223,26 +239,22 @@ Lintian::Relation object is empty (always satisfied).
 
 =cut
 
-sub new_norestriction {
-    my ($class, $relation) = @_;
-    $relation = '' unless defined($relation);
-    $relation =~ s/\[[^,\]]*\]//g;
+sub load_norestriction {
+    my ($self, $condition) = @_;
+
+    $condition //= $EMPTY;
+
+    $condition =~ s/\[[^,\]]*\]//g;
+
     # we have to make sure that the following does not match the less than
     # sign from a version comparison. We do this by doing a negative lookahead
     # and a negative lookbehind for the "opening" triangular bracket
-    $relation =~ s/(?<!<)<(?![<=])[^,]*>//g;
-    return $class->new($relation);
+    $condition =~ s/(?<!<)<(?![<=])[^,]*>//g;
+
+    return $self->load($condition);
 }
 
-=item new_noarch(RELATION)
-
-An alias for new_norestriction.
-
-=cut
-
-*new_noarch = \&new_norestriction;
-
-=item and(RELATION, ...)
+=item logical_and(RELATION, ...)
 
 Creates a new Lintian::Relation object produced by AND'ing all the
 relations together.  Semantically it is the similar to:
@@ -254,47 +266,44 @@ are Lintian::Relation objects already.
 
 =cut
 
-sub and {
-    my ($class, @args) = @_;
-    my (@result, $last_rel, $rels);
-    foreach my $arg (@args) {
-        my $rel = $arg;
-        unless ($arg && ref $arg eq 'Lintian::Relation') {
-            # Optimize out empty entries.
-            next unless $arg;
-            $rel = Lintian::Relation->new($arg);
-        }
-        next if $rel->empty;
-        ++$rels;
-        $last_rel = $rel;
-        if ($rel->[0] eq 'AND') {
-            my @r = @$rel;
-            push @result, @r[1..$#r];
+sub logical_and {
+    my ($self, @conditions) = @_;
+
+    my @tree = ('AND');
+
+    # make sure to add $self
+    for my $condition (@conditions, $self) {
+
+        my $relation;
+
+        if (ref $condition eq $EMPTY) {
+            # allow string conditions
+            $relation = Lintian::Relation->new->load($condition);
+
         } else {
-            push @result, $rel;
+            $relation = $condition;
+        }
+
+        next
+          if $relation->is_empty;
+
+        if (   $tree[$BRANCH_TYPE] eq 'AND'
+            && $relation->trunk->[$BRANCH_TYPE] eq 'AND') {
+
+            my @anded = @{$relation->trunk};
+            shift @anded;
+            push(@tree, @anded);
+
+        } else {
+            push(@tree, $relation->trunk);
         }
     }
 
-    if ($class eq 'Lintian::Relation') {
-        return $EMPTY_RELATION if not @result;
-        return $last_rel if $rels == 1;
-    }
+    my $created = Lintian::Relation->new;
+    $created->trunk(\@tree);
 
-    my $self;
-    if (@result == 1) {
-        $self = $result[0];
-    } else {
-        $self = ['AND', @result];
-    }
-    bless($self, $class);
-    return $self;
+    return $created;
 }
-
-=back
-
-=head1 INSTANCE METHODS
-
-=over 4
 
 =item duplicates()
 
@@ -311,10 +320,9 @@ implication may not hold.
 sub duplicates {
     my ($self) = @_;
 
-    # There are no duplicates unless the top-level relationship is AND.
-    if ($self->[0] ne 'AND') {
-        return ();
-    }
+    # there are no duplicates unless the top-level relationship is AND.
+    return ()
+      unless $self->trunk->[$BRANCH_TYPE] eq 'AND';
 
     # The logic here is a bit complex in order to merge sets of duplicate
     # dependencies.  We want foo (<< 2), foo (>> 1), foo (= 1.5) to end up as
@@ -328,29 +336,47 @@ sub duplicates {
     # the missing one of the pair to the existing set rather than creating a
     # new one.
     my (%dups, %seen);
-    for (my $i = 1; $i < @$self; $i++) {
-        my $self_i = $self->[$i];
-        for (my $j = $i + 1; $j < @$self; $j++) {
-            my $self_j = $self->[$j];
-            my $forward = $self->implies_array($self_i, $self_j);
-            my $reverse = $self->implies_array($self_j, $self_i);
+
+    my @remaining = @{$self->trunk};
+
+    # discard AND identifier
+    shift @remaining;
+    my $i = 1;
+
+    while (@remaining > 1) {
+
+        my $branch_i = shift @remaining;
+        my $j = $i + 1;
+
+        # run against all others
+        for my $branch_j (@remaining) {
+
+            my $forward = implies_array($branch_i, $branch_j);
+            my $reverse = implies_array($branch_j, $branch_i);
 
             if ($forward or $reverse) {
-                my $first = $self->unparse($self_i);
-                my $second = $self->unparse($self_j);
-                if ($seen{$first}) {
-                    $dups{$seen{$first}}{$second} = $j;
-                    $seen{$second} = $seen{$first};
-                } elsif ($seen{$second}) {
-                    $dups{$seen{$second}}{$first} = $i;
-                    $seen{$first} = $seen{$second};
+                my $one = $self->to_string($branch_i);
+                my $two = $self->to_string($branch_j);
+
+                if ($seen{$one}) {
+                    $dups{$seen{$one}}{$two} = $j;
+                    $seen{$two} = $seen{$one};
+
+                } elsif ($seen{$two}) {
+                    $dups{$seen{$two}}{$one} = $i;
+                    $seen{$one} = $seen{$two};
+
                 } else {
-                    $dups{$first} ||= {};
-                    $dups{$first}{$second} = $j;
-                    $seen{$second} = $first;
+                    $dups{$one} ||= {};
+                    $dups{$one}{$two} = $j;
+                    $seen{$two} = $one;
                 }
             }
+        } continue {
+            $j++;
         }
+    } continue {
+        $i++;
     }
 
     # The sort maintains the original order in which we encountered the
@@ -361,31 +387,19 @@ sub duplicates {
     } keys %dups;
 }
 
-=item restriction_less()
+=item restriction_less
 
-Returns a restriction-less variant of this relation (or this relation
-object if it has no restrictions).
+Returns a restriction-less variant of this relation.
 
 =cut
 
 sub restriction_less {
     my ($self) = @_;
-    my @worklist = ($self);
-    my $has_restrictions = 0;
-    while (my $current = pop(@worklist)) {
-        my $rel_type = $current->[0];
-        if ($rel_type eq 'PRED') {
-            if (defined($current->[4]) or defined($current->[6])) {
-                $has_restrictions = 1;
-                last;
-            }
-            next;
-        }
-        next if $rel_type eq 'PRED-UNPARSABLE';
-        push(@worklist, @$current[1 .. $#$current]);
-    }
-    return $self if not $has_restrictions;
-    return Lintian::Relation->new_norestriction($self->unparse);
+
+    my $unrestricted
+      = Lintian::Relation->new->load_norestriction($self->to_string);
+
+    return $unrestricted;
 }
 
 =item implies(RELATION)
@@ -396,8 +410,8 @@ RELATION may be either a string or another Lintian::Relation object.
 
 By default, architecture restrictions are honored in RELATION if it is a
 string.  If architecture restrictions should be ignored in RELATION,
-create a Lintian::Relation object with new_noarch() and pass that in as
-RELATION instead of the string.
+create a Lintian::Relation object with new_norestriction() and pass that
+in as RELATION instead of the string.
 
 =item implies_element
 
@@ -411,10 +425,12 @@ RELATION instead of the string.
 # actually implies not q), return 0.  Otherwise, return undef.  The 0 return
 # is used by implies_element_inverse.
 sub implies_element {
-    my ($self, $p, $q) = @_;
+    my ($p, $q) = @_;
 
     # If the names don't match, there is no relationship between them.
-    return if $$p[1] ne $$q[1];
+
+    return undef
+      if $p->[$NAME] ne $q->[$NAME];
 
     # the restriction formula forms a disjunctive normal form expression one
     # way to check whether A <dnf1> implies A <dnf2> is to check:
@@ -434,13 +450,18 @@ sub implies_element {
     #
     # FIXME: we are not doing this check yet so if we encounter a dependency
     # with build profiles we assume that one does not imply the other:
-    return if defined $$p[6] or defined $$q[6];
+
+    return undef
+      if defined $p->[$RESTRICTIONS]
+      || defined $q->[$RESTRICTIONS];
 
     # If the names match, then the only difference is in the architecture or
     # version clauses.  First, check architecture.  The architectures for p
     # must be a superset of the architectures for q.
-    my @p_arches = split(' ', defined($$p[4]) ? $$p[4] : '');
-    my @q_arches = split(' ', defined($$q[4]) ? $$q[4] : '');
+    my @p_arches = split($SPACE,
+        defined($p->[$BD_ARCHITECTURE]) ? $p->[$BD_ARCHITECTURE] : $EMPTY);
+    my @q_arches = split($SPACE,
+        defined($q->[$BD_ARCHITECTURE]) ? $q->[$BD_ARCHITECTURE] : $EMPTY);
     if (@p_arches || @q_arches) {
         my $p_arch_neg = @p_arches && $p_arches[0] =~ /^!/;
         my $q_arch_neg = @q_arches && $q_arches[0] =~ /^!/;
@@ -454,7 +475,8 @@ sub implies_element {
         # If q has no arches, it is a superset of p and there are no useful
         # implications.
         elsif (not @q_arches) {
-            return;
+
+            return undef;
         }
 
         # Both have arches.  If neither are negated, we know nothing useful
@@ -465,7 +487,9 @@ sub implies_element {
             for my $arch (@q_arches) {
                 $subset = 0 unless $p_arches{$arch};
             }
-            return unless $subset;
+
+            return undef
+              unless $subset;
         }
 
         # If both are negated, we know nothing useful unless p is a subset of
@@ -477,13 +501,16 @@ sub implies_element {
             for my $arch (@p_arches) {
                 $subset = 0 unless $q_arches{$arch};
             }
-            return unless $subset;
+
+            return undef
+              unless $subset;
         }
 
         # If q is negated and p isn't, we'd need to know the full list of
         # arches to know if there's any relationship, so bail.
         elsif (not $p_arch_neg and $q_arch_neg) {
-            return;
+
+            return undef;
         }
 
         # If p is negated and q isn't, q is a subset of p iff none of the
@@ -494,7 +521,9 @@ sub implies_element {
             for my $arch (@p_arches) {
                 $subset = 0 if $q_arches{substr($arch, 1)};
             }
-            return unless $subset;
+
+            return undef
+              unless $subset;
         }
     }
 
@@ -514,11 +543,17 @@ sub implies_element {
     # "pkg:X" (for any valid value of X) seems to imply "pkg:any",
     # fixing that is a TODO (because version clauses complicates
     # matters)
-    if (defined $$p[5]) {
+    if (defined $p->[$MACHINE_ARCHITECTURE]) {
         # Assume the identity to hold
-        return unless defined $$q[5] and $$p[5] eq $$q[5];
-    } elsif (defined $$q[5]) {
-        return unless $$q[5] eq 'any';
+        return undef
+          unless defined $q->[$MACHINE_ARCHITECTURE]
+          && $p->[$MACHINE_ARCHITECTURE] eq $q->[$MACHINE_ARCHITECTURE];
+
+    } elsif (defined $q->[$MACHINE_ARCHITECTURE]) {
+
+        return undef
+          unless $q->[$MACHINE_ARCHITECTURE] eq 'any';
+
         # pkg:any implies pkg (but the reverse is not true).
         #
         # TODO: Review this case.  Are there cases where Q cannot
@@ -530,81 +565,83 @@ sub implies_element {
     # than q's, or is equivalent.
 
     # If q has no version clause, then p's clause is always stronger.
-    return 1 if not defined $$q[2];
+    return 1
+      unless defined $q->[$OPERATOR];
 
     # If q does have a version clause, then p must also have one to have any
     # useful relationship.
-    return if not defined $$p[2];
+    return undef
+      unless defined $p->[$OPERATOR];
 
     # q wants an exact version, so p must provide that exact version.  p
     # disproves q if q's version is outside the range enforced by p.
-    if ($$q[2] eq '=') {
-        if ($$p[2] eq '<<') {
-            return versions_lte($$p[3], $$q[3]) ? 0 : undef;
-        } elsif ($$p[2] eq '<=') {
-            return versions_lt($$p[3], $$q[3]) ? 0 : undef;
-        } elsif ($$p[2] eq '>>') {
-            return versions_gte($$p[3], $$q[3]) ? 0 : undef;
-        } elsif ($$p[2] eq '>=') {
-            return versions_gt($$p[3], $$q[3]) ? 0 : undef;
-        } elsif ($$p[2] eq '=') {
-            return versions_equal($$p[3], $$q[3]) ? 1 : 0;
+    if ($q->[$OPERATOR] eq $EQUAL) {
+        if ($p->[$OPERATOR] eq '<<') {
+            return versions_lte($p->[$VERSION], $q->[$VERSION]) ? 0 : undef;
+        } elsif ($p->[$OPERATOR] eq '<=') {
+            return versions_lt($p->[$VERSION], $q->[$VERSION]) ? 0 : undef;
+        } elsif ($p->[$OPERATOR] eq '>>') {
+            return versions_gte($p->[$VERSION], $q->[$VERSION]) ? 0 : undef;
+        } elsif ($p->[$OPERATOR] eq '>=') {
+            return versions_gt($p->[$VERSION], $q->[$VERSION]) ? 0 : undef;
+        } elsif ($p->[$OPERATOR] eq $EQUAL) {
+            return versions_equal($p->[$VERSION], $q->[$VERSION]) ? 1 : 0;
         }
     }
 
     # A greater than clause may disprove a less than clause.  Otherwise, if
     # p's clause is <<, <=, or =, the version must be <= q's to imply q.
-    if ($$q[2] eq '<=') {
-        if ($$p[2] eq '>>') {
-            return versions_gte($$p[3], $$q[3]) ? 0 : undef;
-        } elsif ($$p[2] eq '>=') {
-            return versions_gt($$p[3], $$q[3]) ? 0 : undef;
-        } elsif ($$p[2] eq '=') {
-            return versions_lte($$p[3], $$q[3]) ? 1 : 0;
+    if ($q->[$OPERATOR] eq '<=') {
+        if ($p->[$OPERATOR] eq '>>') {
+            return versions_gte($p->[$VERSION], $q->[$VERSION]) ? 0 : undef;
+        } elsif ($p->[$OPERATOR] eq '>=') {
+            return versions_gt($p->[$VERSION], $q->[$VERSION]) ? 0 : undef;
+        } elsif ($p->[$OPERATOR] eq $EQUAL) {
+            return versions_lte($p->[$VERSION], $q->[$VERSION]) ? 1 : 0;
         } else {
-            return versions_lte($$p[3], $$q[3]) ? 1 : undef;
+            return versions_lte($p->[$VERSION], $q->[$VERSION]) ? 1 : undef;
         }
     }
 
     # Similar, but << is stronger than <= so p's version must be << q's
     # version if the p relation is <= or =.
-    if ($$q[2] eq '<<') {
-        if ($$p[2] eq '>>' or $$p[2] eq '>=') {
-            return versions_gte($$p[3], $$p[3]) ? 0 : undef;
-        } elsif ($$p[2] eq '<<') {
-            return versions_lte($$p[3], $$q[3]) ? 1 : undef;
-        } elsif ($$p[2] eq '=') {
-            return versions_lt($$p[3], $$q[3]) ? 1 : 0;
+    if ($q->[$OPERATOR] eq '<<') {
+        if ($p->[$OPERATOR] eq '>>' || $p->[$OPERATOR] eq '>=') {
+            return versions_gte($p->[$VERSION], $p->[$VERSION]) ? 0 : undef;
+        } elsif ($p->[$OPERATOR] eq '<<') {
+            return versions_lte($p->[$VERSION], $q->[$VERSION]) ? 1 : undef;
+        } elsif ($p->[$OPERATOR] eq $EQUAL) {
+            return versions_lt($p->[$VERSION], $q->[$VERSION]) ? 1 : 0;
         } else {
-            return versions_lt($$p[3], $$q[3]) ? 1 : undef;
+            return versions_lt($p->[$VERSION], $q->[$VERSION]) ? 1 : undef;
         }
     }
 
     # Same logic as above, only inverted.
-    if ($$q[2] eq '>=') {
-        if ($$p[2] eq '<<') {
-            return versions_lte($$p[3], $$q[3]) ? 0 : undef;
-        } elsif ($$p[2] eq '<=') {
-            return versions_lt($$p[3], $$q[3]) ? 0 : undef;
-        } elsif ($$p[2] eq '=') {
-            return versions_gte($$p[3], $$q[3]) ? 1 : 0;
+    if ($q->[$OPERATOR] eq '>=') {
+        if ($p->[$OPERATOR] eq '<<') {
+            return versions_lte($p->[$VERSION], $q->[$VERSION]) ? 0 : undef;
+        } elsif ($p->[$OPERATOR] eq '<=') {
+            return versions_lt($p->[$VERSION], $q->[$VERSION]) ? 0 : undef;
+        } elsif ($p->[$OPERATOR] eq $EQUAL) {
+            return versions_gte($p->[$VERSION], $q->[$VERSION]) ? 1 : 0;
         } else {
-            return versions_gte($$p[3], $$q[3]) ? 1 : undef;
+            return versions_gte($p->[$VERSION], $q->[$VERSION]) ? 1 : undef;
         }
     }
-    if ($$q[2] eq '>>') {
-        if ($$p[2] eq '<<' or $$p[2] eq '<=') {
-            return versions_lte($$p[3], $$q[3]) ? 0 : undef;
-        } elsif ($$p[2] eq '>>') {
-            return versions_gte($$p[3], $$q[3]) ? 1 : undef;
-        } elsif ($$p[2] eq '=') {
-            return versions_gt($$p[3], $$q[3]) ? 1 : 0;
+    if ($q->[$OPERATOR] eq '>>') {
+        if ($p->[$OPERATOR] eq '<<' || $p->[$OPERATOR] eq '<=') {
+            return versions_lte($p->[$VERSION], $q->[$VERSION]) ? 0 : undef;
+        } elsif ($p->[$OPERATOR] eq '>>') {
+            return versions_gte($p->[$VERSION], $q->[$VERSION]) ? 1 : undef;
+        } elsif ($p->[$OPERATOR] eq $EQUAL) {
+            return versions_gt($p->[$VERSION], $q->[$VERSION]) ? 1 : 0;
         } else {
-            return versions_gt($$p[3], $$q[3]) ? 1 : undef;
+            return versions_gt($p->[$VERSION], $q->[$VERSION]) ? 1 : undef;
         }
     }
 
-    return;
+    return undef;
 }
 
 =item implies_array
@@ -614,33 +651,33 @@ sub implies_element {
 # This internal function does the heavy of AND, OR, and NOT logic.  It expects
 # two references to arrays instead of an object and a relation.
 sub implies_array {
-    my ($self, $p, $q) = @_;
+    my ($p, $q) = @_;
     my $i;
-    my $q0 = $q->[0];
-    my $p0 = $p->[0];
+    my $q0 = $q->[$BRANCH_TYPE];
+    my $p0 = $p->[$BRANCH_TYPE];
     if ($q0 eq 'PRED') {
         if ($p0 eq 'PRED') {
-            return $self->implies_element($p, $q);
+            return implies_element($p, $q);
         } elsif ($p0 eq 'AND') {
             $i = 1;
-            while ($i < @$p) {
-                return 1 if $self->implies_array($p->[$i++], $q);
+            while ($i < @{$p}) {
+                return 1 if implies_array($p->[$i++], $q);
             }
             return 0;
         } elsif ($p0 eq 'OR') {
             $i = 1;
-            while ($i < @$p) {
-                return 0 if not $self->implies_array($p->[$i++], $q);
+            while ($i < @{$p}) {
+                return 0 if not implies_array($p->[$i++], $q);
             }
             return 1;
         } elsif ($p0 eq 'NOT') {
-            return $self->implies_array_inverse($p->[1], $q);
+            return implies_array_inverse($p->[1], $q);
         }
     } elsif ($q0 eq 'AND') {
         # Each of q's clauses must be deduced from p.
         $i = 1;
-        while ($i < @$q) {
-            return 0 if not $self->implies_array($p, $q->[$i++]);
+        while ($i < @{$q}) {
+            return 0 if not implies_array($p, $q->[$i++]);
         }
         return 1;
     } elsif ($q0 eq 'OR') {
@@ -659,51 +696,62 @@ sub implies_array {
         # a|b|c, since a|b doesn't satisfy any of a, b, or c in isolation.
         if ($p0 eq 'PRED') {
             $i = 1;
-            while ($i < @$q) {
-                return 1 if $self->implies_array($p, $q->[$i++]);
+            while ($i < @{$q}) {
+                return 1 if implies_array($p, $q->[$i++]);
             }
             return 0;
         } elsif ($p0 eq 'AND') {
             $i = 1;
-            while ($i < @$p) {
-                return 1 if $self->implies_array($p->[$i++], $q);
+            while ($i < @{$p}) {
+                return 1 if implies_array($p->[$i++], $q);
             }
             return 0;
         } elsif ($p0 eq 'OR') {
-            for ($i = 1; $i < @$p; $i++) {
-                my $j = 1;
-                my $satisfies = 0;
-                while ($j < @$q) {
-                    if ($self->implies_array($p->[$i], $q->[$j++])) {
-                        $satisfies = 1;
-                        last;
-                    }
-                }
-                return 0 unless $satisfies;
+
+            my @p_branches = @{$p};
+            shift @p_branches;
+
+            my @q_branches = @{$q};
+            shift @q_branches;
+
+            for my $p_branch (@p_branches) {
+
+                return 0
+                  unless any { implies_array($p_branch, $_) }
+                @q_branches;
             }
+
             return 1;
-        } elsif ($p->[0] eq 'NOT') {
-            return $self->implies_array_inverse($p->[1], $q);
+
+        } elsif ($p->[$BRANCH_TYPE] eq 'NOT') {
+            return implies_array_inverse($p->[1], $q);
         }
     } elsif ($q0 eq 'NOT') {
         if ($p0 eq 'NOT') {
-            return $self->implies_array($q->[1], $p->[1]);
+            return implies_array($q->[1], $p->[1]);
         }
-        return $self->implies_array_inverse($p, $q->[1]);
+        return implies_array_inverse($p, $q->[1]);
     } elsif ($q0 eq 'PRED-UNPARSABLE') {
         # Assume eqv. holds for unparsable elements.
         return 1 if $p0 eq $q0 and $p->[1] eq $q->[1];
     }
-    return;
+    return undef;
 }
 
 # The public interface.
 sub implies {
-    my ($self, $relation) = @_;
-    if (ref($relation) ne 'Lintian::Relation') {
-        $relation = Lintian::Relation->new($relation);
+    my ($self, $condition) = @_;
+
+    my $relation;
+    if (ref $condition eq $EMPTY) {
+        # allow string conditions
+        $relation = Lintian::Relation->new->load($condition);
+
+    } else {
+        $relation = $condition;
     }
-    return $self->implies_array($self, $relation) // 0;
+
+    return implies_array($self->trunk, $relation->trunk) // 0;
 }
 
 =item implies_inverse(RELATION)
@@ -715,8 +763,8 @@ Lintian::Relation object.
 
 As with implies(), by default, architecture restrictions are honored in
 RELATION if it is a string.  If architecture restrictions should be
-ignored in RELATION, create a Lintian::Relation object with new_noarch()
-and pass that in as RELATION instead of the string.
+ignored in RELATION, create a Lintian::Relation object with
+new_norestriction() and pass that in as RELATION instead of the string.
 
 =item implies_element_inverse
 
@@ -729,10 +777,12 @@ and pass that in as RELATION instead of the string.
 # implies not a.)  Due to the return value of implies_element(), we can let it
 # do most of the work.
 sub implies_element_inverse {
-    my ($self, $p, $q) = @_;
-    my $result = $self->implies_element($p, $q);
+    my ($p, $q) = @_;
+    my $result = implies_element($p, $q);
 
-    return if not defined($result);
+    return undef
+      if not defined($result);
+
     return $result ? 0 : 1;
 }
 
@@ -745,59 +795,68 @@ sub implies_element_inverse {
 # returns true iff the falsehood of the second can be deduced from the truth
 # of the first.
 sub implies_array_inverse {
-    my ($self, $p, $q) = @_;
+    my ($p, $q) = @_;
     my $i;
-    my $q0 = $q->[0];
-    my $p0 = $p->[0];
+    my $q0 = $q->[$BRANCH_TYPE];
+    my $p0 = $p->[$BRANCH_TYPE];
     if ($q0 eq 'PRED') {
         if ($p0 eq 'PRED') {
-            return $self->implies_element_inverse($p, $q);
+            return implies_element_inverse($p, $q);
         } elsif ($p0 eq 'AND') {
             # q's falsehood can be deduced from any of p's clauses
             $i = 1;
-            while ($i < @$p) {
-                return 1 if $self->implies_array_inverse($$p[$i++], $q);
+            while ($i < @{$p}) {
+                return 1 if implies_array_inverse($p->[$i++], $q);
             }
             return 0;
         } elsif ($p0 eq 'OR') {
             # q's falsehood must be deduced from each of p's clauses
             $i = 1;
-            while ($i < @$p) {
-                return 0 if not $self->implies_array_inverse($$p[$i++], $q);
+            while ($i < @{$p}) {
+                return 0 if not implies_array_inverse($p->[$i++], $q);
             }
             return 1;
         } elsif ($p0 eq 'NOT') {
-            return $self->implies_array($q, $$p[1]);
+            return implies_array($q, $p->[1]);
         }
     } elsif ($q0 eq 'AND') {
         # Any of q's clauses must be falsified by p.
         $i = 1;
-        while ($i < @$q) {
-            return 1 if $self->implies_array_inverse($p, $$q[$i++]);
+        while ($i < @{$q}) {
+            return 1 if implies_array_inverse($p, $q->[$i++]);
         }
         return 0;
     } elsif ($q0 eq 'OR') {
         # Each of q's clauses must be falsified by p.
         $i = 1;
-        while ($i < @$q) {
-            return 0 if not $self->implies_array_inverse($p, $$q[$i++]);
+        while ($i < @{$q}) {
+            return 0 if not implies_array_inverse($p, $q->[$i++]);
         }
         return 1;
     } elsif ($q0 eq 'NOT') {
-        return $self->implies_array($p, $$q[1]);
+        return implies_array($p, $q->[1]);
     }
+
+    return 0;
 }
 
 # The public interface.
 sub implies_inverse {
-    my ($self, $relation) = @_;
-    if (ref($relation) ne 'Lintian::Relation') {
-        $relation = Lintian::Relation->new($relation);
+    my ($self, $condition) = @_;
+
+    my $relation;
+    if (ref $condition eq $EMPTY) {
+        # allow string conditions
+        $relation = Lintian::Relation->new->load($condition);
+
+    } else {
+        $relation = $condition;
     }
-    return $self->implies_array_inverse($self, $relation) // 0;
+
+    return implies_array_inverse($self->trunk, $relation->trunk) // 0;
 }
 
-=item unparse()
+=item to_string
 
 Returns the textual form of a relationship.  This converts the internal
 form back into the textual representation and returns that, not the
@@ -807,43 +866,58 @@ internal failures (such as an object in an unexpected format).
 =cut
 
 # The second argument isn't part of the public API.  It's a partial relation
-# that's not a blessed object and is used by unparse() internally so that it
+# that's not a blessed object and is used by to_string() internally so that it
 # can recurse.
 #
 # We also support a NOT predicate.  This currently isn't ever generated by a
 # regular relation, but it may someday be useful.
-sub unparse {
-    my ($self, $partial) = @_;
-    my $relation = defined($partial) ? $partial : $self;
-    my $rel_type = $relation->[0];
-    if ($rel_type eq 'PRED') {
-        my $text = $relation->[1];
-        if (defined $relation->[5]) {
-            $text .= ":$relation->[5]";
-        }
-        if (defined $relation->[2]) {
-            $text .= " ($relation->[2] $relation->[3])";
-        }
-        if (defined $relation->[4]) {
-            $text .= " [$relation->[4]]";
-        }
-        if (defined $relation->[6]) {
-            $text .= " <$relation->[6]>";
-        }
-        return $text;
-    } elsif ($rel_type eq 'AND' || $rel_type eq 'OR') {
-        my $separator = ($relation->[0] eq 'AND') ? ', ' : ' | ';
-        return join($separator,
-            map {$self->unparse($_);} @$relation[1 .. $#$relation]);
-    } elsif ($rel_type eq 'NOT') {
-        return '! ' . $self->unparse($relation->[1]);
-    } elsif ($rel_type eq 'PRED-UNPARSABLE') {
-        # Return the original value
-        return $relation->[1];
+sub to_string {
+    my ($self, $branch) = @_;
+
+    my $tree = $branch // $self->trunk;
+
+    my $text;
+    if ($tree->[$BRANCH_TYPE] eq 'PRED') {
+
+        $text = $tree->[$NAME];
+
+        $text .= $COLON . $tree->[$MACHINE_ARCHITECTURE]
+          if length $tree->[$MACHINE_ARCHITECTURE];
+
+        $text
+          .= $SPACE
+          . $LEFT_PARENS
+          . $tree->[$OPERATOR]
+          . $SPACE
+          . $tree->[$VERSION]
+          . $RIGHT_PARENS
+          if length $tree->[$OPERATOR];
+
+        $text
+          .= $SPACE . $LEFT_SQUARE . $tree->[$BD_ARCHITECTURE] . $RIGHT_SQUARE
+          if length $tree->[$BD_ARCHITECTURE];
+
+        $text .= $SPACE . $LEFT_ANGLE . $tree->[$RESTRICTIONS] . $RIGHT_ANGLE
+          if length $tree->[$RESTRICTIONS];
+
+    } elsif ($tree->[$BRANCH_TYPE] eq 'AND' || $tree->[$BRANCH_TYPE] eq 'OR') {
+
+        my $connector = ($tree->[$BRANCH_TYPE] eq 'AND') ? ', ' : ' | ';
+        my @separated = map { $self->to_string($_) } @{$tree}[1 .. $#{$tree}];
+        $text = join($connector, @separated);
+
+    } elsif ($tree->[$BRANCH_TYPE] eq 'NOT') {
+        $text = '! ' . $self->to_string($tree->[$NAME]);
+
+    } elsif ($tree->[$BRANCH_TYPE] eq 'PRED-UNPARSABLE') {
+        # return the original value
+        $text = $tree->[$NAME];
+
     } else {
-        require Carp;
-        Carp::confess("Case $relation->[0] not implemented");
+        confess encode_utf8("Case $tree->[$BRANCH_TYPE] not implemented");
     }
+
+    return $text;
 }
 
 =item matches (REGEX[, WHAT])
@@ -920,6 +994,19 @@ sub matches {
     return $self->visit(sub { m/$regex/ }, $what | VISIT_STOP_FIRST_MATCH);
 }
 
+=item equals
+
+Same for full-string matches. Satisfies the perlcritic policy
+RegularExpressions::ProhibitFixedStringMatches.
+
+=cut
+
+sub equals {
+    my ($self, $string, $what) = @_;
+    $what //= VISIT_PRED_NAME;
+    return $self->visit(sub { $_ eq $string }, $what | VISIT_STOP_FIRST_MATCH);
+}
+
 =item visit (CODE[, FLAGS])
 
 Visit clauses or predicates of this relation.  Each clause or
@@ -940,12 +1027,12 @@ architecture part(s) are left out (if any).
 =item VISIT_PRED_FULL
 
 The full predicates are visited in turn.  The predicate will be
-normalized (by L</unparse>).
+normalized (by L</to_string>).
 
 =item VISIT_OR_CLAUSE_FULL
 
 CODE will be passed the full OR clauses of this relation.  The clauses
-will be normalized (by L</unparse>)
+will be normalized (by L</to_string>)
 
 Note: It will not visit the underlying predicates in the clause.
 
@@ -968,24 +1055,33 @@ relation).
 # internally so that it can recurse.
 
 sub visit {
-    my ($self, $code, $flags, $partial) = @_;
-    my $relation = $partial // $self;
-    my $rel_type = $relation->[0];
+    my ($self, $code, $flags, $branch) = @_;
+
+    my $tree = $branch // $self->trunk;
+    my $rel_type = $tree->[$BRANCH_TYPE];
+
     $flags //= 0;
+
     if ($rel_type eq 'PRED') {
-        my $against = $relation->[1];
-        $against = $self->unparse($relation) if $flags & VISIT_PRED_FULL;
+        my $against = $tree->[$NAME];
+        $against = $self->to_string($tree)
+          if $flags & VISIT_PRED_FULL;
+
         local $_ = $against;
         return scalar $code->($against);
+
     } elsif (($flags & VISIT_OR_CLAUSE_FULL) == VISIT_OR_CLAUSE_FULL
         and $rel_type eq 'OR') {
-        my $against = $self->unparse($relation);
+
+        my $against = $self->to_string($tree);
+
         local $_ = $against;
         return scalar $code->($against);
     } elsif ($rel_type eq 'AND'
         or $rel_type eq 'OR'
         or $rel_type eq 'NOT') {
-        for my $rel (@$relation[1 .. $#$relation]) {
+
+        for my $rel (@{$tree}[1 .. $#{$tree}]) {
             my $ret = scalar $self->visit($code, $flags, $rel);
             if ($ret && ($flags & VISIT_STOP_FIRST_MATCH)) {
                 return $ret;
@@ -993,18 +1089,23 @@ sub visit {
         }
         return 0;
     }
+
+    return 0;
 }
 
-=item empty
+=item is_empty
 
 Returns a truth value if this relation is empty (i.e. it contains no
 predicates).
 
 =cut
 
-sub empty {
+sub is_empty {
     my ($self) = @_;
-    return 1 if $self->[0] eq 'AND' and not $self->[1];
+
+    return 1
+      if $self->trunk->[$BRANCH_TYPE] eq 'AND' && !$self->trunk->[$NAME];
+
     return 0;
 }
 
@@ -1019,19 +1120,23 @@ sorted by said representation.
 
 sub unparsable_predicates {
     my ($self) = @_;
-    my @worklist = ($self);
+
+    my @worklist = ($self->trunk);
     my @unparsable;
+
     while (my $current = pop(@worklist)) {
-        my $rel_type = $current->[0];
+        my $rel_type = $current->[$BRANCH_TYPE];
         next if $rel_type eq 'PRED';
         if ($rel_type eq 'PRED-UNPARSABLE') {
-            push(@unparsable, $current->[1]);
+            push(@unparsable, $current->[$NAME]);
             next;
         }
-        push(@worklist, @$current[1 .. $#$current]);
+        push(@worklist, @{$current}[1 .. $#{$current}]);
     }
-    @unparsable = sort(@unparsable);
-    return @unparsable;
+
+    my @sorted = sort @unparsable;
+
+    return @sorted;
 }
 
 =back

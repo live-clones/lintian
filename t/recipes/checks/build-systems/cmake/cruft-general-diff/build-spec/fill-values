@@ -1,0 +1,4 @@
+Testname: cruft-general-diff
+Skeleton: upload-non-native
+Source-Format: 1.0
+Description: Check for cruft added in the diff

@@ -1,6 +1,6 @@
 Tag: license-problem-non-free-img-lenna
 Severity: error
-Check: cruft
+Check: files/banned/lenna
 See-Also: https://en.wikipedia.org/wiki/Lenna, https://www.debian.org/vote/2012/vote_002, Bug#771191
 Explanation: The given source file is cropped from a Playboy centerfold.
  .

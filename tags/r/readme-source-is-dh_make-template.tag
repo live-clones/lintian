@@ -1,6 +1,6 @@
 Tag: readme-source-is-dh_make-template
 Severity: error
-Check: cruft
+Check: dh-make
 Explanation: The debian/README.source file appears to be an unmodified or insufficiently
  modified copy of the dh&lowbar;make template.
  .

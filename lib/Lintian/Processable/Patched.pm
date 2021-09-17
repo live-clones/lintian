@@ -22,22 +22,26 @@ package Lintian::Processable::Patched;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
+use Const::Fast;
 use Cwd;
+use List::SomeUtils qw(uniq);
 use IPC::Run3;
 use Path::Tiny;
+use Unicode::UTF8 qw(encode_utf8 decode_utf8);
 
 use Lintian::Index;
 use Lintian::Index::Item;
 
-use constant EMPTY => q{};
-use constant COLON => q{:};
-use constant SLASH => q{/};
-use constant NEWLINE => qq{\n};
-
 use Moo::Role;
 use namespace::clean;
+
+const my $COLON => q{:};
+const my $SLASH => q{/};
+const my $NEWLINE => qq{\n};
+
+const my $NO_UMASK => 0000;
+const my $WAIT_STATUS_SHIFT => 8;
 
 =head1 NAME
 
@@ -68,7 +72,7 @@ has patched => (
         my ($self) = @_;
 
         my $index = Lintian::Index->new;
-        $index->basedir($self->basedir . SLASH . 'unpacked');
+        $index->basedir($self->basedir . $SLASH . 'unpacked');
 
         # source packages can be unpacked anywhere; no anchored roots
         $index->anchored(0);
@@ -76,11 +80,11 @@ has patched => (
         path($index->basedir)->remove_tree
           if -d $index->basedir;
 
-        print "N: Using dpkg-source to unpack\n"
+        print encode_utf8("N: Using dpkg-source to unpack\n")
           if $ENV{'LINTIAN_DEBUG'};
 
         my $saved_umask = umask;
-        umask 0000;
+        umask $NO_UMASK;
 
         my @unpack_command= (
             qw(dpkg-source -q --no-check --extract),
@@ -91,14 +95,17 @@ has patched => (
         my $unpack_errors;
 
         run3(\@unpack_command, \undef, \undef, \$unpack_errors);
+        my $status = ($? >> $WAIT_STATUS_SHIFT);
 
-        my $status = ($? >> 8);
+        $unpack_errors = decode_utf8($unpack_errors)
+          if length $unpack_errors;
+
         if ($status) {
             my $message = "Non-zero status $status from @unpack_command";
-            $message .= COLON . NEWLINE . $unpack_errors
+            $message .= $COLON . $NEWLINE . $unpack_errors
               if length $unpack_errors;
 
-            die $message;
+            die encode_utf8($message);
         }
 
         umask $saved_umask;
@@ -106,7 +113,8 @@ has patched => (
         my $index_errors = $index->create_from_basedir;
 
         my $savedir = getcwd;
-        chdir($index->basedir);
+        chdir($index->basedir)
+          or die encode_utf8('Cannot change to directory ' . $index->basedir);
 
         # fix permissions
         my @permissions_command
@@ -115,10 +123,14 @@ has patched => (
 
         run3(\@permissions_command, \undef, \undef, \$permissions_errors);
 
-        chdir($savedir);
+        $permissions_errors = decode_utf8($permissions_errors)
+          if length $permissions_errors;
+
+        chdir($savedir)
+          or die encode_utf8("Cannot change to directory $savedir");
 
         $self->hint('unpack-message-for-source', $_)
-          for
+          for uniq
           split(/\n/, $unpack_errors . $index_errors . $permissions_errors);
 
         return $index;

@@ -1,6 +1,5 @@
 Testname: cruft-general-test-suite
 Test-Against:
- configure-generated-file-in-source
  source-contains-arch-control-dir
  source-contains-arch-inventory-file
  source-contains-bts-control-dir

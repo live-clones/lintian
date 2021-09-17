@@ -22,13 +22,21 @@ package Lintian::Reporting::ResourceManager;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Carp qw(croak);
+use Const::Fast;
 use File::Basename qw(basename);
 use File::Copy qw(copy);
+use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Util qw(get_file_digest);
+
+const my $SPACE => q{ };
+const my $SLASH => q{/};
+const my $EQUALS => q{=};
+
+const my $BASE64_UNIT => 4;
+const my $WIDELY_READABLE_FOLDER => oct(755);
 
 =head1 NAME
 
@@ -45,8 +53,8 @@ Lintian::Reporting::ResourceManager -- A simple resource manager for html_report
  $resMan->install_resource('path/to/my-image.png', { install_method => 'copy'} );
  # Move the resource
  $resMan->install_resource('path/to/generated-styles.css');
- print 'Image: ' . $resMan->resource_URL('my-image.png'), "\n";
- print 'CSS: ' . $resMan->resource_URL('generated-styles.css'), "\n";
+ print encode_utf8('Image: ' . $resMan->resource_url('my-image.png'), "\n");
+ print encode_utf8('CSS: ' . $resMan->resource_url('generated-styles.css'), "\n");
 
 =head1 DESCRIPTION
 
@@ -71,7 +79,7 @@ will be installed
 sub new {
     my ($class, %opts) = @_;
     my $self = {%opts,};
-    croak('Missing required parameter html_dir (or it is undef)')
+    croak encode_utf8('Missing required parameter html_dir (or it is undef)')
       if not defined $opts{'html_dir'};
     $self->{'_resource_cache'} = {};
     $self->{'_resource_integrity'} = {};
@@ -90,7 +98,7 @@ Installs RESOURCE into the html root.  The resource may be renamed
 (based on content etc.).
 
 Note that the basename of RESOURCE must be unique between all
-resources installed.  See L</resource_URL(RESOURCE_NAME)>.
+resources installed.  See L</resource_url(RESOURCE_NAME)>.
 
 If OPT is given, it must be a hashref with 0 or more of the following
 keys (and values).
@@ -126,9 +134,11 @@ sub install_resource {
     if ($opt && exists($opt->{'source_file'})) {
         $basename = $resource_name;
         $resource = $opt->{'source_file'};
-        if (index($basename, '/') > -1) {
-            croak(
-                join(' ',
+
+        if ($basename =~ m{ / }msx) {
+
+            croak encode_utf8(
+                join($SPACE,
                     qq(Resource "${resource_name}" must not contain "/"),
                     'when source_file is given'));
         }
@@ -140,35 +150,42 @@ sub install_resource {
     $install_name = $digest->clone->hexdigest;
     $b64digest = $digest->b64digest;
 
-    while (length($b64digest) % 4) {
-        $b64digest .= '=';
+    while (length($b64digest) % $BASE64_UNIT) {
+        $b64digest .= $EQUALS;
     }
 
-    croak("Resource name ${basename} already in use")
+    croak encode_utf8("Resource name ${basename} already in use")
       if defined($self->{'_resource_cache'}{$basename});
     if ($basename =~ m/^.+(\.[^\.]+)$/xsm) {
         my $ext = $1;
         $install_name .= $ext;
     }
-    mkdir($resource_root, 0755) if not -d $resource_root;
+
+    if (!-d $resource_root) {
+        mkdir($resource_root, $WIDELY_READABLE_FOLDER)
+          or die encode_utf8("Cannot mkdir $resource_root");
+    }
+
+    my $target_file = "$resource_root/$install_name";
     if ($method eq 'move') {
-        rename($resource, "$resource_root/$install_name");
+        rename($resource, $target_file)
+          or die encode_utf8("Cannot rename $resource to $target_file");
+
     } elsif ($method eq 'copy') {
-        copy($resource, "$resource_root/$install_name")
-          or
-          croak("Cannot copy $resource to $resource_root/$install_name: $!");
+        copy($resource, $target_file)
+          or croak encode_utf8("Cannot copy $resource to $target_file: $!");
     } else {
-        croak(
-            join(' ',
+        croak encode_utf8(
+            join($SPACE,
                 "Unknown install method ${method}",
                 '- please use "move" or "copy"'));
     }
-    $self->{'_resource_cache'}{$basename} = "resources/$install_name";
+    $self->{'_resource_cache'}{$basename} = $target_file;
     $self->{'_resource_integrity'}{$basename} = "sha256-${b64digest}";
     return;
 }
 
-=item resource_URL(RESOURCE_NAME)
+=item resource_url(RESOURCE_NAME)
 
 Returns the path (relative to the HTML root) to a resource installed
 via L</install_resource(RESOURCE)>, where RESOURCE_NAME is the
@@ -176,9 +193,9 @@ basename of the path given to install_resource.
 
 =cut
 
-sub resource_URL {
+sub resource_url {
     my ($self, $resource_name) = @_;
-    croak("Unknown resource $resource_name")
+    croak encode_utf8("Unknown resource $resource_name")
       if not defined($self->{'_resource_cache'}{$resource_name});
     return $self->{'_resource_cache'}{$resource_name};
 }
@@ -192,7 +209,7 @@ Return a string that is valid in the "integrity" field of a C<< <link>
 
 sub resource_integrity_value {
     my ($self, $resource_name) = @_;
-    croak("Unknown resource $resource_name")
+    croak encode_utf8("Unknown resource $resource_name")
       if not defined($self->{'_resource_integrity'}{$resource_name});
     return $self->{'_resource_integrity'}{$resource_name};
 }

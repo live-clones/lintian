@@ -1,0 +1,5 @@
+basic-non-native-3.0 (source): upstream-metadata-missing-repository
+basic-non-native-3.0 (source): upstream-metadata-missing-bug-tracking
+basic-non-native-3.0 (source): older-debian-watch-file-standard 3
+basic-non-native-3.0 (source): debian-watch-does-not-check-gpg-signature
+basic-non-native-3.0 (binary): empty-binary-package

@@ -40,7 +40,6 @@ Generic test runner for all Lintian test suites
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Exporter qw(import);
 
@@ -53,18 +52,21 @@ BEGIN {
 }
 
 use Capture::Tiny qw(capture_merged);
+use Const::Fast;
 use Cwd qw(getcwd);
 use File::Basename qw(basename);
 use File::Spec::Functions qw(abs2rel rel2abs splitpath catpath);
 use File::Compare;
 use File::Copy;
 use File::stat;
+use IPC::Run3;
 use List::Compare;
 use List::Util qw(max min any all);
 use Path::Tiny;
 use Test::More;
 use Text::Diff;
 use Try::Tiny;
+use Unicode::UTF8 qw(encode_utf8 decode_utf8);
 
 use Lintian::Deb822::File;
 use Lintian::Profile;
@@ -75,17 +77,20 @@ use Test::Lintian::Hooks
   qw(find_missing_prerequisites sed_hook sort_lines calibrate);
 use Test::Lintian::Output::Universal qw(get_tagnames order);
 
-use constant SPACE => q{ };
-use constant SLASH => q{/};
-use constant EMPTY => q{};
-use constant NEWLINE => qq{\n};
-use constant YES => q{yes};
-use constant NO => q{no};
+const my $EMPTY => q{};
+const my $SPACE => q{ };
+const my $INDENT => $SPACE x 2;
+const my $SLASH => q{/};
+const my $NEWLINE => qq{\n};
+const my $YES => q{yes};
+const my $NO => q{no};
+
+const my $WAIT_STATUS_SHIFT => 8;
 
 # turn off the @@-style headers in Text::Diff
 no warnings 'redefine';
-sub Text::Diff::Unified::file_header { return EMPTY; }
-sub Text::Diff::Unified::hunk_header { return EMPTY; }
+sub Text::Diff::Unified::file_header { return $EMPTY; }
+sub Text::Diff::Unified::hunk_header { return $EMPTY; }
 
 =head1 FUNCTIONS
 
@@ -108,9 +113,9 @@ sub logged_runner {
     my $files = read_config($runfiles);
 
     # set path to logfile
-    my $logpath = $runpath . SLASH . $files->unfolded_value('Log');
+    my $logpath = $runpath . $SLASH . $files->unfolded_value('Log');
 
-    my $log = capture_merged {
+    my $log_bytes = capture_merged {
         try {
             # call runner
             runner($runpath, $logpath)
@@ -121,6 +126,8 @@ sub logged_runner {
         };
     };
 
+    my $log = decode_utf8($log_bytes);
+
     # append runner log to population log
     path($logpath)->append_utf8($log) if length $log;
 
@@ -129,8 +136,9 @@ sub logged_runner {
 
     # print log and die on error
     if ($error) {
-        print $log if length $log && $ENV{'DUMP_LOGS'}//NO eq YES;
-        die "Runner died for $runpath: $error";
+        print encode_utf8($log)
+          if length $log && $ENV{'DUMP_LOGS'}//$NO eq $YES;
+        die encode_utf8("Runner died for $runpath: $error");
     }
 
     return;
@@ -149,14 +157,15 @@ sub runner {
     # set a predictable locale
     $ENV{'LC_ALL'} = 'C';
 
-    say EMPTY;
-    say '------- Runner starts here -------';
+    say encode_utf8($EMPTY);
+    say encode_utf8('------- Runner starts here -------');
 
     # bail out if runpath does not exist
-    BAIL_OUT("Cannot find test directory $runpath.") unless -d $runpath;
+    BAIL_OUT(encode_utf8("Cannot find test directory $runpath."))
+      unless -d $runpath;
 
     # announce location
-    say "Running test at $runpath.";
+    say encode_utf8("Running test at $runpath.");
 
     # read dynamic file names
     my $runfiles = "$runpath/files";
@@ -167,73 +176,85 @@ sub runner {
 
     # read dynamic case data
     my $rundescpath
-      = $runpath . SLASH . $files->unfolded_value('Test-Specification');
+      = $runpath . $SLASH . $files->unfolded_value('Test-Specification');
     my $testcase = read_config($rundescpath);
 
     # get data age
     $spec_epoch = max(stat($rundescpath)->mtime, $spec_epoch);
-    say 'Specification is from : '. rfc822date($spec_epoch);
+    say encode_utf8('Specification is from : '. rfc822date($spec_epoch));
 
-    say EMPTY;
+    say encode_utf8($EMPTY);
 
     # age of runner executable
     my $runner_epoch = $ENV{'RUNNER_EPOCH'}//time;
-    say 'Runner modified on   : '. rfc822date($runner_epoch);
+    say encode_utf8('Runner modified on   : '. rfc822date($runner_epoch));
 
     # age of harness executable
     my $harness_epoch = $ENV{'HARNESS_EPOCH'}//time;
-    say 'Harness modified on  : '. rfc822date($harness_epoch);
+    say encode_utf8('Harness modified on  : '. rfc822date($harness_epoch));
 
     # calculate rebuild threshold
     my $threshold= max($spec_epoch, $runner_epoch, $harness_epoch);
-    say 'Rebuild threshold is : '. rfc822date($threshold);
+    say encode_utf8('Rebuild threshold is : '. rfc822date($threshold));
 
-    say EMPTY;
+    say encode_utf8($EMPTY);
 
     # age of Lintian executable
     my $lintian_epoch = $ENV{'LINTIAN_EPOCH'}//time;
-    say 'Lintian modified on  : '. rfc822date($lintian_epoch);
+    say encode_utf8('Lintian modified on  : '. rfc822date($lintian_epoch));
 
     my $testname = $testcase->unfolded_value('Testname');
     # name of encapsulating directory should be that of test
     my $expected_name = path($runpath)->basename;
-    die"Test in $runpath is called $testname instead of $expected_name"
+    die encode_utf8(
+        "Test in $runpath is called $testname instead of $expected_name")
       unless $testname eq $expected_name;
 
     # skip test if marked
     my $skipfile = "$runpath/skip";
-    if (-f $skipfile) {
+    if (-e $skipfile) {
         my $reason = path($skipfile)->slurp_utf8 || 'No reason given';
-        say "Skipping test: $reason";
+        say encode_utf8("Skipping test: $reason");
         plan skip_all => "(disabled) $reason";
     }
 
     # skip if missing prerequisites
     my $missing = find_missing_prerequisites($testcase);
     if (length $missing) {
-        say "Missing prerequisites: $missing";
+        say encode_utf8("Missing prerequisites: $missing");
         plan skip_all => $missing;
     }
 
     # check test architectures
     unless (length $ENV{'DEB_HOST_ARCH'}) {
-        say 'DEB_HOST_ARCH is not set.';
-        BAIL_OUT('DEB_HOST_ARCH is not set.');
+        say encode_utf8('DEB_HOST_ARCH is not set.');
+        BAIL_OUT(encode_utf8('DEB_HOST_ARCH is not set.'));
     }
     my $platforms = $testcase->unfolded_value('Test-Architectures');
     if ($platforms ne 'any') {
-        my @wildcards = split(SPACE, $platforms);
-        my @matches= map {
-            qx{dpkg-architecture -a $ENV{'DEB_HOST_ARCH'} -i $_; echo -n \$?}
-        } @wildcards;
-        unless (any { $_ == 0 } @matches) {
-            say 'Architecture mismatch';
-            plan skip_all => 'Architecture mismatch';
+
+        my @wildcards = split($SPACE, $platforms);
+        my $match = 0;
+        for my $wildcard (@wildcards) {
+
+            my @command = (qw{dpkg-architecture -a},
+                $ENV{'DEB_HOST_ARCH'}, '-i', $wildcard);
+            run3(\@command, \undef, \undef, \undef);
+            my $status = ($? >> $WAIT_STATUS_SHIFT);
+
+            unless ($status) {
+                $match = 1;
+                last;
+            }
+        }
+        unless ($match) {
+            say encode_utf8('Architecture mismatch');
+            plan skip_all => encode_utf8('Architecture mismatch');
         }
     }
 
     plan skip_all => 'No package found'
-      unless -f "$runpath/subject";
+      unless -e "$runpath/subject";
 
     # set the testing plan
     plan tests => 1;
@@ -241,8 +262,8 @@ sub runner {
     my $subject = path("$runpath/subject")->realpath;
 
     # get lintian subject
-    die 'Could not get subject of Lintian examination.'
-      unless -f $subject;
+    die encode_utf8('Could not get subject of Lintian examination.')
+      unless -e $subject;
 
     # run lintian
     $ENV{'LINTIAN_COVERAGE'}.= ",-db,./cover_db-$testname"
@@ -252,19 +273,22 @@ sub runner {
       = $testcase->unfolded_value('Lintian-Command-Line');
     my $command
       = "cd $runpath; $ENV{'LINTIAN_UNDER_TEST'} $lintian_command_line $subject";
-    say $command;
+    say encode_utf8($command);
     my ($output, $status) = capture_merged { system($command); };
-    $status = ($status >> 8) & 255;
+    $status >>= $WAIT_STATUS_SHIFT;
 
-    say "$command exited with status $status.";
-    say $output if $status == 1;
+    $output = decode_utf8($output)
+      if length $output;
+
+    say encode_utf8("$command exited with status $status.");
+    say encode_utf8($output) if $status == 1;
 
     my $expected_status = $testcase->unfolded_value('Exit-Status');
 
     my @errors;
     push(@errors,
         "Exit code $status differs from expected value $expected_status.")
-      if $testcase->exists('Exit-Status')
+      if $testcase->declares('Exit-Status')
       && $status != $expected_status;
 
     # filter out some warnings if running under coverage
@@ -279,27 +303,27 @@ sub runner {
     }
 
     # put output back together
-    $output = EMPTY;
-    $output .= $_ . NEWLINE for @lines;
+    $output = $EMPTY;
+    $output .= $_ . $NEWLINE for @lines;
 
-    die 'No match strategy defined'
-      unless $testcase->exists('Match-Strategy');
+    die encode_utf8('No match strategy defined')
+      unless $testcase->declares('Match-Strategy');
 
     my $match_strategy = $testcase->unfolded_value('Match-Strategy');
 
     if ($match_strategy eq 'literal') {
         push(@errors, check_literal($testcase, $runpath, $output));
 
-    } elsif ($match_strategy eq 'tags') {
-        push(@errors, check_tags($testcase, $runpath, $output));
+    } elsif ($match_strategy eq 'hints') {
+        push(@errors, check_hints($testcase, $runpath, $output));
 
     } else {
-        die "Unknown match strategy $match_strategy.";
+        die encode_utf8("Unknown match strategy $match_strategy.");
     }
 
     my $okay = !(scalar @errors);
 
-    if ($testcase->exists('Todo')) {
+    if ($testcase->declares('Todo')) {
 
         my $explanation = $testcase->unfolded_value('Todo');
         diag "TODO ($explanation)";
@@ -312,7 +336,7 @@ sub runner {
         return;
     }
 
-    diag $_ . NEWLINE for @errors;
+    diag $_ . $NEWLINE for @errors;
 
     ok($okay, "Lintian passes for $testname");
 
@@ -332,54 +356,55 @@ sub check_literal {
       unless -e $expected;
 
     my $raw = "$runpath/literal.actual";
-    path($raw)->spew($output);
+    path($raw)->spew_utf8($output);
 
     # run a sed-script if it exists
     my $actual = "$runpath/literal.actual.parsed";
     my $script = "$runpath/post-test";
-    if(-f $script) {
+    if (-e $script) {
         sed_hook($script, $raw, $actual);
     } else {
-        die"Could not copy actual tags $raw to $actual: $!"
-          if(system('cp', '-p', $raw, $actual));
+        die encode_utf8("Could not copy actual hints $raw to $actual: $!")
+          if system('cp', '-p', $raw, $actual);
     }
 
     return check_result($testcase, $runpath, $expected, $actual);
 }
 
-=item check_tags
+=item check_hints
 
 =cut
 
-sub check_tags {
+sub check_hints {
     my ($testcase, $runpath, $output) = @_;
 
-    # create expected tags if there are none; helps when calibrating new tests
-    my $expected = "$runpath/tags";
+    # create expected hints if there are none; helps when calibrating new tests
+    my $expected = "$runpath/hints";
     path($expected)->touch
       unless -e $expected;
 
-    my $raw = "$runpath/tags.actual";
-    path($raw)->spew($output);
+    my $raw = "$runpath/hints.actual";
+    path($raw)->spew_utf8($output);
 
     # run a sed-script if it exists
-    my $actual = "$runpath/tags.actual.parsed";
+    my $actual = "$runpath/hints.actual.parsed";
     my $sedscript = "$runpath/post-test";
-    if(-f $sedscript) {
+    if (-e $sedscript) {
         sed_hook($sedscript, $raw, $actual);
     } else {
-        die"Could not copy actual tags $raw to $actual: $!"
-          if(system('cp', '-p', $raw, $actual));
+        die encode_utf8("Could not copy actual hints $raw to $actual: $!")
+          if system('cp', '-p', $raw, $actual);
     }
 
-    # calibrate tags; may write to $actual
-    my $calibrated = "$runpath/tags.specified.calibrated";
+    # calibrate hints; may write to $actual
+    my $calibrated = "$runpath/hints.specified.calibrated";
     my $calscript = "$runpath/test-calibration";
     if(-x $calscript) {
         calibrate($calscript, $actual, $expected, $calibrated);
     } else {
-        die"Could not copy expected tags $expected to $calibrated: $!"
-          if(system('cp', '-p', $expected, $calibrated));
+        die encode_utf8(
+            "Could not copy expected hints $expected to $calibrated: $!")
+          if system('cp', '-p', $expected, $calibrated);
     }
 
     return check_result($testcase, $runpath, $calibrated, $actual);
@@ -387,9 +412,9 @@ sub check_tags {
 
 =item check_result(DESC, EXPECTED, ACTUAL)
 
-This routine checks if the EXPECTED tags match the calibrated ACTUAL for the
+This routine checks if the EXPECTED hints match the calibrated ACTUAL for the
 test described by DESC. For some additional checks, also need the ORIGINAL
-tags before calibration. Returns a list of errors, if there are any.
+hints before calibration. Returns a list of errors, if there are any.
 
 =cut
 
@@ -398,17 +423,17 @@ sub check_result {
 
     my @errors;
 
-    my @expectedlines = path($expectedpath)->lines;
-    my @actuallines = path($actualpath)->lines;
+    my @expectedlines = path($expectedpath)->lines_utf8;
+    my @actuallines = path($actualpath)->lines_utf8;
 
-    push(@expectedlines, NEWLINE)
+    push(@expectedlines, $NEWLINE)
       unless @expectedlines;
-    push(@actuallines, NEWLINE)
+    push(@actuallines, $NEWLINE)
       unless @actuallines;
 
     my $match_strategy = $testcase->unfolded_value('Match-Strategy');
 
-    if ($match_strategy eq 'tags') {
+    if ($match_strategy eq 'hints') {
         @expectedlines
           = reverse sort { order($a) cmp order($b) } @expectedlines;
         @actuallines
@@ -426,31 +451,31 @@ sub check_result {
         if ($match_strategy eq 'literal') {
             push(@errors, 'Literal output does not match');
 
-        } elsif ($match_strategy eq 'tags') {
+        } elsif ($match_strategy eq 'hints') {
 
-            push(@errors, 'Tags do not match');
+            push(@errors, 'Hints do not match');
 
             @difflines = reverse sort @difflines;
-            my $tagdiff;
-            $tagdiff .= $_ . NEWLINE for @difflines;
-            path("$runpath/tagdiff")->spew($tagdiff // EMPTY);
+            my $hintdiff;
+            $hintdiff .= $_ . $NEWLINE for @difflines;
+            path("$runpath/hintdiff")->spew_utf8($hintdiff // $EMPTY);
 
         } else {
-            die "Unknown match strategy $match_strategy.";
+            die encode_utf8("Unknown match strategy $match_strategy.");
         }
 
-        push(@errors, EMPTY);
+        push(@errors, $EMPTY);
 
         push(@errors, '--- ' . abs2rel($expectedpath));
         push(@errors, '+++ ' . abs2rel($actualpath));
         push(@errors, @difflines);
 
-        push(@errors, EMPTY);
+        push(@errors, $EMPTY);
     }
 
-    # stop if the test is not about tags
+    # stop if the test is not about hints
     return @errors
-      unless $match_strategy eq 'tags';
+      unless $match_strategy eq 'hints';
 
     # get expected tags
     my @expected = sort +get_tagnames($expectedpath);
@@ -460,21 +485,22 @@ sub check_result {
     # look out for tags being tested
     my @related;
 
-    if (   $testcase->exists('Check')
+    if (   $testcase->declares('Check')
         && $testcase->unfolded_value('Check') ne 'all') {
 
         my $profile = Lintian::Profile->new;
-        $profile->load(undef, [$ENV{LINTIAN_BASE}]);
+        $profile->load(undef, undef, 0);
 
         # use tags related to checks declared
-        my @checks = $testcase->trimmed_list('Check');
-        foreach my $check (@checks) {
-            my $checkscript = $profile->get_checkinfo($check);
-            die "Unknown Lintian check $check"
-              unless defined $checkscript;
+        my @check_names = $testcase->trimmed_list('Check');
+        my @unknown
+          = grep { !exists $profile->check_module_by_name->{$_} } @check_names;
 
-            push(@related, $checkscript->tags);
-        }
+        die encode_utf8('Unknown Lintian checks: ' . join($SPACE, @unknown))
+          if @unknown;
+
+        push(@related, @{$profile->tagnames_for_check->{$_} // []})
+          for @check_names;
 
         @related = sort @related;
 
@@ -505,8 +531,8 @@ sub check_result {
     # warn about unexpected tags
     if (@unexpected) {
         push(@errors, 'Unexpected tags:');
-        push(@errors, SPACE . SPACE . $_) for @unexpected;
-        push(@errors, EMPTY);
+        push(@errors, $INDENT . $_) for @unexpected;
+        push(@errors, $EMPTY);
     }
     # find tags not seen; result is sorted
     my @missing = List::Compare->new(\@test_for, \@actual)->get_Lonly;
@@ -514,8 +540,8 @@ sub check_result {
     # warn about missing tags
     if (@missing) {
         push(@errors, 'Missing tags:');
-        push(@errors, SPACE . SPACE . $_) for @missing;
-        push(@errors, EMPTY);
+        push(@errors, $INDENT . $_) for @missing;
+        push(@errors, $EMPTY);
     }
 
     return @errors;

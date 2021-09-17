@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: empty-files-arch-any
+Package-Architecture: any
+Description: Only empty files but marked architecture-dependent

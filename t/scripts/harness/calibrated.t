@@ -26,7 +26,6 @@
 
 use strict;
 use warnings;
-use autodie;
 use v5.10;
 
 use File::Find::Rule;
@@ -41,11 +40,11 @@ plan tests => scalar @descpaths;
 for my $descpath (@descpaths) {
 
     my $testpath = path($descpath)->parent->parent->stringify;
-    my $tagspath = "$testpath/eval/tags";
+    my $hintspath = "$testpath/eval/hints";
     my $literalpath = "$testpath/eval/literal";
 
-    ok(-r $tagspath || -r $literalpath,
-        "Calibrated tags or literal output is readable in $testpath");
+    ok(-r $hintspath || -r $literalpath,
+        "Calibrated hints or literal output is readable in $testpath");
 }
 
 # Local Variables:

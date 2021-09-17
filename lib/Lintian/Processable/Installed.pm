@@ -22,15 +22,17 @@ package Lintian::Processable::Installed;
 
 use v5.20;
 use warnings;
-use autodie;
 use utf8;
+
+use Const::Fast;
+use List::SomeUtils qw(uniq);
 
 use Lintian::Index;
 
-use constant SLASH => q{/};
-
 use Moo::Role;
 use namespace::clean;
+
+const my $SLASH => q{/};
 
 =head1 NAME
 
@@ -61,18 +63,17 @@ has installed => (
         my ($self) = @_;
 
         my $index = Lintian::Index->new;
-        $index->basedir($self->basedir . SLASH . 'unpacked');
+        $index->basedir($self->basedir . $SLASH . 'unpacked');
 
         # binary packages are anchored to the system root
         # allow absolute paths and symbolic links
         $index->anchored(1);
 
         my @command = (qw(dpkg-deb --fsys-tarfile), $self->path);
-        my ($extract_errors, $index_errors)
-          = $index->create_from_piped_tar(\@command);
+        my $errors = $index->create_from_piped_tar(\@command);
 
         $self->hint('unpack-message-for-deb-data', $_)
-          for split(/\n/, $extract_errors . $index_errors);
+          for uniq split(/\n/, $errors);
 
         return $index;
     });

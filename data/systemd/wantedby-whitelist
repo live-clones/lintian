@@ -1,7 +1,0 @@
-# "Usual" targets for WantedBy
-default.target
-graphical.target
-multi-user.target
-network-online.target
-sleep.target
-sysinit.target

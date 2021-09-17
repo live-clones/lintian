@@ -22,9 +22,12 @@ use v5.20;
 use warnings;
 use utf8;
 
+use Const::Fast;
 use List::Compare;
 
-use constant EMPTY => q{};
+const my $EMPTY => q{};
+
+const my $UNKNOWN_POSITION => -1;
 
 use Moo;
 use namespace::clean;
@@ -119,7 +122,7 @@ If FIELD is passed but not present, then this method returns undef.
 sub unfolded_value {
     my ($self, $name) = @_;
 
-    return EMPTY
+    return $EMPTY
       unless length $name;
 
     my $lowercase = lc $name;
@@ -156,14 +159,14 @@ FIELD.
 sub value {
     my ($self, $name) = @_;
 
-    return EMPTY
+    return $EMPTY
       unless length $name;
 
     my $exact = $self->legend->{lc $name};
-    return EMPTY
+    return $EMPTY
       unless length $exact;
 
-    my $trimmed = $self->verbatim->{$exact} // EMPTY;
+    my $trimmed = $self->verbatim->{$exact} // $EMPTY;
 
     # trim both ends
     $trimmed =~ s/^\s+|\s+$//g;
@@ -181,14 +184,14 @@ FIELD.
 sub untrimmed_value {
     my ($self, $name) = @_;
 
-    return EMPTY
+    return $EMPTY
       unless length $name;
 
     my $exact = $self->legend->{lc $name};
-    return EMPTY
+    return $EMPTY
       unless length $exact;
 
-    return $self->verbatim->{$exact} // EMPTY;
+    return $self->verbatim->{$exact} // $EMPTY;
 }
 
 =item text (FIELD)
@@ -209,14 +212,14 @@ sub text {
     return $text;
 }
 
-=item set (FIELD, VALUE)
+=item store (FIELD, VALUE)
 
 =cut
 
-sub set {
+sub store {
     my ($self, $name, $value) = @_;
 
-    $value //= EMPTY;
+    $value //= $EMPTY;
 
     return
       unless length $name;
@@ -232,7 +235,7 @@ sub set {
         $self->legend->{lc $exact} = $exact;
 
         # remove any old position
-        $self->positions->{$exact} = -1;
+        $self->positions->{$exact} = $UNKNOWN_POSITION;
     }
 
     $self->verbatim->{$exact} = $value;
@@ -243,11 +246,11 @@ sub set {
     return;
 }
 
-=item delete (FIELD)
+=item drop (FIELD)
 
 =cut
 
-sub delete {
+sub drop {
     my ($self, $name) = @_;
 
     return
@@ -266,13 +269,13 @@ sub delete {
     return;
 }
 
-=item exists (NAME)
+=item declares (NAME)
 
 Returns a boolean for whether the named field exists.
 
 =cut
 
-sub exists {
+sub declares {
     my ($self, $name) = @_;
 
     return 1
@@ -320,7 +323,7 @@ sub position {
       unless length $field;
 
     my $exact = $self->legend->{lc $field};
-    return
+    return undef
       unless length $exact;
 
     return $self->positions->{$exact};

@@ -1,6 +1,5 @@
 Testname: patch-empties-directory
 Check: debian/copyright/dep5
 Test-Against:
- wildcard-matches-nothing-in-dep5-copyright
- unused-file-paragraph-in-dep5-copyright
+ superfluous-file-pattern
 See-Also: Bug#844274

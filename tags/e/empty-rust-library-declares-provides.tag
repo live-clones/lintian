@@ -8,7 +8,9 @@ Explanation: For some time, Rust libraries used empty installation packages
  .
  Rust packages should not be empty and merely declare a Provides control
  field. Instead, please merge such packages into the main installation
- package.
+ package. When using <code>debcargo</code>, this can usually be achieved by
+ adding <code>collapse_features = true</code> to the
+ <code>debcargo.toml</code> file.
  .
  You can see some examples here:
  .

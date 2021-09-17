@@ -21,19 +21,26 @@ package Lintian::Output::JSON;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
+use Const::Fast;
 use Time::Piece;
 use JSON::MaybeXS;
-
-use constant EMPTY => q{};
-use constant SPACE => q{ };
-use constant NEWLINE => qq{\n};
 
 use Moo;
 use namespace::clean;
 
-with 'Lintian::Output';
+const my $EMPTY => q{};
+
+const my %CODE_PRIORITY => (
+    'E' => 30,
+    'W' => 40,
+    'I' => 50,
+    'P' => 60,
+    'X' => 70,
+    'C' => 80,
+    'O' => 90,
+    'M' => 100,
+);
 
 =head1 NAME
 
@@ -51,34 +58,12 @@ Provides JSON hint output.
 
 =over 4
 
-=item BUILD
-
-=cut
-
-sub BUILD {
-    my ($self, $args) = @_;
-
-    $self->delimiter(EMPTY);
-
-    return;
-}
-
 =item issue_hints
 
 Print all hints passed in array. A separate arguments with processables
 is necessary to report in case no hints were found.
 
 =cut
-
-my %code_priority = (
-    'E' => 30,
-    'W' => 40,
-    'I' => 50,
-    'P' => 60,
-    'X' => 70,
-    'C' => 80,
-    'O' => 90,
-);
 
 sub issue_hints {
     my ($self, $groups) = @_;
@@ -87,7 +72,7 @@ sub issue_hints {
 
     my %output;
 
-    $output{'lintian-version'} = $ENV{LINTIAN_VERSION};
+    $output{lintian_version} = $ENV{LINTIAN_VERSION};
 
     my @allgroups_output;
     $output{groups} = \@allgroups_output;
@@ -95,19 +80,21 @@ sub issue_hints {
     for my $group (sort { $a->name cmp $b->name } @{$groups}) {
 
         my %group_output;
-        $group_output{'group-id'} = $group->name;
+        $group_output{group_id} = $group->name;
+        $group_output{source_name} = $group->source_name;
+        $group_output{source_version} = $group->source_version;
 
         push(@allgroups_output, \%group_output);
 
         my @allfiles_output;
-        $group_output{'input-files'} = \@allfiles_output;
+        $group_output{input_files} = \@allfiles_output;
 
         for my $processable (sort {$a->path cmp $b->path}
             $group->get_processables) {
 
             my %file_output;
             $file_output{path} = $processable->path;
-            $file_output{tags} = $self->hintlist($processable->hints);
+            $file_output{hints} = $self->hintlist($processable->hints);
 
             push(@allfiles_output, \%file_output);
         }
@@ -121,16 +108,8 @@ sub issue_hints {
 
     my $json = $encoder->encode(\%output);
 
-    # duplicate STDOUT
-    open(my $RAW, '>&', *STDOUT) or die 'Cannot dup STDOUT';
-
-    # avoid all PerlIO layers such as utf8
-    binmode($RAW, ':raw');
-
-    # output encoded JSON to the raw handle
-    print {$RAW} $json;
-
-    close $RAW;
+    # output encoded JSON; is already in UTF-8
+    print $json;
 
     return;
 }
@@ -142,40 +121,43 @@ sub issue_hints {
 sub hintlist {
     my ($self, $arrayref) = @_;
 
-    my @hints;
+    my @hint_dictionaries;
 
     my @sorted = sort {
                defined $a->override <=> defined $b->override
-          ||   $code_priority{$a->tag->code}<=> $code_priority{$b->tag->code}
+          ||   $CODE_PRIORITY{$a->tag->code}<=> $CODE_PRIORITY{$b->tag->code}
           || $a->tag->name cmp $b->tag->name
           || $a->context cmp $b->context
     } @{$arrayref // []};
 
-    for my $input (@sorted) {
+    for my $hint (@sorted) {
 
-        my %hint;
-        push(@hints, \%hint);
+        my %hint_dictionary;
+        push(@hint_dictionaries, \%hint_dictionary);
 
-        $hint{name} = $input->tag->name;
+        $hint_dictionary{tag} = $hint->tag->name;
 
-        $hint{context} = $input->context
-          if length $input->context;
+        $hint_dictionary{context} = $hint->context
+          if length $hint->context;
 
-        $hint{severity} = $input->tag->effective_severity;
-        $hint{experimental} = 'yes'
-          if $input->tag->experimental;
+        $hint_dictionary{visibility} = $hint->tag->visibility;
+        $hint_dictionary{experimental} = 'yes'
+          if $hint->tag->experimental;
 
-        if ($input->override) {
+        $hint_dictionary{screen} = $hint->screen->name
+          if defined $hint->screen;
 
-            $hint{override} = 'yes';
+        if ($hint->override) {
 
-            my @comments = @{ $input->override->{comments} // [] };
-            $hint{'override-comments'} = \@comments
+            $hint_dictionary{override} = 'yes';
+
+            my @comments = @{ $hint->override->{comments} // [] };
+            $hint_dictionary{override_comments} = \@comments
               if @comments;
         }
     }
 
-    return \@hints;
+    return \@hint_dictionaries;
 }
 
 =item describe_tags
@@ -183,33 +165,54 @@ sub hintlist {
 =cut
 
 sub describe_tags {
-    my ($self, @tags) = @_;
+    my ($self, $tags) = @_;
 
-    my @array;
+    my @tag_dictionaries;
 
-    for my $tag (@tags) {
+    for my $tag (@{$tags}) {
 
-        my %dictionary;
+        my %tag_dictionary;
+        push(@tag_dictionaries, \%tag_dictionary);
 
-        $dictionary{Name} = $tag->name;
-        $dictionary{'Name-Spaced'} = $tag->name_spaced
+        $tag_dictionary{name} = $tag->name;
+        $tag_dictionary{name_spaced} = $tag->name_spaced
           if length $tag->name_spaced;
-        $dictionary{'Show-Always'} = $tag->show_always
+        $tag_dictionary{show_always} = $tag->show_always
           if length $tag->show_always;
 
-        $dictionary{Explanation} = $tag->explanation;
-        $dictionary{'See-Also'} = $tag->see_also
+        $tag_dictionary{explanation} = $tag->explanation;
+        $tag_dictionary{see_also} = $tag->see_also
           if @{$tag->see_also};
 
-        $dictionary{Check} = $tag->check;
-        $dictionary{Visibility} = $tag->visibility;
-        $dictionary{Experimental} = $tag->experimental
+        $tag_dictionary{check} = $tag->check;
+        $tag_dictionary{visibility} = $tag->visibility;
+        $tag_dictionary{experimental} = $tag->experimental
           if length $tag->experimental;
 
-        $dictionary{'Renamed-From'} = $tag->renamed_from
+        $tag_dictionary{renamed_from} = $tag->renamed_from
           if @{$tag->renamed_from};
 
-        push(@array, \%dictionary);
+        my @screen_dictionaries;
+
+        for my $screen (@{$tag->screens}) {
+
+            my %screen_dictionary;
+            push(@screen_dictionaries, \%screen_dictionary);
+
+            $screen_dictionary{name} = $screen->name;
+
+            my @petitioner_emails = map { $_->format } @{$screen->petitioners};
+            $screen_dictionary{petitioners} = \@petitioner_emails;
+
+            $screen_dictionary{reason} = $screen->reason;
+
+            $screen_dictionary{see_also} = $screen->see_also
+              if @{$screen->see_also};
+        }
+
+        $tag_dictionary{screens} = \@screen_dictionaries;
+
+        $tag_dictionary{lintian_version} = $ENV{LINTIAN_VERSION};
     }
 
     # convert to UTF-8 prior to encoding in JSON
@@ -219,22 +222,14 @@ sub describe_tags {
     $encoder->pretty;
 
     # encode single tags without array bracketing
-    my $object = \@array;
-    $object = $array[0]
-      if scalar @array == 1;
+    my $object = \@tag_dictionaries;
+    $object = shift @tag_dictionaries
+      if @tag_dictionaries == 1;
 
     my $json = $encoder->encode($object);
 
-    # duplicate STDOUT
-    open(my $RAW, '>&', *STDOUT) or die 'Cannot dup STDOUT';
-
-    # avoid all PerlIO layers such as utf8
-    binmode($RAW, ':raw');
-
-    # output encoded JSON to the raw handle
-    print {$RAW} $json;
-
-    close $RAW;
+    # output encoded JSON; is already in UTF-8
+    print $json;
 
     return;
 }

@@ -17,6 +17,7 @@
 *.iml
 /.idea/
 /.nobackup
+*.bak
 *.rej
 cover_db*
 /coverage-report

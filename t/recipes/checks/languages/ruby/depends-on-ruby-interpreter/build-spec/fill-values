@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: depends-on-ruby-interpreter
+Description: Depends on ruby-interpreter

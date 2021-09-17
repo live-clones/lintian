@@ -1,0 +1,26 @@
+binary (binary): spelling-error-in-doc-base-title-field binary:2 debian Debian
+binary (binary): spelling-error-in-doc-base-abstract-field binary:10 speling spelling
+binary (binary): postrm-does-not-call-updatemenus etc/menu-methods/lintian
+binary (binary): postinst-does-not-call-updatemenus usr/share/menu/binary
+binary (binary): menu-method-lacks-include etc/menu-methods/lintian
+binary (binary): menu-file-in-usr-lib usr/lib/menu/binary
+binary (binary): duplicate-format-in-doc-base binary:36 html
+binary (binary): doc-base-unknown-section binary:11 Non/Existant
+binary (binary): doc-base-invalid-document-field binary:1 binary!docs
+binary (binary): doc-base-index-references-multiple-files binary:25
+binary (binary): doc-base-file-unknown-format binary:20 esp
+binary (binary): doc-base-file-unknown-field binary:18 Unknown
+binary (binary): doc-base-file-unknown-field binary:12 Unknown
+binary (binary): doc-base-file-references-missing-file binary:34 /usr/share/info/binary.info.gz
+binary (binary): doc-base-file-references-missing-file binary:31 /usr/share/doc/binary/hml/*.html
+binary (binary): doc-base-file-references-missing-file binary:25 /usr/share/doc/binary/html/ch4.html
+binary (binary): doc-base-file-references-missing-file binary:21 /usr/share/doc/binary/binary.txt
+binary (binary): doc-base-file-references-missing-file binary:17 /usr/share/doc/binary/binary.sgml.gz
+binary (binary): doc-base-file-no-index binary:35
+binary (binary): doc-base-file-no-format-section space
+binary (binary): doc-base-file-no-format binary:26
+binary (binary): doc-base-file-lacks-required-field binary:26 Format
+binary (binary): doc-base-file-lacks-required-field binary:26 Files
+binary (binary): doc-base-file-lacks-required-field binary:22 Files
+binary (binary): doc-base-document-field-ends-in-whitespace binary:1
+binary (binary): doc-base-abstract-field-separator-extra-whitespace binary:7

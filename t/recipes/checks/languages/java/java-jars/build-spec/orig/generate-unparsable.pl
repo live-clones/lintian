@@ -2,7 +2,6 @@
 
 use strict;
 use warnings;
-use autodie;
 
 # Generated with "hexdump -C <valid-file.zip> | head -n 10".  Should
 # be a valid header of a truncated zip file.  This is enough to fool

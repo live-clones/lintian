@@ -23,14 +23,15 @@ use warnings;
 use utf8;
 
 use Carp;
+use Const::Fast;
 use Date::Parse;
 
 use Lintian::Inspect::Changelog::Entry;
 
-use constant EMPTY => q{};
-use constant SPACE => q{ };
-use constant ASTERISK => q{*};
-use constant UNKNOWN => q{unknown};
+const my $EMPTY => q{};
+const my $SPACE => q{ };
+const my $ASTERISK => q{*};
+const my $UNKNOWN => q{unknown};
 
 use Moo;
 use namespace::clean;
@@ -72,10 +73,12 @@ sub find_closes {
     my $changes = shift;
     my @closes = ();
 
-    while ($changes
+    while (
+        $changes
         && ($changes
-            =~ /closes:\s*(?:bug)?\#?\s?\d+(?:,\s*(?:bug)?\#?\s?\d+)*/ig)) {
-        push(@closes, $& =~ /\#?\s?(\d+)/g);
+            =~ /(closes:\s*(?:bug)?\#?\s?\d+(?:,\s*(?:bug)?\#?\s?\d+)*)/ig)
+    ) {
+        push(@closes, $1 =~ /\#?\s?(\d+)/g);
     }
 
     @closes = sort { $a <=> $b } @closes;
@@ -109,13 +112,13 @@ sub parse {
     my $unknowncounter = 1; # to make version unique, e.g. for using as id
     my $lineno = 0;
 
-    local $_;
+    local $_ = undef;
     for (@lines) {
         $lineno++;
 
         # trim end
         s/\s+\r?$//;
-        #	printf(STDERR "%-39.39s %-39.39s\n",$expect,$_);
+        #	print encode_utf*(sprintf(STDERR "%-39.39s %-39.39s\n",$expect,$_));
         if (
 m/^(?<Source>\w[-+0-9a-z.]*) \((?<Version>[^\(\) \t]+)\)(?<Distribution>(?:\s+[-+0-9a-z.]+)+)\;\s*(?<kvpairs>.*)$/i
         ){
@@ -137,10 +140,12 @@ m/^(?<Source>\w[-+0-9a-z.]*) \((?<Version>[^\(\) \t]+)\)(?<Distribution>(?:\s+[-
 
             unless ($entry->is_empty) {
                 $entry->Closes(find_closes($entry->Changes));
-                #		    print STDERR, Dumper($entry);
+
                 push @{$self->entries}, $entry;
                 $entry = Lintian::Inspect::Changelog::Entry->new;
             }
+
+            $entry->position($lineno);
 
             $entry->Header($literal);
 
@@ -154,7 +159,7 @@ m/^(?<Source>\w[-+0-9a-z.]*) \((?<Version>[^\(\) \t]+)\)(?<Distribution>(?:\s+[-
             for my $kv (split(/\s*,\s*/,$kvpairs)) {
                 $kv =~ m/^([-0-9a-z]+)\=\s*(.*\S)$/i
                   ||push @{$self->errors},
-                  [$lineno,"bad key-value after \`;\': \`$kv\'"];
+                  [$lineno,"bad key-value after ';': '$kv'"];
                 my $k = ucfirst $1;
                 my $v = $2;
                 $kvdone{$k}++
@@ -191,17 +196,17 @@ m/^(?<Source>\w[-+0-9a-z.]*) \((?<Version>[^\(\) \t]+)\)(?<Distribution>(?:\s+[-
         } elsif (/^\# /) {
             next; # skip comments, even that's not supported
 
-        } elsif (m,^/\*.*\*/,) {
+        } elsif (m{^/\*.*\*/}) {
             next; # more comments
 
         } elsif (
-m/^(?:\w+\s+\w+\s+\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}\s+[\w\s]*\d{4})\s+(?:.*)\s+(?:<|\()(?:.*)(?:\)|>)/
-            || m/^(?:\w+\s+\w+\s+\d{1,2},?\s*\d{4})\s+(?:.*)\s+(?:<|\()(?:.*)(?:\)|>)/
+m/^(?:\w+\s+\w+\s+\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}\s+[\w\s]*\d{4})\s+(?:.*)\s+[<\(](?:.*)[\)>]/
+            || m/^(?:\w+\s+\w+\s+\d{1,2},?\s*\d{4})\s+(?:.*)\s+[<\(](?:.*)[\)>]/
             || m/^(?:\w[-+0-9a-z.]*) \((?:[^\(\) \t]+)\)\;?/i
-            || m/^(?:[\w.+-]+)(?:-| )\S+ Debian \S+/i
+            || m/^(?:[\w.+-]+)[- ]\S+ Debian \S+/i
             || m/^Changes from version (?:.*) to (?:.*):/i
             || m/^Changes for [\w.+-]+-[\w.+-]+:?$/i
-            || m/^Old Changelog:$/i
+            || fc($_) eq fc('Old Changelog:')
             || m/^(?:\d+:)?\w[\w.+~-]*:?$/) {
             # save entries on old changelog format verbatim
             # we assume the rest of the file will be in old format once we
@@ -225,7 +230,7 @@ m/^ \-\- (?<name>.*) <(?<email>.*)>(?<sep>  ?)(?<date>(?:\w+\,\s*)?\d{1,2}\s+\w+
             $expect eq 'more change data or trailer'
               || push @{$self->errors},
               [$lineno,"found trailer where expected $expect", $literal];
-            if ($separator ne SPACE . SPACE) {
+            if ($separator ne $SPACE . $SPACE) {
                 push @{$self->errors},
                   [$lineno,'badly formatted trailer line', $literal];
             }
@@ -259,15 +264,16 @@ m/^ \-\- (?<name>.*) <(?<email>.*)>(?<sep>  ?)(?<date>(?:\w+\,\s*)?\d{1,2}\s+\w+
                     && !$entry->is_empty) {
                     # lets assume we have missed the actual header line
                     $entry->Closes(find_closes($entry->Changes));
-                    #		    print STDERR, Dumper($entry);
+
                     push @{$self->entries}, $entry;
+
                     $entry = Lintian::Inspect::Changelog::Entry->new;
-                    $entry->Source(UNKNOWN);
-                    $entry->Distribution(UNKNOWN);
-                    $entry->Urgency(UNKNOWN);
-                    $entry->Urgency_LC(UNKNOWN);
-                    $entry->Version(UNKNOWN . ($unknowncounter++));
-                    $entry->Urgency_Comment(EMPTY);
+                    $entry->Source($UNKNOWN);
+                    $entry->Distribution($UNKNOWN);
+                    $entry->Urgency($UNKNOWN);
+                    $entry->Urgency_LC($UNKNOWN);
+                    $entry->Version($UNKNOWN . ($unknowncounter++));
+                    $entry->Urgency_Comment($EMPTY);
                     $entry->ERROR([
                         $lineno,
                         "found change data where expected $expect",$_
@@ -275,7 +281,7 @@ m/^ \-\- (?<name>.*) <(?<email>.*)>(?<sep>  ?)(?<date>(?:\w+\,\s*)?\d{1,2}\s+\w+
                 }
               };
             $entry->{'Changes'} .= (" \n" x $blanklines)." $_\n";
-            if (!$entry->{Items} || $1 eq ASTERISK) {
+            if (!$entry->{Items} || $1 eq $ASTERISK) {
                 $entry->{Items} ||= [];
                 push @{$entry->{Items}}, "$_\n";
             } else {
@@ -322,9 +328,6 @@ m/^ \-\- (?<name>.*) <(?<email>.*)>(?<sep>  ?)(?<date>(?:\w+\,\s*)?\d{1,2}\s+\w+
         $entry->Closes(find_closes($entry->Changes));
         push @{$self->entries}, $entry;
     }
-
-    #    use Data::Dumper;
-    #    print Dumper( $self );
 
     return;
 }

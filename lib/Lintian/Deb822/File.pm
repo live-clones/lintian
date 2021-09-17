@@ -22,12 +22,14 @@ use v5.20;
 use warnings;
 use utf8;
 
+use Const::Fast;
 use Path::Tiny;
+use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Deb822::Parser qw(parse_dpkg_control_string);
 use Lintian::Deb822::Section;
 
-use constant EMPTY => q{};
+const my $EMPTY => q{};
 
 use Moo;
 use namespace::clean;
@@ -75,7 +77,7 @@ sub first_mention {
     # empty when field not present
     $earliest ||= $_->value($name) for @{$self->sections};
 
-    return ($earliest // EMPTY);
+    return ($earliest // $EMPTY);
 }
 
 =item last_mention
@@ -91,10 +93,10 @@ sub last_mention {
 
         # empty when field not present
         $latest = $section->value($name)
-          if $section->exists($name);
+          if $section->declares($name);
     }
 
-    return ($latest // EMPTY);
+    return ($latest // $EMPTY);
 }
 
 =item read_file
@@ -125,17 +127,21 @@ sub parse_string {
     if (length $@) {
         chomp $@;
         $@ =~ s/^syntax error at //;
-        die "syntax error in $@\n"
+        die encode_utf8("syntax error in $@\n")
           if length $@;
     }
 
-    while (my ($index, $paragraph) = each(@paragraphs)) {
+    my $index = 0;
+    for my $paragraph (@paragraphs) {
 
         my $section = Lintian::Deb822::Section->new;
         $section->verbatim($paragraph);
         $section->positions($positions[$index]);
 
         push(@{$self->sections}, $section);
+
+    } continue {
+        $index++;
     }
 
     return @{$self->sections};

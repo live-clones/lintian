@@ -1,0 +1,8 @@
+dbus-policy (binary): dbus-policy-without-send-destination etc/dbus-1/system.d/send-destination.conf (rule 5) <policy context="default"><allow send_path="/com/example/Here"/>
+dbus-policy (binary): dbus-policy-without-send-destination etc/dbus-1/system.d/send-destination.conf (rule 4) <policy context="default"><allow send_member="AreYouReallySureThisMethodIsAlwaysOK"/>
+dbus-policy (binary): dbus-policy-without-send-destination etc/dbus-1/system.d/send-destination.conf (rule 3) <policy context="default"><allow send_interface="org.freedesktop.DBus.ObjectManager"/>
+dbus-policy (binary): dbus-policy-without-send-destination etc/dbus-1/system.d/send-destination.conf (rule 2) <policy user="nobody"><allow send_interface="org.freedesktop.DBus.ObjectManager"/>
+dbus-policy (binary): dbus-policy-excessively-broad etc/dbus-1/system.d/send-destination.conf (rule 5) <policy context="default"><allow send_path="/com/example/Here"/>
+dbus-policy (binary): dbus-policy-excessively-broad etc/dbus-1/system.d/send-destination.conf (rule 4) <policy context="default"><allow send_member="AreYouReallySureThisMethodIsAlwaysOK"/>
+dbus-policy (binary): dbus-policy-at-console etc/dbus-1/system.d/at-console.conf (rule 4) <policy at_console="true"><allow send_destination="com.example.Other"/>
+dbus-policy (binary): dbus-policy-at-console etc/dbus-1/system.d/at-console.conf (rule 3) <policy at_console="true"><allow send_destination="com.example.Service"/>

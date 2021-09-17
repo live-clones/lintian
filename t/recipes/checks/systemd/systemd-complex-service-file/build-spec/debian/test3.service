@@ -1,4 +1,4 @@
-.include /lib/systemd/system/test.service
+.include /usr/lib/systemd/system/test.service
 
 [Unit]
 After=

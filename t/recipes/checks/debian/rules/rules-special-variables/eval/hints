@@ -1,0 +1,2 @@
+rules-special-variables (source): debian-rules-uses-wrong-environment-variable (line 3)
+rules-special-variables (source): debian-rules-uses-as-needed-linker-flag (line 3)

@@ -1,2 +1,0 @@
-scripts (source): missing-build-dependency debhelper | debhelper-compat
-scripts (source): binary-arch-rules-but-pkg-is-arch-indep

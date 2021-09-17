@@ -20,11 +20,9 @@ package Lintian::Processable::Hardening;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Path::Tiny;
-
-use constant EMPTY => q{};
+use Unicode::UTF8 qw(encode_utf8);
 
 use Moo::Role;
 use namespace::clean;
@@ -65,11 +63,13 @@ sub hardening_info {
     my %hardening_info;
 
     if (-e $hardf) {
-        open(my $idx, '<', $hardf);
+        open(my $idx, '<:utf8_strict', $hardf)
+          or die encode_utf8("Cannot open $hardf");
+
         while (my $line = <$idx>) {
             chomp($line);
 
-            if ($line =~ m,^([^:]+):(?:\./)?(.*)$,) {
+            if ($line =~ m{^([^:]+):(?:\./)?(.*)$}) {
                 my ($tag, $file) = ($1, $2);
 
                 push(@{$hardening_info{$file}}, $tag);

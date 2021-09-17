@@ -21,23 +21,34 @@ package Lintian::Output::HTML;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
+use Const::Fast;
+use Path::Tiny;
 use Text::Markdown::Discount qw(markdown);
 use Text::Xslate;
 use Time::Duration;
 use Time::Moment;
-
-use constant EMPTY => q{};
-use constant SPACE => q{ };
-use constant NEWLINE => qq{\n};
-
-use Path::Tiny;
+use Unicode::UTF8 qw(encode_utf8);
 
 use Moo;
 use namespace::clean;
 
-with 'Lintian::Output';
+with 'Lintian::Output::Grammar';
+
+const my $EMPTY => q{};
+const my $SPACE => q{ };
+const my $NEWLINE => qq{\n};
+const my $PARAGRAPH_BREAK => $NEWLINE x 2;
+
+const my %CODE_PRIORITY => (
+    'E' => 30,
+    'W' => 40,
+    'I' => 50,
+    'P' => 60,
+    'X' => 70,
+    'C' => 80,
+    'O' => 90,
+);
 
 =head1 NAME
 
@@ -55,34 +66,12 @@ Provides standalone HTML hint output.
 
 =over 4
 
-=item BUILD
-
-=cut
-
-sub BUILD {
-    my ($self, $args) = @_;
-
-    $self->delimiter(EMPTY);
-
-    return;
-}
-
 =item issue_hints
 
 Print all hints passed in array. A separate arguments with processables
 is necessary to report in case no hints were found.
 
 =cut
-
-my %code_priority = (
-    'E' => 30,
-    'W' => 40,
-    'I' => 50,
-    'P' => 60,
-    'X' => 70,
-    'C' => 80,
-    'O' => 90,
-);
 
 sub issue_hints {
     my ($self, $groups) = @_;
@@ -102,9 +91,8 @@ sub issue_hints {
         my %group_output;
 
         $group_output{'group-id'} = $group->name;
-        my ($name, $version)  = split(m{/}, $group->name, 2);
-        $group_output{'name'} = $name;
-        $group_output{'version'} = $version;
+        $group_output{name} = $group->source_name;
+        $group_output{version} = $group->source_version;
 
         my $start = Time::Moment->from_string($group->processing_start);
         my $end = Time::Moment->from_string($group->processing_end);
@@ -140,7 +128,7 @@ sub issue_hints {
             output => \%output,
         });
 
-    print $page;
+    print encode_utf8($page);
 
     return;
 }
@@ -156,7 +144,7 @@ sub hintlist {
 
     my @sorted = sort {
                defined $a->override <=> defined $b->override
-          ||   $code_priority{$a->tag->code}<=> $code_priority{$b->tag->code}
+          ||   $CODE_PRIORITY{$a->tag->code}<=> $CODE_PRIORITY{$b->tag->code}
           || $a->tag->name cmp $b->tag->name
           || $a->context cmp $b->context
     } @{$arrayref // []};
@@ -168,13 +156,13 @@ sub hintlist {
 
         $hint{name} = $input->tag->name;
 
-        $hint{url} = "https://lintian.debian.org/tags/$hint{name}.html";
+        $hint{url} = "https://lintian.debian.org/tags/$hint{name}";
 
         $hint{context} = $input->context
           if length $input->context;
 
-        $hint{severity} = $input->tag->effective_severity;
-        $hint{code} = uc substr($hint{severity}, 0, 1);
+        $hint{visibility} = $input->tag->visibility;
+        $hint{code} = uc substr($hint{visibility}, 0, 1);
 
         $hint{experimental} = 'yes'
           if $input->tag->experimental;
@@ -197,17 +185,70 @@ sub hintlist {
 =cut
 
 sub describe_tags {
-    my ($self, @tags) = @_;
+    my ($self, $tags) = @_;
 
-    for my $tag (@tags) {
+    for my $tag (@{$tags}) {
 
-        say '<p>Name: ' . $tag->name . '</p>';
-        say EMPTY;
+        say encode_utf8('<p>Name: ' . $tag->name . '</p>');
+        say encode_utf8($EMPTY);
 
-        print markdown($tag->markdown_description);
+        print encode_utf8(markdown($self->markdown_description($tag)));
     }
 
     return;
+}
+
+=item markdown_description
+
+=cut
+
+sub markdown_description {
+    my ($self, $tag) = @_;
+
+    my $description = $tag->explanation;
+
+    my @extras;
+
+    if (@{$tag->see_also}) {
+
+        my $references
+          = 'Please refer to '
+          . $self->oxford_enumeration('and', @{$tag->see_also})
+          . ' for details.';
+
+        push(@extras, $references);
+    }
+
+    push(@extras, 'Visibility: '. $tag->visibility);
+
+    push(@extras, 'Check: ' . $tag->check)
+      if length $tag->check;
+
+    push(@extras, 'Renamed from: ' . join($SPACE, @{$tag->renamed_from}))
+      if @{$tag->renamed_from};
+
+    push(@extras, 'This tag is experimental.')
+      if $tag->experimental;
+
+    push(@extras,
+        'This tag is a classification. There is no issue in your package.')
+      if $tag->visibility eq 'classification';
+
+    for my $screen (@{$tag->screens}) {
+
+        my $screen_description = 'Screen: ' . $screen->name . $NEWLINE;
+        $screen_description
+          .= 'Petitioners: ' . join(', ', @{$screen->petitioners}) . $NEWLINE;
+        $screen_description .= 'Reason: ' . $screen->reason . $NEWLINE;
+
+        $screen_description .= 'See-Also: ' . $NEWLINE;
+
+        push(@extras, $screen_description);
+    }
+
+    $description .= $PARAGRAPH_BREAK . $_ for @extras;
+
+    return $description;
 }
 
 =back

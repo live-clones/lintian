@@ -102,12 +102,12 @@ has files => (
 
         my %files;
 
-        my @lines = split(/\n/, $self->fields->value('Files'));
+        my @files_lines = split(/\n/, $self->fields->value('Files'));
 
         # trim both ends of each line
-        s/^\s+|\s+$//g for @lines;
+        s/^\s+|\s+$//g for @files_lines;
 
-        for my $line (grep { length } @lines) {
+        for my $line (grep { length } @files_lines) {
 
             my @fields = split(/\s+/, $line);
             my $basename = $fields[-1];

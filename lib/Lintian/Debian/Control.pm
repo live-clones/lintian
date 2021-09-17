@@ -25,7 +25,7 @@ use warnings;
 use utf8;
 
 use Path::Tiny;
-use Unicode::UTF8 qw(valid_utf8 decode_utf8);
+use Unicode::UTF8 qw(valid_utf8 decode_utf8 encode_utf8);
 
 use Lintian::Deb822::File;
 use Lintian::Deb822::Section;
@@ -101,7 +101,7 @@ sub load {
         # If it is a syntax error, ignore it (we emit
         # syntax-error-in-control-file in this case via
         # control-file).
-        die $@
+        die map { encode_utf8($_) } $@
           unless $@ =~ /syntax error/;
 
         return;

@@ -24,23 +24,16 @@ use warnings;
 use utf8;
 use autodie qw(open);
 
-use Date::Parse qw(str2time);
 use Carp qw(croak confess);
-use List::MoreUtils qw(all);
+use Const::Fast;
+use Date::Parse qw(str2time);
+use List::SomeUtils qw(all);
 use Path::Tiny;
 use Text::Balanced qw(extract_delimited);
-use Unicode::UTF8 qw(valid_utf8 decode_utf8);
+use Unicode::UTF8 qw(valid_utf8 decode_utf8 encode_utf8);
 
 use Lintian::SlidingWindow;
 use Lintian::Util qw(normalize_link_target);
-
-use constant EMPTY => q{};
-use constant SPACE => q{ };
-use constant SLASH => q{/};
-use constant DOT => q{.};
-use constant DOUBLEDOT => q{..};
-use constant DOUBLEQUOTE => q{"};
-use constant BACKSLASH => q{\\};
 
 use Moo;
 use namespace::clean;
@@ -66,16 +59,42 @@ use constant {
 };
 
 use overload (
-    '""' => \&_as_string,
+    q{""} => \&_as_string,
     'qr' => \&_as_regex_ref,
     'bool' => \&_bool,
-    '!' => \&_bool_not,
-    '.'  => \&_str_concat,
+    q{!} => \&_bool_not,
+    q{.} => \&_str_concat,
     'cmp' => \&_str_cmp,
     'eq' => \&_str_eq,
     'ne' => \&_str_ne,
     'fallback' => 0,
 );
+
+const my $EMPTY => q{};
+const my $SPACE => q{ };
+const my $SLASH => q{/};
+const my $DOT => q{.};
+const my $DOUBLE_DOT => q{..};
+const my $DOUBLE_QUOTE => q{"};
+const my $BACKSLASH => q{\\};
+const my $HASHBANG => q{#!};
+
+const my $MAXIMUM_LINK_DEPTH => 18;
+
+const my $BYTE_MAXIMUM => 255;
+const my $SINGLE_OCTAL_MASK => oct(7);
+const my $DUAL_OCTAL_MASK => oct(77);
+
+const my $ELF_MAGIC_SIZE => 4;
+const my $LINCITY_MAGIC_SIZE => 6;
+const my $SHELL_SCRIPT_MAGIC_SIZE => 2;
+
+const my $READ_BITS => oct(444);
+const my $WRITE_BITS => oct(222);
+const my $EXECUTABLE_BITS => oct(111);
+
+const my $SETUID => oct(4000);
+const my $SETGID => oct(2000);
 
 =head1 NAME
 
@@ -104,10 +123,10 @@ my $hardlinkpattern = qr/\s+link\s+to\s+/;
 
 # adapted from https://www.perlmonks.org/?node_id=1056606
 my %T = (
-    (map {chr() => chr} 0..0377),
-    (map {sprintf('%o',$_) => chr} 0..07),
-    (map {sprintf('%02o',$_) => chr} 0..077),
-    (map {sprintf('%03o',$_) => chr} 0..0377),
+    (map {chr() => chr} 0..$BYTE_MAXIMUM),
+    (map {sprintf('%o',$_) => chr} 0..($BYTE_MAXIMUM & $SINGLE_OCTAL_MASK)),
+    (map {sprintf('%02o',$_) => chr} 0..($BYTE_MAXIMUM & $DUAL_OCTAL_MASK)),
+    (map {sprintf('%03o',$_) => chr} 0..$BYTE_MAXIMUM),
     (split //, "r\rn\nb\ba\af\ft\tv\013"));
 
 sub unescape_c_style {
@@ -123,9 +142,9 @@ sub get_quoted_filename {
 
     # extract quoted file name
     my ($delimited, $extra)
-      = extract_delimited($unknown, DOUBLEQUOTE, $skip, BACKSLASH);
+      = extract_delimited($unknown, $DOUBLE_QUOTE, $skip, $BACKSLASH);
 
-    return
+    return (undef, undef)
       unless defined $delimited;
 
     # drop quotes
@@ -147,7 +166,7 @@ sub init_from_tar_output {
     my ($initial, $size, $date, $time, $remainder)
       = split(/\s+(\d+)\s+($datepattern)\s+($timepattern)\s+/, $line,2);
 
-    die "Cannot parse tar output: $line"
+    die encode_utf8("Cannot parse tar output: $line")
       unless all { defined } ($initial, $size, $date, $time, $remainder);
 
     $self->size($size);
@@ -155,20 +174,21 @@ sub init_from_tar_output {
     $self->time($time);
 
     my ($permissions, $ownership) = split(/\s+/, $initial, 2);
-    die "Cannot parse permissions and ownership in tar output: $line"
+    die encode_utf8(
+        "Cannot parse permissions and ownership in tar output: $line")
       unless all { defined } ($permissions, $ownership);
 
     $self->perm($permissions);
 
     my ($owner, $group) = split(qr{/}, $ownership, 2);
-    die "Cannot parse owner and group in tar output: $line"
+    die encode_utf8("Cannot parse owner and group in tar output: $line")
       unless all { defined } ($owner, $group);
 
     $self->owner($owner);
     $self->group($group);
 
-    my ($name, $extra) = get_quoted_filename($remainder, EMPTY);
-    die "Cannot parse file name in tar output: $line"
+    my ($name, $extra) = get_quoted_filename($remainder, $EMPTY);
+    die encode_utf8("Cannot parse file name in tar output: $line")
       unless all { defined } ($name, $extra);
 
     # strip relative prefix
@@ -180,8 +200,10 @@ sub init_from_tar_output {
     $name =~ s{/+}{/}g;
 
     # make sure directories end with a slash, except root
-    $name .= SLASH
-      if length $name && $self->perm =~ /^d/ && substr($name, -1) ne SLASH;
+    $name .= $SLASH
+      if length $name
+      && $self->perm =~ / ^d /msx
+      && $name !~ m{ /$ }msx;
 
     $self->name($name);
 
@@ -189,7 +211,8 @@ sub init_from_tar_output {
     if ($self->perm =~ /^l/) {
 
         my ($linktarget, undef) = get_quoted_filename($extra, $symlinkpattern);
-        die "Cannot parse symbolic link target in tar output: $line"
+        die encode_utf8(
+            "Cannot parse symbolic link target in tar output: $line")
           unless defined $linktarget;
 
         # do not remove multiple slashes from symlink targets
@@ -204,7 +227,7 @@ sub init_from_tar_output {
     if ($self->perm =~ /^h/) {
 
         my ($linktarget, undef)= get_quoted_filename($extra, $hardlinkpattern);
-        die "Cannot parse hard link target in tar output: $line"
+        die encode_utf8("Cannot parse hard link target in tar output: $line")
           unless defined $linktarget;
 
         # strip relative prefix
@@ -225,24 +248,25 @@ sub init_from_tar_output {
 =item bytes_match(REGEX)
 
 Returns the matched string if REGEX matches the file's byte contents,
-or EMPTY otherwise.
+or $EMPTY otherwise.
 
 =cut
 
 sub bytes_match {
     my ($self, $regex) = @_;
 
-    return EMPTY
+    return $EMPTY
       unless $self->is_file;
 
-    return EMPTY
+    return $EMPTY
       unless $self->is_open_ok;
 
-    return EMPTY
+    return $EMPTY
       unless length $regex;
 
     open(my $fd, '<:raw', $self->unpacked_path);
-    my $sfd = Lintian::SlidingWindow->new($fd);
+    my $sfd = Lintian::SlidingWindow->new;
+    $sfd->handle($fd);
 
     my $match;
     while (my $block = $sfd->readwindow) {
@@ -256,13 +280,13 @@ sub bytes_match {
 
     close $fd;
 
-    return $match // EMPTY;
+    return $match // $EMPTY;
 }
 
 =item mentions_in_operation(REGEX)
 
 Returns the matched string if REGEX matches in a file location
-that is likely an operation (vs text), or EMPTY otherwise.
+that is likely an operation (vs text), or $EMPTY otherwise.
 
 =cut
 
@@ -279,7 +303,7 @@ sub mentions_in_operation {
         $match = $self->bytes_match($regex);
     }
 
-    return $match // EMPTY;
+    return $match // $EMPTY;
 }
 
 =item magic(COUNT)
@@ -291,42 +315,154 @@ Returns the specified COUNT of magic bytes for the file.
 sub magic {
     my ($self, $count) = @_;
 
-    return EMPTY
-      unless $self->size >= $count;
+    return $EMPTY
+      if $self->size < $count;
 
     my $magic;
 
     open(my $fd, '<', $self->unpacked_path);
-    die "Could not read $count bytes from ", $self->name
+    die encode_utf8("Could not read $count bytes from " . $self->name)
       unless read($fd, $magic, $count) == $count;
     close $fd;
 
     return $magic;
 }
 
-=item get_interpreter
+=item C<hashbang>
 
-Returns the interpreter for the file if it is a script.
+Returns the C<hashbang> for the file if it is a script.
 
 =cut
 
-sub get_interpreter {
-    my ($self) = @_;
+has hashbang => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
 
-    my $magic;
-    my $interpreter;
+        return $EMPTY
+          unless $self->is_script;
 
-    open(my $fd, '<', $self->unpacked_path);
-    if (read($fd, $magic, 2) && $magic eq '#!' && !eof($fd)) {
-        $interpreter = <$fd>;
+        my $trimmed_bytes = $EMPTY;
+        my $magic;
+
+        open(my $fd, '<', $self->unpacked_path);
+        if (read($fd, $magic, 2) && $magic eq $HASHBANG && !eof($fd)) {
+            $trimmed_bytes = <$fd>;
+        }
+        close $fd;
+
+        # decoding UTF-8 fails on magyarispell_1.6.1-2.dsc and ldc_1.24.0-1.dsc
+
+        # remove comment, if any
+        $trimmed_bytes =~ s/^([^#]*)/$1/;
 
         # trim both ends
-        $interpreter =~ s/^\s+|\s+$//g;
-    }
-    close $fd;
+        $trimmed_bytes =~ s/^\s+|\s+$//g;
 
-    return $interpreter;
-}
+        return $trimmed_bytes;
+    });
+
+=item interpreter_with_options
+
+Returns the interpreter requested by a script with options
+after stripping C<env>.
+
+=cut
+
+has interpreter_with_options => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        my $with_options = $self->hashbang;
+
+        $with_options =~ s{^/usr/bin/env\s+}{};
+
+        return $with_options;
+    });
+
+=item interpreter
+
+Returns the interpreter requested by a script but strips C<env>.
+
+=cut
+
+has interpreter => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        my $interpreter = $self->interpreter_with_options;
+
+        # keep base command without options
+        $interpreter =~ s/^(\S+).*/$1/;
+
+        return $interpreter;
+    });
+
+=item C<calls_env>
+
+Returns true if file is a script that calls C<env>.
+
+=cut
+
+has calls_env => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        # must return a boolean success value #943724
+        return 1
+          if $self->hashbang =~ m{^/usr/bin/env\s+};
+
+        return 0;
+    });
+
+=item C<is_shell_script>
+
+Returns true if file is a script requesting a recognized shell
+interpreter.
+
+=cut
+
+has is_shell_script => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        my $interpreter = $self->interpreter;
+
+        # keep basename
+        my ($basename) = ($interpreter =~ m{([^/]*)/?$}s);
+
+        return 1
+          if $basename =~ /^(?:[bd]?a|t?c|(?:pd|m)?k|z)?sh$/;
+
+        return 0;
+    });
+
+=item is_elf
+
+Returns true if file is an ELF executable, and false otherwise.
+
+=cut
+
+has is_elf => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        return 1
+          if $self->magic($ELF_MAGIC_SIZE) eq "\x7FELF";
+
+        return 0;
+    });
 
 =item is_script
 
@@ -334,14 +470,21 @@ Returns true if file is a script and false otherwise.
 
 =cut
 
-sub is_script {
-    my ($self) = @_;
+has is_script => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
 
-    return 1
-      if scalar keys %{$self->script};
+        # skip lincity data files; magic: #!#!#!
+        return 0
+          if $self->magic($LINCITY_MAGIC_SIZE) eq '#!#!#!';
 
-    return 0;
-}
+        return 0
+          unless $self->magic($SHELL_SCRIPT_MAGIC_SIZE) eq $HASHBANG;
+
+        return 1;
+    });
 
 =item is_control
 
@@ -349,14 +492,18 @@ Returns true if file is a maintainer script and false otherwise.
 
 =cut
 
-sub is_control {
-    my ($self) = @_;
+has is_control => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
 
-    return 1
-      if scalar keys %{$self->control};
+        return 0
+          unless $self->is_open_ok
+          && $self->name =~ m/^(?:(?:pre|post)(?:inst|rm)|config)$/;
 
-    return 0;
-}
+        return 1;
+    });
 
 =item identity
 
@@ -371,7 +518,7 @@ this may return a numerical owner (except uid 0 is always mapped to
 sub identity {
     my ($self) = @_;
 
-    return $self->owner . SLASH . $self->group;
+    return $self->owner . $SLASH . $self->group;
 }
 
 =item operm
@@ -390,6 +537,16 @@ sub operm {
     return $self->path_info & OPERM_MASK;
 }
 
+=item octal_permissions
+
+=cut
+
+sub octal_permissions {
+    my ($self) = @_;
+
+    return sprintf('%04o', $self->operm);
+}
+
 =item children
 
 Returns a list of children (as Lintian::File::Path objects) of this entry.
@@ -406,7 +563,7 @@ sub children {
 
     my @names = values %{$self->childnames};
 
-    croak 'No index in ' . $self->name
+    croak encode_utf8('No index in ' . $self->name)
       unless defined $self->index;
 
     return map { $self->index->lookup($_) } @names;
@@ -446,7 +603,7 @@ seconds since the start of Unix epoch in UTC.
 sub timestamp {
     my ($self) = @_;
 
-    my $timestamp = $self->date . SPACE . $self->time;
+    my $timestamp = $self->date . $SPACE . $self->time;
 
     return str2time($timestamp, 'GMT');
 }
@@ -469,14 +626,14 @@ Example:
 sub child {
     my ($self, $basename) = @_;
 
-    croak 'Basename is required'
+    croak encode_utf8('Basename is required')
       unless length $basename;
 
     my $childname = $self->childnames->{$basename};
-    return
+    return undef
       unless $childname;
 
-    croak 'No index in ' . $self->name
+    croak encode_utf8('No index in ' . $self->name)
       unless defined $self->index;
 
     return $self->index->lookup($childname);
@@ -518,23 +675,33 @@ symlinks, even if the symlink points to a file.
 =cut
 
 sub is_symlink {
-    return $_[0]->path_info & TYPE_SYMLINK ? 1 : 0;
+    my ($self) = @_;
+
+    return $self->path_info & TYPE_SYMLINK ? 1 : 0;
 }
 
 sub is_hardlink {
-    return $_[0]->path_info & TYPE_HARDLINK ? 1 : 0;
+    my ($self) = @_;
+
+    return $self->path_info & TYPE_HARDLINK ? 1 : 0;
 }
 
 sub is_dir {
-    return $_[0]->path_info & TYPE_DIR ? 1 : 0;
+    my ($self) = @_;
+
+    return $self->path_info & TYPE_DIR ? 1 : 0;
 }
 
 sub is_file {
-    return $_[0]->path_info & (TYPE_FILE | TYPE_HARDLINK) ? 1 : 0;
+    my ($self) = @_;
+
+    return $self->path_info & (TYPE_FILE | TYPE_HARDLINK) ? 1 : 0;
 }
 
 sub is_regular_file {
-    return $_[0]->path_info & TYPE_FILE ? 1 : 0;
+    my ($self) = @_;
+
+    return $self->path_info & TYPE_FILE ? 1 : 0;
 }
 
 =item link_normalized
@@ -564,13 +731,13 @@ sub link_normalized {
     my $name = $self->name;
     my $link = $self->link;
 
-    croak "$name is not a link"
+    croak encode_utf8("$name is not a link")
       unless length $link;
 
     my $dir = $self->dirname;
 
     # hardlinks are always relative to the package root
-    $dir = SLASH
+    $dir = $SLASH
       if $self->is_hardlink;
 
     my $target = normalize_link_target($dir, $link);
@@ -596,14 +763,53 @@ at least one bit denoting executability set (bitmask 0111).
 
 =cut
 
-sub _any_bit_in_operm {
-    my ($self, $bitmask) = @_;
-    return ($self->path_info & $bitmask) ? 1 : 0;
+sub is_readable   {
+    my ($self) = @_;
+
+    return $self->path_info & $READ_BITS;
 }
 
-sub is_readable   { return $_[0]->_any_bit_in_operm(0444); }
-sub is_writable   { return $_[0]->_any_bit_in_operm(0222); }
-sub is_executable { return $_[0]->_any_bit_in_operm(0111); }
+sub is_writable   {
+    my ($self) = @_;
+
+    return $self->path_info & $WRITE_BITS;
+}
+
+sub is_executable {
+    my ($self) = @_;
+
+    return $self->path_info & $EXECUTABLE_BITS;
+}
+
+=item all_bits_set
+
+=cut
+
+sub all_bits_set {
+    my ($self, $bits) = @_;
+
+    return ($self->operm & $bits) == $bits;
+}
+
+=item is_setuid
+
+=cut
+
+sub is_setuid {
+    my ($self) = @_;
+
+    return $self->operm & $SETUID;
+}
+
+=item is_setgid
+
+=cut
+
+sub is_setgid {
+    my ($self) = @_;
+
+    return $self->operm & $SETGID;
+}
 
 =item unpacked_path
 
@@ -640,12 +846,12 @@ sub unpacked_path {
 
     $self->_check_access;
 
-    croak 'No index in ' . $self->name
+    croak encode_utf8('No index in ' . $self->name)
       unless defined $self->index;
 
     my $basedir = $self->index->basedir;
 
-    croak 'No base directory'
+    croak encode_utf8('No base directory')
       unless length $basedir;
 
     my $unpacked = path($basedir)->child($self->name)->stringify;
@@ -703,7 +909,8 @@ sub _check_access {
         # NB: We are deliberately vague here to avoid suggesting
         # whether $path exists.  In some cases (e.g. lintian.d.o)
         # the output is readily available to wider public.
-        confess('Attempt to access through broken or unsafe symlink:'. ' '
+        confess encode_utf8(
+            'Attempt to access through broken or unsafe symlink: '
               . $self->name);
     }
 
@@ -722,8 +929,9 @@ sub _check_open {
     # Leave "_path_access" here as _check_access marks it either as
     # "UNSAFE_PATH" or "FS_PATH_IS_OK"
 
-    confess 'Opening of irregular file not supported: ' . $self->name
-      unless $self->is_file || ($self->is_symlink && -f $self->unpacked_path);
+    confess encode_utf8(
+        'Opening of irregular file not supported: ' . $self->name)
+      unless $self->is_file || ($self->is_symlink && -e $self->unpacked_path);
 
     $self->path_info($self->path_info | OPEN_IS_OK);
 
@@ -739,22 +947,25 @@ Return dereferenced link if applicable
 sub follow {
     my ($self, $maxlinks) = @_;
 
+    return $self
+      unless length $self->link;
+
     return $self->dereferenced
       if defined $self->dereferenced;
 
     # set limit
-    $maxlinks //= 18;
+    $maxlinks //= $MAXIMUM_LINK_DEPTH;
 
     # catch recursive links
-    return
-      unless $maxlinks > 0;
+    return undef
+      if $maxlinks <= 0;
 
     # reduce counter
     $maxlinks--;
 
     my $reference;
 
-    croak 'No index in ' . $self->name
+    croak encode_utf8('No index in ' . $self->name)
       unless defined $self->index;
 
     if ($self->is_hardlink) {
@@ -766,7 +977,7 @@ sub follow {
         $reference = $self->parent_dir;
     }
 
-    return
+    croak encode_utf8('No parent reference for link in ' . $self->name)
       unless defined $reference;
 
     # follow link
@@ -824,18 +1035,18 @@ Examples:
 sub resolve_path {
     my ($self, $request, $maxlinks) = @_;
 
-    croak 'Can only resolve string arguments'
-      if defined $request && ref($request) ne EMPTY;
+    croak encode_utf8('Can only resolve string arguments')
+      if defined $request && ref($request) ne $EMPTY;
 
-    $request //= EMPTY;
+    $request //= $EMPTY;
 
-    croak 'No index in ' . $self->name
+    croak encode_utf8('No index in ' . $self->name)
       unless defined $self->index;
 
     if (length $self->link) {
         # follow the link
         my $dereferenced = $self->follow($maxlinks);
-        return
+        return undef
           unless defined $dereferenced;
 
         # and use that to resolve the request
@@ -848,7 +1059,7 @@ sub resolve_path {
     if ($request =~ s{^/+}{}s) {
 
         # require anchoring for absolute references
-        return
+        return undef
           unless $self->index->anchored;
 
         # get root entry
@@ -863,7 +1074,7 @@ sub resolve_path {
         $reference = $self->parent_dir;
     }
 
-    return
+    return undef
       unless defined $reference;
 
     # read first segment; strip all trailing slashes for recursive use
@@ -873,12 +1084,12 @@ sub resolve_path {
 
         # single dot, or two slashes in a row
         return $reference->resolve_path($request, $maxlinks)
-          if $segment eq DOT || !length $segment;
+          if $segment eq $DOT || !length $segment;
 
         # for double dot, go up a level
-        if ($segment eq DOUBLEDOT) {
+        if ($segment eq $DOUBLE_DOT) {
             my $parent = $reference->parent_dir;
-            return
+            return undef
               unless defined $parent;
 
             return $parent->resolve_path($request, $maxlinks);
@@ -886,13 +1097,13 @@ sub resolve_path {
 
         # look for child otherwise
         my $child = $reference->child($segment);
-        return
+        return undef
           unless defined $child;
 
         return $child->resolve_path($request, $maxlinks);
     }
 
-    croak "Cannot parse path resolution request: $request"
+    croak encode_utf8("Cannot parse path resolution request: $request")
       if length $request;
 
     # nothing else to resolve
@@ -998,13 +1209,9 @@ files.
 
 =item java_info
 
-=item script
-
 =item strings
 
 =item objdump
-
-=item control
 
 =item C<basedir>
 
@@ -1034,7 +1241,7 @@ Return the parent dir entry of this the path entry.
 has name => (
     is => 'rw',
     lazy => 1,
-    coerce => sub { my ($string) = @_; return $string // EMPTY;},
+    coerce => sub { my ($string) = @_; return $string // $EMPTY;},
     trigger => sub {
         my ($self, $name) = @_;
 
@@ -1045,30 +1252,30 @@ has name => (
         my ($dirname) = ($name =~ m{^(.+/)?(?:[^/]+/?)$}s);
         $self->dirname($dirname);
     },
-    default => EMPTY
+    default => $EMPTY
 );
 has basename => (
     is => 'rw',
     lazy => 1,
-    coerce => sub { my ($string) = @_; return $string // EMPTY;},
-    default => EMPTY
+    coerce => sub { my ($string) = @_; return $string // $EMPTY;},
+    default => $EMPTY
 );
 has dirname => (
     is => 'rw',
     lazy => 1,
-    coerce => sub { my ($string) = @_; return $string // EMPTY;},
-    default => EMPTY
+    coerce => sub { my ($string) = @_; return $string // $EMPTY;},
+    default => $EMPTY
 );
 
 has link => (
     is => 'rw',
-    coerce => sub { my ($string) = @_; return $string // EMPTY;},
-    default => EMPTY
+    coerce => sub { my ($string) = @_; return $string // $EMPTY;},
+    default => $EMPTY
 );
 has normalized => (
     is => 'rw',
-    coerce => sub { my ($string) = @_; return $string // EMPTY;},
-    default => EMPTY
+    coerce => sub { my ($string) = @_; return $string // $EMPTY;},
+    default => $EMPTY
 );
 has faux => (is => 'rw', default => 0);
 
@@ -1117,32 +1324,24 @@ has md5sum => (
 );
 has file_info => (
     is => 'rw',
-    coerce => sub { my ($text) = @_; return ($text // EMPTY); },
-    default => EMPTY
+    coerce => sub { my ($text) = @_; return ($text // $EMPTY); },
+    default => $EMPTY
 );
 has java_info => (
     is => 'rw',
     coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
     default => sub { {} });
-has script => (
-    is => 'rw',
-    coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
-    default => sub { {} });
 has strings => (
     is => 'rw',
-    coerce => sub { my ($text) = @_; return ($text // EMPTY); },
-    default => EMPTY
+    coerce => sub { my ($text) = @_; return ($text // $EMPTY); },
+    default => $EMPTY
 );
 has objdump => (
     is => 'rw',
-    coerce => sub { my ($text) = @_; return ($text // EMPTY); },
-    default => EMPTY
+    coerce => sub { my ($text) = @_; return ($text // $EMPTY); },
+    default => $EMPTY
 );
 has ar_info => (
-    is => 'rw',
-    coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
-    default => sub { {} });
-has control => (
     is => 'rw',
     coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
     default => sub { {} });
@@ -1157,9 +1356,9 @@ has parent_dir => (
 
         # do not return root as its own parent
         return
-          if $self->name eq EMPTY;
+          if $self->name eq $EMPTY;
 
-        croak 'No index in ' . $self->name
+        croak encode_utf8('No index in ' . $self->name)
           unless defined $self->index;
 
         # returns root by default
@@ -1184,7 +1383,7 @@ Returns a decoded, wide-character string if file contents are valid UTF-8.
 sub bytes {
     my ($self) = @_;
 
-    return EMPTY
+    return $EMPTY
       unless $self->is_open_ok;
 
     my $bytes = path($self->unpacked_path)->slurp;
@@ -1205,7 +1404,7 @@ sub is_valid_utf8 {
 sub decoded_utf8 {
     my ($self) = @_;
 
-    return EMPTY
+    return $EMPTY
       unless $self->is_valid_utf8;
 
     return decode_utf8($self->bytes);

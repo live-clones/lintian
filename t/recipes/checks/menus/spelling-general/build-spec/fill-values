@@ -2,3 +2,5 @@ Testname: spelling-general
 Skeleton: upload-non-native
 Source-Format: 3.0 (quilt)
 Description: General checks for spelling errors
+# doc-base installation paths now include the package name, see Bug#980903
+Extra-Build-Depends: debhelper (>= 13.4)

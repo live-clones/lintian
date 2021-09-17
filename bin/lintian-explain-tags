@@ -27,18 +27,25 @@ use v5.20;
 use warnings;
 use utf8;
 
+use Cwd qw(realpath);
+use File::Basename qw(dirname);
+
+# neither Path::This nor lib::relative are in Debian
+use constant THISFILE => realpath __FILE__;
+use constant THISDIR => dirname realpath __FILE__;
+
 # use Lintian modules that belong to this program
-use FindBin;
-use lib "$FindBin::RealBin/../lib";
+use lib THISDIR . '/../lib';
 
 # substituted during package build
 my $LINTIAN_VERSION;
 
-use Cwd qw(getcwd realpath);
-use File::BaseDir qw(config_home config_files data_home);
-use File::Basename;
+use Const::Fast;
 use Getopt::Long ();
-use List::MoreUtils qw(any);
+use IO::Interactive qw(is_interactive);
+use List::SomeUtils qw(any);
+use Term::ReadKey;
+use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Output::EWI;
 use Lintian::Output::HTML;
@@ -46,21 +53,27 @@ use Lintian::Output::JSON;
 use Lintian::Profile;
 use Lintian::Version qw(guess_version);
 
-use constant EMPTY => q{};
-use constant SPACE => q{ };
-use constant COLON => q{:};
-use constant NEWLINE => qq{\n};
+const my $EMPTY => q{};
+const my $SPACE => q{ };
 
-binmode(STDOUT, ':encoding(UTF-8)');
+const my $NEW_PROGRAM_NAME => q{lintian-explain-tags};
+
+my $TERMINAL_WIDTH;
+($TERMINAL_WIDTH, undef, undef, undef) = GetTerminalSize()
+  if is_interactive;
 
 if (my $coverage_arg = $ENV{'LINTIAN_COVERAGE'}) {
-    my $p5opt = $ENV{'PERL5OPT'}//EMPTY;
-    $p5opt .= ' ' if $p5opt ne EMPTY;
+    my $p5opt = $ENV{'PERL5OPT'}//$EMPTY;
+    $p5opt .= $SPACE if $p5opt ne $EMPTY;
     $ENV{'PERL5OPT'} = "${p5opt} ${coverage_arg}";
 }
 
-$ENV{LINTIAN_BASE} = realpath("$FindBin::RealBin/..")
-  // die 'Cannot resolve LINTIAN_BASE';
+$ENV{LINTIAN_BASE} = realpath(THISDIR . '/..')
+  // die encode_utf8('Cannot resolve LINTIAN_BASE');
+
+$ENV{LINTIAN_VERSION} = $LINTIAN_VERSION // guess_version($ENV{LINTIAN_BASE});
+die encode_utf8('Unable to determine the version automatically!?')
+  unless length $ENV{LINTIAN_VERSION};
 
 my $format = 'ewi';
 my @INCLUDE_DIRS;
@@ -74,6 +87,7 @@ my %options = (
     'help|h' => \&show_help,
     'include-dir=s' => \@INCLUDE_DIRS,
     'list-tags|l' => \$list_tags,
+    'output-width=i' => \$TERMINAL_WIDTH,
     'profile=s' => \$profile_name,
     'tags|tag|t' => \$tags,
     'user-dirs!' => \$user_dirs,
@@ -82,39 +96,10 @@ my %options = (
 
 Getopt::Long::Configure('gnu_getopt');
 Getopt::Long::GetOptions(%options)
-  or die "error parsing options\n";
-
-# only absolute paths
-my @RESTRICTED_CONFIG_DIRS;
-
-if ($user_dirs) {
-    my $data_home;
-    my $legacy_user_data;
-
-    $data_home = data_home('lintian')
-      if exists $ENV{'HOME'} || exists $ENV{'XDG_CONFIG_HOME'};
-
-    $legacy_user_data = "$ENV{HOME}/.lintian"
-      if exists $ENV{'HOME'};
-
-    if (defined($data_home) and $data_home !~ m@^/@) {
-        # Turn the path into an absolute one.  Just in case
-        # someone sets a relative HOME dir.
-        my $cwd = getcwd();
-        $data_home = "${cwd}/${data_home}";
-    }
-
-    @RESTRICTED_CONFIG_DIRS = grep { -d }
-      grep { length } ($data_home, $legacy_user_data, '/etc/lintian');
-}
-
-# only absolute paths
-my @CONFIG_DIRS = grep { -d }
-  grep { length } map { realpath($_) } ($ENV{'LINTIAN_BASE'}, @INCLUDE_DIRS);
+  or die encode_utf8("error parsing options\n");
 
 my $profile = Lintian::Profile->new;
-$profile->load($profile_name, \@CONFIG_DIRS,
-    { 'restricted-search-dirs' => \@RESTRICTED_CONFIG_DIRS });
+$profile->load($profile_name, \@INCLUDE_DIRS, $user_dirs);
 
 my $output;
 
@@ -129,11 +114,11 @@ if ($format eq 'ewi') {
     $output = Lintian::Output::HTML->new;
 
 } else {
-    die "Invalid output format $format\n";
+    die encode_utf8("Invalid output format $format\n");
 }
 
 if ($list_tags) {
-    say for sort { lc($a) cmp lc($b) } $profile->enabled_tags;
+    say encode_utf8($_) for sort { lc($a) cmp lc($b) } $profile->enabled_tags;
     exit;
 }
 
@@ -146,33 +131,33 @@ my @available = grep { defined} map { $profile->get_tag($_) } @selected;
 
 my @sorted = sort { lc($a->name) cmp lc($b->name) } @available;
 
-$output->describe_tags(@sorted);
+$output->describe_tags(\@sorted, $TERMINAL_WIDTH);
 
 exit any { !defined $profile->get_tag($_) } @selected;
 
 sub show_version {
-    my $version = $LINTIAN_VERSION // guess_version($ENV{LINTIAN_BASE});
+    say encode_utf8("$NEW_PROGRAM_NAME v$ENV{LINTIAN_VERSION}");
 
-    die 'Unable to determine the version automatically!?'
-      unless length $version;
-
-    say "annotate-lintian-hints v$version";
     exit;
 }
 
 sub show_help {
-    print <<"EOT";
-Usage: explain-lintian-tags [log-file...] ...
-       explain-lintian-tags [--tags] tag ...
+    my $message =<<"EOT";
+Usage: $NEW_PROGRAM_NAME [log-file...] ...
+       $NEW_PROGRAM_NAME [--tags] tag ...
 
 Options:
     -l, --list-tags    list all tags Lintian knows about
     -t, --tag, --tags  display tag descriptions
-    --profile X        use vendor profile X to determine severities
     --include-dir DIR  check for Lintian data in DIR
+    --profile X        use vendor profile X to determine severities
+    --output-width NUM set output width instead of probing terminal
     --[no-]user-dirs   whether to include profiles from user directories
     --version          show version info and exit
 EOT
+
+    print encode_utf8($message);
+
     exit;
 }
 

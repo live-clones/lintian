@@ -1,0 +1,1 @@
+manpage-errors-from-man (binary): groff-message usr/share/man/man1/errors-from-man.1P.gz (line 2) 14: warning: macro 'dep' not defined (possibly missing space after 'de')

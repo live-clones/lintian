@@ -1,6 +1,6 @@
 Tag: debian-upstream-obsolete-path
 Severity: error
-Check: cruft
+Check: debian/upstream/metadata
 Explanation: Upstream metadata is stored under an obsolete path.
  .
  Upstream MEtadata GAthered with YAml (UMEGAYA) is an effort to collect

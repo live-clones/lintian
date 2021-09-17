@@ -20,18 +20,24 @@ package Lintian::Index::FileInfo;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
+use Const::Fast;
 use Cwd;
-use IPC::Run3;
+use Unicode::UTF8 qw(encode_utf8 decode_utf8);
 
-use constant EMPTY => q{};
-use constant SPACE => q{ };
-use constant COMMA => q{,};
-use constant NULL => qq{\0};
+use Lintian::IPC::Run3 qw(xargs);
 
 use Moo::Role;
 use namespace::clean;
+
+const my $EMPTY => q{};
+const my $SPACE => q{ };
+const my $COMMA => q{,};
+const my $NEWLINE => qq{\n};
+
+const my $KEEP_EMPTY_FIELDS => -1;
+const my $GZIP_MAGIC_SIZE => 9;
+const my $GZIP_MAGIC_BYTES => 0x1f8b;
 
 =head1 NAME
 
@@ -57,45 +63,58 @@ sub add_fileinfo {
     my ($self) = @_;
 
     my $savedir = getcwd;
-    chdir($self->basedir);
+    chdir($self->basedir)
+      or die 'Cannot change to directory ' . $self->basedir;
 
-    my @files = grep { $_->is_file } $self->sorted_list;
+    my $errors = $EMPTY;
 
-    my $input = EMPTY;
-    $input .= $_->name . NULL for @files;
+    my @files = grep { $_->is_file } @{$self->sorted_list};
+    my @names = map { $_->name } @files;
 
-    my $stdout;
-
-    my @command = (
-        'xargs', '--null','--no-run-if-empty', 'file',
-        '--no-pad', '--print0', '--print0', '--'
-    );
-
-    # ignore failures; file returns non-zero on parse errors
-    # output then contains "ERROR" messages but is still usable
-    run3(\@command, \$input, \$stdout);
+    my @command = qw(file --no-pad --print0 --print0 --);
 
     my %fileinfo;
 
-    $stdout =~ s/\0$//;
+    xargs(
+        \@command,
+        \@names,
+        sub {
+            my ($stdout, $stderr, $status, @partial) = @_;
 
-    my @lines = split(/\0/, $stdout, -1);
+            # ignore failures if possible; file returns non-zero and
+            # "ERROR" on parse errors but output is still usable
 
-    die 'Did not get an even number lines from file command.'
-      unless @lines % 2 == 0;
+            # undecoded split allows names with non UTF-8 bytes
+            $stdout =~ s/\0$//;
 
-    while(defined(my $path = shift @lines)) {
+            my @lines = split(/\0/, $stdout, $KEEP_EMPTY_FIELDS);
 
-        my $type = shift @lines;
+            unless (@lines % 2 == 0) {
+                $errors
+                  .= 'Did not get an even number lines from file command.'
+                  . $NEWLINE;
+                return;
+            }
 
-        die "syntax error in file-info output: '$path' '$type'"
-          unless length $path && length $type;
+            while(defined(my $path = shift @lines)) {
 
-        # drop relative prefix, if present
-        $path =~ s{^\./}{};
+                my $type = shift @lines;
 
-        $fileinfo{$path} = $type;
-    }
+                unless (length $path && length $type) {
+                    $errors
+                      .= "syntax error in file-info output: '$path' '$type'"
+                      . $NEWLINE;
+                    next;
+                }
+
+                # drop relative prefix, if present
+                $path =~ s{^\./}{};
+
+                $fileinfo{$path} = $type;
+            }
+
+            return;
+        });
 
     $_->file_info($fileinfo{$_->name}) for @files;
 
@@ -105,7 +124,7 @@ sub add_fileinfo {
 
     for my $file (@probably_compressed) {
 
-        my $buffer = $file->magic(9);
+        my $buffer = $file->magic($GZIP_MAGIC_SIZE);
         next
           unless length $buffer;
 
@@ -116,16 +135,16 @@ sub add_fileinfo {
 
         # gzip file magic
         next
-          unless $magic == 0x1f8b;
+          unless $magic == $GZIP_MAGIC_BYTES;
 
         my $text = 'gzip compressed data';
 
         # 2 for max compression; RFC1952 suggests this is a
         # flag and not a value, hence bit operation
-        $text .= COMMA . SPACE . 'max compression'
+        $text .= $COMMA . $SPACE . 'max compression'
           if $compression & 2;
 
-        my $new_type = $file->file_info . COMMA . SPACE . $text;
+        my $new_type = $file->file_info . $COMMA . $SPACE . $text;
         $file->file_info($new_type);
     }
 
@@ -135,9 +154,10 @@ sub add_fileinfo {
       @files;
     $_->file_info('data') for @not_gzip;
 
-    chdir($savedir);
+    chdir($savedir)
+      or die encode_utf8("Cannot change to directory $savedir");
 
-    return;
+    return $errors;
 }
 
 =back

@@ -1,6 +1,6 @@
 Tag: source-contains-prebuilt-ms-help-file
 Severity: error
-Check: cruft
+Check: files/banned/compiled-help
 Explanation: The source tarball contains a prebuilt Microsoft precompiled help
  file (CHM file). These are often included by mistake when developers generate
  a tarball without cleaning the source directory first.

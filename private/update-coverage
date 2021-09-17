@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!/usr/bin/perl
 #
 # Copyright © 2018 Chris Lamb <lamby@debian.org>
 #
@@ -10,26 +10,38 @@
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
+
+use Const::Fast;
+use Cwd qw(realpath);
+use File::Basename qw(dirname);
+use Unicode::UTF8 qw(encode_utf8);
+
+# neither Path::This nor lib::relative are in Debian
+use constant THISFILE => realpath __FILE__;
+use constant THISDIR => dirname realpath __FILE__;
 
 # use Lintian modules that belong to this program
-use FindBin;
-use lib "$FindBin::RealBin/../lib";
+use lib THISDIR . '/../lib';
 
-use Cwd qw(realpath);
 use POSIX qw(strftime);
 
 use Lintian::Deb822::Parser qw(read_dpkg_control);
 
-$ENV{LINTIAN_BASE} = realpath("$FindBin::RealBin/..")
-  // die 'Cannot resolve LINTIAN_BASE';
+const my $EMPTY => q{};
+const my $SPACE => q{ };
+const my $PERCENTAGE => 100;
+
+$ENV{LINTIAN_BASE} = realpath(THISDIR . '/..')
+  // die encode_utf8('Cannot resolve LINTIAN_BASE');
 
 # Check that we're being run from the right place (although the above probably
 # died if we weren't).
-unless (-f 'private/runtests') {
-    warn "update-coverage source be run from the top level of the Lintian\n";
-    warn "source tree.\n\n";
-    die "Cannot find private/runtests -- run from the right directory?\n";
+unless (-e 'private/runtests') {
+    warn encode_utf8(
+        "update-coverage source be run from the top level of the Lintian\n");
+    warn encode_utf8("source tree.\n\n");
+    die encode_utf8(
+        "Cannot find private/runtests -- run from the right directory?\n");
 }
 
 # Gather a list of all tags.
@@ -39,7 +51,7 @@ my @legacy_in_new;
 
 for my $desc (glob('checks/*.desc')) {
     for my $data (read_dpkg_control($desc)) {
-        $desc =~ s,.*/,,;
+        $desc =~ s{.*/}{};
         $desc =~ s/\.desc$//;
         if (exists $data->{Tag}) {
             $tags{$data->{Tag}} = $desc;
@@ -66,7 +78,7 @@ for my $desc (
         push(@legacy_in_new, [$testname, $tagfile]);
 
     } elsif (exists $data->{'Test-For'}) {
-        for my $tag (split(' ', $data->{'Test-For'})) {
+        for my $tag (split($SPACE, $data->{'Test-For'})) {
             my $check = $tags{$tag};
             delete $tags{$tag};
             if ($check) {
@@ -96,42 +108,54 @@ for my $tagfile (glob('testset/tags.*')) {
 $ltc = $total - scalar keys %tags;
 $cltc = $check_total - scalar keys %checks;
 
-my $tcr = $total ? sprintf ' (%.02f%%)', ($tc / $total) * 100 : '';
-my $ltcr = $total ? sprintf ' (%.02f%%)', ($ltc / $total) * 100 : '';
+my $tcr = $total ? sprintf ' (%.02f%%)', ($tc / $total) * $PERCENTAGE : $EMPTY;
+my $ltcr
+  = $total
+  ? sprintf ' (%.02f%%)', ($ltc / $total) * $PERCENTAGE
+  : $EMPTY;
 my $ctcr
   = $check_total
-  ? sprintf ' (%.02f%%)', ($ctc / $check_total) * 100
-  : '';
+  ? sprintf ' (%.02f%%)', ($ctc / $check_total) * $PERCENTAGE
+  : $EMPTY;
 my $cltcr
   = $check_total
-  ? sprintf ' (%.02f%%)', ($cltc / $check_total) * 100
-  : '';
+  ? sprintf ' (%.02f%%)', ($cltc / $check_total) * $PERCENTAGE
+  : $EMPTY;
 # Open COVERAGE and print out a date stamp.
-open(my $coverage, '>', 't/COVERAGE') or die "Cannot create t/COVERAGE: $!\n";
-print {$coverage} 'Last generated ', strftime('%Y-%m-%d', gmtime), "\n";
-print {$coverage} "Coverage (Tags): $tc/$total$tcr, ",
-  "w. legacy tests: $ltc/$total$ltcr\n";
-print {$coverage} "Coverage (Checks): $ctc/$check_total$ctcr, ",
-  "w. legacy tests: $cltc/$check_total$cltcr\n\n";
+open(my $coverage, '>', 't/COVERAGE')
+  or die encode_utf8("Cannot create t/COVERAGE: $!\n");
+print {$coverage}
+  encode_utf8('Last generated ', strftime('%Y-%m-%d', gmtime), "\n");
+print {$coverage} encode_utf8(
+    "Coverage (Tags): $tc/$total$tcr, ",
+    "w. legacy tests: $ltc/$total$ltcr\n"
+);
+print {$coverage} encode_utf8(
+    "Coverage (Checks): $ctc/$check_total$ctcr, ",
+    "w. legacy tests: $cltc/$check_total$cltcr\n\n"
+);
 
 # Whatever is left in the %tags hash are untested.  Print them out sorted by
 # checks file.
-print {$coverage} "The following tags are not tested by the test suite:\n";
+print {$coverage}
+  encode_utf8("The following tags are not tested by the test suite:\n");
 print_tags(\%tags, $coverage);
 
 # The contents of the %legacy hash are only tested by the legacy test suite.
 print {$coverage}
-  "\nThe following tags are only tested by the legacy test suite:\n";
+  encode_utf8(
+    "\nThe following tags are only tested by the legacy test suite:\n");
 print_tags(\%legacy, $coverage);
 
 # Print out a breakdown of the tags that are only tested by the legacy test
 # suite, sorted by legacy test case.
 print {$coverage}
-  "\nBreakdown of remaining tags in legacy test suite by test case:\n";
+  encode_utf8(
+    "\nBreakdown of remaining tags in legacy test suite by test case:\n");
 for my $package (sort keys %legacy_test) {
-    print {$coverage} "\n$package\n";
+    print {$coverage} encode_utf8("\n$package\n");
     for my $tag (sort @{ $legacy_test{$package} }) {
-        print {$coverage} "  $tag\n";
+        print {$coverage} encode_utf8("  $tag\n");
     }
 }
 close($coverage);
@@ -142,20 +166,24 @@ close($coverage);
 # names, print out a report to the provide output file handle.
 sub print_tags {
     my ($tags, $out) = @_;
+
     my @untested;
-    for my $tag (keys %$tags) {
+    for my $tag (keys %{$tags}) {
         push(@untested, [$tags->{$tag}, $tag]);
     }
-    @untested = sort { $a->[0] cmp $b->[0] || $a->[1] cmp $b->[1] } @untested;
-    my $last = '';
-    for my $data (@untested) {
-        my ($file, $tag) = @$data;
-        if ($file ne $last) {
-            print {$out} "\n";
-            $last = $file;
+
+    my @sorted = sort { $a->[0] cmp $b->[0] || $a->[1] cmp $b->[1] } @untested;
+
+    my $final = $EMPTY;
+    for my $data (@sorted) {
+        my ($file, $tag) = @{$data};
+        if ($file ne $final) {
+            print {$out} encode_utf8("\n");
+            $final = $file;
         }
-        print {$out} "$file $tag\n";
+        print {$out} encode_utf8("$file $tag\n");
     }
+
     return;
 }
 
@@ -164,7 +192,9 @@ sub add_legacy_tags {
 
     $legacy_test{$testname} ||= [];
 
-    open(my $tag_fd, '<', $tagfile);
+    open(my $tag_fd, '<', $tagfile)
+      or die encode_utf8("Cannot open $tagfile");
+
     while (my $line = <$tag_fd>) {
         if ($line =~ /^.: \S+(?: (?:changes|source|udeb))?: (\S+)/) {
             my $tag = $1;

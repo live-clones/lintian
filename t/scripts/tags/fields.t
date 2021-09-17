@@ -27,11 +27,11 @@
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
+use Const::Fast;
 use File::Find::Rule;
 use IPC::Run3;
-use List::Util qw(all);
+use List::SomeUtils qw(true);
 use Path::Tiny;
 use Test::More;
 
@@ -41,9 +41,9 @@ use Lintian::Deb822::File;
 use Lintian::Output::HTML;
 use Lintian::Profile;
 
-use constant EMPTY => q{};
-use constant SPACE => q{ };
-use constant SLASH => q{/};
+const my $EMPTY => q{};
+const my $SLASH => q{/};
+const my $FIXED_TESTS_PER_FILE => 8;
 
 my @tagpaths = sort File::Find::Rule->file()->name('*.tag')->in('tags');
 
@@ -56,35 +56,47 @@ my @mandatory = qw(Tag Severity Check Explanation);
 my @disallowed = qw(Reference References Ref Info Certainty);
 
 # tests per desc
-my $perfile = 8 + scalar @mandatory + scalar @disallowed;
+my $perfile = $FIXED_TESTS_PER_FILE + scalar @mandatory + scalar @disallowed;
 
 # set the testing plan
-plan tests => $perfile * scalar @tagpaths;
+plan tests => 1 + $perfile * scalar @tagpaths;
 
 my $profile = Lintian::Profile->new;
-$profile->load(undef, [$ENV{LINTIAN_BASE}]);
+$profile->load(undef, undef, 0);
+
+my @descpaths = sort File::Find::Rule->file()->name('*.desc')->in('tags');
+diag "Illegal desc file name $_" for @descpaths;
+is(scalar @descpaths, 0, 'No tags have the old *.desc name');
 
 for my $tagpath (@tagpaths) {
 
-    # test for duplicate fields
-    my %count;
+    my $contents = path($tagpath)->slurp_utf8;
+    my @parts = split(m{\n\n}, $contents);
 
-    my @lines = path($tagpath)->lines;
-    for my $line (@lines) {
-        my ($field) = $line =~ qr/^(\S+):/;
-        $count{$field} += 1
-          if defined $field;
+    # test for duplicate fields
+    my $duplicates = 0;
+
+    for my $part (@parts) {
+        my %count;
+
+        my @lines = split(/\n/, $part);
+        for my $line (@lines) {
+            my ($field) = $line =~ qr/^(\S+):/;
+            $count{$field} += 1
+              if defined $field;
+        }
+
+        $duplicates += true { $count{$_} > 1 } keys %count;
     }
 
-    ok((all { $count{$_} == 1 } keys %count),
-        "No duplicate fields in $tagpath");
+    is($duplicates, 0, "No duplicate fields in $tagpath");
 
     my $deb822 = Lintian::Deb822::File->new;
 
     my @sections = $deb822->read_file($tagpath);
-    is(scalar @sections, 1, "Tag in $tagpath has exactly one section");
+    ok(@sections >= 1, "Tag in $tagpath has at least one section");
 
-    my $fields = $sections[0] // {};
+    my $fields = shift @sections;
 
     # tag has a name
     my $tagname = $fields->value('Tag');
@@ -102,7 +114,7 @@ for my $tagpath (@tagpaths) {
 
     if ($fields->value('Name-Spaced') eq 'yes') {
 
-        $tagname = $checkname . SLASH . $tagname;
+        $tagname = $checkname . $SLASH . $tagname;
 
         # encapsulating directory is name of check
         my $subdir = path($tagpath)->parent->relative('tags');
@@ -118,14 +130,16 @@ for my $tagpath (@tagpaths) {
     }
 
     # mandatory fields
-    ok($fields->exists($_), "Field $_ exists in $tagpath")for @mandatory;
+    ok($fields->declares($_), "Field $_ exists in $tagpath")for @mandatory;
 
     # disallowed fields
-    ok(!$fields->exists($_), "Field $_ does not exist in $tagpath")
+    ok(!$fields->declares($_), "Field $_ does not exist in $tagpath")
       for @disallowed;
 
-    ok($profile->get_checkinfo($checkname),
-        "Tag $tagname is associated with a valid check");
+    ok(
+        length $profile->check_module_by_name->{$checkname},
+        "Tag $tagname is associated with a valid check"
+    );
 
     ok($fields->value('Renamed-From') !~ m{,},
         "Old tag names for $tagname are not separated by commas");
@@ -137,11 +151,12 @@ for my $tagpath (@tagpaths) {
       unless defined $tag;
 
     my $html_description;
-    open(my $fh, '>:encoding(UTF-8)', \$html_description);
+    open(my $fh, '>:utf8_strict', \$html_description)
+      or die 'Cannot open scalar';
     select $fh;
 
     print "<!DOCTYPE html><head><title>$tagname</title></head><body>";
-    $html_output->describe_tags($tag);
+    $html_output->describe_tags([$tag]);
     say '</body>';
 
     select *STDOUT;
@@ -155,7 +170,7 @@ for my $tagpath (@tagpaths) {
     my @tidy_command = qw(tidy -quiet);
     run3(\@tidy_command, \$html_description, \$tidy_out, \$tidy_err);
 
-    is($tidy_err, EMPTY,
+    is($tidy_err, $EMPTY,
         "No warnings from HTML Tidy for tag description in $tagname");
 }
 

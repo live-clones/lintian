@@ -24,7 +24,6 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Carp qw(croak);
 use Exporter qw(import);
 
 BEGIN {
@@ -34,6 +33,12 @@ BEGIN {
 }
 
 use AptPkg::Config '$_config';
+use Carp qw(croak);
+use Const::Fast;
+use Unicode::UTF8 qw(encode_utf8);
+
+const my $EQUAL => q{=};
+
 my $versioning = do {
     my $config = AptPkg::Config->new;
     $config->init;
@@ -46,12 +51,12 @@ Lintian::Relation::Version - Comparison operators on Debian versions
 
 =head1 SYNOPSIS
 
-    print "yes\n" if versions_equal('1.0', '1.00');
-    print "yes\n" if versions_gte('1.1', '1.0');
-    print "no\n" if versions_lte('1.1', '1.0');
-    print "yes\n" if versions_gt('1.1', '1.0');
-    print "no\n" if versions_lt('1.1', '1.1');
-    print "yes\n" if versions_compare('1.1', '<=', '1.1');
+    print encode_utf8("yes\n") if versions_equal('1.0', '1.00');
+    print encode_utf8("yes\n") if versions_gte('1.1', '1.0');
+    print encode_utf8("no\n") if versions_lte('1.1', '1.0');
+    print encode_utf8("yes\n") if versions_gt('1.1', '1.0');
+    print encode_utf8("no\n") if versions_lt('1.1', '1.1');
+    print encode_utf8("yes\n") if versions_compare('1.1', '<=', '1.1');
 
 =head1 DESCRIPTION
 
@@ -159,12 +164,12 @@ C<<< << >>>, or C<<< >> >>>, and false otherwise.
 
 sub versions_compare {
     my ($p, $op, $q) = @_;
-    if    ($op eq  '=') { return versions_equal($p, $q) }
+    if    ($op eq  $EQUAL) { return versions_equal($p, $q) }
     elsif ($op eq '<=') { return versions_lte($p, $q) }
     elsif ($op eq '>=') { return versions_gte($p, $q) }
     elsif ($op eq '<<') { return versions_lt($p, $q) }
     elsif ($op eq '>>') { return versions_gt($p, $q) }
-    else { croak("unknown operator $op") }
+    else { croak encode_utf8("unknown operator $op") }
 }
 
 =item versions_comparator (A, B)
@@ -181,7 +186,7 @@ versions:
 
 # Use a prototype to avoid confusing Perl when used with sort.
 
-sub versions_comparator ($$) {
+sub versions_comparator {
     my ($p, $q) = @_;
     return $versioning->compare($p, $q);
 }

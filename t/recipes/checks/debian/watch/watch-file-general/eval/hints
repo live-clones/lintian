@@ -1,0 +1,24 @@
+watch-file-general (source): debian-watch-uses-insecure-uri http://sourceforge.net/projects/synce/files (line 15)
+watch-file-general (source): debian-watch-uses-insecure-uri http://sourceforge.net/project/showfiles.php?group_id=100501 (line 14)
+watch-file-general (source): debian-watch-uses-insecure-uri http://qa.debian.org/watch/sf.php?project=foo (line 5)
+watch-file-general (source): debian-watch-uses-insecure-uri http://insecure.com (line 28)
+watch-file-general (source): debian-watch-uses-insecure-uri http://githubredir.debian.net/github/username/project (line 24)
+watch-file-general (source): debian-watch-uses-insecure-uri http://ftp.sf.net/foo/foo_bar(.+)\.Z (line 8)
+watch-file-general (source): debian-watch-uses-insecure-uri ftp://upload.sourceforge.net/pub/sourceforge/s/so/soprano/ (line 12)
+watch-file-general (source): debian-watch-not-mangling-version https://secure.com /(.*).tar.gz
+watch-file-general (source): debian-watch-not-mangling-version http://sourceforge.net/projects/synce/files http://downloads.sourceforge.net/.+/kcemirror-(.+).tar.gz.*
+watch-file-general (source): debian-watch-not-mangling-version http://sourceforge.net/project/showfiles.php?group_id=100501 .*/octaviz/octaviz-([\d\.]+).tar.gz.*
+watch-file-general (source): debian-watch-not-mangling-version http://sf.net/uses/redirector-([^-]+)\.tar\.gz
+watch-file-general (source): debian-watch-not-mangling-version http://insecure.com /(.*).tar.gz
+watch-file-general (source): debian-watch-not-mangling-version http://githubredir.debian.net/github/username/project /(.*).tar.gz
+watch-file-general (source): debian-watch-not-mangling-version ftp://upload.sourceforge.net/pub/sourceforge/s/so/soprano/ soprano-(.*)\.tar\.bz2
+watch-file-general (source): debian-watch-mangles-debian-version-improperly opts="uversionmangle=s/$/ds/" http://qa.debian.org/watch/sf.php?project=foo scripts\.([\d.]+)\.tar\.gz debian uupdate
+watch-file-general (source): debian-watch-lacks-sourceforge-redirector http://sourceforge.net/projects/synce/files http://downloads.sourceforge.net/.+/kcemirror-(.+).tar.gz.*
+watch-file-general (source): debian-watch-lacks-sourceforge-redirector http://sourceforge.net/project/showfiles.php?group_id=100501 .*/octaviz/octaviz-([\d\.]+).tar.gz.*
+watch-file-general (source): debian-watch-lacks-sourceforge-redirector http://ftp.sf.net/foo/foo_bar(.+)\.Z 5 uupdate
+watch-file-general (source): debian-watch-lacks-sourceforge-redirector ftp://upload.sourceforge.net/pub/sourceforge/s/so/soprano/ soprano-(.*)\.tar\.bz2
+watch-file-general (source): debian-watch-file-uses-deprecated-sf-redirector-method http://qa.debian.org/watch/sf.php?project=foo scripts\.([\d.]+)\.tar\.gz debian uupdate
+watch-file-general (source): debian-watch-file-uses-deprecated-githubredir http://githubredir.debian.net/github/username/project /(.*).tar.gz
+watch-file-general (source): debian-watch-file-specifies-wrong-upstream-version 2.0.ds1-1
+watch-file-general (source): debian-watch-does-not-check-gpg-signature
+watch-file-general (source): debian-watch-could-verify-download debian/upstream/signing-key.asc
