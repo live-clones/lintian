@@ -26,7 +26,7 @@ use utf8;
 
 use Const::Fast;
 use List::Compare;
-use List::SomeUtils qw(any none);
+use List::SomeUtils qw(any none uniq);
 use Path::Tiny;
 use Unicode::UTF8 qw(encode_utf8);
 
@@ -196,10 +196,27 @@ sub check_control_paragraph {
     my $directory = $section->unfolded_value('Tests-Directory')
       || 'debian/tests';
 
-    my @tests = $section->trimmed_list('Tests', qr/ \s* , \s* | \s+ /x);
+    my $position = $section->position('Tests');
+    my @tests = uniq +$section->trimmed_list('Tests', qr/ \s* , \s* | \s+ /x);
 
-    $self->check_test_file($directory, $_, $section->position('Tests'))
-      for @tests;
+    my @illegal_names = grep { !m{^ [ [:alnum:] \+ \- \. / ]+ $}x } @tests;
+    $self->hint('illegal-runtime-test-name', $_, 'in line', $position)
+      for @illegal_names;
+
+    my @paths;
+    if ($directory eq $DOT) {
+
+        # Special case with "Tests-Directory: ." (see #849880)
+        @paths = @tests;
+
+    } else {
+        @paths = map { "$directory/$_" } @tests;
+    }
+
+    for my $path (@paths) {
+
+        $self->check_test_file($path, $position);
+    }
 
     if ($section->declares('Depends')) {
 
@@ -226,22 +243,17 @@ sub check_control_paragraph {
 }
 
 sub check_test_file {
-    my ($self, $directory, $name, $position) = @_;
-
-    # Special case with "Tests-Directory: ." (see #849880)
-    my $path = $directory eq $DOT ? $name : "$directory/$name";
-
-    $self->hint('illegal-runtime-test-name', $name,'in line', $position)
-      unless $name =~ m{^ [ [:alnum:] \+ \- \. / ]+ $}x;
+    my ($self, $path, $position) = @_;
 
     my $file = $self->processable->patched->resolve_path($path);
     unless (defined $file) {
-        $self->hint('missing-runtime-test-file', $path,'in line', $position);
+        $self->hint('missing-runtime-test-file', $path, "(line $position)");
         return;
     }
 
     unless ($file->is_open_ok) {
-        $self->hint('runtime-test-file-is-not-a-regular-file', $path);
+        $self->hint('runtime-test-file-is-not-a-regular-file',
+            $path, "(line $position)");
         return;
     }
 
