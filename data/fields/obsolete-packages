@@ -123,3 +123,6 @@ libjs-swfobject
 
 # Deprecated in stretch
 libavresample-dev => libswresample-dev
+
+# Deprecated in buster
+libservlet3.1-java => libservlet-api-java

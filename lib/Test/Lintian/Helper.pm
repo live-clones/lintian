@@ -39,7 +39,6 @@ Helper functions for preparing and running Lintian tests.
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Exporter qw(import);
 
@@ -53,15 +52,14 @@ BEGIN {
     );
 }
 
-use Capture::Tiny qw(capture);
 use Carp;
 use File::Spec::Functions qw(abs2rel rel2abs);
 use File::Path qw(remove_tree);
 use Path::Tiny;
 use POSIX qw(locale_h strftime);
+use Unicode::UTF8 qw(encode_utf8 decode_utf8);
 
-use Lintian::Data;
-use Lintian::IO::Async qw(safe_qx);
+use Lintian::IPC::Run3 qw(safe_qx);
 use Lintian::Profile;
 
 =head1 FUNCTIONS
@@ -76,10 +74,13 @@ Ensures that the output from dpkg-architecture has been cached.
 
 sub cache_dpkg_architecture_values {
 
-    my $output = safe_qx('dpkg-architecture');
+    my $output = decode_utf8(safe_qx('dpkg-architecture'));
 
-    die 'dpkg-architecture failed'
+    die encode_utf8('dpkg-architecture failed')
       if $?;
+
+    $output = decode_utf8($output)
+      if length $output;
 
     my @lines = split(/\n/, $output);
 
@@ -100,17 +101,16 @@ of the Debian policy. The second is its effective date.
 
 sub get_latest_policy {
     my $profile = Lintian::Profile->new;
-    $profile->load(undef, [$ENV{'LINTIAN_BASE'}]);
-    Lintian::Data->set_vendor($profile);
+    $profile->load(undef, undef, 0);
 
-    my $STANDARDS
-      = Lintian::Data->new('standards-version/release-dates', qr/\s+/);
-    my @STANDARDS = reverse sort { $a->[1] <=> $b->[1] }
-      map { [$_, $STANDARDS->value($_)] } $STANDARDS->all;
+    my $releases = $profile->policy_releases;
 
-    my $version = $STANDARDS[0][0]
-      // die 'Could not get latest policy version.';
-    my $epoch = $STANDARDS[0][1]// die 'Could not get latest policy date.';
+    my $version = $releases->latest_version;
+    die encode_utf8('Could not get latest policy version.')
+      unless defined $version;
+    my $epoch = $releases->epoch($version);
+    die encode_utf8('Could not get latest policy date.')
+      unless defined $epoch;
 
     return ($version, $epoch);
 }
@@ -124,10 +124,9 @@ via Lintian::Data, relative to the established LINTIAN_BASE.
 
 sub get_recommended_debhelper_version {
     my $profile = Lintian::Profile->new;
-    $profile->load(undef, [$ENV{'LINTIAN_BASE'}]);
-    Lintian::Data->set_vendor($profile);
+    $profile->load(undef, undef, 0);
 
-    my $compat_level= Lintian::Data->new('debhelper/compat-level', qr/=/);
+    my $compat_level = $profile->debhelper_levels;
 
     return $compat_level->value('recommended');
 }
@@ -151,18 +150,20 @@ sub copy_dir_contents {
 
         # recursively delete directories to be replaced by a file
         remove_tree($prospective)
-          if -d $prospective && -f $path;
+          if -d $prospective && -e $path && !-d _;
 
         # remove files to be replaced by a directory
-        unlink($prospective)
-          if -f $prospective && -d $path;
+        if (-e $prospective && !-d _ && -d $path) {
+            unlink($prospective)
+              or die encode_utf8("Cannot unlink $prospective");
+        }
     }
 
     # 'cp -r' with a dot will error without files present
     if (scalar path($source)->children) {
 
         system('cp', '-rp', "$source/.", '-t', $destination)== 0
-          or croak("Could not copy $source to $destination: $!");
+          or croak encode_utf8("Could not copy $source to $destination: $!");
     }
     return 1;
 }

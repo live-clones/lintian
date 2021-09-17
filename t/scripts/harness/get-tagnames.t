@@ -20,44 +20,43 @@
 
 use strict;
 use warnings;
-use autodie;
 
 BEGIN {
     die('Cannot find LINTIAN_BASE')
       unless length $ENV{'LINTIAN_BASE'};
 }
 
-use List::MoreUtils qw(uniq);
+use List::SomeUtils qw(uniq);
 use Path::Tiny;
 use Test::More;
 
 use lib "$ENV{'LINTIAN_BASE'}/lib";
 use Test::Lintian::Output::Universal qw(get_tagnames);
 
-# dummy tags
-my $tagstext =<<EOSTR;
+# dummy hints
+my $hintstext =<<'EOSTR';
 distribution-multiple-bad (changes): bad-distribution-in-changes-file foo-backportss
 distribution-multiple-bad (changes): bad-distribution-in-changes-file foo
 distribution-multiple-bad (changes): bad-distribution-in-changes-file bar
 distribution-multiple-bad (changes): backports-upload-has-incorrect-version-number 1.0
 distribution-multiple-bad (changes): backports-changes-missing
 EOSTR
-my $tagspath = Path::Tiny->tempfile;
-$tagspath->spew($tagstext);
+my $hintspath = Path::Tiny->tempfile;
+$hintspath->spew($hintstext);
 
 # read tag names from file
-my @actual = sort +uniq +get_tagnames($tagspath->stringify);
+my @actual = sort +uniq +get_tagnames($hintspath->stringify);
 
-my @expected = (
-    'backports-changes-missing',
-    'backports-upload-has-incorrect-version-number',
-    'bad-distribution-in-changes-file'
+my @expected = qw(
+  backports-changes-missing
+  backports-upload-has-incorrect-version-number
+  bad-distribution-in-changes-file
 );
 
 # test plan
 plan tests => 1;
 
-# check when tags match
+# check when hints match
 is_deeply(\@actual, \@expected, 'Tags read via get_tagnames match');
 
 # Local Variables:

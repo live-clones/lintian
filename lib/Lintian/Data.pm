@@ -22,245 +22,17 @@ package Lintian::Data;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
-use Carp qw(croak confess);
-use POSIX qw(ENOENT);
+use Carp qw(croak);
+use Const::Fast;
+use List::SomeUtils qw(any);
+use Unicode::UTF8 qw(encode_utf8);
 
-our $LAZY_LOAD = 1;
+use Moo::Role;
+use namespace::clean;
 
-sub _checked_open {
-    my ($path) = @_;
-    my $fd;
-    eval {open($fd, '<:encoding(UTF-8)', $path);};
-    if (my $err = $@) {
-        die($err) if not ref $err or $err->errno != ENOENT;
-        return;
-    }
-    return $fd;
-}
-
-sub new {
-    my ($class, @args) = @_;
-    my $data_name = $args[0];
-    my $self = {};
-    my $data;
-    croak 'no data type specified' unless $data_name;
-    bless $self, $class;
-    $data = $self->_get_data($data_name);
-    if ($data) {
-        # We already loaded this data file - just pull from cache
-        $self->{'data'} = $data;
-    } else {
-        # Pretend we loaded this data file, but leave a "reminder" to
-        # do it later.
-        $self->{'promise'} = \@args;
-        $self->_force_promise if not $LAZY_LOAD;
-    }
-    return $self;
-}
-
-# _get_data fetches an already loaded dataset by type.  It is
-# mostly useful for determining whether it makes sense to make
-# sense to be "lazy".
-#
-# _load_data loads a dataset into %data, which is private to this
-# module.  Use %data as a cache to avoid loading the same dataset more
-# than once (which means lintian doesn't support having the list
-# change over the life of the process).  The returned object knows
-# what dataset, stored in %data, it is supposed to act on.
-{
-    my %data;
-
-    sub _get_data {
-        my ($self, $data_name) = @_;
-        return $data{$data_name};
-    }
-
-    sub _load_data {
-        my ($self, $data_spec) = @_;
-        my $data_name = $data_spec->[0];
-        unless (exists($data{$data_name})) {
-            my $vendors = $self->_get_vendor_names;
-            my ($dataset, $keyorder) = ({}, []);
-            my ($fd, $vno) = $self->_open_data_file($data_name, $vendors, 0);
-            $self->_parse_file($data_name, $fd, $dataset, $keyorder,
-                $data_spec, $vendors, $vno);
-            close($fd);
-            $data{$data_name} = {dataset => $dataset, keyorder => $keyorder};
-        }
-        return $self->{'data'} = $data{$data_name};
-    }
-}
-
-{
-    my $profile;
-    # Set vendor profile
-    sub set_vendor {
-        my (undef, $vendor) = @_;
-        $profile = $vendor;
-        return;
-    }
-
-    # Returns a listref of profile names
-    sub _get_vendor_names {
-        my ($self) = @_;
-        croak 'No vendor given' unless $profile;
-        my @vendors;
-        push @vendors, reverse @{ $profile->profile_list };
-        return \@vendors;
-    }
-
-    # Open the (next) data file
-    #
-    # $self->_open_data_file ($data_name, $vendors, $start)
-    # - $data_name is the data file (e.g. "common/architectures")
-    # - $vendors is the listref return by _get_vendor_names
-    # - $start is an index into $vendors (the first $vendor to try)
-    sub _open_data_file {
-        my ($self, $data_name, $vendors, $start) = @_;
-        my ($fd, $file);
-        my $cur = $start;
-
-      OUTER: for (; $cur < scalar @$vendors ; $cur++) {
-            my $vendorpart = "vendors/$vendors->[$cur]/data/$data_name";
-            foreach my $datafile ($profile->include_path($vendorpart)) {
-                $fd =_checked_open($datafile);
-                next if not $fd;
-                $file = $datafile;
-                last OUTER;
-            }
-        }
-        if (not defined $file and $cur == scalar @$vendors) {
-            foreach my $datafile ($profile->include_path("data/$data_name")) {
-                $fd =_checked_open($datafile);
-                next if not $fd;
-                $file = $datafile;
-                last;
-            }
-            $cur++;
-        }
-        if (not defined $file) {
-            croak "Unknown data file: $data_name" unless $start;
-            croak "No parent data file for $vendors->[$start]";
-        }
-        return ($fd, $cur);
-    }
-}
-
-sub _parse_file {
-    my ($self, $data_name, $fd, $dataset, $keyorder, $data_spec, $vendors,$vno)
-      = @_;
-    my (undef, $separator, $code) = @{$data_spec};
-    my $filename = $data_name;
-    $filename = $vendors->[$vno] . '/' . $data_name if $vno < scalar @$vendors;
-    local $.;
-    while (my $line = <$fd>) {
-
-        # trim both ends
-        $line =~ s/^\s+|\s+$//g;
-
-        next if $line =~ m{ \A \#}xsm or $line eq '';
-        if ($line =~ s/^\@//) {
-            my ($op, $value) = split(m{ \s++ }xsm, $line, 2);
-            if ($op eq 'delete') {
-                croak "Missing key after \@delete in $filename at line $."
-                  unless defined $value && length $value;
-                @{$keyorder} = grep { $_ ne $value } @{$keyorder};
-                delete $dataset->{$value};
-            } elsif ($op eq 'include-parent') {
-                my ($pfd, $pvo)
-                  = $self->_open_data_file($data_name, $vendors,$vno +1);
-                $self->_parse_file($data_name, $pfd, $dataset, $keyorder,
-                    $data_spec, $vendors, $pvo);
-                close($pfd);
-            } elsif ($op eq 'if-vendor-is' or $op eq 'if-vendor-is-not') {
-                my ($desired_name, $remain) = split(m{ \s++ }xsm, $value, 2);
-                my $actual_name;
-                croak "Missing vendor name after \@$op"
-                  unless $desired_name;
-                croak "Missing command after vendor name for \@$op"
-                  unless $remain;
-                $actual_name = (split('/', $vendors->[0], 2))[0];
-                if ($op eq 'if-vendor-is') {
-                    next if $actual_name ne $desired_name;
-                } else {
-                    next if $actual_name eq $desired_name;
-                }
-                $line = $remain;
-                redo;
-            } else {
-                croak "Unknown operation \@$op in $filename at line $.";
-            }
-            next;
-        }
-
-        my ($key, $val);
-        if (defined $separator) {
-            ($key, $val) = split(/$separator/, $line, 2);
-            if ($code) {
-                my $pval = $dataset->{$key};
-                $val = $code->($key, $val, $pval);
-                if (not defined($val)) {
-                    next if defined($pval);
-                    croak "undefined value for $key (data-name: $data_name)";
-                }
-            }
-        } else {
-            ($key, $val) = ($line => 1);
-        }
-        push @{$keyorder}, $key unless exists $dataset->{$key};
-        $dataset->{$key} = $val;
-    }
-    return;
-}
-
-sub _force_promise {
-    my ($self) = @_;
-    my $promise = $self->{promise};
-    my $data = $self->_load_data($promise);
-    delete $self->{promise};
-    return $data;
-}
-
-# Query a data object for whether a particular keyword is valid.
-sub known {
-    my ($self, $keyword) = @_;
-    if(!defined($keyword)) {
-        return;
-    }
-    my $data = $self->{data} || $self->_force_promise;
-    return (exists $data->{'dataset'}{$keyword}) ? 1 : undef;
-}
-
-# Return all known keywords (in no particular order).
-sub all {
-    my ($self) = @_;
-    my $data = $self->{data} || $self->_force_promise;
-    return @{$data->{'keyorder'}};
-}
-
-# Query a data object for the value attached to a particular keyword.
-sub value {
-    my ($self, $keyword) = @_;
-    my $data = $self->{data} || $self->_force_promise;
-    return $data->{'dataset'}{$keyword} // undef;
-}
-
-# Query a data object for whether a particular keyword matches any regex.
-# Accepts an optional second argument for regex modifiers.
-sub matches_any {
-    my ($self, $keyword, $modifiers) = @_;
-    $modifiers //= '';
-    for my $regex ($self->all) {
-        if ($keyword =~ m,(?$modifiers)$regex,) {
-            return 1;
-        }
-    }
-    return;
-}
-
-1;
+const my $EMPTY => q{};
+const my $SLASH => q{/};
 
 =head1 NAME
 
@@ -270,7 +42,7 @@ Lintian::Data - Lintian interface to query lists of keywords
 
     my $keyword;
     my $list = Lintian::Data->new('type');
-    if ($list->known($keyword)) {
+    if ($list->recognizes($keyword)) {
         # do something ...
     }
     my $hash = Lintian::Data->new('another-type', qr{\s++});
@@ -325,79 +97,211 @@ Where Perl semantics allow it, the sub can modify CURVALUE and the
 changes will be reflected in the result.  As an example, if CURVALUE
 is a hashref, new keys can be inserted etc.
 
-=head1 CLASS METHODS
-
-=over 4
-
-=item new(TYPE [,SEPARATOR[, CODE]])
-
-Creates a new Lintian::Data object for the given TYPE.  TYPE is a partial
-path relative to the F<data> directory and should correspond to a file in
-that directory.  The contents of that file will be loaded into memory and
-returned as part of the newly created object.  On error, new() throws an
-exception.
-
-If SEPARATOR is given, it will be used as a regular expression for splitting
-the lines into key/value pairs.
-
-If CODE is also given, it is assumed to be a sub that will pre-process
-the key/value pairs.  See the L</Interface for the CODE argument> above.
-
-A given file will only be loaded once.  If new() is called again with the
-same TYPE argument, the data previously loaded will be reused, avoiding
-multiple file reads.
-
-=item set_vendor(PROFILE)
-
-Specifies vendor profile.  It must be set before the first data file
-is loaded.
-
-=back
-
 =head1 INSTANCE METHODS
 
 =over 4
 
-=item all()
+=item dataset
+
+=item C<keyorder>
+
+=cut
+
+has dataset => (
+    is => 'rw',
+    coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
+    default => sub { {} });
+
+has keyorder => (
+    is => 'rw',
+    coerce => sub { my ($arrayref) = @_; return ($arrayref // []); },
+    default => sub { [] });
+
+=item all
 
 Returns all keywords listed in the data file as a list in original order.
 In a scalar context, returns the number of keywords.
+
+=cut
+
+sub all {
+    my ($self) = @_;
+
+    return @{$self->keyorder};
+}
+
+=item recognizes (KEY)
+
+Returns true if KEY was listed in the data file represented by this
+Lintian::Data instance and false otherwise.
+
+=cut
+
+sub recognizes {
+    my ($self, $key) = @_;
+
+    return 0
+      unless length $key;
+
+    return 1
+      if exists $self->dataset->{$key};
+
+    return 0;
+}
+
+=item value (KEY)
+
+Returns the value attached to KEY if it was listed in the data
+file represented by this Lintian::Data instance and the undefined value
+otherwise.
+
+=cut
+
+sub value {
+    my ($self, $key) = @_;
+
+    return undef
+      unless length $key;
+
+    return $self->dataset->{$key};
+}
 
 =item matches_any(KEYWORD[, MODIFIERS])
 
 Returns true if KEYWORD matches any regular expression listed in the
 data file. The optional MODIFIERS serve as modifiers on all regexes.
 
-=item known(KEYWORD)
+=cut
 
-Returns true if KEYWORD was listed in the data file represented by this
-Lintian::Data instance and false otherwise.
+sub matches_any {
+    my ($self, $wanted, $modifiers) = @_;
 
-=item value(KEYWORD)
+    return 0
+      unless length $wanted;
 
-Returns the value attached to KEYWORD if it was listed in the data
-file represented by this Lintian::Data instance and the undefined value
-otherwise. If SEPARATOR was not given, the value will '1'.
+    $modifiers //= $EMPTY;
 
-=back
+    return 1
+      if any { $wanted =~ /(?$modifiers)$_/ } $self->all;
 
-=head1 DIAGNOSTICS
+    return 0;
+}
 
-=over 4
+=item load
 
-=item no data type specified
+=cut
 
-new() was called without a TYPE argument.
+sub load {
+    my ($self, $search_space, $our_vendor) = @_;
 
-=item unknown data type %s
+    my @remaining_lineage = @{$search_space // []};
+    return 0
+      unless @remaining_lineage;
 
-The TYPE argument to new() did not correspond to a file in the F<data>
-directory of the Lintian root.
+    my $directory = shift @remaining_lineage;
 
-=item undefined value for %s (type: %s)
+    my $path = $directory . $SLASH . $self->location;
+    unless (-e $path) {
 
-The CODE argument return undef for the KEY and no previous value for
-that KEY was available.
+        $self->load(\@remaining_lineage, $our_vendor)
+          or croak encode_utf8('Unknown data file: ' . $self->location);
+
+        return 1;
+    }
+
+    open(my $fd, '<:utf8_strict', $path)
+      or die encode_utf8("Cannot open $path: $!");
+
+    local $. = undef;
+    while (my $line = <$fd>) {
+
+        # trim both ends
+        $line =~ s/^\s+|\s+$//g;
+
+        next
+          unless length $line;
+
+        next
+          if $line =~ m{^\#};
+
+        # a command
+        if ($line =~ s/^\@//) {
+
+            my ($directive, $value) = split(/\s+/, $line, 2);
+            if ($directive eq 'delete') {
+
+                croak encode_utf8(
+                    "Missing key after \@delete in $path at line $.")
+                  unless length $value;
+
+                @{$self->keyorder} = grep { $_ ne $value } @{$self->keyorder};
+                delete $self->dataset->{$value};
+
+            } elsif ($directive eq 'include-parent') {
+
+                $self->load(\@remaining_lineage, $our_vendor)
+                  or croak encode_utf8("No ancestor data file for $path");
+
+            } elsif ($directive eq 'if-vendor-is'
+                || $directive eq 'if-vendor-is-not') {
+
+                my ($specified_vendor, $remain) = split(/\s+/, $value, 2);
+
+                croak encode_utf8("Missing vendor name after \@$directive")
+                  unless length $specified_vendor;
+                croak encode_utf8(
+                    "Missing command after vendor name for \@$directive")
+                  unless length $remain;
+
+                $our_vendor =~ s{/.*$}{};
+
+                next
+                  if $directive eq 'if-vendor-is'
+                  && $our_vendor ne $specified_vendor;
+
+                next
+                  if $directive eq 'if-vendor-is-not'
+                  && $our_vendor eq $specified_vendor;
+
+                $line = $remain;
+                redo;
+
+            } else {
+                croak encode_utf8(
+                    "Unknown operation \@$directive in $path at line $.");
+            }
+            next;
+        }
+
+        my $key = $line;
+        my $remainder;
+
+        ($key, $remainder) = split($self->separator, $line, 2)
+          if defined $self->separator;
+
+        my $value;
+        if (defined $self->accumulator) {
+
+            my $previous = $self->dataset->{$key};
+            $value = $self->accumulator->($key, $remainder, $previous);
+
+            next
+              unless defined $value;
+
+        } else {
+            $value = $remainder;
+        }
+
+        push(@{$self->keyorder}, $key)
+          unless exists $self->dataset->{$key};
+
+        $self->dataset->{$key} = $value;
+    }
+
+    close $fd;
+
+    return 1;
+}
 
 =back
 

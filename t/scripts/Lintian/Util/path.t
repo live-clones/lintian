@@ -2,7 +2,13 @@
 
 use strict;
 use warnings;
+
+use Const::Fast;
 use Test::More tests => 18;
+
+const my $EMPTY => q{};
+const my $SLASH => q{/};
+const my $DOT => q{.};
 
 # Lintian::Util exports fail, which clashes with Test::More, so we
 # have to be explicit about the import(s).
@@ -13,7 +19,8 @@ BEGIN {
 # Safe - absolute
 is(normalize_link_target('usr/share/java', '/usr/share/ant/file'),
     'usr/share/ant/file', 'Safe absolute path');
-is(normalize_link_target('usr/share/ant', '/'), q{}, 'Safe absolute root');
+is(normalize_link_target('usr/share/ant', $SLASH),
+    $EMPTY, 'Safe absolute root');
 
 # Safe - relative
 is(normalize_link_target('/usr/share/java', './file/.'),
@@ -33,17 +40,19 @@ is(
     'usr/share/ant/file',
     'Safe absurd single path argument'
 );
-is(normalize_link_target('usr/share/java', '.'),
+is(normalize_link_target('usr/share/java', $DOT),
     'usr/share/java', 'Safe relative dot path');
-is(normalize_link_target('/', '.'), q{}, 'Safe relative root dot');
-is(normalize_link_target('/', 'usr/..'), q{},'Safe absurd relative root path');
+is(normalize_link_target($SLASH, $DOT), $EMPTY, 'Safe relative root dot');
+is(normalize_link_target($SLASH, 'usr/..'),
+    $EMPTY, 'Safe absurd relative root path');
 is(normalize_link_target('usr/share/java', '../../../'),
-    q{}, 'Safe absurd relative path to root');
-is(normalize_pkg_path('.'), q{}, 'Safe single argument root dot');
-is(normalize_pkg_path('/'), q{}, 'Safe single argument root slash');
-is(normalize_pkg_path('usr/..'), q{},'Safe absurd single relative root path');
+    $EMPTY, 'Safe absurd relative path to root');
+is(normalize_pkg_path($DOT), $EMPTY, 'Safe single argument root dot');
+is(normalize_pkg_path($SLASH), $EMPTY, 'Safe single argument root slash');
+is(normalize_pkg_path('usr/..'),
+    $EMPTY, 'Safe absurd single relative root path');
 is(normalize_pkg_path('usr/share/java/../../../'),
-    q{}, 'Safe absurd single relative path to root');
+    $EMPTY, 'Safe absurd single relative path to root');
 
 # Unsafe
 is(normalize_link_target('/usr/share/ant', '../../../../etc/passwd'),

@@ -5,15 +5,26 @@
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
+
+use Cwd qw(realpath);
+use File::Basename qw(dirname);
+use Unicode::UTF8 qw(decode_utf8 encode_utf8);
+
+# neither Path::This nor lib::relative are in Debian
+use constant THISFILE => realpath __FILE__;
+use constant THISDIR => dirname realpath __FILE__;
 
 # use Lintian modules that belong to this program
-use FindBin;
-use lib "$FindBin::RealBin/../lib";
+use lib THISDIR . '/../lib';
 
+use Const::Fast;
 use Getopt::Long;
+use IPC::Run3;
 
 use Lintian::IPC::Run3 qw(safe_qx);
+
+const my $PLUS => q{+};
+const my $WAIT_STATUS_SHIFT => 8;
 
 my (%added, %removed, %opt);
 
@@ -25,34 +36,43 @@ Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev',
 
 # process commandline options
 Getopt::Long::GetOptions(%opthash)
-  or die("error parsing options\n");
+  or die encode_utf8("error parsing options\n");
 
 my ($commit_range) = @ARGV;
 if (not $commit_range) {
-    my $describe = safe_qx(qw(git describe --abbrev=0));
-    if ($? != 0) {
-        die 'git describe failed with code ' . (($? >> 8) & 0xff);
-    }
+    my $bytes = safe_qx(qw(git describe --abbrev=0));
+    my $status = $? >> $WAIT_STATUS_SHIFT;
+
+    die encode_utf8("git describe failed with code $status\n")
+      if $status;
+
+    my $describe = decode_utf8($bytes);
     chomp($describe);
+
     if (not $describe) {
-        die "git describe did not return anything.\n";
+        die encode_utf8("git describe did not return anything.\n");
     }
     $commit_range = "${describe}..HEAD";
-    print "Assuming commit range to be: ${commit_range}\n";
+    print encode_utf8("Assuming commit range to be: ${commit_range}\n");
 }
 
-open(my $fd, '-|', 'git', 'diff', $commit_range, '--', 'tags/*/*.tag');
-while (my $line = <$fd>) {
-    chomp($line);
-    next unless $line =~ m{ \A ([\+-]) Tag: \s*+ ([^ ]++) \s*+ \Z}xsm;
+my $output;
+my @command =(qw{git diff}, $commit_range, qw{-- tags/*/*.tag});
+run3(\@command, \undef, \$output);
+
+my @lines = split(/\n/, $output);
+while (defined(my $line = shift @lines)) {
+
+    next
+      unless $line =~ m{ \A ([\+-]) Tag: \s*+ ([^ ]++) \s*+ \Z}xsm;
+
     my ($change, $tag) = ($1, $2);
-    if ($change eq '+') {
+    if ($change eq $PLUS) {
         $added{$tag} = 1;
     } else {
         $removed{$tag} = 1;
     }
 }
-close($fd);
 
 for my $tag (keys(%added)) {
     if (exists($removed{$tag})) {
@@ -64,29 +84,41 @@ for my $tag (keys(%added)) {
 }
 
 if (not %added and not %removed) {
-    print STDERR "No tags were added or removed\n";
+    print {*STDERR} encode_utf8("No tags were added or removed\n");
 }
 
 if ($opt{'in-place'}) {
     my $matched = 0;
-    open(my $in_fd, '<', 'debian/changelog');
-    open(my $out_fd, '>', 'debian/changelog.tmp');
+
+    my $infile = 'debian/changelog';
+    open(my $in_fd, '<', $infile)
+      or die encode_utf8("Cannot open $infile");
+
+    my $outfile = 'debian/changelog.tmp';
+    open(my $out_fd, '>', $outfile)
+      or die encode_utf8("Cannot open $outfile");
+
     while (my $line = <$in_fd>) {
         chomp $line;
         if ($line =~ m/^  \* WIP\b/) {
             emit_tag_summary($out_fd);
             $matched++;
         } else {
-            print {$out_fd} $line . "\n";
+            print {$out_fd} encode_utf8($line . "\n");
         }
     }
     close($out_fd);
     close($in_fd);
     if ($matched != 1) {
-        die("changelog did not match WIP placeholder exactly once\n");
+        die encode_utf8(
+            "changelog did not match WIP placeholder exactly once\n");
     }
-    rename('debian/changelog.tmp', 'debian/changelog');
-    print "Updated debian/changelog\n";
+
+    rename($outfile, $infile)
+      or die encode_utf8("Cannot rename $outfile to $infile");
+
+    print encode_utf8("Updated $infile\n");
+
 } else {
     emit_tag_summary(\*STDOUT);
 }
@@ -95,19 +127,25 @@ sub emit_tag_summary {
     my ($fd) = @_;
 
     if (%added or %removed) {
-        print {$fd} "  * Summary of tag changes:\n";
+        print {$fd} encode_utf8("  * Summary of tag changes:\n");
     }
     if (%added) {
-        print {$fd} "    + Added:\n";
+        print {$fd} encode_utf8("    + Added:\n");
         for my $tag (sort(keys(%added))) {
-            print {$fd} "      - $tag\n";
+            print {$fd} encode_utf8("      - $tag\n");
         }
     }
     if (%removed) {
-        print {$fd} "    + Removed:\n";
+        print {$fd} encode_utf8("    + Removed:\n");
         for my $tag (sort(keys(%removed))) {
-            print {$fd} "      - $tag\n";
+            print {$fd} encode_utf8("      - $tag\n");
         }
     }
     return;
 }
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

@@ -26,7 +26,6 @@
 
 use strict;
 use warnings;
-use autodie;
 use v5.10;
 
 use File::Basename;
@@ -39,9 +38,6 @@ use lib "$ENV{'LINTIAN_BASE'}/lib";
 use Lintian::Profile;
 use Test::Lintian::ConfigFile qw(read_config);
 
-use constant SPACE => q{ };
-use constant EMPTY => q{};
-
 my $checkpath = 't/recipes/checks';
 
 # find all test specifications related to only one check
@@ -51,7 +47,7 @@ my @descpaths = sort File::Find::Rule->file()->name('desc')->in($checkpath);
 plan tests => 3 * scalar @descpaths;
 
 my $profile = Lintian::Profile->new;
-$profile->load(undef, [$ENV{LINTIAN_BASE}]);
+$profile->load(undef, undef, 0);
 
 foreach my $descpath (@descpaths) {
 
@@ -61,11 +57,11 @@ foreach my $descpath (@descpaths) {
     # get test path
     my $testpath = path($descpath)->parent->stringify;
 
-    ok($testcase->exists('Check'),
+    ok($testcase->declares('Check'),
         "Test specification for $name defines a field Check");
 
     next
-      unless $testcase->exists('Check');
+      unless $testcase->declares('Check');
 
     my @checks = $testcase->trimmed_list('Check');
 

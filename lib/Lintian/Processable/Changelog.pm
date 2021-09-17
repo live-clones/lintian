@@ -21,12 +21,11 @@ package Lintian::Processable::Changelog;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use File::Copy qw(copy);
-use List::MoreUtils qw(first_value);
+use List::SomeUtils qw(first_value);
 use Path::Tiny;
-use Unicode::UTF8 qw(valid_utf8 decode_utf8);
+use Unicode::UTF8 qw(valid_utf8 decode_utf8 encode_utf8);
 
 use Lintian::IPC::Run3 qw(safe_qx);
 
@@ -92,11 +91,13 @@ has changelog_path => (
         my $changelogpath;
         if ($packagechangelogpath->basename =~ /\.gz$/) {
 
-            my $contents = safe_qx('gunzip', '-c', $resolved->unpacked_path);
+            my $contents
+              = decode_utf8(safe_qx('gunzip', '-c', $resolved->unpacked_path));
 
             $changelogpath
               = path($self->basedir)->child('changelog')->stringify;
-            path($changelogpath)->spew($contents);
+
+            path($changelogpath)->spew_utf8($contents);
 
         } else {
             $changelogpath = $resolved->unpacked_path;
@@ -122,7 +123,9 @@ has changelog_path => (
             }
             # Remove it if it not the Debian changelog.
             unless ($ok) {
-                unlink $changelogpath;
+                unlink $changelogpath
+                  or die encode_utf8("Cannot unlink $changelogpath");
+
                 undef $changelogpath;
             }
         }
@@ -138,14 +141,14 @@ has changelog_path => (
 For binary:
 
 Returns the changelog of the binary package as a Parse::DebianChangelog
-object, or undef if the changelog doesn't exist.  The changelog-file
+object, or an empty object if the changelog doesn't exist.  The changelog-file
 collection script must have been run to create the changelog file, which
 this method expects to find in F<changelog>.
 
 For source:
 
 Returns the changelog of the source package as a Parse::DebianChangelog
-object, or C<undef> if the changelog cannot be resolved safely.
+object, or an empty object if the changelog cannot be resolved safely.
 
 =cut
 
@@ -155,19 +158,17 @@ has changelog => (
     default => sub {
         my ($self) = @_;
 
+        my $changelog = Lintian::Inspect::Changelog->new;
+
         my $dch = $self->changelog_path;
-        return
+        return $changelog
           unless $dch;
 
         my $bytes = path($dch)->slurp;
-        return
+        return $changelog
           unless valid_utf8($bytes);
 
-        # check for UTF-8
-        my $contents = decode_utf8($bytes);
-
-        my $changelog = Lintian::Inspect::Changelog->new;
-        $changelog->parse($contents);
+        $changelog->parse(decode_utf8($bytes));
 
         return $changelog;
     });

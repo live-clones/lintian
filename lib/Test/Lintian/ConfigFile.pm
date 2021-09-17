@@ -36,7 +36,6 @@ Routines for dealing with colon-delimited configuration files.
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Exporter qw(import);
 
@@ -48,14 +47,16 @@ BEGIN {
 }
 
 use Carp;
-use List::MoreUtils qw(any);
+use Const::Fast;
+use List::SomeUtils qw(any);
 use Path::Tiny;
+use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Deb822::File;
 
-use constant SPACE => q{ };
-use constant COLON => q{:};
-use constant NEWLINE => qq{\n};
+const my $SPACE => q{ };
+const my $COLON => q{:};
+const my $NEWLINE => qq{\n};
 
 =head1 FUNCTIONS
 
@@ -71,13 +72,13 @@ returns it. When also passed a HASHREF, will fill that instead.
 sub read_config {
     my ($configpath) = @_;
 
-    croak "Cannot find file $configpath."
-      unless -f $configpath;
+    croak encode_utf8("Cannot find file $configpath.")
+      unless -e $configpath;
 
     my $deb822 = Lintian::Deb822::File->new;
     my @sections = $deb822->read_file($configpath);
-    die "$configpath does not have exactly one paragraph"
-      unless scalar @sections == 1;
+    die encode_utf8("$configpath does not have exactly one paragraph")
+      unless @sections == 1;
 
     my $config = $sections[0];
 
@@ -100,17 +101,17 @@ sub write_config {
     for my $name (sort $testcase->names) {
 
         my @elements = $testcase->trimmed_list($name);
-        unless (
-            scalar @elements > 1 && any { lc($_) eq lc($name) }
-            ('Test-For', 'Test-Against')
-        ) {
-            push(@lines,
-                $name . COLON . SPACE . $testcase->value($name) . NEWLINE);
+
+        # multi-line output for some fields
+        if (@elements > 1
+            && any { fc($_) eq fc($name) } qw(Test-For Test-Against)) {
+            push(@lines, $name . $COLON . $NEWLINE);
+            push(@lines, $SPACE . $_ . $NEWLINE) for @elements;
             next;
         }
 
-        push(@lines, $name . COLON . NEWLINE);
-        push(@lines, SPACE . $_ . NEWLINE) for @elements;
+        push(@lines,
+            $name . $COLON . $SPACE . $testcase->value($name) . $NEWLINE);
     }
 
     $desc->append_utf8(@lines);

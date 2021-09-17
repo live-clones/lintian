@@ -1,0 +1,9 @@
+binary (binary): syntax-error-in-debian-news-file line 12 "found eof where expected more change data or trailer"
+binary (binary): syntax-error-in-debian-news-file line 12 "badly formatted trailer line"
+binary (binary): spelling-error-in-news-debian usefull useful
+binary (binary): spelling-error-in-news-debian speling spelling
+binary (binary): debian-news-entry-has-strange-distribution UNRELEASED
+binary (binary): debian-changelog-file-missing-or-wrong-name
+binary (binary): changelog-news-debian-mismatch Urgency low != high
+binary (binary): changelog-news-debian-mismatch Distribution unstable != UNRELEASED
+binary (binary): changelog-file-not-compressed usr/share/doc/binary/changelog

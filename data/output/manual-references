@@ -7,7 +7,7 @@
 # If <section> is empty, that line specifies the title and URL for the whole
 # manual.  If <url> is empty, that manual is not available on the web.
 #
-# Last updated: 2019-01-17
+# Last updated: 2020-12-09
 
 debconf-spec::::Configuration management::https://www.debian.org/doc/packaging-manuals/debconf_specification.html
 debconf-spec::1::Introduction::https://www.debian.org/doc/packaging-manuals/debconf_specification.html#id-1.2
@@ -20,10 +20,10 @@ debconf-spec::5::Communication with the frontend::https://www.debian.org/doc/pac
 debconf-spec::6::Debian install-time configuration::https://www.debian.org/doc/packaging-manuals/debconf_specification.html#id-1.7
 devref::::Debian Developer's Reference::https://www.debian.org/doc/developers-reference/
 devref::1::Scope of This Document::https://www.debian.org/doc/developers-reference/ch01.html
-devref::2::Applying to Become a Maintainer::https://www.debian.org/doc/developers-reference/ch02.html
+devref::2::Applying to Become a Member::https://www.debian.org/doc/developers-reference/ch02.html
 devref::2.1::Getting started::https://www.debian.org/doc/developers-reference/ch02.html#getting-started
 devref::2.2::Debian mentors and sponsors::https://www.debian.org/doc/developers-reference/ch02.html#mentors
-devref::2.3::Registering as a Debian developer::https://www.debian.org/doc/developers-reference/ch02.html#registering
+devref::2.3::Registering as a Debian member::https://www.debian.org/doc/developers-reference/ch02.html#registering
 devref::3::Debian Developer's Duties::https://www.debian.org/doc/developers-reference/ch03.html
 devref::3.1::Package Maintainer's Duties::https://www.debian.org/doc/developers-reference/ch03.html#package-maintainer-duties
 devref::3.1.1::Work towards the next <code>stable</code> release::https://www.debian.org/doc/developers-reference/ch03.html#help-release
@@ -37,7 +37,7 @@ devref::3.2.3::Voting::https://www.debian.org/doc/developers-reference/ch03.html
 devref::3.2.4::Going on vacation gracefully::https://www.debian.org/doc/developers-reference/ch03.html#inform-vacation
 devref::3.2.5::Retiring::https://www.debian.org/doc/developers-reference/ch03.html#s3.7
 devref::3.2.6::Returning after retirement::https://www.debian.org/doc/developers-reference/ch03.html#returning
-devref::4::Resources for Debian Developers and Debian Maintainers::https://www.debian.org/doc/developers-reference/ch04.html
+devref::4::Resources for Debian Members::https://www.debian.org/doc/developers-reference/ch04.html
 devref::4.1::Mailing lists::https://www.debian.org/doc/developers-reference/ch04.html#mailing-lists
 devref::4.1.1::Basic rules for use::https://www.debian.org/doc/developers-reference/ch04.html#mailing-lists-rules
 devref::4.1.2::Core development mailing lists::https://www.debian.org/doc/developers-reference/ch04.html#core-devel-mailing-lists
@@ -50,7 +50,7 @@ devref::4.4.1::The bugs server::https://www.debian.org/doc/developers-reference/
 devref::4.4.2::The ftp-master server::https://www.debian.org/doc/developers-reference/ch04.html#servers-ftp-master
 devref::4.4.3::The www-master server::https://www.debian.org/doc/developers-reference/ch04.html#servers-www
 devref::4.4.4::The people web server::https://www.debian.org/doc/developers-reference/ch04.html#servers-people
-devref::4.4.5::The VCS servers::https://www.debian.org/doc/developers-reference/ch04.html#servers-vcs
+devref::4.4.5::salsa.debian.org: Git repositories and collaborative development platform::https://www.debian.org/doc/developers-reference/ch04.html#salsa-debian-org
 devref::4.4.6::chroots to different distributions::https://www.debian.org/doc/developers-reference/ch04.html#dchroot
 devref::4.5::The Developers Database::https://www.debian.org/doc/developers-reference/ch04.html#devel-db
 devref::4.6::The Debian archive::https://www.debian.org/doc/developers-reference/ch04.html#archive
@@ -70,7 +70,7 @@ devref::4.9.2::The <strong>dak ls</strong> utility::https://www.debian.org/doc/d
 devref::4.10::The Debian Package Tracker::https://www.debian.org/doc/developers-reference/ch04.html#pkg-tracker
 devref::4.11::Developer's packages overview::https://www.debian.org/doc/developers-reference/ch04.html#ddpo
 devref::4.12::Debian's FusionForge installation: Alioth::https://www.debian.org/doc/developers-reference/ch04.html#alioth
-devref::4.13::Goodies for Debian Developers and Debian Maintainers::https://www.debian.org/doc/developers-reference/ch04.html#developer-misc
+devref::4.13::Goodies for Debian Members::https://www.debian.org/doc/developers-reference/ch04.html#developer-misc
 devref::5::Managing Packages::https://www.debian.org/doc/developers-reference/ch05.html
 devref::5.1::New packages::https://www.debian.org/doc/developers-reference/ch05.html#newpackage
 devref::5.2::Recording changes in the package::https://www.debian.org/doc/developers-reference/ch05.html#changelog-entries
@@ -191,7 +191,6 @@ devref::6.5.4.2.3::Select/Multiselect::https://www.debian.org/doc/developers-ref
 devref::6.5.4.2.4::Notes::https://www.debian.org/doc/developers-reference/ch06.html#s6.5.4.2.4
 devref::6.5.4.3::Choices field::https://www.debian.org/doc/developers-reference/ch06.html#s6.5.4.3
 devref::6.5.4.4::Default field::https://www.debian.org/doc/developers-reference/ch06.html#s6.5.4.4
-devref::6.5.4.5::Default field::https://www.debian.org/doc/developers-reference/ch06.html#s6.5.4.5
 devref::6.6::Internationalization::https://www.debian.org/doc/developers-reference/ch06.html#bpp-i18n
 devref::6.6.1::Handling debconf translations::https://www.debian.org/doc/developers-reference/ch06.html#bpp-i18n-debconf
 devref::6.6.2::Internationalized documentation::https://www.debian.org/doc/developers-reference/ch06.html#bpp-i18n-docs
@@ -208,6 +207,8 @@ devref::6.7.8.1::Pristine source::https://www.debian.org/doc/developers-referenc
 devref::6.7.8.2::Repackaged upstream source::https://www.debian.org/doc/developers-reference/ch06.html#repackagedorigtargz
 devref::6.7.8.3::Changing binary files::https://www.debian.org/doc/developers-reference/ch06.html#changed-binfiles
 devref::6.7.9::Best practices for debug packages::https://www.debian.org/doc/developers-reference/ch06.html#bpp-dbg
+devref::6.7.9.1::Automatically generated debug packages::https://www.debian.org/doc/developers-reference/ch06.html#bpp-dbgsym
+devref::6.7.9.2::Manual -dbg packages::https://www.debian.org/doc/developers-reference/ch06.html#bpp-dbg-legacy
 devref::6.7.10::Best practices for meta-packages::https://www.debian.org/doc/developers-reference/ch06.html#bpp-meta
 devref::7::Beyond Packaging::https://www.debian.org/doc/developers-reference/ch07.html
 devref::7.1::Bug reporting::https://www.debian.org/doc/developers-reference/ch07.html#submit-bug
@@ -278,10 +279,8 @@ doc-base::2.2::Document IDs::
 doc-base::2.3::Control Files::
 doc-base::2.3.1::Example::
 doc-base::2.3.2::Syntax of the control file::
-doc-base::2.3.2.1::The main section::
-doc-base::2.3.2.2::<em>Format</em> sections::
-doc-base::2.3.3::The <samp>section</samp> field::
-doc-base::2.4::Registering Documents With <code>doc-base</code>::
+doc-base::2.3.3::The <code>section</code> field::
+doc-base::2.4::Registering Documents With <strong>doc-base</strong>::
 doc-base::2.5::doc-base 0.8.x features and incompatibilities::
 doc-base::2.5.1::Splitting control files over multiple binary packages::
 doc-base::2.5.2::Registering local documents::
@@ -291,156 +290,414 @@ doc-base::3::Getting information about installed documents::
 doc-base::4::TODO List::
 doc-base::4.1::Roadmap for 0.9.* releases::
 doc-base::4.2::Old TODO entries::
-fhs::::Filesystem Hierarchy Standard::http://www.pathname.com/fhs/pub/fhs-2.3.html
-fhs::introduction::Introduction::http://www.pathname.com/fhs/pub/fhs-2.3.html#INTRODUCTION
-fhs::purpose::Purpose::http://www.pathname.com/fhs/pub/fhs-2.3.html#PURPOSE
-fhs::conventions::Conventions::http://www.pathname.com/fhs/pub/fhs-2.3.html#CONVENTIONS
-fhs::thefilesystem::The Filesystem::http://www.pathname.com/fhs/pub/fhs-2.3.html#THEFILESYSTEM
-fhs::therootfilesystem::The Root Filesystem::http://www.pathname.com/fhs/pub/fhs-2.3.html#THEROOTFILESYSTEM
-fhs::purpose2::Purpose::http://www.pathname.com/fhs/pub/fhs-2.3.html#PURPOSE2
-fhs::requirements::Requirements::http://www.pathname.com/fhs/pub/fhs-2.3.html#REQUIREMENTS
-fhs::specificoptions::Specific Options::http://www.pathname.com/fhs/pub/fhs-2.3.html#SPECIFICOPTIONS
-fhs::binessentialusercommandbinaries::/bin : Essential user command binaries (for use by all users)::http://www.pathname.com/fhs/pub/fhs-2.3.html#BINESSENTIALUSERCOMMANDBINARIES
-fhs::purpose3::Purpose::http://www.pathname.com/fhs/pub/fhs-2.3.html#PURPOSE3
-fhs::requirements2::Requirements::http://www.pathname.com/fhs/pub/fhs-2.3.html#REQUIREMENTS2
-fhs::specificoptions2::Specific Options::http://www.pathname.com/fhs/pub/fhs-2.3.html#SPECIFICOPTIONS2
-fhs::bootstaticfilesofthebootloader::/boot : Static files of the boot loader::http://www.pathname.com/fhs/pub/fhs-2.3.html#BOOTSTATICFILESOFTHEBOOTLOADER
-fhs::purpose4::Purpose::http://www.pathname.com/fhs/pub/fhs-2.3.html#PURPOSE4
-fhs::specificoptions3::Specific Options::http://www.pathname.com/fhs/pub/fhs-2.3.html#SPECIFICOPTIONS3
-fhs::devdevicefiles::/dev : Device files::http://www.pathname.com/fhs/pub/fhs-2.3.html#DEVDEVICEFILES
-fhs::purpose5::Purpose::http://www.pathname.com/fhs/pub/fhs-2.3.html#PURPOSE5
-fhs::specificoptions4::Specific Options::http://www.pathname.com/fhs/pub/fhs-2.3.html#SPECIFICOPTIONS4
-fhs::etchostspecificsystemconfiguration::/etc : Host-specific system configuration::http://www.pathname.com/fhs/pub/fhs-2.3.html#ETCHOSTSPECIFICSYSTEMCONFIGURATION
-fhs::purpose6::Purpose::http://www.pathname.com/fhs/pub/fhs-2.3.html#PURPOSE6
-fhs::requirements3::Requirements::http://www.pathname.com/fhs/pub/fhs-2.3.html#REQUIREMENTS3
-fhs::specificoptions5::Specific Options::http://www.pathname.com/fhs/pub/fhs-2.3.html#SPECIFICOPTIONS5
-fhs::etcoptconfigurationfilesforopt::/etc/opt : Configuration files for /opt::http://www.pathname.com/fhs/pub/fhs-2.3.html#ETCOPTCONFIGURATIONFILESFOROPT
-fhs::etcx11configurationforthexwindows::/etc/X11 : Configuration for the X Window System (optional)::http://www.pathname.com/fhs/pub/fhs-2.3.html#ETCX11CONFIGURATIONFORTHEXWINDOWS
-fhs::etcsgmlconfigurationfilesforsgmlan::/etc/sgml : Configuration files for SGML (optional)::http://www.pathname.com/fhs/pub/fhs-2.3.html#ETCSGMLCONFIGURATIONFILESFORSGMLAN
-fhs::aen795::/etc/xml : Configuration files for XML (optional)::http://www.pathname.com/fhs/pub/fhs-2.3.html#AEN795
-fhs::homeuserhomedirectories::/home : User home directories (optional)::http://www.pathname.com/fhs/pub/fhs-2.3.html#HOMEUSERHOMEDIRECTORIES
-fhs::purpose10::Purpose::http://www.pathname.com/fhs/pub/fhs-2.3.html#PURPOSE10
-fhs::requirements4a::Requirements::http://www.pathname.com/fhs/pub/fhs-2.3.html#REQUIREMENTS4A
-fhs::libessentialsharedlibrariesandkern::/lib : Essential shared libraries and kernel modules::http://www.pathname.com/fhs/pub/fhs-2.3.html#LIBESSENTIALSHAREDLIBRARIESANDKERN
-fhs::purpose11::Purpose::http://www.pathname.com/fhs/pub/fhs-2.3.html#PURPOSE11
-fhs::requirements5::Requirements::http://www.pathname.com/fhs/pub/fhs-2.3.html#REQUIREMENTS5
-fhs::specificoptions7::Specific Options::http://www.pathname.com/fhs/pub/fhs-2.3.html#SPECIFICOPTIONS7
-fhs::libltqualgtalternateformatessential::/lib&lt;qual&gt; : Alternate format essential shared libraries (optional)::http://www.pathname.com/fhs/pub/fhs-2.3.html#LIBLTQUALGTALTERNATEFORMATESSENTIAL
-fhs::purpose12::Purpose::http://www.pathname.com/fhs/pub/fhs-2.3.html#PURPOSE12
-fhs::requirements6::Requirements::http://www.pathname.com/fhs/pub/fhs-2.3.html#REQUIREMENTS6
-fhs::mediamountpoint::/media : Mount point for removeable media::http://www.pathname.com/fhs/pub/fhs-2.3.html#MEDIAMOUNTPOINT
-fhs::purposemediamountpoint::Purpose::http://www.pathname.com/fhs/pub/fhs-2.3.html#PURPOSEMEDIAMOUNTPOINT
-fhs::specificoptionsmediamount::Specific Options::http://www.pathname.com/fhs/pub/fhs-2.3.html#SPECIFICOPTIONSMEDIAMOUNT
-fhs::mntmountpointforatemporarilymount::/mnt : Mount point for a temporarily mounted filesystem::http://www.pathname.com/fhs/pub/fhs-2.3.html#MNTMOUNTPOINTFORATEMPORARILYMOUNT
-fhs::purpose13::Purpose::http://www.pathname.com/fhs/pub/fhs-2.3.html#PURPOSE13
-fhs::optaddonapplicationsoftwarepackages::/opt : Add-on application software packages::http://www.pathname.com/fhs/pub/fhs-2.3.html#OPTADDONAPPLICATIONSOFTWAREPACKAGES
-fhs::purpose14::Purpose::http://www.pathname.com/fhs/pub/fhs-2.3.html#PURPOSE14
-fhs::requirements7::Requirements::http://www.pathname.com/fhs/pub/fhs-2.3.html#REQUIREMENTS7
-fhs::roothomedirectoryfortherootuser::/root : Home directory for the root user (optional)::http://www.pathname.com/fhs/pub/fhs-2.3.html#ROOTHOMEDIRECTORYFORTHEROOTUSER
-fhs::purpose15::Purpose::http://www.pathname.com/fhs/pub/fhs-2.3.html#PURPOSE15
-fhs::sbinsystembinaries::/sbin : System binaries::http://www.pathname.com/fhs/pub/fhs-2.3.html#SBINSYSTEMBINARIES
-fhs::purpose16::Purpose::http://www.pathname.com/fhs/pub/fhs-2.3.html#PURPOSE16
-fhs::requirements8::Requirements::http://www.pathname.com/fhs/pub/fhs-2.3.html#REQUIREMENTS8
-fhs::specificoptions8::Specific Options::http://www.pathname.com/fhs/pub/fhs-2.3.html#SPECIFICOPTIONS8
-fhs::srvdataforservicesprovidedbysystem::/srv : Data for services provided by this system::http://www.pathname.com/fhs/pub/fhs-2.3.html#SRVDATAFORSERVICESPROVIDEDBYSYSTEM
-fhs::purpose16a::Purpose::http://www.pathname.com/fhs/pub/fhs-2.3.html#PURPOSE16A
-fhs::tmptemporaryfiles::/tmp : Temporary files::http://www.pathname.com/fhs/pub/fhs-2.3.html#TMPTEMPORARYFILES
-fhs::purpose17::Purpose::http://www.pathname.com/fhs/pub/fhs-2.3.html#PURPOSE17
-fhs::theusrhierarchy::The /usr Hierarchy::http://www.pathname.com/fhs/pub/fhs-2.3.html#THEUSRHIERARCHY
-fhs::purpose18::Purpose::http://www.pathname.com/fhs/pub/fhs-2.3.html#PURPOSE18
-fhs::requirements9::Requirements::http://www.pathname.com/fhs/pub/fhs-2.3.html#REQUIREMENTS9
-fhs::specificoptions9::Specific Options::http://www.pathname.com/fhs/pub/fhs-2.3.html#SPECIFICOPTIONS9
-fhs::usrx11r6xwindowsystemversion11rel::/usr/X11R6 : X Window System, Version 11 Release 6 (optional)::http://www.pathname.com/fhs/pub/fhs-2.3.html#USRX11R6XWINDOWSYSTEMVERSION11REL
-fhs::purpose19::Purpose::http://www.pathname.com/fhs/pub/fhs-2.3.html#PURPOSE19
-fhs::specificoptions10::Specific Options::http://www.pathname.com/fhs/pub/fhs-2.3.html#SPECIFICOPTIONS10
-fhs::usrbinmostusercommands::/usr/bin : Most user commands::http://www.pathname.com/fhs/pub/fhs-2.3.html#USRBINMOSTUSERCOMMANDS
-fhs::purpose20::Purpose::http://www.pathname.com/fhs/pub/fhs-2.3.html#PURPOSE20
-fhs::specificoptions11::Specific Options::http://www.pathname.com/fhs/pub/fhs-2.3.html#SPECIFICOPTIONS11
-fhs::usrincludedirectoryforstandardinclu::/usr/include : Directory for standard include files.::http://www.pathname.com/fhs/pub/fhs-2.3.html#USRINCLUDEDIRECTORYFORSTANDARDINCLU
-fhs::purpose21::Purpose::http://www.pathname.com/fhs/pub/fhs-2.3.html#PURPOSE21
-fhs::specificoptions12::Specific Options::http://www.pathname.com/fhs/pub/fhs-2.3.html#SPECIFICOPTIONS12
-fhs::usrliblibrariesforprogrammingandpa::/usr/lib : Libraries for programming and packages::http://www.pathname.com/fhs/pub/fhs-2.3.html#USRLIBLIBRARIESFORPROGRAMMINGANDPA
-fhs::purpose22::Purpose::http://www.pathname.com/fhs/pub/fhs-2.3.html#PURPOSE22
-fhs::specificoptions13::Specific Options::http://www.pathname.com/fhs/pub/fhs-2.3.html#SPECIFICOPTIONS13
-fhs::usrlibltqualgtalternateformatlibrari::/usr/lib&lt;qual&gt; : Alternate format libraries (optional)::http://www.pathname.com/fhs/pub/fhs-2.3.html#USRLIBLTQUALGTALTERNATEFORMATLIBRARI
-fhs::purpose23::Purpose::http://www.pathname.com/fhs/pub/fhs-2.3.html#PURPOSE23
-fhs::usrlocallocalhierarchy::/usr/local : Local hierarchy::http://www.pathname.com/fhs/pub/fhs-2.3.html#USRLOCALLOCALHIERARCHY
-fhs::usrlocalshare1::/usr/local/share::http://www.pathname.com/fhs/pub/fhs-2.3.html#USRLOCALSHARE1
-fhs::usrsbinnonessentialstandardsystembi::/usr/sbin : Non-essential standard system binaries::http://www.pathname.com/fhs/pub/fhs-2.3.html#USRSBINNONESSENTIALSTANDARDSYSTEMBI
-fhs::purpose25::Purpose::http://www.pathname.com/fhs/pub/fhs-2.3.html#PURPOSE25
-fhs::usrsharearchitectureindependentdata::/usr/share : Architecture-independent data::http://www.pathname.com/fhs/pub/fhs-2.3.html#USRSHAREARCHITECTUREINDEPENDENTDATA
-fhs::purpose26::Purpose::http://www.pathname.com/fhs/pub/fhs-2.3.html#PURPOSE26
-fhs::requirements11::Requirements::http://www.pathname.com/fhs/pub/fhs-2.3.html#REQUIREMENTS11
-fhs::specificoptions15::Specific Options::http://www.pathname.com/fhs/pub/fhs-2.3.html#SPECIFICOPTIONS15
-fhs::usrsharedictwordlists::/usr/share/dict : Word lists (optional)::http://www.pathname.com/fhs/pub/fhs-2.3.html#USRSHAREDICTWORDLISTS
-fhs::usrsharemanmanualpages::/usr/share/man : Manual pages::http://www.pathname.com/fhs/pub/fhs-2.3.html#USRSHAREMANMANUALPAGES
-fhs::usrsharemiscmiscellaneousarchitecture::/usr/share/misc : Miscellaneous architecture-independent data::http://www.pathname.com/fhs/pub/fhs-2.3.html#USRSHAREMISCMISCELLANEOUSARCHITECTURE
-fhs::usrsharesgmlsgmlandxmldata::/usr/share/sgml : SGML data (optional)::http://www.pathname.com/fhs/pub/fhs-2.3.html#USRSHARESGMLSGMLANDXMLDATA
-fhs::aen2007::/usr/share/xml : XML data (optional)::http://www.pathname.com/fhs/pub/fhs-2.3.html#AEN2007
-fhs::usrsrcsourcecode::/usr/src : Source code (optional)::http://www.pathname.com/fhs/pub/fhs-2.3.html#USRSRCSOURCECODE
-fhs::purpose30::Purpose::http://www.pathname.com/fhs/pub/fhs-2.3.html#PURPOSE30
-fhs::thevarhierarchy::The /var Hierarchy::http://www.pathname.com/fhs/pub/fhs-2.3.html#THEVARHIERARCHY
-fhs::purpose31::Purpose::http://www.pathname.com/fhs/pub/fhs-2.3.html#PURPOSE31
-fhs::requirements12::Requirements::http://www.pathname.com/fhs/pub/fhs-2.3.html#REQUIREMENTS12
-fhs::specificoptions20::Specific Options::http://www.pathname.com/fhs/pub/fhs-2.3.html#SPECIFICOPTIONS20
-fhs::varaccountprocessaccountinglogs::/var/account : Process accounting logs (optional)::http://www.pathname.com/fhs/pub/fhs-2.3.html#VARACCOUNTPROCESSACCOUNTINGLOGS
-fhs::purpose32::Purpose::http://www.pathname.com/fhs/pub/fhs-2.3.html#PURPOSE32
-fhs::varcacheapplicationcachedata::/var/cache : Application cache data::http://www.pathname.com/fhs/pub/fhs-2.3.html#VARCACHEAPPLICATIONCACHEDATA
-fhs::purpose33::Purpose::http://www.pathname.com/fhs/pub/fhs-2.3.html#PURPOSE33
-fhs::specificoptions21::Specific Options::http://www.pathname.com/fhs/pub/fhs-2.3.html#SPECIFICOPTIONS21
-fhs::varcachefontslocallygeneratedfonts::/var/cache/fonts : Locally-generated fonts (optional)::http://www.pathname.com/fhs/pub/fhs-2.3.html#VARCACHEFONTSLOCALLYGENERATEDFONTS
-fhs::varcachemanlocallyformattedmanualpag::/var/cache/man : Locally-formatted manual pages (optional)::http://www.pathname.com/fhs/pub/fhs-2.3.html#VARCACHEMANLOCALLYFORMATTEDMANUALPAG
-fhs::varcrashsystemcrashdumps::/var/crash : System crash dumps (optional)::http://www.pathname.com/fhs/pub/fhs-2.3.html#VARCRASHSYSTEMCRASHDUMPS
-fhs::purpose36::Purpose::http://www.pathname.com/fhs/pub/fhs-2.3.html#PURPOSE36
-fhs::vargamesvariablegamedata::/var/games : Variable game data (optional)::http://www.pathname.com/fhs/pub/fhs-2.3.html#VARGAMESVARIABLEGAMEDATA
-fhs::purpose37::Purpose::http://www.pathname.com/fhs/pub/fhs-2.3.html#PURPOSE37
-fhs::varlibvariablestateinformation::/var/lib : Variable state information::http://www.pathname.com/fhs/pub/fhs-2.3.html#VARLIBVARIABLESTATEINFORMATION
-fhs::purpose38::Purpose::http://www.pathname.com/fhs/pub/fhs-2.3.html#PURPOSE38
-fhs::requirements13::Requirements::http://www.pathname.com/fhs/pub/fhs-2.3.html#REQUIREMENTS13
-fhs::specificoptions23::Specific Options::http://www.pathname.com/fhs/pub/fhs-2.3.html#SPECIFICOPTIONS23
-fhs::varliblteditorgteditorbackupfilesan::/var/lib/&lt;editor&gt; : Editor backup files and state (optional)::http://www.pathname.com/fhs/pub/fhs-2.3.html#VARLIBLTEDITORGTEDITORBACKUPFILESAN
-fhs::varlibhwclockstatedirectoryforhwclo::/var/lib/hwclock : State directory for hwclock (optional)::http://www.pathname.com/fhs/pub/fhs-2.3.html#VARLIBHWCLOCKSTATEDIRECTORYFORHWCLO
-fhs::varlibmiscmiscellaneousvariabledata::/var/lib/misc : Miscellaneous variable data::http://www.pathname.com/fhs/pub/fhs-2.3.html#VARLIBMISCMISCELLANEOUSVARIABLEDATA
-fhs::varlocklockfiles::/var/lock : Lock files::http://www.pathname.com/fhs/pub/fhs-2.3.html#VARLOCKLOCKFILES
-fhs::purpose42::Purpose::http://www.pathname.com/fhs/pub/fhs-2.3.html#PURPOSE42
-fhs::varloglogfilesanddirectories::/var/log : Log files and directories::http://www.pathname.com/fhs/pub/fhs-2.3.html#VARLOGLOGFILESANDDIRECTORIES
-fhs::purpose43::Purpose::http://www.pathname.com/fhs/pub/fhs-2.3.html#PURPOSE43
-fhs::specificoptions24::Specific Options::http://www.pathname.com/fhs/pub/fhs-2.3.html#SPECIFICOPTIONS24
-fhs::varmailusermailboxfiles::/var/mail : User mailbox files (optional)::http://www.pathname.com/fhs/pub/fhs-2.3.html#VARMAILUSERMAILBOXFILES
-fhs::purpose44::Purpose::http://www.pathname.com/fhs/pub/fhs-2.3.html#PURPOSE44
-fhs::varoptvariabledataforopt::/var/opt : Variable data for /opt::http://www.pathname.com/fhs/pub/fhs-2.3.html#VAROPTVARIABLEDATAFOROPT
-fhs::purpose45::Purpose::http://www.pathname.com/fhs/pub/fhs-2.3.html#PURPOSE45
-fhs::varrunruntimevariabledata::/var/run : Run-time variable data::http://www.pathname.com/fhs/pub/fhs-2.3.html#VARRUNRUNTIMEVARIABLEDATA
-fhs::purpose46::Purpose::http://www.pathname.com/fhs/pub/fhs-2.3.html#PURPOSE46
-fhs::requirements14::Requirements::http://www.pathname.com/fhs/pub/fhs-2.3.html#REQUIREMENTS14
-fhs::varspoolapplicationspooldata::/var/spool : Application spool data::http://www.pathname.com/fhs/pub/fhs-2.3.html#VARSPOOLAPPLICATIONSPOOLDATA
-fhs::purpose47::Purpose::http://www.pathname.com/fhs/pub/fhs-2.3.html#PURPOSE47
-fhs::specificoptions25::Specific Options::http://www.pathname.com/fhs/pub/fhs-2.3.html#SPECIFICOPTIONS25
-fhs::varspoollpdlineprinterdaemonprintqu::/var/spool/lpd : Line-printer daemon print queues (optional)::http://www.pathname.com/fhs/pub/fhs-2.3.html#VARSPOOLLPDLINEPRINTERDAEMONPRINTQU
-fhs::varspoolrwhorwhodfiles::/var/spool/rwho : Rwhod files (optional)::http://www.pathname.com/fhs/pub/fhs-2.3.html#VARSPOOLRWHORWHODFILES
-fhs::vartmptemporaryfilespreservedbetwee::/var/tmp : Temporary files preserved between system reboots::http://www.pathname.com/fhs/pub/fhs-2.3.html#VARTMPTEMPORARYFILESPRESERVEDBETWEE
-fhs::purpose50::Purpose::http://www.pathname.com/fhs/pub/fhs-2.3.html#PURPOSE50
-fhs::varypnetworkinformationservice::/var/yp : Network Information Service (NIS) database files (optional)::http://www.pathname.com/fhs/pub/fhs-2.3.html#VARYPNETWORKINFORMATIONSERVICE
-fhs::purpose51::Purpose::http://www.pathname.com/fhs/pub/fhs-2.3.html#PURPOSE51
-fhs::operatingsystemspecificannex::Operating System Specific Annex::http://www.pathname.com/fhs/pub/fhs-2.3.html#OPERATINGSYSTEMSPECIFICANNEX
-fhs::linux::Linux::http://www.pathname.com/fhs/pub/fhs-2.3.html#LINUX
-fhs::rootdirectory::/ : Root directory::http://www.pathname.com/fhs/pub/fhs-2.3.html#ROOTDIRECTORY
-fhs::binessentialusercommandbinaries2::/bin : Essential user command binaries (for use by all users)::http://www.pathname.com/fhs/pub/fhs-2.3.html#BINESSENTIALUSERCOMMANDBINARIES2
-fhs::devdevicesandspecialfiles::/dev : Devices and special files::http://www.pathname.com/fhs/pub/fhs-2.3.html#DEVDEVICESANDSPECIALFILES
-fhs::etchostspecificsystemconfiguration2::/etc : Host-specific system configuration::http://www.pathname.com/fhs/pub/fhs-2.3.html#ETCHOSTSPECIFICSYSTEMCONFIGURATION2
-fhs::lib64::/lib64 and /lib32 : 64/32-bit libraries (architecture dependent)::http://www.pathname.com/fhs/pub/fhs-2.3.html#LIB64
-fhs::prockernelandprocessinformationvir::/proc : Kernel and process information virtual filesystem::http://www.pathname.com/fhs/pub/fhs-2.3.html#PROCKERNELANDPROCESSINFORMATIONVIR
-fhs::sbinessentialsystembinaries::/sbin : Essential system binaries::http://www.pathname.com/fhs/pub/fhs-2.3.html#SBINESSENTIALSYSTEMBINARIES
-fhs::usrincludeheaderfilesincludedbycp::/usr/include : Header files included by C programs::http://www.pathname.com/fhs/pub/fhs-2.3.html#USRINCLUDEHEADERFILESINCLUDEDBYCP
-fhs::usrsrcsourcecode2::/usr/src : Source code::http://www.pathname.com/fhs/pub/fhs-2.3.html#USRSRCSOURCECODE2
-fhs::varspoolcroncronandatjobs::/var/spool/cron : cron and at jobs::http://www.pathname.com/fhs/pub/fhs-2.3.html#VARSPOOLCRONCRONANDATJOBS
-fhs::appendix::Appendix::http://www.pathname.com/fhs/pub/fhs-2.3.html#APPENDIX
-fhs::thefhsmailinglist::The FHS mailing list::http://www.pathname.com/fhs/pub/fhs-2.3.html#THEFHSMAILINGLIST
-fhs::backgroundofthefhs::Background of the FHS::http://www.pathname.com/fhs/pub/fhs-2.3.html#BACKGROUNDOFTHEFHS
-fhs::generalguidelines::General Guidelines::http://www.pathname.com/fhs/pub/fhs-2.3.html#GENERALGUIDELINES
-fhs::scope::Scope::http://www.pathname.com/fhs/pub/fhs-2.3.html#SCOPE
-fhs::acknowledgments::Acknowledgments::http://www.pathname.com/fhs/pub/fhs-2.3.html#ACKNOWLEDGMENTS
-fhs::contributors::Contributors::http://www.pathname.com/fhs/pub/fhs-2.3.html#CONTRIBUTORS
+fhs::::Filesystem Hierarchy Standard::http://www.pathname.com/fhs/pub/fhs-3.0.html
+fhs::introduction::1. Introduction::http://www.pathname.com/fhs/pub/fhs-3.0.html#introduction
+fhs::purpose::1.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose
+fhs::conventions::1.2. Conventions::http://www.pathname.com/fhs/pub/fhs-3.0.html#conventions
+fhs::thefilesystem::2. The Filesystem::http://www.pathname.com/fhs/pub/fhs-3.0.html#thefilesystem
+fhs::therootfilesystem::3. The Root Filesystem::http://www.pathname.com/fhs/pub/fhs-3.0.html#theRootFilesystem
+fhs::purpose2::3.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose2
+fhs::requirements::3.2. Requirements::http://www.pathname.com/fhs/pub/fhs-3.0.html#requirements
+fhs::specificoptions::3.3. Specific Options::http://www.pathname.com/fhs/pub/fhs-3.0.html#specificOptions
+fhs::binessentialusercommandbinaries::3.4. /bin : Essential user command binaries (for use by all users)::http://www.pathname.com/fhs/pub/fhs-3.0.html#binEssentialUserCommandBinaries
+fhs::purpose3::3.4.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose3
+fhs::requirements2::3.4.2. Requirements::http://www.pathname.com/fhs/pub/fhs-3.0.html#requirements2
+fhs::specificoptions2::3.4.3. Specific Options::http://www.pathname.com/fhs/pub/fhs-3.0.html#specificOptions2
+fhs::bootstaticfilesofthebootloader::3.5. /boot : Static files of the boot loader::http://www.pathname.com/fhs/pub/fhs-3.0.html#bootStaticFilesOfTheBootLoader
+fhs::purpose4::3.5.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose4
+fhs::specificoptions3::3.5.2. Specific Options::http://www.pathname.com/fhs/pub/fhs-3.0.html#specificOptions3
+fhs::devdevicefiles::3.6. /dev : Device files::http://www.pathname.com/fhs/pub/fhs-3.0.html#devDeviceFiles
+fhs::purpose5::3.6.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose5
+fhs::specificoptions4::3.6.2. Specific Options::http://www.pathname.com/fhs/pub/fhs-3.0.html#specificOptions4
+fhs::etchostspecificsystemconfiguration::3.7. /etc : Host-specific system configuration::http://www.pathname.com/fhs/pub/fhs-3.0.html#etcHostspecificSystemConfiguration
+fhs::purpose6::3.7.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose6
+fhs::requirements3::3.7.2. Requirements::http://www.pathname.com/fhs/pub/fhs-3.0.html#requirements3
+fhs::specificoptions5::3.7.3. Specific Options::http://www.pathname.com/fhs/pub/fhs-3.0.html#specificOptions5
+fhs::etcoptconfigurationfilesforopt::3.7.4. /etc/opt : Configuration files for /opt::http://www.pathname.com/fhs/pub/fhs-3.0.html#etcoptConfigurationFilesForOpt
+fhs::etcx11configurationforthexwindows::3.7.5. /etc/X11 : Configuration for the X Window System (optional)::http://www.pathname.com/fhs/pub/fhs-3.0.html#etcx11ConfigurationForTheXWindowS
+fhs::etcsgmlconfigurationfilesforsgmlan::3.7.6. /etc/sgml : Configuration files for SGML (optional)::http://www.pathname.com/fhs/pub/fhs-3.0.html#etcsgmlConfigurationFilesForSgmlAn
+fhs::idm236088418512::3.7.7. /etc/xml : Configuration files for XML (optional)::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236088418512
+fhs::homeuserhomedirectories::3.8. /home : User home directories (optional)::http://www.pathname.com/fhs/pub/fhs-3.0.html#homeUserHomeDirectories
+fhs::purpose10::3.8.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose10
+fhs::requirements4a::3.8.2. Requirements::http://www.pathname.com/fhs/pub/fhs-3.0.html#requirements4a
+fhs::homereferences::3.8.3. Home Directory Specifications and Conventions::http://www.pathname.com/fhs/pub/fhs-3.0.html#homeReferences
+fhs::libessentialsharedlibrariesandkern::3.9. /lib : Essential shared libraries and kernel modules::http://www.pathname.com/fhs/pub/fhs-3.0.html#libEssentialSharedLibrariesAndKern
+fhs::purpose11::3.9.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose11
+fhs::requirements5::3.9.2. Requirements::http://www.pathname.com/fhs/pub/fhs-3.0.html#requirements5
+fhs::specificoptions7::3.9.3. Specific Options::http://www.pathname.com/fhs/pub/fhs-3.0.html#specificOptions7
+fhs::libltqualgtalternateformatessential::3.10. /lib<em class="replaceable"><code>&lt;qual&gt;</code></em> : Alternate format essential shared libraries (optional)::http://www.pathname.com/fhs/pub/fhs-3.0.html#libltqualgtAlternateFormatEssential
+fhs::purpose12::3.10.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose12
+fhs::requirements6::3.10.2. Requirements::http://www.pathname.com/fhs/pub/fhs-3.0.html#requirements6
+fhs::mediamountpoint::3.11. /media : Mount point for removable media::http://www.pathname.com/fhs/pub/fhs-3.0.html#mediaMountPoint
+fhs::purposemediamountpoint::3.11.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purposeMediaMountPoint
+fhs::specificoptionsmediamount::3.11.2. Specific Options::http://www.pathname.com/fhs/pub/fhs-3.0.html#specificOptionsMediaMount
+fhs::mntmountpointforatemporarilymount::3.12. /mnt : Mount point for a temporarily mounted filesystem::http://www.pathname.com/fhs/pub/fhs-3.0.html#mntMountPointForATemporarilyMount
+fhs::purpose13::3.12.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose13
+fhs::optaddonapplicationsoftwarepackages::3.13. /opt : Add-on application software packages::http://www.pathname.com/fhs/pub/fhs-3.0.html#optAddonApplicationSoftwarePackages
+fhs::purpose14::3.13.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose14
+fhs::requirements7::3.13.2. Requirements::http://www.pathname.com/fhs/pub/fhs-3.0.html#requirements7
+fhs::roothomedirectoryfortherootuser::3.14. /root : Home directory for the root user (optional)::http://www.pathname.com/fhs/pub/fhs-3.0.html#rootHomeDirectoryForTheRootUser
+fhs::purpose15::3.14.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose15
+fhs::runruntimevariabledata::3.15. /run : Run-time variable data::http://www.pathname.com/fhs/pub/fhs-3.0.html#runRuntimeVariableData
+fhs::runpurpose::3.15.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#runPurpose
+fhs::runrequirements::3.15.2. Requirements::http://www.pathname.com/fhs/pub/fhs-3.0.html#runRequirements
+fhs::sbinsystembinaries::3.16. /sbin : System binaries::http://www.pathname.com/fhs/pub/fhs-3.0.html#sbinSystemBinaries
+fhs::purpose16::3.16.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose16
+fhs::requirements8::3.16.2. Requirements::http://www.pathname.com/fhs/pub/fhs-3.0.html#requirements8
+fhs::specificoptions8::3.16.3. Specific Options::http://www.pathname.com/fhs/pub/fhs-3.0.html#specificOptions8
+fhs::srvdataforservicesprovidedbysystem::3.17. /srv : Data for services provided by this system::http://www.pathname.com/fhs/pub/fhs-3.0.html#srvDataForServicesProvidedBySystem
+fhs::purpose16a::3.17.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose16a
+fhs::tmptemporaryfiles::3.18. /tmp : Temporary files::http://www.pathname.com/fhs/pub/fhs-3.0.html#tmpTemporaryFiles
+fhs::purpose17::3.18.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose17
+fhs::theusrhierarchy::4. The /usr Hierarchy::http://www.pathname.com/fhs/pub/fhs-3.0.html#theUsrHierarchy
+fhs::purpose18::4.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose18
+fhs::requirements9::4.2. Requirements::http://www.pathname.com/fhs/pub/fhs-3.0.html#requirements9
+fhs::specificoptions9::4.3. Specific Options::http://www.pathname.com/fhs/pub/fhs-3.0.html#specificOptions9
+fhs::usrbinmostusercommands::4.4. /usr/bin : Most user commands::http://www.pathname.com/fhs/pub/fhs-3.0.html#usrbinMostUserCommands
+fhs::purpose20::4.4.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose20
+fhs::requirements9a::4.4.2. Requirements::http://www.pathname.com/fhs/pub/fhs-3.0.html#requirements9a
+fhs::specificoptions11::4.4.3. Specific Options::http://www.pathname.com/fhs/pub/fhs-3.0.html#specificOptions11
+fhs::usrincludedirectoryforstandardinclu::4.5. /usr/include : Directory for standard include files.::http://www.pathname.com/fhs/pub/fhs-3.0.html#usrincludeDirectoryForStandardInclu
+fhs::purpose21::4.5.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose21
+fhs::specificoptions12::4.5.2. Specific Options::http://www.pathname.com/fhs/pub/fhs-3.0.html#specificOptions12
+fhs::usrliblibrariesforprogrammingandpa::4.6. /usr/lib : Libraries for programming and packages::http://www.pathname.com/fhs/pub/fhs-3.0.html#usrlibLibrariesForProgrammingAndPa
+fhs::purpose22::4.6.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose22
+fhs::specificoptions13::4.6.2. Specific Options::http://www.pathname.com/fhs/pub/fhs-3.0.html#specificOptions13
+fhs::usrlibexec::4.7. /usr/libexec : Binaries run by other programs (optional)::http://www.pathname.com/fhs/pub/fhs-3.0.html#usrlibexec
+fhs::usrlibexecpurpose::4.7.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#usrlibexecPurpose
+fhs::usrlibltqualgtalternateformatlibrari::4.8. /usr/lib<em class="replaceable"><code>&lt;qual&gt;</code></em> : Alternate format libraries (optional)::http://www.pathname.com/fhs/pub/fhs-3.0.html#usrlibltqualgtAlternateFormatLibrari
+fhs::purpose23::4.8.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose23
+fhs::usrlocallocalhierarchy::4.9. /usr/local : Local hierarchy::http://www.pathname.com/fhs/pub/fhs-3.0.html#usrlocalLocalHierarchy
+fhs::purpose24::4.9.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose24
+fhs::requirements10::4.9.2. Requirements::http://www.pathname.com/fhs/pub/fhs-3.0.html#requirements10
+fhs::specificoptions14::4.9.3. Specific Options::http://www.pathname.com/fhs/pub/fhs-3.0.html#specificOptions14
+fhs::usrlocalshare1::4.9.4. /usr/local/share : Local architecture-independent hierarchy::http://www.pathname.com/fhs/pub/fhs-3.0.html#usrlocalshare1
+fhs::usrsbinnonessentialstandardsystembi::4.10. /usr/sbin : Non-essential standard system binaries::http://www.pathname.com/fhs/pub/fhs-3.0.html#usrsbinNonessentialStandardSystemBi
+fhs::purpose25::4.10.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose25
+fhs::requirements10a::4.10.2. Requirements::http://www.pathname.com/fhs/pub/fhs-3.0.html#requirements10a
+fhs::usrsharearchitectureindependentdata::4.11. /usr/share : Architecture-independent data::http://www.pathname.com/fhs/pub/fhs-3.0.html#usrshareArchitectureindependentData
+fhs::purpose26::4.11.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose26
+fhs::requirements11::4.11.2. Requirements::http://www.pathname.com/fhs/pub/fhs-3.0.html#requirements11
+fhs::specificoptions15::4.11.3. Specific Options::http://www.pathname.com/fhs/pub/fhs-3.0.html#specificOptions15
+fhs::usrsharecolorcolormanagement::4.11.4. /usr/share/color : Color management information (optional)::http://www.pathname.com/fhs/pub/fhs-3.0.html#usrsharecolorColorManagement
+fhs::usrsharedictwordlists::4.11.5. /usr/share/dict : Word lists (optional)::http://www.pathname.com/fhs/pub/fhs-3.0.html#usrsharedictWordLists
+fhs::usrsharemanmanualpages::4.11.6. /usr/share/man : Manual pages::http://www.pathname.com/fhs/pub/fhs-3.0.html#usrsharemanManualPages
+fhs::usrsharemiscmiscellaneousarchitecture::4.11.7. /usr/share/misc : Miscellaneous architecture-independent data::http://www.pathname.com/fhs/pub/fhs-3.0.html#usrsharemiscMiscellaneousArchitecture
+fhs::usrshareppd::4.11.8. /usr/share/ppd : Printer definitions (optional)::http://www.pathname.com/fhs/pub/fhs-3.0.html#usrshareppd
+fhs::usrsharesgmlsgmlandxmldata::4.11.9. /usr/share/sgml : SGML data (optional)::http://www.pathname.com/fhs/pub/fhs-3.0.html#usrsharesgmlSgmlAndXmlData
+fhs::idm236087237360::4.11.10. /usr/share/xml : XML data (optional)::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236087237360
+fhs::usrsrcsourcecode::4.12. /usr/src : Source code (optional)::http://www.pathname.com/fhs/pub/fhs-3.0.html#usrsrcSourceCode
+fhs::purpose30::4.12.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose30
+fhs::thevarhierarchy::5. The /var Hierarchy::http://www.pathname.com/fhs/pub/fhs-3.0.html#theVarHierarchy
+fhs::purpose31::5.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose31
+fhs::requirements12::5.2. Requirements::http://www.pathname.com/fhs/pub/fhs-3.0.html#requirements12
+fhs::specificoptions20::5.3. Specific Options::http://www.pathname.com/fhs/pub/fhs-3.0.html#specificOptions20
+fhs::varaccountprocessaccountinglogs::5.4. /var/account : Process accounting logs (optional)::http://www.pathname.com/fhs/pub/fhs-3.0.html#varaccountProcessAccountingLogs
+fhs::purpose32::5.4.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose32
+fhs::varcacheapplicationcachedata::5.5. /var/cache : Application cache data::http://www.pathname.com/fhs/pub/fhs-3.0.html#varcacheApplicationCacheData
+fhs::purpose33::5.5.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose33
+fhs::specificoptions21::5.5.2. Specific Options::http://www.pathname.com/fhs/pub/fhs-3.0.html#specificOptions21
+fhs::varcachefontslocallygeneratedfonts::5.5.3. /var/cache/fonts : Locally-generated fonts (optional)::http://www.pathname.com/fhs/pub/fhs-3.0.html#varcachefontsLocallygeneratedFonts
+fhs::varcachemanlocallyformattedmanualpag::5.5.4. /var/cache/man : Locally-formatted manual pages (optional)::http://www.pathname.com/fhs/pub/fhs-3.0.html#varcachemanLocallyformattedManualPag
+fhs::varcrashsystemcrashdumps::5.6. /var/crash : System crash dumps (optional)::http://www.pathname.com/fhs/pub/fhs-3.0.html#varcrashSystemCrashDumps
+fhs::purpose36::5.6.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose36
+fhs::vargamesvariablegamedata::5.7. /var/games : Variable game data (optional)::http://www.pathname.com/fhs/pub/fhs-3.0.html#vargamesVariableGameData
+fhs::purpose37::5.7.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose37
+fhs::varlibvariablestateinformation::5.8. /var/lib : Variable state information::http://www.pathname.com/fhs/pub/fhs-3.0.html#varlibVariableStateInformation
+fhs::purpose38::5.8.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose38
+fhs::requirements13::5.8.2. Requirements::http://www.pathname.com/fhs/pub/fhs-3.0.html#requirements13
+fhs::specificoptions23::5.8.3. Specific Options::http://www.pathname.com/fhs/pub/fhs-3.0.html#specificOptions23
+fhs::varliblteditorgteditorbackupfilesan::5.8.4. /var/lib/&lt;editor&gt; : Editor backup files and state (optional)::http://www.pathname.com/fhs/pub/fhs-3.0.html#varliblteditorgtEditorBackupFilesAn
+fhs::varlibcolor::5.8.5. /var/lib/color : Color management information (optional)::http://www.pathname.com/fhs/pub/fhs-3.0.html#varlibcolor
+fhs::varlibhwclockstatedirectoryforhwclo::5.8.6. /var/lib/hwclock : State directory for hwclock (optional)::http://www.pathname.com/fhs/pub/fhs-3.0.html#varlibhwclockStateDirectoryForHwclo
+fhs::varlibmiscmiscellaneousvariabledata::5.8.7. /var/lib/misc : Miscellaneous variable data::http://www.pathname.com/fhs/pub/fhs-3.0.html#varlibmiscMiscellaneousVariableData
+fhs::varlocklockfiles::5.9. /var/lock : Lock files::http://www.pathname.com/fhs/pub/fhs-3.0.html#varlockLockFiles
+fhs::purpose42::5.9.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose42
+fhs::varloglogfilesanddirectories::5.10. /var/log : Log files and directories::http://www.pathname.com/fhs/pub/fhs-3.0.html#varlogLogFilesAndDirectories
+fhs::purpose43::5.10.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose43
+fhs::specificoptions24::5.10.2. Specific Options::http://www.pathname.com/fhs/pub/fhs-3.0.html#specificOptions24
+fhs::varmailusermailboxfiles::5.11. /var/mail : User mailbox files (optional)::http://www.pathname.com/fhs/pub/fhs-3.0.html#varmailUserMailboxFiles
+fhs::purpose44::5.11.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose44
+fhs::varoptvariabledataforopt::5.12. /var/opt : Variable data for /opt::http://www.pathname.com/fhs/pub/fhs-3.0.html#varoptVariableDataForOpt
+fhs::purpose45::5.12.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose45
+fhs::varrunruntimevariabledata::5.13. /var/run : Run-time variable data::http://www.pathname.com/fhs/pub/fhs-3.0.html#varrunRuntimeVariableData
+fhs::purpose46::5.13.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose46
+fhs::requirements14::5.13.2. Requirements::http://www.pathname.com/fhs/pub/fhs-3.0.html#requirements14
+fhs::varspoolapplicationspooldata::5.14. /var/spool : Application spool data::http://www.pathname.com/fhs/pub/fhs-3.0.html#varspoolApplicationSpoolData
+fhs::purpose47::5.14.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose47
+fhs::specificoptions25::5.14.2. Specific Options::http://www.pathname.com/fhs/pub/fhs-3.0.html#specificOptions25
+fhs::varspoollpdlineprinterdaemonprintqu::5.14.3. /var/spool/lpd : Line-printer daemon print queues (optional)::http://www.pathname.com/fhs/pub/fhs-3.0.html#varspoollpdLineprinterDaemonPrintQu
+fhs::varspoolrwhorwhodfiles::5.14.4. /var/spool/rwho : Rwhod files (optional)::http://www.pathname.com/fhs/pub/fhs-3.0.html#varspoolrwhoRwhodFiles
+fhs::vartmptemporaryfilespreservedbetwee::5.15. /var/tmp : Temporary files preserved between system reboots::http://www.pathname.com/fhs/pub/fhs-3.0.html#vartmpTemporaryFilesPreservedBetwee
+fhs::purpose50::5.15.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose50
+fhs::varypnetworkinformationservice::5.16. /var/yp : Network Information Service (NIS) database files (optional)::http://www.pathname.com/fhs/pub/fhs-3.0.html#varypNetworkInformationService
+fhs::purpose51::5.16.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose51
+fhs::operatingsystemspecificannex::6. Operating System Specific Annex::http://www.pathname.com/fhs/pub/fhs-3.0.html#operatingSystemSpecificAnnex
+fhs::linux::6.1. Linux::http://www.pathname.com/fhs/pub/fhs-3.0.html#linux
+fhs::rootdirectory::6.1.1. / : Root directory::http://www.pathname.com/fhs/pub/fhs-3.0.html#rootDirectory
+fhs::binessentialusercommandbinaries2::6.1.2. /bin : Essential user command binaries (for use by all users)::http://www.pathname.com/fhs/pub/fhs-3.0.html#binEssentialUserCommandBinaries2
+fhs::devdevicesandspecialfiles::6.1.3. /dev : Devices and special files::http://www.pathname.com/fhs/pub/fhs-3.0.html#devDevicesAndSpecialFiles
+fhs::etchostspecificsystemconfiguration2::6.1.4. /etc : Host-specific system configuration::http://www.pathname.com/fhs/pub/fhs-3.0.html#etcHostspecificSystemConfiguration2
+fhs::prockernelandprocessinformationvir::6.1.5. /proc : Kernel and process information virtual filesystem::http://www.pathname.com/fhs/pub/fhs-3.0.html#procKernelAndProcessInformationVir
+fhs::sbinessentialsystembinaries::6.1.6. /sbin : Essential system binaries::http://www.pathname.com/fhs/pub/fhs-3.0.html#sbinEssentialSystemBinaries
+fhs::syskernelandsysteminformation::6.1.7. /sys : Kernel and system information virtual filesystem::http://www.pathname.com/fhs/pub/fhs-3.0.html#sysKernelAndSystemInformation
+fhs::usrincludeheaderfilesincludedbycp::6.1.8. /usr/include : Header files included by C programs::http://www.pathname.com/fhs/pub/fhs-3.0.html#usrincludeHeaderFilesIncludedByCP
+fhs::usrsrcsourcecode2::6.1.9. /usr/src : Source code::http://www.pathname.com/fhs/pub/fhs-3.0.html#usrsrcSourceCode2
+fhs::varspoolcroncronandatjobs::6.1.10. /var/spool/cron : cron and at jobs::http://www.pathname.com/fhs/pub/fhs-3.0.html#varspoolcronCronAndAtJobs
+fhs::appendix::7. Appendix::http://www.pathname.com/fhs/pub/fhs-3.0.html#appendix
+fhs::thefhsmailinglist::7.1. The FHS mailing list::http://www.pathname.com/fhs/pub/fhs-3.0.html#theFhsMailingList
+fhs::backgroundofthefhs::7.2. Background of the FHS::http://www.pathname.com/fhs/pub/fhs-3.0.html#backgroundOfTheFhs
+fhs::generalguidelines::7.3. General Guidelines::http://www.pathname.com/fhs/pub/fhs-3.0.html#generalGuidelines
+fhs::scope::7.4. Scope::http://www.pathname.com/fhs/pub/fhs-3.0.html#scope
+fhs::acknowledgments::7.5. Acknowledgments::http://www.pathname.com/fhs/pub/fhs-3.0.html#acknowledgments
+fhs::contributors::7.6. Contributors::http://www.pathname.com/fhs/pub/fhs-3.0.html#contributors
+fhs::purpose::1.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose
+fhs::conventions::1.2. Conventions::http://www.pathname.com/fhs/pub/fhs-3.0.html#conventions
+fhs::purpose2::3.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose2
+fhs::requirements::3.2. Requirements::http://www.pathname.com/fhs/pub/fhs-3.0.html#requirements
+fhs::specificoptions::3.3. Specific Options::http://www.pathname.com/fhs/pub/fhs-3.0.html#specificOptions
+fhs::binessentialusercommandbinaries::3.4. /bin : Essential user command binaries (for use by all users)::http://www.pathname.com/fhs/pub/fhs-3.0.html#binEssentialUserCommandBinaries
+fhs::purpose3::3.4.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose3
+fhs::requirements2::3.4.2. Requirements::http://www.pathname.com/fhs/pub/fhs-3.0.html#requirements2
+fhs::specificoptions2::3.4.3. Specific Options::http://www.pathname.com/fhs/pub/fhs-3.0.html#specificOptions2
+fhs::bootstaticfilesofthebootloader::3.5. /boot : Static files of the boot loader::http://www.pathname.com/fhs/pub/fhs-3.0.html#bootStaticFilesOfTheBootLoader
+fhs::purpose4::3.5.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose4
+fhs::specificoptions3::3.5.2. Specific Options::http://www.pathname.com/fhs/pub/fhs-3.0.html#specificOptions3
+fhs::devdevicefiles::3.6. /dev : Device files::http://www.pathname.com/fhs/pub/fhs-3.0.html#devDeviceFiles
+fhs::purpose5::3.6.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose5
+fhs::specificoptions4::3.6.2. Specific Options::http://www.pathname.com/fhs/pub/fhs-3.0.html#specificOptions4
+fhs::etchostspecificsystemconfiguration::3.7. /etc : Host-specific system configuration::http://www.pathname.com/fhs/pub/fhs-3.0.html#etcHostspecificSystemConfiguration
+fhs::purpose6::3.7.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose6
+fhs::requirements3::3.7.2. Requirements::http://www.pathname.com/fhs/pub/fhs-3.0.html#requirements3
+fhs::specificoptions5::3.7.3. Specific Options::http://www.pathname.com/fhs/pub/fhs-3.0.html#specificOptions5
+fhs::etcoptconfigurationfilesforopt::3.7.4. /etc/opt : Configuration files for /opt::http://www.pathname.com/fhs/pub/fhs-3.0.html#etcoptConfigurationFilesForOpt
+fhs::etcx11configurationforthexwindows::3.7.5. /etc/X11 : Configuration for the X Window System (optional)::http://www.pathname.com/fhs/pub/fhs-3.0.html#etcx11ConfigurationForTheXWindowS
+fhs::etcsgmlconfigurationfilesforsgmlan::3.7.6. /etc/sgml : Configuration files for SGML (optional)::http://www.pathname.com/fhs/pub/fhs-3.0.html#etcsgmlConfigurationFilesForSgmlAn
+fhs::idm236088418512::3.7.7. /etc/xml : Configuration files for XML (optional)::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236088418512
+fhs::homeuserhomedirectories::3.8. /home : User home directories (optional)::http://www.pathname.com/fhs/pub/fhs-3.0.html#homeUserHomeDirectories
+fhs::purpose10::3.8.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose10
+fhs::requirements4a::3.8.2. Requirements::http://www.pathname.com/fhs/pub/fhs-3.0.html#requirements4a
+fhs::homereferences::3.8.3. Home Directory Specifications and Conventions::http://www.pathname.com/fhs/pub/fhs-3.0.html#homeReferences
+fhs::libessentialsharedlibrariesandkern::3.9. /lib : Essential shared libraries and kernel modules::http://www.pathname.com/fhs/pub/fhs-3.0.html#libEssentialSharedLibrariesAndKern
+fhs::purpose11::3.9.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose11
+fhs::requirements5::3.9.2. Requirements::http://www.pathname.com/fhs/pub/fhs-3.0.html#requirements5
+fhs::specificoptions7::3.9.3. Specific Options::http://www.pathname.com/fhs/pub/fhs-3.0.html#specificOptions7
+fhs::libltqualgtalternateformatessential::3.10. /lib<em class="replaceable"><code>&lt;qual&gt;</code></em> : Alternate format essential shared libraries (optional)::http://www.pathname.com/fhs/pub/fhs-3.0.html#libltqualgtAlternateFormatEssential
+fhs::purpose12::3.10.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose12
+fhs::requirements6::3.10.2. Requirements::http://www.pathname.com/fhs/pub/fhs-3.0.html#requirements6
+fhs::mediamountpoint::3.11. /media : Mount point for removable media::http://www.pathname.com/fhs/pub/fhs-3.0.html#mediaMountPoint
+fhs::purposemediamountpoint::3.11.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purposeMediaMountPoint
+fhs::specificoptionsmediamount::3.11.2. Specific Options::http://www.pathname.com/fhs/pub/fhs-3.0.html#specificOptionsMediaMount
+fhs::mntmountpointforatemporarilymount::3.12. /mnt : Mount point for a temporarily mounted filesystem::http://www.pathname.com/fhs/pub/fhs-3.0.html#mntMountPointForATemporarilyMount
+fhs::purpose13::3.12.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose13
+fhs::optaddonapplicationsoftwarepackages::3.13. /opt : Add-on application software packages::http://www.pathname.com/fhs/pub/fhs-3.0.html#optAddonApplicationSoftwarePackages
+fhs::purpose14::3.13.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose14
+fhs::requirements7::3.13.2. Requirements::http://www.pathname.com/fhs/pub/fhs-3.0.html#requirements7
+fhs::roothomedirectoryfortherootuser::3.14. /root : Home directory for the root user (optional)::http://www.pathname.com/fhs/pub/fhs-3.0.html#rootHomeDirectoryForTheRootUser
+fhs::purpose15::3.14.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose15
+fhs::runruntimevariabledata::3.15. /run : Run-time variable data::http://www.pathname.com/fhs/pub/fhs-3.0.html#runRuntimeVariableData
+fhs::runpurpose::3.15.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#runPurpose
+fhs::runrequirements::3.15.2. Requirements::http://www.pathname.com/fhs/pub/fhs-3.0.html#runRequirements
+fhs::sbinsystembinaries::3.16. /sbin : System binaries::http://www.pathname.com/fhs/pub/fhs-3.0.html#sbinSystemBinaries
+fhs::purpose16::3.16.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose16
+fhs::requirements8::3.16.2. Requirements::http://www.pathname.com/fhs/pub/fhs-3.0.html#requirements8
+fhs::specificoptions8::3.16.3. Specific Options::http://www.pathname.com/fhs/pub/fhs-3.0.html#specificOptions8
+fhs::srvdataforservicesprovidedbysystem::3.17. /srv : Data for services provided by this system::http://www.pathname.com/fhs/pub/fhs-3.0.html#srvDataForServicesProvidedBySystem
+fhs::purpose16a::3.17.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose16a
+fhs::tmptemporaryfiles::3.18. /tmp : Temporary files::http://www.pathname.com/fhs/pub/fhs-3.0.html#tmpTemporaryFiles
+fhs::purpose17::3.18.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose17
+fhs::ftn.idm236088643344" class="footnote" name="idm236088643344::<sup class="footnote">[1]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236088643344" class="footnote" name="idm236088643344
+fhs::ftn.idm236088529392" class="footnote" name="idm236088529392::<sup class="footnote">[2]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236088529392" class="footnote" name="idm236088529392
+fhs::ftn.idm236088507872" class="footnote" name="idm236088507872::<sup class="footnote">[3]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236088507872" class="footnote" name="idm236088507872
+fhs::ftn.idm236088451984" class="footnote" name="idm236088451984::<sup class="footnote">[4]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236088451984" class="footnote" name="idm236088451984
+fhs::ftn.idm236088427216" class="footnote" name="idm236088427216::<sup class="footnote">[5]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236088427216" class="footnote" name="idm236088427216
+fhs::ftn.idm236088412656" class="footnote" name="idm236088412656::<sup class="footnote">[6]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236088412656" class="footnote" name="idm236088412656
+fhs::ftn.idm236088405632" class="footnote" name="idm236088405632::<sup class="footnote">[7]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236088405632" class="footnote" name="idm236088405632
+fhs::ftn.idm236088400112" class="footnote" name="idm236088400112::<sup class="footnote">[8]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236088400112" class="footnote" name="idm236088400112
+fhs::ftn.idm236088397728" class="footnote" name="idm236088397728::<sup class="footnote">[9]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236088397728" class="footnote" name="idm236088397728
+fhs::ftn.idm236088395888" class="footnote" name="idm236088395888::<sup class="footnote">[10]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236088395888" class="footnote" name="idm236088395888
+fhs::ftn.idm236088389760" class="footnote" name="idm236088389760::<sup class="footnote">[11]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236088389760" class="footnote" name="idm236088389760
+fhs::ftn.idm236088374992" class="footnote" name="idm236088374992::<sup class="footnote">[12]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236088374992" class="footnote" name="idm236088374992
+fhs::ftn.idm236088363216" class="footnote" name="idm236088363216::<sup class="footnote">[13]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236088363216" class="footnote" name="idm236088363216
+fhs::ftn.idm236088357376" class="footnote" name="idm236088357376::<sup class="footnote">[14]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236088357376" class="footnote" name="idm236088357376
+fhs::ftn.idm236088334544" class="footnote" name="idm236088334544::<sup class="footnote">[15]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236088334544" class="footnote" name="idm236088334544
+fhs::ftn.idm236088285600" class="footnote" name="idm236088285600::<sup class="footnote">[16]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236088285600" class="footnote" name="idm236088285600
+fhs::ftn.idm236088274176" class="footnote" name="idm236088274176::<sup class="footnote">[17]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236088274176" class="footnote" name="idm236088274176
+fhs::ftn.idm236088259440" class="footnote" name="idm236088259440::<sup class="footnote">[18]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236088259440" class="footnote" name="idm236088259440
+fhs::ftn.idm236088255488" class="footnote" name="idm236088255488::<sup class="footnote">[19]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236088255488" class="footnote" name="idm236088255488
+fhs::ftn.idm236088192752" class="footnote" name="idm236088192752::<sup class="footnote">[20]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236088192752" class="footnote" name="idm236088192752
+fhs::idm236088643344" class="para::<sup class="para">[1] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236088643344" class="para
+fhs::idm236088529392" class="para::<sup class="para">[2] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236088529392" class="para
+fhs::idm236088507872" class="para::<sup class="para">[3] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236088507872" class="para
+fhs::idm236088451984" class="para::<sup class="para">[4] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236088451984" class="para
+fhs::idm236088427216" class="para::<sup class="para">[5] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236088427216" class="para
+fhs::idm236088412656" class="para::<sup class="para">[6] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236088412656" class="para
+fhs::idm236088405632" class="para::<sup class="para">[7] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236088405632" class="para
+fhs::idm236088400112" class="para::<sup class="para">[8] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236088400112" class="para
+fhs::idm236088397728" class="para::<sup class="para">[9] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236088397728" class="para
+fhs::idm236088395888" class="para::<sup class="para">[10] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236088395888" class="para
+fhs::idm236088389760" class="para::<sup class="para">[11] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236088389760" class="para
+fhs::idm236088374992" class="para::<sup class="para">[12] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236088374992" class="para
+fhs::idm236088363216" class="para::<sup class="para">[13] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236088363216" class="para
+fhs::idm236088357376" class="para::<sup class="para">[14] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236088357376" class="para
+fhs::idm236088334544" class="para::<sup class="para">[15] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236088334544" class="para
+fhs::idm236088285600" class="para::<sup class="para">[16] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236088285600" class="para
+fhs::idm236088274176" class="para::<sup class="para">[17] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236088274176" class="para
+fhs::idm236088259440" class="para::<sup class="para">[18] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236088259440" class="para
+fhs::idm236088255488" class="para::<sup class="para">[19] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236088255488" class="para
+fhs::idm236088192752" class="para::<sup class="para">[20] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236088192752" class="para
+fhs::purpose18::4.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose18
+fhs::requirements9::4.2. Requirements::http://www.pathname.com/fhs/pub/fhs-3.0.html#requirements9
+fhs::specificoptions9::4.3. Specific Options::http://www.pathname.com/fhs/pub/fhs-3.0.html#specificOptions9
+fhs::usrbinmostusercommands::4.4. /usr/bin : Most user commands::http://www.pathname.com/fhs/pub/fhs-3.0.html#usrbinMostUserCommands
+fhs::purpose20::4.4.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose20
+fhs::requirements9a::4.4.2. Requirements::http://www.pathname.com/fhs/pub/fhs-3.0.html#requirements9a
+fhs::specificoptions11::4.4.3. Specific Options::http://www.pathname.com/fhs/pub/fhs-3.0.html#specificOptions11
+fhs::usrincludedirectoryforstandardinclu::4.5. /usr/include : Directory for standard include files.::http://www.pathname.com/fhs/pub/fhs-3.0.html#usrincludeDirectoryForStandardInclu
+fhs::purpose21::4.5.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose21
+fhs::specificoptions12::4.5.2. Specific Options::http://www.pathname.com/fhs/pub/fhs-3.0.html#specificOptions12
+fhs::usrliblibrariesforprogrammingandpa::4.6. /usr/lib : Libraries for programming and packages::http://www.pathname.com/fhs/pub/fhs-3.0.html#usrlibLibrariesForProgrammingAndPa
+fhs::purpose22::4.6.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose22
+fhs::specificoptions13::4.6.2. Specific Options::http://www.pathname.com/fhs/pub/fhs-3.0.html#specificOptions13
+fhs::usrlibexec::4.7. /usr/libexec : Binaries run by other programs (optional)::http://www.pathname.com/fhs/pub/fhs-3.0.html#usrlibexec
+fhs::usrlibexecpurpose::4.7.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#usrlibexecPurpose
+fhs::usrlibltqualgtalternateformatlibrari::4.8. /usr/lib<em class="replaceable"><code>&lt;qual&gt;</code></em> : Alternate format libraries (optional)::http://www.pathname.com/fhs/pub/fhs-3.0.html#usrlibltqualgtAlternateFormatLibrari
+fhs::purpose23::4.8.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose23
+fhs::usrlocallocalhierarchy::4.9. /usr/local : Local hierarchy::http://www.pathname.com/fhs/pub/fhs-3.0.html#usrlocalLocalHierarchy
+fhs::purpose24::4.9.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose24
+fhs::requirements10::4.9.2. Requirements::http://www.pathname.com/fhs/pub/fhs-3.0.html#requirements10
+fhs::specificoptions14::4.9.3. Specific Options::http://www.pathname.com/fhs/pub/fhs-3.0.html#specificOptions14
+fhs::usrlocalshare1::4.9.4. /usr/local/share : Local architecture-independent hierarchy::http://www.pathname.com/fhs/pub/fhs-3.0.html#usrlocalshare1
+fhs::usrsbinnonessentialstandardsystembi::4.10. /usr/sbin : Non-essential standard system binaries::http://www.pathname.com/fhs/pub/fhs-3.0.html#usrsbinNonessentialStandardSystemBi
+fhs::purpose25::4.10.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose25
+fhs::requirements10a::4.10.2. Requirements::http://www.pathname.com/fhs/pub/fhs-3.0.html#requirements10a
+fhs::usrsharearchitectureindependentdata::4.11. /usr/share : Architecture-independent data::http://www.pathname.com/fhs/pub/fhs-3.0.html#usrshareArchitectureindependentData
+fhs::purpose26::4.11.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose26
+fhs::requirements11::4.11.2. Requirements::http://www.pathname.com/fhs/pub/fhs-3.0.html#requirements11
+fhs::specificoptions15::4.11.3. Specific Options::http://www.pathname.com/fhs/pub/fhs-3.0.html#specificOptions15
+fhs::usrsharecolorcolormanagement::4.11.4. /usr/share/color : Color management information (optional)::http://www.pathname.com/fhs/pub/fhs-3.0.html#usrsharecolorColorManagement
+fhs::usrsharedictwordlists::4.11.5. /usr/share/dict : Word lists (optional)::http://www.pathname.com/fhs/pub/fhs-3.0.html#usrsharedictWordLists
+fhs::usrsharemanmanualpages::4.11.6. /usr/share/man : Manual pages::http://www.pathname.com/fhs/pub/fhs-3.0.html#usrsharemanManualPages
+fhs::usrsharemiscmiscellaneousarchitecture::4.11.7. /usr/share/misc : Miscellaneous architecture-independent data::http://www.pathname.com/fhs/pub/fhs-3.0.html#usrsharemiscMiscellaneousArchitecture
+fhs::usrshareppd::4.11.8. /usr/share/ppd : Printer definitions (optional)::http://www.pathname.com/fhs/pub/fhs-3.0.html#usrshareppd
+fhs::usrsharesgmlsgmlandxmldata::4.11.9. /usr/share/sgml : SGML data (optional)::http://www.pathname.com/fhs/pub/fhs-3.0.html#usrsharesgmlSgmlAndXmlData
+fhs::idm236087237360::4.11.10. /usr/share/xml : XML data (optional)::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236087237360
+fhs::usrsrcsourcecode::4.12. /usr/src : Source code (optional)::http://www.pathname.com/fhs/pub/fhs-3.0.html#usrsrcSourceCode
+fhs::purpose30::4.12.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose30
+fhs::ftn.idm236087593904" class="footnote" name="idm236087593904::<sup class="footnote">[21]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236087593904" class="footnote" name="idm236087593904
+fhs::ftn.idm236087592496" class="footnote" name="idm236087592496::<sup class="footnote">[22]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236087592496" class="footnote" name="idm236087592496
+fhs::ftn.idm236087588928" class="footnote" name="idm236087588928::<sup class="footnote">[23]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236087588928" class="footnote" name="idm236087588928
+fhs::ftn.idm236087585280" class="footnote" name="idm236087585280::<sup class="footnote">[24]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236087585280" class="footnote" name="idm236087585280
+fhs::ftn.idm236087578304" class="footnote" name="idm236087578304::<sup class="footnote">[25]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236087578304" class="footnote" name="idm236087578304
+fhs::ftn.idm236087566784" class="footnote" name="idm236087566784::<sup class="footnote">[26]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236087566784" class="footnote" name="idm236087566784
+fhs::ftn.idm236087558816" class="footnote" name="idm236087558816::<sup class="footnote">[27]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236087558816" class="footnote" name="idm236087558816
+fhs::ftn.idm236087550400" class="footnote" name="idm236087550400::<sup class="footnote">[28]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236087550400" class="footnote" name="idm236087550400
+fhs::ftn.idm236087505920" class="footnote" name="idm236087505920::<sup class="footnote">[29]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236087505920" class="footnote" name="idm236087505920
+fhs::ftn.idm236087499712" class="footnote" name="idm236087499712::<sup class="footnote">[30]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236087499712" class="footnote" name="idm236087499712
+fhs::ftn.idm236087409888" class="footnote" name="idm236087409888::<sup class="footnote">[31]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236087409888" class="footnote" name="idm236087409888
+fhs::ftn.idm236087387344" class="footnote" name="idm236087387344::<sup class="footnote">[32]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236087387344" class="footnote" name="idm236087387344
+fhs::ftn.idm236087362160" class="footnote" name="idm236087362160::<sup class="footnote">[33]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236087362160" class="footnote" name="idm236087362160
+fhs::ftn.idm236087300336" class="footnote" name="idm236087300336::<sup class="footnote">[34]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236087300336" class="footnote" name="idm236087300336
+fhs::ftn.idm236087277008" class="footnote" name="idm236087277008::<sup class="footnote">[35]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236087277008" class="footnote" name="idm236087277008
+fhs::ftn.idm236087260144" class="footnote" name="idm236087260144::<sup class="footnote">[36]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236087260144" class="footnote" name="idm236087260144
+fhs::ftn.idm236087222480" class="footnote" name="idm236087222480::<sup class="footnote">[37]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236087222480" class="footnote" name="idm236087222480
+fhs::idm236087593904" class="para::<sup class="para">[21] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236087593904" class="para
+fhs::idm236087592496" class="para::<sup class="para">[22] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236087592496" class="para
+fhs::idm236087588928" class="para::<sup class="para">[23] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236087588928" class="para
+fhs::idm236087585280" class="para::<sup class="para">[24] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236087585280" class="para
+fhs::idm236087578304" class="para::<sup class="para">[25] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236087578304" class="para
+fhs::idm236087566784" class="para::<sup class="para">[26] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236087566784" class="para
+fhs::idm236087558816" class="para::<sup class="para">[27] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236087558816" class="para
+fhs::idm236087550400" class="para::<sup class="para">[28] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236087550400" class="para
+fhs::idm236087505920" class="para::<sup class="para">[29] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236087505920" class="para
+fhs::idm236087499712" class="para::<sup class="para">[30] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236087499712" class="para
+fhs::idm236087409888" class="para::<sup class="para">[31] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236087409888" class="para
+fhs::idm236087387344" class="para::<sup class="para">[32] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236087387344" class="para
+fhs::idm236087362160" class="para::<sup class="para">[33] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236087362160" class="para
+fhs::idm236087300336" class="para::<sup class="para">[34] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236087300336" class="para
+fhs::idm236087277008" class="para::<sup class="para">[35] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236087277008" class="para
+fhs::idm236087260144" class="para::<sup class="para">[36] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236087260144" class="para
+fhs::idm236087222480" class="para::<sup class="para">[37] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236087222480" class="para
+fhs::purpose31::5.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose31
+fhs::requirements12::5.2. Requirements::http://www.pathname.com/fhs/pub/fhs-3.0.html#requirements12
+fhs::specificoptions20::5.3. Specific Options::http://www.pathname.com/fhs/pub/fhs-3.0.html#specificOptions20
+fhs::varaccountprocessaccountinglogs::5.4. /var/account : Process accounting logs (optional)::http://www.pathname.com/fhs/pub/fhs-3.0.html#varaccountProcessAccountingLogs
+fhs::purpose32::5.4.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose32
+fhs::varcacheapplicationcachedata::5.5. /var/cache : Application cache data::http://www.pathname.com/fhs/pub/fhs-3.0.html#varcacheApplicationCacheData
+fhs::purpose33::5.5.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose33
+fhs::specificoptions21::5.5.2. Specific Options::http://www.pathname.com/fhs/pub/fhs-3.0.html#specificOptions21
+fhs::varcachefontslocallygeneratedfonts::5.5.3. /var/cache/fonts : Locally-generated fonts (optional)::http://www.pathname.com/fhs/pub/fhs-3.0.html#varcachefontsLocallygeneratedFonts
+fhs::varcachemanlocallyformattedmanualpag::5.5.4. /var/cache/man : Locally-formatted manual pages (optional)::http://www.pathname.com/fhs/pub/fhs-3.0.html#varcachemanLocallyformattedManualPag
+fhs::varcrashsystemcrashdumps::5.6. /var/crash : System crash dumps (optional)::http://www.pathname.com/fhs/pub/fhs-3.0.html#varcrashSystemCrashDumps
+fhs::purpose36::5.6.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose36
+fhs::vargamesvariablegamedata::5.7. /var/games : Variable game data (optional)::http://www.pathname.com/fhs/pub/fhs-3.0.html#vargamesVariableGameData
+fhs::purpose37::5.7.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose37
+fhs::varlibvariablestateinformation::5.8. /var/lib : Variable state information::http://www.pathname.com/fhs/pub/fhs-3.0.html#varlibVariableStateInformation
+fhs::purpose38::5.8.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose38
+fhs::requirements13::5.8.2. Requirements::http://www.pathname.com/fhs/pub/fhs-3.0.html#requirements13
+fhs::specificoptions23::5.8.3. Specific Options::http://www.pathname.com/fhs/pub/fhs-3.0.html#specificOptions23
+fhs::varliblteditorgteditorbackupfilesan::5.8.4. /var/lib/&lt;editor&gt; : Editor backup files and state (optional)::http://www.pathname.com/fhs/pub/fhs-3.0.html#varliblteditorgtEditorBackupFilesAn
+fhs::varlibcolor::5.8.5. /var/lib/color : Color management information (optional)::http://www.pathname.com/fhs/pub/fhs-3.0.html#varlibcolor
+fhs::varlibhwclockstatedirectoryforhwclo::5.8.6. /var/lib/hwclock : State directory for hwclock (optional)::http://www.pathname.com/fhs/pub/fhs-3.0.html#varlibhwclockStateDirectoryForHwclo
+fhs::varlibmiscmiscellaneousvariabledata::5.8.7. /var/lib/misc : Miscellaneous variable data::http://www.pathname.com/fhs/pub/fhs-3.0.html#varlibmiscMiscellaneousVariableData
+fhs::varlocklockfiles::5.9. /var/lock : Lock files::http://www.pathname.com/fhs/pub/fhs-3.0.html#varlockLockFiles
+fhs::purpose42::5.9.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose42
+fhs::varloglogfilesanddirectories::5.10. /var/log : Log files and directories::http://www.pathname.com/fhs/pub/fhs-3.0.html#varlogLogFilesAndDirectories
+fhs::purpose43::5.10.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose43
+fhs::specificoptions24::5.10.2. Specific Options::http://www.pathname.com/fhs/pub/fhs-3.0.html#specificOptions24
+fhs::varmailusermailboxfiles::5.11. /var/mail : User mailbox files (optional)::http://www.pathname.com/fhs/pub/fhs-3.0.html#varmailUserMailboxFiles
+fhs::purpose44::5.11.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose44
+fhs::varoptvariabledataforopt::5.12. /var/opt : Variable data for /opt::http://www.pathname.com/fhs/pub/fhs-3.0.html#varoptVariableDataForOpt
+fhs::purpose45::5.12.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose45
+fhs::varrunruntimevariabledata::5.13. /var/run : Run-time variable data::http://www.pathname.com/fhs/pub/fhs-3.0.html#varrunRuntimeVariableData
+fhs::purpose46::5.13.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose46
+fhs::requirements14::5.13.2. Requirements::http://www.pathname.com/fhs/pub/fhs-3.0.html#requirements14
+fhs::varspoolapplicationspooldata::5.14. /var/spool : Application spool data::http://www.pathname.com/fhs/pub/fhs-3.0.html#varspoolApplicationSpoolData
+fhs::purpose47::5.14.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose47
+fhs::specificoptions25::5.14.2. Specific Options::http://www.pathname.com/fhs/pub/fhs-3.0.html#specificOptions25
+fhs::varspoollpdlineprinterdaemonprintqu::5.14.3. /var/spool/lpd : Line-printer daemon print queues (optional)::http://www.pathname.com/fhs/pub/fhs-3.0.html#varspoollpdLineprinterDaemonPrintQu
+fhs::varspoolrwhorwhodfiles::5.14.4. /var/spool/rwho : Rwhod files (optional)::http://www.pathname.com/fhs/pub/fhs-3.0.html#varspoolrwhoRwhodFiles
+fhs::vartmptemporaryfilespreservedbetwee::5.15. /var/tmp : Temporary files preserved between system reboots::http://www.pathname.com/fhs/pub/fhs-3.0.html#vartmpTemporaryFilesPreservedBetwee
+fhs::purpose50::5.15.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose50
+fhs::varypnetworkinformationservice::5.16. /var/yp : Network Information Service (NIS) database files (optional)::http://www.pathname.com/fhs/pub/fhs-3.0.html#varypNetworkInformationService
+fhs::purpose51::5.16.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose51
+fhs::ftn.idm236086662944" class="footnote" name="idm236086662944::<sup class="footnote">[38]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236086662944" class="footnote" name="idm236086662944
+fhs::ftn.idm236086641360" class="footnote" name="idm236086641360::<sup class="footnote">[39]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236086641360" class="footnote" name="idm236086641360
+fhs::ftn.idm236086612224" class="footnote" name="idm236086612224::<sup class="footnote">[40]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236086612224" class="footnote" name="idm236086612224
+fhs::ftn.idm236086608112" class="footnote" name="idm236086608112::<sup class="footnote">[41]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236086608112" class="footnote" name="idm236086608112
+fhs::ftn.idm236086558032" class="footnote" name="idm236086558032::<sup class="footnote">[42]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236086558032" class="footnote" name="idm236086558032
+fhs::ftn.idm236086548848" class="footnote" name="idm236086548848::<sup class="footnote">[43]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236086548848" class="footnote" name="idm236086548848
+fhs::ftn.idm236086527232" class="footnote" name="idm236086527232::<sup class="footnote">[44]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236086527232" class="footnote" name="idm236086527232
+fhs::ftn.idm236086500304" class="footnote" name="idm236086500304::<sup class="footnote">[45]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236086500304" class="footnote" name="idm236086500304
+fhs::ftn.idm236086493728" class="footnote" name="idm236086493728::<sup class="footnote">[46]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236086493728" class="footnote" name="idm236086493728
+fhs::ftn.idm236086446848" class="footnote" name="idm236086446848::<sup class="footnote">[47]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236086446848" class="footnote" name="idm236086446848
+fhs::idm236086662944" class="para::<sup class="para">[38] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236086662944" class="para
+fhs::idm236086641360" class="para::<sup class="para">[39] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236086641360" class="para
+fhs::idm236086612224" class="para::<sup class="para">[40] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236086612224" class="para
+fhs::idm236086608112" class="para::<sup class="para">[41] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236086608112" class="para
+fhs::idm236086558032" class="para::<sup class="para">[42] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236086558032" class="para
+fhs::idm236086548848" class="para::<sup class="para">[43] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236086548848" class="para
+fhs::idm236086527232" class="para::<sup class="para">[44] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236086527232" class="para
+fhs::idm236086500304" class="para::<sup class="para">[45] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236086500304" class="para
+fhs::idm236086493728" class="para::<sup class="para">[46] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236086493728" class="para
+fhs::idm236086446848" class="para::<sup class="para">[47] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236086446848" class="para
+fhs::linux::6.1. Linux::http://www.pathname.com/fhs/pub/fhs-3.0.html#linux
+fhs::rootdirectory::6.1.1. / : Root directory::http://www.pathname.com/fhs/pub/fhs-3.0.html#rootDirectory
+fhs::binessentialusercommandbinaries2::6.1.2. /bin : Essential user command binaries (for use by all users)::http://www.pathname.com/fhs/pub/fhs-3.0.html#binEssentialUserCommandBinaries2
+fhs::devdevicesandspecialfiles::6.1.3. /dev : Devices and special files::http://www.pathname.com/fhs/pub/fhs-3.0.html#devDevicesAndSpecialFiles
+fhs::etchostspecificsystemconfiguration2::6.1.4. /etc : Host-specific system configuration::http://www.pathname.com/fhs/pub/fhs-3.0.html#etcHostspecificSystemConfiguration2
+fhs::prockernelandprocessinformationvir::6.1.5. /proc : Kernel and process information virtual filesystem::http://www.pathname.com/fhs/pub/fhs-3.0.html#procKernelAndProcessInformationVir
+fhs::sbinessentialsystembinaries::6.1.6. /sbin : Essential system binaries::http://www.pathname.com/fhs/pub/fhs-3.0.html#sbinEssentialSystemBinaries
+fhs::syskernelandsysteminformation::6.1.7. /sys : Kernel and system information virtual filesystem::http://www.pathname.com/fhs/pub/fhs-3.0.html#sysKernelAndSystemInformation
+fhs::usrincludeheaderfilesincludedbycp::6.1.8. /usr/include : Header files included by C programs::http://www.pathname.com/fhs/pub/fhs-3.0.html#usrincludeHeaderFilesIncludedByCP
+fhs::usrsrcsourcecode2::6.1.9. /usr/src : Source code::http://www.pathname.com/fhs/pub/fhs-3.0.html#usrsrcSourceCode2
+fhs::varspoolcroncronandatjobs::6.1.10. /var/spool/cron : cron and at jobs::http://www.pathname.com/fhs/pub/fhs-3.0.html#varspoolcronCronAndAtJobs
+fhs::thefhsmailinglist::7.1. The FHS mailing list::http://www.pathname.com/fhs/pub/fhs-3.0.html#theFhsMailingList
+fhs::backgroundofthefhs::7.2. Background of the FHS::http://www.pathname.com/fhs/pub/fhs-3.0.html#backgroundOfTheFhs
+fhs::generalguidelines::7.3. General Guidelines::http://www.pathname.com/fhs/pub/fhs-3.0.html#generalGuidelines
+fhs::scope::7.4. Scope::http://www.pathname.com/fhs/pub/fhs-3.0.html#scope
+fhs::acknowledgments::7.5. Acknowledgments::http://www.pathname.com/fhs/pub/fhs-3.0.html#acknowledgments
+fhs::contributors::7.6. Contributors::http://www.pathname.com/fhs/pub/fhs-3.0.html#contributors
 java-policy::::Debian policy for Java::https://www.debian.org/doc/packaging-manuals/java-policy/
 java-policy::1::Background::https://www.debian.org/doc/packaging-manuals/java-policy/ch01.html
 java-policy::2::Policy::https://www.debian.org/doc/packaging-manuals/java-policy/ch02.html
@@ -453,31 +710,6 @@ java-policy::2.6::Main, contrib or non-free::https://www.debian.org/doc/packagin
 java-policy::3::Issues to discuss::https://www.debian.org/doc/packaging-manuals/java-policy/ch03.html
 java-policy::4::Advices to Java packagers::https://www.debian.org/doc/packaging-manuals/java-policy/ch04.html
 lintian::::Lintian User's Manual::https://lintian.debian.org/manual/
-lintian::1::Introduction::https://lintian.debian.org/manual/chapter-1.html
-lintian::1.1::About Lintian::https://lintian.debian.org/manual/chapter-1.html#section-1.1
-lintian::1.2::The intention of Lintian::https://lintian.debian.org/manual/section-1.2.html
-lintian::1.3::Design issues::https://lintian.debian.org/manual/section-1.3.html
-lintian::1.4::Disclaimer::https://lintian.debian.org/manual/section-1.4.html
-lintian::2::Getting started::https://lintian.debian.org/manual/chapter-2.html
-lintian::2.1::Installing Lintian::https://lintian.debian.org/manual/chapter-2.html#section-2.1
-lintian::2.2::Running lintian::https://lintian.debian.org/manual/section-2.2.html
-lintian::2.3::Lintian Tags::https://lintian.debian.org/manual/section-2.3.html
-lintian::2.4::Overrides::https://lintian.debian.org/manual/section-2.4.html
-lintian::2.4.1::Format of override files::https://lintian.debian.org/manual/section-2.4.html#section-2.4.1
-lintian::2.4.2::Documenting overrides::https://lintian.debian.org/manual/section-2.4.html#section-2.4.2
-lintian::2.4.3::Architecture specific overrides::https://lintian.debian.org/manual/section-2.4.html#section-2.4.3
-lintian::2.5::Vendor Profiles::https://lintian.debian.org/manual/section-2.5.html
-lintian::2.5.1::Rules for profile names and location::https://lintian.debian.org/manual/section-2.5.html#section-2.5.1
-lintian::2.5.2::Profile syntax and semantics::https://lintian.debian.org/manual/section-2.5.html#section-2.5.2
-lintian::2.6::Vendor specific data files::https://lintian.debian.org/manual/section-2.6.html
-lintian::2.6.1::Load paths and order::https://lintian.debian.org/manual/section-2.6.html#section-2.6.1
-lintian::2.6.2::Basic syntax of data files::https://lintian.debian.org/manual/section-2.6.html#section-2.6.2
-lintian::3::Advanced usage::https://lintian.debian.org/manual/chapter-3.html
-lintian::3.1::How Lintian works::https://lintian.debian.org/manual/chapter-3.html#section-3.1
-lintian::3.2::The laboratory::https://lintian.debian.org/manual/section-3.2.html
-lintian::3.3::Writing your own Lintian checks::https://lintian.debian.org/manual/section-3.3.html
-lintian::3.3.1::Check description file::https://lintian.debian.org/manual/section-3.3.html#section-3.3.1
-lintian::3.3.2::Check Perl module file::https://lintian.debian.org/manual/section-3.3.html#section-3.3.2
 menu::::Debian Menu System::https://www.debian.org/doc/packaging-manuals/menu.html/
 menu::1::Introduction::https://www.debian.org/doc/packaging-manuals/menu.html/ch1.html
 menu::2::Menu from the viewpoint of a user::https://www.debian.org/doc/packaging-manuals/menu.html/ch2.html

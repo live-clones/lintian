@@ -2,7 +2,6 @@
 
 use strict;
 use warnings;
-use autodie;
 
 use Test::More;
 
@@ -22,7 +21,7 @@ my %TESTS_BAD = (
 );
 
 my $DATADIR = $0;
-$DATADIR =~ s,[^/]+$,,o;
+$DATADIR =~ s{[^/]+$}{};
 if ($DATADIR) {
     # invoked in some other dir
     $DATADIR = "$DATADIR/data";
@@ -40,7 +39,9 @@ foreach my $filename (sort keys %TESTS_BAD) {
     my $fail_regex = $TESTS_BAD{$filename};
 
     my $path = "$DATADIR/$filename";
-    open(my $fd, '<', $path);
+    open(my $fd, '<', $path)
+      or die "Cannot open $path";
+
     local $/ = undef;
     my $string = <$fd>;
     close $fd;

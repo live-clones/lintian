@@ -1,6 +1,6 @@
 Tag: package-supports-alternative-init-but-no-init.d-script
 Severity: info
-Check: init.d
+Check: init-d
 See-Also: policy 9.11
 Explanation: The package provides daemon, but contains no init.d script
  Packages that provide services (daemons), like cron daemon or web servers,

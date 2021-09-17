@@ -26,13 +26,17 @@ use utf8;
 
 use Exporter qw(import);
 
-use Lintian::Data;
-
-use constant DOUBLE_QUOTE => q{"};
-
-our @EXPORT_OK = qw(check_spelling check_spelling_picky
-  $known_shells_regex
+our @EXPORT_OK = qw(
+  check_spelling
+  check_spelling_picky
 );
+
+use Carp qw(croak);
+use Const::Fast;
+use Unicode::UTF8 qw(encode_utf8);
+
+const my $SPACE => q{ };
+const my $DOUBLE_QUOTE => q{"};
 
 =head1 NAME
 
@@ -86,7 +90,11 @@ Returns the number of spelling mistakes found in TEXT.
 my (%CORRECTIONS, @CORRECTIONS_MULTIWORD);
 
 sub check_spelling {
-    my ($text, $exceptions, $code_ref, $duplicate_check) = @_;
+    my ($profile, $text, $exceptions, $code_ref, $duplicate_check) = @_;
+
+    croak encode_utf8('No profile')
+      unless defined $profile;
+
     return 0 unless $text;
     if (not $code_ref and $exceptions and ref($exceptions) eq 'CODE') {
         $code_ref = $exceptions;
@@ -102,8 +110,8 @@ sub check_spelling {
 
     if (!%CORRECTIONS) {
         my $corrections_multiword
-          = Lintian::Data->new('spelling/corrections-multiword', '\|\|');
-        my $corrections = Lintian::Data->new('spelling/corrections', '\|\|');
+          = $profile->load_data('spelling/corrections-multiword', '\|\|');
+        my $corrections = $profile->load_data('spelling/corrections', '\|\|');
         for my $misspelled ($corrections->all) {
             $CORRECTIONS{$misspelled} = $corrections->value($misspelled);
         }
@@ -124,7 +132,7 @@ sub check_spelling {
     # trim both ends
     $text =~ s/^\s+|\s+$//g;
 
-    for my $word (split(' ', $text)) {
+    for my $word (split($SPACE, $text)) {
         my $ends_with_punct = 0;
         my $q = $word =~ tr/"/"/;
         # Change quoting on "foo or foo" but not "foo".
@@ -178,8 +186,8 @@ sub check_spelling {
             $counter++;
             next if $seen{lc $word}++;
             $code_ref->(
-                DOUBLE_QUOTE . $word . DOUBLE_QUOTE,
-                DOUBLE_QUOTE . $correction . DOUBLE_QUOTE
+                $DOUBLE_QUOTE . $word . $DOUBLE_QUOTE,
+                $DOUBLE_QUOTE . $correction . $DOUBLE_QUOTE
             );
         }
     }
@@ -209,16 +217,19 @@ Returns the number of spelling mistakes found in TEXT.
 =cut
 
 sub check_spelling_picky {
-    my ($text, $code_ref) = @_;
+    my ($profile, $text, $code_ref) = @_;
+
+    croak encode_utf8('No profile')
+      unless defined $profile;
 
     my %seen;
     my $counter = 0;
     my $corrections_case
-      = Lintian::Data->new('spelling/corrections-case', '\|\|');
+      = $profile->load_data('spelling/corrections-case', '\|\|');
 
     # Check this first in case it's contained in square brackets and
     # removed below.
-    if ($text =~ m,meta\s+package,) {
+    if ($text =~ /meta\s+package/) {
         $counter++;
         $code_ref->('meta package', 'metapackage');
     }
@@ -235,7 +246,7 @@ sub check_spelling_picky {
 
     for my $word (split(/\s+/, $text)) {
         $word =~ s/^\(|[).,?!:;]+$//g;
-        if ($corrections_case->known($word)) {
+        if ($corrections_case->recognizes($word)) {
             $counter++;
             next if $seen{$word}++;
             $code_ref->($word, $corrections_case->value($word));
@@ -244,20 +255,6 @@ sub check_spelling_picky {
 
     return $counter;
 }
-
-=back
-
-=head1 VARIABLES
-
-=over 4
-
-=item $known_shells_regex
-
-Regular expression that matches names of any known shell.
-
-=cut
-
-our $known_shells_regex = qr'(?:[bd]?a|t?c|(?:pd|m)?k|z)?sh';
 
 =back
 

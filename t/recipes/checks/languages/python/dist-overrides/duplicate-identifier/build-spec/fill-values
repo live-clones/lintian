@@ -1,0 +1,3 @@
+Skeleton: source-native
+Testname: duplicate-identifier
+Description: Duplicate identifier in d/py3dist-overrides

@@ -1,0 +1,10 @@
+fields-uploaders (source): malformed-contact Uploaders Malformed Email <@ddress@myspace.com>
+fields-uploaders (source): malformed-contact Uploaders Doris Double-Email <Doris
+fields-uploaders (source): mail-contact Uploaders "Mrs. Localhost" <user@localhost>
+fields-uploaders (source): mail-contact Uploaders "Mr. Weird" <no-space@somewhere.com>
+fields-uploaders (source): mail-contact Uploaders "John A. J. Doe" <i.am.ok@somewhere.com>
+fields-uploaders (source): mail-contact Maintainer "Debian Lintian Maintainers" <lintian-maint@debian.org>
+fields-uploaders (source): bogus-mail-host Uploaders user@localhost
+fields-uploaders (changes): mail-contact Maintainer "Debian Lintian Maintainers" <lintian-maint@debian.org>
+fields-uploaders (changes): mail-contact Changed-By "Debian Lintian Maintainers" <lintian-maint@debian.org>
+fields-uploaders (binary): mail-contact Maintainer "Debian Lintian Maintainers" <lintian-maint@debian.org>

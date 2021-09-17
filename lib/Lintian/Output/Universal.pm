@@ -23,19 +23,17 @@ use warnings;
 use utf8;
 
 use Carp;
-use List::MoreUtils qw(all);
-
-use constant SPACE => q{ };
-use constant EMPTY => q{};
-use constant COLON => q{:};
-use constant LPARENS => q{(};
-use constant RPARENS => q{)};
-use constant NEWLINE => qq{\n};
+use Const::Fast;
+use List::SomeUtils qw(all);
+use Unicode::UTF8 qw(encode_utf8);
 
 use Moo;
 use namespace::clean;
 
-with 'Lintian::Output';
+const my $SPACE => q{ };
+const my $COLON => q{:};
+const my $LPARENS => q{(};
+const my $RPARENS => q{)};
 
 =head1 NAME
 
@@ -95,15 +93,6 @@ sub issue_hints {
         $object = 'file'
           if $processable->type eq 'changes';
 
-        $self->v_msg(
-            $self->delimiter,
-            'Processing '. $processable->type. " $object ". $processable->name,
-            '(version '
-              . $processable->version
-              . ', arch '
-              . $processable->architecture . ') ...'
-        );
-
         my @subset = @{$hintlist{$processable} // []};
 
         for my $hint (@subset) {
@@ -112,14 +101,14 @@ sub issue_hints {
 
             my $line
               = $processable->name
-              . SPACE
-              . LPARENS
+              . $SPACE
+              . $LPARENS
               . $processable->type
-              . RPARENS
-              . COLON
-              . SPACE
+              . $RPARENS
+              . $COLON
+              . $SPACE
               . $hint->tag->name;
-            $line .= SPACE . $details
+            $line .= $SPACE . $details
               if length $details;
 
             push(@lines, $line);
@@ -129,7 +118,7 @@ sub issue_hints {
     my @sorted
       = reverse sort { order($a) cmp order($b) } @lines;
 
-    say $_ for @sorted;
+    say encode_utf8($_) for @sorted;
 
     return;
 }
@@ -165,7 +154,7 @@ sub parse_line {
     my ($package, $type, $name, $details)
       = $line =~ qr/^(\S+)\s+\(([^)]+)\):\s+(\S+)(?:\s+(.*))?$/;
 
-    croak "Cannot parse line $line"
+    croak encode_utf8("Cannot parse line $line")
       unless all { length } ($package, $type, $name);
 
     return ($package, $type, $name, $details);

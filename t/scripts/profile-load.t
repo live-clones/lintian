@@ -5,11 +5,14 @@
 use strict;
 use warnings;
 
+use Const::Fast;
 use Test::More;
 
 use Test::Lintian;
 
-$ENV{'LINTIAN_BASE'} //= '.';
+const my $DOT => q{.};
+
+$ENV{'LINTIAN_BASE'} //= $DOT;
 
 # We could use a plan, but then we had to update every time we added
 # or removed a profile...

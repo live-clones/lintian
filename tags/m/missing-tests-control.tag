@@ -1,5 +1,5 @@
 Tag: missing-tests-control
-Severity: info
+Severity: error
 Check: testsuite
 Renamed-From:
  testsuite-autopkgtest-missing

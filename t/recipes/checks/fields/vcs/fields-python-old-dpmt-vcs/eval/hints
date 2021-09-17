@@ -1,0 +1,5 @@
+python-old-dpmt-vcs (source): vcs-uri Git https://salsa.debian.org/python-team/modules/foobar.git
+python-old-dpmt-vcs (source): vcs git
+python-old-dpmt-vcs (source): package-is-team-maintained python-modules-team@lists.alioth.debian.org (with 0 uploaders)
+python-old-dpmt-vcs (source): old-dpmt-vcs Git
+python-old-dpmt-vcs (source): old-dpmt-vcs Browser

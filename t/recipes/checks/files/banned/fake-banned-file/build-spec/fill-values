@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: fake-banned-file
+Description: Test of md5sums forbidden-file

@@ -3,21 +3,24 @@
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
+use Const::Fast;
+use IPC::Run3;
 use Pod::Simple::HTMLBatch;
+use Unicode::UTF8 qw(encode_utf8);
 
-my (@input, $output, $version);
+const my $EMPTY => q{};
 
-$output = pop @ARGV;
-@input = @ARGV;
+my $destination = pop @ARGV;
+my @input = @ARGV;
 
 push @input, './lib', './doc/tutorial' unless @input;
-$output //= './doc/api.html';
-$version = guess_version();
+$destination //= './doc/api.html';
+my $lintian_version = guess_version();
 
-if (!-d $output) {
-    mkdir $output or die "could not create directory: $!";
+if (!-d $destination) {
+    mkdir $destination
+      or die encode_utf8("could not create directory: $!");
 }
 
 my $convert = Pod::Simple::HTMLBatch->new;
@@ -26,22 +29,22 @@ $convert->contents_page_start(header());
 # No footer - it contains a "current time" and is thus unreproducible
 $convert->contents_page_end(q{});
 $convert->css_flurry(0);
-$convert->batch_convert(\@input, $output);
+$convert->batch_convert(\@input, $destination);
 
-print "HTML version available at $output/index.html\n";
+print encode_utf8("HTML version available at $destination/index.html\n");
 
 sub header {
 
-    return <<EOF;
+    return <<"EOF";
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
          "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-  <title>Lintian (v$version) API doc</title>
+  <title>Lintian (v$lintian_version) API doc</title>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 </head>
 <body class='contentspage'>
-<h1>Lintian (v$version) API doc</h1>
+<h1>Lintian (v$lintian_version) API doc</h1>
 <p><em>Note: </em>This API is not stable between releases.</p>
 EOF
 }
@@ -49,12 +52,17 @@ EOF
 sub guess_version {
     my $version;
     my $dist;
-    open(my $fd, '-|', 'dpkg-parsechangelog', '-c0');
-    while (my $line = <$fd>) {
+
+    my @dpkg_command = qw{dpkg-parsechangelog -c0};
+    my $output;
+
+    run3(\@dpkg_command, \undef, \$output);
+    my @lines = split(/\n/, $output);
+
+    while (defined(my $line = shift @lines)) {
         $version = $1 if $line =~ m{\A Version: \s*+ (\S++) \s* \Z}xsm;
         $dist = $1 if $line =~ m{\A Distribution: \s*+ (\S++) \s* \Z}xsm;
     }
-    close($fd);
 
     if ((not defined($dist) or $dist eq 'UNRELEASED') and -d '.git') {
 
@@ -62,11 +70,13 @@ sub guess_version {
 
         # For unreleased versions, git describe is probably a better
         # choice when available.
-        my $guess = qx{git describe};
+        my @command = qw(git describe);
+        my $guess;
+        run3(\@command, \undef, \$guess);
 
         chomp $guess;
         $version = $guess
-          if $guess ne '' && $guess =~ m{\A \d+\. }xsm;
+          if $guess ne $EMPTY && $guess =~ m{\A \d+\. }xsm;
 
         # Ignore git being missing (or even failing to work)
         # - the version being incorrect for non-release cases is

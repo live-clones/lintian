@@ -1,0 +1,34 @@
+#!/bin/sh
+#
+# Create all the various junk that shouldn't exist in the diff so that we can
+# trigger all the tags.
+
+set -e
+dir="$1/debian"
+
+mkdir "${dir}/CVS"
+echo 'diff-contains-cvs-control-dir' > "${dir}/CVS/Entries"
+mkdir "${dir}/.svn"
+echo 'diff-contains-svn-control-dir' > "${dir}/.svn/format"
+mkdir "${dir}/.bzr"
+echo 'diff-contains-bzr-control-dir' > "${dir}/.bzr/foo"
+mkdir "${dir}/{arch}"
+echo 'diff-contains-arch-control-dir' > "${dir}/{arch}/foo"
+mkdir "${dir}/.git"
+echo 'diff-contains-git-control-dir' > "${dir}/.git/foo"
+mkdir "${dir}/.hg"
+echo 'diff-contains-hg-control-dir' > "${dir}/.hg/foo"
+mkdir "${dir}/.be"
+echo 'diff-contains-bts-control-dir' > "${dir}/.be/foo"
+mkdir "${dir}/.pc"
+echo 'diff-contains-quilt-control-dir' > "${dir}/.pc/foo"
+
+echo 'diff-contains-cmake-cache-file' > "${dir}/CMakeCache.txt"
+echo 'diff-contains-svn-commit-file' > "${dir}/svn-commit.tmp"
+echo 'diff-contains-svk-commit-file' > "${dir}/svk-commit444.tmp"
+echo 'diff-contains-arch-inventory-file' > "${dir}/.arch-inventory"
+echo 'diff-contains-hg-tags-file' > "${dir}/.hgtags"
+echo 'diff-contains-cvs-conflict-copy' > "${dir}/.#foo.1.1"
+echo 'diff-contains-svn-conflict-file' > "${dir}/foo.r1352"
+echo 'diff-contains-patch-failure-file' > "${dir}/foo.rej"
+echo 'diff-contains-editor-backup-file' > "${dir}/foo~"

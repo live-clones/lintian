@@ -23,16 +23,23 @@ package Lintian::Index::Objdump;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
+use Const::Fast;
 use Cwd;
 use IPC::Run3;
 use Path::Tiny;
-
-use constant EMPTY => q{};
+use Unicode::UTF8 qw(encode_utf8 valid_utf8 decode_utf8);
 
 use Moo::Role;
 use namespace::clean;
+
+const my $EMPTY => q{};
+const my $SPACE => q{ };
+const my $INDENT => $SPACE x 4;
+const my $HYPHEN => q{-};
+const my $NEWLINE => qq{\n};
+
+const my $LINES_PER_FILE => 3;
 
 =head1 NAME
 
@@ -58,9 +65,12 @@ sub add_objdump {
     my ($self) = @_;
 
     my $savedir = getcwd;
-    chdir($self->basedir);
+    chdir($self->basedir)
+      or die encode_utf8('Cannot change to directory ' . $self->basedir);
 
-    my @files = grep { $_->is_file } $self->sorted_list;
+    my $errors = $EMPTY;
+
+    my @files = grep { $_->is_file } @{$self->sorted_list};
 
     # must be ELF or static library
     my @with_objects = grep {
@@ -75,15 +85,28 @@ sub add_objdump {
             qw{readelf --wide --segments --dynamic --section-details --symbols --version-info},
             $file->name
         );
-        my $combined;
+        my $combined_bytes;
 
-        run3(\@command, \undef, \$combined, \$combined);
+        run3(\@command, \undef, \$combined_bytes, \$combined_bytes);
+
+        next
+          unless length $combined_bytes;
+
+        my $combined_output;
+
+        if (valid_utf8($combined_bytes)) {
+            $combined_output = decode_utf8($combined_bytes);
+
+        } else {
+            $combined_output = $combined_bytes;
+            $errors .= "Output from '@command' is not valid UTF-8" . $NEWLINE;
+        }
 
         # each object file in an archive gets its own File section
-        my @per_files = split(/^(File): (.*)$/m, $combined);
+        my @per_files = split(/^(File): (.*)$/m, $combined_output);
         shift @per_files while @per_files && $per_files[0] ne 'File';
 
-        @per_files = ($combined)
+        @per_files = ($combined_output)
           unless @per_files;
 
         # Special case - readelf will not prefix the output with "File:
@@ -98,28 +121,41 @@ sub add_objdump {
             unshift(@per_files, 'File');
         }
 
-        die "Parsed data from readelf is not a multiple of three for $file"
-          unless @per_files % 3 == 0;
+        unless (@per_files % $LINES_PER_FILE == 0) {
+
+            $errors
+              .= "Parsed data from readelf is not a multiple of $LINES_PER_FILE for $file"
+              . $NEWLINE;
+            next;
+        }
 
         my $parsed;
         while (defined(my $fixed = shift @per_files)) {
 
-            die "Unknown output from readelf for $file"
-              unless $fixed eq 'File';
-
             my $recorded_name = shift @per_files;
-            die "No file name from readelf for $file"
-              unless length $file;
+            my $per_file = shift @per_files;
+
+            unless ($fixed eq 'File') {
+                $errors .= "Unknown output from readelf for $file" . $NEWLINE;
+                next;
+            }
+
+            unless (length $recorded_name) {
+                $errors .= "No file name from readelf for $file" . $NEWLINE;
+                next;
+            }
 
             my ($container, $member) = ($recorded_name =~ /^(.*)\(([^)]+)\)$/);
 
             $container = $recorded_name
               unless defined $container && defined $member;
 
-            die "Container not same as file name ($container vs $file)"
-              unless $container eq $file->name;
-
-            my $per_file = shift @per_files;
+            unless ($container eq $file->name) {
+                $errors
+                  .= "Container not same as file name ($container vs $file)"
+                  . $NEWLINE;
+                next;
+            }
 
             # ignore empty archives, such as in musl-dev_1.2.1-1_amd64.deb
             next
@@ -131,9 +167,10 @@ sub add_objdump {
         $file->objdump($parsed);
     }
 
-    chdir($savedir);
+    chdir($savedir)
+      or die encode_utf8("Cannot change to directory $savedir");
 
-    return;
+    return $errors;
 }
 
 =item parse_per_file
@@ -148,10 +185,10 @@ sub parse_per_file {
     my @dynamic_symbols;
     my %program_headers;
     my $truncated = 0;
-    my $section = EMPTY;
+    my $elf_section = $EMPTY;
     my $static_lib_issues = 0;
 
-    my $parsed .= "Filename: $filename\n";
+    my $parsed = "Filename: $filename" . $NEWLINE;
 
     my @lines = split(/\n/, $from_readelf);
     while (defined(my $line = shift @lines)) {
@@ -165,7 +202,7 @@ sub parse_per_file {
         ) {
        # Various errors for corrupt / broken files.  Note, readelf may spit out
        # multiple errors per file, hence the "unless".
-            $parsed .= "Broken: yes\n"
+            $parsed .= 'Broken: yes' . $NEWLINE
               unless $truncated++;
 
             next;
@@ -181,35 +218,35 @@ sub parse_per_file {
             next;
 
         } elsif ($line =~ /^Elf file type is (\S+)/) {
-            $parsed .= "Elf-Type: $1\n";
+            $parsed .= "Elf-Type: $1" . $NEWLINE;
             next;
 
         } elsif ($line =~ /^Program Headers:/) {
-            $section = 'PH';
-            $parsed .= "Program-Headers:\n";
+            $elf_section = 'PH';
+            $parsed .= 'Program-Headers:' . $NEWLINE;
 
         } elsif ($line =~ /^Section Headers:/) {
-            $section = 'SH';
-            $parsed .= "Section-Headers:\n";
+            $elf_section = 'SH';
+            $parsed .= 'Section-Headers:' . $NEWLINE;
 
         } elsif ($line =~ /^Dynamic section at offset .*:/) {
-            $section = 'DS';
-            $parsed .= "Dynamic-Section:\n";
+            $elf_section = 'DS';
+            $parsed .= 'Dynamic-Section:' . $NEWLINE;
 
         } elsif ($line =~ /^Version symbols section /) {
-            $section = 'VS';
+            $elf_section = 'VS';
 
         } elsif ($line =~ /^Symbol table '.dynsym'/) {
-            $section = 'DS';
+            $elf_section = 'DS';
 
         } elsif ($line =~ /^Symbol table/) {
-            $section = EMPTY;
+            $elf_section = $EMPTY;
 
         } elsif ($line =~ /^\s*$/) {
-            $section = EMPTY;
+            $elf_section = $EMPTY;
 
         } elsif ($line =~ /^\s*(\S+)\s*(?:(?:\S+\s+){4})\S+\s(...)/
-            and $section eq 'PH') {
+            and $elf_section eq 'PH') {
 
             my $header = $1;
             my $flags = $2;
@@ -219,12 +256,12 @@ sub parse_per_file {
             next
               if $header eq 'Type';
 
-            my $extra = EMPTY;
+            my $extra = $EMPTY;
 
-            my $newflags = EMPTY;
-            $newflags .= ($flags =~ m/R/) ? 'r' : '-';
-            $newflags .= ($flags =~ m/W/) ? 'w' : '-';
-            $newflags .= ($flags =~ m/E/) ? 'x' : '-';
+            my $newflags = $EMPTY;
+            $newflags .= ($flags =~ /R/) ? 'r' : $HYPHEN;
+            $newflags .= ($flags =~ /W/) ? 'w' : $HYPHEN;
+            $newflags .= ($flags =~ /E/) ? 'x' : $HYPHEN;
 
             $program_headers{$header} = $newflags;
 
@@ -243,23 +280,23 @@ sub parse_per_file {
                 }
             }
 
-            $parsed .= "  $header flags=${newflags}$extra\n";
+            $parsed .= "  $header flags=${newflags}$extra" . $NEWLINE;
 
             next;
 
         } elsif ($line =~ /^\s*\[\s*(\d+)\] (\S+)(?:\s|\Z)/
-            && $section eq 'SH') {
+            && $elf_section eq 'SH') {
 
             my $section = $2;
             $sections[$1] = $section;
 
             # We need sections as well (e.g. for incomplete stripping)
-            $parsed .= " $section\n"
+            $parsed .= $SPACE . $section . $NEWLINE
               if $section =~ /^(?:\.comment$|\.note$|\.z?debug_)/;
 
         } elsif ($line
             =~ /^\s*0x(?:[0-9A-F]+)\s+\((.*?)\)\s+([\x21-\x7f][\x20-\x7f]*)\Z/i
-            && $section eq 'DS') {
+            && $elf_section eq 'DS') {
 
             my $type = $1;
             my $value = $2;
@@ -291,12 +328,12 @@ sub parse_per_file {
             $keep = 1
               if $value =~ s/^(?:Shared library|Library soname): \[(.*)\]/$1/;
 
-            $parsed .= "  $type   $value\n"
+            $parsed .= "  $type   $value" . $NEWLINE
               if $keep;
 
         } elsif (
             $line =~ /^\s*[0-9a-f]+: \s* \S+ \s* (?:\(\S+\))? (?:\s|\Z)/xi
-            && $section eq 'VS') {
+            && $elf_section eq 'VS') {
 
             while ($line =~ /([0-9a-f]+h?)\s*(?:\((\S+)\))?(?:\s|\Z)/gci) {
                 my $version_number = $1;
@@ -314,7 +351,7 @@ sub parse_per_file {
 
         } elsif ($line
             =~ /^\s*(\d+):\s*[0-9a-f]+\s+\d+\s+(?:(?:\S+\s+){3})(?:\[.*\]\s+)?(\S+)\s+(.*)\Z/
-            && $section eq 'DS') {
+            && $elf_section eq 'DS') {
 
            # We (sometimes) need to read the "Version symbols section" first to
            # use this data and readelf tends to print after this section, so
@@ -326,11 +363,11 @@ sub parse_per_file {
 
             # The headers declare a dynamic section but it's
             # empty.
-            $parsed .= "Bad-Dynamic-Table: Yes\n";
+            $parsed .= 'Bad-Dynamic-Table: Yes' . $NEWLINE;
         }
     }
 
-    $parsed .= "Dynamic-Symbols:\n"
+    $parsed .= 'Dynamic-Symbols:' . $NEWLINE
       if @dynamic_symbols;
 
     for my $dynamic_symbol (@dynamic_symbols) {
@@ -343,11 +380,11 @@ sub parse_per_file {
             $symbol_version = $2;
 
         } else {
-            $symbol_version = $symbol_versions[$symbol_number] // EMPTY;
+            $symbol_version = $symbol_versions[$symbol_number] // $EMPTY;
 
             if ($symbol_version eq '*local*' || $symbol_version eq '*global*'){
                 if ($section eq 'UND') {
-                    $symbol_version = '   ';
+                    $symbol_version = $INDENT;
                 } else {
                     $symbol_version = 'Base';
                 }
@@ -370,10 +407,10 @@ sub parse_per_file {
         next
           unless $section eq 'UND' || $section eq '.text';
 
-        $parsed .= " $section $symbol_version $symbol_name\n";
+        $parsed .= " $section $symbol_version $symbol_name" . $NEWLINE;
     }
 
-    $parsed .= "\n";
+    $parsed .= $NEWLINE;
 
     return $parsed;
 }

@@ -32,10 +32,13 @@ our @EXPORT_OK = (qw(
 
 use Exporter qw(import);
 
+use Const::Fast;
+use Unicode::UTF8 qw(decode_utf8);
+
 use Lintian::IPC::Run3 qw(safe_qx);
 use Lintian::Util qw(version_from_changelog);
 
-use constant EMPTY => q{};
+const my $EMPTY => q{};
 
 =head1 NAME
 
@@ -75,13 +78,17 @@ sub version_from_git {
 
     my $git_path = "$source_path/.git";
 
-    return EMPTY
+    return $EMPTY
       unless -d $git_path;
 
-    my $guess = safe_qx('git', "--git-dir=$git_path", 'describe');
-    chomp $guess;
+    my $describe
+      = decode_utf8(safe_qx('git', "--git-dir=$git_path", 'describe'));
+    chomp $describe;
 
-    return ($guess // EMPTY);
+    my ($guess, $step, $commit) = split(/-/, $describe);
+    $guess =~ s/ [.] 0 $/.$step/sx;
+
+    return ($guess // $EMPTY);
 }
 
 =back

@@ -37,7 +37,6 @@ tests that are supposed to run.
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Exporter qw(import);
 
@@ -49,22 +48,25 @@ BEGIN {
 }
 
 use Carp;
+use Const::Fast;
 use File::Spec::Functions qw(rel2abs splitpath catpath);
 use File::Find::Rule;
-use List::MoreUtils qw(uniq none);
+use List::SomeUtils qw(uniq none);
 use List::Util qw(any all);
 use Path::Tiny;
 use Text::CSV;
+use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Profile;
 use Test::Lintian::ConfigFile qw(read_config);
 
 my @LINTIAN_SUITES = qw(recipes);
 
-use constant DESC => 'desc';
-use constant TWO_SEPARATED_BY_COLON => qr/([^:]+):([^:]+)/;
-use constant EMPTY => q{};
-use constant SPACE => q{ };
+const my $EMPTY => q{};
+const my $SPACE => q{ };
+const my $VERTICAL_BAR => q{|};
+const my $DESC => 'desc';
+const my $SEPARATED_BY_COLON => qr/([^:]+):([^:]+)/;
 
 =head1 FUNCTIONS
 
@@ -81,7 +83,7 @@ sub get_suitepath {
     my ($basepath, $suite) = @_;
     my $suitepath = rel2abs($suite, $basepath);
 
-    croak("Cannot find suite $suite in $basepath")
+    croak encode_utf8("Cannot find suite $suite in $basepath")
       unless -d $suitepath;
 
     return $suitepath;
@@ -99,24 +101,24 @@ sub find_selected_scripts {
 
     my @found;
 
-    my @selectors = split(m/\s*,\s*/, $onlyrun//EMPTY);
+    my @selectors = split(m/\s*,\s*/, $onlyrun//$EMPTY);
 
     if ((any { $_ eq 'suite:scripts' } @selectors) || !length $onlyrun) {
         @found = File::Find::Rule->file()->name('*.t')->in($scriptpath);
     } else {
         foreach my $selector (@selectors) {
-            my ($prefix, $lookfor) = ($selector =~ TWO_SEPARATED_BY_COLON);
+            my ($prefix, $lookfor) = ($selector =~ /$SEPARATED_BY_COLON/);
 
             next if defined $prefix && $prefix ne 'script';
             $lookfor = $selector unless defined $prefix;
 
             # look for files with the standard suffix
             my $withsuffix = rel2abs("$lookfor.t", $scriptpath);
-            push(@found, $withsuffix) if (-f $withsuffix);
+            push(@found, $withsuffix) if -e $withsuffix;
 
             # look for script with exact name
             my $exactpath = rel2abs($lookfor, $scriptpath);
-            push(@found, $exactpath) if (-f $exactpath);
+            push(@found, $exactpath) if -e $exactpath;
 
             # also add entire directory if name matches
             push(@found, File::Find::Rule->file()->name('*.t')->in($exactpath))
@@ -124,7 +126,9 @@ sub find_selected_scripts {
         }
     }
 
-    return sort +uniq @found;
+    my @sorted = sort +uniq @found;
+
+    return @sorted;
 }
 
 =item find_selected_lintian_testpaths(TEST_SET, ONLY_RUN)
@@ -156,7 +160,7 @@ sub find_selected_lintian_testpaths {
         foreach my $selector (@selectors) {
 
             foreach my $wanted (keys %{$filter}) {
-                my ($prefix, $lookfor) = ($selector =~ TWO_SEPARATED_BY_COLON);
+                my ($prefix, $lookfor) = ($selector =~ /$SEPARATED_BY_COLON/);
 
                 next if defined $prefix && $prefix ne $wanted;
 
@@ -167,7 +171,7 @@ sub find_selected_lintian_testpaths {
     }
 
     my $profile = Lintian::Profile->new;
-    $profile->load(undef, [$ENV{LINTIAN_BASE}]);
+    $profile->load(undef, undef, 0);
 
     my @found;
     foreach my $suite (sort @LINTIAN_SUITES) {
@@ -195,23 +199,23 @@ sub find_selected_lintian_testpaths {
 
                 my $tag = $profile->get_tag($tagname);
                 unless ($tag) {
-                    say "Tag $tagname not found";
-                    return;
+                    say encode_utf8("Tag $tagname not found");
+                    return ();
                 }
 
                 if (none { $tagname eq $_ } $profile->enabled_tags) {
-                    say "Tag $tagname not enabled";
-                    return;
+                    say encode_utf8("Tag $tagname not enabled");
+                    return ();
                 }
 
                 $wanted{$tag->check} = 1;
             }
 
             for my $testpath (find_all_testpaths($suitepath)) {
-                my $desc = read_config("$testpath/eval/" . DESC);
+                my $desc = read_config("$testpath/eval/" . $DESC);
 
                 next
-                  unless $desc->exists('Check');
+                  unless $desc->declares('Check');
 
                 for my $check ($desc->trimmed_list('Check')) {
                     push(@insuite, $testpath)
@@ -229,7 +233,7 @@ sub find_selected_lintian_testpaths {
                 my $desc = read_config("$testpath/build-spec/fill-values");
 
                 next
-                  unless $desc->exists('Skeleton');
+                  unless $desc->declares('Skeleton');
 
                 my $skeleton = $desc->unfolded_value('Skeleton');
                 push(@insuite, $testpath)
@@ -238,11 +242,12 @@ sub find_selected_lintian_testpaths {
         }
 
         # guess what was meant by selection without prefix
-        foreach my $parameter (@filter_no_prefix) {
+        for my $parameter (@filter_no_prefix) {
             push(@insuite,find_testpaths_by_name($suitepath, $parameter));
 
-            my $checkscript = $profile->get_checkinfo($parameter);
-            if ($parameter eq 'legacy' || defined $checkscript) {
+            if ($parameter eq 'legacy'
+                || exists $profile->check_module_by_name->{$parameter}) {
+
                 push(@insuite,
                     find_testpaths_by_name($suitepath, "$parameter-*"));
             }
@@ -264,11 +269,9 @@ the test description (presently 'desc').
 
 sub find_all_testpaths {
     my ($directory) = @_;
-    my @descfiles = File::Find::Rule->file()->name(DESC)->in($directory);
+    my @descfiles = File::Find::Rule->file()->name($DESC)->in($directory);
 
-    my @testpaths
-      = map { my $parent = path($_)->parent->parent; $parent->stringify }
-      @descfiles;
+    my @testpaths= map { path($_)->parent->parent->stringify }@descfiles;
 
     return @testpaths;
 }
@@ -287,7 +290,7 @@ sub find_testpaths_by_name {
 
     my @named = File::Find::Rule->directory()->name($name)->in($path);
     my @testpaths= grep { defined }
-      map { -f rel2abs('eval/' . DESC, $_) ? $_ : undef } @named;
+      map { -e rel2abs('eval/' . $DESC, $_) ? $_ : undef } @named;
 
     return @testpaths;
 }
@@ -302,47 +305,48 @@ located in TEST_PATH.
 sub find_all_tags {
     my ($testpath) = @_;
 
-    my $desc = read_config("$testpath/eval/" . DESC);
+    my $desc = read_config("$testpath/eval/" . $DESC);
 
-    return EMPTY
-      unless $desc->exists('Check');
-
-    my %tags;
+    return $EMPTY
+      unless $desc->declares('Check');
 
     my $profile = Lintian::Profile->new;
-    $profile->load(undef, [$ENV{LINTIAN_BASE}]);
+    $profile->load(undef, undef, 0);
 
-    my @checks = $desc->trimmed_list('Check');
-    for my $check (@checks) {
-        my $checkscript = $profile->get_checkinfo($check);
-        die "Unknown Lintian check $check"
-          unless defined $checkscript;
+    my @check_names = $desc->trimmed_list('Check');
+    my @unknown
+      = grep { !exists $profile->check_module_by_name->{$_} } @check_names;
 
-        $tags{$_} = 1 for $checkscript->tags;
+    die encode_utf8('Unknown Lintian checks: ' . join($SPACE, @unknown))
+      if @unknown;
+
+    my %tags;
+    for my $name (@check_names) {
+        $tags{$_} = 1 for @{$profile->tagnames_for_check->{$name}};
     }
 
     return keys %tags
-      unless $desc->exists('Test-Against');
+      unless $desc->declares('Test-Against');
 
-    # read tags from specification
+    # read hints from specification
     my $temp = Path::Tiny->tempfile;
-    die "tagextract failed: $!"
-      if system('private/tagextract', '-f', 'EWI', "$testpath/tags",
+    die encode_utf8("hintextract failed: $!")
+      if system('private/hintextract', '-f', 'EWI', "$testpath/hints",
         $temp->stringify);
     my @lines = $temp->lines_utf8({ chomp => 1 });
 
-    my $csv = Text::CSV->new({ sep_char => '|' });
+    my $csv = Text::CSV->new({ sep_char => $VERTICAL_BAR });
 
     my %expected;
     foreach my $line (@lines) {
 
         my $status = $csv->parse($line);
-        die "Cannot parse line $line: " . $csv->error_diag
+        die encode_utf8("Cannot parse line $line: " . $csv->error_diag)
           unless $status;
 
         my ($type, $package, $name, $details) = $csv->fields;
 
-        die "Cannot parse line $line"
+        die encode_utf8("Cannot parse line $line")
           unless all { length } ($type, $package, $name);
 
         $expected{$name} = 1;

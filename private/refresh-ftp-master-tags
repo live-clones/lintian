@@ -22,15 +22,18 @@
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 # Not a B-D and script is compile tested...
 require LWP::Simple;
 LWP::Simple->import(qw(get));
 
+use Const::Fast;
 use POSIX qw(strftime);
+use Unicode::UTF8 qw(encode_utf8);
 
-use List::MoreUtils qw(uniq);
+use List::SomeUtils qw(uniq);
+
+const my $EMPTY => q{};
 
 our $YAML_URL = 'https://ftp-master.debian.org/static/lintian.tags';
 
@@ -38,10 +41,11 @@ our $YAML_URL = 'https://ftp-master.debian.org/static/lintian.tags';
 # reject and then parse it.  We should probably use a real YAML parser, but
 # that requires every Lintian maintainer to install it.
 my $yaml = get($YAML_URL);
-die "Cannot retrieve $YAML_URL\n" unless $yaml;
+die encode_utf8("Cannot retrieve $YAML_URL\n")
+  unless $yaml;
 my @yaml = split(/\n+/, $yaml);
 shift @yaml while (@yaml and $yaml[0] =~ /^\s*$/);
-die "Unknown YAML file format (first line: $yaml[0])\n"
+die encode_utf8("Unknown YAML file format (first line: $yaml[0])\n")
   unless $yaml[0] =~ /^\s*lintian:\s*$/;
 shift @yaml;
 my (@nonfatal, @fatal, $current);
@@ -52,17 +56,22 @@ for my $line (@yaml) {
     } elsif ($line =~ /^\s*fatal:\s*$/) {
         $current = \@fatal;
     } elsif ($line =~ /^\s*-\s+(\S+)\s*$/) {
-        die "Tag listed outside of section\n" unless $current;
-        push(@$current, $1);
+        die encode_utf8("Tag listed outside of section\n")
+          unless $current;
+        push(@{$current}, $1);
     } else {
-        die "Unrecognized line: $line\n";
+        die encode_utf8("Unrecognized line: $line\n");
     }
 }
 
 # Print out the fatal and nonfatal tags to our data files.
 my $date = strftime('%Y-%m-%d', gmtime);
-open(my $nonfatal, '>', 'private/build-time-data/ftp-master-nonfatal');
-print {$nonfatal} <<"EOH";
+
+my $nonfatal_file = 'private/build-time-data/ftp-master-nonfatal';
+open(my $nonfatal, '>', $nonfatal_file)
+  or die encode_utf8("Cannot open $nonfatal_file");
+
+print {$nonfatal} encode_utf8(<<"EOH");
 # This file lists all tags that cause an automatic reject on upload but can
 # be overridden (nonfatal tags).  It is based on the data file retrieved from
 # $YAML_URL
@@ -70,10 +79,14 @@ print {$nonfatal} <<"EOH";
 # Last updated: $date
 
 EOH
-print {$nonfatal} join("\n", sort(uniq(@nonfatal)), '');
+print {$nonfatal} encode_utf8(join("\n", sort(uniq(@nonfatal)), $EMPTY));
 close($nonfatal);
-open(my $fatal, '>', 'private/build-time-data/ftp-master-fatal');
-print {$fatal} <<"EOH";
+
+my $fatal_file = 'private/build-time-data/ftp-master-fatal';
+open(my $fatal, '>', $fatal_file)
+  or die encode_utf8("Cannot open $fatal_file");
+
+print {$fatal} encode_utf8(<<"EOH");
 # This file lists all tags that cause an automatic reject on upload and cannot
 # be overridden.  It is based on the data file retrieved from
 # $YAML_URL
@@ -81,7 +94,7 @@ print {$fatal} <<"EOH";
 # Last updated: $date
 
 EOH
-print {$fatal} join("\n", sort(uniq(@fatal)), '');
+print {$fatal} encode_utf8(join("\n", sort(uniq(@fatal)), $EMPTY));
 close($fatal);
 
 # Local Variables:

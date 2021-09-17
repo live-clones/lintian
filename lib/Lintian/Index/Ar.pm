@@ -20,20 +20,19 @@ package Lintian::Index::Ar;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
+use Const::Fast;
 use Cwd;
 use Path::Tiny;
+use Unicode::UTF8 qw(decode_utf8 encode_utf8);
 
 use Lintian::IPC::Run3 qw(safe_qx);
 
-use constant EMPTY => q{};
-use constant SPACE => q{ };
-use constant COLON => q{:};
-use constant NEWLINE => qq{\n};
-
 use Moo::Role;
 use namespace::clean;
+
+const my $EMPTY => q{};
+const my $NEWLINE => qq{\n};
 
 =head1 NAME
 
@@ -59,10 +58,14 @@ sub add_ar {
     my ($self) = @_;
 
     my $savedir = getcwd;
-    chdir($self->basedir);
+    chdir($self->basedir)
+      or die encode_utf8('Cannot change to directory ' . $self->basedir);
+
+    my $errors = $EMPTY;
 
     my @archives
-      = grep { $_->name =~ /\.a$/ && $_->is_regular_file } $self->sorted_list;
+      = grep { $_->name =~ / [.]a $/msx && $_->is_regular_file }
+      @{$self->sorted_list};
 
     for my $archive (@archives) {
 
@@ -73,8 +76,13 @@ sub add_ar {
         my %ar_info;
 
     # fails silently for non-ar files (#934899); probably creates empty entries
-    # in case of trouble, please try: "next if $?;" underneath it
-        my $output = safe_qx('ar', 't', $archive);
+        my $bytes = safe_qx(qw{ar t}, $archive);
+        if ($?) {
+            $errors .= "ar failed for $archive" . $NEWLINE;
+            next;
+        }
+
+        my $output = decode_utf8($bytes);
         my @members = split(/\n/, $output);
 
         my $count = 1;
@@ -90,9 +98,10 @@ sub add_ar {
         $archive->ar_info(\%ar_info);
     }
 
-    chdir($savedir);
+    chdir($savedir)
+      or die encode_utf8("Cannot change to directory $savedir");
 
-    return;
+    return $errors;
 }
 
 =back

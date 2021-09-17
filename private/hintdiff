@@ -1,0 +1,132 @@
+#!/usr/bin/perl
+
+# Copyright © 2019 Felix Lechner
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+# The harness for Lintian's test suite.  For detailed information on
+# the test suite layout and naming conventions, see t/tests/README.
+# For more information about running tests, see
+# doc/tutorial/Lintian/Tutorial/TestSuite.pod
+#
+
+use v5.20;
+use warnings;
+use utf8;
+
+use Const::Fast;
+use Cwd qw(realpath);
+use File::Basename qw(dirname);
+
+# neither Path::This nor lib::relative are in Debian
+use constant THISFILE => realpath __FILE__;
+use constant THISDIR => dirname realpath __FILE__;
+
+# use Lintian modules that belong to this program
+use lib THISDIR . '/../lib';
+
+use Getopt::Long;
+use IO::Interactive qw(is_interactive);
+use List::Util qw(all);
+use Path::Tiny;
+use Term::ANSIColor qw(:constants);
+use Text::Diff;
+use Unicode::UTF8 qw(encode_utf8);
+
+use Test::Lintian::Output::Universal qw(order);
+
+const my $EMPTY => q{};
+const my $NEWLINE => qq{\n};
+
+no warnings 'redefine';
+
+sub Text::Diff::Unified::file_header { return $EMPTY; }
+sub Text::Diff::Unified::hunk_header { return $EMPTY; }
+
+# options
+Getopt::Long::Configure;
+unless (
+    Getopt::Long::GetOptions(
+        'help|h'          => sub {usage(); exit;},
+    )
+) {
+    usage();
+    die;
+}
+
+# check arguments and options
+die encode_utf8("Please use -h for usage information.\n")
+  if scalar @ARGV != 2;
+
+# get arguments
+my ($expectedpath, $actualpath) = @ARGV;
+
+my @expected
+  = reverse sort { order($a) cmp order($b) } (path($expectedpath)->lines_utf8);
+my @actual
+  = reverse sort { order($a) cmp order($b) }(path($actualpath)->lines_utf8);
+
+my $diff = diff(\@expected, \@actual, { CONTEXT => 0 });
+
+my @lines = split(/$NEWLINE/, $diff);
+chomp @lines;
+
+# sort before applying color
+@lines = reverse sort @lines;
+
+# apply color when on a terminal
+if (is_interactive) {
+
+    my $green = GREEN;
+    my $red = RED;
+    my $reset = RESET;
+
+    s/^(\+.*)$/$green$1$reset/ for @lines;
+    s/^(\-.*)$/$red$1$reset/ for @lines;
+}
+
+print encode_utf8($_ . $NEWLINE) for @lines;
+
+exit;
+
+sub usage {
+    my $message =<<"END";
+Usage: $0 <expected-hint-file> <actual-hint-file>
+
+    Print differences between the hint information in the two files. The files
+    must in a CSV format delimited by '|'. The easiest way to obtain such a
+    file is to use hintextract.
+
+    The output is sorted lexigraphically in reverse order. If the arguments
+    are reversed, the new output can also be generated from the old one by
+    reversing the signs and sorting again in reverse order (under LC_ALL=C).
+    It only works with uncolored output.
+
+    Returns with a zero exit code under normal conditions, even when the hints
+    do not match.
+END
+
+    print encode_utf8($message);
+
+    return;
+}
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

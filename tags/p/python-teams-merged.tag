@@ -1,11 +1,11 @@
 Tag: python-teams-merged
 Severity: error
-See-Also: DPT policy
 Check: languages/python
-Explanation: The Python Applications Packaging Team (PAPT) has been merged with
-  the Debian Python Module Team (DPMT) to create the new Debian Python Team
-  (DPT). As such, the Maintainer for this package should now be
-  <code>Debian Python Team <team+python@tracker.debian.org></code>.
+Explanation: The Python Applications Packaging Team (PAPT) merged with
+ the Debian Python Module Team (DPMT) to create the new Debian Python
+ Team (DPT). As such, the <code>Maintainer</code> for this package
+ should now be
+ <code>Debian Python Team &lt;team+python@tracker.debian.org&gt;</code>.
  .
- This is not currently the case and the package's Maintainer field should be
- updated.
+ That is not currently the case. Please update the package's
+ <code>Maintainer</code> field.

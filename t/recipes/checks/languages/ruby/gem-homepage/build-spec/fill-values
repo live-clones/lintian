@@ -1,0 +1,4 @@
+Skeleton: source-native
+Testname: gem-homepage
+Description: Homepage points to a Rubygem
+Homepage: https://rubygems.org/gems/some-gem/

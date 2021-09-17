@@ -1,4 +1,5 @@
 # Copyright © 2008 Frank Lichtenheld <frank@lichtenheld.de>
+# Copyright © 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,23 +23,68 @@ use v5.20;
 use warnings;
 use utf8;
 
+use Const::Fast;
 use HTML::HTML5::Entities;
 use Term::ANSIColor ();
 use Text::Wrap;
-
-# for tty hyperlinks
-use constant OSC_HYPERLINK => qq{\033]8;;};
-use constant OSC_DONE => qq{\033\\};
-
-use constant EMPTY => q{};
-use constant SPACE => q{ };
-use constant COLON => q{:};
-use constant NEWLINE => qq{\n};
+use Unicode::UTF8 qw(encode_utf8);
 
 use Moo;
 use namespace::clean;
 
-with 'Lintian::Output';
+with 'Lintian::Output::Grammar';
+
+# for tty hyperlinks
+const my $OSC_HYPERLINK => qq{\033]8;;};
+const my $OSC_DONE => qq{\033\\};
+
+const my $EMPTY => q{};
+const my $SPACE => q{ };
+const my $COLON => q{:};
+const my $DOT => q{.};
+const my $NEWLINE => qq{\n};
+const my $PARAGRAPH_BREAK => $NEWLINE x 2;
+
+const my $YES => q{yes};
+const my $NO => q{no};
+
+const my $COMMENT_PREFIX => q{N:} . $SPACE;
+
+const my $DESCRIPTION_INDENTATION => 2;
+const my $DESCRIPTION_PREFIX => $COMMENT_PREFIX
+  . $SPACE x $DESCRIPTION_INDENTATION;
+
+const my $SCREEN_INDENTATION => 4;
+const my $SCREEN_PREFIX => $COMMENT_PREFIX . $SPACE x $SCREEN_INDENTATION;
+
+const my %COLORS => (
+    'E' => 'red',
+    'W' => 'yellow',
+    'I' => 'cyan',
+    'P' => 'green',
+    'C' => 'blue',
+    'O' => 'bright_black',
+    'M' => 'bright_black',
+);
+
+const my %CODE_PRIORITY => (
+    'E' => 30,
+    'W' => 40,
+    'I' => 50,
+    'P' => 60,
+    'X' => 70,
+    'C' => 80,
+    'O' => 90,
+    'M' => 100,
+);
+
+const my %TYPE_PRIORITY => (
+    'source' => 30,
+    'binary' => 40,
+    'udeb' => 50,
+    'changes' => 60,
+    'buildinfo' => 70,
+);
 
 =head1 NAME
 
@@ -56,6 +102,12 @@ Provides standard hint output.
 
 =over 4
 
+=item tag_count_by_processable
+
+=cut
+
+has tag_count_by_processable => (is => 'rw', default => sub { {} });
+
 =item issue_hints
 
 Print all hints passed in array. A separate arguments with processables
@@ -63,26 +115,8 @@ is necessary to report in case no hints were found.
 
 =cut
 
-my %code_priority = (
-    'E' => 30,
-    'W' => 40,
-    'I' => 50,
-    'P' => 60,
-    'X' => 70,
-    'C' => 80,
-    'O' => 90,
-);
-
-my %type_priority = (
-    'source' => 30,
-    'binary' => 40,
-    'udeb' => 50,
-    'changes' => 60,
-    'buildinfo' => 70,
-);
-
 sub issue_hints {
-    my ($self, $groups) = @_;
+    my ($self, $groups, $option) = @_;
 
     my @processables = map { $_->get_processables } @{$groups // []};
 
@@ -103,15 +137,15 @@ sub issue_hints {
 
     my @sorted = sort {
              defined $a->override <=> defined $b->override
-          || $code_priority{$a->tag->code} <=> $code_priority{$b->tag->code}
+          || $CODE_PRIORITY{$a->tag->code} <=> $CODE_PRIORITY{$b->tag->code}
           || $a->tag->name cmp $b->tag->name
-          || $type_priority{$a->processable->type}
-          <=> $type_priority{$b->processable->type}
+          || $TYPE_PRIORITY{$a->processable->type}
+          <=> $TYPE_PRIORITY{$b->processable->type}
           || $a->processable->name cmp $b->processable->name
           || $a->context cmp $b->context
     } @pending;
 
-    $self->print_hint($_) for @sorted;
+    $self->print_hint($_, $option) for @sorted;
 
     return;
 }
@@ -127,22 +161,23 @@ override info for this hint.
 =cut
 
 sub print_hint {
-    my ($self, $hint) = @_;
+    my ($self, $hint, $option) = @_;
 
     my $tag = $hint->tag;
     my $tag_name = $tag->name;
 
     my $information = $hint->context;
-    $information = SPACE . $self->_quote_print($information)
-      unless $information eq EMPTY;
+    $information = $SPACE . $self->_quote_print($information)
+      unless $information eq $EMPTY;
 
     # Limit the output so people do not drown in hints.  Some hints are
     # insanely noisy (hi static-library-has-unneeded-section)
-    my $limit = $self->tag_display_limit;
+    my $limit = $option->{'tag-display-limit'};
     if ($limit) {
 
-        my $proc_id = $hint->processable->identifier;
-        my $emitted_count= $self->proc_id2tag_count->{$proc_id}{$tag_name}++;
+        my $processable_id = $hint->processable->identifier;
+        my $emitted_count
+          = $self->tag_count_by_processable->{$processable_id}{$tag_name}++;
 
         return
           if $emitted_count >= $limit;
@@ -153,49 +188,58 @@ sub print_hint {
           if $emitted_count >= $limit-1;
     }
 
+    say encode_utf8('N:')
+      if $option->{info};
+
     my $text = $tag_name;
 
     my $code = $tag->code;
     $code = 'O' if defined $hint->override;
+    $code = 'M' if defined $hint->screen;
 
-    my $tag_color = $self->{colors}{$code};
+    my $tag_color = $COLORS{$code};
 
     # keep original color for tags marked experimental
     $code = 'X' if $tag->experimental;
 
     $text = Term::ANSIColor::colored($tag_name, $tag_color)
-      if $self->color;
+      if $option->{color};
 
     my $output;
-    if ($self->tty_hyperlinks && $self->color) {
-        my $target= 'https://lintian.debian.org/tags/' . $tag_name . '.html';
+    if ($option->{hyperlinks} && $option->{color}) {
+        my $target= 'https://lintian.debian.org/tags/' . $tag_name;
         $output .= $self->osc_hyperlink($text, $target);
     } else {
         $output .= $text;
     }
 
-    my $override = $hint->override;
-    if ($override && @{ $override->{comments} }) {
-
-        $self->msg($self->_quote_print($_))for @{ $override->{comments} };
+    if ($hint->override) {
+        say encode_utf8('N: ' . $self->_quote_print($_))
+          for @{$hint->override->{comments}};
     }
 
-    my $type = EMPTY;
-    $type = SPACE . $hint->processable->type
+    say encode_utf8('N: masked by screen ' . $hint->screen->name)
+      if defined $hint->screen;
+
+    my $type = $EMPTY;
+    $type = $SPACE . $hint->processable->type
       unless $hint->processable->type eq 'binary';
 
-    say $code
-      . COLON
-      . SPACE
-      . $hint->processable->name
-      . $type
-      . COLON
-      . SPACE
-      . $output
-      . $information;
+    say encode_utf8($code
+          . $COLON
+          . $SPACE
+          . $hint->processable->name
+          . $type
+          . $COLON
+          . $SPACE
+          . $output
+          . $information);
 
-    $self->describe_tags($tag)
-      if $self->showdescription && !$self->issued_tag($tag->name);
+    if ($option->{info}) {
+
+        $self->describe_tag($tag, $option->{'output-width'})
+          unless $self->issued_tag($tag->name);
+    }
 
     return;
 }
@@ -223,8 +267,8 @@ sub _quote_print {
 sub osc_hyperlink {
     my ($self, $text, $target) = @_;
 
-    my $start = OSC_HYPERLINK . $target . OSC_DONE;
-    my $end = OSC_HYPERLINK . OSC_DONE;
+    my $start = $OSC_HYPERLINK . $target . $OSC_DONE;
+    my $end = $OSC_HYPERLINK . $OSC_DONE;
 
     return $start . $text . $end;
 }
@@ -255,73 +299,154 @@ sub issued_tag {
 =cut
 
 sub describe_tags {
-    my ($self, @tags) = @_;
+    my ($self, $tags, $columns) = @_;
 
-    for my $tag (@tags) {
-        my $code = 'N';
-        my $description = 'N:   Unknown tag.';
+    for my $tag (@{$tags}) {
+
+        my $name;
+        my $code;
 
         if (defined $tag) {
-
+            $name = $tag->name;
             $code = $tag->code;
 
-            my $plain_text= markdown_to_plain($tag->markdown_description);
-            $description = indent_and_wrap($plain_text, 'N:   ');
-
-            chomp $description;
+        } else {
+            $name = 'unknown-tag';
+            $code = 'N';
         }
 
-        my $output = 'N:' . NEWLINE;
-        $output .= $code . COLON . SPACE . $tag->name . NEWLINE;
-        $output .= 'N:' . NEWLINE;
-        $output .= $description . NEWLINE;
-        $output .= 'N:' . NEWLINE;
+        say encode_utf8('N:');
+        say encode_utf8("$code: $name");
 
-        print $output;
+        $self->describe_tag($tag, $columns);
     }
 
     return;
 }
 
-=item indent_and_wrap
+=item describe_tag
 
 =cut
 
-sub indent_and_wrap {
-    my ($text, $indent) = @_;
+sub describe_tag {
+    my ($self, $tag, $columns) = @_;
 
-    my @paragraphs = split(/\n{2,}/, $text);
+    local $Text::Wrap::columns = $columns;
 
-    my @indented;
-    for my $paragraph (@paragraphs) {
+    # do not wrap long words such as urls; see #719769
+    local $Text::Wrap::huge = 'overflow';
 
-        if ($paragraph =~ /^\s/) {
+    my $wrapped = $COMMENT_PREFIX . $NEWLINE;
 
-            # do not wrap preformatted lines; indent only
-            my @lines = split(/\n/, $paragraph);
-            my $indented_paragraph= join(NEWLINE, map { $indent . $_ } @lines);
+    if (defined $tag) {
 
-            push(@indented, $indented_paragraph);
+        my $plain_explanation = markdown_to_plain($tag->explanation,
+            $columns - length $DESCRIPTION_PREFIX);
 
-        } else {
-            # reduce whitespace throughout, including newlines
-            $paragraph =~ s/\s+/ /g;
+        $wrapped .= $DESCRIPTION_PREFIX . $_ . $NEWLINE
+          for split(/\n/, $plain_explanation);
 
-            # trim beginning and end of each line
-            $paragraph =~ s/^\s+|\s+$//mg;
+        if (@{$tag->see_also}) {
 
-            # do not wrap long words like urls, see #719769
-            local $Text::Wrap::huge = 'overflow';
+            $wrapped .= $COMMENT_PREFIX . $NEWLINE;
 
-            my $wrapped_paragraph = wrap($indent, $indent, $paragraph);
+            my $markdown
+              = 'Please refer to '
+              . $self->oxford_enumeration('and', @{$tag->see_also})
+              . ' for details.'
+              . $NEWLINE;
+            my $plain = markdown_to_plain($markdown,
+                $columns - length $DESCRIPTION_PREFIX);
 
-            push(@indented, $wrapped_paragraph);
+            $wrapped .= $DESCRIPTION_PREFIX . $_ . $NEWLINE
+              for split(/\n/, $plain);
         }
+
+        $wrapped .= $COMMENT_PREFIX . $NEWLINE;
+
+        my $visibility_prefix = 'Visibility: ';
+        $wrapped.= wrap(
+            $DESCRIPTION_PREFIX . $visibility_prefix,
+            $DESCRIPTION_PREFIX . $SPACE x length $visibility_prefix,
+            $tag->visibility . $NEWLINE
+        );
+
+        $wrapped .= wrap($DESCRIPTION_PREFIX, $DESCRIPTION_PREFIX,
+            'Show-Always: '. ($tag->show_always ? $YES : $NO) . $NEWLINE);
+
+        my $check_prefix = 'Check: ';
+        $wrapped .= wrap(
+            $DESCRIPTION_PREFIX . $check_prefix,
+            $DESCRIPTION_PREFIX . $SPACE x length $check_prefix,
+            $tag->check . $NEWLINE
+        );
+
+        if (@{$tag->renamed_from}) {
+
+            $wrapped .= wrap($DESCRIPTION_PREFIX, $DESCRIPTION_PREFIX,
+                    'Renamed from: '
+                  . join($SPACE, @{$tag->renamed_from})
+                  . $NEWLINE);
+        }
+
+        $wrapped
+          .= wrap($DESCRIPTION_PREFIX, $DESCRIPTION_PREFIX,
+            'This tag is experimental.' . $NEWLINE)
+          if $tag->experimental;
+
+        $wrapped .= wrap($DESCRIPTION_PREFIX, $DESCRIPTION_PREFIX,
+            'This tag is a classification. There is no issue in your package.'
+              . $NEWLINE)
+          if $tag->visibility eq 'classification';
+
+        for my $screen (@{$tag->screens}) {
+
+            $wrapped .= $COMMENT_PREFIX . $NEWLINE;
+
+            $wrapped
+              .= wrap($DESCRIPTION_PREFIX, $DESCRIPTION_PREFIX,
+                'Screen: ' . $screen->name . $NEWLINE);
+
+            $wrapped .= wrap($SCREEN_PREFIX, $SCREEN_PREFIX,
+                    'Petitioners: '
+                  . join(', ', @{$screen->petitioners})
+                  . $NEWLINE);
+
+            my $combined = $screen->reason . $NEWLINE;
+            if (@{$screen->see_also}) {
+                $combined .= $NEWLINE;
+                $combined
+                  .= 'Read more in '
+                  . $self->oxford_enumeration('and', @{$tag->see_also})
+                  . $DOT
+                  . $NEWLINE;
+            }
+
+            my $reason_prefix = 'Reason: ';
+            my $plain = markdown_to_plain($combined,
+                $columns - length($SCREEN_PREFIX . $reason_prefix));
+
+            my @lines = split(/\n/, $plain);
+            $wrapped
+              .= $SCREEN_PREFIX . $reason_prefix . (shift @lines) . $NEWLINE;
+            $wrapped
+              .= $SCREEN_PREFIX
+              . $SPACE x (length $reason_prefix)
+              . $_
+              . $NEWLINE
+              for @lines;
+        }
+
+    } else {
+        $wrapped
+          .= wrap($DESCRIPTION_PREFIX, $DESCRIPTION_PREFIX, 'Unknown tag.');
     }
 
-    my $formatted = join(NEWLINE . $indent . NEWLINE, @indented) . NEWLINE;
+    $wrapped .= $COMMENT_PREFIX . $NEWLINE;
 
-    return $formatted;
+    print encode_utf8($wrapped);
+
+    return;
 }
 
 =item markdown_to_plain
@@ -329,7 +454,7 @@ sub indent_and_wrap {
 =cut
 
 sub markdown_to_plain {
-    my ($markdown) = @_;
+    my ($markdown, $columns) = @_;
 
     # use angular brackets for emphasis
     $markdown =~ s{<i>|<em>}{&lt;}g;
@@ -347,7 +472,40 @@ sub markdown_to_plain {
     # substitute HTML entities
     my $plain = decode_entities($markdown);
 
-    return $plain;
+    local $Text::Wrap::columns = $columns
+      if defined $columns;
+
+    # do not wrap long words such as urls; see #719769
+    local $Text::Wrap::huge = 'overflow';
+
+    my @paragraphs = split(/\n{2,}/, $plain);
+
+    my @lines;
+    for my $paragraph (@paragraphs) {
+
+        # do not wrap preformatted paragraphs
+        unless ($paragraph =~ /^\s/) {
+
+            # reduce whitespace throughout, including newlines
+            $paragraph =~ s/\s+/ /g;
+
+            # trim beginning and end of each line
+            $paragraph =~ s/^\s+|\s+$//mg;
+
+            $paragraph = wrap($EMPTY, $EMPTY, $paragraph);
+        }
+
+        push(@lines, $EMPTY);
+        push(@lines, split(/\n/, $paragraph));
+    }
+
+    # drop leading blank line
+    shift @lines;
+
+    my $wrapped;
+    $wrapped .= $_ . $NEWLINE for @lines;
+
+    return $wrapped;
 }
 
 =back

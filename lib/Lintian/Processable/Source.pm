@@ -21,17 +21,12 @@ package Lintian::Processable::Source;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Carp qw(croak);
 use File::Spec;
-use Path::Tiny;
+use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Deb822::File;
-
-use constant EMPTY => q{};
-use constant COLON => q{:};
-use constant SLASH => q{/};
 
 use Moo;
 use namespace::clean;
@@ -62,7 +57,7 @@ Lintian::Processable::Source -- A dsc source package Lintian can process
  use Lintian::Processable::Source;
 
  my $processable = Lintian::Processable::Source->new;
- $processable->init('path');
+ $processable->init_from_file('path');
 
 =head1 DESCRIPTION
 
@@ -74,19 +69,16 @@ represents all the files in a changes or buildinfo file.
 
 =over 4
 
-=item init (FILE)
+=item init_from_file (PATH)
 
-Initializes a new object from FILE.
+Initializes a new object from PATH.
 
 =cut
 
-sub init {
+sub init_from_file {
     my ($self, $file) = @_;
 
-    croak "File $file is not an absolute, resolved path"
-      unless $file eq path($file)->realpath->stringify;
-
-    croak "File $file does not exist"
+    croak encode_utf8("File $file does not exist")
       unless -e $file;
 
     $self->path($file);
@@ -94,7 +86,7 @@ sub init {
 
     my $primary = Lintian::Deb822::File->new;
     my @sections = $primary->read_file($self->path)
-      or croak $self->path . ' is not valid dsc file';
+      or croak encode_utf8($self->path . ' is not valid dsc file');
 
     $self->fields($sections[0]);
 
@@ -103,16 +95,16 @@ sub init {
     my $architecture = 'source';
 
     # it is its own source package
-    my $source = $name;
+    my $source_name = $name;
     my $source_version = $version;
 
-    croak $self->path . ' is missing Source field'
+    croak encode_utf8($self->path . ' is missing Source field')
       unless length $name;
 
     $self->name($name);
     $self->version($version);
     $self->architecture($architecture);
-    $self->source($source);
+    $self->source_name($source_name);
     $self->source_version($source_version);
 
     # make sure none of these fields can cause traversal
@@ -120,7 +112,7 @@ sub init {
       if $self->name ne $name
       || $self->version ne $version
       || $self->architecture ne $architecture
-      || $self->source ne $source
+      || $self->source_name ne $source_name
       || $self->source_version ne $source_version;
 
     return;

@@ -20,16 +20,17 @@ package Lintian::Processable::Objdump;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
+use Const::Fast;
+use List::SomeUtils qw(uniq);
 use Path::Tiny;
 
 use Lintian::Deb822::Parser qw(parse_dpkg_control_string);
 
-use constant EMPTY => q{};
-
 use Moo::Role;
 use namespace::clean;
+
+const my $EMPTY => q{};
 
 =head1 NAME
 
@@ -61,13 +62,13 @@ has objdump_info => (
     default => sub {
         my ($self) = @_;
 
-        my @objdump = map { $_->objdump } $self->installed->sorted_list;
-        my $concatenated = join(EMPTY, @objdump);
+        my @objdump = map { $_->objdump } @{$self->installed->sorted_list};
+        my $concatenated = join($EMPTY, @objdump);
 
         my @paragraphs = parse_dpkg_control_string($concatenated);
 
         my %objdump_info;
-        local $_;
+        local $_ = undef;
 
         for my $paragraph (@paragraphs) {
 
@@ -83,20 +84,20 @@ has objdump_info => (
               if defined $paragraph->{'Elf-Type'};
 
             for my $symd (split m/\s*\n\s*/,
-                $paragraph->{'Dynamic-Symbols'}//EMPTY){
+                $paragraph->{'Dynamic-Symbols'}//$EMPTY){
                 next
                   unless length $symd;
 
                 if ($symd =~ m/^\s*(\S+)\s+(?:(\S+)\s+)?(\S+)$/){
                     # $ver is not always there
                     my ($sec, $ver, $sym) = ($1, $2, $3);
-                    $ver //= EMPTY;
+                    $ver //= $EMPTY;
                     push @{ $info{'SYMBOLS'} }, [$sec, $ver, $sym];
                 }
             }
 
             for my $section (split m/\s*\n\s*/,
-                $paragraph->{'Section-Headers'}//EMPTY){
+                $paragraph->{'Section-Headers'}//$EMPTY){
                 next
                   unless length $section;
                 # NB: helpers/coll/objdump-info-helper discards most
@@ -111,7 +112,7 @@ has objdump_info => (
             }
 
             for my $data (split m/\s*\n\s*/,
-                $paragraph->{'Program-Headers'}//EMPTY){
+                $paragraph->{'Program-Headers'}//$EMPTY){
                 next
                   unless length $data;
 
@@ -130,7 +131,7 @@ has objdump_info => (
             }
 
             for my $data (split m/\s*\n\s*/,
-                $paragraph->{'Dynamic-Section'}//EMPTY){
+                $paragraph->{'Dynamic-Section'}//$EMPTY){
                 next
                   unless length $data;
 
@@ -138,7 +139,7 @@ has objdump_info => (
                 my ($header, $val) = split(m/\s++/, $data, 2);
                 if ($header eq 'RPATH' or $header eq 'RUNPATH') {
                     # RPATH is like PATH
-                    for my $rpathcomponent (split(/:/, $val // EMPTY)) {
+                    for my $rpathcomponent (split(/:/, $val // $EMPTY)) {
                         $info{$header}{$rpathcomponent} = 1;
                     }
 
@@ -155,25 +156,27 @@ has objdump_info => (
                 }
             }
 
-            if ($paragraph->{'Filename'} =~ m,^(.+)\(([^/\)]+)\)$,) {
+            if ($paragraph->{'Filename'} =~ m{^(.+)\(([^/\)]+)\)$}) {
 
                 # object file in a static lib.
-                my ($lib, $obj) = ($1, $2);
-                my $libentry = $objdump_info{$lib};
-                if (not defined $libentry) {
-                    $libentry = {
-                        'filename' => $lib,
-                        'objects'  => [$obj],
-                    };
-                    $objdump_info{$lib} = $libentry;
+                my $archive = $1;
+                my $object = $2;
 
-                } else {
-                    push @{ $libentry->{'objects'} }, $obj;
-                }
+                $objdump_info{$archive} //= {
+                    'filename' => $archive,
+                    'objects'  => [],
+                };
+
+                push(@{ $objdump_info{$archive}->{'objects'} }, $object);
             }
 
             $objdump_info{$paragraph->{'Filename'}} = \%info;
         }
+
+        # make object lists unique
+        $objdump_info{$_}->{'objects'}
+          = [uniq @{ $objdump_info{$_}->{'objects'} }]
+          for keys %objdump_info;
 
         return \%objdump_info;
     });

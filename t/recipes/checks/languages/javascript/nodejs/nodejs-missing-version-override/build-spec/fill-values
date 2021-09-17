@@ -1,0 +1,4 @@
+Testname: nodejs-missing-version-override
+Skeleton: upload-native
+Description: Test if nodejs modules have a valid version
+Extra-Build-Depends: pkg-js-tools (>= 0.9.6~), nodejs (>= 8.11.1)

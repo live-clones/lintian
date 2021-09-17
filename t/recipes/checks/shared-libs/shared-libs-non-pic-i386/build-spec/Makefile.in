@@ -46,7 +46,7 @@ endif
 
 .DEFAULT_GOAL := $(product)
 
-ifeq ($(shell dpkg-architecture --is i386),0)
+ifeq ($(shell dpkg-architecture -qDEB_HOST_ARCH),i386)
 $(product): $(origtargz)
 	if [ -r $(origtargz) -a -r $(private_key) ] ; then \
 		tmpdir=$(shell mktemp -d) ; \

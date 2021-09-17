@@ -24,8 +24,6 @@ use v5.20;
 use warnings;
 use utf8;
 
-use constant EMPTY => q{};
-
 use Moo::Role;
 use namespace::clean;
 
@@ -38,7 +36,7 @@ Lintian::Processable::IsNonFree - Lintian interface to source package data colle
     my ($name, $type, $dir) = ('foobar', 'source', '/path/to/lab-entry');
     my $collect = Lintian::Processable::IsNonFree->new($name);
     if ($collect->native) {
-        print "Package is native\n";
+        print encode_utf8("Package is native\n");
     }
 
 =head1 DESCRIPTION
@@ -82,7 +80,7 @@ has is_non_free => (
         $section ||= 'main';
 
         return 1
-          if $section =~ m,^(?:non-free|restricted|multiverse)/,;
+          if $section =~ m{^(?:non-free|restricted|multiverse)/};
 
         return 0;
     });

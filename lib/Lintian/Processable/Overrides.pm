@@ -20,20 +20,20 @@ package Lintian::Processable::Overrides;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
+use Const::Fast;
 use IPC::Run3;
-use List::MoreUtils qw(none first_value);
+use List::SomeUtils qw(none true first_value);
 use Path::Tiny;
-use Unicode::UTF8 qw(valid_utf8 decode_utf8);
-
-use Lintian::Architecture qw(:all);
-
-use constant EMPTY => q{};
-use constant SPACE => q{ };
+use Unicode::UTF8 qw(valid_utf8 decode_utf8 encode_utf8);
 
 use Moo::Role;
 use namespace::clean;
+
+const my $EMPTY => q{};
+const my $SPACE => q{ };
+const my $ASTERISK => q{*};
+const my $DOT => q{.};
 
 =head1 NAME
 
@@ -96,15 +96,20 @@ has overrides => (
 
             my @command
               = (qw{gzip --decompress --stdout}, $override_item->name);
-            my $bytes;
+            my $stdout;
             my $stderr;
 
-            run3(\@command, \undef, \$bytes, \$stderr);
-            die "gunzip $override_item failed: $stderr"
+            run3(\@command, \undef, \$stdout, \$stderr);
+
+            $stdout = decode_utf8($stdout)
+              if length $stdout;
+            $stderr = decode_utf8($stderr)
               if length $stderr;
 
-            $contents = decode_utf8($bytes)
-              if valid_utf8($bytes);
+            die encode_utf8("gunzip $override_item failed: $stderr")
+              if length $stderr;
+
+            $contents = $stdout;
 
         } else {
             $contents = $override_item->decoded_utf8;
@@ -127,7 +132,7 @@ has overrides => (
             # trim both ends
             $remaining =~ s/^\s+|\s+$//g;
 
-            if ($remaining eq EMPTY) {
+            if ($remaining eq $EMPTY) {
                 # Throw away comments, as they are not attached to a tag
                 # also throw away the option of "carrying over" the last
                 # comment
@@ -161,7 +166,7 @@ has overrides => (
 
             # remove architecture list
             if ($remaining =~ s/^\[([^\]]*)\](?=\s|:)//) {
-                @architectures = split(SPACE, $1);
+                @architectures = split($SPACE, $1);
 
                 # both spaces or colon were unmatched lookhead
                 $remaining =~ s/^\s+//;
@@ -193,7 +198,9 @@ has overrides => (
                 next;
             }
 
-            my @invalid = grep { !valid_wildcard($_) } @architectures;
+            my @invalid
+              = grep { !$self->profile->architectures->valid_restriction($_) }
+              @architectures;
             $self->hint('malformed-override',
                 "Unknown architecture wildcard $_ in line $position")
               for @invalid;
@@ -201,32 +208,39 @@ has overrides => (
             next
               if @invalid;
 
-            # strip and count negations; confirm it's either all or none
-            my $negations = scalar grep { s/^!// } @architectures;
+            # count negations
+            my $negations = true { /^!/ } @architectures;
+
+            # confirm it is either all or none
             unless ($negations == @architectures || $negations == 0) {
                 $self->hint('malformed-override',
                     "Inconsistent architecture negation in line $position");
                 next;
             }
 
+            # strip negations if present
+            s/^!// for @architectures;
+
             # proceed when none specified
             next
               if @architectures
               && (
-                $negations xor
-                none { wildcard_matches($_, $self->architecture) }
+                $negations xor none {
+                    $self->profile->architectures->restriction_matches($_,
+                        $self->architecture)
+                }
                 @architectures
               );
 
-            my ($tagname, $context) = split(SPACE, $hint, 2);
+            my ($tagname, $context) = split($SPACE, $hint, 2);
 
             $self->hint('malformed-override',
                 "Cannot parse line $position: $line")
               unless length $tagname;
 
-            $context //= EMPTY;
+            $context //= $EMPTY;
 
-            if (($previous{tag} // EMPTY) eq $tagname
+            if (($previous{tag} // $EMPTY) eq $tagname
                 && !scalar @comments){
                 # There are no new comments, no "empty line" in between and
                 # this tag is the same as the last, so we "carry over" the
@@ -248,20 +262,20 @@ has overrides => (
             if ($context =~ m/\*/) {
                 # It is a pattern, pre-compute it
                 my $pattern = $context;
-                my $end = EMPTY; # Trailing "match anything" (if any)
-                my $pat = EMPTY; # The rest of the pattern
+                my $end = $EMPTY; # Trailing "match anything" (if any)
+                my $pat = $EMPTY; # The rest of the pattern
                  # Split does not help us if $pattern ends with *
                  # so we deal with that now
                 if ($pattern =~ s/\Q*\E+\z//){
-                    $end = '.*';
+                    $end = $DOT . $ASTERISK;
                 }
 
                 # Are there any * left (after the above)?
                 if ($pattern =~ m/\Q*\E/) {
                     # this works even if $text starts with a *, since
-                    # that is split as EMPTY, <text>
+                    # that is split as $EMPTY, <text>
                     my @pargs = split(m/\Q*\E++/, $pattern);
-                    $pat = join('.*', map { quotemeta($_) } @pargs);
+                    $pat = join($DOT . $ASTERISK, map { quotemeta } @pargs);
                 } else {
                     $pat = $pattern;
                 }
@@ -277,11 +291,11 @@ has overrides => (
 
             if (exists $override_data{$tagname}{$context}) {
 
-                my @lines
+                my @same_context
                   = ($override_data{$tagname}{$context}{line}, $current{line});
 
                 $self->hint('duplicate-override-context', $tagname, 'lines',
-                    sort @lines);
+                    sort @same_context);
 
                 next;
             }

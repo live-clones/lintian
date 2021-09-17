@@ -1,0 +1,12 @@
+debhelper-dh-exec (source): package-uses-dh-exec-but-lacks-build-depends
+debhelper-dh-exec (source): package-uses-deprecated-debhelper-compat-version 9
+debhelper-dh-exec (source): dh-exec-useless-usage debian/install:6 "usr/lib/${DEB_HOST_MULTIARCH}/some-package/*.so"
+debhelper-dh-exec (source): dh-exec-useless-usage debian/install:4 "usr/lib/${DEB_HOST_MULTIARCH} /usr/lib/${DEB_HOST_MULTIARCH}/"
+debhelper-dh-exec (source): dh-exec-useless-usage debian/install:3 "usr/lib/${DEB_HOST_MULTIARCH}"
+debhelper-dh-exec (source): dh-exec-subst-unknown-variable debian/manpages:5 DEB_BUILD_WHATEVER
+debhelper-dh-exec (source): dh-exec-script-without-dh-exec-features debian/mime
+debhelper-dh-exec (source): dh-exec-private-helper debian/manpages
+debhelper-dh-exec (source): dh-exec-install-not-allowed-here debian/links
+debhelper-dh-exec (source): debian-build-system dh
+debhelper-dh-exec (source): debhelper-compat-virtual-relation 9
+debhelper-dh-exec (source): debhelper-compat-level 9

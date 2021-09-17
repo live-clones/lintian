@@ -1,147 +1,145 @@
 {
    "groups" : [
       {
-         "group-id" : "json-output/1.0+dsfg-1.1",
-         "input-files" : [
+         "group_id" : "json-output_1.0+dsfg-1.1",
+         "input_files" : [
             {
-               "path" : "PATH",
-               "tags" : [
+               "hints" : [
                   {
                      "context" : "0.0.1-1 -> 1.0+dsfg-1 (missing) -> 1.0+dsfg-1.1",
-                     "name" : "changelog-file-missing-explicit-entry",
-                     "severity" : "warning"
+                     "tag" : "changelog-file-missing-explicit-entry",
+                     "visibility" : "warning"
                   },
                   {
-                     "name" : "format-3.0-but-debian-changes-patch",
-                     "severity" : "warning"
+                     "tag" : "format-3.0-but-debian-changes-patch",
+                     "visibility" : "warning"
                   },
                   {
                      "context" : "1.0+dsfg-1.1",
-                     "name" : "maintainer-upload-has-incorrect-version-number",
-                     "severity" : "warning"
+                     "tag" : "maintainer-upload-has-incorrect-version-number",
+                     "visibility" : "warning"
                   },
                   {
                      "context" : "field \"Section\" in package json-output",
-                     "name" : "binary-control-field-duplicates-source",
-                     "severity" : "info"
+                     "tag" : "binary-control-field-duplicates-source",
+                     "visibility" : "info"
                   },
                   {
                      "context" : "3",
-                     "name" : "older-debian-watch-file-standard",
-                     "severity" : "info"
+                     "tag" : "older-debian-watch-file-standard",
+                     "visibility" : "info"
                   },
                   {
                      "context" : "debian/patches/debian-changes-1.0+dsfg-1.1",
-                     "name" : "patch-not-forwarded-upstream",
-                     "severity" : "info"
+                     "tag" : "patch-not-forwarded-upstream",
+                     "visibility" : "info"
                   },
                   {
-                     "context" : "debian-changes-1.0+dsfg-1.1",
-                     "name" : "quilt-patch-using-template-description",
-                     "severity" : "info"
+                     "context" : "debian/patches/debian-changes-1.0+dsfg-1.1",
+                     "tag" : "quilt-patch-using-template-description",
+                     "visibility" : "info"
                   },
                   {
-                     "name" : "upstream-metadata-missing-bug-tracking",
-                     "severity" : "info"
+                     "tag" : "upstream-metadata-missing-bug-tracking",
+                     "visibility" : "info"
                   },
                   {
-                     "name" : "upstream-metadata-missing-repository",
-                     "severity" : "info"
+                     "tag" : "upstream-metadata-missing-repository",
+                     "visibility" : "info"
                   },
                   {
                      "context" : "line 12",
-                     "name" : "debian-control-has-unusual-field-spacing",
-                     "severity" : "pedantic"
+                     "tag" : "debian-control-has-unusual-field-spacing",
+                     "visibility" : "pedantic"
                   },
                   {
                      "experimental" : "yes",
-                     "name" : "debian-watch-does-not-check-gpg-signature",
-                     "severity" : "pedantic"
+                     "tag" : "debian-watch-does-not-check-gpg-signature",
+                     "visibility" : "pedantic"
                   },
                   {
-                     "name" : "no-homepage-field",
-                     "severity" : "pedantic"
+                     "tag" : "no-homepage-field",
+                     "visibility" : "pedantic"
                   },
                   {
-                     "name" : "old-source-override-location",
-                     "severity" : "pedantic"
+                     "tag" : "old-source-override-location",
+                     "visibility" : "pedantic"
                   },
                   {
                      "context" : "1.0+dsfg-1.1",
-                     "name" : "dfsg-version-misspelled",
                      "override" : "yes",
-                     "severity" : "warning"
+                     "tag" : "dfsg-version-misspelled",
+                     "visibility" : "warning"
                   }
-               ]
+               ],
+               "path" : "PATH"
             },
             {
-               "path" : "PATH",
-               "tags" : [
+               "hints" : [
                   {
                      "context" : "usr/local/share/",
-                     "name" : "dir-in-usr-local",
-                     "severity" : "error"
+                     "tag" : "dir-in-usr-local",
+                     "visibility" : "error"
                   },
                   {
                      "context" : "usr/local/share/lintian/",
-                     "name" : "dir-in-usr-local",
-                     "severity" : "error"
+                     "tag" : "dir-in-usr-local",
+                     "visibility" : "error"
                   },
                   {
                      "context" : "var/lock/lintian/",
-                     "name" : "dir-or-file-in-var-lock",
-                     "severity" : "error"
+                     "tag" : "dir-or-file-in-var-lock",
+                     "visibility" : "error"
                   },
                   {
-                     "name" : "new-essential-package",
-                     "severity" : "error"
-                  },
-                  {
-                     "name" : "possible-gpl-code-linked-with-openssl",
-                     "severity" : "error"
+                     "tag" : "new-essential-package",
+                     "visibility" : "error"
                   },
                   {
                      "context" : "usr/bin/script",
-                     "name" : "no-manual-page",
-                     "severity" : "warning"
+                     "tag" : "no-manual-page",
+                     "visibility" : "warning"
                   },
                   {
                      "context" : "http://www.example.com/.",
-                     "name" : "description-possibly-contains-homepage",
-                     "severity" : "info"
+                     "tag" : "description-possibly-contains-homepage",
+                     "visibility" : "info"
                   },
                   {
                      "context" : "usr/share/applications/script.desktop",
-                     "name" : "desktop-entry-limited-to-environments",
-                     "severity" : "info"
+                     "tag" : "desktop-entry-limited-to-environments",
+                     "visibility" : "info"
                   },
                   {
                      "context" : "usr/local/share/lintian/",
-                     "name" : "package-contains-empty-directory",
-                     "severity" : "info"
+                     "tag" : "package-contains-empty-directory",
+                     "visibility" : "info"
                   },
                   {
                      "context" : "\"Test Lintian's JSON output format.\"",
-                     "name" : "synopsis-is-a-sentence",
-                     "severity" : "info"
+                     "tag" : "synopsis-is-a-sentence",
+                     "visibility" : "info"
                   },
                   {
-                     "context" : "usr/share/doc/json-output/examples/example #!/usr/bin/foo",
-                     "name" : "example-unusual-interpreter",
-                     "severity" : "pedantic"
+                     "context" : "usr/share/doc/json-output/examples/example /usr/bin/foo",
+                     "tag" : "example-unusual-interpreter",
+                     "visibility" : "pedantic"
                   }
-               ]
+               ],
+               "path" : "PATH"
             },
             {
-               "path" : "PATH",
-               "tags" : []
+               "hints" : [],
+               "path" : "PATH"
             },
             {
-               "path" : "PATH",
-               "tags" : []
+               "hints" : [],
+               "path" : "PATH"
             }
-         ]
+         ],
+         "source_name" : "json-output",
+         "source_version" : "1.0+dsfg-1.1"
       }
    ],
-   "lintian-version" : "VERSION"
+   "lintian_version" : "VERSION"
 }

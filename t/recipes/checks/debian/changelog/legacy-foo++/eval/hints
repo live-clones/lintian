@@ -1,0 +1,4 @@
+foo++ (source): latest-debian-changelog-entry-without-new-date
+foo++ (binary): latest-changelog-entry-without-new-date
+foo++ (binary): debian-changelog-has-wrong-day-of-week 2003-04-14 is a Monday
+foo++ (binary): bogus-mail-host-in-debian-changelog he@unknown version 5 (line 1)

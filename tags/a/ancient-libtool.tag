@@ -1,6 +1,6 @@
 Tag: ancient-libtool
 Severity: warning
-Check: cruft
+Check: build-systems/autotools/libtool
 Explanation: The referenced file seems to be from a libtool version older than
  1.5.2-2. This might lead to build errors on some newer architectures not
  known to this libtool.

@@ -22,11 +22,13 @@ use v5.20;
 use warnings;
 use utf8;
 
-use constant EMPTY => q{};
-use constant SPACE => q{ };
+use Const::Fast;
 
 use Moo::Role;
 use namespace::clean;
+
+const my $EMPTY => q{};
+const my $SPACE => q{ };
 
 =head1 NAME
 
@@ -50,6 +52,7 @@ Common facilities for Lintian tags found and to be issued
 =item arguments
 =item tag
 =item override
+=item screen
 =item processable
 
 =item context
@@ -61,6 +64,7 @@ Calculate the string representation commonly referred to as 'context'.
 has arguments => (is => 'rw', default => sub { [] });
 has tag => (is => 'rw');
 has override => (is => 'rw');
+has screen => (is => 'rw');
 has processable => (is => 'rw');
 
 sub context {
@@ -70,7 +74,7 @@ sub context {
     my @relevant = grep { length } @{$self->arguments};
 
     # concatenate with spaces
-    my $context = join(SPACE, @relevant) // EMPTY;
+    my $context = join($SPACE, @relevant) // $EMPTY;
 
     # escape newlines; maybe add others
     $context =~ s/\n/\\n/g;

@@ -1,6 +1,6 @@
 Tag: upstart-job-in-etc-init.d-not-registered-via-update-rc.d
 Severity: warning
-Check: init.d
+Check: init-d
 Explanation: The package installs an upstart-job in <code>/etc/init.d</code>
  which is not registered in the <code>postinst</code> script. On
  non-upstart systems this is usually a bug, unless you omit the links

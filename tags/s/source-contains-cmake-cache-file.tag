@@ -1,6 +1,6 @@
 Tag: source-contains-cmake-cache-file
 Severity: error
-Check: cruft
+Check: build-systems/cmake
 Renamed-From:
  diff-contains-cmake-cache-file
 Explanation: This package ships a CMake cache file.

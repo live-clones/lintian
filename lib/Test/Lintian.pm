@@ -62,7 +62,6 @@ our @EXPORT = qw(
   test_check_desc
   test_load_checks
   test_load_profiles
-  test_tags_implemented
 
   program_name_to_perl_paths
 );
@@ -70,29 +69,30 @@ our @EXPORT = qw(
 use parent 'Test::Builder::Module';
 
 use Cwd qw(realpath);
+use Const::Fast;
 use File::Basename qw(basename);
 use File::Find ();
-use List::MoreUtils qw{any};
+use List::SomeUtils qw{any};
 use Path::Tiny;
-use Unicode::UTF8 qw(valid_utf8 decode_utf8);
+use Unicode::UTF8 qw(valid_utf8 decode_utf8 encode_utf8);
 
 use Lintian::Spelling qw(check_spelling);
-use Lintian::Data;
 use Lintian::Deb822::Parser qw(parse_dpkg_control_string);
 use Lintian::Profile;
 use Lintian::Tag;
 
-# We want data files loaded early to avoid problems with missing data
-# files ending up in releases (like in 2.5.17 and 2.5.18).
-$Lintian::Data::LAZY_LOAD = 0;
+const my $EMPTY => q{};
+const my $COLON => q{:};
+const my $MAXIMUM_TAG_LENGTH => 68;
 
-my %severities = map { $_ => 1 } @Lintian::Tag::SEVERITIES;
+my %visibilities = map { $_ => 1 } @Lintian::Tag::VISIBILITIES;
 my %check_types = map { $_ => 1 } qw(binary changes source udeb);
 my %known_html_tags = map { $_ => 1 } qw(a em i tt);
 
 # We use this to check for explicit links where it is possible to use
 # a manual ref.
-my $MANUALS = $Lintian::Tag::MANUALS;
+my $MANUALS;
+
 # lazy-load this (so loading a profile can affect it)
 my %URLS;
 
@@ -100,11 +100,11 @@ my %URLS;
 
 =over 4
 
-=item test_check_desc([OPTS, ]CHECKS...)
+=item test_check_desc(OPTS, CHECKS...)
 
 Test check desc files (and the tags in them) for common errors.
 
-OPTS is an optional HASHREF containing key/value pairs, which are
+OPTS is a HASHREF containing key/value pairs, which are
 described below.
 
 CHECKS is a list of paths in which to check desc files.  Any given
@@ -145,18 +145,18 @@ translations.  Otherwise, they must be regular checks.
 =cut
 
 sub test_check_desc {
-    my ($opts, @dirs);
+    my ($opts, @dirs) = @_;
+
     my $builder = $CLASS->builder;
     my $colldir = '/usr/share/lintian/collection';
     my $find_opt = {'filter' => undef,};
     my $tested = 0;
 
-    if (ref $_[0] eq 'HASH') {
-        $opts = shift;
-        $find_opt->{'filter'} = $opts->{'filter'} if exists $opts->{'filter'};
-    }
+    $find_opt->{'filter'} = $opts->{'filter'}
+      if exists $opts->{'filter'};
+
     $opts //= {};
-    @dirs = @_;
+
     load_profile_for_test();
 
     my @descs = map { _find_check($find_opt, $_) } @dirs;
@@ -176,16 +176,17 @@ sub test_check_desc {
             next;
         }
         my $content_type = 'Check';
-        my $cname = $header->{'Check-Script'}//'';
-        my $ctype = $header->{'Type'} // '';
+        my $cname = $header->{'Check-Script'}//$EMPTY;
+        my $ctype = $header->{'Type'} // $EMPTY;
         my $i = 1; # paragraph counter.
         $builder->ok(1, "Can parse check $desc_file");
 
-        $builder->isnt_eq($cname, '',"$content_type has a name ($desc_file)");
+        $builder->isnt_eq($cname, $EMPTY,
+            "$content_type has a name ($desc_file)");
 
         # From here on, we just use "$cname" as name of the check, so
         # we don't need to choose been it and $tname.
-        $cname = '<missing>' if $cname eq '';
+        $cname = '<missing>' if $cname eq $EMPTY;
         $tested += 2;
 
         if ($cname eq 'lintian') {
@@ -193,14 +194,15 @@ sub test_check_desc {
             # skip these two tests for this special case...
             $builder->skip("Special case, $reason");
             $builder->skip("Special case, $reason");
-        } elsif ($builder->isnt_eq($ctype, '', "$cname has a type")) {
+        } elsif ($builder->isnt_eq($ctype, $EMPTY, "$cname has a type")) {
             my @bad;
             # new lines are not allowed, map them to "\\n" for readability.
             $ctype =~ s/\n/\\n/g;
             foreach my $type (split /\s*+,\s*+/, $ctype) {
                 push @bad, $type unless exists $check_types{$type};
             }
-            $builder->is_eq(join(', ', @bad),'',"The type of $cname is valid");
+            $builder->is_eq(join(', ', @bad),
+                $EMPTY,"The type of $cname is valid");
         } else {
             $builder->skip(
                 "Cannot check type of $cname is valid (field is empty/missing)"
@@ -208,26 +210,27 @@ sub test_check_desc {
         }
 
         for my $tpara (@tagpara) {
-            my $tag = $tpara->{'Tag'}//'';
-            my $severity = $tpara->{'Severity'}//'';
-            my $explanation = $tpara->{'Explanation'} // '';
+            my $tag = $tpara->{'Tag'}//$EMPTY;
+            my $visibility = $tpara->{'Severity'}//$EMPTY;
+            my $explanation = $tpara->{'Explanation'} // $EMPTY;
             my (@htmltags, %seen);
 
             $i++;
 
             # Tag name
-            $builder->isnt_eq($tag, '', "Tag in check $cname has a name")
+            $builder->isnt_eq($tag, $EMPTY, "Tag in check $cname has a name")
               or $builder->diag("$cname: Paragraph number $i\n");
-            $tag = '<N/A>' if $tag eq '';
+            $tag = '<N/A>' if $tag eq $EMPTY;
             $builder->ok($tag =~ /^[\w0-9.+-]+$/, 'Tag has valid characters')
               or $builder->diag("$cname: $tag\n");
-            $builder->cmp_ok(length $tag, '<=', 68, 'Tag is not too long')
+            $builder->cmp_ok(length $tag, '<=', $MAXIMUM_TAG_LENGTH,
+                'Tag is not too long')
               or $builder->diag("$cname: $tag\n");
 
-            # Severity
-            $builder->ok($severity && exists $severities{$severity},
-                'Tag has valid severity')
-              or $builder->diag("$cname: $tag severity: $severity\n");
+            # Visibility
+            $builder->ok($visibility && exists $visibilities{$visibility},
+                'Tag has valid visibility')
+              or $builder->diag("$cname: $tag visibility: $visibility\n");
 
             # Explanation
             my $mistakes = 0;
@@ -239,7 +242,7 @@ sub test_check_desc {
             };
             # FIXME: There are a couple of known false-positives that
             # breaks the test.
-            # check_spelling($explanation, $handler);
+            # check_spelling($profile, $explanation, $handler);
             $builder->is_eq($mistakes, 0,
                 "$content_type $cname: $tag has no spelling errors");
 
@@ -264,15 +267,14 @@ sub test_check_desc {
 
             # Check the tag explanation for unescaped <> or for unknown tags
             # (which probably indicate the same thing).
-            while (
-                $explanation=~ s,<([^\s>]+)(?:\s+href=\"[^\"]+\")?>.*?</\1>,,s)
-            {
+            while ($explanation
+                =~ s{<([^\s>]+)(?:\s+href=\"[^\"]+\")?>.*?</\1>}{}s){
                 push @htmltags, $1;
             }
             @htmltags
               = grep { !exists $known_html_tags{$_} && !$seen{$_}++ }@htmltags;
             $builder->is_eq(join(', ', @htmltags),
-                '', 'Tag explanation has no unknown html tags')
+                $EMPTY, 'Tag explanation has no unknown html tags')
               or $builder->diag("$content_type $cname: $tag\n");
 
             $builder->ok($explanation !~ /[<>]/,
@@ -313,10 +315,10 @@ sub test_load_profiles {
     my $sre;
     my %opt = ('no_chdir' => 1,);
     if (not defined $absdir) {
-        die "$dir cannot be resolved: $!";
+        die encode_utf8("$dir cannot be resolved: $!");
     }
     $absdir = "$absdir/profiles";
-    $sre = qr,\Q$absdir\E/,;
+    $sre = qr{\Q$absdir\E/};
 
     @inc = ($absdir, '/usr/share/lintian') unless @inc;
 
@@ -325,11 +327,11 @@ sub test_load_profiles {
 
         return
           unless $profname =~ s/\.profile$//;
-        $profname =~ s,^$sre,,;
+        $profname =~ s/^$sre//;
 
         my $profile = Lintian::Profile->new;
 
-        eval {$profile->load($profname, \@inc);};
+        eval {$profile->load($profname, \@inc, 0);};
         my $err = $@;
 
         $builder->ok($profile, "$profname is loadable.")
@@ -340,12 +342,12 @@ sub test_load_profiles {
     return;
 }
 
-=item test_load_checks([OPTS, ]DIR[, CHECKNAMES...])
+=item test_load_checks(OPTS, DIR[, CHECKNAMES...])
 
 Test that the Perl module implementation of the checks can be loaded
 and has a run sub.
 
-OPTS is an optional HASHREF containing key/value pairs, which are
+OPTS is a HASHREF containing key/value pairs, which are
 described below.
 
 DIR is the directory where the checks can be found.
@@ -388,15 +390,9 @@ only be processed if it has the proper extension (i.e. with I<.desc>).
 =cut
 
 sub test_load_checks {
-    my ($opts, $dir, @checknames);
-    my $builder = $CLASS->builder;
+    my ($opts, $dir, @checknames) = @_;
 
-    if ($_[0] and ref $_[0] eq 'HASH') {
-        ($opts, $dir, @checknames) = @_;
-    } else {
-        $opts = {};
-        ($dir, @checknames) = @_;
-    }
+    my $builder = $CLASS->builder;
 
     unless (@checknames) {
         my $find_opt = {'want-check-name' => 1,};
@@ -409,184 +405,37 @@ sub test_load_checks {
     $builder->skip('No desc files found')
       unless @checknames;
 
-    load_profile_for_test();
+    my $profile = load_profile_for_test();
 
     foreach my $checkname (@checknames) {
-        my $cs = Lintian::Check::Info->new;
-        $cs->basedir($dir);
-        $cs->name($checkname);
-        eval {$cs->load;};
-        if (my $err = $@) {
-            $err =~ s/ at .*? line \d+\s*\n//;
-            $builder->ok(0, "Cannot parse ${checkname}.desc");
-            $builder->diag("Error: $err\n");
-            $builder->skip("Cannot parse ${checkname}.desc");
-            next;
-        }
-        my $cname = $cs->name;
-        my $ppkg = $cname;
-        my $path = $cs->path;
-        my $err;
-        my $rs_ref = 'MISSING';
 
-        eval {require $path;};
-
-        if (!$builder->is_eq($@//'', '', "Check $cname can be loaded")) {
+        my $path = $profile->check_path_by_name->{$checkname};
+        eval { require $path; };
+        if (
+            !$builder->is_eq(
+                $@//$EMPTY, $EMPTY, "Check $checkname can be loaded"
+            )
+        ){
             $builder->skip(
-                "Cannot check if $cname has a run sub due to load error");
+                "Cannot check if $checkname has entry points due to load error"
+            );
             next;
         }
 
-        $ppkg =~ s,[-.],_,g;
-        $ppkg =~ s,/,::,g;
-        $ppkg = "Lintian::$ppkg";
+        my $module = $profile->check_module_by_name->{$checkname};
 
-        if ($ppkg->can('run') && !$ppkg->DOES('Lintian::Check')) {
-            $builder->diag(
-                "Warning: check $ppkg uses old entry point ::run\n");
-        }
+        $builder->diag(
+            "Warning: check $checkname uses old entry point ::run\n")
+          if $module->can('run') && !$module->DOES('Lintian::Check');
 
         # setup and breakdown should only be used together with files
-        my $has_entrypoint = any { $ppkg->can($_) }
-        (
-            'source', 'binary', 'udeb', 'installable',
-            'changes', 'always', 'files'
-        );
+        my $has_entrypoint = any { $module->can($_) }
+        qw(source binary udeb installable changes always files);
 
-        if (!$builder->ok($has_entrypoint, "Check $cname has entry point")) {
-            $builder->diag("Expected package name is $ppkg\n");
+        if (!$builder->ok($has_entrypoint, "Check $checkname has entry point"))
+        {
+            $builder->diag("Expected package name is $module\n");
         }
-    }
-    return;
-}
-
-=item test_tags_implemented ([OPTS, ]DIR[, CHECKNAMES...])
-
-Test a given check implements all the tags listed in its desc file.
-For planning purposes, each check counts as one test and the call
-itself do one additional check.  So if 10 checks are tested, the plan
-should account for 11 tests.
-
-This is a simple scan of the source code looking asserting that the
-tag names I<appear> (in the actual code part).  For a vast majority of
-Lintian's tags it is reliable enough to be useful.  However it has
-false-positives and false-negatives - the former can be handled via
-"exclude-pattern" (see below).
-
-The DIR argument is the directory in which to find the checks.
-
-CHECKNAMES is a list of the check names.  If CHECKNAMES is given, only
-the checks in this list will be processed.  Otherwise, all the checks
-in DIR will be processed.
-
-The optional parameter OPTS is a hashref.  If passed it must be the
-first argument.  The following key/value pairs are defined:
-
-=over 4
-
-=item exclude-pattern
-
-The value is assumed to be a regex (or a string describing a regex).
-Any tag matching this regex will be excluded from this test and is
-assumed to be implemented (regardless of whether that is true or not).
-
-This is useful for avoiding false-positives with cases like:
-
-  foreach my $x (@y) {
-    tag "some-tag-for-$x", "blah blah $x"
-        unless f($x);
-  }
-
-=item filter
-
-If defined, it is a filter function that examines $_ (or its first
-argument) and returns a truth value if C<$_> should be considered or
-false otherwise.  C<$_> will be the path to the current file (or dir)
-in question; it may be relative or absolute.
-
-NB: filter is I<not> used if CHECKNAMES is given.
-
-CAVEAT: If the filter rejects a directory, none of the files in it will be
-considered either.  Even if the filter accepts a file, that file will
-only be processed if it has the proper extension (i.e. with I<.desc>).
-
-=back
-
-As mentioned, this test assert that the tag name appears in the code.
-Consider the following example:
-
- my $tagname = 'my-tag';
- $tagname = 'my-other-tag' if $condition;
-
-In this example, this test would conclude that 'my-tag' and
-'my-other-tag' are both implemented.
-
-Comment lines are I<not> ignored, so comments can be used as an
-alternative to the exclude-pattern (above).
-
-=cut
-
-sub test_tags_implemented {
-    my ($opts, $dir, @checknames);
-    my $pattern;
-    my $builder = $CLASS->builder;
-
-    if ($_[0] and ref $_[0] eq 'HASH') {
-        ($opts, $dir, @checknames) = @_;
-    } else {
-        $opts = {};
-        ($dir, @checknames) = @_;
-    }
-
-    unless (@checknames) {
-        my $find_opt = {'want-check-name' => 1,};
-        $find_opt->{'filter'} = $opts->{'filter'} if exists $opts->{'filter'};
-        @checknames = _find_check($find_opt, $dir);
-    } else {
-        $builder->skip('Given an explicit list of checks');
-    }
-
-    if (exists $opts->{'exclude-pattern'}) {
-        if (ref $opts->{'exclude-pattern'} eq 'Regexp') {
-            $pattern = $opts->{'exclude-pattern'};
-        } else {
-            $pattern = qr/$opts->{'exclude-pattern'}/;
-        }
-    }
-
-    foreach my $checkname (@checknames) {
-        my (@tags, $codestr, @missing);
-        my $cs = Lintian::Check::Info->new;
-        $cs->basedir($dir);
-        $cs->name($checkname);
-        eval {$cs->load;};
-        if (my $err = $@) {
-            $err =~ s/ at .*? line \d+\s*\n//;
-            $builder->ok(0, "Cannot parse ${checkname}.desc");
-            $builder->diag("Error: $err\n");
-            next;
-        }
-        my $cname = $cs->name;
-        my $check = $cs->path;
-
-        @tags = $cs->tags unless defined $pattern;
-        @tags = grep { !m/$pattern/ } $cs->tags
-          if defined $pattern;
-
-        # Any tags left to check?
-        unless (@tags) {
-            $builder->skip("All tags $cname are excluded");
-            next;
-        }
-
-        $codestr = path($check)->slurp;
-
-        for my $tag (@tags) {
-            push @missing, $tag unless $codestr =~ /\Q$tag/;
-        }
-
-        $builder->is_eq(join(', ', @missing),
-            '',"$cname has all tags implemented");
     }
     return;
 }
@@ -618,22 +467,28 @@ sub load_profile_for_test {
 
     # We have loaded a profile and are not asked to
     # load a specific one - then current one will do.
-    return if $PROFILE and not $profname;
+    return $PROFILE
+      if $PROFILE and not $profname;
 
-    die "Cannot load two profiles.\n"
+    die encode_utf8("Cannot load two profiles.\n")
       if $PROFILE and $PROFILE->name ne $profname;
 
-    return if $PROFILE; # Already loaded? stop here
-     # We just need it for spell checking, so debian/main should
-     # do just fine...
+    # Already loaded? stop here
+    # We just need it for spell checking, so debian/main should
+    # do just fine...
+    return $PROFILE
+      if $PROFILE;
+
     $profname ||= 'debian/main';
 
     $PROFILE = Lintian::Profile->new;
     $PROFILE->load($profname, [@inc, $ENV{'LINTIAN_BASE'}]);
 
-    Lintian::Data->set_vendor($PROFILE);
-    $ENV{'LINTIAN_CONFIG_DIRS'} = join(':', @inc);
-    return;
+    $MANUALS = $PROFILE->manual_references;
+
+    $ENV{'LINTIAN_CONFIG_DIRS'} = join($COLON, @inc);
+
+    return $PROFILE;
 }
 
 sub _check_reference {
@@ -641,7 +496,7 @@ sub _check_reference {
     my @issues;
 
     unless (%URLS) {
-        $MANUALS->known(''); # force it to load the manual refs
+        $MANUALS->recognizes($EMPTY); # force it to load the manual refs
         foreach my $manid ($MANUALS->all) {
             my $table = $MANUALS->value($manid);
             foreach my $section (keys %{$table}) {
@@ -653,16 +508,16 @@ sub _check_reference {
     }
 
     foreach my $reference (split /\s*,\s*/, $refdata) {
-        if (   $reference =~ m,^https?://bugs.debian.org/(\d++)$,
-            or $reference
-            =~ m,^https?://bugs.debian.org/cgi-bin/bugreport.cgi\?/.*bug=(\d++).*$,
+        if (   $reference =~ m{^https?://bugs.debian.org/(\d++)$}
+            || $reference
+            =~ m{^https?://bugs.debian.org/cgi-bin/bugreport.cgi\?/.*bug=(\d++).*$}
         ) {
             push @issues, "replace \"$reference\" with \"#$1\"";
         } elsif (exists $URLS{$reference}) {
             push @issues, "replace \"$reference\" with \"$URLS{$reference}\"";
         } elsif ($reference =~ m/^([\w-]++)\s++(\S++)$/) {
             my ($manual, $section) = ($1, $2);
-            if ($MANUALS->known($manual)) {
+            if ($MANUALS->recognizes($manual)) {
                 push @issues, "unknown section \"$section\" in $manual"
                   unless exists $MANUALS->value($manual)->{$section};
             } else {
@@ -672,10 +527,10 @@ sub _check_reference {
             # Check it is a valid reference like URLs or #123456
             # NB: "policy 10.1" references already covered above
             my $ok = 0;
-            $ok = 1 if $reference =~ m/^#\d++$/; # debbugs reference
-            $ok = 1 if $reference =~ m,^(?:ftp|https?)://,; # browser URL
-            $ok = 1 if $reference =~ m,^/,; # local file reference
-            $ok = 1 if $reference =~ m,[\w_-]+\(\d\w*\)$,; # man reference
+            $ok = 1 if $reference =~ /^#\d+$/; # debbugs reference
+            $ok = 1 if $reference =~ m{^(?:ftp|https?)://}; # browser URL
+            $ok = 1 if $reference =~ m{^/}; # local file reference
+            $ok = 1 if $reference =~ m{[\w_-]+\(\d\w*\)$}; # man reference
             push @issues, "unknown/malformed reference \"$reference\""
               unless $ok;
         }
@@ -697,7 +552,7 @@ sub _find_check {
     if (-d $input) {
         my (@result, $regex);
         if ($find_opt->{'want-check-name'}) {
-            $regex = qr,^\Q$input\E/*,;
+            $regex = qr{^\Q$input\E/*};
         }
         my $wanted = sub {
             if (defined $filter) {
@@ -709,7 +564,7 @@ sub _find_check {
                     return;
                 }
             }
-            return unless m/\.desc$/ and -f $_;
+            return unless m/\.desc$/ and -e $_;
             if ($regex) {
                 s/$regex//;
                 s/\.desc$//;

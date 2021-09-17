@@ -1,0 +1,7 @@
+version-substvars-general (source): version-substvar-for-external-package Replaces (line 29) ${binary:Version} program-data -> other-foreign-pkg
+version-substvars-general (source): version-substvar-for-external-package Depends (line 26) ${source:Version} program-data -> foreign-pkg
+version-substvars-general (source): not-binnmuable-any-depends-any program-utils -> program-bin
+version-substvars-general (source): not-binnmuable-any-depends-all program-utils -> program-data
+version-substvars-general (source): not-binnmuable-any-depends-all program-bin -> program-data
+version-substvars-general (source): not-binnmuable-all-depends-any program-data-extra -> program-bin
+version-substvars-general (source): maybe-not-arch-all-binnmuable program-bin -> program-data-extra

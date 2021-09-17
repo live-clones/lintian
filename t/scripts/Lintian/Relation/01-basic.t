@@ -2,11 +2,12 @@
 
 use strict;
 use warnings;
-use Test::More tests => 3;
 
-BEGIN { use_ok('Lintian::Relation'); }
+use Test::More tests => 2;
 
-my $relation = Lintian::Relation->new('pkgA, altA | altB');
+use Lintian::Relation;
+
+my $relation = Lintian::Relation->new->load('pkgA, altA | altB');
 
 ok($relation->implies('pkgA'),   'Implies');
 ok(!$relation->implies('altA'),  'Implies alt');

@@ -1,0 +1,2 @@
+changed-by-malformed (changes): malformed-contact Changed-By Foo<bar>
+changed-by-malformed (changes): mail-contact Maintainer "Debian Lintian Maintainers" <lintian-maint@debian.org>

@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: declared-in-etc
+Description: Systemd tmpfiles declared in /etc

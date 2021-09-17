@@ -25,6 +25,7 @@ use warnings;
 use utf8;
 
 use Carp qw(croak);
+use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Relation;
 
@@ -40,7 +41,7 @@ Lintian::Processable::Source::Relation - Lintian interface to source package dat
     my ($name, $type, $dir) = ('foobar', 'source', '/path/to/lab-entry');
     my $collect = Lintian::Processable::Source::Relation->new($name);
     if ($collect->native) {
-        print "Package is native\n";
+        print encode_utf8("Package is native\n");
     }
 
 =head1 DESCRIPTION
@@ -110,12 +111,12 @@ my %known = map { $_ => 1 }
 sub binary_relation {
     my ($self, $package, $name) = @_;
 
-    return
+    return undef
       unless length $name;
 
     my $lowercase = lc $name;
 
-    return
+    return undef
       unless length $package;
 
     my $relation = $self->saved_binary_relations->{$package}{$lowercase};
@@ -123,17 +124,18 @@ sub binary_relation {
 
         if (length $alias{$lowercase}) {
             $relation
-              = Lintian::Relation->and(
+              = Lintian::Relation->new->logical_and(
                 map { $self->binary_relation($package, $_) }
                   @{ $alias{$lowercase} });
 
         } else {
-            croak "unknown relation field $name"
+            croak encode_utf8("unknown relation field $name")
               unless $known{$lowercase};
+
             my $value
               = $self->debian_control->installable_fields($package)
               ->value($name);
-            $relation = Lintian::Relation->new($value);
+            $relation = Lintian::Relation->new->load($value);
         }
 
         $self->saved_binary_relations->{$package}{$lowercase} = $relation;
@@ -177,7 +179,7 @@ has saved_relations => (
 sub relation {
     my ($self, $name) = @_;
 
-    return
+    return undef
       unless length $name;
 
     my $lowercase = lc $name;
@@ -190,14 +192,15 @@ sub relation {
             my @fields
               = ("Build-$type", "Build-$type-Indep", "Build-$type-Arch");
             $relation
-              = Lintian::Relation->and(map { $self->relation($_) } @fields);
+              = Lintian::Relation->new->logical_and(map { $self->relation($_) }
+                  @fields);
 
         } elsif ($name =~ /^Build-(Depends|Conflicts)(?:-(?:Arch|Indep))?$/i){
             my $value = $self->fields->value($name);
-            $relation = Lintian::Relation->new($value);
+            $relation = Lintian::Relation->new->load($value);
 
         } else {
-            croak "unknown relation field $name";
+            croak encode_utf8("unknown relation field $name");
         }
 
         $self->saved_relations->{$lowercase} = $relation;
@@ -206,33 +209,33 @@ sub relation {
     return $relation;
 }
 
-=item relation_noarch (FIELD)
+=item relation_norestriction (FIELD)
 
 The same as L</relation (FIELD)>, but ignores architecture
 restrictions and build profile restrictions in the FIELD field.
 
-=item saved_relations_noarch
+=item saved_relations_norestriction
 
 =cut
 
-has saved_relations_noarch => (
+has saved_relations_norestriction => (
     is => 'rw',
     coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
     default => sub { {} });
 
-sub relation_noarch {
+sub relation_norestriction {
     my ($self, $name) = @_;
 
-    return
+    return undef
       unless length $name;
 
     my $lowercase = lc $name;
 
-    my $relation = $self->saved_relations_noarch->{$lowercase};
+    my $relation = $self->saved_relations_norestriction->{$lowercase};
     unless (defined $relation) {
 
         $relation = $self->relation($name)->restriction_less;
-        $self->saved_relations_noarch->{$lowercase} = $relation;
+        $self->saved_relations_norestriction->{$lowercase} = $relation;
     }
 
     return $relation;

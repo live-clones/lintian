@@ -1,0 +1,4 @@
+binary (source): debian-rules-missing-required-target binary-indep
+binary (source): debian-rules-missing-recommended-target build-indep
+binary (source): debian-rules-ignores-make-clean-error (line 14)
+binary (source): debian-rules-calls-pwd (line 9)

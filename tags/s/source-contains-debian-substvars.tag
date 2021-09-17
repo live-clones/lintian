@@ -1,6 +1,6 @@
 Tag: source-contains-debian-substvars
 Severity: warning
-Check: cruft
+Check: debian/substvars
 Renamed-From:
  diff-contains-substvars
 Explanation: Lintian found a substvars file in the Debian diff for this source

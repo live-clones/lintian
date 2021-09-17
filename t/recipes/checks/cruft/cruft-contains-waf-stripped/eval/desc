@@ -1,3 +1,0 @@
-Testname: cruft-contains-waf-stripped
-Test-Against: source-contains-waf-binary
-Check: cruft

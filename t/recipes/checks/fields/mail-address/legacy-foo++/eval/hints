@@ -1,0 +1,20 @@
+foo++ (source): no-phrase Uploaders Yama@gotchi
+foo++ (source): malformed-contact Uploaders Josip
+foo++ (source): malformed-contact Uploaders I am afraid of spam and think this helps <no_spam_please
+foo++ (source): mail-contact Uploaders Yama@gotchi
+foo++ (source): mail-contact Uploaders Frank <djpig@debian.org>
+foo++ (source): mail-contact Uploaders "Marc 'HE' Brockschmidt" <he@unknown>
+foo++ (source): mail-contact Uploaders "Jeroen van Wolffelaar" <jeroen@localhost.localdomain>
+foo++ (source): mail-contact Maintainer "Lintian Maintainer" <debian-qa@lists.debian.org>
+foo++ (source): faulty-debian-qa-group-address Maintainer debian-qa@lists.debian.org -> packages@qa.debian.org
+foo++ (source): bogus-mail-host Uploaders jeroen@localhost.localdomain
+foo++ (source): bogus-mail-host Uploaders he@unknown
+foo++ (source): bogus-mail-host Uploaders Yama@gotchi
+foo++ (changes): mail-contact Maintainer "Lintian Maintainer" <debian-qa@lists.debian.org>
+foo++ (changes): mail-contact Changed-By "Marc 'HE' Brockschmidt" <he@unknown>
+foo++ (changes): faulty-debian-qa-group-address Maintainer debian-qa@lists.debian.org -> packages@qa.debian.org
+foo++ (changes): bogus-mail-host Changed-By he@unknown
+foo++-helper (binary): mail-contact Maintainer "Lintian Maintainer" <debian-qa@lists.debian.org>
+foo++-helper (binary): faulty-debian-qa-group-address Maintainer debian-qa@lists.debian.org -> packages@qa.debian.org
+foo++ (binary): mail-contact Maintainer "Lintian Maintainer" <debian-qa@lists.debian.org>
+foo++ (binary): faulty-debian-qa-group-address Maintainer debian-qa@lists.debian.org -> packages@qa.debian.org

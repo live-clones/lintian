@@ -21,18 +21,21 @@ package Lintian::Processable::Diffstat;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
+use Const::Fast;
 use IPC::Run3;
 use Path::Tiny;
-
-use constant EMPTY => q{};
-use constant COLON => q{:};
-use constant UNDERSCORE => q{_};
-use constant NEWLINE => qq{\n};
+use Unicode::UTF8 qw(encode_utf8 decode_utf8);
 
 use Moo::Role;
 use namespace::clean;
+
+const my $COLON => q{:};
+const my $UNDERSCORE => q{_};
+const my $NEWLINE => qq{\n};
+
+const my $OPEN_PIPE => q{-|};
+const my $WAIT_STATUS_SHIFT => 8;
 
 =head1 NAME
 
@@ -71,33 +74,39 @@ has diffstat => (
         $noepoch =~ s/^\d://;
 
         # look for a format 1.0 diff.gz near the input file
-        my $diffname = $self->name . UNDERSCORE . $noepoch . '.diff.gz';
+        my $diffname = $self->name . $UNDERSCORE . $noepoch . '.diff.gz';
         my $diffpath = path($self->path)->parent->child($diffname)->stringify;
 
         return {}
-          unless -f $diffpath;
+          unless -e $diffpath;
 
         my @gunzip_command = ('gunzip', '--stdout', $diffpath);
-        my $gunzip_pid = open(my $from_gunzip, '-|', @gunzip_command)
-          or die "Cannot run @gunzip_command: $!";
+        my $gunzip_pid = open(my $from_gunzip, $OPEN_PIPE, @gunzip_command)
+          or die encode_utf8("Cannot run @gunzip_command: $!");
 
         my $stdout;
         my $stderr;
-        my @diffstat_command = ('diffstat',  '-p1');
+        my @diffstat_command = qw(diffstat -p1);
         run3(\@diffstat_command, $from_gunzip, \$stdout, \$stderr);
+        my $status = ($? >> $WAIT_STATUS_SHIFT);
 
-        my $status = ($? >> 8);
+        $stdout = decode_utf8($stdout)
+          if length $stdout;
+        $stderr = decode_utf8($stderr)
+          if length $stderr;
+
         if ($status) {
 
             my $message= "Non-zero status $status from @diffstat_command";
-            $message .= COLON . NEWLINE . $stderr
+            $message .= $COLON . $NEWLINE . $stderr
               if length $stderr;
 
-            die $message;
+            die encode_utf8($message);
         }
 
         close $from_gunzip
-          or warn "close failed for handle from @gunzip_command: $!";
+          or
+          warn encode_utf8("close failed for handle from @gunzip_command: $!");
 
         waitpid($gunzip_pid, 0);
 
@@ -119,7 +128,7 @@ has diffstat => (
             # trim both ends
             $file =~ s/^\s+|\s+$//g;
 
-            die "syntax error in diffstat file: $line"
+            die encode_utf8("syntax error in diffstat file: $line")
               unless length $file;
 
             $diffstat{$file} = $stats;

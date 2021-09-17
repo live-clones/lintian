@@ -26,8 +26,6 @@ use utf8;
 
 use Lintian::Util qw($PKGREPACK_REGEX);
 
-use constant EMPTY => q{};
-
 use Moo::Role;
 use namespace::clean;
 
@@ -40,7 +38,7 @@ Lintian::Processable::Source::Repacked - Lintian interface to source package dat
     my ($name, $type, $dir) = ('foobar', 'source', '/path/to/lab-entry');
     my $collect = Lintian::Processable::Source::Repacked->new($name);
     if ($collect->native) {
-        print "Package is native\n";
+        print encode_utf8("Package is native\n");
     }
 
 =head1 DESCRIPTION

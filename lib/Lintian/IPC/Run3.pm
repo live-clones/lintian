@@ -25,7 +25,6 @@ package Lintian::IPC::Run3;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Exporter qw(import);
 
@@ -34,26 +33,18 @@ our @EXPORT_OK;
 BEGIN {
 
     @EXPORT_OK = qw(
-      get_deb_info
       safe_qx
+      xargs
     );
 }
 
-use Carp qw(croak);
+use Const::Fast;
 use IPC::Run3;
 
-use Lintian::Deb822::File;
+const my $EMPTY => q{};
+const my $NULL => qq{\0};
 
-# read up to 40kB at a time.  this happens to be 4096 "tar records"
-# (with a block-size of 512 and a block factor of 20, which appear to
-# be the defaults).  when we do full reads and writes of READ_SIZE (the
-# OS willing), the receiving end will never be with an incomplete
-# record.
-use constant TAR_RECORD_SIZE => 20 * 512;
-
-use constant EMPTY => q{};
-use constant COLON => q{:};
-use constant NEWLINE => qq{\n};
+const my $WAIT_STATUS_SHIFT => 8;
 
 =head1 NAME
 
@@ -86,7 +77,7 @@ sub safe_qx {
     run3(\@command, \undef, \$stdout, \$stderr);
 
     my $exitcode = $?;
-    my $status = ($exitcode >> 8);
+    my $status = ($exitcode >> $WAIT_STATUS_SHIFT);
 
     $? = $status;
 
@@ -96,56 +87,35 @@ sub safe_qx {
     return $stdout;
 }
 
-=item get_deb_info(DEBFILE)
-
-Extracts the control file from DEBFILE and returns it as a hashref.
-
-DEBFILE must be an ar file containing a "control.tar.gz" member, which
-in turn should contain a "control" file.  If the "control" file is
-empty this will return an empty list.
-
-Note: the control file is only expected to have a single paragraph and
-thus only the first is returned (in the unlikely case that there are
-more than one).
+=item C<xargs>
 
 =cut
 
-sub get_deb_info {
-    my ($path) = @_;
+sub xargs {
+    my ($command, $arguments, $processor) = @_;
 
-    # get control.tar.gz; dpkg-deb -f $file is slow; use tar instead
-    my @dpkg_command = ('dpkg-deb', '--ctrl-tarfile', $path);
+    $command //= [];
+    $arguments //= [];
 
-    my $dpkg_pid = open(my $from_dpkg, '-|', @dpkg_command)
-      or die "Cannot run @dpkg_command: $!";
+    return
+      unless @{$arguments};
 
-    # would like to set buffer size to 4096 & TAR_RECORD_SIZE
+    my $input = $EMPTY;
+    $input .= $_ . $NULL for @{$arguments};
 
-    # get binary control file
     my $stdout;
     my $stderr;
-    my @tar_command = ('tar', '--wildcards', '-xO', '-f', '-', '*control');
-    run3(\@tar_command, $from_dpkg, \$stdout, \$stderr);
 
-    my $status = ($? >> 8);
-    if ($status) {
+    my @combined = (qw(xargs --null --no-run-if-empty), @{$command});
 
-        my $message= "Non-zero status $status from @tar_command";
-        $message .= COLON . NEWLINE . $stderr
-          if length $stderr;
+    run3(\@combined, \$input, \$stdout, \$stderr);
 
-        die $message;
-    }
+    my $exitcode = $?;
+    my $status = ($exitcode >> $WAIT_STATUS_SHIFT);
 
-    close $from_dpkg
-      or warn "close failed for handle from @dpkg_command: $!";
+    $processor->($stdout, $stderr, $status, @{$arguments});
 
-    waitpid($dpkg_pid, 0);
-
-    my $deb822 = Lintian::Deb822::File->new;
-    my @sections = $deb822->parse_string($stdout);
-
-    return $sections[0];
+    return;
 }
 
 =back

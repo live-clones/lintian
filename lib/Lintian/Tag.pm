@@ -25,44 +25,24 @@ use warnings;
 use utf8;
 
 use Carp qw(croak);
-use List::MoreUtils qw(none);
+use Const::Fast;
+use Email::Address::XS;
+use List::SomeUtils qw(none first_value);
+use Unicode::UTF8 qw(encode_utf8);
 
-use Lintian::Data;
 use Lintian::Deb822::File;
-
-use constant EMPTY => q{};
-use constant SPACE => q{ };
-use constant SLASH => q{/};
-use constant COMMA => q{,};
-use constant LEFT_PARENTHESIS => q{(};
-use constant RIGHT_PARENTHESIS => q{)};
-
-use constant PARAGRAPH_BREAK => qq{\n\n};
 
 use Moo;
 use namespace::clean;
 
-# Ordered lists of severities, used for display level parsing.
-our @SEVERITIES= qw(classification pedantic info warning error);
+const my $EMPTY => q{};
+const my $SPACE => q{ };
+const my $SLASH => q{/};
+const my $LEFT_PARENTHESIS => q{(};
+const my $RIGHT_PARENTHESIS => q{)};
 
-# loads the first time info is called
-our $MANUALS
-  = Lintian::Data->new('output/manual-references', qr/::/,\&_load_manual_data);
-
-sub _load_manual_data {
-    my ($key, $rawvalue, $pval) = @_;
-
-    my ($section, $title, $url) = split m/::/, $rawvalue, 3;
-    my $ret;
-    if (not defined $pval) {
-        $ret = $pval = {};
-    }
-
-    $pval->{$section}{title} = $title;
-    $pval->{$section}{url} = $url;
-
-    return $ret;
-}
+# Ordered lists of visibilities, used for display level parsing.
+our @VISIBILITIES= qw(classification pedantic info warning error);
 
 =head1 NAME
 
@@ -82,19 +62,15 @@ metadata elements or to format the tag description.
 
 =over 4
 
-=item tag
+=item name
 
 =item visibility
-
-=item effective_severity
 
 =item check
 
 =item name_spaced
 
 =item show_always
-
-=item check_type
 
 =item experimental
 
@@ -104,12 +80,14 @@ metadata elements or to format the tag description.
 
 =item renamed_from
 
+=item profile
+
 =cut
 
 has name => (
     is => 'rw',
-    coerce => sub { my ($text) = @_; return ($text // EMPTY); },
-    default => EMPTY
+    coerce => sub { my ($text) = @_; return ($text // $EMPTY); },
+    default => $EMPTY
 );
 
 has visibility => (
@@ -118,34 +96,19 @@ has visibility => (
     coerce => sub {
         my ($text) = @_;
 
-        $text //= EMPTY;
-        croak "Unknown tag severity $text"
-          if none { $text eq $_ } @SEVERITIES;
+        $text //= $EMPTY;
+        croak encode_utf8("Unknown tag visibility $text")
+          if none { $text eq $_ } @VISIBILITIES;
 
         return $text;
     },
-    default => EMPTY
-);
-
-has effective_severity => (
-    is => 'rw',
-    lazy => 1,
-    coerce => sub {
-        my ($text) = @_;
-
-        $text //= EMPTY;
-        croak "Unknown tag severity $text"
-          if none { $text eq $_ } @SEVERITIES;
-
-        return $text;
-    },
-    default => EMPTY
+    default => $EMPTY
 );
 
 has check => (
     is => 'rw',
-    coerce => sub { my ($text) = @_; return ($text // EMPTY); },
-    default => EMPTY
+    coerce => sub { my ($text) = @_; return ($text // $EMPTY); },
+    default => $EMPTY
 );
 
 has name_spaced => (
@@ -160,12 +123,6 @@ has show_always => (
     default => 0
 );
 
-has check_type => (
-    is => 'rw',
-    coerce => sub { my ($text) = @_; return ($text // EMPTY); },
-    default => EMPTY
-);
-
 has experimental => (
     is => 'rw',
     coerce => sub { my ($boolean) = @_; return ($boolean // 0); },
@@ -174,8 +131,8 @@ has experimental => (
 
 has explanation => (
     is => 'rw',
-    coerce => sub { my ($text) = @_; return ($text // EMPTY); },
-    default => EMPTY
+    coerce => sub { my ($text) = @_; return ($text // $EMPTY); },
+    default => $EMPTY
 );
 
 has see_also => (
@@ -188,6 +145,13 @@ has renamed_from => (
     coerce => sub { my ($arrayref) = @_; return ($arrayref // []); },
     default => sub { [] });
 
+has screens => (
+    is => 'rw',
+    coerce => sub { my ($arrayref) = @_; return ($arrayref // []); },
+    default => sub { [] });
+
+has profile => (is => 'rw');
+
 =item load(PATH)
 
 Loads a tag description from PATH.
@@ -197,22 +161,20 @@ Loads a tag description from PATH.
 sub load {
     my ($self, $tagpath) = @_;
 
-    croak "Cannot read tag file from $tagpath"
+    croak encode_utf8("Cannot read tag file from $tagpath")
       unless -r $tagpath;
 
     my $deb822 = Lintian::Deb822::File->new;
     my @sections = $deb822->read_file($tagpath);
-    croak "$tagpath does not have exactly one paragraph"
-      unless scalar @sections == 1;
 
-    my $fields = $sections[0];
+    my $fields = shift @sections;
 
     $self->check($fields->value('Check'));
     $self->name_spaced($fields->value('Name-Spaced') eq 'yes');
     $self->show_always($fields->value('Show-Always') eq 'yes');
 
     my $name = $fields->value('Tag');
-    $name = $self->check . SLASH . $name
+    $name = $self->check . $SLASH . $name
       if $self->name_spaced;
 
     $self->name($name);
@@ -222,21 +184,57 @@ sub load {
 
     $self->explanation($fields->text('Explanation') || $fields->text('Info'));
 
-    my @see_also
-      = split(/,/, $fields->value('See-Also') || $fields->value('Ref'));
+    my @see_also = $fields->trimmed_list('See-Also', qr{,});
+    @see_also = $fields->trimmed_list('Ref', qr{,})
+      unless @see_also;
 
-    # trim both ends of each
-    s/^\s+|\s+$//g for @see_also;
-
-    my @markdown = map { markdown_citation($_) } @see_also;
+    my @markdown = map { $self->markdown_citation($_) } @see_also;
     $self->see_also(\@markdown);
 
     $self->renamed_from([$fields->trimmed_list('Renamed-From')]);
 
-    croak "No Tag field in $tagpath"
+    croak encode_utf8("No Tag field in $tagpath")
       unless length $self->name;
 
-    $self->effective_severity($self->visibility);
+    my @screens;
+    for my $section (@sections) {
+
+        my $screen_name = $section->value('Screen');
+
+        my $relative = $screen_name;
+        $relative =~ s{^([[:lower:]])}{\U$1};
+        $relative =~ s{/([[:lower:]])}{/\U$1}g;
+        $relative =~ s{-([[:lower:]])}{\U$1}g;
+
+        my @candidates = map {
+            ("$_/lib/Lintian/Screen/$relative.pm", "$_/screens/relative.pm")
+        } @{$self->profile->safe_include_dirs};
+
+        my $absolute = first_value { -e } @candidates;
+        require $absolute;
+
+        my $module = $relative;
+        $module =~ s{/}{::}g;
+
+        my $screen = "Lintian::Screen::$module"->new;
+
+        $screen->name($screen_name);
+
+        my @petitioners
+          = Email::Address::XS->parse($section->value('Petitioners'));
+        $screen->petitioners(\@petitioners);
+
+        $screen->reason($section->text('Reason'));
+
+        my @see_also_screen = $section->trimmed_list('See-Also', qr{,});
+        my @markdown_screen
+          = map { $self->markdown_citation($_) } @see_also_screen;
+        $screen->see_also(\@markdown_screen);
+
+        push(@screens, $screen);
+    }
+
+    $self->screens(\@screens);
 
     return;
 }
@@ -244,14 +242,14 @@ sub load {
 =item code()
 
 Returns the one-letter code for the tag.  This will be a letter chosen
-from C<E>, C<W>, C<I>, or C<P>, based on the tag severity, and
+from C<E>, C<W>, C<I>, or C<P>, based on the tag visibility, and
 other attributes (such as whether experimental is set).  This code will
 never be C<O> or C<X>; overrides and experimental tags are handled
 separately.
 
 =cut
 
-# Map severity levels to tag codes.
+# Map visibility levels to tag codes.
 our %CODES = (
     'error' => 'E',
     'warning' => 'W',
@@ -263,67 +261,7 @@ our %CODES = (
 sub code {
     my ($self) = @_;
 
-    return $CODES{$self->effective_severity};
-}
-
-=item markdown_description
-
-=cut
-
-sub markdown_description {
-    my ($self) = @_;
-
-    my $description = $self->explanation;
-
-    my @extras;
-
-    my $references = $self->markdown_reference_statement;
-    push(@extras, $references)
-      if length $references;
-
-    push(@extras, 'Severity: '. $self->visibility);
-
-    push(@extras, 'Check: ' . $self->check)
-      if length $self->check;
-
-    push(@extras, 'Renamed from: ' . join(SPACE, @{$self->renamed_from}))
-      if @{$self->renamed_from};
-
-    push(@extras, 'This tag is experimental.')
-      if $self->experimental;
-
-    push(@extras,
-        'This tag is a classification. There is no issue in your package.')
-      if $self->visibility eq 'classification';
-
-    $description .= PARAGRAPH_BREAK . $_ for @extras;
-
-    return $description;
-}
-
-=item markdown_reference_statement
-
-=cut
-
-sub markdown_reference_statement {
-    my ($self) = @_;
-
-    my @references = @{$self->see_also};
-
-    return EMPTY
-      unless @references;
-
-    # remove and save last element
-    my $last = pop @references;
-
-    my $text        = EMPTY;
-    my $oxfordcomma = (@references > 1 ? COMMA : EMPTY);
-    $text = join(', ', @references) . "$oxfordcomma and "
-      if @references;
-
-    $text .= $last;
-
-    return "Refer to $text for details.";
+    return $CODES{$self->visibility};
 }
 
 =item markdown_citation
@@ -331,12 +269,12 @@ sub markdown_reference_statement {
 =cut
 
 sub markdown_citation {
-    my ($citation) = @_;
+    my ($self, $citation) = @_;
 
     my $markdown;
 
     if ($citation =~ /^([\w-]+)\s+(.+)$/) {
-        $markdown = markdown_from_manuals($1, $2);
+        $markdown = $self->markdown_from_manuals($1, $2);
 
     } elsif ($citation =~ /^([\w.-]+)\((\d\w*)\)$/) {
         my ($name, $section) = ($1, $2);
@@ -365,16 +303,21 @@ sub markdown_citation {
 =cut
 
 sub markdown_from_manuals {
-    my ($volume, $section) = @_;
+    my ($self, $volume, $section) = @_;
 
-    return EMPTY
-      unless $MANUALS->known($volume);
+    croak encode_utf8('No profile')
+      unless defined $self->profile;
+
+    my $MANUALS = $self->profile->manual_references;
+
+    return $EMPTY
+      unless $MANUALS->recognizes($volume);
 
     my $entry = $MANUALS->value($volume);
 
     # start with the citation to the overall manual.
-    my $title = $entry->{''}{title};
-    my $url   = $entry->{''}{url};
+    my $title = $entry->{$EMPTY}{title};
+    my $url   = $entry->{$EMPTY}{url};
 
     my $markdown = markdown_hyperlink($title, $url);
 
@@ -400,10 +343,10 @@ sub markdown_from_manuals {
     my $section_url   = $entry->{$section}{url};
 
     $markdown
-      .= SPACE
-      . LEFT_PARENTHESIS
+      .= $SPACE
+      . $LEFT_PARENTHESIS
       . markdown_hyperlink($section_title, $section_url)
-      . RIGHT_PARENTHESIS;
+      . $RIGHT_PARENTHESIS;
 
     return $markdown;
 }

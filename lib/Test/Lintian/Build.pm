@@ -36,7 +36,6 @@ tests are run. To do so, they use the specifications in the test set.
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Exporter qw(import);
 
@@ -47,17 +46,20 @@ BEGIN {
 }
 
 use Carp;
+use Const::Fast;
+use Cwd;
+use IPC::Run3;
+use List::SomeUtils qw(any);
 use Path::Tiny;
-use List::MoreUtils qw(any);
+use Unicode::UTF8 qw(valid_utf8 encode_utf8);
+
+use Lintian::Util qw(utf8_clean_log);
 
 use Test::Lintian::ConfigFile qw(read_config);
 use Test::Lintian::Hooks qw(find_missing_prerequisites);
 
-use constant EMPTY => q{};
-use constant SPACE => q{ };
-use constant SLASH => q{/};
-use constant COMMA => q{,};
-use constant NEWLINE => qq{\n};
+const my $SLASH => q{/};
+const my $WAIT_STATUS_SHIFT => 8;
 
 =head1 FUNCTIONS
 
@@ -74,7 +76,7 @@ sub build_subject {
     my ($sourcepath, $buildpath) = @_;
 
     # check test architectures
-    die 'DEB_HOST_ARCH is not set.'
+    die encode_utf8('DEB_HOST_ARCH is not set.')
       unless (length $ENV{'DEB_HOST_ARCH'});
 
     # read dynamic file names
@@ -83,21 +85,21 @@ sub build_subject {
 
     # read dynamic case data
     my $rundescpath
-      = $sourcepath . SLASH . $files->unfolded_value('Fill-Values');
+      = $sourcepath . $SLASH . $files->unfolded_value('Fill-Values');
     my $testcase = read_config($rundescpath);
 
     # skip test if marked
     my $skipfile = "$sourcepath/skip";
-    if (-f $skipfile) {
+    if (-e $skipfile) {
         my $reason = path($skipfile)->slurp_utf8 || 'No reason given';
-        say "Skipping test: $reason";
+        say encode_utf8("Skipping test: $reason");
         return;
     }
 
     # skip if missing prerequisites
     my $missing = find_missing_prerequisites($testcase);
     if (length $missing) {
-        say "Missing prerequisites: $missing";
+        say encode_utf8("Missing prerequisites: $missing");
         return;
     }
 
@@ -107,23 +109,42 @@ sub build_subject {
     path($buildpath)->mkpath;
 
     # get lintian subject
-    croak 'Could not get subject of Lintian examination.'
-      unless $testcase->exists('Build-Product');
+    croak encode_utf8('Could not get subject of Lintian examination.')
+      unless $testcase->declares('Build-Product');
 
     my $build_product = $testcase->unfolded_value('Build-Product');
-
     my $subject = "$buildpath/$build_product";
 
-    if ($testcase->exists('Build-Command')) {
-        my $command
-          = "cd $buildpath; " . $testcase->unfolded_value('Build-Command');
-        croak "$command failed" if system($command);
+    say encode_utf8("Building in $buildpath");
+
+    my $command = $testcase->unfolded_value('Build-Command');
+    if (length $command) {
+
+        my $savedir = Cwd::getcwd;
+        chdir($buildpath)
+          or die encode_utf8("Cannot change to directory $buildpath");
+
+        my $combined_bytes;
+
+        # array command breaks test files/contents/contains-build-path
+        run3($command, \undef, \$combined_bytes, \$combined_bytes);
+        my $status = ($? >> $WAIT_STATUS_SHIFT);
+
+        chdir($savedir)
+          or die encode_utf8("Cannot change to directory $savedir");
+
+        # sanitize log so it is UTF-8 from here on
+        my $utf8_bytes = utf8_clean_log($combined_bytes);
+        print $utf8_bytes;
+
+        croak encode_utf8("$command failed")
+          if $status;
     }
 
-    croak 'Build was unsuccessful.'
-      unless -f $subject;
+    croak encode_utf8('Build was unsuccessful.')
+      unless -e $subject;
 
-    die "Cannot link to build product $build_product"
+    die encode_utf8("Cannot link to build product $build_product")
       if system("cd $buildpath; ln -s $build_product subject");
 
     return;

@@ -26,13 +26,13 @@
 
 use strict;
 use warnings;
-use autodie;
 use v5.10;
 
+use Const::Fast;
 use File::Basename;
 use File::Find::Rule;
 use List::Compare;
-use List::MoreUtils qw(uniq);
+use List::SomeUtils qw(uniq);
 use Path::Tiny;
 use Test::More;
 
@@ -43,12 +43,12 @@ use Test::Lintian::ConfigFile qw(read_config);
 use Test::Lintian::Output::EWI qw(to_universal);
 use Test::Lintian::Output::Universal qw(tag_name);
 
-use constant SPACE => q{ };
-use constant EMPTY => q{};
-use constant NEWLINE => qq{\n};
+const my $SPACE => q{ };
+const my $NEWLINE => qq{\n};
 
 my @known_missing = (qw(
       changed-by-invalid-for-derivative
+      crossing-screens
       debian-files-list-in-source
       debian-rules-not-executable
       embedded-pear-module
@@ -80,18 +80,13 @@ my @known_missing = (qw(
 ));
 
 my $profile = Lintian::Profile->new;
-$profile->load(undef, [$ENV{LINTIAN_BASE}]);
+$profile->load(undef, undef, 0);
 
 # find known checks
 my @known = uniq $profile->known_checks;
 
 my %checktags;
-for my $check (@known) {
-
-    # get all tags belonging to that check
-    my $script = $profile->get_checkinfo($check);
-    $checktags{$check} = [$script->tags];
-}
+$checktags{$_} = $profile->tagnames_for_check->{$_}for @known;
 
 my %seen;
 
@@ -101,21 +96,21 @@ for my $descpath (@descpaths) {
     my $testcase = read_config($descpath);
 
     my $testpath = dirname($descpath);
-    my $tagspath = "$testpath/tags";
+    my $hintspath = "$testpath/hints";
 
-    next unless -r $tagspath;
+    next unless -r $hintspath;
 
-    my $universal = path($tagspath)->slurp_utf8;
+    my $universal = path($hintspath)->slurp_utf8;
 
     print "testcase->{testname}\n";
-    my @lines = split(NEWLINE, $universal);
+    my @lines = split(/$NEWLINE/, $universal);
     my @testfor = uniq map { tag_name($_) } @lines;
 
-    #    diag "Test-For: " . join(SPACE, @testfor);
+    #    diag "Test-For: " . join($SPACE, @testfor);
 
     if (exists $testcase->{check}) {
-        my @checks = split(SPACE, $testcase->{check});
-        #        diag "Checks: " . join(SPACE, @checks);
+        my @checks = split($SPACE, $testcase->{check});
+        #        diag "Checks: " . join($SPACE, @checks);
         my @related;
         push(@related, @{$checktags{$_} // []})for @checks;
         my $lc = List::Compare->new(\@testfor, \@related);

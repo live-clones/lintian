@@ -22,12 +22,19 @@
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
+
+use Cwd qw(realpath);
+use File::Basename qw(dirname);
+use Unicode::UTF8 qw(encode_utf8);
+
+# neither Path::This nor lib::relative are in Debian
+use constant THISFILE => realpath __FILE__;
+use constant THISDIR => dirname realpath __FILE__;
 
 # use Lintian modules that belong to this program
-use FindBin;
-use lib "$FindBin::RealBin/../lib";
+use lib THISDIR . '/../lib';
 
+use IPC::Run3;
 use POSIX qw(strftime);
 
 use Lintian::Util qw(locate_executable);
@@ -35,7 +42,7 @@ use Lintian::Util qw(locate_executable);
 my ($DATADIR) = @ARGV;
 my (%CODES, $outfile);
 
-die "Usage: $0 <path-to-data-dir>\n"
+die encode_utf8("Usage: $0 <path-to-data-dir>\n")
   unless defined $DATADIR and -d $DATADIR;
 
 check_requirements();
@@ -49,9 +56,10 @@ parse_iso_xml();
 
 $outfile = "$DATADIR/files/locale-codes.new";
 
-open(my $out, '>', $outfile);
+open(my $out, '>', $outfile)
+  or die encode_utf8("Cannot open $outfile");
 
-print {$out} <<EOF ;
+print {$out} encode_utf8(<<"EOF");
 # List of locale codes.  This is derived from the ISO 639-1, ISO
 # 639-2, and ISO 639-3 standards.
 # If a language has 639-1 and 639-2 codes, the -1 code is also included
@@ -63,39 +71,48 @@ EOF
 
 foreach my $code (sort keys %CODES) {
     my $alt = $CODES{$code};
-    print {$out} $code;
-    print {$out} " $alt" if defined $alt;
-    print {$out} "\n";
+    print {$out} encode_utf8($code);
+    print {$out} encode_utf8(" $alt") if defined $alt;
+    print {$out} encode_utf8("\n");
 }
 
 close($out);
 
 rename $outfile, "$DATADIR/files/locale-codes"
-  or die "rename $outfile -> $DATADIR/files/locale-codes: $!";
+  or die encode_utf8("rename $outfile -> $DATADIR/files/locale-codes: $!");
 
 exit 0;
 
 sub parse_iso_xml {
-    open(my $fd, '<', '/usr/share/xml/iso-codes/iso_639_3.xml');
-    local $_;
+    my $iso_xml = '/usr/share/xml/iso-codes/iso_639_3.xml';
+    open(my $fd, '<', $iso_xml)
+      or die encode_utf8("Cannot open $iso_xml");
+
     local $/ = '/>';
-    while (<$fd>) {
+    while (my $line = <$fd>) {
         my $special = 0;
+
         # skip it if it is a "special" isotype (#692548, comment #10).  However
         # sometimes we "collect" these from iso-query.  If so, we have to
         # prune them from %CODES.
-        $special = 1 if m/\<iso_639_3_entry [^\>]* \btype=[\'\"]S?[\'\"]/x;
+        $special = 1
+          if $line =~ /\<iso_639_3_entry [^\>]* \btype=[\'\"]S?[\'\"]/x;
+
         # Extract the id of the entry.  We match the start of the tag
         # again to ensure we catch the id inside the tag.  (Our input
         # separator causes us to consume a lot of leading "stuff"
         # prior to the first entry being closed).
-        next unless m/\<iso_639_3_entry [^\>]* \bid=[\'\"]([^\'\"]+)[\'\"]/x;
+        next
+          unless $line
+          =~ /\<iso_639_3_entry [^\>]* \bid=[\'\"]([^\'\"]+)[\'\"]/x;
+
         my $id = lc $1;
 
         if ($special) {
             delete $CODES{$id};
         } else {
-            $CODES{$id} = undef unless exists $CODES{$id};
+            $CODES{$id} = undef
+              unless exists $CODES{$id};
         }
     }
 
@@ -104,21 +121,32 @@ sub parse_iso_xml {
 }
 
 sub parse_iso_query {
-    open(my $fd, '-|', 'isoquery', '-i', '639-2');
-    local $_;
-    while (<$fd>) {
-        next unless m/^(\S{3})\s+(?:\S{3}\s+)?(?:(\S{2})\s+)?/;
+    my @command = qw{isoquery -i 639-2};
+    my $output;
+
+    run3(\@command, \undef, \$output);
+    my @lines = split(/\n/, $output);
+
+    while (defined(my $line = shift @lines)) {
+
+        next
+          unless $line =~ /^(\S{3})\s+(?:\S{3}\s+)?(?:(\S{2})\s+)?/;
         my ($iso1, $iso2) = ($2, $1);
-        next if $iso2 eq 'zxx';
+        next
+          if $iso2 eq 'zxx';
         $iso2 = lc $iso2;
-        $CODES{$iso2} = undef unless exists $CODES{$iso2};
+
+        $CODES{$iso2} = undef
+          unless exists $CODES{$iso2};
+
         if (defined $iso1) {
             $iso1 = lc $iso1;
             $CODES{lc $iso2} = $iso1;
-            $CODES{$iso1} = undef unless exists $CODES{$iso1};
+            $CODES{$iso1} = undef
+              unless exists $CODES{$iso1};
         }
     }
-    close($fd);
+
     return;
 }
 
@@ -127,12 +155,12 @@ sub check_requirements {
     push @missing, 'isoquery in PATH'
       unless length locate_executable('isoquery');
     push @missing, 'The file /usr/share/xml/iso-codes/iso_639_3.xml'
-      unless -f '/usr/share/xml/iso-codes/iso_639_3.xml';
+      unless -e '/usr/share/xml/iso-codes/iso_639_3.xml';
 
     return unless @missing;
 
-    print STDERR "Missing requirements:\n";
-    print STDERR "\t", join("\n\t", @missing), "\n";
+    print {*STDERR} encode_utf8("Missing requirements:\n");
+    print {*STDERR} encode_utf8("\t", join("\n\t", @missing), "\n");
     exit 1;
 }
 

@@ -25,10 +25,10 @@ Test::ScriptAge -- routines relating to the age of Perl scripts
 =head1 SYNOPSIS
 
   my $executable_epoch = Test::ScriptAge::our_modification_epoch();
-  print 'This script was last modified at ' . localtime($executable_epoch) . "\n";
+  print encode_utf8('This script was last modified at ' . localtime($executable_epoch) . "\n");
 
   my $perl_epoch = Test::ScriptAge::perl_modification_epoch();
-  print 'Perl was last modified at ' . localtime($perl_epoch) . "\n";
+  print encode_utf8('Perl was last modified at ' . localtime($perl_epoch) . "\n");
 
 =head1 DESCRIPTION
 
@@ -39,7 +39,6 @@ Routines to calculated modification times of Perl scripts.
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
 use Exporter qw(import);
 
@@ -53,6 +52,7 @@ BEGIN {
 use File::stat;
 use File::Spec::Functions qw(rel2abs);
 use List::Util qw(max);
+use Unicode::UTF8 qw(encode_utf8);
 
 =head1 FUNCTIONS
 
@@ -80,7 +80,8 @@ sub our_modification_epoch {
 
     my @paths = map { rel2abs($_) } ($callerpath, values %INC);
     if (my @relative = grep { !/^\// } @paths){
-        warn 'Relative paths in running_epoch: '.join(', ', @relative);
+        warn encode_utf8(
+            'Relative paths in running_epoch: '.join(', ', @relative));
     }
     my @epochs = map { stat($_)->mtime } @paths;
     return max @epochs;

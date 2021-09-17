@@ -9,7 +9,7 @@ export DEB_BUILD_MAINT_OPTIONS=hardening=+all
 
 override_dh_installdocs:
 	dh_installdocs
-	chmod 755 debian/$(pkg)/usr/share/doc-base/doc1.txt
+	chmod 755 debian/$(pkg)/usr/share/doc-base/executable-in-docbase.doc1.txt
 
 # In Ubuntu, dh does not catch this file by default.
 #  They have diffed it to reduce the size of packages.

@@ -1,0 +1,2 @@
+source-copyright-global-files-wildcard-not-first-paragraph (source): superfluous-file-pattern debian/copyright filea (Files, line 6)
+source-copyright-global-files-wildcard-not-first-paragraph (source): global-files-wildcard-not-first-paragraph-in-dep5-copyright debian/copyright (line 10)

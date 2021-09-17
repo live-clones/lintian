@@ -1,0 +1,96 @@
+#!/usr/bin/perl
+
+# Copyright © 2019 Felix Lechner
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+# The harness for Lintian's test suite.  For detailed information on
+# the test suite layout and naming conventions, see t/tests/README.
+# For more information about running tests, see
+# doc/tutorial/Lintian/Tutorial/TestSuite.pod
+#
+
+use v5.20;
+use warnings;
+use utf8;
+
+use Const::Fast;
+use Cwd qw(realpath);
+use File::Basename qw(dirname);
+
+# neither Path::This nor lib::relative are in Debian
+use constant THISFILE => realpath __FILE__;
+use constant THISDIR => dirname realpath __FILE__;
+
+# use Lintian modules that belong to this program
+use lib THISDIR . '/../lib';
+
+use Getopt::Long;
+use List::Util qw(all);
+use Path::Tiny;
+use Term::ANSIColor;
+use Unicode::UTF8 qw(encode_utf8);
+
+use Test::Lintian::Output::Universal qw(parse_line order);
+
+const my $EMPTY => q{};
+const my $NEWLINE => qq{\n};
+
+Getopt::Long::Configure;
+unless (
+    Getopt::Long::GetOptions(
+        'help|h'         => sub {usage(); exit;},
+    )
+) {
+    usage();
+    die;
+}
+
+# check arguments and options
+die encode_utf8("Please use -h for usage information.\n")
+  if scalar @ARGV != 1;
+
+# get arguments
+my ($hintspath) = @ARGV;
+
+my @hintslines = path($hintspath)->lines_utf8;
+chomp @hintslines;
+
+my $joined = $EMPTY;
+$joined .= $_ . $NEWLINE
+  for reverse sort { order($a) cmp order($b) } @hintslines;
+
+path($hintspath)->spew_utf8($joined);
+
+exit;
+
+sub usage {
+    my $message =<<"END";
+Usage: $0 <hintfile>
+    Sorts hintfile in the order preferred for universal hints.
+END
+
+    print encode_utf8($message);
+
+    return;
+}
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

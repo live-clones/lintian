@@ -20,18 +20,22 @@ package Lintian::Index::Md5sums;
 use v5.20;
 use warnings;
 use utf8;
-use autodie;
 
+use Const::Fast;
 use Cwd;
-use IPC::Run3;
+use Unicode::UTF8 qw(encode_utf8 decode_utf8);
 
+use Lintian::IPC::Run3 qw(xargs);
 use Lintian::Util qw(read_md5sums);
-
-use constant EMPTY => q{};
-use constant NULL => qq{\0};
 
 use Moo::Role;
 use namespace::clean;
+
+const my $EMPTY => q{};
+const my $NEWLINE => qq{\n};
+
+const my $WAIT_STATUS_SHIFT => 8;
+const my $NULL => qq{\0};
 
 =head1 NAME
 
@@ -57,31 +61,45 @@ sub add_md5sums {
     my ($self) = @_;
 
     my $savedir = getcwd;
-    chdir($self->basedir);
+    chdir($self->basedir)
+      or die encode_utf8('Cannot change to directory ' . $self->basedir);
+
+    my $errors = $EMPTY;
 
     # get the regular files in the index
-    my @files = grep { $_->is_file } $self->sorted_list;
+    my @files = grep { $_->is_file } @{$self->sorted_list};
+    my @names = map { $_->name } @files;
 
-    my $input = EMPTY;
-    $input .= $_->name . NULL for @files;
+    my @command = qw(md5sum --);
 
-    my $stdout;
-    my $errors;
+    my %md5sums;
 
-    my @command = ('xargs', '--null', '--no-run-if-empty', 'md5sum', '--');
-    run3(\@command, \$input, \$stdout, \$errors);
+    xargs(
+        \@command,
+        \@names,
+        sub {
+            my ($stdout, $stderr, $status, @partial) = @_;
 
-    my $status = ($? >> 8);
-    die "Cannot run @command: $errors\n"
-      if $status;
+            $stderr = decode_utf8($stderr)
+              if length $stderr;
 
-    my ($md5sums, undef) = read_md5sums($stdout);
+            if ($status) {
+                $errors .= "Cannot run @command: $stderr" . $NEWLINE;
+                return;
+            }
 
-    $_->md5sum($md5sums->{$_->name}) for @files;
+            # undecoded split allows names with non UTF-8 bytes
+            my ($partial_sums, undef) = read_md5sums($stdout);
 
-    chdir($savedir);
+            $md5sums{$_} = $partial_sums->{$_}for @partial;
+        });
 
-    return;
+    $_->md5sum($md5sums{$_->name}) for @files;
+
+    chdir($savedir)
+      or die encode_utf8("Cannot change to directory $savedir");
+
+    return $errors;
 }
 
 =back
