@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: declared-as-empty
+Description: Empty binary package so declared (false positive)

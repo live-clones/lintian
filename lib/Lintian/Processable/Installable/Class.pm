@@ -105,7 +105,7 @@ sub is_meta_package {
 
     return 1
       if $self->fields->value('Description')
-      =~ /meta[ -]?package|(?:dummy|dependency) package/i;
+      =~ /meta[ -]?package|(?:dependency|dummy|empty) package/i;
 
     # section "tasks" or "metapackages" qualifies too
     return 1
