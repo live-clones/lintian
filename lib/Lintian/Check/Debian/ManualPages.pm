@@ -24,6 +24,8 @@ use v5.20;
 use warnings;
 use utf8;
 
+use List::SomeUtils qw{none};
+
 use Moo;
 use namespace::clean;
 
@@ -44,7 +46,14 @@ sub source {
 
     my @manpages = grep { $_->basename =~ m{\.\d$} } @nopatches;
 
-    $self->hint('maintainer-manual-page', $_->name) for @manpages;
+    for my $manpage (@manpages) {
+
+        my $command = $manpage->basename;
+        $command =~ s/ [.] \d $//x;
+
+        $self->hint('maintainer-manual-page', $manpage->name)
+          if none { $command eq $_->basename } @files;
+    }
 
     return;
 }
