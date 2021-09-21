@@ -75,8 +75,10 @@ has diffstat => (
 
         # look for a format 1.0 diff.gz near the input file
         my $diffname = $self->name . $UNDERSCORE . $noepoch . '.diff.gz';
-        my $diffpath = path($self->path)->parent->child($diffname)->stringify;
+        return {}
+          unless exists $self->files->{$diffname};
 
+        my $diffpath = path($self->path)->parent->child($diffname)->stringify;
         return {}
           unless -e $diffpath;
 
