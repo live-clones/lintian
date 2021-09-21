@@ -9,7 +9,7 @@ Explanation: This package uses the <code>--skip-systemd-native</code>
  .
  This flag is useful for maintainer scripts that want to defer systemd
  actions to <code>deb-systemd-invoke(1p)</code>. However, it was only added
- in <code>init-system-helpers</code> version 1.58.
+ in <code>init-system-helpers</code> version 1.52.
  .
  Please add <code>Pre-Depends: ${misc:Pre-Depends}</code> to your
  <code>debian/control</code> file.
