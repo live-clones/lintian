@@ -486,23 +486,23 @@ has is_script => (
         return 1;
     });
 
-=item is_control
+=item is_maintainer_script
 
 Returns true if file is a maintainer script and false otherwise.
 
 =cut
 
-has is_control => (
+has is_maintainer_script => (
     is => 'rw',
     lazy => 1,
     default => sub {
         my ($self) = @_;
 
-        return 0
-          unless $self->is_open_ok
-          && $self->name =~ m/^(?:(?:pre|post)(?:inst|rm)|config)$/;
+        return 1
+          if $self->name =~ /^ config | (?:pre|post)(?:inst|rm) $/x
+          && $self->is_open_ok;
 
-        return 1;
+        return 0;
     });
 
 =item identity

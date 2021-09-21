@@ -723,7 +723,8 @@ sub installable {
 
     # get maintainer scripts
     my @control
-      = grep { $_->is_control } @{$self->processable->control->sorted_list};
+      = grep { $_->is_maintainer_script }
+      @{$self->processable->control->sorted_list};
 
     # Handle control scripts.  This is an edited version of the code for
     # normal scripts above, because there were just enough differences to
