@@ -26,12 +26,16 @@ use warnings;
 use utf8;
 
 use Const::Fast;
+use File::Basename;
+use List::SomeUtils qw(any first_value);
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
 
+const my $EMPTY => q{};
+const my $SLASH => q{/};
 const my $ARROW => q{ -> };
 
 sub visit_installed_files {
@@ -41,23 +45,31 @@ sub visit_installed_files {
     return
       unless $file->is_symlink;
 
-    # only look at /usr/lib
-    return
-      unless $file->name =~ m{^usr/lib/};
-
-    # must resolve
     my $target = $file->link_normalized;
     return
       unless defined $target;
 
-    # see Bug#243158, Bug#964111
-    my $restraint = $file->dirname;
+    my @ldconfig_folders = @{$self->profile->architectures->ldconfig_folders};
 
-    # either /usr/lib or one level below for architecture, if applicable
-    $restraint =~ s{^((?:[^/]+/){3}).*$}{$1}s;
+    my $origin_dirname= first_value { $file->dirname eq $_ } @ldconfig_folders;
 
-    $self->hint('breakout-link', $file->name . $ARROW .  $target)
-      unless $target =~ m{^\Q$restraint\E};
+    # look only at links originating in common ld.so load paths
+    return
+      unless length $origin_dirname;
+
+    my $target_dirname
+      = first_value { (dirname($target) . $SLASH) eq $_ } @ldconfig_folders;
+    $target_dirname //= $EMPTY;
+
+    # no subfolders
+    $self->hint('ldconfig-escape', $file->name . $ARROW .  $target)
+      unless length $target_dirname;
+
+    my @multiarch= values %{$self->profile->architectures->deb_host_multiarch};
+
+    $self->hint('architecture-escape', $file->name . $ARROW .  $target)
+      if (any { basename($origin_dirname) eq $_ } @multiarch)
+      && (any { $target_dirname eq "$_/" } qw{lib usr/lib usr/local/lib});
 
     return;
 }

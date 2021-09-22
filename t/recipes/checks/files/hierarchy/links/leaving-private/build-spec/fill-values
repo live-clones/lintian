@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: leaving-private
+Description: Links from a private directory in /usr/lib to one level up

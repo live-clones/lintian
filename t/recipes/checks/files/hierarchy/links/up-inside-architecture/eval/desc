@@ -1,5 +1,0 @@
-Testname: up-inside-architecture
-Check: files/hierarchy/links
-Test-Against:
- breakout-link
-See-Also: Bug#243158, Bug#964073

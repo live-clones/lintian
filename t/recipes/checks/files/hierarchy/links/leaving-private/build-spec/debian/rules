@@ -7,8 +7,8 @@ export DEB_BUILD_MAINT_OPTIONS=hardening=+all
 
 # must create here; *.so files are ignored by dpkg-source
 override_dh_auto_build:
-	mkdir modules
-	echo "A SHARED OBJECT" > modules/a-module.so
+	mkdir lib
+	echo "A SHARED OBJECT" > lib/a-library.so
 
 # In Ubuntu, dh does not catch this file by default.
 #  They have diffed it to reduce the size of packages.
