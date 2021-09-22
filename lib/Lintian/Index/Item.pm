@@ -301,8 +301,6 @@ sub mentions_in_operation {
 
     } elsif ($self->is_script) {
         $match = $self->bytes_match($regex);
-
-        say "This branch " . $self->name;
     }
 
     return $match // $EMPTY;
@@ -724,29 +722,28 @@ arguments instead.
 
 =cut
 
-sub link_normalized {
-    my ($self) = @_;
+has link_normalized => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
 
-    return $self->normalized
-      if length $self->normalized;
+        my $name = $self->name;
+        my $link = $self->link;
 
-    my $name = $self->name;
-    my $link = $self->link;
+        croak encode_utf8("$name is not a link")
+          unless length $link;
 
-    croak encode_utf8("$name is not a link")
-      unless length $link;
+        my $dir = $self->dirname;
 
-    my $dir = $self->dirname;
+        # hardlinks are always relative to the package root
+        $dir = $SLASH
+          if $self->is_hardlink;
 
-    # hardlinks are always relative to the package root
-    $dir = $SLASH
-      if $self->is_hardlink;
+        my $target = normalize_link_target($dir, $link);
 
-    my $target = normalize_link_target($dir, $link);
-    $self->normalized($target);
-
-    return $target;
-}
+        return $target;
+    });
 
 =item is_readable
 
