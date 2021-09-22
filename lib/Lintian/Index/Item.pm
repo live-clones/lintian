@@ -301,6 +301,8 @@ sub mentions_in_operation {
 
     } elsif ($self->is_script) {
         $match = $self->bytes_match($regex);
+
+        say "This branch " . $self->name;
     }
 
     return $match // $EMPTY;
