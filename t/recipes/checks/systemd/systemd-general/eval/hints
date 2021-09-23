@@ -1,4 +1,3 @@
-systemd-general (binary): systemd-service-in-odd-location lib/systemd/system/masked.service
 systemd-general (binary): systemd-service-in-odd-location etc/systemd/system/systemd-general.test.service
 systemd-general (binary): systemd-service-in-odd-location etc/systemd/system/fifo-pipe-as-init.service
 systemd-general (binary): systemd-service-file-refers-to-unusual-wantedby-target usr/lib/systemd/system/systemd-general.test.service unusual.target
