@@ -176,7 +176,7 @@ sub installable {
               if exists $objdump->{$item->name}{'PH'}{STACK}
               && $objdump->{$item->name}{'PH'}{STACK}{flags} ne 'rw-';
 
-        } elsif ((any { dirname($item->name) eq $_ } @ldconfig_folders)
+        } elsif ((any { $item->dirname eq $_ } @ldconfig_folders)
             && exists $sharedobject{$item->name}) {
             $self->hint('sharedobject-in-library-directory-missing-soname',
                 $item->name);
@@ -189,14 +189,14 @@ sub installable {
     # 3rd step: check if shlib symlinks are present and in correct order
     for my $path (keys %SONAME) {
 
-        my ($dirname, $basename) = ($path =~ m{(.*)/([^/]+)$});
+        my ($dirname, $basename) = ($path =~ m{^ (.*/) ([^/]+) $}x);
 
         # skip non-public libraries
         next
           unless any { $dirname eq $_ } @ldconfig_folders;
 
         my $soname = $SONAME{$path};
-        my $versioned = "$dirname/$soname";
+        my $versioned = $dirname . $soname;
 
         $self->hint('lacks-versioned-link-to-shared-library',
             $versioned, $path, $soname)
@@ -347,7 +347,7 @@ sub installable {
 
         $unversioned_shlibs{$key} = 1;
         $self->hint('shared-library-lacks-version', $key, $soname)
-          if any { dirname($key) eq $_ } @ldconfig_folders;
+          if any { (dirname($key) . $SLASH) eq $_ } @ldconfig_folders;
     }
 
     my @shared_library_paths = grep { !$unversioned_shlibs{$_} } keys %SONAME;
@@ -362,7 +362,7 @@ sub installable {
 
         # skip it if it's not a public shared library
         next
-          unless any { dirname($path) eq $_ } @ldconfig_folders;
+          unless any { (dirname($path) . $SLASH) eq $_ } @ldconfig_folders;
 
         $self->hint('no-shlibs', $path)
           unless defined $shlibsf
@@ -419,7 +419,8 @@ sub installable {
             unless (exists $shlibs_control{$soname}) {
                 # skip it if it's not a public shared library
                 next
-                  unless any { dirname($path) eq $_ } @ldconfig_folders;
+                  unless any { (dirname($path) . $SLASH) eq $_ }
+                @ldconfig_folders;
 
                 # no!!
                 $self->hint('ships-undeclared-shared-library',
@@ -465,7 +466,8 @@ sub installable {
             for my $path (@shared_library_paths, keys %unversioned_shlibs) {
                 # skip it if it's not a public shared library
                 next
-                  unless any { dirname($path) eq $_ } @ldconfig_folders;
+                  unless any { (dirname($path) . $SLASH) eq $_ }
+                @ldconfig_folders;
 
                 # Skip Objective C libraries as instance/class methods do not
                 # appear in the symbol table
@@ -657,7 +659,8 @@ sub installable {
             unless (exists $symbols_control{$soname}) {
                 # skip it if it's not a public shared library
                 next
-                  unless any { dirname($path) eq $_ } @ldconfig_folders;
+                  unless any { (dirname($path) . $SLASH) eq $_ }
+                @ldconfig_folders;
 
                 $self->hint('shared-library-symbols-not-tracked',
                     $soname,'for', $path)
@@ -839,15 +842,15 @@ sub needs_ldconfig {
     my $HWCAP_DIRS = $self->profile->load_data('shared-libs/hwcap-dirs');
     my @ldconfig_folders = @{$self->profile->architectures->ldconfig_folders};
 
-    my $dirname = dirname($file->name);
+    my $dirname = $file->dirname;
     my $encapsulator;
     do {
-        $dirname =~ s{/([^/]+)$}{};
+        $dirname =~ s{ ([^/]+) / $}{}x;
         $encapsulator = $1;
 
     } while ($encapsulator && $HWCAP_DIRS->recognizes($encapsulator));
 
-    $dirname .= "/$encapsulator" if $encapsulator;
+    $dirname .= "$encapsulator/" if $encapsulator;
 
     # yes! so postinst must call ldconfig
     return 1
