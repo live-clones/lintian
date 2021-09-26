@@ -215,7 +215,7 @@ sub check_control_paragraph {
 
     for my $path (@paths) {
 
-        $self->check_test_file($path, $position);
+        $self->check_test_file($path, $position, $section);
     }
 
     if ($section->declares('Depends')) {
@@ -243,7 +243,7 @@ sub check_control_paragraph {
 }
 
 sub check_test_file {
-    my ($self, $path, $position) = @_;
+    my ($self, $path, $position, $section) = @_;
 
     my $file = $self->processable->patched->resolve_path($path);
     unless (defined $file) {
@@ -274,15 +274,17 @@ sub check_test_file {
                 $path, $command, "(line $.)")
               if $options =~ /\s(?:-\w*i|--installed)/;
 
+            my $depends_norestriction = Lintian::Relation->new;
+            $depends_norestriction->load($section->unfolded_value('Depends'));
+
             $self->hint(
-'runtime-test-file-uses-supported-python-versions-without-python-all-build-depends',
+'runtime-test-file-uses-supported-python-versions-without-test-depends',
                 $path,
                 $command,
                 "(line $.)"
               )
               if $options =~ /\s(?:-\w*s|--supported)/
-              && !$self->processable->relation_norestriction(
-                'Build-Depends-All')->implies($PYTHON3_ALL_DEPEND);
+              && !$depends_norestriction->implies($PYTHON3_ALL_DEPEND);
         }
     }
 
