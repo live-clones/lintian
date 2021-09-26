@@ -47,6 +47,8 @@ const my $EMPTY => q{};
 const my $BRANCH_TYPE => 0;
 const my $PREDICATE => 1;
 
+const my $FALSE => 0;
+
 =head1 NAME
 
 Lintian::Relation - Lintian operations on dependencies and relationships
@@ -97,7 +99,7 @@ satisfied).
 =cut
 
 sub load {
-    my ($self, $condition) = @_;
+    my ($self, $condition, $with_restrictions) = @_;
 
     $condition //= $EMPTY;
 
@@ -112,7 +114,7 @@ sub load {
         for my $alternative (@alternatives) {
 
             my $predicate = Lintian::Relation::Predicate->new;
-            $predicate->parse($alternative);
+            $predicate->parse($alternative, $with_restrictions);
 
             push(@predicates, ['PRED', $predicate]);
         }
@@ -147,16 +149,7 @@ Lintian::Relation object is empty (always satisfied).
 sub load_norestriction {
     my ($self, $condition) = @_;
 
-    $condition //= $EMPTY;
-
-    $condition =~ s/\[[^,\]]*\]//g;
-
-    # we have to make sure that the following does not match the less than
-    # sign from a version comparison. We do this by doing a negative lookahead
-    # and a negative lookbehind for the "opening" triangular bracket
-    $condition =~ s/(?<!<)<(?![<=])[^,]*>//g;
-
-    return $self->load($condition);
+    return $self->load($condition, $FALSE);
 }
 
 =item logical_and(RELATION, ...)

@@ -139,7 +139,9 @@ has build_profile => (
 # substvars to be used as package names so that we can use these routines with
 # the unparsed debian/control file.
 sub parse {
-    my ($self, $text) = @_;
+    my ($self, $text, $with_restrictions) = @_;
+
+    $with_restrictions //= $TRUE;
 
     # store the element as-is, so we can reconstitute it later
     $self->literal($text);
@@ -195,6 +197,13 @@ sub parse {
 
         $self->version_operator($DOUBLE_GREATER_THAN)
           if $self->version_operator eq $GREATER_THAN;
+
+        unless ($with_restrictions) {
+            $self->version_operator($EMPTY);
+            $self->reference_version($EMPTY);
+            $self->build_architecture($EMPTY);
+            $self->build_profile($EMPTY);
+        }
     }
 
     return;
