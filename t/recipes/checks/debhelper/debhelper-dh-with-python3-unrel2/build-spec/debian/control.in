@@ -3,7 +3,7 @@ Priority: optional
 Section: python
 Maintainer: [% $author %]
 Standards-Version: [% $standards_version %]
-Build-Depends: [% $build_depends %], python3-all-dev
+Build-Depends: [% $build_depends %], python3-all-dev:any
 Rules-Requires-Root: no
 
 Package: python3-[% $source %]
