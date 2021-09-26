@@ -12,6 +12,6 @@ Explanation: The package appears to use <code>py3versions -i</code> to determine
  cases. This then prevents the overall transition from taking place.
  .
  Please replace this will a call to all "supported" packages instead
- (eg. <code>py3versions -s</code> and ensure <code>python3-all</code> is listed
+ (eg. <code>py3versions -s</code> and ensure <code>python3-all:any</code> is listed
  in the build dependencies.
 See-Also: https://lists.debian.org/debian-devel/2020/03/msg00280.html
