@@ -803,14 +803,14 @@ sub installable {
                 if ($file eq 'preinst') {
                     unless ($processable->relation('Pre-Depends')
                         ->implies($depends)){
-                        $self->hint('preinst-interpreter-without-predepends',
-                            $interpreter);
+                        $self->hint('control-interpreter-without-predepends',
+                            $interpreter, "($file)", $depends->to_string);
                     }
                 } else {
                     unless (
                         $processable->relation('strong')->implies($depends)) {
                         $self->hint('control-interpreter-without-depends',
-                            "control/$file",$interpreter);
+                            $interpreter, "($file)", $depends->to_string);
                     }
                 }
             }
