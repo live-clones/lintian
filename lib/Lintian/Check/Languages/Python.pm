@@ -232,7 +232,8 @@ sub installable {
         my $dep = $processable->relation($field);
       FIELD: for my $py2 (@PYTHON2) {
             for my $py3 (@PYTHON3) {
-                if ($dep->implies("$py2:any") and $dep->implies("$py3:any")) {
+                # do not look for :any here; too narrow
+                if ($dep->implies($py2) && $dep->implies($py3)) {
                     $self->hint('depends-on-python2-and-python3',
                         "$field: $py2, [..], $py3");
                     last FIELD;
@@ -254,10 +255,12 @@ sub installable {
     if ($pkg !~ /^python[23]?-/ and none { $_ eq $pkg } @PYTHON2) {
         for my $field (@FIELDS) {
             for my $dep (@PYTHON2) {
+
+                # do not look for :any here; too narrow
                 $self->hint(
                     'dependency-on-python-version-marked-for-end-of-life',
                     "($field: $dep)")
-                  if $processable->relation($field)->implies("$dep:any");
+                  if $processable->relation($field)->implies($dep);
             }
         }
     }

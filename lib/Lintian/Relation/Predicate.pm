@@ -339,28 +339,28 @@ sub implies {
     # Other than that, we would need to know that the package has the
     # field "Multi-arch: allowed", but we cannot check that here.  So
     # we assume that it is okay.
-    #
+
+    # pkg:any implies pkg (but the reverse is not true).
+    return undef
+      if length $self->multiarch_acceptor
+      && !length $other->multiarch_acceptor
+      && $self->multiarch_acceptor ne 'any';
+
+    # TODO: Review this case.  Are there cases where other cannot
+    # disprove self due to the ":any"-qualifier?  For now, we
+    # assume there are no such cases.
+    return undef
+      if !length $self->multiarch_acceptor
+      && length $other->multiarch_acceptor;
+
     # For now assert that only the identity holds.  In practise, the
     # "pkg:X" (for any valid value of X) seems to imply "pkg:any",
     # fixing that is a TODO (because version clauses complicates
     # matters)
-    if (length $self->multiarch_acceptor) {
-        # Assume the identity to hold
-        return undef
-          unless length $other->multiarch_acceptor
-          && $self->multiarch_acceptor eq $other->multiarch_acceptor;
-
-    } elsif (length $other->multiarch_acceptor) {
-
-        return undef
-          unless $other->multiarch_acceptor eq 'any';
-
-        # pkg:any implies pkg (but the reverse is not true).
-        #
-        # TODO: Review this case.  Are there cases where other cannot
-        # disprove self due to the ":any"-qualifier?  For now, we
-        # assume there are no such cases.
-    }
+    return undef
+      if length $self->multiarch_acceptor
+      && length $other->multiarch_acceptor
+      && $self->multiarch_acceptor ne $other->multiarch_acceptor;
 
   # Now, down to version.  The implication is true if self's clause is stronger
   # than other's, or is equivalent.

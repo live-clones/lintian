@@ -5,10 +5,13 @@ scripts-control-interpreters-python (binary): unusual-control-interpreter contro
 scripts-control-interpreters-python (binary): maintainer-script-interpreter control/preinst /usr/bin/python3
 scripts-control-interpreters-python (binary): maintainer-script-interpreter control/postinst /usr/bin/python3
 scripts-control-interpreters-python (binary): control-interpreter-without-predepends /usr/bin/python3 (preinst) python3:any | python3-minimal:any
+scripts-control-interpreters-python (binary): control-interpreter-without-depends /usr/bin/python3 (postinst) python3:any | python3-minimal:any
 scripts-control-interpreters-prepython (binary): unusual-control-interpreter control/preinst /usr/bin/python3
 scripts-control-interpreters-prepython (binary): unusual-control-interpreter control/postinst /usr/bin/python3
 scripts-control-interpreters-prepython (binary): maintainer-script-interpreter control/preinst /usr/bin/python3
 scripts-control-interpreters-prepython (binary): maintainer-script-interpreter control/postinst /usr/bin/python3
+scripts-control-interpreters-prepython (binary): control-interpreter-without-predepends /usr/bin/python3 (preinst) python3:any | python3-minimal:any
+scripts-control-interpreters-prepython (binary): control-interpreter-without-depends /usr/bin/python3 (postinst) python3:any | python3-minimal:any
 scripts-control-interpreters-paths (binary): wrong-path-for-interpreter /usr/bin/bash != /bin/bash (control/postinst)
 scripts-control-interpreters-paths (binary): wrong-path-for-interpreter /bin/python3 != /usr/bin/python3 (control/prerm)
 scripts-control-interpreters-paths (binary): unusual-control-interpreter control/prerm /bin/python3
