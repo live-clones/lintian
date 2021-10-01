@@ -1,3 +1,0 @@
-Testname: binaries-golang
-Test-Against: statically-linked-binary
-Check: binaries

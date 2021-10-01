@@ -1,8 +1,7 @@
 Tag: debug-symbols-not-detached
 Severity: warning
-Check: binaries
+Check: binaries/debug-symbols/detached
 Renamed-From: debug-file-should-use-detached-symbols
-See-Also: devref 6.7.9
 Explanation: This file is in a location generally used for detached debugging
  symbols, but it appears to contain a complete copy of the executable or
  library instead of only the debugging symbols. Files in subdirectories
@@ -16,3 +15,4 @@ Explanation: This file is in a location generally used for detached debugging
  If you are using dh&lowbar;strip with the --dbg-package flag, don't also install
  the library in <code>/usr/lib/debug</code>. dh&lowbar;strip does all the work for
  you.
+See-Also: devref 6.7.9

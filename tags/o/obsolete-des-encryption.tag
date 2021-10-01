@@ -1,6 +1,6 @@
 Tag: obsolete-des-encryption
 Severity: error
-Check: binaries
+Check: binaries/obsolete/crypt
 Explanation: The listed ELF binary appears to use a C library function that
   performs DES encryption and/or decryption (<code>encrypt</code>,
   <code>encrypt&lowbar;r</code>, <code>setkey</code>, and/or <code>setkey&lowbar;r</code>).

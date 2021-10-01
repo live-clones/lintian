@@ -1,0 +1,3 @@
+binaries-general (binary): custom-library-search-path usr/share/foo/basic RUNPATH usr/local/lib/
+binaries-general (binary): custom-library-search-path usr/lib/foo/basicshippedrpath RUNPATH usr/share/foo/
+binaries-general (binary): custom-library-search-path usr/lib/foo/basiclibrpath RUNPATH usr/lib/

@@ -1,6 +1,6 @@
 Tag: missing-dependency-on-numpy-abi
 Severity: error
-Check: binaries
+Check: binaries/prerequisites/numpy
 Explanation: This package includes a Python extension module, which uses Numpy via its
  binary interface. Such packages must depend on python3-numpy-abi*N*.
  .

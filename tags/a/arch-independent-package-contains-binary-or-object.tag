@@ -1,6 +1,6 @@
 Tag: arch-independent-package-contains-binary-or-object
 Severity: error
-Check: binaries
+Check: binaries/architecture
 Explanation: The package contains a binary or object file but is tagged
  Architecture: all.
  .

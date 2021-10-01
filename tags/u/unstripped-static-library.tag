@@ -1,6 +1,6 @@
 Tag: unstripped-static-library
 Severity: info
-Check: binaries
+Check: libraries/static
 Explanation: The package installs an unstripped static library.
  .
  Please note, that static libraries have to be stripped with the

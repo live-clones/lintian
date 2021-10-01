@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: binaries-missing-depends-on-xapi
+Description: Test for missing perlapi depends
+Package-Architecture: any

@@ -1,7 +1,6 @@
 Tag: library-not-linked-against-libc
 Severity: error
-Check: binaries
-See-Also: policy 10.2, Bug#698720
+Check: binaries/prerequisites
 Explanation: The package installs a library which is not dynamically linked
  against libc.
  .
@@ -10,3 +9,6 @@ Explanation: The package installs a library which is not dynamically linked
  of the requirement that "shared libraries must be linked against all
  libraries that they use symbols from in the same way that binaries
  are".
+See-Also:
+ policy 10.2,
+ Bug#698720

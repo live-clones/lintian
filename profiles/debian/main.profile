@@ -6,6 +6,23 @@ Enable-Tags-From-Check:
  appstream-metadata
  apt
  binaries
+ binaries/architecture
+ binaries/architecture/other
+ binaries/corrupted
+ binaries/debug-symbols
+ binaries/debug-symbols/detached
+ binaries/hardening
+ binaries/large-file-support
+ binaries/location
+ binaries/obsolete/crypt
+ binaries/prerequisites
+ binaries/prerequisites/numpy
+ binaries/prerequisites/perl
+ binaries/prerequisites/php
+ binaries/profiling
+ binaries/rpath
+ binaries/spelling
+ binaries/static
  build-systems/automake
  build-systems/autotools
  build-systems/autotools/libtool
@@ -183,6 +200,7 @@ Enable-Tags-From-Check:
  languages/javascript/embedded
  languages/javascript/nodejs
  languages/ocaml
+ languages/ocaml/custom-executable
  languages/perl
  languages/perl/perl5
  languages/perl/yapp
@@ -202,7 +220,11 @@ Enable-Tags-From-Check:
  languages/r/site-library
  languages/ruby
  languages/rust
+ libraries/debug-symbols
+ libraries/embedded
  libraries/shared/obsolete
+ libraries/shared/soname
+ libraries/static
  linda
  lintian
  mailcap

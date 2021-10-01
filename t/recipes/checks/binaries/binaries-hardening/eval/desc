@@ -1,3 +1,0 @@
-Testname: binaries-hardening
-Test-Architectures: amd64 i386 armhf arm64
-Check: binaries
