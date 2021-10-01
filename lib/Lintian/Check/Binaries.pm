@@ -704,11 +704,10 @@ sub visit_installed_files {
       if $item->name =~ m{^usr/lib/php\d/.*\.so(?:\.\d+)*$};
 
     # Python extension using Numpy C ABI?
-    if (
-        $item->name=~ m{^usr/lib/(?:pyshared/)?python2\.\d+/.*(?<!_d)\.so$}
-        || (   $item->name =~ m{^usr/lib/python3/.+\.cpython-\d+([a-z]+)\.so$}
-            && $1 !~ /d/)
-    ) {
+    if (   $item->name=~ m{^usr/lib/(?:pyshared/)?python2\.\d+/.*(?<!_d)\.so$}
+        || $item->name
+        =~ m{^ usr/lib/python3(?:[.]\d+)? / \S+ [.]cpython- \d+ - \S+ [.]so $}x
+    ){
         $self->uses_numpy_c_abi(1)
           if $item->strings =~ / numpy /msx
           && $item->strings =~ $NUMPY_REGEX;
