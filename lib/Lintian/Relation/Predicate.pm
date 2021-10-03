@@ -340,27 +340,52 @@ sub implies {
     # field "Multi-arch: allowed", but we cannot check that here.  So
     # we assume that it is okay.
 
-    # pkg:any implies pkg (but the reverse is not true).
-    return undef
-      if length $self->multiarch_acceptor
-      && !length $other->multiarch_acceptor
-      && $self->multiarch_acceptor ne 'any';
-
-    # TODO: Review this case.  Are there cases where other cannot
-    # disprove self due to the ":any"-qualifier?  For now, we
-    # assume there are no such cases.
-    return undef
-      if !length $self->multiarch_acceptor
-      && length $other->multiarch_acceptor;
-
-    # For now assert that only the identity holds.  In practise, the
-    # "pkg:X" (for any valid value of X) seems to imply "pkg:any",
-    # fixing that is a TODO (because version clauses complicates
-    # matters)
-    return undef
-      if length $self->multiarch_acceptor
-      && length $other->multiarch_acceptor
-      && $self->multiarch_acceptor ne $other->multiarch_acceptor;
+    if (!length $self->multiarch_acceptor) {
+        # pkg trivially imples pkg.
+        #
+        # A missing qualifier has an effect similar to pkg:<arch> where
+        # <arch> is the architecture of the dependent package.
+        # We don't know what architecture that is, so assume pkg does not
+        # imply pkg:<other> for any specific architecture <other>.
+        #
+        # pkg *does* imply pkg:any, though, because if we have pkg for a
+        # specific architecture (even if we don't know in this context
+        # what that specific architecture is!), then it's certainly true
+        # that we have pkg for at least one architecture.
+        return undef
+          if length $other->multiarch_acceptor
+          && $other->multiarch_acceptor ne 'any';
+    } elsif ($self->multiarch_acceptor eq 'any') {
+        # pkg:any trivially implies pkg:any.
+        #
+        # It does not imply pkg:<arch> for any specific architecture <arch>,
+        # because pkg:any just means we have pkg for at least one
+        # architecture, without being able to say what that architecture is.
+        #
+        # It does not imply pkg, because that has an effect similar to
+        # pkg:<arch> where <arch> is the architecture of the dependent
+        # package.
+        return undef
+          if !length $other->multiarch_acceptor
+          || $other->multiarch_acceptor ne 'any';
+    } else {
+        # A specific architecture such as pkg:i386 trivially implies pkg:i386.
+        #
+        # It also implies pkg:any, because if you have the i386 version
+        # of pkg, it's certainly true that you have pkg for at least one
+        # architecture.
+        #
+        # It does not imply pkg:amd64, or in general any different
+        # architecture.
+        #
+        # It also does not imply pkg, because that has an effect similar
+        # to pkg:<arch> where <arch> is the architecture of the dependent
+        # package, which we do not know in this context.
+        return undef
+          if !length $other->multiarch_acceptor
+          || ( $other->multiarch_acceptor ne 'any'
+            && $other->multiarch_acceptor ne $self->multiarch_acceptor);
+    }
 
   # Now, down to version.  The implication is true if self's clause is stronger
   # than other's, or is equivalent.
