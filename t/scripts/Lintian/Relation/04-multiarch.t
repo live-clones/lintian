@@ -4,10 +4,16 @@ use strict;
 use warnings;
 use Test::More tests => 13;
 
+use Dpkg::Deps qw();
 use Lintian::Relation;
 
 my $orig = 'pkgA:any, pkgB, pkgC:i386';
 my $relation = Lintian::Relation->new->load($orig);
+# When parsing the relation with libdpkg-perl, we use a host and build
+# architecture not mentioned in any of our test-cases, to ensure that
+# those don't interfere.
+my %dpkg_options = (host_arch => 'mips', build_arch => 'mips');
+my $dpkg = Dpkg::Deps::deps_parse($orig, %dpkg_options);
 
 my @implications = (
     { other => 'pkgA:any', implies => 1, desc => 'pkgA:any implies pkgA:any' },
@@ -38,10 +44,21 @@ my @implications = (
 );
 
 foreach my $impl (@implications) {
+    my $dpkg_other = Dpkg::Deps::deps_parse($impl->{other}, %dpkg_options);
     if ($impl->{implies}) {
         ok($relation->implies($impl->{other}), $impl->{desc});
+        if ($impl->{other} !~ /:any/) {
+            # dpkg applies a stricter interpretation of "implies" than we
+            # do. If a package has Depends: foo:any, then we optimistically
+            # assume that it's probably true that foo is Multi-Arch: allowed,
+            # and therefore foo or foo:i386 implies foo:any; but dpkg
+            # pessimistically assumes that it might not be, so it does not
+            # agree with our assumption for foo:any dependencies.
+            ok($dpkg->implies($dpkg_other), 'dpkg agrees ' . $impl->{desc});
+        }
     } else {
         ok(!$relation->implies($impl->{other}), $impl->{desc});
+        ok(!$dpkg->implies($dpkg_other), 'dpkg agrees ' . $impl->{desc});
     }
 }
 
