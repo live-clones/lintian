@@ -3,6 +3,7 @@ csh-shell               usr/bin/
 cwl-runner              usr/bin/
 no-interpreter          usr/bin/
 not-absolute            usr/bin/
+python3                 usr/bin/
 python2.7               usr/bin/
 make                    usr/bin/
 syntax                  usr/bin/
