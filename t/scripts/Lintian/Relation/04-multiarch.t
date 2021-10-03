@@ -9,30 +9,41 @@ use Lintian::Relation;
 my $orig = 'pkgA:any, pkgB, pkgC:i386';
 my $relation = Lintian::Relation->new->load($orig);
 
-ok($relation->implies('pkgA:any'),   'pkgA:any implies pkgA:any');
+my @implications = (
+    { other => 'pkgA:any', implies => 1, desc => 'pkgA:any implies pkgA:any' },
 
-ok($relation->implies('pkgB'),       'pkgB implies pkgB');
-# pkgB implies pkgB:i386 if and only if the dependency is seen in an i386
-# package, but looking at the dependencies out of context like this, we
-# can't tell whether that's the case.
-ok(!$relation->implies('pkgB:i386'), 'pkgB does not imply pkgB:i386');
+    { other => 'pkgB', implies => 1, desc => 'pkgB implies pkgB' },
 
-ok(!$relation->implies('pkgC'),      'pkgC:i386 does not imply pkgC');
-ok($relation->implies('pkgC:i386'),  'pkgC:i386 implies pkgC:i386');
+    # pkgB implies pkgB:i386 if and only if the dependency is seen in an i386
+    # package, but looking at the dependencies out of context like this, we
+    # can't tell whether that's the case.
+    { other => 'pkgB:i386', implies => 0, desc => 'pkgB does not imply pkgB:i386' },
 
-# If we have pkgB:<arch> for some specific architecture, then it's certainly
-# true that we have pkgB for at least one architecture
-ok($relation->implies('pkgB:any'),   'pkgB implies pkgB:any');
+    { other => 'pkgC', implies => 0, desc => 'pkgC:i386 does not imply pkgC' },
+    { other => 'pkgC:i386', implies => 1, desc => 'pkgC:i386 implies itself' },
 
-# pkgA:any does not imply pkgA, because if pkgA is Multi-Arch: allowed,
-# depending on pkgA is shorthand for pkgA:<arch> for some specific
-# architecture, whereas pkgA:any could be satisfied by an architecture
-# other than <arch>
-ok(!$relation->implies('pkgA'),      'pkgA:any does not imply pkgA');
+    # If we have pkgB:<arch> for some specific architecture, then it's
+    # certainly true that we have pkgB for at least one architecture
+    { other => 'pkgB:any', implies => 1, desc => 'pkgB implies pkgB:any' },
 
-# If we have pkgC:i386, then it's certainly true that we have pkgC for at
-# least one architecture
-ok($relation->implies('pkgC:any'),   'pkgC:i386 implies pkgC:any');
+    # pkgA:any does not imply pkgA, because if pkgA is Multi-Arch: allowed,
+    # depending on pkgA is shorthand for pkgA:<arch> for some specific
+    # architecture, whereas pkgA:any could be satisfied by an architecture
+    # other than <arch>
+    { other => 'pkgA', implies => 0, desc => 'pkgA:any does not imply pkgA' },
+
+    # If we have pkgC:i386, then it's certainly true that we have pkgC for at
+    # least one architecture
+    { other => 'pkgC:any', implies => 1, desc => 'pkgC:i386 implies pkgC:any' },
+);
+
+foreach my $impl (@implications) {
+    if ($impl->{implies}) {
+        ok($relation->implies($impl->{other}), $impl->{desc});
+    } else {
+        ok(!$relation->implies($impl->{other}), $impl->{desc});
+    }
+}
 
 is($relation->to_string, $orig,      'reconstituted eq original');
 
