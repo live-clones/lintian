@@ -1,7 +1,8 @@
 Tag: empty-shared-library-symbols
 Severity: error
-Check: shared-libs
-Renamed-From: pkg-has-symbols-control-file-but-no-shared-libs
+Check: debian/shlibs
+Renamed-From:
+ pkg-has-symbols-control-file-but-no-shared-libs
 Explanation: Although the package does not include any shared libraries, it does
  have a symbols control file. If you did include a shared library, check that
  the SONAME of the library is set and that it matches the contents of the

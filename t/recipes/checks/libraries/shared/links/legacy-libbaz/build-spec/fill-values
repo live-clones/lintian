@@ -1,0 +1,6 @@
+Skeleton: upload-non-native
+Testname: legacy-libbaz
+Source: libbaz
+Version: 1-1
+Default-Build-Depends: debhelper (>= 9.20151004~)
+Description: Legacy test "libbaz"

@@ -1,6 +1,6 @@
 Tag: symbols-declares-dependency-on-other-package
 Severity: warning
-Check: shared-libs
+Check: debian/shlibs
 Explanation: This package declares in its symbols control file a dependency on
  some other package (and not one listed in the Provides of this package).
  .

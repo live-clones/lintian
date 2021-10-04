@@ -1,7 +1,8 @@
 Tag: executable-stack-in-shared-library
 Severity: warning
-Check: shared-libs
-Renamed-From: shlib-with-executable-stack
+Check: libraries/shared/stack
+Renamed-From:
+ shlib-with-executable-stack
 Explanation: The listed shared library declares the stack as executable.
  .
  Executable stack is usually an error as it is only needed if the code

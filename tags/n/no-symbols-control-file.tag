@@ -1,6 +1,6 @@
 Tag: no-symbols-control-file
 Severity: info
-Check: shared-libs
+Check: debian/shlibs
 Explanation: Although the package includes a shared library, the package does not
  have a symbols control file.
  .

@@ -1,8 +1,9 @@
 Tag: exit-in-shared-library
 Severity: info
-Check: shared-libs
+Check: libraries/shared/exit
 Experimental: yes
-Renamed-From: shlib-calls-exit
+Renamed-From:
+ shlib-calls-exit
 Explanation: The listed shared library calls the C library exit() or &lowbar;exit()
  functions.
  .

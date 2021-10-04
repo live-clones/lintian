@@ -27,6 +27,7 @@ Enable-Tags-From-Check:
  build-systems/autotools
  build-systems/autotools/libtool
  build-systems/cmake
+ build-systems/libtool/la-file
  build-systems/waf
  changes-file
  conffiles
@@ -59,6 +60,7 @@ Enable-Tags-From-Check:
  debian/readme
  debian/rules
  debian/rules/dh-sequencer
+ debian/shlibs
  debian/source-dir
  debian/source/include-binaries
  debian/substvars
@@ -222,8 +224,16 @@ Enable-Tags-From-Check:
  languages/rust
  libraries/debug-symbols
  libraries/embedded
+ libraries/shared/exit
+ libraries/shared/file-permissions
+ libraries/shared/links
+ libraries/shared/multi-arch
  libraries/shared/obsolete
+ libraries/shared/relocation
  libraries/shared/soname
+ libraries/shared/soname/missing
+ libraries/shared/stack
+ libraries/shared/trigger/ldconfig
  libraries/static
  libraries/static/name
  linda
@@ -231,6 +241,7 @@ Enable-Tags-From-Check:
  mailcap
  maintainer-scripts/adduser
  maintainer-scripts/generated
+ maintainer-scripts/ldconfig
  md5sums
  menu-format
  menus
@@ -241,7 +252,6 @@ Enable-Tags-From-Check:
  origtar
  pe
  scripts
- shared-libs
  systemd
  systemd/tmpfiles
  team/pkg-js/deprecated

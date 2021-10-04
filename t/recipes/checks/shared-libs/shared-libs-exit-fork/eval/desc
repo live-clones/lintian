@@ -1,4 +1,0 @@
-Testname: shared-libs-exit-fork
-Test-Against:
- exit-in-shared-library
-Check: shared-libs

@@ -1,0 +1,110 @@
+# this makefile was adapted from the standard template to do just one thing:
+# to ensure that no building takes place on architectures other than i386.
+#
+# dpkg-buildpackage croaks not only on build errors but also if there simply
+# is nothing to do. source packages are nowadays permitted to create
+# undeclared build artifacts. there is no way to tell when a build should
+# or should not proceed (although the buildds use a heuristic based on the
+# dsc).
+#
+# this makefile also touches the build product to make sure it exists. for
+# historical reasons, the test runner check that (although perhaps it should
+# not).
+#
+# more information may be available at Bug#949066.
+
+ROOT_DIR:=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
+
+package = [% $source %]
+upstream_version = [% $upstream_version %]
+type = [% $type %]
+
+packagedir = $(package)-$(upstream_version)
+
+origdata = $(ROOT_DIR)/orig
+origtargz = $(package)_$(upstream_version).orig.tar.gz
+
+debiandata = $(ROOT_DIR)/debian
+formatfile = $(debiandata)/source/format
+
+diffdata = $(ROOT_DIR)/diff
+
+private_key = $(ROOT_DIR)/upstream/private-key.asc
+
+pre_build = $(ROOT_DIR)/pre-build
+post_build = $(ROOT_DIR)/post-build
+pre_upstream = $(ROOT_DIR)/pre-upstream
+
+product = [% $build_product %]
+upload_type = [% $upload_type %]
+
+ifeq ($(upload_type),source)
+extraflags = -S
+else
+extraflags =
+endif
+
+.DEFAULT_GOAL := $(product)
+
+ifeq ($(shell dpkg-architecture -qDEB_HOST_ARCH),i386)
+$(product): $(origtargz)
+	if [ -r $(origtargz) -a -r $(private_key) ] ; then \
+		tmpdir=$(shell mktemp -d) ; \
+		gpg --homedir "$$tmpdir" --import $(private_key) ; \
+		gpg --homedir "$$tmpdir" --batch --yes --armor --output $(origtargz).asc \
+			--detach-sign $(origtargz) ; \
+		gpg-connect-agent --homedir "$$tmpdir" KILLAGENT /bye ; \
+		rm -rf "$$tmpdir" ; \
+	fi
+	if [ -d $(diffdata)/. ] ; then \
+		cp -rp $(diffdata)/. $(packagedir) ; \
+	fi
+	if [ -d $(debiandata)/. ] ; then \
+		cp -rp $(debiandata)/. $(packagedir)/debian ; \
+	fi
+
+	if [ -x $(pre_build) ] ; then \
+		$(pre_build) $(shell realpath $(packagedir)) ; \
+	fi
+
+	cd $(packagedir) && dpkg-buildpackage -rfakeroot $(extraflags) -us -uc -d \
+		-iNEVER_MATCH_ANYTHING -INEVER_MATCH_ANYTHING --source-option=--auto-commit
+
+	if [ -x $(post_build) ] ; then \
+		$(post_build) $(shell realpath $(packagedir)) ; \
+	fi
+else
+$(product):
+	touch $(product)
+endif
+
+ifeq ($(type),native)
+$(origtargz):
+	-mkdir $(packagedir)
+	if [ -d $(origdata)/. ] ; then \
+		cp -rp $(origdata)/. $(packagedir) ; \
+	fi
+else
+$(origtargz):
+	-mkdir $(packagedir)
+	if [ -d $(origdata)/. ] ; then \
+		cp -rp $(origdata)/. $(packagedir) ; \
+	fi
+
+	if [ -x $(pre_upstream) ] ; then \
+		$(pre_upstream) $(shell realpath $(packagedir)) ; \
+	fi
+
+	tar czf $(origtargz) $(packagedir)
+
+	if [ -f $(formatfile) ] && grep --quiet "^3\.. (quilt)$$" $(formatfile) ; then \
+		rm -rf $(packagedir)/debian ; \
+	fi
+endif
+
+.PHONY: clean
+clean:
+	rm -rf $(packagedir)
+	if [ "$(type)" = "native" ] ; then \
+		rm -f $(origtargz) ; \
+	fi

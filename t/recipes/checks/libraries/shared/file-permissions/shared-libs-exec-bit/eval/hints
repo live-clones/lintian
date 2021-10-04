@@ -1,0 +1,2 @@
+libexecbit1 (binary): shared-library-is-executable usr/lib/libexecbit.so.1.0.1 0755
+libexecbit1 (binary): odd-permissions-on-shared-library usr/lib/libbadperm.so.1.0.1 0600

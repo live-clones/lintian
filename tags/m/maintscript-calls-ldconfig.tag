@@ -1,6 +1,6 @@
 Tag: maintscript-calls-ldconfig
 Severity: warning
-Check: shared-libs
+Check: maintainer-scripts/ldconfig
 Explanation: The given maintainer script calls ldconfig. However, explicit
  calls in maintainer scripts should be replaced by a dpkg trigger.
  .

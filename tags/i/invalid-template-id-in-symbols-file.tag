@@ -1,6 +1,6 @@
 Tag: invalid-template-id-in-symbols-file
 Severity: error
-Check: shared-libs
+Check: debian/shlibs
 Explanation: The symbol definition refers to an alternative dependency template
  which is not defined for the library containing the symbol.
  .
