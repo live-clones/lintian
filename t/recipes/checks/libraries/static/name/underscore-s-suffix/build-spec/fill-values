@@ -1,0 +1,4 @@
+Testname: underscore-s-suffix
+Package-Architecture: any
+Skeleton: upload-non-native
+Description: Static library installed with _s.a suffix

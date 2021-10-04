@@ -225,6 +225,7 @@ Enable-Tags-From-Check:
  libraries/shared/obsolete
  libraries/shared/soname
  libraries/static
+ libraries/static/name
  linda
  lintian
  mailcap
