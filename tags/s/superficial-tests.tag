@@ -1,5 +1,5 @@
 Tag: superficial-tests
-Severity: warning
+Severity: info
 Check: testsuite
 Explanation: The source package declares tests in the
  <code>debian/tests/control</code> file but  provides only tests

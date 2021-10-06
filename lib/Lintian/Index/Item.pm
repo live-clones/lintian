@@ -486,23 +486,23 @@ has is_script => (
         return 1;
     });
 
-=item is_control
+=item is_maintainer_script
 
 Returns true if file is a maintainer script and false otherwise.
 
 =cut
 
-has is_control => (
+has is_maintainer_script => (
     is => 'rw',
     lazy => 1,
     default => sub {
         my ($self) = @_;
 
-        return 0
-          unless $self->is_open_ok
-          && $self->name =~ m/^(?:(?:pre|post)(?:inst|rm)|config)$/;
+        return 1
+          if $self->name =~ /^ config | (?:pre|post)(?:inst|rm) $/x
+          && $self->is_open_ok;
 
-        return 1;
+        return 0;
     });
 
 =item identity
@@ -722,29 +722,28 @@ arguments instead.
 
 =cut
 
-sub link_normalized {
-    my ($self) = @_;
+has link_normalized => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
 
-    return $self->normalized
-      if length $self->normalized;
+        my $name = $self->name;
+        my $link = $self->link;
 
-    my $name = $self->name;
-    my $link = $self->link;
+        croak encode_utf8("$name is not a link")
+          unless length $link;
 
-    croak encode_utf8("$name is not a link")
-      unless length $link;
+        my $dir = $self->dirname;
 
-    my $dir = $self->dirname;
+        # hardlinks are always relative to the package root
+        $dir = $SLASH
+          if $self->is_hardlink;
 
-    # hardlinks are always relative to the package root
-    $dir = $SLASH
-      if $self->is_hardlink;
+        my $target = normalize_link_target($dir, $link);
 
-    my $target = normalize_link_target($dir, $link);
-    $self->normalized($target);
-
-    return $target;
-}
+        return $target;
+    });
 
 =item is_readable
 

@@ -22,6 +22,7 @@ Enable-Tags:
  control-file-is-not-a-file
  control-interpreter-in-usr-local
  control-interpreter-without-depends
+ control-interpreter-without-predepends
  copyright-contains-dh_make-todo-boilerplate
  copyright-file-compressed
  copyright-file-is-symlink
@@ -94,7 +95,6 @@ Enable-Tags:
  package-uses-local-diversion
  pkg-config-bad-directive
  pkg-config-multi-arch-wrong-dir
- preinst-interpreter-without-predepends
  python-module-has-overly-generic-name
  quilt-series-without-trailing-newline
  required-field

@@ -472,11 +472,8 @@ sub check_dep5_copyright {
         $dulled =~ s/([{}\[\]])/\\$1/g;
 
         my @match = match_glob($dulled, @shipped_names);
-        my $position = $header->position('Files-Excluded');
-        $self->hint('superfluous-file-pattern', $copyright_file->name,
-            $wildcard,"(Files-Excluded, line $position)")
-          unless @match;
 
+        # do not flag missing matches; uscan already excluded them
         push(@excluded, @match);
     }
 

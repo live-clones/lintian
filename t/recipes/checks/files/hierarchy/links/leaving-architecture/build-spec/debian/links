@@ -1,1 +1,1 @@
-usr/lib/module.so usr/lib/myarch/a-module.so
+usr/lib/a-library.so usr/lib/aarch64-linux-gnu/a-link.so

@@ -113,7 +113,7 @@ sub issue_hints {
             $group->get_processables) {
             my %file_output;
             $file_output{filename} = path($processable->path)->basename;
-            $file_output{tags}
+            $file_output{hints}
               = $self->hintlist($lintian_version, $processable->hints);
             push(@allfiles_output, \%file_output);
         }
@@ -154,9 +154,9 @@ sub hintlist {
         my %hint;
         push(@hints, \%hint);
 
-        $hint{name} = $input->tag->name;
+        $hint{tag_name} = $input->tag->name;
 
-        $hint{url} = "https://lintian.debian.org/tags/$hint{name}";
+        $hint{url} = 'https://lintian.debian.org/tags/' . $input->tag->name;
 
         $hint{context} = $input->context
           if length $input->context;

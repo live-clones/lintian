@@ -30,7 +30,7 @@ use Const::Fast;
 use List::SomeUtils qw(any);
 use Unicode::UTF8 qw(encode_utf8);
 
-use Lintian::Relation::Version qw(:all);
+use Lintian::Relation::Predicate;
 
 use Moo;
 use namespace::clean;
@@ -43,23 +43,11 @@ use constant {
 };
 
 const my $EMPTY => q{};
-const my $SPACE => q{ };
-const my $COLON => q{:};
-const my $EQUAL => q{=};
-const my $LEFT_PARENS => q{(};
-const my $RIGHT_PARENS => q{)};
-const my $LEFT_SQUARE => q{[};
-const my $RIGHT_SQUARE => q{]};
-const my $LEFT_ANGLE => q{<};
-const my $RIGHT_ANGLE => q{>};
 
 const my $BRANCH_TYPE => 0;
-const my $NAME => 1;
-const my $OPERATOR => 2;
-const my $VERSION => 3;
-const my $BD_ARCHITECTURE => 4;
-const my $MACHINE_ARCHITECTURE => 5;
-const my $RESTRICTIONS => 6;
+const my $PREDICATE => 1;
+
+const my $FALSE => 0;
 
 =head1 NAME
 
@@ -100,94 +88,6 @@ are ignored.
 
 has trunk => (is => 'rw', default => sub { ['AND'] });
 
-=item create_element
-
-=cut
-
-# The internal parser which converts a single package element of a
-# relationship into the parsed form used for later processing.  We permit
-# substvars to be used as package names so that we can use these routines with
-# the unparsed debian/control file.
-sub create_element {
-    my ($string) = @_;
-
-    if (
-        $string !~ m{
-        ^\s*                            # skip leading whitespace
-        (                               # package name or substvar (1)
-         (?:                            #  start of the name
-          [a-zA-Z0-9][a-zA-Z0-9+.-]*    #   start of a package name
-          |                             #   or
-          \$\{[a-zA-Z0-9:-]+\}          #   substvar
-         )                              #  end of start of the name
-         (?:                            #  substvars may be mixed in
-          [a-zA-Z0-9+.-]+               #   package name portion
-          |                             #   or
-          \$\{[a-zA-Z0-9:-]+\}          #   substvar
-         )*                             #  zero or more portions or substvars
-        )                               # end of package name or substvar
-        (?:[:]([a-z0-9-]+))?            # optional Multi-arch arch specification (2)
-        (?:                             # start of optional version
-         \s* \(                         # open parenthesis for version part
-         \s* (<<|<=|>=|>>|[=<>])        # relation part (3)
-         \s* ([^\)]+)                   # version (4)
-         \s* \)                         # closing parenthesis
-        )?                              # end of optional version
-        (?:                             # start of optional architecture
-         \s* \[                         # open bracket for architecture
-         \s* ([^\]]+)                   # architectures (5)
-         \s* \]                         # closing bracket
-        )?                              # end of optional architecture
-        (?:                             # start of optional restriction
-          \s* <                         # open bracket for restriction
-          \s* ([^,]+)                   # don't parse restrictions now
-          \s* >                         # closing bracket
-        )?                              # end of optional restriction
-    \s* $}x
-    ) {
-        # store the element as-is, so we can reconstitute it later
-        return ['PRED-UNPARSABLE', $string];
-    }
-
-    my ($pkgname, $march, $relop, $relver, $bdarch, $restr)
-      = ($1, $2, $3, $4, $5, $6);
-
-    my @array;
-    if (not defined($relop)) {
-        # If there's no version, we don't need to do any further processing.
-        # Otherwise, convert the legacy < and > relations to the current ones.
-        @array = ('PRED', $pkgname, undef, undef, $bdarch, $march, $restr);
-    } else {
-        if ($relop eq '<') {
-            $relop = '<<';
-        } elsif ($relop eq '>') {
-            $relop = '>>';
-        }
-        @array = ('PRED', $pkgname, $relop, $relver, $bdarch, $march, $restr);
-    }
-
-    # Optimise the memory usage of the array.  Understanding this
-    # requires a bit of "Perl guts" knowledge.  Storing "undef" in an
-    # array (or hash) actually creates a new empty "undefined" scalar.
-    # This means that we pay the full overhead of Perl's SV struct for
-    # each undef value in this array.
-    #   Combine this with the fact that at least the BD-arch qualifier
-    # is rare (in fact, always undef for binary relations) and
-    # multi-arch qualifiers equally so (at least at the moment).
-    # On unversioned relations, we end up paying for 4 (unique) empty
-    # scalars.
-    #   This overhead accumulates to 0.44M for the binary relations of
-    # source:linux (on i386).
-    #
-    # Fortunately, perl allows us to do "out-of-bounds" access and
-    # will simply return undef in this case.  This means, we can
-    # basically get away with popping elements from the right hand
-    # side of the array "for free".
-    pop(@array) while (not defined($array[-1]));
-
-    return \@array;
-}
-
 =item load (RELATION)
 
 Creates a new Lintian::Relation object corresponding to the parsed
@@ -199,7 +99,7 @@ satisfied).
 =cut
 
 sub load {
-    my ($self, $condition) = @_;
+    my ($self, $condition, $with_restrictions) = @_;
 
     $condition //= $EMPTY;
 
@@ -208,15 +108,22 @@ sub load {
     my @requirements = grep { length } split(/\s*,\s*/, $condition);
     for my $requirement (@requirements) {
 
+        my @predicates;
+
         my @alternatives = split(/\s*\|\s*/, $requirement);
-        my @elements
-          = grep { defined } map { create_element($_) } @alternatives;
+        for my $alternative (@alternatives) {
 
-        push(@trunk, @elements)
-          if @elements == 1;
+            my $predicate = Lintian::Relation::Predicate->new;
+            $predicate->parse($alternative, $with_restrictions);
 
-        push(@trunk, ['OR', @elements])
-          if @elements > 1;
+            push(@predicates, ['PRED', $predicate]);
+        }
+
+        push(@trunk, @predicates)
+          if @predicates == 1;
+
+        push(@trunk, ['OR', @predicates])
+          if @predicates > 1;
     }
 
     $self->trunk(\@trunk);
@@ -242,16 +149,7 @@ Lintian::Relation object is empty (always satisfied).
 sub load_norestriction {
     my ($self, $condition) = @_;
 
-    $condition //= $EMPTY;
-
-    $condition =~ s/\[[^,\]]*\]//g;
-
-    # we have to make sure that the following does not match the less than
-    # sign from a version comparison. We do this by doing a negative lookahead
-    # and a negative lookbehind for the "opening" triangular bracket
-    $condition =~ s/(?<!<)<(?![<=])[^,]*>//g;
-
-    return $self->load($condition);
+    return $self->load($condition, $FALSE);
 }
 
 =item logical_and(RELATION, ...)
@@ -413,237 +311,6 @@ string.  If architecture restrictions should be ignored in RELATION,
 create a Lintian::Relation object with new_norestriction() and pass that
 in as RELATION instead of the string.
 
-=item implies_element
-
-=cut
-
-# This internal function does the heavily lifting of comparing two
-# elements.
-#
-# Takes two elements and returns true iff the second can be deduced from the
-# first.  If the second is falsified by the first (in other words, if p
-# actually implies not q), return 0.  Otherwise, return undef.  The 0 return
-# is used by implies_element_inverse.
-sub implies_element {
-    my ($p, $q) = @_;
-
-    # If the names don't match, there is no relationship between them.
-
-    return undef
-      if $p->[$NAME] ne $q->[$NAME];
-
-    # the restriction formula forms a disjunctive normal form expression one
-    # way to check whether A <dnf1> implies A <dnf2> is to check:
-    #
-    # if dnf1 == dnf1 OR dnf2:
-    #     the second dependency is superfluous because the first dependency
-    #     applies in all cases the second one applies
-    #
-    # an easy way to check for equivalence of the two dnf expressions would be
-    # to construct the truth table for both expressions ("dnf1" and "dnf1 OR
-    # dnf2") for all involved profiles and then comparing whether they are
-    # equal
-    #
-    # the size of the truth tables grows with 2 to the power of the amount of
-    # involved profile names but since there currently only exist six possible
-    # profile names (see data/fields/build-profiles) that should be okay
-    #
-    # FIXME: we are not doing this check yet so if we encounter a dependency
-    # with build profiles we assume that one does not imply the other:
-
-    return undef
-      if defined $p->[$RESTRICTIONS]
-      || defined $q->[$RESTRICTIONS];
-
-    # If the names match, then the only difference is in the architecture or
-    # version clauses.  First, check architecture.  The architectures for p
-    # must be a superset of the architectures for q.
-    my @p_arches = split($SPACE,
-        defined($p->[$BD_ARCHITECTURE]) ? $p->[$BD_ARCHITECTURE] : $EMPTY);
-    my @q_arches = split($SPACE,
-        defined($q->[$BD_ARCHITECTURE]) ? $q->[$BD_ARCHITECTURE] : $EMPTY);
-    if (@p_arches || @q_arches) {
-        my $p_arch_neg = @p_arches && $p_arches[0] =~ /^!/;
-        my $q_arch_neg = @q_arches && $q_arches[0] =~ /^!/;
-
-        # If p has no arches, it is a superset of q and we should fall through
-        # to the version check.
-        if (not @p_arches) {
-            # nothing
-        }
-
-        # If q has no arches, it is a superset of p and there are no useful
-        # implications.
-        elsif (not @q_arches) {
-
-            return undef;
-        }
-
-        # Both have arches.  If neither are negated, we know nothing useful
-        # unless q is a subset of p.
-        elsif (not $p_arch_neg and not $q_arch_neg) {
-            my %p_arches = map { $_ => 1 } @p_arches;
-            my $subset = 1;
-            for my $arch (@q_arches) {
-                $subset = 0 unless $p_arches{$arch};
-            }
-
-            return undef
-              unless $subset;
-        }
-
-        # If both are negated, we know nothing useful unless p is a subset of
-        # q (and therefore has fewer things excluded, and therefore is more
-        # general).
-        elsif ($p_arch_neg and $q_arch_neg) {
-            my %q_arches = map { $_ => 1 } @q_arches;
-            my $subset = 1;
-            for my $arch (@p_arches) {
-                $subset = 0 unless $q_arches{$arch};
-            }
-
-            return undef
-              unless $subset;
-        }
-
-        # If q is negated and p isn't, we'd need to know the full list of
-        # arches to know if there's any relationship, so bail.
-        elsif (not $p_arch_neg and $q_arch_neg) {
-
-            return undef;
-        }
-
-        # If p is negated and q isn't, q is a subset of p iff none of the
-        # negated arches in p are present in q.
-        elsif ($p_arch_neg and not $q_arch_neg) {
-            my %q_arches = map { $_ => 1 } @q_arches;
-            my $subset = 1;
-            for my $arch (@p_arches) {
-                $subset = 0 if $q_arches{substr($arch, 1)};
-            }
-
-            return undef
-              unless $subset;
-        }
-    }
-
-    # Multi-arch architecture specification
-
-    # According to the spec, only the special value "any" is allowed
-    # and it is "recommended" to consider "other such package
-    # relations as unsatisfiable".  That said, there seem to be an
-    # interest in supporting ":<arch>" as well, so we will (probably)
-    # have to accept those as well.
-    #
-    # Other than that, we would need to know that the package has the
-    # field "Multi-arch: allowed", but we cannot check that here.  So
-    # we assume that it is okay.
-    #
-    # For now assert that only the identity holds.  In practise, the
-    # "pkg:X" (for any valid value of X) seems to imply "pkg:any",
-    # fixing that is a TODO (because version clauses complicates
-    # matters)
-    if (defined $p->[$MACHINE_ARCHITECTURE]) {
-        # Assume the identity to hold
-        return undef
-          unless defined $q->[$MACHINE_ARCHITECTURE]
-          && $p->[$MACHINE_ARCHITECTURE] eq $q->[$MACHINE_ARCHITECTURE];
-
-    } elsif (defined $q->[$MACHINE_ARCHITECTURE]) {
-
-        return undef
-          unless $q->[$MACHINE_ARCHITECTURE] eq 'any';
-
-        # pkg:any implies pkg (but the reverse is not true).
-        #
-        # TODO: Review this case.  Are there cases where Q cannot
-        # disprove P due to the ":any"-qualifier?  For now, we
-        # assume there are no such cases.
-    }
-
-    # Now, down to version.  The implication is true if p's clause is stronger
-    # than q's, or is equivalent.
-
-    # If q has no version clause, then p's clause is always stronger.
-    return 1
-      unless defined $q->[$OPERATOR];
-
-    # If q does have a version clause, then p must also have one to have any
-    # useful relationship.
-    return undef
-      unless defined $p->[$OPERATOR];
-
-    # q wants an exact version, so p must provide that exact version.  p
-    # disproves q if q's version is outside the range enforced by p.
-    if ($q->[$OPERATOR] eq $EQUAL) {
-        if ($p->[$OPERATOR] eq '<<') {
-            return versions_lte($p->[$VERSION], $q->[$VERSION]) ? 0 : undef;
-        } elsif ($p->[$OPERATOR] eq '<=') {
-            return versions_lt($p->[$VERSION], $q->[$VERSION]) ? 0 : undef;
-        } elsif ($p->[$OPERATOR] eq '>>') {
-            return versions_gte($p->[$VERSION], $q->[$VERSION]) ? 0 : undef;
-        } elsif ($p->[$OPERATOR] eq '>=') {
-            return versions_gt($p->[$VERSION], $q->[$VERSION]) ? 0 : undef;
-        } elsif ($p->[$OPERATOR] eq $EQUAL) {
-            return versions_equal($p->[$VERSION], $q->[$VERSION]) ? 1 : 0;
-        }
-    }
-
-    # A greater than clause may disprove a less than clause.  Otherwise, if
-    # p's clause is <<, <=, or =, the version must be <= q's to imply q.
-    if ($q->[$OPERATOR] eq '<=') {
-        if ($p->[$OPERATOR] eq '>>') {
-            return versions_gte($p->[$VERSION], $q->[$VERSION]) ? 0 : undef;
-        } elsif ($p->[$OPERATOR] eq '>=') {
-            return versions_gt($p->[$VERSION], $q->[$VERSION]) ? 0 : undef;
-        } elsif ($p->[$OPERATOR] eq $EQUAL) {
-            return versions_lte($p->[$VERSION], $q->[$VERSION]) ? 1 : 0;
-        } else {
-            return versions_lte($p->[$VERSION], $q->[$VERSION]) ? 1 : undef;
-        }
-    }
-
-    # Similar, but << is stronger than <= so p's version must be << q's
-    # version if the p relation is <= or =.
-    if ($q->[$OPERATOR] eq '<<') {
-        if ($p->[$OPERATOR] eq '>>' || $p->[$OPERATOR] eq '>=') {
-            return versions_gte($p->[$VERSION], $p->[$VERSION]) ? 0 : undef;
-        } elsif ($p->[$OPERATOR] eq '<<') {
-            return versions_lte($p->[$VERSION], $q->[$VERSION]) ? 1 : undef;
-        } elsif ($p->[$OPERATOR] eq $EQUAL) {
-            return versions_lt($p->[$VERSION], $q->[$VERSION]) ? 1 : 0;
-        } else {
-            return versions_lt($p->[$VERSION], $q->[$VERSION]) ? 1 : undef;
-        }
-    }
-
-    # Same logic as above, only inverted.
-    if ($q->[$OPERATOR] eq '>=') {
-        if ($p->[$OPERATOR] eq '<<') {
-            return versions_lte($p->[$VERSION], $q->[$VERSION]) ? 0 : undef;
-        } elsif ($p->[$OPERATOR] eq '<=') {
-            return versions_lt($p->[$VERSION], $q->[$VERSION]) ? 0 : undef;
-        } elsif ($p->[$OPERATOR] eq $EQUAL) {
-            return versions_gte($p->[$VERSION], $q->[$VERSION]) ? 1 : 0;
-        } else {
-            return versions_gte($p->[$VERSION], $q->[$VERSION]) ? 1 : undef;
-        }
-    }
-    if ($q->[$OPERATOR] eq '>>') {
-        if ($p->[$OPERATOR] eq '<<' || $p->[$OPERATOR] eq '<=') {
-            return versions_lte($p->[$VERSION], $q->[$VERSION]) ? 0 : undef;
-        } elsif ($p->[$OPERATOR] eq '>>') {
-            return versions_gte($p->[$VERSION], $q->[$VERSION]) ? 1 : undef;
-        } elsif ($p->[$OPERATOR] eq $EQUAL) {
-            return versions_gt($p->[$VERSION], $q->[$VERSION]) ? 1 : 0;
-        } else {
-            return versions_gt($p->[$VERSION], $q->[$VERSION]) ? 1 : undef;
-        }
-    }
-
-    return undef;
-}
-
 =item implies_array
 
 =cut
@@ -652,12 +319,14 @@ sub implies_element {
 # two references to arrays instead of an object and a relation.
 sub implies_array {
     my ($p, $q) = @_;
+
     my $i;
     my $q0 = $q->[$BRANCH_TYPE];
     my $p0 = $p->[$BRANCH_TYPE];
+
     if ($q0 eq 'PRED') {
         if ($p0 eq 'PRED') {
-            return implies_element($p, $q);
+            return $p->[$PREDICATE]->implies($q->[$PREDICATE]);
         } elsif ($p0 eq 'AND') {
             $i = 1;
             while ($i < @{$p}) {
@@ -680,6 +349,7 @@ sub implies_array {
             return 0 if not implies_array($p, $q->[$i++]);
         }
         return 1;
+
     } elsif ($q0 eq 'OR') {
         # If p is something other than OR, p needs to satisfy one of the
         # clauses of q.  If p is an AND clause, q is satisfied if any of the
@@ -726,15 +396,14 @@ sub implies_array {
         } elsif ($p->[$BRANCH_TYPE] eq 'NOT') {
             return implies_array_inverse($p->[1], $q);
         }
+
     } elsif ($q0 eq 'NOT') {
         if ($p0 eq 'NOT') {
             return implies_array($q->[1], $p->[1]);
         }
         return implies_array_inverse($p, $q->[1]);
-    } elsif ($q0 eq 'PRED-UNPARSABLE') {
-        # Assume eqv. holds for unparsable elements.
-        return 1 if $p0 eq $q0 and $p->[1] eq $q->[1];
     }
+
     return undef;
 }
 
@@ -766,26 +435,6 @@ RELATION if it is a string.  If architecture restrictions should be
 ignored in RELATION, create a Lintian::Relation object with
 new_norestriction() and pass that in as RELATION instead of the string.
 
-=item implies_element_inverse
-
-=cut
-
-# This internal function does the heavy lifting of inverse implication between
-# two elements.  Takes two elements and returns true iff the falsehood of
-# the second can be deduced from the truth of the first.  In other words, p
-# implies not q, or restated, q implies not p.  (Since if a implies b, not b
-# implies not a.)  Due to the return value of implies_element(), we can let it
-# do most of the work.
-sub implies_element_inverse {
-    my ($p, $q) = @_;
-    my $result = implies_element($p, $q);
-
-    return undef
-      if not defined($result);
-
-    return $result ? 0 : 1;
-}
-
 =item implies_array_inverse
 
 =cut
@@ -801,7 +450,7 @@ sub implies_array_inverse {
     my $p0 = $p->[$BRANCH_TYPE];
     if ($q0 eq 'PRED') {
         if ($p0 eq 'PRED') {
-            return implies_element_inverse($p, $q);
+            return $p->[$PREDICATE]->implies_inverse($q->[$PREDICATE]);
         } elsif ($p0 eq 'AND') {
             # q's falsehood can be deduced from any of p's clauses
             $i = 1;
@@ -868,9 +517,6 @@ internal failures (such as an object in an unexpected format).
 # The second argument isn't part of the public API.  It's a partial relation
 # that's not a blessed object and is used by to_string() internally so that it
 # can recurse.
-#
-# We also support a NOT predicate.  This currently isn't ever generated by a
-# regular relation, but it may someday be useful.
 sub to_string {
     my ($self, $branch) = @_;
 
@@ -879,26 +525,7 @@ sub to_string {
     my $text;
     if ($tree->[$BRANCH_TYPE] eq 'PRED') {
 
-        $text = $tree->[$NAME];
-
-        $text .= $COLON . $tree->[$MACHINE_ARCHITECTURE]
-          if length $tree->[$MACHINE_ARCHITECTURE];
-
-        $text
-          .= $SPACE
-          . $LEFT_PARENS
-          . $tree->[$OPERATOR]
-          . $SPACE
-          . $tree->[$VERSION]
-          . $RIGHT_PARENS
-          if length $tree->[$OPERATOR];
-
-        $text
-          .= $SPACE . $LEFT_SQUARE . $tree->[$BD_ARCHITECTURE] . $RIGHT_SQUARE
-          if length $tree->[$BD_ARCHITECTURE];
-
-        $text .= $SPACE . $LEFT_ANGLE . $tree->[$RESTRICTIONS] . $RIGHT_ANGLE
-          if length $tree->[$RESTRICTIONS];
+        $text = $tree->[$PREDICATE]->to_string;
 
     } elsif ($tree->[$BRANCH_TYPE] eq 'AND' || $tree->[$BRANCH_TYPE] eq 'OR') {
 
@@ -907,11 +534,9 @@ sub to_string {
         $text = join($connector, @separated);
 
     } elsif ($tree->[$BRANCH_TYPE] eq 'NOT') {
-        $text = '! ' . $self->to_string($tree->[$NAME]);
 
-    } elsif ($tree->[$BRANCH_TYPE] eq 'PRED-UNPARSABLE') {
-        # return the original value
-        $text = $tree->[$NAME];
+        # currently not generated by any relation
+        $text = '! ' . $tree->[$PREDICATE]->to_string;
 
     } else {
         confess encode_utf8("Case $tree->[$BRANCH_TYPE] not implemented");
@@ -1063,8 +688,9 @@ sub visit {
     $flags //= 0;
 
     if ($rel_type eq 'PRED') {
-        my $against = $tree->[$NAME];
-        $against = $self->to_string($tree)
+        my $predicate = $tree->[$PREDICATE];
+        my $against = $predicate->name;
+        $against = $predicate->to_string
           if $flags & VISIT_PRED_FULL;
 
         local $_ = $against;
@@ -1077,6 +703,7 @@ sub visit {
 
         local $_ = $against;
         return scalar $code->($against);
+
     } elsif ($rel_type eq 'AND'
         or $rel_type eq 'OR'
         or $rel_type eq 'NOT') {
@@ -1104,7 +731,7 @@ sub is_empty {
     my ($self) = @_;
 
     return 1
-      if $self->trunk->[$BRANCH_TYPE] eq 'AND' && !$self->trunk->[$NAME];
+      if $self->trunk->[$BRANCH_TYPE] eq 'AND' && !$self->trunk->[1];
 
     return 0;
 }
@@ -1125,13 +752,19 @@ sub unparsable_predicates {
     my @unparsable;
 
     while (my $current = pop(@worklist)) {
+
         my $rel_type = $current->[$BRANCH_TYPE];
-        next if $rel_type eq 'PRED';
-        if ($rel_type eq 'PRED-UNPARSABLE') {
-            push(@unparsable, $current->[$NAME]);
+
+        if ($rel_type ne 'PRED') {
+
+            push(@worklist, @{$current}[1 .. $#{$current}]);
             next;
         }
-        push(@worklist, @{$current}[1 .. $#{$current}]);
+
+        my $predicate = $current->[$PREDICATE];
+
+        push(@unparsable, $predicate->literal)
+          unless $predicate->parsable;
     }
 
     my @sorted = sort @unparsable;

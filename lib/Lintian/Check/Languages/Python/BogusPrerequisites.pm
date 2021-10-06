@@ -64,11 +64,10 @@ sub what_is_python {
 
         for my $unwanted (@WHAT_IS_PYTHON) {
 
-            $BOGUS_PREREQUISITES{$unwanted} = [
-                grep {
-                    $self->processable->relation($_)->implies("$unwanted:any")
-                } @fields
-            ];
+            # do not look for :any here; too narrow
+            $BOGUS_PREREQUISITES{$unwanted}
+              = [grep {$self->processable->relation($_)->implies($unwanted)}
+                  @fields];
         }
     }
 

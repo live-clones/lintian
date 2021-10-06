@@ -180,14 +180,14 @@ sub visit_installed_files {
               if $file->operm == $BACKUP_NINJA_FILE
               && $file->name =~ m{^ etc/backup.d/ }msx;
 
-            # sudo requires sudoers files to be mode oct(440)
-            if (   $file->name =~ m{^ etc/sudoers.d/ }msx
-                && $file->operm != $SUDOERS_FILE) {
+            if ($file->name =~ m{^ etc/sudoers.d/ }msx) {
 
+                # sudo requires sudoers files to be mode oct(440)
                 $self->hint(
                     'bad-perm-for-file-in-etc-sudoers.d',$file->name,
                     $file->octal_permissions, $NOT_EQUAL,
-                    sprintf('%04o', $SUDOERS_FILE));
+                    sprintf('%04o', $SUDOERS_FILE)
+                )unless $file->operm == $SUDOERS_FILE;
 
                 return;
             }

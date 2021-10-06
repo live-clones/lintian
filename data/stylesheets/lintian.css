@@ -1,0 +1,587 @@
+/* lintian.css -- Style sheet for lintian.debian.org pages. */
+
+/*
+ # Table of Contents:
+ #
+ # 1. General styles (links, lists, titles, tables...)
+ # 2. Header
+ # 3. Navigation
+ # 4. Main content
+ # 5. Footer
+ # 6. Other
+ */
+
+/*
+ # Order:
+ #
+ # example {
+ #   display
+ #   position
+ #   width
+ #   height
+ #   margin
+ #   padding
+ #   background
+ #   color
+ #   font
+ #   text
+ #   line-height
+ #   border
+ # }
+ */
+
+
+/*
+ * 1. General styles
+ */
+
+* {
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    color: #222;
+    background-color: white;
+    font-family: 'Roboto', serif;
+}
+
+h1, h2 {
+    font-family: 'Roboto Condensed', sans-serif;
+    font-weight: 400;
+}
+
+h1 {
+    margin-bottom: 25px;
+}
+
+h2 {
+    margin-top: 28px;
+    margin-bottom: 14px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid #AAA;
+}
+
+h3 {
+    margin: 5px 0 5px 10px;
+    color: #444;
+    font-size: 1.0em;
+}
+
+p {
+    line-height: 1.4em;
+}
+
+a {
+    color: #3252B2;
+}
+
+ul {
+    margin: 0;
+}
+
+li {
+    color: #333;
+}
+
+hr {
+    display: none;
+}
+
+/*
+ * 2. Header title
+ */
+
+header {
+    display: block; /* HTML5 compat */
+    margin: 0 0 28px 0;
+    padding: 5px 20px;
+    background: #F3F3F3 url("/images/logo-small.png") no-repeat right;
+    border-bottom: 1px solid #AAA;
+}
+
+header p {
+    float: left;
+    margin: 5px 0;
+    color: #444;
+    font-size: 1.2em;
+}
+
+header p a {
+    color: #444;
+    text-decoration: none;
+}
+
+
+/*
+ * 3. Navigation bar
+ */
+
+#nav {
+    float: right;
+    margin: 9px 65px 5px 0;
+    padding: 0;
+}
+
+#nav li {
+    display: inline;
+    margin-left: 5px;
+}
+
+#nav a {
+    padding: 3px 5px;
+    color: #333;
+    font-size: 0.9em;
+    text-decoration: none;
+}
+
+#nav a:hover {
+    background-color: #F3F3F3;
+    border-bottom: 2px solid #D70751;
+}
+
+
+/*
+ * 4. Main content
+ */
+
+main {
+    display: block;
+    margin: 0 40px;
+    font-size: 0.9em;
+    line-height: 1.4em;
+}
+
+img.graph {
+    width: 95%;
+    max-width: 640px;
+}
+
+/* Front page */
+
+#logo {
+    text-align: center;
+}
+
+#index h2, #stats h2, #archives h2 {
+    margin: 1.4em 0 0.4em 0;
+    border: none;
+}
+
+#info {
+    margin: 25px 0;
+    padding: 40px 20px;
+    background: #EFF4F8 url("/images/l.png") no-repeat left;
+    background-origin: content-box;
+    border: 1px solid #DFE4E8;
+}
+
+#info p {
+    margin-left: 160px;
+    font-size: 1.1em;
+}
+
+/* For smaller devices, we leave out the "icon" - it is fairly wide with
+ * little added value.
+ */
+@media (max-width: 700px) {
+
+  #info {
+      margin: 25px 0;
+      padding: 20px;
+      background: #EFF4F8;
+      border: 1px solid #DFE4E8;
+  }
+
+  #info p {
+      margin-left: 5%;
+  }
+}
+
+#stats table, #archives table {
+    border-collapse: collapse;
+}
+
+#stats table tr td, #archives table tr td {
+    padding: 3px 5px;
+    background-color: #FDFDFD;
+    border: 1px solid #CCC;
+}
+
+#stats td span, #archives td span {
+    margin: 0 3px 0 0;
+    padding: 1px 3px;
+    font-family: monospace;
+}
+
+#stats div.graph {
+    text-align: left;
+}
+
+/* Maintainer reports */
+
+#summary {
+    font-size: 0.9em;
+}
+
+#summary p {
+    margin-top: 5px;
+    font-size: 0.95em;
+}
+
+#summary ul {
+    padding-left: 20px;
+}
+
+ul.report {
+    padding-left: 20px;
+    padding-bottom: 1em;
+}
+
+div.graph {
+    text-align: center;
+}
+
+ul.tag {
+    padding-bottom: 1em;
+}
+
+ul.report li {
+    padding-left: 5px;
+    padding-bottom: 6px;
+    list-style: none;
+}
+
+ul.tag li {
+    list-style: square;
+}
+
+li span {
+    margin: 0 0px 0 0;
+    padding: 1px 0px;
+}
+
+ul.extra {
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+ul.report li ul.extra li {
+    padding-left: 0;
+    padding-bottom: 1px;
+    color: #444;
+    list-style: square;
+}
+
+div.source-header {
+    width: 100%;
+    margin: 1.4em 0 14px 0;
+    padding-bottom: 6px;
+    border-bottom: 2px solid #AAA;
+}
+
+div.source-header p, div.source-header h2 {
+    display: inline;
+    border: none;
+}
+
+.info-links {
+    margin-top: 0;
+}
+
+.info-links:before {
+    content: "– ";
+}
+
+/* Tag type */
+
+h2.tag {
+    margin: 5px 0;
+    padding: 0;
+    color: #444;
+    font-family: sans-serif;
+    font-size: 1.0em;
+    font-weight: normal;
+    border: none;
+}
+
+h2.tag a {
+    font-weight: bold;
+}
+
+h2.tag span.type-O {
+    margin: 0 3px 0 0;
+    padding: 2px 4px;
+    color: #555;
+    background: #EEE;
+    font-family: monospace;
+    font-size: 1.1em;
+    font-weight: bold;
+    border: 1px solid #DDD;
+}
+
+br.tag {
+    padding-bottom: 1em;
+}
+
+
+/* E/W/I colors */
+
+span.code {
+    padding: 1px 5px;
+    margin-right: 5px;
+    font-family: monospace;
+    font-weight: normal;
+    font-size: 1.1em;
+}
+
+span.label {
+    font-family: 'Roboto Condensed', sans-serif;
+    font-weight: 700;
+}
+
+#tagsourcelist {
+    margin-top: 20px;
+    padding-top: 10px;
+    border-top: 2px solid #AAA;
+}
+
+span.tinycode {
+    font-family: monospace;
+    font-weight: bold;
+    font-size: 1.1em;
+    padding: 1px 3px;
+}
+
+span.tinyhint {
+    font-family: 'Roboto Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 0.9em;
+}
+
+span.tinycontext {
+    font-family: 'Roboto', sans-serif;
+    font-style: italic;
+    font-size: 0.9em;
+}
+
+span.tinycomment {
+    font-family: 'Roboto', sans-serif;
+    font-size: 0.9em;
+}
+
+ul.filelist {
+    list-style-type: disc;
+    margin-left: 2em;
+}
+
+ul.hintlist {
+    list-style: none;
+    padding-left: 10px;
+}
+
+ul.commentlist {
+    list-style: none;
+    padding-left: 0px;
+}
+
+li.fileitem {
+    margin: 10px 0 5px 0;
+}
+
+#code-E {
+    color: #ffffff;
+    background-color: #fc0905;
+    border: 1px solid #ffffff;
+}
+
+#code-W {
+    color: #111111;
+    background-color: #fceb02;
+    border: 1px solid #888888;
+}
+
+#code-I {
+    color: #ffffff;
+    background-color: #465efc;
+    border: 1px solid #ffffff;
+}
+
+#code-P {
+    color: #ffffff;
+    background-color: #00c627;
+    border: 1px solid #ffffff;
+}
+
+#code-X {
+    color: #ffffff;
+    background-color: #9e8040;
+    border: 1px solid #ffffff;
+}
+
+#code-O {
+    color: #ffffff;
+    background-color: #444444;
+    border: 1px solid #ffffff;
+}
+
+#code-M {
+    color: #111111;
+    background-color: #dddddd;
+    border: 1px solid #444444;
+}
+
+#code-C {
+    color: #ffffff;
+    background-color: #bc55fc;
+    border: 1px solid #ffffff;
+}
+
+li.code-O {
+    color: #444;
+}
+
+b.processing-error {
+    color: #FF6700;
+}
+
+div.description {
+    padding: 8px 28px;
+    margin: 25px 0;
+    background-color: #EEE;
+    border: 1px solid #BBB;
+}
+
+#description-E {
+    background-color: #fccac9;
+    border: 1px solid #fc0905;
+}
+
+#description-W {
+    background-color: #fcf9c9;
+    border: 1px solid #fceb02;
+}
+
+#description-I {
+    background-color: #dee2fc;
+    border: 1px solid #465efc;
+}
+
+#description-P {
+    background-color: #d4fcdc;
+    border: 1px solid #00c627;
+}
+
+#description-X {
+    background-color: #fcf2de;
+    border: 1px solid #9e8040;
+}
+
+#description-C {
+    background-color: #f4e8fc;
+    border: 1px solid #bc55fc;
+}
+
+div.terminal {
+    margin-bottom: 1em;
+}
+
+p.terminal {
+    font-family: monospace;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+div.versions {
+    background-color: #F3F3F3;
+    border: 1px solid #AAA;
+    padding: 0.5em;
+    display: inline-block;
+}
+
+#version_headline {
+    margin-bottom: 0.5em;
+}
+
+span.maintenance_links {
+    font-size: 0.6em;
+    margin-left: 1.2em;
+}
+
+#liberty-main {
+    font-weight: bold;
+}
+
+#liberty-contrib {
+    font-weight: bold;
+    color: red;
+}
+
+#liberty-non-free {
+    font-weight: bold;
+    color: red;
+}
+
+ul.no-bullets {
+  list-style-type: none;
+}
+
+ul.no-indent {
+  padding: 0;
+  margin: 0;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.italic {
+    font-style: italic;
+}
+
+.green {
+    color: green;
+}
+
+.gray {
+    color: gray;
+}
+
+.center {
+    text-align: center;
+}
+
+.no-margin {
+    margin: 0;
+}
+
+/*
+ * 5. Footer
+ */
+
+footer {
+    display: block; /* HTML5 compat */
+    margin: 20px 20px;
+    padding: 10px 0 0 0;
+    font-family: 'Roboto Condensed', sans-serif;
+    font-size: 0.85em;
+    border-top: 1px solid #AAA;
+}
+
+footer p {
+    margin: 0;
+    padding: 0;
+}
+
+
+/*
+ * 6. Other
+ */
+
+div.clear {
+    clear: both;
+}
+

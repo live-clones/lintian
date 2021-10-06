@@ -723,7 +723,8 @@ sub installable {
 
     # get maintainer scripts
     my @control
-      = grep { $_->is_control } @{$self->processable->control->sorted_list};
+      = grep { $_->is_maintainer_script }
+      @{$self->processable->control->sorted_list};
 
     # Handle control scripts.  This is an edited version of the code for
     # normal scripts above, because there were just enough differences to
@@ -802,14 +803,14 @@ sub installable {
                 if ($file eq 'preinst') {
                     unless ($processable->relation('Pre-Depends')
                         ->implies($depends)){
-                        $self->hint('preinst-interpreter-without-predepends',
-                            $interpreter);
+                        $self->hint('control-interpreter-without-predepends',
+                            $interpreter, "($file)", $depends->to_string);
                     }
                 } else {
                     unless (
                         $processable->relation('strong')->implies($depends)) {
                         $self->hint('control-interpreter-without-depends',
-                            "control/$file",$interpreter);
+                            $interpreter, "($file)", $depends->to_string);
                     }
                 }
             }

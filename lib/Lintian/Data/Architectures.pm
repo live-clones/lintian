@@ -135,7 +135,9 @@ has ldconfig_folders => (
         };
         push(@ldconfig_folders, @always);
 
-        return \@ldconfig_folders;
+        my @with_slash = map { $_ . $SLASH } @ldconfig_folders;
+
+        return \@with_slash;
     });
 
 # Valid architecture wildcards.

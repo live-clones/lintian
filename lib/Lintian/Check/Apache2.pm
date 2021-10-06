@@ -196,7 +196,8 @@ sub check_maintainer_scripts {
     my ($self) = @_;
 
     my @control
-      = grep { $_->is_control } @{$self->processable->control->sorted_list};
+      = grep { $_->is_maintainer_script }
+      @{$self->processable->control->sorted_list};
     for my $file (@control) {
 
         my $hashbang = $file->hashbang;

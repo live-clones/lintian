@@ -133,7 +133,7 @@ sub visit_control_files {
     my ($self, $item) = @_;
 
     return
-      unless $item->is_control;
+      unless $item->is_maintainer_script;
 
     $self->check_item($item);
 

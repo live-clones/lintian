@@ -160,7 +160,7 @@ sub visit_control_files {
     my ($self, $item) = @_;
 
     return
-      unless $item->is_control;
+      unless $item->is_maintainer_script;
 
     # look only at shell scripts
     return
@@ -288,8 +288,9 @@ sub get_systemd_service_names {
 sub check_systemd_service_file {
     my ($self, $file) = @_;
 
+    # ambivalent about /lib or /usr/lib
     $self->hint('systemd-service-in-odd-location', $file)
-      if $file =~ m{^(?:lib|etc)/systemd/system/};
+      if $file =~ m{^etc/systemd/system/};
 
     unless ($file->is_open_ok
         || ($file->is_symlink && $file->link eq '/dev/null')) {
