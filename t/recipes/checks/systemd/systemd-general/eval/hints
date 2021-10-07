@@ -16,4 +16,5 @@ systemd-general (binary): service-file-is-not-a-file etc/systemd/system/fifo-pip
 systemd-general (binary): missing-systemd-service-for-init.d-rcS-script systemd-general
 systemd-general (binary): maintainer-script-calls-systemctl postrm:6
 systemd-general (binary): init.d-script-does-not-source-init-functions etc/init.d/systemd-general
+systemd-general (binary): init.d-script-does-not-source-init-functions etc/init.d/bootmisc.sh
 systemd-general (binary): init-script-is-not-a-file etc/init.d/fifo-pipe-as-init

@@ -132,12 +132,7 @@ sub visit_installed_files {
         && $self->processable->name ne 'initscripts'
         && $item->link ne '/lib/init/upstart-job') {
 
-        # sysv generator drops the .sh suffix
-        my $service_name = $item->basename;
-        $service_name =~ s/\.sh$//;
-
-        $self->check_init_script($item, $self->services)
-          unless $self->INIT_WHITELIST->recognizes($service_name);
+        $self->check_init_script($item, $self->services);
     }
 
     if ($item->name =~ m{/systemd/system/.*\.socket$}) {
@@ -231,8 +226,12 @@ sub check_init_script {
     $self->hint('init.d-script-does-not-source-init-functions', $file)
       unless $lsb_source_seen;
 
+    # sysv generator drops the .sh suffix
     my $servicename = $file->basename;
     $servicename =~ s/\.sh$//;
+
+    return
+      if $self->INIT_WHITELIST->recognizes($servicename);
 
     if (!$services->{$servicename}) {
         # rcS scripts are particularly bad; always tag
