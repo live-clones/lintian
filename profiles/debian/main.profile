@@ -242,6 +242,7 @@ Enable-Tags-From-Check:
  maintainer-scripts/adduser
  maintainer-scripts/generated
  maintainer-scripts/ldconfig
+ maintainer-scripts/systemctl
  md5sums
  menu-format
  menus
