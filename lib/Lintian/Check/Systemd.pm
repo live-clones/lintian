@@ -237,14 +237,14 @@ sub check_init_script {
         # rcS scripts are particularly bad; always tag
         if ($is_rcs_script) {
             $self->hint('missing-systemd-service-for-init.d-rcS-script',
-                $file->name);
+                $file->name, $servicename);
         } else {
             if (%{$services}) {
                 $self->hint('omitted-systemd-service-for-init.d-script',
-                    $file->name);
+                    $file->name, $servicename);
             } else {
                 $self->hint('missing-systemd-service-for-init.d-script',
-                    $file->name);
+                    $file->name, $servicename);
             }
         }
     }

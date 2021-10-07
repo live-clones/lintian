@@ -1,6 +1,6 @@
-init.d-general-sourcing-without-test (binary): missing-systemd-service-for-init.d-script etc/init.d/init.d-general-sourcing-without-test
-init.d-general-new-style (binary): missing-systemd-service-for-init.d-script etc/init.d/init.d-general-new-style
-init.d-general-interpreter-in-usr-dir (binary): missing-systemd-service-for-init.d-script etc/init.d/init.d-general-interpreter-in-usr-dir
+init.d-general-sourcing-without-test (binary): missing-systemd-service-for-init.d-script etc/init.d/init.d-general-sourcing-without-test init.d-general-sourcing-without-test
+init.d-general-new-style (binary): missing-systemd-service-for-init.d-script etc/init.d/init.d-general-new-style init.d-general-new-style
+init.d-general-interpreter-in-usr-dir (binary): missing-systemd-service-for-init.d-script etc/init.d/init.d-general-interpreter-in-usr-dir init.d-general-interpreter-in-usr-dir
 init.d-general-interpreter-in-usr-dir (binary): init.d-script-does-not-source-init-functions etc/init.d/init.d-general-interpreter-in-usr-dir
-init.d-general-bugs (binary): missing-systemd-service-for-init.d-script etc/init.d/init.d-general-bugs
-init.d-general (binary): missing-systemd-service-for-init.d-script etc/init.d/init.d-general
+init.d-general-bugs (binary): missing-systemd-service-for-init.d-script etc/init.d/init.d-general-bugs init.d-general-bugs
+init.d-general (binary): missing-systemd-service-for-init.d-script etc/init.d/init.d-general init.d-general
