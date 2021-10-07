@@ -464,27 +464,10 @@ sub service_file_lines {
 sub extract_service_file_values {
     my ($self, $file, $extract_section, $extract_key) = @_;
 
-    my @unfiltered = service_file_lines($file);
-
-    my @lines;
-    for my $line (@unfiltered) {
-
-        if ($line =~ /^\.include (.+)$/) {
-
-            my $included = $file->parent_dir->resolve_path($1);
-
-            if (defined $included) {
-                push(@lines, service_file_lines($included));
-                next;
-            }
-        }
-
-        push(@lines, $line);
-    }
-
     my @values;
     my $section;
 
+    my @lines = service_file_lines($file);
     for my $line (@lines) {
         # section header
         if ($line =~ /^\[([^\]]+)\]$/) {

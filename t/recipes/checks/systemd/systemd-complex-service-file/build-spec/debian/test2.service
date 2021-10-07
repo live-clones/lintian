@@ -1,5 +1,3 @@
-.include /usr/lib/systemd/system/test.service
-
 [Unit]
 After=
 After=syslog.target
