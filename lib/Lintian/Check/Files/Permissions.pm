@@ -54,35 +54,40 @@ const my $USR_SRC_FOLDER => oct(2775);
 
 const my $WORLD_READABLE => oct(444);
 
-has component => (is => 'rw');
-has linked_against_libvga => (is => 'rw');
+has component => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
 
-sub setup_installed_files {
-    my ($self) = @_;
+        return path($self->processable->path)->basename;
+    });
 
-    my $component = path($self->processable->path)->basename;
-    $self->component($component);
+has linked_against_libvga => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
 
-    my %linked_against_libvga;
+        my %linked_against_libvga;
 
-    # read data from objdump-info file
-    my $table = $self->processable->objdump_info;
+        # read data from objdump-info file
+        my $table = $self->processable->objdump_info;
 
-    foreach my $file (sort keys %{$table}) {
-        my $objdump = $table->{$file};
+        for my $file (sort keys %{$table}) {
+            my $objdump = $table->{$file};
 
-        next
-          unless defined $objdump->{NEEDED};
+            next
+              unless defined $objdump->{NEEDED};
 
-        for my $lib (@{$objdump->{NEEDED}}) {
-            $linked_against_libvga{$file} = 1
-              if $lib =~ /^libvga\.so\./;
+            for my $lib (@{$objdump->{NEEDED}}) {
+                $linked_against_libvga{$file} = 1
+                  if $lib =~ /^libvga\.so\./;
+            }
         }
-    }
 
-    $self->linked_against_libvga(\%linked_against_libvga);
-    return;
-}
+        return \%linked_against_libvga;
+    });
 
 sub visit_installed_files {
     my ($self, $file) = @_;

@@ -34,23 +34,6 @@ with 'Lintian::Check';
 has related => (is => 'rwp', default => sub { [] });
 has links => (is => 'rwp', default => sub { [] });
 
-sub breakdown_installed_files {
-    my ($self) = @_;
-
-    # Check for .devhelp2? files that aren't symlinked into paths searched by
-    # devhelp.
-    for my $path (@{$self->related}) {
-
-        $self->hint('package-contains-devhelp-file-without-symlink', $path)
-          if none { $path =~ /^\Q$_\E/ } @{$self->links};
-    }
-
-    $self->_set_related([]);
-    $self->_set_links([]);
-
-    return;
-}
-
 sub visit_installed_files {
     my ($self, $file) = @_;
 
@@ -75,6 +58,23 @@ sub visit_installed_files {
     ) {
         push(@{$self->related}, $file->name);
     }
+
+    return;
+}
+
+sub installable {
+    my ($self) = @_;
+
+    # Check for .devhelp2? files that aren't symlinked into paths searched by
+    # devhelp.
+    for my $path (@{$self->related}) {
+
+        $self->hint('package-contains-devhelp-file-without-symlink', $path)
+          if none { $path =~ /^\Q$_\E/ } @{$self->links};
+    }
+
+    $self->_set_related([]);
+    $self->_set_links([]);
 
     return;
 }

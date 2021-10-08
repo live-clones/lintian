@@ -38,9 +38,70 @@ const my $EMPTY => q{};
 # The maximum number of *.cmi files to show individually.
 const my $MAX_CMI => 3;
 
-has provided_o => (is => 'rwp', default => sub{ {} });
-has is_lib_package => (is => 'rwp', default => 0);
-has is_dev_package => (is => 'rwp', default => 0);
+has provided_o => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        my %provided_o;
+
+        for my $item (@{$self->processable->installed->sorted_list}) {
+
+            my $ar_info = $item->ar_info;
+            next
+              unless scalar keys %{$ar_info};
+
+            # ends in a slash
+            my $dirname = $item->dirname;
+
+            for my $count (keys %{$ar_info}) {
+
+                my $member = $ar_info->{$count}{name};
+                # Note: a .o may be legitimately in several different .a
+                $provided_o{"$dirname$member"} = $item->name
+                  if length $member;
+            }
+        }
+
+        return \%provided_o;
+    });
+
+has is_lib_package => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        # is it a library package?
+        return 1
+          if $self->processable->name =~ /^lib/;
+
+        return 0;
+    });
+
+has is_dev_package => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        # is it a development package?
+        return 1
+          if (
+            $self->processable->name =~ m{
+           (?: -dev
+              |\A camlp[45](?:-extra)?
+              |\A ocaml  (?:
+                     -nox
+                    |-interp
+                    |-compiler-libs
+                  )?
+           )\Z}xsm
+          );
+
+        return 0;
+    });
 
 # for libraries outside /usr/lib/ocaml
 has outside_number => (is => 'rwp', default => 0);
@@ -55,48 +116,6 @@ has dev_prefix => (is => 'rwp');
 
 # does the package provide a META file?
 has has_meta => (is => 'rwp', default => 0);
-
-sub setup_installed_files {
-    my ($self) = @_;
-
-    for my $item (@{$self->processable->installed->sorted_list}) {
-
-        my $ar_info = $item->ar_info;
-        next
-          unless scalar keys %{$ar_info};
-
-        # ends in a slash
-        my $dirname = $item->dirname;
-
-        for my $count (keys %{$ar_info}) {
-
-            my $member = $ar_info->{$count}{name};
-            # Note: a .o may be legitimately in several different .a
-            $self->provided_o->{"$dirname$member"} = $item->name
-              if length $member;
-        }
-    }
-
-    # is it a library package?
-    $self->_set_is_lib_package(1)
-      if $self->processable->name =~ /^lib/;
-
-    # is it a development package?
-    $self->_set_is_dev_package(1)
-      if (
-        $self->processable->name =~ m{
-           (?: -dev
-              |\A camlp[45](?:-extra)?
-              |\A ocaml  (?:
-                     -nox
-                    |-interp
-                    |-compiler-libs
-                  )?
-           )\Z}xsm
-      );
-
-    return;
-}
 
 sub visit_installed_files {
     my ($self, $file) = @_;
@@ -178,7 +197,7 @@ sub visit_installed_files {
     return;
 }
 
-sub breakdown_installed_files {
+sub installable {
     my ($self) = @_;
 
     if ($self->is_dev_package) {

@@ -89,20 +89,10 @@ has COMPRESS_FILE_EXTENSIONS_OR_ALL => (
         return qr/$text/;
     });
 
-has ppkg => (is => 'rwp');
-
-sub setup_installed_files {
-    my ($self) = @_;
-
-    $self->_set_ppkg(quotemeta($self->processable->name));
-
-    return;
-}
-
 sub visit_installed_files {
     my ($self, $file) = @_;
 
-    my $ppkg = $self->ppkg;
+    my $ppkg = quotemeta($self->processable->name);
 
     if ($self->processable->type eq 'udeb') {
         if ($file->name =~ m{^usr/share/(?:doc|info)/\S}) {

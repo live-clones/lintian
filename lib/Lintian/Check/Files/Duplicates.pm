@@ -59,7 +59,7 @@ sub visit_installed_files {
     return;
 }
 
-sub breakdown_installed_files {
+sub installable {
     my ($self) = @_;
 
     foreach my $md5 (keys %{$self->md5map}){

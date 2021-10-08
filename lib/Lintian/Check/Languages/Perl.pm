@@ -34,21 +34,6 @@ with 'Lintian::Check';
 has perl_sources_in_lib => (is => 'rwp', default => sub { [] });
 has has_perl_binaries => (is => 'rwp', default => 0);
 
-sub breakdown_installed_files {
-    my ($self) = @_;
-
-    unless ($self->has_perl_binaries) {
-
-        $self->hint('package-installs-nonbinary-perl-in-usr-lib-perl5', $_)
-          for @{$self->perl_sources_in_lib};
-    }
-
-    $self->_set_perl_sources_in_lib([]);
-    $self->_set_has_perl_binaries(0);
-
-    return;
-}
-
 sub visit_installed_files {
     my ($self, $file) = @_;
 
@@ -106,6 +91,21 @@ sub visit_installed_files {
         }
         close($fd);
     }
+
+    return;
+}
+
+sub installable {
+    my ($self) = @_;
+
+    unless ($self->has_perl_binaries) {
+
+        $self->hint('package-installs-nonbinary-perl-in-usr-lib-perl5', $_)
+          for @{$self->perl_sources_in_lib};
+    }
+
+    $self->_set_perl_sources_in_lib([]);
+    $self->_set_has_perl_binaries(0);
 
     return;
 }

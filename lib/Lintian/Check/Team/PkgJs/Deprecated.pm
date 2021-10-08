@@ -32,22 +32,20 @@ with 'Lintian::Check';
 
 has javascript_team_maintained => (
     is => 'rw',
+    lazy => 1,
     coerce => sub { my ($boolean) = @_; return ($boolean // 0); },
-    default => 0
-);
+    default => sub {
+        my ($self) = @_;
 
-sub setup_installed_files {
-    my ($self) = @_;
+        my $maintainer = $self->processable->fields->value('Maintainer');
 
-    my $maintainer = $self->processable->fields->value('Maintainer');
+        # only for pkg-perl packages
+        return 1
+          if $maintainer
+          =~ /pkg-javascript-maintainers\@lists\.alioth\.debian\.org/;
 
-    # only for pkg-perl packages
-    $self->javascript_team_maintained(1)
-      if $maintainer
-      =~ /pkg-javascript-maintainers\@lists\.alioth\.debian\.org/;
-
-    return;
-}
+        return 0;
+    });
 
 sub visit_installed_files {
     my ($self, $item) = @_;

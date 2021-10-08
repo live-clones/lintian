@@ -140,7 +140,7 @@ sub visit_installed_files {
     return;
 }
 
-sub breakdown_installed_files {
+sub installable {
     my ($self) = @_;
 
     my $depends = $self->processable->relation('strong');
