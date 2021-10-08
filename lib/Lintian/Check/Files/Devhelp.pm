@@ -31,8 +31,8 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-has related => (is => 'rwp', default => sub { [] });
-has links => (is => 'rwp', default => sub { [] });
+has related => (is => 'rw', default => sub { [] });
+has links => (is => 'rw', default => sub { [] });
 
 sub visit_installed_files {
     my ($self, $file) = @_;
@@ -73,8 +73,8 @@ sub installable {
           if none { $path =~ /^\Q$_\E/ } @{$self->links};
     }
 
-    $self->_set_related([]);
-    $self->_set_links([]);
+    $self->related([]);
+    $self->links([]);
 
     return;
 }

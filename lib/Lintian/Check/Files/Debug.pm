@@ -29,7 +29,7 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-has warned_debug_name => (is => 'rwp', default => 0);
+has warned_debug_name => (is => 'rw', default => 0);
 
 sub visit_installed_files {
     my ($self, $file) = @_;
@@ -40,7 +40,7 @@ sub visit_installed_files {
 
             unless ($self->warned_debug_name) {
                 $self->hint('debug-suffix-not-dbg', $file->name);
-                $self->_set_warned_debug_name(1);
+                $self->warned_debug_name(1);
             }
         }
     }

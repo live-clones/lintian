@@ -31,8 +31,8 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-has perl_sources_in_lib => (is => 'rwp', default => sub { [] });
-has has_perl_binaries => (is => 'rwp', default => 0);
+has perl_sources_in_lib => (is => 'rw', default => sub { [] });
+has has_perl_binaries => (is => 'rw', default => 0);
 
 sub visit_installed_files {
     my ($self, $file) = @_;
@@ -49,7 +49,7 @@ sub visit_installed_files {
         push @{$self->perl_sources_in_lib}, $file->name;
 
     }elsif ($file->name =~ m{^usr/lib/(?:[^/]+/)?perl5/.*\.(?:bs|so)$}) {
-        $self->_set_has_perl_binaries(1);
+        $self->has_perl_binaries(1);
     }
 
     # perl modules
@@ -104,8 +104,8 @@ sub installable {
           for @{$self->perl_sources_in_lib};
     }
 
-    $self->_set_perl_sources_in_lib([]);
-    $self->_set_has_perl_binaries(0);
+    $self->perl_sources_in_lib([]);
+    $self->has_perl_binaries(0);
 
     return;
 }

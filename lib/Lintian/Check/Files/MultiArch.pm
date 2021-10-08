@@ -46,8 +46,8 @@ has TRIPLETS => (
 my %PATH_DIRECTORIES = map { $_ => 1 } qw(
   bin/ sbin/ usr/bin/ usr/sbin/ usr/games/ );
 
-has has_public_executable => (is => 'rwp', default => 0);
-has has_public_shared_library => (is => 'rwp', default => 0);
+has has_public_executable => (is => 'rw', default => 0);
+has has_public_shared_library => (is => 'rw', default => 0);
 
 sub visit_installed_files {
     my ($self, $file) = @_;
@@ -76,11 +76,11 @@ sub visit_installed_files {
     }
 
     if (exists($PATH_DIRECTORIES{$file->dirname})) {
-        $self->_set_has_public_executable(1);
+        $self->has_public_executable(1);
     }
 
     if ($file->name =~ m{^(?:usr/)?lib/(?:([^/]+)/)?lib[^/]*\.so$}) {
-        $self->_set_has_public_shared_library(1)
+        $self->has_public_shared_library(1)
           if (!defined($1) || exists $self->TRIPLETS->{$1});
     }
 

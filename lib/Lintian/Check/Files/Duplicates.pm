@@ -31,7 +31,7 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-has md5map => (is => 'rwp', default => sub{ {} });
+has md5map => (is => 'rw', default => sub{ {} });
 
 sub visit_installed_files {
     my ($self, $file) = @_;
