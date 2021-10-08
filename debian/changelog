@@ -1,8 +1,33 @@
-lintian (2.107.0+git) UNRELEASED; urgency=medium
+lintian (2.108.0) unstable; urgency=medium
 
-  * WIP (generated at release time: please do not add entries below).
+  * Summary of tag changes:
+    + Added:
+      - odd-static-library-name
+      - static-library-has-unneeded-sections
+    + Removed:
+      - static-library-has-unneeded-section
 
- -- Chris Lamb <lamby@debian.org>  Fri, 01 Oct 2021 09:29:50 +0100
+  [ Felix Lechner ]
+  * Report static libraries with "_s.a" suffix in the filename.
+    (Closes: #698398)
+  * Enable the failing test binaries/binaries-missing-depends-on-numpy-abi
+    in autopkgtests.
+  * Fix the missing-dependency-on-numpy-abi tag to work with newer Python 3
+    versions.
+  * Adjust test suite to debhelper reversal of systemd installation paths.
+    (Re: #992711, #992465)
+  * Provide full path to init scripts in context.
+
+  [ Simon McVittie ]
+  * debian/tests: Correct name of python3-all-dev.
+
+  [ David Steele ]
+  * Revise a statement that sysvinit support is required.
+
+  [ "Unit 193" ]
+  * Preserve DEB_VENDOR as it's used later to set the profile.
+
+ -- Chris Lamb <lamby@debian.org>  Fri, 08 Oct 2021 08:36:47 +0000
 
 lintian (2.107.0) unstable; urgency=medium
 
