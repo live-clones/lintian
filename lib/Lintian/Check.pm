@@ -86,30 +86,22 @@ has profile => (is => 'rw');
 sub visit_files {
     my ($self, $index) = @_;
 
-    my $setup_hook = 'setup' . $UNDERSCORE . $index . $UNDERSCORE . 'files';
-    $self->$setup_hook
-      if $self->can($setup_hook);
-
     my $visit_hook = 'visit' . $UNDERSCORE . $index . $UNDERSCORE . 'files';
-    if ($self->can($visit_hook)) {
 
-        my @items = @{$self->processable->$index->sorted_list};
+    return
+      unless $self->can($visit_hook);
 
-        # do not look inside quilt directory
-        @items = grep { $_->name !~ m{^\.pc/} } @items
-          if $index eq 'patched';
+    my @items = @{$self->processable->$index->sorted_list};
 
-        # exclude Lintian's test suite from source scans
-        @items = grep { $_->name !~ m{^t/} } @items
-          if $self->processable->name eq 'lintian' && $index eq 'patched';
+    # do not look inside quilt directory
+    @items = grep { $_->name !~ m{^\.pc/} } @items
+      if $index eq 'patched';
 
-        $self->$visit_hook($_) for @items;
-    }
+    # exclude Lintian's test suite from source scans
+    @items = grep { $_->name !~ m{^t/} } @items
+      if $self->processable->name eq 'lintian' && $index eq 'patched';
 
-    my $breakdown_hook
-      ='breakdown' . $UNDERSCORE . $index . $UNDERSCORE . 'files';
-    $self->$breakdown_hook
-      if $self->can($breakdown_hook);
+    $self->$visit_hook($_) for @items;
 
     return;
 }
@@ -125,24 +117,16 @@ sub run {
 
     my $type = $self->processable->type;
 
-    $self->visit_files('patched')
-      if $type eq 'source';
+    if ($type eq 'source') {
+
+        $self->visit_files('orig');
+        $self->visit_files('patched');
+    }
 
     if ($type eq 'binary' || $type eq 'udeb') {
 
         $self->visit_files('control');
-
         $self->visit_files('installed');
-
-        $self->setup
-          if $self->can('setup');
-
-        if ($self->can('files')) {
-            $self->files($_) for @{$self->processable->installed->sorted_list};
-        }
-
-        $self->breakdown
-          if $self->can('breakdown');
 
         $self->installable
           if $self->can('installable');
