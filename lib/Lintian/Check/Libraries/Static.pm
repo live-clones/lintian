@@ -94,12 +94,13 @@ sub visit_installed_files {
 
     # "libfoo_g.a" is usually a "debug" library, so ignore
     # unneeded sections in those.
-    if ($item->name !~ m{ _g [.]a $}x) {
+    for my $member (keys %extra_sections_by_member) {
 
         $self->hint('static-library-has-unneeded-sections',
-            $item->name, "($_)",
-            join($SPACE, sort +uniq @{$extra_sections_by_member{$_}}))
-          for keys %extra_sections_by_member;
+            $item->name, "($member)",
+            join($SPACE, sort +uniq @{$extra_sections_by_member{$member}}))
+          if @{$extra_sections_by_member{$member}}
+          && $item->name !~ m{ _g [.]a $}x;
     }
 
     return;
