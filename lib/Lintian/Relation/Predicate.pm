@@ -209,7 +209,7 @@ sub parse {
     return;
 }
 
-=item implies
+=item satisfies
 
 =cut
 
@@ -218,9 +218,9 @@ sub parse {
 #
 # Takes two elements and returns true iff the second can be deduced from the
 # first.  If the second is falsified by the first (in other words, if self
-# actually implies not other), return 0.  Otherwise, return undef.  The 0 return
+# actually satisfies not other), return 0.  Otherwise, return undef.  The 0 return
 # is used by implies_element_inverse.
-sub implies {
+sub satisfies {
     my ($self, $other) = @_;
 
     if (!$self->parsable || !$other->parsable) {
@@ -236,7 +236,7 @@ sub implies {
       if $self->name ne $other->name;
 
     # the restriction formula forms a disjunctive normal form expression one
-    # way to check whether A <dnf1> implies A <dnf2> is to check:
+    # way to check whether A <dnf1> satisfies A <dnf2> is to check:
     #
     # if dnf1 == dnf1 OR dnf2:
     #     the second dependency is superfluous because the first dependency
@@ -252,7 +252,7 @@ sub implies {
     # profile names (see data/fields/build-profiles) that should be okay
     #
     # FIXME: we are not doing this check yet so if we encounter a dependency
-    # with build profiles we assume that one does not imply the other:
+    # with build profiles we assume that one does not satisfy the other:
 
     return undef
       if length $self->build_profile
@@ -340,7 +340,7 @@ sub implies {
     # field "Multi-arch: allowed", but we cannot check that here.  So
     # we assume that it is okay.
 
-    # pkg:any implies pkg (but the reverse is not true).
+    # pkg:any satisfies pkg (but the reverse is not true).
     return undef
       if length $self->multiarch_acceptor
       && !length $other->multiarch_acceptor
@@ -354,7 +354,7 @@ sub implies {
       && length $other->multiarch_acceptor;
 
     # For now assert that only the identity holds.  In practise, the
-    # "pkg:X" (for any valid value of X) seems to imply "pkg:any",
+    # "pkg:X" (for any valid value of X) seems to satisfy "pkg:any",
     # fixing that is a TODO (because version clauses complicates
     # matters)
     return undef
@@ -396,7 +396,7 @@ sub implies {
     }
 
 # A greater than clause may disprove a less than clause.  Otherwise, if
-# self's clause is <<, <=, or =, the version must be <= other's to imply other.
+# self's clause is <<, <=, or =, the version must be <= other's to satisfy other.
     if ($other->version_operator eq $LESS_THAN_OR_EQUAL) {
         if ($self->version_operator eq $DOUBLE_GREATER_THAN) {
             return versions_gte($self->reference_version,
@@ -468,20 +468,20 @@ sub implies {
     return undef;
 }
 
-=item implies_inverse
+=item satisfies_inverse
 
 =cut
 
 # This internal function does the heavy lifting of inverse implication between
 # two elements.  Takes two elements and returns true iff the falsehood of
 # the second can be deduced from the truth of the first.  In other words, self
-# implies not other, or restated, other implies not self.  (Since if a implies b, not b
-# implies not a.)  Due to the return value of implies_element(), we can let it
+# satisfies not other, or restated, other satisfies not self.  (Since if a satisfies b, not b
+# satisfies not a.)  Due to the return value of implies_element(), we can let it
 # do most of the work.
-sub implies_inverse {
+sub satisfies_inverse {
     my ($self, $other) = @_;
 
-    my $result = $self->implies($other);
+    my $result = $self->satisfies($other);
     return undef
       if !defined $result;
 

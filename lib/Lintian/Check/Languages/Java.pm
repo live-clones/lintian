@@ -160,7 +160,7 @@ sub installable {
             # Here, we need to check that the package depends on
             # jarwrapper.
             $missing_jarwrapper = 1
-              unless $processable->relation('strong')->implies('jarwrapper');
+              unless $processable->relation('strong')->satisfies('jarwrapper');
         } elsif ($file->name !~ m{^usr/share/}) {
             $self->hint('jar-not-in-usr-share', $file->name);
         }

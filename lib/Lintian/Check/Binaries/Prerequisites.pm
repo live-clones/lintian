@@ -55,7 +55,7 @@ has built_with_octave => (
         my $source = $self->group->source;
 
         $built_with_octave
-          = $source->relation('Build-Depends')->implies('dh-octave')
+          = $source->relation('Build-Depends')->satisfies('dh-octave')
           if defined $source;
 
         return $built_with_octave;

@@ -9,9 +9,9 @@ use Lintian::Relation;
 my $relation = Lintian::Relation->new->load_norestriction(
     'pkgA (<= 1.0) <stage1 nocheck> <nobiarch>, pkgB (<< 1.0) <!nodoc>');
 
-ok($relation->implies('pkgA'),
-    'Implies restriction <stage1 nocheck> <nobiarch>');
-ok($relation->implies('pkgB'),  'Implies restriction <!nodoc>');
+ok($relation->satisfies('pkgA'),
+    'Satisfies restrictions <stage1 nocheck> <nobiarch>');
+ok($relation->satisfies('pkgB'),  'Satisfies restriction <!nodoc>');
 
 my $rel = Lintian::Relation->new->load('pkgC   <foo bar> <baz>');
 

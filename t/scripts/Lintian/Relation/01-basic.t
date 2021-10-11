@@ -9,8 +9,8 @@ use Lintian::Relation;
 
 my $relation = Lintian::Relation->new->load('pkgA, altA | altB');
 
-ok($relation->implies('pkgA'),   'Implies');
-ok(!$relation->implies('altA'),  'Implies alt');
+ok($relation->satisfies('pkgA'),   'Satisfies');
+ok(!$relation->satisfies('altA'),  'Satisfies alt');
 
 # Local Variables:
 # indent-tabs-mode: nil

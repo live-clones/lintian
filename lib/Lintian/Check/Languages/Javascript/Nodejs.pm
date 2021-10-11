@@ -92,7 +92,7 @@ sub source {
     my $command_prefix_pattern = qr/\s+[@+-]?(?:\S+=\S+\s+)*/;
     my ($seen_nodejs,$override_test,$seen_dh_dynamic);
     my $bdepends = $processable->relation('Build-Depends-All');
-    $seen_nodejs = 1 if $bdepends->implies('dh-sequence-nodejs');
+    $seen_nodejs = 1 if $bdepends->satisfies('dh-sequence-nodejs');
 
     while (my $line = <$rules_fd>) {
 
@@ -214,7 +214,7 @@ sub visit_installed_files {
         $name =~ s/-+/-/g;
         $self->hint('nodejs-module-not-declared', $name, $file->name)
           if $subpath eq $SLASH
-          && !$provides->implies($name);
+          && !$provides->satisfies($name);
     }
     return;
 }

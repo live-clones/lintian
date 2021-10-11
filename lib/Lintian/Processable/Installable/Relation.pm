@@ -84,7 +84,7 @@ The concatenation of Recommends and Suggests.
 =back
 
 If FIELD isn't present in the package, the returned Lintian::Relation
-object will be empty (always satisfied and implies nothing).
+object will be empty (always present and satisfies nothing).
 
 =item saved_relations
 

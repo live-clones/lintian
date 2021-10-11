@@ -221,7 +221,7 @@ sub installable {
         if ($self->has_meta) {
             my $depends = $self->processable->relation('all');
             $self->hint('ocaml-meta-without-suggesting-findlib')
-              unless $depends->implies('ocaml-findlib');
+              unless $depends->satisfies('ocaml-findlib');
         }
     } else {
         # summary about dev files

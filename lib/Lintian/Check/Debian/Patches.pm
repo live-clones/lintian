@@ -60,10 +60,10 @@ sub source {
       = $self->processable->patched->resolve_path('debian/patches/series');
 
     push(@patch_system, 'dpatch')
-      if $build_deps->implies('dpatch');
+      if $build_deps->satisfies('dpatch');
 
     push(@patch_system, 'quilt')
-      if $quilt_format || $build_deps->implies('quilt');
+      if $quilt_format || $build_deps->satisfies('quilt');
 
     $self->hint('patch-system', $_) for @patch_system;
 

@@ -33,7 +33,8 @@ sub installable {
     my ($self) = @_;
 
     $self->hint('obsolete-vim-addon-manager')
-      if $self->processable->relation('strong')->implies('vim-addon-manager');
+      if $self->processable->relation('strong')
+      ->satisfies('vim-addon-manager');
 
     return;
 }

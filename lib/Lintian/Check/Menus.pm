@@ -170,7 +170,7 @@ sub installable {
     foreach my $bin ($group->get_binary_processables) {
         next
           unless $processable->name eq $bin->name
-          or $processable->relation('strong')->implies($bin->name);
+          or $processable->relation('strong')->satisfies($bin->name);
         for my $file (@{$bin->installed->sorted_list}) {
             add_file_link_info($bin, $file->name, \%all_files,\%all_links);
         }

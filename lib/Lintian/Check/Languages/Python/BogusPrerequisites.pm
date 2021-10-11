@@ -66,7 +66,7 @@ sub what_is_python {
 
             # do not look for :any here; too narrow
             $BOGUS_PREREQUISITES{$unwanted}
-              = [grep {$self->processable->relation($_)->implies($unwanted)}
+              = [grep {$self->processable->relation($_)->satisfies($unwanted)}
                   @fields];
         }
     }

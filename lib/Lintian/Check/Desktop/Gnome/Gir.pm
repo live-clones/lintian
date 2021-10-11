@@ -40,7 +40,7 @@ sub source {
         if ($bin =~ m/^gir1\.2-/) {
             if (
                 not $processable->binary_relation($bin, 'strong')
-                ->implies('${gir:Depends}')) {
+                ->satisfies('${gir:Depends}')) {
                 $self->hint(('typelib-missing-gir-depends', $bin));
             }
         }
@@ -123,15 +123,15 @@ sub installable {
         foreach my $bin ($group->get_binary_processables) {
             next unless $bin->name =~ m/^gir1\.2-/;
             my $other = $bin->name.' (= '.$bin->fields->value('Version').')';
-            if (    $bin->relation('Provides')->implies($expected)
-                and $processable->relation('strong')->implies($other)) {
+            if (    $bin->relation('Provides')->satisfies($expected)
+                and $processable->relation('strong')->satisfies($other)) {
                 next GIR;
             }
         }
 
         if (
             not $processable->relation('strong')
-            ->implies("$expected (= $version)")) {
+            ->satisfies("$expected (= $version)")) {
             $self->hint(('gir-missing-typelib-dependency', $gir, $expected));
         }
     }
@@ -141,7 +141,7 @@ sub installable {
         $expected =~ s/\.typelib$//;
         $expected =~ tr/_/-/;
         if ($pkg ne $expected
-            and not $processable->relation('Provides')->implies($expected)) {
+            and not $processable->relation('Provides')->satisfies($expected)) {
             $self->hint(
                 ('typelib-package-name-does-not-match', $typelib, $expected));
         }

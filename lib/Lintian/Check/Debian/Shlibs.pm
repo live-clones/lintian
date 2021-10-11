@@ -244,7 +244,7 @@ sub check_shlibs_file {
         for my $prerequisite (uniq @shlibs_prerequisites) {
 
             $self->hint('distant-prerequisite-in-shlibs', $prerequisite)
-              unless $provides->implies($prerequisite);
+              unless $provides->satisfies($prerequisite);
 
             $self->hint('outdated-relation-in-shlibs', $prerequisite)
               if $prerequisite =~ m/\(\s*[><](?![<>=])\s*/;
@@ -549,7 +549,7 @@ sub check_symbols_file {
         $prerequisite =~ s/ [ ] [#] MINVER [#] $//x;
         $self->hint('symbols-declares-dependency-on-other-package',
             $prerequisite)
-          unless $provides->implies($prerequisite);
+          unless $provides->satisfies($prerequisite);
     }
 
     return;

@@ -72,7 +72,7 @@ has built_with_golang => (
 
         $built_with_golang
           = $source->relation('Build-Depends-All')
-          ->implies('golang-go | golang-any')
+          ->satisfies('golang-go | golang-any')
           if defined $source;
 
         return $built_with_golang;

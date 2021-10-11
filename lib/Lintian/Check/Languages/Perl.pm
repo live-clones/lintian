@@ -65,7 +65,7 @@ sub visit_installed_files {
     my $dep = $self->processable->relation('strong');
     if (   $file->is_file
         && $file->name =~ /\.pm$/
-        && !$dep->implies('libperl4-corelibs-perl | perl (<< 5.12.3-7)')) {
+        && !$dep->satisfies('libperl4-corelibs-perl | perl (<< 5.12.3-7)')) {
 
         open(my $fd, '<', $file->unpacked_path)
           or die encode_utf8('Cannot open ' . $file->unpacked_path);

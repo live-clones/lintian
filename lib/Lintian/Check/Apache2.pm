@@ -141,7 +141,7 @@ sub check_web_application_package {
     # apache2 | httpd but don't worry about versions, virtual package
     # don't support that
     $self->hint('web-application-works-only-with-apache', $webapp)
-      if $rel->implies('apache2');
+      if $rel->satisfies('apache2');
 
     $self->inspect_conf_file($pkgtype, $file);
     return;

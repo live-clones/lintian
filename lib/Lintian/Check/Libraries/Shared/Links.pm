@@ -50,7 +50,7 @@ has development_packages => (
             push(@development_packages, $installable)
               if $installable->name =~ /-dev$/
               && $installable->relation('strong')
-              ->implies($self->processable->name);
+              ->satisfies($self->processable->name);
         }
 
         return \@development_packages;

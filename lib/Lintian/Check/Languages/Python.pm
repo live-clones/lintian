@@ -100,7 +100,7 @@ sub source {
             # Don't trigger if we ship any Python 3 module
             next if any {
                 $processable->binary_relation($_, 'all')
-                  ->implies('${python3:Depends}')
+                  ->satisfies('${python3:Depends}')
             }
             @package_names;
             $self->hint('python-foo-but-no-python3-foo', $bin);
@@ -109,8 +109,8 @@ sub source {
 
     my $build_all = $processable->relation('Build-Depends-All');
     $self->hint('build-depends-on-python-sphinx-only')
-      if $build_all->implies('python-sphinx')
-      and not $build_all->implies('python3-sphinx');
+      if $build_all->satisfies('python-sphinx')
+      and not $build_all->satisfies('python3-sphinx');
 
     my $maintainer = $self->processable->fields->value('Maintainer');
     $self->hint('python-teams-merged', $maintainer)
@@ -130,7 +130,7 @@ sub source {
             next if $binpkg !~ qr/$regex/;
             $self->hint('mismatched-python-substvar', $binpkg, $substvar)
               if $processable->binary_relation($binpkg, 'all')
-              ->implies($substvar);
+              ->satisfies($substvar);
         }
     }
 
@@ -340,7 +340,7 @@ sub installable {
             if (   $file->is_file
                 && $file
                 =~ m{^usr/lib/(?<version>python[23])[\d.]*/(?:site|dist)-packages}
-                && !$deps->implies($REQUIRED_DEPENDS{$+{version}})) {
+                && !$deps->satisfies($REQUIRED_DEPENDS{$+{version}})) {
                 $self->hint('python-package-missing-depends-on-python');
                 last;
             }
@@ -353,7 +353,7 @@ sub installable {
       FIELD: for my $py2 (@PYTHON2) {
             for my $py3 (@PYTHON3) {
                 # do not look for :any here; too narrow
-                if ($dep->implies($py2) && $dep->implies($py3)) {
+                if ($dep->satisfies($py2) && $dep->satisfies($py3)) {
                     $self->hint('depends-on-python2-and-python3',
                         "$field: $py2, [..], $py3");
                     last FIELD;
@@ -380,7 +380,7 @@ sub installable {
                 $self->hint(
                     'dependency-on-python-version-marked-for-end-of-life',
                     "($field: $dep)")
-                  if $processable->relation($field)->implies($dep);
+                  if $processable->relation($field)->satisfies($dep);
             }
         }
     }
@@ -391,7 +391,7 @@ sub installable {
         next if $pkg !~ /$regex/;
         next if any { $pkg =~ /$_/ } @IGNORE;
         $self->hint('django-package-does-not-depend-on-django', $basepkg)
-          if not $processable->relation('strong')->implies($basepkg);
+          if not $processable->relation('strong')->satisfies($basepkg);
     }
 
     if ($pkg =~ /^python([23]?)-/ and none { $pkg =~ /$_/ } @IGNORE) {

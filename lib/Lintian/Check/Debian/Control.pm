@@ -249,7 +249,7 @@ sub source {
         }
     }
 
-    # Make sure that a stronger dependency field doesn't imply any of
+    # Make sure that a stronger dependency field doesn't satisfy any of
     # the elements of a weaker dependency field.  dpkg-gencontrol will
     # fix this up for us, but we want to check the source package
     # since dpkg-gencontrol may silently "fix" something that's a more
@@ -270,10 +270,10 @@ sub source {
             my $relation
               = $processable->binary_relation($bin, $dep_fields[$strong]);
             $self->hint('package-depends-on-itself', $bin,$dep_fields[$strong])
-              if $relation->implies($bin);
+              if $relation->satisfies($bin);
             $self->hint('package-depends-on-hardcoded-libc',
                 $bin, $dep_fields[$strong])
-              if $relation->implies($LIBCS)
+              if $relation->satisfies($LIBCS)
               and $self->processable->name !~ /^e?glibc$/;
             for my $weak (($strong + 1) .. $#dep_fields) {
                 next
@@ -286,7 +286,7 @@ sub source {
                     $self->hint('stronger-dependency-implies-weaker',
                         $bin,"$dep_fields[$strong] -> $dep_fields[$weak]",
                         $dependency)
-                      if $relation->implies($dependency);
+                      if $relation->satisfies($dependency);
                 }
             }
         }
@@ -515,11 +515,11 @@ sub source {
         $self->hint(
             'gobject-introspection-package-missing-depends-on-gir-depends',
             $bin)
-          unless $relation->implies('${gir:Depends}');
+          unless $relation->satisfies('${gir:Depends}');
     }
 
     if ($processable->relation('Build-Depends')
-        ->implies('golang-go | golang-any')) {
+        ->satisfies('golang-go | golang-any')) {
         # Verify that golang binary packages set Built-Using (except for
         # arch:all library packages).
         foreach my $bin (@package_names) {

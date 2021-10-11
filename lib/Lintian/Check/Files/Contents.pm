@@ -85,7 +85,7 @@ sub check_item {
     return
       unless $item->is_file;
 
-    unless ($self->processable->relation('all')->implies('sensible-utils')
+    unless ($self->processable->relation('all')->satisfies('sensible-utils')
         || $self->processable->source_name eq 'sensible-utils') {
 
         my $sensible = $item->mentions_in_operation($SENSIBLE_REGEX);

@@ -56,8 +56,8 @@ Lintian::Relation - Lintian operations on dependencies and relationships
 =head1 SYNOPSIS
 
     my $depends = Lintian::Relation->new('foo | bar, baz');
-    print encode_utf8("yes\n") if $depends->implies('baz');
-    print encode_utf8("no\n") if $depends->implies('foo');
+    print encode_utf8("yes\n") if $depends->satisfies('baz');
+    print encode_utf8("no\n") if $depends->satisfies('foo');
 
 =head1 DESCRIPTION
 
@@ -208,7 +208,7 @@ sub logical_and {
 Returns a list of duplicated elements within the relation object.  Each
 element of the returned list will be a reference to an anonymous array
 holding a set of relations considered duplicates of each other.  Two
-relations are considered duplicates if one implies the other, meaning that
+relations are considered duplicates if one satisfies the other, meaning that
 if one relationship is satisfied, the other is necessarily satisfied.
 This relationship does not have to be commutative: the opposite
 implication may not hold.
@@ -224,7 +224,7 @@ sub duplicates {
 
     # The logic here is a bit complex in order to merge sets of duplicate
     # dependencies.  We want foo (<< 2), foo (>> 1), foo (= 1.5) to end up as
-    # one set of duplicates, even though the first doesn't imply the second.
+    # one set of duplicates, even though the first doesn't satisfy the second.
     #
     # $dups holds a hash, where the key is the earliest dependency in a set
     # and the value is a hash whose keys are the other dependencies in the
@@ -300,9 +300,9 @@ sub restriction_less {
     return $unrestricted;
 }
 
-=item implies(RELATION)
+=item satisfies(RELATION)
 
-Returns true if the relationship implies RELATION, meaning that if the
+Returns true if the relationship satisfies RELATION, meaning that if the
 Lintian::Relation object is satisfied, RELATION will always be satisfied.
 RELATION may be either a string or another Lintian::Relation object.
 
@@ -326,7 +326,7 @@ sub implies_array {
 
     if ($q0 eq 'PRED') {
         if ($p0 eq 'PRED') {
-            return $p->[$PREDICATE]->implies($q->[$PREDICATE]);
+            return $p->[$PREDICATE]->satisfies($q->[$PREDICATE]);
         } elsif ($p0 eq 'AND') {
             $i = 1;
             while ($i < @{$p}) {
@@ -408,7 +408,7 @@ sub implies_array {
 }
 
 # The public interface.
-sub implies {
+sub satisfies {
     my ($self, $condition) = @_;
 
     my $relation;
@@ -423,14 +423,14 @@ sub implies {
     return implies_array($self->trunk, $relation->trunk) // 0;
 }
 
-=item implies_inverse(RELATION)
+=item satisfies_inverse(RELATION)
 
-Returns true if the relationship implies that RELATION is certainly false,
+Returns true if the relationship satisfies that RELATION is certainly false,
 meaning that if the Lintian::Relation object is satisfied, RELATION cannot
 be satisfied.  RELATION may be either a string or another
 Lintian::Relation object.
 
-As with implies(), by default, architecture restrictions are honored in
+As with satisfies(), by default, architecture restrictions are honored in
 RELATION if it is a string.  If architecture restrictions should be
 ignored in RELATION, create a Lintian::Relation object with
 new_norestriction() and pass that in as RELATION instead of the string.
@@ -450,7 +450,7 @@ sub implies_array_inverse {
     my $p0 = $p->[$BRANCH_TYPE];
     if ($q0 eq 'PRED') {
         if ($p0 eq 'PRED') {
-            return $p->[$PREDICATE]->implies_inverse($q->[$PREDICATE]);
+            return $p->[$PREDICATE]->satisfies_inverse($q->[$PREDICATE]);
         } elsif ($p0 eq 'AND') {
             # q's falsehood can be deduced from any of p's clauses
             $i = 1;
@@ -490,7 +490,7 @@ sub implies_array_inverse {
 }
 
 # The public interface.
-sub implies_inverse {
+sub satisfies_inverse {
     my ($self, $condition) = @_;
 
     my $relation;
@@ -554,7 +554,7 @@ VISIT_PRED_NAME.
 This method will return a truth value if REGEX matches at least one
 predicate or clause (as defined by the WHAT parameter - see below).
 
-NOTE: Often L</implies> (or L</implies_inverse>) is a better choice
+NOTE: Often L</satisfies> (or L</satisfies_inverse>) is a better choice
 than this method.  This method should generally only be used when
 checking for a "pattern" package (e.g. phpapi-[\d\w+]+).
 

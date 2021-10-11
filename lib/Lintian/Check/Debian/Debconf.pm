@@ -192,7 +192,7 @@ sub installable {
     # See if the package depends on dbconfig-common.  Packages that do
     # are allowed to have a config file with no templates, since they
     # use the dbconfig-common templates.
-    my $usesdbconfig = $alldependencies->implies('dbconfig-common');
+    my $usesdbconfig = $alldependencies->satisfies('dbconfig-common');
 
     # Check that both debconf control area files are present.
     if ($seenconfig and not $seentemplates and not $usesdbconfig) {
@@ -259,7 +259,7 @@ sub installable {
             # cdebconf has a special "entropy" type
             $self->hint('unknown-template-type', $type)
               unless $type eq 'entropy'
-              && $alldependencies->implies('cdebconf');
+              && $alldependencies->satisfies('cdebconf');
 
         } elsif ($type eq 'select' || $type eq 'multiselect') {
             $isselect = 1;
@@ -555,7 +555,7 @@ sub installable {
                 # If we haven't seen db_purge we emit the tag unless the
                 # package is a debconf provider (in which case db_purge
                 # won't be available)
-                unless ($db_purge or $selfrelation->implies($ANY_DEBCONF)) {
+                unless ($db_purge or $selfrelation->satisfies($ANY_DEBCONF)) {
                     $self->hint('postrm-does-not-purge-debconf');
                 }
             }
@@ -572,7 +572,7 @@ sub installable {
             # postrm script at all.
             $self->hint('postrm-does-not-purge-debconf')
               unless $self->processable->type eq 'udeb'
-              or $selfrelation->implies($ANY_DEBCONF);
+              or $selfrelation->satisfies($ANY_DEBCONF);
         }
     }
 
@@ -604,14 +604,13 @@ sub installable {
     # package that might provide debconf functionality.
 
     if ($usespreinst) {
-        unless (
-            $self->processable->relation('Pre-Depends')->implies($ANY_DEBCONF))
-        {
+        unless ($self->processable->relation('Pre-Depends')
+            ->satisfies($ANY_DEBCONF)){
             $self->hint('missing-debconf-dependency-for-preinst')
               unless $self->processable->type eq 'udeb';
         }
     } else {
-        unless ($alldependencies->implies($ANY_DEBCONF) or $usesdbconfig) {
+        unless ($alldependencies->satisfies($ANY_DEBCONF) or $usesdbconfig) {
             $self->hint('missing-debconf-dependency');
         }
     }

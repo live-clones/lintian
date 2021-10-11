@@ -582,7 +582,7 @@ sub installable {
         # Check for obsolete perl libraries
         if (
             $base eq 'perl'
-            &&!$str_deps->implies(
+            &&!$str_deps->satisfies(
                 'libperl4-corelibs-perl | perl (<< 5.12.3-7)')
         ) {
             open(my $fd, '<', $file->unpacked_path)
@@ -628,7 +628,7 @@ sub installable {
             if (not defined $depends) {
                 $depends = $base;
             }
-            if ($depends && !$all_parsed->implies($depends)) {
+            if ($depends && !$all_parsed->satisfies($depends)) {
                 if ($base =~ /^php/) {
                     $self->hint('php-script-but-no-php-cli-dep',
                         $filename, $interpreter);
@@ -670,7 +670,7 @@ sub installable {
               if length $interpreter_data->{prerequisites};
 
             my $depends = join(' | ',  @depends);
-            unless ($all_parsed->implies($depends)) {
+            unless ($all_parsed->satisfies($depends)) {
                 if ($base =~ /^(wish|tclsh)/) {
                     $self->hint("$1-script-but-no-$1-dep", $filename,
                         $interpreter);
@@ -684,7 +684,7 @@ sub installable {
             my ($version) = ($base =~ /$interpreter_data->{regex}/);
             my $depends = $interpreter_data->{template};
             $depends =~ s/\$1/$version/g;
-            unless ($all_parsed->implies($depends)) {
+            unless ($all_parsed->satisfies($depends)) {
                 if ($base =~ /^(python|ruby)/) {
                     $self->hint("$1-script-but-no-$1-dep", $filename,
                         $interpreter);
@@ -802,13 +802,13 @@ sub installable {
                     $interpreter_data->{prerequisites});
                 if ($file eq 'preinst') {
                     unless ($processable->relation('Pre-Depends')
-                        ->implies($depends)){
+                        ->satisfies($depends)){
                         $self->hint('control-interpreter-without-predepends',
                             $interpreter, "($file)", $depends->to_string);
                     }
                 } else {
                     unless (
-                        $processable->relation('strong')->implies($depends)) {
+                        $processable->relation('strong')->satisfies($depends)){
                         $self->hint('control-interpreter-without-depends',
                             $interpreter, "($file)", $depends->to_string);
                     }
@@ -944,7 +944,7 @@ sub installable {
                 $self->hint('udevadm-called-without-guard', "$file:$.")
                   unless $saw_udevadm_guard
                   || $line =~ m{\|\|}
-                  || $str_deps->implies('udev');
+                  || $str_deps->satisfies('udev');
             }
 
             if (   $line =~  m{[^\w](?:(?:/var)?/tmp|\$TMPDIR)/[^)\]\}\s]}
@@ -1127,7 +1127,7 @@ sub installable {
                         $self->hint('maintainer-script-modifies-inetd-conf',
                             "$file:$.")
                           unless $processable->relation('Provides')
-                          ->implies('inet-superserver');
+                          ->satisfies('inet-superserver');
                     }
 
                     if ($line
@@ -1135,7 +1135,7 @@ sub installable {
                         $self->hint('maintainer-script-modifies-inetd-conf',
                             "$file:$.")
                           unless $processable->relation('Provides')
-                          ->implies('inet-superserver');
+                          ->satisfies('inet-superserver');
                     }
 
                     # Check for running commands with a leading path.
@@ -1200,7 +1200,7 @@ sub installable {
 
                         } elsif ($line !~ /\|\|\s*true\b/) {
                             unless ($processable->relation('strong')
-                                ->implies($package)) {
+                                ->satisfies($package)) {
                                 my $shortpackage = $package;
                                 $shortpackage =~ s/[ \(].*//;
                                 $self->hint(
@@ -1253,7 +1253,7 @@ sub installable {
             $self->hint('skip-systemd-native-flag-missing-pre-depends',
                 "$file:$.")
               if $line =~ /invoke-rc.d\b.*--skip-systemd-native\b/
-              && !$pdepends->implies('init-system-helpers (>= 1.54~)');
+              && !$pdepends->satisfies('init-system-helpers (>= 1.54~)');
 
             if (   $line =~ m{$LEADIN(?:/usr/sbin/)?dpkg-divert\s}
                 && $line !~ /--(?:help|list|truename|version)/) {
