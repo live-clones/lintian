@@ -16,9 +16,9 @@ ok($relation->satisfies('pkgB'),       'pkgB satisfies pkgB');
 ok(!$relation->satisfies('pkgC'),      'pkgC:i386 does not satisfy pkgC');
 ok($relation->satisfies('pkgC:i386'),  'pkgC:i386 satisfies pkgC:i386');
 
-ok(!$relation->satisfies('pkgB:any'),  'pkgB does not satisfy pkgB:any');
+ok($relation->satisfies('pkgB:any'),   'pkgB satisfies pkgB:any');
 
-ok($relation->satisfies('pkgA'),       'pkgA:any satisfies pkgA');
+ok(!$relation->satisfies('pkgA'),      'pkgA:any does not satisfy pkgA');
 
 ok(!$relation->satisfies('pkgC:any'),  'pkgC:i386 does not satisfy pkgC:any');
 

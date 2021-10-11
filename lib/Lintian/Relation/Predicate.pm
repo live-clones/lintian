@@ -340,23 +340,25 @@ sub satisfies {
     # field "Multi-arch: allowed", but we cannot check that here.  So
     # we assume that it is okay.
 
-    # pkg:any satisfies pkg (but the reverse is not true).
+    # pkg has no chance of satisfing pkg:Y unless Y is 'any'
     return undef
-      if length $self->multiarch_acceptor
-      && !length $other->multiarch_acceptor
-      && $self->multiarch_acceptor ne 'any';
+      if !length $self->multiarch_acceptor
+      && length $other->multiarch_acceptor
+      && $other->multiarch_acceptor ne 'any';
 
     # TODO: Review this case.  Are there cases where other cannot
     # disprove self due to the ":any"-qualifier?  For now, we
     # assume there are no such cases.
+    # pkg:X has no chance of satisfying pkg
     return undef
-      if !length $self->multiarch_acceptor
-      && length $other->multiarch_acceptor;
+      if length $self->multiarch_acceptor
+      && !length $other->multiarch_acceptor;
 
     # For now assert that only the identity holds.  In practise, the
     # "pkg:X" (for any valid value of X) seems to satisfy "pkg:any",
     # fixing that is a TODO (because version clauses complicates
     # matters)
+    # pkg:X has no chance of satisfying pkg:Y unless X equals Y
     return undef
       if length $self->multiarch_acceptor
       && length $other->multiarch_acceptor

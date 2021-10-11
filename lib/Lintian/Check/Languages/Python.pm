@@ -45,8 +45,8 @@ const my $PYTHON2_MIGRATION_MINOR => 6;
 
 my @FIELDS = qw(Depends Pre-Depends Recommends Suggests);
 my @IGNORE = qw(-dev$ -docs?$ -common$ -tools$);
-my @PYTHON2 = qw(python2 python2.7 python2-dev);
-my @PYTHON3 = qw(python3 python3-dev);
+my @PYTHON2 = qw(python2:any python2.7:any python2-dev:any);
+my @PYTHON3 = qw(python3:any python3-dev:any);
 
 my %DJANGO_PACKAGES = (
     '^python3-django-' => 'python3-django',
@@ -352,10 +352,10 @@ sub installable {
         my $dep = $processable->relation($field);
       FIELD: for my $py2 (@PYTHON2) {
             for my $py3 (@PYTHON3) {
-                # do not look for :any here; too narrow
+
                 if ($dep->satisfies($py2) && $dep->satisfies($py3)) {
                     $self->hint('depends-on-python2-and-python3',
-                        "$field: $py2, [..], $py3");
+                        $field, "(satisfies $py2, $py3)");
                     last FIELD;
                 }
             }
@@ -376,10 +376,9 @@ sub installable {
         for my $field (@FIELDS) {
             for my $dep (@PYTHON2) {
 
-                # do not look for :any here; too narrow
                 $self->hint(
                     'dependency-on-python-version-marked-for-end-of-life',
-                    "($field: $dep)")
+                    $field, "(satisfies $dep)")
                   if $processable->relation($field)->satisfies($dep);
             }
         }
