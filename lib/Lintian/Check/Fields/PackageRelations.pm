@@ -627,7 +627,7 @@ sub source {
         }
     }
 
-    # Check for duplicates.
+    # Check for redundancies.
     my @to_check = (
         ['Build-Depends'],
         ['Build-Depends', 'Build-Depends-Indep'],
@@ -636,10 +636,12 @@ sub source {
     for my $fields (@to_check) {
         my $relation = Lintian::Relation->new->logical_and(
             map { $processable->relation($_) }@{$fields});
-        my @dups = $relation->duplicates;
-        for my $dup (@dups) {
-            $self->hint('package-has-a-duplicate-build-relation',
-                join(', ', @{$dup}));
+
+        for my $redundant_set ($relation->redundancies) {
+
+            $self->hint(
+                'redundant-build-prerequisites',
+                join(', ', sort @{$redundant_set}));
         }
     }
 

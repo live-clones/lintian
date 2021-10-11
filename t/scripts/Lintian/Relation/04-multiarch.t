@@ -24,34 +24,37 @@ ok(!$relation->satisfies('pkgC:any'),  'pkgC:i386 does not satisfy pkgC:any');
 
 is($relation->to_string, $orig,      'reconstituted eq original');
 
-my @duplicates1 = Lintian::Relation->new->load('pkgD, pkgD:any')->duplicates;
+my @redundancies1
+  = Lintian::Relation->new->load('pkgD, pkgD:any')->redundancies;
 is_deeply(
-    \@duplicates1,
+    \@redundancies1,
     [['pkgD', 'pkgD:any']],
-    'pkgD and pkgD:any are duplicates'
+    'pkgD and pkgD:any are redundant'
 );
 
 TODO: {
     local $TODO = ':X => :Y cases are not implemented (in general)';
 
-    my @duplicates2
-      = Lintian::Relation->new->load('pkgD:i386, pkgD:any')->duplicates;
+    my @redundancies2
+      = Lintian::Relation->new->load('pkgD:i386, pkgD:any')->redundancies;
     is_deeply(
-        \@duplicates2,
+        \@redundancies2,
         [['pkgD:i386', 'pkgD:any']],
-        'pkgD:i386 and pkgD:any are duplicates'
+        'pkgD:i386 and pkgD:any are redundant'
     );
 }
 
-my @duplicates3 = Lintian::Relation->new->load('pkgD:i386, pkgD')->duplicates;
-is_deeply(\@duplicates3, [],'pkgD:i386 and pkgD are not duplicates');
+my @redundancies3
+  = Lintian::Relation->new->load('pkgD:i386, pkgD')->redundancies;
+is_deeply(\@redundancies3, [],'pkgD:i386 and pkgD are not redundant');
 
-my @duplicates4
-  = Lintian::Relation->new->load('pkgD:i386, pkgD:i386 (>= 1.0)')->duplicates;
+my @redundancies4
+  = Lintian::Relation->new->load('pkgD:i386, pkgD:i386 (>= 1.0)')
+  ->redundancies;
 is_deeply(
-    \@duplicates4,
+    \@redundancies4,
     [['pkgD:i386', 'pkgD:i386 (>= 1.0)']],
-    'Can detect pkgD:i386 duplicates'
+    'Can detect pkgD:i386 redundancies'
 );
 
 # Local Variables:

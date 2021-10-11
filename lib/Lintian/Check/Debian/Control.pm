@@ -27,8 +27,7 @@ use warnings;
 use utf8;
 
 use Const::Fast;
-use List::SomeUtils qw(any);
-use List::Util qw(first none);
+use List::SomeUtils qw(any none first_value);
 use Path::Tiny;
 use Unicode::UTF8 qw(encode_utf8);
 
@@ -169,7 +168,7 @@ sub source {
         my $bfields = $processable->debian_control->installable_fields($bin);
         $self->hint('build-info-in-binary-control-file-section',"Package $bin")
           if (
-            first { $bfields->value("Build-$_") }
+            first_value { $bfields->value("Build-$_") }
             qw(Depends Depends-Indep Conflicts Conflicts-Indep)
           );
         foreach my $field ($bfields->names) {
@@ -654,14 +653,15 @@ sub check_dev_depends {
     return;
 }
 
-# Checks for duplicates in a relation, for missing separators and
+# Checks for redundancies in a relation, for missing separators and
 # obsolete relation forms.
 sub check_relation {
     my ($self, $pkg, $field, $rawvalue, $relation) = @_;
 
-    for my $dup ($relation->duplicates) {
-        $self->hint('duplicate-in-relation-field', 'in', $pkg,
-            "$field:", join(', ', @{$dup}));
+    for my $redundant_set ($relation->redundancies) {
+
+        $self->hint('redundant-control-relation', 'in', $pkg,
+            "$field:", join(', ', sort @{$redundant_set}));
     }
 
     $rawvalue =~ s/\n(\s)/$1/g;

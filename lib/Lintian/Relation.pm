@@ -203,37 +203,37 @@ sub logical_and {
     return $created;
 }
 
-=item duplicates()
+=item redundancies()
 
 Returns a list of duplicated elements within the relation object.  Each
 element of the returned list will be a reference to an anonymous array
-holding a set of relations considered duplicates of each other.  Two
-relations are considered duplicates if one satisfies the other, meaning that
+holding a set of relations considered redundancies of each other.  Two
+relations are considered redundancies if one satisfies the other, meaning that
 if one relationship is satisfied, the other is necessarily satisfied.
 This relationship does not have to be commutative: the opposite
 implication may not hold.
 
 =cut
 
-sub duplicates {
+sub redundancies {
     my ($self) = @_;
 
-    # there are no duplicates unless the top-level relationship is AND.
+    # there are no redundancies unless the top-level relationship is AND.
     return ()
       unless $self->trunk->[$BRANCH_TYPE] eq 'AND';
 
-    # The logic here is a bit complex in order to merge sets of duplicate
-    # dependencies.  We want foo (<< 2), foo (>> 1), foo (= 1.5) to end up as
-    # one set of duplicates, even though the first doesn't satisfy the second.
-    #
-    # $dups holds a hash, where the key is the earliest dependency in a set
-    # and the value is a hash whose keys are the other dependencies in the
-    # set.  $seen holds a map from package names to the duplicate sets that
-    # they're part of, if they're not the earliest package in a set.  If
-    # either of the dependencies in a duplicate pair were already seen, add
-    # the missing one of the pair to the existing set rather than creating a
-    # new one.
-    my (%dups, %seen);
+# The logic here is a bit complex in order to merge sets of duplicate
+# dependencies.  We want foo (<< 2), foo (>> 1), foo (= 1.5) to end up as
+# one set of redundancies, even though the first doesn't satisfy the second.
+#
+# $redundant_sets holds a hash, where the key is the earliest dependency in a set
+# and the value is a hash whose keys are the other dependencies in the
+# set.  $seen holds a map from package names to the duplicate sets that
+# they're part of, if they're not the earliest package in a set.  If
+# either of the dependencies in a duplicate pair were already seen, add
+# the missing one of the pair to the existing set rather than creating a
+# new one.
+    my %redundant_sets;
 
     my @remaining = @{$self->trunk};
 
@@ -241,6 +241,7 @@ sub duplicates {
     shift @remaining;
     my $i = 1;
 
+    my %seen;
     while (@remaining > 1) {
 
         my $branch_i = shift @remaining;
@@ -257,16 +258,16 @@ sub duplicates {
                 my $two = $self->to_string($branch_j);
 
                 if ($seen{$one}) {
-                    $dups{$seen{$one}}{$two} = $j;
+                    $redundant_sets{$seen{$one}}{$two} = $j;
                     $seen{$two} = $seen{$one};
 
                 } elsif ($seen{$two}) {
-                    $dups{$seen{$two}}{$one} = $i;
+                    $redundant_sets{$seen{$two}}{$one} = $i;
                     $seen{$one} = $seen{$two};
 
                 } else {
-                    $dups{$one} ||= {};
-                    $dups{$one}{$two} = $j;
+                    $redundant_sets{$one} ||= {};
+                    $redundant_sets{$one}{$two} = $j;
                     $seen{$two} = $one;
                 }
             }
@@ -277,12 +278,7 @@ sub duplicates {
         $i++;
     }
 
-    # The sort maintains the original order in which we encountered the
-    # dependencies, just in case that helps the user find the problems,
-    # despite the fact we're using a hash.
-    return map {
-        [$_, sort { $dups{$_}{$a} <=> $dups{$_}{$b} } keys %{ $dups{$_} }]
-    } keys %dups;
+    return map { [$_, keys %{ $redundant_sets{$_}}] } keys %redundant_sets;
 }
 
 =item restriction_less
