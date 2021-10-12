@@ -65,6 +65,12 @@ has private_folders => (
     default => sub {
         my ($self) = @_;
 
+        my @lib_folders = qw{lib};
+
+        push(@lib_folders,
+            map { $_ . $SLASH . $self->multiarch_component } @lib_folders)
+          if length $self->multiarch_component;
+
         my @usrlib_folders = qw{usr/lib};
 
         push(@usrlib_folders,
@@ -75,7 +81,7 @@ has private_folders => (
 
         my @private_folders
           = map { $_ . $SLASH . $self->processable->source_name }
-          (@usrlib_folders, @game_folders);
+          (@lib_folders, @usrlib_folders, @game_folders);
 
         my @normalized;
         for my $folder (@private_folders) {
