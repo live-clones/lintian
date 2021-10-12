@@ -596,7 +596,8 @@ m{^\t\s*[-@]?(?:(?:/usr)?/bin/)?(?:cp|chmod|echo|ln|mv|mkdir|rm|test|true)}
 
     my @clean_in_indep
       = grep { $build_indep->satisfies($_) } uniq @needed_clean;
-    $self->hint('missing-build-depends-for-clean-target-in-debian-rules', $_)
+    $self->hint('missing-build-depends-for-clean-target-in-debian-rules',
+        "(does not satisfy $_)")
       for @clean_in_indep;
 
     # another check complains when debhelper is missing from d/rules
@@ -606,7 +607,8 @@ m{^\t\s*[-@]?(?:(?:/usr)?/bin/)?(?:cp|chmod|echo|ln|mv|mkdir|rm|test|true)}
       = grep { !$build_all_norestriction->satisfies($_) }
       $combined_lc->get_Lonly;
 
-    $self->hint('rules-require-build-prerequisite', $_)for @still_missing;
+    $self->hint('rules-require-build-prerequisite', "(does not satisfy $_)")
+      for @still_missing;
 
     $self->hint('debian-rules-should-not-set-CFLAGS-from-noopt')
       if $contents
