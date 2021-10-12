@@ -1,3 +1,6 @@
+min-js-with-sources (source): very-long-line-length-in-source-file ugly/missing-source.min.js line 1 is 3586 characters long (>512)
+min-js-with-sources (source): very-long-line-length-in-source-file ugly/fullpath.min.js line 1 is 3586 characters long (>512)
+min-js-with-sources (source): very-long-line-length-in-source-file ugly/basename.min.js line 1 is 3586 characters long (>512)
 min-js-with-sources (source): source-is-missing ugly/missing-source.min.js
 min-js-with-sources (source): source-contains-prebuilt-javascript-object ugly/missing-source.min.js
 min-js-with-sources (source): source-contains-prebuilt-javascript-object ugly/fullpath.min.js

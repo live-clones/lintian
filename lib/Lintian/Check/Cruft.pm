@@ -34,6 +34,7 @@ use utf8;
 use Const::Fast;
 use File::Basename qw(basename);
 use List::SomeUtils qw(any none first_value);
+use List::UtilsBy qw(max_by);
 use Path::Tiny;
 use Unicode::UTF8 qw(encode_utf8);
 
@@ -517,6 +518,11 @@ sub full_text_check {
     return
       unless length $contents;
 
+    my ($maximum, $position) = $self->maximum_line_length($contents);
+    $self->hint('very-long-line-length-in-source-file',$item->name,
+        "line $position is $maximum characters long (>$VERY_LONG_LINE_LENGTH)")
+      if $maximum > $VERY_LONG_LINE_LENGTH;
+
     my $lowercase = lc($contents);
     my $clean = clean_text($lowercase);
 
@@ -636,8 +642,11 @@ sub check_html_cruft {
 
             $blockscript = substr($blockscript,$+[0]);
 
+            my $lcscript = $1;
+            $self->check_js_script($item, $lcscript);
+
             return 0
-              if $self->check_js_script($item, $1);
+              if $self->warn_long_lines($item, $lcscript);
 
             next;
         }
@@ -683,7 +692,7 @@ sub check_js_script {
             $item->name,'extract of copyright statement:',$extract);
     }
 
-    return $self->warn_long_lines($item, $lcscript);
+    return;
 }
 
 # check if file is javascript but not minified
@@ -705,14 +714,13 @@ sub warn_prebuilt_javascript{
 
     my $extratext= "line $position is $linelength characters long (>$cutoff)";
 
-    $self->hint('source-contains-prebuilt-javascript-object',
-        $item->name,$extratext);
+    $self->hint('source-contains-prebuilt-javascript-object',$item->name);
 
     # Check for missing source.  It will check
     # for the source file in well known directories
     if ($item->basename =~ m{\.js$}i) {
 
-        $self->hint('source-is-missing', $item->name, $extratext)
+        $self->hint('source-is-missing', $item->name)
           unless $self->find_source(
             $item,
             {
@@ -723,7 +731,7 @@ sub warn_prebuilt_javascript{
 
     } else  {
         # html file
-        $self->hint('source-is-missing', $item->name, $extratext)
+        $self->hint('source-is-missing', $item->name)
           unless $self->find_source($item, {'.fragment.js' => $DOLLAR});
     }
 
@@ -733,21 +741,24 @@ sub warn_prebuilt_javascript{
 sub maximum_line_length {
     my ($self, $text) = @_;
 
-    my @lines = split(/\n+/, $text);
-    my $maximum = 0;
+    my @lines = split(/\n/, $text);
+    my %line_lengths;
 
     my $position = 1;
     for my $line (@lines) {
 
-        my $linelength = length $line;
-        $maximum = $linelength
-          if $maximum < $linelength;
+        $line_lengths{$position} = length $line;
 
     } continue {
         ++$position;
     }
 
-    return ($maximum, $position);
+    my $longest = max_by { $line_lengths{$_} } keys %line_lengths;
+
+    return (0, 0)
+      unless defined $longest;
+
+    return ($line_lengths{$longest}, $longest);
 }
 
 # strip C comment
@@ -802,10 +813,6 @@ sub warn_long_lines {
    # first check if line >  $VERY_LONG_LINE_LENGTH that is likely minification
    # avoid problem by recursive regex with longline
     if ($maximum > $VERY_LONG_LINE_LENGTH) {
-
-        $self->hint('very-long-line-length-in-source-file',$item->name,
-"line $position is $maximum characters long (>$VERY_LONG_LINE_LENGTH)"
-        );
 
         # clean up jslint craps line
         $lowercase =~ s{^\s*/[*][^\n]*[*]/\s*$}{}gm;
