@@ -652,8 +652,8 @@ sub installable {
                     # ABI-versioned virtual packages for erlang
                 } else {
                     $self->hint('missing-dep-for-interpreter',
-                        "$base => $depends",
-                        "($filename)", $interpreter);
+                        $interpreter, "[$filename]",
+                        "(does not satisfy $depends)");
                 }
             }
         } elsif ($self->VERSIONED_INTERPRETERS->recognizes($base)) {
@@ -676,8 +676,8 @@ sub installable {
                         $interpreter);
                 } else {
                     $self->hint('missing-dep-for-interpreter',
-                        "$base => $depends",
-                        "($filename)", $interpreter);
+                        $interpreter, "[$filename]",
+                        "(does not satisfy $depends)");
                 }
             }
         } else {
@@ -690,8 +690,8 @@ sub installable {
                         $interpreter);
                 } else {
                     $self->hint('missing-dep-for-interpreter',
-                        "$base => $depends",
-                        "($filename)", $interpreter);
+                        $interpreter, "[$filename]",
+                        "(does not satisfy $depends)");
                 }
             }
         }
