@@ -50,18 +50,17 @@ sub visit_patched_files {
     return
       unless $item->is_file;
 
-    # Lena Söderberg image
-    if ($item->basename =~ /\blenn?a\b/i) {
-        if(    $item->file_info =~ /\bimage\b/i
-            or $item->file_info =~ /^Matlab v\d+ mat/i
-            or $item->file_info =~ /\bbitmap\b/i
-            or $item->file_info =~ /^PDF Document\b/i
-            or $item->file_info =~ /^Postscript Document\b/i) {
+    return
+         unless $item->file_info =~ /\bimage\b/i
+      || $item->file_info =~ /^Matlab v\d+ mat/i
+      || $item->file_info =~ /\bbitmap\b/i
+      || $item->file_info =~ /^PDF Document\b/i
+      || $item->file_info =~ /^Postscript Document\b/i;
 
-            $self->hint('license-problem-non-free-img-lenna', $item->name)
-              unless $self->LENNA_WHITELIST->recognizes($item->md5sum);
-        }
-    }
+    # Lena Söderberg image
+    $self->hint('license-problem-non-free-img-lenna', $item->name)
+      if $item->basename =~ / ( \b | _ ) lenn?a ( \b | _ ) /ix
+      && !$self->LENNA_WHITELIST->recognizes($item->md5sum);
 
     return;
 }
