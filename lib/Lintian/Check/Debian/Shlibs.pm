@@ -49,7 +49,7 @@ my @known_meta_labels = qw{
   Ignore-Blacklist-Groups
 };
 
-has soname_by_file => (
+has soname_by_filename => (
     is => 'rw',
     lazy => 1,
     default => sub {
@@ -57,18 +57,18 @@ has soname_by_file => (
 
         my $objdump = $self->processable->objdump_info;
 
-        my %soname_by_file;
+        my %soname_by_filename;
         for my $name (keys %{$objdump}) {
 
-            $soname_by_file{$name} = $objdump->{$name}{SONAME}[0]
+            $soname_by_filename{$name} = $objdump->{$name}{SONAME}[0]
               if exists $objdump->{$name}{SONAME};
         }
 
-        return \%soname_by_file;
+        return \%soname_by_filename;
     });
 
 has shlibs_positions_by_pretty_soname => (is => 'rw', default => sub { {} });
-has symbols_positions_by_pretty_soname => (is => 'rw', default => sub { {} });
+has symbols_positions_by_soname => (is => 'rw', default => sub { {} });
 
 sub installable {
     my ($self) = @_;
@@ -76,16 +76,20 @@ sub installable {
     $self->check_shlibs_file;
     $self->check_symbols_file;
 
+    my @pretty_sonames_from_shlibs
+      = keys %{$self->shlibs_positions_by_pretty_soname};
+    my @pretty_sonames_from_symbols
+      = map { human_soname($_) } keys %{$self->symbols_positions_by_soname};
+
     # Compare the contents of the shlibs and symbols control files, but exclude
     # from this check shared libraries whose SONAMEs has no version.  Those can
     # only be represented in symbols files and aren't expected in shlibs files.
-    my $extra_lc = List::Compare->new(
-        [keys %{$self->symbols_positions_by_pretty_soname}],
-        [keys %{$self->shlibs_positions_by_pretty_soname}]);
+    my $extra_lc = List::Compare->new(\@pretty_sonames_from_symbols,
+        \@pretty_sonames_from_shlibs);
 
     if (%{$self->shlibs_positions_by_pretty_soname}) {
 
-        my @versioned = grep { / / } $extra_lc->get_Lonly;
+        my @versioned = grep { m{ } } $extra_lc->get_Lonly;
 
         $self->hint('symbols-for-undeclared-shared-library', $_)for @versioned;
     }
@@ -104,9 +108,9 @@ sub check_shlibs_file {
     # they're in private directories, assume they're plugins or
     # private libraries and are safe.
     my @unversioned_libraries;
-    for my $name (keys %{$self->soname_by_file}) {
+    for my $name (keys %{$self->soname_by_filename}) {
 
-        my $pretty_soname = human_soname($self->soname_by_file->{$name});
+        my $pretty_soname = human_soname($self->soname_by_filename->{$name});
         next
           if $pretty_soname =~ m{ };
 
@@ -115,7 +119,7 @@ sub check_shlibs_file {
           if any { (dirname($name) . $SLASH) eq $_ } @ldconfig_folders;
     }
 
-    my $versioned_lc = List::Compare->new([keys %{$self->soname_by_file}],
+    my $versioned_lc = List::Compare->new([keys %{$self->soname_by_filename}],
         \@unversioned_libraries);
     my @versioned_libraries = $versioned_lc->get_Lonly;
 
@@ -151,8 +155,8 @@ sub check_shlibs_file {
         for my $line (@lines) {
 
             next
-              if $line =~ /^\s*$/
-              || $line =~ /^#/;
+              if $line =~ m{^ \s* $}x
+              || $line =~ m{^ [#] }x;
 
             # We exclude udebs from the checks for correct shared library
             # dependencies, since packages may contain dependencies on
@@ -178,11 +182,11 @@ sub check_shlibs_file {
             ++$position;
         }
 
-        my @duplicates
+        my @duplicate_pretty_sonames
           = grep { @{$self->shlibs_positions_by_pretty_soname->{$_}} > 1 }
           keys %{$self->shlibs_positions_by_pretty_soname};
 
-        for my $pretty_soname (@duplicates) {
+        for my $pretty_soname (@duplicate_pretty_sonames) {
 
             my $indicator
               = $LEFT_PARENTHESIS . 'lines'
@@ -195,13 +199,14 @@ sub check_shlibs_file {
             $self->hint('duplicate-in-shlibs', $indicator,$pretty_soname);
         }
 
-        my @used_sonames;
+        my @used_pretty_sonames;
         for my $name (@versioned_libraries) {
 
-            my $pretty_soname = human_soname($self->soname_by_file->{$name});
+            my $pretty_soname
+              = human_soname($self->soname_by_filename->{$name});
 
-            push(@used_sonames, $pretty_soname);
-            push(@used_sonames, "udeb: $pretty_soname");
+            push(@used_pretty_sonames, $pretty_soname);
+            push(@used_pretty_sonames, "udeb: $pretty_soname");
 
             # only public shared libraries
             $self->hint('ships-undeclared-shared-library',
@@ -218,7 +223,7 @@ sub check_shlibs_file {
         my $unused_lc
           = List::Compare->new(
             [keys %{$self->shlibs_positions_by_pretty_soname}],
-            \@used_sonames);
+            \@used_pretty_sonames);
 
         $self->hint('shared-library-not-shipped', $_)for $unused_lc->get_Lonly;
 
@@ -258,7 +263,7 @@ sub check_symbols_file {
     my ($self) = @_;
 
     my @ldconfig_folders = @{$self->profile->architectures->ldconfig_folders};
-    my @shared_libraries = keys %{$self->soname_by_file};
+    my @shared_libraries = keys %{$self->soname_by_filename};
 
     my $fields = $self->processable->fields;
     my $symbols_file = $self->processable->control->lookup('symbols');
@@ -295,37 +300,38 @@ sub check_symbols_file {
     my $package_version_wo_rev = $package_version;
     $package_version_wo_rev =~ s/^ (.+) - [^-]+ $/$1/x;
 
-    my @symbols;
-    my @full_version_symbols;
-    my @debian_revision_symbols;
-    my @prerequisites;
+    my @sonames;
+    my %symbols_by_soname;
+    my %full_version_symbols_by_soname;
+    my %debian_revision_symbols_by_soname;
+    my %prerequisites_by_soname;
+    my %positions_by_soname_and_meta_label;
     my @syntax_errors;
-    my %positions_by_meta_label;
     my $template_count = 0;
 
     my @lines = split(/\n/, $symbols_file->decoded_utf8);
 
-    my $soname = $EMPTY;
+    my $current_soname = $EMPTY;
     my $position = 1;
     for my $line (@lines) {
 
         next
-          if $line =~ /^\s*$/
-          || $line =~ /^#/;
+          if $line =~ m{^ \s* $}x
+          || $line =~ m{^ [#] }x;
 
         # soname, main dependency template
-        if ($line =~ /^([^\s|*]\S+)\s\S+\s*(?:\(\S+\s+\S+\)|\#MINVER\#)?/){
+        if ($line
+            =~ m{^ ([^\s|*]\S+) \s\S+\s* (?: [(] \S+\s+\S+ [)] | [#]MINVER[#] )? }x
+        ){
 
-            $soname = $1;
+            $current_soname = $1;
+            push(@sonames, $current_soname);
 
-            $line =~ s/^\Q$soname\E\s*//;
-            my $pretty_soname = human_soname($soname);
+            $line =~ s/^\Q$current_soname\E\s*//;
 
-            $self->symbols_positions_by_pretty_soname->{$pretty_soname} //= [];
+            $self->symbols_positions_by_soname->{$current_soname} //= [];
             push(
-                @{
-                    $self->symbols_positions_by_pretty_soname->{$pretty_soname}
-                },
+                @{$self->symbols_positions_by_soname->{$current_soname}},
                 $position
             );
 
@@ -333,13 +339,17 @@ sub check_symbols_file {
                 for my $disjunctive (split(m{ \s* [|] \s* }x, $conjunctive)){
 
                     $disjunctive
-                      =~ m{^ (\S+) ( \s* (?: [(] \S+ \s+ \S+ [)] | [#]MINVER[#]))? $}x;
+                      =~ m{^ (\S+) ( \s* (?: [(] \S+\s+\S+ [)] | [#]MINVER[#]))? $}x;
 
                     my $package = $1;
                     my $version = $2 || $EMPTY;
 
                     if (length $package) {
-                        push(@prerequisites, $package . $version);
+                        $prerequisites_by_soname{$current_soname} //= [];
+                        push(
+                            @{$prerequisites_by_soname{$current_soname}},
+                            $package . $version
+                        );
 
                     } else {
                         push(@syntax_errors, $position);
@@ -348,23 +358,24 @@ sub check_symbols_file {
             }
 
             $template_count = 0;
-            @symbols = ();
 
             next;
         }
 
         # alternative dependency template
-        if ($line =~ /^\|\s+\S+\s*(?:\(\S+\s+\S+\)|#MINVER#)?/) {
+        if ($line
+            =~ m{^ [|] \s+\S+\s* (?: [(] \S+\s+\S+ [)] | [#]MINVER[#] )? }x) {
 
             my $error = 0;
 
-            if (%positions_by_meta_label || !length $soname) {
+            if (%{$positions_by_soname_and_meta_label{$current_soname} // {} }
+                || !length $current_soname) {
 
                 push(@syntax_errors, $position);
                 $error = 1;
             }
 
-            $line =~ s/^\|\s*//;
+            $line =~ s{^ [|] \s* }{}x;
 
             for my $conjunctive (split(m{ \s* , \s* }x, $line)) {
                 for my $disjunctive (split(m{ \s* [|] \s* }x, $conjunctive)) {
@@ -376,7 +387,11 @@ sub check_symbols_file {
                     my $version = $2 || $EMPTY;
 
                     if (length $package) {
-                        push(@prerequisites, $package . $version);
+                        $prerequisites_by_soname{$current_soname} //= [];
+                        push(
+                            @{$prerequisites_by_soname{$current_soname}},
+                            $package . $version
+                        );
 
                     } else {
                         push(@syntax_errors, $position)
@@ -393,45 +408,62 @@ sub check_symbols_file {
         }
 
         # meta-information
-        if ($line =~ /^\*\s(\S+):\s\S+/) {
+        if ($line =~ m{^ [*] \s (\S+) : \s \S+ }x) {
 
             my $meta_label = $1;
 
-            $positions_by_meta_label{$meta_label} //= [];
-            push(@{$positions_by_meta_label{$meta_label}}, $position);
+            $positions_by_soname_and_meta_label{$current_soname}{$meta_label}
+              //= [];
+            push(
+                @{
+                    $positions_by_soname_and_meta_label{$current_soname}
+                      {$meta_label}
+                },
+                $position
+            );
 
             push(@syntax_errors, $position)
-              if !defined $soname || @symbols;
+              if !defined $current_soname
+              || @{$symbols_by_soname{$current_soname} // [] };
 
             next;
         }
 
         # Symbol definition
-        if ($line =~ /^\s+(\S+)\s(\S+)(?:\s(\S+(?:\s\S+)?))?$/) {
+        if ($line =~ m{^\s+ (\S+) \s (\S+) (?:\s (\S+ (?:\s\S+)? ) )? $}x) {
 
             my $symbol = $1;
             my $version = $2;
             my $selector = $3 // $EMPTY;
 
             push(@syntax_errors, $position)
-              unless length $soname;
+              unless length $current_soname;
 
-            push(@symbols, $symbol);
+            $symbols_by_soname{$current_soname} //= [];
+            push(@{$symbols_by_soname{$current_soname}}, $symbol);
 
-            if ($version eq $package_version && $package_version =~ /-/) {
-                push(@full_version_symbols, $symbol);
+            if ($version eq $package_version && $package_version =~ m{-}) {
+                $full_version_symbols_by_soname{$current_soname} //= [];
+                push(
+                    @{$full_version_symbols_by_soname{$current_soname}},
+                    $symbol
+                );
 
-            } elsif ($version =~ /-/
-                && $version !~ /~$/
+            } elsif ($version =~ m{-}
+                && $version !~ m{~$}
                 && $version ne $package_version_wo_rev) {
 
-                push(@debian_revision_symbols, $symbol);
+                $debian_revision_symbols_by_soname{$current_soname} //= [];
+                push(
+                    @{$debian_revision_symbols_by_soname{$current_soname}},
+                    $symbol
+                );
             }
 
             $self->hint('invalid-template-id-in-symbols-file',
-                "(line $position)")
+                $selector, "(line $position)")
               if length $selector
-              && ($selector !~ /^\d+$/ || $selector > $template_count);
+              && ($selector !~ m{^ \d+ $}x || $selector > $template_count);
 
             next;
         }
@@ -442,19 +474,20 @@ sub check_symbols_file {
         ++$position;
     }
 
-    my @duplicates
-      = grep { @{$self->symbols_positions_by_pretty_soname->{$_}} > 1 }
-      keys %{$self->symbols_positions_by_pretty_soname};
+    my @duplicate_sonames
+      = grep { @{$self->symbols_positions_by_soname->{$_}} > 1 }
+      keys %{$self->symbols_positions_by_soname};
 
-    for my $pretty_soname (@duplicates) {
+    for my $soname (@duplicate_sonames) {
 
         my $indicator
           = $LEFT_PARENTHESIS . 'lines'
           . $SPACE
           . join($SPACE,
-            sort { $a <=> $b }
-              @{$self->symbols_positions_by_pretty_soname->{$pretty_soname}})
+            sort { $a <=> $b }@{$self->symbols_positions_by_soname->{$soname}})
           . $RIGHT_PARENTHESIS;
+
+        my $pretty_soname = human_soname($soname);
 
         $self->hint('duplicate-entry-in-symbols-control-file',
             $indicator,$pretty_soname);
@@ -462,68 +495,6 @@ sub check_symbols_file {
 
     $self->hint('syntax-error-in-symbols-file',"(line $_)")
       for uniq @syntax_errors;
-
-    my $meta_lc = List::Compare->new([keys %positions_by_meta_label],
-        \@known_meta_labels);
-
-    for my $meta_label ($meta_lc->get_Lonly) {
-
-        $self->hint('unknown-meta-field-in-symbols-file',
-            "(line $_)", $meta_label)
-          for @{$positions_by_meta_label{$meta_label}};
-    }
-
-    if (@full_version_symbols) {
-
-        my @sorted = sort +uniq @full_version_symbols;
-
-        my $context = 'on symbol ' . $sorted[0];
-        $context .= ' and ' . (scalar @sorted - 1) . ' others'
-          if @sorted > 1;
-
-        $self->hint(
-            'symbols-file-contains-current-version-with-debian-revision',
-            $context);
-    }
-
-    if (@debian_revision_symbols) {
-
-        my @sorted = sort +uniq @debian_revision_symbols;
-
-        my $context = 'on symbol ' . $sorted[0];
-        $context .= ' and ' . (scalar @sorted - 1) . ' others'
-          if @sorted > 1;
-
-        $self->hint('symbols-file-contains-debian-revision', $context);
-    }
-
-    my @used_sonames;
-    for my $name (@shared_libraries) {
-
-        my $pretty_soname = human_soname($self->soname_by_file->{$name});
-        push(@used_sonames, $pretty_soname);
-        push(@used_sonames, "udeb: $pretty_soname");
-
-        # only public shared libraries
-        $self->hint('shared-library-symbols-not-tracked',
-            $pretty_soname,'for', $name)
-          if (
-            any { (dirname($name) . $SLASH) eq $_ }
-            @ldconfig_folders
-          )
-          && !@{$self->symbols_positions_by_pretty_soname->{$pretty_soname}
-              // [] }
-          && !is_nss_plugin($name);
-    }
-
-    my $unused_lc
-      = List::Compare->new([keys %{$self->symbols_positions_by_pretty_soname}],
-        \@used_sonames);
-
-    $self->hint('surplus-shared-library-symbols', $_)for $unused_lc->get_Lonly;
-
-    $self->hint('symbols-file-missing-build-depends-package-field')
-      if none { $_ eq 'Build-Depends-Package' } keys %positions_by_meta_label;
 
     # Check that all of the packages listed as dependencies in the symbols
     # file are satisfied by the current package or its Provides.
@@ -541,16 +512,92 @@ sub check_symbols_file {
     $provides
       = $self->processable->relation('Provides')->logical_and($provides);
 
-    # Deduplicate the list of dependencies before warning so that we don't
-    # duplicate warnings.
+    for my $soname (uniq @sonames) {
 
-    for my $prerequisite (uniq @prerequisites) {
+        my @used_meta_labels
+          = keys %{$positions_by_soname_and_meta_label{$soname} // {} };
 
-        $prerequisite =~ s/ [ ] [#] MINVER [#] $//x;
-        $self->hint('symbols-declares-dependency-on-other-package',
-            $prerequisite)
-          unless $provides->satisfies($prerequisite);
+        my $meta_lc
+          = List::Compare->new(\@used_meta_labels, \@known_meta_labels);
+
+        for my $meta_label ($meta_lc->get_Lonly) {
+
+            $self->hint('unknown-meta-field-in-symbols-file',
+                $meta_label, "($soname, line $_)")
+              for @{$positions_by_soname_and_meta_label{$soname}{$meta_label}};
+        }
+
+        $self->hint('symbols-file-missing-build-depends-package-field',$soname)
+          if none { $_ eq 'Build-Depends-Package' } @used_meta_labels;
+
+        my @full_version_symbols
+          = @{$full_version_symbols_by_soname{$soname} // [] };
+        if (@full_version_symbols) {
+
+            my @sorted = sort +uniq @full_version_symbols;
+
+            my $context = 'on symbol ' . $sorted[0];
+            $context .= ' and ' . (scalar @sorted - 1) . ' others'
+              if @sorted > 1;
+
+            $self->hint(
+                'symbols-file-contains-current-version-with-debian-revision',
+                $context, "($soname)");
+        }
+
+        my @debian_revision_symbols
+          = @{$debian_revision_symbols_by_soname{$soname} // [] };
+        if (@debian_revision_symbols) {
+
+            my @sorted = sort +uniq @debian_revision_symbols;
+
+            my $context = 'on symbol ' . $sorted[0];
+            $context .= ' and ' . (scalar @sorted - 1) . ' others'
+              if @sorted > 1;
+
+            $self->hint('symbols-file-contains-debian-revision',
+                $context, "($soname)");
+        }
+
+        # Deduplicate the list of dependencies before warning so that we don't
+        # duplicate warnings.
+        for
+          my $prerequisite (uniq @{$prerequisites_by_soname{$soname} // [] }) {
+
+            $prerequisite =~ s/ [ ] [#] MINVER [#] $//x;
+            $self->hint('symbols-declares-dependency-on-other-package',
+                $prerequisite, "($soname)")
+              unless $provides->satisfies($prerequisite);
+        }
     }
+
+    my @used_pretty_sonames;
+    for my $filename (@shared_libraries) {
+
+        my $soname = $self->soname_by_filename->{$filename};
+        my $pretty_soname = human_soname($soname);
+
+        push(@used_pretty_sonames, $pretty_soname);
+        push(@used_pretty_sonames, "udeb: $pretty_soname");
+
+        # only public shared libraries
+        $self->hint('shared-library-symbols-not-tracked',
+            $pretty_soname,'for', $filename)
+          if (
+            any { (dirname($filename) . $SLASH) eq $_ }
+            @ldconfig_folders
+          )
+          && !@{$self->symbols_positions_by_soname->{$soname}// [] }
+          && !is_nss_plugin($filename);
+    }
+
+    my @available_pretty_sonames
+      = map { human_soname($_) } keys %{$self->symbols_positions_by_soname};
+
+    my $unused_lc
+      = List::Compare->new(\@available_pretty_sonames,\@used_pretty_sonames);
+
+    $self->hint('surplus-shared-library-symbols', $_)for $unused_lc->get_Lonly;
 
     return;
 }
