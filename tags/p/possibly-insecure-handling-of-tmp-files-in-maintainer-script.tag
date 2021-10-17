@@ -1,9 +1,12 @@
 Tag: possibly-insecure-handling-of-tmp-files-in-maintainer-script
 Severity: warning
 Check: scripts
-Explanation: The maintainer script seems to access a file in <code>/tmp</code> or
- some other temporary directory. Since creating temporary files in a
- world-writable directory is very dangerous, this is likely to be a
- security bug. Use the <code>tempfile</code> or <code>mktemp</code> utilities to
- create temporary files in these directories.
-See-Also: policy 10.4
+Explanation: The named maintainer script appears to access a file or a directory in
+ <code>/tmp</code> or a similar folder for temporary data. Working directly in such
+ folders, which are usually world-writable, can easily lead to serious security or
+ privacy bugs.
+ .
+ Please consider using the <code>mktemp</code> utility from the <code>coreutils</code>
+ package when creating temporary files or directories.
+See-Also:
+ policy 10.4
