@@ -76,8 +76,6 @@ has INTERPRETERS => (
                 my ($folder, $prerequisites)= split(/ \s* , \s* /msx,
                     $remainder, $UNVERSIONED_INTERPRETER_FIELDS);
 
-                $prerequisites ||= $interpreter;
-
                 if ($prerequisites eq '@NODEPS@') {
                     $prerequisites = $EMPTY;
 
@@ -143,7 +141,6 @@ has VERSIONED_INTERPRETERS => (
                     $remainder, $VERSIONED_INTERPRETER_FIELDS);
 
                 my @versions = split(/ \s+ /msx, $version_list);
-                $prerequisites ||= $interpreter;
 
                 if ($prerequisites eq '@NO_DEFAULT_DEPS@') {
                     $prerequisites = $EMPTY;

@@ -12,8 +12,8 @@ scripts (binary): php-script-but-no-php-cli-dep usr/share/scripts/phpfoo /usr/bi
 scripts (binary): php-script-but-no-php-cli-dep usr/share/scripts/phpenvfoo php
 scripts (binary): php-script-but-no-php-cli-dep usr/share/scripts/php7.0foo /usr/bin/php7.0
 scripts (binary): php-script-but-no-php-cli-dep usr/share/scripts/php7.0envfoo php7.0
-scripts (binary): missing-dep-for-interpreter /usr/local/bin/lefty [usr/bin/lefty-foo] (does not satisfy graphviz)
-scripts (binary): missing-dep-for-interpreter /usr/bin/jruby [usr/bin/jruby-broken] (does not satisfy jruby | jruby1.0 | jruby1.1 | jruby1.2)
+scripts (binary): missing-dep-for-interpreter /usr/local/bin/lefty [usr/bin/lefty-foo] (does not satisfy graphviz:any)
+scripts (binary): missing-dep-for-interpreter /usr/bin/jruby [usr/bin/jruby-broken] (does not satisfy jruby:any | jruby1.0:any | jruby1.1:any | jruby1.2:any)
 scripts (binary): maintainer-script-without-set-e postrm
 scripts (binary): maintainer-script-interpreter control/prerm
 scripts (binary): maintainer-script-interpreter control/preinst /bin/sh
