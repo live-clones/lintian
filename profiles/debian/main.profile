@@ -5,6 +5,7 @@ Enable-Tags-From-Check:
  application-not-library
  appstream-metadata
  apt
+ archive/file/name/length
  binaries
  binaries/architecture
  binaries/architecture/other
@@ -126,7 +127,6 @@ Enable-Tags-From-Check:
  fields/urgency
  fields/vcs
  fields/version
- filename-length
  files/architecture
  files/banned
  files/banned/compiled-help
