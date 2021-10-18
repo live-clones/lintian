@@ -76,14 +76,7 @@ has INTERPRETERS => (
                 my ($folder, $prerequisites)= split(/ \s* , \s* /msx,
                     $remainder, $UNVERSIONED_INTERPRETER_FIELDS);
 
-                if ($prerequisites eq '@NODEPS@') {
-                    $prerequisites = $EMPTY;
-
-                } elsif ($prerequisites =~ / @ /msx) {
-                    die encode_utf8(
-"Unknown magic value $prerequisites for versioned interpreter $interpreter"
-                    );
-                }
+                $prerequisites //= $EMPTY;
 
                 return {
                     folder => $folder,
@@ -111,7 +104,6 @@ has INTERPRETERS => (
 # * If <dependency-relation> was left out, it has been substituted by the
 #   interpreter.
 # * The magic values of <dependency-relation> are represented as:
-#   @NO_DEFAULT_DEPS@  -> '' (i.e. an empty string)
 #   @SKIP_UNVERSIONED@ ->  undef (i.e the undefined value)
 # * <version-list> has been split into a list of versions.
 #   (e.g. "1.6 1.8" will be ["1.6", "1.8"])
@@ -141,11 +133,9 @@ has VERSIONED_INTERPRETERS => (
                     $remainder, $VERSIONED_INTERPRETER_FIELDS);
 
                 my @versions = split(/ \s+ /msx, $version_list);
+                $prerequisites //= $EMPTY;
 
-                if ($prerequisites eq '@NO_DEFAULT_DEPS@') {
-                    $prerequisites = $EMPTY;
-
-                } elsif ($prerequisites eq '@SKIP_UNVERSIONED@') {
+                if ($prerequisites eq '@SKIP_UNVERSIONED@') {
                     $prerequisites = undef;
 
                 } elsif ($prerequisites =~ / @ /msx) {

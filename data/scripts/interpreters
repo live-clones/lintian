@@ -4,12 +4,8 @@
 # syntax:
 #   <interpreter> => <path>[, <dependency-relation>]
 #
-# NB: <dependency-relation> can have the magic value @NODEPS@
-# meaning that the interpreter will be provided by an essential
-# package or otherwise does not need a dependency.
-#
-# If <dependency-relation> is left out, its value is assumed to
-# be the same as the interpreter itself (saves some typing).
+# an empty <dependency-relation> means the interpreter is provided
+# by an essential package or otherwise does not need a dependency.
 #
 # Do NOT list versioned interpreters here (such as pythonX.Y,
 # rubyX.Y, etc.).  These are handled by the file
@@ -20,14 +16,14 @@
 #
 
 ash            => /bin, ash:any
-awk            => /usr/bin, @NODEPS@
-bash           => /bin, @NODEPS@
+awk            => /usr/bin
+bash           => /bin
 bltwish        => /usr/bin, blt:any
 cfagent        => /usr/sbin, cfengine2:any
 clisp          => /usr/bin, clisp:any
 csh            => /bin, tcsh:any | csh:any | c-shell:any
 cwl-runner     => /usr/bin, cwltool:any | cwl-runner:any
-dash           => /bin, @NODEPS@
+dash           => /bin
 escript        => /usr/bin, erlang-base:any | erlang-base-hipe:any
 expect         => /usr/bin, expect:any
 expectk        => /usr/bin, expectk:any
@@ -46,9 +42,9 @@ gnuplot        => /usr/bin, gnuplot:any
 gosh           => /usr/bin, gauche:any
 hhvm           => /usr/bin, hhvm:any
 icmake         => /usr/bin, icmake:any
-init-d-script  => /lib/init, @NODEPS@
-install-menu   => /usr/bin, @NODEPS@
-invoke-run     => /lib/runit, @NODEPS@
+init-d-script  => /lib/init
+install-menu   => /usr/bin
+invoke-run     => /lib/runit
 ir             => /usr/bin, ironruby:any
 jed            => /usr/bin, jed:any
 jed-script     => /usr/bin, jed:any | xjed:any
@@ -70,7 +66,7 @@ node           => /usr/bin, nodejs:any
 ocamlrun       => /usr/bin, ocaml-base-nox:any | ocaml-base:any | ocaml-nox:any | ocaml:any
 pagsh          => /usr/bin, openafs-client:any | heimdal-clients:any
 parrot         => /usr/bin, parrot:any
-perl           => /usr/bin, @NODEPS@
+perl           => /usr/bin
 perl6          => /usr/bin, rakudo:any
 perl6-m        => /usr/bin, rakudo:any
 php            => /usr/bin, php-cli:any
@@ -94,9 +90,9 @@ ruby           => /usr/bin, ruby:any
 run            => /lib/runit/invoke, runit:any (>= 2.1.2-23)
 runhaskell     => /usr/bin, ghc:any | ghc6:any
 runhugs        => /usr/bin, hugs:any | hugs98:any
-sed            => /bin, @NODEPS@
+sed            => /bin
 seed           => /usr/bin, seed:any
-sh             => /bin, @NODEPS@
+sh             => /bin
 slsh           => /usr/bin, slsh:any
 speedy         => /usr/bin, speedy-cgi-perl:any
 stap           => /usr/bin, systemtap:any
