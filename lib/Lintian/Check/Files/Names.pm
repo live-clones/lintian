@@ -32,15 +32,6 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-has FNAMES => (
-    is => 'rw',
-    lazy => 1,
-    default => sub {
-        my ($self) = @_;
-
-        return $self->profile->load_data('files/fnames', qr/\s*\~\~\s*/);
-    });
-
 my %PATH_DIRECTORIES = map { $_ => 1 } qw(
   bin/ sbin/ usr/bin/ usr/sbin/ usr/games/ );
 
@@ -57,14 +48,56 @@ sub visit_installed_files {
     $self->hint('hyphen-file', $file->name)
       if $file->name =~ m{/-\z};
 
-    # check for generic bad filenames
-    foreach my $tag ($self->FNAMES->all()) {
+    $self->hint('file-name-contains-wildcard-character', $file->name)
+      if $file->name =~ m{[*?]};
 
-        my $regex = $self->FNAMES->value($tag);
+    $self->hint('package-contains-compiled-glib-schema', $file->name)
+      if $file->name
+      =~ m{^ usr/share/ glib-[^/]+ /schemas/ gschemas[.]compiled $}x;
 
-        $self->hint($tag, $file->name)
-          if $file->name =~ m/$regex/;
-    }
+    $self->hint('package-contains-file-in-etc-skel', $file->name)
+      if $file->dirname =~ m{^etc/skel/}
+      && $file->basename
+      !~ m{^ [.]bashrc | [.]bash_logout | [.]m?kshrc | [.]profile $}x;
+
+    $self->hint('package-contains-file-in-usr-share-hal', $file->name)
+      if $file->dirname =~ m{^usr/share/hal/};
+
+    $self->hint('package-contains-icon-cache-in-generic-dir', $file->name)
+      if $file->name eq 'usr/share/icons/hicolor/icon-theme.cache';
+
+    $self->hint('package-contains-python-dot-directory', $file->name)
+      if $file->dirname
+      =~ m{^ usr/lib/python[^/]+ / (?:dist|site)-packages / }x
+      && $file->name =~ m{ [.][^/]+ / }x;
+
+    $self->hint('package-contains-python-coverage-file', $file->name)
+      if $file->basename eq '.coverage';
+
+    $self->hint('package-contains-python-doctree-file', $file->name)
+      if $file->basename =~ m{ [.]doctree (?:[.]gz)? $}x;
+
+    $self->hint('package-contains-python-header-in-incorrect-directory',
+        $file->name)
+      if $file->dirname =~ m{^ usr/include/python3[.][01234567]/ }x
+      && $file->name =~ m{ [.]h $}x;
+
+    $self->hint('package-contains-python-hypothesis-example', $file->name)
+      if $file->dirname =~ m{ /[.]hypothesis/examples/ }x;
+
+    $self->hint('package-contains-python-tests-in-global-namespace',
+        $file->name)
+      if $file->name
+      =~ m{^ usr/lib/python[^\/]+ / (?:dist|site)-packages / test_.+[.]py $}x;
+
+    $self->hint('package-contains-sass-cache-directory', $file->name)
+      if $file->name =~ m{ / [.]sass-cache / }x;
+
+    $self->hint('package-contains-eslint-config-file', $file->name)
+      if $file->basename =~ m{^ [.]eslintrc }x;
+
+    $self->hint('package-contains-npm-ignore-file', $file->name)
+      if $file->basename eq '.npmignore';
 
     if (exists($PATH_DIRECTORIES{$file->dirname})) {
 
