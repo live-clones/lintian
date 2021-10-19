@@ -1,25 +1,24 @@
-scripts (binary): wrong-path-for-interpreter usr/bin/rubyfoo (/bin/ruby1.8 != /usr/bin/ruby1.8)
-scripts (binary): wrong-path-for-interpreter usr/bin/lefty-foo (/usr/local/bin/lefty != /usr/bin/lefty)
-scripts (binary): unusual-interpreter usr/bin/suidperlfoo /usr/bin/suidperl
-scripts (binary): unusual-interpreter usr/bin/py3.Xfoo python3.7
+scripts (binary): wrong-path-for-interpreter /usr/local/bin/lefty != /usr/bin/lefty [usr/bin/lefty-foo]
+scripts (binary): wrong-path-for-interpreter /bin/ruby1.8 != /usr/bin/ruby1.8 [usr/bin/rubyfoo]
+scripts (binary): unusual-interpreter python3.7 [usr/bin/py3.Xfoo]
+scripts (binary): unusual-interpreter /usr/bin/suidperl [usr/bin/suidperlfoo]
 scripts (binary): shell-script-fails-syntax-check usr/bin/sh-broken
 scripts (binary): script-without-interpreter control/prerm
-scripts (binary): script-uses-bin-env usr/bin/envfoo
-scripts (binary): python3-script-but-no-python3-dep usr/bin/py3foo python3
-scripts (binary): php-script-with-unusual-interpreter usr/share/scripts/php7.0foo /usr/bin/php7.0
-scripts (binary): php-script-with-unusual-interpreter usr/share/scripts/php7.0envfoo php7.0
-scripts (binary): php-script-but-no-php-cli-dep usr/share/scripts/phpfoo /usr/bin/php
-scripts (binary): php-script-but-no-php-cli-dep usr/share/scripts/phpenvfoo php
-scripts (binary): php-script-but-no-php-cli-dep usr/share/scripts/php7.0foo /usr/bin/php7.0
-scripts (binary): php-script-but-no-php-cli-dep usr/share/scripts/php7.0envfoo php7.0
+scripts (binary): script-uses-bin-env usr/bin/envfoo (/bin/env)
+scripts (binary): python3-script-but-no-python3-dep python3 [usr/bin/py3foo] (does not satisfy python3:any | python3-minimal:any)
+scripts (binary): php-script-with-unusual-interpreter usr/share/scripts/php7.0foo (/usr/bin/php7.0)
+scripts (binary): php-script-with-unusual-interpreter usr/share/scripts/php7.0envfoo (php7.0)
+scripts (binary): php-script-but-no-php-cli-dep php7.0 [usr/share/scripts/php7.0envfoo] (does not satisfy php-cli:any)
+scripts (binary): php-script-but-no-php-cli-dep php [usr/share/scripts/phpenvfoo] (does not satisfy php-cli:any)
+scripts (binary): php-script-but-no-php-cli-dep /usr/bin/php7.0 [usr/share/scripts/php7.0foo] (does not satisfy php-cli:any)
+scripts (binary): php-script-but-no-php-cli-dep /usr/bin/php [usr/share/scripts/phpfoo] (does not satisfy php-cli:any)
 scripts (binary): missing-dep-for-interpreter /usr/local/bin/lefty [usr/bin/lefty-foo] (does not satisfy graphviz:any)
 scripts (binary): missing-dep-for-interpreter /usr/bin/jruby [usr/bin/jruby-broken] (does not satisfy jruby:any | jruby1.0:any | jruby1.1:any | jruby1.2:any)
-scripts (binary): maintainer-script-without-set-e postrm
-scripts (binary): maintainer-script-interpreter control/prerm
-scripts (binary): maintainer-script-interpreter control/preinst /bin/sh
-scripts (binary): maintainer-script-interpreter control/postrm /bin/sh
-scripts (binary): maintainer-script-interpreter control/postinst /bin/sh
-scripts (binary): maintainer-script-ignores-errors postinst
-scripts (binary): maintainer-script-has-unexpanded-debhelper-token preinst
-scripts (binary): maintainer-script-empty preinst
+scripts (binary): maintainer-script-without-set-e control/postrm
+scripts (binary): maintainer-script-interpreter /bin/sh [control/preinst]
+scripts (binary): maintainer-script-interpreter /bin/sh [control/postrm]
+scripts (binary): maintainer-script-interpreter /bin/sh [control/postinst]
+scripts (binary): maintainer-script-ignores-errors control/postinst
+scripts (binary): maintainer-script-has-unexpanded-debhelper-token control/preinst (#DEBHELPER#)
+scripts (binary): maintainer-script-empty control/preinst
 scripts (binary): executable-not-elf-or-script usr/bin/perl-bizarre-3

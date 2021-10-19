@@ -1,12 +1,14 @@
-scripts-missing-dep (binary): wish-script-but-no-wish-dep usr/bin/wish-script /usr/bin/wish
-scripts-missing-dep (binary): tclsh-script-but-no-tclsh-dep usr/bin/tclsh-script /usr/bin/tclsh
-scripts-missing-dep (binary): ruby-script-but-no-ruby-dep usr/bin/ruby-script /usr/bin/ruby
-scripts-missing-dep (binary): python3-script-but-no-python3-dep usr/bin/python3-script /usr/bin/python3
-scripts-missing-dep (binary): python2-script-but-no-python2-dep usr/bin/python2-script /usr/bin/python2
-scripts-missing-dep (binary): php-script-but-no-php-cli-dep usr/bin/php-script /usr/bin/php
-scripts-missing-dep (binary): mawk-script-but-no-mawk-dep usr/bin/mawk-script /usr/bin/mawk
-scripts-missing-dep (binary): maintainer-script-needs-depends-on-xfonts-utils postinst
-scripts-missing-dep (binary): maintainer-script-needs-depends-on-update-inetd postinst
-scripts-missing-dep (binary): maintainer-script-needs-depends-on-adduser postinst
-scripts-missing-dep (binary): maintainer-script-interpreter control/postinst /bin/sh
-scripts-missing-dep (binary): gawk-script-but-no-gawk-dep usr/bin/gawk-script /usr/bin/gawk
+scripts-missing-dep (binary): wish-script-but-no-wish-dep /usr/bin/wish [usr/bin/wish-script] (does not satisfy wish:any | tk:any | tk8.3:any | tk8.4:any | tk8.5:any | tk8.6:any)
+scripts-missing-dep (binary): tclsh-script-but-no-tclsh-dep /usr/bin/tclsh [usr/bin/tclsh-script] (does not satisfy tclsh:any | tcl:any | tcl8.3:any | tcl8.4:any | tcl8.5:any | tcl8.6:any)
+scripts-missing-dep (binary): ruby-script-but-no-ruby-dep /usr/bin/ruby [usr/bin/ruby-script] (does not satisfy ruby:any)
+scripts-missing-dep (binary): python3-script-but-no-python3-dep /usr/bin/python3 [usr/bin/python3-script] (does not satisfy python3:any | python3-minimal:any)
+scripts-missing-dep (binary): python2-script-but-no-python2-dep /usr/bin/python2 [usr/bin/python2-script] (does not satisfy python2:any | python2-minimal:any)
+scripts-missing-dep (binary): php-script-but-no-php-cli-dep /usr/bin/php [usr/bin/php-script] (does not satisfy php-cli:any)
+scripts-missing-dep (binary): mawk-script-but-no-mawk-dep /usr/bin/mawk [usr/bin/mawk-script] (does not satisfy mawk:any)
+scripts-missing-dep (binary): maintainer-script-needs-depends-on-xfonts-utils update-fonts-scale [control/postinst:10] (does not satisfy xfonts-utils)
+scripts-missing-dep (binary): maintainer-script-needs-depends-on-xfonts-utils update-fonts-dir [control/postinst:9] (does not satisfy xfonts-utils)
+scripts-missing-dep (binary): maintainer-script-needs-depends-on-xfonts-utils update-fonts-alias [control/postinst:8] (does not satisfy xfonts-utils)
+scripts-missing-dep (binary): maintainer-script-needs-depends-on-update-inetd update-inetd [control/postinst:7] (does not satisfy update-inetd | inet-superserver | openbsd-inetd | inetutils-inetd | rlinetd | xinetd)
+scripts-missing-dep (binary): maintainer-script-needs-depends-on-adduser adduser [control/postinst:6] (does not satisfy adduser)
+scripts-missing-dep (binary): maintainer-script-interpreter /bin/sh [control/postinst]
+scripts-missing-dep (binary): gawk-script-but-no-gawk-dep /usr/bin/gawk [usr/bin/gawk-script] (does not satisfy gawk:any)

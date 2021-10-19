@@ -1,139 +1,145 @@
-maintainer-scripts (binary): recursive-privilege-change postinst:166
-maintainer-scripts (binary): read-in-maintainer-script prerm:66
-maintainer-scripts (binary): read-in-maintainer-script prerm:65
-maintainer-scripts (binary): read-in-maintainer-script prerm:64
-maintainer-scripts (binary): read-in-maintainer-script prerm:63
-maintainer-scripts (binary): read-in-maintainer-script prerm:62
-maintainer-scripts (binary): read-in-maintainer-script prerm:181
-maintainer-scripts (binary): read-in-maintainer-script prerm:180
-maintainer-scripts (binary): read-in-maintainer-script prerm:179
-maintainer-scripts (binary): read-in-maintainer-script prerm:177
-maintainer-scripts (binary): read-in-maintainer-script postinst:20
-maintainer-scripts (binary): postrm-removes-alternative postrm:4
-maintainer-scripts (binary): possibly-insecure-handling-of-tmp-files-in-maintainer-script postrm:40
-maintainer-scripts (binary): possibly-insecure-handling-of-tmp-files-in-maintainer-script postinst:51
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:98 '>& bar'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:97 '>&bar'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:95 'ech.os() {'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:90 '  echo -ne'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:89 '  echo -en'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:88 '  echo -e'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:87 '  echo -n -e'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:84 'VAR+='
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:81 '<<<'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:79 '$PIPESTATUS'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:78 '$SHELLOPTS'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:77 '$BASH_FOO'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:75 '$SECONDS'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:74 '$DIRSTACK'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:73 '$SHLVL'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:72 '$EUID'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:71 '${UID'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:69 'echo 'a\nb''
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:68 'echo "a\\b"'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:66 'read'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:63 'read -x'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:62 'read -x'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:52 '${line:3:1}'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:33 '[['
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:29 'source $FOO'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:26 '&>'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:23 'function foo('
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:19 '[ "$2" == '
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:188 'source a'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:187 'source ~/bar'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:186 'source '$BAR''
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:185 'source "$BAR"'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:181 'read --fish'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:180 'read -p'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:179 'read -r'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:171 'foobar@()    '
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:166 ' foo.bar()'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:158 ' {a,b}'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:155 'sh +O'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:154 'sh --foo'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:153 'sh -D'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:149 'export -x'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:147 '/dev/tcp'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:145 'readonly -f'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:143 'popd'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:141 'local -x'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:138 'pushd'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:136 ' <(tac a)'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:135 'dirs'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:134 'time '
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:133 'type '
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:132 'shopt'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:131 'ulimit'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:126 '  unalias -a'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:125 '  alias -p'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:124 '  set -B'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:123 '  builtin '
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:122 '  disown '
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:121 '  typeset '
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:120 '.foobar() {'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:117 '  declare '
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:116 '  compgen '
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:115 '  complete '
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:114 '  caller '
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:112 '  suspend '
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:111 'foobar.() {'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:108 '  echo -e'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:107 '  echo -ne'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:106 '  echo -e'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:103 '  echo 'xyz\rabc''
-maintainer-scripts (binary): possible-bashism-in-maintainer-script prerm:102 '  echo "abc\nxyz"'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script postinst:25 '${H[@]}'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script postinst:24 '${#H[0]}'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script postinst:23 '${H[0]}'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script postinst:22 'H[0]='
-maintainer-scripts (binary): possible-bashism-in-maintainer-script postinst:20 'read'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script postinst:176 '$RANDOM'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script postinst:17 '. "$(dirname $0)/shell"'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script postinst:16 '. /usr/share/lintian/shell foo'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script postinst:156 '$RANDOM'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script postinst:155 'test -a'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script postinst:154 'let '
-maintainer-scripts (binary): possible-bashism-in-maintainer-script postinst:152 '    exec -a'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script postinst:151 '    exec -c'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script postinst:150 '    exec -l'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script postinst:147 'select foo'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script postinst:145 '${!foo}'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script postinst:144 'echo -e'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script postinst:109 '${H[@]}'
-maintainer-scripts (binary): maintainer-shell-script-fails-syntax-check prerm
-maintainer-scripts (binary): maintainer-shell-script-fails-syntax-check postinst
-maintainer-scripts (binary): maintainer-script-without-set-e postinst
-maintainer-scripts (binary): maintainer-script-switches-dir-to-symlink-unsafely postinst:5
-maintainer-scripts (binary): maintainer-script-removes-device-files postrm:41 '/dev/device1'
-maintainer-scripts (binary): maintainer-script-removes-device-files postrm:40 '/dev/device'
-maintainer-scripts (binary): maintainer-script-needs-depends-on-xml-core postinst
-maintainer-scripts (binary): maintainer-script-needs-depends-on-ucf postinst
-maintainer-scripts (binary): maintainer-script-needs-depends-on-gconf2 postinst
-maintainer-scripts (binary): maintainer-script-modifies-inetd-conf postinst:93
-maintainer-scripts (binary): maintainer-script-modifies-inetd-conf postinst:92
-maintainer-scripts (binary): maintainer-script-interpreter control/prerm /bin/sh
-maintainer-scripts (binary): maintainer-script-interpreter control/preinst /bin/sh
-maintainer-scripts (binary): maintainer-script-interpreter control/postrm /bin/bash
-maintainer-scripts (binary): maintainer-script-interpreter control/postinst /bin/sh
-maintainer-scripts (binary): maintainer-script-interpreter control/config /usr/bin/python
-maintainer-scripts (binary): maintainer-script-ignores-errors preinst
-maintainer-scripts (binary): maintainer-script-ignores-errors postrm
-maintainer-scripts (binary): maintainer-script-hides-init-failure postinst:56
-maintainer-scripts (binary): maintainer-script-empty config
-maintainer-scripts (binary): maintainer-script-changes-netbase postinst:86 '/etc/rpc'
-maintainer-scripts (binary): maintainer-script-changes-netbase postinst:85 '/etc/protocols'
-maintainer-scripts (binary): maintainer-script-changes-netbase postinst:84 '/etc/services'
-maintainer-scripts (binary): maintainer-script-calls-start-stop-daemon postinst:160
-maintainer-scripts (binary): maintainer-script-calls-install-sgmlcatalog prerm:58
-maintainer-scripts (binary): maintainer-script-calls-install-sgmlcatalog postrm:47
-maintainer-scripts (binary): maintainer-script-calls-install-sgmlcatalog postinst:99
-maintainer-scripts (binary): maintainer-script-calls-install-sgmlcatalog postinst:100
-maintainer-scripts (binary): maintainer-script-calls-init-script-directly prerm:55
-maintainer-scripts (binary): maintainer-script-calls-gconftool postinst:69
-maintainer-scripts (binary): maintainer-script-calls-chown-improperly postinst:33 'chown root.root'
-maintainer-scripts (binary): maintainer-script-calls-chown-improperly postinst:166 'chown -R root.root'
-maintainer-scripts (binary): install-info-used-in-maintainer-script postinst:28
-maintainer-scripts (binary): forbidden-config-interpreter /usr/bin/python
-maintainer-scripts (binary): command-with-path-in-maintainer-script preinst:12 (plain script) /bin/egrep
-maintainer-scripts (binary): command-with-path-in-maintainer-script postinst:172 (plain script) /usr/bin/baz
+maintainer-scripts (binary): recursive-privilege-change "chown -R" [control/postinst:166]
+maintainer-scripts (binary): read-in-maintainer-script [control/prerm:66]
+maintainer-scripts (binary): read-in-maintainer-script [control/prerm:65]
+maintainer-scripts (binary): read-in-maintainer-script [control/prerm:64]
+maintainer-scripts (binary): read-in-maintainer-script [control/prerm:63]
+maintainer-scripts (binary): read-in-maintainer-script [control/prerm:62]
+maintainer-scripts (binary): read-in-maintainer-script [control/prerm:181]
+maintainer-scripts (binary): read-in-maintainer-script [control/prerm:180]
+maintainer-scripts (binary): read-in-maintainer-script [control/prerm:179]
+maintainer-scripts (binary): read-in-maintainer-script [control/prerm:177]
+maintainer-scripts (binary): read-in-maintainer-script [control/postinst:20]
+maintainer-scripts (binary): postrm-removes-alternative "update-alternatives --remove" [control/postrm:4]
+maintainer-scripts (binary): possibly-insecure-handling-of-tmp-files-in-maintainer-script /var/tmp [control/postinst:53]
+maintainer-scripts (binary): possibly-insecure-handling-of-tmp-files-in-maintainer-script /var/tmp [control/postinst:43]
+maintainer-scripts (binary): possibly-insecure-handling-of-tmp-files-in-maintainer-script /tmp [control/postrm:44]
+maintainer-scripts (binary): possibly-insecure-handling-of-tmp-files-in-maintainer-script /tmp [control/postrm:40]
+maintainer-scripts (binary): possibly-insecure-handling-of-tmp-files-in-maintainer-script /tmp [control/postinst:52]
+maintainer-scripts (binary): possibly-insecure-handling-of-tmp-files-in-maintainer-script /tmp [control/postinst:51]
+maintainer-scripts (binary): possibly-insecure-handling-of-tmp-files-in-maintainer-script /tmp [control/postinst:44]
+maintainer-scripts (binary): possibly-insecure-handling-of-tmp-files-in-maintainer-script /tmp [control/postinst:42]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script '{a,b}' [control/prerm:158]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script 'unalias -a' [control/prerm:126]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script 'ulimit' [control/prerm:131]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script 'typeset' [control/prerm:121]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script 'type' [control/prerm:133]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script 'time' [control/prerm:134]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script 'test -a' [control/postinst:155]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script 'suspend' [control/prerm:112]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script 'source ~/bar' [control/prerm:187]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script 'source a' [control/prerm:188]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script 'source '$BAR'' [control/prerm:186]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script 'source $FOO' [control/prerm:29]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script 'source "$BAR"' [control/prerm:185]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script 'shopt' [control/prerm:132]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script 'sh -D' [control/prerm:153]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script 'sh --foo' [control/prerm:154]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script 'sh +O' [control/prerm:155]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script 'set -B' [control/prerm:124]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script 'select foo' [control/postinst:147]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script 'readonly -f' [control/prerm:145]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script 'read' [control/prerm:66]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script 'read' [control/postinst:20]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script 'read -x' [control/prerm:63]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script 'read -x' [control/prerm:62]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script 'read -r' [control/prerm:179]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script 'read -p' [control/prerm:180]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script 'read --fish' [control/prerm:181]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script 'pushd' [control/prerm:138]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script 'popd' [control/prerm:143]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script 'local -x' [control/prerm:141]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script 'let' [control/postinst:154]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script 'function foo(' [control/prerm:23]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script 'foobar@()' [control/prerm:171]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script 'foobar.() {' [control/prerm:111]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script 'foo.bar()' [control/prerm:166]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script 'export -x' [control/prerm:149]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script 'exec -l' [control/postinst:150]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script 'exec -c' [control/postinst:151]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script 'exec -a' [control/postinst:152]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script 'echo -ne' [control/prerm:90]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script 'echo -ne' [control/prerm:107]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script 'echo -n -e' [control/prerm:87]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script 'echo -en' [control/prerm:89]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script 'echo -e' [control/prerm:88]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script 'echo -e' [control/prerm:108]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script 'echo -e' [control/prerm:106]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script 'echo -e' [control/postinst:144]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script 'echo 'xyz\rabc'' [control/prerm:103]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script 'echo 'a\nb'' [control/prerm:69]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script 'echo "abc\nxyz"' [control/prerm:102]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script 'echo "a\\b"' [control/prerm:68]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script 'ech.os() {' [control/prerm:95]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script 'disown' [control/prerm:122]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script 'dirs' [control/prerm:135]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script 'declare' [control/prerm:117]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script 'complete' [control/prerm:115]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script 'compgen' [control/prerm:116]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script 'caller' [control/prerm:114]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script 'builtin' [control/prerm:123]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script 'alias -p' [control/prerm:125]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script '[[' [control/prerm:33]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script '[ "$2" ==' [control/prerm:19]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script 'VAR+=' [control/prerm:84]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script 'H[0]=' [control/postinst:22]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script '>&bar' [control/prerm:97]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script '>& bar' [control/prerm:98]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script '<<<' [control/prerm:81]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script '<(tac a)' [control/prerm:136]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script '/dev/tcp' [control/prerm:147]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script '.foobar() {' [control/prerm:120]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script '. /usr/share/lintian/shell foo' [control/postinst:16]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script '. "$(dirname $0)/shell"' [control/postinst:17]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script '&>' [control/prerm:26]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script '${line:3:1}' [control/prerm:52]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script '${UID' [control/prerm:71]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script '${H[@]}' [control/postinst:25]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script '${H[@]}' [control/postinst:109]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script '${H[0]}' [control/postinst:23]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script '${#H[0]}' [control/postinst:24]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script '${!foo}' [control/postinst:145]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script '$SHLVL' [control/prerm:73]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script '$SHELLOPTS' [control/prerm:78]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script '$SECONDS' [control/prerm:75]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script '$RANDOM' [control/postinst:176]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script '$RANDOM' [control/postinst:156]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script '$PIPESTATUS' [control/prerm:79]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script '$EUID' [control/prerm:72]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script '$DIRSTACK' [control/prerm:74]
+maintainer-scripts (binary): possible-bashism-in-maintainer-script '$BASH_FOO' [control/prerm:77]
+maintainer-scripts (binary): maintainer-shell-script-fails-syntax-check control/prerm
+maintainer-scripts (binary): maintainer-shell-script-fails-syntax-check control/postinst
+maintainer-scripts (binary): maintainer-script-without-set-e control/postinst
+maintainer-scripts (binary): maintainer-script-switches-dir-to-symlink-unsafely "ln -sf ../share/doc/maintainer-scripts /usr/doc" [control/postinst:5]
+maintainer-scripts (binary): maintainer-script-removes-device-files "rm /tmp/foo /dev/device" [control/postrm:40]
+maintainer-scripts (binary): maintainer-script-removes-device-files "rm	/dev/device1" [control/postrm:41]
+maintainer-scripts (binary): maintainer-script-needs-depends-on-xml-core update-xmlcatalog [control/postinst:76] (does not satisfy xml-core)
+maintainer-scripts (binary): maintainer-script-needs-depends-on-ucf ucf [control/postinst:66] (does not satisfy ucf)
+maintainer-scripts (binary): maintainer-script-needs-depends-on-gconf2 gconf-schemas [control/postinst:72] (does not satisfy gconf2)
+maintainer-scripts (binary): maintainer-script-modifies-inetd-conf [control/postinst:93]
+maintainer-scripts (binary): maintainer-script-modifies-inetd-conf [control/postinst:92]
+maintainer-scripts (binary): maintainer-script-interpreter /usr/bin/python [control/config]
+maintainer-scripts (binary): maintainer-script-interpreter /bin/sh [control/prerm]
+maintainer-scripts (binary): maintainer-script-interpreter /bin/sh [control/preinst]
+maintainer-scripts (binary): maintainer-script-interpreter /bin/sh [control/postinst]
+maintainer-scripts (binary): maintainer-script-interpreter /bin/bash [control/postrm]
+maintainer-scripts (binary): maintainer-script-ignores-errors control/preinst
+maintainer-scripts (binary): maintainer-script-ignores-errors control/postrm
+maintainer-scripts (binary): maintainer-script-hides-init-failure "invoke-rc.d foo start || exit 0" [control/postinst:56]
+maintainer-scripts (binary): maintainer-script-empty control/config
+maintainer-scripts (binary): maintainer-script-changes-netbase "mv /usr/share/doc/rpc /etc/rpc" [control/postinst:86]
+maintainer-scripts (binary): maintainer-script-changes-netbase "cp /nonexistent /etc/protocols" [control/postinst:85]
+maintainer-scripts (binary): maintainer-script-changes-netbase "> /etc/services" [control/postinst:84]
+maintainer-scripts (binary): maintainer-script-calls-start-stop-daemon "start-stop-daemon" [control/postinst:160]
+maintainer-scripts (binary): maintainer-script-calls-install-sgmlcatalog "install-sgmlcatalog" [control/prerm:58]
+maintainer-scripts (binary): maintainer-script-calls-install-sgmlcatalog "install-sgmlcatalog" [control/postrm:47]
+maintainer-scripts (binary): maintainer-script-calls-install-sgmlcatalog "install-sgmlcatalog" [control/postinst:99]
+maintainer-scripts (binary): maintainer-script-calls-install-sgmlcatalog "install-sgmlcatalog" [control/postinst:100]
+maintainer-scripts (binary): maintainer-script-calls-init-script-directly [control/prerm:55]
+maintainer-scripts (binary): maintainer-script-calls-gconftool "gconftool-2" [control/postinst:69]
+maintainer-scripts (binary): maintainer-script-calls-chown-improperly "chown root.root" [control/postinst:33]
+maintainer-scripts (binary): maintainer-script-calls-chown-improperly "chown -R root.root" [control/postinst:166]
+maintainer-scripts (binary): install-info-used-in-maintainer-script "install-info" [control/postinst:28]
+maintainer-scripts (binary): forbidden-config-interpreter /usr/bin/python [control/config]
+maintainer-scripts (binary): command-with-path-in-maintainer-script /usr/bin/baz [control/postinst:172] (plain script)
+maintainer-scripts (binary): command-with-path-in-maintainer-script /bin/egrep [control/preinst:12] (plain script)

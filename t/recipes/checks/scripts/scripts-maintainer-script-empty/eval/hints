@@ -1,8 +1,8 @@
-scripts-maintainer-script-empty (binary): maintainer-script-interpreter control/prerm /bin/sh
-scripts-maintainer-script-empty (binary): maintainer-script-interpreter control/preinst /bin/sh
-scripts-maintainer-script-empty (binary): maintainer-script-interpreter control/postrm /bin/sh
-scripts-maintainer-script-empty (binary): maintainer-script-interpreter control/postinst /bin/sh
-scripts-maintainer-script-empty (binary): maintainer-script-empty prerm
-scripts-maintainer-script-empty (binary): maintainer-script-empty preinst
-scripts-maintainer-script-empty (binary): maintainer-script-empty postrm
-scripts-maintainer-script-empty (binary): maintainer-script-empty postinst
+scripts-maintainer-script-empty (binary): maintainer-script-interpreter /bin/sh [control/prerm]
+scripts-maintainer-script-empty (binary): maintainer-script-interpreter /bin/sh [control/preinst]
+scripts-maintainer-script-empty (binary): maintainer-script-interpreter /bin/sh [control/postrm]
+scripts-maintainer-script-empty (binary): maintainer-script-interpreter /bin/sh [control/postinst]
+scripts-maintainer-script-empty (binary): maintainer-script-empty control/prerm
+scripts-maintainer-script-empty (binary): maintainer-script-empty control/preinst
+scripts-maintainer-script-empty (binary): maintainer-script-empty control/postrm
+scripts-maintainer-script-empty (binary): maintainer-script-empty control/postinst

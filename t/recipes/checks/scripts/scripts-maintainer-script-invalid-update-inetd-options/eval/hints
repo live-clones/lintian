@@ -1,5 +1,10 @@
-scripts-maintainer-script-invalid-update-inetd-options (binary): maintainer-script-needs-depends-on-update-inetd postinst
-scripts-maintainer-script-invalid-update-inetd-options (binary): maintainer-script-interpreter control/postinst /bin/sh
-scripts-maintainer-script-invalid-update-inetd-options (binary): maintainer-script-has-invalid-update-inetd-options postinst:9 (--pattern with --add)
-scripts-maintainer-script-invalid-update-inetd-options (binary): maintainer-script-has-invalid-update-inetd-options postinst:8 (--group without --add)
-scripts-maintainer-script-invalid-update-inetd-options (binary): maintainer-script-has-invalid-update-inetd-options postinst:10 (--pattern with --add)
+scripts-maintainer-script-invalid-update-inetd-options (binary): maintainer-script-needs-depends-on-update-inetd update-inetd [control/postinst:9] (does not satisfy update-inetd | inet-superserver | openbsd-inetd | inetutils-inetd | rlinetd | xinetd)
+scripts-maintainer-script-invalid-update-inetd-options (binary): maintainer-script-needs-depends-on-update-inetd update-inetd [control/postinst:8] (does not satisfy update-inetd | inet-superserver | openbsd-inetd | inetutils-inetd | rlinetd | xinetd)
+scripts-maintainer-script-invalid-update-inetd-options (binary): maintainer-script-needs-depends-on-update-inetd update-inetd [control/postinst:15] (does not satisfy update-inetd | inet-superserver | openbsd-inetd | inetutils-inetd | rlinetd | xinetd)
+scripts-maintainer-script-invalid-update-inetd-options (binary): maintainer-script-needs-depends-on-update-inetd update-inetd [control/postinst:14] (does not satisfy update-inetd | inet-superserver | openbsd-inetd | inetutils-inetd | rlinetd | xinetd)
+scripts-maintainer-script-invalid-update-inetd-options (binary): maintainer-script-needs-depends-on-update-inetd update-inetd [control/postinst:13] (does not satisfy update-inetd | inet-superserver | openbsd-inetd | inetutils-inetd | rlinetd | xinetd)
+scripts-maintainer-script-invalid-update-inetd-options (binary): maintainer-script-needs-depends-on-update-inetd update-inetd [control/postinst:10] (does not satisfy update-inetd | inet-superserver | openbsd-inetd | inetutils-inetd | rlinetd | xinetd)
+scripts-maintainer-script-invalid-update-inetd-options (binary): maintainer-script-interpreter /bin/sh [control/postinst]
+scripts-maintainer-script-invalid-update-inetd-options (binary): maintainer-script-has-invalid-update-inetd-options (--pattern with --add) [control/postinst:9]
+scripts-maintainer-script-invalid-update-inetd-options (binary): maintainer-script-has-invalid-update-inetd-options (--pattern with --add) [control/postinst:10]
+scripts-maintainer-script-invalid-update-inetd-options (binary): maintainer-script-has-invalid-update-inetd-options (--group without --add) [control/postinst:8]
