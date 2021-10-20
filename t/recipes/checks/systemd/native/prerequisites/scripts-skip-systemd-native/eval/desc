@@ -1,0 +1,2 @@
+Testname: scripts-skip-systemd-native
+Check: systemd/native/prerequisites

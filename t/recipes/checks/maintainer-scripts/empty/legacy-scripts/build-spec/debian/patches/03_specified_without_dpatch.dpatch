@@ -1,0 +1,5 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: Listed in 00list without .dpatch suffix.
+
+@DPATCH@

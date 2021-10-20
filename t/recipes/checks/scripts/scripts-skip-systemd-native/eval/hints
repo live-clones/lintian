@@ -1,3 +1,2 @@
-scripts-skip-systemd-native-without (binary): skip-systemd-native-flag-missing-pre-depends [control/postinst:8] (does not satisfy init-system-helpers (>= 1.54~))
 scripts-skip-systemd-native-without (binary): maintainer-script-interpreter /bin/sh [control/postinst]
 scripts-skip-systemd-native-with (binary): maintainer-script-interpreter /bin/sh [control/postinst]

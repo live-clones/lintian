@@ -1,9 +1,9 @@
 Tag: maintainer-script-has-unexpanded-debhelper-token
 Severity: warning
-Check: scripts
-Explanation: Lintian has detected the presence of a #DEBHELPER# token in the
- listed maintainer/control script. By default, dh&lowbar;installdeb will remove
- the token when it makes a substitution in a script.
+Check: build-systems/debhelper/maintainer-script/token
+Explanation: The named maintainer script contains a <code>#DEBHELPER#</code>
+ token. Normally, <code>dh&lowbar;installdeb</code> removes those tokens
+ when it makes substitutions in a script.
  .
- Please note that dh&lowbar;installdeb does *not* substitute the #DEBHELPER#
- token in udebs.
+ Please note that <code>dh&lowbar;installdeb</code> does <strong>not</strong>
+ substitute the <code>#DEBHELPER#</code> token in <code>udebs</code>.

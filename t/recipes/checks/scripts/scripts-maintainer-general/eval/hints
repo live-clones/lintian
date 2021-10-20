@@ -12,16 +12,7 @@ scripts-maintainer-general (binary): recursive-privilege-change "chmod -R" [cont
 scripts-maintainer-general (binary): recursive-privilege-change "chmod --recursive" [control/postinst:218]
 scripts-maintainer-general (binary): read-in-maintainer-script [control/postinst:10]
 scripts-maintainer-general (binary): postrm-removes-alternative "update-alternatives --remove" [control/postrm:7]
-scripts-maintainer-general (binary): possibly-insecure-handling-of-tmp-files-in-maintainer-script /var/tmp [control/postinst:28]
-scripts-maintainer-general (binary): possibly-insecure-handling-of-tmp-files-in-maintainer-script /var/tmp [control/postinst:19]
-scripts-maintainer-general (binary): possibly-insecure-handling-of-tmp-files-in-maintainer-script /tmp [control/postinst:27]
-scripts-maintainer-general (binary): possibly-insecure-handling-of-tmp-files-in-maintainer-script /tmp [control/postinst:26]
-scripts-maintainer-general (binary): possibly-insecure-handling-of-tmp-files-in-maintainer-script /tmp [control/postinst:20]
-scripts-maintainer-general (binary): possibly-insecure-handling-of-tmp-files-in-maintainer-script /tmp [control/postinst:18]
-scripts-maintainer-general (binary): mknod-in-maintainer-script [control/postinst:125]
-scripts-maintainer-general (binary): missing-call-to-dpkg-maintscript-helper symlink_to_dir [control/preinst]
-scripts-maintainer-general (binary): missing-call-to-dpkg-maintscript-helper symlink_to_dir [control/postrm]
-scripts-maintainer-general (binary): maintainer-shell-script-fails-syntax-check control/prerm
+scripts-maintainer-general (binary): maintainer-script-updates-fontconfig-cache-improperly "fc-cache" [control/postinst:97]
 scripts-maintainer-general (binary): maintainer-script-updates-fontconfig-cache-improperly "fc-cache" [control/postinst:95]
 scripts-maintainer-general (binary): maintainer-script-switches-dir-to-symlink-unsafely "ln -s tworld-data /usr/share/doc" [control/postinst:205]
 scripts-maintainer-general (binary): maintainer-script-should-not-use-piuparts-variable "PIUPARTS_TEST" [control/postinst:243]
@@ -67,7 +58,6 @@ scripts-maintainer-general (binary): maintainer-script-interpreter /bin/sh [cont
 scripts-maintainer-general (binary): maintainer-script-interpreter /bin/sh [control/postinst]
 scripts-maintainer-general (binary): maintainer-script-ignores-errors control/postrm
 scripts-maintainer-general (binary): maintainer-script-hides-init-failure "invoke-rc.d foo start || exit 0" [control/postinst:31]
-scripts-maintainer-general (binary): maintainer-script-has-unexpanded-debhelper-token control/postinst (#DEBHELPER#)
 scripts-maintainer-general (binary): maintainer-script-changes-netbase "mv /usr/share/doc/rpc /etc/rpc" [control/postinst:61]
 scripts-maintainer-general (binary): maintainer-script-changes-netbase "cp /nonexistent /etc/protocols" [control/postinst:60]
 scripts-maintainer-general (binary): maintainer-script-changes-netbase "> /etc/services" [control/postinst:59]

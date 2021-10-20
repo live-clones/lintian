@@ -1,4 +1,2 @@
 binary (binary): maintainer-script-without-set-e control/postinst
 binary (binary): maintainer-script-interpreter /bin/bash [control/postinst]
-binary (binary): executable-not-elf-or-script usr/share/applications/goodbye.desktop
-binary (binary): executable-not-elf-or-script usr/bin/iminusrbin

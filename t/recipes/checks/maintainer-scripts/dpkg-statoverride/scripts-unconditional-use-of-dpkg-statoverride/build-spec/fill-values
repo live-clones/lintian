@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: scripts-unconditional-use-of-dpkg-statoverride
+Description: Test for maintscripts that call dpkg-statoverride without calling --list

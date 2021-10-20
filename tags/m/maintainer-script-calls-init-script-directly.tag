@@ -1,9 +1,11 @@
 Tag: maintainer-script-calls-init-script-directly
 Severity: error
-Check: scripts
-Explanation: This script apparently runs an init script directly rather than
- using invoke-rc.d. The use of invoke-rc.d to invoke the /etc/init.d/&ast;
- initscripts instead of calling them directly is required. Maintainer
- scripts may call the init script directly only if invoke-rc.d is not
- available.
-See-Also: policy 9.3.3.2
+Check: init-d/maintainer-script
+Explanation: The named maintainer script appear to run an <code>init</code> script in
+ <code>/etc/init.d/&ast;</code> directly and not via <code>invoke-rc.d</code>, but
+ the use of <code>invoke-rc.d</code> is required.
+ .
+ Maintainer scripts may call an init script directly only when <code>invoke-rc.d</code>
+ is not available.
+See-Also:
+ policy 9.3.3.2

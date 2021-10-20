@@ -1,7 +1,1 @@
-scripts-supports-ancient-package-version (binary): maintainer-script-supports-ancient-package-version 0.5 (2009-02-07 < 2017-06-18) [control/postinst:9]
-scripts-supports-ancient-package-version (binary): maintainer-script-supports-ancient-package-version 0.5 (2009-02-07 < 2017-06-18) [control/postinst:8]
-scripts-supports-ancient-package-version (binary): maintainer-script-supports-ancient-package-version 0.5 (2009-02-07 < 2017-06-18) [control/postinst:7]
-scripts-supports-ancient-package-version (binary): maintainer-script-supports-ancient-package-version 0.5 (2009-02-07 < 2017-06-18) [control/postinst:6]
-scripts-supports-ancient-package-version (binary): maintainer-script-supports-ancient-package-version 0.5 (2009-02-07 < 2017-06-18) [control/postinst:11]
-scripts-supports-ancient-package-version (binary): maintainer-script-supports-ancient-package-version 0.5 (2009-02-07 < 2017-06-18) [control/postinst:10]
 scripts-supports-ancient-package-version (binary): maintainer-script-interpreter /bin/sh [control/postinst]

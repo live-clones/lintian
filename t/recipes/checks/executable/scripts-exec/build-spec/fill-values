@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: scripts-exec
+Description: Check for exec bit related issues for scripts

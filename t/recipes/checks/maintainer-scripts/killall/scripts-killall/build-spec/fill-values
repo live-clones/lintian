@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: scripts-killall
+Description: Test for killall usage in maint script

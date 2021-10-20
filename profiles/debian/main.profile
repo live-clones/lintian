@@ -28,6 +28,7 @@ Enable-Tags-From-Check:
  build-systems/autotools
  build-systems/autotools/libtool
  build-systems/cmake
+ build-systems/debhelper/maintainer-script/token
  build-systems/libtool/la-file
  build-systems/waf
  changes-file
@@ -78,6 +79,7 @@ Enable-Tags-From-Check:
  desktop/gnome/gir
  desktop/icons
  desktop/x11
+ desktop/x11/font/update
  dh-make
  documentation
  documentation/doxygen
@@ -87,6 +89,7 @@ Enable-Tags-From-Check:
  emacs
  emacs/elpa
  examples
+ executable
  fields/architecture
  fields/bugs
  fields/built-using
@@ -196,6 +199,7 @@ Enable-Tags-From-Check:
  images/thumbnails
  includes/config-h
  init-d
+ init-d/maintainer-script
  languages/fortran/gfortran
  languages/java
  languages/java/bytecode
@@ -204,6 +208,7 @@ Enable-Tags-From-Check:
  languages/ocaml
  languages/ocaml/custom-executable
  languages/perl
+ languages/perl/perl4/prerequisites
  languages/perl/perl5
  languages/perl/yapp
  languages/php
@@ -240,9 +245,17 @@ Enable-Tags-From-Check:
  lintian
  mailcap
  maintainer-scripts/adduser
+ maintainer-scripts/ancient-version
+ maintainer-scripts/diversion
+ maintainer-scripts/dpkg-statoverride
+ maintainer-scripts/empty
  maintainer-scripts/generated
+ maintainer-scripts/helper/dpkg
+ maintainer-scripts/killall
  maintainer-scripts/ldconfig
+ maintainer-scripts/mknod
  maintainer-scripts/systemctl
+ maintainer-scripts/temporary-files
  md5sums
  menu-format
  menus
@@ -252,8 +265,13 @@ Enable-Tags-From-Check:
  obsolete-sites
  origtar
  pe
+ script/syntax
  scripts
+ shell/bash/completion
+ shell/csh
+ shell/non-posix/bash-centric
  systemd
+ systemd/native/prerequisites
  systemd/tmpfiles
  team/pkg-js/deprecated
  team/pkg-js/testsuite
