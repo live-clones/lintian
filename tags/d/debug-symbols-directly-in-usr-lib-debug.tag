@@ -1,6 +1,6 @@
 Tag: debug-symbols-directly-in-usr-lib-debug
 Severity: error
-Check: binaries
+Check: binaries/debug-symbols/detached
 Explanation: The given debugging symbols-only object is installed directly in
  <code>/usr/lib/debug</code>, although it should be installed in a
  subdirectory. For example, debug symbols of a binary in

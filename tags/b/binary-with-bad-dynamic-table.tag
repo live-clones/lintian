@@ -1,6 +1,6 @@
 Tag: binary-with-bad-dynamic-table
 Severity: error
-Check: binaries
+Check: binaries/corrupted
 Explanation: This appears to be an ELF file. According to readelf, the
  program headers suggests it should have a dynamic section, but
  readelf cannot find it.

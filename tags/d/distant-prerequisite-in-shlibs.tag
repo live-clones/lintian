@@ -1,7 +1,8 @@
 Tag: distant-prerequisite-in-shlibs
 Severity: warning
-Check: shared-libs
-Renamed-From: shlibs-declares-dependency-on-other-package
+Check: debian/shlibs
+Renamed-From:
+ shlibs-declares-dependency-on-other-package
 Explanation: This package declares in its shlibs control file either a dependency
  on some other package not listed in the Provides of this package or on a
  version of this package that the package version doesn't satisfy.

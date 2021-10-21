@@ -1,3 +1,0 @@
-Testname: binaries-missing-lfs
-Test-Architectures: i386 armhf
-Check: binaries

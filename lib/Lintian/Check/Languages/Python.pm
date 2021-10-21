@@ -45,8 +45,8 @@ const my $PYTHON2_MIGRATION_MINOR => 6;
 
 my @FIELDS = qw(Depends Pre-Depends Recommends Suggests);
 my @IGNORE = qw(-dev$ -docs?$ -common$ -tools$);
-my @PYTHON2 = qw(python2 python2.7 python2-dev);
-my @PYTHON3 = qw(python3 python3-dev);
+my @PYTHON2 = qw(python2:any python2.7:any python2-dev:any);
+my @PYTHON3 = qw(python3:any python3-dev:any);
 
 my %DJANGO_PACKAGES = (
     '^python3-django-' => 'python3-django',
@@ -100,7 +100,7 @@ sub source {
             # Don't trigger if we ship any Python 3 module
             next if any {
                 $processable->binary_relation($_, 'all')
-                  ->implies('${python3:Depends}')
+                  ->satisfies('${python3:Depends}')
             }
             @package_names;
             $self->hint('python-foo-but-no-python3-foo', $bin);
@@ -109,8 +109,8 @@ sub source {
 
     my $build_all = $processable->relation('Build-Depends-All');
     $self->hint('build-depends-on-python-sphinx-only')
-      if $build_all->implies('python-sphinx')
-      and not $build_all->implies('python3-sphinx');
+      if $build_all->satisfies('python-sphinx')
+      and not $build_all->satisfies('python3-sphinx');
 
     my $maintainer = $self->processable->fields->value('Maintainer');
     $self->hint('python-teams-merged', $maintainer)
@@ -130,7 +130,7 @@ sub source {
             next if $binpkg !~ qr/$regex/;
             $self->hint('mismatched-python-substvar', $binpkg, $substvar)
               if $processable->binary_relation($binpkg, 'all')
-              ->implies($substvar);
+              ->satisfies($substvar);
         }
     }
 
@@ -196,103 +196,6 @@ sub source {
     $self->hint('source-package-encodes-python-version')
       if $processable->name =~ m/^python\d-/
       and $processable->name ne 'python3-defaults';
-
-    return;
-}
-
-sub installable {
-    my ($self) = @_;
-
-    my $pkg = $self->processable->name;
-    my $processable = $self->processable;
-
-    my $deps = $processable->relation('all')
-      ->logical_and($processable->relation('Provides'), $pkg);
-
-    my @entries
-      = $processable->changelog
-      ? @{$processable->changelog->entries}
-      : ();
-
-    # Check for missing dependencies
-    if ($pkg !~ /-dbg$/) {
-        for my $file (@{$processable->installed->sorted_list}) {
-            if (   $file->is_file
-                && $file
-                =~ m{^usr/lib/(?<version>python[23])[\d.]*/(?:site|dist)-packages}
-                && !$deps->implies($REQUIRED_DEPENDS{$+{version}})) {
-                $self->hint('python-package-missing-depends-on-python');
-                last;
-            }
-        }
-    }
-
-    # Check for duplicate dependencies
-    for my $field (@FIELDS) {
-        my $dep = $processable->relation($field);
-      FIELD: for my $py2 (@PYTHON2) {
-            for my $py3 (@PYTHON3) {
-                # do not look for :any here; too narrow
-                if ($dep->implies($py2) && $dep->implies($py3)) {
-                    $self->hint('depends-on-python2-and-python3',
-                        "$field: $py2, [..], $py3");
-                    last FIELD;
-                }
-            }
-        }
-    }
-
-    # Python 2 modules
-    $self->hint('new-package-should-not-package-python2-module', $pkg)
-      if $pkg =~ / ^ python2? - /msx
-      && none { $pkg =~ / \Q$_\E$ /msx } @IGNORE
-      && @entries == 1
-      && $entries[0]->Changes
-      !~ / \b python [ ]? 2 (?:[.]x)? [ ] (?:variant|version) \b /imsx
-      && $entries[0]->Changes !~ / \Q$pkg\E /msx;
-
-    # Python applications
-    if ($pkg !~ /^python[23]?-/ and none { $_ eq $pkg } @PYTHON2) {
-        for my $field (@FIELDS) {
-            for my $dep (@PYTHON2) {
-
-                # do not look for :any here; too narrow
-                $self->hint(
-                    'dependency-on-python-version-marked-for-end-of-life',
-                    "($field: $dep)")
-                  if $processable->relation($field)->implies($dep);
-            }
-        }
-    }
-
-    # Django modules
-    foreach my $regex (keys %DJANGO_PACKAGES) {
-        my $basepkg = $DJANGO_PACKAGES{$regex};
-        next if $pkg !~ /$regex/;
-        next if any { $pkg =~ /$_/ } @IGNORE;
-        $self->hint('django-package-does-not-depend-on-django', $basepkg)
-          if not $processable->relation('strong')->implies($basepkg);
-    }
-
-    if ($pkg =~ /^python([23]?)-/ and none { $pkg =~ /$_/ } @IGNORE) {
-        my $version = $1 || '2'; # Assume python-foo is a Python 2.x package
-        my @prefixes = ($version eq '2') ? 'python3' : qw(python python2);
-
-        for my $field (@FIELDS) {
-            for my $prefix (@prefixes) {
-                my $visit = sub {
-                    my $rel = $_;
-                    return if any { $rel =~ /$_/ } @IGNORE;
-                    $self->hint(
-'python-package-depends-on-package-from-other-python-variant',
-                        "$field: $rel"
-                    ) if /^$prefix-/;
-                };
-                $processable->relation($field)
-                  ->visit($visit, Lintian::Relation::VISIT_PRED_NAME);
-            }
-        }
-    }
 
     return;
 }
@@ -412,13 +315,103 @@ sub visit_installed_files {
     return;
 }
 
-sub breakdown_installed_files {
+sub installable {
     my ($self) = @_;
 
     $self->hint(
         'python-module-in-wrong-location',
         $_ . $ARROW . $self->correct_location->{$_}
     )for keys %{$self->correct_location};
+
+    my $pkg = $self->processable->name;
+    my $processable = $self->processable;
+
+    my $deps = $processable->relation('all')
+      ->logical_and($processable->relation('Provides'), $pkg);
+
+    my @entries
+      = $processable->changelog
+      ? @{$processable->changelog->entries}
+      : ();
+
+    # Check for missing dependencies
+    if ($pkg !~ /-dbg$/) {
+        for my $file (@{$processable->installed->sorted_list}) {
+            if (   $file->is_file
+                && $file
+                =~ m{^usr/lib/(?<version>python[23])[\d.]*/(?:site|dist)-packages}
+                && !$deps->satisfies($REQUIRED_DEPENDS{$+{version}})) {
+                $self->hint('python-package-missing-depends-on-python');
+                last;
+            }
+        }
+    }
+
+    # Check for duplicate dependencies
+    for my $field (@FIELDS) {
+        my $dep = $processable->relation($field);
+      FIELD: for my $py2 (@PYTHON2) {
+            for my $py3 (@PYTHON3) {
+
+                if ($dep->satisfies($py2) && $dep->satisfies($py3)) {
+                    $self->hint('depends-on-python2-and-python3',
+                        $field, "(satisfies $py2, $py3)");
+                    last FIELD;
+                }
+            }
+        }
+    }
+
+    # Python 2 modules
+    $self->hint('new-package-should-not-package-python2-module', $pkg)
+      if $pkg =~ / ^ python2? - /msx
+      && none { $pkg =~ / \Q$_\E$ /msx } @IGNORE
+      && @entries == 1
+      && $entries[0]->Changes
+      !~ / \b python [ ]? 2 (?:[.]x)? [ ] (?:variant|version) \b /imsx
+      && $entries[0]->Changes !~ / \Q$pkg\E /msx;
+
+    # Python applications
+    if ($pkg !~ /^python[23]?-/ and none { $_ eq $pkg } @PYTHON2) {
+        for my $field (@FIELDS) {
+            for my $dep (@PYTHON2) {
+
+                $self->hint(
+                    'dependency-on-python-version-marked-for-end-of-life',
+                    $field, "(satisfies $dep)")
+                  if $processable->relation($field)->satisfies($dep);
+            }
+        }
+    }
+
+    # Django modules
+    foreach my $regex (keys %DJANGO_PACKAGES) {
+        my $basepkg = $DJANGO_PACKAGES{$regex};
+        next if $pkg !~ /$regex/;
+        next if any { $pkg =~ /$_/ } @IGNORE;
+        $self->hint('django-package-does-not-depend-on-django', $basepkg)
+          if not $processable->relation('strong')->satisfies($basepkg);
+    }
+
+    if ($pkg =~ /^python([23]?)-/ and none { $pkg =~ /$_/ } @IGNORE) {
+        my $version = $1 || '2'; # Assume python-foo is a Python 2.x package
+        my @prefixes = ($version eq '2') ? 'python3' : qw(python python2);
+
+        for my $field (@FIELDS) {
+            for my $prefix (@prefixes) {
+                my $visit = sub {
+                    my $rel = $_;
+                    return if any { $rel =~ /$_/ } @IGNORE;
+                    $self->hint(
+'python-package-depends-on-package-from-other-python-variant',
+                        "$field: $rel"
+                    ) if /^$prefix-/;
+                };
+                $processable->relation($field)
+                  ->visit($visit, Lintian::Relation::VISIT_PRED_NAME);
+            }
+        }
+    }
 
     return;
 }

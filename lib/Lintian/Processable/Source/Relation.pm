@@ -85,7 +85,7 @@ The concatenation of Recommends and Suggests.
 =back
 
 If FIELD isn't present in the package, the returned Lintian::Relation
-object will be empty (always satisfied and implies nothing).
+object will be empty (present but satisfies nothing).
 
 Any substvars in F<debian/control> will be represented in the returned
 relation as packages named after the substvar.
@@ -165,7 +165,7 @@ Build-Conflicts-Indep.
 =back
 
 If FIELD isn't present in the package, the returned Lintian::Relation
-object will be empty (always satisfied and implies nothing).
+object will be empty (present but satisfies nothing).
 
 =item saved_relation
 

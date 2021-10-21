@@ -1,6 +1,6 @@
 Tag: non-empty-dependency_libs-in-la-file
 Severity: error
-Check: shared-libs
+Check: build-systems/libtool/la-file
 Explanation: The dependency&lowbar;libs field in the .la file has not been cleared. It has
  long been a release goal to get rid of unneeded .la files and clearing the
  dependency&lowbar;libs field from the rest of them.

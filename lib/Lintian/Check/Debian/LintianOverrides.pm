@@ -29,19 +29,10 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-has ppkg => (is => 'rwp');
-
-sub setup_installed_files {
-    my ($self) = @_;
-
-    $self->_set_ppkg(quotemeta($self->processable->name));
-    return;
-}
-
 sub visit_installed_files {
     my ($self, $file) = @_;
 
-    my $ppkg = $self->ppkg;
+    my $ppkg = quotemeta($self->processable->name);
 
     # misplaced overrides
     if ($file->name =~ m{^usr/share/doc/$ppkg/override\.[lL]intian(?:\.gz)?$}

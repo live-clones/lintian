@@ -37,22 +37,23 @@ with 'Lintian::Check';
 # get timestamp of first member; https://tools.ietf.org/html/rfc1952.html#page-5
 const my $GZIP_HEADER_SIZE => 8;
 
-has changelog_timestamp => (is => 'rwp', default => 0);
+has changelog_timestamp => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
 
-sub setup_installed_files {
-    my ($self) = @_;
+        # remains 0 if there is no timestamp
+        my $changelog = $self->processable->changelog;
+        if (defined $changelog) {
 
-    # remains 0 if there is no timestamp
-    my $changelog = $self->processable->changelog;
-    if (defined $changelog) {
+            my ($entry) = @{$changelog->entries};
+            return $entry->Timestamp
+              if $entry && $entry->Timestamp;
+        }
 
-        my ($entry) = @{$changelog->entries};
-        $self->_set_changelog_timestamp($entry->Timestamp)
-          if $entry && $entry->Timestamp;
-    }
-
-    return;
-}
+        return 0;
+    });
 
 sub visit_installed_files {
     my ($self, $file) = @_;

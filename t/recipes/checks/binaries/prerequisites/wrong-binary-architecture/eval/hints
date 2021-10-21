@@ -1,0 +1,1 @@
+wrong-binary-architecture (binary): undeclared-elf-prerequisites usr/bin/foreign-binary (libc.so.6)

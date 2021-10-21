@@ -1,6 +1,6 @@
 Tag: statically-linked-binary
 Severity: error
-Check: binaries
+Check: binaries/static
 Explanation: The package installs a statically linked binary or object file.
  .
  Usually this is a bug. Otherwise, please add an override if your package

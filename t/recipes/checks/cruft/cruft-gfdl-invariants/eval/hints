@@ -1,3 +1,5 @@
+cruft-gfdl-invariants (source): very-long-line-length-in-source-file src/oldfalsepositive/fontsMX.html line 1 is 1162 characters long (>512)
+cruft-gfdl-invariants (source): very-long-line-length-in-source-file src/false-positive.rtf line 16 is 974 characters long (>512)
 cruft-gfdl-invariants (source): license-problem-gfdl-non-official-text src/oldfalsepositive/zeroisnotplural.texi invariant part is: with no invariant section, no front-cover text and no back-cover text
 cruft-gfdl-invariants (source): license-problem-gfdl-non-official-text src/oldfalsepositive/variantdictfold.txt invariant part is: with no invariant sections, front- or back-cover texts
 cruft-gfdl-invariants (source): license-problem-gfdl-non-official-text src/oldfalsepositive/tla.txt invariant part is: with the front-cover texts being (none) and with the back-cover texts being (none)

@@ -55,7 +55,7 @@ sub source {
     my $package2_xml = $processable->patched->lookup('package2.xml');
     if (defined($package_xml) || defined($package2_xml)) {
         # Checking source builddep
-        if (!$bdepends->implies('pkg-php-tools')) {
+        if (!$bdepends->satisfies('pkg-php-tools')) {
             $self->hint('pear-package-without-pkg-php-tools-builddep');
         } else {
             # Checking first binary relations
@@ -65,14 +65,14 @@ sub source {
             my $recommends
               = $processable->binary_relation($binary, 'Recommends');
             my $breaks = $processable->binary_relation($binary, 'Breaks');
-            if (!$depends->implies('${phppear:Debian-Depends}')) {
+            if (!$depends->satisfies('${phppear:Debian-Depends}')) {
                 $self->hint('pear-package-but-missing-dependency', 'Depends');
             }
-            if (!$recommends->implies('${phppear:Debian-Recommends}')) {
+            if (!$recommends->satisfies('${phppear:Debian-Recommends}')) {
                 $self->hint('pear-package-but-missing-dependency',
                     'Recommends');
             }
-            if (!$breaks->implies('${phppear:Debian-Breaks}')) {
+            if (!$breaks->satisfies('${phppear:Debian-Breaks}')) {
                 $self->hint('pear-package-but-missing-dependency', 'Breaks');
             }
 
@@ -117,11 +117,11 @@ sub source {
                 close $package_xml_fd;
 
                 if ($package_type eq 'extsrc') { # PECL package
-                    if (!$bdepends->implies('php-dev')) {
+                    if (!$bdepends->satisfies('php-dev')) {
                         $self->hint('pecl-package-requires-build-dependency',
                             'php-dev');
                     }
-                    if (!$bdepends->implies('dh-php')) {
+                    if (!$bdepends->satisfies('dh-php')) {
                         $self->hint('pecl-package-requires-build-dependency',
                             'dh-php');
                     }
@@ -132,7 +132,7 @@ sub source {
     # PEAR channel
     my $channel_xml = $processable->patched->lookup('channel.xml');
     if (defined($channel_xml)) {
-        if (!$bdepends->implies('pkg-php-tools')) {
+        if (!$bdepends->satisfies('pkg-php-tools')) {
             $self->hint('pear-channel-without-pkg-php-tools-builddep');
         }
     }
@@ -141,13 +141,13 @@ sub source {
     if (   !defined($package_xml)
         && !defined($package2_xml)
         && defined($composer_json)) {
-        if (!$bdepends->implies('pkg-php-tools')) {
+        if (!$bdepends->satisfies('pkg-php-tools')) {
             $self->hint('composer-package-without-pkg-php-tools-builddep');
         }
     }
     # Check rules
     if (
-        $bdepends->implies('pkg-php-tools')
+        $bdepends->satisfies('pkg-php-tools')
         && (   defined($package_xml)
             || defined($package2_xml)
             || defined($channel_xml)

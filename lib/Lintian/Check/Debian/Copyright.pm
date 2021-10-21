@@ -477,11 +477,11 @@ sub depends_on {
 
     my $strong = $processable->relation('strong');
     return 1
-      if $strong->implies($package);
+      if $strong->satisfies($package);
 
     my $arch = $processable->architecture;
     return 1
-      if $arch ne 'all' and $strong->implies("${package}:${arch}");
+      if $arch ne 'all' and $strong->satisfies("${package}:${arch}");
 
     return 0;
 }

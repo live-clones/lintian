@@ -7,8 +7,8 @@ Explanation: The given package appears to have a Python development package
  <code>Build-Depends-Indep</code> fields, but only <code>Architecture: all</code>
  packages are built by this source package. Python applications and modules
  do not usually require those dev packages, so you should consider removing
- them in favour of <code>python3:any</code>, <code>python3-all:any</code>
- or <code>pythonX.Y:any</code>.
+ them in favour of <code>python3</code>, <code>python3-all</code>
+ or <code>pythonX.Y</code>.
  .
  If you are building a Python extension instead, you should have
  development packages listed in <code>Build-Depends</code>, but normally there should

@@ -1,6 +1,6 @@
 Tag: missing-dependency-on-phpapi
 Severity: error
-Check: binaries
+Check: binaries/prerequisites/php
 Explanation: This package includes a &ast;.so file in <code>/usr/lib/phpN</code>
  (where N is a number representing the major PHP version), normally
  indicating that it includes a PHP extension. PHP extensions must

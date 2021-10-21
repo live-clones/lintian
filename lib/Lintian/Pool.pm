@@ -79,13 +79,13 @@ in the pool. The key is a unique identifier based on name and version.
 
 =cut
 
-has groups => (is => 'rwp', default => sub{ {} });
+has groups => (is => 'rw', default => sub{ {} });
 
 has savedir => (is => 'rw', default => sub{ getcwd; });
 
 # must be absolute; frontend/lintian depends on it
 has basedir => (
-    is => 'rwp',
+    is => 'rw',
     default => sub {
 
         my $absolute

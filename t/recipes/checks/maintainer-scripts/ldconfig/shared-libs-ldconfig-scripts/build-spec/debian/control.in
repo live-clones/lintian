@@ -1,0 +1,47 @@
+Source: [% $source %]
+Priority: optional
+Section: libs
+Maintainer: [% $author %]
+Standards-Version: [% $standards_version %]
+Build-Depends: [% $build_depends %]
+Rules-Requires-Root: no
+
+Package: libfoo1
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: [% $description %] (missing ldc)
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.
+ .
+ Checks for missing ldconfig in scripts.
+
+Package: libfish1
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: [% $description %] (preinst/rm ldc)
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.
+ .
+ Checks for ldconfig in preinst/prerm scripts.
+
+Package: libuns1
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: [% $description %] (unsafe ldc)
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.
+ .
+ Checks for unsafe ldconfig usage scripts.
+
+Package: app
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: [% $description %] (useless ldc)
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.
+ .
+ Checks for useless ldconfig usage in scripts.

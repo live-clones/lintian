@@ -8,11 +8,11 @@ use Lintian::Relation;
 
 test_relation(
     'pkg%any (>= 1.0)  ,  pkgB   |  _gf  ,  pkgC(>=2.0)',
-    'implied' => [
+    'satisfied' => [
         'pkgB | _gf', # partly unparsable, but identity holds
         'pkgC (>= 1.0)', # regular entry
     ],
-    'not-implied' => [
+    'not-satisfied' => [
         'pkg',     # unparsable
         'pkg%any', # unparsable
         'pkgB',    # OR relation with unparsable entry
@@ -25,37 +25,37 @@ test_relation(
 done_testing;
 
 sub test_relation {
-    my ($str, %tests) = @_;
+    my ($text, %tests) = @_;
 
-    my $rel = Lintian::Relation->new->load($str);
+    my $relation_under_test = Lintian::Relation->new->load($text);
 
     my $tests = 0;
     if (my $reconstituted = $tests{'reconstituted'}) {
-        is($rel->to_string, $reconstituted, "Reconstitute $str");
+        is($relation_under_test->to_string,
+            $reconstituted, "Reconstitute $text");
         $tests++;
     }
-    if (my $implications = $tests{'implied'}) {
-        for my $imp (@{$implications}) {
-            my $test = qq{"$str" implies "$imp"};
-            ok($rel->implies($imp), $test);
-            $tests++;
-        }
+
+    for my $other_relation (@{$tests{'satisfied'} // [] }) {
+        ok($relation_under_test->satisfies($other_relation),
+            "'$text' satisfies '$other_relation'");
+        $tests++;
     }
 
-    if (my $non_implications = $tests{'not-implied'}) {
-        for my $no_imp (@{$non_implications}) {
-            my $test = qq{"$str" does NOT imply "$no_imp"};
-            ok(!$rel->implies($no_imp), $test);
-            $tests++;
-        }
+    for my $other_relation (@{$tests{'not-satisfied'} // [] }) {
+        ok(
+            !$relation_under_test->satisfies($other_relation),
+            "'$text' does NOT satisfy '$other_relation'"
+        );
+        $tests++;
     }
+
     if (my $unparsable = $tests{'unparsable'}) {
-        my @actual = $rel->unparsable_predicates;
-        my $test_name = qq{Unparsable entries for "$str"};
-        is_deeply(\@actual, $unparsable, $test_name);
+        my @actual = $relation_under_test->unparsable_predicates;
+        is_deeply(\@actual, $unparsable, "Unparsable entries for '$text'");
     }
 
-    cmp_ok($tests, '>=', 1, qq{Ran at least on test on "$str"});
+    cmp_ok($tests, '>=', 1, "Ran at least one test on '$text'");
     return;
 }
 

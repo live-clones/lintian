@@ -64,9 +64,9 @@ my %KNOWN_DOCBASE_FORMAT_FIELDS = (
     'Index'   => 0
 );
 
-has menu_file => (is => 'rwp');
-has menumethod_file => (is => 'rwp');
-has documentation => (is => 'rwp', default => 0);
+has menu_file => (is => 'rw');
+has menumethod_file => (is => 'rw');
+has documentation => (is => 'rw', default => 0);
 
 sub spelling_tag_emitter {
     my ($self, @orig_args) = @_;
@@ -93,7 +93,7 @@ sub visit_installed_files {
                 $self->hint('menu-file-in-usr-lib', $file);
             }
 
-            $self->_set_menu_file($file->name);
+            $self->menu_file($file->name);
 
             $self->hint('bad-menu-file-name', $file)
               if $file =~ m{^usr/(?:lib|share)/menu/menu$}
@@ -106,7 +106,7 @@ sub visit_installed_files {
             # the menu manual
 
             my $menumethod_includes_menu_h = 0;
-            $self->_set_menumethod_file($file->name);
+            $self->menumethod_file($file->name);
 
             if ($file->is_open_ok) {
                 open(my $fd, '<', $file->unpacked_path)
@@ -136,7 +136,7 @@ sub visit_installed_files {
             unless ($name =~ m/^changelog\.html$/
                 or $name =~ m/^README[.-]/
                 or $name =~ m/examples/) {
-                $self->_set_documentation(1);
+                $self->documentation(1);
             }
         }
     }
@@ -170,7 +170,7 @@ sub installable {
     foreach my $bin ($group->get_binary_processables) {
         next
           unless $processable->name eq $bin->name
-          or $processable->relation('strong')->implies($bin->name);
+          or $processable->relation('strong')->satisfies($bin->name);
         for my $file (@{$bin->installed->sorted_list}) {
             add_file_link_info($bin, $file->name, \%all_files,\%all_links);
         }

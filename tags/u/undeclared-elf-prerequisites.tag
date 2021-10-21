@@ -1,7 +1,8 @@
 Tag: undeclared-elf-prerequisites
 Severity: warning
-Check: binaries
-Renamed-From: missing-depends-line
+Check: binaries/prerequisites
+Renamed-From:
+ missing-depends-line
 Explanation: The installation package contains an ELF executable or object file
  with dynamic references but does not declare any package prerequisites. The
  Depends field in the installation <code>control</code> file is empty.

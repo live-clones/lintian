@@ -1,2 +1,0 @@
-libhallo1 (binary): symbols-file-missing-build-depends-package-field
-libhallo1 (binary): shared-library-is-multi-arch-foreign usr/lib/libhallo.so.1.0.1

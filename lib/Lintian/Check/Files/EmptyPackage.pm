@@ -41,19 +41,20 @@ has STANDARD_FILES => (
         return $self->profile->load_data('files/standard-files');
     });
 
-has is_dummy => (is => 'rw', default => 0);
 has is_empty => (is => 'rw', default => 1);
+has is_dummy => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
 
-sub setup_installed_files {
-    my ($self) = @_;
+        # check if package is empty
+        return 1
+          if $self->processable->is_transitional
+          || $self->processable->is_meta_package;
 
-    # check if package is empty
-    $self->is_dummy(1)
-      if $self->processable->is_transitional
-      || $self->processable->is_meta_package;
-
-    return;
-}
+        return 0;
+    });
 
 sub visit_installed_files {
     my ($self, $file) = @_;
@@ -129,7 +130,7 @@ sub visit_installed_files {
     return;
 }
 
-sub breakdown_installed_files {
+sub installable {
     my ($self) = @_;
 
     return

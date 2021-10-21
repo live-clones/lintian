@@ -1,4 +1,4 @@
 Skeleton: upload-native
 Testname: systemd-complex-service-file
 Dh-Compat-Level: 9
-Description: Verifies that systemd properly handles .include in service files
+Description: Long ago tested the dropped .include directive; now another general purpose test

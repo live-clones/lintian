@@ -1,3 +1,0 @@
-Testname: shared-libs-non-pic-i386
-Test-Architectures: i386
-Check: shared-libs

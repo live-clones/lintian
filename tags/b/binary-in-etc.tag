@@ -1,6 +1,6 @@
 Tag: binary-in-etc
 Severity: error
-Check: binaries
-See-Also: fhs etchostspecificsystemconfiguration
+Check: binaries/location
 Explanation: This package installs an ELF binary in <code>/etc</code>. The
- Filesystem Hierarchy Standard forbids this.
+ Filesystem Hierarchy Standard forbids it.
+See-Also: fhs etchostspecificsystemconfiguration

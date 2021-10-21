@@ -1,6 +1,6 @@
 Tag: obsolete-crypt-alias
 Severity: error
-Check: binaries
+Check: binaries/obsolete/crypt
 Explanation: The listed ELF binary appears to use the C library function
   <code>fcrypt</code>, which is a less-portable alias for <code>crypt</code>.
   Programs that use this function cannot be linked against the

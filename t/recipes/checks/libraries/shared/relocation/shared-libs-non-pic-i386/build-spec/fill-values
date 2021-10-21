@@ -1,0 +1,6 @@
+Skeleton: upload-native
+Testname: shared-libs-non-pic-i386
+Package-Architecture: i386
+Default-Build-Depends: debhelper (>= 9.20151004~)
+Dh-Compat-Level: 9
+Description: Test checks related to non-pic code

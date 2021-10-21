@@ -36,7 +36,7 @@ sub suppress {
       && ( $processable->type eq 'binary'
         || $processable->type eq 'udeb')
       && $processable->name =~ /-dev$/
-      && $processable->relation('strong')->implies('gnat');
+      && $processable->relation('strong')->satisfies('gnat');
 
     return 0;
 }

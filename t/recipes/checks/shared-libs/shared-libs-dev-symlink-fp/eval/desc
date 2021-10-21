@@ -1,4 +1,0 @@
-Testname: shared-libs-dev-symlink-fp
-Test-Against:
- lacks-unversioned-link-to-shared-library
-Check: shared-libs

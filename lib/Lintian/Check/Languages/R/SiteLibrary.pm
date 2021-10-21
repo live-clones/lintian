@@ -33,7 +33,18 @@ with 'Lintian::Check';
 
 has r_site_libraries => (is => 'rw', default => sub { [] });
 
-sub breakdown_installed_files {
+sub visit_installed_files {
+    my ($self, $file) = @_;
+
+    # R site libraries
+    if ($file->name =~ m{^usr/lib/R/site-library/(.*)/DESCRIPTION$}) {
+        push(@{$self->r_site_libraries}, $1);
+    }
+
+    return;
+}
+
+sub installable {
     my ($self) = @_;
 
     $self->hint('ships-r-site-library', $_) for @{$self->r_site_libraries};
@@ -47,17 +58,6 @@ sub breakdown_installed_files {
     $self->hint('requires-r-api')
       unless $depends->matches(qr/^r-api-[\w\d+-.]+$/,
         Lintian::Relation::VISIT_OR_CLAUSE_FULL);
-
-    return;
-}
-
-sub visit_installed_files {
-    my ($self, $file) = @_;
-
-    # R site libraries
-    if ($file->name =~ m{^usr/lib/R/site-library/(.*)/DESCRIPTION$}) {
-        push(@{$self->r_site_libraries}, $1);
-    }
 
     return;
 }

@@ -1,3 +1,0 @@
-Testname: legacy-debug
-Test-Against: symbols-file-missing-build-depends-package-field
-Check: shared-libs

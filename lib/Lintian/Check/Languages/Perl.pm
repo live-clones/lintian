@@ -31,23 +31,8 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-has perl_sources_in_lib => (is => 'rwp', default => sub { [] });
-has has_perl_binaries => (is => 'rwp', default => 0);
-
-sub breakdown_installed_files {
-    my ($self) = @_;
-
-    unless ($self->has_perl_binaries) {
-
-        $self->hint('package-installs-nonbinary-perl-in-usr-lib-perl5', $_)
-          for @{$self->perl_sources_in_lib};
-    }
-
-    $self->_set_perl_sources_in_lib([]);
-    $self->_set_has_perl_binaries(0);
-
-    return;
-}
+has perl_sources_in_lib => (is => 'rw', default => sub { [] });
+has has_perl_binaries => (is => 'rw', default => 0);
 
 sub visit_installed_files {
     my ($self, $file) = @_;
@@ -64,7 +49,7 @@ sub visit_installed_files {
         push @{$self->perl_sources_in_lib}, $file->name;
 
     }elsif ($file->name =~ m{^usr/lib/(?:[^/]+/)?perl5/.*\.(?:bs|so)$}) {
-        $self->_set_has_perl_binaries(1);
+        $self->has_perl_binaries(1);
     }
 
     # perl modules
@@ -80,7 +65,7 @@ sub visit_installed_files {
     my $dep = $self->processable->relation('strong');
     if (   $file->is_file
         && $file->name =~ /\.pm$/
-        && !$dep->implies('libperl4-corelibs-perl | perl (<< 5.12.3-7)')) {
+        && !$dep->satisfies('libperl4-corelibs-perl | perl (<< 5.12.3-7)')) {
 
         open(my $fd, '<', $file->unpacked_path)
           or die encode_utf8('Cannot open ' . $file->unpacked_path);
@@ -106,6 +91,21 @@ sub visit_installed_files {
         }
         close($fd);
     }
+
+    return;
+}
+
+sub installable {
+    my ($self) = @_;
+
+    unless ($self->has_perl_binaries) {
+
+        $self->hint('package-installs-nonbinary-perl-in-usr-lib-perl5', $_)
+          for @{$self->perl_sources_in_lib};
+    }
+
+    $self->perl_sources_in_lib([]);
+    $self->has_perl_binaries(0);
 
     return;
 }

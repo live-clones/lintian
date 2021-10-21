@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: systemd-general
+Description: General systemd tests

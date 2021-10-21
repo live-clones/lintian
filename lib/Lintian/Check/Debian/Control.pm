@@ -27,8 +27,7 @@ use warnings;
 use utf8;
 
 use Const::Fast;
-use List::SomeUtils qw(any);
-use List::Util qw(first none);
+use List::SomeUtils qw(any none first_value);
 use Path::Tiny;
 use Unicode::UTF8 qw(encode_utf8);
 
@@ -169,7 +168,7 @@ sub source {
         my $bfields = $processable->debian_control->installable_fields($bin);
         $self->hint('build-info-in-binary-control-file-section',"Package $bin")
           if (
-            first { $bfields->value("Build-$_") }
+            first_value { $bfields->value("Build-$_") }
             qw(Depends Depends-Indep Conflicts Conflicts-Indep)
           );
         foreach my $field ($bfields->names) {
@@ -249,7 +248,7 @@ sub source {
         }
     }
 
-    # Make sure that a stronger dependency field doesn't imply any of
+    # Make sure that a stronger dependency field doesn't satisfy any of
     # the elements of a weaker dependency field.  dpkg-gencontrol will
     # fix this up for us, but we want to check the source package
     # since dpkg-gencontrol may silently "fix" something that's a more
@@ -270,10 +269,10 @@ sub source {
             my $relation
               = $processable->binary_relation($bin, $dep_fields[$strong]);
             $self->hint('package-depends-on-itself', $bin,$dep_fields[$strong])
-              if $relation->implies($bin);
+              if $relation->satisfies($bin);
             $self->hint('package-depends-on-hardcoded-libc',
                 $bin, $dep_fields[$strong])
-              if $relation->implies($LIBCS)
+              if $relation->satisfies($LIBCS)
               and $self->processable->name !~ /^e?glibc$/;
             for my $weak (($strong + 1) .. $#dep_fields) {
                 next
@@ -286,7 +285,7 @@ sub source {
                     $self->hint('stronger-dependency-implies-weaker',
                         $bin,"$dep_fields[$strong] -> $dep_fields[$weak]",
                         $dependency)
-                      if $relation->implies($dependency);
+                      if $relation->satisfies($dependency);
                 }
             }
         }
@@ -515,11 +514,11 @@ sub source {
         $self->hint(
             'gobject-introspection-package-missing-depends-on-gir-depends',
             $bin)
-          unless $relation->implies('${gir:Depends}');
+          unless $relation->satisfies('${gir:Depends}');
     }
 
     if ($processable->relation('Build-Depends')
-        ->implies('golang-go | golang-any')) {
+        ->satisfies('golang-go | golang-any')) {
         # Verify that golang binary packages set Built-Using (except for
         # arch:all library packages).
         foreach my $bin (@package_names) {
@@ -654,14 +653,15 @@ sub check_dev_depends {
     return;
 }
 
-# Checks for duplicates in a relation, for missing separators and
+# Checks for redundancies in a relation, for missing separators and
 # obsolete relation forms.
 sub check_relation {
     my ($self, $pkg, $field, $rawvalue, $relation) = @_;
 
-    for my $dup ($relation->duplicates) {
-        $self->hint('duplicate-in-relation-field', 'in', $pkg,
-            "$field:", join(', ', @{$dup}));
+    for my $redundant_set ($relation->redundancies) {
+
+        $self->hint('redundant-control-relation', 'in', $pkg,
+            "$field:", join(', ', sort @{$redundant_set}));
     }
 
     $rawvalue =~ s/\n(\s)/$1/g;

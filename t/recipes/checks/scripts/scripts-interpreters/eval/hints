@@ -5,8 +5,8 @@ scripts-interpreters (binary): unusual-interpreter usr/bin/unusual /usr/bin/lint
 scripts-interpreters (binary): shell-script-fails-syntax-check usr/bin/syntax
 scripts-interpreters (binary): script-without-interpreter usr/bin/no-interpreter
 scripts-interpreters (binary): script-uses-bin-env usr/bin/bin-env
-scripts-interpreters (binary): missing-dep-for-interpreter pike7.6 => pike7.6 | pike7.6-core (usr/bin/versioned-pike) /usr/bin/pike7.6
-scripts-interpreters (binary): missing-dep-for-interpreter pike => pike7.6 | pike7.6-core | pike7.8 | pike7.8-core (usr/bin/unversioned-pike) /usr/bin/pike
+scripts-interpreters (binary): missing-dep-for-interpreter /usr/bin/pike7.6 [usr/bin/versioned-pike] (does not satisfy pike7.6 | pike7.6-core)
+scripts-interpreters (binary): missing-dep-for-interpreter /usr/bin/pike [usr/bin/unversioned-pike] (does not satisfy pike7.6 | pike7.6-core | pike7.8 | pike7.8-core)
 scripts-interpreters (binary): interpreter-not-absolute usr/bin/not-absolute perl
 scripts-interpreters (binary): interpreter-in-usr-local usr/bin/usr-local /usr/local/bin/special-perl
 scripts-interpreters (binary): incorrect-path-for-interpreter usr/bin/usr-bin-env-perl (#!/usr/bin/env perl != /usr/bin/perl)

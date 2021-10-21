@@ -36,7 +36,7 @@ with 'Lintian::Check';
 const my $EMPTY => q{};
 const my $ASTERISK => q{*};
 
-has wildcard_links => (is => 'rwp', default => sub{ [] });
+has wildcard_links => (is => 'rw', default => sub{ [] });
 
 sub visit_installed_files {
     my ($self, $file) = @_;
@@ -69,7 +69,7 @@ sub visit_installed_files {
     return;
 }
 
-sub breakdown_installed_files {
+sub installable {
     my ($self) = @_;
 
     return

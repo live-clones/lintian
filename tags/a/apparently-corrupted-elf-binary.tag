@@ -1,6 +1,6 @@
 Tag: apparently-corrupted-elf-binary
 Severity: warning
-Check: binaries
+Check: binaries/corrupted
 Explanation: This appears to be an ELF file but readelf cannot parse it.
  .
  This may be a mistake or a corrupted file, you may need to

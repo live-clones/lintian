@@ -1,6 +1,7 @@
 # triggers -- lintian check script -*- perl -*-
 
 # Copyright © 2017 Niels Thykier
+# Copyright © 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -25,6 +26,8 @@ use warnings;
 use utf8;
 use autodie qw(open);
 
+use Const::Fast;
+use List::SomeUtils qw(all);
 use Unicode::UTF8 qw(encode_utf8);
 
 use Moo;
@@ -32,56 +35,96 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-sub _parse_trigger_types {
-    my ($key, $val) = @_;
-    my %values;
-    for my $kvstr (split(m/\s*,\s*/, $val)) {
-        my ($k, $v) = split(m/\s*=\s*/, $kvstr, 2);
-        $values{$k} = $v;
-    }
-    if (exists($values{'implicit-await'})) {
-        die encode_utf8(
-"Invalid trigger-types: $key is defined as implicit-await but not await"
-        )if $values{'implicit-await'} and not $values{'await'};
-    }
-    return \%values;
-}
+const my $SPACE => q{ };
+const my $LEFT_PARENTHESIS => q{(};
+const my $RIGHT_PARENTHESIS => q{)};
 
-sub installable {
-    my ($self) = @_;
+has TRIGGER_TYPES => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
 
-    my $processable = $self->processable;
+        return $self->profile->load_data(
+            'triggers/trigger-types',
+            qr/\s*\Q=>\E\s*/,
+            sub {
+                my ($type, $attributes) = @_;
 
-    my $TRIGGER_TYPES = $self->profile->load_data('triggers/trigger-types',
-        qr/\s*\Q=>\E\s*/, \&_parse_trigger_types);
+                my %trigger_types;
 
-    my $triggers_file = $processable->control->lookup('triggers');
-    return if not $triggers_file or not $triggers_file->is_open_ok;
-    open(my $fd, '<', $triggers_file->unpacked_path);
-    my %seen_triggers;
-    while (my $line = <$fd>) {
+                for my $pair (split(m{ \s* , \s* }x, $attributes)) {
+
+                    my ($flag, $setting) = split(m{ \s* = \s* }x, $pair, 2);
+                    $trigger_types{$flag} = $setting;
+                }
+
+                die encode_utf8(
+"Invalid trigger-types: $type is defined as implicit-await but not await"
+                  )
+                  if $trigger_types{'implicit-await'}
+                  && !$trigger_types{await};
+
+                return \%trigger_types;
+            });
+    });
+
+sub visit_control_files {
+    my ($self, $item) = @_;
+
+    return
+      unless $item->name eq 'triggers';
+
+    my @lines = split(m{\n}, $item->decoded_utf8);
+
+    my %positions_by_trigger_name;
+
+    my $position = 1;
+    while (defined(my $line = shift @lines)) {
 
         # trim both ends
         $line =~ s/^\s+|\s+$//g;
 
-        next if $line =~ m/^(?:\s*)(?:#.*)?$/;
-        my ($trigger_type, $arg) = split(m/\s++/, $line, 2);
-        my $trigger_info = $TRIGGER_TYPES->value($trigger_type);
-        if (not $trigger_info) {
-            $self->hint('unknown-trigger', $line, "(line $.)");
+        next
+          if $line =~ m/^(?:\s*)(?:#.*)?$/;
+
+        my ($trigger_type, $trigger_name) = split($SPACE, $line, 2);
+        next
+          unless all { length } ($trigger_type, $trigger_name);
+
+        $positions_by_trigger_name{$trigger_name} //= [];
+        push(@{$positions_by_trigger_name{$trigger_name}}, $position);
+
+        my $trigger_info = $self->TRIGGER_TYPES->value($trigger_type);
+        if (!$trigger_info) {
+
+            $self->hint('unknown-trigger', $trigger_type, "(line $position)");
             next;
         }
-        if ($trigger_info->{'implicit-await'}) {
-            $self->hint('uses-implicit-await-trigger', $line, "(line $.)");
-        }
-        if (defined(my $prev_info = $seen_triggers{$arg})) {
-            my ($prev_line, $prev_line_no) = @{$prev_info};
-            $self->hint('repeated-trigger-name', $line, "(line $.)", 'vs',
-                $prev_line,"(line $prev_line_no)");
-            next;
-        }
-        $seen_triggers{$arg} = [$line, $.];
+
+        $self->hint('uses-implicit-await-trigger', $trigger_type,
+            "(line $position)")
+          if $trigger_info->{'implicit-await'};
+
+    } continue {
+        ++$position;
     }
+
+    my @duplicates= grep { @{$positions_by_trigger_name{$_}} > 1 }
+      keys %positions_by_trigger_name;
+
+    for my $trigger_name (@duplicates) {
+
+        my $indicator
+          = $LEFT_PARENTHESIS . 'lines'
+          . $SPACE
+          . join($SPACE,
+            sort { $a <=> $b }@{$positions_by_trigger_name{$trigger_name}})
+          . $RIGHT_PARENTHESIS;
+
+        $self->hint('repeated-trigger-name', $trigger_name, $indicator);
+    }
+
     return;
 }
 

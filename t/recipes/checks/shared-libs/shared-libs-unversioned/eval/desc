@@ -1,5 +1,0 @@
-Testname: shared-libs-unversioned
-Test-Against:
- ships-undeclared-shared-library
-See-Also: Debian Bug#506673
-Check: shared-libs

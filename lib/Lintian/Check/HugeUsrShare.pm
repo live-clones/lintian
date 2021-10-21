@@ -40,8 +40,8 @@ const my $THRESHOLD_SIZE_HARD => 8192;
 const my $PERCENT => 100;
 const my $THRESHOLD_PERCENTAGE => 50;
 
-has total_size => (is => 'rwp', default => 0);
-has usrshare_size => (is => 'rwp', default => 0);
+has total_size => (is => 'rw', default => 0);
+has usrshare_size => (is => 'rw', default => 0);
 
 sub visit_installed_files {
     my ($self, $file) = @_;
@@ -50,16 +50,16 @@ sub visit_installed_files {
       unless $file->is_regular_file;
 
     # space taken up by package
-    $self->_set_total_size($self->total_size + $file->size);
+    $self->total_size($self->total_size + $file->size);
 
     # space taken up in /usr/share.
-    $self->_set_usrshare_size($self->usrshare_size + $file->size)
+    $self->usrshare_size($self->usrshare_size + $file->size)
       if $file =~ m{^usr/share/};
 
     return;
 }
 
-sub breakdown_installed_files {
+sub installable {
     my ($self) = @_;
 
     # skip architecture-dependent packages.

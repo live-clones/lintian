@@ -107,15 +107,15 @@ sub check_file_overlap {
 
             # $two conflicts/replaces with $one
             next
-              if $two->relation('Conflicts')->implies($relation_one);
+              if $two->relation('Conflicts')->satisfies($relation_one);
             next
-              if $two->relation('Replaces')->implies($one->name);
+              if $two->relation('Replaces')->satisfies($one->name);
 
             # $one conflicts/replaces with $two
             next
-              if $one->relation('Conflicts')->implies($relation_two);
+              if $one->relation('Conflicts')->satisfies($relation_two);
             next
-              if $one->relation('Replaces')->implies($two->name);
+              if $one->relation('Replaces')->satisfies($two->name);
 
             for my $one_file (@{$one->installed->sorted_list}) {
 

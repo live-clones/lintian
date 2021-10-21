@@ -1,2 +1,0 @@
-libhallo1 (binary): symbols-file-missing-build-depends-package-field
-libhallo1 (binary): shared-library-lacks-stack-section usr/lib/libhallo.so.1.0.1

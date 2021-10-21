@@ -284,7 +284,7 @@ sub check_test_file {
                 "(line $.)"
               )
               if $options =~ /\s(?:-\w*s|--supported)/
-              && !$depends_norestriction->implies($PYTHON3_ALL_DEPEND);
+              && !$depends_norestriction->satisfies($PYTHON3_ALL_DEPEND);
         }
     }
 

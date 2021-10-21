@@ -36,7 +36,7 @@ use namespace::clean;
 with 'Lintian::Check';
 
 # whether the package appears to be an Apache2 module/web application
-has seen_apache2_special_file => (is => 'rwp', default => 0);
+has seen_apache2_special_file => (is => 'rw', default => 0);
 
 sub visit_installed_files {
     my ($self, $file) = @_;
@@ -68,13 +68,13 @@ sub visit_installed_files {
     # Package appears to be a binary module
     if ($file =~ m{^usr/lib/apache2/modules/(.*)\.so$}) {
         $self->check_module_package($1);
-        $self->_set_seen_apache2_special_file(1);
+        $self->seen_apache2_special_file(1);
     }
 
     # Package appears to be a web application
     elsif ($file =~ m{^etc/apache2/(conf|site)-available/(.*)$}) {
         $self->check_web_application_package($file, $1, $2);
-        $self->_set_seen_apache2_special_file(1);
+        $self->seen_apache2_special_file(1);
     }
 
     # Package appears to be a legacy web application
@@ -82,7 +82,7 @@ sub visit_installed_files {
         $self->hint('apache2-reverse-dependency-uses-obsolete-directory',
             $file);
         $self->check_web_application_package($file,'conf', $1);
-        $self->_set_seen_apache2_special_file(1);
+        $self->seen_apache2_special_file(1);
     }
 
     # Package does scary things
@@ -92,7 +92,7 @@ sub visit_installed_files {
             'apache2-reverse-dependency-ships-file-in-not-allowed-directory',
             $file);
 
-        $self->_set_seen_apache2_special_file(1);
+        $self->seen_apache2_special_file(1);
     }
 
     return;
@@ -141,7 +141,7 @@ sub check_web_application_package {
     # apache2 | httpd but don't worry about versions, virtual package
     # don't support that
     $self->hint('web-application-works-only-with-apache', $webapp)
-      if $rel->implies('apache2');
+      if $rel->satisfies('apache2');
 
     $self->inspect_conf_file($pkgtype, $file);
     return;

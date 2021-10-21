@@ -216,7 +216,7 @@ sub installable {
                   if ( $field eq 'Breaks'
                     && !$d_version->[0]
                     && !$VIRTUAL_PACKAGES->recognizes($d_pkg)
-                    && !$replaces->implies($part_d_orig));
+                    && !$replaces->satisfies($part_d_orig));
 
                 $self->hint('conflicts-with-version', $part_d_orig)
                   if ($field eq 'Conflicts' && $d_version->[0]);
@@ -412,7 +412,7 @@ sub installable {
                 $processable->fields->value($conflict)) {
 
                 $self->hint('conflicts-with-dependency', $field, $package)
-                  if $relation->implies($package);
+                  if $relation->satisfies($package);
             }
         }
     }
@@ -627,7 +627,7 @@ sub source {
         }
     }
 
-    # Check for duplicates.
+    # Check for redundancies.
     my @to_check = (
         ['Build-Depends'],
         ['Build-Depends', 'Build-Depends-Indep'],
@@ -636,10 +636,12 @@ sub source {
     for my $fields (@to_check) {
         my $relation = Lintian::Relation->new->logical_and(
             map { $processable->relation($_) }@{$fields});
-        my @dups = $relation->duplicates;
-        for my $dup (@dups) {
-            $self->hint('package-has-a-duplicate-build-relation',
-                join(', ', @{$dup}));
+
+        for my $redundant_set ($relation->redundancies) {
+
+            $self->hint(
+                'redundant-build-prerequisites',
+                join(', ', sort @{$redundant_set}));
         }
     }
 
@@ -652,7 +654,7 @@ sub source {
     ) {
         next unless $_;
         for my $conflict (split /\s*,\s*/, $_) {
-            if ($build_all->implies($conflict)) {
+            if ($build_all->satisfies($conflict)) {
                 $self->hint('build-conflicts-with-build-dependency',$conflict);
             }
         }
@@ -688,14 +690,14 @@ sub source {
 
     # Check for a python*-dev build dependency in source packages that
     # build only arch: all packages.
-    if ($arch_dep_packages == 0 and $build_all->implies($PYTHON_DEV)) {
+    if ($arch_dep_packages == 0 and $build_all->satisfies($PYTHON_DEV)) {
         $self->hint('build-depends-on-python-dev-with-no-arch-any');
     }
 
     my $bdepends = $processable->relation('Build-Depends');
 
     # libmodule-build-perl
-    # matches() instead of implies() because of possible OR relation
+    # matches() instead of satisifies() because of possible OR relation
     $self->hint('libmodule-build-perl-needs-to-be-in-build-depends')
       if $processable->relation('Build-Depends-Indep')
       ->equals('libmodule-build-perl', Lintian::Relation::VISIT_PRED_NAME)
@@ -705,8 +707,8 @@ sub source {
     # libmodule-build-tiny-perl
     $self->hint('libmodule-build-tiny-perl-needs-to-be-in-build-depends')
       if $processable->relation('Build-Depends-Indep')
-      ->implies('libmodule-build-tiny-perl')
-      && !$bdepends->implies('libmodule-build-tiny-perl');
+      ->satisfies('libmodule-build-tiny-perl')
+      && !$bdepends->satisfies('libmodule-build-tiny-perl');
 
     return;
 }

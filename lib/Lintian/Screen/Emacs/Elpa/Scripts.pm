@@ -34,7 +34,7 @@ sub suppress {
       if $context =~ m{^usr/lib/emacsen-common/packages/}
       && ( $processable->type eq 'binary'
         || $processable->type eq 'udeb')
-      && $processable->relation('strong')->implies('emacsen-common');
+      && $processable->relation('strong')->satisfies('emacsen-common');
 
     return 0;
 }

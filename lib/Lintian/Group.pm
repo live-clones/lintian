@@ -681,7 +681,7 @@ sub direct_dependencies {
                   if $this->name eq $that->name;
 
                 push @specific, $this
-                  if $relation->implies($this->name);
+                  if $relation->satisfies($this->name);
             }
             $dependencies{$that->name} = \@specific;
         }
@@ -732,7 +732,7 @@ sub direct_reliants {
 
                 my $relation = $this->relation('strong');
                 push @specific, $this
-                  if $relation->implies($that->name);
+                  if $relation->satisfies($that->name);
             }
             $reliants{$that->name} = \@specific;
         }

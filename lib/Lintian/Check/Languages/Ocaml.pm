@@ -38,53 +38,58 @@ const my $EMPTY => q{};
 # The maximum number of *.cmi files to show individually.
 const my $MAX_CMI => 3;
 
-has provided_o => (is => 'rwp', default => sub{ {} });
-has is_lib_package => (is => 'rwp', default => 0);
-has is_dev_package => (is => 'rwp', default => 0);
+has provided_o => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
 
-# for libraries outside /usr/lib/ocaml
-has outside_number => (is => 'rwp', default => 0);
-has outside_prefix => (is => 'rwp');
+        my %provided_o;
 
-# dangling .cmi files (we show only $MAX_CMI of them)
-has cmi_number => (is => 'rwp', default => 0);
+        for my $item (@{$self->processable->installed->sorted_list}) {
 
-# dev files in nondev package
-has dev_number => (is => 'rwp', default => 0);
-has dev_prefix => (is => 'rwp');
+            my $ar_info = $item->ar_info;
+            next
+              unless scalar keys %{$ar_info};
 
-# does the package provide a META file?
-has has_meta => (is => 'rwp', default => 0);
+            # ends in a slash
+            my $dirname = $item->dirname;
 
-sub setup_installed_files {
-    my ($self) = @_;
+            for my $count (keys %{$ar_info}) {
 
-    for my $item (@{$self->processable->installed->sorted_list}) {
-
-        my $ar_info = $item->ar_info;
-        next
-          unless scalar keys %{$ar_info};
-
-        # ends in a slash
-        my $dirname = $item->dirname;
-
-        for my $count (keys %{$ar_info}) {
-
-            my $member = $ar_info->{$count}{name};
-            # Note: a .o may be legitimately in several different .a
-            $self->provided_o->{"$dirname$member"} = $item->name
-              if length $member;
+                my $member = $ar_info->{$count}{name};
+                # Note: a .o may be legitimately in several different .a
+                $provided_o{"$dirname$member"} = $item->name
+                  if length $member;
+            }
         }
-    }
 
-    # is it a library package?
-    $self->_set_is_lib_package(1)
-      if $self->processable->name =~ /^lib/;
+        return \%provided_o;
+    });
 
-    # is it a development package?
-    $self->_set_is_dev_package(1)
-      if (
-        $self->processable->name =~ m{
+has is_lib_package => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        # is it a library package?
+        return 1
+          if $self->processable->name =~ /^lib/;
+
+        return 0;
+    });
+
+has is_dev_package => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        # is it a development package?
+        return 1
+          if (
+            $self->processable->name =~ m{
            (?: -dev
               |\A camlp[45](?:-extra)?
               |\A ocaml  (?:
@@ -93,10 +98,24 @@ sub setup_installed_files {
                     |-compiler-libs
                   )?
            )\Z}xsm
-      );
+          );
 
-    return;
-}
+        return 0;
+    });
+
+# for libraries outside /usr/lib/ocaml
+has outside_number => (is => 'rw', default => 0);
+has outside_prefix => (is => 'rw');
+
+# dangling .cmi files (we show only $MAX_CMI of them)
+has cmi_number => (is => 'rw', default => 0);
+
+# dev files in nondev package
+has dev_number => (is => 'rw', default => 0);
+has dev_prefix => (is => 'rw');
+
+# does the package provide a META file?
+has has_meta => (is => 'rw', default => 0);
 
 sub visit_installed_files {
     my ($self, $file) = @_;
@@ -134,7 +153,7 @@ sub visit_installed_files {
         && s/\.cmi$/.ml/
         && !$self->processable->installed->lookup("${_}i")
         && !$self->processable->installed->lookup($_)) {
-        $self->_set_cmi_number($self->cmi_number + 1);
+        $self->cmi_number($self->cmi_number + 1);
         if ($self->cmi_number <= $MAX_CMI) {
             $self->hint('ocaml-dangling-cmi', $file);
         }
@@ -142,13 +161,13 @@ sub visit_installed_files {
 
     # non-dev packages should not ship .cmi, .cmx or .cmxa files
     if ($file =~ m/\.cm(i|xa?)$/) {
-        $self->_set_dev_number($self->dev_number + 1);
+        $self->dev_number($self->dev_number + 1);
         if (defined $self->dev_prefix) {
             my $dev_prefix = $self->dev_prefix;
             chop $dev_prefix while ($file !~ m{^$dev_prefix});
-            $self->_set_dev_prefix($dev_prefix);
+            $self->dev_prefix($dev_prefix);
         } else {
-            $self->_set_dev_prefix($file->name);
+            $self->dev_prefix($file->name);
         }
     }
 
@@ -161,24 +180,24 @@ sub visit_installed_files {
     # development files outside /usr/lib/ocaml (.cmi, .cmx, .cmxa)
     # .cma, .cmo and .cmxs are excluded because they can be plugins
     if ($file =~ m/\.cm(i|xa?)$/ && $file !~ m{^usr/lib/ocaml/}) {
-        $self->_set_outside_number($self->outside_number + 1);
+        $self->outside_number($self->outside_number + 1);
         if (defined $self->outside_prefix) {
             my $outside_prefix = $self->outside_prefix;
             chop $outside_prefix while ($file !~ m{^$outside_prefix});
-            $self->_set_outside_prefix($outside_prefix);
+            $self->outside_prefix($outside_prefix);
         } else {
-            $self->_set_outside_prefix($file->name);
+            $self->outside_prefix($file->name);
         }
     }
 
     # If there is a META file, ocaml-findlib should be at least suggested.
-    $self->_set_has_meta(1)
+    $self->has_meta(1)
       if $file =~ m{^usr/lib/ocaml/(.+/)?META(\..*)?$};
 
     return;
 }
 
-sub breakdown_installed_files {
+sub installable {
     my ($self) = @_;
 
     if ($self->is_dev_package) {
@@ -202,7 +221,7 @@ sub breakdown_installed_files {
         if ($self->has_meta) {
             my $depends = $self->processable->relation('all');
             $self->hint('ocaml-meta-without-suggesting-findlib')
-              unless $depends->implies('ocaml-findlib');
+              unless $depends->satisfies('ocaml-findlib');
         }
     } else {
         # summary about dev files

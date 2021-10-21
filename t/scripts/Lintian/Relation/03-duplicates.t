@@ -15,8 +15,12 @@ my $relation_b
   = Lintian::Relation->new->load_norestriction(
     'pkgA, pkgB, pkgC, pkgD | pkgE');
 
-is_deeply($relation_a->duplicates, (['pkgA', 'pkgA | pkgD']), 'Duplicates');
-is($relation_b->duplicates, 0, 'No duplicates');
+is_deeply(
+    $relation_a->redundancies,
+    (['pkgA', 'pkgA | pkgD']),
+    'Find redundancies'
+);
+is($relation_b->redundancies, 0, 'No redundancies');
 
 # Local Variables:
 # indent-tabs-mode: nil

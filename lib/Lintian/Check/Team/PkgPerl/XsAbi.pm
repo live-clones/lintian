@@ -37,40 +37,38 @@ with 'Lintian::Check';
 
 has relies_on_modern_api => (
     is => 'rw',
+    lazy => 1,
     coerce => sub { my ($boolean) = @_; return ($boolean // 0); },
-    default => 0
-);
+    default => sub {
+        my ($self) = @_;
 
-sub setup_installed_files {
-    my ($self) = @_;
+        return 0
+          if $self->processable->fields->value('Architecture') eq 'all';
 
-    return
-      if $self->processable->fields->value('Architecture') eq 'all';
+        my $depends = $self->processable->relation('strong');
 
-    my $depends = $self->processable->relation('strong');
+        my $api_version = $depends->visit(
+            sub {
+                my ($prerequisite) = @_;
 
-    my $api_version = $depends->visit(
-        sub {
-            my ($prerequisite) = @_;
+                if ($prerequisite =~ /^perlapi-(\d[\d.]*)$/) {
+                    return $1;
+                }
 
-            if ($prerequisite =~ /^perlapi-(\d[\d.]*)$/) {
-                return $1;
-            }
+                return;
+            },
+            Lintian::Relation::VISIT_OR_CLAUSE_FULL
+              | Lintian::Relation::VISIT_STOP_FIRST_MATCH
+        );
 
-            return;
-        },
-        Lintian::Relation::VISIT_OR_CLAUSE_FULL
-          | Lintian::Relation::VISIT_STOP_FIRST_MATCH
-    );
+        return 0
+          unless defined $api_version;
 
-    return
-      unless defined $api_version;
+        return 1
+          if version_compare_relation($api_version, REL_GE, '5.19.11');
 
-    $self->relies_on_modern_api(1)
-      if version_compare_relation($api_version, REL_GE, '5.19.11');
-
-    return;
-}
+        return 0;
+    });
 
 sub visit_installed_files {
     my ($self, $item) = @_;

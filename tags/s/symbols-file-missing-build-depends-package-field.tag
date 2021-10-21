@@ -1,6 +1,6 @@
 Tag: symbols-file-missing-build-depends-package-field
 Severity: info
-Check: shared-libs
+Check: debian/shlibs
 Explanation: The symbols file for this package does not contain a
  <code>Build-Depends-Package</code> meta-information field.
  .

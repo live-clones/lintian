@@ -1,7 +1,8 @@
 Tag: shared-library-lacks-prerequisites
 Severity: warning
-Check: binaries
-Renamed-From: shared-lib-without-dependency-information
+Check: binaries/prerequisites
+Renamed-From:
+ shared-lib-without-dependency-information
 Explanation: The listed shared library doesn't include information about the
  other libraries against which it was linked.
  .

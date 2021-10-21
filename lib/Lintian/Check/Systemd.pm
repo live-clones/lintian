@@ -30,10 +30,9 @@ use warnings;
 use utf8;
 
 use Const::Fast;
-use File::Basename;
-use List::SomeUtils qw(any none first_index);
+use List::Compare;
+use List::SomeUtils qw(any none);
 use Text::ParseWords qw(shellwords);
-use Unicode::UTF8 qw(encode_utf8);
 
 use Moo;
 use namespace::clean;
@@ -89,7 +88,7 @@ const my @HARDENING_FLAGS => qw{
 };
 
 # init scripts that do not need a service file
-has INIT_WHITELIST => (
+has PROVIDED_BY_SYSTEMD => (
     is => 'rw',
     lazy => 1,
     default =>sub {
@@ -98,49 +97,76 @@ has INIT_WHITELIST => (
         return $self->profile->load_data('systemd/init-whitelist');
     });
 
-has services => (is => 'rw', default => sub { {} });
-has timers => (is => 'rw', default => sub { [] });
+# array of names provided by the service files.
+# This includes Alias= directives, so after parsing
+# NetworkManager.service, it will contain NetworkManager and
+# network-manager.
+has service_names => (is => 'rw', default => sub { [] });
 
-sub setup_installed_files {
-    my ($self) = @_;
+has timer_files => (is => 'rw', default => sub { [] });
 
-    # A hash of names reference which are provided by the service files.
-    # This includes Alias= directives, so after parsing
-    # NetworkManager.service, it will contain NetworkManager and
-    # network-manager.
+has init_files_by_service_name => (is => 'rw', default => sub { {} });
+has cron_scripts => (is => 'rw', default => sub { [] });
 
-    my @service_files = grep {
-             $_->name =~ m{/systemd/system/.*\.service$}
-          && $self->check_systemd_service_file($_)
-    } @{$self->processable->installed->sorted_list};
-
-    $self->services($self->get_systemd_service_names(\@service_files));
-
-    my @timers = grep { m{^(?:usr/)?lib/systemd/system/[^\/]+\.timer$} }
-      @{$self->processable->installed->sorted_list};
-    $self->timers(\@timers);
-
-    return;
-}
+has is_rcs_script_by_name => (is => 'rw', default => sub { {} });
 
 sub visit_installed_files {
     my ($self, $item) = @_;
+
+    if ($item->name =~ m{/systemd/system/.*\.service$}) {
+
+        $self->check_systemd_service_file($item);
+
+        my $service_name = $item->basename;
+        $service_name =~ s/@?\.service$//;
+
+        push(@{$self->service_names}, $service_name);
+
+        my @aliases
+          = $self->extract_service_file_values($item, 'Install', 'Alias');
+
+        for my $alias (@aliases) {
+
+            $self->hint('systemd-service-alias-without-extension', $item->name)
+              if $alias !~ m/\.service$/;
+
+            # maybe issue a tag for duplicates?
+
+            $alias =~ s{ [.]service $}{}x;
+            push(@{$self->service_names}, $alias);
+        }
+    }
+
+    push(@{$self->timer_files}, $item)
+      if $item->name =~ m{^(?:usr/)?lib/systemd/system/[^\/]+\.timer$};
+
+    push(@{$self->cron_scripts}, $item)
+      if $item->dirname =~ m{^ etc/cron[.][^\/]+ / $}x;
 
     if (   $item->dirname eq 'etc/init.d/'
         && !$item->is_dir
         && (none { $item->basename eq $_} qw{README skeleton rc rcS})
         && $self->processable->name ne 'initscripts'
-        && $item->link ne '/lib/init/upstart-job') {
+        && $item->link ne 'lib/init/upstart-job') {
+
+        unless ($item->is_file) {
+
+            $self->hint('init-script-is-not-a-file', $item->name);
+            return;
+        }
 
         # sysv generator drops the .sh suffix
         my $service_name = $item->basename;
-        $service_name =~ s/\.sh$//;
+        $service_name =~ s{ [.]sh $}{}x;
 
-        $self->check_init_script($item, $self->services)
-          unless $self->INIT_WHITELIST->recognizes($service_name);
+        $self->init_files_by_service_name->{$service_name} //= [];
+        push(@{$self->init_files_by_service_name->{$service_name}}, $item);
+
+        $self->is_rcs_script_by_name->{$item->name}
+          = $self->check_init_script($item);
     }
 
-    if ($item->name =~ m{/systemd/system/.*\.socket$}) {
+    if ($item->name =~ m{ /systemd/system/ .*[.]socket $}x) {
 
         my @values
           = $self->extract_service_file_values($item,'Socket','ListenStream');
@@ -150,38 +176,48 @@ sub visit_installed_files {
           for grep { m{^/var/run/} } @values;
     }
 
-    $self->hint('missing-systemd-timer-for-cron-script', $item)
-      if $item->dirname =~ m{^etc/cron\.[^\/]+/$} && !scalar @{$self->timers};
-
     return;
 }
 
-sub visit_control_files {
-    my ($self, $item) = @_;
+sub installable {
+    my ($self) = @_;
 
-    return
-      unless $item->is_maintainer_script;
+    my $lc = List::Compare->new([keys %{$self->init_files_by_service_name}],
+        $self->service_names);
 
-    # look only at shell scripts
-    return
-      unless $item->hashbang =~ /^\S*sh\b/;
+    my @missing_service_names = $lc->get_Lonly;
 
-    my @lines = split(/\n/, $item->decoded_utf8);
-
-    my $position = 1;
-    for my $line (@lines) {
+    for my $service_name (@missing_service_names) {
 
         next
-          if $line =~ /^#/;
+          if $self->PROVIDED_BY_SYSTEMD->recognizes($service_name);
 
-        # systemctl should not be called in maintainer scripts at all,
-        # except for systemctl daemon-reload calls.
-        $self->hint('maintainer-script-calls-systemctl', "$item:$position")
-          if $line =~ /^(?:.+;)?\s*systemctl\b/
-          && $line !~ /daemon-reload/;
+        my @init_files
+          = @{$self->init_files_by_service_name->{$service_name} // []};
 
-    } continue {
-        ++$position;
+        for my $init_file (@init_files) {
+
+            # rcS scripts are particularly bad; always tag
+            $self->hint('missing-systemd-service-for-init.d-rcS-script',
+                $init_file->name, $service_name)
+              if $self->is_rcs_script_by_name->{$init_file->name};
+
+            $self->hint('omitted-systemd-service-for-init.d-script',
+                $init_file->name, $service_name)
+              if @{$self->service_names}
+              && !$self->is_rcs_script_by_name->{$init_file->name};
+
+            $self->hint('missing-systemd-service-for-init.d-script',
+                $init_file->name, $service_name)
+              if !@{$self->service_names}
+              && !$self->is_rcs_script_by_name->{$init_file->name};
+        }
+    }
+
+    if (!@{$self->timer_files}) {
+
+        $self->hint('missing-systemd-timer-for-cron-script', $_->name)
+          for @{$self->cron_scripts};
     }
 
     return;
@@ -190,18 +226,12 @@ sub visit_control_files {
 # Verify that each init script includes /lib/lsb/init-functions,
 # because that is where the systemd diversion happens.
 sub check_init_script {
-    my ($self, $file, $services) = @_;
-
-    unless ($file->is_regular_file || $file->is_open_ok) {
-
-        $self->hint('init-script-is-not-a-file', $file);
-        return;
-    }
+    my ($self, $item) = @_;
 
     my $lsb_source_seen;
     my $is_rcs_script = 0;
 
-    my @lines = split(/\n/, $file->decoded_utf8);
+    my @lines = split(/\n/, $item->decoded_utf8);
 
     my $position = 1;
     for my $line (@lines) {
@@ -228,105 +258,54 @@ sub check_init_script {
         ++$position;
     }
 
-    $self->hint('init.d-script-does-not-source-init-functions', $file)
+    $self->hint('init.d-script-does-not-source-init-functions', $item)
       unless $lsb_source_seen;
 
-    my $servicename = $file->basename;
-    $servicename =~ s/\.sh$//;
-
-    if (!$services->{$servicename}) {
-        # rcS scripts are particularly bad; always tag
-        if ($is_rcs_script) {
-            $self->hint('missing-systemd-service-for-init.d-rcS-script',
-                $file->basename);
-        } else {
-            if (%{$services}) {
-                $self->hint('omitted-systemd-service-for-init.d-script',
-                    $file->basename);
-            } else {
-                $self->hint('missing-systemd-service-for-init.d-script',
-                    $file->basename);
-            }
-        }
-    }
-
-    return;
-}
-
-sub get_systemd_service_names {
-    my ($self,$files_ref) = @_;
-
-    my %services;
-
-    my $safe_add_service = sub {
-        my ($name) = @_;
-        if (exists $services{$name}) {
-            # should add a tag here
-            return;
-        }
-        $services{$name} = 1;
-    };
-
-    for my $file (@{$files_ref}) {
-        my $name = $file->basename;
-        $name =~ s/@?\.service$//;
-        $safe_add_service->($name);
-
-        my @aliases
-          = $self->extract_service_file_values($file, 'Install', 'Alias');
-
-        for my $alias (@aliases) {
-            $self->hint('systemd-service-alias-without-extension', $file)
-              if $alias !~ m/\.service$/;
-            $alias =~ s/\.service$//;
-            $safe_add_service->($alias);
-        }
-    }
-    return \%services;
+    return $is_rcs_script;
 }
 
 sub check_systemd_service_file {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     # ambivalent about /lib or /usr/lib
-    $self->hint('systemd-service-in-odd-location', $file)
-      if $file =~ m{^etc/systemd/system/};
+    $self->hint('systemd-service-in-odd-location', $item)
+      if $item =~ m{^etc/systemd/system/};
 
-    unless ($file->is_open_ok
-        || ($file->is_symlink && $file->link eq '/dev/null')) {
+    unless ($item->is_open_ok
+        || ($item->is_symlink && $item->link eq '/dev/null')) {
 
-        $self->hint('service-file-is-not-a-file', $file);
+        $self->hint('service-file-is-not-a-file', $item);
         return 0;
     }
 
-    my @values = $self->extract_service_file_values($file, 'Unit', 'After');
+    my @values = $self->extract_service_file_values($item, 'Unit', 'After');
     my @obsolete = grep { /^(?:syslog|dbus)\.target$/ } @values;
 
-    $self->hint('systemd-service-file-refers-to-obsolete-target',$file, $_)
+    $self->hint('systemd-service-file-refers-to-obsolete-target',$item, $_)
       for @obsolete;
 
-    $self->hint('systemd-service-file-refers-to-obsolete-bindto', $file,)
-      if $self->extract_service_file_values($file, 'Unit', 'BindTo');
+    $self->hint('systemd-service-file-refers-to-obsolete-bindto', $item)
+      if $self->extract_service_file_values($item, 'Unit', 'BindTo');
 
     for my $key (
         qw(ExecStart ExecStartPre ExecStartPost ExecReload ExecStop ExecStopPost)
     ) {
-        $self->hint('systemd-service-file-wraps-init-script', $file, $key)
+        $self->hint('systemd-service-file-wraps-init-script', $item, $key)
           if any { m{^/etc/init\.d/} }
-        $self->extract_service_file_values($file, 'Service', $key);
+        $self->extract_service_file_values($item, 'Service', $key);
     }
 
-    unless ($file->link eq '/dev/null') {
+    unless ($item->link eq '/dev/null') {
 
         my @wanted_by
-          = $self->extract_service_file_values($file, 'Install', 'WantedBy');
+          = $self->extract_service_file_values($item, 'Install', 'WantedBy');
         my $is_oneshot = any { $_ eq 'oneshot' }
-        $self->extract_service_file_values($file, 'Service', 'Type');
+        $self->extract_service_file_values($item, 'Service', 'Type');
 
         # We are a "standalone" service file if we have no .path or .timer
         # equivalent.
         my $is_standalone = 1;
-        if ($file =~ m{^(usr/)?lib/systemd/system/([^/]*?)@?\.service$}) {
+        if ($item =~ m{^(usr/)?lib/systemd/system/([^/]*?)@?\.service$}) {
 
             my ($usr, $service) = ($1 // $EMPTY, $2);
 
@@ -341,55 +320,55 @@ sub check_systemd_service_file {
 
             $self->hint(
                 'systemd-service-file-refers-to-unusual-wantedby-target',
-                $file, $target)
+                $item, $target)
               unless (any { $target eq $_ } @WANTEDBY_WHITELIST)
               || $self->processable->name eq 'systemd';
         }
 
-        $self->hint('systemd-service-file-missing-documentation-key', $file,)
-          unless $self->extract_service_file_values($file, 'Unit',
+        $self->hint('systemd-service-file-missing-documentation-key', $item)
+          unless $self->extract_service_file_values($item, 'Unit',
             'Documentation');
 
         if (   !@wanted_by
             && !$is_oneshot
             && $is_standalone
-            && $file =~ m{^(?:usr/)?lib/systemd/[^\/]+/[^\/]+\.service$}
-            && $file !~ m{@\.service$}) {
+            && $item =~ m{^(?:usr/)?lib/systemd/[^\/]+/[^\/]+\.service$}
+            && $item !~ m{@\.service$}) {
 
-            $self->hint('systemd-service-file-missing-install-key', $file)
-              unless $self->extract_service_file_values($file, 'Install',
+            $self->hint('systemd-service-file-missing-install-key', $item)
+              unless $self->extract_service_file_values($item, 'Install',
                 'RequiredBy')
-              || $self->extract_service_file_values($file, 'Install', 'Also');
+              || $self->extract_service_file_values($item, 'Install', 'Also');
         }
 
         my @pidfile
-          = $self->extract_service_file_values($file,'Service','PIDFile');
+          = $self->extract_service_file_values($item,'Service','PIDFile');
         for my $x (@pidfile) {
             $self->hint('systemd-service-file-refers-to-var-run',
-                $file, 'PIDFile', $x)
+                $item, 'PIDFile', $x)
               if $x =~ m{^/var/run/};
         }
 
         my $seen_hardening
-          = any { $self->extract_service_file_values($file, 'Service', $_) }
+          = any { $self->extract_service_file_values($item, 'Service', $_) }
         @HARDENING_FLAGS;
 
-        $self->hint('systemd-service-file-missing-hardening-features', $file)
+        $self->hint('systemd-service-file-missing-hardening-features', $item)
           unless $seen_hardening
           || $is_oneshot
           || any { 'sleep.target' eq $_ } @wanted_by;
 
         if (
             $self->extract_service_file_values(
-                $file, 'Unit', 'DefaultDependencies', 1
+                $item, 'Unit', 'DefaultDependencies', 1
             )
         ) {
             my @before
-              = $self->extract_service_file_values($file, 'Unit','Before');
+              = $self->extract_service_file_values($item, 'Unit','Before');
             my @conflicts
-              = $self->extract_service_file_values($file, 'Unit','Conflicts');
+              = $self->extract_service_file_values($item, 'Unit','Conflicts');
 
-            $self->hint('systemd-service-file-shutdown-problems', $file,)
+            $self->hint('systemd-service-file-shutdown-problems', $item)
               if (none { $_ eq 'shutdown.target' } @before)
               && (any { $_ eq 'shutdown.target' } @conflicts);
         }
@@ -404,9 +383,9 @@ sub check_systemd_service_file {
             my $value = $bad_users{$key};
 
             $self->hint('systemd-service-file-uses-nobody-or-nogroup',
-                $file, "$key=$value")
+                $item, "$key=$value")
               if any { $_ eq $value }
-            $self->extract_service_file_values($file, 'Service',$key);
+            $self->extract_service_file_values($item, 'Service',$key);
         }
 
         for my $key (qw(StandardError StandardOutput)) {
@@ -414,9 +393,9 @@ sub check_systemd_service_file {
 
                 $self->hint(
                     'systemd-service-file-uses-deprecated-syslog-facility',
-                    $file, "$key=$value")
+                    $item, "$key=$value")
                   if any { $_ eq $value }
-                $self->extract_service_file_values($file, 'Service',$key);
+                $self->extract_service_file_values($item, 'Service',$key);
             }
         }
     }
@@ -425,14 +404,14 @@ sub check_systemd_service_file {
 }
 
 sub service_file_lines {
-    my ($file) = @_;
+    my ($item) = @_;
 
     my @output;
 
     return @output
-      if $file->is_symlink and $file->link eq '/dev/null';
+      if $item->is_symlink and $item->link eq '/dev/null';
 
-    my @lines = split(/\n/, $file->decoded_utf8);
+    my @lines = split(/\n/, $item->decoded_utf8);
     my $continuation = $EMPTY;
 
     my $position = 1;
@@ -450,7 +429,7 @@ sub service_file_lines {
         $line =~ s/\s+$//;
 
         next
-          if $line eq $EMPTY;
+          unless length $line;
 
         next
           if $line =~ /^[#;\n]/;
@@ -463,29 +442,15 @@ sub service_file_lines {
 
 # Extracts the values of a specific Key from a .service file
 sub extract_service_file_values {
-    my ($self, $file, $extract_section, $extract_key) = @_;
+    my ($self, $item, $extract_section, $extract_key) = @_;
 
-    my @unfiltered = service_file_lines($file);
-
-    my @lines;
-    for my $line (@unfiltered) {
-
-        if ($line =~ /^\.include (.+)$/) {
-
-            my $included = $file->parent_dir->resolve_path($1);
-
-            if (defined $included) {
-                push(@lines, service_file_lines($included));
-                next;
-            }
-        }
-
-        push(@lines, $line);
-    }
+    return ()
+      unless length $extract_section && length $extract_key;
 
     my @values;
     my $section;
 
+    my @lines = service_file_lines($item);
     for my $line (@lines) {
         # section header
         if ($line =~ /^\[([^\]]+)\]$/) {
@@ -502,11 +467,13 @@ sub extract_service_file_values {
         if (   defined($key)
             && $section eq $extract_section
             && $key eq $extract_key) {
-            if ($value eq $EMPTY) {
+
+            if (length $value) {
+                push(@values, shellwords($value));
+
+            } else {
                 # Empty assignment resets the list
                 @values = ();
-            } else {
-                push(@values, shellwords($value));
             }
         }
     }

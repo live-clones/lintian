@@ -1,14 +1,14 @@
 Tag: binary-file-built-without-LFS-support
 Severity: info
-Check: binaries
+Check: binaries/large-file-support
 Experimental: yes
 Explanation: The listed ELF binary appears to be (partially) built without
  "Large File Support" (LFS). If so, it may not be able to handle large
- files or files with large metadata values (ex: inode numbers) correctly.
+ files or files with large metadata values, such as inode numbers, correctly.
  .
  To support large files, code review might be needed to make sure that
  those files are not slurped into memory or mmap(2)ed, and that correct
- 64-bit data types are used (ex: off&lowbar;t instead of ssize&lowbar;t), etc. Once
+ 64-bit data types are used (ex: <code>off&lowbar;t</code> instead of <code>ssize&lowbar;t</code>), etc. Once
  that has been done ensure <code>&lowbar;FILE&lowbar;OFFSET&lowbar;BITS</code> is defined and
  set to 64 before any system headers are included (note that on systems
  were the ABI has LFS enabled by default, setting <code>&lowbar;FILE&lowbar;OFFSET&lowbar;BITS</code>

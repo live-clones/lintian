@@ -52,10 +52,10 @@ sub what_is_python {
 
     # see Bug#973011
     my @WHAT_IS_PYTHON = qw(
-      python-is-python2
-      python-dev-is-python2
-      python-is-python3
-      python-dev-is-python3
+      python-is-python2:any
+      python-dev-is-python2:any
+      python-is-python3:any
+      python-dev-is-python3:any
     );
 
     my %BOGUS_PREREQUISITES;
@@ -64,16 +64,15 @@ sub what_is_python {
 
         for my $unwanted (@WHAT_IS_PYTHON) {
 
-            # do not look for :any here; too narrow
             $BOGUS_PREREQUISITES{$unwanted}
-              = [grep {$self->processable->relation($_)->implies($unwanted)}
+              = [grep {$self->processable->relation($_)->satisfies($unwanted)}
                   @fields];
         }
     }
 
     for my $unwanted (keys %BOGUS_PREREQUISITES) {
 
-        $self->hint('bogus-python-prerequisite', $_, $unwanted)
+        $self->hint('bogus-python-prerequisite', $_, "(satisfies $unwanted)")
           for @{$BOGUS_PREREQUISITES{$unwanted}};
     }
 

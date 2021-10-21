@@ -1,7 +1,8 @@
 Tag: link-to-shared-library-in-wrong-package
 Severity: warning
-Check: shared-libs
-Renamed-From: non-dev-pkg-with-shlib-symlink
+Check: libraries/shared/links
+Renamed-From:
+ non-dev-pkg-with-shlib-symlink
 Explanation: Although this package is not a "-dev" package, it installs a
  "libsomething.so" symbolic link referencing the corresponding shared
  library. When the link doesn't include the version number, it is used by
@@ -14,4 +15,5 @@ Explanation: Although this package is not a "-dev" package, it installs a
  However, if this is a small package which includes the runtime and the
  development libraries, this is not a bug. In the latter case, please
  override this warning.
-See-Also: policy 8.4
+See-Also:
+ policy 8.4

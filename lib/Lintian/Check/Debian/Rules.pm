@@ -178,11 +178,11 @@ sub source {
 
     # no need to look for items we have
     delete %GLOBAL_DEPENDS{$_}
-      for grep { $build_regular->implies($_) } keys %GLOBAL_DEPENDS;
+      for grep { $build_regular->satisfies($_) } keys %GLOBAL_DEPENDS;
     delete %GLOBAL_CLEAN_DEPENDS{$_}
-      for grep { $build_regular->implies($_) } keys %GLOBAL_CLEAN_DEPENDS;
+      for grep { $build_regular->satisfies($_) } keys %GLOBAL_CLEAN_DEPENDS;
     delete %RULE_CLEAN_DEPENDS{$_}
-      for grep { $build_regular->implies($_) } keys %RULE_CLEAN_DEPENDS;
+      for grep { $build_regular->satisfies($_) } keys %RULE_CLEAN_DEPENDS;
 
     my @needed;
     my @needed_clean;
@@ -347,7 +347,7 @@ sub source {
             "(line $position)"
           )
           if $line =~ /(py3versions\s+([\w\-\s]*--supported|-\w*s\w*))/
-          && !$build_all_norestriction->implies($PYTHON3_ALL_DEPEND);
+          && !$build_all_norestriction->satisfies($PYTHON3_ALL_DEPEND);
 
         # General assignment - save the variable
         if ($line =~ /^\s*(?:\S+\s+)*?(\S+)\s*[:\?\+]?=\s*(.*+)?$/s) {
@@ -358,7 +358,7 @@ sub source {
             $self->hint('unnecessary-source-date-epoch-assignment',
                 "(line $position)")
               if $var eq 'SOURCE_DATE_EPOCH'
-              and not $build_all->implies(
+              and not $build_all->satisfies(
                 'dpkg-dev (>= 1.18.8) | debhelper (>= 10.10)');
         }
 
@@ -594,17 +594,21 @@ m{^\t\s*[-@]?(?:(?:/usr)?/bin/)?(?:cp|chmod|echo|ln|mv|mkdir|rm|test|true)}
     $self->hint('debian-rules-contains-unnecessary-get-orig-source-target')
       if any { m/^\s+uscan\b/ } @{$rules_per_target{'get-orig-source'}};
 
-    my @clean_in_indep = grep { $build_indep->implies($_) } uniq @needed_clean;
-    $self->hint('missing-build-depends-for-clean-target-in-debian-rules', $_)
+    my @clean_in_indep
+      = grep { $build_indep->satisfies($_) } uniq @needed_clean;
+    $self->hint('missing-build-depends-for-clean-target-in-debian-rules',
+        "(does not satisfy $_)")
       for @clean_in_indep;
 
     # another check complains when debhelper is missing from d/rules
     my $combined_lc = List::Compare->new(\@needed, ['debhelper']);
 
     my @still_missing
-      = grep { !$build_all_norestriction->implies($_) }$combined_lc->get_Lonly;
+      = grep { !$build_all_norestriction->satisfies($_) }
+      $combined_lc->get_Lonly;
 
-    $self->hint('rules-require-build-prerequisite', $_)for @still_missing;
+    $self->hint('rules-require-build-prerequisite', "(does not satisfy $_)")
+      for @still_missing;
 
     $self->hint('debian-rules-should-not-set-CFLAGS-from-noopt')
       if $contents

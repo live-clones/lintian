@@ -43,7 +43,7 @@ sub source {
 
     my $build_deps = $self->processable->relation('Build-Depends-All');
     return
-      unless $build_deps->implies('dpatch');
+      unless $build_deps->satisfies('dpatch');
 
     my $patch_dir
       = $self->processable->patched->resolve_path('debian/patches/');

@@ -163,7 +163,7 @@ sub source {
     my $bdepends = $processable->relation('Build-Depends-All');
 
     foreach (qw(python2 python3)) {
-        $seen{$_} = 1 if $bdepends_norestriction->implies("dh-sequence-$_");
+        $seen{$_} = 1 if $bdepends_norestriction->satisfies("dh-sequence-$_");
     }
 
     while (my $line = <$rules_fd>) {
@@ -394,7 +394,7 @@ sub source {
     unless ($inclcdbs){
         # Okay - d/rules does not include any file in /usr/share/cdbs/
         $self->hint('unused-build-dependency-on-cdbs')
-          if ($bdepends->implies('cdbs'));
+          if ($bdepends->satisfies('cdbs'));
     }
 
     if (%build_systems) {
@@ -422,11 +422,11 @@ sub source {
         my $strong = $processable->binary_relation($binpkg, 'strong');
         my $all = $processable->binary_relation($binpkg, 'all');
 
-        if (!$all->implies($MISC_DEPENDS)) {
+        if (!$all->satisfies($MISC_DEPENDS)) {
             $self->hint('debhelper-but-no-misc-depends', $binpkg);
         } else {
             $self->hint('weak-dependency-on-misc-depends', $binpkg)
-              unless $strong->implies($MISC_DEPENDS);
+              unless $strong->satisfies($MISC_DEPENDS);
         }
     }
 
@@ -437,9 +437,9 @@ sub source {
 
         $self->hint('package-uses-dh-runit-but-lacks-breaks-substvar', $binpkg)
           if $seen{'runit'}
-          && $strong->implies('runit')
+          && $strong->satisfies('runit')
           && (any { m{^ etc/sv/ }msx } @{$proc->installed->sorted_list})
-          && !$breaks->implies('${runit:Breaks}');
+          && !$breaks->satisfies('${runit:Breaks}');
     }
 
     my $compatnan = 0;
@@ -679,10 +679,10 @@ sub source {
 
     if ($needbuilddepends) {
         $self->hint('package-uses-debhelper-but-lacks-build-depends')
-          unless $bdepends->implies('debhelper')
-          or $bdepends->implies('debhelper-compat');
+          unless $bdepends->satisfies('debhelper')
+          or $bdepends->satisfies('debhelper-compat');
     }
-    if ($needdhexecbuilddepends && !$bdepends->implies('dh-exec')) {
+    if ($needdhexecbuilddepends && !$bdepends->satisfies('dh-exec')) {
         $self->hint('package-uses-dh-exec-but-lacks-build-depends');
     }
 
@@ -699,7 +699,7 @@ sub source {
 
         $self->hint('missing-build-dependency-for-dh_-command',
             "$command => $dep")
-          unless ($bdepends_norestriction->implies($dep));
+          unless ($bdepends_norestriction->satisfies($dep));
     }
 
     for my $dep (keys %missingbdeps_addons) {
@@ -707,24 +707,24 @@ sub source {
         my $addon = $missingbdeps_addons{$dep};
 
         $self->hint('missing-build-dependency-for-dh-addon', "$addon => $dep")
-          unless ($bdepends_norestriction->implies($dep));
+          unless ($bdepends_norestriction->satisfies($dep));
 
         # As a special case, the python3 addon needs a dependency on
         # dh-python unless the -dev packages are used.
         my $pkg = 'dh-python';
         $self->hint('missing-build-dependency-for-dh-addon',"$addon => $pkg")
           if $addon eq 'python3'
-          && $bdepends_norestriction->implies($dep)
-          && !$bdepends_norestriction->implies(
+          && $bdepends_norestriction->satisfies($dep)
+          && !$bdepends_norestriction->satisfies(
             'python3-dev:any | python3-all-dev:any')
-          && !$bdepends_norestriction->implies($pkg);
+          && !$bdepends_norestriction->satisfies($pkg);
     }
 
     $dh_bd_version //= $level;
 
     $self->hint('no-versioned-debhelper-prerequisite', $dh_bd_version)
-      unless $bdepends->implies("debhelper (>= ${dh_bd_version}~)")
-      || $bdepends->implies("debhelper-compat (= ${dh_bd_version})");
+      unless $bdepends->satisfies("debhelper (>= ${dh_bd_version}~)")
+      || $bdepends->satisfies("debhelper-compat (= ${dh_bd_version})");
 
     if ($level >= $USES_AUTORECONF) {
         for my $pkg (qw(dh-autoreconf autotools-dev)) {
@@ -733,7 +733,7 @@ sub source {
               if $pkg eq 'autotools-dev' and $uses_autotools_dev_dh;
 
             $self->hint('useless-autoreconf-build-depends', $pkg)
-              if $bdepends->implies($pkg);
+              if $bdepends->satisfies($pkg);
         }
     }
 
@@ -741,7 +741,7 @@ sub source {
         my %python_depends;
         for my $binpkg (@pkgs) {
             if ($processable->binary_relation($binpkg, 'all')
-                ->implies('${python:Depends}')) {
+                ->satisfies('${python:Depends}')) {
                 $python_depends{$binpkg} = 1;
             }
         }
@@ -754,7 +754,7 @@ sub source {
         my %python3_depends;
         for my $binpkg (@pkgs) {
             if ($processable->binary_relation($binpkg, 'all')
-                ->implies('${python3:Depends}')) {
+                ->satisfies('${python3:Depends}')) {
                 $python3_depends{$binpkg} = 1;
             }
         }
@@ -769,7 +769,7 @@ sub source {
         for my $binpkg (@pkgs) {
             $seen_sphinxdoc = 1
               if $processable->binary_relation($binpkg, 'all')
-              ->implies('${sphinxdoc:Depends}');
+              ->satisfies('${sphinxdoc:Depends}');
         }
         $self->hint('sphinxdoc-but-no-sphinxdoc-depends')
           unless $seen_sphinxdoc;

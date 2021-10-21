@@ -76,17 +76,17 @@ sub source {
     unless ($quilt_format) {
 
         $self->hint('quilt-build-dep-but-no-series-file')
-          if $build_deps->implies('quilt')
+          if $build_deps->satisfies('quilt')
           && (!defined $patch_series || !$patch_series->is_open_ok);
 
         $self->hint('quilt-series-but-no-build-dep')
           if $patch_series
           && $patch_series->is_file
-          && !$build_deps->implies('quilt');
+          && !$build_deps->satisfies('quilt');
     }
 
     return
-      unless $quilt_format || $build_deps->implies('quilt');
+      unless $quilt_format || $build_deps->satisfies('quilt');
 
     if ($patch_series && $patch_series->is_open_ok) {
 

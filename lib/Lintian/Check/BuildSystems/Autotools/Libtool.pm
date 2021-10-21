@@ -50,7 +50,7 @@ has libtool_in_build_depends => (
         my ($self) = @_;
 
         return $self->processable->relation('Build-Depends-All')
-          ->implies($LIBTOOL);
+          ->satisfies($LIBTOOL);
     });
 
 sub visit_patched_files {

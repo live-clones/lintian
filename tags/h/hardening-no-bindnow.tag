@@ -1,6 +1,6 @@
 Tag: hardening-no-bindnow
 Severity: info
-Check: binaries
+Check: binaries/hardening
 Explanation: This package provides an ELF binary that lacks the "bindnow"
  linker flag.
  .

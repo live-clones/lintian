@@ -100,8 +100,8 @@ Parses STRING as the content of a debian/changelog file.
 sub parse {
     my ($self, $contents) = @_;
 
-    $self->_set_errors([]);
-    $self->_set_entries([]);
+    $self->errors([]);
+    $self->entries([]);
 
     my @lines = split(/\n/, $contents);
 
@@ -338,8 +338,8 @@ m/^ \-\- (?<name>.*) <(?<email>.*)>(?<sep>  ?)(?<date>(?:\w+\,\s*)?\d{1,2}\s+\w+
 
 =cut
 
-has errors => (is => 'rwp', default => sub { [] });
-has entries => (is => 'rwp', default => sub { [] });
+has errors => (is => 'rw', default => sub { [] });
+has entries => (is => 'rw', default => sub { [] });
 
 =back
 

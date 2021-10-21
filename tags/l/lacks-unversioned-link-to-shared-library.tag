@@ -1,7 +1,8 @@
 Tag: lacks-unversioned-link-to-shared-library
 Severity: warning
-Check: shared-libs
-Renamed-From: dev-pkg-without-shlib-symlink
+Check: libraries/shared/links
+Renamed-From:
+ dev-pkg-without-shlib-symlink
 Explanation: A "-dev" package is supposed to install a "libsomething.so" symbolic
  link referencing the corresponding shared library. Notice how the link name
  doesn't include the version number -- this is because such a link is used
@@ -17,4 +18,5 @@ Explanation: A "-dev" package is supposed to install a "libsomething.so" symboli
  .
  Implementation detail: This tag is emitted for the library package and not
  the "-dev" package.
-See-Also: policy 8.4
+See-Also:
+ policy 8.4

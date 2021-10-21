@@ -1,6 +1,6 @@
 Tag: hardening-no-fortify-functions
 Severity: info
-Check: binaries
+Check: binaries/hardening
 Explanation: This package provides an ELF binary that lacks the use of fortified
  libc functions. Either there are no potentially unfortified functions
  called by any routines, all unfortified calls have already been fully

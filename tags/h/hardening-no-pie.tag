@@ -1,6 +1,6 @@
 Tag: hardening-no-pie
 Severity: warning
-Check: binaries
+Check: binaries/hardening
 Explanation: This package provides an ELF executable that was not compiled
  as a position independent executable (PIE).
  .
