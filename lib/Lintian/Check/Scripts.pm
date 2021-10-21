@@ -328,7 +328,7 @@ sub visit_installed_files {
     # the path and we want to warn about that.
     return
       if ( $item->name =~ /\.pm\z/
-        && (!item->is_file || !$item->is_executable)
+        && (!$item->is_file || !$item->is_executable)
         && !$is_absolute
         && $item->name =~ m{^usr/share/doc/[^/]+/examples/});
 
