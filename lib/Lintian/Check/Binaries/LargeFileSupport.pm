@@ -62,7 +62,7 @@ sub visit_installed_files {
     # The LFS check only works reliably for ELF files due to the
     # architecture regex.
     return
-      unless $item->file_info =~ /^ [^,]* \b ELF \b /;
+      unless $item->is_elf;
 
     # Only 32bit ELF binaries can lack LFS.
     return
