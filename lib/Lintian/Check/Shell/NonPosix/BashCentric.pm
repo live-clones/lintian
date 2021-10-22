@@ -145,7 +145,7 @@ sub visit_installed_files {
     return
       unless $basename eq 'sh';
 
-    $self->check_bash_centric($item);
+    $self->check_bash_centric($item, 'bash-term-in-posix-shell', $item->name);
 
     return;
 }
@@ -161,13 +161,14 @@ sub visit_control_files {
     return
       unless $basename eq 'sh';
 
-    $self->check_bash_centric($item);
+    $self->check_bash_centric($item, 'possible-bashism-in-maintainer-script',
+        "control/$item");
 
     return;
 }
 
 sub check_bash_centric {
-    my ($self, $item) = @_;
+    my ($self, $item, $tag_name, $label) = @_;
 
     return
       unless $item->is_open_ok;
@@ -209,18 +210,21 @@ sub check_bash_centric {
         # trim both ends
         $match =~ s/^\s+|\s+$//g;
 
+        next
+          unless length $match;
+
+        my $printable = "'$match'";
+        $printable = '{hex:' . sprintf('%vX', $match) . '}'
+          if $match =~ /\P{XPosixPrint}/;
+
         my $pointer
           = $LEFT_SQUARE_BRACKET
-          . 'control'
-          . $SLASH
-          . $item->name
+          . $label
           . $COLON
           . $position
           . $RIGHT_SQUARE_BRACKET;
 
-        $self->hint('possible-bashism-in-maintainer-script',
-            "'$match'", $pointer)
-          if length $match;
+        $self->hint($tag_name, $pointer, $printable);
 
     } continue {
         ++$position;

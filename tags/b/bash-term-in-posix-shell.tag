@@ -1,5 +1,5 @@
-Tag: possible-bashism-in-maintainer-script
-Severity: warning
+Tag: bash-term-in-posix-shell
+Severity: info
 Check: shell/non-posix/bash-centric
 Explanation: This script is marked as running under <code>/bin/sh</code>, but it seems
  to use a feature found in bash but not in the SUSv3 or POSIX shell
@@ -15,5 +15,3 @@ Explanation: This script is marked as running under <code>/bin/sh</code>, but it
      <code>{foo,bar}</code> instead of <code>foo bar</code>
      <code>[[ test ]]</code> instead of <code>[ test ]</code> (requires a Korn shell)
      <code>type</code> instead of <code>which</code> or <code>command -v</code>
-See-Also:
- policy 10.4
