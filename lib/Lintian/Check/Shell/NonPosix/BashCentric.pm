@@ -30,6 +30,7 @@ use utf8;
 
 use Const::Fast;
 use File::Basename;
+use List::SomeUtils qw(uniq);
 use Unicode::UTF8 qw(encode_utf8);
 
 use Moo;
@@ -205,18 +206,6 @@ sub check_bash_centric {
         my $line = $stashed . $no_comment;
         $stashed = $EMPTY;
 
-        my $match = $self->check_line($line);
-
-        # trim both ends
-        $match =~ s/^\s+|\s+$//g;
-
-        next
-          unless length $match;
-
-        my $printable = "'$match'";
-        $printable = '{hex:' . sprintf('%vX', $match) . '}'
-          if $match =~ /\P{XPosixPrint}/;
-
         my $pointer
           = $LEFT_SQUARE_BRACKET
           . $label
@@ -224,7 +213,16 @@ sub check_bash_centric {
           . $position
           . $RIGHT_SQUARE_BRACKET;
 
-        $self->hint($tag_name, $pointer, $printable);
+        my @matches = uniq +$self->check_line($line);
+
+        for my $match (@matches) {
+
+            my $printable = "'$match'";
+            $printable = '{hex:' . sprintf('%vX', $match) . '}'
+              if $match =~ /\P{XPosixPrint}/;
+
+            $self->hint($tag_name, $pointer, $printable);
+        }
 
     } continue {
         ++$position;
@@ -238,6 +236,8 @@ sub check_bash_centric {
 sub check_line {
     my ($self, $line) = @_;
 
+    my @matches;
+
     # since this test is ugly, I have to do it by itself
     # detect source (.) trying to pass args to the command it runs
     # The first expression weeds out '. "foo bar"'
@@ -250,8 +250,9 @@ sub check_line {
 
         my ($dot_command, $extra) = ($1, $2);
 
-        return $dot_command
-          unless $extra =~ /^([\&\|<]|\d?>)/;
+        push(@matches, $dot_command)
+          if length $dot_command
+          && $extra !~ m{^ & | [|] | < | \d? > }x;
     }
 
     my $modified = $line;
@@ -262,7 +263,8 @@ sub check_line {
             # on unmodified line
             my ($match) = ($line =~ /($regex)/);
 
-            return $match;
+            push(@matches, $match)
+              if length $match;
         }
     }
 
@@ -285,7 +287,10 @@ sub check_line {
             # on unmodified line
             my ($match) = ($line =~ /($regex)/);
 
-            return $match;
+            $match //= $EMPTY;
+
+            push(@matches, $match)
+              if length $match;
         }
     }
 
@@ -297,11 +302,19 @@ sub check_line {
             # on unmodified line
             my ($match) = ($line =~ /($regex)/);
 
-            return $match;
+            $match //= $EMPTY;
+
+            push(@matches, $match)
+              if length $match;
         }
     }
 
-    return $EMPTY;
+    # trim both ends of each element
+    s/^\s+|\s+$//g for @matches;
+
+    my @meaningful = grep { length } @matches;
+
+    return @meaningful;
 }
 
 sub remove_comments {
