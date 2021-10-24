@@ -155,6 +155,7 @@ Enable-Tags-From-Check:
  files/empty-directories
  files/empty-package
  files/encoding
+ files/generated
  files/hard-links
  files/hierarchy/links
  files/hierarchy/merged-usr
