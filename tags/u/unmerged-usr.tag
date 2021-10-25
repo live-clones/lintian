@@ -2,7 +2,7 @@ Tag: unmerged-usr
 Severity: classification
 Check: files/hierarchy/merged-usr
 Explanation: The named file is being installed in a legacy location.
- Many competiting distributions install this file under <code>/usr</code>.
+ Many competing distributions install this file under <code>/usr</code>.
  Debian would like to do the same, but the best way to get there is
  presently unclear.
  .
