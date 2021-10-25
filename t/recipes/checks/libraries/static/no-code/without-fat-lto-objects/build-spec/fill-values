@@ -1,0 +1,4 @@
+Testname: without-fat-lto-objects
+Package-Architecture: any
+Skeleton: upload-non-native
+Description: Static library built with -flto=auto, but without -ffat-lto-objects

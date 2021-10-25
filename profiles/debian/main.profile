@@ -268,6 +268,7 @@ Enable-Tags-From-Check:
  libraries/shared/trigger/ldconfig
  libraries/static
  libraries/static/name
+ libraries/static/no-code
  linda
  lintian
  mailcap
