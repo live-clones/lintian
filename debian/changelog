@@ -1,3 +1,9 @@
+lintian (2.110.0~bpo11+1) bullseye-backports; urgency=medium
+
+  * Rebuild for bullseye-backports.
+
+ -- Chris Lamb <lamby@debian.org>  Tue, 26 Oct 2021 08:55:54 +0100
+
 lintian (2.110.0) unstable; urgency=medium
 
   * Summary of tag changes:
