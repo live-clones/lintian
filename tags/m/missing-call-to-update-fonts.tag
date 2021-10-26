@@ -1,10 +1,11 @@
 Tag: missing-call-to-update-fonts
 Severity: warning
-Check: scripts
-Explanation: The maintainer script ships the specified X11 font but does not
- appear to call update-fonts-scale or update-fonts-dir in its postinst
- script.
+Check: desktop/x11/font/update
+Explanation: The named maintainer script ships the specified X11 font but does
+ not appear to call <code>update-fonts-scale</code> or <code>update-fonts-dir</code>
+ in its <code>postinst</code> script.
  .
- If you are using dh&lowbar;installxfonts, add a dependency on ${misc:Depends}
- and dh&lowbar;installxfonts will take care of this for you.
-See-Also: https://lists.debian.org/msgid-search/CAJqvfD-A1EPXxF_mS=_BaQ0FtqygVwRUf+23WqSqrkSmYgVAtA@mail.gmail.com
+ If you are using <code>dh&lowbar;installxfonts</code>, add <code>${misc:Depends}</code>
+ as a prerequisite and <code>dh&lowbar;installxfonts</code> will take care of it for you.
+See-Also:
+ https://lists.debian.org/msgid-search/CAJqvfD-A1EPXxF_mS=_BaQ0FtqygVwRUf+23WqSqrkSmYgVAtA@mail.gmail.com

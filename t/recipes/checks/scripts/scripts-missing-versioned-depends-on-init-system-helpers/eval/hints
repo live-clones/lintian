@@ -1,2 +1,2 @@
-scripts-missing-versioned-depends-on-init-system-helpers-without (binary): maintainer-script-interpreter control/postinst /bin/sh
-scripts-missing-versioned-depends-on-init-system-helpers-with (binary): maintainer-script-interpreter control/postinst /bin/sh
+scripts-missing-versioned-depends-on-init-system-helpers-without (binary): maintainer-script-interpreter /bin/sh [control/postinst]
+scripts-missing-versioned-depends-on-init-system-helpers-with (binary): maintainer-script-interpreter /bin/sh [control/postinst]

@@ -861,7 +861,7 @@ div.clear {
 
       <span class="tinycode" id="code-P">P</span>
       <span class="tinyhint"><a href="https://lintian.debian.org/tags/example-unusual-interpreter">example-unusual-interpreter</a></span>
-      <span class="tinycontext">usr/share/doc/html-output/examples/example /usr/bin/foo</span>
+      <span class="tinycontext">/usr/bin/foo [usr/share/doc/html-output/examples/example]</span>
 
     </li>
 

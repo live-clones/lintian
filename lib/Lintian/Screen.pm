@@ -46,7 +46,7 @@ A class for masking Lintian tags after they are issued
 
 =item name
 
-=item petitioners
+=item advocates
 
 =item reason
 
@@ -55,7 +55,7 @@ A class for masking Lintian tags after they are issued
 =cut
 
 has name => (is => 'rw', default => sub { {} });
-has petitioners => (is => 'rw', default => sub { {} });
+has advocates => (is => 'rw', default => sub { {} });
 has reason => (is => 'rw', default => sub { {} });
 has see_also => (is => 'rw', default => sub { {} });
 

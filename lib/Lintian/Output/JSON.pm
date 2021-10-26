@@ -201,8 +201,8 @@ sub describe_tags {
 
             $screen_dictionary{name} = $screen->name;
 
-            my @petitioner_emails = map { $_->format } @{$screen->petitioners};
-            $screen_dictionary{petitioners} = \@petitioner_emails;
+            my @advocate_emails = map { $_->format } @{$screen->advocates};
+            $screen_dictionary{advocates} = \@advocate_emails;
 
             $screen_dictionary{reason} = $screen->reason;
 

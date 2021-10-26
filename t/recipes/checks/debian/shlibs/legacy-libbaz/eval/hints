@@ -1,8 +1,8 @@
 libbaz2 (binary): no-symbols-control-file usr/lib/libbaz2.so.1.0.3b
 libbaz1 (binary): symbols-for-undeclared-shared-library libbaz 2
-libbaz1 (binary): symbols-file-missing-build-depends-package-field
-libbaz1 (binary): symbols-file-contains-debian-revision on symbol foo
-libbaz1 (binary): symbols-file-contains-current-version-with-debian-revision on symbol pw
+libbaz1 (binary): symbols-file-missing-build-depends-package-field libbaz.so.2
+libbaz1 (binary): symbols-file-contains-debian-revision on symbol foo (libbaz.so.2)
+libbaz1 (binary): symbols-file-contains-current-version-with-debian-revision on symbol pw (libbaz.so.2)
 libbaz1 (binary): surplus-shared-library-symbols libbaz 2
 libbaz1 (binary): ships-undeclared-shared-library libbaz2 1.0 for usr/lib/libfoo2.so.1.0.3b
 libbaz1 (binary): shared-library-symbols-not-tracked libbaz3 1 for usr/lib/libbaz3.so.1.0.3b

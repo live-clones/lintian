@@ -1,0 +1,4 @@
+Testname: regular-shipped
+Skeleton: upload-non-native
+Description: Check bashism detection
+Extra-Build-Depends: dash (>= 0.5.10.2)

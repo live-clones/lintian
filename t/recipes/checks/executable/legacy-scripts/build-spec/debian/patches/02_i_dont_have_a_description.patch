@@ -1,0 +1,7 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 02_i_dont_have_a_description.patch.dpatch by Marc 'HE' Brockschmidt <Marc 'HE' Brockschmidt <he@debian.org>>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: No description.
+
+@DPATCH@

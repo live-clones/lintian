@@ -519,9 +519,11 @@ sub full_text_check {
       unless length $contents;
 
     my ($maximum, $position) = $self->maximum_line_length($contents);
+
     $self->hint('very-long-line-length-in-source-file',$item->name,
         "line $position is $maximum characters long (>$VERY_LONG_LINE_LENGTH)")
-      if $maximum > $VERY_LONG_LINE_LENGTH;
+      if $maximum > $VERY_LONG_LINE_LENGTH
+      && $item->file_info !~ m{SVG Scalable Vector Graphics image};
 
     my $lowercase = lc($contents);
     my $clean = clean_text($lowercase);

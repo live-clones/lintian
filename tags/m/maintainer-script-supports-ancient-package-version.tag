@@ -1,9 +1,8 @@
 Tag: maintainer-script-supports-ancient-package-version
 Severity: info
-Check: scripts
+Check: maintainer-scripts/ancient-version
 Experimental: yes
-Explanation: The maintainer script appears to detect the specified version
- which was prepared prior to the release of oldstable.
+Explanation: The named maintainer script appears to look for a package version
+ that is older than the current <code>oldstable</code> release.
  .
- Please remove the code/check for this version as such upgrades
- (etc.) are unsupported.
+ Please remove the check for that version. Such upgrades are not supported.

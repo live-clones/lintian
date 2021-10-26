@@ -1,0 +1,1 @@
+scripts-uses-perl4-libs-without-dep (binary): script-uses-perl4-libs-without-dep newgetopt.pl [usr/bin/naughty-script:20] (does not satisfy libperl4-corelibs-perl | perl (<< 5.12.3-7))

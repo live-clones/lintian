@@ -93,12 +93,12 @@ sub visit_installed_files {
 
         my $library_data = $self->EMBEDDED_LIBRARIES->value($embedded_name);
 
-        return
+        next
           if length $library_data->{'source-regex'}
           && $self->processable->source_name=~ $library_data->{'source-regex'};
 
-        return
-          if length $library_data->{'source-regex'}
+        next
+          if length $library_data->{source}
           && $self->processable->source_name eq $library_data->{source};
 
         $self->hint('embedded-library', $library_data->{libname},$item->name)

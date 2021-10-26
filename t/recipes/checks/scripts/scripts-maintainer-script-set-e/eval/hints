@@ -1,2 +1,2 @@
-scripts-maintainer-script-set-e (binary): maintainer-script-without-set-e postinst
-scripts-maintainer-script-set-e (binary): maintainer-script-interpreter control/postinst /bin/sh
+scripts-maintainer-script-set-e (binary): maintainer-script-without-set-e control/postinst
+scripts-maintainer-script-set-e (binary): maintainer-script-interpreter /bin/sh [control/postinst]

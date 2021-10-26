@@ -34,14 +34,37 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-# "Known good" files that match eg. lena.jpg.
+# known bad files
+has LENNA_BLACKLIST => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        return $self->profile->load_data(
+            'files/banned/lenna/blacklist',
+            qr/ \s* ~~ \s* /x,
+            sub {
+                my ($sha1, $sha256, $name, $link)
+                  = split(/ \s* ~~ \s* /msx, $_[1]);
+
+                return {
+                    'sha1'   => $sha1,
+                    'sha256' => $sha256,
+                    'name'   => $name,
+                    'link'   => $link,
+                };
+            });
+    });
+
+# known good files
 has LENNA_WHITELIST => (
     is => 'rw',
     lazy => 1,
     default => sub {
         my ($self) = @_;
 
-        return $self->profile->load_data('cruft/lenna-whitelist');
+        return $self->profile->load_data('files/banned/lenna/whitelist');
     });
 
 sub visit_patched_files {
@@ -57,10 +80,13 @@ sub visit_patched_files {
       || $item->file_info =~ /^PDF Document\b/i
       || $item->file_info =~ /^Postscript Document\b/i;
 
+    return
+      if $self->LENNA_WHITELIST->recognizes($item->md5sum);
+
     # Lena Söderberg image
     $self->hint('license-problem-non-free-img-lenna', $item->name)
       if $item->basename =~ / ( \b | _ ) lenn?a ( \b | _ ) /ix
-      && !$self->LENNA_WHITELIST->recognizes($item->md5sum);
+      || $self->LENNA_BLACKLIST->recognizes($item->md5sum);
 
     return;
 }

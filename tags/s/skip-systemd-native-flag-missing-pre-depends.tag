@@ -1,15 +1,16 @@
 Tag: skip-systemd-native-flag-missing-pre-depends
 Severity: warning
-Check: scripts
-See-Also: invoke-rc.d(8), deb-systemd-invoke(1p)
-Explanation: This package uses the <code>--skip-systemd-native</code>
- <code>invoke-rc.d</code> flag in the specified maintainer script but does
- not specify a <code>Pre-Depends</code> dependency on a recent version of
- <code>init-system-helpers</code>.
+Check: systemd/native/prerequisites
+Explanation: The named maintainer script uses the <code>--skip-systemd-native</code>
+ flag to <code>invoke-rc.d</code> but does not declare a <code>Pre-Depends</code>
+ prerequisite on a recent version of <code>init-system-helpers</code>.
  .
- This flag is useful for maintainer scripts that want to defer systemd
- actions to <code>deb-systemd-invoke(1p)</code>. However, it was only added
+ When set, the flag helps to defer <code>systemd</code> actions until
+ <code>deb-systemd-invoke(1p)</code> is called, but the functionality was added only
  in <code>init-system-helpers</code> version 1.52.
  .
  Please add <code>Pre-Depends: ${misc:Pre-Depends}</code> to your
  <code>debian/control</code> file.
+See-Also:
+ invoke-rc.d(8),
+ deb-systemd-invoke(1p)

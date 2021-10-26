@@ -408,9 +408,7 @@ sub describe_tag {
                 'Screen: ' . $screen->name . $NEWLINE);
 
             $wrapped .= wrap($SCREEN_PREFIX, $SCREEN_PREFIX,
-                    'Petitioners: '
-                  . join(', ', @{$screen->petitioners})
-                  . $NEWLINE);
+                'Advocates: '. join(', ', @{$screen->advocates}). $NEWLINE);
 
             my $combined = $screen->reason . $NEWLINE;
             if (@{$screen->see_also}) {

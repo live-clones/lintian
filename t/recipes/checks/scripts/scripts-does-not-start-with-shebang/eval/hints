@@ -1,5 +1,3 @@
 scripts-does-not-start-with-shebang (binary): script-without-interpreter control/postrm
-scripts-does-not-start-with-shebang (binary): maintainer-script-interpreter control/preinst ELF
-scripts-does-not-start-with-shebang (binary): maintainer-script-interpreter control/postrm
-scripts-does-not-start-with-shebang (binary): maintainer-script-interpreter control/postinst /bin/sh
+scripts-does-not-start-with-shebang (binary): maintainer-script-interpreter /bin/sh [control/postinst]
 scripts-does-not-start-with-shebang (binary): elf-maintainer-script control/preinst

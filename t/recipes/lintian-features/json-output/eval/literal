@@ -121,7 +121,7 @@
                      "visibility" : "info"
                   },
                   {
-                     "context" : "usr/share/doc/json-output/examples/example /usr/bin/foo",
+                     "context" : "/usr/bin/foo [usr/share/doc/json-output/examples/example]",
                      "tag" : "example-unusual-interpreter",
                      "visibility" : "pedantic"
                   }

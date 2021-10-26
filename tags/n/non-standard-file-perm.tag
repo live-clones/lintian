@@ -6,7 +6,7 @@ Explanation: The file has a mode different from 0644. In some cases this is
 See-Also: policy 10.9
 
 Screen: toolchain/gnat/ali-read-only
-Petitioners: Nicolas Boulenguez <nicolas@debian.org>
+Advocates: Nicolas Boulenguez <nicolas@debian.org>
 Reason: In GNAT, the compiler also deals with dependencies and rebuild order.
  The <code>.ali</code> files contain the dependency information required to detect
  if a <code>.o</code> is more recent than the closure of all sources it depends

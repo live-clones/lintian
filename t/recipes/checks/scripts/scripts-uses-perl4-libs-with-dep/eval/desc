@@ -1,3 +1,0 @@
-Testname: scripts-uses-perl4-libs-with-dep
-Test-Against: script-uses-perl4-libs-without-dep
-Check: scripts

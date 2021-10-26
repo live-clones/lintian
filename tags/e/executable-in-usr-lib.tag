@@ -14,7 +14,7 @@ See-Also: policy 9.1.1,
  Bug#954149
 
 Screen: emacs/elpa/scripts
-Petitioners: David Bremner <bremner@debian.org>
+Advocates: David Bremner <bremner@debian.org>
 Reason: The <code>emacsen-common</code> package places installation
  and removal scripts, which for ELPA packages are executable,
  in the folder <code>/usr/lib/emacsen-common/packages</code>.

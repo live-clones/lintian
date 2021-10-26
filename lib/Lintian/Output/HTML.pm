@@ -238,7 +238,7 @@ sub markdown_description {
 
         my $screen_description = 'Screen: ' . $screen->name . $NEWLINE;
         $screen_description
-          .= 'Petitioners: ' . join(', ', @{$screen->petitioners}) . $NEWLINE;
+          .= 'Advocates: ' . join(', ', @{$screen->advocates}) . $NEWLINE;
         $screen_description .= 'Reason: ' . $screen->reason . $NEWLINE;
 
         $screen_description .= 'See-Also: ' . $NEWLINE;

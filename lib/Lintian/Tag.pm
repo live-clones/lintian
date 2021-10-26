@@ -220,9 +220,8 @@ sub load {
 
         $screen->name($screen_name);
 
-        my @petitioners
-          = Email::Address::XS->parse($section->value('Petitioners'));
-        $screen->petitioners(\@petitioners);
+        my @advocates= Email::Address::XS->parse($section->value('Advocates'));
+        $screen->advocates(\@advocates);
 
         $screen->reason($section->text('Reason'));
 

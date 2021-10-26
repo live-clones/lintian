@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: scripts-maintainer-general
+Distribution: precise
+Description: Check general problems in maintainer scripts

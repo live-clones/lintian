@@ -1,12 +1,13 @@
 Tag: maintainer-script-empty
 Severity: warning
-Check: scripts
-Explanation: The maintainer script doesn't seem to contain any code other than
- comments and boilerplate (set -e, exit statements, and the case statement
- to parse options). While this is harmless in most cases, it is probably
- not what you wanted, may mean the package will leave unnecessary files
- behind until purged, and may even lead to problems in rare situations
- where dpkg would fail if no maintainer script was present.
+Check: maintainer-scripts/empty
+Explanation: The named maintainer script does not appear to contain code
+ other than comments or boilerplate such as <code>set -e</code>,
+ <code>exit</code> statements, or a <code>case</code> statement
+ to parse options.
  .
- If the package currently doesn't need to do anything in this maintainer
- script, it shouldn't be included in the package.
+ While harmless in most cases, it is not needed. The package may also leave
+ files behind until purged, and can contribute to rare problems when
+ <code>dpkg</code> fails because no maintainer scripts are present.
+ .
+ Please do not ship the maintainer script unless it does something useful.

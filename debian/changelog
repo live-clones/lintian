@@ -1,3 +1,24 @@
+lintian (2.110.0) unstable; urgency=medium
+
+  * Summary of tag changes:
+    + Added:
+      - bash-term-in-posix-shell
+
+  [ Felix Lechner ]
+  * Consider source exemptions for embedded-libraries when no regex is
+    present. (Closes: #996684)
+  * Accept nodejs:any as a prerequisite for Node.js scripts.
+    (Closes: #996710)
+  * Fix parsing of debian/symbols files for those with multiple sonames.
+    (Closes: #996688)
+  * Move the filename-length check to archive/file/name/length.
+  * Update release epoch for oldstable in a maintainer scripts check.
+  * Drop mention of 'tempfile' from tag descriptions. (Re: #994275)
+  * Issue only Lenna-specific tag for known bad Lenna files. (Re: #996093)
+  * Disregard long text lines in SVG images.
+
+ -- Chris Lamb <lamby@debian.org>  Sat, 23 Oct 2021 14:18:51 +0000
+
 lintian (2.109.0~bpo11+1) bullseye-backports; urgency=medium
 
   * Rebuild for bullseye-backports.
