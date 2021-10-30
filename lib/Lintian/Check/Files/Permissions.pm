@@ -97,7 +97,7 @@ sub visit_installed_files {
         if (
                $file->is_executable
             && $file->identity eq 'root/games'
-            && (   !$file->is_setuid
+            && (   !$file->is_setgid
                 || !$file->all_bits_set($STANDARD_EXECUTABLE))
         ) {
 
@@ -106,7 +106,7 @@ sub visit_installed_files {
                 $file->name,
                 $file->octal_permissions,
                 $NOT_EQUAL,
-                sprintf('%04o', $SET_USER_ID & $STANDARD_EXECUTABLE));
+                sprintf('%04o', $SET_GROUP_ID | $STANDARD_EXECUTABLE));
 
             return;
         }
