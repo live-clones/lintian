@@ -1,4 +1,3 @@
-control-file-general (source): xs-vcs-field-in-debian-control XS-Vcs-Svn [line 14]
 control-file-general (source): stronger-dependency-implies-weaker control-file-general Recommends -> Suggests match${lintian:Match}
 control-file-general (source): stronger-dependency-implies-weaker control-file-general Recommends -> Suggests bar | baz
 control-file-general (source): stronger-dependency-implies-weaker control-file-general Depends -> Suggests bar | baz
@@ -10,11 +9,12 @@ control-file-general (source): obsolete-relation-form-in-source libsqlite3-0 (< 
 control-file-general (source): missing-separator-between-items between '${shlibs:Depends}' and '${some:Depends}' (Depends for control-file-general)
 control-file-general (source): duplicate-short-description control-file-general control-file-general-1
 control-file-general (source): duplicate-long-description control-file-general control-file-general-1 control-file-general-2 control-file-general-3 control-file-general-4 control-file-general-5 control-file-general-dbg control-file-general-dbgsym
-control-file-general (source): debian-control-repeats-field-name-in-value [line 91]
-control-file-general (source): debian-control-repeats-field-name-in-value [line 81]
-control-file-general (source): debian-control-repeats-field-name-in-value [line 101]
+control-file-general (source): debian-control-repeats-field-name-in-value Description (in section for control-file-general-dbgsym) [line 91]
+control-file-general (source): debian-control-repeats-field-name-in-value Description (in section for control-file-general-dbg) [line 101]
+control-file-general (source): debian-control-repeats-field-name-in-value Description (in section for control-file-general-5) [line 81]
 control-file-general (source): debian-control-has-obsolete-dbg-package control-file-general-dbg
 control-file-general (source): debian-control-has-dbgsym-package control-file-general-dbgsym
 control-file-general (source): control-file-contains-dh_make-vcs-comment
 control-file-general (source): build-info-in-binary-control-file-section Build-Conflicts (in section for control-file-general)
 control-file-general (source): binary-control-field-duplicates-source Maintainer (in section for control-file-general)
+control-file-general (source): adopted-extended-field XS-Vcs-Svn (in section for source) [line 14]

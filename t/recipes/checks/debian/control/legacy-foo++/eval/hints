@@ -1,3 +1,4 @@
 foo++ (source): silent-on-rules-requiring-root
 foo++ (source): duplicate-short-description foo++ foo++-helper
 foo++ (source): build-info-in-binary-control-file-section Build-Depends (in section for foo++)
+foo++ (source): adopted-extended-field XS-Dm-Upload-Allowed (in section for source) [line 9]

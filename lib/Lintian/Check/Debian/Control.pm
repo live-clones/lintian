@@ -31,7 +31,6 @@ use List::SomeUtils qw(any none first_value);
 use Path::Tiny;
 use Unicode::UTF8 qw(encode_utf8);
 
-use Lintian::Deb822::Parser qw(parse_dpkg_control_string);
 use Lintian::Relation;
 
 use Moo;
@@ -43,6 +42,8 @@ const my $EMPTY => q{};
 const my $COLON => q{:};
 const my $LEFT_PARENTHESIS => q{(};
 const my $RIGHT_PARENTHESIS => q{)};
+const my $LEFT_SQUARE_BRACKET => q{[};
+const my $RIGHT_SQUARE_BRACKET => q{]};
 
 const my $ARROW => q{->};
 
@@ -53,9 +54,6 @@ my $LIBCS = Lintian::Relation->new->load(join(' | ', @LIBCS));
 
 sub source {
     my ($self) = @_;
-
-    my $control = $self->processable->debian_control;
-    my $source_fields = $control->source_fields;
 
     my $debian_dir = $self->processable->patched->resolve_path('debian/');
     return
@@ -71,14 +69,10 @@ sub source {
     return
       unless $file->is_open_ok;
 
-    # another check complains about invalid encoding
     return
       unless $file->is_valid_utf8;
 
-    my $KNOWN_SOURCE_FIELDS= $self->profile->load_data('common/source-fields');
-
-    my $contents = $file->decoded_utf8;
-    my @lines = split(/\n/, $contents);
+    my @lines = split(/\n/, $file->decoded_utf8);
 
     # Nag about dh_make Vcs comment only once
     my $seen_vcs_comment = 0;
@@ -89,17 +83,10 @@ sub source {
 
         $line =~ s{\s*$}{};
 
-        if (
-            $line =~ m{\A \# \s* Vcs-(?:Git|Browser): \s*
+        ++$seen_vcs_comment
+          if $line =~ m{\A \# \s* Vcs-(?:Git|Browser): \s*
                   (?:git|http)://git\.debian\.org/
-                  (?:\?p=)?collab-maint/<pkg>\.git}smx
-        ) {
-            # Emit it only once per package
-            $self->hint('control-file-contains-dh_make-vcs-comment')
-              unless $seen_vcs_comment++;
-
-            next;
-        }
+                  (?:\?p=)?collab-maint/<pkg>\.git}smx;
 
         next
           if $line =~ m{^#};
@@ -111,64 +98,132 @@ sub source {
 
             my $pointer = "[line $position]";
 
-            if ($field =~ /^XS-Vcs-/) {
-
-                my $base = $field;
-                $base =~ s/^XS-//;
-
-                $self->hint('xs-vcs-field-in-debian-control', $field, $pointer)
-                  if $KNOWN_SOURCE_FIELDS->recognizes($base);
-            }
-
-            $self->hint('xs-testsuite-field-in-debian-control',
-                $field, $pointer)
-              if $field eq 'XS-Testsuite';
-
-            $self->hint('xc-package-type-in-debian-control', $pointer)
-              if $field eq 'XC-Package-Type';
-
             $self->hint('debian-control-has-unusual-field-spacing',$pointer)
               unless $line =~ m{^ \S+ : [ ] \S }x
               || $line =~ m{^ \S+ : $}x;
-
-            # something like "Maintainer: Maintainer: bad field"
-            $self->hint('debian-control-repeats-field-name-in-value',$pointer)
-              if $line =~ m{^\Q$field\E: \s* \Q$field\E \s* :}xsmi;
-
-            $self->hint('spelling-error-in-rules-requires-root',
-                $field, $pointer)
-              if $field ne 'Rules-Requires-Root'
-              && $field =~ m{^ Rules? - Requires? - Roots? $}xi;
         }
 
     } continue {
         ++$position;
     }
 
-    eval {
-        # check we can parse it, but ignore the result - we will fetch
-        # the fields we need from $self->processable.
-        parse_dpkg_control_string($contents);
-    };
-    if ($@) {
+    # once per source
+    $self->hint('control-file-contains-dh_make-vcs-comment')
+      if $seen_vcs_comment;
 
-        chomp $@;
+    my $control = $self->processable->debian_control;
+    my $source_fields = $control->source_fields;
 
-        $@ =~ s/^internal error: //;
-        $@ =~ s/^syntax error in //;
+    my $KNOWN_SOURCE_FIELDS= $self->profile->load_data('common/source-fields');
+    my $KNOWN_BINARY_FIELDS= $self->profile->load_data('fields/binary-fields');
 
-        die encode_utf8("syntax error in debian/control: $@");
+    for my $field ($source_fields->names) {
+
+        my ($marker, $bare) = split(qr{-}, $field, 2);
+
+        next
+          unless length $marker
+          && length $bare;
+
+        # case-insensitive match
+        $self->hint('adopted-extended-field',$field,'(in section for source)',
+                $LEFT_SQUARE_BRACKET . 'line '
+              . $source_fields->position($field)
+              . $RIGHT_SQUARE_BRACKET)
+          if $marker =~ m{^ X }ix
+          && $KNOWN_SOURCE_FIELDS->resembles($bare);
     }
 
-    my @empty_fields
-      = grep { !length $source_fields->value($_) }$source_fields->names;
+    for my $installable ($control->installables) {
+        my $installable_fields = $control->installable_fields($installable);
 
-    $self->hint('debian-control-has-empty-field',$_, '(in source paragraph)')
-      for @empty_fields;
+        for my $field ($installable_fields->names) {
 
-    my @package_names = $control->installables;
+            my ($marker, $bare) = split(qr{-}, $field, 2);
 
-    for my $installable (@package_names) {
+            next
+              unless length $marker
+              && length $bare;
+
+            # case-insensitive match
+            $self->hint(
+                'adopted-extended-field',
+                $field,
+                "(in section for $installable)",
+                $LEFT_SQUARE_BRACKET . 'line '
+                  . $installable_fields->position($field)
+                  . $RIGHT_SQUARE_BRACKET
+              )
+              if $marker =~ m{^ X }ix
+              && $KNOWN_BINARY_FIELDS->resembles($bare);
+        }
+    }
+
+    # something like "Maintainer: Maintainer: bad field"
+    my @doubled_up_source_fields
+      = grep { $source_fields->value($_) =~ m{^ \Q$_\E \s* : }ix }
+      $source_fields->names;
+
+    $self->hint(
+        'debian-control-repeats-field-name-in-value',
+        $_,
+        '(in section for source)',
+        $LEFT_SQUARE_BRACKET . 'line '
+          . $source_fields->position($_)
+          . $RIGHT_SQUARE_BRACKET
+    )for @doubled_up_source_fields;
+
+    for my $installable ($control->installables) {
+        my $installable_fields = $control->installable_fields($installable);
+
+        # something like "Maintainer: Maintainer: bad field"
+        my @doubled_up_installable_fields
+          = grep { $installable_fields->value($_) =~ m{^ \Q$_\E \s* : }ix }
+          $installable_fields->names;
+
+        $self->hint(
+            'debian-control-repeats-field-name-in-value',
+            $_,
+            "(in section for $installable)",
+            $LEFT_SQUARE_BRACKET . 'line '
+              . $installable_fields->position($_)
+              . $RIGHT_SQUARE_BRACKET
+        )for @doubled_up_installable_fields;
+    }
+
+    my @r3_misspelled = grep { $_ ne 'Rules-Requires-Root' }
+      grep { m{^ Rules? - Requires? - Roots? $}xi } $source_fields->names;
+
+    $self->hint('spelling-error-in-rules-requires-root',$_,
+            $LEFT_SQUARE_BRACKET . 'line '
+          . $source_fields->position($_)
+          . $RIGHT_SQUARE_BRACKET)
+      for @r3_misspelled;
+
+    my @empty_source_fields
+      = grep { !length $source_fields->value($_) } $source_fields->names;
+
+    $self->hint('debian-control-has-empty-field', $_, '(in source paragraph)')
+      for @empty_source_fields;
+
+    for my $installable ($control->installables) {
+        my $installable_fields = $control->installable_fields($installable);
+
+        my @empty_installable_fields
+          = grep { !length $installable_fields->value($_) }
+          $installable_fields->names;
+
+        $self->hint(
+            'debian-control-has-empty-field',
+            $_,
+            "(in section for $installable)",
+            $LEFT_SQUARE_BRACKET . 'line '
+              . $installable_fields->position($_)
+              . $RIGHT_SQUARE_BRACKET
+        )for @empty_installable_fields;
+    }
+
+    for my $installable ($control->installables) {
         my $installable_fields = $control->installable_fields($installable);
 
         my $pointer = "(in section for $installable)";
@@ -187,9 +242,6 @@ sub source {
               if $source_fields->declares($field)
               && $installable_fields->value($field) eq
               $source_fields->value($field);
-
-            $self->hint('debian-control-has-empty-field',$field, $pointer,)
-              unless length $installable_fields->value($field);
         }
 
         $self->hint('debian-control-has-dbgsym-package', $installable)
@@ -239,7 +291,7 @@ sub source {
         $self->check_relation('source', $field, $raw, $relation);
     }
 
-    for my $installable (@package_names) {
+    for my $installable ($control->installables) {
 
         for my $field (
             qw(Pre-Depends Depends Recommends Suggests Breaks
@@ -273,7 +325,7 @@ sub source {
     # ordered from stronger to weaker
     my @ordered_fields = qw(Pre-Depends Depends Recommends Suggests);
 
-    for my $installable (@package_names) {
+    for my $installable ($control->installables) {
 
         my @remaining_fields = @ordered_fields;
 
@@ -343,13 +395,15 @@ sub source {
     my $seen_main;
     my $seen_contrib;
 
-    for my $installable (@package_names) {
+    for my $installable ($control->installables) {
 
         my $depends
           = $control->installable_fields($installable)->value('Depends');
 
+        my @installable_names = $control->installables;
+
         # If this looks like a -dev package, check its dependencies.
-        $self->check_dev_depends($installable, $depends, @package_names)
+        $self->check_dev_depends($installable, $depends, @installable_names)
           if $installable =~ /-dev$/ && defined $depends;
 
         $self->hint('depends-on-misc-pre-depends', $installable)
@@ -393,7 +447,7 @@ sub source {
     my %installables_by_synopsis;
     my %installables_by_exended;
 
-    for my $installable (@package_names) {
+    for my $installable ($control->installables) {
 
         my $description
           = $control->installable_fields($installable)
@@ -453,7 +507,7 @@ sub source {
       = $self->profile->load_data('fields/build-profiles');
 
     # check the syntax of the Build-Profiles field
-    for my $installable (@package_names) {
+    for my $installable ($control->installables) {
 
         my $raw = $control->installable_fields($installable)
           ->value('Build-Profiles');
@@ -534,14 +588,14 @@ sub source {
         }
     }
 
-    for my $installable (@package_names) {
+    for my $installable ($control->installables) {
 
         $self->hint('multiline-architecture-field',$installable)
           if $control->installable_fields($installable)->value('Architecture')
           =~ /\n./;
     }
 
-    for my $installable (@package_names) {
+    for my $installable ($control->installables) {
 
         next
           unless $installable =~ m/gir[\d\.]+-.*-[\d\.]+$/;
@@ -559,7 +613,7 @@ sub source {
 
         # Verify that golang binary packages set Built-Using (except for
         # arch:all library packages).
-        for my $installable (@package_names) {
+        for my $installable ($control->installables) {
 
             my $built_using = $control->installable_fields($installable)
               ->value('Built-Using');

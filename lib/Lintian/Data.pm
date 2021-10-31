@@ -149,6 +149,28 @@ sub recognizes {
     return 0;
 }
 
+=item resembles (KEY)
+
+Returns true if the data file contains a key that is a case-insensitive match
+to KEY, and false otherwise.
+
+=cut
+
+sub resembles {
+    my ($self, $key) = @_;
+
+    return 0
+      unless length $key;
+
+    return 1
+      if $self->recognizes($key);
+
+    return 1
+      if any { m{^\Q$key\E$}i } keys %{$self->dataset};
+
+    return 0;
+}
+
 =item value (KEY)
 
 Returns the value attached to KEY if it was listed in the data
