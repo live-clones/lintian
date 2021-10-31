@@ -654,7 +654,7 @@ div.clear {
 
       <span class="tinycode" id="code-I">I</span>
       <span class="tinyhint"><a href="https://lintian.debian.org/tags/binary-control-field-duplicates-source">binary-control-field-duplicates-source</a></span>
-      <span class="tinycontext">field &quot;Section&quot; in package html-output</span>
+      <span class="tinycontext">Section (in section for html-output)</span>
 
     </li>
     <li class="hintitem">
@@ -714,7 +714,7 @@ div.clear {
 
       <span class="tinycode" id="code-P">P</span>
       <span class="tinyhint"><a href="https://lintian.debian.org/tags/debian-control-has-unusual-field-spacing">debian-control-has-unusual-field-spacing</a></span>
-      <span class="tinycontext">line 12</span>
+      <span class="tinycontext">[line 12]</span>
 
     </li>
     <li class="hintitem">

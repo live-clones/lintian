@@ -20,7 +20,7 @@
                      "visibility" : "warning"
                   },
                   {
-                     "context" : "field \"Section\" in package json-output",
+                     "context" : "Section (in section for json-output)",
                      "tag" : "binary-control-field-duplicates-source",
                      "visibility" : "info"
                   },
@@ -48,7 +48,7 @@
                      "visibility" : "info"
                   },
                   {
-                     "context" : "line 12",
+                     "context" : "[line 12]",
                      "tag" : "debian-control-has-unusual-field-spacing",
                      "visibility" : "pedantic"
                   },

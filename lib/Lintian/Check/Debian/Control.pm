@@ -2,7 +2,7 @@
 #
 # Copyright © 2004 Marc Brockschmidt
 # Copyright © 2020 Chris Lamb <lamby@debian.org>
-# Copyright © 2020 Felix Lechner
+# Copyright © 2020-2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -41,6 +41,10 @@ with 'Lintian::Check';
 
 const my $EMPTY => q{};
 const my $COLON => q{:};
+const my $LEFT_PARENTHESIS => q{(};
+const my $RIGHT_PARENTHESIS => q{)};
+
+const my $ARROW => q{->};
 
 # The list of libc packages, used for checking for a hard-coded dependency
 # rather than using ${shlibs:Depends}.
@@ -50,30 +54,30 @@ my $LIBCS = Lintian::Relation->new->load(join(' | ', @LIBCS));
 sub source {
     my ($self) = @_;
 
-    my $processable = $self->processable;
-    my $group = $self->group;
+    my $control = $self->processable->debian_control;
+    my $source_fields = $control->source_fields;
 
-    my $debian_dir = $processable->patched->resolve_path('debian/');
+    my $debian_dir = $self->processable->patched->resolve_path('debian/');
     return
       unless $debian_dir;
 
-    my $dcontrol = $debian_dir->child('control');
+    my $file = $debian_dir->child('control');
     return
-      unless $dcontrol;
+      unless $file;
 
     $self->hint('debian-control-file-is-a-symlink')
-      if $dcontrol->is_symlink;
+      if $file->is_symlink;
 
     return
-      unless $dcontrol->is_open_ok;
+      unless $file->is_open_ok;
 
     # another check complains about invalid encoding
     return
-      unless $dcontrol->is_valid_utf8;
+      unless $file->is_valid_utf8;
 
-    my $src_fields = $self->profile->load_data('common/source-fields');
+    my $KNOWN_SOURCE_FIELDS= $self->profile->load_data('common/source-fields');
 
-    my $contents = $dcontrol->decoded_utf8;
+    my $contents = $file->decoded_utf8;
     my @lines = split(/\n/, $contents);
 
     # Nag about dh_make Vcs comment only once
@@ -83,7 +87,7 @@ sub source {
     my $position = 1;
     while (defined($line = shift @lines)) {
 
-        $line =~ s/\s*$//;
+        $line =~ s{\s*$}{};
 
         if (
             $line =~ m{\A \# \s* Vcs-(?:Git|Browser): \s*
@@ -93,104 +97,110 @@ sub source {
             # Emit it only once per package
             $self->hint('control-file-contains-dh_make-vcs-comment')
               unless $seen_vcs_comment++;
+
             next;
         }
 
         next
-          if $line =~ /^\#/;
+          if $line =~ m{^#};
 
         # line with field:
-        if ($line =~ /^(\S+):/) {
+        if ($line =~ m{^ (\S+) : }x) {
 
             my $field = $1;
 
+            my $pointer = "[line $position]";
+
             if ($field =~ /^XS-Vcs-/) {
+
                 my $base = $field;
                 $base =~ s/^XS-//;
-                $self->hint('xs-vcs-field-in-debian-control', $field)
-                  if $src_fields->recognizes($base);
+
+                $self->hint('xs-vcs-field-in-debian-control', $field, $pointer)
+                  if $KNOWN_SOURCE_FIELDS->recognizes($base);
             }
 
-            if ($field eq 'XS-Testsuite') {
-                $self->hint('xs-testsuite-field-in-debian-control', $field);
-            }
+            $self->hint('xs-testsuite-field-in-debian-control',
+                $field, $pointer)
+              if $field eq 'XS-Testsuite';
 
-            if ($field eq 'XC-Package-Type') {
-                $self->hint('xc-package-type-in-debian-control',
-                    "line $position");
-            }
+            $self->hint('xc-package-type-in-debian-control', $pointer)
+              if $field eq 'XC-Package-Type';
 
-            unless ($line =~ /^\S+: \S/ || $line =~ /^\S+:$/) {
-                $self->hint('debian-control-has-unusual-field-spacing',
-                    "line $position");
-            }
+            $self->hint('debian-control-has-unusual-field-spacing',$pointer)
+              unless $line =~ m{^ \S+ : [ ] \S }x
+              || $line =~ m{^ \S+ : $}x;
 
             # something like "Maintainer: Maintainer: bad field"
-            if ($line =~ /^\Q$field\E: \s* \Q$field\E \s* :/xsmi) {
-                $self->hint('debian-control-repeats-field-name-in-value',
-                    "line $position");
-            }
+            $self->hint('debian-control-repeats-field-name-in-value',$pointer)
+              if $line =~ m{^\Q$field\E: \s* \Q$field\E \s* :}xsmi;
 
-            if (    $field =~ /^Rules?-Requires?-Roots?$/i
-                and $field ne 'Rules-Requires-Root') {
-                $self->hint('spelling-error-in-rules-requires-root',
-                    $field,"(line $position)");
-            }
+            $self->hint('spelling-error-in-rules-requires-root',
+                $field, $pointer)
+              if $field ne 'Rules-Requires-Root'
+              && $field =~ m{^ Rules? - Requires? - Roots? $}xi;
         }
-    }continue {
+
+    } continue {
         ++$position;
     }
 
     eval {
         # check we can parse it, but ignore the result - we will fetch
-        # the fields we need from $processable.
+        # the fields we need from $self->processable.
         parse_dpkg_control_string($contents);
     };
     if ($@) {
+
         chomp $@;
+
         $@ =~ s/^internal error: //;
         $@ =~ s/^syntax error in //;
+
         die encode_utf8("syntax error in debian/control: $@");
     }
 
-    for my $field ($processable->debian_control->source_fields->names) {
-        $self->hint(
-            'debian-control-has-empty-field',
-            "field \"$field\" in source paragraph",
-          )
-          unless
-          length $processable->debian_control->source_fields->value($field);
-    }
+    my @empty_fields
+      = grep { !length $source_fields->value($_) }$source_fields->names;
 
-    my @package_names = $processable->debian_control->installables;
+    $self->hint('debian-control-has-empty-field',$_, '(in source paragraph)')
+      for @empty_fields;
 
-    foreach my $bin (@package_names) {
-        my $bfields = $processable->debian_control->installable_fields($bin);
-        $self->hint('build-info-in-binary-control-file-section',"Package $bin")
-          if (
-            first_value { $bfields->value("Build-$_") }
-            qw(Depends Depends-Indep Conflicts Conflicts-Indep)
-          );
-        foreach my $field ($bfields->names) {
-            $self->hint(
-                'binary-control-field-duplicates-source',
-                "field \"$field\" in package $bin"
-              )
-              if ($processable->debian_control->source_fields->declares($field)
-                && $bfields->value($field) eq
-                $processable->debian_control->source_fields->value($field));
-            $self->hint(
-                'debian-control-has-empty-field',
-                "field \"$field\" in package $bin",
-            ) if $bfields->value($field) eq $EMPTY;
+    my @package_names = $control->installables;
+
+    for my $installable (@package_names) {
+        my $installable_fields = $control->installable_fields($installable);
+
+        my $pointer = "(in section for $installable)";
+
+        my @build_fields = grep { $installable_fields->declares($_) }
+          qw{Build-Depends Build-Depends-Indep Build-Conflicts Build-Conflicts-Indep};
+
+        $self->hint('build-info-in-binary-control-file-section',
+            sort(@build_fields), $pointer)
+          if @build_fields;
+
+        for my $field ($installable_fields->names) {
+
+            $self->hint('binary-control-field-duplicates-source',
+                $field, $pointer)
+              if $source_fields->declares($field)
+              && $installable_fields->value($field) eq
+              $source_fields->value($field);
+
+            $self->hint('debian-control-has-empty-field',$field, $pointer,)
+              unless length $installable_fields->value($field);
         }
-        if ($bin =~ /[-]dbgsym$/) {
-            $self->hint('debian-control-has-dbgsym-package', $bin);
-        }
-        if ($bin =~ /[-]dbg$/) {
-            $self->hint('debian-control-has-obsolete-dbg-package', $bin)
-              unless $self->dbg_pkg_is_known($bin);
-        }
+
+        $self->hint('debian-control-has-dbgsym-package', $installable)
+          if $installable =~ /[-]dbgsym$/;
+
+        my $KNOWN_LEGACY_DBG_PATTERNS
+          = $self->profile->load_data('common/dbg-pkg');
+
+        $self->hint('debian-control-has-obsolete-dbg-package', $installable)
+          if $installable =~ /[-]dbg$/
+          && none { $installable =~ m/$_/xms } $KNOWN_LEGACY_DBG_PATTERNS->all;
     }
 
     # Check that fields which should be comma-separated or
@@ -218,33 +228,32 @@ sub source {
 
     for my $field (
         qw(Build-Depends Build-Depends-Indep
-        Build-conflicts Build-Conflicts-Indep)
+        Build-Conflicts Build-Conflicts-Indep)
     ) {
         next
-          unless $processable->debian_control->source_fields->declares($field);
+          unless $source_fields->declares($field);
 
-        my $raw = $processable->debian_control->source_fields->value($field);
-        my $rel;
+        my $raw = $source_fields->value($field);
 
-        $rel = Lintian::Relation->new->load($raw);
-        $self->check_relation('source', $field, $raw, $rel);
+        my $relation = Lintian::Relation->new->load($raw);
+        $self->check_relation('source', $field, $raw, $relation);
     }
 
-    for my $bin (@package_names) {
+    for my $installable (@package_names) {
+
         for my $field (
             qw(Pre-Depends Depends Recommends Suggests Breaks
             Conflicts Provides Replaces Enhances)
         ) {
             next
-              unless $processable->debian_control->installable_fields($bin)
+              unless $control->installable_fields($installable)
               ->declares($field);
 
-            my $raw
-              = $processable->debian_control->installable_fields($bin)
-              ->value($field);
-            my $rel;
-            $rel = $processable->binary_relation($bin, $field);
-            $self->check_relation($bin, $field, $raw, $rel);
+            my $raw= $control->installable_fields($installable)->value($field);
+
+            my $relation
+              = $self->processable->binary_relation($installable, $field);
+            $self->check_relation($installable, $field, $raw, $relation);
         }
     }
 
@@ -260,32 +269,43 @@ sub source {
     # doesn't hard-code a dependency on libc.  We have to do the
     # latter check here rather than in checks/fields to distinguish
     # from dependencies created by ${shlibs:Depends}.
-    my @dep_fields = qw(Pre-Depends Depends Recommends Suggests);
-    foreach my $bin (@package_names) {
-        for my $strong (0 .. $#dep_fields) {
+
+    # ordered from stronger to weaker
+    my @ordered_fields = qw(Pre-Depends Depends Recommends Suggests);
+
+    for my $installable (@package_names) {
+
+        my @remaining_fields = @ordered_fields;
+
+        for my $stronger (@ordered_fields) {
+
+            shift @remaining_fields;
+
             next
-              unless $processable->debian_control->installable_fields($bin)
-              ->declares($dep_fields[$strong]);
+              unless $control->installable_fields($installable)
+              ->declares($stronger);
+
             my $relation
-              = $processable->binary_relation($bin, $dep_fields[$strong]);
-            $self->hint('package-depends-on-itself', $bin,$dep_fields[$strong])
-              if $relation->satisfies($bin);
+              = $self->processable->binary_relation($installable,$stronger);
+
+            $self->hint('package-depends-on-itself', $installable,$stronger)
+              if $relation->satisfies($installable);
+
             $self->hint('package-depends-on-hardcoded-libc',
-                $bin, $dep_fields[$strong])
+                $installable, $stronger)
               if $relation->satisfies($LIBCS)
-              and $self->processable->name !~ /^e?glibc$/;
-            for my $weak (($strong + 1) .. $#dep_fields) {
-                next
-                  unless $processable->debian_control->installable_fields($bin)
-                  ->declares($dep_fields[$weak]);
-                for my $dependency (split /\s*,\s*/,
-                    $processable->debian_control->installable_fields($bin)
-                    ->value($dep_fields[$weak])) {
-                    next unless $dependency;
+              && $self->processable->name !~ /^e?glibc$/;
+
+            for my $weaker (@remaining_fields) {
+
+                my @prerequisites = $control->installable_fields($installable)
+                  ->trimmed_list($weaker, qr{\s*,\s*});
+
+                for my $prerequisite (@prerequisites) {
+
                     $self->hint('stronger-dependency-implies-weaker',
-                        $bin,"$dep_fields[$strong] -> $dep_fields[$weak]",
-                        $dependency)
-                      if $relation->satisfies($dependency);
+                        $installable, $stronger, $ARROW,$weaker,$prerequisite)
+                      if $relation->satisfies($prerequisite);
                 }
             }
         }
@@ -312,7 +332,7 @@ sub source {
     # description for udebs is much less important or significant to
     # the user.
 
-    my $area = $processable->debian_control->source_fields->value('Section');
+    my $area = $source_fields->value('Section');
 
     if ($area =~ m{^([^/]+)/}) {
         $area = $1;
@@ -320,106 +340,126 @@ sub source {
         $area = 'main';
     }
 
-    my @descriptions;
-    my ($seen_main, $seen_contrib);
-    foreach my $bin (@package_names) {
-        my $depends
-          = $processable->debian_control->installable_fields($bin)
-          ->value('Depends');
+    my $seen_main;
+    my $seen_contrib;
 
-        # Accumulate the description.
-        my $desc = $processable->debian_control->installable_fields($bin)
-          ->untrimmed_value('Description');
-        my $bin_area;
-        if (length $desc
-            and $processable->debian_control->installable_package_type($bin)ne
-            'udeb') {
-            push @descriptions, [$bin, split(/\n/, $desc, 2)];
-        }
+    for my $installable (@package_names) {
+
+        my $depends
+          = $control->installable_fields($installable)->value('Depends');
 
         # If this looks like a -dev package, check its dependencies.
-        if ($bin =~ /-dev$/ and $depends) {
-            $self->check_dev_depends($bin, $depends, @package_names);
-        }
+        $self->check_dev_depends($installable, $depends, @package_names)
+          if $installable =~ /-dev$/ && defined $depends;
 
-        if ($depends =~ m/\$\{misc:Pre-Depends\}/) {
-            $self->hint('depends-on-misc-pre-depends', $bin);
-        }
+        $self->hint('depends-on-misc-pre-depends', $installable)
+          if $depends =~ m/\$\{misc:Pre-Depends\}/;
 
         # Check mismatches in archive area.
-        $bin_area
-          = $processable->debian_control->installable_fields($bin)
-          ->value('Section');
-        $seen_main = 1 if not length($bin_area) and $area eq 'main';
-        next
-          unless length $area && length $bin_area;
+        my $installable_area
+          = $control->installable_fields($installable)->value('Section');
+        $seen_main = 1
+          if $area eq 'main'
+          && !length($installable_area);
 
-        if ($bin_area =~ m{^([^/]+)/}) {
-            $bin_area = $1;
+        next
+          unless length $area
+          && length $installable_area;
+
+        if ($installable_area =~ m{^([^/]+)/}) {
+            $installable_area = $1;
         } else {
-            $bin_area = 'main';
+            $installable_area = 'main';
         }
-        $seen_main = 1 if $bin_area eq 'main';
-        $seen_contrib = 1 if $bin_area eq 'contrib';
-        next
-          if $area eq $bin_area
-          or ($area eq 'main' and $bin_area eq 'contrib');
 
-        $self->hint('section-area-mismatch', 'Package', $bin);
+        $seen_main = 1
+          if $installable_area eq 'main';
+
+        $seen_contrib = 1
+          if $installable_area eq 'contrib';
+
+        next
+          if $area eq $installable_area
+          || ($area eq 'main' && $installable_area eq 'contrib');
+
+        $self->hint('section-area-mismatch', 'Package', $installable);
     }
 
     $self->hint('section-area-mismatch')
       if $seen_contrib
-      and not $seen_main
-      and $area eq 'main';
+      && !$seen_main
+      && $area eq 'main';
 
-    my %short_descriptions;
-    my %long_descriptions;
+    my %installables_by_synopsis;
+    my %installables_by_exended;
 
-    for my $paragraph (@descriptions) {
+    for my $installable (@package_names) {
 
-        my $package = @{$paragraph}[0];
+        my $description
+          = $control->installable_fields($installable)
+          ->untrimmed_value('Description');
 
-        my $short = @{$paragraph}[1];
-        if (length $short) {
-            $short_descriptions{$short} //= [];
-            push(@{$short_descriptions{$short}}, $package);
+        next
+          unless length $description;
+
+        next
+          if $control->installable_package_type($installable) eq 'udeb';
+
+        my ($synopsis, $extended) = split(/\n/, $description, 2);
+
+        $synopsis //= $EMPTY;
+        $extended //= $EMPTY;
+
+        # trim both ends
+        $synopsis =~ s/^\s+|\s+$//g;
+        $extended =~ s/^\s+|\s+$//g;
+
+        if (length $synopsis) {
+            $installables_by_synopsis{$synopsis} //= [];
+            push(@{$installables_by_synopsis{$synopsis}}, $installable);
         }
 
-        my $long = @{$paragraph}[2];
-        if (length $long) {
-            $long_descriptions{$long} //= [];
-            push(@{$long_descriptions{$long}}, $package);
+        if (length $extended) {
+            $installables_by_exended{$extended} //= [];
+            push(@{$installables_by_exended{$extended}}, $installable);
         }
     }
 
     # check for duplicate short description
-    for my $short (keys %short_descriptions) {
+    for my $synopsis (keys %installables_by_synopsis) {
+
         # Assume that substvars are correctly handled
-        next if $short =~ m/\$\{.+\}/;
-        $self->hint(
-            'duplicate-short-description',
-            sort @{$short_descriptions{$short}}
-        )if scalar @{$short_descriptions{$short}} > 1;
+        next
+          if $synopsis =~ m/\$\{.+\}/;
+
+        $self->hint('duplicate-short-description',
+            sort @{$installables_by_synopsis{$synopsis}})
+          if scalar @{$installables_by_synopsis{$synopsis}} > 1;
     }
 
     # check for duplicate long description
-    for my $long (keys %long_descriptions) {
+    for my $extended (keys %installables_by_exended) {
+
         # Assume that substvars are correctly handled
-        next if $long =~ m/\$\{.+\}/;
+        next
+          if $extended =~ m/\$\{.+\}/;
+
         $self->hint('duplicate-long-description',
-            sort @{$long_descriptions{$long}})
-          if scalar @{$long_descriptions{$long}} > 1;
+            sort @{$installables_by_exended{$extended}})
+          if scalar @{$installables_by_exended{$extended}} > 1;
     }
 
     my $KNOWN_BUILD_PROFILES
       = $self->profile->load_data('fields/build-profiles');
 
     # check the syntax of the Build-Profiles field
-    for my $bin (@package_names) {
-        my $raw = $processable->debian_control->installable_fields($bin)
+    for my $installable (@package_names) {
+
+        my $raw = $control->installable_fields($installable)
           ->value('Build-Profiles');
-        next unless $raw;
+        next
+          unless $raw;
+
         if (
             $raw!~ m{^\s*              # skip leading whitespace
                      <                 # first list start
@@ -443,135 +483,121 @@ sub source {
               }x
         ) {
             $self->hint('invalid-restriction-formula-in-build-profiles-field',
-                $raw,$bin);
+                $raw,$installable);
+
         } else {
             # parse the field and check the profile names
             $raw =~ s/^\s*<(.*)>\s*$/$1/;
             for my $restrlist (split />\s+</, $raw) {
                 for my $profile (split /\s+/, $restrlist) {
+
                     $profile =~ s/^!//;
+
                     $self->hint('invalid-profile-name-in-build-profiles-field',
-                        $profile, $bin)
+                        $profile, $installable)
                       unless $KNOWN_BUILD_PROFILES->recognizes($profile)
-                      or $profile =~ /^pkg\.[a-z0-9][a-z0-9+.-]+\../;
+                      || $profile =~ /^pkg\.[a-z0-9][a-z0-9+.-]+\../;
                 }
             }
         }
     }
 
-    # Check Rules-Requires-Root
-    if (
-        $processable->debian_control->source_fields->declares(
-            'Rules-Requires-Root')
-    ) {
-        my $r3
-          = $processable->debian_control->source_fields->value(
-            'Rules-Requires-Root');
-        if ($r3 eq 'no') {
-            $self->hint('rules-does-not-require-root');
-        } else {
-            $self->hint('rules-requires-root-explicitly');
-        }
-    } else {
-        $self->hint('silent-on-rules-requiring-root');
-    }
+    $self->hint('rules-does-not-require-root')
+      if $source_fields->value('Rules-Requires-Root') eq 'no';
 
-    if ((
-            $processable->debian_control->source_fields->value(
-                'Rules-Requires-Root')
-            || 'no'
-        ) eq 'no'
-    ) {
-      BINARY:
-        foreach my $proc ($group->get_binary_processables) {
-            my $pkg = $proc->name;
-            for my $file (@{$proc->installed->sorted_list}) {
-                my $owner = $file->owner . $COLON . $file->group;
-                next if $owner eq 'root:root';
-                $self->hint('rules-silently-require-root',
-                    $pkg, $file,"($owner)");
-                last BINARY;
-            }
+    $self->hint('rules-requires-root-explicitly')
+      if $source_fields->declares('Rules-Requires-Root')
+      && $source_fields->value('Rules-Requires-Root') ne 'no';
+
+    $self->hint('silent-on-rules-requiring-root')
+      unless $source_fields->declares('Rules-Requires-Root');
+
+    if (  !$source_fields->declares('Rules-Requires-Root')
+        || $source_fields->value('Rules-Requires-Root') eq 'no') {
+
+        for my $other ($self->group->get_binary_processables) {
+
+            my $user_owned_item
+              = first_value { $_->owner ne 'root' || $_->group ne 'root' }
+            @{$other->installed->sorted_list};
+
+            $self->hint(
+                'rules-silently-require-root',
+                $other->name,
+                $user_owned_item->name,
+                $LEFT_PARENTHESIS
+                  . $user_owned_item->owner
+                  . $COLON
+                  . $user_owned_item->group
+                  . $RIGHT_PARENTHESIS
+            )if defined $user_owned_item;
         }
     }
 
-    # Make sure that the Architecture field in source packages is not multiline
-    for my $bin (@package_names) {
-        # The Architecture field is mandatory and dpkg-buildpackage
-        # will already bail out if it's missing, so we don't need to
-        # check that.
-        my $raw = $processable->debian_control->installable_fields($bin)
-          ->value('Architecture');
-        if ($raw =~ /\n./) {
-            $self->hint('multiline-architecture-field',$bin);
-        }
+    for my $installable (@package_names) {
+
+        $self->hint('multiline-architecture-field',$installable)
+          if $control->installable_fields($installable)->value('Architecture')
+          =~ /\n./;
     }
 
-    # Check for GObject Introspection packages that are missing ${gir:Depends}
-    foreach my $bin (@package_names) {
-        next unless $bin =~ m/gir[\d\.]+-.*-[\d\.]+$/;
-        my $relation = $processable->binary_relation($bin, 'all');
+    for my $installable (@package_names) {
+
+        next
+          unless $installable =~ m/gir[\d\.]+-.*-[\d\.]+$/;
+
+        my $relation= $self->processable->binary_relation($installable, 'all');
+
         $self->hint(
             'gobject-introspection-package-missing-depends-on-gir-depends',
-            $bin)
+            $installable)
           unless $relation->satisfies('${gir:Depends}');
     }
 
-    if ($processable->relation('Build-Depends')
+    if ($self->processable->relation('Build-Depends')
         ->satisfies('golang-go | golang-any')) {
+
         # Verify that golang binary packages set Built-Using (except for
         # arch:all library packages).
-        foreach my $bin (@package_names) {
-            my $bu = $processable->debian_control->installable_fields($bin)
+        for my $installable (@package_names) {
+
+            my $built_using = $control->installable_fields($installable)
               ->value('Built-Using');
-            my $arch = $processable->debian_control->installable_fields($bin)
+
+            my $arch
+              = $control->installable_fields($installable)
               ->value('Architecture');
+
             if ($arch eq 'all') {
-                $self->hint('built-using-field-on-arch-all-package', $bin)
-                  if length $bu;
+
+                $self->hint('built-using-field-on-arch-all-package',
+                    $installable)
+                  if length $built_using;
+
             } else {
-                if (!length($bu) || $bu !~ /\$\{misc:Built-Using\}/) {
-                    $self->hint('missing-built-using-field-for-golang-package',
-                        $bin);
-                }
+                $self->hint('missing-built-using-field-for-golang-package',
+                    $installable)
+                  unless length($built_using)
+                  && $built_using =~ /\$\{misc:Built-Using\}/;
             }
         }
 
         $self->hint('missing-xs-go-import-path-for-golang-package')
-          unless (
-            $processable->debian_control->source_fields->value(
-                'XS-Go-Import-Path'));
+          unless ($source_fields->value('XS-Go-Import-Path'));
     }
 
-    my $changes = $group->changes;
-    $self->hint('source-only-upload-to-non-free-without-autobuild')
-      if defined($changes)
-      and $changes->fields->value('Architecture') eq 'source'
-      and $processable->is_non_free
-      and ($processable->debian_control->source_fields->value('XS-Autobuild')
-        || 'no')eq 'no';
+    if (defined $self->group->changes) {
+
+        my $group_fields = $self->group->changes->fields;
+
+        $self->hint('source-only-upload-to-non-free-without-autobuild')
+          if $group_fields->value('Architecture') eq 'source'
+          && $self->processable->is_non_free
+          && (!$source_fields->declares('XS-Autobuild')
+            || $source_fields->value('XS-Autobuild') eq 'no');
+    }
 
     return;
-}
-
-# check debug package
-sub dbg_pkg_is_known {
-    my ($self, $pkg) = @_;
-
-    my $KNOWN_DBG_PACKAGE = $self->profile->load_data(
-        'common/dbg-pkg',
-        qr/\s*\~\~\s*/,
-        sub {
-            return qr/$_[0]/xms;
-        });
-
-    foreach my $dbg_regexp ($KNOWN_DBG_PACKAGE->all) {
-        my $regex = $KNOWN_DBG_PACKAGE->value($dbg_regexp);
-        if($pkg =~ m/$regex/xms) {
-            return 1;
-        }
-    }
-    return 0;
 }
 
 # Check the dependencies of a -dev package.  Any dependency on one of the
@@ -581,7 +607,7 @@ sub dbg_pkg_is_known {
 sub check_dev_depends {
     my ($self, $package, $depends, @packages) = @_;
 
-    my $processable = $self->processable;
+    my $control = $self->processable->debian_control;
 
     # trim both ends
     $depends =~ s/^\s+|\s+$//g;
@@ -630,7 +656,7 @@ sub check_dev_depends {
                 # arch:all as well.  The version-substvars check
                 # handles that for us.
                 next
-                  if$processable->debian_control->installable_fields($target)
+                  if $control->installable_fields($target)
                   ->value('Architecture') eq 'all'
                   && $versions[0] =~ /^\s*=\s*\$\{source:Version\}/;
                 $self->hint('weak-library-dev-dependency',
@@ -650,24 +676,28 @@ sub check_dev_depends {
             }
         }
     }
+
     return;
 }
 
 # Checks for redundancies in a relation, for missing separators and
 # obsolete relation forms.
 sub check_relation {
-    my ($self, $pkg, $field, $rawvalue, $relation) = @_;
+    my ($self, $package, $field, $string, $relation) = @_;
+
+    my $pointer = "($field for $package)";
 
     for my $redundant_set ($relation->redundancies) {
 
-        $self->hint('redundant-control-relation', 'in', $pkg,
-            "$field:", join(', ', sort @{$redundant_set}));
+        $self->hint('redundant-control-relation',
+            join(', ', sort @{$redundant_set}), $pointer);
     }
 
-    $rawvalue =~ s/\n(\s)/$1/g;
-    $rawvalue =~ s/\[[^\]]*\]//g;
+    $string =~ s/\n(\s)/$1/g;
+    $string =~ s/\[[^\]]*\]//g;
+
     if (
-        $rawvalue =~ m{(?:^|\s)
+        $string =~ m{(?:^|\s)
                    (
                 (?:\w[^\s,|\$\(]+|\$\{\S+:Depends\})\s*
                 (?:\([^\)]*\)\s*)?
@@ -679,17 +709,20 @@ sub check_relation {
                    )}x
     ) {
         my ($prev, $next) = ($1, $2);
-        for ($prev, $next) {
-            # trim right
-            s/\s+$//;
-        }
+
+        # trim right
+        $prev =~ s/\s+$//;
+        $next =~ s/\s+$//;
+
         $self->hint('missing-separator-between-items',
-            'in', $pkg,"$field field between '$prev' and '$next'");
+            "between '$prev' and '$next'", $pointer);
     }
-    while ($rawvalue =~ /([^\s\(]+\s*\([<>]\s*[^<>=]+\))/g) {
-        $self->hint('obsolete-relation-form-in-source','in', $pkg,
-            "$field: $1");
+
+    while ($string =~ /([^\s\(]+\s*\([<>]\s*[^<>=]+\))/g) {
+
+        $self->hint('obsolete-relation-form-in-source', $1, $pointer);
     }
+
     return;
 }
 
