@@ -487,7 +487,7 @@ sub source {
           if $synopsis =~ m/\$\{.+\}/;
 
         $self->hint('duplicate-short-description',
-            sort @{$installables_by_synopsis{$synopsis}})
+            (sort @{$installables_by_synopsis{$synopsis}}))
           if scalar @{$installables_by_synopsis{$synopsis}} > 1;
     }
 
@@ -499,7 +499,7 @@ sub source {
           if $extended =~ m/\$\{.+\}/;
 
         $self->hint('duplicate-long-description',
-            sort @{$installables_by_exended{$extended}})
+            (sort @{$installables_by_exended{$extended}}))
           if scalar @{$installables_by_exended{$extended}} > 1;
     }
 

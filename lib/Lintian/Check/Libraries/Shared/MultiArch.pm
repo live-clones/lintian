@@ -66,7 +66,7 @@ sub installable {
 
     $self->hint(
         'shared-library-is-multi-arch-foreign',
-        sort +uniq @{$self->shared_libraries})
+        (sort +uniq @{$self->shared_libraries}))
       if @{$self->shared_libraries}
       && $self->processable->fields->value('Multi-Arch') eq 'foreign';
 

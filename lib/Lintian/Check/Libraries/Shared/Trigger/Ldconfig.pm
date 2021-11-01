@@ -89,7 +89,7 @@ sub installable {
       && $self->processable->type ne 'udeb';
 
     $self->hint('lacks-ldconfig-trigger',
-        sort +uniq @{$self->must_call_ldconfig})
+        (sort +uniq @{$self->must_call_ldconfig}))
       if @{$self->must_call_ldconfig}
       && !$we_trigger_ldconfig
       && $self->processable->type ne 'udeb';

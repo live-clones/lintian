@@ -73,7 +73,8 @@ sub source {
         # It takes two to tango... erh. make a circular dependency.
         next if scalar @{$comp} < 2;
 
-        $self->hint('intra-source-package-circular-dependency', sort @{$comp});
+        $self->hint('intra-source-package-circular-dependency',
+            (sort @{$comp}));
     }
 
     return;

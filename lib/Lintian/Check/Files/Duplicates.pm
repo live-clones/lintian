@@ -69,10 +69,10 @@ sub installable {
           if scalar @files < 2;
 
         if (any { m/changelog/i} @files) {
-            $self->hint('duplicate-changelog-files', sort @files);
+            $self->hint('duplicate-changelog-files', (sort @files));
 
         } else {
-            $self->hint('duplicate-files', sort @files);
+            $self->hint('duplicate-files', (sort @files));
         }
     }
 

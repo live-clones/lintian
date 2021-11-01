@@ -333,7 +333,7 @@ sub always {
     }
 
     $self->hint('vcs-fields-use-more-than-one-vcs',
-        sort map { lc } keys %seen_vcs)
+        (sort map { lc } keys %seen_vcs))
       if keys %seen_vcs > 1;
 
     $self->hint('co-maintained-package-with-no-vcs-fields')

@@ -53,7 +53,7 @@ sub source {
 
     # Check if more than one signing key is present
     $self->hint('public-upstream-keys-in-multiple-locations',
-        sort keys %key_locations)
+        (sort keys %key_locations))
       if scalar keys %key_locations > 1;
 
     # Go through signing keys and run checks for each

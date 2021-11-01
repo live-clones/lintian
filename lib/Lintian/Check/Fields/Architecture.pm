@@ -56,7 +56,7 @@ sub installable {
             $installable_architecture);
     }
 
-    $self->hint('too-many-architectures', sort @installable_architectures)
+    $self->hint('too-many-architectures', (sort @installable_architectures))
       if @installable_architectures > 1;
 
     my $installable_architecture = $installable_architectures[0];
