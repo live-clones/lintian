@@ -1,18 +1,21 @@
 Tag: silent-on-rules-requiring-root
 Severity: pedantic
-Check: debian/control
+Check: debian/control/field/rules-requires-root
 Renamed-From:
  rules-requires-root-missing
-Explanation: The <code>debian/control</code> file is missing an explicit
- <code>Rules-Requires-Root</code> field.
+Explanation: The field <code>Rules-Requires-Root</code> is missing from the file
+ <code>debian/control</code>.
  .
- Traditionally, Debian packages have required root privileges for some
- debian/rules target requiring a split between build and binary targets.
- This makes the builds slower due to the increased amount of invocations
- as well as the overhead of fakeroot itself.
+ Over time, Debian has sucessively narrowed the steps for which elevated privileges
+ are required. It speeds up the building of installation packages in the archive.
+ Eventually, Debian will switch the default archive-wide behaviour to expedite the
+ build process further.
  .
- Please specify (eg.) <code>Rules-Requires-Root: no</code> in the
- <code>debian/control</code> source stanza, but packagers should
- verify using <code>diffoscope(1)</code> that the binaries built with this
- field present are identical.
-See-Also: /usr/share/doc/dpkg-dev/rootless-builds.txt.gz, policy 4.9.2, policy 5.6.31
+ Please declare explicitly that the sources do not require root privileges. You can
+ use the setting  <code>Rules-Requires-Root: no</code> in the source stanza of
+ <code>debian/control</code>, but please verify with <code>diffoscope(1)</code> that
+ the installation packages produced are in fact identical.
+See-Also:
+ /usr/share/doc/dpkg-dev/rootless-builds.txt.gz,
+ policy 4.9.2,
+ policy 5.6.31

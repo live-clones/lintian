@@ -1,11 +1,13 @@
 Tag: source-only-upload-to-non-free-without-autobuild
 Severity: error
-Check: debian/control
-Explanation: For licensing reasons packages from the non-free section are not
- built by the autobuilders by default, so this source-upload to
- "non-free" will result in the package never appearing in the archive.
+Check: archive/non-free/autobuild
+Explanation: For licensing reasons, packages in the non-free section are by default
+ not built automatically. This source-upload to non-free will never result in built
+ packages appearing in the archive.
  .
- Please either perform a regular binary upload or (after checking the
- license) add <code>XS-Autobuild: yes</code> into the header part of
- debian/control and get the package added to the "autobuild" whitelist.
-See-Also: devref 5.10.5
+ Please perform an upload that includes installable packages. After checking the
+ license, you can alternatively add <code>XS-Autobuild: yes</code> to the source
+ paragraph of <code>debian/control</code> and ask for the source to be added to the
+ <code>autobuild</code> whitelist.
+See-Also:
+ devref 5.10.5

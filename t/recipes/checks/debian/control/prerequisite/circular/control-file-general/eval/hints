@@ -1,0 +1,1 @@
+control-file-general (source): circular-installation-prerequisite Depends control-file-general, foo, baz, ${shlibs:Depends} ${some:Depends}, ${misc:Depends} (in section for control-file-general) [debian/control:24]

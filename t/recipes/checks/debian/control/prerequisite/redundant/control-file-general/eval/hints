@@ -1,0 +1,4 @@
+control-file-general (source): redundant-installation-prerequisite control-file-general Suggests -> Recommends match${lintian:Match} (in section for control-file-general) [debian/control:25]
+control-file-general (source): redundant-installation-prerequisite control-file-general Suggests -> Recommends bar | baz (in section for control-file-general) [debian/control:25]
+control-file-general (source): redundant-installation-prerequisite control-file-general Suggests -> Depends bar | baz (in section for control-file-general) [debian/control:24]
+control-file-general (source): redundant-installation-prerequisite control-file-general Recommends -> Depends foo (in section for control-file-general) [debian/control:24]

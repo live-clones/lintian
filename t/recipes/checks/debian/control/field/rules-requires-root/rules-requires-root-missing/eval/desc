@@ -1,0 +1,2 @@
+Testname: rules-requires-root-missing
+Check: debian/control/field/rules-requires-root

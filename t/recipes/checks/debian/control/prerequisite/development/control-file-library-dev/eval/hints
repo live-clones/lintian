@@ -1,0 +1,3 @@
+control-file-library-dev (source): weak-library-dev-dependency Depends libcontrol-file-baz9-4 (>= ${source:Version}) (in section for libcontrol-file-all-dev) [debian/control:90]
+control-file-library-dev (source): weak-library-dev-dependency Depends libcontrol-file-baz9-4 (>= ${binary:Version}) (in section for libcontrol-file-dev) [debian/control:35]
+control-file-library-dev (source): weak-library-dev-dependency Depends libcontrol-file-bar7ldbl (in section for libcontrol-file-dev) [debian/control:35]

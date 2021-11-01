@@ -1,6 +1,0 @@
-control-file-duplicate (source): rules-does-not-require-root
-control-file-duplicate (source): redundant-control-relation foobar, foobar (Build-Depends-Indep for source)
-control-file-duplicate (source): redundant-control-relation debhelper, debhelper (>= 13~) (Build-Depends for source)
-control-file-duplicate (source): redundant-control-relation baz, baz (= 1.0), baz (>= 2.0) (Suggests for control-file-duplicate)
-control-file-duplicate (source): redundant-control-relation bar, bar [i386] (Build-Conflicts for source)
-control-file-duplicate (source): redundant-control-relation ${misc:Depends}, ${misc:Depends} (Depends for control-file-duplicate)

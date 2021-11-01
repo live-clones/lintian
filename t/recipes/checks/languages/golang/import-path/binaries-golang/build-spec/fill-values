@@ -1,0 +1,5 @@
+Skeleton: upload-native
+Testname: binaries-golang
+Extra-Build-Depends: golang-go (>= 2:1.1.1-4)
+Description: Misc errors related to golang binaries
+Package-Architecture: any

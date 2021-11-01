@@ -1,0 +1,2 @@
+Testname: control-file-golang-xs-go-import-path
+Check: debian/control/field/adopted

@@ -1,0 +1,2 @@
+Testname: control-file-gobject-introspection-package-missing-gir-depends
+Check: desktop/gnome/gir/substvars

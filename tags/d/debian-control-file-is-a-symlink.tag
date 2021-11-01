@@ -1,8 +1,11 @@
 Tag: debian-control-file-is-a-symlink
 Severity: warning
-Check: debian/control
-Explanation: The <code>debian/control</code> file is a symlink rather than a regular
- file. Using symlinks for required source package files is unnecessary and
- makes package checking and manipulation more difficult. If the control
- file should be available in the source package under multiple names, make
- <code>debian/control</code> the real file and the other names symlinks to it.
+Check: debian/control/link
+Explanation: The <code>debian/control</code> file is a symbolic link.
+ .
+ It is not recommended to use anything other than plain files for the required
+ source files. Using links makes it harder to check and manipulate sources
+ automatically.
+ .
+ If the file must be available under multiple names, please make
+ <code>debian/control</code> the real file and let the other names point to it.

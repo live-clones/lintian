@@ -1,5 +1,6 @@
 Tag: package-depends-on-hardcoded-libc
 Severity: warning
-Check: debian/control
-Explanation: The given package declares a dependency on libc directly instead
- of using ${shlibs:Depends} in its <code>debian/control</code> stanza.
+Check: substvars/libc
+Explanation: The package depends directly on <code>libc</code>. Please use
+ only the substitution variables <code>${shlibs:Depends}</code> in the relevant
+ stanza in the <code>debian/control</code> file.

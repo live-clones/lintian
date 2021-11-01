@@ -1,0 +1,1 @@
+control-file-golang-built-using (source): built-using-field-on-arch-all-package Built-Using ${misc:Built-Using} (in section for control-file-golang-built-using-dev) [debian/control:23]

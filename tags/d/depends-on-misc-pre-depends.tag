@@ -1,6 +1,7 @@
 Tag: depends-on-misc-pre-depends
 Severity: warning
-Check: debian/control
-Explanation: This package has a <code>Depends</code> field that contains the
- <code>${misc:Pre-Depends}</code> substitution variable. This should be in
- the <code>Pre-Depends</code> field instead.
+Check: substvars/misc/pre-depends
+Explanation: The <code>Depends</code> field contains the substitution variable
+ <code>${misc:Pre-Depends}</code>.
+ .
+ The variable should be in listed in the <code>Pre-Depends</code> field instead.

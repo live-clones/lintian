@@ -1,3 +1,0 @@
-binaries-golang (source): rules-does-not-require-root
-binaries-golang (source): missing-xs-go-import-path-for-golang-package
-binaries-golang (source): missing-built-using-field-for-golang-package binaries-golang

@@ -1,3 +1,0 @@
-Testname: binaries-multiarch
-Test-Architectures: i386 amd64
-Check: debian/control

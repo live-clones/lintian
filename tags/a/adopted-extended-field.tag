@@ -1,6 +1,6 @@
 Tag: adopted-extended-field
 Severity: info
-Check: debian/control
+Check: debian/control/field/adopted
 Renamed-From:
  xc-package-type-in-debian-control
  xs-testsuite-field-in-debian-control

@@ -1,5 +1,0 @@
-control-has-empty-field (source): rules-requires-root-explicitly
-control-has-empty-field (source): debian-control-has-empty-field Vcs-Git (in source paragraph)
-control-has-empty-field (source): debian-control-has-empty-field Vcs-Browser (in source paragraph)
-control-has-empty-field (source): debian-control-has-empty-field Suggests (in section for control-has-empty-field) [line 18]
-control-has-empty-field (source): debian-control-has-empty-field Provides (in section for control-has-empty-field) [line 20]

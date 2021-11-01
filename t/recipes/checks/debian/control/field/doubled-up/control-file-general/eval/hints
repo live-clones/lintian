@@ -1,0 +1,3 @@
+control-file-general (source): debian-control-repeats-field-name-in-value Description (in section for control-file-general-dbgsym) [debian/control:91]
+control-file-general (source): debian-control-repeats-field-name-in-value Description (in section for control-file-general-dbg) [debian/control:101]
+control-file-general (source): debian-control-repeats-field-name-in-value Description (in section for control-file-general-5) [debian/control:81]

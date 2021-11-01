@@ -6,6 +6,8 @@ Enable-Tags-From-Check:
  appstream-metadata
  apt
  archive/file/name/length
+ archive/liberty/mismatch
+ archive/non-free/autobuild
  binaries
  binaries/architecture
  binaries/architecture/other
@@ -40,7 +42,22 @@ Enable-Tags-From-Check:
  deb-format
  debhelper
  debian/changelog
- debian/control
+ debian/control/field/adopted
+ debian/control/field/architecture/multiline
+ debian/control/field/build-profiles
+ debian/control/field/built-using
+ debian/control/field/description/duplicate
+ debian/control/field/doubled-up
+ debian/control/field/empty
+ debian/control/field/misplaced
+ debian/control/field/redundant
+ debian/control/field/relation
+ debian/control/field/rules-requires-root
+ debian/control/field/spacing
+ debian/control/link
+ debian/control/prerequisite/circular
+ debian/control/prerequisite/development
+ debian/control/prerequisite/redundant
  debian/copyright
  debian/copyright/apache-notice
  debian/copyright/dep5
@@ -74,9 +91,12 @@ Enable-Tags-From-Check:
  debian/version-substvars
  debian/watch
  debian/watch/standard
+ debug/automatic
+ debug/obsolete
  desktop/dbus
  desktop/gnome
  desktop/gnome/gir
+ desktop/gnome/gir/substvars
  desktop/icons
  desktop/x11
  desktop/x11/font/update
@@ -202,6 +222,8 @@ Enable-Tags-From-Check:
  init-d
  init-d/maintainer-script
  languages/fortran/gfortran
+ languages/golang/built-using
+ languages/golang/import-path
  languages/java
  languages/java/bytecode
  languages/javascript/embedded
@@ -271,6 +293,8 @@ Enable-Tags-From-Check:
  shell/bash/completion
  shell/csh
  shell/non-posix/bash-centric
+ substvars/libc
+ substvars/misc/pre-depends
  systemd
  systemd/native/prerequisites
  systemd/tmpfiles
@@ -280,6 +304,7 @@ Enable-Tags-From-Check:
  team/pkg-perl/testsuite
  team/pkg-perl/vcs
  team/pkg-perl/xs-abi
+ template/dh-make/control/vcs
  testsuite
  triggers
  udev

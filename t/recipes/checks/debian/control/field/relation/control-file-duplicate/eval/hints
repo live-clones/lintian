@@ -1,0 +1,5 @@
+control-file-duplicate (source): redundant-control-relation Suggests baz, baz (= 1.0), baz (>= 2.0) (in section for control-file-duplicate) [debian/control:17]
+control-file-duplicate (source): redundant-control-relation Depends ${misc:Depends}, ${misc:Depends} (in section for control-file-duplicate) [debian/control:15]
+control-file-duplicate (source): redundant-control-relation Build-Depends-Indep foobar, foobar (in source paragraph) [debian/control:7]
+control-file-duplicate (source): redundant-control-relation Build-Depends debhelper, debhelper (>= 13~) (in source paragraph) [debian/control:6]
+control-file-duplicate (source): redundant-control-relation Build-Conflicts bar, bar [i386] (in source paragraph) [debian/control:8]

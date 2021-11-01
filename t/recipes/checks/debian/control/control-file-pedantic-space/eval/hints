@@ -1,4 +1,0 @@
-control-file-pedantic-space (source): rules-does-not-require-root
-control-file-pedantic-space (source): debian-control-has-unusual-field-spacing [line 3]
-control-file-pedantic-space (source): debian-control-has-unusual-field-spacing [line 2]
-control-file-pedantic-space (source): debian-control-has-unusual-field-spacing [line 1]

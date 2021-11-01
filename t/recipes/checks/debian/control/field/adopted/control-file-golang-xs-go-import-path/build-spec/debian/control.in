@@ -1,0 +1,41 @@
+Source: [% $source %]
+Section: net
+Priority: optional
+Maintainer: [% $author %]
+Standards-Version: [% $standards_version %]
+Rules-Requires-Root: [% $rules_requires_root %]
+Build-Depends: [% $build_depends %],
+ golang-go (>= 2:1.1.1-4)
+XS-Go-Import-Path: github.com/Debian/lintian-test-package
+
+Package: [% $source %]
+Architecture: [% $package_architecture %]
+Depends: ${misc:Depends}
+Built-Using: ${misc:Built-Using}
+Description: [% $description %]
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+
+Package: [% $source %]-dev
+Architecture: all
+Depends: ${misc:Depends}
+Description: [% $description %] (dev)
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+ .
+ This package contains the source.
+
+Package: [% $source %]-clean-dev
+Architecture: all
+Depends: ${misc:Depends}
+Description: [% $description %] (clean dev)
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+ .
+ This package contains the source, without a built-using tag.

@@ -20,8 +20,8 @@
                      "visibility" : "warning"
                   },
                   {
-                     "context" : "Section (in section for json-output)",
-                     "tag" : "binary-control-field-duplicates-source",
+                     "context" : "Section (in section for json-output) [debian/control:13]",
+                     "tag" : "installable-field-mirrors-source",
                      "visibility" : "info"
                   },
                   {
@@ -48,7 +48,7 @@
                      "visibility" : "info"
                   },
                   {
-                     "context" : "[line 12]",
+                     "context" : "Essential [debian/control:12]",
                      "tag" : "debian-control-has-unusual-field-spacing",
                      "visibility" : "pedantic"
                   },

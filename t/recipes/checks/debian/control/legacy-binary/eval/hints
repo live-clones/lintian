@@ -1,4 +1,0 @@
-binary (source): silent-on-rules-requiring-root
-binary (source): binary-control-field-duplicates-source Vcs-Svn (in section for binary)
-binary (source): adopted-extended-field XS-Vcs-Browser (in section for source) [line 9]
-binary (source): adopted-extended-field XS-Dm-Upload-Allowed (in section for source) [line 10]

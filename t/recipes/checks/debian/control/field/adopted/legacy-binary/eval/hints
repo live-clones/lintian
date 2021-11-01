@@ -1,0 +1,2 @@
+binary (source): adopted-extended-field XS-Vcs-Browser (in section for source) [debian/control:9]
+binary (source): adopted-extended-field XS-Dm-Upload-Allowed (in section for source) [debian/control:10]

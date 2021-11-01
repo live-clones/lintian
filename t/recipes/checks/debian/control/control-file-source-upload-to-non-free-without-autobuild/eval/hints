@@ -1,2 +1,0 @@
-control-file-source-upload-to-non-free-without-autobuild (source): rules-does-not-require-root
-control-file-source-upload-to-non-free-without-autobuild (source): adopted-extended-field XS-Autobuild (in section for source) [line 8]

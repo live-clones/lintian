@@ -1,3 +1,0 @@
-control-file-missing-separator (source): silent-on-rules-requiring-root
-control-file-missing-separator (source): missing-separator-between-items between 'p1' and 'p2' (Suggests for control-file-missing-separator)
-control-file-missing-separator (source): missing-separator-between-items between 'foo (>= 1)' and 'baz (<< 2)' (Depends for control-file-missing-separator)

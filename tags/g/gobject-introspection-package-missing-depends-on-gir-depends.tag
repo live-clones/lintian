@@ -1,9 +1,11 @@
 Tag: gobject-introspection-package-missing-depends-on-gir-depends
 Severity: error
-Check: debian/control
-Explanation: The package is a GObject Introspection package but does not specify a
- dependency on the ${gir:Depends} substvar. Without the dependencies, a
- program usually aborts.
+Check: desktop/gnome/gir/substvars
+Explanation: The package in <code>debian/control</code> is a GObject Introspection
+ installation package but does not declare its prerequisites using the
+ <code>${gir:Depends}</code> substvar.
  .
- Often, this can be fixed by adding the <code>--with=gir</code> debhelper
+ Without proper runtime prerequisites, a program usually aborts.
+ .
+ This tag can often be fixed by adding the <code>--with=gir</code> Debhelper
  sequence.

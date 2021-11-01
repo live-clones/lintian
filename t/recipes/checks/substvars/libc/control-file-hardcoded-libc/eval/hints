@@ -1,0 +1,4 @@
+control-file-hardcoded-libc (source): package-depends-on-hardcoded-libc Suggests libc0.3 (in section for control-file-hardcoded-libc) [debian/control:14]
+control-file-hardcoded-libc (source): package-depends-on-hardcoded-libc Recommends libc6.1 (in section for control-file-hardcoded-libc) [debian/control:13]
+control-file-hardcoded-libc (source): package-depends-on-hardcoded-libc Pre-Depends libc0.1 (in section for control-file-hardcoded-libc) [debian/control:11]
+control-file-hardcoded-libc (source): package-depends-on-hardcoded-libc Depends ${shlibs:Depends}, ${misc:Depends}, libc6 (in section for control-file-hardcoded-libc) [debian/control:12]

@@ -14,7 +14,7 @@ Enable-Tags:
  binary-in-etc
  binary-with-bad-dynamic-table
  bogus-mail-host
- build-info-in-binary-control-file-section
+ build-prerequisite-in-installable-section
  changelog-distribution-does-not-match-changes-file
  conflicting-negation-in-source-relation
  control-file-has-bad-owner
@@ -124,7 +124,7 @@ Tags:
  bad-version-number
  binary-in-etc
  bogus-mail-host
- build-info-in-binary-control-file-section
+ build-prerequisite-in-installable-section
  changelog-distribution-does-not-match-changes-file
  conflicting-negation-in-source-relation
  control-file-has-bad-owner

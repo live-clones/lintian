@@ -1,0 +1,6 @@
+#!/bin/sh
+
+ROOT_DIR="$1"
+
+mv "${ROOT_DIR}/debian/control" "${ROOT_DIR}/debian/control.real"
+ln -s control.real "${ROOT_DIR}/debian/control"

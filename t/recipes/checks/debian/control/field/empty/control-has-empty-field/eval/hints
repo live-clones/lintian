@@ -1,0 +1,4 @@
+control-has-empty-field (source): debian-control-has-empty-field Vcs-Git (in source paragraph) [debian/control:13]
+control-has-empty-field (source): debian-control-has-empty-field Vcs-Browser (in source paragraph) [debian/control:11]
+control-has-empty-field (source): debian-control-has-empty-field Suggests (in section for control-has-empty-field) [debian/control:18]
+control-has-empty-field (source): debian-control-has-empty-field Provides (in section for control-has-empty-field) [debian/control:20]
