@@ -29,6 +29,7 @@ use utf8;
 
 use Const::Fast;
 use File::Basename;
+use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Relation;
 

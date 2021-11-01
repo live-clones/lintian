@@ -1,3 +1,24 @@
+lintian (2.111.0) unstable; urgency=medium
+
+  * Summary of tag changes:
+    + Added:
+      - generated-file
+
+  [ Chris Lamb ]
+  * Mention that --with=sphinxdoc (or dh_sphinxdoc) is the easiest way to
+    prevent including Sphinx .doctree files in binary packages.
+
+  [ Felix Lechner ]
+  * Limit Python dot directories to those starting with a dot.
+    (Closes: #997662)
+  * Offer classification tag "generated-file" for source files that look
+    generated. (Closes: #993662)
+
+  [ Simon Quigley ]
+  * Add "jammy" as a known Ubuntu distribution.
+
+ -- Chris Lamb <lamby@debian.org>  Sat, 30 Oct 2021 09:03:59 +0000
+
 lintian (2.110.0~bpo11+1) bullseye-backports; urgency=medium
 
   * Rebuild for bullseye-backports.

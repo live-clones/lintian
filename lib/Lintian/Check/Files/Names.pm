@@ -69,7 +69,7 @@ sub visit_installed_files {
     $self->hint('package-contains-python-dot-directory', $file->name)
       if $file->dirname
       =~ m{^ usr/lib/python[^/]+ / (?:dist|site)-packages / }x
-      && $file->name =~ m{ [.][^/]+ / }x;
+      && $file->name =~ m{ / [.][^/]+ / }x;
 
     $self->hint('package-contains-python-coverage-file', $file->name)
       if $file->basename eq '.coverage';
