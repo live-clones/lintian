@@ -37,6 +37,7 @@ with 'Lintian::Output::Grammar';
 # for tty hyperlinks
 const my $OSC_HYPERLINK => qq{\033]8;;};
 const my $OSC_DONE => qq{\033\\};
+const my $BEL => qq{\a};
 
 const my $EMPTY => q{};
 const my $SPACE => q{ };
@@ -267,8 +268,8 @@ sub _quote_print {
 sub osc_hyperlink {
     my ($self, $text, $target) = @_;
 
-    my $start = $OSC_HYPERLINK . $target . $OSC_DONE;
-    my $end = $OSC_HYPERLINK . $OSC_DONE;
+    my $start = $OSC_HYPERLINK . $target . $BEL;
+    my $end = $OSC_HYPERLINK . $BEL;
 
     return $start . $text . $end;
 }

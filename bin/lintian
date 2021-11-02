@@ -532,7 +532,7 @@ $selected{hyperlinks} //= 'off'
   if $selected{color} eq 'never';
 
 # change to 'on' after gcc's terminal blacklist was implemented here
-$selected{hyperlinks} //= 'off';
+$selected{hyperlinks} //= 'on';
 
 die encode_utf8("The hyperlink value must be on or off\n")
   unless any { $selected{hyperlinks} eq $_ } qw(on off);
