@@ -53,17 +53,16 @@ sub source {
     # first binary section.  Missing sections will be caught by other
     # checks.
 
-    my $source_liberty = $source_fields->value('Section');
+    my $source_section = $source_fields->value('Section');
     return
-      unless length $source_liberty;
+      unless length $source_section;
 
     # see policy 2.4
-    if ($source_liberty =~ m{^([^/]+)/}) {
-        $source_liberty = $1;
+    $source_section = "main/$source_section"
+      if $source_section !~ m{/};
 
-    } else {
-        $source_liberty = 'main';
-    }
+    my $source_liberty = $source_section;
+    $source_liberty =~ s{ / .* $}{}x;
 
     my %liberty_by_installable;
 
@@ -71,18 +70,20 @@ sub source {
 
         my $installable_fields = $control->installable_fields($installable);
 
-        my $installable_liberty
-          = $control->installable_fields($installable)->value('Section');
+        my $installable_section;
+        if ($installable_fields->declares('Section')) {
 
-        $installable_liberty ||= $source_liberty;
+            $installable_section = $installable_fields->value('Section');
 
-        # see policy 2.4
-        if ($installable_liberty =~ m{^([^/]+)/}) {
-            $installable_liberty = $1;
-
-        } else {
-            $installable_liberty = 'main';
+            # see policy 2.4
+            $installable_section = "main/$installable_section"
+              if $installable_section !~ m{/};
         }
+
+        $installable_section ||= $source_section;
+
+        my $installable_liberty = $installable_section;
+        $installable_liberty =~ s{ / .* $}{}x;
 
         $liberty_by_installable{$installable} = $installable_liberty;
 
