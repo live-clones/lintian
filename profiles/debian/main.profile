@@ -205,6 +205,7 @@ Enable-Tags-From-Check:
  files/special
  files/symbolic-links
  files/symbolic-links/broken
+ files/unicode/trojan
  files/unwanted
  files/usr-merge
  files/vcs
