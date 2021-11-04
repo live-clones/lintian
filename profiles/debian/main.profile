@@ -53,6 +53,7 @@ Enable-Tags-From-Check:
  debian/control/field/redundant
  debian/control/field/relation
  debian/control/field/rules-requires-root
+ debian/control/field/section
  debian/control/field/spacing
  debian/control/link
  debian/control/prerequisite/circular
