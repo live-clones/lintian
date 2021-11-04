@@ -25,12 +25,17 @@ use v5.20;
 use warnings;
 use utf8;
 
+use Const::Fast;
 use Encode qw(decode);
+use Try::Tiny;
 
 use Lintian::IPC::Run3 qw(safe_qx);
 
 use Moo;
 use namespace::clean;
+
+const my $SPACE => q{ };
+const my $COLON => q{:};
 
 with 'Lintian::Check';
 
@@ -46,8 +51,14 @@ sub visit_installed_files {
     my @command = ('t1disasm', $item->unpacked_path);
     my $bytes = safe_qx(@command);
 
-    # iso-8859-1 works too, but the Font 1 standard could be older
-    my $output = decode('cp1252', $bytes, Encode::FB_CROAK);
+    my $output;
+    try {
+        # iso-8859-1 works too, but the Font 1 standard could be older
+        $output = decode('cp1252', $bytes, Encode::FB_CROAK);
+
+    } catch {
+        die 'In file ' . $item->name . $COLON . $SPACE . $_;
+    };
 
     my @lines = split(/\n/, $output);
 
