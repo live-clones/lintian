@@ -81,7 +81,7 @@ relationship a superset of another relationship."
 
 =item name
 
-=item multiarch_acceptor
+=item multiarch_qualifier
 
 =item version_operator
 
@@ -107,7 +107,7 @@ has name => (
     coerce => sub { my ($text) = @_; return ($text // $EMPTY); }
 );
 
-has multiarch_acceptor => (
+has multiarch_qualifier => (
     is => 'rw',
     default => $EMPTY,
     coerce => sub { my ($text) = @_; return ($text // $EMPTY); }
@@ -190,7 +190,7 @@ sub parse {
         $self->parsable($TRUE);
 
         $self->name($1);
-        $self->multiarch_acceptor($2);
+        $self->multiarch_qualifier($2);
         $self->version_operator($3);
         $self->reference_version($4);
         $self->build_architecture($5);
@@ -350,17 +350,17 @@ sub satisfies {
 
     # pkg has no chance of satisfing pkg:Y unless Y is 'any'
     return undef
-      if !length $self->multiarch_acceptor
-      && length $other->multiarch_acceptor
-      && $other->multiarch_acceptor ne 'any';
+      if !length $self->multiarch_qualifier
+      && length $other->multiarch_qualifier
+      && $other->multiarch_qualifier ne 'any';
 
     # TODO: Review this case.  Are there cases where other cannot
     # disprove self due to the ":any"-qualifier?  For now, we
     # assume there are no such cases.
     # pkg:X has no chance of satisfying pkg
     return undef
-      if length $self->multiarch_acceptor
-      && !length $other->multiarch_acceptor;
+      if length $self->multiarch_qualifier
+      && !length $other->multiarch_qualifier;
 
     # For now assert that only the identity holds.  In practise, the
     # "pkg:X" (for any valid value of X) seems to satisfy "pkg:any",
@@ -368,9 +368,9 @@ sub satisfies {
     # matters)
     # pkg:X has no chance of satisfying pkg:Y unless X equals Y
     return undef
-      if length $self->multiarch_acceptor
-      && length $other->multiarch_acceptor
-      && $self->multiarch_acceptor ne $other->multiarch_acceptor;
+      if length $self->multiarch_qualifier
+      && length $other->multiarch_qualifier
+      && $self->multiarch_qualifier ne $other->multiarch_qualifier;
 
   # Now, down to version.  The implication is true if self's clause is stronger
   # than other's, or is equivalent.
@@ -511,8 +511,8 @@ sub to_string {
 
     my $text = $self->name;
 
-    $text .= $COLON . $self->multiarch_acceptor
-      if length $self->multiarch_acceptor;
+    $text .= $COLON . $self->multiarch_qualifier
+      if length $self->multiarch_qualifier;
 
     $text
       .= $SPACE
