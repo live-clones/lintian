@@ -12,18 +12,18 @@ Explanation: The named text file contains a Unicode codepoint that has been
  .
  Here are the relevant codepoints:
  .
- - <code>ARABIC LETTER MARK</code> (U+061C)
- - <code>LEFT-TO-RIGHT MARK</code> (U+200E)
- - <code>RIGHT-TO-LEFT MARK</code> (U+200F)
- - <code>LEFT-TO-RIGHT EMBEDDING</code> (U+202A)
- - <code>RIGHT-TO-LEFT EMBEDDING</code> (U+202B)
- - <code>POP DIRECTIONAL FORMATTING</code> (U+202C)
- - <code>LEFT-TO-RIGHT OVERRIDE</code> (U+202D)
- - <code>RIGHT-TO-LEFT OVERRIDE</code> (U+202E)
- - <code>LEFT-TO-RIGHT ISOLATE</code> (U+2066)
- - <code>RIGHT-TO-LEFT ISOLATE</code> (U+2067)
- - <code>FIRST STRONG ISOLATE</code> (U+2068)
- - <code>POP DIRECTIONAL ISOLATE</code> (U+2069)
+ - ARABIC LETTER MARK (<code>U+061C</code>)
+ - LEFT-TO-RIGHT MARK (<code>U+200E</code>)
+ - RIGHT-TO-LEFT MARK (<code>U+200F</code>)
+ - LEFT-TO-RIGHT EMBEDDING (<code>U+202A</code>)
+ - RIGHT-TO-LEFT EMBEDDING (<code>U+202B</code>)
+ - POP DIRECTIONAL FORMATTING (<code>U+202C</code>)
+ - LEFT-TO-RIGHT OVERRIDE (<code>U+202D</code>)
+ - RIGHT-TO-LEFT OVERRIDE (<code>U+202E</code>)
+ - LEFT-TO-RIGHT ISOLATE (<code>U+2066</code>)
+ - RIGHT-TO-LEFT ISOLATE (<code>U+2067</code>)
+ - FIRST STRONG ISOLATE (<code>U+2068</code>)
+ - POP DIRECTIONAL ISOLATE (<code>U+2069</code>)
  .
  You can also run a similar check in your shell with that command:
  .
