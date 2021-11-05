@@ -1,5 +1,6 @@
 Tag: unicode-trojan
-Severity: info
+Severity: pedantic
+Experimental: yes
 Check: files/unicode/trojan
 Explanation: The named text file contains a Unicode codepoint that has been
  identified as a potential security risk.
