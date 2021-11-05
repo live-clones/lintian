@@ -10,27 +10,30 @@ Explanation: The named text file contains a Unicode codepoint that has been
  The second is birectional attacks, in which the rendered text hides
  potentially malicious characters.
  .
- Here are the relevant codepoint:
+ Here are the relevant codepoints:
  .
- - ARABIC LETTER MARK (U+061C)
- - LEFT-TO-RIGHT MARK (U+200E)
- - RIGHT-TO-LEFT MARK (U+200F)
- - LEFT-TO-RIGHT EMBEDDING (U+202A)
- - RIGHT-TO-LEFT EMBEDDING (U+202B)
- - POP DIRECTIONAL FORMATTING (U+202C)
- - LEFT-TO-RIGHT OVERRIDE (U+202D)
- - RIGHT-TO-LEFT OVERRIDE (U+202E)
- - LEFT-TO-RIGHT ISOLATE (U+2066)
- - RIGHT-TO-LEFT ISOLATE (U+2067)
- - FIRST STRONG ISOLATE (U+2068)
- - POP DIRECTIONAL ISOLATE (U+2069)
+ - <code>ARABIC LETTER MARK</code> (U+061C)
+ - <code>LEFT-TO-RIGHT MARK</code> (U+200E)
+ - <code>RIGHT-TO-LEFT MARK</code> (U+200F)
+ - <code>LEFT-TO-RIGHT EMBEDDING</code> (U+202A)
+ - <code>RIGHT-TO-LEFT EMBEDDING</code> (U+202B)
+ - <code>POP DIRECTIONAL FORMATTING</code> (U+202C)
+ - <code>LEFT-TO-RIGHT OVERRIDE</code> (U+202D)
+ - <code>RIGHT-TO-LEFT OVERRIDE</code> (U+202E)
+ - <code>LEFT-TO-RIGHT ISOLATE</code> (U+2066)
+ - <code>RIGHT-TO-LEFT ISOLATE</code> (U+2067)
+ - <code>FIRST STRONG ISOLATE</code> (U+2068)
+ - <code>POP DIRECTIONAL ISOLATE</code> (U+2069)
  .
  You can also run a similar check in your shell with that command:
  .
  <code>grep -r $'[\u061C\u200E\u200F\u202A\u202B\u202C\u202D\u202E\u2066\u2067\u2068\u2069]'</code>
+ .
+ The registered vulnerabilities are  CVE-2021-42694 ("Homoglyph") and
+ CVE-2021-42574 ("Bidirectional Attack").
 See-Also:
- CVE-2021-42694 ("Homoglyph"),
- CVE-2021-42574 ("Bidirectional Attack"),
+ https://nvd.nist.gov/vuln/detail/CVE-2021-42694,
+ https://nvd.nist.gov/vuln/detail/CVE-2021-42574,
  https://www.trojansource.codes,
  https://www.trojansource.codes/trojan-source.pdf,
  https://en.wikipedia.org/wiki/Bidirectional_text,
