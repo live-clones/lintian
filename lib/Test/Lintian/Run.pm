@@ -63,9 +63,9 @@ use IPC::Run3;
 use List::Compare;
 use List::Util qw(max min any all);
 use Path::Tiny;
+use Syntax::Keyword::Try;
 use Test::More;
 use Text::Diff;
-use Try::Tiny;
 use Unicode::UTF8 qw(encode_utf8 decode_utf8);
 
 use Lintian::Deb822::File;
@@ -120,10 +120,10 @@ sub logged_runner {
             # call runner
             runner($runpath, $logpath)
 
-        }catch {
+        } catch {
             # catch any error
-            $error = $_;
-        };
+            $error = $@;
+        }
     };
 
     my $log = decode_utf8($log_bytes);

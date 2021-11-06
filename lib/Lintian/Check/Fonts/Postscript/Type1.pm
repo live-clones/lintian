@@ -27,7 +27,7 @@ use utf8;
 
 use Const::Fast;
 use Encode qw(decode);
-use Try::Tiny;
+use Syntax::Keyword::Try;
 
 use Lintian::IPC::Run3 qw(safe_qx);
 
@@ -57,8 +57,8 @@ sub visit_installed_files {
         $output = decode('cp1252', $bytes, Encode::FB_CROAK);
 
     } catch {
-        die 'In file ' . $item->name . $COLON . $SPACE . $_;
-    };
+        die 'In file ' . $item->name . $COLON . $SPACE . $@;
+    }
 
     my @lines = split(/\n/, $output);
 

@@ -52,10 +52,10 @@ use IPC::Run3;
 use List::Compare;
 use MCE::Loop;
 use Path::Tiny;
+use Syntax::Keyword::Try;
 use Time::Duration;
 use Time::Moment;
 use Time::Piece;
-use Try::Tiny;
 use Unicode::UTF8 qw(encode_utf8 decode_utf8);
 
 use Lintian::IPC::Run3 qw(safe_qx);
@@ -351,10 +351,10 @@ sub prepare_build {
             prepare("$recipe_root/$recipe/build-spec",
                 $source_path, $testset, $force_rebuild);
 
-        }catch {
+        } catch {
             # catch any error
-            $error = $_;
-        };
+            $error = $@;
+        }
     };
 
     my $log = decode_utf8($log_bytes);
@@ -425,10 +425,11 @@ sub build_package {
         try {
             # call runner
             build_subject($source_path, $build_path);
-        }catch {
+
+        } catch {
             # catch any error
-            $error = $_;
-        };
+            $error = $@;
+        }
     };
 
     my $log = decode_utf8($log_bytes);

@@ -28,7 +28,7 @@ use Const::Fast;
 use Cwd qw(realpath);
 use File::Temp();
 use IPC::Run3;
-use Try::Tiny;
+use Syntax::Keyword::Try;
 use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::IPC::Run3 qw(safe_qx);
@@ -246,17 +246,18 @@ sub source {
             die encode_utf8("system @intltool failed: $?")
               if $?;
 
-        }catch {
+        } catch {
             # catch any error
-            $error = $_;
-        }finally {
+            $error = $@;
+
+        } finally {
             # restore environment
             %ENV = %save;
 
             # restore working directory
             chdir($cwd)
               or die encode_utf8('Cannot change directory ' . $cwd);
-        };
+        }
 
         # output could be helpful to user but is currently not printed
 
@@ -287,10 +288,10 @@ sub source {
             die encode_utf8("system @testright failed: $?")
               if $?;
 
-        }catch {
+        } catch {
             # catch any error
-            $error = $_;
-        };
+            $error = $@;
+        }
 
         $self->hint('newer-debconf-templates') if length $error;
     }

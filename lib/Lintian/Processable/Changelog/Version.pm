@@ -24,7 +24,7 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Try::Tiny;
+use Syntax::Keyword::Try;
 
 use Lintian::Inspect::Changelog::Version;
 
@@ -78,7 +78,9 @@ has changelog_version => (
         my $version = Lintian::Inspect::Changelog::Version->new;
         try {
             $version->assign($versionstring, $self->native);
-        };
+
+        } catch {
+        }
 
         return $version;
     });

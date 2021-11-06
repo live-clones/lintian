@@ -57,7 +57,6 @@ use File::stat;
 use List::Util qw(max);
 use Path::Tiny;
 use Text::Template;
-use Try::Tiny;
 use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Deb822::Section;

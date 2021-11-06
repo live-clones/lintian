@@ -28,7 +28,6 @@ use utf8;
 
 use List::Compare;
 use Path::Tiny;
-use Try::Tiny;
 
 use Lintian::Util qw(read_md5sums drop_relative_prefix);
 
