@@ -345,6 +345,19 @@ sub check_systemd_service_file {
               for @invalid;
         }
 
+        my @kill_modes
+          = $self->extract_service_file_values($item, 'Service','KillMode');
+
+        for my $kill_mode (@kill_modes) {
+
+            # trim both ends
+            $kill_mode =~ s/^\s+|\s+$//g;
+
+            $self->hint('kill-mode-none',$_,
+                $LEFT_SQUARE_BRACKET . $item->name . $RIGHT_SQUARE_BRACKET)
+              if $kill_mode eq 'none';
+        }
+
         if (   !@wanted_by
             && !$is_oneshot
             && $is_standalone

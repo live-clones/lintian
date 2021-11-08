@@ -1,0 +1,2 @@
+kill-mode-none (binary): systemd-service-file-missing-hardening-features lib/systemd/system/kill-mode-none.service
+kill-mode-none (binary): kill-mode-none lib/systemd/system/kill-mode-none.service [lib/systemd/system/kill-mode-none.service]
