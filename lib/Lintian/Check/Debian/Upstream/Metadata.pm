@@ -39,6 +39,8 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
+const my $EMPTY => q{};
+
 # Need 0.69 for $LoadBlessed (#861958)
 const my $HAS_LOAD_BLESSED => 0.69;
 
@@ -130,7 +132,11 @@ sub source {
         return;
     }
 
-    $self->hint('upstream-metadata-field-present', $_) for keys %{$yaml};
+    for my $field (keys %{$yaml}) {
+
+        $self->hint('upstream-metadata', $field, $yaml->{$field})
+          if ref($yaml->{$field}) eq $EMPTY;
+    }
 
     my $lc
       = List::Compare->new([keys %{$yaml}],[@known_fields, @tolerated_fields]);

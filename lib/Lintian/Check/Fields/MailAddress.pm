@@ -75,6 +75,7 @@ sub always {
 
         my @valid = grep { $_->is_valid } @{$parsed{$role}};
         my @unique = uniq_by { $_->format } @valid;
+
         $self->check_single_address($role, $_) for @unique;
     }
 
