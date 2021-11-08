@@ -1,5 +1,6 @@
 Tag: executable-in-usr-lib
 Severity: pedantic
+Experimental: yes
 Check: files/permissions/usr-lib
 Explanation: The package ships an executable file in /usr/lib.
  .
@@ -23,4 +24,5 @@ Reason: The <code>emacsen-common</code> package places installation
  them declare <code>emacsen-common</code> as an installation
  prerequisite.
 See-Also:
- Bug#974175
+ Bug#974175,
+ Bug#954149
