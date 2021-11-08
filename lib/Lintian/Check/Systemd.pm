@@ -30,6 +30,7 @@ use warnings;
 use utf8;
 
 use Const::Fast;
+use Data::Validate::URI qw(is_uri);
 use List::Compare;
 use List::SomeUtils qw(any none);
 use Text::ParseWords qw(shellwords);
@@ -40,6 +41,8 @@ use namespace::clean;
 with 'Lintian::Check';
 
 const my $EMPTY => q{};
+const my $LEFT_SQUARE_BRACKET => q{[};
+const my $RIGHT_SQUARE_BRACKET => q{]};
 
 # "Usual" targets for WantedBy
 const my @WANTEDBY_WHITELIST => qw{
@@ -325,9 +328,22 @@ sub check_systemd_service_file {
               || $self->processable->name eq 'systemd';
         }
 
+        my @documentation
+          = $self->extract_service_file_values($item, 'Unit','Documentation');
+
         $self->hint('systemd-service-file-missing-documentation-key', $item)
-          unless $self->extract_service_file_values($item, 'Unit',
-            'Documentation');
+          unless @documentation;
+
+        for my $documentation (@documentation) {
+
+            my @uris = split(m{\s+}, $documentation);
+
+            my @invalid = grep { !is_uri($_) } @uris;
+
+            $self->hint('invalid-systemd-documentation',
+                $_,$LEFT_SQUARE_BRACKET . $item->name . $RIGHT_SQUARE_BRACKET)
+              for @invalid;
+        }
 
         if (   !@wanted_by
             && !$is_oneshot

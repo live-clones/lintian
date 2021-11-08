@@ -42,6 +42,7 @@ Depends:
  libcpanel-json-xs-perl,
  libdata-dpath-perl,
  libdata-validate-domain-perl,
+ libdata-validate-uri-perl,
  libdevel-size-perl,
  libdigest-sha-perl,
  libdpkg-perl,
