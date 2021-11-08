@@ -194,6 +194,14 @@ sub source {
             $withgpgverification = 1
               if $option =~ /^pgpsigurlmangle\s*=\s*/
               || $option =~ /^pgpmode\s*=\s*(?!none\s*$)\S.*$/;
+
+            my ($name, $value) = split(m{ \s* = \s* }x, $option, 2);
+
+            $value //= $EMPTY;
+
+            $self->hint('prefer-uscan-symlink', $name, $value,
+                "[debian/watch:$position]")
+              if $name eq 'filenamemangle';
         }
 
         $self->hint('debian-watch-file-uses-deprecated-sf-redirector-method',

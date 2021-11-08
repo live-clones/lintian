@@ -1,0 +1,2 @@
+filenamemangle (source): prefer-uscan-symlink filenamemangle s/.+\/tag\/(\d\S+)$/foot-$1\.tar\.gz/ [debian/watch:5]
+filenamemangle (source): debian-watch-does-not-check-gpg-signature
