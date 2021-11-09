@@ -52,7 +52,10 @@ sub source {
     # look for version
     my @mentioned = ($contents =~ /^ version \s* = \s* (\d+) \s* $/gmsx);
 
-    unless (@mentioned) {
+    my $has_contents = !!($contents =~ m{^ \s* [^#] }gmx);
+
+    if ($has_contents && !@mentioned) {
+
         $self->hint('missing-debian-watch-file-standard');
         return;
     }
