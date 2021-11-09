@@ -88,7 +88,7 @@ sub check_for_trojan {
     }
 
     return
-      unless $item->file_info =~ /text/;
+      unless $item->is_script;
 
     # slurping contents for now in hope of speed
     my $contents = $item->decoded_utf8;
