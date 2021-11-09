@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: relative
+Description: Relative RPATH
+Package-Architecture: any

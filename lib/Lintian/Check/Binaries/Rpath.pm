@@ -121,9 +121,18 @@ sub visit_installed_files {
             push(@custom, $folder);
         }
 
+        my @absolute = grep { m{^ / }x } @custom;
+
         $self->hint('custom-library-search-path', $section, $_,
             $LEFT_SQUARE_BRACKET . $item->name. $RIGHT_SQUARE_BRACKET)
-          for @custom;
+          for @absolute;
+
+        my @relative = grep { m{^ [^/] }x } @custom;
+
+        $self->hint('relative-library-search-path',
+            $section, $_,
+            $LEFT_SQUARE_BRACKET . $item->name. $RIGHT_SQUARE_BRACKET)
+          for @relative;
     }
 
     return;
