@@ -318,6 +318,9 @@ sub magic {
     return $EMPTY
       if $self->size < $count;
 
+    return $EMPTY
+      unless $self->is_open_ok;
+
     my $magic;
 
     open(my $fd, '<', $self->unpacked_path);
