@@ -30,6 +30,7 @@ use Const::Fast;
 use List::Compare;
 use List::SomeUtils qw(any all none uniq);
 use Text::Glob qw(match_glob);
+use Time::Piece;
 use XML::LibXML;
 
 use Lintian::Deb822::File;
@@ -608,6 +609,34 @@ sub check_dep5_copyright {
 
         } else {
             @wildcards = $section->trimmed_list('Files');
+        }
+
+        my @rightholders = $section->trimmed_list('Copyright', qr{ \n }x);
+        my @years = map { /(\d{4})/g } @rightholders;
+        my @changelog_entries = @{$self->processable->changelog->entries};
+
+        if (   @years
+            && @changelog_entries
+            && (any { m{^ debian (?: / | $) }x } @wildcards)) {
+
+            my @descending = reverse sort { $a <=> $b } @years;
+            my $latest_copyright = $descending[0];
+
+            my $tp = Time::Piece->strptime($changelog_entries[0]->Date,
+                '%a, %d %b %Y %T %z');
+            my $latest_changelog = $tp->year;
+
+            $self->hint(
+                'update-debian-copyright',
+                $latest_copyright,
+                'vs',
+                $tp->year,
+                $LEFT_SQUARE
+                  .$copyright_file->name
+                  . $COLON
+                  . $section->position('Copyright')
+                  . $RIGHT_SQUARE
+            )if $latest_copyright < $tp->year;
         }
 
         for my $wildcard (@wildcards) {

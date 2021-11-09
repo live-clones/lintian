@@ -1,3 +1,4 @@
+source-copyright-empty-field (source): update-debian-copyright 2014 vs CHANGELOG-YEAR [debian/copyright:26]
 source-copyright-empty-field (source): superfluous-file-pattern debian/copyright m4/ (Files, line 77)
 source-copyright-empty-field (source): superfluous-file-pattern debian/copyright * (Files, line 7)
 source-copyright-empty-field (source): missing-license-text-in-dep5-copyright debian/copyright GPL-2+ (line 97)

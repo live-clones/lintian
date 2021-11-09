@@ -1,3 +1,6 @@
+source-copyright-dep5-general (source): update-debian-copyright 2010 vs CHANGELOG-YEAR [debian/copyright:36]
+source-copyright-dep5-general (source): update-debian-copyright 2010 vs CHANGELOG-YEAR [debian/copyright:32]
+source-copyright-dep5-general (source): update-debian-copyright 2010 vs CHANGELOG-YEAR [debian/copyright:28]
 source-copyright-dep5-general (source): unused-license-paragraph-in-dep5-copyright debian/copyright expat (line 96)
 source-copyright-dep5-general (source): unknown-paragraph-in-dep5-copyright debian/copyright paragraph at line 6
 source-copyright-dep5-general (source): obsolete-field-in-dep5-copyright debian/copyright Upstream-Maintainer Upstream-Contact (line 3)
