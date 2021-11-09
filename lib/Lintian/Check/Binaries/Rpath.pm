@@ -37,6 +37,8 @@ use namespace::clean;
 with 'Lintian::Check';
 
 const my $SLASH => q{/};
+const my $LEFT_SQUARE_BRACKET => q{[};
+const my $RIGHT_SQUARE_BRACKET => q{]};
 
 has DEB_HOST_MULTIARCH => (
     is => 'rw',
@@ -83,16 +85,7 @@ has private_folders => (
           = map { $_ . $SLASH . $self->processable->source_name }
           (@lib_folders, @usrlib_folders, @game_folders);
 
-        my @normalized;
-        for my $folder (@private_folders) {
-
-            $folder .= $SLASH
-              unless $folder =~ m{/\z};
-
-            push(@normalized, $folder);
-        }
-
-        return \@normalized;
+        return \@private_folders;
     });
 
 sub visit_installed_files {
@@ -114,31 +107,22 @@ sub visit_installed_files {
 
         my @canonical = map { File::Spec->canonpath($_) } @no_origin;
 
-        my @normalized;
-        for my $path (@canonical) {
-
-            $path =~ s{^/}{};
-            $path .= $SLASH
-              unless $path =~ m{/\z};
-
-            push(@normalized, $path);
-        }
-
         my @custom;
-        for my $folder (@normalized) {
+        for my $folder (@canonical) {
 
             # for shipped folders, would have to disallow system locations
             next
-              if any { $folder =~ m{^\Q$_\E} } @{$self->private_folders};
+              if any { $folder =~ m{^ / \Q$_\E }x } @{$self->private_folders};
 
             # GHC in Debian uses a scheme for RPATH (#914873)
             next
-              if $folder =~ m{^usr/lib/ghc/};
+              if $folder =~ m{^ /usr/lib/ghc (?: / | $ ) }x;
 
             push(@custom, $folder);
         }
 
-        $self->hint('custom-library-search-path', $item, $section, $_)
+        $self->hint('custom-library-search-path', $section, $_,
+            $LEFT_SQUARE_BRACKET . $item->name. $RIGHT_SQUARE_BRACKET)
           for @custom;
     }
 
