@@ -62,6 +62,7 @@ Enable-Tags-From-Check:
  debian/copyright
  debian/copyright/apache-notice
  debian/copyright/dep5
+ debian/copyright/dep5/components
  debian/debconf
  debian/desktop-entries
  debian/filenames
