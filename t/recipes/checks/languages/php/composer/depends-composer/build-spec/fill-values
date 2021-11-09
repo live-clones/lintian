@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: depends-composer
+Description: Installation package depends on composer

@@ -238,6 +238,7 @@ Enable-Tags-From-Check:
  languages/perl/perl5
  languages/perl/yapp
  languages/php
+ languages/php/composer
  languages/php/embedded
  languages/php/pear
  languages/php/pear/embedded
