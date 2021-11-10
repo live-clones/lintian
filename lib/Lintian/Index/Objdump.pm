@@ -321,12 +321,7 @@ sub parse_per_file {
             my $name = $2;
 
             $section_name_by_number[$number] = $name;
-
-            # We need sections as well (e.g. for incomplete stripping)
-            $by_object{SH}{$name} = 1
-              if $name eq '.comment'
-              || $name eq '.note'
-              || $name =~ m{^ [.]z?debug_ }x;
+            $by_object{SH}{$name} = 1;
 
             next;
         }
