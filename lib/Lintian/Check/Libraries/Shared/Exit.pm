@@ -47,7 +47,7 @@ sub visit_installed_files {
       unless $item->is_file;
 
     # shared library
-    my $objdump = $self->processable->objdump_info->{$item->name}{$EMPTY};
+    my $objdump = $item->objdump->{$EMPTY};
     return
       unless @{$objdump->{SONAME} // [] };
 

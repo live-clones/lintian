@@ -51,7 +51,7 @@ sub visit_installed_files {
       unless $item->file_info
       =~ m{(?: shared [ ] object | pie [ ] executable )}x;
 
-    my $objdump = $self->processable->objdump_info->{$item->name}{$EMPTY};
+    my $objdump = $item->objdump->{$EMPTY};
     return
       unless defined $objdump;
 

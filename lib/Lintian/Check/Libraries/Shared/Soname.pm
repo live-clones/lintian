@@ -28,7 +28,6 @@ use warnings;
 use utf8;
 
 use Const::Fast;
-use File::Basename;
 use List::SomeUtils qw(any none uniq);
 
 use Moo;
@@ -38,6 +37,7 @@ with 'Lintian::Check';
 
 const my $EMPTY => q{};
 const my $SPACE => q{ };
+const my $SLASH => q{/};
 
 has DEB_HOST_MULTIARCH => (
     is => 'rw',
@@ -62,7 +62,7 @@ sub installable {
       if length $multiarch_component;
 
     my @duplicated;
-    for my $file_name (keys %{$self->processable->objdump_info}) {
+    for my $item (@{$self->processable->installed->sorted_list}) {
 
         # For the package naming check, filter out SONAMEs where all the
         # files are at paths other than /lib, /usr/lib and /usr/lib/<MA-DIR>.
@@ -70,15 +70,13 @@ sub installable {
         # which may have their own SONAMEs but which don't matter for the
         # purposes of this check.
         next
-          if none { dirname($file_name) eq $_ } @common_folders;
+          if none { $item->dirname eq $_ . $SLASH } @common_folders;
 
         # Also filter out nsswitch modules
         next
-          if basename($file_name) =~ m{^ libnss_[^.]+\.so(?:\.\d+) $}x;
+          if $item->basename =~ m{^ libnss_[^.]+\.so(?:\.\d+) $}x;
 
-        my $objdump = $self->processable->objdump_info->{$file_name};
-
-        push(@duplicated, @{$objdump->{$EMPTY}{SONAME} // []});
+        push(@duplicated, @{$item->objdump->{$EMPTY}{SONAME} // []});
     }
 
     my @sonames = uniq @duplicated;

@@ -41,7 +41,6 @@ with
   'Lintian::Processable::Installed',
   'Lintian::Processable::IsNonFree',
   'Lintian::Processable::Hardening',
-  'Lintian::Processable::Objdump',
   'Lintian::Processable::NotJustDocs',
   'Lintian::Processable::Overrides',
   'Lintian::Processable';

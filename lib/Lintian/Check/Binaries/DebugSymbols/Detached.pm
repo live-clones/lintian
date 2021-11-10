@@ -58,7 +58,7 @@ sub visit_installed_files {
       unless $item->name
       =~ m{^ usr/lib/debug/ (?:lib\d*|s?bin|usr|opt|dev|emul|\.build-id) / }x;
 
-    my $objdump = $self->processable->objdump_info->{$item->name}{$EMPTY};
+    my $objdump = $item->objdump->{$EMPTY};
     return
       unless defined $objdump;
 

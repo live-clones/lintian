@@ -71,15 +71,12 @@ has linked_against_libvga => (
 
         my %linked_against_libvga;
 
-        # read data from objdump-info file
-        my $objdump_info = $self->processable->objdump_info;
+        for my $item (@{$self->processable->installed->sorted_list}) {
 
-        for my $file_name (keys %{$objdump_info}) {
+            for my $library (@{$item->objdump->{$EMPTY}{NEEDED} // []}){
 
-            for my $lib (@{$objdump_info->{$file_name}{$EMPTY}{NEEDED} // []}){
-
-                $linked_against_libvga{$file_name} = 1
-                  if $lib =~ /^libvga\.so\./;
+                $linked_against_libvga{$item->name} = 1
+                  if $library =~ m{^ libvga[.]so[.] }x;
             }
         }
 

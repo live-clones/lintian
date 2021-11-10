@@ -36,23 +36,21 @@ with 'Lintian::Check';
 
 const my $EMPTY => q{};
 
-has soname_by_file => (
+has soname_by_filename => (
     is => 'rw',
     lazy => 1,
     default => sub {
         my ($self) = @_;
 
-        my $objdump = $self->processable->objdump_info;
+        my %soname_by_filename;
+        for my $item (@{$self->processable->installed->sorted_list}) {
 
-        my %soname_by_file;
-        for my $file_name (keys %{$objdump}) {
-
-            $soname_by_file{$file_name}
-              = $objdump->{$file_name}{$EMPTY}{SONAME}[0]
-              if exists $objdump->{$file_name}{$EMPTY}{SONAME};
+            $soname_by_filename{$item->name}
+              = $item->objdump->{$EMPTY}{SONAME}[0]
+              if exists $item->objdump->{$EMPTY}{SONAME};
         }
 
-        return \%soname_by_file;
+        return \%soname_by_filename;
     });
 
 has must_call_ldconfig => (is => 'rw', default => sub { [] });
@@ -69,7 +67,7 @@ sub visit_installed_files {
     # hardware capabilities.
     # yes! so postinst must call ldconfig
     push(@{$self->must_call_ldconfig}, $resolved_name)
-      if exists $self->soname_by_file->{$resolved_name}
+      if exists $self->soname_by_filename->{$resolved_name}
       && $self->needs_ldconfig($item);
 
     return;

@@ -48,7 +48,7 @@ sub visit_installed_files {
     return
       unless $item->file_info =~ m{ \b current [ ] ar [ ] archive \b }x;
 
-    my $archive_objdump = $self->processable->objdump_info->{$item->name};
+    my $archive_objdump = $item->objdump;
     return
       unless defined $archive_objdump;
 

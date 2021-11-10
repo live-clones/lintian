@@ -55,14 +55,12 @@ has soname_by_filename => (
     default => sub {
         my ($self) = @_;
 
-        my $objdump = $self->processable->objdump_info;
-
         my %soname_by_filename;
-        for my $file_name (keys %{$objdump}) {
+        for my $item (@{$self->processable->installed->sorted_list}) {
 
-            $soname_by_filename{$file_name}
-              = $objdump->{$file_name}{$EMPTY}{SONAME}[0]
-              if exists $objdump->{$file_name}{$EMPTY}{SONAME};
+            $soname_by_filename{$item->name}
+              = $item->objdump->{$EMPTY}{SONAME}[0]
+              if exists $item->objdump->{$EMPTY}{SONAME};
         }
 
         return \%soname_by_filename;
@@ -275,9 +273,11 @@ sub check_symbols_file {
 
         for my $file_name (@shared_libraries){
 
-            my $objdump_info = $self->processable->objdump_info;
-            my @symbols
-              = @{$objdump_info->{$file_name}{$EMPTY}{SYMBOLS} // []};
+            my $item = $self->processable->installed->lookup($file_name);
+            next
+              unless defined $item;
+
+            my @symbols = @{$item->objdump->{$EMPTY}{SYMBOLS} // []};
 
             # only public shared libraries
             # Skip Objective C libraries as instance/class methods do not

@@ -27,10 +27,15 @@ use v5.20;
 use warnings;
 use utf8;
 
+use Const::Fast;
+
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $LEFT_SQUARE_BRACKET => q{[};
+const my $RIGHT_SQUARE_BRACKET => q{]};
 
 has OBSOLETE_CRYPT_FUNCTIONS => (
     is => 'rw',
@@ -42,32 +47,24 @@ has OBSOLETE_CRYPT_FUNCTIONS => (
             qr/\s*\|\|\s*/);
     });
 
-sub installable {
-    my ($self) = @_;
+sub visit_installed_files {
+    my ($self, $item) = @_;
 
-    for my $file_name (keys %{$self->processable->objdump_info}) {
+    for my $object_name (keys %{$item->objdump}) {
 
-        for my $object_name (
-            keys %{$self->processable->objdump_info->{$file_name}}) {
+        for my $symbol (@{$item->objdump->{$object_name}{SYMBOLS} // []}) {
 
-            my $objdump
-              = $self->processable->objdump_info->{$file_name}{$object_name};
+            next
+              unless $symbol->section eq 'UND';
 
-            for my $symbol (@{$objdump->{SYMBOLS}}) {
+            next
+              unless $self->OBSOLETE_CRYPT_FUNCTIONS->recognizes(
+                $symbol->name);
 
-                next
-                  unless $symbol->section eq 'UND';
+            my $tag = $self->OBSOLETE_CRYPT_FUNCTIONS->value($symbol->name);
 
-                if ($self->OBSOLETE_CRYPT_FUNCTIONS->recognizes($symbol->name))
-                {
-
-                    my $tag
-                      = $self->OBSOLETE_CRYPT_FUNCTIONS->value($symbol->name);
-
-                    $self->hint($tag, $object_name, $symbol->name,
-                        "[$file_name]");
-                }
-            }
+            $self->hint($tag, $object_name, $symbol->name,
+                $LEFT_SQUARE_BRACKET . $item->name . $RIGHT_SQUARE_BRACKET);
         }
     }
 

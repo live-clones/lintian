@@ -74,7 +74,7 @@ sub visit_installed_files {
     return
       if $item->name =~ m{^usr/lib/debug/};
 
-    my $objdump = $self->processable->objdump_info->{$item->name}{$EMPTY};
+    my $objdump = $item->objdump->{$EMPTY};
     return
       unless defined $objdump;
 

@@ -35,6 +35,8 @@ use namespace::clean;
 with 'Lintian::Check';
 
 const my $EMPTY => q{};
+const my $LEFT_SQUARE_BRACKET => q{[};
+const my $RIGHT_SQUARE_BRACKET => q{]};
 
 has HARDENED_FUNCTIONS => (
     is => 'rw',
@@ -82,50 +84,40 @@ has built_with_golang => (
         return $built_with_golang;
     });
 
-sub installable {
-    my ($self) = @_;
-
-    my $objdump_info = $self->processable->objdump_info;
-
-    for my $file_name (keys %{$objdump_info}) {
-        for my $object_name (keys %{$objdump_info->{$file_name}}) {
-
-            my $objdump = $objdump_info->{$file_name}{$object_name};
-
-            my @hardened_functions;
-            my @unhardened_functions;
-            for my $symbol (@{$objdump->{SYMBOLS}}) {
-
-                next
-                  unless $symbol->section eq 'UND';
-
-                if ($symbol->name =~ /^__(\S+)_chk$/) {
-
-                    my $vulnerable = $1;
-                    push(@hardened_functions, $vulnerable)
-                      if $self->HARDENED_FUNCTIONS->recognizes($vulnerable);
-
-                } else {
-
-                    push(@unhardened_functions, $symbol->name)
-                      if $self->HARDENED_FUNCTIONS->recognizes($symbol->name);
-                }
-            }
-
-            $self->hint('hardening-no-fortify-functions',
-                $object_name, "[$file_name]")
-              if @unhardened_functions
-              && !@hardened_functions
-              && !$self->built_with_golang
-              && $self->recommended_hardening_features->{fortify};
-        }
-    }
-
-    return;
-}
-
 sub visit_installed_files {
     my ($self, $item) = @_;
+
+    for my $object_name (keys %{$item->objdump}) {
+
+        my @hardened_functions;
+        my @unhardened_functions;
+
+        for my $symbol (@{$item->objdump->{$object_name}{SYMBOLS}}) {
+
+            next
+              unless $symbol->section eq 'UND';
+
+            if ($symbol->name =~ /^__(\S+)_chk$/) {
+
+                my $vulnerable = $1;
+                push(@hardened_functions, $vulnerable)
+                  if $self->HARDENED_FUNCTIONS->recognizes($vulnerable);
+
+            } else {
+
+                push(@unhardened_functions, $symbol->name)
+                  if $self->HARDENED_FUNCTIONS->recognizes($symbol->name);
+            }
+        }
+
+        $self->hint('hardening-no-fortify-functions',
+            $object_name,
+            $LEFT_SQUARE_BRACKET . $item->name . $RIGHT_SQUARE_BRACKET)
+          if @unhardened_functions
+          && !@hardened_functions
+          && !$self->built_with_golang
+          && $self->recommended_hardening_features->{fortify};
+    }
 
     return
       if $self->processable->type eq 'udeb';
@@ -137,7 +129,7 @@ sub visit_installed_files {
       if $item->file_info !~ m{^ [^,]* \b ELF \b }x
       || $item->file_info !~ m{ \b executable | shared [ ] object \b }x;
 
-    my $objdump = $self->processable->objdump_info->{$item->name}{$EMPTY};
+    my $objdump = $item->objdump->{$EMPTY};
     return
       unless defined $objdump;
 

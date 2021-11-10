@@ -42,9 +42,7 @@ sub visit_installed_files {
     return
       unless $file->file_info =~ /^[^,]*\bELF\b/;
 
-    my $objdump = $self->processable->objdump_info->{$file->name};
-
-    my @needed = @{$objdump->{$EMPTY}{NEEDED} // []};
+    my @needed = @{$file->objdump->{$EMPTY}{NEEDED} // []};
     my @obsolete = grep { /^libcblas\.so\.\d/ } @needed;
 
     $self->hint('linked-with-obsolete-library', $_, $file->name) for @obsolete;

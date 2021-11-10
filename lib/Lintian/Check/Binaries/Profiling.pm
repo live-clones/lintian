@@ -41,7 +41,7 @@ sub visit_installed_files {
 
     # $object_name can be an object inside a static lib.  These do
     # not appear in the output of our file_info collection.
-    my $objdump = $self->processable->objdump_info->{$item->name}{$EMPTY};
+    my $objdump = $item->objdump->{$EMPTY};
     return
       unless defined $objdump;
 
