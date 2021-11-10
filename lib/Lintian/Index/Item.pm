@@ -316,6 +316,9 @@ sub magic {
     my ($self, $count) = @_;
 
     return $EMPTY
+      if length $self->link;
+
+    return $EMPTY
       if $self->size < $count;
 
     return $EMPTY
