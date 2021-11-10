@@ -30,6 +30,9 @@ use IPC::Run3;
 use Path::Tiny;
 use Unicode::UTF8 qw(encode_utf8 valid_utf8 decode_utf8);
 
+use Lintian::Deb822::File;
+use Lintian::Inspect::Elf::Symbol;
+
 use Moo::Role;
 use namespace::clean;
 
@@ -164,7 +167,121 @@ sub add_objdump {
             $parsed .= parse_per_file($per_file, $recorded_name);
         }
 
-        $file->objdump($parsed);
+        my $deb822_file = Lintian::Deb822::File->new;
+        $deb822_file->parse_string($parsed);
+
+        my %by_file;
+
+        for my $deb822_section (@{$deb822_file->sections}) {
+
+            my %by_object;
+
+            $by_object{ERRORS} = 1
+              if lc($deb822_section->value('Broken')) eq 'yes';
+
+            $by_object{'BAD-DYNAMIC-TABLE'} = 1
+              if lc($deb822_section->value('Bad-Dynamic-Table')) eq 'yes';
+
+            $by_object{'ELF-TYPE'} = $deb822_section->value('Elf-Type')
+              if $deb822_section->declares('Elf-Type');
+
+            my @symbol_definitions
+              = $deb822_section->trimmed_list('Dynamic-Symbols', qr{\s*\n\s*});
+
+            for my $definition (@symbol_definitions) {
+
+                if ($definition =~ m/^\s*(\S+)\s+(?:(\S+)\s+)?(\S+)$/){
+
+                    # $version is not always there
+                    my $section = $1;
+                    my $version = $2;
+                    my $name = $3;
+
+                    my $symbol = Lintian::Inspect::Elf::Symbol->new;
+                    $symbol->section($section);
+                    $symbol->version($version);
+                    $symbol->name($name);
+
+                    push(@{ $by_object{SYMBOLS} }, $symbol);
+                }
+            }
+
+            my @elf_sections
+              = $deb822_section->trimmed_list('Section-Headers', qr{\s*\n\s*});
+
+            for my $section (@elf_sections) {
+
+                $by_object{SH}{$section} = 1;
+            }
+
+            my @program_headers
+              = $deb822_section->trimmed_list('Program-Headers', qr{\s*\n\s*});
+
+            for my $header (@program_headers) {
+
+                my ($type, @kvpairs) = split(/\s+/, $header);
+
+                for my $kvpair (@kvpairs) {
+
+                    my ($key, $value) = split(/=/, $kvpair);
+
+                    if ($type eq 'INTERP' && $key eq 'interp') {
+                        $by_object{INTERP} = $value;
+
+                    } else {
+                        $by_object{PH}{$type}{$key} = $value;
+                    }
+                }
+            }
+
+            my @dynamic_settings
+              = $deb822_section->trimmed_list('Dynamic-Section', qr{\s*\n\s*});
+
+            for my $setting (@dynamic_settings) {
+
+                # Here we just need RPATH and NEEDS, so ignore the rest for now
+                my ($type, $remainder) = split(/\s+/, $setting, 2);
+
+                $remainder //= $EMPTY;
+
+                if ($type eq 'RPATH' || $type eq 'RUNPATH') {
+
+                    # RPATH is like PATH
+                    my @components = split(/:/, $remainder);
+
+                    $by_object{$type}{$_} = 1 for @components;
+
+                } elsif ($type eq 'NEEDED' || $type eq 'SONAME') {
+                    push(@{ $by_object{$type} }, $remainder);
+
+                } elsif ($type eq 'TEXTREL' || $type eq 'DEBUG') {
+                    $by_object{$type} = 1;
+
+                } elsif ($type eq 'FLAGS_1') {
+
+                    my @flags = split(/\s+/, $remainder);
+
+                    $by_object{$type}{$_} = 1 for @flags;
+                }
+            }
+
+            my $file_name;
+            my $object_name;
+
+            if ($deb822_section->value('Filename') =~ m{^(.+)\(([^/\)]+)\)$}) {
+
+                # object file in a static lib.
+                $file_name = $1;
+                $object_name = $2;
+            }
+
+            $file_name //= $deb822_section->value('Filename');
+            $object_name //= $EMPTY;
+
+            $by_file{$object_name} = \%by_object;
+        }
+
+        $file->objdump(\%by_file);
     }
 
     chdir($savedir)

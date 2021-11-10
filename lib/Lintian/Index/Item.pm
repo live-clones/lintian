@@ -1340,9 +1340,8 @@ has strings => (
 );
 has objdump => (
     is => 'rw',
-    coerce => sub { my ($text) = @_; return ($text // $EMPTY); },
-    default => $EMPTY
-);
+    coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
+    default => sub { {} });
 has ar_info => (
     is => 'rw',
     coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
