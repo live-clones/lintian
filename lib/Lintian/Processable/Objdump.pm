@@ -25,6 +25,7 @@ use Const::Fast;
 use List::SomeUtils qw(uniq);
 
 use Lintian::Deb822::File;
+use Lintian::Inspect::Elf::Symbol;
 
 use Moo::Role;
 use namespace::clean;
@@ -91,11 +92,16 @@ has objdump_info => (
                 if ($definition =~ m/^\s*(\S+)\s+(?:(\S+)\s+)?(\S+)$/){
 
                     # $version is not always there
-                    my $elf_section = $1;
-                    my $version = $2 // $EMPTY;
+                    my $section = $1;
+                    my $version = $2;
                     my $name = $3;
 
-                    push @{ $info{SYMBOLS} }, [$elf_section, $version, $name];
+                    my $symbol = Lintian::Inspect::Elf::Symbol->new;
+                    $symbol->section($section);
+                    $symbol->version($version);
+                    $symbol->name($name);
+
+                    push(@{ $info{SYMBOLS} }, $symbol);
                 }
             }
 

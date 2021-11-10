@@ -87,21 +87,21 @@ sub installable {
 
         my @hardened_functions;
         my @unhardened_functions;
-        for my $entry (@{$objdump->{SYMBOLS}}) {
-            my ($section, $version, $symbol) = @{$entry};
+        for my $symbol (@{$objdump->{SYMBOLS}}) {
 
             next
-              unless $section eq 'UND';
+              unless $symbol->section eq 'UND';
 
-            if ($symbol =~ /^__(\S+)_chk$/) {
+            if ($symbol->name =~ /^__(\S+)_chk$/) {
+
                 my $vulnerable = $1;
                 push(@hardened_functions, $vulnerable)
                   if $self->HARDENED_FUNCTIONS->recognizes($vulnerable);
 
             } else {
 
-                push(@unhardened_functions, $symbol)
-                  if $self->HARDENED_FUNCTIONS->recognizes($symbol);
+                push(@unhardened_functions, $symbol->name)
+                  if $self->HARDENED_FUNCTIONS->recognizes($symbol->name);
             }
         }
 

@@ -49,17 +49,16 @@ sub installable {
 
         my $objdump = $self->processable->objdump_info->{$object_name};
 
-        for my $entry (@{$objdump->{SYMBOLS}}) {
-            my ($section, $version, $symbol) = @{$entry};
+        for my $symbol (@{$objdump->{SYMBOLS}}) {
 
             next
-              unless $section eq 'UND';
+              unless $symbol->section eq 'UND';
 
-            if ($self->OBSOLETE_CRYPT_FUNCTIONS->recognizes($symbol)){
+            if ($self->OBSOLETE_CRYPT_FUNCTIONS->recognizes($symbol->name)){
 
-                my $tag = $self->OBSOLETE_CRYPT_FUNCTIONS->value($symbol);
+                my $tag= $self->OBSOLETE_CRYPT_FUNCTIONS->value($symbol->name);
 
-                $self->hint($tag, $object_name, $symbol);
+                $self->hint($tag, $object_name, $symbol->name);
             }
         }
     }

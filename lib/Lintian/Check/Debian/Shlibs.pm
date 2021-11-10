@@ -280,7 +280,7 @@ sub check_symbols_file {
             # appear in the symbol table
             $self->hint('no-symbols-control-file', $name)
               if (any { (dirname($name) . $SLASH) eq $_ } @ldconfig_folders)
-              && (none { @{$_}[2] =~ m/^__objc_/ } @{$objdump->{SYMBOLS}})
+              && (none { $_->name =~ m/^__objc_/ } @{$objdump->{SYMBOLS}})
               && !is_nss_plugin($name);
         }
     }

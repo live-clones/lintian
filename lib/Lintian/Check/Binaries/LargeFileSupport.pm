@@ -76,14 +76,13 @@ sub visit_installed_files {
       unless defined $objdump;
 
     my @unresolved_symbols;
-    for my $entry (@{$objdump->{SYMBOLS} // [] }) {
-        my ($resolution, $version, $symbol) = @{$entry};
+    for my $symbol (@{$objdump->{SYMBOLS} // [] }) {
 
         # ignore if defined in the binary
         next
-          unless $resolution eq 'UND';
+          unless $symbol->section eq 'UND';
 
-        push(@unresolved_symbols, $symbol);
+        push(@unresolved_symbols, $symbol->name);
     }
 
     # Using a 32bit only interface call, some parts of the

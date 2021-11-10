@@ -49,7 +49,7 @@ sub visit_installed_files {
       unless @{$objdump->{SONAME} // [] };
 
     my @symbol_names
-      = map { @{$_}[2] } @{$objdump->{SYMBOLS} // []};
+      = map { $_->name } @{$objdump->{SYMBOLS} // []};
 
     # If it has an INTERP section it might be an application with
     # a SONAME (hi openjdk-6, see #614305).  Also see the comment

@@ -45,21 +45,20 @@ sub visit_installed_files {
 
     my $is_profiled = 0;
 
-    for my $entry (@{$objdump->{SYMBOLS} // [] }) {
-        my ($section, $version, $symbol) = @{$entry};
+    for my $symbol (@{$objdump->{SYMBOLS} // [] }) {
 
         # According to the binutils documentation[1], the profiling symbol
         # can be named "mcount", "_mcount" or even "__mcount".
         # [1] http://sourceware.org/binutils/docs/gprof/Implementation.html
         $is_profiled = 1
-          if $version =~ /^GLIBC_.*/
-          && $symbol =~ m{\A _?+ _?+ (gnu_)?+mcount(_nc)?+ \Z}xsm;
+          if $symbol->version =~ /^GLIBC_.*/
+          && $symbol->name =~ m{\A _?+ _?+ (gnu_)?+mcount(_nc)?+ \Z}xsm;
 
         # This code was used to detect profiled code in Wheezy and earlier
         $is_profiled = 1
-          if $section eq '.text'
-          && $version eq 'Base'
-          && $symbol eq '__gmon_start__'
+          if $symbol->section eq '.text'
+          && $symbol->version eq 'Base'
+          && $symbol->name eq '__gmon_start__'
           && $architecture ne 'hppa';
     }
 
