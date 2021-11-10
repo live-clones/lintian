@@ -35,7 +35,6 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-const my $EMPTY => q{};
 const my $SPACE => q{ };
 const my $LEFT_PARENTHESIS => q{(};
 const my $RIGHT_PARENTHESIS => q{)};
@@ -80,7 +79,7 @@ sub visit_installed_files {
 
     my $is_shared = $item->file_info =~ m/(shared object|pie executable)/;
 
-    for my $library (@{$item->objdump->{$EMPTY}{NEEDED} // [] }) {
+    for my $library (@{$item->elf->{NEEDED} // [] }) {
 
         $self->files_by_library->{$library} //= [];
         push(@{$self->files_by_library->{$library}}, $item->name);
@@ -91,7 +90,7 @@ sub visit_installed_files {
     # has no dependencies).
     $self->hint('shared-library-lacks-prerequisites', $item)
       if $is_shared
-      && !@{$item->objdump->{$EMPTY}{NEEDED} // []}
+      && !@{$item->elf->{NEEDED} // []}
       && $item->name !~ m{^boot/modules/}
       && $item->name !~ m{^lib/modules/}
       && $item->name !~ m{^usr/lib/debug/}
@@ -108,9 +107,9 @@ sub visit_installed_files {
 
     $self->hint('undeclared-elf-prerequisites', $item->name,
             $LEFT_PARENTHESIS
-          . join($SPACE, sort +uniq @{$item->objdump->{$EMPTY}{NEEDED} // []})
+          . join($SPACE, sort +uniq @{$item->elf->{NEEDED} // []})
           . $RIGHT_PARENTHESIS)
-      if @{$item->objdump->{$EMPTY}{NEEDED} // [] }
+      if @{$item->elf->{NEEDED} // [] }
       && $depends->is_empty;
 
     # If there is no libc dependency, then it is most likely a
@@ -118,13 +117,13 @@ sub visit_installed_files {
     # but these tend to link against libstdc++ instead.  (see
     # #719806)
     my $linked_with_libc
-      = any { m{^ libc[.]so[.] }x } @{$item->objdump->{$EMPTY}{NEEDED} // []};
+      = any { m{^ libc[.]so[.] }x } @{$item->elf->{NEEDED} // []};
 
     $self->hint('library-not-linked-against-libc', $item)
       if !$linked_with_libc
       && $is_shared
-      && @{$item->objdump->{$EMPTY}{NEEDED} // [] }
-      && (none { /^libc[.]so[.]/ } @{$item->objdump->{$EMPTY}{NEEDED} // [] })
+      && @{$item->elf->{NEEDED} // [] }
+      && (none { /^libc[.]so[.]/ } @{$item->elf->{NEEDED} // [] })
       && $item->name !~ m{/libc\b}
       && (!$self->built_with_octave
         || $item->name !~ m/\.(?:oct|mex)$/);
@@ -132,11 +131,10 @@ sub visit_installed_files {
     $self->hint('program-not-linked-against-libc', $item)
       if !$linked_with_libc
       && !$is_shared
-      && @{$item->objdump->{$EMPTY}{NEEDED} // [] }
+      && @{$item->elf->{NEEDED} // [] }
       && (
         none { /^libstdc[+][+][.]so[.]/ }
-        @{$item->objdump->{$EMPTY}{NEEDED} // [] }
-      )&& !$self->built_with_octave;
+        @{$item->elf->{NEEDED} // [] })&& !$self->built_with_octave;
 
     return;
 }

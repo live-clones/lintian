@@ -27,14 +27,10 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Const::Fast;
-
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-const my $EMPTY => q{};
 
 has built_with_golang => (
     is => 'rw',
@@ -69,10 +65,6 @@ sub visit_installed_files {
     return
       unless $item->file_info =~ m{ executable | shared [ ] object }x;
 
-    my $objdump = $item->objdump->{$EMPTY};
-    return
-      unless defined $objdump;
-
     my $is_shared = $item->file_info =~ m/(shared object|pie executable)/;
 
     # Some exceptions: files in /boot, /usr/lib/debug/*,
@@ -85,13 +77,13 @@ sub visit_installed_files {
     # ldconfig must be static.
     $self->hint('statically-linked-binary', $item)
       if !$is_shared
-      && !exists $objdump->{NEEDED}
+      && !exists $item->elf->{NEEDED}
       && $item->name !~ m{^boot/}
       && $item->name !~ /[\.-]static$/
       && $self->processable->name !~ /-static$/
       && !$self->built_with_golang
-      && (!exists $objdump->{INTERP}
-        || $objdump->{INTERP} !~ m{/lib/klibc-\S+\.so})
+      && (!exists $item->elf->{INTERP}
+        || $item->elf->{INTERP} !~ m{/lib/klibc-\S+\.so})
       && $item->name !~ m{^usr/lib/debug/}
       && $item->name ne 'sbin/ldconfig';
 

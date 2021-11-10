@@ -48,15 +48,11 @@ sub visit_installed_files {
     return
       unless $item->file_info =~ m{ \b current [ ] ar [ ] archive \b }x;
 
-    my $archive_objdump = $item->objdump;
-    return
-      unless defined $archive_objdump;
-
     my @unstripped_members;
     my %extra_sections_by_member;
-    for my $member_name (keys %{$archive_objdump}) {
+    for my $member_name (keys %{$item->elf_by_member}) {
 
-        my $member_objdump = $archive_objdump->{$member_name};
+        my $member_elf = $item->elf_by_member->{$member_name};
 
         # These are the ones file(1) looks for.  The ".zdebug_info" being the
         # compressed version of .debug_info.
@@ -65,13 +61,13 @@ sub visit_installed_files {
         my @DEBUG_SECTIONS = qw{.debug_info .zdebug_info};
 
         push(@unstripped_members, $member_name)
-          if any { exists $member_objdump->{SH}{$_} } @DEBUG_SECTIONS;
+          if any { exists $member_elf->{SH}{$_} } @DEBUG_SECTIONS;
 
-        if (none { exists $member_objdump->{SH}{$_} } @DEBUG_SECTIONS) {
+        if (none { exists $member_elf->{SH}{$_} } @DEBUG_SECTIONS) {
 
             my @EXTRA_SECTIONS = qw{.note .comment};
             my @not_needed
-              = grep { exists $member_objdump->{SH}{$_} } @EXTRA_SECTIONS;
+              = grep { exists $member_elf->{SH}{$_} } @EXTRA_SECTIONS;
 
             $extra_sections_by_member{$member_name} //= [];
             push(@{$extra_sections_by_member{$member_name}}, @not_needed);

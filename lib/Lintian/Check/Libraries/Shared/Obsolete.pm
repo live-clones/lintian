@@ -24,14 +24,10 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Const::Fast;
-
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-const my $EMPTY => q{};
 
 sub visit_installed_files {
     my ($self, $file) = @_;
@@ -42,7 +38,7 @@ sub visit_installed_files {
     return
       unless $file->file_info =~ /^[^,]*\bELF\b/;
 
-    my @needed = @{$file->objdump->{$EMPTY}{NEEDED} // []};
+    my @needed = @{$file->elf->{NEEDED} // []};
     my @obsolete = grep { /^libcblas\.so\.\d/ } @needed;
 
     $self->hint('linked-with-obsolete-library', $_, $file->name) for @obsolete;

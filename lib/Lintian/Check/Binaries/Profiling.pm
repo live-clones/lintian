@@ -27,29 +27,19 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Const::Fast;
-
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
 
-const my $EMPTY => q{};
-
 sub visit_installed_files {
     my ($self, $item) = @_;
-
-    # $object_name can be an object inside a static lib.  These do
-    # not appear in the output of our file_info collection.
-    my $objdump = $item->objdump->{$EMPTY};
-    return
-      unless defined $objdump;
 
     my $architecture = $self->processable->fields->value('Architecture');
 
     my $is_profiled = 0;
 
-    for my $symbol (@{$objdump->{SYMBOLS} // [] }) {
+    for my $symbol (@{$item->elf->{SYMBOLS} // [] }) {
 
         # According to the binutils documentation[1], the profiling symbol
         # can be named "mcount", "_mcount" or even "__mcount".

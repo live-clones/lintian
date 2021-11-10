@@ -33,8 +33,6 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-const my $EMPTY => q{};
-
 const my $WIDELY_READABLE => oct(644);
 
 sub visit_installed_files {
@@ -44,9 +42,8 @@ sub visit_installed_files {
       unless $item->is_file;
 
     # shared library
-    my $objdump = $item->objdump->{$EMPTY};
     return
-      unless @{$objdump->{SONAME} // [] };
+      unless @{$item->elf->{SONAME} // [] };
 
     # Yes.  But if the library has an INTERP section, it's
     # designed to do something useful when executed, so don't
@@ -55,7 +52,7 @@ sub visit_installed_files {
     $self->hint('shared-library-is-executable',
         $item->name, $item->octal_permissions)
       if $item->is_executable
-      && !$objdump->{INTERP}
+      && !$item->elf->{INTERP}
       && $item->name !~ m{^lib.*/ld-[\d.]+\.so$};
 
     $self->hint('odd-permissions-on-shared-library',

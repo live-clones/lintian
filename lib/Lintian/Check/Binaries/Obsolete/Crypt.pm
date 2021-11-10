@@ -34,6 +34,7 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
+const my $COLON => q{:};
 const my $LEFT_SQUARE_BRACKET => q{[};
 const my $RIGHT_SQUARE_BRACKET => q{]};
 
@@ -50,9 +51,24 @@ has OBSOLETE_CRYPT_FUNCTIONS => (
 sub visit_installed_files {
     my ($self, $item) = @_;
 
-    for my $object_name (keys %{$item->objdump}) {
+    for my $symbol (@{$item->elf->{SYMBOLS} // []}) {
 
-        for my $symbol (@{$item->objdump->{$object_name}{SYMBOLS} // []}) {
+        next
+          unless $symbol->section eq 'UND';
+
+        next
+          unless $self->OBSOLETE_CRYPT_FUNCTIONS->recognizes($symbol->name);
+
+        my $tag = $self->OBSOLETE_CRYPT_FUNCTIONS->value($symbol->name);
+
+        $self->hint($tag, $symbol->name,
+            $LEFT_SQUARE_BRACKET . $item->name . $RIGHT_SQUARE_BRACKET);
+    }
+
+    for my $member_name (keys %{$item->elf_by_member}) {
+
+        for
+          my $symbol (@{$item->elf_by_member->{$member_name}{SYMBOLS} // []}) {
 
             next
               unless $symbol->section eq 'UND';
@@ -63,8 +79,12 @@ sub visit_installed_files {
 
             my $tag = $self->OBSOLETE_CRYPT_FUNCTIONS->value($symbol->name);
 
-            $self->hint($tag, $object_name, $symbol->name,
-                $LEFT_SQUARE_BRACKET . $item->name . $RIGHT_SQUARE_BRACKET);
+            $self->hint($tag, $symbol->name,
+                    $LEFT_SQUARE_BRACKET
+                  . $item->name
+                  . $COLON
+                  . $member_name
+                  . $RIGHT_SQUARE_BRACKET);
         }
     }
 

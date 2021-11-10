@@ -27,16 +27,12 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Const::Fast;
-
 use List::SomeUtils qw(none);
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-const my $EMPTY => q{};
 
 sub visit_installed_files {
     my ($self, $item) = @_;
@@ -58,18 +54,14 @@ sub visit_installed_files {
       unless $item->name
       =~ m{^ usr/lib/debug/ (?:lib\d*|s?bin|usr|opt|dev|emul|\.build-id) / }x;
 
-    my $objdump = $item->objdump->{$EMPTY};
-    return
-      unless defined $objdump;
-
     $self->hint('debug-symbols-not-detached', $item)
-      if exists $objdump->{NEEDED};
+      if exists $item->elf->{NEEDED};
 
     # Something other than detached debugging symbols in
     # /usr/lib/debug paths.
     my @DEBUG_SECTIONS = qw{.debug_line .zdebug_line .debug_str .zdebug_str};
     $self->hint('debug-file-with-no-debug-symbols', $item)
-      if none { exists $objdump->{SH}{$_} } @DEBUG_SECTIONS;
+      if none { exists $item->elf->{SH}{$_} } @DEBUG_SECTIONS;
 
     return;
 }

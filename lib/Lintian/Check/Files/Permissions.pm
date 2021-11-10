@@ -33,7 +33,6 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-const my $EMPTY => q{};
 const my $NOT_EQUAL => q{!=};
 
 const my $STANDARD_EXECUTABLE => oct(755);
@@ -73,7 +72,7 @@ has linked_against_libvga => (
 
         for my $item (@{$self->processable->installed->sorted_list}) {
 
-            for my $library (@{$item->objdump->{$EMPTY}{NEEDED} // []}){
+            for my $library (@{$item->elf->{NEEDED} // []}){
 
                 $linked_against_libvga{$item->name} = 1
                   if $library =~ m{^ libvga[.]so[.] }x;

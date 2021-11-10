@@ -26,15 +26,12 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Const::Fast;
 use List::SomeUtils qw(any uniq);
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-const my $EMPTY => q{};
 
 has soname_by_filename => (
     is => 'rw',
@@ -45,9 +42,8 @@ has soname_by_filename => (
         my %soname_by_filename;
         for my $item (@{$self->processable->installed->sorted_list}) {
 
-            $soname_by_filename{$item->name}
-              = $item->objdump->{$EMPTY}{SONAME}[0]
-              if exists $item->objdump->{$EMPTY}{SONAME};
+            $soname_by_filename{$item->name}= $item->elf->{SONAME}[0]
+              if exists $item->elf->{SONAME};
         }
 
         return \%soname_by_filename;

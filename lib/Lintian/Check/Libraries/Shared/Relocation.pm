@@ -26,15 +26,10 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Const::Fast;
-use List::SomeUtils qw(any none);
-
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-const my $EMPTY => q{};
 
 sub visit_installed_files {
     my ($self, $item) = @_;
@@ -43,14 +38,13 @@ sub visit_installed_files {
       unless $item->is_file;
 
     # shared library
-    my $objdump = $item->objdump->{$EMPTY};
     return
-      unless @{$objdump->{SONAME} // [] };
+      unless @{$item->elf->{SONAME} // [] };
 
     # Now that we're sure this is really a shared library, report on
     # non-PIC problems.
     $self->hint('specific-address-in-shared-library', $item->name)
-      if $objdump->{TEXTREL};
+      if $item->elf->{TEXTREL};
 
     return;
 }

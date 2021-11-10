@@ -170,8 +170,6 @@ sub add_objdump {
         my $deb822_file = Lintian::Deb822::File->new;
         $deb822_file->parse_string($parsed);
 
-        my %by_file;
-
         for my $deb822_section (@{$deb822_file->sections}) {
 
             my %by_object;
@@ -265,23 +263,19 @@ sub add_objdump {
                 }
             }
 
-            my $file_name;
-            my $object_name;
-
-            if ($deb822_section->value('Filename') =~ m{^(.+)\(([^/\)]+)\)$}) {
+            if ($deb822_section->value('Filename') =~ m{^(?:.+)\(([^/\)]+)\)$})
+            {
 
                 # object file in a static lib.
-                $file_name = $1;
-                $object_name = $2;
+                my $object_name = $1;
+
+                $file->elf_by_member->{$object_name} = \%by_object;
+
+            } else {
+
+                $file->elf(\%by_object);
             }
-
-            $file_name //= $deb822_section->value('Filename');
-            $object_name //= $EMPTY;
-
-            $by_file{$object_name} = \%by_object;
         }
-
-        $file->objdump(\%by_file);
     }
 
     chdir($savedir)

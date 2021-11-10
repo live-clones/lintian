@@ -35,7 +35,6 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-const my $EMPTY => q{};
 const my $SPACE => q{ };
 const my $SLASH => q{/};
 
@@ -76,7 +75,7 @@ sub installable {
         next
           if $item->basename =~ m{^ libnss_[^.]+\.so(?:\.\d+) $}x;
 
-        push(@duplicated, @{$item->objdump->{$EMPTY}{SONAME} // []});
+        push(@duplicated, @{$item->elf->{SONAME} // []});
     }
 
     my @sonames = uniq @duplicated;

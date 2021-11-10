@@ -26,15 +26,12 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Const::Fast;
 use List::SomeUtils qw(none);
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-const my $EMPTY => q{};
 
 sub visit_installed_files {
     my ($self, $item) = @_;
@@ -49,13 +46,9 @@ sub visit_installed_files {
       unless $item->file_info
       =~ m{(?: shared [ ] object | pie [ ] executable )}x;
 
-    my $objdump = $item->objdump->{$EMPTY};
+    # does not have SONAME
     return
-      unless defined $objdump;
-
-    # do not have SONAME
-    return
-      if @{$objdump->{SONAME} // [] };
+      if @{$item->elf->{SONAME} // [] };
 
     my @ldconfig_folders = @{$self->profile->architectures->ldconfig_folders};
     return
@@ -64,7 +57,7 @@ sub visit_installed_files {
     # disregard executables
     $self->hint('sharedobject-in-library-directory-missing-soname',$item->name)
       if !$item->is_executable
-      || !defined $objdump->{DEBUG}
+      || !defined $item->elf->{DEBUG}
       || $item->name =~ / [.]so (?: [.] | $ ) /msx;
 
     return;

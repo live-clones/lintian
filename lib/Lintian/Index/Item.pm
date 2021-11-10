@@ -1213,7 +1213,9 @@ files.
 
 =item strings
 
-=item objdump
+=item elf
+
+=item elf_by_member
 
 =item C<basedir>
 
@@ -1338,7 +1340,11 @@ has strings => (
     coerce => sub { my ($text) = @_; return ($text // $EMPTY); },
     default => $EMPTY
 );
-has objdump => (
+has elf => (
+    is => 'rw',
+    coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
+    default => sub { {} });
+has elf_by_member => (
     is => 'rw',
     coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
     default => sub { {} });

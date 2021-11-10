@@ -27,15 +27,10 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Const::Fast;
-use List::SomeUtils qw(any);
-
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-const my $EMPTY => q{};
 
 sub visit_installed_files {
     my ($self, $item) = @_;
@@ -46,12 +41,9 @@ sub visit_installed_files {
     return
       unless $item->file_info =~ /^ [^,]* \b ELF \b /x;
 
-    my $objdump = $item->objdump->{$EMPTY};
-    return
-      unless defined $objdump;
-
     my @EXTRA_SECTIONS = qw{.note .comment};
-    my @unneeded_sections = grep { exists $objdump->{SH}{$_} } @EXTRA_SECTIONS;
+    my @unneeded_sections
+      = grep { exists $item->elf->{SH}{$_} } @EXTRA_SECTIONS;
 
     # appropriately stripped, but is it stripped enough?
     if (   $item->file_info !~ m{ \b not [ ] stripped \b }x

@@ -34,7 +34,7 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-const my $EMPTY => q{};
+const my $COLON => q{:};
 const my $LEFT_SQUARE_BRACKET => q{[};
 const my $RIGHT_SQUARE_BRACKET => q{]};
 
@@ -87,12 +87,40 @@ has built_with_golang => (
 sub visit_installed_files {
     my ($self, $item) = @_;
 
-    for my $object_name (keys %{$item->objdump}) {
+    my @elf_hardened;
+    my @elf_unhardened;
 
-        my @hardened_functions;
-        my @unhardened_functions;
+    for my $symbol (@{$item->elf->{SYMBOLS}}) {
 
-        for my $symbol (@{$item->objdump->{$object_name}{SYMBOLS}}) {
+        next
+          unless $symbol->section eq 'UND';
+
+        if ($symbol->name =~ /^__(\S+)_chk$/) {
+
+            my $vulnerable = $1;
+            push(@elf_hardened, $vulnerable)
+              if $self->HARDENED_FUNCTIONS->recognizes($vulnerable);
+
+        } else {
+
+            push(@elf_unhardened, $symbol->name)
+              if $self->HARDENED_FUNCTIONS->recognizes($symbol->name);
+        }
+    }
+
+    $self->hint('hardening-no-fortify-functions',
+        $LEFT_SQUARE_BRACKET . $item->name . $RIGHT_SQUARE_BRACKET)
+      if @elf_unhardened
+      && !@elf_hardened
+      && !$self->built_with_golang
+      && $self->recommended_hardening_features->{fortify};
+
+    for my $member_name (keys %{$item->elf_by_member}) {
+
+        my @member_hardened;
+        my @member_unhardened;
+
+        for my $symbol (@{$item->elf_by_member->{$member_name}{SYMBOLS}}) {
 
             next
               unless $symbol->section eq 'UND';
@@ -100,21 +128,24 @@ sub visit_installed_files {
             if ($symbol->name =~ /^__(\S+)_chk$/) {
 
                 my $vulnerable = $1;
-                push(@hardened_functions, $vulnerable)
+                push(@member_hardened, $vulnerable)
                   if $self->HARDENED_FUNCTIONS->recognizes($vulnerable);
 
             } else {
 
-                push(@unhardened_functions, $symbol->name)
+                push(@member_unhardened, $symbol->name)
                   if $self->HARDENED_FUNCTIONS->recognizes($symbol->name);
             }
         }
 
-        $self->hint('hardening-no-fortify-functions',
-            $object_name,
-            $LEFT_SQUARE_BRACKET . $item->name . $RIGHT_SQUARE_BRACKET)
-          if @unhardened_functions
-          && !@hardened_functions
+        $self->hint('hardening-no-fortify-functions',$member_name,
+                $LEFT_SQUARE_BRACKET
+              . $item->name
+              . $COLON
+              . $member_name
+              . $RIGHT_SQUARE_BRACKET)
+          if @member_unhardened
+          && !@member_hardened
           && !$self->built_with_golang
           && $self->recommended_hardening_features->{fortify};
     }
@@ -129,28 +160,24 @@ sub visit_installed_files {
       if $item->file_info !~ m{^ [^,]* \b ELF \b }x
       || $item->file_info !~ m{ \b executable | shared [ ] object \b }x;
 
-    my $objdump = $item->objdump->{$EMPTY};
-    return
-      unless defined $objdump;
-
     # dynamically linked?
     return
-      unless exists $objdump->{NEEDED};
+      unless exists $item->elf->{NEEDED};
 
     $self->hint('hardening-no-relro', $item)
       if $self->recommended_hardening_features->{relro}
       && !$self->built_with_golang
-      && !$objdump->{PH}{RELRO};
+      && !$item->elf->{PH}{RELRO};
 
     $self->hint('hardening-no-bindnow', $item)
       if $self->recommended_hardening_features->{bindnow}
       && !$self->built_with_golang
-      && !exists $objdump->{FLAGS_1}{NOW};
+      && !exists $item->elf->{FLAGS_1}{NOW};
 
     $self->hint('hardening-no-pie', $item)
       if $self->recommended_hardening_features->{pie}
       && !$self->built_with_golang
-      && $objdump->{'ELF-TYPE'} eq 'EXEC';
+      && $item->elf->{'ELF-TYPE'} eq 'EXEC';
 
     return;
 }

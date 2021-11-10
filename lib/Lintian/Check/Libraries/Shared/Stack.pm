@@ -26,14 +26,10 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Const::Fast;
-
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-const my $EMPTY => q{};
 
 sub visit_installed_files {
     my ($self, $item) = @_;
@@ -42,17 +38,16 @@ sub visit_installed_files {
       unless $item->is_file;
 
     # shared library
-    my $objdump = $item->objdump->{$EMPTY};
     return
-      unless @{$objdump->{SONAME} // [] };
+      unless @{$item->elf->{SONAME} // [] };
 
     $self->hint('shared-library-lacks-stack-section',$item->name)
       if $self->processable->fields->declares('Architecture')
-      && !exists $objdump->{PH}{STACK};
+      && !exists $item->elf->{PH}{STACK};
 
     $self->hint('executable-stack-in-shared-library', $item->name)
-      if exists $objdump->{PH}{STACK}
-      && $objdump->{PH}{STACK}{flags} ne 'rw-';
+      if exists $item->elf->{PH}{STACK}
+      && $item->elf->{PH}{STACK}{flags} ne 'rw-';
 
     return;
 }

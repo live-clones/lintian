@@ -27,15 +27,12 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Const::Fast;
 use List::SomeUtils qw(any);
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-const my $EMPTY => q{};
 
 has ARCH_REGEX => (
     is => 'rw',
@@ -74,12 +71,8 @@ sub visit_installed_files {
     return
       if $item->name =~ m{^usr/lib/debug/};
 
-    my $objdump = $item->objdump->{$EMPTY};
-    return
-      unless defined $objdump;
-
     my @unresolved_symbols;
-    for my $symbol (@{$objdump->{SYMBOLS} // [] }) {
+    for my $symbol (@{$item->elf->{SYMBOLS} // [] }) {
 
         # ignore if defined in the binary
         next

@@ -64,11 +64,10 @@ sub visit_installed_files {
       unless $item->is_file;
 
     # shared library
-    my $objdump = $item->objdump->{$EMPTY};
     return
-      unless @{$objdump->{SONAME} // [] };
+      unless @{$item->elf->{SONAME} // [] };
 
-    my $soname = $objdump->{SONAME}[0];
+    my $soname = $item->elf->{SONAME}[0];
 
     my @ldconfig_folders = @{$self->profile->architectures->ldconfig_folders};
     return

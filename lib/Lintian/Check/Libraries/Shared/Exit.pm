@@ -26,15 +26,12 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Const::Fast;
 use List::SomeUtils qw(any none);
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-const my $EMPTY => q{};
 
 # not presently used
 #my $UNKNOWN_SHARED_LIBRARY_EXCEPTIONS
@@ -47,12 +44,10 @@ sub visit_installed_files {
       unless $item->is_file;
 
     # shared library
-    my $objdump = $item->objdump->{$EMPTY};
     return
-      unless @{$objdump->{SONAME} // [] };
+      unless @{$item->elf->{SONAME} // [] };
 
-    my @symbol_names
-      = map { $_->name } @{$objdump->{SYMBOLS} // []};
+    my @symbol_names = map { $_->name } @{$item->elf->{SYMBOLS} // []};
 
     # If it has an INTERP section it might be an application with
     # a SONAME (hi openjdk-6, see #614305).  Also see the comment
@@ -60,7 +55,7 @@ sub visit_installed_files {
     $self->hint('exit-in-shared-library', $item->name)
       if (any { m/^_?exit$/ } @symbol_names)
       && (none { $_ eq 'fork' } @symbol_names)
-      && !length $objdump->{INTERP};
+      && !length $item->elf->{INTERP};
 
     return;
 }

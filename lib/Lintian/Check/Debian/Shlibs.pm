@@ -58,9 +58,8 @@ has soname_by_filename => (
         my %soname_by_filename;
         for my $item (@{$self->processable->installed->sorted_list}) {
 
-            $soname_by_filename{$item->name}
-              = $item->objdump->{$EMPTY}{SONAME}[0]
-              if exists $item->objdump->{$EMPTY}{SONAME};
+            $soname_by_filename{$item->name}= $item->elf->{SONAME}[0]
+              if exists $item->elf->{SONAME};
         }
 
         return \%soname_by_filename;
@@ -277,7 +276,7 @@ sub check_symbols_file {
             next
               unless defined $item;
 
-            my @symbols = @{$item->objdump->{$EMPTY}{SYMBOLS} // []};
+            my @symbols = @{$item->elf->{SYMBOLS} // []};
 
             # only public shared libraries
             # Skip Objective C libraries as instance/class methods do not
