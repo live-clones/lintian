@@ -30,7 +30,6 @@ use IPC::Run3;
 use Path::Tiny;
 use Unicode::UTF8 qw(encode_utf8 valid_utf8 decode_utf8);
 
-use Lintian::Deb822::File;
 use Lintian::Inspect::Elf::Symbol;
 
 use Moo::Role;
@@ -132,7 +131,6 @@ sub add_objdump {
             next;
         }
 
-        my $parsed;
         while (defined(my $fixed = shift @per_files)) {
 
             my $recorded_name = shift @per_files;
@@ -164,117 +162,14 @@ sub add_objdump {
             next
               unless length $per_file;
 
-            $parsed .= parse_per_file($per_file, $recorded_name);
-        }
-
-        my $deb822_file = Lintian::Deb822::File->new;
-        $deb822_file->parse_string($parsed);
-
-        for my $deb822_section (@{$deb822_file->sections}) {
-
-            my %by_object;
-
-            $by_object{ERRORS} = 1
-              if lc($deb822_section->value('Broken')) eq 'yes';
-
-            $by_object{'BAD-DYNAMIC-TABLE'} = 1
-              if lc($deb822_section->value('Bad-Dynamic-Table')) eq 'yes';
-
-            $by_object{'ELF-TYPE'} = $deb822_section->value('Elf-Type')
-              if $deb822_section->declares('Elf-Type');
-
-            my @symbol_definitions
-              = $deb822_section->trimmed_list('Dynamic-Symbols', qr{\s*\n\s*});
-
-            for my $definition (@symbol_definitions) {
-
-                if ($definition =~ m/^\s*(\S+)\s+(?:(\S+)\s+)?(\S+)$/){
-
-                    # $version is not always there
-                    my $section = $1;
-                    my $version = $2;
-                    my $name = $3;
-
-                    my $symbol = Lintian::Inspect::Elf::Symbol->new;
-                    $symbol->section($section);
-                    $symbol->version($version);
-                    $symbol->name($name);
-
-                    push(@{ $by_object{SYMBOLS} }, $symbol);
-                }
-            }
-
-            my @elf_sections
-              = $deb822_section->trimmed_list('Section-Headers', qr{\s*\n\s*});
-
-            for my $section (@elf_sections) {
-
-                $by_object{SH}{$section} = 1;
-            }
-
-            my @program_headers
-              = $deb822_section->trimmed_list('Program-Headers', qr{\s*\n\s*});
-
-            for my $header (@program_headers) {
-
-                my ($type, @kvpairs) = split(/\s+/, $header);
-
-                for my $kvpair (@kvpairs) {
-
-                    my ($key, $value) = split(/=/, $kvpair);
-
-                    if ($type eq 'INTERP' && $key eq 'interp') {
-                        $by_object{INTERP} = $value;
-
-                    } else {
-                        $by_object{PH}{$type}{$key} = $value;
-                    }
-                }
-            }
-
-            my @dynamic_settings
-              = $deb822_section->trimmed_list('Dynamic-Section', qr{\s*\n\s*});
-
-            for my $setting (@dynamic_settings) {
-
-                # Here we just need RPATH and NEEDS, so ignore the rest for now
-                my ($type, $remainder) = split(/\s+/, $setting, 2);
-
-                $remainder //= $EMPTY;
-
-                if ($type eq 'RPATH' || $type eq 'RUNPATH') {
-
-                    # RPATH is like PATH
-                    my @components = split(/:/, $remainder);
-
-                    $by_object{$type}{$_} = 1 for @components;
-
-                } elsif ($type eq 'NEEDED' || $type eq 'SONAME') {
-                    push(@{ $by_object{$type} }, $remainder);
-
-                } elsif ($type eq 'TEXTREL' || $type eq 'DEBUG') {
-                    $by_object{$type} = 1;
-
-                } elsif ($type eq 'FLAGS_1') {
-
-                    my @flags = split(/\s+/, $remainder);
-
-                    $by_object{$type}{$_} = 1 for @flags;
-                }
-            }
-
-            if ($deb822_section->value('Filename') =~ m{^(?:.+)\(([^/\)]+)\)$})
-            {
+            my $object_name;
+            if ($recorded_name =~ m{^(?:.+)\(([^/\)]+)\)$}){
 
                 # object file in a static lib.
-                my $object_name = $1;
-
-                $file->elf_by_member->{$object_name} = \%by_object;
-
-            } else {
-
-                $file->elf(\%by_object);
+                $object_name = $1;
             }
+
+            parse_per_file($file, $object_name, $per_file);
         }
     }
 
@@ -289,17 +184,27 @@ sub add_objdump {
 =cut
 
 sub parse_per_file {
-    my ($from_readelf, $filename) = @_;
+    my ($file, $object_name, $from_readelf) = @_;
 
-    my @sections;
+    my %by_object;
+
+    if (length $object_name) {
+
+        # object file in a static lib.
+        $file->elf_by_member->{$object_name} = \%by_object;
+
+    } else {
+
+        $file->elf(\%by_object);
+    }
+
+    my @section_name_by_number;
     my @symbol_versions;
     my @dynamic_symbols;
     my %program_headers;
     my $truncated = 0;
     my $elf_section = $EMPTY;
     my $static_lib_issues = 0;
-
-    my $parsed = "Filename: $filename" . $NEWLINE;
 
     my @lines = split(/\n/, $from_readelf);
     while (defined(my $line = shift @lines)) {
@@ -313,51 +218,65 @@ sub parse_per_file {
         ) {
        # Various errors for corrupt / broken files.  Note, readelf may spit out
        # multiple errors per file, hence the "unless".
-            $parsed .= 'Broken: yes' . $NEWLINE
+            $by_object{ERRORS} = 1
               unless $truncated++;
 
             next;
+        }
 
-        } elsif ($line =~ /^readelf: Error: Not an ELF file/) {
+        if ($line =~ /^readelf: Error: Not an ELF file/) {
             # Some upstreams like to create valid ar archives with the ".a"
             # extensions and fill them with poems rather than object files.
             #
             # Possibly a reference to afl...
             $static_lib_issues++
-              if $filename =~ m{\([^/\\)]++\)$};
+              if length $object_name;
 
             next;
+        }
 
-        } elsif ($line =~ /^Elf file type is (\S+)/) {
-            $parsed .= "Elf-Type: $1" . $NEWLINE;
+        if ($line =~ /^Elf file type is (\S+)/) {
+            $by_object{'ELF-TYPE'} = $1;
             next;
+        }
 
-        } elsif ($line =~ /^Program Headers:/) {
+        if ($line =~ /^Program Headers:/) {
             $elf_section = 'PH';
-            $parsed .= 'Program-Headers:' . $NEWLINE;
+            next;
+        }
 
-        } elsif ($line =~ /^Section Headers:/) {
+        if ($line =~ /^Section Headers:/) {
             $elf_section = 'SH';
-            $parsed .= 'Section-Headers:' . $NEWLINE;
+            next;
+        }
 
-        } elsif ($line =~ /^Dynamic section at offset .*:/) {
+        if ($line =~ /^Dynamic section at offset .*:/) {
             $elf_section = 'DS';
-            $parsed .= 'Dynamic-Section:' . $NEWLINE;
+            next;
+        }
 
-        } elsif ($line =~ /^Version symbols section /) {
+        if ($line =~ /^Version symbols section /) {
             $elf_section = 'VS';
+            next;
+        }
 
-        } elsif ($line =~ /^Symbol table '.dynsym'/) {
+        if ($line =~ /^Symbol table '.dynsym'/) {
             $elf_section = 'DS';
+            next;
+        }
 
-        } elsif ($line =~ /^Symbol table/) {
+        if ($line =~ /^Symbol table/) {
             $elf_section = $EMPTY;
+            next;
+        }
 
-        } elsif ($line =~ /^\s*$/) {
+        if ($line =~ /^\s*$/) {
             $elf_section = $EMPTY;
+            next;
+        }
 
-        } elsif ($line =~ /^\s*(\S+)\s*(?:(?:\S+\s+){4})\S+\s(...)/
-            and $elf_section eq 'PH') {
+        if (   $elf_section eq 'PH'
+            && $line =~ /^\s*(\S+)\s*(?:(?:\S+\s+){4})\S+\s(...)/) {
 
             my $header = $1;
             my $flags = $2;
@@ -367,14 +286,14 @@ sub parse_per_file {
             next
               if $header eq 'Type';
 
-            my $extra = $EMPTY;
-
             my $newflags = $EMPTY;
             $newflags .= ($flags =~ /R/) ? 'r' : $HYPHEN;
             $newflags .= ($flags =~ /W/) ? 'w' : $HYPHEN;
             $newflags .= ($flags =~ /E/) ? 'x' : $HYPHEN;
 
             $program_headers{$header} = $newflags;
+
+            $by_object{PH}{$header}{flags} = $newflags;
 
             if ($header eq 'INTERP' && @lines) {
                 # Check if the next line is the "requesting an interpreter"
@@ -384,69 +303,100 @@ sub parse_per_file {
                 if ($next_line
                     =~ m{\[Requesting program interpreter:\s([^\]]+)\]}){
 
-                    $extra .= " interp=$1";
+                    my $interpreter = $1;
+
+                    $by_object{INTERP} = $interpreter;
 
                     # discard line
                     shift @lines;
                 }
             }
 
-            $parsed .= "  $header flags=${newflags}$extra" . $NEWLINE;
-
             next;
+        }
 
-        } elsif ($line =~ /^\s*\[\s*(\d+)\] (\S+)(?:\s|\Z)/
-            && $elf_section eq 'SH') {
+        if ($elf_section eq 'SH' && $line =~ /^\s*\[\s*(\d+)\] (\S+)(?:\s|\Z)/)
+        {
+            my $number = $1;
+            my $name = $2;
 
-            my $section = $2;
-            $sections[$1] = $section;
+            $section_name_by_number[$number] = $name;
 
             # We need sections as well (e.g. for incomplete stripping)
-            $parsed .= $SPACE . $section . $NEWLINE
-              if $section =~ /^(?:\.comment$|\.note$|\.z?debug_)/;
+            $by_object{SH}{$name} = 1
+              if $name eq '.comment'
+              || $name eq '.note'
+              || $name =~ m{^ [.]z?debug_ }x;
 
-        } elsif ($line
+            next;
+        }
+
+        if (   $elf_section eq 'DS'
+            && $line
             =~ /^\s*0x(?:[0-9A-F]+)\s+\((.*?)\)\s+([\x21-\x7f][\x20-\x7f]*)\Z/i
-            && $elf_section eq 'DS') {
+        ) {
 
             my $type = $1;
-            my $value = $2;
+            my $remainder = $2;
 
             my $keep = 0;
 
-            if ($type eq 'RPATH' or $type eq 'RUNPATH') {
-                $value =~ s/^.*\[//;
-                $value =~ s/\]\s*$//;
+            if ($type eq 'RPATH' || $type eq 'RUNPATH') {
+                $remainder =~ s/^.*\[//;
+                $remainder =~ s/\]\s*$//;
                 $keep = 1;
 
-            } elsif ($type eq 'TEXTREL' or $type eq 'DEBUG') {
+            } elsif ($type eq 'TEXTREL' || $type eq 'DEBUG') {
                 $keep = 1;
 
             } elsif ($type eq 'FLAGS_1') {
                 # Will contain "NOW" if the binary was built with -Wl,-z,now
-                $value =~ s/^Flags:\s*//i;
+                $remainder =~ s/^Flags:\s*//i;
                 $keep = 1;
 
-            } elsif (($type eq 'FLAGS' and $value =~ m/\bBIND_NOW\b/)
-                or $type eq 'BIND_NOW') {
+            } elsif (($type eq 'FLAGS' && $remainder =~ m/\bBIND_NOW\b/)
+                || $type eq 'BIND_NOW') {
 
                 # Variants of bindnow
                 $type = 'FLAGS_1';
-                $value = 'NOW';
+                $remainder = 'NOW';
                 $keep = 1;
             }
 
             $keep = 1
-              if $value =~ s/^(?:Shared library|Library soname): \[(.*)\]/$1/;
+              if $remainder
+              =~ s/^(?:Shared library|Library soname): \[(.*)\]/$1/;
 
-            $parsed .= "  $type   $value" . $NEWLINE
-              if $keep;
+            next
+              unless $keep;
 
-        } elsif (
-            $line =~ /^\s*[0-9a-f]+: \s* \S+ \s* (?:\(\S+\))? (?:\s|\Z)/xi
-            && $elf_section eq 'VS') {
+            # Here we just need RPATH and NEEDS, so ignore the rest for now
+            if ($type eq 'RPATH' || $type eq 'RUNPATH') {
+
+                # RPATH is like PATH
+                my @components = split(/:/, $remainder);
+                $by_object{$type}{$_} = 1 for @components;
+
+            } elsif ($type eq 'NEEDED' || $type eq 'SONAME') {
+                push(@{ $by_object{$type} }, $remainder);
+
+            } elsif ($type eq 'TEXTREL' || $type eq 'DEBUG') {
+                $by_object{$type} = 1;
+
+            } elsif ($type eq 'FLAGS_1') {
+
+                my @flags = split(/\s+/, $remainder);
+                $by_object{$type}{$_} = 1 for @flags;
+            }
+
+            next;
+        }
+
+        if (   $elf_section eq 'VS'
+            && $line =~ /^\s*[0-9a-f]+: \s* \S+ \s* (?:\(\S+\))? (?:\s|\Z)/xi){
 
             while ($line =~ /([0-9a-f]+h?)\s*(?:\((\S+)\))?(?:\s|\Z)/gci) {
+
                 my $version_number = $1;
                 my $version_string = $2;
 
@@ -460,26 +410,32 @@ sub parse_per_file {
                 push(@symbol_versions, $version_string);
             }
 
-        } elsif ($line
+            next;
+        }
+
+        if (   $elf_section eq 'DS'
+            && $line
             =~ /^\s*(\d+):\s*[0-9a-f]+\s+\d+\s+(?:(?:\S+\s+){3})(?:\[.*\]\s+)?(\S+)\s+(.*)\Z/
-            && $elf_section eq 'DS') {
+        ) {
 
            # We (sometimes) need to read the "Version symbols section" first to
            # use this data and readelf tends to print after this section, so
            # save for later.
             push(@dynamic_symbols, [$1, $2, $3]);
 
-        } elsif ($line =~ /^There is no dynamic section in this file/
+            next;
+        }
+
+        if ($line =~ /^There is no dynamic section in this file/
             && exists $program_headers{DYNAMIC}) {
 
             # The headers declare a dynamic section but it's
             # empty.
-            $parsed .= 'Bad-Dynamic-Table: Yes' . $NEWLINE;
+            $by_object{'BAD-DYNAMIC-TABLE'} = 1;
+
+            next;
         }
     }
-
-    $parsed .= 'Dynamic-Symbols:' . $NEWLINE
-      if @dynamic_symbols;
 
     for my $dynamic_symbol (@dynamic_symbols) {
 
@@ -510,7 +466,7 @@ sub parse_per_file {
           unless length $symbol_name;
 
         # look up numbered section
-        $section = $sections[$section] // $section
+        $section = $section_name_by_number[$section] // $section
           if $section =~ /^\d+$/;
 
         # We only care about undefined symbols and symbols in
@@ -518,12 +474,15 @@ sub parse_per_file {
         next
           unless $section eq 'UND' || $section eq '.text';
 
-        $parsed .= " $section $symbol_version $symbol_name" . $NEWLINE;
+        my $symbol = Lintian::Inspect::Elf::Symbol->new;
+        $symbol->section($section);
+        $symbol->version($symbol_version);
+        $symbol->name($symbol_name);
+
+        push(@{ $by_object{SYMBOLS} }, $symbol);
     }
 
-    $parsed .= $NEWLINE;
-
-    return $parsed;
+    return;
 }
 
 =back
