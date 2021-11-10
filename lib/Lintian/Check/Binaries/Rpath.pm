@@ -36,6 +36,7 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
+const my $EMPTY => q{};
 const my $SLASH => q{/};
 const my $LEFT_SQUARE_BRACKET => q{[};
 const my $RIGHT_SQUARE_BRACKET => q{]};
@@ -97,7 +98,9 @@ sub visit_installed_files {
     return
       unless $item->file_info =~ /^ [^,]* \b ELF \b /x;
 
-    my $objdump = $self->processable->objdump_info->{$item->name};
+    my $objdump = $self->processable->objdump_info->{$item->name}{$EMPTY};
+    return
+      unless defined $objdump;
 
     for my $section (qw{RPATH RUNPATH}) {
 

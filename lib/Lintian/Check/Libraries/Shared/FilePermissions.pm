@@ -33,6 +33,8 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
+const my $EMPTY => q{};
+
 const my $WIDELY_READABLE => oct(644);
 
 sub visit_installed_files {
@@ -42,7 +44,7 @@ sub visit_installed_files {
       unless $item->is_file;
 
     # shared library
-    my $objdump = $self->processable->objdump_info->{$item->name};
+    my $objdump = $self->processable->objdump_info->{$item->name}{$EMPTY};
     return
       unless @{$objdump->{SONAME} // [] };
 

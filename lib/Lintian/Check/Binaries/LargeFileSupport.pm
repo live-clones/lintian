@@ -27,12 +27,15 @@ use v5.20;
 use warnings;
 use utf8;
 
+use Const::Fast;
 use List::SomeUtils qw(any);
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $EMPTY => q{};
 
 has ARCH_REGEX => (
     is => 'rw',
@@ -71,7 +74,7 @@ sub visit_installed_files {
     return
       if $item->name =~ m{^usr/lib/debug/};
 
-    my $objdump = $self->processable->objdump_info->{$item->name};
+    my $objdump = $self->processable->objdump_info->{$item->name}{$EMPTY};
     return
       unless defined $objdump;
 

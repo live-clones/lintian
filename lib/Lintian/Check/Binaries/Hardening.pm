@@ -27,10 +27,14 @@ use v5.20;
 use warnings;
 use utf8;
 
+use Const::Fast;
+
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $EMPTY => q{};
 
 has HARDENED_FUNCTIONS => (
     is => 'rw',
@@ -81,35 +85,40 @@ has built_with_golang => (
 sub installable {
     my ($self) = @_;
 
-    for my $object_name (sort keys %{$self->processable->objdump_info}) {
+    my $objdump_info = $self->processable->objdump_info;
 
-        my $objdump = $self->processable->objdump_info->{$object_name};
+    for my $file_name (keys %{$objdump_info}) {
+        for my $object_name (keys %{$objdump_info->{$file_name}}) {
 
-        my @hardened_functions;
-        my @unhardened_functions;
-        for my $symbol (@{$objdump->{SYMBOLS}}) {
+            my $objdump = $objdump_info->{$file_name}{$object_name};
 
-            next
-              unless $symbol->section eq 'UND';
+            my @hardened_functions;
+            my @unhardened_functions;
+            for my $symbol (@{$objdump->{SYMBOLS}}) {
 
-            if ($symbol->name =~ /^__(\S+)_chk$/) {
+                next
+                  unless $symbol->section eq 'UND';
 
-                my $vulnerable = $1;
-                push(@hardened_functions, $vulnerable)
-                  if $self->HARDENED_FUNCTIONS->recognizes($vulnerable);
+                if ($symbol->name =~ /^__(\S+)_chk$/) {
 
-            } else {
+                    my $vulnerable = $1;
+                    push(@hardened_functions, $vulnerable)
+                      if $self->HARDENED_FUNCTIONS->recognizes($vulnerable);
 
-                push(@unhardened_functions, $symbol->name)
-                  if $self->HARDENED_FUNCTIONS->recognizes($symbol->name);
+                } else {
+
+                    push(@unhardened_functions, $symbol->name)
+                      if $self->HARDENED_FUNCTIONS->recognizes($symbol->name);
+                }
             }
-        }
 
-        $self->hint('hardening-no-fortify-functions', $object_name)
-          if @unhardened_functions
-          && !@hardened_functions
-          && !$self->built_with_golang
-          && $self->recommended_hardening_features->{fortify};
+            $self->hint('hardening-no-fortify-functions',
+                $object_name, "[$file_name]")
+              if @unhardened_functions
+              && !@hardened_functions
+              && !$self->built_with_golang
+              && $self->recommended_hardening_features->{fortify};
+        }
     }
 
     return;
@@ -128,7 +137,9 @@ sub visit_installed_files {
       if $item->file_info !~ m{^ [^,]* \b ELF \b }x
       || $item->file_info !~ m{ \b executable | shared [ ] object \b }x;
 
-    my $objdump = $self->processable->objdump_info->{$item->name};
+    my $objdump = $self->processable->objdump_info->{$item->name}{$EMPTY};
+    return
+      unless defined $objdump;
 
     # dynamically linked?
     return

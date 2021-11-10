@@ -26,12 +26,15 @@ use v5.20;
 use warnings;
 use utf8;
 
+use Const::Fast;
 use List::SomeUtils qw(none uniq);
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $EMPTY => q{};
 
 has shared_libraries => (is => 'rw', default => sub { [] });
 
@@ -48,7 +51,7 @@ sub visit_installed_files {
       unless $item->file_info
       =~ m{(?: shared [ ] object | pie [ ] executable )}x;
 
-    my $objdump = $self->processable->objdump_info->{$item->name};
+    my $objdump = $self->processable->objdump_info->{$item->name}{$EMPTY};
     return
       unless defined $objdump;
 

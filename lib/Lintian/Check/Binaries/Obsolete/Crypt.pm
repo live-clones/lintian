@@ -45,20 +45,28 @@ has OBSOLETE_CRYPT_FUNCTIONS => (
 sub installable {
     my ($self) = @_;
 
-    for my $object_name (keys %{$self->processable->objdump_info}) {
+    for my $file_name (keys %{$self->processable->objdump_info}) {
 
-        my $objdump = $self->processable->objdump_info->{$object_name};
+        for my $object_name (
+            keys %{$self->processable->objdump_info->{$file_name}}) {
 
-        for my $symbol (@{$objdump->{SYMBOLS}}) {
+            my $objdump
+              = $self->processable->objdump_info->{$file_name}{$object_name};
 
-            next
-              unless $symbol->section eq 'UND';
+            for my $symbol (@{$objdump->{SYMBOLS}}) {
 
-            if ($self->OBSOLETE_CRYPT_FUNCTIONS->recognizes($symbol->name)){
+                next
+                  unless $symbol->section eq 'UND';
 
-                my $tag= $self->OBSOLETE_CRYPT_FUNCTIONS->value($symbol->name);
+                if ($self->OBSOLETE_CRYPT_FUNCTIONS->recognizes($symbol->name))
+                {
 
-                $self->hint($tag, $object_name, $symbol->name);
+                    my $tag
+                      = $self->OBSOLETE_CRYPT_FUNCTIONS->value($symbol->name);
+
+                    $self->hint($tag, $object_name, $symbol->name,
+                        "[$file_name]");
+                }
             }
         }
     }

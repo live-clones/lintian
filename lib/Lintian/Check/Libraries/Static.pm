@@ -29,7 +29,6 @@ use utf8;
 
 use Const::Fast;
 use List::SomeUtils qw(any none uniq);
-use Unicode::UTF8 qw(encode_utf8);
 
 use Moo;
 use namespace::clean;
@@ -55,15 +54,9 @@ sub visit_installed_files {
 
     my @unstripped_members;
     my %extra_sections_by_member;
-    for my $member_name (@{ $archive_objdump->{objects} }) {
+    for my $member_name (keys %{$archive_objdump}) {
 
-        my $lookup = $item->name . "($member_name)";
-        my $member_objdump = $self->processable->objdump_info->{$lookup};
-
-        die encode_utf8('object ('
-              . $item->name
-              . ": $member_name) in static lib is missing")
-          unless defined $member_objdump;
+        my $member_objdump = $archive_objdump->{$member_name};
 
         # These are the ones file(1) looks for.  The ".zdebug_info" being the
         # compressed version of .debug_info.

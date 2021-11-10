@@ -27,10 +27,14 @@ use v5.20;
 use warnings;
 use utf8;
 
+use Const::Fast;
+
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $EMPTY => q{};
 
 has built_with_golang => (
     is => 'rw',
@@ -65,7 +69,7 @@ sub visit_installed_files {
     return
       unless $item->file_info =~ m{ executable | shared [ ] object }x;
 
-    my $objdump = $self->processable->objdump_info->{$item->name};
+    my $objdump = $self->processable->objdump_info->{$item->name}{$EMPTY};
     return
       unless defined $objdump;
 

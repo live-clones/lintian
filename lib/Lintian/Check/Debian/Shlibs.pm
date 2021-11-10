@@ -58,10 +58,11 @@ has soname_by_filename => (
         my $objdump = $self->processable->objdump_info;
 
         my %soname_by_filename;
-        for my $name (keys %{$objdump}) {
+        for my $file_name (keys %{$objdump}) {
 
-            $soname_by_filename{$name} = $objdump->{$name}{SONAME}[0]
-              if exists $objdump->{$name}{SONAME};
+            $soname_by_filename{$file_name}
+              = $objdump->{$file_name}{$EMPTY}{SONAME}[0]
+              if exists $objdump->{$file_name}{$EMPTY}{SONAME};
         }
 
         return \%soname_by_filename;
@@ -108,15 +109,16 @@ sub check_shlibs_file {
     # they're in private directories, assume they're plugins or
     # private libraries and are safe.
     my @unversioned_libraries;
-    for my $name (keys %{$self->soname_by_filename}) {
+    for my $file_name (keys %{$self->soname_by_filename}) {
 
-        my $pretty_soname = human_soname($self->soname_by_filename->{$name});
+        my $pretty_soname
+          = human_soname($self->soname_by_filename->{$file_name});
         next
           if $pretty_soname =~ m{ };
 
-        push(@unversioned_libraries, $name);
-        $self->hint('shared-library-lacks-version', $name, $pretty_soname)
-          if any { (dirname($name) . $SLASH) eq $_ } @ldconfig_folders;
+        push(@unversioned_libraries, $file_name);
+        $self->hint('shared-library-lacks-version', $file_name, $pretty_soname)
+          if any { (dirname($file_name) . $SLASH) eq $_ } @ldconfig_folders;
     }
 
     my $versioned_lc = List::Compare->new([keys %{$self->soname_by_filename}],
@@ -135,14 +137,14 @@ sub check_shlibs_file {
       if defined $shlibs_file && !@versioned_libraries;
 
     # shared libraries included, thus shlibs control file has to exist
-    for my $name (@versioned_libraries) {
+    for my $file_name (@versioned_libraries) {
 
         # only public shared libraries
-        $self->hint('no-shlibs', $name)
-          if (any { (dirname($name) . $SLASH) eq $_ } @ldconfig_folders)
+        $self->hint('no-shlibs', $file_name)
+          if (any { (dirname($file_name) . $SLASH) eq $_ } @ldconfig_folders)
           && !defined $shlibs_file
           && $self->processable->type ne 'udeb'
-          && !is_nss_plugin($name);
+          && !is_nss_plugin($file_name);
     }
 
     if (@versioned_libraries && defined $shlibs_file) {
@@ -200,24 +202,24 @@ sub check_shlibs_file {
         }
 
         my @used_pretty_sonames;
-        for my $name (@versioned_libraries) {
+        for my $file_name (@versioned_libraries) {
 
             my $pretty_soname
-              = human_soname($self->soname_by_filename->{$name});
+              = human_soname($self->soname_by_filename->{$file_name});
 
             push(@used_pretty_sonames, $pretty_soname);
             push(@used_pretty_sonames, "udeb: $pretty_soname");
 
             # only public shared libraries
             $self->hint('ships-undeclared-shared-library',
-                $pretty_soname, 'for', $name)
+                $pretty_soname, 'for', $file_name)
               if (
-                any { (dirname($name) . $SLASH) eq $_ }
+                any { (dirname($file_name) . $SLASH) eq $_ }
                 @ldconfig_folders
               )
               && !@{$self->shlibs_positions_by_pretty_soname->{$pretty_soname}
                   // []}
-              && !is_nss_plugin($name);
+              && !is_nss_plugin($file_name);
         }
 
         my $unused_lc
@@ -271,17 +273,22 @@ sub check_symbols_file {
     if (!defined $symbols_file
         && $self->processable->type ne 'udeb') {
 
-        for my $name (@shared_libraries){
+        for my $file_name (@shared_libraries){
 
-            my $objdump = $self->processable->objdump_info->{$name};
+            my $objdump_info = $self->processable->objdump_info;
+            my @symbols
+              = @{$objdump_info->{$file_name}{$EMPTY}{SYMBOLS} // []};
 
             # only public shared libraries
             # Skip Objective C libraries as instance/class methods do not
             # appear in the symbol table
-            $self->hint('no-symbols-control-file', $name)
-              if (any { (dirname($name) . $SLASH) eq $_ } @ldconfig_folders)
-              && (none { $_->name =~ m/^__objc_/ } @{$objdump->{SYMBOLS}})
-              && !is_nss_plugin($name);
+            $self->hint('no-symbols-control-file', $file_name)
+              if (
+                any { (dirname($file_name) . $SLASH) eq $_ }
+                @ldconfig_folders
+              )
+              && (none { $_->name =~ m/^__objc_/ } @symbols)
+              && !is_nss_plugin($file_name);
         }
     }
 

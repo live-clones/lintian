@@ -26,12 +26,15 @@ use v5.20;
 use warnings;
 use utf8;
 
+use Const::Fast;
 use List::SomeUtils qw(any uniq);
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $EMPTY => q{};
 
 has soname_by_file => (
     is => 'rw',
@@ -42,10 +45,11 @@ has soname_by_file => (
         my $objdump = $self->processable->objdump_info;
 
         my %soname_by_file;
-        for my $name (keys %{$objdump}) {
+        for my $file_name (keys %{$objdump}) {
 
-            $soname_by_file{$name} = $objdump->{$name}{SONAME}[0]
-              if exists $objdump->{$name}{SONAME};
+            $soname_by_file{$file_name}
+              = $objdump->{$file_name}{$EMPTY}{SONAME}[0]
+              if exists $objdump->{$file_name}{$EMPTY}{SONAME};
         }
 
         return \%soname_by_file;

@@ -35,6 +35,8 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
+const my $EMPTY => q{};
+
 sub visit_installed_files {
     my ($self, $item) = @_;
 
@@ -44,7 +46,7 @@ sub visit_installed_files {
     return
       unless $item->file_info =~ /^ [^,]* \b ELF \b /x;
 
-    my $objdump = $self->processable->objdump_info->{$item->name};
+    my $objdump = $self->processable->objdump_info->{$item->name}{$EMPTY};
     return
       unless defined $objdump;
 

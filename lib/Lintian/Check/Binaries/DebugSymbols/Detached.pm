@@ -27,12 +27,16 @@ use v5.20;
 use warnings;
 use utf8;
 
+use Const::Fast;
+
 use List::SomeUtils qw(none);
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $EMPTY => q{};
 
 sub visit_installed_files {
     my ($self, $item) = @_;
@@ -54,7 +58,7 @@ sub visit_installed_files {
       unless $item->name
       =~ m{^ usr/lib/debug/ (?:lib\d*|s?bin|usr|opt|dev|emul|\.build-id) / }x;
 
-    my $objdump = $self->processable->objdump_info->{$item->name};
+    my $objdump = $self->processable->objdump_info->{$item->name}{$EMPTY};
     return
       unless defined $objdump;
 

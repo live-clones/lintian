@@ -36,6 +36,7 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
+const my $EMPTY => q{};
 const my $SPACE => q{ };
 
 has DEB_HOST_MULTIARCH => (
@@ -61,7 +62,7 @@ sub installable {
       if length $multiarch_component;
 
     my @duplicated;
-    for my $object_name (keys %{$self->processable->objdump_info}) {
+    for my $file_name (keys %{$self->processable->objdump_info}) {
 
         # For the package naming check, filter out SONAMEs where all the
         # files are at paths other than /lib, /usr/lib and /usr/lib/<MA-DIR>.
@@ -69,15 +70,15 @@ sub installable {
         # which may have their own SONAMEs but which don't matter for the
         # purposes of this check.
         next
-          if none { dirname($object_name) eq $_ } @common_folders;
+          if none { dirname($file_name) eq $_ } @common_folders;
 
         # Also filter out nsswitch modules
         next
-          if basename($object_name) =~ m{^ libnss_[^.]+\.so(?:\.\d+) $}x;
+          if basename($file_name) =~ m{^ libnss_[^.]+\.so(?:\.\d+) $}x;
 
-        my $objdump = $self->processable->objdump_info->{$object_name};
+        my $objdump = $self->processable->objdump_info->{$file_name};
 
-        push(@duplicated, @{$objdump->{SONAME} // []});
+        push(@duplicated, @{$objdump->{$EMPTY}{SONAME} // []});
     }
 
     my @sonames = uniq @duplicated;

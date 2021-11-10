@@ -27,17 +27,21 @@ use v5.20;
 use warnings;
 use utf8;
 
+use Const::Fast;
+
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $EMPTY => q{};
 
 sub visit_installed_files {
     my ($self, $item) = @_;
 
     # $object_name can be an object inside a static lib.  These do
     # not appear in the output of our file_info collection.
-    my $objdump = $self->processable->objdump_info->{$item->name};
+    my $objdump = $self->processable->objdump_info->{$item->name}{$EMPTY};
     return
       unless defined $objdump;
 

@@ -81,7 +81,7 @@ sub visit_installed_files {
     my $is_shared = $item->file_info =~ m/(shared object|pie executable)/;
     my $objdump = $self->processable->objdump_info->{$item->name};
 
-    for my $library (@{$objdump->{NEEDED} // [] }) {
+    for my $library (@{$objdump->{$EMPTY}{NEEDED} // [] }) {
 
         $self->files_by_library->{$library} //= [];
         push(@{$self->files_by_library->{$library}}, $item->name);
@@ -92,7 +92,7 @@ sub visit_installed_files {
     # has no dependencies).
     $self->hint('shared-library-lacks-prerequisites', $item)
       if $is_shared
-      && !@{$objdump->{NEEDED} // []}
+      && !@{$objdump->{$EMPTY}{NEEDED} // []}
       && $item->name !~ m{^boot/modules/}
       && $item->name !~ m{^lib/modules/}
       && $item->name !~ m{^usr/lib/debug/}
@@ -109,9 +109,9 @@ sub visit_installed_files {
 
     $self->hint('undeclared-elf-prerequisites', $item->name,
             $LEFT_PARENTHESIS
-          . join($SPACE, sort +uniq @{$objdump->{NEEDED}})
+          . join($SPACE, sort +uniq @{$objdump->{$EMPTY}{NEEDED} // []})
           . $RIGHT_PARENTHESIS)
-      if @{$objdump->{NEEDED} // [] }
+      if @{$objdump->{$EMPTY}{NEEDED} // [] }
       && $depends->is_empty;
 
     # If there is no libc dependency, then it is most likely a
@@ -119,13 +119,13 @@ sub visit_installed_files {
     # but these tend to link against libstdc++ instead.  (see
     # #719806)
     my $linked_with_libc
-      = any { m{^ libc[.]so[.] }x } @{$objdump->{NEEDED} // []};
+      = any { m{^ libc[.]so[.] }x } @{$objdump->{$EMPTY}{NEEDED} // []};
 
     $self->hint('library-not-linked-against-libc', $item)
       if !$linked_with_libc
       && $is_shared
-      && @{$objdump->{NEEDED} // [] }
-      && (none { /^libc[.]so[.]/ } @{$objdump->{NEEDED} // [] })
+      && @{$objdump->{$EMPTY}{NEEDED} // [] }
+      && (none { /^libc[.]so[.]/ } @{$objdump->{$EMPTY}{NEEDED} // [] })
       && $item->name !~ m{/libc\b}
       && (!$self->built_with_octave
         || $item->name !~ m/\.(?:oct|mex)$/);
@@ -133,9 +133,10 @@ sub visit_installed_files {
     $self->hint('program-not-linked-against-libc', $item)
       if !$linked_with_libc
       && !$is_shared
-      && @{$objdump->{NEEDED} // [] }
-      && (none { /^libstdc[+][+][.]so[.]/ } @{$objdump->{NEEDED} // [] })
-      && !$self->built_with_octave;
+      && @{$objdump->{$EMPTY}{NEEDED} // [] }
+      && (
+        none { /^libstdc[+][+][.]so[.]/ }
+        @{$objdump->{$EMPTY}{NEEDED} // [] })&& !$self->built_with_octave;
 
     return;
 }

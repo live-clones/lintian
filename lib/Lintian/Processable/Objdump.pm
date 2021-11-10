@@ -164,26 +164,21 @@ has objdump_info => (
                 }
             }
 
+            my $file_name;
+            my $object_name;
+
             if ($deb822_section->value('Filename') =~ m{^(.+)\(([^/\)]+)\)$}) {
 
                 # object file in a static lib.
-                my $archive = $1;
-                my $object = $2;
-
-                $objdump_info{$archive} //= {
-                    'filename' => $archive,
-                    'objects'  => [],
-                };
-
-                push(@{ $objdump_info{$archive}->{objects} }, $object);
+                $file_name = $1;
+                $object_name = $2;
             }
 
-            $objdump_info{$deb822_section->value('Filename')} = \%info;
-        }
+            $file_name //= $deb822_section->value('Filename');
+            $object_name //= $EMPTY;
 
-        # make object lists unique
-        $objdump_info{$_}->{objects}= [uniq @{ $objdump_info{$_}->{objects} }]
-          for keys %objdump_info;
+            $objdump_info{$file_name}{$object_name} = \%info;
+        }
 
         return \%objdump_info;
     });
