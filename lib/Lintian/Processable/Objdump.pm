@@ -1,6 +1,6 @@
 # -*- perl -*- Lintian::Processable::Objdump
 #
-# Copyright © 2019 Felix Lechner
+# Copyright © 2019-2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -23,14 +23,14 @@ use utf8;
 
 use Const::Fast;
 use List::SomeUtils qw(uniq);
-use Path::Tiny;
 
-use Lintian::Deb822::Parser qw(parse_dpkg_control_string);
+use Lintian::Deb822::File;
 
 use Moo::Role;
 use namespace::clean;
 
 const my $EMPTY => q{};
+const my $NEWLINE => qq{\n};
 
 =head1 NAME
 
@@ -63,100 +63,102 @@ has objdump_info => (
         my ($self) = @_;
 
         my @objdump = map { $_->objdump } @{$self->installed->sorted_list};
-        my $concatenated = join($EMPTY, @objdump);
+        my $concatenated = join($NEWLINE, @objdump);
 
-        my @paragraphs = parse_dpkg_control_string($concatenated);
+        my $deb822_file = Lintian::Deb822::File->new;
+        $deb822_file->parse_string($concatenated);
 
         my %objdump_info;
-        local $_ = undef;
 
-        for my $paragraph (@paragraphs) {
+        for my $deb822_section (@{$deb822_file->sections}) {
 
             my %info;
 
-            $info{'ERRORS'} = 1
-              if lc($paragraph->{'Broken'}//'no') eq 'yes';
+            $info{ERRORS} = 1
+              if lc($deb822_section->value('Broken')) eq 'yes';
 
             $info{'BAD-DYNAMIC-TABLE'} = 1
-              if lc($paragraph->{'Bad-Dynamic-Table'}//'no') eq 'yes';
+              if lc($deb822_section->value('Bad-Dynamic-Table')) eq 'yes';
 
-            $info{'ELF-TYPE'} = $paragraph->{'Elf-Type'}
-              if defined $paragraph->{'Elf-Type'};
+            $info{'ELF-TYPE'} = $deb822_section->value('Elf-Type')
+              if $deb822_section->declares('Elf-Type');
 
-            for my $symd (split m/\s*\n\s*/,
-                $paragraph->{'Dynamic-Symbols'}//$EMPTY){
-                next
-                  unless length $symd;
+            my @symbol_definitions
+              = $deb822_section->trimmed_list('Dynamic-Symbols', qr{\s*\n\s*});
 
-                if ($symd =~ m/^\s*(\S+)\s+(?:(\S+)\s+)?(\S+)$/){
-                    # $ver is not always there
-                    my ($sec, $ver, $sym) = ($1, $2, $3);
-                    $ver //= $EMPTY;
-                    push @{ $info{'SYMBOLS'} }, [$sec, $ver, $sym];
+            for my $definition (@symbol_definitions) {
+
+                if ($definition =~ m/^\s*(\S+)\s+(?:(\S+)\s+)?(\S+)$/){
+
+                    # $version is not always there
+                    my $elf_section = $1;
+                    my $version = $2 // $EMPTY;
+                    my $name = $3;
+
+                    push @{ $info{SYMBOLS} }, [$elf_section, $version, $name];
                 }
             }
 
-            for my $section (split m/\s*\n\s*/,
-                $paragraph->{'Section-Headers'}//$EMPTY){
-                next
-                  unless length $section;
-                # NB: helpers/coll/objdump-info-helper discards most
-                # sections.  If you are missing a section name for a
-                # check, please update helpers/coll/objdump-info-helper to
-                # retrain the section name you need.
+            my @elf_sections
+              = $deb822_section->trimmed_list('Section-Headers', qr{\s*\n\s*});
 
-                # trim both ends
-                $section =~ s/^\s+|\s+$//g;
+            for my $section (@elf_sections) {
 
-                $info{'SH'}{$section} = 1;
+                $info{SH}{$section} = 1;
             }
 
-            for my $data (split m/\s*\n\s*/,
-                $paragraph->{'Program-Headers'}//$EMPTY){
-                next
-                  unless length $data;
+            my @program_headers
+              = $deb822_section->trimmed_list('Program-Headers', qr{\s*\n\s*});
 
-                my ($header, @vals) = split m/\s++/, $data;
+            for my $header (@program_headers) {
 
-                for my $extra (@vals) {
+                my ($type, @kvpairs) = split(/\s+/, $header);
 
-                    my ($opt, $val) = split m/=/, $extra;
-                    if ($opt eq 'interp' and $header eq 'INTERP') {
-                        $info{'INTERP'} = $val;
+                for my $kvpair (@kvpairs) {
+
+                    my ($key, $value) = split(/=/, $kvpair);
+
+                    if ($type eq 'INTERP' && $key eq 'interp') {
+                        $info{INTERP} = $value;
 
                     } else {
-                        $info{'PH'}{$header}{$opt} = $val;
+                        $info{PH}{$type}{$key} = $value;
                     }
                 }
             }
 
-            for my $data (split m/\s*\n\s*/,
-                $paragraph->{'Dynamic-Section'}//$EMPTY){
-                next
-                  unless length $data;
+            my @dynamic_settings
+              = $deb822_section->trimmed_list('Dynamic-Section', qr{\s*\n\s*});
+
+            for my $setting (@dynamic_settings) {
 
                 # Here we just need RPATH and NEEDS, so ignore the rest for now
-                my ($header, $val) = split(m/\s++/, $data, 2);
-                if ($header eq 'RPATH' or $header eq 'RUNPATH') {
+                my ($type, $remainder) = split(/\s+/, $setting, 2);
+
+                $remainder //= $EMPTY;
+
+                if ($type eq 'RPATH' || $type eq 'RUNPATH') {
+
                     # RPATH is like PATH
-                    for my $rpathcomponent (split(/:/, $val // $EMPTY)) {
-                        $info{$header}{$rpathcomponent} = 1;
-                    }
+                    my @components = split(/:/, $remainder);
 
-                } elsif ($header eq 'NEEDED' or $header eq 'SONAME') {
-                    push @{ $info{$header} }, $val;
+                    $info{$type}{$_} = 1 for @components;
 
-                } elsif ($header eq 'TEXTREL' or $header eq 'DEBUG') {
-                    $info{$header} = 1;
+                } elsif ($type eq 'NEEDED' || $type eq 'SONAME') {
+                    push(@{ $info{$type} }, $remainder);
 
-                } elsif ($header eq 'FLAGS_1') {
-                    for my $flag (split(m/\s++/, $val)) {
-                        $info{$header}{$flag} = 1;
-                    }
+                } elsif ($type eq 'TEXTREL' || $type eq 'DEBUG') {
+                    $info{$type} = 1;
+
+                } elsif ($type eq 'FLAGS_1') {
+
+                    my @flags = split(/\s+/, $remainder);
+
+                    $info{$type}{$_} = 1 for @flags;
                 }
             }
 
-            if ($paragraph->{'Filename'} =~ m{^(.+)\(([^/\)]+)\)$}) {
+            if ($deb822_section->value('Filename') =~ m{^(.+)\(([^/\)]+)\)$}) {
 
                 # object file in a static lib.
                 my $archive = $1;
@@ -167,15 +169,14 @@ has objdump_info => (
                     'objects'  => [],
                 };
 
-                push(@{ $objdump_info{$archive}->{'objects'} }, $object);
+                push(@{ $objdump_info{$archive}->{objects} }, $object);
             }
 
-            $objdump_info{$paragraph->{'Filename'}} = \%info;
+            $objdump_info{$deb822_section->value('Filename')} = \%info;
         }
 
         # make object lists unique
-        $objdump_info{$_}->{'objects'}
-          = [uniq @{ $objdump_info{$_}->{'objects'} }]
+        $objdump_info{$_}->{objects}= [uniq @{ $objdump_info{$_}->{objects} }]
           for keys %objdump_info;
 
         return \%objdump_info;
