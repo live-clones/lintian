@@ -177,7 +177,7 @@ sub visit_installed_files {
     $self->hint('hardening-no-pie', $item)
       if $self->recommended_hardening_features->{pie}
       && !$self->built_with_golang
-      && $item->elf->{'ELF-TYPE'} eq 'EXEC';
+      && $item->elf->{'ELF-HEADER'}{Type} =~ m{^ EXEC }x;
 
     return;
 }

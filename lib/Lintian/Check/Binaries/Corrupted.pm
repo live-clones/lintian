@@ -27,16 +27,22 @@ use v5.20;
 use warnings;
 use utf8;
 
+use Const::Fast;
+
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
 
+const my $LEFT_SQUARE_BRACKET => q{[};
+const my $RIGHT_SQUARE_BRACKET => q{]};
+
 sub visit_installed_files {
     my ($self, $item) = @_;
 
-    $self->hint('apparently-corrupted-elf-binary', $item->name)
-      if $item->elf->{ERRORS};
+    $self->hint('apparently-corrupted-elf-binary',
+        $_, $LEFT_SQUARE_BRACKET . $item->name . $RIGHT_SQUARE_BRACKET)
+      for @{$item->elf->{ERRORS} // []};
 
     $self->hint('binary-with-bad-dynamic-table', $item->name)
       if $item->elf->{'BAD-DYNAMIC-TABLE'}
