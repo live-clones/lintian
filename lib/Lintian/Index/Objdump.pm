@@ -464,11 +464,6 @@ sub parse_per_file {
         $section = $section_name_by_number[$section] // $section
           if $section =~ /^\d+$/;
 
-        # We only care about undefined symbols and symbols in
-        # the .text segment.
-        next
-          unless $section eq 'UND' || $section eq '.text';
-
         my $symbol = Lintian::Inspect::Elf::Symbol->new;
         $symbol->section($section);
         $symbol->version($symbol_version);

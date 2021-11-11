@@ -46,7 +46,8 @@ sub visit_installed_files {
         # [1] http://sourceware.org/binutils/docs/gprof/Implementation.html
         $is_profiled = 1
           if $symbol->version =~ /^GLIBC_.*/
-          && $symbol->name =~ m{\A _?+ _?+ (gnu_)?+mcount(_nc)?+ \Z}xsm;
+          && $symbol->name =~ m{\A _?+ _?+ (gnu_)?+mcount(_nc)?+ \Z}xsm
+          && ($symbol->section eq 'UND' || $symbol->section eq '.text');
 
         # This code was used to detect profiled code in Wheezy and earlier
         $is_profiled = 1

@@ -276,7 +276,9 @@ sub check_symbols_file {
             next
               unless defined $item;
 
-            my @symbols = @{$item->elf->{SYMBOLS} // []};
+            my @symbols
+              = grep { $_->section eq '.text' || $_->section eq 'UND' }
+              @{$item->elf->{SYMBOLS} // []};
 
             # only public shared libraries
             # Skip Objective C libraries as instance/class methods do not

@@ -47,7 +47,10 @@ sub visit_installed_files {
     return
       unless @{$item->elf->{SONAME} // [] };
 
-    my @symbol_names = map { $_->name } @{$item->elf->{SYMBOLS} // []};
+    my @symbols = grep { $_->section eq '.text' || $_->section eq 'UND' }
+      @{$item->elf->{SYMBOLS} // []};
+
+    my @symbol_names = map { $_->name } @symbols;
 
     # If it has an INTERP section it might be an application with
     # a SONAME (hi openjdk-6, see #614305).  Also see the comment
