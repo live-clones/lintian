@@ -197,6 +197,9 @@ sub source {
 
             my ($name, $value) = split(m{ \s* = \s* }x, $option, 2);
 
+            next
+              unless length $name;
+
             $value //= $EMPTY;
 
             $self->hint('prefer-uscan-symlink', $name, $value,
