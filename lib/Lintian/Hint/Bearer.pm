@@ -68,8 +68,10 @@ Store found tags for later processing.
 sub hint {
     my ($self, $tagname, @context_components) = @_;
 
+    my @meaningful = grep { length } @context_components;
+
     # trim both ends of each item
-    s/^\s+|\s+$//g for @context_components;
+    s/^\s+|\s+$//g for @meaningful;
 
     my $tag = $self->profile->get_tag($tagname);
     unless (defined $tag) {
@@ -82,7 +84,7 @@ sub hint {
     return
       unless $self->profile->tag_is_enabled($tagname);
 
-    my $context_string = join($SPACE, @context_components);
+    my $context_string = join($SPACE, @meaningful);
     if (exists $self->context_tracker->{$tagname}{$context_string}) {
 
         my $checkname = $tag->check;
@@ -97,7 +99,7 @@ sub hint {
     my $hint = Lintian::Hint::Standard->new;
 
     $hint->tag($tag);
-    $hint->arguments(\@context_components);
+    $hint->arguments(\@meaningful);
 
     push(@{$self->hints}, $hint);
 
