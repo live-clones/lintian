@@ -1,4 +1,4 @@
-# -*- perl -*- Lintian::Index::Objdump
+# -*- perl -*- Lintian::Index::Elf
 #
 # Copyright © 1998 Christian Schwarz
 # Copyright © 2008 Adam D. Barratt
@@ -18,7 +18,7 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Lintian::Index::Objdump;
+package Lintian::Index::Elf;
 
 use v5.20;
 use warnings;
@@ -43,7 +43,7 @@ const my $LINES_PER_FILE => 3;
 
 =head1 NAME
 
-Lintian::Index::Objdump - binary symbol information.
+Lintian::Index::Elf - binary symbol information.
 
 =head1 SYNOPSIS
 
@@ -51,17 +51,17 @@ Lintian::Index::Objdump - binary symbol information.
 
 =head1 DESCRIPTION
 
-Lintian::Index::Objdump binary symbol information.
+Lintian::Index::Elf binary symbol information.
 
 =head1 INSTANCE METHODS
 
 =over 4
 
-=item add_objdump
+=item add_elf
 
 =cut
 
-sub add_objdump {
+sub add_elf {
     my ($self) = @_;
 
     my $savedir = getcwd;

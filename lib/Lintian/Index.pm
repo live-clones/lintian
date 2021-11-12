@@ -40,10 +40,10 @@ use namespace::clean;
 
 with
   'Lintian::Index::Ar',
+  'Lintian::Index::Elf',
   'Lintian::Index::FileInfo',
   'Lintian::Index::Java',
   'Lintian::Index::Md5sums',
-  'Lintian::Index::Objdump',
   'Lintian::Index::Strings';
 
 const my $EMPTY => q{};
@@ -536,8 +536,8 @@ sub load {
     $errors .= $self->add_fileinfo;
 
     $errors .= $self->add_ar;
+    $errors .= $self->add_elf;
     $errors .= $self->add_java;
-    $errors .= $self->add_objdump;
     $errors .= $self->add_strings;
 
     return $errors;
