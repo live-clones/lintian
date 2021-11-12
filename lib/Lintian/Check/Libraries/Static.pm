@@ -28,6 +28,7 @@ use warnings;
 use utf8;
 
 use Const::Fast;
+use List::Compare;
 use List::SomeUtils qw(any none uniq);
 
 use Moo;
@@ -49,29 +50,42 @@ sub visit_installed_files {
       unless $item->file_info =~ m{ \b current [ ] ar [ ] archive \b }x;
 
     my @unstripped_members;
-    my %extra_sections_by_member;
+    my %stripped_sections_by_member;
+
     for my $member_name (keys %{$item->elf_by_member}) {
 
         my $member_elf = $item->elf_by_member->{$member_name};
+
+        my @elf_sections = values %{$member_elf->{'SECTION-HEADERS'}};
+        my @have_section_names = map { $_->name } @elf_sections;
 
         # These are the ones file(1) looks for.  The ".zdebug_info" being the
         # compressed version of .debug_info.
         # - Technically, file(1) also looks for .symtab, but that is apparently
         #   not strippable for static libs.  Accordingly, it is omitted below.
-        my @DEBUG_SECTIONS = qw{.debug_info .zdebug_info};
+        my @KNOWN_DEBUG_SECTION_NAMES = qw{.debug_info .zdebug_info};
+        my $lc_debug = List::Compare->new(\@have_section_names,
+            \@KNOWN_DEBUG_SECTION_NAMES);
 
-        push(@unstripped_members, $member_name)
-          if any { exists $member_elf->{SH}{$_} } @DEBUG_SECTIONS;
+        my @have_debug_sections = $lc_debug->get_intersection;
 
-        if (none { exists $member_elf->{SH}{$_} } @DEBUG_SECTIONS) {
+        if (@have_debug_sections) {
 
-            my @EXTRA_SECTIONS = qw{.note .comment};
-            my @not_needed
-              = grep { exists $member_elf->{SH}{$_} } @EXTRA_SECTIONS;
-
-            $extra_sections_by_member{$member_name} //= [];
-            push(@{$extra_sections_by_member{$member_name}}, @not_needed);
+            push(@unstripped_members, $member_name);
+            next;
         }
+
+        my @KNOWN_STRIPPED_SECTION_NAMES = qw{.note .comment};
+        my $lc_stripped = List::Compare->new(\@have_section_names,
+            \@KNOWN_STRIPPED_SECTION_NAMES);
+
+        my @have_stripped_sections = $lc_stripped->get_intersection;
+
+        $stripped_sections_by_member{$member_name} //= [];
+        push(
+            @{$stripped_sections_by_member{$member_name}},
+            @have_stripped_sections
+        );
     }
 
     $self->hint('unstripped-static-library', $item->name,
@@ -83,12 +97,14 @@ sub visit_installed_files {
 
     # "libfoo_g.a" is usually a "debug" library, so ignore
     # unneeded sections in those.
-    for my $member (keys %extra_sections_by_member) {
+    for my $member (keys %stripped_sections_by_member) {
 
-        $self->hint('static-library-has-unneeded-sections',
-            $item->name, "($member)",
-            join($SPACE, sort +uniq @{$extra_sections_by_member{$member}}))
-          if @{$extra_sections_by_member{$member}}
+        $self->hint(
+            'static-library-has-unneeded-sections',
+            $item->name,
+            "($member)",
+            join($SPACE, sort +uniq @{$stripped_sections_by_member{$member}}))
+          if @{$stripped_sections_by_member{$member}}
           && $item->name !~ m{ _g [.]a $}x;
     }
 

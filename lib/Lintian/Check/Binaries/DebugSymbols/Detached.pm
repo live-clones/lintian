@@ -27,7 +27,7 @@ use v5.20;
 use warnings;
 use utf8;
 
-use List::SomeUtils qw(none);
+use List::Compare;
 
 use Moo;
 use namespace::clean;
@@ -59,9 +59,19 @@ sub visit_installed_files {
 
     # Something other than detached debugging symbols in
     # /usr/lib/debug paths.
-    my @DEBUG_SECTIONS = qw{.debug_line .zdebug_line .debug_str .zdebug_str};
+    my @KNOWN_DEBUG_SECTION_NAMES
+      = qw{.debug_line .zdebug_line .debug_str .zdebug_str};
+
+    my @elf_sections = values %{$item->elf->{'SECTION-HEADERS'}};
+    my @have_section_names = map { $_->name } @elf_sections;
+
+    my $lc_name
+      = List::Compare->new(\@have_section_names, \@KNOWN_DEBUG_SECTION_NAMES);
+
+    my @have_debug_sections = $lc_name->get_intersection;
+
     $self->hint('debug-file-with-no-debug-symbols', $item)
-      if none { exists $item->elf->{SH}{$_} } @DEBUG_SECTIONS;
+      unless @have_debug_sections;
 
     return;
 }

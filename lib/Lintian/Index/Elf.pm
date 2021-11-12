@@ -29,6 +29,7 @@ use Cwd;
 use IPC::Run3;
 use Unicode::UTF8 qw(encode_utf8 valid_utf8 decode_utf8);
 
+use Lintian::Inspect::Elf::Section;
 use Lintian::Inspect::Elf::Symbol;
 
 use Moo::Role;
@@ -465,17 +466,94 @@ sub dynamic_section {
 sub section_headers {
     my ($text, $by_object) = @_;
 
+    const my $TOTAL_FIELDS => 11;
+
     my @lines = split(m{\n}, $text);
 
+    die 'No column labels.'
+      unless @lines;
+
+    my $first = shift @lines;
+
+    my %labels_by_column;
+
+    my $column = 1;
+    for my $label (split($SPACE, $first)) {
+
+        $label =~ s{^ [[] }{}x;
+        $label =~ s{ []] $}{}x;
+
+        $labels_by_column{$column} = $label;
+
+    } continue {
+        ++$column;
+    }
+
+    die 'Not enough column labels.'
+      if keys %labels_by_column != $TOTAL_FIELDS;
+
+    my $row = 1;
     while (defined(my $line = shift @lines)) {
 
-        if ($line =~ m{^ \s* [[] \s* (\d+) []] \s+ (\S+) (?:\s | \Z) }x) {
+        last
+          if $line =~ /^Key to Flags:/;
 
-            my $number = $1;
-            my $name = $2;
+        my %section_header;
 
-            $by_object->{SH}{$name}{number} = $number;
+        my @matches = (
+            $line =~ m{^ \s*
+                         [[] \s* (\S+) []] \s    # Nr
+                         (\S+)?      \s+         # Name
+                         (\S+)       \s+         # Type
+                         ([0-9a-f]+) \s          # Address/Addr
+                         ([0-9a-f]+) \s          # Off
+                         ([0-9a-f]+) \s          # Size
+                         (\S+)       \s+         # ES
+                         (\S+)?      \s+         # Flg
+                         (\S+)       \s+         # Lk
+                         (\S+)       \s+         # Inf
+                         (\S+)                   # Al
+                       $}x
+        );
+
+        if (@matches != $TOTAL_FIELDS) {
+
+            warn "Parse error in readelf section headers [row $row]: $line";
+            next;
         }
+
+        for my $column (keys %labels_by_column) {
+
+            my $label = $labels_by_column{$column};
+            my $value = $matches[$column -1] // $EMPTY;
+
+            $section_header{$label} = $value;
+        }
+
+        # http://sco.com/developers/gabi/latest/ch4.sheader.html
+        my $section = Lintian::Inspect::Elf::Section->new;
+        $section->number($section_header{Nr});
+        $section->name($section_header{Name});
+        $section->type($section_header{Type});
+
+        # readelf uses both
+        $section->address(
+            hex($section_header{Address} // $section_header{Addr}));
+        $section->offset(hex($section_header{Off}));
+        $section->size(hex($section_header{Size}));
+        $section->entry_size(hex($section_header{ES}));
+        $section->flags($section_header{Flg});
+        $section->index_link(hex($section_header{Lk}));
+        $section->index_info(hex($section_header{Inf}));
+        $section->alignment(hex($section_header{Al}));
+
+        die 'No section number.'
+          unless length $section->number;
+
+        $by_object->{'SECTION-HEADERS'}{$section->number} = $section;
+
+    } continue {
+        ++$row;
     }
 
     return;

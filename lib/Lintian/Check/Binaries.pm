@@ -27,6 +27,8 @@ use v5.20;
 use warnings;
 use utf8;
 
+use List::Compare;
+
 use Moo;
 use namespace::clean;
 
@@ -41,16 +43,22 @@ sub visit_installed_files {
     return
       unless $item->file_info =~ /^ [^,]* \b ELF \b /x;
 
-    my @EXTRA_SECTIONS = qw{.note .comment};
-    my @unneeded_sections
-      = grep { exists $item->elf->{SH}{$_} } @EXTRA_SECTIONS;
+    my @KNOWN_STRIPPED_SECTION_NAMES = qw{.note .comment};
+
+    my @elf_sections = values %{$item->elf->{'SECTION-HEADERS'}};
+    my @have_section_names = map { $_->name } @elf_sections;
+
+    my $lc_name = List::Compare->new(\@have_section_names,
+        \@KNOWN_STRIPPED_SECTION_NAMES);
+
+    my @have_stripped_sections = $lc_name->get_intersection;
 
     # appropriately stripped, but is it stripped enough?
     if (   $item->file_info !~ m{ \b not [ ] stripped \b }x
         && $item->name !~ m{^ (?:usr/)? lib/ (?: debug | profile ) / }x) {
 
         $self->hint('binary-has-unneeded-section', $item->name, $_)
-          for @unneeded_sections;
+          for @have_stripped_sections;
     }
 
     return;
