@@ -194,7 +194,9 @@ sub parse_per_file {
 
     $by_object{READELF} = $from_readelf;
 
-    my @paragraphs = split(m{\n\n}, $from_readelf);
+    # sometimes there are three blank lines; seen on armhf
+    my @paragraphs = split(/\n{2,}/, $from_readelf);
+
     for my $paragraph (@paragraphs) {
 
         my ($first, $bulk) = split(m{\n}, $paragraph, 2);
