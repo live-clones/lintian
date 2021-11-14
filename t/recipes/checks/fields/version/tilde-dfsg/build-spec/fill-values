@@ -1,0 +1,6 @@
+Testname: tilde-dfsg
+Skeleton: upload-non-native
+Version: 1.0~dfsg-1
+Description: Check for dfsg with tilde (~) prefix
+See-Also:
+ https://lists.debian.org/debian-devel/2021/10/msg00012.html

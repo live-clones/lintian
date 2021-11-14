@@ -1,6 +1,7 @@
 # fields/version -- lintian check script (rewrite) -*- perl -*-
 #
 # Copyright © 2004 Marc Brockschmidt
+# Copyright © 2021 Kentaro Hayashi
 #
 # Parts of the code were taken from the old check script, which
 # was Copyright © 1998 Richard Braakman (also licensed under the
@@ -52,8 +53,13 @@ sub source {
     # repeat ourselves too much.
     if ($version =~ /dfsg/ && $self->processable->native) {
         $self->hint('dfsg-version-in-native-package', $version);
+
     } elsif ($version =~ /\.dfsg/) {
         $self->hint('dfsg-version-with-period', $version);
+
+    } elsif ($version =~ /~dfsg/) {
+        $self->hint('dfsg-version-with-tilde', $version);
+
     } elsif ($version =~ /dsfg/) {
         $self->hint('dfsg-version-misspelled', $version);
     }
