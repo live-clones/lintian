@@ -1,0 +1,4 @@
+Testname: fields-version-tilde-dfsg
+Skeleton: upload-non-native
+Version: 1.0~dfsg-1
+Description: Check for dfsg with tilde (~) prefix

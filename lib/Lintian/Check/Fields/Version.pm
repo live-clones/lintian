@@ -54,6 +54,8 @@ sub source {
         $self->hint('dfsg-version-in-native-package', $version);
     } elsif ($version =~ /\.dfsg/) {
         $self->hint('dfsg-version-with-period', $version);
+    } elsif ($version =~ /~dfsg/) {
+        $self->hint('dfsg-version-with-tilde', $version);
     } elsif ($version =~ /dsfg/) {
         $self->hint('dfsg-version-misspelled', $version);
     }
