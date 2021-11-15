@@ -267,6 +267,7 @@ Enable-Tags-From-Check:
  libraries/shared/stack
  libraries/shared/trigger/ldconfig
  libraries/static
+ libraries/static/link-time-optimization
  libraries/static/name
  libraries/static/no-code
  linda
