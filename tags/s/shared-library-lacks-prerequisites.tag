@@ -11,3 +11,13 @@ Explanation: The listed shared library doesn't include information about the
  .
  The fix is to specify the libraries. One way to do so is to add
  something like "-lc" to the command-line options for "ld".
+
+Screen: coq/cmxs/prerequisites
+Advocates: Julien Puydt <julien.puydt@gmail.com>
+Reason: The Coq project comes with a kind of compiler that generates files
+ which are ELF shared objects. Unfortunately, they contain many undefined
+ symbols, but those are expected.
+ .
+ There are a lot of false positives.
+See-Also:
+ Bug#999602
