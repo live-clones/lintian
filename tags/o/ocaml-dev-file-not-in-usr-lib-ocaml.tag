@@ -1,7 +1,9 @@
 Tag: ocaml-dev-file-not-in-usr-lib-ocaml
 Severity: pedantic
-Check: languages/ocaml
-Explanation: This development package installs OCaml development files
- (<code>.cmi</code>, <code>.cmx</code> or <code>.cmxa</code>) outside
- <code>/usr/lib/ocaml</code>. Such files are used only by compilation and
- should be in a subdirectory of OCaml standard library path.
+Check: languages/ocaml/byte-code/misplaced/path
+Explanation: This OCaml package ships development files like <code>&ast;.cmi</code>,
+ <code>&ast;.cmx</code> or <code>&ast;.cmxa</code> outside of the standard folder
+ <code>/usr/lib/ocaml</code>.
+ .
+ Those files are used only for compilation and should be placed in a  subfolder of
+ the standard OCaml library path.

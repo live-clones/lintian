@@ -1,0 +1,27 @@
+Source: [% $source %]
+Priority: optional
+Section: [% $section %]
+Maintainer: [% $author %]
+Standards-Version: [% $standards_version %]
+Build-Depends: [% $build_depends %]
+Rules-Requires-Root: no
+
+Package: libocaml-general-ocaml
+Architecture: [% $package_architecture %]
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: OCaml library package for tests
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.
+ .
+ A library package for OCaml checks.
+
+Package: libocaml-general-ocaml-dev
+Architecture: [% $package_architecture %]
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: OCaml dev package for tests
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.
+ .
+ A development package for OCaml checks.

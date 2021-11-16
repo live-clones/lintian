@@ -1,7 +1,9 @@
 Tag: ocaml-dangling-cmxs
 Severity: warning
-Check: languages/ocaml
-Explanation: This package seems to be a library package, and provides a native
- plugin (<code>.cmxs</code>). If the plugin is meant to be used as a library
- for other plugins, it should be shipped as bytecode (<code>.cma</code> or
- <code>.cmo</code>) as well.
+Check: languages/ocaml/byte-code/plugin
+Explanation: This OCaml package provides a native plugin with a name like
+ <code>*.cmxs</code> but does not ship the associated byte code.
+ .
+ If the plugin is meant to be used inside other plugins, the package should also
+ ship the byte code in a similarly-named file, such as <code>&ast;cma</code> or
+ <code>&ast;.cmo</code>.

@@ -231,8 +231,14 @@ Enable-Tags-From-Check:
  languages/java/bytecode
  languages/javascript/embedded
  languages/javascript/nodejs
- languages/ocaml
+ languages/ocaml/byte-code/compiled
+ languages/ocaml/byte-code/interface
+ languages/ocaml/byte-code/library
+ languages/ocaml/byte-code/misplaced/package
+ languages/ocaml/byte-code/misplaced/path
+ languages/ocaml/byte-code/plugin
  languages/ocaml/custom-executable
+ languages/ocaml/meta
  languages/perl
  languages/perl/perl4/prerequisites
  languages/perl/perl5
