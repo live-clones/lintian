@@ -62,6 +62,8 @@ sub source {
 
     } elsif ($version =~ /dsfg/) {
         $self->hint('dfsg-version-misspelled', $version);
+    } elsif ($version =~ /dfsg1-/) {
+        $self->hint('dfsg-version-with-dfsg1', $version);
     }
 
     $self->hint('binary-nmu-debian-revision-in-source', $version)
