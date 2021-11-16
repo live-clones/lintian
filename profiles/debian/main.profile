@@ -153,6 +153,7 @@ Enable-Tags-From-Check:
  fields/vcs
  fields/version
  fields/version/derivative
+ fields/version/repack/count
  fields/version/repack/native
  fields/version/repack/period
  fields/version/repack/tilde

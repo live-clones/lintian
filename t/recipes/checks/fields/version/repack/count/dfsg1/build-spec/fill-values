@@ -1,0 +1,6 @@
+Testname: dfsg1
+Skeleton: upload-non-native
+Version: 1.0+dfsg1-1
+Description: Start with +dfsg-1 instead of +dfsg1-1
+See-Also:
+ https://lists.debian.org/debian-devel/2021/10/msg00026.html
