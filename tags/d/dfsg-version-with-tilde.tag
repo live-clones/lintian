@@ -1,6 +1,6 @@
 Tag: dfsg-version-with-tilde
 Severity: info
-Check: fields/version
+Check: fields/version/repack/tilde
 Explanation: The source version string contains a tilde like <code>~dfsg</code>.
  It is probably in a form like <code>1.0~dfsg-1</code>.
  .

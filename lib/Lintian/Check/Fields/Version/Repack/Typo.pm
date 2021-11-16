@@ -1,4 +1,4 @@
-# fields/version -- lintian check script (rewrite) -*- perl -*-
+# fields/version/repack/typo -- lintian check script (rewrite) -*- perl -*-
 #
 # Copyright © 2004 Marc Brockschmidt
 # Copyright © 2021 Felix Lechner
@@ -23,20 +23,22 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::Check::Fields::Version;
+package Lintian::Check::Fields::Version::Repack::Typo;
 
 use v5.20;
 use warnings;
 use utf8;
 
-use Dpkg::Version;
+use Dpkg::Version qw(version_check);
+
+use Lintian::Relation::Version qw(versions_compare);
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
 
-sub always {
+sub source {
     my ($self) = @_;
 
     my $fields = $self->processable->fields;
@@ -46,47 +48,9 @@ sub always {
 
     my $version = $fields->unfolded_value('Version');
 
-    my $dversion = Dpkg::Version->new($version);
-    unless ($dversion->is_valid) {
-        $self->hint('bad-version-number', $version);
-        return;
-    }
-
-    my ($epoch, $upstream, $debian)
-      = ($dversion->epoch, $dversion->version, $dversion->revision);
-
-    # Dpkg::Version sets the debian revision to 0 if there is
-    # no revision.  So we need to check if the raw version
-    # ends with "-0".
-    $self->hint('debian-revision-is-zero', $version)
-      if $version =~ /-0$/;
-
-    my $ubuntu;
-    if($debian =~ /^(?:[^.]+)(?:\.[^.]+)?(?:\.[^.]+)?(\..*)?$/){
-        my $extra = $1;
-        if (
-            defined $extra
-            && $debian =~ m{\A
-                            (?:[^.]+ubuntu[^.]+)(?:\.\d+){1,3}(\..*)?
-                            \Z}xsm
-        ) {
-            $ubuntu = 1;
-            $extra = $1;
-        }
-
-        $self->hint('debian-revision-not-well-formed', $version)
-          if defined $extra;
-
-    } else {
-        $self->hint('debian-revision-not-well-formed', $version);
-    }
-
-    if ($self->processable->type eq 'source') {
-
-        $self->hint('binary-nmu-debian-revision-in-source', $version)
-          if ($debian =~ /^[^.-]+\.[^.-]+\./ && !$ubuntu)
-          || $version =~ /\+b\d+$/;
-    }
+    $self->hint('dfsg-version-misspelled', $version)
+      if $version =~ /dsfg/
+      && !$self->processable->native;
 
     return;
 }

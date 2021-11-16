@@ -1,4 +1,4 @@
-# fields/version -- lintian check script (rewrite) -*- perl -*-
+# languages/perl/core/provides -- lintian check script (rewrite) -*- perl -*-
 #
 # Copyright © 2004 Marc Brockschmidt
 # Copyright © 2021 Felix Lechner
@@ -23,13 +23,15 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::Check::Fields::Version;
+package Lintian::Check::Languages::Perl::Core::Provides;
 
 use v5.20;
 use warnings;
 use utf8;
 
-use Dpkg::Version;
+use Dpkg::Version qw(version_check);
+
+use Lintian::Relation::Version qw(versions_compare);
 
 use Moo;
 use namespace::clean;
@@ -47,46 +49,28 @@ sub always {
     my $version = $fields->unfolded_value('Version');
 
     my $dversion = Dpkg::Version->new($version);
-    unless ($dversion->is_valid) {
-        $self->hint('bad-version-number', $version);
-        return;
-    }
+    return
+      unless $dversion->is_valid;
 
     my ($epoch, $upstream, $debian)
       = ($dversion->epoch, $dversion->version, $dversion->revision);
 
-    # Dpkg::Version sets the debian revision to 0 if there is
-    # no revision.  So we need to check if the raw version
-    # ends with "-0".
-    $self->hint('debian-revision-is-zero', $version)
-      if $version =~ /-0$/;
+    my $PERL_CORE_PROVIDES
+      = $self->profile->load_data('fields/perl-provides', '\s+');
 
-    my $ubuntu;
-    if($debian =~ /^(?:[^.]+)(?:\.[^.]+)?(?:\.[^.]+)?(\..*)?$/){
-        my $extra = $1;
-        if (
-            defined $extra
-            && $debian =~ m{\A
-                            (?:[^.]+ubuntu[^.]+)(?:\.\d+){1,3}(\..*)?
-                            \Z}xsm
-        ) {
-            $ubuntu = 1;
-            $extra = $1;
-        }
+    my $name = $fields->value('Package');
 
-        $self->hint('debian-revision-not-well-formed', $version)
-          if defined $extra;
+    return
+      unless $PERL_CORE_PROVIDES->recognizes($name);
 
-    } else {
-        $self->hint('debian-revision-not-well-formed', $version);
-    }
+    my $core_version = $PERL_CORE_PROVIDES->value($name);
 
-    if ($self->processable->type eq 'source') {
+    my $no_revision = "$epoch:$upstream";
+    return
+      unless version_check($no_revision);
 
-        $self->hint('binary-nmu-debian-revision-in-source', $version)
-          if ($debian =~ /^[^.-]+\.[^.-]+\./ && !$ubuntu)
-          || $version =~ /\+b\d+$/;
-    }
+    $self->hint('package-superseded-by-perl', "with $core_version")
+      if versions_compare($core_version, '>=', $no_revision);
 
     return;
 }

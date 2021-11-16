@@ -1,4 +1,4 @@
-# fields/version -- lintian check script (rewrite) -*- perl -*-
+# fields/version/derivative -- lintian check script (rewrite) -*- perl -*-
 #
 # Copyright © 2004 Marc Brockschmidt
 # Copyright © 2021 Felix Lechner
@@ -23,7 +23,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::Check::Fields::Version;
+package Lintian::Check::Fields::Version::Derivative;
 
 use v5.20;
 use warnings;
@@ -36,7 +36,7 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-sub always {
+sub source {
     my ($self) = @_;
 
     my $fields = $self->processable->fields;
@@ -47,45 +47,28 @@ sub always {
     my $version = $fields->unfolded_value('Version');
 
     my $dversion = Dpkg::Version->new($version);
-    unless ($dversion->is_valid) {
-        $self->hint('bad-version-number', $version);
-        return;
-    }
+    return
+      unless $dversion->is_valid;
 
     my ($epoch, $upstream, $debian)
       = ($dversion->epoch, $dversion->version, $dversion->revision);
 
-    # Dpkg::Version sets the debian revision to 0 if there is
-    # no revision.  So we need to check if the raw version
-    # ends with "-0".
-    $self->hint('debian-revision-is-zero', $version)
-      if $version =~ /-0$/;
+    my $DERIVATIVE_VERSIONS
+      = $self->profile->load_data('fields/derivative-versions',
+        qr/\s*~~\s*/, sub { $_[1]; });
 
-    my $ubuntu;
-    if($debian =~ /^(?:[^.]+)(?:\.[^.]+)?(?:\.[^.]+)?(\..*)?$/){
-        my $extra = $1;
-        if (
-            defined $extra
-            && $debian =~ m{\A
-                            (?:[^.]+ubuntu[^.]+)(?:\.\d+){1,3}(\..*)?
-                            \Z}xsm
-        ) {
-            $ubuntu = 1;
-            $extra = $1;
+    unless ($self->processable->native) {
+
+        for my $pattern ($DERIVATIVE_VERSIONS->all) {
+
+            next
+              if $version =~ m/$pattern/;
+
+            my $explanation = $DERIVATIVE_VERSIONS->value($pattern);
+
+            $self->hint('invalid-version-number-for-derivative',
+                $version,"($explanation)");
         }
-
-        $self->hint('debian-revision-not-well-formed', $version)
-          if defined $extra;
-
-    } else {
-        $self->hint('debian-revision-not-well-formed', $version);
-    }
-
-    if ($self->processable->type eq 'source') {
-
-        $self->hint('binary-nmu-debian-revision-in-source', $version)
-          if ($debian =~ /^[^.-]+\.[^.-]+\./ && !$ubuntu)
-          || $version =~ /\+b\d+$/;
     }
 
     return;

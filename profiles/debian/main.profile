@@ -152,6 +152,11 @@ Enable-Tags-From-Check:
  fields/urgency
  fields/vcs
  fields/version
+ fields/version/derivative
+ fields/version/repack/native
+ fields/version/repack/period
+ fields/version/repack/tilde
+ fields/version/repack/typo
  files/architecture
  files/banned
  files/banned/compiled-help
@@ -240,6 +245,7 @@ Enable-Tags-From-Check:
  languages/ocaml/custom-executable
  languages/ocaml/meta
  languages/perl
+ languages/perl/core/provides
  languages/perl/perl4/prerequisites
  languages/perl/perl5
  languages/perl/yapp
