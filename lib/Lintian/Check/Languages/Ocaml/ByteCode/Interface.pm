@@ -25,10 +25,14 @@ use v5.20;
 use warnings;
 use utf8;
 
+use Const::Fast;
+
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $LAST_ITEM => -1;
 
 sub visit_installed_files {
     my ($self, $item) = @_;
@@ -36,11 +40,16 @@ sub visit_installed_files {
     my $no_extension = $item->basename;
     $no_extension =~ s{ [.] [^.]+ $}{}x;
 
+    # for dune
+    my $interface_name = (split(/__/, $no_extension))[$LAST_ITEM];
+
     # $somename.cmi should be shipped with $somename.mli or $somename.ml
     $self->hint('ocaml-dangling-cmi', $item->name)
       if $item->name =~ m{ [.]cmi $}x
-      && !$item->parent_dir->child($no_extension . '.mli')
-      && !$item->parent_dir->child($no_extension . '.ml');
+      && !$item->parent_dir->child($interface_name . '.mli')
+      && !$item->parent_dir->child(lc($interface_name) . '.mli')
+      && !$item->parent_dir->child($interface_name . '.ml')
+      && !$item->parent_dir->child(lc($interface_name) . '.ml');
 
     return;
 }
