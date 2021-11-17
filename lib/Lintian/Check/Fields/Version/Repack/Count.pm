@@ -1,6 +1,5 @@
 # fields/version/repack/count -- lintian check script (rewrite) -*- perl -*-
 #
-# Copyright © 2004 Marc Brockschmidt
 # Copyright © 2021 Kentaro Hayashi
 #
 # Parts of the code were taken from the old check script, which
@@ -37,6 +36,10 @@ with 'Lintian::Check';
 sub source {
     my ($self) = @_;
 
+    # repack counts in native packages are dealt with elsewhere
+    return
+      if $self->processable->native;
+
     my $fields = $self->processable->fields;
 
     return
@@ -45,8 +48,10 @@ sub source {
     my $version = $fields->unfolded_value('Version');
 
     $self->hint('anticipated-repack-count', $version)
-      if $version =~ /dfsg1-/
-      && !$self->processable->native;
+      if $version =~ /dfsg1-/;
+
+    $self->hint('dot-before-repack-count', $version)
+      if $version =~ / dfsg [.] \d+ /x;
 
     return;
 }
