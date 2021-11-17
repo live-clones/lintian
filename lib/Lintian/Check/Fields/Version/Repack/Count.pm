@@ -48,6 +48,10 @@ sub source {
       if $version =~ /dfsg1-/
       && !$self->processable->native;
 
+    $self->hint('dfsg-version-with-extra-dot', $version)
+      if $version =~ /dfsg\.[1-9]/
+      && !$self->processable->native;
+
     return;
 }
 
