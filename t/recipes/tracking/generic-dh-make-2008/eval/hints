@@ -12,23 +12,23 @@ generic-dh-make-2008 (source): older-source-format 1.0
 generic-dh-make-2008 (source): no-dh-sequencer
 generic-dh-make-2008 (source): no-dep5-copyright debian/copyright
 generic-dh-make-2008 (source): missing-debian-source-format
-generic-dh-make-2008 (source): dh-make-template-in-source debian/watch.ex
-generic-dh-make-2008 (source): dh-make-template-in-source debian/prerm.ex
-generic-dh-make-2008 (source): dh-make-template-in-source debian/preinst.ex
-generic-dh-make-2008 (source): dh-make-template-in-source debian/postrm.ex
-generic-dh-make-2008 (source): dh-make-template-in-source debian/postinst.ex
-generic-dh-make-2008 (source): dh-make-template-in-source debian/menu.ex
-generic-dh-make-2008 (source): dh-make-template-in-source debian/manpage.xml.ex
-generic-dh-make-2008 (source): dh-make-template-in-source debian/manpage.sgml.ex
-generic-dh-make-2008 (source): dh-make-template-in-source debian/manpage.1.ex
-generic-dh-make-2008 (source): dh-make-template-in-source debian/init.d.lsb.ex
-generic-dh-make-2008 (source): dh-make-template-in-source debian/init.d.ex
-generic-dh-make-2008 (source): dh-make-template-in-source debian/generic-dh-make-2008.doc-base.EX
-generic-dh-make-2008 (source): dh-make-template-in-source debian/generic-dh-make-2008.default.ex
-generic-dh-make-2008 (source): dh-make-template-in-source debian/emacsen-startup.ex
-generic-dh-make-2008 (source): dh-make-template-in-source debian/emacsen-remove.ex
-generic-dh-make-2008 (source): dh-make-template-in-source debian/emacsen-install.ex
-generic-dh-make-2008 (source): dh-make-template-in-source debian/cron.d.ex
+generic-dh-make-2008 (source): dh-make-template-in-source [debian/watch.ex]
+generic-dh-make-2008 (source): dh-make-template-in-source [debian/prerm.ex]
+generic-dh-make-2008 (source): dh-make-template-in-source [debian/preinst.ex]
+generic-dh-make-2008 (source): dh-make-template-in-source [debian/postrm.ex]
+generic-dh-make-2008 (source): dh-make-template-in-source [debian/postinst.ex]
+generic-dh-make-2008 (source): dh-make-template-in-source [debian/menu.ex]
+generic-dh-make-2008 (source): dh-make-template-in-source [debian/manpage.xml.ex]
+generic-dh-make-2008 (source): dh-make-template-in-source [debian/manpage.sgml.ex]
+generic-dh-make-2008 (source): dh-make-template-in-source [debian/manpage.1.ex]
+generic-dh-make-2008 (source): dh-make-template-in-source [debian/init.d.lsb.ex]
+generic-dh-make-2008 (source): dh-make-template-in-source [debian/init.d.ex]
+generic-dh-make-2008 (source): dh-make-template-in-source [debian/generic-dh-make-2008.doc-base.EX]
+generic-dh-make-2008 (source): dh-make-template-in-source [debian/generic-dh-make-2008.default.ex]
+generic-dh-make-2008 (source): dh-make-template-in-source [debian/emacsen-startup.ex]
+generic-dh-make-2008 (source): dh-make-template-in-source [debian/emacsen-remove.ex]
+generic-dh-make-2008 (source): dh-make-template-in-source [debian/emacsen-install.ex]
+generic-dh-make-2008 (source): dh-make-template-in-source [debian/cron.d.ex]
 generic-dh-make-2008 (source): dh-clean-k-is-deprecated
 generic-dh-make-2008 (source): debian-watch-file-is-missing
 generic-dh-make-2008 (source): debian-rules-missing-recommended-target build-indep
