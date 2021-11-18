@@ -34,15 +34,58 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
+const my $COLON => q{:};
 const my $LEFT_SQUARE_BRACKET => q{[};
 const my $RIGHT_SQUARE_BRACKET => q{]};
+
+sub visit_patched_files {
+    my ($self, $item) = @_;
+
+    $self->check_elf_issues($item);
+
+    return;
+}
 
 sub visit_installed_files {
     my ($self, $item) = @_;
 
-    $self->hint('apparently-corrupted-elf-binary',
-        $_, $LEFT_SQUARE_BRACKET . $item->name . $RIGHT_SQUARE_BRACKET)
+    $self->check_elf_issues($item);
+
+    return;
+}
+
+sub check_elf_issues {
+    my ($self, $item) = @_;
+
+    $self->hint('elf-error',$_,
+        $LEFT_SQUARE_BRACKET . $item->name . $RIGHT_SQUARE_BRACKET)
       for @{$item->elf->{ERRORS} // []};
+
+    $self->hint('elf-warning',$_,
+        $LEFT_SQUARE_BRACKET . $item->name . $RIGHT_SQUARE_BRACKET)
+      for @{$item->elf->{WARNINGS} // []};
+
+    # static library
+    for my $member_name (keys %{$item->elf_by_member}) {
+
+        my $member_elf = $item->elf_by_member->{$member_name};
+
+        $self->hint('elf-error',$_,
+                $LEFT_SQUARE_BRACKET
+              . $item->name
+              . $COLON
+              . $member_name
+              . $RIGHT_SQUARE_BRACKET)
+          for @{$member_elf->{ERRORS} // []};
+
+        $self->hint('elf-warning',$_,
+                $LEFT_SQUARE_BRACKET
+              . $item->name
+              . $COLON
+              . $member_name
+              . $RIGHT_SQUARE_BRACKET)
+          for @{$member_elf->{WARNINGS} // []};
+    }
 
     $self->hint('binary-with-bad-dynamic-table', $item->name)
       if $item->elf->{'BAD-DYNAMIC-TABLE'}

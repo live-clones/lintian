@@ -312,15 +312,8 @@ sub elf_header {
 
     for my $line (@lines) {
 
-        if ($line =~ m{^ readelf: \s+ Error: \s+ (.*)}x) {
-
-            my $error = $1;
-
-            $by_object->{ERRORS} //= [];
-            push(@{$by_object->{ERRORS}}, $error);
-
-            next;
-        }
+        next
+          if divert_error('ELF header', $line, $by_object);
 
         my ($field, $value) = split(/:/, $line, 2);
 
@@ -347,6 +340,9 @@ sub program_headers {
     my @lines = split(m{\n}, $text);
 
     while (defined(my $line = shift @lines)) {
+
+        next
+          if divert_error('program headers', $line, $by_object);
 
         if ($line =~ m{^ \s* (\S+) \s* (?:(?:\S+\s+){4}) \S+ \s (...) }x) {
 
@@ -398,6 +394,9 @@ sub dynamic_section {
     my @lines = split(m{\n}, $text);
 
     while (defined(my $line = shift @lines)) {
+
+        next
+          if divert_error('dynamic section', $line, $by_object);
 
         if ($line
             =~ m{^ \s* 0x (?:[0-9A-F]+) \s+ [(] (.*?) [)] \s+ ([\x21-\x7f][\x20-\x7f]*) \Z}ix
@@ -497,6 +496,9 @@ sub section_headers {
     my $row = 1;
     while (defined(my $line = shift @lines)) {
 
+        next
+          if divert_error('section headers', $line, $by_object);
+
         last
           if $line =~ /^Key to Flags:/;
 
@@ -576,6 +578,9 @@ sub symbol_table {
 
     while (defined(my $line = shift @lines)) {
 
+        next
+          if divert_error('symbol table', $line, $by_object);
+
         if ($line
             =~ m{^ \s* (\d+) : \s* [0-9a-f]+ \s+ \d+ \s+ (?:(?:\S+\s+){3}) (?: [[] .* []] \s+)? (\S+) \s+ (.*) \Z}x
         ) {
@@ -605,6 +610,9 @@ sub version_symbols {
 
     while (defined(my $line = shift @lines)) {
 
+        next
+          if divert_error('version symbols', $line, $by_object);
+
         if ($line
             =~ m{^ \s* [0-9a-f]+ : \s* \S+ \s* (?: [(] \S+ [)] )? (?: \s | \Z ) }xi
         ){
@@ -630,6 +638,39 @@ sub version_symbols {
     }
 
     return;
+}
+
+=item divert_error
+
+=cut
+
+sub divert_error {
+    my ($section, $line, $by_object) = @_;
+
+    return 0
+      unless $line =~ s{^ readelf: \s+ }{}x;
+
+    if ($line =~ s{^ Error: \s+ }{}x) {
+
+        my $message = "In $section: $line";
+
+        $by_object->{ERRORS} //= [];
+        push(@{$by_object->{ERRORS}}, $message);
+
+        return 1;
+    }
+
+    if ($line =~ s{^ Warning: \s+ }{}x) {
+
+        my $message = "In $section: $line";
+
+        $by_object->{WARNINGS} //= [];
+        push(@{$by_object->{WARNINGS}}, $message);
+
+        return 1;
+    }
+
+    return 0;
 }
 
 =back

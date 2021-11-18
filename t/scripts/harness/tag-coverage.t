@@ -51,6 +51,7 @@ my @known_missing = (qw(
       crossing-screens
       debian-files-list-in-source
       debian-rules-not-executable
+      elf-warning
       embedded-pear-module
       invalid-field-for-derivative
       invalid-version-number-for-derivative
