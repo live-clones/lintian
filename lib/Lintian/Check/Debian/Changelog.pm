@@ -581,8 +581,6 @@ sub binary {
         }
     }
 
-    my $BUGS_NUMBER
-      = $self->profile->load_data('changelog-file/bugs-number', qr/\s*=\s*/);
     my $INVALID_DATES
       = $self->profile->load_data('changelog-file/invalid-dates',
         qr/\s*=\>\s*/);
@@ -719,8 +717,8 @@ sub binary {
         # before bug 50004 bts removed bug instead of archiving
         for my $bug (@{$latest_entry->Closes}) {
             $self->hint('improbable-bug-number-in-closes', $bug)
-              if $bug < $BUGS_NUMBER->value('min-bug')
-              || $bug > $BUGS_NUMBER->value('max-bug');
+              if $bug < 50_004
+              || $bug > 1_500_000;
         }
 
         # Compare against NEWS.Debian if available.
