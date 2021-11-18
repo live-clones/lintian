@@ -58,7 +58,6 @@ scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:
 scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:121] '<(tac a)'
 scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:120] 'dirs'
 scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:119] 'time'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:118] 'type'
 scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:117] 'shopt'
 scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:116] 'ulimit'
 scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:111] 'unalias -a'

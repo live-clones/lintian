@@ -50,7 +50,6 @@ maintainer-scripts (binary): possible-bashism-in-maintainer-script [control/prer
 maintainer-scripts (binary): possible-bashism-in-maintainer-script [control/prerm:136] '<(tac a)'
 maintainer-scripts (binary): possible-bashism-in-maintainer-script [control/prerm:135] 'dirs'
 maintainer-scripts (binary): possible-bashism-in-maintainer-script [control/prerm:134] 'time'
-maintainer-scripts (binary): possible-bashism-in-maintainer-script [control/prerm:133] 'type'
 maintainer-scripts (binary): possible-bashism-in-maintainer-script [control/prerm:132] 'shopt'
 maintainer-scripts (binary): possible-bashism-in-maintainer-script [control/prerm:131] 'ulimit'
 maintainer-scripts (binary): possible-bashism-in-maintainer-script [control/prerm:126] 'unalias -a'

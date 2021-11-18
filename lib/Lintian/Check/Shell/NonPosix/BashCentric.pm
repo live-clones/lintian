@@ -125,7 +125,6 @@ my @bashism_regexes = (
     $LEADING_REGEX . qr/export\s+-[^p]/,  # export only takes -p as an option
     $LEADING_REGEX . qr/ulimit(\s|\Z)/,
     $LEADING_REGEX . qr/shopt(\s|\Z)/,
-    $LEADING_REGEX . qr/type\s/,
     $LEADING_REGEX . qr/time\s/,
     $LEADING_REGEX . qr/dirs(\s|\Z)/,
     qr/(?:^|\s+)[<>]\(.*?\)/,       # <() process substitution
