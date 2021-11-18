@@ -53,7 +53,7 @@ sub installable {
     # If there is a META file, ocaml-findlib should at least be suggested.
     $self->hint('ocaml-meta-without-suggesting-findlib')
       if $self->has_meta
-      && !$prerequisites->satisfies('ocaml-findlib');
+      && !$prerequisites->satisfies('ocaml-findlib:any');
 
     return;
 }

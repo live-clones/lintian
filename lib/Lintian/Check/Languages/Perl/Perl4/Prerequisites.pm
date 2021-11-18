@@ -39,7 +39,8 @@ use namespace::clean;
 with 'Lintian::Check';
 
 # check for obsolete perl libraries
-const my $PERL4_PREREQUISITES => 'libperl4-corelibs-perl | perl (<< 5.12.3-7)';
+const my $PERL4_PREREQUISITES =>
+  'libperl4-corelibs-perl:any | perl:any (<< 5.12.3-7)';
 
 has satisfies_perl4_prerequisites => (
     is => 'rw',

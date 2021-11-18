@@ -50,7 +50,7 @@ sub source {
         my $raw = $source_fields->value($field);
         my $relation = Lintian::Relation->new->load($raw);
 
-        my $condition = 'composer';
+        my $condition = 'composer:any';
 
         $self->pointed_hint('composer-prerequisite', $pointer, $field,
             '(in source paragraph)')
@@ -73,7 +73,7 @@ sub source {
             my $relation
               = $self->processable->binary_relation($installable, $field);
 
-            my $condition = 'composer';
+            my $condition = 'composer:any';
 
             $self->pointed_hint('composer-prerequisite', $pointer, $field,
                 "(in section for $installable)")

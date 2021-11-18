@@ -476,7 +476,7 @@ sub check_init {
 
         if (
                $line =~ m{^\s*\.\s+/lib/lsb/init-functions}
-            && !$processable->relation('strong')->satisfies('lsb-base')
+            && !$processable->relation('strong')->satisfies('lsb-base:any')
             && (
                 none { $_->basename =~ m/\.service$/ && !$_->is_dir }
                 @{$processable->installed->sorted_list})

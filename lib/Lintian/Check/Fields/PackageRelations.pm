@@ -118,7 +118,7 @@ my @known_java_pkg = map { qr/$_/ } (
 # dependencies for architecture-independent source packages.
 our $PYTHON_DEV = join(' | ',
     qw(python3-dev python3-all-dev),
-    map { "python$_-dev" } qw(2.7 3 3.7 3.8 3.9));
+    map { "python$_-dev:any" } qw(2.7 3 3.7 3.8 3.9));
 
 sub installable {
     my ($self) = @_;
@@ -700,7 +700,7 @@ sub source {
     my $bdepends = $processable->relation('Build-Depends');
 
     # libmodule-build-perl
-    # matches() instead of satisifies() because of possible OR relation
+    # matches() instead of satisfies() because of possible OR relation
     $self->hint('libmodule-build-perl-needs-to-be-in-build-depends')
       if $processable->relation('Build-Depends-Indep')
       ->equals('libmodule-build-perl', Lintian::Relation::VISIT_PRED_NAME)
@@ -711,7 +711,7 @@ sub source {
     $self->hint('libmodule-build-tiny-perl-needs-to-be-in-build-depends')
       if $processable->relation('Build-Depends-Indep')
       ->satisfies('libmodule-build-tiny-perl')
-      && !$bdepends->satisfies('libmodule-build-tiny-perl');
+      && !$bdepends->satisfies('libmodule-build-tiny-perl:any');
 
     return;
 }

@@ -117,30 +117,32 @@ sub source {
    # optional tags to use for reporting the problem if some information other
    # than the default is required.
     my %GLOBAL_CLEAN_DEPENDS = (
-        ant => [qr{^include\s*/usr/share/cdbs/1/rules/ant\.mk}],
-        cdbs => [
+        'ant:any' => [qr{^include\s*/usr/share/cdbs/1/rules/ant\.mk}],
+        'cdbs:any' => [
             qr{^include\s+/usr/share/cdbs/},
             qr{^include\s+/usr/share/R/debian/r-cran\.mk}
         ],
-        dbs => [qr{^include\s+/usr/share/dbs/}],
-        'dh-make-php' => [qr{^include\s+/usr/share/cdbs/1/class/pear\.mk}],
-        'debhelper | debhelper-compat' =>[
+        'dbs:any' => [qr{^include\s+/usr/share/dbs/}],
+        'dh-make-php:any' => [qr{^include\s+/usr/share/cdbs/1/class/pear\.mk}],
+        'debhelper:any | debhelper-compat:any' =>[
             qr{^include\s+/usr/share/cdbs/1/rules/debhelper\.mk},
             qr{^include\s+/usr/share/R/debian/r-cran\.mk}
         ],
-        dpatch => [
+        'dpatch:any' => [
             qr{^include\s+/usr/share/dpatch/},
             qr{^include\s+/usr/share/cdbs/1/rules/dpatch\.mk}
         ],
-        'gnome-pkg-tools | dh-sequence-gnome' =>
+        'gnome-pkg-tools:any | dh-sequence-gnome:any' =>
           [qr{^include\s+/usr/share/gnome-pkg-tools/}],
-        quilt => [
+        'quilt:any' => [
             qr{^include\s+/usr/share/quilt/},
             qr{^include\s+/usr/share/cdbs/1/rules/patchsys-quilt\.mk}
         ],
-        'mozilla-devscripts' =>[qr{^include\s+/usr/share/mozilla-devscripts/}],
-        'ruby-pkg-tools' =>[qr{^include\s+/usr/share/ruby-pkg-tools/1/class/}],
-        'r-base-dev' => [qr{^include\s+/usr/share/R/debian/r-cran\.mk}],
+        'mozilla-devscripts:any' =>
+          [qr{^include\s+/usr/share/mozilla-devscripts/}],
+        'ruby-pkg-tools:any' =>
+          [qr{^include\s+/usr/share/ruby-pkg-tools/1/class/}],
+        'r-base-dev:any' => [qr{^include\s+/usr/share/R/debian/r-cran\.mk}],
         $ANYPYTHON_DEPEND =>[qr{/usr/share/cdbs/1/class/python-distutils\.mk}],
     );
 
@@ -148,8 +150,9 @@ sub source {
   # debian/rules file, this package must be listed in either Build-Depends or
   # Build-Depends-Indep as appropriate; and optional tags as above.
     my %GLOBAL_DEPENDS = (
-        'dh-ocaml, ocaml-nox | ocaml' => [qr/^\t\s*dh_ocaml(?:init|doc)\s/],
-        'debhelper | debhelper-compat | dh-autoreconf' =>
+        'dh-ocaml:any, ocaml-nox:any | ocaml:any' =>
+          [qr/^\t\s*dh_ocaml(?:init|doc)\s/],
+        'debhelper:any | debhelper-compat:any | dh-autoreconf:any' =>
           [qr/^\t\s*dh_autoreconf(?:_clean)?\s/],
     );
 
@@ -157,15 +160,16 @@ sub source {
  # regex matches in one of clean, build-arch, binary-arch, or a rule they
  # depend on, this package is allowed (and required) in Build-Depends.
     my %RULE_CLEAN_DEPENDS =(
-        ant => [qr/^\t\s*(\S+=\S+\s+)*ant\s/],
-        'debhelper | debhelper-compat' => [qr/^\t\s*dh_(?!autoreconf).+/],
-        'dh-ocaml, ocaml-nox | ocaml' => [qr/^\t\s*dh_ocamlinit\s/],
-        dpatch => [qr/^\t\s*(\S+=\S+\s+)*dpatch\s/],
-        'po-debconf' => [qr/^\t\s*debconf-updatepo\s/],
+        'ant:any' => [qr/^\t\s*(\S+=\S+\s+)*ant\s/],
+        'debhelper:any | debhelper-compat:any' =>
+          [qr/^\t\s*dh_(?!autoreconf).+/],
+        'dh-ocaml:any, ocaml-nox:any | ocaml:any' =>[qr/^\t\s*dh_ocamlinit\s/],
+        'dpatch:any' => [qr/^\t\s*(\S+=\S+\s+)*dpatch\s/],
+        'po-debconf:any' => [qr/^\t\s*debconf-updatepo\s/],
         $PYTHON_DEPEND => [qr/^\t\s*python\s/],
         $PYTHON3_DEPEND => [qr/^\t\s*python3\s/],
         $ANYPYTHON_DEPEND => [qr/\ssetup\.py\b/],
-        quilt => [qr/^\t\s*(\S+=\S+\s+)*quilt\s/],
+        'quilt:any' => [qr/^\t\s*(\S+=\S+\s+)*quilt\s/],
     );
 
     my $build_all = $self->processable->relation('Build-Depends-All');
@@ -357,7 +361,7 @@ sub source {
                 "(line $position)")
               if $var eq 'SOURCE_DATE_EPOCH'
               and not $build_all->satisfies(
-                'dpkg-dev (>= 1.18.8) | debhelper (>= 10.10)');
+                'dpkg-dev:any (>= 1.18.8) | debhelper:any (>= 10.10)');
         }
 
         # Keep track of whether this portion of debian/rules may be optional
@@ -569,6 +573,7 @@ sub source {
     for my $cmd (qw(dh_clean dh_fixperms)) {
         for my $suffix ($EMPTY, '-indep', '-arch') {
             my $pointer = $overridden{"$cmd$suffix"};
+
             $self->hint("override_$cmd-does-not-call-$cmd", "(line $pointer)")
               if $pointer
               and none { m/^\t\s*-?($cmd\b|\$\(overridden_command\))/ }
@@ -599,7 +604,7 @@ m{^\t\s*[-@]?(?:(?:/usr)?/bin/)?(?:cp|chmod|echo|ln|mv|mkdir|rm|test|true)}
       for @clean_in_indep;
 
     # another check complains when debhelper is missing from d/rules
-    my $combined_lc = List::Compare->new(\@needed, ['debhelper']);
+    my $combined_lc = List::Compare->new(\@needed, ['debhelper:any']);
 
     my @still_missing
       = grep { !$build_all_norestriction->satisfies($_) }

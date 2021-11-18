@@ -37,7 +37,7 @@ with 'Lintian::Check';
 
 # The list of libc packages, used for checking for a hard-coded dependency
 # rather than using ${shlibs:Depends}.
-const my @LIBCS => qw(libc6 libc6.1 libc0.1 libc0.3);
+const my @LIBCS => qw(libc6:any libc6.1:any libc0.1:any libc0.3:any);
 
 my $LIBC_RELATION = Lintian::Relation->new->load(join(' | ', @LIBCS));
 
