@@ -47,7 +47,6 @@ readonly dh_regex='^(usr/bin/dh_|usr/share/perl5/Debian/Debhelper/Sequence/).'
 readonly dh_command_perl_regex='^usr/bin/(dh_[^\s]+)\s+[\w-]+/([^,]+).*'
 readonly dh_addon_perl_regex='^usr/share/perl5/Debian/Debhelper/Sequence/([^\s]+)\.pm\s+[\w-]+/([^,]+).*'
 current_date=$(date -u  '+%Y-%m-%d %H:%M')
-offline=0
 
 [ -d "$lintian_data" ] || {
     printf "%s is not a directory, aborting" "$lintiandata" >&2
@@ -59,13 +58,13 @@ offline=0
     exit 1
 }
 
-[ -z "$contents" ] || offline=1
-
 readonly workdir="$(mktemp -d)"
 
 cleanup () {
         [ ! -d "$workdir" ] || rm -rf "$workdir"
 }; trap cleanup EXIT
+
+cd "$workdir"
 
 create_data_file() {
     local file="$1" basename
@@ -87,8 +86,18 @@ EOF
     LC_ALL=C sort -u >> "$file"
 }
 
+mirror="${DEB_MIRROR:=https://deb.debian.org/debian}"
+WGET_ARGS="${WGET_ARGS:=-nv}"
 
-if [ $offline -eq 1 ]; then
+offline=0
+[ -z "$contents" ] || offline=1
+
+if [ $offline -eq 1  ]; then
+
+    # offline may not work past the bullseye release
+    # archive now produces Contents-{all,i386}.gz
+    # this code now needs both
+
     known_commands="$lintian_data/debhelper/dh_commands"
     [ -f "$known_commands" ] || exit 1
     new_commands="$workdir/new"
@@ -111,67 +120,89 @@ if [ $offline -eq 1 ]; then
         | sort > "$new_commands"
     cmp -s "$known_commands" "$new_commands"
     exit
+
 else
-    mirror="${DEB_MIRROR:=https://deb.debian.org/debian}"
-    WGET_ARGS="${WGET_ARGS:=-nv}"
-    wget() {
-        echo wget "$mirror"/"$1"
-        /usr/bin/wget $WGET_ARGS "$mirror"/"$1"
-    }
     mkdir -p "$lintian_data/debhelper"
 
-    cd "$workdir"
-    wget dists/sid/main/Contents-i386.gz
-    zgrep -E "$dh_regex" Contents-i386.gz > dh_entries
-    cat dh_entries \
-        | perl -n -w -E 's#'"$dh_command_perl_regex"'#$1=$2# and print' \
-        | sed 's/=debhelper$/=debhelper | debhelper-compat/' \
-        > dh_commands
-    cat dh_entries \
-        | perl -n -w -E 's#'"$dh_addon_perl_regex"'#$1=$2# and print' \
-        | sed 's/=debhelper$/=debhelper | debhelper-compat/' \
-        > dh_addons
-    cat dh_commands \
-        | cut -d '|' -f 1 | sed 's/\s*$//' \
-        | cut -d '=' -f 2 | sort -u > dh_packages
+    for architecture in all amd64; do
+
+        contents_url="$mirror"/"dists/sid/main/Contents-${architecture}.gz"
+
+        echo wget "$contents_url"
+        /usr/bin/wget $WGET_ARGS "$contents_url"
+
+        zgrep -E "$dh_regex" "Contents-${architecture}.gz" > "dh_entries-${architecture}"
+
+        cat "dh_entries-${architecture}" \
+            | perl -n -w -E 's#'"$dh_command_perl_regex"'#$1=$2# and print' \
+            | sed 's/=debhelper$/=debhelper | debhelper-compat/' \
+                  > "dh_commands-${architecture}"
+
+        cat "dh_commands-${architecture}" >> dh_commands
+
+        cat "dh_entries-${architecture}" \
+            | perl -n -w -E 's#'"$dh_addon_perl_regex"'#$1=$2# and print' \
+            | sed 's/=debhelper$/=debhelper | debhelper-compat/' \
+                  > "dh_addons-${architecture}"
+
+        cat "dh_addons-${architecture}" >> dh_addons
+
+        cat "dh_commands-${architecture}" \
+            | cut -d '|' -f 1 | sed 's/\s*$//' \
+            | cut -d '=' -f 2 | sort -u > "dh_packages-${architecture}"
+
+        cat "dh_packages-${architecture}" >> dh_packages
+
+        packages_url="$mirror"/"dists/sid/main/binary-${architecture}/Packages.gz"
+
+        echo wget "$packages_url"
+        /usr/bin/wget $WGET_ARGS -O "Packages-${architecture}.gz" "$packages_url"
+
+        gunzip "Packages-${architecture}.gz"
+
+        for package in $(cat "dh_packages-${architecture}"); do
+
+            fn="$(grep-dctrl -n -P -X "$package" -sFilename Packages-${architecture})"
+
+            deb_url="$mirror"/"$fn"
+
+            echo wget "$deb_url"
+            /usr/bin/wget $WGET_ARGS "$deb_url"
+
+            file="$(basename "$fn")"
+            dpkg-deb -x "$file" "$(mktemp -d -p .)"
+            rm -f "$file"
+
+            find */ | grep -Ev '^[^/]+/usr/bin/dh_.+$' \
+                | xargs rm >/dev/null 2>&1 || true
+            find */ -type l -print | xargs rm >/dev/null 2>&1 || true
+        done
+
+        grep -lr autoscript */ \
+            | sed 's,.*/usr/bin/,,g' > "maint_commands-${architecture}"
+
+        cat "maint_commands-${architecture}" >> maint_commands
+
+        grep -lr misc:Depends */ \
+             | sed 's,.*/usr/bin/,,g' | grep -v dh_gencontrol \
+             > "miscDepends_commands-${architecture}"
+
+        cat "miscDepends_commands-${architecture}" >> miscDepends_commands
+
+    done
 
     for f in commands packages; do
         rf="$lintian_data/debhelper/dh_$f"
-        [ ! -f "$rf" ] ||
-            mv "$rf" "${rf}.old"
         create_data_file "$rf" < "dh_$f"
     done
 
     for f in addons; do
         rf="$lintian_data/common/dh_$f"
-        [ ! -f "$rf" ] ||
-            mv "$rf" "${rf}.old"
         create_data_file "$rf" < "dh_$f"
     done
 
-    wget dists/sid/main/binary-i386/Packages.gz
-    gunzip Packages.gz
-    for package in $(cat dh_packages); do
-        fn="$(grep-dctrl -n -P -X "$package" -sFilename Packages)"
-        wget "$fn"
-        file="$(basename "$fn")"
-        dpkg-deb -x "$file" "$(mktemp -d -p .)"
-        rm -f "$file"
-        find */ | grep -Ev '^[^/]+/usr/bin/dh_.+$' \
-            | xargs rm >/dev/null 2>&1 || true
-        find */ -type l -print | xargs rm >/dev/null 2>&1 || true
-    done
-
-    grep -lr autoscript */ \
-        | sed 's,.*/usr/bin/,,g' > maint_commands
-    grep -lr misc:Depends */ \
-        | sed 's,.*/usr/bin/,,g' | grep -v dh_gencontrol \
-        > miscDepends_commands
-
     for f in maint miscDepends; do
         rf="$lintian_data/debhelper/${f}_commands"
-        [ ! -f "$rf" ] ||
-            mv "$rf" "${rf}.old"
         create_data_file "$rf" < "${f}_commands"
     done
 fi
