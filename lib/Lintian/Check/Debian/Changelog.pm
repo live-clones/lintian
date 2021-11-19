@@ -49,6 +49,8 @@ with 'Lintian::Check';
 const my $EMPTY => q{};
 
 const my $MAXIMUM_WIDTH => 82;
+const my $FIRST_ARCHIVED_BUG_NUMBER => 50_004;
+const my $OUT_OF_REACH_BUG_NUMBER => 1_500_000;
 
 sub spelling_tag_emitter {
     my ($self, @orig_args) = @_;
@@ -717,8 +719,8 @@ sub binary {
         # before bug 50004 bts removed bug instead of archiving
         for my $bug (@{$latest_entry->Closes}) {
             $self->hint('improbable-bug-number-in-closes', $bug)
-              if $bug < 50_004
-              || $bug > 1_500_000;
+              if $bug < $FIRST_ARCHIVED_BUG_NUMBER
+              || $bug >= $OUT_OF_REACH_BUG_NUMBER;
         }
 
         # Compare against NEWS.Debian if available.
