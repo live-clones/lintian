@@ -72,7 +72,7 @@ has patched => (
         my ($self) = @_;
 
         my $index = Lintian::Index->new;
-        $index->identifier($self->name . ' (patched)');
+        $index->identifier($self->path . ' (patched)');
         $index->basedir($self->basedir . $SLASH . 'unpacked');
 
         # source packages can be unpacked anywhere; no anchored roots

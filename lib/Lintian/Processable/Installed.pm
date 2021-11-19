@@ -63,7 +63,7 @@ has installed => (
         my ($self) = @_;
 
         my $index = Lintian::Index->new;
-        $index->identifier($self->name . ' (installed)');
+        $index->identifier($self->path . ' (installed)');
         $index->basedir($self->basedir . $SLASH . 'unpacked');
 
         # binary packages are anchored to the system root
