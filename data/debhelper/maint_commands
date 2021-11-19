@@ -1,5 +1,5 @@
 # This file is generated from private/refresh-debhelper-data.
-# It was generated on 2020-11-01 03:16
+# It was generated on 2021-11-19 20:32
 
 dh_apache2
 dh_apparmor
@@ -23,6 +23,7 @@ dh_installmenu
 dh_installmodules
 dh_installsystemd
 dh_installsystemduser
+dh_installsysusers
 dh_installtex
 dh_installtmpfiles
 dh_installwm

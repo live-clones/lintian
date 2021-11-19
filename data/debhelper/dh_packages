@@ -1,5 +1,5 @@
 # This file is generated from private/refresh-debhelper-data.
-# It was generated on 2020-11-01 03:16
+# It was generated on 2021-11-19 20:32
 
 apache2-dev
 autotools-dev
@@ -49,7 +49,7 @@ gnome-pkg-tools
 gnustep-make
 gobject-introspection
 haskell-devscripts-minimal
-kodi-addons-dev
+kodi-addons-dev-common
 libdbi-perl
 libgstreamer1.0-dev
 libimager-perl

@@ -1,15 +1,12 @@
 # This file is generated from private/refresh-debhelper-data.
-# It was generated on 2020-11-01 03:16
-#
-# If the script generates an insufficient/incorrect value for a
-# single item, please have a look at dh_commands-manual.
-#
+# It was generated on 2021-11-19 20:32
 
 dh_acc=dh-acc
 dh_ada_library=dh-ada-library
 dh_apache2=apache2-dev
 dh_apparmor=dh-apparmor
 dh_aspell-simple=dictionaries-common-dev
+dh_assistant=debhelper | debhelper-compat
 dh_auto_build=debhelper | debhelper-compat
 dh_auto_build_nant=cli-common-dev
 dh_auto_clean=debhelper | debhelper-compat
@@ -60,7 +57,6 @@ dh_elpa=dh-elpa
 dh_elpa_test=dh-elpa
 dh_fixperms=debhelper | debhelper-compat
 dh_fortran_mod=dh-fortran-mod
-dh_gconf=debhelper | debhelper-compat
 dh_gencontrol=debhelper | debhelper-compat
 dh_germinate_clean=germinate
 dh_germinate_metapackage=germinate
@@ -107,6 +103,7 @@ dh_installpam=debhelper | debhelper-compat
 dh_installppp=debhelper | debhelper-compat
 dh_installsystemd=debhelper | debhelper-compat
 dh_installsystemduser=debhelper | debhelper-compat
+dh_installsysusers=debhelper | debhelper-compat
 dh_installtex=tex-common
 dh_installtmpfiles=debhelper | debhelper-compat
 dh_installudev=debhelper | debhelper-compat
@@ -115,7 +112,7 @@ dh_installxfonts=debhelper | debhelper-compat
 dh_installxmlcatalogs=xml-core
 dh_installxsp=dh-xsp
 dh_installyorick=yorick-dev
-dh_kodiaddon_depends=kodi-addons-dev
+dh_kodiaddon_depends=kodi-addons-dev-common
 dh_libva=libva-dev
 dh_link=debhelper | debhelper-compat
 dh_linktree=dh-linktree
