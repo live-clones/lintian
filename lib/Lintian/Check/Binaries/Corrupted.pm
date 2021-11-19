@@ -28,6 +28,7 @@ use warnings;
 use utf8;
 
 use Const::Fast;
+use List::SomeUtils qw(uniq);
 
 use Moo;
 use namespace::clean;
@@ -59,11 +60,11 @@ sub check_elf_issues {
 
     $self->hint('elf-error',$_,
         $LEFT_SQUARE_BRACKET . $item->name . $RIGHT_SQUARE_BRACKET)
-      for @{$item->elf->{ERRORS} // []};
+      for uniq @{$item->elf->{ERRORS} // []};
 
     $self->hint('elf-warning',$_,
         $LEFT_SQUARE_BRACKET . $item->name . $RIGHT_SQUARE_BRACKET)
-      for @{$item->elf->{WARNINGS} // []};
+      for uniq @{$item->elf->{WARNINGS} // []};
 
     # static library
     for my $member_name (keys %{$item->elf_by_member}) {
@@ -76,7 +77,7 @@ sub check_elf_issues {
               . $COLON
               . $member_name
               . $RIGHT_SQUARE_BRACKET)
-          for @{$member_elf->{ERRORS} // []};
+          for uniq @{$member_elf->{ERRORS} // []};
 
         $self->hint('elf-warning',$_,
                 $LEFT_SQUARE_BRACKET
@@ -84,7 +85,7 @@ sub check_elf_issues {
               . $COLON
               . $member_name
               . $RIGHT_SQUARE_BRACKET)
-          for @{$member_elf->{WARNINGS} // []};
+          for uniq @{$member_elf->{WARNINGS} // []};
     }
 
     $self->hint('binary-with-bad-dynamic-table', $item->name)
