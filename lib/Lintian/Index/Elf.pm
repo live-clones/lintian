@@ -85,6 +85,13 @@ sub add_elf {
 
     for my $file (@with_objects) {
 
+        local $SIG{__WARN__}= sub {
+            warn encode_utf8($self->identifier
+                  . ': Warning while running readelf on'
+                  . $file->name
+                  . ": $_[0]");
+        };
+
         my @command = (qw{readelf --all --wide}, $file->name);
         my $combined_bytes;
 
