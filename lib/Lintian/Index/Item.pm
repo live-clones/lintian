@@ -166,7 +166,8 @@ sub init_from_tar_output {
     my ($initial, $size, $date, $time, $remainder)
       = split(/\s+(\d+)\s+($datepattern)\s+($timepattern)\s+/, $line,2);
 
-    die encode_utf8("Cannot parse tar output: $line")
+    die encode_utf8(
+        $self->index->identifier . ": Cannot parse tar output: $line")
       unless all { defined } ($initial, $size, $date, $time, $remainder);
 
     $self->size($size);
@@ -174,21 +175,23 @@ sub init_from_tar_output {
     $self->time($time);
 
     my ($permissions, $ownership) = split(/\s+/, $initial, 2);
-    die encode_utf8(
-        "Cannot parse permissions and ownership in tar output: $line")
+    die encode_utf8($self->index->identifier
+          .": Cannot parse permissions and ownership in tar output: $line")
       unless all { defined } ($permissions, $ownership);
 
     $self->perm($permissions);
 
     my ($owner, $group) = split(qr{/}, $ownership, 2);
-    die encode_utf8("Cannot parse owner and group in tar output: $line")
+    die encode_utf8($self->index->identifier
+          . ": Cannot parse owner and group in tar output: $line")
       unless all { defined } ($owner, $group);
 
     $self->owner($owner);
     $self->group($group);
 
     my ($name, $extra) = get_quoted_filename($remainder, $EMPTY);
-    die encode_utf8("Cannot parse file name in tar output: $line")
+    die encode_utf8($self->index->identifier
+          . ": Cannot parse file name in tar output: $line")
       unless all { defined } ($name, $extra);
 
     # strip relative prefix
@@ -211,8 +214,8 @@ sub init_from_tar_output {
     if ($self->perm =~ /^l/) {
 
         my ($linktarget, undef) = get_quoted_filename($extra, $symlinkpattern);
-        die encode_utf8(
-            "Cannot parse symbolic link target in tar output: $line")
+        die encode_utf8($self->index->identifier
+              .": Cannot parse symbolic link target in tar output: $line")
           unless defined $linktarget;
 
         # do not remove multiple slashes from symlink targets
@@ -227,7 +230,8 @@ sub init_from_tar_output {
     if ($self->perm =~ /^h/) {
 
         my ($linktarget, undef)= get_quoted_filename($extra, $hardlinkpattern);
-        die encode_utf8("Cannot parse hard link target in tar output: $line")
+        die encode_utf8($self->index->identifier
+              . ": Cannot parse hard link target in tar output: $line")
           unless defined $linktarget;
 
         # strip relative prefix
@@ -327,7 +331,9 @@ sub magic {
     my $magic;
 
     open(my $fd, '<', $self->unpacked_path);
-    die encode_utf8("Could not read $count bytes from " . $self->name)
+    die encode_utf8($self->index->identifier
+          . ": Could not read $count bytes from "
+          . $self->name)
       unless read($fd, $magic, $count) == $count;
     close $fd;
 
@@ -567,10 +573,10 @@ NB: Returns the empty list for non-dir entries.
 sub children {
     my ($self) = @_;
 
-    my @names = values %{$self->childnames};
-
     croak encode_utf8('No index in ' . $self->name)
       unless defined $self->index;
+
+    my @names = values %{$self->childnames};
 
     return map { $self->index->lookup($_) } @names;
 }
@@ -632,15 +638,15 @@ Example:
 sub child {
     my ($self, $basename) = @_;
 
-    croak encode_utf8('Basename is required')
+    croak encode_utf8('No index in ' . $self->name)
+      unless defined $self->index;
+
+    croak encode_utf8($self->index->identifier . ': Basename is required')
       unless length $basename;
 
     my $childname = $self->childnames->{$basename};
     return undef
       unless $childname;
-
-    croak encode_utf8('No index in ' . $self->name)
-      unless defined $self->index;
 
     return $self->index->lookup($childname);
 }
@@ -737,7 +743,7 @@ has link_normalized => (
         my $name = $self->name;
         my $link = $self->link;
 
-        croak encode_utf8("$name is not a link")
+        croak encode_utf8($self->index->identifier . ": $name is not a link")
           unless length $link;
 
         my $dir = $self->dirname;
@@ -856,7 +862,7 @@ sub unpacked_path {
 
     my $basedir = $self->index->basedir;
 
-    croak encode_utf8('No base directory')
+    croak encode_utf8($self->index->identifier . ': No base directory')
       unless length $basedir;
 
     my $unpacked = path($basedir)->child($self->name)->stringify;
@@ -914,8 +920,8 @@ sub _check_access {
         # NB: We are deliberately vague here to avoid suggesting
         # whether $path exists.  In some cases (e.g. lintian.d.o)
         # the output is readily available to wider public.
-        confess encode_utf8(
-            'Attempt to access through broken or unsafe symlink: '
+        confess encode_utf8($self->index->identifier
+              .': Attempt to access through broken or unsafe symlink: '
               . $self->name);
     }
 
@@ -934,8 +940,9 @@ sub _check_open {
     # Leave "_path_access" here as _check_access marks it either as
     # "UNSAFE_PATH" or "FS_PATH_IS_OK"
 
-    confess encode_utf8(
-        'Opening of irregular file not supported: ' . $self->name)
+    confess encode_utf8($self->index->identifier
+          .': Opening of irregular file not supported: '
+          . $self->name)
       unless $self->is_file || ($self->is_symlink && -e $self->unpacked_path);
 
     $self->path_info($self->path_info | OPEN_IS_OK);
@@ -982,7 +989,9 @@ sub follow {
         $reference = $self->parent_dir;
     }
 
-    croak encode_utf8('No parent reference for link in ' . $self->name)
+    croak encode_utf8($self->index->identifier
+          . ': No parent reference for link in '
+          . $self->name)
       unless defined $reference;
 
     # follow link
@@ -1040,13 +1049,14 @@ Examples:
 sub resolve_path {
     my ($self, $request, $maxlinks) = @_;
 
-    croak encode_utf8('Can only resolve string arguments')
+    croak encode_utf8('No index in ' . $self->name)
+      unless defined $self->index;
+
+    croak encode_utf8(
+        $self->index->identifier . ': Can only resolve string arguments')
       if defined $request && ref($request) ne $EMPTY;
 
     $request //= $EMPTY;
-
-    croak encode_utf8('No index in ' . $self->name)
-      unless defined $self->index;
 
     if (length $self->link) {
         # follow the link
@@ -1108,7 +1118,8 @@ sub resolve_path {
         return $child->resolve_path($request, $maxlinks);
     }
 
-    croak encode_utf8("Cannot parse path resolution request: $request")
+    croak encode_utf8($self->index->identifier
+          . ": Cannot parse path resolution request: $request")
       if length $request;
 
     # nothing else to resolve

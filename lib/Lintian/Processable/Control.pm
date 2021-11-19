@@ -60,6 +60,7 @@ has control => (
         my ($self) = @_;
 
         my $index = Lintian::Index->new;
+        $index->identifier($self->name . ' (control)');
         $index->basedir($self->basedir . $SLASH . 'control');
 
         # control files are not installed relative to the system root

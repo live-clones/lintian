@@ -62,7 +62,8 @@ sub add_md5sums {
 
     my $savedir = getcwd;
     chdir($self->basedir)
-      or die encode_utf8('Cannot change to directory ' . $self->basedir);
+      or die encode_utf8(
+        $self->identifier . ': Cannot change to directory ' . $self->basedir);
 
     my $errors = $EMPTY;
 
@@ -97,7 +98,8 @@ sub add_md5sums {
     $_->md5sum($md5sums{$_->name}) for @files;
 
     chdir($savedir)
-      or die encode_utf8("Cannot change to directory $savedir");
+      or die encode_utf8(
+        $self->identifier . ": Cannot change to directory $savedir");
 
     return $errors;
 }

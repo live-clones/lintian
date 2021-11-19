@@ -85,6 +85,8 @@ Lintian::Processable::Orig::Index provides an interface to collected data about 
 
 =over 4
 
+=item identifier
+
 =item catalog
 
 Returns a reference to a hash with elements catalogued by path names.
@@ -96,6 +98,8 @@ Returns the base directory for file references.
 =item C<anchored>
 
 =cut
+
+has identifier => (is => 'rw', default => 'unnamed');
 
 has catalog => (
     is => 'rw',
@@ -167,7 +171,7 @@ sub lookup {
     # get root dir by default
     $name //= $EMPTY;
 
-    croak encode_utf8('Name is not a string')
+    croak encode_utf8($self->identifier . ': Name is not a string')
       unless ref $name eq $EMPTY;
 
     my $found = $self->catalog->{$name};
@@ -197,7 +201,8 @@ sub create_from_basedir {
 
     my $savedir = getcwd;
     chdir($self->basedir)
-      or die encode_utf8('Cannot change to directory ' . $self->basedir);
+      or die encode_utf8(
+        $self->identifier . ': Cannot change to directory ' . $self->basedir);
 
     # get times in UTC
     my @index_command
@@ -208,7 +213,8 @@ sub create_from_basedir {
     run3(\@index_command, \undef, \$index_output, \$index_errors);
 
     chdir($savedir)
-      or die encode_utf8("Cannot change to directory $savedir");
+      or die encode_utf8(
+        $self->identifier . ": Cannot change to directory $savedir");
 
     # allow processing of file names with non UTF-8 bytes
     $index_errors = decode_utf8($index_errors)
@@ -225,8 +231,8 @@ sub create_from_basedir {
     $index_output =~ s/\0$//;
 
     my @lines = split(/\0/, $index_output, $NO_LIMIT);
-    die encode_utf8(
-        "Did not get a multiple of $LINES_PER_FILE lines from find.")
+    die encode_utf8($self->identifier
+          . ": Did not get a multiple of $LINES_PER_FILE lines from find.")
       unless @lines % $LINES_PER_FILE == 0;
 
     while (defined(my $first = shift @lines)) {
@@ -310,8 +316,9 @@ sub create_from_piped_tar {
         my $entry = Lintian::Index::Item->new;
         $entry->init_from_tar_output($line);
 
-        die encode_utf8(
-            'Numerical index lists extra files for file name '. $entry->name)
+        die encode_utf8($self->identifier
+              . ': Numerical index lists extra files for file name '
+              . $entry->name)
           unless exists $catalog{$entry->name};
 
         # keep numerical uid and gid
@@ -386,11 +393,12 @@ sub load {
     }
 
     # disallow absolute names
-    die encode_utf8('Index contains absolute path names')
+    die encode_utf8($self->identifier . ': Index contains absolute path names')
       if any { $_->name =~ m{^/}s } values %all;
 
     # disallow absolute hardlink targets
-    die encode_utf8('Index contains absolute hardlink targets')
+    die encode_utf8(
+        $self->identifier . ': Index contains absolute hardlink targets')
       if any { $_->link =~ m{^/}s } grep { $_->is_hardlink } values %all;
 
     # add entries for missing directories
@@ -469,7 +477,7 @@ sub load {
     }
 
     # ensure root is not its own child; may create leaks like #695866
-    die encode_utf8('Root directory is its own parent')
+    die encode_utf8($self->identifier . ': Root directory is its own parent')
       if defined $all{$EMPTY} && defined $all{$EMPTY}->parent_dir;
 
     # find all hard links
@@ -550,12 +558,13 @@ sub load {
 sub merge_in {
     my ($self, $other) = @_;
 
-    die encode_utf8('Need same base directory ('
+    die encode_utf8($self->identifier
+          . ': Need same base directory ('
           . $self->basedir . ' vs '
           . $other->basedir . ')')
       unless $self->basedir eq $other->basedir;
 
-    die encode_utf8('Need same anchoring status')
+    die encode_utf8($self->identifier . ': Need same anchoring status')
       unless $self->anchored == $other->anchored;
 
     # associate all new items with this index
@@ -608,7 +617,7 @@ sub capture_common_prefix {
       if $new_basedir eq $SLASH;
 
     my $segment = path($self->basedir)->basename;
-    die encode_utf8('Common path segment has no length')
+    die encode_utf8($self->identifier . ': Common path segment has no length')
       unless length $segment;
 
     my $prefix;
@@ -677,15 +686,15 @@ sub drop_common_prefix {
 
     my @childnames = keys %{$self->catalog->{$EMPTY}->childnames};
 
-    die encode_utf8('Not exactly one top-level child')
+    die encode_utf8($self->identifier . ': Not exactly one top-level child')
       unless @childnames == 1;
 
     my $segment = $childnames[0];
-    die encode_utf8('Common path segment has no length')
+    die encode_utf8($self->identifier . ': Common path segment has no length')
       unless length $segment;
 
     my $new_root = $self->lookup($segment . $SLASH);
-    die encode_utf8('New root is not a directory')
+    die encode_utf8($self->identifier . ': New root is not a directory')
       unless $new_root->is_dir;
 
     my $prefix;
@@ -747,15 +756,16 @@ sub drop_basedir_segment {
     my $errors = $EMPTY;
 
     my $obsolete = path($self->basedir)->basename;
-    die encode_utf8('Base directory has no name')
+    die encode_utf8($self->identifier . ': Base directory has no name')
       unless length $obsolete;
 
     my $parent_dir = path($self->basedir)->parent->stringify;
-    die encode_utf8('Base directory has no parent')
+    die encode_utf8($self->identifier . ': Base directory has no parent')
       if $parent_dir eq $SLASH;
 
     my $grandparent_dir = path($parent_dir)->parent->stringify;
-    die encode_utf8('Will not do anything in file system root')
+    die encode_utf8(
+        $self->identifier . ': Will not do anything in file system root')
       if $grandparent_dir eq $SLASH;
 
     # destroyed when object is lost

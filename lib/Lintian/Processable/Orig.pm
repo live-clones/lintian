@@ -71,6 +71,7 @@ has orig => (
         my ($self) = @_;
 
         my $index = Lintian::Index->new;
+        $index->identifier($self->name . ' (orig)');
         $index->basedir($self->basedir . $SLASH . 'orig');
 
         return $index
