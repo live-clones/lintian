@@ -233,6 +233,7 @@ Enable-Tags-From-Check:
  languages/fortran/gfortran
  languages/golang/built-using
  languages/golang/import-path
+ languages/guile/dynamic-link
  languages/java
  languages/java/bytecode
  languages/javascript/embedded
