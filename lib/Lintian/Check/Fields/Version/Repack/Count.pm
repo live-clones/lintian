@@ -48,7 +48,7 @@ sub source {
     my $version = $fields->unfolded_value('Version');
 
     $self->hint('anticipated-repack-count', $version)
-      if $version =~ /dfsg1-/;
+      if $version =~ m{ dfsg [01] - }x;
 
     $self->hint('dot-before-repack-count', $version)
       if $version =~ / dfsg [.] \d+ /x;

@@ -2,7 +2,7 @@ Tag: anticipated-repack-count
 Severity: info
 Check: fields/version/repack/count
 Explanation: The version contains the string <code>+dfsgN</code>
- where <code>N</code> is a number as in <code>+dfsg1</code>.
+ where <code>N</code> is a low number as in <code>+dfsg1</code>.
  .
  Normally it is not necessary to repackage an upstream source package more than
  once. You can omit the repack count. In most cases <code>+dfsg-1</code> is
