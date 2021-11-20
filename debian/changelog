@@ -1,8 +1,41 @@
-lintian (2.112.0+git) UNRELEASED; urgency=medium
+lintian (2.113.0) unstable; urgency=medium
 
-  * WIP (generated at release time: please do not add entries below).
+  * Summary of tag changes:
+    + Added:
+      - anticipated-repack-count
+      - dfsg-version-with-tilde
+      - dot-before-repack-count
+      - elf-error
+      - elf-warning
+      - no-code-sections
+      - static-link-time-optimization
+    + Removed:
+      - apparently-corrupted-elf-binary
 
- -- Chris Lamb <lamby@debian.org>  Sat, 13 Nov 2021 07:27:48 -0800
+  [ Felix Lechner ]
+  * Bump the maximum plausible bug number to 1,500,000. (Closes: #1000148)
+  * Flag static archives without code sections, as can happen with LTO
+    objects. (Closes: #977596)
+  * Flag use of link-time-optimization (LTO) in static archives.
+    (Closes: #963057)
+  * Exempt Coq's cmxs files from the shared-library-lacks-prerequisites
+    tag. (Closes: #999602)
+  * Accommodate dune's file names for the bytecode in OCaml interfaces.
+    (Closes: #999601)
+  * Drop 'type' from the list of bash-centric expressions.
+    (Closes: #999878)
+  * Fix CI failure on armhf due to a parsing failure of readelf output.
+  * Adjust refresh script fetching debhelper data for the new
+    Contents-all.gz served by archive.
+  * Refresh debhelper data.
+
+  [ Kentaro Hayashi ]
+  * Add the dfsg-version-with-tilde tag, as opposed to a plus.
+  * Add a new tag about a possibly unnecessary repack count for upstream
+    sources.
+  * Add a tag about source versions with a dot before the repack count.
+
+ -- Chris Lamb <lamby@debian.org>  Sat, 20 Nov 2021 16:43:03 +0000
 
 lintian (2.112.0) unstable; urgency=medium
 
