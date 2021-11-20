@@ -205,6 +205,8 @@ sub check_bash_centric {
         my $line = $stashed . $no_comment;
         $stashed = $EMPTY;
 
+	last if $line =~ /^exec\s/;
+
         my $pointer
           = $LEFT_SQUARE_BRACKET
           . $label
