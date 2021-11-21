@@ -1,4 +1,0 @@
-foo usr/share/foo/ELF/
-bar::ELF usr/share/foo/ELF/
-bar::ELF usr/share/foo/
-true usr/lib/bar::ELF
