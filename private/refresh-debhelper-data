@@ -1,213 +1,270 @@
-#!/bin/sh
-
-#    Copyright © 2008 by Raphael Geissert <atomo64@gmail.com>
-#    Copyright © 2017-2018 Chris Lamb <lamby@debian.org>
+#!/usr/bin/perl
 #
-#    This file is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 2 of the License, or
-#    (at your option) any later version.
+# Copyright © 2008 by Raphael Geissert <atomo64@gmail.com>
+# Copyright © 2017-2018 Chris Lamb <lamby@debian.org>
+# Copyright © 2021 Felix Lechner
 #
-#    This file is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+# This program is free software.  It is distributed under the terms of
+# the GNU General Public License as published by the Free Software
+# Foundation; either version 2 of the License, or (at your option) any
+# later version.
 #
-#    You should have received a copy of the GNU General Public License
-#    along with this file.  If not, see <http://www.gnu.org/licenses/>.
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
 
-set -e
+use v5.20;
+use warnings;
+use utf8;
 
-if [ -z "$1" ]; then
-    printf "Usage: %s path/to/lintian/data [Contents-arch.(gz|bz2|)]\n" \
-        "$(basename "$0")"
-    cat <<INFO
+use Const::Fast;
+use Cwd qw(getcwd);
+use File::Basename;
+use File::Find::Rule;
+use IPC::Run3;
+use List::SomeUtils qw(any uniq);
+use Path::Tiny;
+use PerlIO::gzip;
+use Time::Piece;
+use Unicode::UTF8 qw(encode_utf8 decode_utf8);
 
-If the Contents file is specified, the list of dh_ commands found there will
-be compared with the list at lintian/data/debhelper/dh_commands and will
-indicate if the list is up to date with an exit status of zero.
+const my $EMPTY => q{};
+const my $SPACE => q{ };
+const my $HORIZONTAL_BAR => q{|};
 
-If the Contents file is not specified, the script will download the following
-files from a mirror (which should be specified via the DEB_MIRROR env var, 
-which defaults to https://deb.debian.org/debian and is used directly
-without any kind of parsing so one can play with it):
-* main/Contents-i386.gz, main/binary-i386/Packages.gz
-* Binary packages found at Contents shipping dh_ commands
-Any special parameter can be passed to wget via WGET_ARGS, if needed.
+const my $NEWLINE => qq{\n};
 
-Other options:
-Other variables such as GREP_OPTIONS can be used to enable things like --mmap.
-INFO
-    exit
-fi
-
-readonly lintian_data="$(readlink -f "$1")"
-readonly contents="$(readlink -f "$2")"
-readonly dh_regex='^(usr/bin/dh_|usr/share/perl5/Debian/Debhelper/Sequence/).'
-readonly dh_command_perl_regex='^usr/bin/(dh_[^\s]+)\s+[\w-]+/([^,]+).*'
-readonly dh_addon_perl_regex='^usr/share/perl5/Debian/Debhelper/Sequence/([^\s]+)\.pm\s+[\w-]+/([^,]+).*'
-current_date=$(date -u  '+%Y-%m-%d %H:%M')
-
-[ -d "$lintian_data" ] || {
-    printf "%s is not a directory, aborting" "$lintiandata" >&2
-    exit 1
+if (@ARGV != 1) {
+    usage();
+    exit;
 }
 
-[ ! -z "$contents" -a ! -f "$contents" ] && {
-    printf "%s is not a file, aborting" "$contents" >&2
-    exit 1
+my ($data_folder) = @ARGV;
+
+die encode_utf8('No data folder')
+  unless length $data_folder;
+
+die encode_utf8('Data folder does not exist')
+  unless -d $data_folder;
+
+my $work_folder
+  = Path::Tiny->tempdir(TEMPLATE => 'refresh-debhelper-data-XXXXXXXXXX');
+
+my $save_folder = getcwd();
+
+chdir $work_folder
+  or die encode_utf8("Cannot change folder to $work_folder.");
+
+my $mirror_base = 'https://deb.debian.org/debian';
+
+# neutral sort order
+local $ENV{LC_ALL} = 'C';
+
+my $port = 'amd64';
+
+my %installable_names_by_command;
+my %installable_names_by_addon;
+
+my @wget_command = qw{/usr/bin/wget --no-verbose};
+
+for my $architecture ('all', $port) {
+
+    my $file_name = "Contents-$architecture.gz";
+    my $url = "$mirror_base/dists/sid/main/$file_name";
+
+    say $EMPTY;
+    say encode_utf8("Getting $file_name");
+
+    run3([@wget_command, "--output-document=$file_name", $url]);
+
+    open(my $fd, '<:gzip', $file_name)
+      or die encode_utf8("Cannot open $file_name.");
+
+    while (my $line = <$fd>) {
+
+        chomp $line;
+
+        if ($line =~ m{^ usr/bin/ (dh_ \S+) \s+ [\w-]+ / (\S+) $}x) {
+
+            my $command = $1;
+            my $installable_name = $2;
+
+            $installable_names_by_command{$command} //= [];
+            push(@{$installable_names_by_command{$command}},$installable_name);
+
+            next;
+        }
+
+        if ($line
+            =~ m{^ usr/share/perl5/Debian/Debhelper/Sequence/ (\S+) [.]pm \s+ [\w-]+ / (\S+) $}x
+        ) {
+
+            my $command = $1;
+            my $installable_name = $2;
+
+            $installable_names_by_addon{$command} //= [];
+            push(@{$installable_names_by_addon{$command}}, $installable_name);
+
+            next;
+        }
+    }
+
+    close $fd;
 }
 
-readonly workdir="$(mktemp -d)"
+my @installable_names= uniq map { @{$_} } values %installable_names_by_command;
 
-cleanup () {
-        [ ! -d "$workdir" ] || rm -rf "$workdir"
-}; trap cleanup EXIT
+my $packages_filename = 'Packages';
+my $packages_url = "$mirror_base/dists/sid/main/binary-$port/Packages.gz";
 
-cd "$workdir"
+say $EMPTY;
+say encode_utf8("Getting $packages_filename");
 
-create_data_file() {
-    local file="$1" basename
-    cat > "$file" <<EOF
-# This file is generated from private/refresh-debhelper-data.
-# It was generated on ${current_date}
-EOF
-    if [ -f "${file}-manual" ] ; then
-        basename=$(basename "$file")
-        cat >> "$file" <<EOF
-#
-# If the script generates an insufficient/incorrect value for a
-# single item, please have a look at ${basename}-manual.
-#
-EOF
-    fi
+run3([@wget_command, "--output-document=$packages_filename.gz",$packages_url]);
+run3(['gunzip', "$packages_filename.gz"]);
 
-    echo >> "$file"
-    LC_ALL=C sort -u >> "$file"
+my @uses_autoscript;
+my @uses_misc_depends;
+
+for my $installable_name (sort @installable_names) {
+
+    my @command = (
+        qw{grep-dctrl
+          --no-field-names
+          --field=Package --exact-match}, $installable_name,
+        '--show-field=Filename',
+        $packages_filename
+    );
+
+    my $pool_path;
+    run3(\@command, \undef, \$pool_path);
+
+    chomp $pool_path;
+
+    my $deb_url = "$mirror_base/$pool_path";
+
+    say $EMPTY;
+    say encode_utf8("Getting $pool_path");
+    run3([@wget_command, $deb_url]);
+
+    my $extract_folder = "pool/$pool_path";
+    path($extract_folder)->mkpath;
+
+    my $basename = basename($pool_path);
+    run3([qw{dpkg-deb --extract}, $basename, $extract_folder]);
+
+    unlink($basename)
+      or die encode_utf8("Cannot delete $basename");
+
+    my $autoscript_rule = File::Find::Rule->file;
+    $autoscript_rule->name(qr{^dh_});
+    $autoscript_rule->grep(qr{autoscript});
+    my @autoscript_matches = $autoscript_rule->in("$extract_folder/usr/bin");
+
+    push(@uses_autoscript, map { basename($_) } @autoscript_matches);
+
+    my $misc_depends_rule = File::Find::Rule->file;
+    $misc_depends_rule->name(qr{^dh_});
+    $misc_depends_rule->grep(qr{misc:Depends});
+    my @misc_depends_matches
+      = $misc_depends_rule->in("$extract_folder/usr/bin");
+
+    push(@uses_misc_depends, map { basename($_) } @misc_depends_matches);
 }
 
-mirror="${DEB_MIRROR:=https://deb.debian.org/debian}"
-WGET_ARGS="${WGET_ARGS:=-nv}"
+chdir $save_folder
+  or die encode_utf8("Cannot change folder to $save_folder.");
 
-offline=0
-[ -z "$contents" ] || offline=1
+say $EMPTY;
 
-if [ $offline -eq 1  ]; then
+path($data_folder)->mkpath('debhelper');
+path($data_folder)->mkpath('common');
 
-    # offline may not work past the bullseye release
-    # archive now produces Contents-{all,i386}.gz
-    # this code now needs both
+create_data_file("$data_folder/debhelper/dh_packages",
+    (sort @installable_names));
 
-    known_commands="$lintian_data/debhelper/dh_commands"
-    [ -f "$known_commands" ] || exit 1
-    new_commands="$workdir/new"
+my @command_lines;
+for my $command (keys %installable_names_by_command) {
 
-    case "$contents" in
-        *.gz)
-            command="zgrep"
-        ;;
-        *.bz2)
-            command="bzgrep"
-        ;;
-        *)
-            command="grep"
-        ;;
-    esac
-    which "$command" 2>&1 1>/dev/null || exit 2
+    my @alternatives = @{$installable_names_by_command{$command}};
+    push(@alternatives, 'debhelper-compat')
+      if any { $_ eq 'debhelper' } @alternatives;
 
-    $command -E "$dh_regex" "$contents" \
-        | perl -p -w -E 's#'"$dh_command_perl_regex"'#$1=$2#g;' \
-        | sort > "$new_commands"
-    cmp -s "$known_commands" "$new_commands"
-    exit
+    my $prerequisites
+      = join($SPACE . $HORIZONTAL_BAR . $SPACE, (uniq @alternatives));
+    push(@command_lines, "$command=$prerequisites");
+}
 
-else
-    mkdir -p "$lintian_data/debhelper"
+create_data_file("$data_folder/debhelper/dh_commands", (sort @command_lines));
 
-    for architecture in all amd64; do
+my @addon_lines;
+for my $addon (keys %installable_names_by_addon) {
 
-        contents_url="$mirror"/"dists/sid/main/Contents-${architecture}.gz"
+    my @alternatives = @{$installable_names_by_addon{$addon}};
+    push(@alternatives, 'debhelper-compat')
+      if any { $_ eq 'debhelper' } @alternatives;
 
-        echo wget "$contents_url"
-        /usr/bin/wget $WGET_ARGS "$contents_url"
+    my $prerequisites
+      = join($SPACE . $HORIZONTAL_BAR . $SPACE, (uniq @alternatives));
+    push(@addon_lines, "$addon=$prerequisites");
+}
 
-        zgrep -E "$dh_regex" "Contents-${architecture}.gz" > "dh_entries-${architecture}"
+create_data_file("$data_folder/common/dh_addons", (sort @addon_lines));
 
-        cat "dh_entries-${architecture}" \
-            | perl -n -w -E 's#'"$dh_command_perl_regex"'#$1=$2# and print' \
-            | sed 's/=debhelper$/=debhelper | debhelper-compat/' \
-                  > "dh_commands-${architecture}"
+my @maint_lines = uniq @uses_autoscript;
+create_data_file("$data_folder/debhelper/maint_commands", (sort @maint_lines));
 
-        cat "dh_commands-${architecture}" >> dh_commands
+my @misc_depends_lines= grep { $_ ne 'dh_gencontrol' } uniq @uses_misc_depends;
+create_data_file("$data_folder/debhelper/miscDepends_commands",
+    (sort @misc_depends_lines));
 
-        cat "dh_entries-${architecture}" \
-            | perl -n -w -E 's#'"$dh_addon_perl_regex"'#$1=$2# and print' \
-            | sed 's/=debhelper$/=debhelper | debhelper-compat/' \
-                  > "dh_addons-${architecture}"
+exit;
 
-        cat "dh_addons-${architecture}" >> dh_addons
+sub create_data_file {
+    my ($path, @lines) = @_;
 
-        cat "dh_commands-${architecture}" \
-            | cut -d '|' -f 1 | sed 's/\s*$//' \
-            | cut -d '=' -f 2 | sort -u > "dh_packages-${architecture}"
+    my $text = join($NEWLINE, @lines) . $NEWLINE;
 
-        cat "dh_packages-${architecture}" >> dh_packages
+    my $current_date = gmtime->datetime . 'Z';
 
-        packages_url="$mirror"/"dists/sid/main/binary-${architecture}/Packages.gz"
+    my $preamble =<<"EOF_EOF_EOF";
+# Generated by private/refresh-debhelper-data on $current_date
+EOF_EOF_EOF
 
-        echo wget "$packages_url"
-        /usr/bin/wget $WGET_ARGS -O "Packages-${architecture}.gz" "$packages_url"
+    my $contents = $preamble . $NEWLINE . $text;
 
-        gunzip "Packages-${architecture}.gz"
+    say "Writing $path";
+    path($path)->spew_utf8($contents);
 
-        for package in $(cat "dh_packages-${architecture}"); do
+    return;
+}
 
-            fn="$(grep-dctrl -n -P -X "$package" -sFilename Packages-${architecture})"
+sub usage {
+    my $message =<<"EOF_EOF_EOF";
+Usage: $0 <data-directory>
 
-            deb_url="$mirror"/"$fn"
+The program will download the following files from https://deb.debian.org:
 
-            echo wget "$deb_url"
-            /usr/bin/wget $WGET_ARGS "$deb_url"
+* main/Contents-all.gz
+* main/Contents-amd64.gz
+* main/binary-amd64/Packages.gz
+* Installable packages found in Contents that ship dh_ commands
+EOF_EOF_EOF
 
-            file="$(basename "$fn")"
-            dpkg-deb -x "$file" "$(mktemp -d -p .)"
-            rm -f "$file"
+    print encode_utf8($message);
 
-            find */ | grep -Ev '^[^/]+/usr/bin/dh_.+$' \
-                | xargs rm >/dev/null 2>&1 || true
-            find */ -type l -print | xargs rm >/dev/null 2>&1 || true
-        done
-
-        grep -lr autoscript */ \
-            | sed 's,.*/usr/bin/,,g' > "maint_commands-${architecture}"
-
-        cat "maint_commands-${architecture}" >> maint_commands
-
-        grep -lr misc:Depends */ \
-             | sed 's,.*/usr/bin/,,g' | grep -v dh_gencontrol \
-             > "miscDepends_commands-${architecture}"
-
-        cat "miscDepends_commands-${architecture}" >> miscDepends_commands
-
-    done
-
-    for f in commands packages; do
-        rf="$lintian_data/debhelper/dh_$f"
-        create_data_file "$rf" < "dh_$f"
-    done
-
-    for f in addons; do
-        rf="$lintian_data/common/dh_$f"
-        create_data_file "$rf" < "dh_$f"
-    done
-
-    for f in maint miscDepends; do
-        rf="$lintian_data/debhelper/${f}_commands"
-        create_data_file "$rf" < "${f}_commands"
-    done
-fi
+    return;
+}
 
 # Local Variables:
 # indent-tabs-mode: nil
+# cperl-indent-level: 4
 # End:
-# vim: syntax=sh sw=4 sts=4 sr et
+# vim: syntax=perl sw=4 sts=4 sr et
