@@ -2,4 +2,4 @@ Skeleton: upload-native
 Testname: binaries-missing-depends-on-numpy-abi
 Description: Test for missing dependency on python3-numpy-abiN
 Package-Architecture: any
-Extra-Build-Depends: python3-all-dev, python3-numpy, dh-python
+Extra-Build-Depends: python3-all-dev, python3-numpy, dh-python, python3-setuptools
