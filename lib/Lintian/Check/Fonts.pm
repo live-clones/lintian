@@ -25,10 +25,17 @@ use v5.20;
 use warnings;
 use utf8;
 
+use Const::Fast;
+use List::SomeUtils qw(any);
+
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my $SPACE => q{ };
+const my $LEFT_PARENTHESIS => q{(};
+const my $RIGHT_PARENTHESIS => q{)};
 
 sub visit_installed_files {
     my ($self, $item) = @_;
@@ -36,20 +43,24 @@ sub visit_installed_files {
     return
       unless $item->is_file;
 
-    my ($anycase)
-      = ($item->name =~ m{/([\w-]+\.(?:[to]tf|pfb|woff2?|eot)(?:\.gz)?)$}i);
     return
-      unless length $anycase;
+      unless $item->basename
+      =~ m{ [\w-]+ [.] (?:[to]tf | pfb | woff2? | eot) (?:[.]gz)? $}ix;
 
-    my $font = lc $anycase;
+    my $font = $item->basename;
 
     my $FONT_PACKAGES = $self->profile->fonts;
 
-    my $owner = $FONT_PACKAGES->value($font);
-    if (length $owner) {
+    my @installed_by = $FONT_PACKAGES->installed_by($font);
+    if (@installed_by) {
 
-        $self->hint('duplicate-font-file', $item->name, 'also in', $owner)
-          unless $self->processable->name eq $owner
+        my $list
+          = $LEFT_PARENTHESIS
+          . join($SPACE, (sort @installed_by))
+          . $RIGHT_PARENTHESIS;
+
+        $self->hint('duplicate-font-file', $item->name, 'also in', $list)
+          unless (any { $_ eq $self->processable->name } @installed_by)
           || $self->processable->type eq 'udeb';
 
     } else {

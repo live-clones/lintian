@@ -1,1 +1,1 @@
-s/also in [-[:alnum:]]+/also in FONT_PACKAGE/
+s/also in [(][^)]+[)]/also in (FONT_PACKAGES)/
