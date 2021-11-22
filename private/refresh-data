@@ -55,8 +55,8 @@ $profile->load;
 
 my @parts = (
     $profile->architectures, $profile->debhelper_addons,
-    $profile->debhelper_commands, $profile->hardening_buildflags,
-    $profile->policy_releases,
+    $profile->debhelper_commands, $profile->fonts,
+    $profile->hardening_buildflags,$profile->policy_releases,
 );
 
 my $errors = 0;
