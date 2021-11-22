@@ -51,16 +51,21 @@ sub visit_installed_files {
 
     my $FONT_PACKAGES = $self->profile->fonts;
 
-    my @installed_by = $FONT_PACKAGES->installed_by($font);
-    if (@installed_by) {
+    my @declared_shippers = $FONT_PACKAGES->installed_by($font);
+
+    if (@declared_shippers) {
+
+        # Fonts in xfonts-tipa are really shipped by tipa.
+        my @renamed
+          = map { $_ eq 'xfonts-tipa' ? 'tipa' : $_ } @declared_shippers;
 
         my $list
           = $LEFT_PARENTHESIS
-          . join($SPACE, (sort @installed_by))
+          . join($SPACE, (sort @renamed))
           . $RIGHT_PARENTHESIS;
 
         $self->hint('duplicate-font-file', $item->name, 'also in', $list)
-          unless (any { $_ eq $self->processable->name } @installed_by)
+          unless (any { $_ eq $self->processable->name } @renamed)
           || $self->processable->type eq 'udeb';
 
     } else {

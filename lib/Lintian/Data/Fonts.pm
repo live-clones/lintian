@@ -203,10 +203,6 @@ sub refresh {
                       unless $installable_name
                       =~ m{^ (?: [to]tf | t1 | x?fonts ) - }x;
 
-                    # Fonts in xfonts-tipa are really shipped by tipa.
-                    $installable_name = 'tipa'
-                      if $installable_name eq 'xfonts-tipa';
-
                     my $basename = basename($path);
                     my $lowercase = lc $basename;
 
