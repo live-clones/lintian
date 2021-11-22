@@ -77,8 +77,8 @@ cat > "$workdir/fonts" <<EOF
 EOF
 
 if [ -z "$contents" ] ; then
-    wget dists/sid/main/Contents-i386.gz
-    contents="$workdir/Contents-i386.gz"
+    wget dists/sid/main/Contents-all.gz
+    contents="$workdir/Contents-all.gz"
 fi
 zcat "$contents" \
     | perl -n -w -E 'print lc $_ if (s%^.+/([\w-]+\.(?:[to]tf|pfb))\s+\w+/((?:[to]tf|t1|x?fonts)-[^,]+)(,.+)?$%$1 $2%i);' \
