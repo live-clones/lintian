@@ -2,6 +2,7 @@
 
 # Copyright © 1999 by Joey Hess
 # Copyright © 2016-2020 Chris Lamb <lamby@debian.org>
+# Copyright © 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -40,8 +41,10 @@ use namespace::clean;
 with 'Lintian::Check';
 
 const my $EMPTY => q{};
+const my $SPACE => q{ };
 const my $COLON => q{:};
 const my $UNDERSCORE => q{_};
+const my $HORIZONTAL_BAR => q{|};
 const my $LEFT_SQUARE_BRACKET => q{[};
 const my $RIGHT_SQUARE_BRACKET => q{]};
 
@@ -127,17 +130,14 @@ my %DH_ADDON_MANUAL_PREREQUISITES = (
 sub source {
     my ($self) = @_;
 
-    my $MAINT_COMMANDS = $self->profile->load_data('debhelper/maint_commands');
+    my @MAINT_COMMANDS = @{$self->profile->debhelper_commands->maint_commands};
 
     my $FILENAME_CONFIGS
       = $self->profile->load_data('debhelper/filename-config-files');
 
     my $DEBHELPER_LEVELS = $self->profile->debhelper_levels;
-
-    my $DH_ADDONS = $self->profile->load_data('common/dh_addons', qr{=});
-
-    my $DH_COMMANDS_DEPENDS
-      = $self->profile->load_data('debhelper/dh_commands', qr{=});
+    my $DH_ADDONS = $self->profile->debhelper_addons;
+    my $DH_COMMANDS_DEPENDS= $self->profile->debhelper_commands;
 
     my @KNOWN_DH_COMMANDS;
     for my $command ($DH_COMMANDS_DEPENDS->all) {
@@ -255,7 +255,7 @@ sub source {
 
             # if command is passed -n, it does not modify the scripts
             $modifies_scripts = 1
-              if $MAINT_COMMANDS->recognizes($dh_command)
+              if (any { $dh_command eq $_ } @MAINT_COMMANDS)
               && $line !~ /\s+\-n\s+/;
 
            # If debhelper commands are wrapped in make conditionals, assume the
@@ -268,8 +268,10 @@ sub source {
                       = $DH_COMMAND_MANUAL_PREREQUISITES{$dh_command};
                     $command_by_prerequisite{$prerequisite} = $dh_command;
 
-                } elsif ($DH_COMMANDS_DEPENDS->recognizes($dh_command)) {
-                    my $prerequisite= $DH_COMMANDS_DEPENDS->value($dh_command);
+                } elsif ($DH_COMMANDS_DEPENDS->installed_by($dh_command)) {
+                    my $prerequisite = join(
+                        $SPACE . $HORIZONTAL_BAR . $SPACE,
+                        $DH_COMMANDS_DEPENDS->installed_by($dh_command));
                     $command_by_prerequisite{$prerequisite} = $dh_command;
                 }
             }
@@ -305,7 +307,9 @@ sub source {
                     $addon =~ y,-,_,;
 
                     my $prerequisite = $DH_ADDON_MANUAL_PREREQUISITES{$addon}
-                      || $DH_ADDONS->value($addon);
+                      || join(
+                        $SPACE . $HORIZONTAL_BAR . $SPACE,
+                        $DH_ADDONS->installed_by($addon));
 
                     if ($addon eq 'autotools_dev') {
 
@@ -410,7 +414,7 @@ sub source {
                 $uses_debhelper = 1;
 
                 next
-                  if $DH_COMMANDS_DEPENDS->recognizes($dh_command);
+                  if $DH_COMMANDS_DEPENDS->installed_by($dh_command);
 
                 # Unknown command, so check for likely misspellings
                 my $missingauto = firstval { "dh_auto_$command" eq $_ }

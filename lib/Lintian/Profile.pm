@@ -45,6 +45,8 @@ use Moo;
 use namespace::clean;
 
 with 'Lintian::Profile::Architectures',
+  'Lintian::Profile::Debhelper::Addons',
+  'Lintian::Profile::Debhelper::Commands',
   'Lintian::Profile::Debhelper::Levels',
   'Lintian::Profile::Hardening::Buildflags',
   'Lintian::Profile::Manual::References',

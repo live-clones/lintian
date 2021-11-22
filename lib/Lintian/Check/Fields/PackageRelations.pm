@@ -132,8 +132,9 @@ sub installable {
     my $KNOWN_TOOLCHAIN = $self->profile->load_data('fields/toolchain');
     my $KNOWN_METAPACKAGES = $self->profile->load_data('fields/metapackages');
 
-    my $DH_ADDONS = $self->profile->load_data('common/dh_addons', $EQUAL);
-    my %DH_ADDONS_VALUES = map { $DH_ADDONS->value($_) => 1 } $DH_ADDONS->all;
+    my $DH_ADDONS = $self->profile->debhelper_addons;
+    my %DH_ADDONS_VALUES
+      = map { $_ => 1 } map { $DH_ADDONS->installed_by($_) } $DH_ADDONS->all;
 
     my $OBSOLETE_PACKAGES
       = $self->profile->load_data('fields/obsolete-packages',qr/\s*=>\s*/);

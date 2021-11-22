@@ -24,231 +24,43 @@ use v5.20;
 use warnings;
 use utf8;
 
+use Cwd qw(realpath);
+use File::Basename qw(dirname);
+
+# neither Path::This nor lib::relative are in Debian
+use constant THISFILE => realpath __FILE__;
+use constant THISDIR => dirname realpath __FILE__;
+
+# use Lintian modules that belong to this program
+use lib THISDIR . '/../lib';
+
 use Const::Fast;
-use Cwd qw(getcwd);
-use File::Basename;
-use File::Find::Rule;
-use IPC::Run3;
-use List::SomeUtils qw(any uniq);
-use Path::Tiny;
-use PerlIO::gzip;
-use Time::Piece;
-use Unicode::UTF8 qw(encode_utf8 decode_utf8);
+use Unicode::UTF8 qw(encode_utf8);
 
-const my $EMPTY => q{};
-const my $SPACE => q{ };
-const my $HORIZONTAL_BAR => q{|};
+use Lintian::Profile;
 
-const my $NEWLINE => qq{\n};
+$ENV{LINTIAN_BASE} = realpath(THISDIR . '/..')
+  // die encode_utf8('Cannot resolve LINTIAN_BASE');
 
-if (@ARGV != 1) {
-    usage();
-    exit;
-}
+my $basedir = 'data';
 
-my ($data_folder) = @ARGV;
+die encode_utf8("Basedir does not exist at $basedir\n")
+  unless -e $basedir;
 
-die encode_utf8('No data folder')
-  unless length $data_folder;
+my $profile = Lintian::Profile->new;
+$profile->load;
 
-die encode_utf8('Data folder does not exist')
-  unless -d $data_folder;
+my $addons = $profile->debhelper_addons;
+$addons->refresh($basedir);
 
-my $work_folder
-  = Path::Tiny->tempdir(TEMPLATE => 'refresh-debhelper-data-XXXXXXXXXX');
-
-my $save_folder = getcwd();
-
-chdir $work_folder
-  or die encode_utf8("Cannot change folder to $work_folder.");
-
-my $mirror_base = 'https://deb.debian.org/debian';
-
-# neutral sort order
-local $ENV{LC_ALL} = 'C';
-
-my $port = 'amd64';
-
-my %installable_names_by_command;
-my %installable_names_by_addon;
-
-my @wget_command = qw{/usr/bin/wget --no-verbose};
-
-for my $architecture ('all', $port) {
-
-    my $file_name = "Contents-$architecture.gz";
-    my $url = "$mirror_base/dists/sid/main/$file_name";
-
-    say $EMPTY;
-    say encode_utf8("Getting $file_name");
-
-    run3([@wget_command, "--output-document=$file_name", $url]);
-
-    open(my $fd, '<:gzip', $file_name)
-      or die encode_utf8("Cannot open $file_name.");
-
-    while (my $line = <$fd>) {
-
-        chomp $line;
-
-        if ($line =~ m{^ usr/bin/ (dh_ \S+) \s+ [\w-]+ / (\S+) $}x) {
-
-            my $command = $1;
-            my $installable_name = $2;
-
-            $installable_names_by_command{$command} //= [];
-            push(@{$installable_names_by_command{$command}},$installable_name);
-
-            next;
-        }
-
-        if ($line
-            =~ m{^ usr/share/perl5/Debian/Debhelper/Sequence/ (\S+) [.]pm \s+ [\w-]+ / (\S+) $}x
-        ) {
-
-            my $command = $1;
-            my $installable_name = $2;
-
-            $installable_names_by_addon{$command} //= [];
-            push(@{$installable_names_by_addon{$command}}, $installable_name);
-
-            next;
-        }
-    }
-
-    close $fd;
-}
-
-my @installable_names= uniq map { @{$_} } values %installable_names_by_command;
-
-my $packages_filename = 'Packages';
-my $packages_url = "$mirror_base/dists/sid/main/binary-$port/Packages.gz";
-
-say $EMPTY;
-say encode_utf8("Getting $packages_filename");
-
-run3([@wget_command, "--output-document=$packages_filename.gz",$packages_url]);
-run3(['gunzip', "$packages_filename.gz"]);
-
-my @uses_autoscript;
-my @uses_misc_depends;
-
-for my $installable_name (sort @installable_names) {
-
-    my @command = (
-        qw{grep-dctrl
-          --no-field-names
-          --field=Package --exact-match}, $installable_name,
-        '--show-field=Filename',
-        $packages_filename
-    );
-
-    my $pool_path;
-    run3(\@command, \undef, \$pool_path);
-
-    chomp $pool_path;
-
-    my $deb_url = "$mirror_base/$pool_path";
-
-    say $EMPTY;
-    say encode_utf8("Getting $pool_path");
-    run3([@wget_command, $deb_url]);
-
-    my $extract_folder = "pool/$pool_path";
-    path($extract_folder)->mkpath;
-
-    my $basename = basename($pool_path);
-    run3([qw{dpkg-deb --extract}, $basename, $extract_folder]);
-
-    unlink($basename)
-      or die encode_utf8("Cannot delete $basename");
-
-    my $autoscript_rule = File::Find::Rule->file;
-    $autoscript_rule->name(qr{^dh_});
-    $autoscript_rule->grep(qr{autoscript});
-    my @autoscript_matches = $autoscript_rule->in("$extract_folder/usr/bin");
-
-    push(@uses_autoscript, map { basename($_) } @autoscript_matches);
-
-    my $misc_depends_rule = File::Find::Rule->file;
-    $misc_depends_rule->name(qr{^dh_});
-    $misc_depends_rule->grep(qr{misc:Depends});
-    my @misc_depends_matches
-      = $misc_depends_rule->in("$extract_folder/usr/bin");
-
-    push(@uses_misc_depends, map { basename($_) } @misc_depends_matches);
-}
-
-chdir $save_folder
-  or die encode_utf8("Cannot change folder to $save_folder.");
-
-say $EMPTY;
-
-path($data_folder)->mkpath('debhelper');
-path($data_folder)->mkpath('common');
-
-create_data_file("$data_folder/debhelper/dh_packages",
-    (sort @installable_names));
-
-my @command_lines;
-for my $command (keys %installable_names_by_command) {
-
-    my @alternatives = @{$installable_names_by_command{$command}};
-    push(@alternatives, 'debhelper-compat')
-      if any { $_ eq 'debhelper' } @alternatives;
-
-    my $prerequisites
-      = join($SPACE . $HORIZONTAL_BAR . $SPACE, (uniq @alternatives));
-    push(@command_lines, "$command=$prerequisites");
-}
-
-create_data_file("$data_folder/debhelper/dh_commands", (sort @command_lines));
-
-my @addon_lines;
-for my $addon (keys %installable_names_by_addon) {
-
-    my @alternatives = @{$installable_names_by_addon{$addon}};
-    push(@alternatives, 'debhelper-compat')
-      if any { $_ eq 'debhelper' } @alternatives;
-
-    my $prerequisites
-      = join($SPACE . $HORIZONTAL_BAR . $SPACE, (uniq @alternatives));
-    push(@addon_lines, "$addon=$prerequisites");
-}
-
-create_data_file("$data_folder/common/dh_addons", (sort @addon_lines));
-
-my @maint_lines = uniq @uses_autoscript;
-create_data_file("$data_folder/debhelper/maint_commands", (sort @maint_lines));
-
-my @misc_depends_lines= grep { $_ ne 'dh_gencontrol' } uniq @uses_misc_depends;
-create_data_file("$data_folder/debhelper/miscDepends_commands",
-    (sort @misc_depends_lines));
+my $commands = $profile->debhelper_commands;
+$commands->refresh($basedir);
 
 exit;
 
-sub create_data_file {
-    my ($path, @lines) = @_;
-
-    my $text = join($NEWLINE, @lines) . $NEWLINE;
-
-    my $current_date = gmtime->datetime . 'Z';
-
-    my $preamble =<<"EOF_EOF_EOF";
-# Generated by private/refresh-debhelper-data on $current_date
-EOF_EOF_EOF
-
-    my $contents = $preamble . $NEWLINE . $text;
-
-    say "Writing $path";
-    path($path)->spew_utf8($contents);
-
-    return;
-}
-
 sub usage {
     my $message =<<"EOF_EOF_EOF";
-Usage: $0 <data-directory>
+Usage: $0
 
 The program will download the following files from https://deb.debian.org:
 
