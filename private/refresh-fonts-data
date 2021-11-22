@@ -1,93 +1,175 @@
-#!/bin/sh
-# refresh-fonts-data -- Refresh data about font packages in Debian
-
-# Copyright © 2008, 2009 Raphael Geissert <atomo64@gmail.com>
-# Copyright © 2017 Chris Lamb <lamby@debian.org>
+#!/usr/bin/perl
 #
-# This file is free software: you can redistribute it and/or modify it
-# under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 2 of the License, or
-# (at your option) any later version.
+# Copyright © 2008 by Raphael Geissert <atomo64@gmail.com>
+# Copyright © 2017-2018 Chris Lamb <lamby@debian.org>
+# Copyright © 2021 Felix Lechner
 #
-# This file is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
+# This program is free software.  It is distributed under the terms of
+# the GNU General Public License as published by the Free Software
+# Foundation; either version 2 of the License, or (at your option) any
+# later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this file.  If not, see <http://www.gnu.org/licenses/>.
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
 
-set -e
+use v5.20;
+use warnings;
+use utf8;
 
-if [ -z "$1" ]; then
-    printf "Usage: %s <path-to-data> [<contents>]\n" "$(basename "$0")"
-    cat <<INFO
+use Const::Fast;
+use File::Basename;
+use List::SomeUtils qw(uniq);
+use IPC::Run3;
+use Path::Tiny;
+use PerlIO::gzip;
+use Time::Piece;
+use Unicode::UTF8 qw(encode_utf8);
 
-If <contents> is specified, it should be the path to the Contents file
-from the current unstable distribution.  It will be used to find all
-font files already packaged for Debian and update the list of known
-font files and the packages that contain them.  <path-to-data> should
-be the path to the root of the Lintian data directory to update.
+const my $EMPTY => q{};
+const my $SPACE => q{ };
 
-If the Contents file is not specified, the script will download the
-following files from a mirror.  The mirror can be specified with the
-DEB_MIRROR environment variable.  If it is not set, the default is
-http://deb.debian.org/debian.
+const my $NEWLINE => qq{\n};
 
-* Contents-i386.gz
-
-Any necessary special parameters for wget can be set via the
-environment variable WGET_ARGS.  The default arguments are -nv.
-
-INFO
-    exit
-fi
-
-readonly lintian_data="$(readlink -f "$1")"
-if [ -n "$2" ] ; then
-    contents="$(readlink -f "$2")"
-fi
-
-[ -d "$lintian_data" ] || {
-    printf "%s is not a directory, aborting" "$lintian_data" >&2
-    exit 1
+if (@ARGV != 1) {
+    usage();
+    exit;
 }
 
-readonly workdir="$(mktemp -d)"
+my ($data_folder) = @ARGV;
 
-cleanup () {
-    [ ! -d "$workdir" ] || rm -rf "$workdir"
-}; trap cleanup EXIT
+die encode_utf8('No data folder')
+  unless length $data_folder;
 
-mirror="${DEB_MIRROR:=http://deb.debian.org/debian}"
-WGET_ARGS="${WGET_ARGS:=-nv}"
-wget() {
-    echo wget "$mirror"/"$1"
-    /usr/bin/wget $WGET_ARGS -O "$workdir/$(basename "$1")" "$mirror"/"$1"
+die encode_utf8('Data folder does not exist')
+  unless -d $data_folder;
+
+my $work_folder
+  = Path::Tiny->tempdir(TEMPLATE => 'refresh-debhelper-data-XXXXXXXXXX');
+
+my $mirror_base = 'https://deb.debian.org/debian';
+
+# neutral sort order
+local $ENV{LC_ALL} = 'C';
+
+my $port = 'amd64';
+
+my %installable_names_by_font;
+
+my @wget_command = qw{/usr/bin/wget --no-verbose};
+
+for my $architecture ('all', $port) {
+
+    my $file_name = "Contents-$architecture.gz";
+    my $local_path = "$work_folder/$file_name";
+    my $url = "$mirror_base/dists/sid/main/$file_name";
+
+    say $EMPTY;
+    say encode_utf8("Getting $file_name");
+
+    run3([@wget_command, "--output-document=$local_path", $url]);
+
+    open(my $fd, '<:gzip', $local_path)
+      or die encode_utf8("Cannot open $local_path.");
+
+    while (my $line = <$fd>) {
+
+        chomp $line;
+
+        my ($path, $finder) = split($SPACE, $line, 2);
+        next
+          unless length $path
+          && length $finder;
+
+        if ($path =~ m{ [.] (?:[to]tf|pfb) $}ix) {
+
+            my @locations = split(m{,}, $finder);
+            for my $location (@locations) {
+
+                my ($section, $installable_name) = split(m{/}, $location, 2);
+
+        # Record only packages starting with ttf-, otf-, t1-, xfonts- or fonts-
+                next
+                  unless $installable_name
+                  =~ m{^ (?: [to]tf | t1 | x?fonts ) - }x;
+
+                # Fonts in xfonts-tipa are really shipped by tipa.
+                $installable_name = 'tipa'
+                  if $installable_name eq 'xfonts-tipa';
+
+                my $basename = basename($path);
+                my $font = lc $basename;
+
+                $installable_names_by_font{$font} //= [];
+                push(@{$installable_names_by_font{$font}}, $installable_name);
+            }
+
+            next;
+        }
+    }
+
+    close $fd;
 }
-mkdir -p "$lintian_data/files"
 
-cat > "$workdir/fonts" <<EOF
-# The list of known font filenames already packaged for Debian and the
-# package that contains the font.  Only packages starting with ttf-,
-# otf-, t1-, xfonts- and fonts- are searched for fonts.
-#
-# Last updated: $(date -u +'%Y-%m-%d')
+say $EMPTY;
 
-EOF
+path($data_folder)->mkpath('files');
 
-if [ -z "$contents" ] ; then
-    wget dists/sid/main/Contents-all.gz
-    contents="$workdir/Contents-all.gz"
-fi
-zcat "$contents" \
-    | perl -n -w -E 'print lc $_ if (s%^.+/([\w-]+\.(?:[to]tf|pfb))\s+\w+/((?:[to]tf|t1|x?fonts)-[^,]+)(,.+)?$%$1 $2%i);' \
-    | LC_ALL=C sort -u >> "$workdir/fonts"
-# Fonts in xfonts-tipa are really shipped by tipa.
-sed -i 's/ xfonts-tipa$/ tipa/g' "$workdir/fonts"
-mv "$workdir/fonts" "$lintian_data/files/fonts"
+my @font_lines;
+for my $font (keys %installable_names_by_font) {
+
+    my @alternatives = @{$installable_names_by_font{$font}};
+
+    push(@font_lines, $font . $SPACE . $_) for uniq @alternatives;
+}
+
+create_data_file("$data_folder/files/fonts", (sort @font_lines));
+
+exit;
+
+sub create_data_file {
+    my ($path, @lines) = @_;
+
+    my $text = join($NEWLINE, @lines) . $NEWLINE;
+
+    my $current_date = gmtime->datetime . 'Z';
+
+    my $preamble =<<"EOF_EOF_EOF";
+# Generated by private/refresh-fonts-data on $current_date
+EOF_EOF_EOF
+
+    my $contents = $preamble . $NEWLINE . $text;
+
+    say "Writing $path";
+    path($path)->spew_utf8($contents);
+
+    return;
+}
+
+sub usage {
+    my $message =<<"EOF_EOF_EOF";
+Usage: $0 <data-directory>
+
+The program will download the following files from https://deb.debian.org:
+
+* main/Contents-all.gz
+* main/Contents-amd64.gz
+EOF_EOF_EOF
+
+    print encode_utf8($message);
+
+    return;
+}
 
 # Local Variables:
 # indent-tabs-mode: nil
+# cperl-indent-level: 4
 # End:
-# vim: syntax=sh sw=4 sts=4 sr et
+# vim: syntax=perl sw=4 sts=4 sr et
