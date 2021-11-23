@@ -113,6 +113,12 @@
             "debhelper"
          ]
       },
+      "dh_click" : {
+         "installed_by" : [
+            "click-dev"
+         ],
+         "uses_autoscript" : 1
+      },
       "dh_clideps" : {
          "installed_by" : [
             "cli-common-dev"
@@ -1078,7 +1084,7 @@
       }
    },
    "preamble" : {
-      "last_update" : "2021-11-22T07:23:58Z",
+      "last_update" : "2021-11-23T11:06:43Z",
       "title" : "Debhelper Commands"
    }
 }

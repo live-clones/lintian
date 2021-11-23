@@ -55,6 +55,11 @@
             "cli-common-dev"
          ]
       },
+      "click" : {
+         "installed_by" : [
+            "click-dev"
+         ]
+      },
       "cmake" : {
          "installed_by" : [
             "dh-cmake"
@@ -437,7 +442,7 @@
       }
    },
    "preamble" : {
-      "last_update" : "2021-11-22T04:37:00Z",
+      "last_update" : "2021-11-23T11:05:58Z",
       "title" : "Debhelper Add-ons"
    }
 }
