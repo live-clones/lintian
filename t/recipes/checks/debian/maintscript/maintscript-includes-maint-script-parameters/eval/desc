@@ -1,2 +1,2 @@
 Testname: maintscript-includes-maint-script-parameters
-Check: debhelper
+Check: debian/maintscript

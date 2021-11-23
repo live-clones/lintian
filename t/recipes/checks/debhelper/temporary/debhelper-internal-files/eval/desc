@@ -1,2 +1,2 @@
 Testname: debhelper-internal-files
-Check: debhelper
+Check: debhelper/temporary

@@ -41,6 +41,7 @@ Enable-Tags-From-Check:
  cruft
  deb-format
  debhelper
+ debhelper/temporary
  debian/changelog
  debian/control/field/adopted
  debian/control/field/architecture/multiline
@@ -70,6 +71,7 @@ Enable-Tags-From-Check:
  debian/line-separators
  debian/lintian-overrides
  debian/lintian-overrides/comments
+ debian/maintscript
  debian/manual-pages
  debian/not-installed
  debian/patches
@@ -103,6 +105,7 @@ Enable-Tags-From-Check:
  desktop/x11
  desktop/x11/font/update
  dh-make
+ dh-make/template
  documentation
  documentation/doxygen
  documentation/examples

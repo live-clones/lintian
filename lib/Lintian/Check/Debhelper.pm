@@ -1,4 +1,4 @@
-# debhelper format -- lintian check script -*- perl -*-
+# debhelper -- lintian check script -*- perl -*-
 
 # Copyright © 1999 by Joey Hess
 # Copyright © 2016-2020 Chris Lamb <lamby@debian.org>
@@ -126,6 +126,35 @@ my %DH_ADDON_MANUAL_PREREQUISITES = (
     systemd =>
 'debhelper (>= 9.20160709~) | debhelper-compat | dh-sequence-systemd | dh-systemd',
 );
+
+sub visit_patched_files {
+    my ($self, $item) = @_;
+
+    return
+      unless $item->dirname eq 'debian/';
+
+    return
+      if !$item->is_symlink && !$item->is_file;
+
+    if (   $item->basename eq 'control'
+        || $item->basename =~ m/^(?:.*\.)?(?:copyright|changelog|NEWS)$/) {
+
+        # Handle "control", [<pkg>.]copyright, [<pkg>.]changelog
+        # and [<pkg>.]NEWS
+
+        # The permissions of symlinks are not really defined, so resolve
+        # $item to ensure we are not dealing with a symlink.
+        my $actual = $item->resolve_path;
+
+        $self->hint('package-file-is-executable',
+            $LEFT_SQUARE_BRACKET . $item->name . $RIGHT_SQUARE_BRACKET)
+          if $actual && $actual->is_executable;
+
+        return;
+    }
+
+    return;
+}
 
 sub source {
     my ($self) = @_;
@@ -492,13 +521,7 @@ sub source {
         return;
     }
 
-    my @installable_names = $self->processable->debian_control->installables;
-
-    my $single_pkg = $EMPTY;
-    $single_pkg
-      =  $self->processable->debian_control->installable_package_type(
-        $installable_names[0])
-      if scalar @installable_names == 1;
+    my @installable_names= $self->processable->debian_control->installables;
 
     for my $installable_name (@installable_names) {
 
@@ -633,8 +656,6 @@ sub source {
         "[debian/rules:$seen_dh_systemd]"
     ) if $seen_dh_systemd && $debhelper_level >= $INVOKES_SYSTEMD;
 
-    # Check the files in the debian directory for various debhelper-related
-    # things.
     for my $item ($droot->children) {
 
         next
@@ -652,12 +673,19 @@ sub source {
             # for scripts that look like maintainer scripts and make
             # sure the token is there.
             my $installable_name = $1 || $EMPTY;
-            my $seentag = $EMPTY;
+            my $seentag = 0;
 
             $seentag = 1
               if $item->decoded_utf8 =~ /\#DEBHELPER\#/;
 
             if (!$seentag) {
+
+                my $single_pkg = $EMPTY;
+                $single_pkg
+                  =  $self->processable->debian_control
+                  ->installable_package_type($installable_names[0])
+                  if scalar @installable_names == 1;
+
                 my $installable_type
                   = $self->processable->debian_control
                   ->installable_package_type($installable_name);
@@ -675,95 +703,69 @@ sub source {
                   unless $is_udeb;
             }
 
-        } elsif ($item->basename eq 'control'
-            || $item->basename =~ m/^(?:.*\.)?(?:copyright|changelog|NEWS)$/) {
+            next;
+        }
 
-            # Handle "control", [<pkg>.]copyright, [<pkg>.]changelog
-            # and [<pkg>.]NEWS
+        my $category = $item->basename;
+        $category =~ s/^.+\.//;
 
-            # The permissions of symlinks are not really defined, so resolve
-            # $item to ensure we are not dealing with a symlink.
-            my $actual = $item->resolve_path;
-            $self->hint('package-file-is-executable',
-                $LEFT_SQUARE_BRACKET . $item->name . $RIGHT_SQUARE_BRACKET)
-              if $actual && $actual->is_executable;
+        next
+          unless length $category;
 
-        } elsif ($item->basename =~ m/^ex\.|\.ex$/i) {
-            $self->hint('dh-make-template-in-source',
-                $LEFT_SQUARE_BRACKET . $item->name . $RIGHT_SQUARE_BRACKET);
+        # Check whether this is a debhelper config file that takes
+        # a list of filenames.
+        if ($FILENAME_CONFIGS->recognizes($category)) {
 
-        } elsif ($item->basename =~ m/^(?:(.*)\.)?maintscript$/) {
+            if ($debhelper_level < $USES_EXECUTABLE_FILES) {
 
-            $self->check_maintscript_file($item);
-
-        } elsif ($item->basename =~ m/^(?:.+\.)?debhelper(?:\.log)?$/){
-            # The regex matches "debhelper", but debhelper/Dh_Lib does not
-            # make those, so skip it.
-            $self->hint('temporary-debhelper-file',
-                $LEFT_SQUARE_BRACKET . $item->name . $RIGHT_SQUARE_BRACKET)
-              if $item->basename ne 'debhelper';
-
-        } else {
-            my $category = $item->basename;
-            $category =~ s/^.+\.//;
-
-            # Check whether this is a debhelper config file that takes
-            # a list of filenames.
-            if ($FILENAME_CONFIGS->recognizes($category)) {
-
-                if ($debhelper_level < $USES_EXECUTABLE_FILES) {
-
-                    # debhelper only use executable files in compat 9
+                # debhelper only use executable files in compat 9
 
                # The permissions of symlinks are not really defined, so resolve
                # $item to ensure we are not dealing with a symlink.
-                    my $actual = $item->resolve_path;
-                    $self->hint('package-file-is-executable',
+                my $actual = $item->resolve_path;
+                $self->hint('package-file-is-executable',
+                    $LEFT_SQUARE_BRACKET. $item->name. $RIGHT_SQUARE_BRACKET)
+                  if $actual && $actual->is_executable;
+
+            } else {
+
+                # Permissions are not really well defined for
+                # symlinks.  Resolve unconditionally, so we are
+                # certain it is not a symlink.
+                my $actual = $item->resolve_path;
+
+                if ($actual && $actual->is_executable) {
+
+                    $self->hint(
+                        'executable-debhelper-file-without-being-executable',
+                        $LEFT_SQUARE_BRACKET
+                          . $item->name
+                          . $RIGHT_SQUARE_BRACKET
+                    )if !length $actual->hashbang;
+
+                    # Only /usr/bin/dh-exec is allowed, even if
+                    # /usr/lib/dh-exec/dh-exec-subst works too.
+                    $self->hint('dh-exec-private-helper',
                             $LEFT_SQUARE_BRACKET
                           . $item->name
                           . $RIGHT_SQUARE_BRACKET)
-                      if $actual && $actual->is_executable;
+                      if $actual->hashbang =~ m{^/usr/lib/dh-exec/};
 
-                } else {
+                    # Do not make assumptions about the contents of an
+                    # executable debhelper file, unless it's a dh-exec
+                    # script.
+                    if ($actual->hashbang =~ /dh-exec/) {
 
-                    # Permissions are not really well defined for
-                    # symlinks.  Resolve unconditionally, so we are
-                    # certain it is not a symlink.
-                    my $actual = $item->resolve_path;
+                        $uses_dh_exec = 1;
 
-                    if ($actual && $actual->is_executable) {
-
-                        $self->hint(
-'executable-debhelper-file-without-being-executable',
-                            $LEFT_SQUARE_BRACKET
-                              . $item->name
-                              . $RIGHT_SQUARE_BRACKET
-                        )if !length $actual->hashbang;
-
-                        # Only /usr/bin/dh-exec is allowed, even if
-                        # /usr/lib/dh-exec/dh-exec-subst works too.
-                        $self->hint('dh-exec-private-helper',
-                                $LEFT_SQUARE_BRACKET
-                              . $item->name
-                              . $RIGHT_SQUARE_BRACKET)
-                          if $actual->hashbang =~ m{^/usr/lib/dh-exec/};
-
-                        # Do not make assumptions about the contents of an
-                        # executable debhelper file, unless it's a dh-exec
-                        # script.
-                        if ($actual->hashbang =~ /dh-exec/) {
-
-                            $uses_dh_exec = 1;
-
-                            $self->check_dh_exec($item, $category);
-                        }
-
-                        next;
+                        $self->check_dh_exec($item, $category);
                     }
-                }
 
-                $self->check_for_brace_expansion($item, $debhelper_level);
+                    next;
+                }
             }
+
+            $self->check_for_brace_expansion($item, $debhelper_level);
         }
     }
 
@@ -831,7 +833,7 @@ sub source {
               if $autotools_source eq 'autotools-dev'
               && $uses_autotools_dev_dh;
 
-            $self->hint('useless-autoreconf-build-depends', $autotools_source)
+            $self->hint('useless-autoreconf-build-depends',$autotools_source)
               if $build_prerequisites->satisfies($autotools_source);
         }
     }
@@ -843,7 +845,7 @@ sub source {
         for my $installable_name (@installable_names) {
 
             $python_depends{$installable_name} = 1
-              if $self->processable->binary_relation($installable_name, 'all')
+              if $self->processable->binary_relation($installable_name,'all')
               ->satisfies('${python:Depends}');
         }
 
@@ -859,7 +861,7 @@ sub source {
         for my $installable_name (@installable_names) {
 
             $python3_depends{$installable_name} = 1
-              if $self->processable->binary_relation($installable_name, 'all')
+              if $self->processable->binary_relation($installable_name,'all')
               ->satisfies('${python3:Depends}');
         }
 
@@ -874,7 +876,7 @@ sub source {
 
         for my $installable_name (@installable_names) {
             $seen_sphinxdoc = 1
-              if $self->processable->binary_relation($installable_name, 'all')
+              if $self->processable->binary_relation($installable_name,'all')
               ->satisfies('${sphinxdoc:Depends}');
         }
 
@@ -985,36 +987,6 @@ sub check_compat_file {
     return $debhelper_level;
 }
 
-sub check_maintscript_file {
-    my ($self, $item) = @_;
-
-    return
-      unless $item->is_open_ok;
-
-    open(my $fd, '<', $item->unpacked_path)
-      or die encode_utf8('Cannot open ' . $item->unpacked_path);
-
-    my $position = 1;
-    while (my $line = <$fd>) {
-
-        $self->hint('maintscript-includes-maint-script-parameters',
-                $LEFT_SQUARE_BRACKET
-              . $item->name
-              . $COLON
-              . $position
-              . $RIGHT_SQUARE_BRACKET)
-          if $line =~ /--\s+"\$(?:@|{@})"\s*$/;
-
-    } continue {
-        ++$position;
-    }
-
-    close $fd;
-
-    return;
-}
-
-# Perform various checks on a dh-exec file.
 sub check_dh_exec {
     my ($self, $item, $category) = @_;
 

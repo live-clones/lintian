@@ -1,7 +1,10 @@
 Tag: dh-make-template-in-source
 Severity: warning
-Check: debhelper
-Explanation: This package contains debian/&ast;.ex and/or debian/ex.&ast; files
- installed by dh&lowbar;make. These are intended to be filled in with the
- package's details and renamed for use by various debhelper commands.
- If they are not being used, they should be removed.
+Check: dh-make/template
+Explanation: The named file looks like a <code>dh&lowbar;make</code> template.
+ .
+ Source files like <code>debian/&ast;.ex</code> or <code>debian/ex.&ast;</code>
+ were usually installed by <code>dh&lowbar;make</code>. They are meant to be
+ renamed after they were adapted by the maintainer.
+ .
+ Unused templates should be removed.

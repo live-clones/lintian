@@ -1,7 +1,9 @@
 Tag: maintscript-includes-maint-script-parameters
 Severity: warning
-Check: debhelper
-Explanation: Lines in a <code>debian/&ast;.maintscript</code> correspond to
- <code>dpkg-maintscript-helper(1)</code> commands and parameters. However, the
- "maint-script-parameters" should not be included as debhelper will add those
- automatically. See <code>dh&lowbar;installdeb(1)</code> for more information.
+Check: debian/maintscript
+Explanation: The named <code>debian/&ast;.maintscript</code> file uses commands
+ or parameters from <code>dpkg-maintscript-helper(1)</code>.
+ .
+ Debhelper will add them automatically. Please do not include them manually.
+See-Also:
+ dh_installdeb(1)
