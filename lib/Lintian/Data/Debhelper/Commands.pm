@@ -40,6 +40,7 @@ use Moo;
 use namespace::clean;
 
 const my $EMPTY => q{};
+const my $SPACE => q{ };
 const my $SLASH => q{/};
 
 const my $WAIT_STATUS_SHIFT => 8;
@@ -205,13 +206,23 @@ sub refresh {
 
             chomp $line;
 
-            if ($line =~ m{^ usr/bin/ (dh_ \S+) \s+ [\w-]+ / (\S+) $}x) {
+            my ($path, $finder) = split($SPACE, $line, 2);
+            next
+              unless length $path
+              && length $finder;
+
+            if ($path =~ m{^ usr/bin/ (dh_ \S+) $}x) {
 
                 my $name = $1;
-                my $installable = $2;
 
-                $commands{$name}{installed_by} //= [];
-                push(@{$commands{$name}{installed_by}}, $installable);
+                my @locations = split(m{,}, $finder);
+                for my $location (@locations) {
+
+                    my ($section, $installable)= split(m{/}, $location, 2);
+
+                    $commands{$name}{installed_by} //= [];
+                    push(@{$commands{$name}{installed_by}}, $installable);
+                }
 
                 next;
             }
