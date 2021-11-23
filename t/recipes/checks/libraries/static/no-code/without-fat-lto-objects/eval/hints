@@ -1,1 +1,1 @@
-libfoo-dev (binary): no-code-sections usr/lib/libcodeless.a (code.o)
+libfoo-dev (binary): no-code-sections [usr/lib/libcodeless.a]

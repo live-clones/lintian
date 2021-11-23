@@ -34,8 +34,8 @@ use namespace::clean;
 with 'Lintian::Check';
 
 const my $SPACE => q{ };
-const my $LEFT_PARENTHESIS => q{(};
-const my $RIGHT_PARENTHESIS => q{)};
+const my $LEFT_SQUARE_BRACKET => q{[};
+const my $RIGHT_SQUARE_BRACKET => q{]};
 
 sub visit_installed_files {
     my ($self, $item) = @_;
@@ -50,7 +50,7 @@ sub visit_installed_files {
     return
       unless $item->file_info =~ m{ \b current [ ] ar [ ] archive \b }x;
 
-    my @codeless_members;
+    my @codeful_members;
     for my $member_name (keys %{$item->elf_by_member}) {
 
         my $member_elf = $item->elf_by_member->{$member_name};
@@ -78,15 +78,13 @@ sub visit_installed_files {
         $has_code = 1
           if @have_array_sections;
 
-        push(@codeless_members, $member_name)
-          unless $has_code;
+        push(@codeful_members, $member_name)
+          if $has_code;
     }
 
-    $self->hint('no-code-sections', $item->name,
-            $LEFT_PARENTHESIS
-          . join($SPACE, sort +uniq @codeless_members)
-          . $RIGHT_PARENTHESIS)
-      if @codeless_members;
+    $self->hint('no-code-sections',
+        $LEFT_SQUARE_BRACKET. $item->name. $RIGHT_SQUARE_BRACKET)
+      unless @codeful_members;
 
     return;
 }
