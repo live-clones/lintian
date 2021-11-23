@@ -58,6 +58,8 @@ This module provides a way to load data files for debhelper.
 
 =over 4
 
+=item title
+
 =item location
 
 =item preamble
@@ -65,6 +67,11 @@ This module provides a way to load data files for debhelper.
 =item installable_names_by_add_on
 
 =cut
+
+has title => (
+    is => 'rw',
+    default => 'Debhelper Add-ons'
+);
 
 has location => (
     is => 'rw',
@@ -211,7 +218,7 @@ sub refresh {
     }
 
     my %preamble;
-    $preamble{title} = 'Debhelper Add-ons';
+    $preamble{title} = $self->title;
     $preamble{last_update} = gmtime->datetime . 'Z';
 
     my %all;

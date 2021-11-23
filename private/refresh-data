@@ -67,7 +67,7 @@ for my $part (@parts) {
     next
       unless $part->can('refresh');
 
-    my $title = $part->preamble->{title};
+    my $title = $part->title;
 
     say $EMPTY;
     say "* * *   Refreshing $title   * * *";

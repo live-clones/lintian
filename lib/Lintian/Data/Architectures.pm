@@ -64,6 +64,8 @@ Note that the architecture and cpu name are not always identical
 
 =over 4
 
+=item title
+
 =item location
 
 =item preamble
@@ -75,6 +77,11 @@ Note that the architecture and cpu name are not always identical
 =item C<names>
 
 =cut
+
+has title => (
+    is => 'rw',
+    default => 'DEB_HOST_* Variables From Dpkg'
+);
 
 has location => (
     is => 'rw',
@@ -413,7 +420,7 @@ sub refresh {
     }
 
     my %preamble;
-    $preamble{title} = 'DEB_HOST_* Variables From Dpkg';
+    $preamble{title} = $self->title;
     $preamble{'dpkg-version'} = $dpkg_version;
     $preamble{'last-update'} = gmtime->datetime . 'Z';
 

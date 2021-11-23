@@ -57,6 +57,8 @@ Lintian API for hardening build flags.
 
 =over 4
 
+=item title
+
 =item location
 
 =item preamble
@@ -64,6 +66,11 @@ Lintian API for hardening build flags.
 =item recommended_features
 
 =cut
+
+has title => (
+    is => 'rw',
+    default => 'Hardening Flags From Dpkg'
+);
 
 has location => (
     is => 'rw',
@@ -134,7 +141,7 @@ sub refresh {
     }
 
     my %preamble;
-    $preamble{title} = 'Hardening Flags From Dpkg';
+    $preamble{title} = $self->title;
     $preamble{'dpkg-version'} = $dpkg_version;
     $preamble{'last-update'} = gmtime->datetime . 'Z';
 

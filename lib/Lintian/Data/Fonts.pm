@@ -61,6 +61,8 @@ This module provides a way to load data files for fonts.
 
 =over 4
 
+=item title
+
 =item location
 
 =item preamble
@@ -68,6 +70,11 @@ This module provides a way to load data files for fonts.
 =item installable_names_by_font
 
 =cut
+
+has title => (
+    is => 'rw',
+    default => 'Fonts Available for Installation'
+);
 
 has location => (
     is => 'rw',
@@ -219,7 +226,7 @@ sub refresh {
     }
 
     my %preamble;
-    $preamble{title} = 'Fonts Available for Installation';
+    $preamble{title} = $self->title;
     $preamble{last_update} = gmtime->datetime . 'Z';
 
     my %all;

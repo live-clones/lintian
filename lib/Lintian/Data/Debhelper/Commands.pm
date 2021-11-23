@@ -61,6 +61,8 @@ This module provides a way to load data files for debhelper.
 
 =over 4
 
+=item title
+
 =item location
 
 =item preamble
@@ -72,6 +74,11 @@ This module provides a way to load data files for debhelper.
 =item misc_depends_commands
 
 =cut
+
+has title => (
+    is => 'rw',
+    default => 'Debhelper Commands'
+);
 
 has location => (
     is => 'rw',
@@ -324,7 +331,7 @@ sub refresh {
     $commands{$_}{uses_misc_depends} = 1 for @uses_misc_depends;
 
     my %preamble;
-    $preamble{title} = 'Debhelper Commands';
+    $preamble{title} = $self->title;
     $preamble{last_update} = gmtime->datetime . 'Z';
 
     my %all;

@@ -49,6 +49,8 @@ manual references.
 
 =over 4
 
+=item title
+
 =item location
 
 =item separator
@@ -56,6 +58,11 @@ manual references.
 =item accumulator
 
 =cut
+
+has title => (
+    is => 'rw',
+    default => 'Manual References'
+);
 
 has location => (
     is => 'rw',

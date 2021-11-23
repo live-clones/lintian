@@ -45,6 +45,8 @@ This module provides a way to load data files for debhelper.
 
 =over 4
 
+=item title
+
 =item location
 
 =item separator
@@ -52,6 +54,11 @@ This module provides a way to load data files for debhelper.
 =item accumulator
 
 =cut
+
+has title => (
+    is => 'rw',
+    default => 'Debhelper Levels'
+);
 
 has location => (
     is => 'rw',

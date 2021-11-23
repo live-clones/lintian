@@ -60,6 +60,8 @@ This module provides a way to load data files for policy releases.
 
 =over 4
 
+=item title
+
 =item location
 
 =item preamble
@@ -71,6 +73,11 @@ This module provides a way to load data files for policy releases.
 =item max_dots
 
 =cut
+
+has title => (
+    is => 'rw',
+    default => 'Debian Policy Releases'
+);
 
 has location => (
     is => 'rw',
@@ -245,7 +252,7 @@ sub refresh {
     my @sorted = rev_nsort_by { $_->{epoch} } @releases;
 
     my %preamble;
-    $preamble{title} = 'Debian Policy Releases';
+    $preamble{title} = $self->title;
     $preamble{'last-update'} = gmtime->datetime . 'Z';
 
     my %all;
