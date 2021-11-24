@@ -200,7 +200,7 @@ sub load {
 =cut
 
 sub refresh {
-    my ($self, $basedir) = @_;
+    my ($self, $archive, $basedir) = @_;
 
     my $changelog_url
       = 'https://salsa.debian.org/dbnpolicy/policy/-/raw/master/debian/changelog?inline=false';

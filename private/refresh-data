@@ -38,6 +38,7 @@ use Const::Fast;
 use Syntax::Keyword::Try;
 use Unicode::UTF8 qw(encode_utf8);
 
+use Lintian::Archive;
 use Lintian::Profile;
 
 const my $EMPTY => q{};
@@ -59,6 +60,8 @@ my @parts = (
     $profile->hardening_buildflags,$profile->policy_releases,
 );
 
+my $archive = Lintian::Archive->new;
+
 my $errors = 0;
 
 my $count;
@@ -69,11 +72,10 @@ for my $part (@parts) {
 
     my $title = $part->title;
 
-    say $EMPTY;
-    say "* * *   Refreshing $title   * * *";
+    say "Refreshing $title...";
 
     try {
-        $part->refresh($basedir);
+        $part->refresh($archive, $basedir);
 
     } catch {
         ++$errors;

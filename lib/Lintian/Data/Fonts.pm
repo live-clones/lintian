@@ -24,7 +24,6 @@ use utf8;
 use Carp qw(croak);
 use Const::Fast;
 use File::Basename;
-use IPC::Run3;
 use JSON::MaybeXS;
 use List::SomeUtils qw(first_value uniq);
 use Path::Tiny;
@@ -42,8 +41,6 @@ const my $SPACE => q{ };
 const my $SLASH => q{/};
 
 const my $NEWLINE => qq{\n};
-
-const my $WAIT_STATUS_SHIFT => 8;
 
 =head1 NAME
 
@@ -150,13 +147,7 @@ sub load {
 =cut
 
 sub refresh {
-    my ($self, $basedir) = @_;
-
-    my $work_folder
-      = Path::Tiny->tempdir(
-        TEMPLATE => 'refresh-debhelper-add-ons-XXXXXXXXXX');
-
-    my $mirror_base = 'https://deb.debian.org/debian';
+    my ($self, $archive, $basedir) = @_;
 
     # neutral sort order
     local $ENV{LC_ALL} = 'C';
@@ -165,25 +156,10 @@ sub refresh {
 
     my %fonts;
 
-    my @wget_command = qw{/usr/bin/wget --no-verbose};
+    for my $installable_architecture ('all', $port) {
 
-    for my $architecture ('all', $port) {
-
-        my $file_name = "Contents-$architecture.gz";
-        my $local_path = "$work_folder/$file_name";
-        my $url = "$mirror_base/dists/sid/main/$file_name";
-
-        say $EMPTY;
-        say encode_utf8("Getting $file_name");
-
-        my $stderr;
-        run3([@wget_command, "--output-document=$local_path", $url],
-            undef, \$stderr);
-        my $status = ($? >> $WAIT_STATUS_SHIFT);
-
-        # already in UTF-8
-        die $stderr
-          if $status;
+        my $local_path
+          = $archive->contents_gz('sid', 'main', $installable_architecture);
 
         open(my $fd, '<:gzip', $local_path)
           or die encode_utf8("Cannot open $local_path.");

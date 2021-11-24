@@ -1,8 +1,8 @@
 {
    "preamble" : {
-      "dpkg-version" : "1.20.7.1",
-      "last-update" : "2021-03-18T21:07:45Z",
-      "title" : "Hardening Flags From Dpkg"
+      "dpkg-version" : "1.20.9",
+      "last-update" : "2021-11-24T14:14:35Z",
+      "title" : "Hardening Flags from Dpkg"
    },
    "recommended-features" : {
       "aix-alpha" : [

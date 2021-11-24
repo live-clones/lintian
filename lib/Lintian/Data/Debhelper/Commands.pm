@@ -169,13 +169,7 @@ sub load {
 =cut
 
 sub refresh {
-    my ($self, $basedir) = @_;
-
-    my $work_folder
-      = Path::Tiny->tempdir(
-        TEMPLATE => 'refresh-debhelper-add-ons-XXXXXXXXXX');
-
-    my $mirror_base = 'https://deb.debian.org/debian';
+    my ($self, $archive, $basedir) = @_;
 
     # neutral sort order
     local $ENV{LC_ALL} = 'C';
@@ -184,27 +178,10 @@ sub refresh {
 
     my %commands;
 
-    my $stderr;
-    my $status;
+    for my $installable_architecture ('all', $port) {
 
-    my @wget_command = qw{/usr/bin/wget --no-verbose};
-
-    for my $architecture ('all', $port) {
-
-        my $file_name = "Contents-$architecture.gz";
-        my $local_path = "$work_folder/$file_name";
-        my $url = "$mirror_base/dists/sid/main/$file_name";
-
-        say $EMPTY;
-        say encode_utf8("Getting $file_name");
-
-        run3([@wget_command, "--output-document=$local_path", $url],
-            undef, \$stderr);
-        $status = ($? >> $WAIT_STATUS_SHIFT);
-
-        # already in UTF-8
-        die $stderr
-          if $status;
+        my $local_path
+          = $archive->contents_gz('sid', 'main', $installable_architecture);
 
         open(my $fd, '<:gzip', $local_path)
           or die encode_utf8("Cannot open $local_path.");
@@ -238,36 +215,12 @@ sub refresh {
         close $fd;
     }
 
-    my $packages_filename = 'Packages';
-    my $packages_local_path = "$work_folder/$packages_filename";
-    my $packages_url = "$mirror_base/dists/sid/main/binary-$port/Packages.gz";
+    my $deb822_by_installable_name
+      = $archive->deb822_packages_by_installable_name('sid', 'main', $port);
 
-    say $EMPTY;
-    say encode_utf8("Getting $packages_filename");
-
-    run3([
-            @wget_command, "--output-document=$packages_local_path.gz",
-            $packages_url
-        ],
-        \undef,
-        \$stderr
-    );
-
-    run3(['gunzip', "$packages_local_path.gz"], \undef, \$stderr);
-    $status = ($? >> $WAIT_STATUS_SHIFT);
-    # already in UTF-8
-    die $stderr
-      if $status;
-
-    my $deb822 = Lintian::Deb822::File->new;
-    my @sections = $deb822->read_file($packages_local_path);
-
-    my %section_by_installable_name;
-    for my $section (@sections) {
-
-        my $installable_name = $section->value('Package');
-        $section_by_installable_name{$installable_name} = $section;
-    }
+    my $work_folder
+      = Path::Tiny->tempdir(
+        TEMPLATE => 'refresh-debhelper-add-ons-XXXXXXXXXX');
 
     my @uses_autoscript;
     my @uses_misc_depends;
@@ -276,21 +229,25 @@ sub refresh {
 
     for my $installable_name (sort @installable_names) {
 
-        my $section = $section_by_installable_name{$installable_name};
+        next
+          unless exists $deb822_by_installable_name->{$installable_name};
 
-        my $pool_path = $section->value('Filename');
+        my $deb822 = $deb822_by_installable_name->{$installable_name};
+
+        my $pool_path = $deb822->value('Filename');
 
         my $deb_filename = basename($pool_path);
         my $deb_local_path = "$work_folder/$deb_filename";
-        my $deb_url = "$mirror_base/$pool_path";
+        my $deb_url = $archive->mirror_base . $SLASH . $pool_path;
 
-        say $EMPTY;
-        say encode_utf8("Getting $pool_path");
+        my $stderr;
+        run3(
+            [qw{wget --quiet}, "--output-document=$deb_local_path", $deb_url],
+            undef, \$stderr
+        );
+        my $status = ($? >> $WAIT_STATUS_SHIFT);
 
-        run3([@wget_command, "--output-document=$deb_local_path", $deb_url],
-            \undef, \$stderr);
-        $status = ($? >> $WAIT_STATUS_SHIFT);
-        # already in UTF-8
+        # stderr already in UTF-8
         die $stderr
           if $status;
 
@@ -298,9 +255,10 @@ sub refresh {
         path($extract_folder)->mkpath;
 
         run3([qw{dpkg-deb --extract}, $deb_local_path, $extract_folder],
-            \undef, \$stderr);
+            undef, \$stderr);
         $status = ($? >> $WAIT_STATUS_SHIFT);
-        # already in UTF-8
+
+        # stderr already in UTF-8
         die $stderr
           if $status;
 

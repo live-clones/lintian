@@ -69,7 +69,7 @@ Lintian API for hardening build flags.
 
 has title => (
     is => 'rw',
-    default => 'Hardening Flags From Dpkg'
+    default => 'Hardening Flags from Dpkg'
 );
 
 has location => (
@@ -107,7 +107,7 @@ sub load {
 =cut
 
 sub refresh {
-    my ($self, $basedir) = @_;
+    my ($self, $archive, $basedir) = @_;
 
     # find all recommended hardening features
     local $ENV{LC_ALL} = 'C';

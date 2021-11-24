@@ -80,7 +80,7 @@ Note that the architecture and cpu name are not always identical
 
 has title => (
     is => 'rw',
-    default => 'DEB_HOST_* Variables From Dpkg'
+    default => 'DEB_HOST_* Variables from Dpkg'
 );
 
 has location => (
@@ -388,7 +388,7 @@ sub load {
 =cut
 
 sub refresh {
-    my ($self, $basedir) = @_;
+    my ($self, $archive, $basedir) = @_;
 
     local $ENV{LC_ALL} = 'C';
     delete local $ENV{DEB_HOST_ARCH};
