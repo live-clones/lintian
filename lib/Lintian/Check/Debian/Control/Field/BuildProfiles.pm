@@ -26,17 +26,13 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Const::Fast;
-
+use Lintian::Pointer::Item;
 use Lintian::Relation;
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-const my $LEFT_SQUARE_BRACKET => q{[};
-const my $RIGHT_SQUARE_BRACKET => q{]};
 
 sub source {
     my ($self) = @_;
@@ -54,6 +50,11 @@ sub source {
         my $raw = $installable_fields->value($field);
         next
           unless $raw;
+
+        my $pointer = Lintian::Pointer::Item->new;
+        $pointer->item(
+            $self->processable->patched->resolve_path('debian/control'));
+        $pointer->position($installable_fields->position($field));
 
         if (
             $raw!~ m{^\s*              # skip leading whitespace
@@ -77,15 +78,9 @@ sub source {
                      \s*$              # trailing spaces at the end
               }x
         ) {
-            $self->hint(
+            $self->pointed_hint(
                 'invalid-restriction-formula-in-build-profiles-field',
-                $raw,
-                "(in section for $installable)",
-                $LEFT_SQUARE_BRACKET
-                  . 'debian/control:'
-                  . $installable_fields->position($field)
-                  . $RIGHT_SQUARE_BRACKET
-            );
+                $pointer, $raw,"(in section for $installable)");
 
         } else {
             # parse the field and check the profile names
@@ -96,15 +91,9 @@ sub source {
 
                     $profile =~ s/^!//;
 
-                    $self->hint(
+                    $self->pointed_hint(
                         'invalid-profile-name-in-build-profiles-field',
-                        $profile,
-                        "(in section for $installable)",
-                        $LEFT_SQUARE_BRACKET
-                          . 'debian/control:'
-                          . $installable_fields->position($field)
-                          . $RIGHT_SQUARE_BRACKET
-                      )
+                        $pointer, $profile,"(in section for $installable)")
                       unless $KNOWN_BUILD_PROFILES->recognizes($profile)
                       || $profile =~ /^pkg\.[a-z0-9][a-z0-9+.-]+\../;
                 }

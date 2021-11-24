@@ -31,6 +31,8 @@ use Const::Fast;
 use List::SomeUtils qw(any none);
 use Unicode::UTF8 qw(encode_utf8);
 
+use Lintian::Pointer::Item;
+
 use Moo;
 use namespace::clean;
 
@@ -95,11 +97,12 @@ sub visit_control_files {
         my $line = $stashed . $no_comment;
         $stashed = $EMPTY;
 
-        $self->hint(
-            'skip-systemd-native-flag-missing-pre-depends',
-            "[control/$item:$position]",
-            "(does not satisfy $SYSTEMD_NATIVE_PREREQUISITES)"
-          )
+        my $pointer = Lintian::Pointer::Item->new;
+        $pointer->item($item);
+        $pointer->position($position);
+
+        $self->pointed_hint('skip-systemd-native-flag-missing-pre-depends',
+            $pointer,"(does not satisfy $SYSTEMD_NATIVE_PREREQUISITES)")
           if $line =~ /invoke-rc.d\b.*--skip-systemd-native\b/
           && !$self->satisfies_systemd_native_prerequisites;
 

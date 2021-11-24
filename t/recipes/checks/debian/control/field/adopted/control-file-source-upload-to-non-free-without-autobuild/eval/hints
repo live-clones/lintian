@@ -1,1 +1,1 @@
-control-file-source-upload-to-non-free-without-autobuild (source): adopted-extended-field XS-Autobuild (in section for source) [debian/control:8]
+control-file-source-upload-to-non-free-without-autobuild (source): adopted-extended-field (in section for source) XS-Autobuild [debian/control:8]

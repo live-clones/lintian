@@ -26,15 +26,12 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Const::Fast;
+use Lintian::Pointer::Item;
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-const my $LEFT_SQUARE_BRACKET => q{[};
-const my $RIGHT_SQUARE_BRACKET => q{]};
 
 sub source {
     my ($self) = @_;
@@ -47,15 +44,14 @@ sub source {
 
         my $field = 'Architecture';
 
-        $self->hint(
-            'multiline-architecture-field',
-            $field,
-            "(in section for $installable)",
-            $LEFT_SQUARE_BRACKET
-              . 'debian/control:'
-              . $installable_fields->position($field)
-              . $RIGHT_SQUARE_BRACKET
-        )if $installable_fields->value($field)=~ /\n./;
+        my $pointer = Lintian::Pointer::Item->new;
+        $pointer->item(
+            $self->processable->patched->resolve_path('debian/control'));
+        $pointer->position($installable_fields->position($field));
+
+        $self->pointed_hint('multiline-architecture-field',
+            $pointer, $field,"(in section for $installable)")
+          if $installable_fields->value($field)=~ /\n./;
     }
 
     return;

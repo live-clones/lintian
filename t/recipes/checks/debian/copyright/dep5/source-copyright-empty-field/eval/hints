@@ -1,12 +1,12 @@
 source-copyright-empty-field (source): update-debian-copyright 2014 vs CHANGELOG-YEAR [debian/copyright:26]
-source-copyright-empty-field (source): superfluous-file-pattern debian/copyright m4/ (Files, line 77)
-source-copyright-empty-field (source): superfluous-file-pattern debian/copyright * (Files, line 7)
-source-copyright-empty-field (source): missing-license-text-in-dep5-copyright debian/copyright GPL-2+ (line 97)
-source-copyright-empty-field (source): missing-license-text-in-dep5-copyright debian/copyright (line 95)
-source-copyright-empty-field (source): missing-field-in-dep5-copyright debian/copyright Files (empty field, line 43)
-source-copyright-empty-field (source): missing-field-in-dep5-copyright debian/copyright Copyright (empty field, line 8)
-source-copyright-empty-field (source): empty-short-license-in-dep5-copyright debian/copyright (line 95)
-source-copyright-empty-field (source): empty-short-license-in-dep5-copyright debian/copyright (line 79)
-source-copyright-empty-field (source): empty-short-license-in-dep5-copyright debian/copyright (line 61)
-source-copyright-empty-field (source): empty-short-license-in-dep5-copyright debian/copyright (line 5)
-source-copyright-empty-field (source): empty-short-license-in-dep5-copyright debian/copyright (line 27)
+source-copyright-empty-field (source): superfluous-file-pattern m4/ [debian/copyright:77]
+source-copyright-empty-field (source): superfluous-file-pattern * [debian/copyright:7]
+source-copyright-empty-field (source): missing-license-text-in-dep5-copyright [debian/copyright:95]
+source-copyright-empty-field (source): missing-license-text-in-dep5-copyright GPL-2+ [debian/copyright:97]
+source-copyright-empty-field (source): missing-field-in-dep5-copyright (empty field) Files [debian/copyright:43]
+source-copyright-empty-field (source): missing-field-in-dep5-copyright (empty field) Copyright [debian/copyright:8]
+source-copyright-empty-field (source): empty-short-license-in-dep5-copyright [debian/copyright:95]
+source-copyright-empty-field (source): empty-short-license-in-dep5-copyright [debian/copyright:79]
+source-copyright-empty-field (source): empty-short-license-in-dep5-copyright [debian/copyright:61]
+source-copyright-empty-field (source): empty-short-license-in-dep5-copyright [debian/copyright:5]
+source-copyright-empty-field (source): empty-short-license-in-dep5-copyright [debian/copyright:27]

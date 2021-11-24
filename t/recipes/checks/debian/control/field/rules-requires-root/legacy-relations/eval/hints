@@ -1,1 +1,1 @@
-relations (source): silent-on-rules-requiring-root
+relations (source): silent-on-rules-requiring-root [debian/control]

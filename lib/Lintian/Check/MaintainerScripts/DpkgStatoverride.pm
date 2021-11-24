@@ -30,6 +30,8 @@ use utf8;
 use Const::Fast;
 use Unicode::UTF8 qw(encode_utf8);
 
+use Lintian::Pointer::Item;
+
 use Moo;
 use namespace::clean;
 
@@ -66,6 +68,10 @@ sub visit_control_files {
     my $position = 1;
     while (my $possible_continuation = <$fd>) {
 
+        my $pointer = Lintian::Pointer::Item->new;
+        $pointer->item($item);
+        $pointer->position($position);
+
         chomp $possible_continuation;
 
         # skip empty lines
@@ -96,8 +102,9 @@ sub visit_control_files {
               if $line =~ /--list/;
 
             if ($line =~ /--add/) {
-                $self->hint('unconditional-use-of-dpkg-statoverride',
-                    "[control/$item:$position]")
+
+                $self->pointed_hint('unconditional-use-of-dpkg-statoverride',
+                    $pointer)
                   unless $saw_statoverride_list;
             }
         }

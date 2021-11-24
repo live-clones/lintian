@@ -1,1 +1,1 @@
-debconf-udeb (udeb): udeb-postinst-calls-ldconfig
+debconf-udeb (udeb): udeb-postinst-calls-ldconfig [postinst]

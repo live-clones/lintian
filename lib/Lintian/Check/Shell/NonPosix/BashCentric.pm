@@ -34,6 +34,8 @@ use File::Basename;
 use List::SomeUtils qw(uniq);
 use Unicode::UTF8 qw(encode_utf8);
 
+use Lintian::Pointer::Item;
+
 use Moo;
 use namespace::clean;
 
@@ -41,9 +43,6 @@ with 'Lintian::Check';
 
 const my $EMPTY => q{};
 const my $SLASH => q{/};
-const my $COLON => q{:};
-const my $LEFT_SQUARE_BRACKET => q{[};
-const my $RIGHT_SQUARE_BRACKET => q{]};
 
 # When detecting commands inside shell scripts, use this regex to match the
 # beginning of the command rather than checking whether the command is at the
@@ -146,7 +145,7 @@ sub visit_installed_files {
     return
       unless $basename eq 'sh';
 
-    $self->check_bash_centric($item, 'bash-term-in-posix-shell', $item->name);
+    $self->check_bash_centric($item, 'bash-term-in-posix-shell');
 
     return;
 }
@@ -162,14 +161,13 @@ sub visit_control_files {
     return
       unless $basename eq 'sh';
 
-    $self->check_bash_centric($item, 'possible-bashism-in-maintainer-script',
-        "control/$item");
+    $self->check_bash_centric($item, 'possible-bashism-in-maintainer-script');
 
     return;
 }
 
 sub check_bash_centric {
-    my ($self, $item, $tag_name, $label) = @_;
+    my ($self, $item, $tag_name) = @_;
 
     return
       unless $item->is_open_ok;
@@ -210,12 +208,9 @@ sub check_bash_centric {
         last
           if $line =~ m{^ exec \s }x;
 
-        my $pointer
-          = $LEFT_SQUARE_BRACKET
-          . $label
-          . $COLON
-          . $position
-          . $RIGHT_SQUARE_BRACKET;
+        my $pointer = Lintian::Pointer::Item->new;
+        $pointer->item($item);
+        $pointer->position($position);
 
         my @matches = uniq +$self->check_line($line);
 
@@ -225,7 +220,7 @@ sub check_bash_centric {
             $printable = '{hex:' . sprintf('%vX', $match) . '}'
               if $match =~ /\P{XPosixPrint}/;
 
-            $self->hint($tag_name, $pointer, $printable);
+            $self->pointed_hint($tag_name, $pointer, $printable);
         }
 
     } continue {

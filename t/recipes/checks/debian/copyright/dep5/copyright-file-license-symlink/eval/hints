@@ -1,2 +1,2 @@
-copyright-file-license-symlink (source): no-dep5-copyright debian/copyright-file-license-symlink-pedantic.copyright
-copyright-file-license-symlink (source): no-dep5-copyright debian/copyright-file-license-symlink-bad.copyright
+copyright-file-license-symlink (source): no-dep5-copyright [debian/copyright-file-license-symlink-pedantic.copyright]
+copyright-file-license-symlink (source): no-dep5-copyright [debian/copyright-file-license-symlink-bad.copyright]

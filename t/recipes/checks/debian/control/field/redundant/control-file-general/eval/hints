@@ -1,1 +1,1 @@
-control-file-general (source): installable-field-mirrors-source Maintainer (in section for control-file-general) [debian/control:20]
+control-file-general (source): installable-field-mirrors-source (in section for control-file-general) Maintainer [debian/control:20]

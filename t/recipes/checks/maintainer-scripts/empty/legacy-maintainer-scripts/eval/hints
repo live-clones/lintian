@@ -1,1 +1,1 @@
-maintainer-scripts (binary): maintainer-script-empty control/config
+maintainer-scripts (binary): maintainer-script-empty [config]

@@ -26,16 +26,12 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Const::Fast;
+use Lintian::Pointer::Item;
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-const my $COLON => q{:};
-const my $LEFT_SQUARE_BRACKET => q{[};
-const my $RIGHT_SQUARE_BRACKET => q{]};
 
 sub visit_patched_files {
     my ($self, $item) = @_;
@@ -55,12 +51,12 @@ sub visit_patched_files {
     my $position = 1;
     while (my $line = <$fd>) {
 
-        $self->hint('maintscript-includes-maint-script-parameters',
-                $LEFT_SQUARE_BRACKET
-              . $item->name
-              . $COLON
-              . $position
-              . $RIGHT_SQUARE_BRACKET)
+        my $pointer = Lintian::Pointer::Item->new;
+        $pointer->item($item);
+        $pointer->position($position);
+
+        $self->pointed_hint('maintscript-includes-maint-script-parameters',
+            $pointer)
           if $line =~ /--\s+"\$(?:@|{@})"\s*$/;
 
     } continue {

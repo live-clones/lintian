@@ -31,16 +31,13 @@ use Const::Fast;
 use File::Basename;
 use Unicode::UTF8 qw(encode_utf8);
 
+use Lintian::Pointer::Item;
 use Lintian::Relation;
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-const my $COLON => q{:};
-const my $LEFT_SQUARE_BRACKET => q{[};
-const my $RIGHT_SQUARE_BRACKET => q{]};
 
 # check for obsolete perl libraries
 const my $PERL4_PREREQUISITES => 'libperl4-corelibs-perl | perl (<< 5.12.3-7)';
@@ -99,16 +96,14 @@ sub visit_installed_files {
 
             my $module = "$1.pl";
 
-            $self->hint(
-                'script-uses-perl4-libs-without-dep',
-                $module,
-                $LEFT_SQUARE_BRACKET
-                  . $item->name
-                  . $COLON
-                  . $position
-                  . $RIGHT_SQUARE_BRACKET,
-                "(does not satisfy $PERL4_PREREQUISITES)"
-            )unless $self->satisfies_perl4_prerequisites;
+            my $pointer = Lintian::Pointer::Item->new;
+            $pointer->item($item);
+            $pointer->position($position);
+
+            $self->pointed_hint(
+                'script-uses-perl4-libs-without-dep',$pointer,
+                "(does not satisfy $PERL4_PREREQUISITES)",$module
+            ) unless $self->satisfies_perl4_prerequisites;
 
         }
 

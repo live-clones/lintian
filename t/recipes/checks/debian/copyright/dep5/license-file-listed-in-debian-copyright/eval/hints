@@ -1,2 +1,2 @@
 license-file-listed-in-debian-copyright (source): update-debian-copyright 2019 vs CHANGELOG-YEAR [debian/copyright:14]
-license-file-listed-in-debian-copyright (source): license-file-listed-in-debian-copyright debian/copyright COPYING
+license-file-listed-in-debian-copyright (source): license-file-listed-in-debian-copyright COPYING [debian/copyright]

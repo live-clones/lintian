@@ -26,15 +26,12 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Const::Fast;
+use Lintian::Pointer::Item;
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-const my $LEFT_SQUARE_BRACKET => q{[};
-const my $RIGHT_SQUARE_BRACKET => q{]};
 
 sub source {
     my ($self) = @_;
@@ -50,15 +47,14 @@ sub source {
 
         for my $field (@build_fields) {
 
-            $self->hint(
-                'build-prerequisite-in-installable-section',
-                $field,
-                "(in section for $installable)",
-                $LEFT_SQUARE_BRACKET
-                  . 'debian/control:'
-                  . $installable_fields->position($_)
-                  . $RIGHT_SQUARE_BRACKET
-            )if $installable_fields->declares($field);
+            my $pointer = Lintian::Pointer::Item->new;
+            $pointer->item(
+                $self->processable->patched->resolve_path('debian/control'));
+            $pointer->position($installable_fields->position($field));
+
+            $self->pointed_hint('build-prerequisite-in-installable-section',
+                $pointer, $field,"(in section for $installable)")
+              if $installable_fields->declares($field);
         }
     }
 

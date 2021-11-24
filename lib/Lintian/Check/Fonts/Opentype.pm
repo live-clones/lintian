@@ -28,6 +28,8 @@ use autodie qw(open);
 use Const::Fast;
 use Font::TTF::Font;
 
+use Lintian::Pointer::Item;
+
 use Moo;
 use namespace::clean;
 
@@ -50,7 +52,10 @@ sub visit_installed_files {
     return
       unless $file->file_info =~ /^OpenType font data/;
 
-    $self->hint('opentype-font-wrong-filename', $file->name)
+    my $pointer = Lintian::Pointer::Item->new;
+    $pointer->item($file);
+
+    $self->pointed_hint('opentype-font-wrong-filename', $pointer)
       unless $file->name =~ /\.otf$/i;
 
     my $font = Font::TTF::Font->open($file->unpacked_path);
@@ -79,8 +84,8 @@ sub visit_installed_files {
     $terms = join($COMMA . $SPACE, @clauses)
       if @clauses;
 
-    $self->hint('opentype-font-prohibits-installable-embedding',
-        "[$terms] " . $file->name)
+    $self->pointed_hint('opentype-font-prohibits-installable-embedding',
+        $pointer, "($terms)")
       if length $terms;
 
     return;

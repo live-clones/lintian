@@ -14,6 +14,6 @@ debhelper-override-typos (source): typo-in-debhelper-override-target override_dh
 debhelper-override-typos (source): typo-in-debhelper-override-target override dh_install => override_dh_install [debian/rules:25]
 debhelper-override-typos (source): typo-in-debhelper-override-target execute_before_dh_nope => execute_before_dh_gnome [debian/rules:28]
 debhelper-override-typos (source): typo-in-debhelper-override-target execute_after_dh_nope => execute_after_dh_gnome [debian/rules:27]
-debhelper-override-typos (source): debian-build-system dh
-debhelper-override-typos (source): debhelper-compat-virtual-relation 13
+debhelper-override-typos (source): debian-build-system dh [debian/rules]
+debhelper-override-typos (source): debhelper-compat-virtual-relation 13 [debian/control]
 debhelper-override-typos (source): debhelper-compat-level 13

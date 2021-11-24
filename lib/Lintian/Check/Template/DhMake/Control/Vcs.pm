@@ -26,19 +26,20 @@ use v5.20;
 use warnings;
 use utf8;
 
+use Lintian::Pointer::Item;
+
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
 
-sub source {
-    my ($self) = @_;
+sub visit_patched_files {
+    my ($self, $item) = @_;
 
-    my $file = $self->processable->patched->resolve_path('debian/control');
     return
-      unless $file;
+      unless $item->name eq 'debian/control';
 
-    my @lines = split(/\n/, $file->decoded_utf8);
+    my @lines = split(/\n/, $item->decoded_utf8);
 
     my $line;
     my $position = 1;
@@ -52,8 +53,12 @@ sub source {
                        (?:\?p=)?collab-maint/<pkg>\.git}smx
         ) {
 
-            $self->hint('control-file-contains-dh-make-vcs-comment',
-                $line, "[debian/control:$position]");
+            my $pointer = Lintian::Pointer::Item->new;
+            $pointer->item($item);
+            $pointer->position($position);
+
+            $self->pointed_hint('control-file-contains-dh-make-vcs-comment',
+                $pointer, $line);
 
             # once per source
             last;

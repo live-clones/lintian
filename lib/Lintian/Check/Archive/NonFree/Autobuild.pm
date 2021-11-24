@@ -26,15 +26,12 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Const::Fast;
+use Lintian::Pointer::Item;
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-const my $LEFT_SQUARE_BRACKET => q{[};
-const my $RIGHT_SQUARE_BRACKET => q{]};
 
 sub source {
     my ($self) = @_;
@@ -53,17 +50,13 @@ sub source {
 
         my $field = 'XS-Autobuild';
 
-        $self->hint(
-            'source-only-upload-to-non-free-without-autobuild',
-            $field,
-            '(in the source paragraph)',
-            $LEFT_SQUARE_BRACKET
-              . 'debian/control:'
-              . (
-                     $source_fields->position($field)
-                  || $source_fields->position('Source'))
-              . $RIGHT_SQUARE_BRACKET
-          )
+        my $pointer = Lintian::Pointer::Item->new;
+        $pointer->item(
+            $self->processable->patched->resolve_path('debian/control'));
+        $pointer->position($source_fields->position($field));
+
+        $self->pointed_hint('source-only-upload-to-non-free-without-autobuild',
+            $pointer, '(in the source paragraph)', $field)
           if !$source_fields->declares($field)
           || $source_fields->value($field) eq 'no';
     }

@@ -27,16 +27,12 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Const::Fast;
+use Lintian::Pointer::Item;
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-const my $COLON => q{:};
-const my $LEFT_SQUARE_BRACKET => q{[};
-const my $RIGHT_SQUARE_BRACKET => q{]};
 
 has HARDENED_FUNCTIONS => (
     is => 'rw',
@@ -108,8 +104,10 @@ sub visit_installed_files {
         }
     }
 
-    $self->hint('hardening-no-fortify-functions',
-        $LEFT_SQUARE_BRACKET . $item->name . $RIGHT_SQUARE_BRACKET)
+    my $pointer = Lintian::Pointer::Item->new;
+    $pointer->item($item);
+
+    $self->pointed_hint('hardening-no-fortify-functions', $pointer)
       if @elf_unhardened
       && !@elf_hardened
       && !$self->built_with_golang
@@ -138,12 +136,8 @@ sub visit_installed_files {
             }
         }
 
-        $self->hint('hardening-no-fortify-functions',$member_name,
-                $LEFT_SQUARE_BRACKET
-              . $item->name
-              . $COLON
-              . $member_name
-              . $RIGHT_SQUARE_BRACKET)
+        $self->pointed_hint('hardening-no-fortify-functions',
+            $pointer, $member_name)
           if @member_unhardened
           && !@member_hardened
           && !$self->built_with_golang
@@ -164,17 +158,17 @@ sub visit_installed_files {
     return
       unless exists $item->elf->{NEEDED};
 
-    $self->hint('hardening-no-relro', $item)
+    $self->pointed_hint('hardening-no-relro', $pointer)
       if $self->recommended_hardening_features->{relro}
       && !$self->built_with_golang
       && !$item->elf->{PH}{RELRO};
 
-    $self->hint('hardening-no-bindnow', $item)
+    $self->pointed_hint('hardening-no-bindnow', $pointer)
       if $self->recommended_hardening_features->{bindnow}
       && !$self->built_with_golang
       && !exists $item->elf->{FLAGS_1}{NOW};
 
-    $self->hint('hardening-no-pie', $item)
+    $self->pointed_hint('hardening-no-pie', $pointer)
       if $self->recommended_hardening_features->{pie}
       && !$self->built_with_golang
       && $item->elf->{'ELF-HEADER'}{Type} =~ m{^ EXEC }x;

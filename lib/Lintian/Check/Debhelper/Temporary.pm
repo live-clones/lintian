@@ -26,15 +26,12 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Const::Fast;
+use Lintian::Pointer::Item;
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-const my $LEFT_SQUARE_BRACKET => q{[};
-const my $RIGHT_SQUARE_BRACKET => q{]};
 
 sub visit_patched_files {
     my ($self, $item) = @_;
@@ -42,10 +39,12 @@ sub visit_patched_files {
     return
       unless $item->dirname eq 'debian/';
 
+    my $pointer = Lintian::Pointer::Item->new;
+    $pointer->item($item);
+
     # The regex matches "debhelper", but debhelper/Dh_Lib does not
     # make those, so skip it.
-    $self->hint('temporary-debhelper-file',
-        $LEFT_SQUARE_BRACKET . $item->name . $RIGHT_SQUARE_BRACKET)
+    $self->pointed_hint('temporary-debhelper-file', $pointer)
       if $item->basename =~ m{ (?: ^ | [.] ) debhelper (?: [.]log )? $}x
       && $item->basename ne 'debhelper';
 

@@ -1,1 +1,1 @@
-control-file-pedantic (source): adopted-extended-field XC-Package-Type (in section for control-file-pedantic-udeb) [debian/control:14]
+control-file-pedantic (source): adopted-extended-field (in section for control-file-pedantic-udeb) XC-Package-Type [debian/control:14]

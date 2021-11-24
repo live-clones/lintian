@@ -27,13 +27,12 @@ use utf8;
 use Const::Fast;
 use Unicode::UTF8 qw(encode_utf8);
 
+use Lintian::Pointer::Item;
+
 use Moo;
 use namespace::clean;
 
-const my $COLON => q{:};
 const my $DOUBLE_QUOTE => q{"};
-const my $LEFT_SQUARE_BRACKET => q{[};
-const my $RIGHT_SQUARE_BRACKET => q{]};
 
 with 'Lintian::Check';
 
@@ -61,15 +60,12 @@ sub visit_patched_files {
 
             my $marker = $1;
 
-            $self->hint(
-                'generated-file',
-                $DOUBLE_QUOTE . $marker . $DOUBLE_QUOTE,
-                $LEFT_SQUARE_BRACKET
-                  . $item->name
-                  . $COLON
-                  . $position
-                  . $RIGHT_SQUARE_BRACKET
-            );
+            my $pointer = Lintian::Pointer::Item->new;
+            $pointer->item($item);
+            $pointer->position($position);
+
+            $self->pointed_hint('generated-file', $pointer,
+                $DOUBLE_QUOTE . $marker . $DOUBLE_QUOTE);
         }
 
     } continue {

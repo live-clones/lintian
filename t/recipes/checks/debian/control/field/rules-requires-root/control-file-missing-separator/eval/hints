@@ -1,1 +1,1 @@
-control-file-missing-separator (source): silent-on-rules-requiring-root
+control-file-missing-separator (source): silent-on-rules-requiring-root [debian/control]

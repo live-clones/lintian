@@ -31,6 +31,8 @@ use Const::Fast;
 use List::SomeUtils qw(any none);
 use Unicode::UTF8 qw(encode_utf8);
 
+use Lintian::Pointer::Item;
+
 use Moo;
 use namespace::clean;
 
@@ -69,6 +71,10 @@ sub visit_control_files {
     my $position = 1;
     while (my $possible_continuation = <$fd>) {
 
+        my $pointer = Lintian::Pointer::Item->new;
+        $pointer->item($item);
+        $pointer->position($position);
+
         chomp $possible_continuation;
 
         # skip empty lines
@@ -96,8 +102,7 @@ sub visit_control_files {
         if (   $line =~ m{$LEADING_REGEX(?:/usr/sbin/)?dpkg-divert\s}
             && $line !~ /--(?:help|list|truename|version)/) {
 
-            $self->hint('package-uses-local-diversion',
-                "[control/$item:$position]")
+            $self->pointed_hint('package-uses-local-diversion',$pointer)
               if $line =~ /--local/;
 
             my $mode = $line =~ /--remove/ ? 'remove' : 'add';
@@ -261,9 +266,13 @@ sub installable {
                 # versions of the package.
 
                 my $unquoted = unquote($divert, $self->expand_diversions);
-                my $pointer = "[control/$script:$position]";
 
-                $self->hint('remove-of-unknown-diversion', $unquoted,$pointer);
+                my $pointer = Lintian::Pointer::Item->new;
+                $pointer->item($script);
+                $pointer->position($position);
+
+                $self->pointed_hint('remove-of-unknown-diversion', $pointer,
+                    $unquoted);
             }
         }
     }
@@ -273,12 +282,14 @@ sub installable {
         my $script = $self->added_diversions->{$divert}{script};
         my $position = $self->added_diversions->{$divert}{position};
 
-        my $pointer = "[control/$script:$position]";
+        my $pointer = Lintian::Pointer::Item->new;
+        $pointer->item($script);
+        $pointer->position($position);
 
         my $divertrx = $divert;
         my $unquoted = unquote($divert, $self->expand_diversions);
 
-        $self->hint('orphaned-diversion', $unquoted, $pointer)
+        $self->pointed_hint('orphaned-diversion', $pointer, $unquoted)
           unless exists $self->added_diversions->{$divertrx}{removed};
 
         # Handle man page diversions somewhat specially.  We may
@@ -299,13 +310,16 @@ sub installable {
         }
 
         if ($self->expand_diversions) {
-            $self->hint('diversion-for-unknown-file', $unquoted, $pointer)
+
+            $self->pointed_hint('diversion-for-unknown-file', $pointer,
+                $unquoted)
               unless (
                 any { /$divertrx/ }
                 @{$self->processable->installed->sorted_list});
 
         } else {
-            $self->hint('diversion-for-unknown-file', $unquoted, $pointer)
+            $self->pointed_hint('diversion-for-unknown-file', $pointer,
+                $unquoted)
               unless $self->processable->installed->lookup($unquoted);
         }
     }

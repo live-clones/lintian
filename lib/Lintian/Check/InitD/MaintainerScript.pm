@@ -30,6 +30,8 @@ use utf8;
 use Const::Fast;
 use Unicode::UTF8 qw(encode_utf8);
 
+use Lintian::Pointer::Item;
+
 use Moo;
 use namespace::clean;
 
@@ -100,9 +102,15 @@ sub visit_control_files {
         ++$position;
     }
 
-    $self->hint('maintainer-script-calls-init-script-directly',
-        "[control/$item:$saw_init]")
-      if $saw_init && !$saw_invoke;
+    if ($saw_init && !$saw_invoke) {
+
+        my $pointer = Lintian::Pointer::Item->new;
+        $pointer->item($item);
+        $pointer->position($saw_init);
+
+        $self->pointed_hint('maintainer-script-calls-init-script-directly',
+            $pointer);
+    }
 
     return;
 }

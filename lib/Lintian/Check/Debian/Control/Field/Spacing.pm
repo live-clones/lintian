@@ -26,24 +26,23 @@ use v5.20;
 use warnings;
 use utf8;
 
+use Lintian::Pointer::Item;
+
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
 
-sub source {
-    my ($self) = @_;
+sub visit_patched_files {
+    my ($self, $item) = @_;
 
-    my $file = $self->processable->patched->resolve_path('debian/control');
     return
-      unless $file;
+      unless $item eq 'debian/control';
 
-    my @lines = split(/\n/, $file->decoded_utf8);
+    my @lines = split(/\n/, $item->decoded_utf8);
 
-    my $line;
     my $position = 1;
-
-    while (defined($line = shift @lines)) {
+    while (defined(my $line = shift @lines)) {
 
         # strip leading spaces
         $line =~ s{\s*$}{};
@@ -56,8 +55,12 @@ sub source {
 
             my $field = $1;
 
-            $self->hint('debian-control-has-unusual-field-spacing',
-                $field, "[debian/control:$position]")
+            my $pointer = Lintian::Pointer::Item->new;
+            $pointer->item($item);
+            $pointer->position($position);
+
+            $self->pointed_hint('debian-control-has-unusual-field-spacing',
+                $pointer, $field)
               unless $line =~ m{^ \S+ : [ ] \S }x
               || $line =~ m{^ \S+ : $}x;
         }

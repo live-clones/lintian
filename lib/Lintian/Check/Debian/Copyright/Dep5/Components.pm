@@ -24,18 +24,15 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Const::Fast;
 use List::Compare;
 
 use Lintian::Deb822::File;
+use Lintian::Pointer::Item;
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-const my $LEFT_SQUARE => q{[};
-const my $RIGHT_SQUARE => q{]};
 
 sub source {
     my ($self) = @_;
@@ -94,8 +91,10 @@ sub check_dep5_copyright {
 
     my @missing_components = $component_lc->get_Lonly;
 
-    $self->hint('add-component-copyright', $_,
-        $LEFT_SQUARE.$copyright_file->name. $RIGHT_SQUARE)
+    my $pointer = Lintian::Pointer::Item->new;
+    $pointer->item($copyright_file);
+
+    $self->pointed_hint('add-component-copyright', $pointer, $_)
       for @missing_components;
 
     return;

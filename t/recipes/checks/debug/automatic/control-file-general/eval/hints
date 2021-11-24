@@ -1,1 +1,1 @@
-control-file-general (source): debian-control-has-dbgsym-package Package (in section for control-file-general-dbgsym) [debian/control:87]
+control-file-general (source): debian-control-has-dbgsym-package (in section for control-file-general-dbgsym) Package [debian/control:87]

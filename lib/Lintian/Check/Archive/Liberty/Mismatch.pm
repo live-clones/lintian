@@ -29,13 +29,12 @@ use utf8;
 use Const::Fast;
 use List::SomeUtils qw(all none);
 
+use Lintian::Pointer::Item;
+
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-const my $LEFT_SQUARE_BRACKET => q{[};
-const my $RIGHT_SQUARE_BRACKET => q{]};
 
 const my $ARROW => q{->};
 
@@ -91,15 +90,15 @@ sub source {
         next
           if $source_liberty eq 'main' && $installable_liberty eq 'contrib';
 
-        $self->hint(
-            'archive-liberty-mismatch',
-            "$installable_liberty vs $source_liberty",
+        my $pointer = Lintian::Pointer::Item->new;
+        $pointer->item(
+            $self->processable->patched->resolve_path('debian/control'));
+        $pointer->position($installable_fields->position('Section'));
+
+        $self->pointed_hint('archive-liberty-mismatch', $pointer,
             "(in section for $installable)",
-            $LEFT_SQUARE_BRACKET
-              . 'debian/control:'
-              . $installable_fields->position('Section')
-              . $RIGHT_SQUARE_BRACKET
-        )if $source_liberty ne $installable_liberty;
+            $installable_liberty, 'vs', $source_liberty)
+          if $source_liberty ne $installable_liberty;
     }
 
     # in ascending order of liberty
@@ -109,17 +108,14 @@ sub source {
         last
           if $inferior_liberty eq $source_liberty;
 
-        $self->hint(
-            'archive-liberty-mismatch',
-            $source_liberty,
-            $ARROW,
-            $inferior_liberty,
+        my $pointer = Lintian::Pointer::Item->new;
+        $pointer->item(
+            $self->processable->patched->resolve_path('debian/control'));
+        $pointer->position($source_fields->position('Section'));
+
+        $self->pointed_hint('archive-liberty-mismatch', $pointer,
             '(in source paragraph)',
-            $LEFT_SQUARE_BRACKET
-              . 'debian/control:'
-              . $source_fields->position('Section')
-              . $RIGHT_SQUARE_BRACKET
-          )
+            $source_liberty,$ARROW, $inferior_liberty)
           if (
             all { $liberty_by_installable{$_} eq $inferior_liberty }
             keys %liberty_by_installable

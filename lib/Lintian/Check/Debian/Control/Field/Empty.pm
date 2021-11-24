@@ -26,15 +26,12 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Const::Fast;
+use Lintian::Pointer::Item;
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-const my $LEFT_SQUARE_BRACKET => q{[};
-const my $RIGHT_SQUARE_BRACKET => q{]};
 
 sub source {
     my ($self) = @_;
@@ -45,12 +42,18 @@ sub source {
     my @empty_source_fields
       = grep { !length $source_fields->value($_) } $source_fields->names;
 
-    $self->hint('debian-control-has-empty-field', $_, '(in source paragraph)',
-            $LEFT_SQUARE_BRACKET
-          . 'debian/control:'
-          . $source_fields->position($_)
-          . $RIGHT_SQUARE_BRACKET)
-      for @empty_source_fields;
+    for my $field (@empty_source_fields) {
+
+        my $pointer = Lintian::Pointer::Item->new;
+        $pointer->item(
+            $self->processable->patched->resolve_path('debian/control'));
+        $pointer->position($source_fields->position($field));
+
+        $self->pointed_hint(
+            'debian-control-has-empty-field', $pointer,
+            '(in source paragraph)', $field
+        );
+    }
 
     for my $installable ($control->installables) {
         my $installable_fields = $control->installable_fields($installable);
@@ -59,15 +62,18 @@ sub source {
           = grep { !length $installable_fields->value($_) }
           $installable_fields->names;
 
-        $self->hint(
-            'debian-control-has-empty-field',
-            $_,
-            "(in section for $installable)",
-            $LEFT_SQUARE_BRACKET
-              . 'debian/control:'
-              . $installable_fields->position($_)
-              . $RIGHT_SQUARE_BRACKET
-        )for @empty_installable_fields;
+        for my $field (@empty_installable_fields) {
+
+            my $pointer = Lintian::Pointer::Item->new;
+            $pointer->item(
+                $self->processable->patched->resolve_path('debian/control'));
+            $pointer->position($installable_fields->position($field));
+
+            $self->pointed_hint(
+                'debian-control-has-empty-field',$pointer,
+                "(in section for $installable)", $field
+            );
+        }
     }
 
     return;

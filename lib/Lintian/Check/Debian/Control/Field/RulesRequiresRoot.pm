@@ -26,19 +26,14 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Const::Fast;
 use List::SomeUtils qw(first_value);
+
+use Lintian::Pointer::Item;
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-const my $COLON => q{:};
-const my $LEFT_PARENTHESIS => q{(};
-const my $RIGHT_PARENTHESIS => q{)};
-const my $LEFT_SQUARE_BRACKET => q{[};
-const my $RIGHT_SQUARE_BRACKET => q{]};
 
 sub source {
     my ($self) = @_;
@@ -49,42 +44,50 @@ sub source {
     my @r3_misspelled = grep { $_ ne 'Rules-Requires-Root' }
       grep { m{^ Rules? - Requires? - Roots? $}xi } $source_fields->names;
 
-    $self->hint('spelling-error-in-rules-requires-root',$_,
-            $LEFT_SQUARE_BRACKET
-          . 'debian/control:'
-          . $source_fields->position($_)
-          . $RIGHT_SQUARE_BRACKET)
-      for @r3_misspelled;
+    for my $field (@r3_misspelled) {
 
-    $self->hint('rules-do-not-require-root')
+        my $pointer = Lintian::Pointer::Item->new;
+        $pointer->item(
+            $self->processable->patched->resolve_path('debian/control'));
+        $pointer->position($source_fields->position($field));
+
+        $self->pointed_hint('spelling-error-in-rules-requires-root',
+            $pointer, $field);
+    }
+
+    my $pointer = Lintian::Pointer::Item->new;
+    $pointer->item(
+        $self->processable->patched->resolve_path('debian/control'));
+    $pointer->position($source_fields->position('Rules-Requires-Root'));
+
+    $self->pointed_hint('rules-do-not-require-root', $pointer)
       if $source_fields->value('Rules-Requires-Root') eq 'no';
 
-    $self->hint('rules-require-root-explicitly')
+    $self->pointed_hint('rules-require-root-explicitly', $pointer)
       if $source_fields->declares('Rules-Requires-Root')
       && $source_fields->value('Rules-Requires-Root') ne 'no';
 
-    $self->hint('silent-on-rules-requiring-root')
+    $self->pointed_hint('silent-on-rules-requiring-root', $pointer)
       unless $source_fields->declares('Rules-Requires-Root');
 
     if (  !$source_fields->declares('Rules-Requires-Root')
         || $source_fields->value('Rules-Requires-Root') eq 'no') {
 
-        for my $other ($self->group->get_binary_processables) {
+        for my $installable ($self->group->get_binary_processables) {
 
             my $user_owned_item
               = first_value { $_->owner ne 'root' || $_->group ne 'root' }
-            @{$other->installed->sorted_list};
+            @{$installable->installed->sorted_list};
 
-            $self->hint(
-                'rules-silently-require-root',
-                $other->name,
-                $user_owned_item->name,
-                $LEFT_PARENTHESIS
-                  . $user_owned_item->owner
-                  . $COLON
-                  . $user_owned_item->group
-                  . $RIGHT_PARENTHESIS
-            )if defined $user_owned_item;
+            next
+              unless defined $user_owned_item;
+
+            my $owner = $user_owned_item->owner;
+            my $group = $user_owned_item->group;
+
+            $self->pointed_hint('rules-silently-require-root',
+                $pointer, $installable->name,
+                "($owner:$group)", $user_owned_item->name);
         }
     }
 

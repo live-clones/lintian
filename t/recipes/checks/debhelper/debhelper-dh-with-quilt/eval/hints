@@ -1,4 +1,4 @@
-debhelper-dh-with-quilt (source): missing-build-dependency-for-dh-addon quilt => quilt
-debhelper-dh-with-quilt (source): debian-build-system dh
-debhelper-dh-with-quilt (source): debhelper-compat-virtual-relation 13
+debhelper-dh-with-quilt (source): missing-build-dependency-for-dh-addon quilt => quilt [debian/rules]
+debhelper-dh-with-quilt (source): debian-build-system dh [debian/rules]
+debhelper-dh-with-quilt (source): debhelper-compat-virtual-relation 13 [debian/control]
 debhelper-dh-with-quilt (source): debhelper-compat-level 13

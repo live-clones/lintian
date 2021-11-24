@@ -1,1 +1,1 @@
-foo++ (source): debian-watch-file-in-native-package
+foo++ (source): debian-watch-file-in-native-package [debian/watch]

@@ -28,14 +28,14 @@ use Const::Fast;
 use List::SomeUtils qw(any uniq);
 use Unicode::UTF8 qw(encode_utf8);
 
+use Lintian::Pointer::Item;
+
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
 
 const my $SPACE => q{ };
-const my $LEFT_SQUARE_BRACKET => q{[};
-const my $RIGHT_SQUARE_BRACKET => q{]};
 
 sub visit_installed_files {
     my ($self, $item) = @_;
@@ -82,8 +82,10 @@ sub visit_installed_files {
           if $has_code;
     }
 
-    $self->hint('no-code-sections',
-        $LEFT_SQUARE_BRACKET. $item->name. $RIGHT_SQUARE_BRACKET)
+    my $pointer = Lintian::Pointer::Item->new;
+    $pointer->item($item);
+
+    $self->pointed_hint('no-code-sections', $pointer)
       unless @codeful_members;
 
     return;

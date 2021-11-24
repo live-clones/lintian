@@ -6,21 +6,21 @@ source-copyright-undefined (source): update-debian-copyright 2014 vs CHANGELOG-Y
 source-copyright-undefined (source): update-debian-copyright 2014 vs CHANGELOG-YEAR [debian/copyright:23]
 source-copyright-undefined (source): update-debian-copyright 2014 vs CHANGELOG-YEAR [debian/copyright:18]
 source-copyright-undefined (source): update-debian-copyright 2014 vs CHANGELOG-YEAR [debian/copyright:13]
-source-copyright-undefined (source): superfluous-file-pattern debian/copyright debian/g (Files, line 51)
-source-copyright-undefined (source): superfluous-file-pattern debian/copyright debian/f (Files, line 45)
-source-copyright-undefined (source): superfluous-file-pattern debian/copyright debian/e (Files, line 39)
-source-copyright-undefined (source): superfluous-file-pattern debian/copyright debian/d (Files, line 33)
-source-copyright-undefined (source): superfluous-file-pattern debian/copyright debian/c (Files, line 27)
-source-copyright-undefined (source): superfluous-file-pattern debian/copyright debian/b (Files, line 22)
-source-copyright-undefined (source): superfluous-file-pattern debian/copyright debian/a (Files, line 17)
-source-copyright-undefined (source): superfluous-file-pattern debian/copyright * (Files, line 6)
-source-copyright-undefined (source): space-in-std-shortname-in-dep5-copyright debian/copyright undefined license (line 42)
-source-copyright-undefined (source): space-in-std-shortname-in-dep5-copyright debian/copyright common public license - v 1.0 (line 54)
-source-copyright-undefined (source): license-problem-undefined-license debian/copyright unknown (line 14)
-source-copyright-undefined (source): license-problem-undefined-license debian/copyright unknow (line 19)
-source-copyright-undefined (source): license-problem-undefined-license debian/copyright undefined license (line 42)
-source-copyright-undefined (source): license-problem-undefined-license debian/copyright undefined (line 48)
-source-copyright-undefined (source): license-problem-undefined-license debian/copyright todo (line 24)
-source-copyright-undefined (source): license-problem-undefined-license debian/copyright fixme (line 8)
-source-copyright-undefined (source): license-problem-undefined-license debian/copyright - (line 36)
-source-copyright-undefined (source): license-problem-undefined-license debian/copyright - (line 30)
+source-copyright-undefined (source): superfluous-file-pattern debian/g [debian/copyright:51]
+source-copyright-undefined (source): superfluous-file-pattern debian/f [debian/copyright:45]
+source-copyright-undefined (source): superfluous-file-pattern debian/e [debian/copyright:39]
+source-copyright-undefined (source): superfluous-file-pattern debian/d [debian/copyright:33]
+source-copyright-undefined (source): superfluous-file-pattern debian/c [debian/copyright:27]
+source-copyright-undefined (source): superfluous-file-pattern debian/b [debian/copyright:22]
+source-copyright-undefined (source): superfluous-file-pattern debian/a [debian/copyright:17]
+source-copyright-undefined (source): superfluous-file-pattern * [debian/copyright:6]
+source-copyright-undefined (source): space-in-std-shortname-in-dep5-copyright undefined license [debian/copyright:42]
+source-copyright-undefined (source): space-in-std-shortname-in-dep5-copyright common public license - v 1.0 [debian/copyright:54]
+source-copyright-undefined (source): license-problem-undefined-license unknown [debian/copyright:14]
+source-copyright-undefined (source): license-problem-undefined-license unknow [debian/copyright:19]
+source-copyright-undefined (source): license-problem-undefined-license undefined license [debian/copyright:42]
+source-copyright-undefined (source): license-problem-undefined-license undefined [debian/copyright:48]
+source-copyright-undefined (source): license-problem-undefined-license todo [debian/copyright:24]
+source-copyright-undefined (source): license-problem-undefined-license fixme [debian/copyright:8]
+source-copyright-undefined (source): license-problem-undefined-license - [debian/copyright:36]
+source-copyright-undefined (source): license-problem-undefined-license - [debian/copyright:30]

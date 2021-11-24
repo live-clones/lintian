@@ -29,6 +29,8 @@ use v5.20;
 use warnings;
 use utf8;
 
+use Lintian::Pointer::Item;
+
 use Moo;
 use namespace::clean;
 
@@ -52,9 +54,13 @@ sub visit_control_files {
         next
           if $line =~ /^#/;
 
+        my $pointer = Lintian::Pointer::Item->new;
+        $pointer->item($item);
+        $pointer->position($position);
+
         # systemctl should not be called in maintainer scripts at all,
         # except for systemctl daemon-reload calls.
-        $self->hint('maintainer-script-calls-systemctl', "$item:$position")
+        $self->pointed_hint('maintainer-script-calls-systemctl', $pointer)
           if $line =~ /^(?:.+;)?\s*systemctl\b/
           && $line !~ /daemon-reload/;
 

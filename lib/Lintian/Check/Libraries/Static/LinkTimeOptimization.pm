@@ -24,16 +24,14 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Const::Fast;
 use List::SomeUtils qw(uniq);
+
+use Lintian::Pointer::Item;
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-const my $LEFT_SQUARE_BRACKET => q{[};
-const my $RIGHT_SQUARE_BRACKET => q{]};
 
 sub visit_installed_files {
     my ($self, $item) = @_;
@@ -48,6 +46,9 @@ sub visit_installed_files {
     return
       unless $item->file_info =~ m{ \b current [ ] ar [ ] archive \b }x;
 
+    my $pointer = Lintian::Pointer::Item->new;
+    $pointer->item($item);
+
     for my $member_name (keys %{$item->elf_by_member}) {
 
         my $member_elf = $item->elf_by_member->{$member_name};
@@ -57,9 +58,8 @@ sub visit_installed_files {
 
         my @lto_section_names = grep { m{^ [.]gnu[.]lto }x } @section_names;
 
-        $self->hint('static-link-time-optimization',
-            $member_name,
-            $LEFT_SQUARE_BRACKET . $item->name . $RIGHT_SQUARE_BRACKET)
+        $self->pointed_hint('static-link-time-optimization',
+            $pointer, $member_name)
           if @lto_section_names;
     }
 

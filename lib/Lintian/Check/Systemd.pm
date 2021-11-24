@@ -35,14 +35,14 @@ use List::Compare;
 use List::SomeUtils qw(any none);
 use Text::ParseWords qw(shellwords);
 
+use Lintian::Pointer::Item;
+
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
 
 const my $EMPTY => q{};
-const my $LEFT_SQUARE_BRACKET => q{[};
-const my $RIGHT_SQUARE_BRACKET => q{]};
 
 # "Usual" targets for WantedBy
 const my @WANTEDBY_WHITELIST => qw{
@@ -116,6 +116,9 @@ has is_rcs_script_by_name => (is => 'rw', default => sub { {} });
 sub visit_installed_files {
     my ($self, $item) = @_;
 
+    my $pointer = Lintian::Pointer::Item->new;
+    $pointer->item($item);
+
     if ($item->name =~ m{/systemd/system/.*\.service$}) {
 
         $self->check_systemd_service_file($item);
@@ -130,7 +133,8 @@ sub visit_installed_files {
 
         for my $alias (@aliases) {
 
-            $self->hint('systemd-service-alias-without-extension', $item->name)
+            $self->pointed_hint('systemd-service-alias-without-extension',
+                $pointer)
               if $alias !~ m/\.service$/;
 
             # maybe issue a tag for duplicates?
@@ -154,7 +158,7 @@ sub visit_installed_files {
 
         unless ($item->is_file) {
 
-            $self->hint('init-script-is-not-a-file', $item->name);
+            $self->pointed_hint('init-script-is-not-a-file', $pointer);
             return;
         }
 
@@ -174,8 +178,8 @@ sub visit_installed_files {
         my @values
           = $self->extract_service_file_values($item,'Socket','ListenStream');
 
-        $self->hint('systemd-service-file-refers-to-var-run',
-            $item, 'ListenStream', $_)
+        $self->pointed_hint('systemd-service-file-refers-to-var-run',
+            $pointer, 'ListenStream', $_)
           for grep { m{^/var/run/} } @values;
     }
 
@@ -200,18 +204,22 @@ sub installable {
 
         for my $init_file (@init_files) {
 
+            my $pointer = Lintian::Pointer::Item->new;
+            $pointer->item($init_file);
+
             # rcS scripts are particularly bad; always tag
-            $self->hint('missing-systemd-service-for-init.d-rcS-script',
-                $init_file->name, $service_name)
+            $self->pointed_hint(
+                'missing-systemd-service-for-init.d-rcS-script',
+                $pointer, $service_name)
               if $self->is_rcs_script_by_name->{$init_file->name};
 
-            $self->hint('omitted-systemd-service-for-init.d-script',
-                $init_file->name, $service_name)
+            $self->pointed_hint('omitted-systemd-service-for-init.d-script',
+                $pointer, $service_name)
               if @{$self->service_names}
               && !$self->is_rcs_script_by_name->{$init_file->name};
 
-            $self->hint('missing-systemd-service-for-init.d-script',
-                $init_file->name, $service_name)
+            $self->pointed_hint('missing-systemd-service-for-init.d-script',
+                $pointer, $service_name)
               if !@{$self->service_names}
               && !$self->is_rcs_script_by_name->{$init_file->name};
         }
@@ -219,8 +227,14 @@ sub installable {
 
     if (!@{$self->timer_files}) {
 
-        $self->hint('missing-systemd-timer-for-cron-script', $_->name)
-          for @{$self->cron_scripts};
+        for my $cron_script (@{$self->cron_scripts}) {
+
+            my $pointer = Lintian::Pointer::Item->new;
+            $pointer->item($cron_script);
+
+            $self->pointed_hint('missing-systemd-timer-for-cron-script',
+                $pointer);
+        }
     }
 
     return;
@@ -261,7 +275,11 @@ sub check_init_script {
         ++$position;
     }
 
-    $self->hint('init.d-script-does-not-source-init-functions', $item)
+    my $pointer = Lintian::Pointer::Item->new;
+    $pointer->item($item);
+
+    $self->pointed_hint('init.d-script-does-not-source-init-functions',
+        $pointer)
       unless $lsb_source_seen;
 
     return $is_rcs_script;
@@ -270,30 +288,36 @@ sub check_init_script {
 sub check_systemd_service_file {
     my ($self, $item) = @_;
 
+    my $pointer = Lintian::Pointer::Item->new;
+    $pointer->item($item);
+
     # ambivalent about /lib or /usr/lib
-    $self->hint('systemd-service-in-odd-location', $item)
+    $self->pointed_hint('systemd-service-in-odd-location', $pointer)
       if $item =~ m{^etc/systemd/system/};
 
     unless ($item->is_open_ok
         || ($item->is_symlink && $item->link eq '/dev/null')) {
 
-        $self->hint('service-file-is-not-a-file', $item);
+        $self->pointed_hint('service-file-is-not-a-file', $pointer);
         return 0;
     }
 
     my @values = $self->extract_service_file_values($item, 'Unit', 'After');
     my @obsolete = grep { /^(?:syslog|dbus)\.target$/ } @values;
 
-    $self->hint('systemd-service-file-refers-to-obsolete-target',$item, $_)
+    $self->pointed_hint('systemd-service-file-refers-to-obsolete-target',
+        $pointer, $_)
       for @obsolete;
 
-    $self->hint('systemd-service-file-refers-to-obsolete-bindto', $item)
+    $self->pointed_hint('systemd-service-file-refers-to-obsolete-bindto',
+        $pointer)
       if $self->extract_service_file_values($item, 'Unit', 'BindTo');
 
     for my $key (
         qw(ExecStart ExecStartPre ExecStartPost ExecReload ExecStop ExecStopPost)
     ) {
-        $self->hint('systemd-service-file-wraps-init-script', $item, $key)
+        $self->pointed_hint('systemd-service-file-wraps-init-script',
+            $pointer, $key)
           if any { m{^/etc/init\.d/} }
         $self->extract_service_file_values($item, 'Service', $key);
     }
@@ -321,9 +345,9 @@ sub check_systemd_service_file {
 
         for my $target (@wanted_by) {
 
-            $self->hint(
+            $self->pointed_hint(
                 'systemd-service-file-refers-to-unusual-wantedby-target',
-                $item, $target)
+                $pointer, $target)
               unless (any { $target eq $_ } @WANTEDBY_WHITELIST)
               || $self->processable->name eq 'systemd';
         }
@@ -331,7 +355,8 @@ sub check_systemd_service_file {
         my @documentation
           = $self->extract_service_file_values($item, 'Unit','Documentation');
 
-        $self->hint('systemd-service-file-missing-documentation-key', $item)
+        $self->pointed_hint('systemd-service-file-missing-documentation-key',
+            $pointer)
           unless @documentation;
 
         for my $documentation (@documentation) {
@@ -340,8 +365,7 @@ sub check_systemd_service_file {
 
             my @invalid = grep { !is_uri($_) } @uris;
 
-            $self->hint('invalid-systemd-documentation',
-                $_,$LEFT_SQUARE_BRACKET . $item->name . $RIGHT_SQUARE_BRACKET)
+            $self->pointed_hint('invalid-systemd-documentation',$pointer, $_)
               for @invalid;
         }
 
@@ -353,8 +377,7 @@ sub check_systemd_service_file {
             # trim both ends
             $kill_mode =~ s/^\s+|\s+$//g;
 
-            $self->hint('kill-mode-none',$_,
-                $LEFT_SQUARE_BRACKET . $item->name . $RIGHT_SQUARE_BRACKET)
+            $self->pointed_hint('kill-mode-none',$pointer, $_)
               if $kill_mode eq 'none';
         }
 
@@ -364,7 +387,8 @@ sub check_systemd_service_file {
             && $item =~ m{^(?:usr/)?lib/systemd/[^\/]+/[^\/]+\.service$}
             && $item !~ m{@\.service$}) {
 
-            $self->hint('systemd-service-file-missing-install-key', $item)
+            $self->pointed_hint('systemd-service-file-missing-install-key',
+                $pointer)
               unless $self->extract_service_file_values($item, 'Install',
                 'RequiredBy')
               || $self->extract_service_file_values($item, 'Install', 'Also');
@@ -373,8 +397,8 @@ sub check_systemd_service_file {
         my @pidfile
           = $self->extract_service_file_values($item,'Service','PIDFile');
         for my $x (@pidfile) {
-            $self->hint('systemd-service-file-refers-to-var-run',
-                $item, 'PIDFile', $x)
+            $self->pointed_hint('systemd-service-file-refers-to-var-run',
+                $pointer, 'PIDFile', $x)
               if $x =~ m{^/var/run/};
         }
 
@@ -382,7 +406,8 @@ sub check_systemd_service_file {
           = any { $self->extract_service_file_values($item, 'Service', $_) }
         @HARDENING_FLAGS;
 
-        $self->hint('systemd-service-file-missing-hardening-features', $item)
+        $self->pointed_hint('systemd-service-file-missing-hardening-features',
+            $pointer)
           unless $seen_hardening
           || $is_oneshot
           || any { 'sleep.target' eq $_ } @wanted_by;
@@ -397,7 +422,8 @@ sub check_systemd_service_file {
             my @conflicts
               = $self->extract_service_file_values($item, 'Unit','Conflicts');
 
-            $self->hint('systemd-service-file-shutdown-problems', $item)
+            $self->pointed_hint('systemd-service-file-shutdown-problems',
+                $pointer)
               if (none { $_ eq 'shutdown.target' } @before)
               && (any { $_ eq 'shutdown.target' } @conflicts);
         }
@@ -411,8 +437,8 @@ sub check_systemd_service_file {
 
             my $value = $bad_users{$key};
 
-            $self->hint('systemd-service-file-uses-nobody-or-nogroup',
-                $item, "$key=$value")
+            $self->pointed_hint('systemd-service-file-uses-nobody-or-nogroup',
+                $pointer, "$key=$value")
               if any { $_ eq $value }
             $self->extract_service_file_values($item, 'Service',$key);
         }
@@ -420,9 +446,9 @@ sub check_systemd_service_file {
         for my $key (qw(StandardError StandardOutput)) {
             for my $value (qw(syslog syslog-console)) {
 
-                $self->hint(
+                $self->pointed_hint(
                     'systemd-service-file-uses-deprecated-syslog-facility',
-                    $item, "$key=$value")
+                    $pointer, "$key=$value")
                   if any { $_ eq $value }
                 $self->extract_service_file_values($item, 'Service',$key);
             }

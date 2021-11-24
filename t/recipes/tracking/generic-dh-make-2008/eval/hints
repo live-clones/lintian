@@ -5,12 +5,12 @@ generic-dh-make-2008 (source): trailing-whitespace debian/rules (line 43)
 generic-dh-make-2008 (source): trailing-whitespace debian/rules (line 35)
 generic-dh-make-2008 (source): trailing-whitespace debian/rules (line 26)
 generic-dh-make-2008 (source): superfluous-clutter-in-homepage <insert the upstream URL, if relevant>
-generic-dh-make-2008 (source): silent-on-rules-requiring-root
+generic-dh-make-2008 (source): silent-on-rules-requiring-root [debian/control]
 generic-dh-make-2008 (source): package-uses-deprecated-debhelper-compat-version 7
 generic-dh-make-2008 (source): out-of-date-standards-version 3.7.3 (released 2007-12-03) (current is CURRENT)
 generic-dh-make-2008 (source): older-source-format 1.0
 generic-dh-make-2008 (source): no-dh-sequencer
-generic-dh-make-2008 (source): no-dep5-copyright debian/copyright
+generic-dh-make-2008 (source): no-dep5-copyright [debian/copyright]
 generic-dh-make-2008 (source): missing-debian-source-format
 generic-dh-make-2008 (source): dh-make-template-in-source [debian/watch.ex]
 generic-dh-make-2008 (source): dh-make-template-in-source [debian/prerm.ex]
@@ -29,7 +29,7 @@ generic-dh-make-2008 (source): dh-make-template-in-source [debian/emacsen-startu
 generic-dh-make-2008 (source): dh-make-template-in-source [debian/emacsen-remove.ex]
 generic-dh-make-2008 (source): dh-make-template-in-source [debian/emacsen-install.ex]
 generic-dh-make-2008 (source): dh-make-template-in-source [debian/cron.d.ex]
-generic-dh-make-2008 (source): dh-clean-k-is-deprecated
+generic-dh-make-2008 (source): dh-clean-k-is-deprecated [debian/rules]
 generic-dh-make-2008 (source): debian-watch-file-is-missing
 generic-dh-make-2008 (source): debian-rules-missing-recommended-target build-indep
 generic-dh-make-2008 (source): debian-rules-missing-recommended-target build-arch

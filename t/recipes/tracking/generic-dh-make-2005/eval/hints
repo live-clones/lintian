@@ -4,15 +4,15 @@ generic-dh-make-2005 (source): trailing-whitespace debian/rules (line 54)
 generic-dh-make-2005 (source): trailing-whitespace debian/rules (line 49)
 generic-dh-make-2005 (source): trailing-whitespace debian/rules (line 32)
 generic-dh-make-2005 (source): trailing-whitespace debian/changelog (line 6)
-generic-dh-make-2005 (source): silent-on-rules-requiring-root
+generic-dh-make-2005 (source): silent-on-rules-requiring-root [debian/control]
 generic-dh-make-2005 (source): package-uses-deprecated-debhelper-compat-version 7
 generic-dh-make-2005 (source): older-source-format 1.0
 generic-dh-make-2005 (source): no-versioned-debhelper-prerequisite 7
 generic-dh-make-2005 (source): no-homepage-field
 generic-dh-make-2005 (source): no-dh-sequencer
-generic-dh-make-2005 (source): no-dep5-copyright debian/copyright
+generic-dh-make-2005 (source): no-dep5-copyright [debian/copyright]
 generic-dh-make-2005 (source): missing-debian-source-format
-generic-dh-make-2005 (source): dh-clean-k-is-deprecated
+generic-dh-make-2005 (source): dh-clean-k-is-deprecated [debian/rules]
 generic-dh-make-2005 (source): debian-watch-file-is-missing
 generic-dh-make-2005 (source): debian-rules-should-not-set-CFLAGS-from-noopt
 generic-dh-make-2005 (source): debian-rules-missing-recommended-target build-indep

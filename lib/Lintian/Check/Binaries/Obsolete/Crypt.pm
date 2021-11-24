@@ -27,16 +27,12 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Const::Fast;
+use Lintian::Pointer::Item;
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-const my $COLON => q{:};
-const my $LEFT_SQUARE_BRACKET => q{[};
-const my $RIGHT_SQUARE_BRACKET => q{]};
 
 has OBSOLETE_CRYPT_FUNCTIONS => (
     is => 'rw',
@@ -51,6 +47,9 @@ has OBSOLETE_CRYPT_FUNCTIONS => (
 sub visit_installed_files {
     my ($self, $item) = @_;
 
+    my $pointer = Lintian::Pointer::Item->new;
+    $pointer->item($item);
+
     for my $symbol (@{$item->elf->{SYMBOLS} // []}) {
 
         next
@@ -61,8 +60,7 @@ sub visit_installed_files {
 
         my $tag = $self->OBSOLETE_CRYPT_FUNCTIONS->value($symbol->name);
 
-        $self->hint($tag, $symbol->name,
-            $LEFT_SQUARE_BRACKET . $item->name . $RIGHT_SQUARE_BRACKET);
+        $self->pointed_hint($tag, $pointer, $symbol->name);
     }
 
     for my $member_name (keys %{$item->elf_by_member}) {
@@ -79,12 +77,8 @@ sub visit_installed_files {
 
             my $tag = $self->OBSOLETE_CRYPT_FUNCTIONS->value($symbol->name);
 
-            $self->hint($tag, $symbol->name,
-                    $LEFT_SQUARE_BRACKET
-                  . $item->name
-                  . $COLON
-                  . $member_name
-                  . $RIGHT_SQUARE_BRACKET);
+            $self->pointed_hint($tag, $pointer, "($member_name)",
+                $symbol->name);
         }
     }
 

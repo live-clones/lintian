@@ -654,7 +654,7 @@ div.clear {
 
       <span class="tinycode" id="code-I">I</span>
       <span class="tinyhint"><a href="https://lintian.debian.org/tags/installable-field-mirrors-source">installable-field-mirrors-source</a></span>
-      <span class="tinycontext">Section (in section for html-output) [debian/control:13]</span>
+      <span class="tinycontext">(in section for html-output) Section [debian/control:13]</span>
 
     </li>
     <li class="hintitem">
@@ -724,7 +724,7 @@ div.clear {
 
       <span class="tinycode" id="code-P">P</span>
       <span class="tinyhint"><a href="https://lintian.debian.org/tags/debian-watch-does-not-check-gpg-signature">debian-watch-does-not-check-gpg-signature</a></span>
-      <span class="tinycontext"></span>
+      <span class="tinycontext">[debian/watch]</span>
 
     </li>
     <li class="hintitem">

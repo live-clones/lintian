@@ -1,97 +1,97 @@
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:99] 'caller'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:97] 'suspend'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:96] 'foobar.() {'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:93] 'echo -e'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:92] 'echo -ne'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:91] 'echo -e'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:8] 'source /bar/baz/bat'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:88] 'echo 'xyz\rabc''
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:87] 'echo "abc\nxyz"'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:83] '>& bar'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:82] '>&bar'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:80] 'ech.os() {'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:7] 'read'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:75] 'echo -ne'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:74] 'echo -en'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:73] 'echo -e'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:72] 'echo -n -e'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:69] 'VAR+='
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:66] '<<<'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:64] '$PIPESTATUS'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:63] '$SHELLOPTS'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:62] '$BASH_FOO'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:60] '$SECONDS'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:59] '$DIRSTACK'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:58] '$SHLVL'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:57] '$EUID'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:56] '${UID'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:54] 'echo 'a\nb''
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:53] 'echo "a\\b"'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:51] 'read'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:48] 'read -x'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:47] 'read -x'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:43] '${line:3:1}'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:26] '[['
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:22] 'source $FOO'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:19] '&>'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:171] 'source a'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:170] 'source ~/bar'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:16] 'function foo('
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:169] 'source '$BAR''
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:168] 'source "$BAR"'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:166] 'read --fish'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:165] 'read -p'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:164] 'read -r'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:156] 'foobar@()'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:151] 'foo.bar()'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:143] '{a,b}'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:140] 'sh +O'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:139] 'sh --foo'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:138] 'sh -D'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:134] 'export -x'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:132] '/dev/tcp'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:130] 'readonly -f'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:12] '[ "$2" =='
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:128] 'popd'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:126] 'local -x'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:123] 'pushd'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:121] '<(tac a)'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:120] 'dirs'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:119] 'time'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:117] 'shopt'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:116] 'ulimit'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:111] 'unalias -a'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:110] 'alias -p'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:109] 'set -B'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:108] 'builtin'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:107] 'disown'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:106] 'typeset'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:105] '.foobar() {'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:102] 'declare'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:101] 'compgen'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/prerm:100] 'complete'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/postinst:80] '$RANDOM'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/postinst:75] '$RANDOM'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/postinst:74] 'test -a'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/postinst:73] 'let'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/postinst:71] 'exec -a'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/postinst:70] 'exec -c'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/postinst:69] 'exec -l'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/postinst:66] 'select foo'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/postinst:64] '${!foo}'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/postinst:63] 'echo -e'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/postinst:55] '${H[@]}'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/postinst:50] '${H[@]}'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/postinst:45] '$HOSTNAME'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/postinst:43] '${H[@]}'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/postinst:38] '${H[@]}'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/postinst:33] '${H[@]}'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/postinst:28] '${H[@]}'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/postinst:23] '${H[@]}'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/postinst:19] '${H[@]}'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/postinst:18] '${#H[0]}'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/postinst:17] '${H[0]}'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/postinst:16] 'H[0]='
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/postinst:14] 'read'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/postinst:11] '. "$(dirname $0)/shell"'
-scripts-bashisms (binary): possible-bashism-in-maintainer-script [control/postinst:10] '. /usr/share/lintian/shell foo'
+scripts-bashisms (binary): possible-bashism-in-maintainer-script '{a,b}' [prerm:143]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'unalias -a' [prerm:111]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'ulimit' [prerm:116]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'typeset' [prerm:106]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'time' [prerm:119]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'test -a' [postinst:74]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'suspend' [prerm:97]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'source ~/bar' [prerm:170]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'source a' [prerm:171]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'source /bar/baz/bat' [prerm:8]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'source '$BAR'' [prerm:169]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'source $FOO' [prerm:22]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'source "$BAR"' [prerm:168]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'shopt' [prerm:117]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'sh -D' [prerm:138]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'sh --foo' [prerm:139]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'sh +O' [prerm:140]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'set -B' [prerm:109]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'select foo' [postinst:66]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'readonly -f' [prerm:130]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'read' [prerm:7]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'read' [prerm:51]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'read' [postinst:14]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'read -x' [prerm:48]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'read -x' [prerm:47]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'read -r' [prerm:164]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'read -p' [prerm:165]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'read --fish' [prerm:166]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'pushd' [prerm:123]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'popd' [prerm:128]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'local -x' [prerm:126]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'let' [postinst:73]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'function foo(' [prerm:16]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'foobar@()' [prerm:156]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'foobar.() {' [prerm:96]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'foo.bar()' [prerm:151]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'export -x' [prerm:134]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'exec -l' [postinst:69]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'exec -c' [postinst:70]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'exec -a' [postinst:71]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'echo -ne' [prerm:92]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'echo -ne' [prerm:75]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'echo -n -e' [prerm:72]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'echo -en' [prerm:74]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'echo -e' [prerm:93]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'echo -e' [prerm:91]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'echo -e' [prerm:73]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'echo -e' [postinst:63]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'echo 'xyz\rabc'' [prerm:88]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'echo 'a\nb'' [prerm:54]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'echo "abc\nxyz"' [prerm:87]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'echo "a\\b"' [prerm:53]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'ech.os() {' [prerm:80]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'disown' [prerm:107]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'dirs' [prerm:120]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'declare' [prerm:102]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'complete' [prerm:100]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'compgen' [prerm:101]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'caller' [prerm:99]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'builtin' [prerm:108]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'alias -p' [prerm:110]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script '[[' [prerm:26]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script '[ "$2" ==' [prerm:12]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'VAR+=' [prerm:69]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script 'H[0]=' [postinst:16]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script '>&bar' [prerm:82]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script '>& bar' [prerm:83]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script '<<<' [prerm:66]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script '<(tac a)' [prerm:121]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script '/dev/tcp' [prerm:132]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script '.foobar() {' [prerm:105]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script '. /usr/share/lintian/shell foo' [postinst:10]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script '. "$(dirname $0)/shell"' [postinst:11]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script '&>' [prerm:19]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script '${line:3:1}' [prerm:43]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script '${UID' [prerm:56]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script '${H[@]}' [postinst:55]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script '${H[@]}' [postinst:50]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script '${H[@]}' [postinst:43]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script '${H[@]}' [postinst:38]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script '${H[@]}' [postinst:33]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script '${H[@]}' [postinst:28]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script '${H[@]}' [postinst:23]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script '${H[@]}' [postinst:19]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script '${H[0]}' [postinst:17]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script '${#H[0]}' [postinst:18]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script '${!foo}' [postinst:64]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script '$SHLVL' [prerm:58]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script '$SHELLOPTS' [prerm:63]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script '$SECONDS' [prerm:60]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script '$RANDOM' [postinst:80]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script '$RANDOM' [postinst:75]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script '$PIPESTATUS' [prerm:64]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script '$HOSTNAME' [postinst:45]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script '$EUID' [prerm:57]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script '$DIRSTACK' [prerm:59]
+scripts-bashisms (binary): possible-bashism-in-maintainer-script '$BASH_FOO' [prerm:62]

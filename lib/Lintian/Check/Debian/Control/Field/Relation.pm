@@ -26,26 +26,13 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Const::Fast;
-use List::SomeUtils qw(any none first_value);
-use Path::Tiny;
-use Unicode::UTF8 qw(encode_utf8);
-
+use Lintian::Pointer::Item;
 use Lintian::Relation;
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-const my $EMPTY => q{};
-const my $COLON => q{:};
-const my $LEFT_PARENTHESIS => q{(};
-const my $RIGHT_PARENTHESIS => q{)};
-const my $LEFT_SQUARE_BRACKET => q{[};
-const my $RIGHT_SQUARE_BRACKET => q{]};
-
-const my $ARROW => q{->};
 
 sub source {
     my ($self) = @_;
@@ -83,27 +70,31 @@ sub source {
         next
           unless $source_fields->declares($field);
 
-        my $position = $source_fields->position($field);
-        my $pointer = "(in source paragraph) [debian/control:$position]";
+        my $pointer = Lintian::Pointer::Item->new;
+        $pointer->item(
+            $self->processable->patched->resolve_path('debian/control'));
+        $pointer->position($source_fields->position($field));
 
         my @values = $source_fields->trimmed_list($field, qr{ \s* , \s* }x);
         my @obsolete = grep { m{ [(] [<>] \s* [^<>=]+ [)] }x } @values;
 
-        $self->hint('obsolete-relation-form-in-source', $field, $_, $pointer)
-          for @obsolete;
+        $self->pointed_hint(
+            'obsolete-relation-form-in-source',
+            $pointer, '(in source paragraph)',
+            $field, $_
+        )for @obsolete;
 
         my $raw = $source_fields->value($field);
         my $relation = Lintian::Relation->new->load($raw);
 
         for my $redundant_set ($relation->redundancies) {
 
-            $self->hint(
-                'redundant-control-relation', $field,
-                join(', ', sort @{$redundant_set}), $pointer
-            );
+            $self->pointed_hint('redundant-control-relation', $pointer,
+                '(in source paragraph)',
+                $field,join(', ', sort @{$redundant_set}));
         }
 
-        $self->check_separators('source', $raw, $pointer);
+        $self->check_separators($raw, $pointer, '(in source paragraph)');
     }
 
     for my $installable ($control->installables) {
@@ -116,31 +107,35 @@ sub source {
             next
               unless $installable_fields->declares($field);
 
-            my $position = $installable_fields->position($field);
-            my $pointer
-              = "(in section for $installable) [debian/control:$position]";
+            my $pointer = Lintian::Pointer::Item->new;
+            $pointer->item(
+                $self->processable->patched->resolve_path('debian/control'));
+            $pointer->position($installable_fields->position($field));
 
             my @values
               = $installable_fields->trimmed_list($field, qr{ \s* , \s* }x);
             my @obsolete = grep { m{ [(] [<>] \s* [^<>=]+ [)] }x } @values;
 
-            $self->hint('obsolete-relation-form-in-source',
-                $field, $_, $pointer)
-              for @obsolete;
+            $self->pointed_hint(
+                'obsolete-relation-form-in-source',
+                $pointer, "(in section for $installable)",
+                $field, $_
+            )for @obsolete;
 
             my $relation
               = $self->processable->binary_relation($installable, $field);
 
             for my $redundant_set ($relation->redundancies) {
 
-                $self->hint(
-                    'redundant-control-relation', $field,
-                    join(', ', sort @{$redundant_set}), $pointer
-                );
+                $self->pointed_hint(
+                    'redundant-control-relation', $pointer,
+                    "(in section for $installable)", $field,
+                    join(', ', sort @{$redundant_set}));
             }
 
             my $raw = $installable_fields->value($field);
-            $self->check_separators($installable, $raw, $pointer);
+            $self->check_separators($raw, $pointer,
+                "(in section for $installable)");
         }
     }
 
@@ -148,7 +143,7 @@ sub source {
 }
 
 sub check_separators {
-    my ($self, $package, $string, $pointer) = @_;
+    my ($self, $string, $pointer, $explainer) = @_;
 
     $string =~ s/\n(\s)/$1/g;
     $string =~ s/\[[^\]]*\]//g;
@@ -171,8 +166,8 @@ sub check_separators {
         $prev =~ s/\s+$//;
         $next =~ s/\s+$//;
 
-        $self->hint('missing-separator-between-items',
-            "'$prev' and '$next'", $pointer);
+        $self->pointed_hint('missing-separator-between-items',
+            $pointer,$explainer, "'$prev' and '$next'");
     }
 
     return;

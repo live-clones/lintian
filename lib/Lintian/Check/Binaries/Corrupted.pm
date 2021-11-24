@@ -27,17 +27,14 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Const::Fast;
 use List::SomeUtils qw(uniq);
+
+use Lintian::Pointer::Item;
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-const my $COLON => q{:};
-const my $LEFT_SQUARE_BRACKET => q{[};
-const my $RIGHT_SQUARE_BRACKET => q{]};
 
 sub visit_patched_files {
     my ($self, $item) = @_;
@@ -58,12 +55,13 @@ sub visit_installed_files {
 sub check_elf_issues {
     my ($self, $item) = @_;
 
-    $self->hint('elf-error',$_,
-        $LEFT_SQUARE_BRACKET . $item->name . $RIGHT_SQUARE_BRACKET)
+    my $pointer = Lintian::Pointer::Item->new;
+    $pointer->item($item);
+
+    $self->pointed_hint('elf-error',$pointer, $_)
       for uniq @{$item->elf->{ERRORS} // []};
 
-    $self->hint('elf-warning',$_,
-        $LEFT_SQUARE_BRACKET . $item->name . $RIGHT_SQUARE_BRACKET)
+    $self->pointed_hint('elf-warning', $pointer, $_)
       for uniq @{$item->elf->{WARNINGS} // []};
 
     # static library
@@ -71,24 +69,14 @@ sub check_elf_issues {
 
         my $member_elf = $item->elf_by_member->{$member_name};
 
-        $self->hint('elf-error',$_,
-                $LEFT_SQUARE_BRACKET
-              . $item->name
-              . $COLON
-              . $member_name
-              . $RIGHT_SQUARE_BRACKET)
+        $self->pointed_hint('elf-error', $pointer, $member_name, $_)
           for uniq @{$member_elf->{ERRORS} // []};
 
-        $self->hint('elf-warning',$_,
-                $LEFT_SQUARE_BRACKET
-              . $item->name
-              . $COLON
-              . $member_name
-              . $RIGHT_SQUARE_BRACKET)
+        $self->pointed_hint('elf-warning', $pointer, $member_name, $_)
           for uniq @{$member_elf->{WARNINGS} // []};
     }
 
-    $self->hint('binary-with-bad-dynamic-table', $item->name)
+    $self->pointed_hint('binary-with-bad-dynamic-table', $pointer)
       if $item->elf->{'BAD-DYNAMIC-TABLE'}
       && $item->name !~ m{^usr/lib/debug/};
 

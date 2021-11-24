@@ -28,6 +28,7 @@ use utf8;
 
 use Const::Fast;
 
+use Lintian::Pointer::Item;
 use Lintian::Relation;
 
 use Moo;
@@ -35,12 +36,10 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-const my $LEFT_SQUARE_BRACKET => q{[};
-const my $RIGHT_SQUARE_BRACKET => q{]};
-
 # The list of libc packages, used for checking for a hard-coded dependency
 # rather than using ${shlibs:Depends}.
-my @LIBCS = qw(libc6 libc6.1 libc0.1 libc0.3);
+const my @LIBCS => qw(libc6 libc6.1 libc0.1 libc0.3);
+
 my $LIBC_RELATION = Lintian::Relation->new->load(join(' | ', @LIBCS));
 
 sub source {
@@ -62,15 +61,15 @@ sub source {
             my $relation
               = $self->processable->binary_relation($installable,$field);
 
-            $self->hint(
+            my $pointer = Lintian::Pointer::Item->new;
+            $pointer->item(
+                $self->processable->patched->resolve_path('debian/control'));
+            $pointer->position($installable_fields->position($field));
+
+            $self->pointed_hint(
                 'package-depends-on-hardcoded-libc',
-                $field,
-                $relation->to_string,
-                "(in section for $installable)",
-                $LEFT_SQUARE_BRACKET
-                  . 'debian/control:'
-                  . $installable_fields->position($field)
-                  . $RIGHT_SQUARE_BRACKET
+                $pointer,"(in section for $installable)",
+                $field, $relation->to_string
               )
               if $relation->satisfies($LIBC_RELATION)
               && $self->processable->name !~ /^e?glibc$/;

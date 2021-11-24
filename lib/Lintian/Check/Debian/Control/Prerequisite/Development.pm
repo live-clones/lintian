@@ -29,14 +29,14 @@ use utf8;
 use Const::Fast;
 use List::SomeUtils qw(any);
 
+use Lintian::Pointer::Item;
+
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
 
 const my $EMPTY => q{};
-const my $LEFT_SQUARE_BRACKET => q{[};
-const my $RIGHT_SQUARE_BRACKET => q{]};
 
 sub source {
     my ($self) = @_;
@@ -54,19 +54,24 @@ sub source {
         next
           unless $installable_fields->declares($field);
 
+        my $pointer = Lintian::Pointer::Item->new;
+        $pointer->item(
+            $self->processable->patched->resolve_path('debian/control'));
+        $pointer->position($installable_fields->position($field));
+
         my @depends
           = $installable_fields->trimmed_list($field, qr{ \s* , \s* }x);
 
-        for my $other ($control->installables) {
+        for my $other_name ($control->installables) {
 
             next
-              if $other =~ /-(?:dev|docs?|common)$/;
+              if $other_name =~ /-(?:dev|docs?|common)$/;
 
             next
-              unless $other =~ /^lib[\w.+-]+\d/;
+              unless $other_name =~ /^lib[\w.+-]+\d/;
 
             my @relevant
-              = grep { m{ (?: ^ | [\s|] ) \Q$other\E (?: [\s|(] | \z ) }x }
+              = grep { m{ (?: ^ | [\s|] ) \Q$other_name\E (?: [\s|(] | \z ) }x }
               @depends;
 
             # If there are any alternatives here, something special is
@@ -103,7 +108,7 @@ sub source {
                     # arch:all as well.  The version-substvars check
                     # handles that for us.
                     next
-                      if $control->installable_fields($other)
+                      if $control->installable_fields($other_name)
                       ->value('Architecture') eq 'all'
                       && $versions[0]
                       =~ m{^ \s* = \s* \$[{]source:Version[}] }x;
@@ -124,16 +129,10 @@ sub source {
                 }
             }
 
-            $self->hint(
-                'weak-library-dev-dependency',
-                $field,
-                $context,
-                "(in section for $installable)",
-                $LEFT_SQUARE_BRACKET
-                  . 'debian/control:'
-                  . $installable_fields->position($field)
-                  . $RIGHT_SQUARE_BRACKET
-            ) if length $context;
+            $self->pointed_hint('weak-library-dev-dependency',
+                $pointer, "(in section for $installable)",
+                $field, $context)
+              if length $context;
         }
     }
 

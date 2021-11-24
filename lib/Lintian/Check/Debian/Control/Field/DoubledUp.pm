@@ -26,15 +26,12 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Const::Fast;
+use Lintian::Pointer::Item;
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-const my $LEFT_SQUARE_BRACKET => q{[};
-const my $RIGHT_SQUARE_BRACKET => q{]};
 
 sub source {
     my ($self) = @_;
@@ -47,15 +44,16 @@ sub source {
       = grep { $source_fields->value($_) =~ m{^ \Q$_\E \s* : }ix }
       $source_fields->names;
 
-    $self->hint(
-        'debian-control-repeats-field-name-in-value',
-        $_,
-        '(in section for source)',
-        $LEFT_SQUARE_BRACKET
-          . 'debian/control:'
-          . $source_fields->position($_)
-          . $RIGHT_SQUARE_BRACKET
-    )for @doubled_up_source_fields;
+    for my $field (@doubled_up_source_fields) {
+
+        my $pointer = Lintian::Pointer::Item->new;
+        $pointer->item(
+            $self->processable->patched->resolve_path('debian/control'));
+        $pointer->position($source_fields->position($field));
+
+        $self->pointed_hint('debian-control-repeats-field-name-in-value',
+            $pointer, '(in section for source)', $field);
+    }
 
     for my $installable ($control->installables) {
         my $installable_fields = $control->installable_fields($installable);
@@ -65,15 +63,16 @@ sub source {
           = grep { $installable_fields->value($_) =~ m{^ \Q$_\E \s* : }ix }
           $installable_fields->names;
 
-        $self->hint(
-            'debian-control-repeats-field-name-in-value',
-            $_,
-            "(in section for $installable)",
-            $LEFT_SQUARE_BRACKET
-              . 'debian/control:'
-              . $installable_fields->position($_)
-              . $RIGHT_SQUARE_BRACKET
-        )for @doubled_up_installable_fields;
+        for my $field (@doubled_up_installable_fields) {
+
+            my $pointer = Lintian::Pointer::Item->new;
+            $pointer->item(
+                $self->processable->patched->resolve_path('debian/control'));
+            $pointer->position($installable_fields->position($field));
+
+            $self->pointed_hint('debian-control-repeats-field-name-in-value',
+                $pointer,"(in section for $installable)", $field);
+        }
     }
 
     return;

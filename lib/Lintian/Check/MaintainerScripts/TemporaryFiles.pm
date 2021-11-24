@@ -30,6 +30,8 @@ use utf8;
 use Const::Fast;
 use Unicode::UTF8 qw(encode_utf8);
 
+use Lintian::Pointer::Item;
+
 use Moo;
 use namespace::clean;
 
@@ -56,6 +58,10 @@ sub visit_control_files {
 
     my $position = 1;
     while (my $possible_continuation = <$fd>) {
+
+        my $pointer = Lintian::Pointer::Item->new;
+        $pointer->item($item);
+        $pointer->position($position);
 
         chomp $possible_continuation;
 
@@ -85,10 +91,10 @@ sub visit_control_files {
 
             my $indicator = $1;
 
-            $self->hint(
+            $self->pointed_hint(
                 'possibly-insecure-handling-of-tmp-files-in-maintainer-script',
-                $indicator,
-                "[control/$item:$position]"
+                $pointer,
+                $indicator
               )
               if $line !~ /\bmks?temp\b/
               && $line !~ /\btempfile\b/

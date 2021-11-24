@@ -31,14 +31,14 @@ use Const::Fast;
 use File::Spec;
 use List::SomeUtils qw(any);
 
+use Lintian::Pointer::Item;
+
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
 
 const my $SLASH => q{/};
-const my $LEFT_SQUARE_BRACKET => q{[};
-const my $RIGHT_SQUARE_BRACKET => q{]};
 
 has DEB_HOST_MULTIARCH => (
     is => 'rw',
@@ -97,6 +97,9 @@ sub visit_installed_files {
     return
       unless $item->file_info =~ /^ [^,]* \b ELF \b /x;
 
+    my $pointer = Lintian::Pointer::Item->new;
+    $pointer->item($item);
+
     for my $section (qw{RPATH RUNPATH}) {
 
         my @rpaths = keys %{$item->elf->{$section} // {}};
@@ -121,15 +124,14 @@ sub visit_installed_files {
 
         my @absolute = grep { m{^ / }x } @custom;
 
-        $self->hint('custom-library-search-path', $section, $_,
-            $LEFT_SQUARE_BRACKET . $item->name. $RIGHT_SQUARE_BRACKET)
+        $self->pointed_hint('custom-library-search-path',
+            $pointer, $section, $_)
           for @absolute;
 
         my @relative = grep { m{^ [^/] }x } @custom;
 
-        $self->hint('relative-library-search-path',
-            $section, $_,
-            $LEFT_SQUARE_BRACKET . $item->name. $RIGHT_SQUARE_BRACKET)
+        $self->pointed_hint('relative-library-search-path',
+            $pointer, $section, $_)
           for @relative;
     }
 

@@ -26,15 +26,12 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Const::Fast;
+use Lintian::Pointer::Item;
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-const my $LEFT_SQUARE_BRACKET => q{[};
-const my $RIGHT_SQUARE_BRACKET => q{]};
 
 sub source {
     my ($self) = @_;
@@ -53,12 +50,16 @@ sub source {
           unless length $marker
           && length $bare;
 
+        my $pointer = Lintian::Pointer::Item->new;
+        $pointer->item(
+            $self->processable->patched->resolve_path('debian/control'));
+        $pointer->position($source_fields->position($field));
+
         # case-insensitive match
-        $self->hint('adopted-extended-field',$field,'(in section for source)',
-                $LEFT_SQUARE_BRACKET
-              . 'debian/control:'
-              . $source_fields->position($field)
-              . $RIGHT_SQUARE_BRACKET)
+        $self->pointed_hint(
+            'adopted-extended-field',$pointer,
+            '(in section for source)', $field
+          )
           if $marker =~ m{^ X }ix
           && $KNOWN_SOURCE_FIELDS->resembles($bare);
     }
@@ -74,15 +75,15 @@ sub source {
               unless length $marker
               && length $bare;
 
+            my $pointer = Lintian::Pointer::Item->new;
+            $pointer->item(
+                $self->processable->patched->resolve_path('debian/control'));
+            $pointer->position($installable_fields->position($field));
+
             # case-insensitive match
-            $self->hint(
-                'adopted-extended-field',
-                $field,
-                "(in section for $installable)",
-                $LEFT_SQUARE_BRACKET
-                  . 'debian/control:'
-                  . $installable_fields->position($field)
-                  . $RIGHT_SQUARE_BRACKET
+            $self->pointed_hint(
+                'adopted-extended-field', $pointer,
+                "(in section for $installable)", $field
               )
               if $marker =~ m{^ X }ix
               && $KNOWN_BINARY_FIELDS->resembles($bare);

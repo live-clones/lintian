@@ -27,6 +27,7 @@ use utf8;
 use Const::Fast;
 use Unicode::UTF8 qw(encode_utf8);
 
+use Lintian::Pointer::Item;
 use Lintian::SlidingWindow;
 
 use Moo;
@@ -117,10 +118,14 @@ has PRIVACY_BREAKER_TAG_ATTR => (
 
 sub detect_privacy_breach {
     my ($self, $file) = @_;
+
     my %privacybreachhash;
 
     return
       unless $file->is_regular_file;
+
+    my $pointer = Lintian::Pointer::Item->new;
+    $pointer->item($file);
 
     open(my $fd, '<:raw', $file->unpacked_path)
       or die encode_utf8('Cannot open ' . $file->unpacked_path);
@@ -140,21 +145,27 @@ sub detect_privacy_breach {
 
         # try generic fragment tagging
         foreach my $keyword ($self->PRIVACY_BREAKER_FRAGMENTS->all) {
+
             if ($lowercase =~ / \Q$keyword\E /msx) {
                 my $keyvalue
                   = $self->PRIVACY_BREAKER_FRAGMENTS->value($keyword);
                 my $regex = $keyvalue->{'regex'};
+
                 if ($lowercase =~ m{($regex)}) {
                     my $capture = $1;
                     my $breaker_tag = $keyvalue->{'tag'};
+
                     unless (exists $privacybreachhash{'tag-'.$breaker_tag}){
+
                         $privacybreachhash{'tag-'.$breaker_tag} = 1;
-                        $self->hint($breaker_tag, $file->name,
+
+                        $self->pointed_hint($breaker_tag, $pointer,
                             "(choke on: $capture)");
                     }
                 }
             }
         }
+
         for my $x (
             qw(src="http src="ftp src="// data-href="http data-href="ftp
             data-href="// codebase="http codebase="ftp codebase="// data="http
@@ -246,6 +257,10 @@ sub is_localhost {
 
 sub check_tag_url_privacy_breach {
     my ($self, $fulltag, $tagattr, $url,$privacybreachhash, $file) = @_;
+
+    my $pointer = Lintian::Pointer::Item->new;
+    $pointer->item($file);
+
     my $website = $url;
     # detect also "^//" trick
     $website =~ s{^"?(?:(?:ht|f)tps?:)?//}{};
@@ -258,6 +273,7 @@ sub check_tag_url_privacy_breach {
 
     # reparse fulltag for rel
     if ($tagattr eq 'link') {
+
         my $rel = $fulltag;
         $rel =~ m{<link
                       (?:\s[^>]+)? \s+
@@ -265,6 +281,7 @@ sub check_tag_url_privacy_breach {
                       [^>]*
                       >}xismog;
         my $relcontent = $1;
+
         if (defined($relcontent)) {
             # See, for example, https://www.w3schools.com/tags/att_link_rel.asp
             my %allowed = (
@@ -283,7 +300,10 @@ sub check_tag_url_privacy_breach {
                 'schema.dct'        => 1, # #736992
                 'search'            => 1, # #891301
             );
-            return if ($allowed{$relcontent});
+
+            return
+              if ($allowed{$relcontent});
+
             if ($relcontent eq 'alternate') {
                 my $type = $fulltag;
                 $type =~ m{<link
@@ -306,6 +326,7 @@ sub check_tag_url_privacy_breach {
     if(    $file->basename eq 'legal.xml'
         && $tagattr eq 'link'
         && $website =~ m{^creativecommons.org/licenses/}) {
+
         return;
     }
 
@@ -314,20 +335,27 @@ sub check_tag_url_privacy_breach {
     if(    $file->basename =~ '.xml$'
         && $tagattr eq 'link'
         && $file->bytes=~ qr{ xmlns="http://projectmallard\.org/1\.0/"}) {
+
         return;
     }
 
     # track well known site
     foreach my $breaker ($self->PRIVACY_BREAKER_WEBSITES->all) {
+
         my $value = $self->PRIVACY_BREAKER_WEBSITES->value($breaker);
         my $regex = $value->{'regexp'};
+
         if ($website =~ m{$regex}mxs) {
+
             unless (exists $privacybreachhash->{'tag-'.$breaker}) {
+
                 my $tag =  $value->{'tag'};
                 my $suggest = $value->{'suggest'} // $EMPTY;
+
                 $privacybreachhash->{'tag-'.$breaker}= 1;
-                $self->hint($tag, $file, $suggest, "($url)");
+                $self->pointed_hint($tag, $pointer, $suggest, "($url)");
             }
+
             # do not go to generic case
             return;
         }
@@ -335,9 +363,12 @@ sub check_tag_url_privacy_breach {
 
     # generic case
     unless (exists $privacybreachhash->{'tag-generic-'.$website}){
-        $self->hint('privacy-breach-generic', $file->name,"[$fulltag] ($url)");
+
+        $self->pointed_hint('privacy-breach-generic', $pointer, "[$fulltag]",
+            "($url)");
         $privacybreachhash->{'tag-generic-'.$website} = 1;
     }
+
     return;
 }
 

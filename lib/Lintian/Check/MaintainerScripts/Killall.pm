@@ -30,6 +30,8 @@ use utf8;
 use Const::Fast;
 use Unicode::UTF8 qw(encode_utf8);
 
+use Lintian::Pointer::Item;
+
 use Moo;
 use namespace::clean;
 
@@ -57,6 +59,10 @@ sub visit_control_files {
     my $position = 1;
     while (my $possible_continuation = <$fd>) {
 
+        my $pointer = Lintian::Pointer::Item->new;
+        $pointer->item($item);
+        $pointer->position($position);
+
         chomp $possible_continuation;
 
         # skip empty lines
@@ -81,7 +87,7 @@ sub visit_control_files {
         my $line = $stashed . $no_comment;
         $stashed = $EMPTY;
 
-        $self->hint('killall-is-dangerous', "[control/$item:$position]")
+        $self->pointed_hint('killall-is-dangerous', $pointer)
           if $line =~ /^\s*killall(?:\s|\z)/;
 
     } continue {

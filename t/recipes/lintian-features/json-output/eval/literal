@@ -20,7 +20,7 @@
                      "visibility" : "warning"
                   },
                   {
-                     "context" : "Section (in section for json-output) [debian/control:13]",
+                     "context" : "(in section for json-output) Section [debian/control:13]",
                      "tag" : "installable-field-mirrors-source",
                      "visibility" : "info"
                   },
@@ -53,6 +53,7 @@
                      "visibility" : "pedantic"
                   },
                   {
+                     "context" : "[debian/watch]",
                      "experimental" : "yes",
                      "tag" : "debian-watch-does-not-check-gpg-signature",
                      "visibility" : "pedantic"

@@ -1,1 +1,1 @@
-scripts-supports-ancient-package-version (binary): maintainer-script-interpreter /bin/sh [control/postinst]
+scripts-supports-ancient-package-version (binary): maintainer-script-interpreter /bin/sh [postinst]

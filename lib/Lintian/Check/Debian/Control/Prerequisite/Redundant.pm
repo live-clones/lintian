@@ -28,13 +28,12 @@ use utf8;
 
 use Const::Fast;
 
+use Lintian::Pointer::Item;
+
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-const my $LEFT_SQUARE_BRACKET => q{[};
-const my $RIGHT_SQUARE_BRACKET => q{]};
 
 const my $ARROW => q{->};
 
@@ -65,6 +64,11 @@ sub source {
               unless $control->installable_fields($installable)
               ->declares($stronger);
 
+            my $pointer = Lintian::Pointer::Item->new;
+            $pointer->item(
+                $self->processable->patched->resolve_path('debian/control'));
+            $pointer->position($installable_fields->position($stronger));
+
             my $relation
               = $self->processable->binary_relation($installable,$stronger);
 
@@ -75,18 +79,11 @@ sub source {
 
                 for my $prerequisite (@prerequisites) {
 
-                    $self->hint(
-                        'redundant-installation-prerequisite',
-                        $installable,
-                        $weaker,
-                        $ARROW,
-                        $stronger,
-                        $prerequisite,
-                        "(in section for $installable)",
-                        $LEFT_SQUARE_BRACKET
-                          . 'debian/control:'
-                          . $installable_fields->position($stronger)
-                          . $RIGHT_SQUARE_BRACKET
+                    $self->pointed_hint(
+                        'redundant-installation-prerequisite',$pointer,
+                        "(in section for $installable)",$weaker,
+                        $ARROW, $stronger,
+                        $prerequisite
                     )if $relation->satisfies($prerequisite);
                 }
             }
