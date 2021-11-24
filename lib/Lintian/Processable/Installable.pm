@@ -33,8 +33,7 @@ use Moo;
 use namespace::clean;
 
 with
-  'Lintian::Processable::Installable::Class',
-  'Lintian::Processable::Installable::Relation',
+  'Lintian::Processable',
   'Lintian::Processable::Changelog',
   'Lintian::Processable::Control',
   'Lintian::Processable::Control::Conffiles',
@@ -42,8 +41,9 @@ with
   'Lintian::Processable::IsNonFree',
   'Lintian::Processable::Hardening',
   'Lintian::Processable::NotJustDocs',
-  'Lintian::Processable::Overrides',
-  'Lintian::Processable';
+  'Lintian::Processable::Installable::Class',
+  'Lintian::Processable::Installable::Overrides',
+  'Lintian::Processable::Installable::Relation';
 
 # read up to 40kB at a time.  this happens to be 4096 "tar records"
 # (with a block-size of 512 and a block factor of 20, which appear to

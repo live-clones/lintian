@@ -31,8 +31,10 @@ use Lintian::Deb822::File;
 use Moo;
 use namespace::clean;
 
-with 'Lintian::Processable::Fields::Files', 'Lintian::Processable::Overrides',
-  'Lintian::Processable';
+with
+  'Lintian::Processable',
+  'Lintian::Processable::Fields::Files',
+  'Lintian::Processable::Changes::Overrides';
 
 =for Pod::Coverage BUILDARGS
 

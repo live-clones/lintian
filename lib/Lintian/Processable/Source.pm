@@ -31,7 +31,8 @@ use Lintian::Deb822::File;
 use Moo;
 use namespace::clean;
 
-with 'Lintian::Processable',
+with
+  'Lintian::Processable',
   'Lintian::Processable::Diffstat',
   'Lintian::Processable::Changelog',
   'Lintian::Processable::Changelog::Version',
@@ -39,10 +40,10 @@ with 'Lintian::Processable',
   'Lintian::Processable::Fields::Files',
   'Lintian::Processable::IsNonFree',
   'Lintian::Processable::Orig',
-  'Lintian::Processable::Overrides',
   'Lintian::Processable::Patched',
   'Lintian::Processable::Source::Components',
   'Lintian::Processable::Source::Format',
+  'Lintian::Processable::Source::Overrides',
   'Lintian::Processable::Source::Relation',
   'Lintian::Processable::Source::Repacked';
 
