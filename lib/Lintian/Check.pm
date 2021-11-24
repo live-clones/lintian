@@ -162,20 +162,6 @@ sub find_tag {
     # try global name space
     $tag ||= $self->profile->get_tag($tagname);
 
-    return $tag;
-}
-
-=item hint
-
-Tag the processable associated with this check
-
-=cut
-
-sub hint {
-    my ($self, $tagname, @context) = @_;
-
-    my $tag = $self->find_tag($tagname);
-
     unless (defined $tag) {
 
         warn encode_utf8(
@@ -192,6 +178,35 @@ sub hint {
               . ' does).');
         return undef;
     }
+
+    return $tag;
+}
+
+=item pointed_hint
+
+=cut
+
+sub pointed_hint {
+    my ($self, $tagname, $pointer, @context) = @_;
+
+    my $tag = $self->find_tag($tagname);
+    return undef
+      unless defined $tag;
+
+    # pull name from tag; could be name-spaced
+    return $self->processable->pointed_hint($tag->name, $pointer, @context);
+}
+
+=item hint
+
+=cut
+
+sub hint {
+    my ($self, $tagname, @context) = @_;
+
+    my $tag = $self->find_tag($tagname);
+    return undef
+      unless defined $tag;
 
     # pull name from tag; could be name-spaced
     return $self->processable->hint($tag->name, @context);

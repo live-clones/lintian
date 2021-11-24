@@ -1,4 +1,4 @@
-# Copyright © 2019 Felix Lechner <felix.lechner@lease-up.com>
+# Copyright © 2019-2021 Felix Lechner <felix.lechner@lease-up.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -31,6 +31,8 @@ use Moo::Role;
 use namespace::clean;
 
 const my $SPACE => q{ };
+const my $LEFT_SQUARE_BRACKET => q{[};
+const my $RIGHT_SQUARE_BRACKET => q{]};
 
 =head1 NAME
 
@@ -59,6 +61,21 @@ A class for collecting Lintian tags as they are found
 has profile => (is => 'rw');
 has context_tracker => (is => 'rw', default => sub { {} });
 
+=item pointed_hint (ARGS)
+
+Store found tags for later processing.
+
+=cut
+
+sub pointed_hint {
+    my ($self, $tagname, $pointer, @context) = @_;
+
+    $self->hint($tagname, @context,
+        $LEFT_SQUARE_BRACKET . $pointer->to_string . $RIGHT_SQUARE_BRACKET);
+
+    return;
+}
+
 =item hint (ARGS)
 
 Store found tags for later processing.
@@ -67,11 +84,6 @@ Store found tags for later processing.
 
 sub hint {
     my ($self, $tagname, @context_components) = @_;
-
-    my @meaningful = grep { length } @context_components;
-
-    # trim both ends of each item
-    s/^\s+|\s+$//g for @meaningful;
 
     my $tag = $self->profile->get_tag($tagname);
     unless (defined $tag) {
@@ -83,6 +95,11 @@ sub hint {
     # skip disabled tags
     return
       unless $self->profile->tag_is_enabled($tagname);
+
+    my @meaningful = grep { length } @context_components;
+
+    # trim both ends of each item
+    s/^\s+|\s+$//g for @meaningful;
 
     my $context_string = join($SPACE, @meaningful);
     if (exists $self->context_tracker->{$tagname}{$context_string}) {
