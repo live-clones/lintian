@@ -29,6 +29,8 @@ use v5.20;
 use warnings;
 use utf8;
 
+use Unicode::UTF8 qw(encode_utf8);
+
 use Moo;
 use namespace::clean;
 
