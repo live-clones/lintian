@@ -392,26 +392,6 @@ sub empty{
     return scalar keys %{$self->groups} == 0;
 }
 
-=item DEMOLISH
-
-Removes the lab and everything in it.  Any reference to an entry
-returned from this lab will immediately become invalid.
-
-=cut
-
-sub DEMOLISH {
-    my ($self, $in_global_destruction) = @_;
-
-    # change back to where we were; otherwise removal may fail
-    chdir($self->savedir)
-      or die encode_utf8('Cannot change to directory ' . $self->savedir);
-
-    path($self->basedir)->remove_tree
-      if length $self->basedir && -d $self->basedir;
-
-    return;
-}
-
 =back
 
 =head1 AUTHOR
