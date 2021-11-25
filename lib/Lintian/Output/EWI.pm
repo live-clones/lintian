@@ -25,6 +25,7 @@ use utf8;
 
 use Const::Fast;
 use HTML::HTML5::Entities;
+use List::Compare;
 use Term::ANSIColor ();
 use Text::Wrap;
 use Unicode::UTF8 qw(encode_utf8);
@@ -111,61 +112,114 @@ has tag_count_by_processable => (is => 'rw', default => sub { {} });
 
 =item issue_hints
 
-Print all hints passed in array. A separate arguments with processables
-is necessary to report in case no hints were found.
-
 =cut
 
 sub issue_hints {
     my ($self, $groups, $option) = @_;
 
-    my @processables = map { $_->get_processables } @{$groups // []};
+    my %sorter;
+    for my $group (@{$groups // []}) {
 
-    my @pending;
-    for my $processable (@processables) {
+        for my $processable ($group->get_processables) {
 
-        # get hints
-        my @hints = @{$processable->hints};
+            my $type = $processable->type;
+            my $type_priority = $TYPE_PRIORITY{$type};
 
-        # associate hints with processable
-        $_->processable($processable) for @hints;
+            for my $hint (@{$processable->hints}) {
 
-        # remove circular references
-        $processable->hints([]);
+                my $tag = $hint->tag;
+                my $override_status = defined $hint->override;
+                my $code_priority = $CODE_PRIORITY{$tag->code};
 
-        push(@pending, @hints);
+                my %for_output;
+                $for_output{hint} = $hint;
+                $for_output{processable} = $processable;
+
+                push(
+                    @{
+                        $sorter{$override_status}{$code_priority}{$tag->name}
+                          {$type_priority}{$processable->name}{$hint->context}
+                    },
+                    \%for_output
+                );
+            }
+        }
     }
 
-    my @sorted = sort {
-             defined $a->override <=> defined $b->override
-          || $CODE_PRIORITY{$a->tag->code} <=> $CODE_PRIORITY{$b->tag->code}
-          || $a->tag->name cmp $b->tag->name
-          || $TYPE_PRIORITY{$a->processable->type}
-          <=> $TYPE_PRIORITY{$b->processable->type}
-          || $a->processable->name cmp $b->processable->name
-          || $a->context cmp $b->context
-    } @pending;
+    for my $override_status (sort keys %sorter) {
 
-    $self->print_hint($_, $option) for @sorted;
+        my %by_code_priority = %{$sorter{$override_status}};
+
+        for my $code_priority (sort { $a <=> $b } keys %by_code_priority) {
+
+            my %by_tag_name = %{$by_code_priority{$code_priority}};
+
+            for my $tag_name (sort keys %by_tag_name) {
+
+                my %by_type_priority = %{$by_tag_name{$tag_name}};
+
+                for
+                  my $type_priority (sort { $a <=> $b }keys %by_type_priority){
+
+                    my %by_processable_name
+                      = %{$by_type_priority{$type_priority}};
+
+                    for my $processable_name (sort keys %by_processable_name) {
+
+                        my %by_context
+                          = %{$by_processable_name{$processable_name}};
+
+                        for my $context (sort keys %by_context) {
+
+                            my $for_output
+                              = $sorter{$override_status}{$code_priority}
+                              {$tag_name}{$type_priority}{$processable_name}
+                              {$context};
+
+                            for my $each (@{$for_output}) {
+
+                                my $hint = $each->{hint};
+                                my $processable = $each->{processable};
+
+                                $self->print_hint($hint, $processable,$option);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     return;
 }
 
-=item C<print_hint($pkg_info, $tag, $context, $override)>
-
-Print a hint.  The first two arguments are hash reference with the
-information about the package and the hint, $context is the context
-information for the hint (if any) as an array reference, and $override
-is either undef if the hint is not overridden or a hash with
-override info for this hint.
+=item C<print_hint>
 
 =cut
 
 sub print_hint {
-    my ($self, $hint, $option) = @_;
+    my ($self, $hint, $processable, $option) = @_;
 
     my $tag = $hint->tag;
     my $tag_name = $tag->name;
+
+    my @want_references = @{$option->{'display-source'} // []};
+    my @have_references = @{$tag->see_also};
+
+    # keep only the first word
+    s{^ ([\w-]+) \s }{$1}x for @have_references;
+
+    # drop anything in parentheses at the end
+    s{ [(] \S+ [)] $}{}x for @have_references;
+
+    # check if hint refers to the selected references
+    my $reference_lc= List::Compare->new(\@have_references, \@want_references);
+
+    my @found_references = $reference_lc->get_intersection;
+
+    return
+      if @want_references
+      && !@found_references;
 
     my $information = $hint->context;
     $information = $SPACE . $self->_quote_print($information)
@@ -176,7 +230,7 @@ sub print_hint {
     my $limit = $option->{'tag-display-limit'};
     if ($limit) {
 
-        my $processable_id = $hint->processable->identifier;
+        my $processable_id = $processable->identifier;
         my $emitted_count
           = $self->tag_count_by_processable->{$processable_id}{$tag_name}++;
 
@@ -223,13 +277,13 @@ sub print_hint {
       if defined $hint->screen;
 
     my $type = $EMPTY;
-    $type = $SPACE . $hint->processable->type
-      unless $hint->processable->type eq 'binary';
+    $type = $SPACE . $processable->type
+      unless $processable->type eq 'binary';
 
     say encode_utf8($code
           . $COLON
           . $SPACE
-          . $hint->processable->name
+          . $processable->name
           . $type
           . $COLON
           . $SPACE

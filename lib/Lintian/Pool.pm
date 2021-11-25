@@ -155,6 +155,7 @@ sub process{
         return;
     }
 
+    my %reported_count;
     my %override_count;
     my %ignored_overrides;
     my $unused_overrides = 0;
@@ -168,84 +169,59 @@ sub process{
 
         my $success= $group->process(\%ignored_overrides, $option);
 
-        # associate all hints with processable
         for my $processable ($group->get_processables){
-            $_->processable($processable) for @{$processable->hints};
-        }
 
-        my @hints = map { @{$_->hints} } $group->get_processables;
+            my @hints = @{$processable->hints};
 
-        # remove circular references
-        $_->hints([]) for $group->get_processables;
+            # remove circular references
+            $processable->hints([]);
 
-        my @reported = grep { !$_->override } @hints;
-        my @reported_trusted = grep { !$_->tag->experimental } @reported;
-        my @reported_experimental = grep { $_->tag->experimental } @reported;
+            my @reported = grep { !$_->override } @hints;
+            my @reported_trusted = grep { !$_->tag->experimental } @reported;
+            my @reported_experimental
+              = grep { $_->tag->experimental } @reported;
 
-        my @override = grep { $_->override } @hints;
-        my @override_trusted = grep { !$_->tag->experimental } @override;
-        my @override_experimental = grep { $_->tag->experimental } @override;
+            my @override = grep { $_->override } @hints;
+            my @override_trusted = grep { !$_->tag->experimental } @override;
+            my @override_experimental
+              = grep { $_->tag->experimental } @override;
 
-        $unused_overrides+= scalar grep {
-                 $_->tag->name eq 'mismatched-override'
-              || $_->tag->name eq 'unused-override'
-        } @hints;
+            $unused_overrides+= scalar grep {
+                     $_->tag->name eq 'mismatched-override'
+                  || $_->tag->name eq 'unused-override'
+            } @hints;
 
-        my %reported_count;
-        $reported_count{$_->tag->visibility}++ for @reported_trusted;
-        $reported_count{experimental} += scalar @reported_experimental;
-        $reported_count{override} += scalar @override;
+            $reported_count{$_->tag->visibility}++ for @reported_trusted;
+            $reported_count{experimental} += scalar @reported_experimental;
+            $reported_count{override} += scalar @override;
 
-        unless ($option->{'no-override'} || $option->{'show-overrides'}) {
+            unless ($option->{'no-override'} || $option->{'show-overrides'}) {
 
-            $override_count{$_->tag->visibility}++ for @override_trusted;
-            $override_count{experimental} += scalar @override_experimental;
+                $override_count{$_->tag->visibility}++ for @override_trusted;
+                $override_count{experimental} += scalar @override_experimental;
+            }
+
+            # discard disabled tags
+            @hints= grep { $PROFILE->tag_is_enabled($_->tag->name) } @hints;
+
+            # discard experimental tags
+            @hints = grep { !$_->tag->experimental } @hints
+              unless $option->{'display-experimental'};
+
+            # discard overridden tags
+            @hints = grep { !defined $_->override } @hints
+              unless $option->{'show-overrides'};
+
+            # discard outside the selected display level
+            @hints
+              = grep { $PROFILE->display_level_for_tag($_->tag->name) }@hints;
+
+            # put hints back into their respective processables
+            $processable->hints(\@hints);
         }
 
         ${$exit_code_ref} = 2
           if $success && any { $reported_count{$_} } @{$option->{'fail-on'}};
-
-        # discard disabled tags
-        @hints= grep { $PROFILE->tag_is_enabled($_->tag->name) } @hints;
-
-        # discard experimental tags
-        @hints = grep { !$_->tag->experimental } @hints
-          unless $option->{'display-experimental'};
-
-        # discard overridden tags
-        @hints = grep { !defined $_->override } @hints
-          unless $option->{'show-overrides'};
-
-        # discard outside the selected display level
-        @hints= grep { $PROFILE->display_level_for_tag($_->tag->name) }@hints;
-
-        my $reference_limit = $option->{'display-source'} // [];
-        if (@{$reference_limit}) {
-
-            my @topic_hints;
-            for my $hint (@hints) {
-                my @references = split(/,/, $hint->tag->references);
-
-                # retain the first word
-                s/^([\w-]+)\s.*/$1/ for @references;
-
-                # remove anything in parentheses at the end
-                s/\(\S+\)$// for @references;
-
-                # check if hint refers to the selected references
-                my $referencelc
-                  = List::Compare->new(\@references, $reference_limit);
-                next
-                  unless $referencelc->get_intersection;
-
-                push(@topic_hints, $hint);
-            }
-
-            @hints = @topic_hints;
-        }
-
-        # put hints back into their respective processables
-        push(@{$_->processable->hints}, $_) for @hints;
 
         # interruptions can leave processes behind (manpages); wait and reap
         if (${$exit_code_ref} == 1) {

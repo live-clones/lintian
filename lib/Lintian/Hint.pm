@@ -53,7 +53,6 @@ Common facilities for Lintian tags found and to be issued
 =item tag
 =item override
 =item screen
-=item processable
 
 =item context
 
@@ -65,7 +64,6 @@ has arguments => (is => 'rw', default => sub { [] });
 has tag => (is => 'rw');
 has override => (is => 'rw');
 has screen => (is => 'rw');
-has processable => (is => 'rw');
 
 sub context {
     my ($self) = @_;
