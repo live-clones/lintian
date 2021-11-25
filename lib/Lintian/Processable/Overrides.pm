@@ -24,6 +24,8 @@ use utf8;
 use Const::Fast;
 use List::SomeUtils qw(none true);
 
+use Lintian::Pointer::Item;
+
 use Moo::Role;
 use namespace::clean;
 
@@ -66,6 +68,10 @@ sub parse_overrides {
 
     my $position = 1;
     for my $line (@lines) {
+
+        my $pointer = Lintian::Pointer::Item->new;
+        $pointer->item($self->override_file);
+        $pointer->position($position);
 
         my $remaining = $line;
 
@@ -124,24 +130,24 @@ sub parse_overrides {
 
         # require and remove colon when any package details are present
         if ($require_colon && $remaining !~ s/^\s*:\s*//) {
-            $self->hint('malformed-override',
-                "Expected a colon in line $position");
+            $self->pointed_hint('malformed-override', $pointer,
+                'Expected a colon');
             next;
         }
 
         my $hint = $remaining;
 
         if (@architectures && $self->architecture eq 'all') {
-            $self->hint('malformed-override',
-                "Architecture list for arch:all package in line $position");
+            $self->pointed_hint('malformed-override', $pointer,
+                'Architecture list for arch:all package');
             next;
         }
 
         my @invalid
           = grep { !$self->profile->architectures->valid_restriction($_) }
           @architectures;
-        $self->hint('malformed-override',
-            "Unknown architecture wildcard $_ in line $position")
+        $self->pointed_hint('malformed-override', $pointer,
+            "Unknown architecture wildcard $_")
           for @invalid;
 
         next
@@ -152,8 +158,8 @@ sub parse_overrides {
 
         # confirm it is either all or none
         unless ($negations == @architectures || $negations == 0) {
-            $self->hint('malformed-override',
-                "Inconsistent architecture negation in line $position");
+            $self->pointed_hint('malformed-override', $pointer,
+                'Inconsistent architecture negation');
             next;
         }
 
@@ -173,7 +179,8 @@ sub parse_overrides {
 
         my ($tagname, $context) = split($SPACE, $hint, 2);
 
-        $self->hint('malformed-override',"Cannot parse line $position: $line")
+        $self->pointed_hint('malformed-override', $pointer,
+            "Cannot parse line: $line")
           unless length $tagname;
 
         $context //= $EMPTY;
@@ -232,8 +239,10 @@ sub parse_overrides {
             my @same_context
               = ($override_data{$tagname}{$context}{line}, $current{line});
 
-            $self->hint('duplicate-override-context', $tagname, 'lines',
-                sort @same_context);
+            my $lines = join($SPACE, sort @same_context);
+
+            $self->pointed_hint('duplicate-override-context', $pointer,
+                $tagname, "(lines $lines)");
 
             next;
         }
