@@ -309,8 +309,7 @@ sub load {
         for my $tagpath (@tagpaths) {
 
             my $tag = Lintian::Tag->new;
-            $tag->profile($self);
-            $tag->load($tagpath);
+            $tag->load($self, $tagpath);
 
             die encode_utf8("Tag in $tagpath is not associated with a check")
               unless length $tag->check;

@@ -36,10 +36,7 @@ use Moo;
 use namespace::clean;
 
 const my $EMPTY => q{};
-const my $SPACE => q{ };
 const my $SLASH => q{/};
-const my $LEFT_PARENTHESIS => q{(};
-const my $RIGHT_PARENTHESIS => q{)};
 
 # Ordered lists of visibilities, used for display level parsing.
 our @VISIBILITIES= qw(classification pedantic info warning error);
@@ -150,8 +147,6 @@ has screens => (
     coerce => sub { my ($arrayref) = @_; return ($arrayref // []); },
     default => sub { [] });
 
-has profile => (is => 'rw');
-
 =item load(PATH)
 
 Loads a tag description from PATH.
@@ -159,7 +154,10 @@ Loads a tag description from PATH.
 =cut
 
 sub load {
-    my ($self, $tagpath) = @_;
+    my ($self, $profile, $tagpath) = @_;
+
+    croak encode_utf8('No profile')
+      unless defined $profile;
 
     croak encode_utf8("Cannot read tag file from $tagpath")
       unless -r $tagpath;
@@ -188,7 +186,9 @@ sub load {
     @see_also = $fields->trimmed_list('Ref', qr{,})
       unless @see_also;
 
-    my @markdown = map { $self->markdown_citation($_) } @see_also;
+    my $manuals = $profile->manual_references;
+
+    my @markdown = map { $manuals->markdown_citation($_) } @see_also;
     $self->see_also(\@markdown);
 
     $self->renamed_from([$fields->trimmed_list('Renamed-From')]);
@@ -208,7 +208,7 @@ sub load {
 
         my @candidates = map {
             ("$_/lib/Lintian/Screen/$relative.pm", "$_/screens/relative.pm")
-        } @{$self->profile->safe_include_dirs};
+        } @{$profile->safe_include_dirs};
 
         my $absolute = first_value { -e } @candidates;
         require $absolute;
@@ -227,7 +227,7 @@ sub load {
 
         my @see_also_screen = $section->trimmed_list('See-Also', qr{,});
         my @markdown_screen
-          = map { $self->markdown_citation($_) } @see_also_screen;
+          = map { $manuals->markdown_citation($_) } @see_also_screen;
         $screen->see_also(\@markdown_screen);
 
         push(@screens, $screen);
@@ -261,109 +261,6 @@ sub code {
     my ($self) = @_;
 
     return $CODES{$self->visibility};
-}
-
-=item markdown_citation
-
-=cut
-
-sub markdown_citation {
-    my ($self, $citation) = @_;
-
-    my $markdown;
-
-    if ($citation =~ /^([\w-]+)\s+(.+)$/) {
-        $markdown = $self->markdown_from_manuals($1, $2);
-
-    } elsif ($citation =~ /^([\w.-]+)\((\d\w*)\)$/) {
-        my ($name, $section) = ($1, $2);
-        my $url
-          ="https://manpages.debian.org/cgi-bin/man.cgi?query=$name&amp;sektion=$section";
-        my $hyperlink = markdown_hyperlink($citation, $url);
-        $markdown = "the $hyperlink manual page";
-
-    } elsif ($citation =~ m{^(ftp|https?)://}) {
-        $markdown = markdown_hyperlink(undef, $citation);
-
-    } elsif ($citation =~ m{^/}) {
-        $markdown = markdown_hyperlink($citation, "file://$citation");
-
-    } elsif ($citation =~ m{^(?:Bug)?#(\d+)$}) {
-        my $bugnumber = $1;
-        $markdown
-          = markdown_hyperlink($citation,"https://bugs.debian.org/$bugnumber");
-    }
-
-    return $markdown // $citation;
-}
-
-=item markdown_from_manuals
-
-=cut
-
-sub markdown_from_manuals {
-    my ($self, $volume, $section) = @_;
-
-    croak encode_utf8('No profile')
-      unless defined $self->profile;
-
-    my $MANUALS = $self->profile->manual_references;
-
-    return $EMPTY
-      unless $MANUALS->recognizes($volume);
-
-    my $entry = $MANUALS->value($volume);
-
-    # start with the citation to the overall manual.
-    my $title = $entry->{$EMPTY}{title};
-    my $url   = $entry->{$EMPTY}{url};
-
-    my $markdown = markdown_hyperlink($title, $url);
-
-    return $markdown
-      unless length $section;
-
-    # Add the section information, if present, and a direct link to that
-    # section of the manual where possible.
-    if ($section =~ /^[A-Z]+$/) {
-        $markdown .= " appendix $section";
-
-    } elsif ($section =~ /^\d+$/) {
-        $markdown .= " chapter $section";
-
-    } elsif ($section =~ /^[A-Z\d.]+$/) {
-        $markdown .= " section $section";
-    }
-
-    return $markdown
-      unless exists $entry->{$section};
-
-    my $section_title = $entry->{$section}{title};
-    my $section_url   = $entry->{$section}{url};
-
-    $markdown
-      .= $SPACE
-      . $LEFT_PARENTHESIS
-      . markdown_hyperlink($section_title, $section_url)
-      . $RIGHT_PARENTHESIS;
-
-    return $markdown;
-}
-
-=item markdown_hyperlink
-
-=cut
-
-sub markdown_hyperlink {
-    my ($text, $url) = @_;
-
-    return $text
-      unless length $url;
-
-    return "<$url>"
-      unless length $text;
-
-    return "[$text]($url)";
 }
 
 =back
