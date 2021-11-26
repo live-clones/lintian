@@ -31,6 +31,7 @@ use File::Spec;
 use List::Compare;
 use List::SomeUtils qw(any none uniq firstval);
 use POSIX qw(ENOENT);
+use Syntax::Keyword::Try;
 use Time::HiRes qw(gettimeofday tv_interval);
 use Time::Piece;
 use Unicode::UTF8 qw(encode_utf8);
@@ -200,9 +201,13 @@ sub process {
             say {*STDERR} encode_utf8('Loading overrides file (if any) ...')
               if $option->{debug};
 
-            eval {$declared_overrides = $processable->overrides;};
-            if (my $err = $@) {
-                die encode_utf8($err) if not ref $err or $err->errno != ENOENT;
+            try {
+                $declared_overrides = $processable->overrides;
+
+            } catch {
+                my $err = $@;
+                die encode_utf8($err)
+                  if !ref $err || $err->errno != ENOENT;
             }
 
             my %alias = %{$self->profile->known_aliases};
@@ -295,12 +300,11 @@ sub process {
             $check->group($self);
             $check->profile($self->profile);
 
-            eval { $check->run };
-            my $err = $@;
-            my $raw_res = tv_interval($timer);
+            try {
+                $check->run
 
-            if ($err) {
-                my $message = $err;
+            } catch {
+                my $message = $@;
                 $message
                   .= "warning: cannot run $name check on package $procid\n";
                 $message .= "skipping check of $procid\n";
@@ -311,7 +315,9 @@ sub process {
                 next;
             }
 
+            my $raw_res = tv_interval($timer);
             my $tres = sprintf('%.3fs', $raw_res);
+
             say {*STDERR} encode_utf8("Check $name for $procid done ($tres)")
               if $option->{debug};
             say {*STDERR} encode_utf8("$procid,check/$name,$raw_res")

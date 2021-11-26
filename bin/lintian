@@ -50,6 +50,7 @@ use List::Compare;
 use List::SomeUtils qw(any none first_value);
 use Path::Tiny;
 use POSIX qw(:sys_wait_h);
+use Syntax::Keyword::Try;
 use Term::ReadKey;
 use Unicode::UTF8 qw(encode_utf8 decode_utf8);
 
@@ -676,7 +677,7 @@ for my $subject (@subjects) {
 "bad package file name $subject (neither .deb, .udeb, .ddeb, .changes, .dsc or .buildinfo file)\n"
     ) unless $subject =~ /\.(?:[u|d]?deb|dsc|changes|buildinfo)$/;
 
-    eval {
+    try {
         # create a new group
         my $group = Lintian::Group->new;
         $group->pooldir($pool->basedir);
@@ -713,8 +714,8 @@ for my $subject (@subjects) {
         }
 
         $pool->add_group($group);
-    };
-    if ($@) {
+
+    } catch {
         warn encode_utf8("Skipping $subject: $@\n");
         $exit_code = 1;
     }

@@ -29,6 +29,7 @@ use Const::Fast;
 use Date::Parse qw(str2time);
 use List::SomeUtils qw(all);
 use Path::Tiny;
+use Syntax::Keyword::Try;
 use Text::Balanced qw(extract_delimited);
 use Unicode::UTF8 qw(valid_utf8 decode_utf8 encode_utf8);
 
@@ -895,10 +896,14 @@ sub is_open_ok {
     return 0
       if $path_info & ACCESS_INFO;
 
-    eval {$self->_check_open;};
+    try {
+        $self->_check_open;
 
-    return 0
-      if $@;
+    } catch {
+        return 0;
+
+        # perlcritic 1.140-1 requires the semicolon on the next line
+    };
 
     return 1;
 }

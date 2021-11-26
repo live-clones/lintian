@@ -25,6 +25,7 @@ use warnings;
 use utf8;
 
 use List::Compare;
+use Syntax::Keyword::Try;
 
 use Lintian::Deb822::File;
 use Lintian::Pointer::Item;
@@ -59,14 +60,17 @@ sub source {
 sub check_dep5_copyright {
     my ($self, $copyright_file) = @_;
 
-    my $contents = $copyright_file->decoded_utf8;
+    my $deb822 = Lintian::Deb822::File->new;
 
     my @sections;
+    try {
+        @sections = $deb822->read_file($copyright_file->unpacked_path);
 
-    my $deb822 = Lintian::Deb822::File->new;
-    eval { @sections = $deb822->parse_string($contents); };
+    } catch {
+        # may not be in DEP 5 format
+        return;
+    }
 
-    # may not be in DEP 5 format
     return
       unless @sections;
 

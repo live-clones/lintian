@@ -55,6 +55,7 @@ use Exporter qw(import);
 use File::Temp qw(tempfile);
 use List::Util qw(shuffle);
 use Path::Tiny;
+use Syntax::Keyword::Try;
 use Unicode::UTF8 qw(encode_utf8);
 use YAML::XS ();
 
@@ -84,15 +85,18 @@ sub load_state_cache {
 
     my $yaml = path($state_file)->slurp;
 
-    eval {$state = YAML::XS::Load($yaml);};
-    # Not sure what Load does in case of issues; perldoc YAML says
-    # very little about it.  Based on YAML::Error, I guess it will
-    # write stuff to STDERR and use die/croak, but it remains a
-    # guess.
-    if (my $err = $@) {
+    try {
+        $state = YAML::XS::Load($yaml);
+
+    } catch {
+        # Not sure what Load does in case of issues; perldoc YAML says
+        # very little about it.  Based on YAML::Error, I guess it will
+        # write stuff to STDERR and use die/croak, but it remains a
+        # guess.
         die encode_utf8(
-            "$state_file was invalid; please fix or remove it.\n$err");
+            "$state_file was invalid; please fix or remove it.\n$@");
     }
+
     $state //= {};
 
     if (ref($state) ne 'HASH') {
@@ -118,7 +122,7 @@ sub save_state_cache {
     # atomic replacement of the state file; not a substitute for
     # proper locking, but it will at least ensure that the file
     # is in a consistent state.
-    eval {
+    try {
         print {$tmp_fd} encode_utf8(YAML::XS::Dump($state));
 
         close($tmp_fd) or die encode_utf8("close $tmp_path: $!");
@@ -129,15 +133,19 @@ sub save_state_cache {
 
         rename($tmp_path, $state_file)
           or die encode_utf8("rename $tmp_path -> $state_file: $!");
-    };
-    if (my $err = $@) {
+
+    } catch {
+        my $err = $@;
         if (-e $tmp_path) {
             # Ignore error as we have a more important one
             unlink($tmp_path)
               or warn encode_utf8("Cannot unlink $tmp_path");
         }
         die encode_utf8($err);
-    }
+
+        # perlcritic 1.140-1 requires the semicolon on the next line
+    };
+
     return 1;
 }
 

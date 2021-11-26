@@ -25,6 +25,7 @@ use warnings;
 use utf8;
 
 use Const::Fast;
+use Syntax::Keyword::Try;
 
 use Lintian::Deb822::File;
 
@@ -49,9 +50,12 @@ sub source {
         my $deb822 = Lintian::Deb822::File->new;
 
         my @sections;
-        eval { @sections = $deb822->parse_string($file->decoded_utf8) };
-        next
-          if length $@;
+        try {
+            @sections = $deb822->read_file($file->unpacked_path)
+
+        } catch {
+            next;
+        }
 
         my $count = 1;
         for my $section (@sections) {

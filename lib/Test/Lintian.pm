@@ -74,6 +74,7 @@ use File::Basename qw(basename);
 use File::Find ();
 use List::SomeUtils qw{any};
 use Path::Tiny;
+use Syntax::Keyword::Try;
 use Unicode::UTF8 qw(valid_utf8 decode_utf8 encode_utf8);
 
 use Lintian::Spelling qw(check_spelling);
@@ -167,14 +168,20 @@ sub test_check_desc {
             "File $desc_file does not use a national encoding.");
         next
           unless valid_utf8($bytes);
+
         my $contents = decode_utf8($bytes);
-        eval {($header, @tagpara) = parse_dpkg_control_string($contents);};
-        if (my $err = $@) {
+
+        try {
+            ($header, @tagpara) = parse_dpkg_control_string($contents);
+
+        } catch {
+            my $err = $@;
             $err =~ s/ at .*? line \d+\s*\n//;
             $builder->ok(0, "Cannot parse $desc_file");
             $builder->diag("Error: $err");
             next;
         }
+
         my $content_type = 'Check';
         my $cname = $header->{'Check-Script'}//$EMPTY;
         my $ctype = $header->{'Type'} // $EMPTY;
@@ -310,13 +317,16 @@ This sub will do one test per profile loaded.
 
 sub test_load_profiles {
     my ($dir, @inc) = @_;
+
     my $builder = $CLASS->builder;
     my $absdir = realpath $dir;
     my $sre;
     my %opt = ('no_chdir' => 1,);
+
     if (not defined $absdir) {
         die encode_utf8("$dir cannot be resolved: $!");
     }
+
     $absdir = "$absdir/profiles";
     $sre = qr{\Q$absdir\E/};
 
@@ -331,11 +341,15 @@ sub test_load_profiles {
 
         my $profile = Lintian::Profile->new;
 
-        eval {$profile->load($profname, \@inc, 0);};
-        my $err = $@;
+        try {
+            $profile->load($profname, \@inc, 0);
 
-        $builder->ok($profile, "$profname is loadable.")
-          or $builder->diag("Load error: $err\n");
+        } catch {
+            $builder->diag("Load error: $@\n");
+            $profile = 0;
+        }
+
+        $builder->ok($profile, "$profname is loadable.");
     };
 
     File::Find::find(\%opt, $absdir);
@@ -410,17 +424,17 @@ sub test_load_checks {
     foreach my $checkname (@checknames) {
 
         my $path = $profile->check_path_by_name->{$checkname};
-        eval { require $path; };
-        if (
-            !$builder->is_eq(
-                $@//$EMPTY, $EMPTY, "Check $checkname can be loaded"
-            )
-        ){
+        try {
+            require $path;
+
+        } catch {
             $builder->skip(
                 "Cannot check if $checkname has entry points due to load error"
             );
             next;
         }
+
+        $builder->ok(1, "Check $checkname can be loaded");
 
         my $module = $profile->check_module_by_name->{$checkname};
 

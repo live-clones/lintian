@@ -24,6 +24,7 @@ use utf8;
 
 use Const::Fast;
 use Path::Tiny;
+use Syntax::Keyword::Try;
 use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Deb822::Parser qw(parse_dpkg_control_string);
@@ -120,15 +121,13 @@ sub parse_string {
 
     my (@paragraphs, @positions);
 
-    eval {
+    try {
         @paragraphs= parse_dpkg_control_string($contents, $flags,\@positions);
-    };
 
-    if (length $@) {
-        chomp $@;
-        $@ =~ s/^syntax error at //;
-        die encode_utf8("syntax error in $@\n")
-          if length $@;
+    } catch {
+        # ignore syntax errors here
+        die map { encode_utf8($_) } $@
+          unless $@ =~ /syntax error/;
     }
 
     my $index = 0;

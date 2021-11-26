@@ -28,10 +28,12 @@ use utf8;
 use Const::Fast;
 use List::SomeUtils qw(none);
 use Path::Tiny;
+use Syntax::Keyword::Try;
 use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Deb822::File;
 use Lintian::Deb822::Parser qw(:constants);
+use Lintian::Pointer::Item;
 use Lintian::Relation;
 use Lintian::Util qw($PKGNAME_REGEX);
 
@@ -94,20 +96,24 @@ sub source {
     my @utf8 = grep { $_->is_valid_utf8 } @files;
     for my $file (@utf8) {
 
-        my $contents = $file->decoded_utf8;
         my $deb822 = Lintian::Deb822::File->new;
 
         my @templates;
-        eval {
+        try {
             @templates
-              = $deb822->parse_string($contents, DCTRL_DEBCONF_TEMPLATE);
-        };
+              = $deb822->read_file($file->unpacked_path,
+                DCTRL_DEBCONF_TEMPLATE);
 
-        if (length $@) {
-            chomp $@;
+        } catch {
+            my $error = $@;
+            chomp $error;
+            $error =~ s{^syntax error in }{};
 
-            $@ =~ s/^syntax error in //;
-            $self->hint('syntax-error-in-debconf-template',"$file: $@");
+            my $pointer = Lintian::Pointer::Item->new;
+            $pointer->item($file);
+
+            $self->pointed_hint('syntax-error-in-debconf-template',
+                $pointer, $error);
 
             next;
         }
@@ -210,25 +216,25 @@ sub installable {
     if ($seentemplates) {
 
         if ($ctrl_templates->is_valid_utf8) {
-            my $contents = $ctrl_templates->decoded_utf8;
             my $deb822 = Lintian::Deb822::File->new;
 
-            eval {
+            try {
                 # $seentemplates (above) will be false if $ctrl_templates is a
                 # symlink or not a file, so this should be safe without
                 # (re-checking) with -f/-l.
-                @templates
-                  = $deb822->parse_string($contents,DCTRL_DEBCONF_TEMPLATE);
-            };
+                @templates= $deb822->read_file($ctrl_templates->unpacked_path,
+                    DCTRL_DEBCONF_TEMPLATE);
 
-            if (length $@) {
-                chomp $@;
+            } catch {
+                my $error = $@;
+                chomp $error;
+                $error =~ s{^syntax error in }{};
 
-                $@ =~ s/^syntax error in //;
-                $self->hint(
-                    'syntax-error-in-debconf-template',
-                    "DEBIAN/$ctrl_templates: $@"
-                );
+                my $pointer = Lintian::Pointer::Item->new;
+                $pointer->item($ctrl_templates);
+
+                $self->pointed_hint('syntax-error-in-debconf-template',
+                    $pointer, $error);
 
                 @templates = ();
             }

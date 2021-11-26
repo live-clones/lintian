@@ -41,6 +41,7 @@ use Const::Fast;
 use IPC::Open3;
 use IO::Select;
 use Symbol;
+use Syntax::Keyword::Try;
 use Unicode::UTF8 qw(encode_utf8);
 
 # read up to 40kB at a time.  this happens to be 4096 "tar records"
@@ -89,13 +90,14 @@ sub unpack_and_index_piped_tar {
     my @produce_command = @{$command};
 
     my $produce_pid;
-    eval{
+    try {
         $produce_pid = open3(
             $produce_stdin, $produce_stdout,
             $produce_stderr, @produce_command
         );
-    };
-    die map { encode_utf8($_) } $@ if $@;
+    } catch {
+        die map { encode_utf8($_) } $@;
+    }
 
     close $produce_stdin;
 
@@ -113,13 +115,14 @@ sub unpack_and_index_piped_tar {
     );
 
     my $extract_pid;
-    eval{
+    try {
         $extract_pid = open3(
             $extract_stdin, $extract_stdout,
             $extract_stderr, @extract_command
         );
-    };
-    die map { encode_utf8($_) } $@ if $@;
+    } catch {
+        die map { encode_utf8($_) } $@;
+    }
 
     push(@pids, $extract_pid);
 
@@ -135,11 +138,12 @@ sub unpack_and_index_piped_tar {
     my @named_command = ('tar', @index_options);
 
     my $named_pid;
-    eval{
+    try {
         $named_pid
           = open3($named_stdin, $named_stdout, $named_stderr, @named_command);
-    };
-    die map { encode_utf8($_) } $@ if $@;
+    } catch {
+        die map { encode_utf8($_) } $@;
+    }
 
     push(@pids, $named_pid);
 
@@ -152,13 +156,14 @@ sub unpack_and_index_piped_tar {
     my @numeric_command = ('tar', '--numeric-owner', @index_options);
 
     my $numeric_pid;
-    eval{
+    try {
         $numeric_pid = open3(
             $numeric_stdin, $numeric_stdout,
             $numeric_stderr, @numeric_command
         );
-    };
-    die map { encode_utf8($_) } $@ if $@;
+    } catch {
+        die map { encode_utf8($_) } $@;
+    }
 
     push(@pids, $numeric_pid);
 

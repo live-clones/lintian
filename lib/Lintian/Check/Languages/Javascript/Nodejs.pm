@@ -28,6 +28,7 @@ use Const::Fast;
 use JSON::MaybeXS;
 use List::SomeUtils qw(any);
 use Path::Tiny;
+use Syntax::Keyword::Try;
 use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Relation;
@@ -189,8 +190,13 @@ sub visit_installed_files {
 
     # Look only valid package.json files
     my $pac;
-    eval {$pac = decode_json($content);};
-    return if $@ or not length $pac->{name};
+    try {
+        $pac = decode_json($content);
+        die
+          unless length $pac->{name};
+    } catch {
+        return;
+    }
 
     # Store node module name & version (classification)
     $self->hint('nodejs-module', $pac->{name},$pac->{version} // 'undef',

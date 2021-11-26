@@ -29,6 +29,7 @@ use utf8;
 use Const::Fast;
 use List::Compare;
 use List::SomeUtils qw(any all none uniq);
+use Syntax::Keyword::Try;
 use Text::Glob qw(match_glob);
 use Time::Piece;
 use XML::LibXML;
@@ -244,12 +245,14 @@ sub check_dep5_copyright {
     my $deb822 = Lintian::Deb822::File->new;
 
     my @sections;
-    eval { @sections = $deb822->parse_string($contents); };
+    try {
+        @sections = $deb822->read_file($copyright_file->unpacked_path);
 
-    if (length $@) {
-        chomp $@;
+    } catch {
+        my $error = $@;
+        chomp $error;
+        $error =~ s{^syntax error in }{};
 
-        $@ =~ s/^syntax error in //;
         $self->pointed_hint('syntax-error-in-dep5-copyright',
             $rough_pointer, $@);
 
@@ -859,7 +862,14 @@ sub check_dep5_copyright {
             $parser->set_option('no_network', 1);
 
             my $file = $self->processable->patched->resolve_path($name);
-            my $doc = eval {$parser->parse_file($file->unpacked_path);};
+            my $doc;
+            try {
+                $doc = $parser->parse_file($file->unpacked_path);
+
+            } catch {
+                next;
+            }
+
             next
               unless $doc;
 

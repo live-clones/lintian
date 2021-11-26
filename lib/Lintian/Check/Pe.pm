@@ -25,6 +25,7 @@ use warnings;
 use utf8;
 
 use Const::Fast;
+use Syntax::Keyword::Try;
 use Unicode::UTF8 qw(encode_utf8);
 
 use Moo;
@@ -58,7 +59,7 @@ sub visit_installed_files {
     open(my $fd, '<', $file->unpacked_path)
       or die encode_utf8('Cannot open ' . $file->unpacked_path);
 
-    eval {
+    try {
         # offset to main header
         seek($fd, $MAIN_HEADER, 0)
           or die encode_utf8("seek: $!");
@@ -75,7 +76,10 @@ sub visit_installed_files {
         # get DLLCharacteristics value
         read($fd, $buf, 2)
           or die encode_utf8("read: $!");
-    };
+
+    } catch {
+        die $@;
+    }
 
     my $characteristics = unpack('v', $buf);
     my %features = (

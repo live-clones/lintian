@@ -56,19 +56,14 @@ Lintian::Deb822::Parser - Lintian's generic Deb822 parser functions
 =head1 SYNOPSIS
 
  use Lintian::Deb822::Parser qw(read_dpkg_control);
- 
- my (@paragraphs);
- eval { @paragraphs = read_dpkg_control('some/debian/ctrl/file'); };
- if ($@) {
-    # syntax error etc.
-    die encode_utf8("ctrl/file: $@");
- }
- 
- foreach my $para (@paragraphs) {
-    my $value = $para->{'some-field'};
-    if (defined $value) {
-        # ...
-    }
+
+ my @paragraphs;
+ try {
+     @paragraphs = read_dpkg_control('some/debian/ctrl/file');
+
+ } catch {
+     # syntax error etc.
+     die encode_utf8("ctrl/file: $@");
  }
 
 =head1 DESCRIPTION

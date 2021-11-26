@@ -26,6 +26,7 @@ use utf8;
 
 use Const::Fast;
 use List::SomeUtils qw(any none);
+use Syntax::Keyword::Try;
 use Unicode::UTF8 qw(valid_utf8 decode_utf8);
 
 use Lintian::Deb822::File;
@@ -66,9 +67,12 @@ sub visit_patched_files {
     my $deb822 = Lintian::Deb822::File->new;
 
     my @sections;
-    eval { @sections = $deb822->parse_string($header) };
-    return
-      if length $@;
+    try {
+        @sections = $deb822->parse_string($header);
+
+    } catch {
+        return;
+    }
 
     return
       unless @sections;

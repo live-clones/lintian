@@ -29,6 +29,7 @@ use utf8;
 use Const::Fast;
 use List::Compare;
 use List::Util qw(none);
+use Syntax::Keyword::Try;
 use YAML::XS;
 
 # default changed to false in 0.81; enable then in .perlcriticrc
@@ -103,9 +104,14 @@ sub source {
       if $YAML::XS::VERSION < $HAS_LOAD_BLESSED;
 
     my $yaml;
-    eval { $yaml = YAML::XS::LoadFile($file->unpacked_path); };
+    try {
+        $yaml = YAML::XS::LoadFile($file->unpacked_path);
 
-    if ($@ || !defined $yaml) {
+        die
+          unless defined $yaml;
+
+    } catch {
+
         my $message = $@;
         my ($reason, $document, $line, $column)= (
             $message =~ m{

@@ -25,6 +25,7 @@ use warnings;
 use utf8;
 
 use Path::Tiny;
+use Syntax::Keyword::Try;
 use Unicode::UTF8 qw(valid_utf8 decode_utf8 encode_utf8);
 
 use Lintian::Deb822::File;
@@ -95,9 +96,10 @@ sub load {
     my $deb822 = Lintian::Deb822::File->new;
 
     my @sections;
-    eval {@sections = $deb822->parse_string($contents);};
+    try {
+        @sections = $deb822->parse_string($contents);
 
-    if (length $@) {
+    } catch {
         # If it is a syntax error, ignore it (we emit
         # syntax-error-in-control-file in this case via
         # control-file).

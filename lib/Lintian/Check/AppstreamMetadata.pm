@@ -36,6 +36,7 @@ use utf8;
 use autodie qw(open);
 
 use File::Basename qw(basename);
+use Syntax::Keyword::Try;
 use XML::LibXML;
 
 use Moo;
@@ -119,10 +120,14 @@ sub check_modalias {
     my $parser = XML::LibXML->new;
     $parser->set_option('no_network', 1);
 
-    my $doc = eval {$parser->parse_file($metadatafile->unpacked_path);};
-    if ($@) {
+    my $doc;
+    try {
+        $doc = $parser->parse_file($metadatafile->unpacked_path);
+
+    } catch {
         $self->hint('appstream-metadata-invalid',
             basename($metadatafile->unpacked_path));
+
         return 0;
     }
 
