@@ -78,7 +78,6 @@ Depends:
  libtime-duration-perl,
  libtime-moment-perl,
  libtimedate-perl,
- libtry-tiny-perl,
  libtype-tiny-perl,
  libunicode-utf8-perl,
  liburi-perl,

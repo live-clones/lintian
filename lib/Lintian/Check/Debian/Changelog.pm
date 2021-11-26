@@ -32,7 +32,7 @@ use Email::Address::XS;
 use List::Util qw(first);
 use List::SomeUtils qw(any all uniq);
 use Path::Tiny;
-use Try::Tiny;
+use Syntax::Keyword::Try;
 use Unicode::UTF8 qw(valid_utf8 decode_utf8 encode_utf8);
 
 use Lintian::Inspect::Changelog;
@@ -95,11 +95,11 @@ sub source {
 
     } catch {
         my $indicator= ($processable->native ? $EMPTY : 'non-') . 'native';
-        $self->hint(
-            'malformed-debian-changelog-version',
-            $versionstring . " (for $indicator)"
-        );
+        $self->hint('malformed-debian-changelog-version',
+            $versionstring, "(for $indicator)");
         undef $latest_version;
+
+        # perlcritic 1.140-1 requires a semicolon on the next line
     };
 
     if (defined $latest_version) {
@@ -174,7 +174,7 @@ sub source {
                 $previous_entry->Version . " (for $indicator)"
             );
             undef $previous_version;
-        };
+        }
 
         if ($latest_timestamp && $previous_timestamp) {
 
