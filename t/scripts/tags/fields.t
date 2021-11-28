@@ -107,19 +107,19 @@ for my $tagpath (@tagpaths) {
     is(path($tagpath)->basename,
         "$tagname.tag", "Tagfile for $tagname is named $tagname.tag");
 
-    my $checkname = $fields->value('Check');
+    my $check_name = $fields->value('Check');
 
     # tag is associated with a check
-    ok(length $checkname, "Tag $tagname is associated with a check");
+    ok(length $check_name, "Tag $tagname is associated with a check");
 
     if ($fields->value('Name-Spaced') eq 'yes') {
 
-        $tagname = $checkname . $SLASH . $tagname;
+        $tagname = $check_name . $SLASH . $tagname;
 
         # encapsulating directory is name of check
         my $subdir = path($tagpath)->parent->relative('tags');
-        is($subdir, $checkname,
-            "Tag $tagname is in directory named '$checkname'");
+        is($subdir, $check_name,
+            "Tag $tagname is in directory named '$check_name'");
 
     } else {
         # encapsulating directory is first letter of tag's name
@@ -137,7 +137,7 @@ for my $tagpath (@tagpaths) {
       for @disallowed;
 
     ok(
-        length $profile->check_module_by_name->{$checkname},
+        length $profile->check_module_by_name->{$check_name},
         "Tag $tagname is associated with a valid check"
     );
 

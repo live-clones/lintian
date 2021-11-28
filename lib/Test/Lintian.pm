@@ -409,50 +409,53 @@ only be processed if it has the proper extension (i.e. with I<.desc>).
 =cut
 
 sub test_load_checks {
-    my ($opts, $dir, @checknames) = @_;
+    my ($opts, $dir, @check_names) = @_;
 
     my $builder = $CLASS->builder;
 
-    unless (@checknames) {
+    unless (@check_names) {
         my $find_opt = {'want-check-name' => 1,};
         $find_opt->{'filter'} = $opts->{'filter'} if exists $opts->{'filter'};
-        @checknames = _find_check($find_opt, $dir);
+        @check_names = _find_check($find_opt, $dir);
     } else {
         $builder->skip('Given an explicit list of checks');
     }
 
     $builder->skip('No desc files found')
-      unless @checknames;
+      unless @check_names;
 
     my $profile = load_profile_for_test();
 
-    foreach my $checkname (@checknames) {
+    foreach my $check_name (@check_names) {
 
-        my $path = $profile->check_path_by_name->{$checkname};
+        my $path = $profile->check_path_by_name->{$check_name};
         try {
             require $path;
 
         } catch {
             $builder->skip(
-                "Cannot check if $checkname has entry points due to load error"
+"Cannot check if $check_name has entry points due to load error"
             );
             next;
         }
 
-        $builder->ok(1, "Check $checkname can be loaded");
+        $builder->ok(1, "Check $check_name can be loaded");
 
-        my $module = $profile->check_module_by_name->{$checkname};
+        my $module = $profile->check_module_by_name->{$check_name};
 
         $builder->diag(
-            "Warning: check $checkname uses old entry point ::run\n")
+            "Warning: check $check_name uses old entry point ::run\n")
           if $module->can('run') && !$module->DOES('Lintian::Check');
 
         # setup and breakdown should only be used together with files
         my $has_entrypoint = any { $module->can($_) }
         qw(source binary udeb installable changes always files);
 
-        if (!$builder->ok($has_entrypoint, "Check $checkname has entry point"))
-        {
+        if (
+            !$builder->ok(
+                $has_entrypoint, "Check $check_name has entry point"
+            )
+        ){
             $builder->diag("Expected package name is $module\n");
         }
     }

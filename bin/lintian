@@ -608,31 +608,31 @@ if (@{$selected{'check-part'}} || @{$selected{tags}}) {
         $PROFILE->enable_tag($_) for @{$selected{tags}};
 
     } else {
-        for my $checkname (@{$selected{'check-part'}}) {
-            if ($checkname eq 'all') {
+        for my $check_name (@{$selected{'check-part'}}) {
+            if ($check_name eq 'all') {
                 my @tags = map { @{$PROFILE->tagnames_for_check->{$_} // []} }
                   $PROFILE->known_checks;
                 $PROFILE->enable_tag($_) for @tags;
                 next;
             }
 
-            die encode_utf8("Unrecognized check (via -C): $checkname\n")
-              unless exists $PROFILE->check_module_by_name->{$checkname};
+            die encode_utf8("Unrecognized check (via -C): $check_name\n")
+              unless exists $PROFILE->check_module_by_name->{$check_name};
 
             $PROFILE->enable_tag($_)
-              for @{$PROFILE->tagnames_for_check->{$checkname} // []};
+              for @{$PROFILE->tagnames_for_check->{$check_name} // []};
         }
     }
 
 } elsif (@{$selected{'dont-check-part'}}) {
     # we are disabling checks
-    for my $checkname (@{$selected{'dont-check-part'}}) {
+    for my $check_name (@{$selected{'dont-check-part'}}) {
 
-        die encode_utf8("Unrecognized check (via -X): $checkname\n")
-          unless exists $PROFILE->check_module_by_name->{$checkname};
+        die encode_utf8("Unrecognized check (via -X): $check_name\n")
+          unless exists $PROFILE->check_module_by_name->{$check_name};
 
         $PROFILE->disable_tag($_)
-          for @{$PROFILE->tagnames_for_check->{$checkname} // []};
+          for @{$PROFILE->tagnames_for_check->{$check_name} // []};
     }
 }
 

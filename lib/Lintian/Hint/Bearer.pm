@@ -104,9 +104,9 @@ sub hint {
     my $context_string = join($SPACE, @meaningful);
     if (exists $self->context_tracker->{$tagname}{$context_string}) {
 
-        my $checkname = $tag->check;
+        my $check_name = $tag->check;
         warn encode_utf8(
-"tried to issue duplicate hint in check $checkname: $tagname $context_string\n"
+"tried to issue duplicate hint in check $check_name: $tagname $context_string\n"
         );
         return;
     }
