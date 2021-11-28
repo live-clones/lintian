@@ -267,7 +267,7 @@ sub installable {
 
     # files actually installed in /etc/init.d should match our list :-)
     for my $script ($initd_dir->children) {
-        my $tagname = 'script-in-etc-init.d-not-registered-via-update-rc.d';
+        my $tag_name = 'script-in-etc-init.d-not-registered-via-update-rc.d';
         my $basename = $script->basename;
         next
           if (
@@ -278,7 +278,7 @@ sub installable {
         # In an upstart system, such as Ubuntu, init scripts are symlinks to
         # upstart-job which are not registered with update-rc.d.
         if ($script->is_symlink and $script->link eq '/lib/init/upstart-job') {
-            $tagname
+            $tag_name
               = 'upstart-job-in-etc-init.d-not-registered-via-update-rc.d';
         }
 
@@ -287,7 +287,7 @@ sub installable {
         # unregistered scripts so that we get more complete Lintian
         # coverage in the first pass.
         unless ($initd_postinst{$script->basename}) {
-            $self->hint($tagname, $script);
+            $self->hint($tag_name, $script);
             $self->check_init($script);
         }
     }

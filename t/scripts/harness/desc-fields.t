@@ -121,7 +121,7 @@ for my $descpath (@descpaths) {
 
     # listed test-against belong to listed checks
     $known_tests += scalar @against;
-    my @tags = map { @{$profile->tagnames_for_check->{$_} // []} }
+    my @tags = map { @{$profile->tag_names_for_check->{$_} // []} }
       (@check_names, 'lintian');
     my %relatedtags = map { $_ => 1 } @tags;
     for my $tag (@against) {

@@ -139,7 +139,7 @@ has check_path_by_name => (
     coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
     default => sub { {} });
 
-has tagnames_for_check => (
+has tag_names_for_check => (
     is => 'rw',
     coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
     default => sub { {} });
@@ -330,8 +330,8 @@ sub load {
               if exists $self->known_tags_by_name->{$tag->name};
 
             $self->known_tags_by_name->{$tag->name} = $tag;
-            $self->tagnames_for_check->{$tag->check} //= [];
-            push(@{$self->tagnames_for_check->{$tag->check}},$tag->name);
+            $self->tag_names_for_check->{$tag->check} //= [];
+            push(@{$self->tag_names_for_check->{$tag->check}},$tag->name);
 
             # record known aliases
             my @taken
@@ -428,9 +428,9 @@ Returns a false value if the tag has been marked as
 =cut
 
 sub is_overridable {
-    my ($self, $tagname) = @_;
+    my ($self, $tag_name) = @_;
 
-    return !exists $self->non_overridable_tags->{$tagname};
+    return !exists $self->non_overridable_tags->{$tag_name};
 }
 
 =item $prof->known_checks
@@ -633,10 +633,10 @@ sub read_profile {
           . join($SPACE, @duplicate_tags))
       if @duplicate_tags;
 
-    push(@enable_tags, @{$self->tagnames_for_check->{$_} // []})
+    push(@enable_tags, @{$self->tag_names_for_check->{$_} // []})
       for @enable_checks;
 
-    push(@disable_tags, @{$self->tagnames_for_check->{$_} // []})
+    push(@disable_tags, @{$self->tag_names_for_check->{$_} // []})
       for @disable_checks;
 
     $self->enable_tag($_) for @enable_tags;
@@ -675,12 +675,12 @@ sub read_profile {
             }
         }
 
-        for my $tagname (@tags) {
+        for my $tag_name (@tags) {
 
             if ($overridable) {
-                delete $self->non_overridable_tags->{$tagname};
+                delete $self->non_overridable_tags->{$tag_name};
             } else {
-                $self->non_overridable_tags->{$tagname} = 1;
+                $self->non_overridable_tags->{$tag_name} = 1;
             }
         }
 
@@ -698,10 +698,10 @@ sub read_profile {
 =cut
 
 sub display_level_for_tag {
-    my ($self, $tagname) = @_;
+    my ($self, $tag_name) = @_;
 
-    my $tag = $self->get_tag($tagname);
-    croak encode_utf8("Unknown tag $tagname")
+    my $tag = $self->get_tag($tag_name);
+    croak encode_utf8("Unknown tag $tag_name")
       unless defined $tag;
 
     return $self->display_level_lookup->{$tag->visibility};
@@ -712,10 +712,10 @@ sub display_level_for_tag {
 =cut
 
 sub tag_is_enabled {
-    my ($self, $tagname) = @_;
+    my ($self, $tag_name) = @_;
 
     return 1
-      if exists $self->enabled_tags_by_name->{$tagname};
+      if exists $self->enabled_tags_by_name->{$tag_name};
 
     return 0;
 }

@@ -75,7 +75,7 @@ use Test::Lintian::ConfigFile qw(read_config);
 use Test::Lintian::Helper qw(rfc822date);
 use Test::Lintian::Hooks
   qw(find_missing_prerequisites sed_hook sort_lines calibrate);
-use Test::Lintian::Output::Universal qw(get_tagnames order);
+use Test::Lintian::Output::Universal qw(get_tag_names order);
 
 const my $EMPTY => q{};
 const my $SPACE => q{ };
@@ -478,7 +478,7 @@ sub check_result {
       unless $match_strategy eq 'hints';
 
     # get expected tags
-    my @expected = sort +get_tagnames($expectedpath);
+    my @expected = sort +get_tag_names($expectedpath);
 
     #diag "=Expected tag: $_" for @expected;
 
@@ -499,7 +499,7 @@ sub check_result {
         die encode_utf8('Unknown Lintian checks: ' . join($SPACE, @unknown))
           if @unknown;
 
-        push(@related, @{$profile->tagnames_for_check->{$_} // []})
+        push(@related, @{$profile->tag_names_for_check->{$_} // []})
           for @check_names;
 
         @related = sort @related;
@@ -520,7 +520,7 @@ sub check_result {
     #diag "-Test-Against (calculated): $_" for @test_against;
 
     # get actual tags from output
-    my @actual = sort +get_tagnames($actualpath);
+    my @actual = sort +get_tag_names($actualpath);
 
     #diag "*Actual tag found: $_" for @actual;
 

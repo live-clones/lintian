@@ -610,7 +610,7 @@ if (@{$selected{'check-part'}} || @{$selected{tags}}) {
     } else {
         for my $check_name (@{$selected{'check-part'}}) {
             if ($check_name eq 'all') {
-                my @tags = map { @{$PROFILE->tagnames_for_check->{$_} // []} }
+                my @tags = map { @{$PROFILE->tag_names_for_check->{$_} // []} }
                   $PROFILE->known_checks;
                 $PROFILE->enable_tag($_) for @tags;
                 next;
@@ -620,7 +620,7 @@ if (@{$selected{'check-part'}} || @{$selected{tags}}) {
               unless exists $PROFILE->check_module_by_name->{$check_name};
 
             $PROFILE->enable_tag($_)
-              for @{$PROFILE->tagnames_for_check->{$check_name} // []};
+              for @{$PROFILE->tag_names_for_check->{$check_name} // []};
         }
     }
 
@@ -632,7 +632,7 @@ if (@{$selected{'check-part'}} || @{$selected{tags}}) {
           unless exists $PROFILE->check_module_by_name->{$check_name};
 
         $PROFILE->disable_tag($_)
-          for @{$PROFILE->tagnames_for_check->{$check_name} // []};
+          for @{$PROFILE->tag_names_for_check->{$check_name} // []};
     }
 }
 

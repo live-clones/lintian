@@ -87,7 +87,7 @@ $profile->load(undef, undef, 0);
 my @known = uniq $profile->known_checks;
 
 my %checktags;
-$checktags{$_} = $profile->tagnames_for_check->{$_}for @known;
+$checktags{$_} = $profile->tag_names_for_check->{$_}for @known;
 
 my %seen;
 

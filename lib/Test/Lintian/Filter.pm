@@ -195,16 +195,16 @@ sub find_selected_lintian_testpaths {
 
             my %wanted = map { $_ => 1 } @{$filter->{check}};
 
-            for my $tagname (@{$filter->{tag}}) {
+            for my $tag_name (@{$filter->{tag}}) {
 
-                my $tag = $profile->get_tag($tagname);
+                my $tag = $profile->get_tag($tag_name);
                 unless ($tag) {
-                    say encode_utf8("Tag $tagname not found");
+                    say encode_utf8("Tag $tag_name not found");
                     return ();
                 }
 
-                if (none { $tagname eq $_ } $profile->enabled_tags) {
-                    say encode_utf8("Tag $tagname not enabled");
+                if (none { $tag_name eq $_ } $profile->enabled_tags) {
+                    say encode_utf8("Tag $tag_name not enabled");
                     return ();
                 }
 
@@ -322,7 +322,7 @@ sub find_all_tags {
 
     my %tags;
     for my $name (@check_names) {
-        $tags{$_} = 1 for @{$profile->tagnames_for_check->{$name}};
+        $tags{$_} = 1 for @{$profile->tag_names_for_check->{$name}};
     }
 
     return keys %tags

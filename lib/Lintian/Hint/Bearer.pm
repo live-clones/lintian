@@ -68,9 +68,9 @@ Store found tags for later processing.
 =cut
 
 sub pointed_hint {
-    my ($self, $tagname, $pointer, @context) = @_;
+    my ($self, $tag_name, $pointer, @context) = @_;
 
-    $self->hint($tagname, @context,
+    $self->hint($tag_name, @context,
         $LEFT_SQUARE_BRACKET . $pointer->to_string . $RIGHT_SQUARE_BRACKET);
 
     return;
@@ -83,18 +83,18 @@ Store found tags for later processing.
 =cut
 
 sub hint {
-    my ($self, $tagname, @context_components) = @_;
+    my ($self, $tag_name, @context_components) = @_;
 
-    my $tag = $self->profile->get_tag($tagname);
+    my $tag = $self->profile->get_tag($tag_name);
     unless (defined $tag) {
 
-        warn encode_utf8("tried to issue unknown tag: $tagname\n");
+        warn encode_utf8("tried to issue unknown tag: $tag_name\n");
         return;
     }
 
     # skip disabled tags
     return
-      unless $self->profile->tag_is_enabled($tagname);
+      unless $self->profile->tag_is_enabled($tag_name);
 
     my @meaningful = grep { length } @context_components;
 
@@ -102,16 +102,16 @@ sub hint {
     s/^\s+|\s+$//g for @meaningful;
 
     my $context_string = join($SPACE, @meaningful);
-    if (exists $self->context_tracker->{$tagname}{$context_string}) {
+    if (exists $self->context_tracker->{$tag_name}{$context_string}) {
 
         my $check_name = $tag->check;
         warn encode_utf8(
-"tried to issue duplicate hint in check $check_name: $tagname $context_string\n"
+"tried to issue duplicate hint in check $check_name: $tag_name $context_string\n"
         );
         return;
     }
 
-    $self->context_tracker->{$tagname}{$context_string} = 1;
+    $self->context_tracker->{$tag_name}{$context_string} = 1;
 
     my $hint = Lintian::Hint::Standard->new;
 

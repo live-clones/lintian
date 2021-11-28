@@ -40,11 +40,11 @@ sub always {
     return
       unless defined $declared_overrides;
 
-    for my $tagname (keys %{$declared_overrides}) {
+    for my $tag_name (keys %{$declared_overrides}) {
 
-        for my $context (keys %{$declared_overrides->{$tagname}}) {
+        for my $context (keys %{$declared_overrides->{$tag_name}}) {
 
-            my $entry = $declared_overrides->{$tagname}{$context};
+            my $entry = $declared_overrides->{$tag_name}{$context};
 
             my @comments = @{$entry->{comments}};
             my $override_position = $entry->{line};
@@ -58,7 +58,7 @@ sub always {
                     $self->group->spelling_exceptions,
                     $self->emitter(
                         'spelling-in-override-comment',
-                        "$tagname (line $position)"
+                        "$tag_name (line $position)"
                     ));
 
                 check_spelling_picky(
@@ -66,7 +66,7 @@ sub always {
                     $comment,
                     $self->emitter(
                         'capitalization-in-override-comment',
-                        "$tagname (line $position)"
+                        "$tag_name (line $position)"
                     ));
             } continue {
                 $position++;

@@ -177,15 +177,15 @@ sub parse_overrides {
             @architectures
           );
 
-        my ($tagname, $context) = split($SPACE, $hint, 2);
+        my ($tag_name, $context) = split($SPACE, $hint, 2);
 
         $self->pointed_hint('malformed-override', $pointer,
             "Cannot parse line: $line")
-          unless length $tagname;
+          unless length $tag_name;
 
         $context //= $EMPTY;
 
-        if (($previous{tag} // $EMPTY) eq $tagname
+        if (($previous{tag} // $EMPTY) eq $tag_name
             && !scalar @comments){
             # There are no new comments, no "empty line" in between and
             # this tag is the same as the last, so we "carry over" the
@@ -197,7 +197,7 @@ sub parse_overrides {
         }
 
         my %current;
-        $current{tag} = $tagname;
+        $current{tag} = $tag_name;
 
         # record line number
         $current{line} = $position;
@@ -232,22 +232,22 @@ sub parse_overrides {
         push(@{$current{comments}}, @comments);
         @comments = ();
 
-        $override_data{$tagname} //= {};
+        $override_data{$tag_name} //= {};
 
-        if (exists $override_data{$tagname}{$context}) {
+        if (exists $override_data{$tag_name}{$context}) {
 
             my @same_context
-              = ($override_data{$tagname}{$context}{line}, $current{line});
+              = ($override_data{$tag_name}{$context}{line}, $current{line});
 
             my $lines = join($SPACE, sort @same_context);
 
             $self->pointed_hint('duplicate-override-context', $pointer,
-                $tagname, "(lines $lines)");
+                $tag_name, "(lines $lines)");
 
             next;
         }
 
-        $override_data{$tagname}{$context} = \%current;
+        $override_data{$tag_name}{$context} = \%current;
 
         %previous = %current;
 

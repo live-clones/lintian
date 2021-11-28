@@ -146,26 +146,26 @@ sub run {
 =cut
 
 sub find_tag {
-    my ($self, $tagname) = @_;
+    my ($self, $tag_name) = @_;
 
     croak encode_utf8('No tag name')
-      unless length $tagname;
+      unless length $tag_name;
 
     # try local name space
-    my $tag = $self->profile->get_tag($self->name . $SLASH . $tagname);
+    my $tag = $self->profile->get_tag($self->name . $SLASH . $tag_name);
 
-    warn encode_utf8("Using tag $tagname as name spaced in "
+    warn encode_utf8("Using tag $tag_name as name spaced in "
           . $self->name
           . ' while not so declared.')
       if defined $tag && !$tag->name_spaced;
 
     # try global name space
-    $tag ||= $self->profile->get_tag($tagname);
+    $tag ||= $self->profile->get_tag($tag_name);
 
     unless (defined $tag) {
 
         warn encode_utf8(
-            "Unknown tag $tagname in check " . $self->name . $DOT);
+            "Unknown tag $tag_name in check " . $self->name . $DOT);
         return undef;
     }
 
@@ -173,7 +173,7 @@ sub find_tag {
 
         warn encode_utf8('Check '
               . $self->name
-              . " has no tag $tagname (but "
+              . " has no tag $tag_name (but "
               . $tag->check
               . ' does).');
         return undef;
@@ -187,9 +187,9 @@ sub find_tag {
 =cut
 
 sub pointed_hint {
-    my ($self, $tagname, $pointer, @context) = @_;
+    my ($self, $tag_name, $pointer, @context) = @_;
 
-    my $tag = $self->find_tag($tagname);
+    my $tag = $self->find_tag($tag_name);
     return undef
       unless defined $tag;
 
@@ -202,9 +202,9 @@ sub pointed_hint {
 =cut
 
 sub hint {
-    my ($self, $tagname, @context) = @_;
+    my ($self, $tag_name, @context) = @_;
 
-    my $tag = $self->find_tag($tagname);
+    my $tag = $self->find_tag($tag_name);
     return undef
       unless defined $tag;
 

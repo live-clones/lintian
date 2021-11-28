@@ -99,34 +99,34 @@ for my $tagpath (@tagpaths) {
     my $fields = shift @sections;
 
     # tag has a name
-    my $tagname = $fields->value('Tag');
+    my $tag_name = $fields->value('Tag');
     BAIL_OUT("Tag described in $tagpath has no name")
-      unless length $tagname;
+      unless length $tag_name;
 
-    # tagfile is named $tagname.tag
+    # tagfile is named $tag_name.tag
     is(path($tagpath)->basename,
-        "$tagname.tag", "Tagfile for $tagname is named $tagname.tag");
+        "$tag_name.tag", "Tagfile for $tag_name is named $tag_name.tag");
 
     my $check_name = $fields->value('Check');
 
     # tag is associated with a check
-    ok(length $check_name, "Tag $tagname is associated with a check");
+    ok(length $check_name, "Tag $tag_name is associated with a check");
 
     if ($fields->value('Name-Spaced') eq 'yes') {
 
-        $tagname = $check_name . $SLASH . $tagname;
+        $tag_name = $check_name . $SLASH . $tag_name;
 
         # encapsulating directory is name of check
         my $subdir = path($tagpath)->parent->relative('tags');
         is($subdir, $check_name,
-            "Tag $tagname is in directory named '$check_name'");
+            "Tag $tag_name is in directory named '$check_name'");
 
     } else {
         # encapsulating directory is first letter of tag's name
         my $parentdir = path($tagpath)->parent->basename;
-        my $firstletter = lc(substr($tagname, 0, 1));
+        my $firstletter = lc(substr($tag_name, 0, 1));
         is($parentdir, $firstletter,
-            "Tag $tagname is in directory named '$firstletter'");
+            "Tag $tag_name is in directory named '$firstletter'");
     }
 
     # mandatory fields
@@ -138,16 +138,16 @@ for my $tagpath (@tagpaths) {
 
     ok(
         length $profile->check_module_by_name->{$check_name},
-        "Tag $tagname is associated with a valid check"
+        "Tag $tag_name is associated with a valid check"
     );
 
     ok($fields->value('Renamed-From') !~ m{,},
-        "Old tag names for $tagname are not separated by commas");
+        "Old tag names for $tag_name are not separated by commas");
 
     my $html_output = Lintian::Output::HTML->new;
 
-    my $tag = $profile->get_tag($tagname);
-    BAIL_OUT("Tag $tagname was not loaded via profile")
+    my $tag = $profile->get_tag($tag_name);
+    BAIL_OUT("Tag $tag_name was not loaded via profile")
       unless defined $tag;
 
     my $html_description;
@@ -155,7 +155,7 @@ for my $tagpath (@tagpaths) {
       or die 'Cannot open scalar';
     select $fh;
 
-    print "<!DOCTYPE html><head><title>$tagname</title></head><body>";
+    print "<!DOCTYPE html><head><title>$tag_name</title></head><body>";
     $html_output->describe_tags([$tag]);
     say '</body>';
 
@@ -171,7 +171,7 @@ for my $tagpath (@tagpaths) {
     run3(\@tidy_command, \$html_description, \$tidy_out, \$tidy_err);
 
     is($tidy_err, $EMPTY,
-        "No warnings from HTML Tidy for tag description in $tagname");
+        "No warnings from HTML Tidy for tag description in $tag_name");
 }
 
 # Local Variables:

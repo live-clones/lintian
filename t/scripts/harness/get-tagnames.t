@@ -31,7 +31,7 @@ use Path::Tiny;
 use Test::More;
 
 use lib "$ENV{'LINTIAN_BASE'}/lib";
-use Test::Lintian::Output::Universal qw(get_tagnames);
+use Test::Lintian::Output::Universal qw(get_tag_names);
 
 # dummy hints
 my $hintstext =<<'EOSTR';
@@ -45,7 +45,7 @@ my $hintspath = Path::Tiny->tempfile;
 $hintspath->spew($hintstext);
 
 # read tag names from file
-my @actual = sort +uniq +get_tagnames($hintspath->stringify);
+my @actual = sort +uniq +get_tag_names($hintspath->stringify);
 
 my @expected = qw(
   backports-changes-missing
@@ -57,7 +57,7 @@ my @expected = qw(
 plan tests => 1;
 
 # check when hints match
-is_deeply(\@actual, \@expected, 'Tags read via get_tagnames match');
+is_deeply(\@actual, \@expected, 'Tags read via get_tag_names match');
 
 # Local Variables:
 # indent-tabs-mode: nil

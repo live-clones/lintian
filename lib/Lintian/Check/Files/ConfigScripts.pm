@@ -81,11 +81,11 @@ sub visit_installed_files {
                     next
                       if $file->basename =~ m{^\Q$madir\E}xms;
 
-                    my $tagname = 'old-style-config-script-multiarch-path';
-                    $tagname .= '-arch-all'
+                    my $tag_name = 'old-style-config-script-multiarch-path';
+                    $tag_name .= '-arch-all'
                       if $architecture eq 'all';
 
-                    $self->hint($tagname, $file->name,
+                    $self->hint($tag_name, $file->name,
                         'full text contains architecture specific dir',$madir);
 
                     last;
