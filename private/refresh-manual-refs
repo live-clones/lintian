@@ -69,7 +69,7 @@ my $link_re
 my $index_re
   = qr/<a href="(.+?)">\s*([A-Z]|[A-Z]?[\d\.]+?)\.?\s+([\w\s[:punct:]]+?)\s*<\/a>/;
 my $sphinx_re
-  = qr/<a class="reference internal" href="(.+)">([\d\.]+)\.\s+(.*)<\/a>/;
+  = qr/<a class="reference internal" href="([^"]+)"(?: id="[^"]+")?>(\d[\d\.]*)(?:\s|&nbsp;)+(.*)<\/a>/;
 my $page_fields = [['url'], ['section'], ['title']];
 my $dbk_index_re
   = qr/([\d.]+?)\.\s+<a\s*href="(.+?)"\s*>([\w\s[:punct:]]+?)<\/a\s*>/i;
@@ -96,10 +96,9 @@ my %manuals = (
         $page_fields
     ],
     'python-policy' => [
-        '/usr/share/doc/python3/python-policy.html/index.html',
+        '/usr/share/doc/python3/python-policy.html',
         'https://www.debian.org/doc/packaging-manuals/python-policy/',
-        $index_re,
-        $page_fields
+        $sphinx_re,$page_fields
     ],
     'java-policy' => [
         '/usr/share/doc/java-policy/debian-java-policy/index.html',
@@ -115,13 +114,13 @@ my %manuals = (
     'lintian' => [
         '/usr/share/doc/lintian/lintian.html',
         'https://lintian.debian.org/manual/',
-        $dbk_index_re,
-        $dbk_fields
+        $sphinx_re,
+        $page_fields
     ],
     'devref' => [
-        '/usr/share/doc/developers-reference/index.html',
+        '/usr/share/doc/developers-reference/docs/index.html',
         'https://www.debian.org/doc/developers-reference/',
-        $index_re,
+        $sphinx_re,
         $page_fields,
 #<<< no perl tidy
 # breaking this regex up with x should work, but for some reason it
@@ -150,7 +149,7 @@ my %manuals = (
     'fhs' => [
         '/usr/share/doc/debian-policy/fhs/fhs-3.0.html',
         'http://www.pathname.com/fhs/pub/fhs-3.0.html',
-        qr/<a\s*href="(#.+?)"\s*>([\w\s[:punct:]]+?)<\/a\s*>/i,
+        qr/<a\s+href="(#.+?)"\s*>(\d[\w\s[:punct:]]*?)<\/a\s*>/i,
         [['section', 'url'], ['title']]
     ],
 );
@@ -270,6 +269,9 @@ sub extract_refs {
 
             $ref{url} = "$url$ref{url}";
             $ref{url} = $EMPTY if not $url;
+
+            # drop final dots
+            $ref{section} =~ s{ [.]+ $}{}x;
 
             $ref{section} =~ s/^\#(.+)$/\L$1/;
             # Some manuals reuse section numbers for different references,
