@@ -7,7 +7,7 @@
 # If <section> is empty, that line specifies the title and URL for the whole
 # manual.  If <url> is empty, that manual is not available on the web.
 #
-# Last updated: 2020-12-09
+# Last updated: 2021-11-28
 
 debconf-spec::::Configuration management::https://www.debian.org/doc/packaging-manuals/debconf_specification.html
 debconf-spec::1::Introduction::https://www.debian.org/doc/packaging-manuals/debconf_specification.html#id-1.2
@@ -18,259 +18,264 @@ debconf-spec::3.1::Template information::https://www.debian.org/doc/packaging-ma
 debconf-spec::4::Configuration frontends::https://www.debian.org/doc/packaging-manuals/debconf_specification.html#id-1.5
 debconf-spec::5::Communication with the frontend::https://www.debian.org/doc/packaging-manuals/debconf_specification.html#id-1.6
 debconf-spec::6::Debian install-time configuration::https://www.debian.org/doc/packaging-manuals/debconf_specification.html#id-1.7
-devref::::Debian Developer's Reference::https://www.debian.org/doc/developers-reference/
-devref::1::Scope of This Document::https://www.debian.org/doc/developers-reference/ch01.html
-devref::2::Applying to Become a Member::https://www.debian.org/doc/developers-reference/ch02.html
-devref::2.1::Getting started::https://www.debian.org/doc/developers-reference/ch02.html#getting-started
-devref::2.2::Debian mentors and sponsors::https://www.debian.org/doc/developers-reference/ch02.html#mentors
-devref::2.3::Registering as a Debian member::https://www.debian.org/doc/developers-reference/ch02.html#registering
-devref::3::Debian Developer's Duties::https://www.debian.org/doc/developers-reference/ch03.html
-devref::3.1::Package Maintainer's Duties::https://www.debian.org/doc/developers-reference/ch03.html#package-maintainer-duties
-devref::3.1.1::Work towards the next <code>stable</code> release::https://www.debian.org/doc/developers-reference/ch03.html#help-release
-devref::3.1.2::Maintain packages in <code>stable</code>::https://www.debian.org/doc/developers-reference/ch03.html#maintain-stable
-devref::3.1.3::Manage release-critical bugs::https://www.debian.org/doc/developers-reference/ch03.html#rc-bugs
-devref::3.1.4::Coordination with upstream developers::https://www.debian.org/doc/developers-reference/ch03.html#upstream-coordination
-devref::3.2::Administrative Duties::https://www.debian.org/doc/developers-reference/ch03.html#administrative-duties
-devref::3.2.1::Maintaining your Debian information::https://www.debian.org/doc/developers-reference/ch03.html#user-maint
-devref::3.2.2::Maintaining your public key::https://www.debian.org/doc/developers-reference/ch03.html#key-maint
-devref::3.2.3::Voting::https://www.debian.org/doc/developers-reference/ch03.html#voting
-devref::3.2.4::Going on vacation gracefully::https://www.debian.org/doc/developers-reference/ch03.html#inform-vacation
-devref::3.2.5::Retiring::https://www.debian.org/doc/developers-reference/ch03.html#s3.7
-devref::3.2.6::Returning after retirement::https://www.debian.org/doc/developers-reference/ch03.html#returning
-devref::4::Resources for Debian Members::https://www.debian.org/doc/developers-reference/ch04.html
-devref::4.1::Mailing lists::https://www.debian.org/doc/developers-reference/ch04.html#mailing-lists
-devref::4.1.1::Basic rules for use::https://www.debian.org/doc/developers-reference/ch04.html#mailing-lists-rules
-devref::4.1.2::Core development mailing lists::https://www.debian.org/doc/developers-reference/ch04.html#core-devel-mailing-lists
-devref::4.1.3::Special lists::https://www.debian.org/doc/developers-reference/ch04.html#mailing-lists-special
-devref::4.1.4::Requesting new development-related lists::https://www.debian.org/doc/developers-reference/ch04.html#mailing-lists-new
-devref::4.2::IRC channels::https://www.debian.org/doc/developers-reference/ch04.html#irc-channels
-devref::4.3::Documentation::https://www.debian.org/doc/developers-reference/ch04.html#doc-rsrcs
-devref::4.4::Debian machines::https://www.debian.org/doc/developers-reference/ch04.html#server-machines
-devref::4.4.1::The bugs server::https://www.debian.org/doc/developers-reference/ch04.html#servers-bugs
-devref::4.4.2::The ftp-master server::https://www.debian.org/doc/developers-reference/ch04.html#servers-ftp-master
-devref::4.4.3::The www-master server::https://www.debian.org/doc/developers-reference/ch04.html#servers-www
-devref::4.4.4::The people web server::https://www.debian.org/doc/developers-reference/ch04.html#servers-people
-devref::4.4.5::salsa.debian.org: Git repositories and collaborative development platform::https://www.debian.org/doc/developers-reference/ch04.html#salsa-debian-org
-devref::4.4.6::chroots to different distributions::https://www.debian.org/doc/developers-reference/ch04.html#dchroot
-devref::4.5::The Developers Database::https://www.debian.org/doc/developers-reference/ch04.html#devel-db
-devref::4.6::The Debian archive::https://www.debian.org/doc/developers-reference/ch04.html#archive
-devref::4.6.1::Sections::https://www.debian.org/doc/developers-reference/ch04.html#archive-sections
-devref::4.6.2::Architectures::https://www.debian.org/doc/developers-reference/ch04.html#s4.6.2
-devref::4.6.3::Packages::https://www.debian.org/doc/developers-reference/ch04.html#s4.6.3
-devref::4.6.4::Distributions::https://www.debian.org/doc/developers-reference/ch04.html#s4.6.4
-devref::4.6.4.1::Stable, testing, and unstable::https://www.debian.org/doc/developers-reference/ch04.html#sec-dists
-devref::4.6.4.2::More information about the testing distribution::https://www.debian.org/doc/developers-reference/ch04.html#s4.6.4.2
-devref::4.6.4.3::Experimental::https://www.debian.org/doc/developers-reference/ch04.html#experimental
-devref::4.6.5::Release code names::https://www.debian.org/doc/developers-reference/ch04.html#codenames
-devref::4.7::Debian mirrors::https://www.debian.org/doc/developers-reference/ch04.html#mirrors
-devref::4.8::The Incoming system::https://www.debian.org/doc/developers-reference/ch04.html#incoming-system
-devref::4.9::Package information::https://www.debian.org/doc/developers-reference/ch04.html#pkg-info
-devref::4.9.1::On the web::https://www.debian.org/doc/developers-reference/ch04.html#pkg-info-web
-devref::4.9.2::The <strong>dak ls</strong> utility::https://www.debian.org/doc/developers-reference/ch04.html#dak-ls
-devref::4.10::The Debian Package Tracker::https://www.debian.org/doc/developers-reference/ch04.html#pkg-tracker
-devref::4.11::Developer's packages overview::https://www.debian.org/doc/developers-reference/ch04.html#ddpo
-devref::4.12::Debian's FusionForge installation: Alioth::https://www.debian.org/doc/developers-reference/ch04.html#alioth
-devref::4.13::Goodies for Debian Members::https://www.debian.org/doc/developers-reference/ch04.html#developer-misc
-devref::5::Managing Packages::https://www.debian.org/doc/developers-reference/ch05.html
-devref::5.1::New packages::https://www.debian.org/doc/developers-reference/ch05.html#newpackage
-devref::5.2::Recording changes in the package::https://www.debian.org/doc/developers-reference/ch05.html#changelog-entries
-devref::5.3::Testing the package::https://www.debian.org/doc/developers-reference/ch05.html#sanitycheck
-devref::5.4::Layout of the source package::https://www.debian.org/doc/developers-reference/ch05.html#sourcelayout
-devref::5.5::Picking a distribution::https://www.debian.org/doc/developers-reference/ch05.html#distribution
-devref::5.5.1::Special case: uploads to the <code>stable</code> and <code>oldstable</code> distributions::https://www.debian.org/doc/developers-reference/ch05.html#upload-stable
-devref::5.5.2::Special case: uploads to <code>testing/testing-proposed-updates</code>::https://www.debian.org/doc/developers-reference/ch05.html#upload-t-p-u
-devref::5.6::Uploading a package::https://www.debian.org/doc/developers-reference/ch05.html#upload
-devref::5.6.1::Uploading to <code>ftp-master</code>::https://www.debian.org/doc/developers-reference/ch05.html#upload-ftp-master
-devref::5.6.2::Delayed uploads::https://www.debian.org/doc/developers-reference/ch05.html#delayed-incoming
-devref::5.6.3::Security uploads::https://www.debian.org/doc/developers-reference/ch05.html#s5.6.4
-devref::5.6.4::Other upload queues::https://www.debian.org/doc/developers-reference/ch05.html#s5.6.5
-devref::5.6.5::Notifications::https://www.debian.org/doc/developers-reference/ch05.html#upload-notification
-devref::5.7::Specifying the package section, subsection and priority::https://www.debian.org/doc/developers-reference/ch05.html#override-file
-devref::5.8::Handling bugs::https://www.debian.org/doc/developers-reference/ch05.html#bug-handling
-devref::5.8.1::Monitoring bugs::https://www.debian.org/doc/developers-reference/ch05.html#bug-monitoring
-devref::5.8.2::Responding to bugs::https://www.debian.org/doc/developers-reference/ch05.html#bug-answering
-devref::5.8.3::Bug housekeeping::https://www.debian.org/doc/developers-reference/ch05.html#bug-housekeeping
-devref::5.8.4::When bugs are closed by new uploads::https://www.debian.org/doc/developers-reference/ch05.html#upload-bugfix
-devref::5.8.5::Handling security-related bugs::https://www.debian.org/doc/developers-reference/ch05.html#bug-security
-devref::5.8.5.1::The Security Tracker::https://www.debian.org/doc/developers-reference/ch05.html#bug-security-tracker
-devref::5.8.5.2::Confidentiality::https://www.debian.org/doc/developers-reference/ch05.html#bug-security-confidentiality
-devref::5.8.5.3::Security Advisories::https://www.debian.org/doc/developers-reference/ch05.html#bug-security-advisories
-devref::5.8.5.4::Preparing packages to address security issues::https://www.debian.org/doc/developers-reference/ch05.html#bug-security-building
-devref::5.8.5.5::Uploading the fixed package::https://www.debian.org/doc/developers-reference/ch05.html#bug-security-upload
-devref::5.9::Moving, removing, renaming, orphaning, adopting, and reintroducing packages::https://www.debian.org/doc/developers-reference/ch05.html#archive-manip
-devref::5.9.1::Moving packages::https://www.debian.org/doc/developers-reference/ch05.html#moving-pkgs
-devref::5.9.2::Removing packages::https://www.debian.org/doc/developers-reference/ch05.html#removing-pkgs
-devref::5.9.2.1::Removing packages from <code>Incoming</code>::https://www.debian.org/doc/developers-reference/ch05.html#s5.9.2.1
-devref::5.9.3::Replacing or renaming packages::https://www.debian.org/doc/developers-reference/ch05.html#s5.9.3
-devref::5.9.4::Orphaning a package::https://www.debian.org/doc/developers-reference/ch05.html#orphaning
-devref::5.9.5::Adopting a package::https://www.debian.org/doc/developers-reference/ch05.html#adopting
-devref::5.9.6::Reintroducing packages::https://www.debian.org/doc/developers-reference/ch05.html#reintroducing-pkgs
-devref::5.10::Porting and being ported::https://www.debian.org/doc/developers-reference/ch05.html#porting
-devref::5.10.1::Being kind to porters::https://www.debian.org/doc/developers-reference/ch05.html#kind-to-porters
-devref::5.10.2::Guidelines for porter uploads::https://www.debian.org/doc/developers-reference/ch05.html#porter-guidelines
-devref::5.10.2.1::Recompilation or binary-only NMU::https://www.debian.org/doc/developers-reference/ch05.html#binary-only-nmu
-devref::5.10.2.2::When to do a source NMU if you are a porter::https://www.debian.org/doc/developers-reference/ch05.html#source-nmu-when-porter
-devref::5.10.3::Porting infrastructure and automation::https://www.debian.org/doc/developers-reference/ch05.html#porter-automation
-devref::5.10.3.1::Mailing lists and web pages::https://www.debian.org/doc/developers-reference/ch05.html#s5.10.3.1
-devref::5.10.3.2::Porter tools::https://www.debian.org/doc/developers-reference/ch05.html#s5.10.3.2
-devref::5.10.3.3::<code>wanna-build</code>::https://www.debian.org/doc/developers-reference/ch05.html#wanna-build
-devref::5.10.4::When your package is <em>not</em> portable::https://www.debian.org/doc/developers-reference/ch05.html#packages-arch-specific
-devref::5.10.5::Marking non-free packages as auto-buildable::https://www.debian.org/doc/developers-reference/ch05.html#non-free-buildd
-devref::5.11::Non-Maintainer Uploads (NMUs)::https://www.debian.org/doc/developers-reference/ch05.html#nmu
-devref::5.11.1::When and how to do an NMU::https://www.debian.org/doc/developers-reference/ch05.html#nmu-guidelines
-devref::5.11.2::NMUs and <code>debian/changelog</code>::https://www.debian.org/doc/developers-reference/ch05.html#nmu-changelog
-devref::5.11.3::Using the <code>DELAYED/</code> queue::https://www.debian.org/doc/developers-reference/ch05.html#nmu-delayed
-devref::5.11.4::NMUs from the maintainer's point of view::https://www.debian.org/doc/developers-reference/ch05.html#nmu-maintainer
-devref::5.11.5::Source NMUs vs Binary-only NMUs (binNMUs)::https://www.debian.org/doc/developers-reference/ch05.html#nmu-binnmu
-devref::5.11.6::NMUs vs QA uploads::https://www.debian.org/doc/developers-reference/ch05.html#nmu-qa-upload
-devref::5.11.7::NMUs vs team uploads::https://www.debian.org/doc/developers-reference/ch05.html#nmu-team-upload
-devref::5.12::Package Salvaging::https://www.debian.org/doc/developers-reference/ch05.html#package-salvaging
-devref::5.12.1::When a package is eligible for package salvaging::https://www.debian.org/doc/developers-reference/ch05.html#ps-eligibility
-devref::5.12.2::How to salvage a package::https://www.debian.org/doc/developers-reference/ch05.html#ps-guidelines
-devref::5.13::Collaborative maintenance::https://www.debian.org/doc/developers-reference/ch05.html#collaborative-maint
-devref::5.14::The testing distribution::https://www.debian.org/doc/developers-reference/ch05.html#testing
-devref::5.14.1::Basics::https://www.debian.org/doc/developers-reference/ch05.html#testing-basics
-devref::5.14.2::Updates from unstable::https://www.debian.org/doc/developers-reference/ch05.html#testing-unstable
-devref::5.14.2.1::Out-of-date::https://www.debian.org/doc/developers-reference/ch05.html#outdated
-devref::5.14.2.2::Removals from testing::https://www.debian.org/doc/developers-reference/ch05.html#removals
-devref::5.14.2.3::Circular dependencies::https://www.debian.org/doc/developers-reference/ch05.html#circular
-devref::5.14.2.4::Influence of package in testing::https://www.debian.org/doc/developers-reference/ch05.html#s5.13.2.4
-devref::5.14.2.5::Details::https://www.debian.org/doc/developers-reference/ch05.html#details
-devref::5.14.3::Direct updates to testing::https://www.debian.org/doc/developers-reference/ch05.html#t-p-u
-devref::5.14.4::Frequently asked questions::https://www.debian.org/doc/developers-reference/ch05.html#faq
-devref::5.14.4.1::What are release-critical bugs, and how do they get counted?::https://www.debian.org/doc/developers-reference/ch05.html#rc
-devref::5.14.4.2::How could installing a package into <code>testing</code> possibly break other packages?::https://www.debian.org/doc/developers-reference/ch05.html#s5.13.4.2
-devref::6::Best Packaging Practices::https://www.debian.org/doc/developers-reference/ch06.html
-devref::6.1::Best practices for <code>debian/rules</code>::https://www.debian.org/doc/developers-reference/ch06.html#bpp-debian-rules
-devref::6.1.1::Helper scripts::https://www.debian.org/doc/developers-reference/ch06.html#helper-scripts
-devref::6.1.2::Separating your patches into multiple files::https://www.debian.org/doc/developers-reference/ch06.html#multiple-patches
-devref::6.1.3::Multiple binary packages::https://www.debian.org/doc/developers-reference/ch06.html#multiple-binary
-devref::6.2::Best practices for <code>debian/control</code>::https://www.debian.org/doc/developers-reference/ch06.html#bpp-debian-control
-devref::6.2.1::General guidelines for package descriptions::https://www.debian.org/doc/developers-reference/ch06.html#bpp-desc-basics
-devref::6.2.2::The package synopsis, or short description::https://www.debian.org/doc/developers-reference/ch06.html#bpp-pkg-synopsis
-devref::6.2.3::The long description::https://www.debian.org/doc/developers-reference/ch06.html#bpp-pkg-desc
-devref::6.2.4::Upstream home page::https://www.debian.org/doc/developers-reference/ch06.html#bpp-upstream-info
-devref::6.2.5::Version Control System location::https://www.debian.org/doc/developers-reference/ch06.html#bpp-vcs
-devref::6.2.5.1::Vcs-Browser::https://www.debian.org/doc/developers-reference/ch06.html#s6.2.5.1
-devref::6.2.5.2::Vcs-*::https://www.debian.org/doc/developers-reference/ch06.html#s6.2.5.2
-devref::6.3::Best practices for <code>debian/changelog</code>::https://www.debian.org/doc/developers-reference/ch06.html#bpp-debian-changelog
-devref::6.3.1::Writing useful changelog entries::https://www.debian.org/doc/developers-reference/ch06.html#bpp-changelog-do
-devref::6.3.2::Selecting the upload urgency::https://www.debian.org/doc/developers-reference/ch06.html#bpp-changelog-urgency
-devref::6.3.3::Common misconceptions about changelog entries::https://www.debian.org/doc/developers-reference/ch06.html#bpp-changelog-misconceptions
-devref::6.3.4::Common errors in changelog entries::https://www.debian.org/doc/developers-reference/ch06.html#bpp-changelog-errors
-devref::6.3.5::Supplementing changelogs with <code>NEWS.Debian</code> files::https://www.debian.org/doc/developers-reference/ch06.html#bpp-news-debian
-devref::6.4::Best practices for maintainer scripts::https://www.debian.org/doc/developers-reference/ch06.html#bpp-debian-maint-scripts
-devref::6.5::Configuration management with <code>debconf</code>::https://www.debian.org/doc/developers-reference/ch06.html#bpp-config-mgmt
-devref::6.5.1::Do not abuse debconf::https://www.debian.org/doc/developers-reference/ch06.html#s6.5.1
-devref::6.5.2::General recommendations for authors and translators::https://www.debian.org/doc/developers-reference/ch06.html#s6.5.2
-devref::6.5.2.1::Write correct English::https://www.debian.org/doc/developers-reference/ch06.html#s6.5.2.1
-devref::6.5.2.2::Be kind to translators::https://www.debian.org/doc/developers-reference/ch06.html#s6.5.2.2
-devref::6.5.2.3::Unfuzzy complete translations when correcting typos and spelling::https://www.debian.org/doc/developers-reference/ch06.html#s6.5.2.3
-devref::6.5.2.4::Do not make assumptions about interfaces::https://www.debian.org/doc/developers-reference/ch06.html#s6.5.2.4
-devref::6.5.2.5::Do not use first person::https://www.debian.org/doc/developers-reference/ch06.html#s6.5.2.5
-devref::6.5.2.6::Be gender neutral::https://www.debian.org/doc/developers-reference/ch06.html#s6.5.2.6
-devref::6.5.3::Templates fields definition::https://www.debian.org/doc/developers-reference/ch06.html#s6.5.3
-devref::6.5.3.1::Type::https://www.debian.org/doc/developers-reference/ch06.html#s6.5.3.1
-devref::6.5.3.1.1::string::https://www.debian.org/doc/developers-reference/ch06.html#s6.5.3.1.1
-devref::6.5.3.1.2::password::https://www.debian.org/doc/developers-reference/ch06.html#s6.5.3.1.2
-devref::6.5.3.1.3::boolean::https://www.debian.org/doc/developers-reference/ch06.html#s6.5.3.1.3
-devref::6.5.3.1.4::select::https://www.debian.org/doc/developers-reference/ch06.html#s6.5.3.1.4
-devref::6.5.3.1.5::multiselect::https://www.debian.org/doc/developers-reference/ch06.html#s6.5.3.1.5
-devref::6.5.3.1.6::note::https://www.debian.org/doc/developers-reference/ch06.html#s6.5.3.1.6
-devref::6.5.3.1.7::text::https://www.debian.org/doc/developers-reference/ch06.html#s6.5.3.1.7
-devref::6.5.3.1.8::error::https://www.debian.org/doc/developers-reference/ch06.html#s6.5.3.1.8
-devref::6.5.3.2::Description: short and extended description::https://www.debian.org/doc/developers-reference/ch06.html#s6.5.3.2
-devref::6.5.3.3::Choices::https://www.debian.org/doc/developers-reference/ch06.html#s6.5.3.3
-devref::6.5.3.4::Default::https://www.debian.org/doc/developers-reference/ch06.html#s6.5.3.4
-devref::6.5.4::Template fields specific style guide::https://www.debian.org/doc/developers-reference/ch06.html#s6.5.4
-devref::6.5.4.1::Type field::https://www.debian.org/doc/developers-reference/ch06.html#s6.5.4.1
-devref::6.5.4.2::Description field::https://www.debian.org/doc/developers-reference/ch06.html#s6.5.4.2
-devref::6.5.4.2.1::String/password templates::https://www.debian.org/doc/developers-reference/ch06.html#s6.5.4.2.1
-devref::6.5.4.2.2::Boolean templates::https://www.debian.org/doc/developers-reference/ch06.html#s6.5.4.2.2
-devref::6.5.4.2.3::Select/Multiselect::https://www.debian.org/doc/developers-reference/ch06.html#s6.5.4.2.3
-devref::6.5.4.2.4::Notes::https://www.debian.org/doc/developers-reference/ch06.html#s6.5.4.2.4
-devref::6.5.4.3::Choices field::https://www.debian.org/doc/developers-reference/ch06.html#s6.5.4.3
-devref::6.5.4.4::Default field::https://www.debian.org/doc/developers-reference/ch06.html#s6.5.4.4
-devref::6.6::Internationalization::https://www.debian.org/doc/developers-reference/ch06.html#bpp-i18n
-devref::6.6.1::Handling debconf translations::https://www.debian.org/doc/developers-reference/ch06.html#bpp-i18n-debconf
-devref::6.6.2::Internationalized documentation::https://www.debian.org/doc/developers-reference/ch06.html#bpp-i18n-docs
-devref::6.7::Common packaging situations::https://www.debian.org/doc/developers-reference/ch06.html#bpp-common-situations
-devref::6.7.1::Packages using <strong>autoconf</strong>/<strong>automake</strong>::https://www.debian.org/doc/developers-reference/ch06.html#bpp-autotools
-devref::6.7.2::Libraries::https://www.debian.org/doc/developers-reference/ch06.html#bpp-libraries
-devref::6.7.3::Documentation::https://www.debian.org/doc/developers-reference/ch06.html#bpp-docs
-devref::6.7.4::Specific types of packages::https://www.debian.org/doc/developers-reference/ch06.html#bpp-other
-devref::6.7.5::Architecture-independent data::https://www.debian.org/doc/developers-reference/ch06.html#bpp-archindepdata
-devref::6.7.6::Needing a certain locale during build::https://www.debian.org/doc/developers-reference/ch06.html#bpp-locale
-devref::6.7.7::Make transition packages deborphan compliant::https://www.debian.org/doc/developers-reference/ch06.html#bpp-transition
-devref::6.7.8::Best practices for <code>.orig.tar.{gz,bz2,xz}</code> files::https://www.debian.org/doc/developers-reference/ch06.html#bpp-origtargz
-devref::6.7.8.1::Pristine source::https://www.debian.org/doc/developers-reference/ch06.html#pristinesource
-devref::6.7.8.2::Repackaged upstream source::https://www.debian.org/doc/developers-reference/ch06.html#repackagedorigtargz
-devref::6.7.8.3::Changing binary files::https://www.debian.org/doc/developers-reference/ch06.html#changed-binfiles
-devref::6.7.9::Best practices for debug packages::https://www.debian.org/doc/developers-reference/ch06.html#bpp-dbg
-devref::6.7.9.1::Automatically generated debug packages::https://www.debian.org/doc/developers-reference/ch06.html#bpp-dbgsym
-devref::6.7.9.2::Manual -dbg packages::https://www.debian.org/doc/developers-reference/ch06.html#bpp-dbg-legacy
-devref::6.7.10::Best practices for meta-packages::https://www.debian.org/doc/developers-reference/ch06.html#bpp-meta
-devref::7::Beyond Packaging::https://www.debian.org/doc/developers-reference/ch07.html
-devref::7.1::Bug reporting::https://www.debian.org/doc/developers-reference/ch07.html#submit-bug
-devref::7.1.1::Reporting lots of bugs at once (mass bug filing)::https://www.debian.org/doc/developers-reference/ch07.html#submit-many-bugs
-devref::7.1.1.1::Usertags::https://www.debian.org/doc/developers-reference/ch07.html#usertags
-devref::7.2::Quality Assurance effort::https://www.debian.org/doc/developers-reference/ch07.html#qa-effort
-devref::7.2.1::Daily work::https://www.debian.org/doc/developers-reference/ch07.html#qa-daily-work
-devref::7.2.2::Bug squashing parties::https://www.debian.org/doc/developers-reference/ch07.html#qa-bsp
-devref::7.3::Contacting other maintainers::https://www.debian.org/doc/developers-reference/ch07.html#contacting-maintainers
-devref::7.4::Dealing with inactive and/or unreachable maintainers::https://www.debian.org/doc/developers-reference/ch07.html#mia-qa
-devref::7.5::Interacting with prospective Debian developers::https://www.debian.org/doc/developers-reference/ch07.html#newmaint
-devref::7.5.1::Sponsoring packages::https://www.debian.org/doc/developers-reference/ch07.html#sponsoring
-devref::7.5.1.1::Sponsoring a new package::https://www.debian.org/doc/developers-reference/ch07.html#sponsoring-new-package
-devref::7.5.1.2::Sponsoring an update of an existing package::https://www.debian.org/doc/developers-reference/ch07.html#sponsoring-update
-devref::7.5.2::Advocating new developers::https://www.debian.org/doc/developers-reference/ch07.html#advocating-new-developers
-devref::7.5.3::Handling new maintainer applications::https://www.debian.org/doc/developers-reference/ch07.html#become-application-manager
-devref::8::Internationalization and Translations::https://www.debian.org/doc/developers-reference/ch08.html
-devref::8.1::How translations are handled within Debian::https://www.debian.org/doc/developers-reference/ch08.html#l10n-handling
-devref::8.2::I18N &amp; L10N FAQ for maintainers::https://www.debian.org/doc/developers-reference/ch08.html#l10n-faqm
-devref::8.2.1::How to get a given text translated::https://www.debian.org/doc/developers-reference/ch08.html#l10n-faqm-tr
-devref::8.2.2::How to get a given translation reviewed::https://www.debian.org/doc/developers-reference/ch08.html#l10n-faqm-rev
-devref::8.2.3::How to get a given translation updated::https://www.debian.org/doc/developers-reference/ch08.html#l10n-faqm-update
-devref::8.2.4::How to handle a bug report concerning a translation::https://www.debian.org/doc/developers-reference/ch08.html#l10n-faqm-bug
-devref::8.3::I18N &amp; L10N FAQ for translators::https://www.debian.org/doc/developers-reference/ch08.html#l10n-faqtr
-devref::8.3.1::How to help the translation effort::https://www.debian.org/doc/developers-reference/ch08.html#l10n-faqtr-help
-devref::8.3.2::How to provide a translation for inclusion in a package::https://www.debian.org/doc/developers-reference/ch08.html#l10n-faqtr-inc
-devref::8.4::Best current practice concerning l10n::https://www.debian.org/doc/developers-reference/ch08.html#l10n-best
-devref::A::Overview of Debian Maintainer Tools::https://www.debian.org/doc/developers-reference/apa.html
-devref::A.1::Core tools::https://www.debian.org/doc/developers-reference/apa.html#tools-core
-devref::A.1.1::<code>dpkg-dev</code>::https://www.debian.org/doc/developers-reference/apa.html#dpkg-dev
-devref::A.1.2::<code>debconf</code>::https://www.debian.org/doc/developers-reference/apa.html#debconf
-devref::A.1.3::<code>fakeroot</code>::https://www.debian.org/doc/developers-reference/apa.html#fakeroot
-devref::A.2::Package lint tools::https://www.debian.org/doc/developers-reference/apa.html#tools-lint
-devref::A.2.1::<code>lintian</code>::https://www.debian.org/doc/developers-reference/apa.html#lintian
-devref::A.2.2::<strong>debdiff</strong>::https://www.debian.org/doc/developers-reference/apa.html#debdiff
-devref::A.3::Helpers for <code>debian/rules</code>::https://www.debian.org/doc/developers-reference/apa.html#tools-helpers
-devref::A.3.1::<code>debhelper</code>::https://www.debian.org/doc/developers-reference/apa.html#debhelper
-devref::A.3.2::<code>dh-make</code>::https://www.debian.org/doc/developers-reference/apa.html#dh-make
-devref::A.3.3::<code>equivs</code>::https://www.debian.org/doc/developers-reference/apa.html#equivs
-devref::A.4::Package builders::https://www.debian.org/doc/developers-reference/apa.html#tools-builders
-devref::A.4.1::<code>git-buildpackage</code>::https://www.debian.org/doc/developers-reference/apa.html#git-buildpackage
-devref::A.4.2::<code>debootstrap</code>::https://www.debian.org/doc/developers-reference/apa.html#debootstrap
-devref::A.4.3::<code>pbuilder</code>::https://www.debian.org/doc/developers-reference/apa.html#pbuilder
-devref::A.4.4::<code>sbuild</code>::https://www.debian.org/doc/developers-reference/apa.html#sbuild
-devref::A.5::Package uploaders::https://www.debian.org/doc/developers-reference/apa.html#uploaders
-devref::A.5.1::<code>dupload</code>::https://www.debian.org/doc/developers-reference/apa.html#dupload
-devref::A.5.2::<code>dput</code>::https://www.debian.org/doc/developers-reference/apa.html#dput
-devref::A.5.3::<strong>dcut</strong>::https://www.debian.org/doc/developers-reference/apa.html#dcut
-devref::A.6::Maintenance automation::https://www.debian.org/doc/developers-reference/apa.html#tools-maint-automate
-devref::A.6.1::<code>devscripts</code>::https://www.debian.org/doc/developers-reference/apa.html#devscripts
-devref::A.6.2::<code>autotools-dev</code>::https://www.debian.org/doc/developers-reference/apa.html#autotools-dev
-devref::A.6.3::<code>dpkg-repack</code>::https://www.debian.org/doc/developers-reference/apa.html#dpkg-repack
-devref::A.6.4::<code>alien</code>::https://www.debian.org/doc/developers-reference/apa.html#alien
-devref::A.6.5::<code>dpkg-dev-el</code>::https://www.debian.org/doc/developers-reference/apa.html#dpkg-dev-el
-devref::A.6.6::<strong>dpkg-depcheck</strong>::https://www.debian.org/doc/developers-reference/apa.html#dpkg-depcheck
-devref::A.7::Porting tools::https://www.debian.org/doc/developers-reference/apa.html#tools-porting
-devref::A.7.1::<code>dpkg-cross</code>::https://www.debian.org/doc/developers-reference/apa.html#dpkg-cross
-devref::A.8::Documentation and information::https://www.debian.org/doc/developers-reference/apa.html#tools-doc
-devref::A.8.1::<code>docbook-xml</code>::https://www.debian.org/doc/developers-reference/apa.html#docbook-xml
-devref::A.8.2::<code>debiandoc-sgml</code>::https://www.debian.org/doc/developers-reference/apa.html#debiandoc-sgml
-devref::A.8.3::<code>debian-keyring</code>::https://www.debian.org/doc/developers-reference/apa.html#debian-keyring
-devref::A.8.4::<code>debian-el</code>::https://www.debian.org/doc/developers-reference/apa.html#debian-el
+devref::::Debian Developer&#39;s Reference::https://www.debian.org/doc/developers-reference/
+devref::1::Scope of This Document::https://www.debian.org/doc/developers-reference/scope.html
+devref::2::Applying to Become a Member::https://www.debian.org/doc/developers-reference/new-maintainer.html
+devref::2.1::Getting started::https://www.debian.org/doc/developers-reference/new-maintainer.html#getting-started
+devref::2.2::Debian mentors and sponsors::https://www.debian.org/doc/developers-reference/new-maintainer.html#debian-mentors-and-sponsors
+devref::2.3::Registering as a Debian member::https://www.debian.org/doc/developers-reference/new-maintainer.html#registering-as-a-debian-member
+devref::3::Debian Developer's Duties::https://www.debian.org/doc/developers-reference/developer-duties.html
+devref::3.1::Package Maintainer's Duties::https://www.debian.org/doc/developers-reference/developer-duties.html#package-maintainer-s-duties
+devref::3.1.1::Work towards the next <code>stable</code> release::https://www.debian.org/doc/developers-reference/developer-duties.html#work-towards-the-next-stable-release
+devref::3.1.2::Maintain packages in <code>stable</code>::https://www.debian.org/doc/developers-reference/developer-duties.html#maintain-packages-in-stable
+devref::3.1.3::Manage release-critical bugs::https://www.debian.org/doc/developers-reference/developer-duties.html#manage-release-critical-bugs
+devref::3.1.4::Coordination with upstream developers::https://www.debian.org/doc/developers-reference/developer-duties.html#coordination-with-upstream-developers
+devref::3.2::Administrative Duties::https://www.debian.org/doc/developers-reference/developer-duties.html#administrative-duties
+devref::3.2.1::Maintaining your Debian information::https://www.debian.org/doc/developers-reference/developer-duties.html#maintaining-your-debian-information
+devref::3.2.2::Maintaining your public key::https://www.debian.org/doc/developers-reference/developer-duties.html#maintaining-your-public-key
+devref::3.2.3::Voting::https://www.debian.org/doc/developers-reference/developer-duties.html#voting
+devref::3.2.4::Going on vacation gracefully::https://www.debian.org/doc/developers-reference/developer-duties.html#going-on-vacation-gracefully
+devref::3.2.5::Retiring::https://www.debian.org/doc/developers-reference/developer-duties.html#retiring
+devref::3.2.6::Returning after retirement::https://www.debian.org/doc/developers-reference/developer-duties.html#returning-after-retirement
+devref::4::Resources for Debian Members::https://www.debian.org/doc/developers-reference/resources.html
+devref::4.1::Mailing lists::https://www.debian.org/doc/developers-reference/resources.html#mailing-lists
+devref::4.1.1::Basic rules for use::https://www.debian.org/doc/developers-reference/resources.html#basic-rules-for-use
+devref::4.1.2::Core development mailing lists::https://www.debian.org/doc/developers-reference/resources.html#core-development-mailing-lists
+devref::4.1.3::Special lists::https://www.debian.org/doc/developers-reference/resources.html#special-lists
+devref::4.1.4::Requesting new development-related lists::https://www.debian.org/doc/developers-reference/resources.html#requesting-new-development-related-lists
+devref::4.2::IRC channels::https://www.debian.org/doc/developers-reference/resources.html#irc-channels
+devref::4.3::Documentation::https://www.debian.org/doc/developers-reference/resources.html#documentation
+devref::4.4::Debian machines::https://www.debian.org/doc/developers-reference/resources.html#debian-machines
+devref::4.4.1::The bugs server::https://www.debian.org/doc/developers-reference/resources.html#the-bugs-server
+devref::4.4.2::The ftp-master server::https://www.debian.org/doc/developers-reference/resources.html#the-ftp-master-server
+devref::4.4.3::The www-master server::https://www.debian.org/doc/developers-reference/resources.html#the-www-master-server
+devref::4.4.4::The people web server::https://www.debian.org/doc/developers-reference/resources.html#the-people-web-server
+devref::4.4.5::salsa.debian.org: Git repositories and collaborative development platform::https://www.debian.org/doc/developers-reference/resources.html#salsa-debian-org-git-repositories-and-collaborative-development-platform
+devref::4.4.6::chroots to different distributions::https://www.debian.org/doc/developers-reference/resources.html#chroots-to-different-distributions
+devref::4.5::The Developers Database::https://www.debian.org/doc/developers-reference/resources.html#the-developers-database
+devref::4.6::The Debian archive::https://www.debian.org/doc/developers-reference/resources.html#the-debian-archive
+devref::4.6.1::Sections::https://www.debian.org/doc/developers-reference/resources.html#sections
+devref::4.6.2::Architectures::https://www.debian.org/doc/developers-reference/resources.html#architectures
+devref::4.6.3::Packages::https://www.debian.org/doc/developers-reference/resources.html#packages
+devref::4.6.4::Distributions::https://www.debian.org/doc/developers-reference/resources.html#distributions
+devref::4.6.4.1::Stable, testing, and unstable::https://www.debian.org/doc/developers-reference/resources.html#stable-testing-and-unstable
+devref::4.6.4.2::More information about the testing distribution::https://www.debian.org/doc/developers-reference/resources.html#more-information-about-the-testing-distribution
+devref::4.6.4.3::Experimental::https://www.debian.org/doc/developers-reference/resources.html#experimental
+devref::4.6.5::Release code names::https://www.debian.org/doc/developers-reference/resources.html#release-code-names
+devref::4.7::Debian mirrors::https://www.debian.org/doc/developers-reference/resources.html#debian-mirrors
+devref::4.8::The Incoming system::https://www.debian.org/doc/developers-reference/resources.html#the-incoming-system
+devref::4.9::Package information::https://www.debian.org/doc/developers-reference/resources.html#package-information
+devref::4.9.1::On the web::https://www.debian.org/doc/developers-reference/resources.html#on-the-web
+devref::4.9.2::The <code>dak ls</code> utility::https://www.debian.org/doc/developers-reference/resources.html#the-dak-ls-utility
+devref::4.10::The Debian Package Tracker::https://www.debian.org/doc/developers-reference/resources.html#the-debian-package-tracker
+devref::4.11::Developer's packages overview::https://www.debian.org/doc/developers-reference/resources.html#developer-s-packages-overview
+devref::4.12::Debian's FusionForge installation: Alioth::https://www.debian.org/doc/developers-reference/resources.html#debian-s-fusionforge-installation-alioth
+devref::4.13::Goodies for Debian Members::https://www.debian.org/doc/developers-reference/resources.html#goodies-for-debian-members
+devref::5::Managing Packages::https://www.debian.org/doc/developers-reference/pkgs.html
+devref::5.1::New packages::https://www.debian.org/doc/developers-reference/pkgs.html#new-packages
+devref::5.2::Recording changes in the package::https://www.debian.org/doc/developers-reference/pkgs.html#recording-changes-in-the-package
+devref::5.3::Testing the package::https://www.debian.org/doc/developers-reference/pkgs.html#testing-the-package
+devref::5.4::Layout of the source package::https://www.debian.org/doc/developers-reference/pkgs.html#layout-of-the-source-package
+devref::5.5::Picking a distribution::https://www.debian.org/doc/developers-reference/pkgs.html#picking-a-distribution
+devref::5.5.1::Special case: uploads to the <code>stable</code> and <code>oldstable</code> distributions::https://www.debian.org/doc/developers-reference/pkgs.html#special-case-uploads-to-the-stable-and-oldstable-distributions
+devref::5.5.2::Special case: the <code>stable-updates</code> suite::https://www.debian.org/doc/developers-reference/pkgs.html#special-case-the-stable-updates-suite
+devref::5.5.3::Special case: uploads to <code>testing/testing-proposed-updates</code>::https://www.debian.org/doc/developers-reference/pkgs.html#special-case-uploads-to-testing-testing-proposed-updates
+devref::5.6::Uploading a package::https://www.debian.org/doc/developers-reference/pkgs.html#uploading-a-package
+devref::5.6.1::Uploading to <code>ftp-master</code>::https://www.debian.org/doc/developers-reference/pkgs.html#uploading-to-ftp-master
+devref::5.6.2::Delayed uploads::https://www.debian.org/doc/developers-reference/pkgs.html#delayed-uploads
+devref::5.6.3::Security uploads::https://www.debian.org/doc/developers-reference/pkgs.html#security-uploads
+devref::5.6.4::Other upload queues::https://www.debian.org/doc/developers-reference/pkgs.html#other-upload-queues
+devref::5.6.5::Notifications::https://www.debian.org/doc/developers-reference/pkgs.html#notifications
+devref::5.7::Specifying the package section, subsection and priority::https://www.debian.org/doc/developers-reference/pkgs.html#specifying-the-package-section-subsection-and-priority
+devref::5.8::Handling bugs::https://www.debian.org/doc/developers-reference/pkgs.html#handling-bugs
+devref::5.8.1::Monitoring bugs::https://www.debian.org/doc/developers-reference/pkgs.html#monitoring-bugs
+devref::5.8.2::Responding to bugs::https://www.debian.org/doc/developers-reference/pkgs.html#responding-to-bugs
+devref::5.8.3::Bug housekeeping::https://www.debian.org/doc/developers-reference/pkgs.html#bug-housekeeping
+devref::5.8.4::When bugs are closed by new uploads::https://www.debian.org/doc/developers-reference/pkgs.html#when-bugs-are-closed-by-new-uploads
+devref::5.8.5::Handling security-related bugs::https://www.debian.org/doc/developers-reference/pkgs.html#handling-security-related-bugs
+devref::5.8.5.1::Debian Security Tracker::https://www.debian.org/doc/developers-reference/pkgs.html#debian-security-tracker
+devref::5.8.5.2::Confidentiality::https://www.debian.org/doc/developers-reference/pkgs.html#confidentiality
+devref::5.8.5.3::Security Advisories::https://www.debian.org/doc/developers-reference/pkgs.html#security-advisories
+devref::5.8.5.4::Preparing packages to address security issues::https://www.debian.org/doc/developers-reference/pkgs.html#preparing-packages-to-address-security-issues
+devref::5.8.5.5::Uploading the fixed package::https://www.debian.org/doc/developers-reference/pkgs.html#uploading-the-fixed-package
+devref::5.9::Moving, removing, renaming, orphaning, adopting, and reintroducing packages::https://www.debian.org/doc/developers-reference/pkgs.html#moving-removing-renaming-orphaning-adopting-and-reintroducing-packages
+devref::5.9.1::Moving packages::https://www.debian.org/doc/developers-reference/pkgs.html#moving-packages
+devref::5.9.2::Removing packages::https://www.debian.org/doc/developers-reference/pkgs.html#removing-packages
+devref::5.9.2.1::Removing packages from <code>Incoming</code>::https://www.debian.org/doc/developers-reference/pkgs.html#removing-packages-from-incoming
+devref::5.9.3::Replacing or renaming packages::https://www.debian.org/doc/developers-reference/pkgs.html#replacing-or-renaming-packages
+devref::5.9.4::Orphaning a package::https://www.debian.org/doc/developers-reference/pkgs.html#orphaning-a-package
+devref::5.9.5::Adopting a package::https://www.debian.org/doc/developers-reference/pkgs.html#adopting-a-package
+devref::5.9.6::Reintroducing packages::https://www.debian.org/doc/developers-reference/pkgs.html#reintroducing-packages
+devref::5.10::Porting and being ported::https://www.debian.org/doc/developers-reference/pkgs.html#porting-and-being-ported
+devref::5.10.1::Being kind to porters::https://www.debian.org/doc/developers-reference/pkgs.html#being-kind-to-porters
+devref::5.10.2::Guidelines for porter uploads::https://www.debian.org/doc/developers-reference/pkgs.html#guidelines-for-porter-uploads
+devref::5.10.2.1::Recompilation or binary-only NMU::https://www.debian.org/doc/developers-reference/pkgs.html#recompilation-or-binary-only-nmu
+devref::5.10.2.2::When to do a source NMU if you are a porter::https://www.debian.org/doc/developers-reference/pkgs.html#when-to-do-a-source-nmu-if-you-are-a-porter
+devref::5.10.3::Porting infrastructure and automation::https://www.debian.org/doc/developers-reference/pkgs.html#porting-infrastructure-and-automation
+devref::5.10.3.1::Mailing lists and web pages::https://www.debian.org/doc/developers-reference/pkgs.html#mailing-lists-and-web-pages
+devref::5.10.3.2::Porter tools::https://www.debian.org/doc/developers-reference/pkgs.html#porter-tools
+devref::5.10.3.3::<code>wanna-build</code>::https://www.debian.org/doc/developers-reference/pkgs.html#wanna-build
+devref::5.10.4::When your package is <em>not</em> portable::https://www.debian.org/doc/developers-reference/pkgs.html#when-your-package-is-not-portable
+devref::5.10.5::Marking non-free packages as auto-buildable::https://www.debian.org/doc/developers-reference/pkgs.html#marking-non-free-packages-as-auto-buildable
+devref::5.11::Non-Maintainer Uploads (NMUs)::https://www.debian.org/doc/developers-reference/pkgs.html#non-maintainer-uploads-nmus
+devref::5.11.1::When and how to do an NMU::https://www.debian.org/doc/developers-reference/pkgs.html#when-and-how-to-do-an-nmu
+devref::5.11.2::NMUs and <code>debian/changelog</code>::https://www.debian.org/doc/developers-reference/pkgs.html#nmus-and-debian-changelog
+devref::5.11.3::Using the <code>DELAYED/</code> queue::https://www.debian.org/doc/developers-reference/pkgs.html#using-the-delayed-queue
+devref::5.11.4::NMUs from the maintainer's point of view::https://www.debian.org/doc/developers-reference/pkgs.html#nmus-from-the-maintainer-s-point-of-view
+devref::5.11.5::Source NMUs vs Binary-only NMUs (binNMUs)::https://www.debian.org/doc/developers-reference/pkgs.html#source-nmus-vs-binary-only-nmus-binnmus
+devref::5.11.6::NMUs vs QA uploads::https://www.debian.org/doc/developers-reference/pkgs.html#nmus-vs-qa-uploads
+devref::5.11.7::NMUs vs team uploads::https://www.debian.org/doc/developers-reference/pkgs.html#nmus-vs-team-uploads
+devref::5.12::Package Salvaging::https://www.debian.org/doc/developers-reference/pkgs.html#package-salvaging
+devref::5.12.1::When a package is eligible for package salvaging::https://www.debian.org/doc/developers-reference/pkgs.html#when-a-package-is-eligible-for-package-salvaging
+devref::5.12.2::How to salvage a package::https://www.debian.org/doc/developers-reference/pkgs.html#how-to-salvage-a-package
+devref::5.13::Collaborative maintenance::https://www.debian.org/doc/developers-reference/pkgs.html#collaborative-maintenance
+devref::5.14::The testing distribution::https://www.debian.org/doc/developers-reference/pkgs.html#the-testing-distribution
+devref::5.14.1::Basics::https://www.debian.org/doc/developers-reference/pkgs.html#basics
+devref::5.14.2::Updates from unstable::https://www.debian.org/doc/developers-reference/pkgs.html#updates-from-unstable
+devref::5.14.2.1::Out-of-date::https://www.debian.org/doc/developers-reference/pkgs.html#out-of-date
+devref::5.14.2.2::Removals from testing::https://www.debian.org/doc/developers-reference/pkgs.html#removals-from-testing
+devref::5.14.2.3::Circular dependencies::https://www.debian.org/doc/developers-reference/pkgs.html#circular-dependencies
+devref::5.14.2.4::Influence of package in testing::https://www.debian.org/doc/developers-reference/pkgs.html#influence-of-package-in-testing
+devref::5.14.2.5::Details::https://www.debian.org/doc/developers-reference/pkgs.html#details
+devref::5.14.3::Direct updates to testing::https://www.debian.org/doc/developers-reference/pkgs.html#direct-updates-to-testing
+devref::5.14.4::Frequently asked questions::https://www.debian.org/doc/developers-reference/pkgs.html#frequently-asked-questions
+devref::5.14.4.1::What are release-critical bugs, and how do they get counted?::https://www.debian.org/doc/developers-reference/pkgs.html#what-are-release-critical-bugs-and-how-do-they-get-counted
+devref::5.14.4.2::How could installing a package into <code>testing</code> possibly break other packages?::https://www.debian.org/doc/developers-reference/pkgs.html#how-could-installing-a-package-into-testing-possibly-break-other-packages
+devref::6::Best Packaging Practices::https://www.debian.org/doc/developers-reference/best-pkging-practices.html
+devref::6.1::Best practices for <code>debian/rules</code>::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#best-practices-for-debian-rules
+devref::6.1.1::Helper scripts::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#helper-scripts
+devref::6.1.2::Separating your patches into multiple files::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#separating-your-patches-into-multiple-files
+devref::6.1.3::Multiple binary packages::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#multiple-binary-packages
+devref::6.2::Best practices for <code>debian/control</code>::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#best-practices-for-debian-control
+devref::6.2.1::General guidelines for package descriptions::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#general-guidelines-for-package-descriptions
+devref::6.2.2::The package synopsis, or short description::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#the-package-synopsis-or-short-description
+devref::6.2.3::The long description::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#the-long-description
+devref::6.2.4::Upstream home page::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#upstream-home-page
+devref::6.2.5::Version Control System location::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#version-control-system-location
+devref::6.2.5.1::Vcs-Browser::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#vcs-browser
+devref::6.2.5.2::Vcs-*::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#vcs
+devref::6.3::Best practices for <code>debian/changelog</code>::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#best-practices-for-debian-changelog
+devref::6.3.1::Writing useful changelog entries::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#writing-useful-changelog-entries
+devref::6.3.2::Selecting the upload urgency::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#selecting-the-upload-urgency
+devref::6.3.3::Common misconceptions about changelog entries::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#common-misconceptions-about-changelog-entries
+devref::6.3.4::Common errors in changelog entries::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#common-errors-in-changelog-entries
+devref::6.3.5::Supplementing changelogs with <code>NEWS.Debian</code> files::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#supplementing-changelogs-with-news-debian-files
+devref::6.4::Best practices for maintainer scripts::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#best-practices-for-maintainer-scripts
+devref::6.5::Configuration management with <code>debconf</code>::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#configuration-management-with-debconf
+devref::6.5.1::Do not abuse debconf::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#do-not-abuse-debconf
+devref::6.5.2::General recommendations for authors and translators::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#general-recommendations-for-authors-and-translators
+devref::6.5.2.1::Write correct English::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#write-correct-english
+devref::6.5.2.2::Be kind to translators::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#be-kind-to-translators
+devref::6.5.2.3::Unfuzzy complete translations when correcting typos and spelling::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#unfuzzy-complete-translations-when-correcting-typos-and-spelling
+devref::6.5.2.4::Do not make assumptions about interfaces::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#do-not-make-assumptions-about-interfaces
+devref::6.5.2.5::Do not use first person::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#do-not-use-first-person
+devref::6.5.2.6::Be gender neutral::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#be-gender-neutral
+devref::6.5.3::Templates fields definition::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#templates-fields-definition
+devref::6.5.3.1::Type::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#type
+devref::6.5.3.2::Description: short and extended description::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#description-short-and-extended-description
+devref::6.5.3.3::Choices::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#choices
+devref::6.5.3.4::Default::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#default
+devref::6.5.4::Template fields specific style guide::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#template-fields-specific-style-guide
+devref::6.5.4.1::Type field::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#type-field
+devref::6.5.4.2::Description field::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#description-field
+devref::6.5.4.3::Choices field::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#choices-field
+devref::6.5.4.4::Default field::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#default-field
+devref::6.6::Internationalization::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#internationalization
+devref::6.6.1::Handling debconf translations::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#handling-debconf-translations
+devref::6.6.2::Internationalized documentation::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#internationalized-documentation
+devref::6.7::Common packaging situations::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#common-packaging-situations
+devref::6.7.1::Packages using <code>autoconf</code>/<code>automake</code>::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#packages-using-autoconf-automake
+devref::6.7.2::Libraries::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#libraries
+devref::6.7.3::Documentation::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#documentation
+devref::6.7.4::Specific types of packages::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#specific-types-of-packages
+devref::6.7.5::Architecture-independent data::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#architecture-independent-data
+devref::6.7.6::Needing a certain locale during build::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#needing-a-certain-locale-during-build
+devref::6.7.7::Make transition packages deborphan compliant::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#make-transition-packages-deborphan-compliant
+devref::6.7.8::Best practices for <code>.orig.tar.{gz,bz2,xz}</code> files::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#best-practices-for-orig-tar-gz-bz2-xz-files
+devref::6.7.8.1::Pristine source::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#pristine-source
+devref::6.7.8.2::Repackaged upstream source::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#repackaged-upstream-source
+devref::6.7.8.3::Changing binary files::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#changing-binary-files
+devref::6.7.9::Best practices for debug packages::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#best-practices-for-debug-packages
+devref::6.7.9.1::Automatically generated debug packages::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#automatically-generated-debug-packages
+devref::6.7.9.2::Manual -dbg packages::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#manual-dbg-packages
+devref::6.7.10::Best practices for meta-packages::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#best-practices-for-meta-packages
+devref::7::Beyond Packaging::https://www.debian.org/doc/developers-reference/beyond-pkging.html
+devref::7.1::Bug reporting::https://www.debian.org/doc/developers-reference/beyond-pkging.html#bug-reporting
+devref::7.1.1::Reporting lots of bugs at once (mass bug filing)::https://www.debian.org/doc/developers-reference/beyond-pkging.html#reporting-lots-of-bugs-at-once-mass-bug-filing
+devref::7.1.1.1::Usertags::https://www.debian.org/doc/developers-reference/beyond-pkging.html#usertags
+devref::7.2::Quality Assurance effort::https://www.debian.org/doc/developers-reference/beyond-pkging.html#quality-assurance-effort
+devref::7.2.1::Daily work::https://www.debian.org/doc/developers-reference/beyond-pkging.html#daily-work
+devref::7.2.2::Bug squashing parties::https://www.debian.org/doc/developers-reference/beyond-pkging.html#bug-squashing-parties
+devref::7.3::Contacting other maintainers::https://www.debian.org/doc/developers-reference/beyond-pkging.html#contacting-other-maintainers
+devref::7.4::Dealing with inactive and/or unreachable maintainers::https://www.debian.org/doc/developers-reference/beyond-pkging.html#dealing-with-inactive-and-or-unreachable-maintainers
+devref::7.5::Interacting with prospective Debian developers::https://www.debian.org/doc/developers-reference/beyond-pkging.html#interacting-with-prospective-debian-developers
+devref::7.5.1::Sponsoring packages::https://www.debian.org/doc/developers-reference/beyond-pkging.html#sponsoring-packages
+devref::7.5.1.1::Sponsoring a new package::https://www.debian.org/doc/developers-reference/beyond-pkging.html#sponsoring-a-new-package
+devref::7.5.1.2::Sponsoring an update of an existing package::https://www.debian.org/doc/developers-reference/beyond-pkging.html#sponsoring-an-update-of-an-existing-package
+devref::7.5.2::Advocating new developers::https://www.debian.org/doc/developers-reference/beyond-pkging.html#advocating-new-developers
+devref::7.5.3::Handling new maintainer applications::https://www.debian.org/doc/developers-reference/beyond-pkging.html#handling-new-maintainer-applications
+devref::8::Internationalization and Translations::https://www.debian.org/doc/developers-reference/l10n.html
+devref::8.1::How translations are handled within Debian::https://www.debian.org/doc/developers-reference/l10n.html#how-translations-are-handled-within-debian
+devref::8.2::I18N &amp; L10N FAQ for maintainers::https://www.debian.org/doc/developers-reference/l10n.html#i18n-l10n-faq-for-maintainers
+devref::8.2.1::How to get a given text translated::https://www.debian.org/doc/developers-reference/l10n.html#how-to-get-a-given-text-translated
+devref::8.2.2::How to get a given translation reviewed::https://www.debian.org/doc/developers-reference/l10n.html#how-to-get-a-given-translation-reviewed
+devref::8.2.3::How to get a given translation updated::https://www.debian.org/doc/developers-reference/l10n.html#how-to-get-a-given-translation-updated
+devref::8.2.4::How to handle a bug report concerning a translation::https://www.debian.org/doc/developers-reference/l10n.html#how-to-handle-a-bug-report-concerning-a-translation
+devref::8.3::I18N &amp; L10N FAQ for translators::https://www.debian.org/doc/developers-reference/l10n.html#i18n-l10n-faq-for-translators
+devref::8.3.1::How to help the translation effort::https://www.debian.org/doc/developers-reference/l10n.html#how-to-help-the-translation-effort
+devref::8.3.2::How to provide a translation for inclusion in a package::https://www.debian.org/doc/developers-reference/l10n.html#how-to-provide-a-translation-for-inclusion-in-a-package
+devref::8.4::Best current practice concerning l10n::https://www.debian.org/doc/developers-reference/l10n.html#best-current-practice-concerning-l10n
+devref::1*::Overview of Debian Maintainer Tools::https://www.debian.org/doc/developers-reference/tools.html
+devref::1.1::Core tools::https://www.debian.org/doc/developers-reference/tools.html#core-tools
+devref::1.1.1::<code>dpkg-dev</code>::https://www.debian.org/doc/developers-reference/tools.html#dpkg-dev
+devref::1.1.2::<code>debconf</code>::https://www.debian.org/doc/developers-reference/tools.html#debconf
+devref::1.1.3::<code>fakeroot</code>::https://www.debian.org/doc/developers-reference/tools.html#fakeroot
+devref::1.2::Package lint tools::https://www.debian.org/doc/developers-reference/tools.html#package-lint-tools
+devref::1.2.1::<code>lintian</code>::https://www.debian.org/doc/developers-reference/tools.html#lintian
+devref::1.2.2::<code>lintian-brush</code>::https://www.debian.org/doc/developers-reference/tools.html#lintian-brush
+devref::1.2.3::<code>piuparts</code>::https://www.debian.org/doc/developers-reference/tools.html#piuparts
+devref::1.2.4::<code>debdiff</code>::https://www.debian.org/doc/developers-reference/tools.html#debdiff
+devref::1.2.5::<code>diffoscope</code>::https://www.debian.org/doc/developers-reference/tools.html#diffoscope
+devref::1.2.6::<code>duck</code>::https://www.debian.org/doc/developers-reference/tools.html#duck
+devref::1.2.7::<code>adequate</code>::https://www.debian.org/doc/developers-reference/tools.html#adequate
+devref::1.2.8::<code>i18nspector</code>::https://www.debian.org/doc/developers-reference/tools.html#i18nspector
+devref::1.2.9::<code>cme</code>::https://www.debian.org/doc/developers-reference/tools.html#cme
+devref::1.2.10::<code>licensecheck</code>::https://www.debian.org/doc/developers-reference/tools.html#licensecheck
+devref::1.2.11::<code>blhc</code>::https://www.debian.org/doc/developers-reference/tools.html#blhc
+devref::1.3::Helpers for <code>debian/rules</code>::https://www.debian.org/doc/developers-reference/tools.html#helpers-for-debian-rules
+devref::1.3.1::<code>debhelper</code>::https://www.debian.org/doc/developers-reference/tools.html#debhelper
+devref::1.3.2::<code>dh-make</code>::https://www.debian.org/doc/developers-reference/tools.html#dh-make
+devref::1.3.3::<code>equivs</code>::https://www.debian.org/doc/developers-reference/tools.html#equivs
+devref::1.4::Package builders::https://www.debian.org/doc/developers-reference/tools.html#package-builders
+devref::1.4.1::<code>git-buildpackage</code>::https://www.debian.org/doc/developers-reference/tools.html#git-buildpackage
+devref::1.4.2::<code>debootstrap</code>::https://www.debian.org/doc/developers-reference/tools.html#debootstrap
+devref::1.4.3::<code>pbuilder</code>::https://www.debian.org/doc/developers-reference/tools.html#pbuilder
+devref::1.4.4::<code>sbuild</code>::https://www.debian.org/doc/developers-reference/tools.html#sbuild
+devref::1.5::Package uploaders::https://www.debian.org/doc/developers-reference/tools.html#package-uploaders
+devref::1.5.1::<code>dupload</code>::https://www.debian.org/doc/developers-reference/tools.html#dupload
+devref::1.5.2::<code>dput</code>::https://www.debian.org/doc/developers-reference/tools.html#dput
+devref::1.5.3::<code>dcut</code>::https://www.debian.org/doc/developers-reference/tools.html#dcut
+devref::1.6::Maintenance automation::https://www.debian.org/doc/developers-reference/tools.html#maintenance-automation
+devref::1.6.1::<code>devscripts</code>::https://www.debian.org/doc/developers-reference/tools.html#devscripts
+devref::1.6.2::<code>reportbug</code>::https://www.debian.org/doc/developers-reference/tools.html#reportbug
+devref::1.6.3::<code>autotools-dev</code>::https://www.debian.org/doc/developers-reference/tools.html#autotools-dev
+devref::1.6.4::<code>dpkg-repack</code>::https://www.debian.org/doc/developers-reference/tools.html#dpkg-repack
+devref::1.6.5::<code>alien</code>::https://www.debian.org/doc/developers-reference/tools.html#alien
+devref::1.6.6::<code>dpkg-dev-el</code>::https://www.debian.org/doc/developers-reference/tools.html#dpkg-dev-el
+devref::1.6.7::<code>dpkg-depcheck</code>::https://www.debian.org/doc/developers-reference/tools.html#dpkg-depcheck
+devref::1.7::Porting tools::https://www.debian.org/doc/developers-reference/tools.html#porting-tools
+devref::1.7.1::<code>dpkg-cross</code>::https://www.debian.org/doc/developers-reference/tools.html#dpkg-cross
+devref::1.8::Documentation and information::https://www.debian.org/doc/developers-reference/tools.html#documentation-and-information
+devref::1.8.1::<code>debian-policy</code>::https://www.debian.org/doc/developers-reference/tools.html#debian-policy
+devref::1.8.2::<code>doc-debian</code>::https://www.debian.org/doc/developers-reference/tools.html#doc-debian
+devref::1.8.3::<code>developers-reference</code>::https://www.debian.org/doc/developers-reference/tools.html#developers-reference
+devref::1.8.4::<code>maint-guide</code>::https://www.debian.org/doc/developers-reference/tools.html#maint-guide
+devref::1.8.5::<code>packaging-tutorial</code>::https://www.debian.org/doc/developers-reference/tools.html#packaging-tutorial
+devref::1.8.6::<code>how-can-i-help</code>::https://www.debian.org/doc/developers-reference/tools.html#how-can-i-help
+devref::1.8.7::<code>docbook-xml</code>::https://www.debian.org/doc/developers-reference/tools.html#docbook-xml
+devref::1.8.8::<code>debiandoc-sgml</code>::https://www.debian.org/doc/developers-reference/tools.html#debiandoc-sgml
+devref::1.8.9::<code>debian-keyring</code>::https://www.debian.org/doc/developers-reference/tools.html#debian-keyring
+devref::1.8.10::<code>debian-el</code>::https://www.debian.org/doc/developers-reference/tools.html#debian-el
 doc-base::::Debian doc-base Manual::
 doc-base::1::About <code>doc-base</code>::
 doc-base::2::The packages interface::
@@ -279,6 +284,8 @@ doc-base::2.2::Document IDs::
 doc-base::2.3::Control Files::
 doc-base::2.3.1::Example::
 doc-base::2.3.2::Syntax of the control file::
+doc-base::2.3.2.1::The main section::
+doc-base::2.3.2.2::<em>Format</em> sections::
 doc-base::2.3.3::The <code>section</code> field::
 doc-base::2.4::Registering Documents With <strong>doc-base</strong>::
 doc-base::2.5::doc-base 0.8.x features and incompatibilities::
@@ -506,46 +513,6 @@ fhs::srvdataforservicesprovidedbysystem::3.17. /srv : Data for services provided
 fhs::purpose16a::3.17.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose16a
 fhs::tmptemporaryfiles::3.18. /tmp : Temporary files::http://www.pathname.com/fhs/pub/fhs-3.0.html#tmpTemporaryFiles
 fhs::purpose17::3.18.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose17
-fhs::ftn.idm236088643344" class="footnote" name="idm236088643344::<sup class="footnote">[1]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236088643344" class="footnote" name="idm236088643344
-fhs::ftn.idm236088529392" class="footnote" name="idm236088529392::<sup class="footnote">[2]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236088529392" class="footnote" name="idm236088529392
-fhs::ftn.idm236088507872" class="footnote" name="idm236088507872::<sup class="footnote">[3]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236088507872" class="footnote" name="idm236088507872
-fhs::ftn.idm236088451984" class="footnote" name="idm236088451984::<sup class="footnote">[4]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236088451984" class="footnote" name="idm236088451984
-fhs::ftn.idm236088427216" class="footnote" name="idm236088427216::<sup class="footnote">[5]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236088427216" class="footnote" name="idm236088427216
-fhs::ftn.idm236088412656" class="footnote" name="idm236088412656::<sup class="footnote">[6]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236088412656" class="footnote" name="idm236088412656
-fhs::ftn.idm236088405632" class="footnote" name="idm236088405632::<sup class="footnote">[7]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236088405632" class="footnote" name="idm236088405632
-fhs::ftn.idm236088400112" class="footnote" name="idm236088400112::<sup class="footnote">[8]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236088400112" class="footnote" name="idm236088400112
-fhs::ftn.idm236088397728" class="footnote" name="idm236088397728::<sup class="footnote">[9]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236088397728" class="footnote" name="idm236088397728
-fhs::ftn.idm236088395888" class="footnote" name="idm236088395888::<sup class="footnote">[10]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236088395888" class="footnote" name="idm236088395888
-fhs::ftn.idm236088389760" class="footnote" name="idm236088389760::<sup class="footnote">[11]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236088389760" class="footnote" name="idm236088389760
-fhs::ftn.idm236088374992" class="footnote" name="idm236088374992::<sup class="footnote">[12]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236088374992" class="footnote" name="idm236088374992
-fhs::ftn.idm236088363216" class="footnote" name="idm236088363216::<sup class="footnote">[13]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236088363216" class="footnote" name="idm236088363216
-fhs::ftn.idm236088357376" class="footnote" name="idm236088357376::<sup class="footnote">[14]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236088357376" class="footnote" name="idm236088357376
-fhs::ftn.idm236088334544" class="footnote" name="idm236088334544::<sup class="footnote">[15]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236088334544" class="footnote" name="idm236088334544
-fhs::ftn.idm236088285600" class="footnote" name="idm236088285600::<sup class="footnote">[16]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236088285600" class="footnote" name="idm236088285600
-fhs::ftn.idm236088274176" class="footnote" name="idm236088274176::<sup class="footnote">[17]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236088274176" class="footnote" name="idm236088274176
-fhs::ftn.idm236088259440" class="footnote" name="idm236088259440::<sup class="footnote">[18]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236088259440" class="footnote" name="idm236088259440
-fhs::ftn.idm236088255488" class="footnote" name="idm236088255488::<sup class="footnote">[19]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236088255488" class="footnote" name="idm236088255488
-fhs::ftn.idm236088192752" class="footnote" name="idm236088192752::<sup class="footnote">[20]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236088192752" class="footnote" name="idm236088192752
-fhs::idm236088643344" class="para::<sup class="para">[1] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236088643344" class="para
-fhs::idm236088529392" class="para::<sup class="para">[2] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236088529392" class="para
-fhs::idm236088507872" class="para::<sup class="para">[3] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236088507872" class="para
-fhs::idm236088451984" class="para::<sup class="para">[4] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236088451984" class="para
-fhs::idm236088427216" class="para::<sup class="para">[5] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236088427216" class="para
-fhs::idm236088412656" class="para::<sup class="para">[6] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236088412656" class="para
-fhs::idm236088405632" class="para::<sup class="para">[7] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236088405632" class="para
-fhs::idm236088400112" class="para::<sup class="para">[8] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236088400112" class="para
-fhs::idm236088397728" class="para::<sup class="para">[9] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236088397728" class="para
-fhs::idm236088395888" class="para::<sup class="para">[10] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236088395888" class="para
-fhs::idm236088389760" class="para::<sup class="para">[11] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236088389760" class="para
-fhs::idm236088374992" class="para::<sup class="para">[12] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236088374992" class="para
-fhs::idm236088363216" class="para::<sup class="para">[13] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236088363216" class="para
-fhs::idm236088357376" class="para::<sup class="para">[14] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236088357376" class="para
-fhs::idm236088334544" class="para::<sup class="para">[15] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236088334544" class="para
-fhs::idm236088285600" class="para::<sup class="para">[16] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236088285600" class="para
-fhs::idm236088274176" class="para::<sup class="para">[17] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236088274176" class="para
-fhs::idm236088259440" class="para::<sup class="para">[18] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236088259440" class="para
-fhs::idm236088255488" class="para::<sup class="para">[19] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236088255488" class="para
-fhs::idm236088192752" class="para::<sup class="para">[20] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236088192752" class="para
 fhs::purpose18::4.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose18
 fhs::requirements9::4.2. Requirements::http://www.pathname.com/fhs/pub/fhs-3.0.html#requirements9
 fhs::specificoptions9::4.3. Specific Options::http://www.pathname.com/fhs/pub/fhs-3.0.html#specificOptions9
@@ -584,40 +551,6 @@ fhs::usrsharesgmlsgmlandxmldata::4.11.9. /usr/share/sgml : SGML data (optional):
 fhs::idm236087237360::4.11.10. /usr/share/xml : XML data (optional)::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236087237360
 fhs::usrsrcsourcecode::4.12. /usr/src : Source code (optional)::http://www.pathname.com/fhs/pub/fhs-3.0.html#usrsrcSourceCode
 fhs::purpose30::4.12.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose30
-fhs::ftn.idm236087593904" class="footnote" name="idm236087593904::<sup class="footnote">[21]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236087593904" class="footnote" name="idm236087593904
-fhs::ftn.idm236087592496" class="footnote" name="idm236087592496::<sup class="footnote">[22]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236087592496" class="footnote" name="idm236087592496
-fhs::ftn.idm236087588928" class="footnote" name="idm236087588928::<sup class="footnote">[23]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236087588928" class="footnote" name="idm236087588928
-fhs::ftn.idm236087585280" class="footnote" name="idm236087585280::<sup class="footnote">[24]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236087585280" class="footnote" name="idm236087585280
-fhs::ftn.idm236087578304" class="footnote" name="idm236087578304::<sup class="footnote">[25]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236087578304" class="footnote" name="idm236087578304
-fhs::ftn.idm236087566784" class="footnote" name="idm236087566784::<sup class="footnote">[26]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236087566784" class="footnote" name="idm236087566784
-fhs::ftn.idm236087558816" class="footnote" name="idm236087558816::<sup class="footnote">[27]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236087558816" class="footnote" name="idm236087558816
-fhs::ftn.idm236087550400" class="footnote" name="idm236087550400::<sup class="footnote">[28]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236087550400" class="footnote" name="idm236087550400
-fhs::ftn.idm236087505920" class="footnote" name="idm236087505920::<sup class="footnote">[29]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236087505920" class="footnote" name="idm236087505920
-fhs::ftn.idm236087499712" class="footnote" name="idm236087499712::<sup class="footnote">[30]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236087499712" class="footnote" name="idm236087499712
-fhs::ftn.idm236087409888" class="footnote" name="idm236087409888::<sup class="footnote">[31]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236087409888" class="footnote" name="idm236087409888
-fhs::ftn.idm236087387344" class="footnote" name="idm236087387344::<sup class="footnote">[32]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236087387344" class="footnote" name="idm236087387344
-fhs::ftn.idm236087362160" class="footnote" name="idm236087362160::<sup class="footnote">[33]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236087362160" class="footnote" name="idm236087362160
-fhs::ftn.idm236087300336" class="footnote" name="idm236087300336::<sup class="footnote">[34]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236087300336" class="footnote" name="idm236087300336
-fhs::ftn.idm236087277008" class="footnote" name="idm236087277008::<sup class="footnote">[35]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236087277008" class="footnote" name="idm236087277008
-fhs::ftn.idm236087260144" class="footnote" name="idm236087260144::<sup class="footnote">[36]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236087260144" class="footnote" name="idm236087260144
-fhs::ftn.idm236087222480" class="footnote" name="idm236087222480::<sup class="footnote">[37]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236087222480" class="footnote" name="idm236087222480
-fhs::idm236087593904" class="para::<sup class="para">[21] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236087593904" class="para
-fhs::idm236087592496" class="para::<sup class="para">[22] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236087592496" class="para
-fhs::idm236087588928" class="para::<sup class="para">[23] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236087588928" class="para
-fhs::idm236087585280" class="para::<sup class="para">[24] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236087585280" class="para
-fhs::idm236087578304" class="para::<sup class="para">[25] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236087578304" class="para
-fhs::idm236087566784" class="para::<sup class="para">[26] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236087566784" class="para
-fhs::idm236087558816" class="para::<sup class="para">[27] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236087558816" class="para
-fhs::idm236087550400" class="para::<sup class="para">[28] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236087550400" class="para
-fhs::idm236087505920" class="para::<sup class="para">[29] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236087505920" class="para
-fhs::idm236087499712" class="para::<sup class="para">[30] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236087499712" class="para
-fhs::idm236087409888" class="para::<sup class="para">[31] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236087409888" class="para
-fhs::idm236087387344" class="para::<sup class="para">[32] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236087387344" class="para
-fhs::idm236087362160" class="para::<sup class="para">[33] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236087362160" class="para
-fhs::idm236087300336" class="para::<sup class="para">[34] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236087300336" class="para
-fhs::idm236087277008" class="para::<sup class="para">[35] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236087277008" class="para
-fhs::idm236087260144" class="para::<sup class="para">[36] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236087260144" class="para
-fhs::idm236087222480" class="para::<sup class="para">[37] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236087222480" class="para
 fhs::purpose31::5.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose31
 fhs::requirements12::5.2. Requirements::http://www.pathname.com/fhs/pub/fhs-3.0.html#requirements12
 fhs::specificoptions20::5.3. Specific Options::http://www.pathname.com/fhs/pub/fhs-3.0.html#specificOptions20
@@ -661,26 +594,6 @@ fhs::vartmptemporaryfilespreservedbetwee::5.15. /var/tmp : Temporary files prese
 fhs::purpose50::5.15.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose50
 fhs::varypnetworkinformationservice::5.16. /var/yp : Network Information Service (NIS) database files (optional)::http://www.pathname.com/fhs/pub/fhs-3.0.html#varypNetworkInformationService
 fhs::purpose51::5.16.1. Purpose::http://www.pathname.com/fhs/pub/fhs-3.0.html#purpose51
-fhs::ftn.idm236086662944" class="footnote" name="idm236086662944::<sup class="footnote">[38]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236086662944" class="footnote" name="idm236086662944
-fhs::ftn.idm236086641360" class="footnote" name="idm236086641360::<sup class="footnote">[39]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236086641360" class="footnote" name="idm236086641360
-fhs::ftn.idm236086612224" class="footnote" name="idm236086612224::<sup class="footnote">[40]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236086612224" class="footnote" name="idm236086612224
-fhs::ftn.idm236086608112" class="footnote" name="idm236086608112::<sup class="footnote">[41]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236086608112" class="footnote" name="idm236086608112
-fhs::ftn.idm236086558032" class="footnote" name="idm236086558032::<sup class="footnote">[42]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236086558032" class="footnote" name="idm236086558032
-fhs::ftn.idm236086548848" class="footnote" name="idm236086548848::<sup class="footnote">[43]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236086548848" class="footnote" name="idm236086548848
-fhs::ftn.idm236086527232" class="footnote" name="idm236086527232::<sup class="footnote">[44]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236086527232" class="footnote" name="idm236086527232
-fhs::ftn.idm236086500304" class="footnote" name="idm236086500304::<sup class="footnote">[45]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236086500304" class="footnote" name="idm236086500304
-fhs::ftn.idm236086493728" class="footnote" name="idm236086493728::<sup class="footnote">[46]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236086493728" class="footnote" name="idm236086493728
-fhs::ftn.idm236086446848" class="footnote" name="idm236086446848::<sup class="footnote">[47]</sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#ftn.idm236086446848" class="footnote" name="idm236086446848
-fhs::idm236086662944" class="para::<sup class="para">[38] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236086662944" class="para
-fhs::idm236086641360" class="para::<sup class="para">[39] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236086641360" class="para
-fhs::idm236086612224" class="para::<sup class="para">[40] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236086612224" class="para
-fhs::idm236086608112" class="para::<sup class="para">[41] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236086608112" class="para
-fhs::idm236086558032" class="para::<sup class="para">[42] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236086558032" class="para
-fhs::idm236086548848" class="para::<sup class="para">[43] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236086548848" class="para
-fhs::idm236086527232" class="para::<sup class="para">[44] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236086527232" class="para
-fhs::idm236086500304" class="para::<sup class="para">[45] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236086500304" class="para
-fhs::idm236086493728" class="para::<sup class="para">[46] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236086493728" class="para
-fhs::idm236086446848" class="para::<sup class="para">[47] </sup>::http://www.pathname.com/fhs/pub/fhs-3.0.html#idm236086446848" class="para
 fhs::linux::6.1. Linux::http://www.pathname.com/fhs/pub/fhs-3.0.html#linux
 fhs::rootdirectory::6.1.1. / : Root directory::http://www.pathname.com/fhs/pub/fhs-3.0.html#rootDirectory
 fhs::binessentialusercommandbinaries2::6.1.2. /bin : Essential user command binaries (for use by all users)::http://www.pathname.com/fhs/pub/fhs-3.0.html#binEssentialUserCommandBinaries2
@@ -705,11 +618,35 @@ java-policy::2.1::Virtual machines::https://www.debian.org/doc/packaging-manuals
 java-policy::2.2::Building Java packages::https://www.debian.org/doc/packaging-manuals/java-policy/ch02.html#build-pkg
 java-policy::2.3::Java programs::https://www.debian.org/doc/packaging-manuals/java-policy/ch02.html#policy-programs
 java-policy::2.4::Java libraries::https://www.debian.org/doc/packaging-manuals/java-policy/ch02.html#policy-libraries
-java-policy::2.5::Native Java Bytecode (gcj packages)::https://www.debian.org/doc/packaging-manuals/java-policy/ch02.html#policy-gcj-native
-java-policy::2.6::Main, contrib or non-free::https://www.debian.org/doc/packaging-manuals/java-policy/ch02.html#policy-politics
+java-policy::2.5::Main, contrib or non-free::https://www.debian.org/doc/packaging-manuals/java-policy/ch02.html#policy-politics
 java-policy::3::Issues to discuss::https://www.debian.org/doc/packaging-manuals/java-policy/ch03.html
-java-policy::4::Advices to Java packagers::https://www.debian.org/doc/packaging-manuals/java-policy/ch04.html
+java-policy::4::Advice to Java packagers::https://www.debian.org/doc/packaging-manuals/java-policy/ch04.html
 lintian::::Lintian User's Manual::https://lintian.debian.org/manual/
+lintian::1::Introduction::https://lintian.debian.org/manual/#introduction
+lintian::1.1::About Lintian::https://lintian.debian.org/manual/#about-lintian
+lintian::1.2::The intention of Lintian::https://lintian.debian.org/manual/#the-intention-of-lintian
+lintian::1.3::Design issues::https://lintian.debian.org/manual/#design-issues
+lintian::1.4::Disclaimer::https://lintian.debian.org/manual/#disclaimer
+lintian::2::Getting started::https://lintian.debian.org/manual/#getting-started
+lintian::2.1::Installing Lintian::https://lintian.debian.org/manual/#installing-lintian
+lintian::2.2::Running lintian::https://lintian.debian.org/manual/#running-lintian
+lintian::2.3::Lintian Tags::https://lintian.debian.org/manual/#lintian-tags
+lintian::2.4::Overrides::https://lintian.debian.org/manual/#overrides
+lintian::2.4.1::Format of override files::https://lintian.debian.org/manual/#format-of-override-files
+lintian::2.4.2::Documenting overrides::https://lintian.debian.org/manual/#documenting-overrides
+lintian::2.4.3::Architecture specific overrides::https://lintian.debian.org/manual/#architecture-specific-overrides
+lintian::2.5::Vendor Profiles::https://lintian.debian.org/manual/#vendor-profiles
+lintian::2.5.1::Rules for profile names and location::https://lintian.debian.org/manual/#rules-for-profile-names-and-location
+lintian::2.5.2::Profile syntax and semantics::https://lintian.debian.org/manual/#profile-syntax-and-semantics
+lintian::2.6::Vendor specific data files::https://lintian.debian.org/manual/#vendor-specific-data-files
+lintian::2.6.1::Load paths and order::https://lintian.debian.org/manual/#load-paths-and-order
+lintian::2.6.2::Basic syntax of data files::https://lintian.debian.org/manual/#basic-syntax-of-data-files
+lintian::3::Advanced usage::https://lintian.debian.org/manual/#advanced-usage
+lintian::3.1::How Lintian works::https://lintian.debian.org/manual/#how-lintian-works
+lintian::3.2::The laboratory::https://lintian.debian.org/manual/#the-laboratory
+lintian::3.3::Writing your own Lintian checks::https://lintian.debian.org/manual/#writing-your-own-lintian-checks
+lintian::3.3.1::Check description file::https://lintian.debian.org/manual/#check-description-file
+lintian::3.3.2::Check Perl module file::https://lintian.debian.org/manual/#check-perl-module-file
 menu::::Debian Menu System::https://www.debian.org/doc/packaging-manuals/menu.html/
 menu::1::Introduction::https://www.debian.org/doc/packaging-manuals/menu.html/ch1.html
 menu::2::Menu from the viewpoint of a user::https://www.debian.org/doc/packaging-manuals/menu.html/ch2.html
@@ -825,7 +762,7 @@ policy::4.9.2::<code>debian/rules</code> and <code>Rules-Requires-Root</code>::h
 policy::4.10::Variable substitutions: <code>debian/substvars</code>::https://www.debian.org/doc/debian-policy/ch-source.html#variable-substitutions-debian-substvars
 policy::4.11::Optional upstream source location: <code>debian/watch</code>::https://www.debian.org/doc/debian-policy/ch-source.html#optional-upstream-source-location-debian-watch
 policy::4.12::Generated files list: <code>debian/files</code>::https://www.debian.org/doc/debian-policy/ch-source.html#generated-files-list-debian-files
-policy::4.13::Convenience copies of code::https://www.debian.org/doc/debian-policy/ch-source.html#convenience-copies-of-code
+policy::4.13::Embedded code copies::https://www.debian.org/doc/debian-policy/ch-source.html#embedded-code-copies
 policy::4.14::Source package handling: <code>debian/README.source</code>::https://www.debian.org/doc/debian-policy/ch-source.html#source-package-handling-debian-readme-source
 policy::4.15::Reproducibility::https://www.debian.org/doc/debian-policy/ch-source.html#reproducibility
 policy::4.16::Missing sources: <code>debian/missing-sources</code>::https://www.debian.org/doc/debian-policy/ch-source.html#missing-sources-debian-missing-sources
@@ -923,12 +860,12 @@ policy::9.2::Users and groups::https://www.debian.org/doc/debian-policy/ch-opers
 policy::9.2.1::Introduction::https://www.debian.org/doc/debian-policy/ch-opersys.html#introduction
 policy::9.2.2::UID and GID classes::https://www.debian.org/doc/debian-policy/ch-opersys.html#uid-and-gid-classes
 policy::9.2.3::Non-existent home directories::https://www.debian.org/doc/debian-policy/ch-opersys.html#non-existent-home-directories
-policy::9.3::System run levels and <code>init.d</code> scripts::https://www.debian.org/doc/debian-policy/ch-opersys.html#system-run-levels-and-init-d-scripts
-policy::9.3.1::Introduction::https://www.debian.org/doc/debian-policy/ch-opersys.html#s-etc-init-d
+policy::9.3::Starting system services::https://www.debian.org/doc/debian-policy/ch-opersys.html#starting-system-services
+policy::9.3.1::Introduction::https://www.debian.org/doc/debian-policy/ch-opersys.html#s-services-intro
 policy::9.3.2::Writing the scripts::https://www.debian.org/doc/debian-policy/ch-opersys.html#writing-the-scripts
 policy::9.3.3::Interfacing with init systems::https://www.debian.org/doc/debian-policy/ch-opersys.html#interfacing-with-init-systems
 policy::9.3.3.1::Managing the links::https://www.debian.org/doc/debian-policy/ch-opersys.html#managing-the-links
-policy::9.3.3.2::Running initscripts::https://www.debian.org/doc/debian-policy/ch-opersys.html#running-initscripts
+policy::9.3.3.2::Running init scripts::https://www.debian.org/doc/debian-policy/ch-opersys.html#running-init-scripts
 policy::9.3.4::Boot-time initialization::https://www.debian.org/doc/debian-policy/ch-opersys.html#boot-time-initialization
 policy::9.3.5::Example::https://www.debian.org/doc/debian-policy/ch-opersys.html#example
 policy::9.4::Console messages from <code>init.d</code> scripts::https://www.debian.org/doc/debian-policy/ch-opersys.html#console-messages-from-init-d-scripts
@@ -944,6 +881,7 @@ policy::9.9::Environment variables::https://www.debian.org/doc/debian-policy/ch-
 policy::9.10::Registering Documents using doc-base::https://www.debian.org/doc/debian-policy/ch-opersys.html#registering-documents-using-doc-base
 policy::9.11::Alternate init systems::https://www.debian.org/doc/debian-policy/ch-opersys.html#alternate-init-systems
 policy::9.11.1::Event-based boot with upstart::https://www.debian.org/doc/debian-policy/ch-opersys.html#event-based-boot-with-upstart
+policy::9.12::Signaling that a reboot is required::https://www.debian.org/doc/debian-policy/ch-opersys.html#signaling-that-a-reboot-is-required
 policy::10::Files::https://www.debian.org/doc/debian-policy/ch-files.html
 policy::10.1::Binaries::https://www.debian.org/doc/debian-policy/ch-files.html#binaries
 policy::10.2::Libraries::https://www.debian.org/doc/debian-policy/ch-files.html#libraries
@@ -1043,106 +981,114 @@ policy::8.4*::Other Tags::https://www.debian.org/doc/debian-policy/ap-process.ht
 policy::9*::Maintainer script flowcharts::https://www.debian.org/doc/debian-policy/ap-flowcharts.html
 policy::10*::Upgrading checklist::https://www.debian.org/doc/debian-policy/upgrading-checklist.html
 policy::10.1*::About the checklist::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#about-the-checklist
-policy::10.2*::Version 4.3.0::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-4-3-0
-policy::10.3*::Version 4.2.1::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-4-2-1
-policy::10.4*::Version 4.2.0::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-4-2-0
-policy::10.5*::Version 4.1.5::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-4-1-5
-policy::10.6*::Version 4.1.4::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-4-1-4
-policy::10.7*::Version 4.1.3::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-4-1-3
-policy::10.8*::Version 4.1.2::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-4-1-2
-policy::10.9*::Version 4.1.1::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-4-1-1
-policy::10.10*::Version 4.1.0::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-4-1-0
-policy::10.11::Version 4.0.1::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-4-0-1
-policy::10.12::Version 4.0.0::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-4-0-0
-policy::10.13::Version 3.9.8::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-9-8
-policy::10.14::Version 3.9.7::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-9-7
-policy::10.15::Version 3.9.6::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-9-6
-policy::10.16::Version 3.9.5::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-9-5
-policy::10.17::Version 3.9.4::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-9-4
-policy::10.18::Version 3.9.3::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-9-3
-policy::10.19::Version 3.9.2::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-9-2
-policy::10.20::Version 3.9.1::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-9-1
-policy::10.21::Version 3.9.0::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-9-0
-policy::10.22::Version 3.8.4::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-8-4
-policy::10.23::Version 3.8.3::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-8-3
-policy::10.24::Version 3.8.2::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-8-2
-policy::10.25::Version 3.8.1::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-8-1
-policy::10.26::Version 3.8.0::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-8-0
-policy::10.27::Version 3.7.3::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-7-3
-policy::10.28::Version 3.7.2.2::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-7-2-2
-policy::10.29::Version 3.7.2::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-7-2
-policy::10.30::Version 3.7.1::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-7-1
-policy::10.31::Version 3.7.0::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-7-0
-policy::10.32::Version 3.6.2::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-6-2
-policy::10.33::Version 3.6.1::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-6-1
-policy::10.34::Version 3.6.0::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-6-0
-policy::10.35::Version 3.5.10::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-5-10
-policy::10.36::Version 3.5.9::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-5-9
-policy::10.37::Version 3.5.8::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-5-8
-policy::10.38::Version 3.5.7::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-5-7
-policy::10.39::Version 3.5.6::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-5-6
-policy::10.40::Version 3.5.5::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-5-5
-policy::10.41::Version 3.5.4::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-5-4
-policy::10.42::Version 3.5.3::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-5-3
-policy::10.43::Version 3.5.2::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-5-2
-policy::10.44::Version 3.5.1::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-5-1
-policy::10.45::Version 3.5.0::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-5-0
-policy::10.46::Version 3.2.1.1::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-2-1-1
-policy::10.47::Version 3.2.1::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-2-1
-policy::10.48::Version 3.2.0::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-2-0
-policy::10.49::Version 3.1.1::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-1-1
-policy::10.50::Version 3.1.0::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-1-0
-policy::10.51::Version 3.0.1::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-0-1
-policy::10.52::Version 3.0.0::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-0-0
-policy::10.53::Version 2.5.0::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-2-5-0
-policy::10.54::Version 2.4.1::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-2-4-1
-policy::10.55::Version 2.4.0::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-2-4-0
-policy::10.56::Version 2.3.0::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-2-3-0
-policy::10.57::Version 2.2.0::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-2-2-0
-policy::10.58::Version 2.1.3::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-2-1-3
-policy::10.59::Version 2.1.2::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-2-1-2
-policy::10.60::Version 2.1.1::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-2-1-1
-policy::10.61::Version 2.1.0::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-2-1-0
+policy::10.2*::Version 4.5.1::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-4-5-1
+policy::10.3*::Version 4.5.0::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-4-5-0
+policy::10.4*::Version 4.4.1::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-4-4-1
+policy::10.5*::Version 4.4.0::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-4-4-0
+policy::10.6*::Version 4.3.0::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-4-3-0
+policy::10.7*::Version 4.2.1::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-4-2-1
+policy::10.8*::Version 4.2.0::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-4-2-0
+policy::10.9*::Version 4.1.5::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-4-1-5
+policy::10.10*::Version 4.1.4::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-4-1-4
+policy::10.11::Version 4.1.3::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-4-1-3
+policy::10.12::Version 4.1.2::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-4-1-2
+policy::10.13::Version 4.1.1::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-4-1-1
+policy::10.14::Version 4.1.0::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-4-1-0
+policy::10.15::Version 4.0.1::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-4-0-1
+policy::10.16::Version 4.0.0::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-4-0-0
+policy::10.17::Version 3.9.8::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-9-8
+policy::10.18::Version 3.9.7::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-9-7
+policy::10.19::Version 3.9.6::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-9-6
+policy::10.20::Version 3.9.5::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-9-5
+policy::10.21::Version 3.9.4::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-9-4
+policy::10.22::Version 3.9.3::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-9-3
+policy::10.23::Version 3.9.2::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-9-2
+policy::10.24::Version 3.9.1::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-9-1
+policy::10.25::Version 3.9.0::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-9-0
+policy::10.26::Version 3.8.4::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-8-4
+policy::10.27::Version 3.8.3::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-8-3
+policy::10.28::Version 3.8.2::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-8-2
+policy::10.29::Version 3.8.1::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-8-1
+policy::10.30::Version 3.8.0::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-8-0
+policy::10.31::Version 3.7.3::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-7-3
+policy::10.32::Version 3.7.2.2::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-7-2-2
+policy::10.33::Version 3.7.2::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-7-2
+policy::10.34::Version 3.7.1::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-7-1
+policy::10.35::Version 3.7.0::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-7-0
+policy::10.36::Version 3.6.2::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-6-2
+policy::10.37::Version 3.6.1::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-6-1
+policy::10.38::Version 3.6.0::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-6-0
+policy::10.39::Version 3.5.10::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-5-10
+policy::10.40::Version 3.5.9::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-5-9
+policy::10.41::Version 3.5.8::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-5-8
+policy::10.42::Version 3.5.7::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-5-7
+policy::10.43::Version 3.5.6::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-5-6
+policy::10.44::Version 3.5.5::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-5-5
+policy::10.45::Version 3.5.4::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-5-4
+policy::10.46::Version 3.5.3::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-5-3
+policy::10.47::Version 3.5.2::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-5-2
+policy::10.48::Version 3.5.1::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-5-1
+policy::10.49::Version 3.5.0::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-5-0
+policy::10.50::Version 3.2.1.1::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-2-1-1
+policy::10.51::Version 3.2.1::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-2-1
+policy::10.52::Version 3.2.0::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-2-0
+policy::10.53::Version 3.1.1::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-1-1
+policy::10.54::Version 3.1.0::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-1-0
+policy::10.55::Version 3.0.1::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-0-1
+policy::10.56::Version 3.0.0::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-0-0
+policy::10.57::Version 2.5.0::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-2-5-0
+policy::10.58::Version 2.4.1::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-2-4-1
+policy::10.59::Version 2.4.0::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-2-4-0
+policy::10.60::Version 2.3.0::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-2-3-0
+policy::10.61::Version 2.2.0::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-2-2-0
+policy::10.62::Version 2.1.3::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-2-1-3
+policy::10.63::Version 2.1.2::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-2-1-2
+policy::10.64::Version 2.1.1::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-2-1-1
+policy::10.65::Version 2.1.0::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-2-1-0
 policy::11*::License::https://www.debian.org/doc/debian-policy/ap-license.html
-python-policy::::Debian Python Policy::https://www.debian.org/doc/packaging-manuals/python-policy/
-python-policy::1::On the move to Python 3::https://www.debian.org/doc/packaging-manuals/python-policy/python3.html
-python-policy::2::Python Packaging::https://www.debian.org/doc/packaging-manuals/python-policy/python.html
-python-policy::2.1::Versions::https://www.debian.org/doc/packaging-manuals/python-policy/python.html#versions
-python-policy::2.2::Main packages::https://www.debian.org/doc/packaging-manuals/python-policy/python.html#base
-python-policy::2.3::Minimal packages::https://www.debian.org/doc/packaging-manuals/python-policy/python.html#minimal
-python-policy::2.4::Python Interpreter::https://www.debian.org/doc/packaging-manuals/python-policy/python.html#interpreter
-python-policy::2.4.1::Interpreter Name::https://www.debian.org/doc/packaging-manuals/python-policy/python.html#interpreter_name
-python-policy::2.4.2::Interpreter Location::https://www.debian.org/doc/packaging-manuals/python-policy/python.html#interpreter_loc
-python-policy::2.5::Module Path::https://www.debian.org/doc/packaging-manuals/python-policy/python.html#paths
-python-policy::2.6::Hooks for updates to installed runtimes::https://www.debian.org/doc/packaging-manuals/python-policy/python.html#runtimes_hooks
-python-policy::2.7::Documentation::https://www.debian.org/doc/packaging-manuals/python-policy/python.html#docs
-python-policy::3::Packaged Modules::https://www.debian.org/doc/packaging-manuals/python-policy/module_packages.html
-python-policy::3.1::Types of Python Modules::https://www.debian.org/doc/packaging-manuals/python-policy/module_packages.html#idm302
-python-policy::3.2::Wheels::https://www.debian.org/doc/packaging-manuals/python-policy/module_packages.html#wheels
-python-policy::3.3::Module Package Names::https://www.debian.org/doc/packaging-manuals/python-policy/module_packages.html#package_names
-python-policy::3.4::Specifying Supported Versions::https://www.debian.org/doc/packaging-manuals/python-policy/module_packages.html#specifying_versions
-python-policy::3.5::Dependencies::https://www.debian.org/doc/packaging-manuals/python-policy/module_packages.html#dependencies
-python-policy::3.6::Provides::https://www.debian.org/doc/packaging-manuals/python-policy/module_packages.html#provides
-python-policy::3.7::Modules Byte-Compilation::https://www.debian.org/doc/packaging-manuals/python-policy/module_packages.html#byte_compilation
-python-policy::4::Python Programs::https://www.debian.org/doc/packaging-manuals/python-policy/programs.html
-python-policy::4.1::Interpreter directive (“Shebang”)::https://www.debian.org/doc/packaging-manuals/python-policy/programs.html#interpreter-directive
-python-policy::4.2::Programs using the default Python::https://www.debian.org/doc/packaging-manuals/python-policy/programs.html#version_indep_progs
-python-policy::4.2.1::Programs Shipping Private Modules::https://www.debian.org/doc/packaging-manuals/python-policy/programs.html#current_version_progs
-python-policy::4.3::Programs Using a Particular Python Version::https://www.debian.org/doc/packaging-manuals/python-policy/programs.html#version_dep_progs
-python-policy::5::Programs Embedding Python::https://www.debian.org/doc/packaging-manuals/python-policy/embed.html
-python-policy::5.1::Building Embedded Programs::https://www.debian.org/doc/packaging-manuals/python-policy/embed.html#build_embedded
-python-policy::5.2::Embedded Python Dependencies::https://www.debian.org/doc/packaging-manuals/python-policy/embed.html#embedded_deps
-python-policy::6::Interaction with Locally Installed Python Versions::https://www.debian.org/doc/packaging-manuals/python-policy/other.html
-python-policy::A::Build Dependencies::https://www.debian.org/doc/packaging-manuals/python-policy/build_dependencies.html
-python-policy::B::Packaging Tools::https://www.debian.org/doc/packaging-manuals/python-policy/packaging_tools.html
-python-policy::B.1::distutils::https://www.debian.org/doc/packaging-manuals/python-policy/packaging_tools.html#distutils
-python-policy::B.2::setuptools::https://www.debian.org/doc/packaging-manuals/python-policy/packaging_tools.html#setuptools
-python-policy::B.3::<code>dh-python</code>::https://www.debian.org/doc/packaging-manuals/python-policy/packaging_tools.html#dh-python
-python-policy::B.4::pybuild::https://www.debian.org/doc/packaging-manuals/python-policy/packaging_tools.html#pybuild
-python-policy::B.5::CDBS::https://www.debian.org/doc/packaging-manuals/python-policy/packaging_tools.html#cdbs
-python-policy::B.6::<code>python-support</code> (removed)::https://www.debian.org/doc/packaging-manuals/python-policy/packaging_tools.html#pysupport
-python-policy::B.7::<code>python-central</code> (removed)::https://www.debian.org/doc/packaging-manuals/python-policy/packaging_tools.html#pycentral
-python-policy::C::Upgrade Procedure::https://www.debian.org/doc/packaging-manuals/python-policy/upgrade.html
+python-policy::::Debian Python Policy 0.12.0.0 documentation::https://www.debian.org/doc/packaging-manuals/python-policy/
+python-policy::1::Copyright::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#document-copyright
+python-policy::2::Completing the move to Python 3::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#document-python3
+python-policy::2.1::Removal of the unversioned packages::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#removal-of-the-unversioned-packages
+python-policy::2.2::Unversioned python commands::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#unversioned-python-commands
+python-policy::3::Python Packaging::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#document-interpreter
+python-policy::3.1::Versions::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#versions
+python-policy::3.2::Main packages::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#main-packages
+python-policy::3.3::Minimal packages::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#minimal-packages
+python-policy::3.4::Python Interpreter::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#python-interpreter
+python-policy::3.4.1::Interpreter Name::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#interpreter-name
+python-policy::3.4.2::Interpreter Location::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#interpreter-location
+python-policy::3.5::Module Path::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#module-path
+python-policy::3.6::Hooks for updates to installed runtimes::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#hooks-for-updates-to-installed-runtimes
+python-policy::3.7::Documentation::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#documentation
+python-policy::4::Packaged Modules::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#document-packaged-modules
+python-policy::4.1::Types of Python Modules::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#types-of-python-modules
+python-policy::4.2::Wheels::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#wheels
+python-policy::4.3::Module Package Names::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#module-package-names
+python-policy::4.4::Specifying Supported Versions::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#specifying-supported-versions
+python-policy::4.5::Dependencies::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#dependencies
+python-policy::4.6::Provides::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#provides
+python-policy::4.7::Modules Byte-Compilation::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#modules-byte-compilation
+python-policy::5::Python Programs::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#document-python-programs
+python-policy::5.1::Interpreter directive (“Shebang”)::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#interpreter-directive-shebang
+python-policy::5.2::Programs using the default Python::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#programs-using-the-default-python
+python-policy::5.3::Programs Shipping Private Modules::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#programs-shipping-private-modules
+python-policy::5.4::Programs Using a Particular Python Version::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#programs-using-a-particular-python-version
+python-policy::6::Programs Embedding Python::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#document-embedded-python
+python-policy::6.1::Building Embedded Programs::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#building-embedded-programs
+python-policy::6.2::Embedded Python Dependencies::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#embedded-python-dependencies
+python-policy::7::Interaction with Locally Installed Python Versions::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#document-locally-installed-python
+python-policy::1*::Build Dependencies::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#document-build-dependencies
+python-policy::2*::Packaging Tools::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#document-packaging-tools
+python-policy::2.1*::distutils::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#distutils
+python-policy::2.2*::setuptools::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#setuptools
+python-policy::2.3::dh-python::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#dh-python
+python-policy::2.4::pybuild::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#pybuild
+python-policy::2.5::CDBS::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#cdbs
+python-policy::2.6::python-support (removed)::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#python-support-removed
+python-policy::2.7::python-central (removed)::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#python-central-removed
+python-policy::3*::Upgrade Procedure::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#document-upgrade-procedure
+python-policy::4*::This document::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#document-this-document
 vim-policy::::Debian Packaging Policy for Vim::http://pkg-vim.alioth.debian.org/vim-policy.html/
 vim-policy::1::Vim Addon Packaging in a Nutshell::http://pkg-vim.alioth.debian.org/vim-policy.html/index.html#nutshell
 vim-policy::2::Vim Packaging::http://pkg-vim.alioth.debian.org/vim-policy.html/x73.html
