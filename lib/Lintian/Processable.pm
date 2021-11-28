@@ -217,22 +217,6 @@ sub identifier {
     return $id;
 }
 
-=item remove
-
-Removes all unpacked parts of the package in the lab.  Returns a truth
-value if successful.
-
-=cut
-
-sub remove {
-    my ($self) = @_;
-
-    path($self->basedir)->remove_tree
-      if -e $self->basedir;
-
-    return;
-}
-
 =item clean_field
 
 Cleans a field of evil characters to prevent traversal or worse.

@@ -466,50 +466,7 @@ sub process {
     chdir $savedir
       or warn encode_utf8("Cannot change to directory $savedir");
 
-    $self->clean_lab($option);
-
     return $success;
-}
-
-=item clean_lab
-
-Removes the lab files to conserve disk space. Global destruction will
-also get these unless we are keeping the lab.
-
-=cut
-
-sub clean_lab {
-    my ($self, $option) = @_;
-
-    my $total = [gettimeofday];
-
-    for my $processable ($self->get_processables) {
-
-        my $proc_id = $processable->identifier;
-        say {*STDERR} encode_utf8("Auto removing: $proc_id ...")
-          if $option->{debug};
-
-        my $each = [gettimeofday];
-
-        $processable->remove;
-
-        my $raw_res = tv_interval($each);
-        say {*STDERR} encode_utf8("Auto removing: $proc_id done (${raw_res}s)")
-          if $option->{debug};
-        say {*STDERR} encode_utf8("$proc_id,auto-remove entry,$raw_res")
-          if $option->{'perf-output'};
-    }
-
-    my $raw_res = tv_interval($total);
-    my $tres = sprintf('%.3fs', $raw_res);
-    say {*STDERR}
-      encode_utf8(
-        'Auto-removal all for group ' . $self->name . " done ($tres)")
-      if $option->{debug};
-    say {*STDERR}encode_utf8($self->name . ",total-group-auto-remove,$raw_res")
-      if $option->{'perf-output'};
-
-    return;
 }
 
 =item $group->add_processable($proc)
