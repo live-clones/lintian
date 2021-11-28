@@ -31,6 +31,8 @@ use List::SomeUtils qw(none first_value);
 use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Deb822;
+use Lintian::Output::Markdown
+  qw(markdown_bug markdown_manual_page markdown_uri markdown_hyperlink);
 
 use Moo;
 use namespace::clean;
@@ -186,9 +188,7 @@ sub load {
     @see_also = $fields->trimmed_list('Ref', qr{,})
       unless @see_also;
 
-    my $manuals = $profile->manual_references;
-
-    my @markdown = map { $manuals->markdown_citation($_) } @see_also;
+    my @markdown = map { $self->markdown_citation($profile, $_) } @see_also;
     $self->see_also(\@markdown);
 
     $self->renamed_from([$fields->trimmed_list('Renamed-From')]);
@@ -227,7 +227,7 @@ sub load {
 
         my @see_also_screen = $section->trimmed_list('See-Also', qr{,});
         my @markdown_screen
-          = map { $manuals->markdown_citation($_) } @see_also_screen;
+          = map { $self->markdown_citation($profile, $_) } @see_also_screen;
         $screen->see_also(\@markdown_screen);
 
         push(@screens, $screen);
@@ -236,6 +236,51 @@ sub load {
     $self->screens(\@screens);
 
     return;
+}
+
+=item markdown_citation
+
+=cut
+
+sub markdown_citation {
+    my ($self, $profile, $citation) = @_;
+
+    if ($citation =~ m{^ ([\w-]+) \s+ (.+) $}x) {
+
+        my $volume = $1;
+        my $section = $2;
+
+        my $references = $profile->manual_references;
+
+        return ($references->markdown_citation($volume, $section)// $citation);
+    }
+
+    if ($citation =~ m{^ ([\w.-]+) [(] (\d\w*) [)] $}x) {
+
+        my $name = $1;
+        my $section = $2;
+
+        return markdown_manual_page($name, $section);
+    }
+
+    if ($citation =~ m{^(?:Bug)?#(\d+)$}) {
+
+        my $number = $1;
+        return markdown_bug($number);
+    }
+
+    # turn bare file into file uris
+    $citation =~ s{^ / }{file://}x;
+
+    # strip scheme from uri
+    if ($citation =~ s{^ (\w+) : // }{}x) {
+
+        my $scheme = $1;
+
+        return markdown_uri($scheme, $citation);
+    }
+
+    return $citation;
 }
 
 =item code()

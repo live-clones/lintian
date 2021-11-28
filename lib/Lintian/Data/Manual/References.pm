@@ -25,6 +25,8 @@ use utf8;
 
 use Const::Fast;
 
+use Lintian::Output::Markdown qw(markdown_authority);
+
 use Moo;
 use namespace::clean;
 
@@ -105,41 +107,7 @@ has accumulator => (
 =cut
 
 sub markdown_citation {
-    my ($self, $citation) = @_;
-
-    my $markdown;
-
-    if ($citation =~ /^([\w-]+)\s+(.+)$/) {
-        $markdown = $self->markdown_from_manuals($1, $2);
-
-    } elsif ($citation =~ /^([\w.-]+)\((\d\w*)\)$/) {
-        my ($name, $section) = ($1, $2);
-        my $url
-          ="https://manpages.debian.org/cgi-bin/man.cgi?query=$name&amp;sektion=$section";
-        my $hyperlink = markdown_hyperlink($citation, $url);
-        $markdown = "the $hyperlink manual page";
-
-    } elsif ($citation =~ m{^(ftp|https?)://}) {
-        $markdown = markdown_hyperlink(undef, $citation);
-
-    } elsif ($citation =~ m{^/}) {
-        $markdown = markdown_hyperlink($citation, "file://$citation");
-
-    } elsif ($citation =~ m{^(?:Bug)?#(\d+)$}) {
-        my $bugnumber = $1;
-        $markdown
-          = markdown_hyperlink($citation,"https://bugs.debian.org/$bugnumber");
-    }
-
-    return $markdown // $citation;
-}
-
-=item markdown_from_manuals
-
-=cut
-
-sub markdown_from_manuals {
-    my ($self, $volume, $section) = @_;
+    my ($self, $volume, $section_key) = @_;
 
     return $EMPTY
       unless $self->recognizes($volume);
@@ -147,55 +115,17 @@ sub markdown_from_manuals {
     my $entry = $self->value($volume);
 
     # start with the citation to the overall manual.
-    my $title = $entry->{$EMPTY}{title};
-    my $url   = $entry->{$EMPTY}{url};
+    my $volume_title = $entry->{$EMPTY}{title};
+    my $volume_url   = $entry->{$EMPTY}{url};
 
-    my $markdown = markdown_hyperlink($title, $url);
+    # may not be defined
+    my $section_title = $entry->{$section_key}{title};
+    my $section_url   = $entry->{$section_key}{url};
 
-    return $markdown
-      unless length $section;
-
-    # Add the section information, if present, and a direct link to that
-    # section of the manual where possible.
-    if ($section =~ /^[A-Z]+$/) {
-        $markdown .= " appendix $section";
-
-    } elsif ($section =~ /^\d+$/) {
-        $markdown .= " chapter $section";
-
-    } elsif ($section =~ /^[A-Z\d.]+$/) {
-        $markdown .= " section $section";
-    }
-
-    return $markdown
-      unless exists $entry->{$section};
-
-    my $section_title = $entry->{$section}{title};
-    my $section_url   = $entry->{$section}{url};
-
-    $markdown
-      .= $SPACE
-      . $LEFT_PARENTHESIS
-      . markdown_hyperlink($section_title, $section_url)
-      . $RIGHT_PARENTHESIS;
-
-    return $markdown;
-}
-
-=item markdown_hyperlink
-
-=cut
-
-sub markdown_hyperlink {
-    my ($text, $url) = @_;
-
-    return $text
-      unless length $url;
-
-    return "<$url>"
-      unless length $text;
-
-    return "[$text]($url)";
+    return markdown_authority(
+        $volume_title, $volume_url,$section_key,
+        $section_title, $section_url
+    );
 }
 
 =back
