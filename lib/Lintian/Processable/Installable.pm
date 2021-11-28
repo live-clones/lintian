@@ -27,7 +27,7 @@ use Const::Fast;
 use IPC::Run3;
 use Unicode::UTF8 qw(encode_utf8 decode_utf8 valid_utf8);
 
-use Lintian::Deb822::File;
+use Lintian::Deb822;
 
 use Moo;
 use namespace::clean;
@@ -129,7 +129,7 @@ sub init_from_file {
 
     my $stdout = decode_utf8($stdout_bytes);
 
-    my $deb822 = Lintian::Deb822::File->new;
+    my $deb822 = Lintian::Deb822->new;
     my @sections = $deb822->parse_string($stdout);
     croak encode_utf8(
         'Not exactly one section with installable control data in '

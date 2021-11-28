@@ -34,7 +34,7 @@ use PerlIO::gzip;
 use Time::Piece;
 use Unicode::UTF8 qw(encode_utf8);
 
-use Lintian::Deb822::File;
+use Lintian::Deb822;
 
 use Moo;
 use namespace::clean;

@@ -68,7 +68,7 @@ use Test::More;
 use Text::Diff;
 use Unicode::UTF8 qw(encode_utf8 decode_utf8);
 
-use Lintian::Deb822::File;
+use Lintian::Deb822;
 use Lintian::Profile;
 
 use Test::Lintian::ConfigFile qw(read_config);

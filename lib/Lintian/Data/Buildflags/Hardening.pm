@@ -31,7 +31,7 @@ use Path::Tiny;
 use Time::Piece;
 use Unicode::UTF8 qw(decode_utf8 encode_utf8);
 
-use Lintian::Deb822::File;
+use Lintian::Deb822;
 use Lintian::IPC::Run3 qw(safe_qx);
 
 use Moo;
@@ -131,7 +131,7 @@ sub refresh {
         my @command = qw{dpkg-buildflags --query-features hardening};
         my $feature_output = decode_utf8(safe_qx(@command));
 
-        my $deb822 = Lintian::Deb822::File->new;
+        my $deb822 = Lintian::Deb822->new;
         my @sections = $deb822->parse_string($feature_output);
 
         my @enabled = grep { $_->value('Enabled') eq 'yes' } @sections;

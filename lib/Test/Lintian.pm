@@ -78,7 +78,7 @@ use Syntax::Keyword::Try;
 use Unicode::UTF8 qw(valid_utf8 decode_utf8 encode_utf8);
 
 use Lintian::Spelling qw(check_spelling);
-use Lintian::Deb822::Parser qw(parse_dpkg_control_string);
+use Lintian::Deb822;
 use Lintian::Profile;
 use Lintian::Tag;
 
@@ -162,17 +162,18 @@ sub test_check_desc {
 
     my @descs = map { _find_check($find_opt, $_) } @dirs;
     foreach my $desc_file (@descs) {
-        my ($header, @tagpara);
+
         my $bytes = path($desc_file)->slurp;
         $builder->ok(valid_utf8($bytes),
             "File $desc_file does not use a national encoding.");
         next
           unless valid_utf8($bytes);
 
-        my $contents = decode_utf8($bytes);
+        my $deb822 = Lintian::Deb822->new;
 
+        my @sections;
         try {
-            ($header, @tagpara) = parse_dpkg_control_string($contents);
+            @sections = $deb822->read_file($desc_file);
 
         } catch {
             my $err = $@;
@@ -182,9 +183,11 @@ sub test_check_desc {
             next;
         }
 
+        my ($header, @tagpara) = @sections;
+
         my $content_type = 'Check';
-        my $cname = $header->{'Check-Script'}//$EMPTY;
-        my $ctype = $header->{'Type'} // $EMPTY;
+        my $cname = $header->value('Check-Script');
+        my $ctype = $header->value('Type');
         my $i = 1; # paragraph counter.
         $builder->ok(1, "Can parse check $desc_file");
 
@@ -217,9 +220,11 @@ sub test_check_desc {
         }
 
         for my $tpara (@tagpara) {
-            my $tag = $tpara->{'Tag'}//$EMPTY;
-            my $visibility = $tpara->{'Severity'}//$EMPTY;
-            my $explanation = $tpara->{'Explanation'} // $EMPTY;
+
+            my $tag = $tpara->value('Tag');
+            my $visibility = $tpara->value('Severity');
+            my $explanation = $tpara->value('Explanation');
+
             my (@htmltags, %seen);
 
             $i++;
@@ -288,9 +293,11 @@ sub test_check_desc {
                 'Tag explanation has no stray angle brackets')
               or $builder->diag("$content_type $cname: $tag\n");
 
-            if ($tpara->{'See-Also'}) {
-                my @issues = _check_reference($tpara->{'See-Also'});
+            if ($tpara->declares('See-Also')) {
+
+                my @issues = _check_reference($tpara->value('See-Also'));
                 my $text = join("\n\t", @issues);
+
                 $builder->ok(!@issues, 'Proper references are used')
                   or $builder->diag("$content_type $cname: $tag\n\t$text");
             }

@@ -30,8 +30,8 @@ use List::SomeUtils qw(any none uniq);
 use Path::Tiny;
 use Unicode::UTF8 qw(encode_utf8);
 
-use Lintian::Deb822::File;
-use Lintian::Deb822::Parser qw(DCTRL_COMMENTS_AT_EOL);
+use Lintian::Deb822;
+use Lintian::Deb822::Constants qw(DCTRL_COMMENTS_AT_EOL);
 use Lintian::Relation;
 
 use Moo;
@@ -98,7 +98,7 @@ sub source {
         # another check complains about invalid encoding
         my $contents = $tests_control->decoded_utf8;
 
-        my $control_file = Lintian::Deb822::File->new;
+        my $control_file = Lintian::Deb822->new;
         $control_file->parse_string($contents, DCTRL_COMMENTS_AT_EOL);
 
         my @sections = @{$control_file->sections};

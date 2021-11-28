@@ -34,7 +34,7 @@ use Text::Glob qw(match_glob);
 use Time::Piece;
 use XML::LibXML;
 
-use Lintian::Deb822::File;
+use Lintian::Deb822;
 use Lintian::Pointer::Item;
 use Lintian::Relation::Version qw(versions_compare);
 
@@ -242,7 +242,7 @@ sub check_dep5_copyright {
       if versions_compare($version, '<<', $LAST_DEP5_OVERHAUL);
 
     # probably DEP 5 format; let's try more checks
-    my $deb822 = Lintian::Deb822::File->new;
+    my $deb822 = Lintian::Deb822->new;
 
     my @sections;
     try {

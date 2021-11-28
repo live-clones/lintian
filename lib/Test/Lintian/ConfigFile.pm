@@ -52,7 +52,7 @@ use List::SomeUtils qw(any);
 use Path::Tiny;
 use Unicode::UTF8 qw(encode_utf8);
 
-use Lintian::Deb822::File;
+use Lintian::Deb822;
 
 const my $SPACE => q{ };
 const my $COLON => q{:};
@@ -75,7 +75,7 @@ sub read_config {
     croak encode_utf8("Cannot find file $configpath.")
       unless -e $configpath;
 
-    my $deb822 = Lintian::Deb822::File->new;
+    my $deb822 = Lintian::Deb822->new;
     my @sections = $deb822->read_file($configpath);
     die encode_utf8("$configpath does not have exactly one paragraph")
       unless @sections == 1;

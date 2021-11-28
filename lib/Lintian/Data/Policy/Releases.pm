@@ -225,7 +225,7 @@ sub refresh {
     die $stderr
       if $status;
 
-    my $deb822 = Lintian::Deb822::File->new;
+    my $deb822 = Lintian::Deb822->new;
     my @sections = $deb822->parse_string(decode_utf8($rfc822));
 
     my @releases;

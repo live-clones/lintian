@@ -12,7 +12,7 @@ use File::Find::Rule;
 use Path::Tiny;
 use Test::More;
 
-use Lintian::Deb822::File;
+use Lintian::Deb822;
 
 const my $EMPTY => q{};
 const my $TESTS_PER_TAG => 3;
@@ -47,7 +47,7 @@ my %TAGS;
 my @tag_paths = File::Find::Rule->file->name('*.tag')->in("$root/tags");
 for my $tag_path (@tag_paths) {
 
-    my $deb822 = Lintian::Deb822::File->new;
+    my $deb822 = Lintian::Deb822->new;
     my @sections = $deb822->read_file($tag_path);
 
     BAIL_OUT("$tag_path does not have at least one paragraph")
@@ -74,7 +74,7 @@ my @profilepaths
   = File::Find::Rule->file->name('*.profile')->in("$root/profiles");
 for my $profile (@profilepaths) {
 
-    my $deb822 = Lintian::Deb822::File->new;
+    my $deb822 = Lintian::Deb822->new;
     my ($header, @sections) = $deb822->read_file($profile);
 
     my @checks

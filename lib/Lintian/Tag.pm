@@ -30,7 +30,7 @@ use Email::Address::XS;
 use List::SomeUtils qw(none first_value);
 use Unicode::UTF8 qw(encode_utf8);
 
-use Lintian::Deb822::File;
+use Lintian::Deb822;
 
 use Moo;
 use namespace::clean;
@@ -162,7 +162,7 @@ sub load {
     croak encode_utf8("Cannot read tag file from $tagpath")
       unless -r $tagpath;
 
-    my $deb822 = Lintian::Deb822::File->new;
+    my $deb822 = Lintian::Deb822->new;
     my @sections = $deb822->read_file($tagpath);
 
     my $fields = shift @sections;

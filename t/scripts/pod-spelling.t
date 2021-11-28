@@ -82,6 +82,7 @@ Lichtenheld
 Niels Thykier
 Bastien ROUCARIES
 Felix Lechner
+Chritian Schwarz
 
 lintian Lintian Lintian's # ' # hi emacs
 dpkg

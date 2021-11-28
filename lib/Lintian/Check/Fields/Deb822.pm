@@ -27,7 +27,7 @@ use utf8;
 use Const::Fast;
 use Syntax::Keyword::Try;
 
-use Lintian::Deb822::File;
+use Lintian::Deb822;
 
 use Moo;
 use namespace::clean;
@@ -47,7 +47,7 @@ sub source {
         return
           unless defined $file;
 
-        my $deb822 = Lintian::Deb822::File->new;
+        my $deb822 = Lintian::Deb822->new;
 
         my @sections;
         try {

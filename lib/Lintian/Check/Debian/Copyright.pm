@@ -33,7 +33,7 @@ use Path::Tiny;
 use Syntax::Keyword::Try;
 use Unicode::UTF8 qw(valid_utf8 decode_utf8 encode_utf8);
 
-use Lintian::Deb822::Parser qw(parse_dpkg_control_string);
+use Lintian::Deb822;
 use Lintian::IPC::Run3 qw(safe_qx);
 use Lintian::Spelling qw(check_spelling);
 
@@ -540,16 +540,18 @@ sub check_names_texts {
         };
     }
 
+    my $deb822 = Lintian::Deb822->new;
+
     my @paragraphs;
     try {
-        @paragraphs = parse_dpkg_control_string($contents);
+        @paragraphs = $deb822->parse_string($contents);
 
     } catch {
         # parse error: copyright not in new format, just check text
         return $text_check->(\$contents);
     }
 
-    my @licenses = grep { length } map { $_->{License} } @paragraphs;
+    my @licenses = grep { length } map { $_->value('License') } @paragraphs;
     for my $license (@licenses) {
 
         my ($name, $text) = ($license =~ /^\s*([^\r\n]+)\r?\n(.*)\z/s);

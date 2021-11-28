@@ -54,7 +54,6 @@ use Syntax::Keyword::Try;
 use Term::ReadKey;
 use Unicode::UTF8 qw(encode_utf8 decode_utf8);
 
-use Lintian::Deb822::Parser qw(parse_dpkg_control_string);
 use Lintian::Inspect::Changelog;
 use Lintian::IPC::Run3 qw(safe_qx);
 use Lintian::Pool;

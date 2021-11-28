@@ -29,7 +29,7 @@ use List::SomeUtils qw(any none);
 use Syntax::Keyword::Try;
 use Unicode::UTF8 qw(valid_utf8 decode_utf8);
 
-use Lintian::Deb822::File;
+use Lintian::Deb822;
 
 use Moo;
 use namespace::clean;
@@ -64,7 +64,7 @@ sub visit_patched_files {
     return
       unless length $header;
 
-    my $deb822 = Lintian::Deb822::File->new;
+    my $deb822 = Lintian::Deb822->new;
 
     my @sections;
     try {

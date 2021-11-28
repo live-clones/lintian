@@ -27,7 +27,7 @@ use utf8;
 use List::Compare;
 use Syntax::Keyword::Try;
 
-use Lintian::Deb822::File;
+use Lintian::Deb822;
 use Lintian::Pointer::Item;
 
 use Moo;
@@ -60,7 +60,7 @@ sub source {
 sub check_dep5_copyright {
     my ($self, $copyright_file) = @_;
 
-    my $deb822 = Lintian::Deb822::File->new;
+    my $deb822 = Lintian::Deb822->new;
 
     my @sections;
     try {

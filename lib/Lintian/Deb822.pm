@@ -1,7 +1,5 @@
-# Hey emacs! This is a -*- Perl -*- script!
-# Lintian::Deb822::Parser -- Perl utility functions for parsing deb822 files
-
 # Copyright © 1998 Christian Schwarz
+# Copyright © 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,59 +17,140 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::Deb822::Parser;
+package Lintian::Deb822;
 
 use v5.20;
 use warnings;
 use utf8;
 
-use constant {
-    DCTRL_DEBCONF_TEMPLATE => 1,
-    DCTRL_NO_COMMENTS => 2,
-    DCTRL_COMMENTS_AT_EOL => 4,
-};
-
-our %EXPORT_TAGS = (constants =>
-      [qw(DCTRL_DEBCONF_TEMPLATE DCTRL_NO_COMMENTS DCTRL_COMMENTS_AT_EOL)],);
-our @EXPORT_OK = (qw(
-      visit_dpkg_paragraph_string
-      parse_dpkg_control_string
-      parse_dpkg_control_string_lc
-      read_dpkg_control
-      read_dpkg_control_lc
-      ), @{ $EXPORT_TAGS{constants} });
-
-use Exporter qw(import);
-
 use Const::Fast;
+use Path::Tiny;
+use Syntax::Keyword::Try;
 use Unicode::UTF8 qw(encode_utf8);
+
+use Lintian::Deb822::Constants qw(:constants);
+use Lintian::Deb822::Section;
 
 const my $EMPTY => q{};
 const my $NUMBER_SIGN => q{#};
 
+use Moo;
+use namespace::clean;
+
+=encoding utf-8
+
 =head1 NAME
 
-Lintian::Deb822::Parser - Lintian's generic Deb822 parser functions
+Lintian::Deb822 -- A deb822 control file
 
 =head1 SYNOPSIS
 
- use Lintian::Deb822::Parser qw(read_dpkg_control);
-
- my @paragraphs;
- try {
-     @paragraphs = read_dpkg_control('some/debian/ctrl/file');
-
- } catch {
-     # syntax error etc.
-     die encode_utf8("ctrl/file: $@");
- }
+ use Lintian::Deb822;
 
 =head1 DESCRIPTION
 
-This module contains a number of utility subs that are nice to have,
-but on their own did not warrant their own module.
+Represents a paragraph in a Deb822 control file.
 
-Most subs are imported only on request.
+=head1 INSTANCE METHODS
+
+=over 4
+
+=item sections
+
+Array of Deb822::Section objects in order of their original appearance.
+
+=item positions
+
+Line positions
+
+=cut
+
+has sections => (is => 'rw', default => sub { [] });
+has positions => (is => 'rw', default => sub { [] });
+
+=item first_mention
+
+=cut
+
+sub first_mention {
+    my ($self, $name) = @_;
+
+    my $earliest;
+
+    # empty when field not present
+    $earliest ||= $_->value($name) for @{$self->sections};
+
+    return ($earliest // $EMPTY);
+}
+
+=item last_mention
+
+=cut
+
+sub last_mention {
+    my ($self, $name) = @_;
+
+    my $latest;
+
+    for my $section (@{$self->sections}) {
+
+        # empty when field not present
+        $latest = $section->value($name)
+          if $section->declares($name);
+    }
+
+    return ($latest // $EMPTY);
+}
+
+=item read_file
+
+=cut
+
+sub read_file {
+    my ($self, $path, $flags) = @_;
+
+    my $contents = path($path)->slurp_utf8;
+
+    return $self->parse_string($contents, $flags);
+}
+
+=item parse_string
+
+=cut
+
+sub parse_string {
+    my ($self, $contents, $flags) = @_;
+
+    my (@paragraphs, @positions);
+
+    try {
+        @paragraphs= parse_dpkg_control_string($contents, $flags,\@positions);
+
+    } catch {
+        # ignore syntax errors here
+        die map { encode_utf8($_) } $@
+          unless $@ =~ /syntax error/;
+    }
+
+    my $index = 0;
+    for my $paragraph (@paragraphs) {
+
+        my $section = Lintian::Deb822::Section->new;
+        $section->verbatim($paragraph);
+        $section->positions($positions[$index]);
+
+        push(@{$self->sections}, $section);
+
+    } continue {
+        $index++;
+    }
+
+    return @{$self->sections};
+}
+
+=back
+
+=head1 FUNCTIONS
 
 =head2 Debian control parsers
 
@@ -79,36 +158,6 @@ At first glance, this module appears to contain several debian control
 parsers.  In practise, there is only one real parser
 (L</visit_dpkg_paragraph_string>) - the rest are convenience functions around
 it.
-
-=over 4
-
-=item Use L</read_dpkg_control> when
-
-You have a debian control file (such I<debian/control>) and you want
-a number of paragraphs from it.
-
-=back
-
-=head1 CONSTANTS
-
-The following constants can be passed to the Debian control file
-parser functions to alter their parsing flag.
-
-=over 4
-
-=item DCTRL_DEBCONF_TEMPLATE
-
-The file should be parsed as debconf template.  These have slightly
-syntax rules for whitespace in some cases.
-
-=item DCTRL_NO_COMMENTS
-
-The file do not allow comments.  With this flag, any comment in the
-file is considered a syntax error.
-
-=back
-
-=head1 FUNCTIONS
 
 =over 4
 
@@ -621,6 +670,12 @@ sub visit_dpkg_paragraph_string {
 }
 
 =back
+
+=head1 AUTHOR
+
+Originally written Christian Schwarz and many other people.
+
+Moo version by Felix Lechner <felix.lechner@lease-up.com> for Lintian.
 
 =head1 SEE ALSO
 

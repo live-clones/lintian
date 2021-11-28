@@ -66,7 +66,7 @@ use List::SomeUtils qw(first_value);
 use Path::Tiny;
 use Unicode::UTF8 qw(valid_utf8 encode_utf8);
 
-use Lintian::Deb822::File;
+use Lintian::Deb822;
 use Lintian::Inspect::Changelog;
 use Lintian::Relation::Version qw(versions_equal versions_comparator);
 

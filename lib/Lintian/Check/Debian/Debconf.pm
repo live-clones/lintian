@@ -31,8 +31,8 @@ use Path::Tiny;
 use Syntax::Keyword::Try;
 use Unicode::UTF8 qw(encode_utf8);
 
-use Lintian::Deb822::File;
-use Lintian::Deb822::Parser qw(:constants);
+use Lintian::Deb822;
+use Lintian::Deb822::Constants qw(DCTRL_DEBCONF_TEMPLATE);
 use Lintian::Pointer::Item;
 use Lintian::Relation;
 use Lintian::Util qw($PKGNAME_REGEX);
@@ -96,7 +96,7 @@ sub source {
     my @utf8 = grep { $_->is_valid_utf8 } @files;
     for my $file (@utf8) {
 
-        my $deb822 = Lintian::Deb822::File->new;
+        my $deb822 = Lintian::Deb822->new;
 
         my @templates;
         try {
@@ -216,7 +216,7 @@ sub installable {
     if ($seentemplates) {
 
         if ($ctrl_templates->is_valid_utf8) {
-            my $deb822 = Lintian::Deb822::File->new;
+            my $deb822 = Lintian::Deb822->new;
 
             try {
                 # $seentemplates (above) will be false if $ctrl_templates is a

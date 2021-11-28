@@ -26,7 +26,7 @@ use Carp qw(croak);
 use File::Spec;
 use Unicode::UTF8 qw(encode_utf8);
 
-use Lintian::Deb822::File;
+use Lintian::Deb822;
 
 use Moo;
 use namespace::clean;
@@ -85,7 +85,7 @@ sub init_from_file {
     $self->path($file);
     $self->type('source');
 
-    my $primary = Lintian::Deb822::File->new;
+    my $primary = Lintian::Deb822->new;
     my @sections = $primary->read_file($self->path)
       or croak encode_utf8($self->path . ' is not valid dsc file');
 

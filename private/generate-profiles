@@ -26,7 +26,7 @@ use Path::Tiny;
 use Unicode::UTF8 qw(encode_utf8);
 use YAML::XS;
 
-use Lintian::Deb822::File;
+use Lintian::Deb822;
 
 const my $EMPTY => q{};
 const my $SPACE => q{ };
@@ -84,7 +84,7 @@ my $tagroot = "$ENV{LINTIAN_BASE}/tags";
 my @descfiles = File::Find::Rule->file()->name('*.tag')->in($tagroot);
 for my $tagpath (@descfiles) {
 
-    my $deb822 = Lintian::Deb822::File->new;
+    my $deb822 = Lintian::Deb822->new;
     my @sections = $deb822->read_file($tagpath);
     die encode_utf8("Tag in $tagpath does not have at least one paragraph")
       unless @sections;

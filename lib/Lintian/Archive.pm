@@ -138,7 +138,7 @@ sub deb822_packages_by_installable_name {
     die $stderr
       if $status;
 
-    my $deb822 = Lintian::Deb822::File->new;
+    my $deb822 = Lintian::Deb822->new;
     my @sections = $deb822->read_file($local_path);
 
     unlink($local_path)

@@ -38,7 +38,7 @@ use Unicode::UTF8 qw(encode_utf8);
 use Dpkg::Vendor qw(get_current_vendor get_vendor_info);
 
 use Lintian::Data::Generic;
-use Lintian::Deb822::File;
+use Lintian::Deb822;
 use Lintian::Tag;
 
 use Moo;
@@ -535,7 +535,7 @@ sub read_profile {
         'Could not find a profile matching: ' . join($SPACE, @search_space))
       unless length $path;
 
-    my $deb822 = Lintian::Deb822::File->new;
+    my $deb822 = Lintian::Deb822->new;
     my @paragraphs = $deb822->read_file($path);
 
     my ($header, @sections) = @paragraphs;

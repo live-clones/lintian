@@ -37,7 +37,7 @@ use Test::More;
 
 use lib "$ENV{'LINTIAN_BASE'}/lib";
 
-use Lintian::Deb822::File;
+use Lintian::Deb822;
 use Lintian::Output::HTML;
 use Lintian::Profile;
 
@@ -91,7 +91,7 @@ for my $tagpath (@tagpaths) {
 
     is($duplicates, 0, "No duplicate fields in $tagpath");
 
-    my $deb822 = Lintian::Deb822::File->new;
+    my $deb822 = Lintian::Deb822->new;
 
     my @sections = $deb822->read_file($tagpath);
     ok(@sections >= 1, "Tag in $tagpath has at least one section");
