@@ -50,7 +50,7 @@ sub visit_installed_files {
       unless $file->is_file;
 
     return
-      unless $file->file_info =~ /^OpenType font data/;
+      unless $file->file_type =~ /^OpenType font data/;
 
     my $pointer = Lintian::Pointer::Item->new;
     $pointer->item($file);

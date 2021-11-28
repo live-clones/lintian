@@ -36,7 +36,7 @@ sub visit_installed_files {
       unless $file->is_file;
 
     return
-      unless $file->file_info =~ /^[^,]*\bELF\b/;
+      unless $file->file_type =~ /^[^,]*\bELF\b/;
 
     my @needed = @{$file->elf->{NEEDED} // []};
     my @obsolete = grep { /^libcblas\.so\.\d/ } @needed;

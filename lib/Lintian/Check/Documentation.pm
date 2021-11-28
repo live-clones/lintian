@@ -186,7 +186,7 @@ sub visit_installed_files {
         if (   $file->name =~ / [.]gz $/msx
             && $file->is_regular_file
             && $file->size <= $MAXIMUM_EMPTY_GZIP_SIZE
-            && $file->file_info =~ / gzip \s compressed /msx) {
+            && $file->file_type =~ / gzip \s compressed /msx) {
 
             open(my $fd, '<:gzip', $file->unpacked_path)
               or die encode_utf8('Cannot open ' . $file->unpacked_path);
@@ -228,7 +228,7 @@ sub visit_installed_files {
     # contains a compressed version of objects.inv in
     # sphinx-generated documentation?
     if (   $file->name=~ m{^usr/share/doc/$ppkg/(?:[^/]+/)+objects\.inv\.gz$}
-        && $file->file_info =~ m/gzip compressed/) {
+        && $file->file_type =~ m/gzip compressed/) {
         $self->hint('compressed-documentation', $file->name);
     }
 

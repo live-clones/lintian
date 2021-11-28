@@ -126,7 +126,7 @@ sub visit_installed_files {
     $self->hint('country-in-manual', $file)
       if $language =~ /_/ && $language !~ /^(?:pt_BR|zh_[A-Z][A-Z])$/;
 
-    my $file_info = $file->file_info;
+    my $file_type = $file->file_type;
 
     my @pieces = split(/\./, $manpage);
     my $ext = pop @pieces;
@@ -134,9 +134,9 @@ sub visit_installed_files {
         push @pieces, $ext;
         $self->hint('uncompressed-manual-page', $file);
     } elsif ($file->is_file) { # so it's .gz... files first; links later
-        if ($file_info !~ m/gzip compressed data/) {
+        if ($file_type !~ m/gzip compressed data/) {
             $self->hint('wrong-compression-in-manual-page', $file);
-        } elsif ($file_info !~ m/max compression/) {
+        } elsif ($file_type !~ m/max compression/) {
             $self->hint('poor-compression-in-manual-page',$file);
         }
     }
@@ -186,7 +186,7 @@ sub visit_installed_files {
     } else { # not a symlink
 
         my $fd;
-        if ($file_info =~ m/gzip compressed/) {
+        if ($file_type =~ m/gzip compressed/) {
 
             open($fd, '<:gzip', $file->unpacked_path)
               or die encode_utf8('Cannot open ' . $file->unpacked_path);
@@ -450,13 +450,13 @@ sub visit_installed_files {
 
     # most man pages are zipped
     my $bytes;
-    if ($file->file_info =~ /gzip compressed/) {
+    if ($file->file_type =~ /gzip compressed/) {
 
         my $path = $file->unpacked_path;
         gunzip($path => \$bytes)
           or die encode_utf8("gunzip $path failed: $GunzipError");
 
-    } elsif ($file->file_info =~ /^troff/ || $file->file_info =~ /text$/) {
+    } elsif ($file->file_type =~ /^troff/ || $file->file_type =~ /text$/) {
         $bytes = $file->bytes;
     }
 

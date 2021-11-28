@@ -41,7 +41,7 @@ use namespace::clean;
 with
   'Lintian::Index::Ar',
   'Lintian::Index::Elf',
-  'Lintian::Index::FileInfo',
+  'Lintian::Index::FileTypes',
   'Lintian::Index::Java',
   'Lintian::Index::Md5sums',
   'Lintian::Index::Strings';
@@ -541,7 +541,7 @@ sub load {
     $self->catalog(\%all);
 
     $errors .= $self->add_md5sums;
-    $errors .= $self->add_fileinfo;
+    $errors .= $self->add_file_types;
 
     $errors .= $self->add_ar;
     $errors .= $self->add_elf;

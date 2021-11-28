@@ -48,7 +48,7 @@ sub visit_installed_files {
       if $item->name =~ m{^ usr/lib/ghc/ }x;
 
     return
-      unless $item->file_info =~ m{ \b current [ ] ar [ ] archive \b }x;
+      unless $item->file_type =~ m{ \b current [ ] ar [ ] archive \b }x;
 
     my @codeful_members;
     for my $member_name (keys %{$item->elf_by_member}) {

@@ -47,7 +47,7 @@ sub visit_installed_files {
       unless $item->is_file;
 
     return
-      unless $item->file_info =~ m{ \b current [ ] ar [ ] archive \b }x;
+      unless $item->file_type =~ m{ \b current [ ] ar [ ] archive \b }x;
 
     my @unstripped_members;
     my %stripped_sections_by_member;

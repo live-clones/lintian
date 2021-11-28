@@ -49,8 +49,8 @@ sub binary {
 
     # Read package contents...
     foreach my $file ($info_dir->descendants) {
-        # NB: file_info can be undef (e.g. symlinks)
-        my $file_info = $file->file_info // $EMPTY;
+        # NB: file_type can be undef (e.g. symlinks)
+        my $file_type = $file->file_type // $EMPTY;
         my $fname = $file->basename;
 
         next unless $file->is_symlink or $file->is_file;
@@ -68,11 +68,11 @@ sub binary {
         if ($ext eq 'gz') { # ok!
             if ($file->is_file) {
                 # compressed with maximum compression rate?
-                if ($file_info !~ m/gzip compressed data/) {
+                if ($file_type !~ m/gzip compressed data/) {
                     $self->hint('info-document-not-compressed-with-gzip',
                         $file);
                 } else {
-                    if ($file_info !~ m/max compression/) {
+                    if ($file_type !~ m/max compression/) {
                         $self->hint(
 'info-document-not-compressed-with-max-compression',
                             $file
@@ -96,10 +96,10 @@ sub binary {
 
         # If this is the main info file (no numeric extension). make
         # sure it has appropriate dir entry information.
-        if ($fname !~ /-\d+\.gz/ && $file_info =~ /gzip compressed data/) {
+        if ($fname !~ /-\d+\.gz/ && $file_type =~ /gzip compressed data/) {
             if (!$file->is_open_ok) {
                 # unsafe symlink, skip.  Actually, this should never
-                # be true as "$file_info" for symlinks will not be
+                # be true as "$file_type" for symlinks will not be
                 # "gzip compressed data".  But for good measure.
                 next;
             }

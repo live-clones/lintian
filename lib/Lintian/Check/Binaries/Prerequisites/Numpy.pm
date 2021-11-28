@@ -50,8 +50,8 @@ sub visit_installed_files {
       unless $item->is_file;
 
     return
-      if $item->file_info !~ m{^ [^,]* \b ELF \b }x
-      || $item->file_info !~ m{ \b executable | shared [ ] object \b }x;
+      if $item->file_type !~ m{^ [^,]* \b ELF \b }x
+      || $item->file_type !~ m{ \b executable | shared [ ] object \b }x;
 
     # Python extension using Numpy C ABI?
     if (   $item->name=~ m{^usr/lib/(?:pyshared/)?python2\.\d+/.*(?<!_d)\.so$}

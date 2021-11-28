@@ -44,7 +44,7 @@ sub visit_installed_files {
       if $item->name =~ m{^ usr/lib/ghc/ }x;
 
     return
-      unless $item->file_info =~ m{ \b current [ ] ar [ ] archive \b }x;
+      unless $item->file_type =~ m{ \b current [ ] ar [ ] archive \b }x;
 
     my $pointer = Lintian::Pointer::Item->new;
     $pointer->item($item);

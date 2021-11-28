@@ -78,8 +78,8 @@ sub add_elf {
 
     # must be ELF or static library
     my @with_objects = grep {
-        $_->file_info =~ /\bELF\b/
-          || ( $_->file_info =~ /\bcurrent ar archive\b/
+        $_->file_type =~ /\bELF\b/
+          || ( $_->file_type =~ /\bcurrent ar archive\b/
             && $_->name =~ /\.a$/)
     } @files;
 

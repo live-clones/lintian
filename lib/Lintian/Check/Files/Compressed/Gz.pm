@@ -70,7 +70,7 @@ sub visit_installed_files {
     }
 
     # gzip files
-    if ($file->file_info =~ /gzip compressed/) {
+    if ($file->file_type =~ /gzip compressed/) {
 
         my $bytes = $file->magic($GZIP_HEADER_SIZE);
         my (undef, $gziptime) = unpack('VV', $bytes);

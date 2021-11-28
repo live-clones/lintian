@@ -39,11 +39,11 @@ sub visit_installed_files {
       unless $item->is_file;
 
     return
-      unless $item->file_info =~ /^ [^,]* \b ELF \b /x;
+      unless $item->file_type =~ /^ [^,]* \b ELF \b /x;
 
     # stripped but a debug or profiling library?
     $self->hint('stripped-library',$item)
-      if $item->file_info !~ m{\bnot stripped\b}
+      if $item->file_type !~ m{\bnot stripped\b}
       && $item->name =~ m{^ (?:usr/)? lib/ (?: debug | profile ) / }x
       && $item->size;
 

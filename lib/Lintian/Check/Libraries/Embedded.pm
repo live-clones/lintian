@@ -87,7 +87,7 @@ sub visit_installed_files {
       unless $item->is_file;
 
     return
-      unless $item->file_info =~ /^ [^,]* \b ELF \b /x;
+      unless $item->file_type =~ /^ [^,]* \b ELF \b /x;
 
     for my $embedded_name ($self->EMBEDDED_LIBRARIES->all) {
 

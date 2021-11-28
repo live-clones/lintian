@@ -43,8 +43,8 @@ sub visit_installed_files {
       unless $item->is_file;
 
     return
-      if $item->file_info !~ m{^ [^,]* \b ELF \b }x
-      || $item->file_info !~ m{ \b executable | shared [ ] object \b }x;
+      if $item->file_type !~ m{^ [^,]* \b ELF \b }x
+      || $item->file_type !~ m{ \b executable | shared [ ] object \b }x;
 
     # PHP extension?
     $self->has_php_ext(1)

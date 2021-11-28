@@ -1,6 +1,6 @@
-# -*- perl -*- Lintian::Index::FileInfo
+# -*- perl -*- Lintian::Index::FileTypes
 #
-# Copyright © 2020 Felix Lechner
+# Copyright © 2020-2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Lintian::Index::FileInfo;
+package Lintian::Index::FileTypes;
 
 use v5.20;
 use warnings;
@@ -41,7 +41,7 @@ const my $GZIP_MAGIC_BYTES => 0x1f8b;
 
 =head1 NAME
 
-Lintian::Index::FileInfo - determine file type via magic.
+Lintian::Index::FileTypes - determine file type via magic.
 
 =head1 SYNOPSIS
 
@@ -49,21 +49,21 @@ Lintian::Index::FileInfo - determine file type via magic.
 
 =head1 DESCRIPTION
 
-Lintian::Index::FileInfo determine file type via magic.
+Lintian::Index::FileTypes determine file type via magic.
 
 =head1 INSTANCE METHODS
 
 =over 4
 
-=item add_fileinfo
+=item add_file_types
 
 =cut
 
-sub add_fileinfo {
+sub add_file_types {
     my ($self) = @_;
 
     my $savedir = getcwd;
-    chdir($self->basedir)
+    chdir $self->basedir
       or die encode_utf8(
         $self->identifier . ': Cannot change to directory ' . $self->basedir);
 
@@ -74,7 +74,7 @@ sub add_fileinfo {
 
     my @command = qw(file --no-pad --print0 --print0 --);
 
-    my %fileinfo;
+    my %file_types;
 
     xargs(
         \@command,
@@ -86,9 +86,9 @@ sub add_fileinfo {
             # "ERROR" on parse errors but output is still usable
 
             # undecoded split allows names with non UTF-8 bytes
-            $stdout =~ s/\0$//;
+            $stdout =~ s{ \0 $}{}x;
 
-            my @lines = split(/\0/, $stdout, $KEEP_EMPTY_FIELDS);
+            my @lines = split(m{\0}, $stdout, $KEEP_EMPTY_FIELDS);
 
             unless (@lines % 2 == 0) {
                 $errors
@@ -97,7 +97,7 @@ sub add_fileinfo {
                 return;
             }
 
-            while(defined(my $path = shift @lines)) {
+            while (defined(my $path = shift @lines)) {
 
                 my $type = shift @lines;
 
@@ -109,57 +109,67 @@ sub add_fileinfo {
                 }
 
                 # drop relative prefix, if present
-                $path =~ s{^\./}{};
+                $path =~ s{^ [.]/ }{}x;
 
-                $fileinfo{$path} = $type;
+                $file_types{$path} = $self->adjust_type($path, $type);
             }
 
             return;
         });
 
-    $_->file_info($fileinfo{$_->name}) for @files;
+    $_->file_type($file_types{$_->name}) for @files;
 
-    # some files need to be corrected
-    my @probably_compressed
-      = grep { $_->name =~ /\.gz$/i && $_->file_info !~ /compressed/ } @files;
-
-    for my $file (@probably_compressed) {
-
-        my $buffer = $file->magic($GZIP_MAGIC_SIZE);
-        next
-          unless length $buffer;
-
-        # translation of the unpack
-        #  nn nn ,  NN NN NN NN, nn nn, cc     - bytes read
-        #  $magic,  __ __ __ __, __ __, $comp  - variables
-        my ($magic, undef, undef, $compression) = unpack('nNnc', $buffer);
-
-        # gzip file magic
-        next
-          unless $magic == $GZIP_MAGIC_BYTES;
-
-        my $text = 'gzip compressed data';
-
-        # 2 for max compression; RFC1952 suggests this is a
-        # flag and not a value, hence bit operation
-        $text .= $COMMA . $SPACE . 'max compression'
-          if $compression & 2;
-
-        my $new_type = $file->file_info . $COMMA . $SPACE . $text;
-        $file->file_info($new_type);
-    }
-
-    # some TFMs are categorized as gzip, see Bug#963589
-    my @not_gzip
-      = grep { $_->name =~ /\.tfm$/i && $_->file_info =~ /gzip compressed data/ }
-      @files;
-    $_->file_info('data') for @not_gzip;
-
-    chdir($savedir)
+    chdir $savedir
       or die encode_utf8(
         $self->identifier . ": Cannot change to directory $savedir");
 
     return $errors;
+}
+
+=item adjust_type
+
+=cut
+
+# some files need to be corrected
+sub adjust_type {
+    my ($self, $name, $file_type) = @_;
+
+    if ($name =~ m{ [.]gz $}ix && $file_type !~ /compressed/) {
+
+        my $item = $self->lookup($name);
+
+        die encode_utf8("Cannot find file $name in index")
+          unless $item;
+
+        my $buffer = $item->magic($GZIP_MAGIC_SIZE);
+        if (length $buffer) {
+
+            # translation of the unpack
+            #  nn nn ,  NN NN NN NN, nn nn, cc     - bytes read
+            #  $magic,  __ __ __ __, __ __, $comp  - variables
+            my ($magic, undef, undef, $compression) = unpack('nNnc', $buffer);
+
+            # gzip file magic
+            if ($magic == $GZIP_MAGIC_BYTES) {
+
+                my $augment = 'gzip compressed data';
+
+                # 2 for max compression; RFC1952 suggests this is a
+                # flag and not a value, hence bit operation
+                $augment .= $COMMA . $SPACE . 'max compression'
+                  if $compression & 2;
+
+                return $file_type . $COMMA . $SPACE . $augment;
+            }
+        }
+    }
+
+    # some TFMs are categorized as gzip, see Bug#963589
+    return 'data'
+      if $name =~ m{ [.]tfm $}ix
+      && $file_type =~ /gzip compressed data/;
+
+    return $file_type;
 }
 
 =back

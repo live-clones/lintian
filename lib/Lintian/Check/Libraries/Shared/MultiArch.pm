@@ -42,10 +42,10 @@ sub visit_installed_files {
       unless $item->is_file;
 
     return
-      unless $item->file_info =~ m{^ [^,]* \b ELF \b }x;
+      unless $item->file_type =~ m{^ [^,]* \b ELF \b }x;
 
     return
-      unless $item->file_info
+      unless $item->file_type
       =~ m{(?: shared [ ] object | pie [ ] executable )}x;
 
     my @ldconfig_folders = @{$self->profile->architectures->ldconfig_folders};

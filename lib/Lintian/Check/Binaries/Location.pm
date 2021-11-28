@@ -87,8 +87,8 @@ sub visit_installed_files {
       unless $item->is_file;
 
     return
-      unless $item->file_info =~ /^ [^,]* \b ELF \b /x
-      || $item->file_info =~ / \b current [ ] ar [ ] archive \b /x;
+      unless $item->file_type =~ /^ [^,]* \b ELF \b /x
+      || $item->file_type =~ / \b current [ ] ar [ ] archive \b /x;
 
     $self->hint('binary-in-etc', $item)
       if $item->name =~ m{^etc/};
@@ -114,7 +114,7 @@ sub visit_installed_files {
       && $item->name !~ m{/[.]build-id/};
 
     return
-      unless $item->file_info =~ /^ [^,]* \b ELF \b /x;
+      unless $item->file_type =~ /^ [^,]* \b ELF \b /x;
 
     $self->hint('development-package-ships-elf-binary-in-path', $item)
       if exists $PATH_DIRECTORIES{$item->dirname}

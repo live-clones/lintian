@@ -94,7 +94,7 @@ sub visit_installed_files {
         # okay, we cannot rule it out based on file name; but if
         # it is an elf or a static library, we also skip it.  (In
         # case you hadn't guessed; liblicense)
-        my $fileinfo = $file->file_info;
+        my $fileinfo = $file->file_type;
 
         $self->hint('extra-license-file', $file->name)
           unless $fileinfo and ($fileinfo =~ m/^[^,]*\bELF\b/)

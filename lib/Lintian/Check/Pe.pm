@@ -50,7 +50,7 @@ sub visit_installed_files {
       unless $file->is_file;
 
     return
-      unless $file->file_info =~ /^PE32\+? executable/;
+      unless $file->file_type =~ /^PE32\+? executable/;
 
     return
       unless $file->is_open_ok;
@@ -91,7 +91,7 @@ sub visit_installed_files {
     # Don't check for the x86-specific "SafeSEH" feature for code
     # that is JIT-compiled by the Mono runtime. (#926334)
     delete $features{'SafeSEH'}
-      if $file->file_info =~ / Mono\/.Net assembly, /;
+      if $file->file_type =~ / Mono\/.Net assembly, /;
 
     my @missing = grep { !$features{$_} } sort keys %features;
 

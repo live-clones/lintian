@@ -31,37 +31,37 @@ with 'Lintian::Check';
 
 my @image_formats = ({
         name => 'PNG',
-        file_info => qr/^PNG image data/,
+        file_type => qr/^PNG image data/,
         good_name => sub { $_[0] =~ /\.(?:png|PNG)$/ }
     },
     {
         name => 'JPEG',
-        file_info => qr/^JPEG image data/,
+        file_type => qr/^JPEG image data/,
         good_name => sub { $_[0] =~ /\.(?:jpg|JPG|jpeg|JPEG)$/ }
     },
     {
         name => 'GIF',
-        file_info => qr/^GIF image data/,
+        file_type => qr/^GIF image data/,
         good_name => sub { $_[0] =~ /\.(?:gif|GIF)$/ }
     },
     {
         name => 'TIFF',
-        file_info => qr/^TIFF image data/,
+        file_type => qr/^TIFF image data/,
         good_name => sub { $_[0] =~ /\.(?:tiff|TIFF|tif|TIF)$/ }
     },
     {
         name => 'XPM',
-        file_info => qr/^X pixmap image/,
+        file_type => qr/^X pixmap image/,
         good_name => sub { $_[0] =~ /\.(?:xpm|XPM)$/ }
     },
     {
         name => 'Netpbm',
-        file_info => qr/^Netpbm image data/,
+        file_type => qr/^Netpbm image data/,
         good_name => sub { $_[0] =~ /\.(?:pbm|PBM|pgm|PGM|ppm|PPM|pnm|PNM)$/ }
     },
     {
         name => 'SVG',
-        file_info => qr/^SVG Scalable Vector Graphics image/,
+        file_type => qr/^SVG Scalable Vector Graphics image/,
         good_name => sub { $_[0] =~ /\.(?:svg|SVG)$/ }
     },
 );
@@ -78,7 +78,7 @@ sub visit_installed_files {
 
     for my $format (@image_formats) {
 
-        if ($file->file_info =~ $format->{file_info}) {
+        if ($file->file_type =~ $format->{file_type}) {
             $our_format = $format;
             last;
         }

@@ -41,10 +41,10 @@ sub visit_installed_files {
       unless $item->is_file;
 
     return
-      unless $item->file_info =~ /^ [^,]* \b ELF \b /x;
+      unless $item->file_type =~ /^ [^,]* \b ELF \b /x;
 
     return
-      unless $item->file_info =~ m{ executable | shared [ ] object }x;
+      unless $item->file_type =~ m{ executable | shared [ ] object }x;
 
     # Detached debugging symbols directly in /usr/lib/debug.
     $self->hint('debug-symbols-directly-in-usr-lib-debug', $item)

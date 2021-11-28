@@ -47,7 +47,7 @@ sub visit_patched_files {
     # Ensure we have a README.source for R data files
     if (   $item->basename =~ /\.(?:rda|Rda|rdata|Rdata|RData)$/
         && $item->is_open_ok
-        && $item->file_info =~ /gzip compressed data/
+        && $item->file_type =~ /gzip compressed data/
         && !$self->processable->patched->resolve_path('debian/README.source')){
 
         open(my $fd, '<:gzip', $item->unpacked_path)

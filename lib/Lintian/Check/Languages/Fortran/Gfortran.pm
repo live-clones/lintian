@@ -53,7 +53,7 @@ sub visit_installed_files {
     return
          unless $file->is_file
       && $file->is_open_ok
-      && $file->file_info =~ /\bgzip compressed\b/;
+      && $file->file_type =~ /\bgzip compressed\b/;
 
     my $module_version;
 

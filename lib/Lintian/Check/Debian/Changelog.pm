@@ -356,7 +356,7 @@ sub binary {
 
         $self->hint('changelog-not-compressed-with-max-compression',
             $path->name)
-          unless $resolved->file_info =~ /max compression/;
+          unless $resolved->file_type =~ /max compression/;
     }
 
     my $found_html = 0;

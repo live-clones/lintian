@@ -46,7 +46,7 @@ sub visit_installed_files {
       unless $item->is_file;
 
     return
-      unless $item->file_info =~ m/PostScript Type 1 font program data/;
+      unless $item->file_type =~ m/PostScript Type 1 font program data/;
 
     my @command = ('t1disasm', $item->unpacked_path);
     my $bytes = safe_qx(@command);

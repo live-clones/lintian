@@ -45,19 +45,19 @@ sub visit_installed_files {
       unless $item->is_file;
 
     return
-      unless $item->file_info =~ /^ [^,]* \b ELF \b /x;
+      unless $item->file_type =~ /^ [^,]* \b ELF \b /x;
 
     # Is it an object file (which generally cannot be
     # stripped), a kernel module, debugging symbols, or
     # perhaps a debugging package?
     $self->hint('unstripped-binary-or-object', $item)
-      if $item->file_info =~ m{ \b not [ ] stripped \b }x
+      if $item->file_type =~ m{ \b not [ ] stripped \b }x
       && $item->name !~ m{ [.]k?o $}x
       && $self->processable->name !~ m{ -dbg $}x
       && $item->name !~ m{^ (?:usr/)? lib/debug/ }x
       && $item->name !~ $GUILE_PATH_REGEX
       && $item->name !~ m{ [.]gox $}x
-      && ( $item->file_info !~ m/executable/
+      && ( $item->file_type !~ m/executable/
         || $item->strings !~ m{^ Caml1999X0[0-9][0-9] $}mx);
 
     return;

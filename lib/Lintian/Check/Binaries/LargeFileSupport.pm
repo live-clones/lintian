@@ -66,7 +66,7 @@ sub visit_installed_files {
 
     # Only 32bit ELF binaries can lack LFS.
     return
-      unless $item->file_info =~ $self->ARCH_REGEX->value('32');
+      unless $item->file_type =~ $self->ARCH_REGEX->value('32');
 
     return
       if $item->name =~ m{^usr/lib/debug/};

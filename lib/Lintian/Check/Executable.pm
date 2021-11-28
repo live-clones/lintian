@@ -40,7 +40,7 @@ sub visit_installed_files {
 
     $self->hint('executable-not-elf-or-script', $item->name)
       if $item->is_executable
-      && $item->file_info !~ / ^ [^,]* \b ELF \b /msx
+      && $item->file_type !~ / ^ [^,]* \b ELF \b /msx
       && !$item->is_script
       && !$item->is_hardlink
       && $item->name !~ m{^ usr(?:/X11R6)?/man/ }x

@@ -41,7 +41,7 @@ sub visit_installed_files {
       unless $item->is_file;
 
     return
-      unless $item->file_info =~ /^ [^,]* \b ELF \b /x;
+      unless $item->file_type =~ /^ [^,]* \b ELF \b /x;
 
     my @KNOWN_STRIPPED_SECTION_NAMES = qw{.note .comment};
 
@@ -54,7 +54,7 @@ sub visit_installed_files {
     my @have_stripped_sections = $lc_name->get_intersection;
 
     # appropriately stripped, but is it stripped enough?
-    if (   $item->file_info !~ m{ \b not [ ] stripped \b }x
+    if (   $item->file_type !~ m{ \b not [ ] stripped \b }x
         && $item->name !~ m{^ (?:usr/)? lib/ (?: debug | profile ) / }x) {
 
         $self->hint('binary-has-unneeded-section', $item->name, $_)

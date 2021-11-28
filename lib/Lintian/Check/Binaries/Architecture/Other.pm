@@ -69,7 +69,7 @@ sub from_other_architecture {
     # If it matches the architecture regex, it is good
     return 0
       if $self->ARCH_REGEX->recognizes($architecture)
-      && $item->file_info =~ $self->ARCH_REGEX->value($architecture);
+      && $item->file_type =~ $self->ARCH_REGEX->value($architecture);
 
     # Special case - "old" multi-arch dirs
     if (   $item->name =~ m{(?:^|/)lib(x?\d\d)/}
@@ -79,7 +79,7 @@ sub from_other_architecture {
 
         return 0
           if $self->ARCH_REGEX->value($bus_width)
-          && $item->file_info =~ $self->ARCH_REGEX->value($bus_width);
+          && $item->file_type =~ $self->ARCH_REGEX->value($bus_width);
     }
 
     # Detached debug symbols could be for a biarch library.
@@ -97,13 +97,13 @@ sub from_other_architecture {
         my $equivalent_64 = $self->ARCH_64BIT_EQUIVS->value($architecture);
 
         return 0
-          if $item->file_info =~ $self->ARCH_REGEX->value($equivalent_64);
+          if $item->file_type =~ $self->ARCH_REGEX->value($equivalent_64);
     }
 
     # Ignore i386 binaries in amd64 packages for right now.
     return 0
       if $architecture eq 'amd64'
-      && $item->file_info =~ $self->ARCH_REGEX->value('i386');
+      && $item->file_type =~ $self->ARCH_REGEX->value('i386');
 
     return 1;
 }
@@ -115,7 +115,7 @@ sub visit_installed_files {
       unless $item->is_file;
 
     return
-      unless $item->file_info =~ /^ [^,]* \b ELF \b /x;
+      unless $item->file_type =~ /^ [^,]* \b ELF \b /x;
 
     $self->hint('binary-from-other-architecture', $item)
       if $self->from_other_architecture($item);

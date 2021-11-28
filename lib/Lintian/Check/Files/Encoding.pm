@@ -42,7 +42,7 @@ sub visit_patched_files {
       unless $item->is_file;
 
     return
-      unless $item->file_info =~ /text$/;
+      unless $item->file_type =~ /text$/;
 
     if ($item->name =~ m{^debian/patches/}) {
 
@@ -70,7 +70,7 @@ sub visit_control_files {
       unless $item->is_file;
 
     return
-      unless $item->file_info =~ /text$/ || $item->is_script;
+      unless $item->file_type =~ /text$/ || $item->is_script;
 
     $self->hint('national-encoding', 'DEBIAN/' . $item->name)
       unless $item->is_valid_utf8;
@@ -93,7 +93,7 @@ sub visit_installed_files {
     #   || $item->name =~ m{\.(?:p[myl]|php|rb|tcl|sh|txt)(?:\.gz)?$}
     #   || $item->name =~ m{^usr/share/doc};
 
-    if ($item->file_info =~ /text$/) {
+    if ($item->file_type =~ /text$/) {
 
         $self->hint('national-encoding', $item->name)
           unless $item->is_valid_utf8;
@@ -101,7 +101,7 @@ sub visit_installed_files {
 
     # for man pages also look at compressed files
     if (   $item->name =~ m{^usr/share/man/}
-        && $item->file_info =~ /gzip compressed/) {
+        && $item->file_type =~ /gzip compressed/) {
 
         my $bytes;
 

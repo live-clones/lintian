@@ -65,7 +65,7 @@ sub add_strings {
 
         # skip non-binaries
         next
-          unless $file->file_info =~ /\bELF\b/;
+          unless $file->file_type =~ /\bELF\b/;
 
         # prior implementations sometimes made the list unique
         my $allstrings

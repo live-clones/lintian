@@ -37,7 +37,7 @@ sub visit_installed_files {
         my ($directory_width, $directory_height) = ($1, $2);
         my $resolved = $file->resolve_path;
 
-        if ($resolved && $resolved->file_info =~ m/,\s*(\d+)\s*x\s*(\d+)\s*,/){
+        if ($resolved && $resolved->file_type =~ m/,\s*(\d+)\s*x\s*(\d+)\s*,/){
 
             my ($file_width, $file_height) = ($1, $2);
             my $width_delta = abs($directory_width - $file_width);

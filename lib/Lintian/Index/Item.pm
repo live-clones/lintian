@@ -1221,7 +1221,7 @@ NB: If the gid is not available, 0 will be returned.
 This usually happens if the numerical data is not collected (e.g. in
 source packages)
 
-=item file_info
+=item file_type
 
 Return the data from L<file(1)> if it has been collected.
 
@@ -1345,7 +1345,7 @@ has md5sum => (
     coerce => sub { my ($checksum) = @_; return ($checksum // 0); },
     default => 0
 );
-has file_info => (
+has file_type => (
     is => 'rw',
     coerce => sub { my ($text) = @_; return ($text // $EMPTY); },
     default => $EMPTY

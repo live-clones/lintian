@@ -60,12 +60,12 @@ sub visit_installed_files {
       unless $item->is_file;
 
     return
-      unless $item->file_info =~ /^ [^,]* \b ELF \b /x;
+      unless $item->file_type =~ /^ [^,]* \b ELF \b /x;
 
     return
-      unless $item->file_info =~ m{ executable | shared [ ] object }x;
+      unless $item->file_type =~ m{ executable | shared [ ] object }x;
 
-    my $is_shared = $item->file_info =~ m/(shared object|pie executable)/;
+    my $is_shared = $item->file_type =~ m/(shared object|pie executable)/;
 
     # Some exceptions: files in /boot, /usr/lib/debug/*,
     # named *-static or *.static, or *-static as

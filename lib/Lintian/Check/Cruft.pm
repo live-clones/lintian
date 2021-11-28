@@ -301,17 +301,17 @@ sub visit_patched_files {
 
     # prebuilt-file or forbidden file type
     $self->hint('source-contains-prebuilt-wasm-binary', $item->name)
-      if $item->file_info =~ m{^WebAssembly \s \(wasm\) \s binary \s module}x;
+      if $item->file_type =~ m{^WebAssembly \s \(wasm\) \s binary \s module}x;
 
     $self->hint('source-contains-prebuilt-windows-binary', $item->name)
-      if $item->file_info
+      if $item->file_type
       =~ m{\b(?:PE(?:32|64)|(?:MS-DOS|COM)\s executable)\b}x;
 
     $self->hint('source-contains-prebuilt-silverlight-object', $item->name)
-      if $item->file_info =~ m{^Zip \s archive \s data}x
+      if $item->file_type =~ m{^Zip \s archive \s data}x
       && $item->name =~ m{(?i)\.xac$}x;
 
-    if ($item->file_info =~ m{^python \s \d(\.\d+)? \s byte-compiled}x) {
+    if ($item->file_type =~ m{^python \s \d(\.\d+)? \s byte-compiled}x) {
 
         $self->hint('source-contains-prebuilt-python-object', $item->name);
 
@@ -320,7 +320,7 @@ sub visit_patched_files {
             {'.py' => '(?i)(?:\.cpython-\d{2}|\.pypy)?\.py[co]$'});
     }
 
-    if ($item->file_info =~ m{\bELF\b}x) {
+    if ($item->file_type =~ m{\bELF\b}x) {
         $self->hint('source-contains-prebuilt-binary', $item->name);
 
         my %patterns = map {
@@ -332,7 +332,7 @@ sub visit_patched_files {
           unless $self->find_source($item, \%patterns);
     }
 
-    if ($item->file_info =~ m{^Macromedia \s Flash}x) {
+    if ($item->file_type =~ m{^Macromedia \s Flash}x) {
 
         $self->hint('source-contains-prebuilt-flash-object', $item->name);
 
@@ -340,7 +340,7 @@ sub visit_patched_files {
           unless $self->find_source($item, {'.as' => '(?i)\.swf$'});
     }
 
-    if (   $item->file_info =~ m{^Composite \s Document \s File}x
+    if (   $item->file_type =~ m{^Composite \s Document \s File}x
         && $item->name =~ m{(?i)\.fla$}x) {
 
         $self->hint('source-contains-prebuilt-flash-project', $item->name);
@@ -523,7 +523,7 @@ sub full_text_check {
     $self->hint('very-long-line-length-in-source-file',$item->name,
         "line $position is $maximum characters long (>$VERY_LONG_LINE_LENGTH)")
       if $maximum > $VERY_LONG_LINE_LENGTH
-      && $item->file_info !~ m{SVG Scalable Vector Graphics image};
+      && $item->file_type !~ m{SVG Scalable Vector Graphics image};
 
     my $lowercase = lc($contents);
     my $clean = clean_text($lowercase);

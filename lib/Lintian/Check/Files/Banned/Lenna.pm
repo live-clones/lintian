@@ -74,11 +74,11 @@ sub visit_patched_files {
       unless $item->is_file;
 
     return
-         unless $item->file_info =~ /\bimage\b/i
-      || $item->file_info =~ /^Matlab v\d+ mat/i
-      || $item->file_info =~ /\bbitmap\b/i
-      || $item->file_info =~ /^PDF Document\b/i
-      || $item->file_info =~ /^Postscript Document\b/i;
+         unless $item->file_type =~ /\bimage\b/i
+      || $item->file_type =~ /^Matlab v\d+ mat/i
+      || $item->file_type =~ /\bbitmap\b/i
+      || $item->file_type =~ /^PDF Document\b/i
+      || $item->file_type =~ /^Postscript Document\b/i;
 
     return
       if $self->LENNA_WHITELIST->recognizes($item->md5sum);
