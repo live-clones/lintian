@@ -27,7 +27,11 @@ use utf8;
 use Const::Fast;
 use Unicode::UTF8 qw(encode_utf8);
 
+use Lintian::Hint::Pointed;
+use Lintian::Hint::Standard;
+
 const my $EMPTY => q{};
+const my $SPACE => q{ };
 const my $UNDERSCORE => q{_};
 
 use Moo::Role;
@@ -60,12 +64,16 @@ A class for operating Lintian checks
 
 =item profile
 
+=item hints
+
 =cut
 
 has name => (is => 'rw', default => $EMPTY);
 has processable => (is => 'rw', default => sub { {} });
 has group => (is => 'rw', default => sub { {} });
 has profile => (is => 'rw');
+
+has hints => (is => 'rw', default => sub { [] });
 
 =item visit_files
 
@@ -101,6 +109,9 @@ sub visit_files {
 sub run {
     my ($self) = @_;
 
+    # do not carry over any hints
+    $self->hints([]);
+
     my $type = $self->processable->type;
 
     if ($type eq 'source') {
@@ -124,10 +135,7 @@ sub run {
     $self->always
       if $self->can('always');
 
-    my @hints = @{$self->processable->hints};
-    $self->processable->hints([]);
-
-    return @hints;
+    return @{$self->hints};
 }
 
 =item pointed_hint
@@ -137,8 +145,16 @@ sub run {
 sub pointed_hint {
     my ($self, $tag_name, $pointer, @notes) = @_;
 
-    return $self->processable->pointed_hint($tag_name, $self->name, $pointer,
-        @notes);
+    my $hint = Lintian::Hint::Pointed->new;
+
+    $hint->tag_name($tag_name);
+    $hint->issued_by($self->name);
+    $hint->note(stringify(@notes));
+    $hint->pointer($pointer);
+
+    push(@{$self->hints}, $hint);
+
+    return;
 }
 
 =item hint
@@ -148,7 +164,39 @@ sub pointed_hint {
 sub hint {
     my ($self, $tag_name, @notes) = @_;
 
-    return $self->processable->hint($tag_name, $self->name, @notes);
+    my $hint = Lintian::Hint::Standard->new;
+
+    $hint->tag_name($tag_name);
+    $hint->issued_by($self->name);
+    $hint->note(stringify(@notes));
+
+    push(@{$self->hints}, $hint);
+
+    return;
+}
+
+no namespace::clean;
+
+=item stringify
+
+=cut
+
+sub stringify {
+    my (@arguments) = @_;
+
+    # skip empty arguments
+    my @meaningful = grep { length } @arguments;
+
+    # trim both ends of each item
+    s{^ \s+ | \s+ $}{}gx for @meaningful;
+
+    # concatenate with spaces
+    my $text = join($SPACE, @meaningful) // $EMPTY;
+
+    # escape newlines; maybe add others
+    $text =~ s{\n}{\\n}g;
+
+    return $text;
 }
 
 =back

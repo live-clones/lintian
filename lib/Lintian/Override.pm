@@ -53,8 +53,6 @@ Lintian::Override provides access to override data.
 =item comments
 =item position
 
-=item renamed_from
-
 =cut
 
 has tag_name => (is => 'rw', default => $EMPTY);
@@ -65,8 +63,6 @@ has regex => (is => 'rw');
 
 has comments => (is => 'rw', default => sub { [] });
 has position => (is => 'rw');
-
-has renamed_from => (is => 'rw', default => sub { [] });
 
 =back
 

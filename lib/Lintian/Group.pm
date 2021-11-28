@@ -36,6 +36,7 @@ use Time::HiRes qw(gettimeofday tv_interval);
 use Time::Piece;
 use Unicode::UTF8 qw(encode_utf8);
 
+use Lintian::Hint::Pointed;
 use Lintian::Util qw(human_bytes);
 
 const my $EMPTY => q{};
@@ -205,12 +206,16 @@ sub process {
             my %alias = %{$self->profile->known_aliases};
             for my $override (@{$processable->overrides}) {
 
-                my $tag_name = $override->tag_name;
                 my $pattern = $override->pattern;
 
-                # for mystery tags
+                # catch renames
+                my $tag_name = $override->tag_name;
+                $tag_name = $alias{$tag_name}
+                  if length $alias{$tag_name};
+
+                # also catches unknown tags
                 next
-                  unless defined $self->profile->get_tag($tag_name);
+                  unless $self->profile->tag_is_enabled($tag_name);
 
                 my @architectures = @{$override->architectures};
 
@@ -232,12 +237,7 @@ sub process {
                     @architectures
                   );
 
-                # catch renames
-                $tag_name = $alias{$tag_name}
-                  if length $alias{$tag_name};
-
                 if (!$self->profile->is_overridable($tag_name)) {
-
                     ++$ignored_overrides->{$tag_name};
                     next;
                 }
@@ -245,9 +245,6 @@ sub process {
                 $enabled_overrides{$tag_name}{$pattern} = $override;
             }
         }
-
-        push(@hints, @{$processable->hints});
-        $processable->hints([]);
 
         my @from_checks;
 
@@ -297,6 +294,7 @@ sub process {
 
         my %context_tracker;
         my %used_overrides;
+        my %otherwise_visible;
 
         for my $hint (@from_checks) {
 
@@ -341,7 +339,6 @@ sub process {
             my $context = $hint->context;
 
             if (exists $context_tracker{$tag_name}{$context}) {
-
                 warn encode_utf8(
 "Tried to issue duplicate hint in check $issuer: $tag_name $context\n"
                 );
@@ -396,18 +393,13 @@ sub process {
                 $hint->override($override);
             }
 
+            $otherwise_visible{$tag->name} = 1;
+
             push(@hints, $hint);
         }
 
-        $processable->hints(\@hints);
-
-        my %otherwise_visible = map { $_->tag_name => 1 } @hints;
-
         # look for unused overrides
         for my $tag_name (keys %enabled_overrides) {
-
-            next
-              unless $self->profile->tag_is_enabled($tag_name);
 
             my @declared_patterns = keys %{$enabled_overrides{$tag_name}};
             my @used_patterns = keys %{$used_overrides{$tag_name} // {}};
@@ -416,37 +408,34 @@ sub process {
               = List::Compare->new(\@declared_patterns, \@used_patterns);
             my @unused_patterns = $pattern_lc->get_Lonly;
 
-            my $condition = 'unused-override';
-            $condition = 'mismatched-override'
-              if $otherwise_visible{$tag_name};
-
             for my $pattern (@unused_patterns) {
 
                 my $override = $enabled_overrides{$tag_name}{$pattern};
-                my @original_overrides = @{$override->renamed_from};
-
-                # for renamed tags, use the original name from overrides
-                for my $original_override (@original_overrides) {
-
-                    my $override_item = $processable->override_file;
-                    my $pointer
-                      = $override_item->pointer($original_override->position);
-
-                    my $original_name = $original_override->tag_name;
-
-                    $processable->pointed_hint($condition, 'lintian',
-                        $pointer, $original_name,$pattern);
-                }
 
                 my $override_item = $processable->override_file;
-                my $pointer = $override_item->pointer($override->position);
+                my $position = $override->position;
+                my $pointer = $override_item->pointer($position);
 
-                # without renames present, just use the current name
-                $processable->pointed_hint($condition, 'lintian', $pointer,
-                    $tag_name,$pattern)
-                  unless @original_overrides;
+                my $unused = Lintian::Hint::Pointed->new;
+                $unused->issued_by('lintian');
+
+                $unused->tag_name('unused-override');
+                $unused->tag_name('mismatched-override')
+                  if $otherwise_visible{$tag_name};
+
+                # use the original name, in case the tag was renamed
+                my $original_name = $override->tag_name;
+                $unused->note("$original_name $pattern");
+
+                $unused->pointer($pointer);
+
+                # cannot be overridden or suppressed
+                push(@hints, $unused);
             }
         }
+
+        # carry hints into the output modules
+        $processable->hints(\@hints);
     }
 
     $self->processing_end(gmtime->datetime . 'Z');
