@@ -304,7 +304,11 @@ sub load {
         my $value;
         if (defined $self->accumulator) {
 
-            my $previous = $self->dataset->{$key};
+            # do not autovivify; 'exists' below
+            my $previous;
+            $previous = $self->dataset->{$key}
+              if exists $self->dataset->{$key};
+
             $value = $self->accumulator->($key, $remainder, $previous);
 
             next

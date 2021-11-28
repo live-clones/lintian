@@ -87,17 +87,16 @@ has accumulator => (
         return sub {
             my ($key, $remainder, $previous) = @_;
 
-            return undef
-              if defined $previous;
+            # use previous hashref, if available
+            $previous //= {};
 
             my ($section, $title, $url)
               = split($self->separator, $remainder, $THREE_PARTS);
 
-            my %entry;
-            $entry{$section}{title} = $title;
-            $entry{$section}{url} = $url;
+            $previous->{$section}{title} = $title;
+            $previous->{$section}{url} = $url;
 
-            return \%entry;
+            return $previous;
         };
     });
 
