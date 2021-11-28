@@ -1,0 +1,12 @@
+# Data about titles, sections, and URLs of manuals, used to expand references
+# in tag descriptions and add links for HTML output.  Each line of this file
+# has three fields separated by double colons:
+#
+#     <section> :: <title> :: <url>
+#
+# If <section> is empty, that line specifies the title and URL for the whole
+# manual.  If <url> is empty, that manual is not available on the web.
+#
+# Last updated: 2021-11-27
+
+::Lintian User's Manual::https://lintian.debian.org/manual/

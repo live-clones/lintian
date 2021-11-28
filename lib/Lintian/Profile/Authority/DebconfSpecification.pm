@@ -1,13 +1,13 @@
 # -*- perl -*-
-# Lintian::Profile::Manual::References
+# Lintian::Profile::Authority::DebconfSpecification
 
-# Copyright © 2020 Felix Lechner
+# Copyright © 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
 # Software Foundation; either version 2 of the License, or (at your option)
 # any later version.
-#
+#b
 # This program is distributed in the hope that it will be useful, but WITHOUT
 # ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
 # FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
@@ -16,20 +16,20 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Lintian::Profile::Manual::References;
+package Lintian::Profile::Authority::DebconfSpecification;
 
 use v5.20;
 use warnings;
 use utf8;
 
-use Lintian::Data::Manual::References;
+use Lintian::Data::Authority::DebconfSpecification;
 
 use Moo::Role;
 use namespace::clean;
 
 =head1 NAME
 
-Lintian::Profile::Manual::References - Lintian interface to manual references
+Lintian::Profile::Authority::DebconfSpecification - Lintian interface to manual references
 
 =head1 SYNOPSIS
 
@@ -37,26 +37,26 @@ Lintian::Profile::Manual::References - Lintian interface to manual references
 
 =head1 DESCRIPTION
 
-Lintian::Profile::Manual::References provides an interface to manual references.
+Lintian::Profile::Authority::DebconfSpecification provides an interface to manual references.
 
 =head1 INSTANCE METHODS
 
 =over 4
 
-=item manual_references
+=item debconf_specification
 
 =cut
 
-has manual_references => (
+has debconf_specification => (
     is => 'rw',
     lazy => 1,
     default => sub {
         my ($self) = @_;
 
-        my $manuals = Lintian::Data::Manual::References->new;
-        $manuals->load($self->data_paths, $self->our_vendor);
+        my $manual = Lintian::Data::Authority::DebconfSpecification->new;
+        $manual->load($self->data_paths, $self->our_vendor);
 
-        return $manuals;
+        return $manual;
     });
 
 =back

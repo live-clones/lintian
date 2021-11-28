@@ -3,6 +3,7 @@
 # Copyright © 2001 Colin Watson
 # Copyright © 2008 Jordà Polo
 # Copyright © 2017-2019 Chris Lamb <lamby@debian.org>
+# Copyright © 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -45,10 +46,13 @@ use List::SomeUtils qw(none);
 use POSIX qw(strftime);
 
 const my $EMPTY => q{};
-const my $NEWLINE => qq{\n};
+const my $UNDERSCORE => q{_};
 const my $ASTERISK => q{*};
 const my $DOLLAR => q{$};
-const my $DOUBLE_COLON => q{::};
+const my $COLON => q{:};
+
+const my $NEWLINE => qq{\n};
+const my $DOUBLE_COLON => $COLON . $COLON;
 
 # For each manual, we need:
 #  * Location of the manual index on the local filesystem
@@ -157,7 +161,7 @@ my %manuals = (
 # Check all of the manuals are present before trying anything
 {
     my $ok = 1;
-    foreach my $manual (sort keys %manuals) {
+    for my $manual (sort keys %manuals) {
         my ($index, undef) = @{$manuals{$manual}};
         unless (-e $index) {
             print {*STDERR}
@@ -169,11 +173,16 @@ my %manuals = (
     exit 1 unless $ok;
 }
 
-my $generated;
-open(my $memory_fd, '>', \$generated)
-  or die encode_utf8('Cannot open scalar');
+my $folder = 'data/authority';
+path($folder)->mkpath
+  unless -e $folder;
 
 for my $manual (sort keys %manuals) {
+
+    my $generated;
+    open(my $memory_fd, '>', \$generated)
+      or die encode_utf8('Cannot open scalar');
+
     my ($index, $url, $ref_re, $fields, $sub_re) = @{$manuals{$manual}};
 
     # Extract references from the index.
@@ -181,25 +190,32 @@ for my $manual (sort keys %manuals) {
       = extract_refs($memory_fd, $manual, 0, $index, $url, $ref_re, $fields);
 
     # Extract additional subsection references if not available in the index.
-    next
-      unless $sub_re;
+    if ($sub_re) {
 
-    for my $pagename (@subpages) {
-        my $page = dirname($index) . "/$pagename";
-        extract_refs($memory_fd, $manual, 1, $page, $url, $sub_re, $fields);
+        for my $pagename (@subpages) {
+            my $page = dirname($index) . "/$pagename";
+            extract_refs($memory_fd, $manual, 1, $page, $url, $sub_re,$fields);
+        }
     }
+
+    close $memory_fd;
+
+    write_data_file($generated, "$folder/$manual");
 }
 
-close $memory_fd;
+exit;
 
-my $date = strftime('%Y-%m-%d', gmtime);
+sub write_data_file {
+    my ($generated, $path) = @_;
 
-my $header =<<"HEADER";
+    my $date = strftime('%Y-%m-%d', gmtime);
+
+    my $header =<<"HEADER";
 # Data about titles, sections, and URLs of manuals, used to expand references
 # in tag descriptions and add links for HTML output.  Each line of this file
-# has four fields separated by double colons:
+# has three fields separated by double colons:
 #
-#     <manual> :: <section> :: <title> :: <url>
+#     <section> :: <title> :: <url>
 #
 # If <section> is empty, that line specifies the title and URL for the whole
 # manual.  If <url> is empty, that manual is not available on the web.
@@ -208,10 +224,12 @@ my $header =<<"HEADER";
 
 HEADER
 
-my $output = encode_utf8($header) . $generated;
-path('data/output/manual-references')->spew($output);
+    say "Writing $path.";
+    my $output = encode_utf8($header) . $generated;
+    path($path)->spew($output);
 
-exit;
+    return;
+}
 
 # extract_refs -- Extract manual references from HTML file.
 #
@@ -236,7 +254,7 @@ sub extract_refs {
 
         if (!$title_done && $chunk =~ /$title_re/) {
             $title_done = 1;
-            my $line = join($DOUBLE_COLON, $manual, $EMPTY, $1, $url);
+            my $line = join($DOUBLE_COLON, $UNDERSCORE, $1, $url);
             print {$data_fd} encode_utf8($line . $NEWLINE);
         }
 
@@ -284,8 +302,8 @@ sub extract_refs {
                 && $seen_sections{$ref{section}} ne $ref{url});
             $seen_sections{$ref{section}} = $ref{url};
 
-            my $line= join($DOUBLE_COLON,
-                $manual, $ref{section}, $ref{title}, $ref{url});
+            my $line
+              = join($DOUBLE_COLON, $ref{section}, $ref{title}, $ref{url});
             print {$data_fd} encode_utf8($line . $NEWLINE);
         }
     }

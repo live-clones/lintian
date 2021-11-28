@@ -90,10 +90,6 @@ my %visibilities = map { $_ => 1 } @Lintian::Tag::VISIBILITIES;
 my %check_types = map { $_ => 1 } qw(binary changes source udeb);
 my %known_html_tags = map { $_ => 1 } qw(a em i tt);
 
-# We use this to check for explicit links where it is possible to use
-# a manual ref.
-my $MANUALS;
-
 # lazy-load this (so loading a profile can affect it)
 my %URLS;
 
@@ -295,7 +291,9 @@ sub test_check_desc {
 
             if ($tpara->declares('See-Also')) {
 
-                my @issues = _check_reference($tpara->value('See-Also'));
+                my @issues = map { _check_reference($_) }
+                  $tpara->trimmed_list('See-Also', qr{ \s* , \s* }x);
+
                 my $text = join("\n\t", @issues);
 
                 $builder->ok(!@issues, 'Proper references are used')
@@ -505,57 +503,87 @@ sub load_profile_for_test {
     $PROFILE = Lintian::Profile->new;
     $PROFILE->load($profname, [@inc, $ENV{'LINTIAN_BASE'}]);
 
-    $MANUALS = $PROFILE->manual_references;
-
     $ENV{'LINTIAN_CONFIG_DIRS'} = join($COLON, @inc);
 
     return $PROFILE;
 }
 
 sub _check_reference {
-    my ($refdata) = @_;
+    my ($see_also) = @_;
+
     my @issues;
 
+    my @MARKDOWN_CAPABLE = (
+        $PROFILE->menu_policy,
+        $PROFILE->perl_policy,
+        $PROFILE->python_policy,
+        $PROFILE->java_policy,
+        $PROFILE->vim_policy,
+        $PROFILE->lintian_manual,
+        $PROFILE->developer_reference,
+        $PROFILE->policy_manual,
+        $PROFILE->debconf_specification,
+        $PROFILE->menu_specification,
+        $PROFILE->doc_base_specification,
+        $PROFILE->filesystem_hierarchy_standard,
+    );
+
+    my %by_shorthand = map { $_->shorthand => $_ } @MARKDOWN_CAPABLE;
+
+    # We use this to check for explicit links where it is possible to use
+    # a manual ref.
     unless (%URLS) {
-        $MANUALS->recognizes($EMPTY); # force it to load the manual refs
-        foreach my $manid ($MANUALS->all) {
-            my $table = $MANUALS->value($manid);
-            foreach my $section (keys %{$table}) {
-                my $url = $table->{$section}{url};
-                next unless $url;
-                $URLS{$url} = "$manid $section";
+        for my $manual (@MARKDOWN_CAPABLE) {
+
+            my $volume = $manual->shorthand;
+
+            for my $section_key ($manual->all){
+                my $entry = $manual->value($section_key);
+
+                my $url = $entry->{$section_key}{url};
+                next
+                  unless length $url;
+
+                $URLS{$url} = "$volume $section_key";
             }
         }
     }
 
-    foreach my $reference (split /\s*,\s*/, $refdata) {
-        if (   $reference =~ m{^https?://bugs.debian.org/(\d++)$}
-            || $reference
-            =~ m{^https?://bugs.debian.org/cgi-bin/bugreport.cgi\?/.*bug=(\d++).*$}
-        ) {
-            push @issues, "replace \"$reference\" with \"#$1\"";
-        } elsif (exists $URLS{$reference}) {
-            push @issues, "replace \"$reference\" with \"$URLS{$reference}\"";
-        } elsif ($reference =~ m/^([\w-]++)\s++(\S++)$/) {
-            my ($manual, $section) = ($1, $2);
-            if ($MANUALS->recognizes($manual)) {
-                push @issues, "unknown section \"$section\" in $manual"
-                  unless exists $MANUALS->value($manual)->{$section};
-            } else {
-                push @issues, "unknown manual \"$manual\"";
-            }
+    if (   $see_also =~ m{^https?://bugs.debian.org/(\d++)$}
+        || $see_also
+        =~ m{^https?://bugs.debian.org/cgi-bin/bugreport.cgi\?/.*bug=(\d++).*$}
+    ) {
+        push(@issues, "replace '$see_also' with '#$1'");
+
+    } elsif (exists $URLS{$see_also}) {
+        push(@issues, "replace '$see_also' with '$URLS{$see_also}'");
+
+    } elsif ($see_also =~ m/^([\w-]++)\s++(\S++)$/) {
+
+        my $volume = $1;
+        my $section = $2;
+
+        if (exists $by_shorthand{$volume}) {
+
+            my $manual = $by_shorthand{$volume};
+
+            push(@issues, "unknown section '$section' in $volume")
+              unless length $manual->markdown_citation($section);
+
         } else {
-            # Check it is a valid reference like URLs or #123456
-            # NB: "policy 10.1" references already covered above
-            my $ok = 0;
-            $ok = 1 if $reference =~ /^#\d+$/; # debbugs reference
-            $ok = 1 if $reference =~ m{^(?:ftp|https?)://}; # browser URL
-            $ok = 1 if $reference =~ m{^/}; # local file reference
-            $ok = 1 if $reference =~ m{[\w_-]+\(\d\w*\)$}; # man reference
-            push @issues, "unknown/malformed reference \"$reference\""
-              unless $ok;
+            push(@issues, "unknown manual '$volume'");
         }
+
+    } else {
+        # Check it is a valid reference like URLs or #123456
+        # NB: "policy 10.1" references already covered above
+        push(@issues, "unknown or malformed reference '$see_also'")
+          if $see_also !~ /^#\d+$/ # debbugs reference
+          && $see_also !~ m{^(?:ftp|https?)://} # browser URL
+          && $see_also !~ m{^/} # local file reference
+          && $see_also !~ m{[\w_-]+\(\d\w*\)$}; # man reference
     }
+
     return @issues;
 }
 

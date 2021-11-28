@@ -1,0 +1,54 @@
+# Data about titles, sections, and URLs of manuals, used to expand references
+# in tag descriptions and add links for HTML output.  Each line of this file
+# has three fields separated by double colons:
+#
+#     <section> :: <title> :: <url>
+#
+# If <section> is empty, that line specifies the title and URL for the whole
+# manual.  If <url> is empty, that manual is not available on the web.
+#
+# Last updated: 2021-11-28
+
+_::Debian Python Policy 0.12.0.0 documentation::https://www.debian.org/doc/packaging-manuals/python-policy/
+1::Copyright::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#document-copyright
+2::Completing the move to Python 3::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#document-python3
+2.1::Removal of the unversioned packages::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#removal-of-the-unversioned-packages
+2.2::Unversioned python commands::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#unversioned-python-commands
+3::Python Packaging::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#document-interpreter
+3.1::Versions::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#versions
+3.2::Main packages::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#main-packages
+3.3::Minimal packages::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#minimal-packages
+3.4::Python Interpreter::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#python-interpreter
+3.4.1::Interpreter Name::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#interpreter-name
+3.4.2::Interpreter Location::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#interpreter-location
+3.5::Module Path::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#module-path
+3.6::Hooks for updates to installed runtimes::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#hooks-for-updates-to-installed-runtimes
+3.7::Documentation::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#documentation
+4::Packaged Modules::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#document-packaged-modules
+4.1::Types of Python Modules::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#types-of-python-modules
+4.2::Wheels::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#wheels
+4.3::Module Package Names::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#module-package-names
+4.4::Specifying Supported Versions::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#specifying-supported-versions
+4.5::Dependencies::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#dependencies
+4.6::Provides::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#provides
+4.7::Modules Byte-Compilation::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#modules-byte-compilation
+5::Python Programs::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#document-python-programs
+5.1::Interpreter directive (“Shebang”)::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#interpreter-directive-shebang
+5.2::Programs using the default Python::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#programs-using-the-default-python
+5.3::Programs Shipping Private Modules::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#programs-shipping-private-modules
+5.4::Programs Using a Particular Python Version::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#programs-using-a-particular-python-version
+6::Programs Embedding Python::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#document-embedded-python
+6.1::Building Embedded Programs::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#building-embedded-programs
+6.2::Embedded Python Dependencies::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#embedded-python-dependencies
+7::Interaction with Locally Installed Python Versions::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#document-locally-installed-python
+1*::Build Dependencies::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#document-build-dependencies
+2*::Packaging Tools::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#document-packaging-tools
+2.1*::distutils::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#distutils
+2.2*::setuptools::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#setuptools
+2.3::dh-python::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#dh-python
+2.4::pybuild::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#pybuild
+2.5::CDBS::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#cdbs
+2.6::python-support (removed)::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#python-support-removed
+2.7::python-central (removed)::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#python-central-removed
+3*::Upgrade Procedure::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#document-upgrade-procedure
+4*::This document::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#document-this-document

@@ -1,0 +1,21 @@
+# Data about titles, sections, and URLs of manuals, used to expand references
+# in tag descriptions and add links for HTML output.  Each line of this file
+# has three fields separated by double colons:
+#
+#     <section> :: <title> :: <url>
+#
+# If <section> is empty, that line specifies the title and URL for the whole
+# manual.  If <url> is empty, that manual is not available on the web.
+#
+# Last updated: 2021-11-28
+
+_::Debian policy for Java::https://www.debian.org/doc/packaging-manuals/java-policy/
+1::Background::https://www.debian.org/doc/packaging-manuals/java-policy/ch01.html
+2::Policy::https://www.debian.org/doc/packaging-manuals/java-policy/ch02.html
+2.1::Virtual machines::https://www.debian.org/doc/packaging-manuals/java-policy/ch02.html#policy-vm
+2.2::Building Java packages::https://www.debian.org/doc/packaging-manuals/java-policy/ch02.html#build-pkg
+2.3::Java programs::https://www.debian.org/doc/packaging-manuals/java-policy/ch02.html#policy-programs
+2.4::Java libraries::https://www.debian.org/doc/packaging-manuals/java-policy/ch02.html#policy-libraries
+2.5::Main, contrib or non-free::https://www.debian.org/doc/packaging-manuals/java-policy/ch02.html#policy-politics
+3::Issues to discuss::https://www.debian.org/doc/packaging-manuals/java-policy/ch03.html
+4::Advice to Java packagers::https://www.debian.org/doc/packaging-manuals/java-policy/ch04.html

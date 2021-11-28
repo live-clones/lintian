@@ -250,9 +250,11 @@ sub markdown_citation {
         my $volume = $1;
         my $section = $2;
 
-        my $references = $profile->manual_references;
+        my $markdown = $profile->markdown_citation($volume, $section);
 
-        return ($references->markdown_citation($volume, $section)// $citation);
+        $markdown ||= $citation;
+
+        return $markdown;
     }
 
     if ($citation =~ m{^ ([\w.-]+) [(] (\d\w*) [)] $}x) {

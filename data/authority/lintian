@@ -1,0 +1,37 @@
+# Data about titles, sections, and URLs of manuals, used to expand references
+# in tag descriptions and add links for HTML output.  Each line of this file
+# has three fields separated by double colons:
+#
+#     <section> :: <title> :: <url>
+#
+# If <section> is empty, that line specifies the title and URL for the whole
+# manual.  If <url> is empty, that manual is not available on the web.
+#
+# Last updated: 2021-11-28
+
+_::Lintian User's Manual::https://lintian.debian.org/manual/
+1::Introduction::https://lintian.debian.org/manual/#introduction
+1.1::About Lintian::https://lintian.debian.org/manual/#about-lintian
+1.2::The intention of Lintian::https://lintian.debian.org/manual/#the-intention-of-lintian
+1.3::Design issues::https://lintian.debian.org/manual/#design-issues
+1.4::Disclaimer::https://lintian.debian.org/manual/#disclaimer
+2::Getting started::https://lintian.debian.org/manual/#getting-started
+2.1::Installing Lintian::https://lintian.debian.org/manual/#installing-lintian
+2.2::Running lintian::https://lintian.debian.org/manual/#running-lintian
+2.3::Lintian Tags::https://lintian.debian.org/manual/#lintian-tags
+2.4::Overrides::https://lintian.debian.org/manual/#overrides
+2.4.1::Format of override files::https://lintian.debian.org/manual/#format-of-override-files
+2.4.2::Documenting overrides::https://lintian.debian.org/manual/#documenting-overrides
+2.4.3::Architecture specific overrides::https://lintian.debian.org/manual/#architecture-specific-overrides
+2.5::Vendor Profiles::https://lintian.debian.org/manual/#vendor-profiles
+2.5.1::Rules for profile names and location::https://lintian.debian.org/manual/#rules-for-profile-names-and-location
+2.5.2::Profile syntax and semantics::https://lintian.debian.org/manual/#profile-syntax-and-semantics
+2.6::Vendor specific data files::https://lintian.debian.org/manual/#vendor-specific-data-files
+2.6.1::Load paths and order::https://lintian.debian.org/manual/#load-paths-and-order
+2.6.2::Basic syntax of data files::https://lintian.debian.org/manual/#basic-syntax-of-data-files
+3::Advanced usage::https://lintian.debian.org/manual/#advanced-usage
+3.1::How Lintian works::https://lintian.debian.org/manual/#how-lintian-works
+3.2::The laboratory::https://lintian.debian.org/manual/#the-laboratory
+3.3::Writing your own Lintian checks::https://lintian.debian.org/manual/#writing-your-own-lintian-checks
+3.3.1::Check description file::https://lintian.debian.org/manual/#check-description-file
+3.3.2::Check Perl module file::https://lintian.debian.org/manual/#check-perl-module-file

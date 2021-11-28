@@ -1,6 +1,6 @@
 # Copyright © 2011 Niels Thykier <niels@thykier.net>
 # Copyright © 2018 Chris Lamb <lamby@debian.org>
-# Copyright © 2020 Felix Lechner
+# Copyright © 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -44,13 +44,25 @@ use Lintian::Tag;
 use Moo;
 use namespace::clean;
 
-with 'Lintian::Profile::Architectures',
+with
+  'Lintian::Profile::Architectures',
+  'Lintian::Profile::Authority::DebconfSpecification',
+  'Lintian::Profile::Authority::DebianPolicy',
+  'Lintian::Profile::Authority::DeveloperReference',
+  'Lintian::Profile::Authority::DocBaseSpecification',
+  'Lintian::Profile::Authority::FilesystemHierarchyStandard',
+  'Lintian::Profile::Authority::JavaPolicy',
+  'Lintian::Profile::Authority::LintianManual',
+  'Lintian::Profile::Authority::MenuPolicy',
+  'Lintian::Profile::Authority::MenuSpecification',
+  'Lintian::Profile::Authority::PerlPolicy',
+  'Lintian::Profile::Authority::PythonPolicy',
+  'Lintian::Profile::Authority::VimPolicy',
   'Lintian::Profile::Debhelper::Addons',
   'Lintian::Profile::Debhelper::Commands',
   'Lintian::Profile::Debhelper::Levels',
   'Lintian::Profile::Fonts',
   'Lintian::Profile::Hardening::Buildflags',
-  'Lintian::Profile::Manual::References',
   'Lintian::Profile::Policy::Releases';
 
 const my $EMPTY => q{};
@@ -876,6 +888,32 @@ sub search_space {
     my @search_space = grep { -e } @candidates;
 
     return @search_space;
+}
+
+=item markdown_citation
+
+=cut
+
+sub markdown_citation {
+    my ($self, $volume, $section) = @_;
+
+    my @MARKDOWN_CAPABLE = (
+        $self->menu_policy,$self->perl_policy,
+        $self->python_policy,$self->java_policy,
+        $self->vim_policy,$self->lintian_manual,
+        $self->developer_reference,$self->policy_manual,
+        $self->debconf_specification,$self->menu_specification,
+        $self->doc_base_specification,$self->filesystem_hierarchy_standard,
+    );
+
+    my %by_shorthand = map { $_->shorthand => $_ } @MARKDOWN_CAPABLE;
+
+    return $EMPTY
+      unless exists $by_shorthand{$volume};
+
+    my $manual = $by_shorthand{$volume};
+
+    return $manual->markdown_citation($section);
 }
 
 =back

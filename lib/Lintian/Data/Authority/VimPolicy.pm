@@ -2,7 +2,7 @@
 #
 # Copyright © 1998 Christian Schwarz and Richard Braakman
 # Copyright © 2009 Russ Allbery
-# Copyright © 2020 Felix Lechner
+# Copyright © 2020-2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -17,39 +17,43 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Lintian::Data::Manual::References;
+package Lintian::Data::Authority::VimPolicy;
 
 use v5.20;
 use warnings;
 use utf8;
 
+use Carp qw(croak);
 use Const::Fast;
 
 use Lintian::Output::Markdown qw(markdown_authority);
+
+const my $EMPTY => q{};
+const my $SPACE => q{ };
+const my $UNDERSCORE => q{_};
+const my $LEFT_PARENTHESIS => q{(};
+const my $RIGHT_PARENTHESIS => q{)};
+
+const my $TWO_PARTS => 2;
+
+const my $VOLUME_KEY => $UNDERSCORE;
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Data';
 
-const my $EMPTY => q{};
-const my $SPACE => q{ };
-const my $LEFT_PARENTHESIS => q{(};
-const my $RIGHT_PARENTHESIS => q{)};
-
-const my $THREE_PARTS => 3;
-
 =head1 NAME
 
-Lintian::Data::Manual::References - Lintian interface for manual references
+Lintian::Data::Authority::VimPolicy - Lintian interface for manual references
 
 =head1 SYNOPSIS
 
-    use Lintian::Data::Manual::References;
+    use Lintian::Data::Authority::VimPolicy;
 
 =head1 DESCRIPTION
 
-Lintian::Data::Manual::References provides a way to load data files for
+Lintian::Data::Authority::VimPolicy provides a way to load data files for
 manual references.
 
 =head1 CLASS METHODS
@@ -57,6 +61,8 @@ manual references.
 =over 4
 
 =item title
+
+=item shorthand
 
 =item location
 
@@ -68,13 +74,22 @@ manual references.
 
 has title => (
     is => 'rw',
-    default => 'Manual References'
+    default => 'Vim Policy'
+);
+
+has shorthand => (
+    is => 'rw',
+    default => 'vim-policy'
 );
 
 has location => (
     is => 'rw',
-    default => 'output/manual-references'
-);
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        return 'authority/' . $self->shorthand;
+    });
 
 has separator => (
     is => 'rw',
@@ -89,16 +104,16 @@ has accumulator => (
         return sub {
             my ($key, $remainder, $previous) = @_;
 
-            # use previous hashref, if available
-            $previous //= {};
+            return undef
+              if defined $previous;
 
-            my ($section, $title, $url)
-              = split($self->separator, $remainder, $THREE_PARTS);
+            my ($title, $url)= split($self->separator, $remainder, $TWO_PARTS);
 
-            $previous->{$section}{title} = $title;
-            $previous->{$section}{url} = $url;
+            my %entry;
+            $entry{title} = $title;
+            $entry{url} = $url;
 
-            return $previous;
+            return \%entry;
         };
     });
 
@@ -107,20 +122,27 @@ has accumulator => (
 =cut
 
 sub markdown_citation {
-    my ($self, $volume, $section_key) = @_;
+    my ($self, $section_key) = @_;
 
-    return $EMPTY
-      unless $self->recognizes($volume);
+    croak "Invalid section $section_key"
+      if $section_key eq $VOLUME_KEY;
 
-    my $entry = $self->value($volume);
+    my $volume_entry = $self->value($VOLUME_KEY);
 
     # start with the citation to the overall manual.
-    my $volume_title = $entry->{$EMPTY}{title};
-    my $volume_url   = $entry->{$EMPTY}{url};
+    my $volume_title = $volume_entry->{title};
+    my $volume_url   = $volume_entry->{url};
 
-    # may not be defined
-    my $section_title = $entry->{$section_key}{title};
-    my $section_url   = $entry->{$section_key}{url};
+    my $section_title;
+    my $section_url;
+
+    if ($self->recognizes($section_key)) {
+
+        my $section_entry = $self->value($section_key);
+
+        $section_title = $section_entry->{title};
+        $section_url   = $section_entry->{url};
+    }
 
     return markdown_authority(
         $volume_title, $volume_url,$section_key,

@@ -1,0 +1,37 @@
+# Data about titles, sections, and URLs of manuals, used to expand references
+# in tag descriptions and add links for HTML output.  Each line of this file
+# has three fields separated by double colons:
+#
+#     <section> :: <title> :: <url>
+#
+# If <section> is empty, that line specifies the title and URL for the whole
+# manual.  If <url> is empty, that manual is not available on the web.
+#
+# Last updated: 2021-11-27
+
+::Debian Perl Policy::https://www.debian.org/doc/packaging-manuals/perl-policy/
+1::About this document::https://www.debian.org/doc/packaging-manuals/perl-policy/ch1.html
+2::Perl Packaging::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-perl.html
+2.1::Versions::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-perl.html#s-versions
+2.2::Base Package::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-perl.html#s-base
+2.3::Module Path::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-perl.html#s-paths
+2.4::Documentation::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-perl.html#s-docs
+3::Locally Installed Modules::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-site.html
+3.1::Site Directories::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-site.html#s-site-dirs
+3.2::Site Installation::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-site.html#s-site-install
+4::Packaged Modules::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-module_packages.html
+4.1::Vendor Directories::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-module_packages.html#s-vendor-dirs
+4.2::Module Package Names::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-module_packages.html#s-package-names
+4.3::Vendor Installation::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-module_packages.html#s-vendor-install
+4.4::Module Dependencies::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-module_packages.html#s-module-deps
+4.4.1::Architecture-Independent Modules::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-module_packages.html#s-indep-modules
+4.4.2::Binary and Other Architecture Dependent Modules::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-module_packages.html#s-binary-modules
+4.4.3::Automating Perl Dependencies::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-module_packages.html#s-dh-perl
+5::Perl Programs::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-programs.html
+5.1::Script Magic::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-programs.html#s-hash-bang
+5.2::Program Dependencies::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-programs.html#s-program-deps
+6::Programs Embedding Perl::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-embed.html
+6.1::Building Embedded Programs::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-embed.html#s-build-embedded
+6.2::Embedded Perl Dependencies::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-embed.html#s-embedded-deps
+6.3::Perl Package Upgrades::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-embed.html#s-perl-upgrades
+A::Perl 6::https://www.debian.org/doc/packaging-manuals/perl-policy/ap-perl6.html
