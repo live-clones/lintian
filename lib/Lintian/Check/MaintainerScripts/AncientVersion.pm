@@ -31,8 +31,6 @@ use Const::Fast;
 use POSIX qw(strftime);
 use Unicode::UTF8 qw(encode_utf8);
 
-use Lintian::Pointer::Item;
-
 use Moo;
 use namespace::clean;
 
@@ -129,9 +127,7 @@ sub visit_control_files {
                 my $epoch
                   = strftime('%Y-%m-%d', gmtime $OLDSTABLE_RELEASE_EPOCH);
 
-                my $pointer = Lintian::Pointer::Item->new;
-                $pointer->item($item);
-                $pointer->position($position);
+                my $pointer = $item->pointer($position);
 
                 $self->pointed_hint(
                     'maintainer-script-supports-ancient-package-version',

@@ -26,8 +26,6 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Lintian::Pointer::Item;
-
 use Moo;
 use namespace::clean;
 
@@ -46,10 +44,10 @@ sub source {
 
     for my $field (@doubled_up_source_fields) {
 
-        my $pointer = Lintian::Pointer::Item->new;
-        $pointer->item(
-            $self->processable->patched->resolve_path('debian/control'));
-        $pointer->position($source_fields->position($field));
+        my $control_item
+          = $self->processable->patched->resolve_path('debian/control');
+        my $position = $source_fields->position($field);
+        my $pointer = $control_item->pointer($position);
 
         $self->pointed_hint('debian-control-repeats-field-name-in-value',
             $pointer, '(in section for source)', $field);
@@ -65,10 +63,10 @@ sub source {
 
         for my $field (@doubled_up_installable_fields) {
 
-            my $pointer = Lintian::Pointer::Item->new;
-            $pointer->item(
-                $self->processable->patched->resolve_path('debian/control'));
-            $pointer->position($installable_fields->position($field));
+            my $control_item
+              = $self->processable->patched->resolve_path('debian/control');
+            my $position = $installable_fields->position($field);
+            my $pointer = $control_item->pointer($position);
 
             $self->pointed_hint('debian-control-repeats-field-name-in-value',
                 $pointer,"(in section for $installable)", $field);

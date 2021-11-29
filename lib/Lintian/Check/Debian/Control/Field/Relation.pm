@@ -26,7 +26,6 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Lintian::Pointer::Item;
 use Lintian::Relation;
 
 use Moo;
@@ -70,10 +69,10 @@ sub source {
         next
           unless $source_fields->declares($field);
 
-        my $pointer = Lintian::Pointer::Item->new;
-        $pointer->item(
-            $self->processable->patched->resolve_path('debian/control'));
-        $pointer->position($source_fields->position($field));
+        my $control_item
+          = $self->processable->patched->resolve_path('debian/control');
+        my $position = $source_fields->position($field);
+        my $pointer = $control_item->pointer($position);
 
         my @values = $source_fields->trimmed_list($field, qr{ \s* , \s* }x);
         my @obsolete = grep { m{ [(] [<>] \s* [^<>=]+ [)] }x } @values;
@@ -107,10 +106,10 @@ sub source {
             next
               unless $installable_fields->declares($field);
 
-            my $pointer = Lintian::Pointer::Item->new;
-            $pointer->item(
-                $self->processable->patched->resolve_path('debian/control'));
-            $pointer->position($installable_fields->position($field));
+            my $control_item
+              = $self->processable->patched->resolve_path('debian/control');
+            my $position = $installable_fields->position($field);
+            my $pointer = $control_item->pointer($position);
 
             my @values
               = $installable_fields->trimmed_list($field, qr{ \s* , \s* }x);

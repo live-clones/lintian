@@ -31,8 +31,6 @@ use Const::Fast;
 use List::Compare;
 use Unicode::UTF8 qw(encode_utf8);
 
-use Lintian::Pointer::Item;
-
 use Moo;
 use namespace::clean;
 
@@ -134,11 +132,9 @@ sub installable {
             my $item = $self->processable->control->lookup($name);
 
             if (defined $item) {
-                my $pointer = Lintian::Pointer::Item->new;
-                $pointer->item($item);
 
                 $self->pointed_hint('missing-call-to-dpkg-maintscript-helper',
-                    $pointer, $command);
+                    $item->pointer, $command);
 
             } else {
                 # file does not exist

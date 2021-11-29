@@ -26,8 +26,6 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Lintian::Pointer::Item;
-
 use Moo;
 use namespace::clean;
 
@@ -51,9 +49,7 @@ sub visit_patched_files {
     my $position = 1;
     while (my $line = <$fd>) {
 
-        my $pointer = Lintian::Pointer::Item->new;
-        $pointer->item($item);
-        $pointer->position($position);
+        my $pointer = $item->pointer($position);
 
         $self->pointed_hint('maintscript-includes-maint-script-parameters',
             $pointer)

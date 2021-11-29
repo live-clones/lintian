@@ -26,8 +26,6 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Lintian::Pointer::Item;
-
 use Moo;
 use namespace::clean;
 
@@ -47,10 +45,10 @@ sub source {
 
         for my $field (@build_fields) {
 
-            my $pointer = Lintian::Pointer::Item->new;
-            $pointer->item(
-                $self->processable->patched->resolve_path('debian/control'));
-            $pointer->position($installable_fields->position($field));
+            my $control_item
+              = $self->processable->patched->resolve_path('debian/control');
+            my $position = $installable_fields->position($field);
+            my $pointer = $control_item->pointer($position);
 
             $self->pointed_hint('build-prerequisite-in-installable-section',
                 $pointer, $field,"(in section for $installable)")

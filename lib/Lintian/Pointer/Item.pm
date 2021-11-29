@@ -55,7 +55,11 @@ A class for item pointers
 =cut
 
 has item => (is => 'rw');
-has position => (is => 'rw', default => $EMPTY);
+has position => (
+    is => 'rw',
+    coerce => sub { my ($number) = @_; return $number // 0;},
+    default => 0
+);
 
 =item to_string
 
@@ -70,7 +74,7 @@ sub to_string {
     my $text = $self->item->name;
 
     $text .= $COLON . $self->position
-      if length $self->position;
+      if $self->position > 0;
 
     return $text;
 }

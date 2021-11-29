@@ -30,8 +30,6 @@ use utf8;
 use Const::Fast;
 use Unicode::UTF8 qw(encode_utf8);
 
-use Lintian::Pointer::Item;
-
 use Moo;
 use namespace::clean;
 
@@ -117,10 +115,7 @@ sub visit_control_files {
 
     if ($item->name eq 'postinst' && !$saw_update_fonts) {
 
-        my $pointer = Lintian::Pointer::Item->new;
-        $pointer->item($self->processable->control->resolve_path('postinst'));
-
-        $self->pointed_hint('missing-call-to-update-fonts', $pointer, $_)
+        $self->pointed_hint('missing-call-to-update-fonts', $item->pointer, $_)
           for @{$self->x_fonts};
     }
 

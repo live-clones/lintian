@@ -32,8 +32,6 @@ use List::Compare;
 use List::SomeUtils qw(any none);
 use Path::Tiny;
 
-use Lintian::Pointer::Item;
-
 const my $SPACE => q{ };
 
 const my @KNOWN_INSTRUCTIONS => qw(remove-on-upgrade);
@@ -49,19 +47,16 @@ sub visit_installed_files {
     return
       if $self->processable->type =~ 'udeb';
 
-    my $rough_pointer = Lintian::Pointer::Item->new;
-    $rough_pointer->item($item);
-
     my $declared_conffiles = $self->processable->declared_conffiles;
 
     unless ($item->is_file) {
-        $self->pointed_hint('conffile-has-bad-file-type', $rough_pointer)
+        $self->pointed_hint('conffile-has-bad-file-type', $item->pointer)
           if $declared_conffiles->is_known($item->name);
         return;
     }
 
     # files /etc must be conffiles, with some exceptions).
-    $self->pointed_hint('file-in-etc-not-marked-as-conffile',$rough_pointer)
+    $self->pointed_hint('file-in-etc-not-marked-as-conffile',$item->pointer)
       if $item->name =~ m{^etc/}
       && !$declared_conffiles->is_known($item->name)
       && $item->name !~ m{/README$}
@@ -76,23 +71,21 @@ sub binary {
     my $declared_conffiles = $self->processable->declared_conffiles;
     for my $relative ($declared_conffiles->all) {
 
-        my $rough_pointer = Lintian::Pointer::Item->new;
-        $rough_pointer->item($self->processable->conffiles_item);
+        my $item = $self->processable->conffiles_item;
 
         my @entries = @{$declared_conffiles->by_file->{$relative}};
 
         my @positions = map { $_->position } @entries;
         my $lines = join($SPACE, (sort { $a <=> $b } @positions));
 
-        $self->pointed_hint('duplicate-conffile', $rough_pointer,
+        $self->pointed_hint('duplicate-conffile', $item->pointer,
             $relative, "(lines $lines)")
           if @entries > 1;
 
         for my $entry (@entries) {
 
-            my $pointer = Lintian::Pointer::Item->new;
-            $pointer->item($self->processable->conffiles_item);
-            $pointer->position($entry->position);
+            my $conffiles_item = $self->processable->conffiles_item;
+            my $pointer = $conffiles_item->pointer($entry->position);
 
             $self->pointed_hint('relative-conffile', $pointer,$relative)
               if $entry->is_relative;

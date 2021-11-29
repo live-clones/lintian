@@ -26,8 +26,6 @@ use utf8;
 
 use List::SomeUtils qw(uniq);
 
-use Lintian::Pointer::Item;
-
 use Moo;
 use namespace::clean;
 
@@ -46,9 +44,6 @@ sub visit_installed_files {
     return
       unless $item->file_type =~ m{ \b current [ ] ar [ ] archive \b }x;
 
-    my $pointer = Lintian::Pointer::Item->new;
-    $pointer->item($item);
-
     for my $member_name (keys %{$item->elf_by_member}) {
 
         my $member_elf = $item->elf_by_member->{$member_name};
@@ -59,7 +54,7 @@ sub visit_installed_files {
         my @lto_section_names = grep { m{^ [.]gnu[.]lto }x } @section_names;
 
         $self->pointed_hint('static-link-time-optimization',
-            $pointer, $member_name)
+            $item->pointer, $member_name)
           if @lto_section_names;
     }
 

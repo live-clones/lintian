@@ -24,8 +24,6 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Lintian::Pointer::Item;
-
 use Moo;
 use namespace::clean;
 
@@ -41,10 +39,7 @@ sub visit_installed_files {
     return
       unless $item->name =~ m{^usr/lib/};
 
-    my $pointer = Lintian::Pointer::Item->new;
-    $pointer->item($item);
-
-    $self->pointed_hint('executable-in-usr-lib', $pointer)
+    $self->pointed_hint('executable-in-usr-lib', $item->pointer)
       if $item->is_file && $item->is_executable;
 
     return;

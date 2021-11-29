@@ -26,8 +26,6 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Lintian::Pointer::Item;
-
 use Moo;
 use namespace::clean;
 
@@ -50,10 +48,10 @@ sub source {
 
         my $field = 'XS-Autobuild';
 
-        my $pointer = Lintian::Pointer::Item->new;
-        $pointer->item(
-            $self->processable->patched->resolve_path('debian/control'));
-        $pointer->position($source_fields->position($field));
+        my $control_item
+          = $self->processable->patched->resolve_path('debian/control');
+        my $position = $source_fields->position($field);
+        my $pointer = $control_item->pointer($position);
 
         $self->pointed_hint('source-only-upload-to-non-free-without-autobuild',
             $pointer, '(in the source paragraph)', $field)

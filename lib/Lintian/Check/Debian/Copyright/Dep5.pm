@@ -35,7 +35,6 @@ use Time::Piece;
 use XML::LibXML;
 
 use Lintian::Deb822;
-use Lintian::Pointer::Item;
 use Lintian::Relation::Version qw(versions_compare);
 
 use Moo;
@@ -95,12 +94,10 @@ sub find_dep5_version {
     my $uri = $original_uri;
     my $version;
 
-    my $pointer = Lintian::Pointer::Item->new;
-    $pointer->item($file);
-
     if ($uri =~ /\b(?:rev=REVISION|VERSIONED_FORMAT_URL)\b/) {
 
-        $self->pointed_hint('boilerplate-copyright-format-uri', $pointer,$uri);
+        $self->pointed_hint('boilerplate-copyright-format-uri',
+            $file->pointer,$uri);
         return undef;
     }
 
@@ -155,16 +152,13 @@ sub find_dep5_version {
     }
 
     $self->pointed_hint('unknown-copyright-format-uri',
-        $pointer, $original_uri);
+        $file->pointer, $original_uri);
 
     return undef;
 }
 
 sub check_dep5_copyright {
     my ($self, $copyright_file) = @_;
-
-    my $rough_pointer = Lintian::Pointer::Item->new;
-    $rough_pointer->item($copyright_file);
 
     my $contents = $copyright_file->decoded_utf8;
 
@@ -174,13 +168,13 @@ sub check_dep5_copyright {
             =~ m{^Format:.*/doc/packaging-manuals/copyright-format/1.0/?$}m) {
 
             $self->pointed_hint('repackaged-source-not-advertised',
-                $rough_pointer)
+                $copyright_file->pointer)
               unless $self->processable->repacked
               || $self->processable->native;
 
         } else {
             $self->pointed_hint('files-excluded-without-copyright-format-1.0',
-                $rough_pointer);
+                $copyright_file->pointer);
         }
     }
 
@@ -196,7 +190,7 @@ sub check_dep5_copyright {
                ) }x
     ){
 
-        $self->pointed_hint('no-dep5-copyright', $rough_pointer);
+        $self->pointed_hint('no-dep5-copyright', $copyright_file->pointer);
         return;
     }
 
@@ -209,7 +203,8 @@ sub check_dep5_copyright {
     $first_para =~ s/\n?[ \t]+/ /g;
 
     if ($first_para !~ /^Format(?:-Specification)?:\s*(\S+)\s*$/mi) {
-        $self->pointed_hint('unknown-copyright-format-uri', $rough_pointer);
+        $self->pointed_hint('unknown-copyright-format-uri',
+            $copyright_file->pointer);
         return;
     }
 
@@ -223,19 +218,20 @@ sub check_dep5_copyright {
       unless defined $version;
 
     if ($version =~ /wiki/) {
-        $self->pointed_hint('wiki-copyright-format-uri', $rough_pointer, $uri);
+        $self->pointed_hint('wiki-copyright-format-uri',
+            $copyright_file->pointer, $uri);
 
     } elsif ($version =~ /svn$/) {
         $self->pointed_hint('unversioned-copyright-format-uri',
-            $rough_pointer, $uri);
+            $copyright_file->pointer, $uri);
 
     } elsif (versions_compare($version, '<<', $LAST_SIGNIFICANT_DEP5_CHANGE)) {
         $self->pointed_hint('out-of-date-copyright-format-uri',
-            $rough_pointer, $uri);
+            $copyright_file->pointer, $uri);
 
     } elsif ($uri =~ m{^http://www\.debian\.org/}) {
         $self->pointed_hint('insecure-copyright-format-uri',
-            $rough_pointer, $uri);
+            $copyright_file->pointer, $uri);
     }
 
     return
@@ -254,7 +250,7 @@ sub check_dep5_copyright {
         $error =~ s{^syntax error in }{};
 
         $self->pointed_hint('syntax-error-in-dep5-copyright',
-            $rough_pointer, $@);
+            $copyright_file->pointer, $@);
 
         return;
     }
@@ -270,9 +266,8 @@ sub check_dep5_copyright {
     my @license_sections = grep { $_->declares('License') } @sections;
     for my $section (@license_sections) {
 
-        my $pointer = Lintian::Pointer::Item->new;
-        $pointer->item($copyright_file);
-        $pointer->position($section->position('License'));
+        my $position = $section->position('License');
+        my $pointer = $copyright_file->pointer($position);
 
         $self->pointed_hint('tab-in-license-text', $pointer)
           if $section->untrimmed_value('License') =~ /\t/;
@@ -367,9 +362,8 @@ sub check_dep5_copyright {
 
         for my $section (@{$found_standalone{$name}}) {
 
-            my $pointer = Lintian::Pointer::Item->new;
-            $pointer->item($copyright_file);
-            $pointer->position($section->position('License'));
+            my $position = $section->position('License');
+            my $pointer = $copyright_file->pointer($position);
 
             $self->pointed_hint('dep5-copyright-license-name-not-unique',
                 $pointer, $name);
@@ -381,17 +375,14 @@ sub check_dep5_copyright {
     my @obsolete_fields = grep { $header->declares($_) } keys %NEW_FIELD_NAMES;
     for my $old_name (@obsolete_fields) {
 
-        my $pointer = Lintian::Pointer::Item->new;
-        $pointer->item($copyright_file);
-        $pointer->position($header->position($old_name));
+        my $position = $header->position($old_name);
+        my $pointer = $copyright_file->pointer($position);
 
         $self->pointed_hint('obsolete-field-in-dep5-copyright',
             $pointer, $old_name, $NEW_FIELD_NAMES{$old_name});
     }
 
-    my $header_pointer = Lintian::Pointer::Item->new;
-    $header_pointer->item($copyright_file);
-    $header_pointer->position($header->position);
+    my $header_pointer = $copyright_file->pointer($header->position);
 
     $self->pointed_hint('missing-field-in-dep5-copyright',
         $header_pointer, 'Format')
@@ -417,26 +408,16 @@ sub check_dep5_copyright {
           && !$_->declares('Files')
     } @followers;
 
-    for my $section (@ambiguous_sections) {
-
-        my $pointer = Lintian::Pointer::Item->new;
-        $pointer->item($copyright_file);
-        $pointer->position($section->position);
-
-        $self->pointed_hint('ambiguous-paragraph-in-dep5-copyright',$pointer);
-    }
+    $self->pointed_hint(
+        'ambiguous-paragraph-in-dep5-copyright',
+        $copyright_file->pointer($_->position))for @ambiguous_sections;
 
     my @unknown_sections
       = grep {!$_->declares('License')&& !$_->declares('Files')} @followers;
 
-    for my $section (@unknown_sections) {
-
-        my $pointer = Lintian::Pointer::Item->new;
-        $pointer->item($copyright_file);
-        $pointer->position($section->position);
-
-        $self->pointed_hint('unknown-paragraph-in-dep5-copyright',$pointer);
-    }
+    $self->pointed_hint(
+        'unknown-paragraph-in-dep5-copyright',
+        $copyright_file->pointer($_->position))for @unknown_sections;
 
     my @shipped_items;
 
@@ -462,9 +443,8 @@ sub check_dep5_copyright {
     my @excluded;
     for my $wildcard ($header->trimmed_list('Files-Excluded')) {
 
-        my $pointer = Lintian::Pointer::Item->new;
-        $pointer->item($copyright_file);
-        $pointer->position($header->position('Files-Excluded'));
+        my $position = $header->position('Files-Excluded');
+        my $pointer = $copyright_file->pointer($position);
 
         my @offenders = escape_errors($wildcard);
 
@@ -504,9 +484,8 @@ sub check_dep5_copyright {
     my @included;
     for my $wildcard ($header->trimmed_list('Files-Included')) {
 
-        my $pointer = Lintian::Pointer::Item->new;
-        $pointer->item($copyright_file);
-        $pointer->position($header->position('Files-Included'));
+        my $position = $header->position('Files-Included');
+        my $pointer = $copyright_file->pointer($position);
 
         my @offenders = escape_errors($wildcard);
 
@@ -554,9 +533,8 @@ sub check_dep5_copyright {
     # already unique
     for my $name (@affirmed) {
 
-        my $pointer = Lintian::Pointer::Item->new;
-        $pointer->item($copyright_file);
-        $pointer->position($header->position('Files-Included'));
+        my $position = $header->position('Files-Included');
+        my $pointer = $copyright_file->pointer($position);
 
         $self->pointed_hint('file-included-already', $pointer, $name);
     }
@@ -564,9 +542,8 @@ sub check_dep5_copyright {
     # already unique
     for my $name (@unwanted) {
 
-        my $pointer = Lintian::Pointer::Item->new;
-        $pointer->item($copyright_file);
-        $pointer->position($header->position('Files-Excluded'));
+        my $position = $header->position('Files-Excluded');
+        my $pointer = $copyright_file->pointer($position);
 
         $self->pointed_hint('source-ships-excluded-file',$pointer, $name)
           unless $name =~ m{^(?:debian|\.pc)/};
@@ -580,9 +557,8 @@ sub check_dep5_copyright {
 
     for my $section (@fields_with_comma) {
 
-        my $pointer = Lintian::Pointer::Item->new;
-        $pointer->item($copyright_file);
-        $pointer->position($section->position('Files'));
+        my $position = $section->position('Files');
+        my $pointer = $copyright_file->pointer($position);
 
         $self->pointed_hint('comma-separated-files-in-dep5-copyright',$pointer)
           if !@names_with_comma;
@@ -597,17 +573,14 @@ sub check_dep5_copyright {
 
         if (!length $section->value('Files')) {
 
-            my $pointer = Lintian::Pointer::Item->new;
-            $pointer->item($copyright_file);
-            $pointer->position($section->position('Files'));
+            my $position = $section->position('Files');
+            my $pointer = $copyright_file->pointer($position);
 
             $self->pointed_hint('missing-field-in-dep5-copyright',
                 $pointer,'(empty field)', 'Files');
         }
 
-        my $section_pointer = Lintian::Pointer::Item->new;
-        $section_pointer->item($copyright_file);
-        $section_pointer->position($section->position);
+        my $section_pointer = $copyright_file->pointer($section->position);
 
         $self->pointed_hint('missing-field-in-dep5-copyright',
             $section_pointer, 'License')
@@ -620,9 +593,8 @@ sub check_dep5_copyright {
         if ($section->declares('Copyright')
             && !length $section->value('Copyright')) {
 
-            my $pointer = Lintian::Pointer::Item->new;
-            $pointer->item($copyright_file);
-            $pointer->position($section->position('Copyright'));
+            my $position = $section->position('Copyright');
+            my $pointer = $copyright_file->pointer($position);
 
             $self->pointed_hint('missing-field-in-dep5-copyright',
                 $pointer, '(empty field)', 'Copyright');
@@ -637,17 +609,14 @@ sub check_dep5_copyright {
     my $section_count = 0;
     for my $section (@followers) {
 
-        my $wildcard_pointer = Lintian::Pointer::Item->new;
-        $wildcard_pointer->item($copyright_file);
-        $wildcard_pointer->position($section->position('Files'));
+        my $wildcard_pointer
+          = $copyright_file->pointer($section->position('Files'));
 
-        my $copyright_pointer = Lintian::Pointer::Item->new;
-        $copyright_pointer->item($copyright_file);
-        $copyright_pointer->position($section->position('Copyright'));
+        my $copyright_pointer
+          = $copyright_file->pointer($section->position('Copyright'));
 
-        my $license_pointer = Lintian::Pointer::Item->new;
-        $license_pointer->item($copyright_file);
-        $license_pointer->position($section->position('License'));
+        my $license_pointer
+          = $copyright_file->pointer($section->position('License'));
 
         my @license_names
           = @{$license_names_by_section{$section->position} // []};
@@ -790,15 +759,12 @@ sub check_dep5_copyright {
 
         for my $wildcard (@duplicate_wildcards) {
 
-            my $pointer = Lintian::Pointer::Item->new;
-            $pointer->item($copyright_file);
-
             my $lines = join($SPACE,
                 map { $_->position('Files') }
                   @{$sections_by_wildcard{$wildcard}});
 
-            $self->pointed_hint('duplicate-globbing-patterns', $pointer,
-                $wildcard, '(lines $lines)');
+            $self->pointed_hint('duplicate-globbing-patterns',
+                $copyright_file->pointer,$wildcard, '(lines $lines)');
         }
 
         # do not issue next tag for duplicates or redundant wildcards
@@ -813,9 +779,8 @@ sub check_dep5_copyright {
         for my $wildcard (@matches_nothing) {
             for my $section (@{$sections_by_wildcard{$wildcard}}) {
 
-                my $pointer = Lintian::Pointer::Item->new;
-                $pointer->item($copyright_file);
-                $pointer->position($section->position('Files'));
+                my $position = $section->position('Files');
+                my $pointer = $copyright_file->pointer($position);
 
                 $self->pointed_hint('superfluous-file-pattern', $pointer,
                     $wildcard);
@@ -890,7 +855,7 @@ sub check_dep5_copyright {
             my @mismatched = grep { $_ ne $seen } @wanted;
 
             $self->pointed_hint('inconsistent-appstream-metadata-license',
-                $rough_pointer, $name, "($seen != $_)")
+                $copyright_file->pointer, $name, "($seen != $_)")
               for @mismatched;
         }
 
@@ -903,7 +868,7 @@ sub check_dep5_copyright {
           = grep { !@{$sections_by_file{$_} // []} } @license_needed;
 
         $self->pointed_hint('file-without-copyright-information',
-            $rough_pointer, $_)
+            $copyright_file->pointer, $_)
           for @not_covered;
     }
 
@@ -917,9 +882,8 @@ sub check_dep5_copyright {
 
         my $section = $required_standalone{$license};
 
-        my $pointer = Lintian::Pointer::Item->new;
-        $pointer->item($copyright_file);
-        $pointer->position($section->position('License'));
+        my $position = $section->position('License');
+        my $pointer = $copyright_file->pointer($position);
 
         $self->pointed_hint('missing-license-paragraph-in-dep5-copyright',
             $pointer, $license);
@@ -929,9 +893,8 @@ sub check_dep5_copyright {
 
         for my $section (@{$found_standalone{$license}}) {
 
-            my $pointer = Lintian::Pointer::Item->new;
-            $pointer->item($copyright_file);
-            $pointer->position($section->position('License'));
+            my $position = $section->position('License');
+            my $pointer = $copyright_file->pointer($position);
 
             $self->pointed_hint('unused-license-paragraph-in-dep5-copyright',
                 $pointer, $license);
@@ -942,9 +905,8 @@ sub check_dep5_copyright {
 
         my $section = $required_standalone{$license};
 
-        my $pointer = Lintian::Pointer::Item->new;
-        $pointer->item($copyright_file);
-        $pointer->position($section->position('Files'));
+        my $position = $section->position('Files');
+        my $pointer = $copyright_file->pointer($position);
 
         $self->pointed_hint('dep5-file-paragraph-references-header-paragraph',
             $pointer, $license)
@@ -957,7 +919,7 @@ sub check_dep5_copyright {
     my @listed_licenses = $license_lc->get_intersection;
 
     $self->pointed_hint('license-file-listed-in-debian-copyright',
-        $rough_pointer, $_)
+        $copyright_file->pointer, $_)
       for @listed_licenses;
 
     return;

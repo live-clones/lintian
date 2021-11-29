@@ -33,6 +33,7 @@ use Syntax::Keyword::Try;
 use Text::Balanced qw(extract_delimited);
 use Unicode::UTF8 qw(valid_utf8 decode_utf8 encode_utf8);
 
+use Lintian::Pointer::Item;
 use Lintian::SlidingWindow;
 use Lintian::Util qw(normalize_link_target);
 
@@ -1391,6 +1392,20 @@ has parent_dir => (
         return $self->index->lookup($self->dirname);
     });
 has dereferenced => (is => 'rw');
+
+=item pointer
+
+=cut
+
+sub pointer {
+    my ($self, $position) = @_;
+
+    my $pointer = Lintian::Pointer::Item->new;
+    $pointer->item($self);
+    $pointer->position($position);
+
+    return $pointer;
+}
 
 =item bytes
 

@@ -29,8 +29,6 @@ use utf8;
 
 use Unicode::UTF8 qw(encode_utf8);
 
-use Lintian::Pointer::Item;
-
 use Moo;
 use namespace::clean;
 
@@ -59,9 +57,7 @@ sub visit_control_files {
 
         my $token = $1;
 
-        my $pointer = Lintian::Pointer::Item->new;
-        $pointer->item($item);
-        $pointer->position($position);
+        my $pointer = $item->pointer($position);
 
         $self->pointed_hint('maintainer-script-has-unexpanded-debhelper-token',
             $pointer, $token);

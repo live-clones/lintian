@@ -34,8 +34,6 @@ use File::Basename;
 use List::SomeUtils qw(uniq);
 use Unicode::UTF8 qw(encode_utf8);
 
-use Lintian::Pointer::Item;
-
 use Moo;
 use namespace::clean;
 
@@ -208,9 +206,7 @@ sub check_bash_centric {
         last
           if $line =~ m{^ exec \s }x;
 
-        my $pointer = Lintian::Pointer::Item->new;
-        $pointer->item($item);
-        $pointer->position($position);
+        my $pointer = $item->pointer($position);
 
         my @matches = uniq +$self->check_line($line);
 

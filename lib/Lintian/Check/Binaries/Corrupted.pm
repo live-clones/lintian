@@ -29,8 +29,6 @@ use utf8;
 
 use List::SomeUtils qw(uniq);
 
-use Lintian::Pointer::Item;
-
 use Moo;
 use namespace::clean;
 
@@ -55,13 +53,10 @@ sub visit_installed_files {
 sub check_elf_issues {
     my ($self, $item) = @_;
 
-    my $pointer = Lintian::Pointer::Item->new;
-    $pointer->item($item);
-
-    $self->pointed_hint('elf-error',$pointer, $_)
+    $self->pointed_hint('elf-error',$item->pointer, $_)
       for uniq @{$item->elf->{ERRORS} // []};
 
-    $self->pointed_hint('elf-warning', $pointer, $_)
+    $self->pointed_hint('elf-warning', $item->pointer, $_)
       for uniq @{$item->elf->{WARNINGS} // []};
 
     # static library
@@ -69,14 +64,14 @@ sub check_elf_issues {
 
         my $member_elf = $item->elf_by_member->{$member_name};
 
-        $self->pointed_hint('elf-error', $pointer, $member_name, $_)
+        $self->pointed_hint('elf-error', $item->pointer, $member_name, $_)
           for uniq @{$member_elf->{ERRORS} // []};
 
-        $self->pointed_hint('elf-warning', $pointer, $member_name, $_)
+        $self->pointed_hint('elf-warning', $item->pointer, $member_name, $_)
           for uniq @{$member_elf->{WARNINGS} // []};
     }
 
-    $self->pointed_hint('binary-with-bad-dynamic-table', $pointer)
+    $self->pointed_hint('binary-with-bad-dynamic-table', $item->pointer)
       if $item->elf->{'BAD-DYNAMIC-TABLE'}
       && $item->name !~ m{^usr/lib/debug/};
 

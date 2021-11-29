@@ -28,7 +28,6 @@ use List::Compare;
 use Syntax::Keyword::Try;
 
 use Lintian::Deb822;
-use Lintian::Pointer::Item;
 
 use Moo;
 use namespace::clean;
@@ -95,10 +94,7 @@ sub check_dep5_copyright {
 
     my @missing_components = $component_lc->get_Lonly;
 
-    my $pointer = Lintian::Pointer::Item->new;
-    $pointer->item($copyright_file);
-
-    $self->pointed_hint('add-component-copyright', $pointer, $_)
+    $self->pointed_hint('add-component-copyright', $copyright_file->pointer,$_)
       for @missing_components;
 
     return;

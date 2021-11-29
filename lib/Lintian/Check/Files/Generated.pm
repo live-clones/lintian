@@ -27,8 +27,6 @@ use utf8;
 use Const::Fast;
 use Unicode::UTF8 qw(encode_utf8);
 
-use Lintian::Pointer::Item;
-
 use Moo;
 use namespace::clean;
 
@@ -60,12 +58,11 @@ sub visit_patched_files {
 
             my $marker = $1;
 
-            my $pointer = Lintian::Pointer::Item->new;
-            $pointer->item($item);
-            $pointer->position($position);
-
-            $self->pointed_hint('generated-file', $pointer,
-                $DOUBLE_QUOTE . $marker . $DOUBLE_QUOTE);
+            $self->pointed_hint(
+                'generated-file',
+                $item->pointer($position),
+                $DOUBLE_QUOTE . $marker . $DOUBLE_QUOTE
+            );
         }
 
     } continue {

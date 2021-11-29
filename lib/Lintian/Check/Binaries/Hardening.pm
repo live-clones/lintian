@@ -27,8 +27,6 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Lintian::Pointer::Item;
-
 use Moo;
 use namespace::clean;
 
@@ -104,10 +102,7 @@ sub visit_installed_files {
         }
     }
 
-    my $pointer = Lintian::Pointer::Item->new;
-    $pointer->item($item);
-
-    $self->pointed_hint('hardening-no-fortify-functions', $pointer)
+    $self->pointed_hint('hardening-no-fortify-functions', $item->pointer)
       if @elf_unhardened
       && !@elf_hardened
       && !$self->built_with_golang
@@ -137,7 +132,7 @@ sub visit_installed_files {
         }
 
         $self->pointed_hint('hardening-no-fortify-functions',
-            $pointer, $member_name)
+            $item->pointer, $member_name)
           if @member_unhardened
           && !@member_hardened
           && !$self->built_with_golang
@@ -158,17 +153,17 @@ sub visit_installed_files {
     return
       unless exists $item->elf->{NEEDED};
 
-    $self->pointed_hint('hardening-no-relro', $pointer)
+    $self->pointed_hint('hardening-no-relro', $item->pointer)
       if $self->recommended_hardening_features->{relro}
       && !$self->built_with_golang
       && !$item->elf->{PH}{RELRO};
 
-    $self->pointed_hint('hardening-no-bindnow', $pointer)
+    $self->pointed_hint('hardening-no-bindnow', $item->pointer)
       if $self->recommended_hardening_features->{bindnow}
       && !$self->built_with_golang
       && !exists $item->elf->{FLAGS_1}{NOW};
 
-    $self->pointed_hint('hardening-no-pie', $pointer)
+    $self->pointed_hint('hardening-no-pie', $item->pointer)
       if $self->recommended_hardening_features->{pie}
       && !$self->built_with_golang
       && $item->elf->{'ELF-HEADER'}{Type} =~ m{^ EXEC }x;

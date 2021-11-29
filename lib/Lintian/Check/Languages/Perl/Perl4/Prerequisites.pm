@@ -31,7 +31,6 @@ use Const::Fast;
 use File::Basename;
 use Unicode::UTF8 qw(encode_utf8);
 
-use Lintian::Pointer::Item;
 use Lintian::Relation;
 
 use Moo;
@@ -96,9 +95,7 @@ sub visit_installed_files {
 
             my $module = "$1.pl";
 
-            my $pointer = Lintian::Pointer::Item->new;
-            $pointer->item($item);
-            $pointer->position($position);
+            my $pointer = $item->pointer($position);
 
             $self->pointed_hint(
                 'script-uses-perl4-libs-without-dep',$pointer,

@@ -33,7 +33,6 @@ use List::UtilsBy qw(min_by);
 use Text::LevenshteinXS qw(distance);
 use Unicode::UTF8 qw(encode_utf8);
 
-use Lintian::Pointer::Item;
 use Lintian::Relation;
 
 use Moo;
@@ -144,10 +143,7 @@ sub visit_patched_files {
         # $item to ensure we are not dealing with a symlink.
         my $actual = $item->resolve_path;
 
-        my $pointer = Lintian::Pointer::Item->new;
-        $pointer->item($item);
-
-        $self->pointed_hint('package-file-is-executable', $pointer)
+        $self->pointed_hint('package-file-is-executable', $item->pointer)
           if $actual && $actual->is_executable;
 
         return;
@@ -236,9 +232,7 @@ sub source {
     my $position = 1;
     while (my $line = <$rules_fd>) {
 
-        my $pointer = Lintian::Pointer::Item->new;
-        $pointer->item($drules);
-        $pointer->position($position);
+        my $pointer = $drules->pointer($position);
 
         while ($line =~ s/\\$// && defined(my $cont = <$rules_fd>)) {
             $line .= $cont;
@@ -502,28 +496,25 @@ sub source {
     %seen = map { $_ => 1 } keys %seen
       if $seen_dh_dynamic;
 
-    my $rough_pointer = Lintian::Pointer::Item->new;
-    $rough_pointer->item($drules);
-
     # Okay - d/rules does not include any file in /usr/share/cdbs/
-    $self->pointed_hint('unused-build-dependency-on-cdbs', $rough_pointer)
+    $self->pointed_hint('unused-build-dependency-on-cdbs', $drules->pointer)
       if $build_prerequisites->satisfies('cdbs')
       && !$includes_cdbs;
 
     if (%build_systems) {
 
         my @systems = sort keys %build_systems;
-        $self->pointed_hint('debian-build-system', $rough_pointer,
+        $self->pointed_hint('debian-build-system', $drules->pointer,
             join(', ', @systems));
 
     } else {
-        $self->pointed_hint('debian-build-system', $rough_pointer, 'other');
+        $self->pointed_hint('debian-build-system', $drules->pointer, 'other');
     }
 
     unless ($seen_any_dh_command || $includes_cdbs) {
 
         $self->pointed_hint('package-does-not-use-debhelper-or-cdbs',
-            $rough_pointer);
+            $drules->pointer);
         return;
     }
 
@@ -555,7 +546,7 @@ sub source {
           = $self->processable->binary_relation($installable->name, 'strong');
 
         $self->pointed_hint('package-uses-dh-runit-but-lacks-breaks-substvar',
-            $rough_pointer,$installable->name)
+            $drules->pointer,$installable->name)
           if $seen{'runit'}
           && $strong->satisfies('runit')
           && (any { m{^ etc/sv/ }msx } @{$installable->installed->sorted_list})
@@ -577,12 +568,11 @@ sub source {
           | Lintian::Relation::VISIT_STOP_FIRST_MATCH
     );
 
-    my $control_pointer = Lintian::Pointer::Item->new;
-    $control_pointer->item(
-        $self->processable->patched->resolve_path('debian/control'));
+    my $control_item
+      =$self->processable->patched->resolve_path('debian/control');
 
     $self->pointed_hint('debhelper-compat-virtual-relation',
-        $control_pointer, $virtual_compat)
+        $control_item->pointer, $virtual_compat)
       if length $virtual_compat;
 
     # gives precedence to virtual compat
@@ -599,12 +589,9 @@ sub source {
 
     if (length $debhelper_level && length $from_compat_file) {
 
-        my $compat_pointer = Lintian::Pointer::Item->new;
-        $compat_pointer->item($compat_file);
-
         $self->pointed_hint(
             'declares-possibly-conflicting-debhelper-compat-versions',
-            $compat_pointer, $from_compat_file, 'vs elsewhere',
+            $compat_file->pointer,$from_compat_file,'vs elsewhere',
             $debhelper_level);
     }
 
@@ -636,7 +623,7 @@ sub source {
         $debhelper_level)
       if $debhelper_level >= $DEBHELPER_LEVELS->value('experimental');
 
-    $self->pointed_hint('dh-clean-k-is-deprecated', $rough_pointer)
+    $self->pointed_hint('dh-clean-k-is-deprecated', $drules->pointer)
       if $seen_dh_clean_k;
 
     for my $suffix (qw(enable start)) {
@@ -644,12 +631,11 @@ sub source {
         my ($stored_position, $focus)
           = @{$overrides{"dh_systemd_$suffix"} // []};
 
-        my $pointer = Lintian::Pointer::Item->new;
-        $pointer->item($drules);
-        $pointer->position($stored_position);
-
-        $self->pointed_hint('debian-rules-uses-deprecated-systemd-override',
-            $pointer,"override_dh_systemd_$suffix$focus")
+        $self->pointed_hint(
+            'debian-rules-uses-deprecated-systemd-override',
+            $drules->pointer($stored_position),
+            "override_dh_systemd_$suffix$focus"
+          )
           if $stored_position
           && $debhelper_level >= $BETTER_SYSTEMD_INTEGRATION;
     }
@@ -659,25 +645,17 @@ sub source {
     $self->hint('excessive-debhelper-overrides', $num_overrides)
       if $num_overrides >= $MANY_OVERRIDES;
 
-    if ($seen_dh_parallel && $debhelper_level >= $DH_PARALLEL_NOT_NEEDED) {
+    $self->pointed_hint(
+        'debian-rules-uses-unnecessary-dh-argument',
+        $drules->pointer($seen_dh_parallel),
+        'dh ... --parallel'
+    )if $seen_dh_parallel && $debhelper_level >= $DH_PARALLEL_NOT_NEEDED;
 
-        my $pointer = Lintian::Pointer::Item->new;
-        $pointer->item($drules);
-        $pointer->position($seen_dh_parallel);
-
-        $self->pointed_hint('debian-rules-uses-unnecessary-dh-argument',
-            $pointer,'dh ... --parallel');
-    }
-
-    if ($seen_dh_systemd && $debhelper_level >= $INVOKES_SYSTEMD) {
-
-        my $pointer = Lintian::Pointer::Item->new;
-        $pointer->item($drules);
-        $pointer->position($seen_dh_systemd);
-
-        $self->pointed_hint('debian-rules-uses-unnecessary-dh-argument',
-            $pointer,'dh ... --with=systemd');
-    }
+    $self->pointed_hint(
+        'debian-rules-uses-unnecessary-dh-argument',
+        $drules->pointer($seen_dh_systemd),
+        'dh ... --with=systemd'
+    )if $seen_dh_systemd && $debhelper_level >= $INVOKES_SYSTEMD;
 
     for my $item ($droot->children) {
 
@@ -721,11 +699,8 @@ sub source {
                 $is_udeb = 1
                   if !$installable_name && $single_pkg eq 'udeb';
 
-                my $pointer = Lintian::Pointer::Item->new;
-                $pointer->item($item);
-
                 $self->pointed_hint('maintainer-script-lacks-debhelper-token',
-                    $pointer)
+                    $item->pointer)
                   unless $is_udeb;
             }
 
@@ -742,9 +717,6 @@ sub source {
         # a list of filenames.
         if ($FILENAME_CONFIGS->recognizes($category)) {
 
-            my $pointer = Lintian::Pointer::Item->new;
-            $pointer->item($item);
-
             # The permissions of symlinks are not really defined, so resolve
             # $item to ensure we are not dealing with a symlink.
             my $actual = $item->resolve_path;
@@ -754,7 +726,7 @@ sub source {
             $self->check_for_brace_expansion($item, $debhelper_level);
 
             # debhelper only use executable files in compat 9
-            $self->pointed_hint('package-file-is-executable', $pointer)
+            $self->pointed_hint('package-file-is-executable', $item->pointer)
               if $actual->is_executable
               && $debhelper_level < $USES_EXECUTABLE_FILES;
 
@@ -762,13 +734,13 @@ sub source {
 
                 $self->pointed_hint(
                     'executable-debhelper-file-without-being-executable',
-                    $pointer)
+                    $item->pointer)
                   if $actual->is_executable
                   && !length $actual->hashbang;
 
                 # Only /usr/bin/dh-exec is allowed, even if
                 # /usr/lib/dh-exec/dh-exec-subst works too.
-                $self->pointed_hint('dh-exec-private-helper', $pointer)
+                $self->pointed_hint('dh-exec-private-helper', $item->pointer)
                   if $actual->is_executable
                   && $actual->hashbang =~ m{^/usr/lib/dh-exec/};
 
@@ -785,13 +757,13 @@ sub source {
     }
 
     $self->pointed_hint('package-uses-debhelper-but-lacks-build-depends',
-        $rough_pointer)
+        $drules->pointer)
       if $uses_debhelper
       && !$build_prerequisites->satisfies('debhelper')
       && !$build_prerequisites->satisfies('debhelper-compat');
 
     $self->pointed_hint('package-uses-dh-exec-but-lacks-build-depends',
-        $rough_pointer)
+        $drules->pointer)
       if $uses_dh_exec
       && !$build_prerequisites->satisfies('dh-exec');
 
@@ -811,7 +783,7 @@ sub source {
           );
 
         $self->pointed_hint('missing-build-dependency-for-dh_-command',
-            $rough_pointer,$command, $ARROW, $prerequisite)
+            $drules->pointer,$command, $ARROW, $prerequisite)
           unless $build_prerequisites_norestriction->satisfies($prerequisite);
     }
 
@@ -820,7 +792,7 @@ sub source {
         my $addon = $addon_by_prerequisite{$prerequisite};
 
         $self->pointed_hint('missing-build-dependency-for-dh-addon',
-            $rough_pointer,$addon, $ARROW, $prerequisite)
+            $drules->pointer,$addon, $ARROW, $prerequisite)
           unless (
             $build_prerequisites_norestriction->satisfies($prerequisite));
 
@@ -829,7 +801,7 @@ sub source {
         my $python_source = 'dh-python';
 
         $self->pointed_hint('missing-build-dependency-for-dh-addon',
-            $rough_pointer,$addon, $ARROW, $python_source)
+            $drules->pointer,$addon, $ARROW, $python_source)
           if $addon eq 'python3'
           && $build_prerequisites_norestriction->satisfies($prerequisite)
           && !$build_prerequisites_norestriction->satisfies(
@@ -898,7 +870,7 @@ sub source {
         }
 
         $self->pointed_hint('sphinxdoc-but-no-sphinxdoc-depends',
-            $rough_pointer)
+            $drules->pointer)
           unless $seen_sphinxdoc;
     }
 
@@ -927,9 +899,7 @@ sub check_for_brace_expansion {
         if ($line =~ /((?<!\\)\{(?:[^\s\\\}]*?,)+[^\\\}\s,]*,*\})/){
             my $expansion = $1;
 
-            my $pointer = Lintian::Pointer::Item->new;
-            $pointer->item($item);
-            $pointer->position($position);
+            my $pointer = $item->pointer($position);
 
             $self->pointed_hint('brace-expansion-in-debhelper-config-file',
                 $pointer, $expansion);
@@ -974,9 +944,7 @@ sub check_compat_file {
             next;
         }
 
-        my $pointer = Lintian::Pointer::Item->new;
-        $pointer->item($compat_file);
-        $pointer->position($position);
+        my $pointer = $compat_file->pointer($position);
 
         $self->pointed_hint('debhelper-compat-file-contains-multiple-levels',
             $pointer)
@@ -993,22 +961,17 @@ sub check_compat_file {
 
     if (!length $debhelper_level) {
 
-        my $pointer = Lintian::Pointer::Item->new;
-        $pointer->item($compat_file);
-
-        $self->pointed_hint('debhelper-compat-file-is-empty', $pointer);
+        $self->pointed_hint('debhelper-compat-file-is-empty',
+            $compat_file->pointer);
         return $EMPTY;
     }
 
     my $DEBHELPER_LEVELS = $self->profile->debhelper_levels;
 
-    my $compat_pointer = Lintian::Pointer::Item->new;
-    $compat_pointer->item($compat_file);
-
     # Recommend people use debhelper-compat (introduced in debhelper
     # 11.1.5~alpha1) over debian/compat, except for experimental/beta
     # versions.
-    $self->pointed_hint('uses-debhelper-compat-file', $compat_pointer)
+    $self->pointed_hint('uses-debhelper-compat-file', $compat_file->pointer)
       if $debhelper_level >= $VERSIONED_PREREQUISITE_AVAILABLE
       && $debhelper_level < $DEBHELPER_LEVELS->value('experimental');
 
@@ -1033,9 +996,7 @@ sub check_dh_exec {
 
         chomp $line;
 
-        my $pointer = Lintian::Pointer::Item->new;
-        $pointer->item($item);
-        $pointer->position($position);
+        my $pointer = $item->pointer($position);
 
         if ($line =~ /\$\{([^\}]+)\}/) {
 
@@ -1096,16 +1057,13 @@ sub check_dh_exec {
 
     close $fd;
 
-    my $rough_pointer = Lintian::Pointer::Item->new;
-    $rough_pointer->item($item);
-
     $self->pointed_hint('dh-exec-script-without-dh-exec-features',
-        $rough_pointer)
+        $item->pointer)
       if !$dhe_subst
       && !$dhe_install
       && !$dhe_filter;
 
-    $self->pointed_hint('dh-exec-install-not-allowed-here', $rough_pointer)
+    $self->pointed_hint('dh-exec-install-not-allowed-here', $item->pointer)
       if $dhe_install
       && $category ne 'install'
       && $category ne 'manpages';

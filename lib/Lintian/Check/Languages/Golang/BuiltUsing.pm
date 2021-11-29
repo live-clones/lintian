@@ -26,8 +26,6 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Lintian::Pointer::Item;
-
 use Moo;
 use namespace::clean;
 
@@ -45,13 +43,15 @@ sub source {
     for my $installable ($control->installables) {
         my $installable_fields= $control->installable_fields($installable);
 
-        my $pointer = Lintian::Pointer::Item->new;
-        $pointer->item(
-            $self->processable->patched->resolve_path('debian/control'));
-        $pointer->position($installable_fields->position('Package'));
+        my $control_item
+          = $self->processable->patched->resolve_path('debian/control');
+        my $position = $installable_fields->position('Package');
 
-        $self->pointed_hint('missing-built-using-field-for-golang-package',
-            $pointer,"(in section for $installable)")
+        $self->pointed_hint(
+            'missing-built-using-field-for-golang-package',
+            $control_item->pointer($position),
+            "(in section for $installable)"
+          )
           if $installable_fields->value('Built-Using')
           !~ m{ \$ [{] misc:Built-Using [}] }x
           && $installable_fields->value('Architecture') ne 'all';

@@ -31,8 +31,6 @@ use Const::Fast;
 use File::Spec;
 use List::SomeUtils qw(any);
 
-use Lintian::Pointer::Item;
-
 use Moo;
 use namespace::clean;
 
@@ -97,9 +95,6 @@ sub visit_installed_files {
     return
       unless $item->file_type =~ /^ [^,]* \b ELF \b /x;
 
-    my $pointer = Lintian::Pointer::Item->new;
-    $pointer->item($item);
-
     for my $section (qw{RPATH RUNPATH}) {
 
         my @rpaths = keys %{$item->elf->{$section} // {}};
@@ -125,13 +120,13 @@ sub visit_installed_files {
         my @absolute = grep { m{^ / }x } @custom;
 
         $self->pointed_hint('custom-library-search-path',
-            $pointer, $section, $_)
+            $item->pointer, $section, $_)
           for @absolute;
 
         my @relative = grep { m{^ [^/] }x } @custom;
 
         $self->pointed_hint('relative-library-search-path',
-            $pointer, $section, $_)
+            $item->pointer, $section, $_)
           for @relative;
     }
 

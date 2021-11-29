@@ -26,8 +26,6 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Lintian::Pointer::Item;
-
 use Moo;
 use namespace::clean;
 
@@ -42,14 +40,11 @@ sub visit_control_files {
     return
       unless $item->decoded_utf8 =~ /^ [^\#]* \b ldconfig \b /mx;
 
-    my $pointer = Lintian::Pointer::Item->new;
-    $pointer->item($item);
-
-    $self->pointed_hint('udeb-postinst-calls-ldconfig', $pointer)
+    $self->pointed_hint('udeb-postinst-calls-ldconfig', $item->pointer)
       if $item->name eq 'postinst'
       && $self->processable->type eq 'udeb';
 
-    $self->pointed_hint('maintscript-calls-ldconfig', $pointer)
+    $self->pointed_hint('maintscript-calls-ldconfig', $item->pointer)
       if $item->name ne 'postinst'
       || $self->processable->type ne 'udeb';
 

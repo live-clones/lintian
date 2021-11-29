@@ -26,8 +26,6 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Lintian::Pointer::Item;
-
 use Moo;
 use namespace::clean;
 
@@ -53,9 +51,7 @@ sub visit_patched_files {
                        (?:\?p=)?collab-maint/<pkg>\.git}smx
         ) {
 
-            my $pointer = Lintian::Pointer::Item->new;
-            $pointer->item($item);
-            $pointer->position($position);
+            my $pointer = $item->pointer($position);
 
             $self->pointed_hint('control-file-contains-dh-make-vcs-comment',
                 $pointer, $line);

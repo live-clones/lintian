@@ -24,8 +24,6 @@ use utf8;
 use Const::Fast;
 use List::SomeUtils qw(none true);
 
-use Lintian::Pointer::Item;
-
 use Moo::Role;
 use namespace::clean;
 
@@ -69,9 +67,7 @@ sub parse_overrides {
     my $position = 1;
     for my $line (@lines) {
 
-        my $pointer = Lintian::Pointer::Item->new;
-        $pointer->item($self->override_file);
-        $pointer->position($position);
+        my $pointer = $self->override_file->pointer($position);
 
         my $remaining = $line;
 

@@ -30,8 +30,6 @@ use utf8;
 use Const::Fast;
 use Unicode::UTF8 qw(encode_utf8);
 
-use Lintian::Pointer::Item;
-
 use Moo;
 use namespace::clean;
 
@@ -104,10 +102,7 @@ sub visit_control_files {
         ++$position;
     }
 
-    my $pointer = Lintian::Pointer::Item->new;
-    $pointer->item($item);
-
-    $self->pointed_hint('maintainer-script-empty', $pointer)
+    $self->pointed_hint('maintainer-script-empty', $item->pointer)
       unless $has_code;
 
     return;

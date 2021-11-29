@@ -29,8 +29,6 @@ use utf8;
 use Const::Fast;
 use List::SomeUtils qw(any);
 
-use Lintian::Pointer::Item;
-
 use Moo;
 use namespace::clean;
 
@@ -54,10 +52,10 @@ sub source {
         next
           unless $installable_fields->declares($field);
 
-        my $pointer = Lintian::Pointer::Item->new;
-        $pointer->item(
-            $self->processable->patched->resolve_path('debian/control'));
-        $pointer->position($installable_fields->position($field));
+        my $control_item
+          = $self->processable->patched->resolve_path('debian/control');
+        my $position = $installable_fields->position($field);
+        my $pointer = $control_item->pointer($position);
 
         my @depends
           = $installable_fields->trimmed_list($field, qr{ \s* , \s* }x);

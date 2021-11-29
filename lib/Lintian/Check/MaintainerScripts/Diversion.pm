@@ -31,8 +31,6 @@ use Const::Fast;
 use List::SomeUtils qw(any none);
 use Unicode::UTF8 qw(encode_utf8);
 
-use Lintian::Pointer::Item;
-
 use Moo;
 use namespace::clean;
 
@@ -71,9 +69,7 @@ sub visit_control_files {
     my $position = 1;
     while (my $possible_continuation = <$fd>) {
 
-        my $pointer = Lintian::Pointer::Item->new;
-        $pointer->item($item);
-        $pointer->position($position);
+        my $pointer = $item->pointer($position);
 
         chomp $possible_continuation;
 
@@ -259,7 +255,7 @@ sub installable {
                 my $position = $item->{position};
 
                 next
-                  unless $script eq 'postrm';
+                  unless $script->name eq 'postrm';
 
                 # Allow preinst and postinst to remove diversions the
                 # package doesn't add to clean up after previous
@@ -267,9 +263,7 @@ sub installable {
 
                 my $unquoted = unquote($divert, $self->expand_diversions);
 
-                my $pointer = Lintian::Pointer::Item->new;
-                $pointer->item($script);
-                $pointer->position($position);
+                my $pointer = $script->pointer($position);
 
                 $self->pointed_hint('remove-of-unknown-diversion', $pointer,
                     $unquoted);
@@ -282,8 +276,7 @@ sub installable {
         my $script = $self->added_diversions->{$divert}{script};
         my $position = $self->added_diversions->{$divert}{position};
 
-        my $pointer = Lintian::Pointer::Item->new;
-        $pointer->item($script);
+        my $pointer = $script->pointer($script);
         $pointer->position($position);
 
         my $divertrx = $divert;

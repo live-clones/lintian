@@ -28,8 +28,6 @@ use Const::Fast;
 use List::SomeUtils qw(any uniq);
 use Unicode::UTF8 qw(encode_utf8);
 
-use Lintian::Pointer::Item;
-
 use Moo;
 use namespace::clean;
 
@@ -82,10 +80,7 @@ sub visit_installed_files {
           if $has_code;
     }
 
-    my $pointer = Lintian::Pointer::Item->new;
-    $pointer->item($item);
-
-    $self->pointed_hint('no-code-sections', $pointer)
+    $self->pointed_hint('no-code-sections', $item->pointer)
       unless @codeful_members;
 
     return;

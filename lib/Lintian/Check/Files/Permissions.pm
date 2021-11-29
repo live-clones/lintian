@@ -28,8 +28,6 @@ use utf8;
 use Const::Fast;
 use Path::Tiny;
 
-use Lintian::Pointer::Item;
-
 const my $NOT_EQUAL => q{!=};
 
 const my $STANDARD_EXECUTABLE => oct(755);
@@ -87,9 +85,6 @@ has linked_against_libvga => (
 sub visit_installed_files {
     my ($self, $item) = @_;
 
-    my $pointer = Lintian::Pointer::Item->new;
-    $pointer->item($item);
-
     if ($item->is_file) {
 
         if (
@@ -101,7 +96,7 @@ sub visit_installed_files {
 
             $self->pointed_hint(
                 'non-standard-game-executable-perm',
-                $pointer,
+                $item->pointer,
                 $item->octal_permissions,
                 $NOT_EQUAL,
                 sprintf('%04o', $SET_GROUP_ID | $STANDARD_EXECUTABLE));
@@ -110,14 +105,14 @@ sub visit_installed_files {
         }
 
         $self->pointed_hint('executable-is-not-world-readable',
-            $pointer, $item->octal_permissions)
+            $item->pointer, $item->octal_permissions)
           if $item->is_executable
           && !$item->all_bits_set($WORLD_READABLE);
 
         if ($item->is_setuid || $item->is_setgid) {
 
             $self->pointed_hint('non-standard-setuid-executable-perm',
-                $pointer, $item->octal_permissions)
+                $item->pointer, $item->octal_permissions)
               unless (($item->operm & ~($SET_USER_ID | $SET_GROUP_ID))
                 == $STANDARD_EXECUTABLE)
               || $item->operm == $SETGID_EXECUTABLE;
@@ -144,7 +139,7 @@ sub visit_installed_files {
 
         if ($item->is_setuid || $item->is_setgid) {
             $self->pointed_hint(
-                'elevated-privileges', $pointer,
+                'elevated-privileges', $item->pointer,
                 $item->octal_permissions, $item->identity
             );
 
@@ -155,7 +150,7 @@ sub visit_installed_files {
             && $item->operm != $STANDARD_EXECUTABLE) {
 
             $self->pointed_hint('non-standard-executable-perm',
-                $pointer, $item->octal_permissions, $NOT_EQUAL,
+                $item->pointer, $item->octal_permissions, $NOT_EQUAL,
                 sprintf('%04o', $STANDARD_EXECUTABLE));
 
             return;
@@ -173,7 +168,8 @@ sub visit_installed_files {
             if (   $item->name =~ m{^ usr/lib/ .* [.]ali $}msx
                 && $item->operm != $WORLD_READABLE) {
 
-                $self->pointed_hint('bad-permissions-for-ali-file', $pointer);
+                $self->pointed_hint('bad-permissions-for-ali-file',
+                    $item->pointer);
 
                 return;
             }
@@ -187,7 +183,7 @@ sub visit_installed_files {
 
                 # sudo requires sudoers files to be mode oct(440)
                 $self->pointed_hint(
-                    'bad-perm-for-file-in-etc-sudoers.d',$pointer,
+                    'bad-perm-for-file-in-etc-sudoers.d',$item->pointer,
                     $item->octal_permissions, $NOT_EQUAL,
                     sprintf('%04o', $SUDOERS_FILE)
                 )unless $item->operm == $SUDOERS_FILE;
@@ -196,7 +192,7 @@ sub visit_installed_files {
             }
 
             $self->pointed_hint(
-                'non-standard-file-perm', $pointer,
+                'non-standard-file-perm', $item->pointer,
                 $item->octal_permissions, $NOT_EQUAL,
                 sprintf('%04o', $STANDARD_FILE)
             )unless $item->operm == $STANDARD_FILE;
@@ -232,7 +228,7 @@ sub visit_installed_files {
           && $item->name eq 'usr/src/';
 
         $self->pointed_hint(
-            'non-standard-dir-perm', $pointer,
+            'non-standard-dir-perm', $item->pointer,
             $item->octal_permissions, $NOT_EQUAL,
             sprintf('%04o', $STANDARD_FOLDER)
         )unless $item->operm == $STANDARD_FOLDER;

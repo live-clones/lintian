@@ -33,7 +33,6 @@ use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Deb822;
 use Lintian::Deb822::Constants qw(DCTRL_DEBCONF_TEMPLATE);
-use Lintian::Pointer::Item;
 use Lintian::Relation;
 use Lintian::Util qw($PKGNAME_REGEX);
 
@@ -109,11 +108,8 @@ sub source {
             chomp $error;
             $error =~ s{^syntax error in }{};
 
-            my $pointer = Lintian::Pointer::Item->new;
-            $pointer->item($file);
-
             $self->pointed_hint('syntax-error-in-debconf-template',
-                $pointer, $error);
+                $file->pointer, $error);
 
             next;
         }
@@ -230,11 +226,8 @@ sub installable {
                 chomp $error;
                 $error =~ s{^syntax error in }{};
 
-                my $pointer = Lintian::Pointer::Item->new;
-                $pointer->item($ctrl_templates);
-
                 $self->pointed_hint('syntax-error-in-debconf-template',
-                    $pointer, $error);
+                    $ctrl_templates->pointer, $error);
 
                 @templates = ();
             }

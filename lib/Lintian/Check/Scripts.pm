@@ -33,7 +33,6 @@ use List::SomeUtils qw(any none);
 use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::IPC::Run3 qw(safe_qx);
-use Lintian::Pointer::Item;
 use Lintian::Relation;
 
 use Moo;
@@ -286,14 +285,11 @@ sub visit_installed_files {
 
     my $is_absolute = ($item->interpreter =~ m{^/} || $item->calls_env);
 
-    my $pointer = Lintian::Pointer::Item->new;
-    $pointer->item($item);
-
     # As a special-exception, Policy 10.4 states that Perl scripts must use
     # /usr/bin/perl directly and not via /usr/bin/env, etc.
     $self->pointed_hint(
         'incorrect-path-for-interpreter',
-        $pointer,'/usr/bin/env perl',
+        $item->pointer,'/usr/bin/env perl',
         $NOT_EQUAL, '/usr/bin/perl'
       )
       if $item->calls_env
@@ -302,7 +298,7 @@ sub visit_installed_files {
 
     $self->pointed_hint(
         'example-incorrect-path-for-interpreter',
-        $pointer,'/usr/bin/env perl',
+        $item->pointer,'/usr/bin/env perl',
         $NOT_EQUAL, '/usr/bin/perl'
       )
       if $item->calls_env
@@ -337,29 +333,30 @@ sub visit_installed_files {
 
     if ($item->interpreter eq $EMPTY) {
 
-        $self->pointed_hint('script-without-interpreter', $pointer)
+        $self->pointed_hint('script-without-interpreter', $item->pointer)
           if $item->name !~ m{^usr/share/doc/[^/]+/examples/};
 
-        $self->pointed_hint('example-script-without-interpreter', $pointer)
+        $self->pointed_hint('example-script-without-interpreter',
+            $item->pointer)
           if $item->name =~ m{^usr/share/doc/[^/]+/examples/};
 
         return;
     }
 
     # Either they use an absolute path or they use '/usr/bin/env interp'.
-    $self->pointed_hint('interpreter-not-absolute', $pointer,
+    $self->pointed_hint('interpreter-not-absolute', $item->pointer,
         $item->interpreter)
       if !$is_absolute
       && $item->name !~ m{^usr/share/doc/[^/]+/examples/};
 
     $self->pointed_hint('example-interpreter-not-absolute',
-        $pointer,$item->interpreter)
+        $item->pointer,$item->interpreter)
       if !$is_absolute
       && $item->name =~ m{^usr/share/doc/[^/]+/examples/};
 
     my $bash_completion_regex= qr{^usr/share/bash-completion/completions/.*};
 
-    $self->pointed_hint('script-not-executable', $pointer)
+    $self->pointed_hint('script-not-executable', $item->pointer)
       if (!$item->is_file || !$item->is_executable)
       && $item->name !~ m{^usr/(?:lib|share)/.*\.pm}
       && $item->name !~ m{^usr/(?:lib|share)/.*\.py}
@@ -406,28 +403,29 @@ sub visit_installed_files {
 
         my @context = ($item->interpreter, $NOT_EQUAL, $expected);
 
-        $self->pointed_hint('wrong-path-for-interpreter', $pointer, @context)
+        $self->pointed_hint('wrong-path-for-interpreter', $item->pointer,
+            @context)
           if $item->interpreter ne $expected
           && !$item->calls_env
           && $expected ne '/usr/bin/env perl'
           && $item->name !~ m{^usr/share/doc/[^/]+/examples/};
 
         $self->pointed_hint('example-wrong-path-for-interpreter',
-            $pointer, @context)
+            $item->pointer, @context)
           if $item->interpreter ne $expected
           && !$item->calls_env
           && $expected ne '/usr/bin/env perl'
           && $item->name =~ m{^usr/share/doc/[^/]+/examples/};
 
         $self->pointed_hint('incorrect-path-for-interpreter',
-            $pointer, @context)
+            $item->pointer, @context)
           if $item->interpreter ne $expected
           && !$item->calls_env
           && $expected eq '/usr/bin/env perl'
           && $item->name !~ m{^usr/share/doc/[^/]+/examples/};
 
         $self->pointed_hint('example-incorrect-path-for-interpreter',
-            $pointer, @context)
+            $item->pointer, @context)
           if $item->interpreter ne $expected
           && !$item->calls_env
           && $expected eq '/usr/bin/env perl'
@@ -435,31 +433,32 @@ sub visit_installed_files {
 
     } elsif ($item->interpreter =~ m{^/usr/local/}) {
 
-        $self->pointed_hint('interpreter-in-usr-local', $pointer,
+        $self->pointed_hint('interpreter-in-usr-local', $item->pointer,
             $item->interpreter)
           if $item->name !~ m{^usr/share/doc/[^/]+/examples/};
 
         $self->pointed_hint('example-interpreter-in-usr-local',
-            $pointer,$item->interpreter)
+            $item->pointer,$item->interpreter)
           if $item->name =~ m{^usr/share/doc/[^/]+/examples/};
 
     } elsif ($item->interpreter eq '/bin/env') {
 
-        $self->pointed_hint('script-uses-bin-env', $pointer,$item->interpreter)
+        $self->pointed_hint('script-uses-bin-env', $item->pointer,
+            $item->interpreter)
           if $item->name !~ m{^usr/share/doc/[^/]+/examples/};
 
-        $self->pointed_hint('example-script-uses-bin-env', $pointer,
+        $self->pointed_hint('example-script-uses-bin-env', $item->pointer,
             $item->interpreter)
           if $item->name =~ m{^usr/share/doc/[^/]+/examples/};
 
     } elsif ($item->interpreter eq 'nodejs') {
 
         $self->pointed_hint('script-uses-deprecated-nodejs-location',
-            $pointer,$item->interpreter)
+            $item->pointer,$item->interpreter)
           if $item->name !~ m{^usr/share/doc/[^/]+/examples/};
 
         $self->pointed_hint('example-script-uses-deprecated-nodejs-location',
-            $pointer,$item->interpreter)
+            $item->pointer,$item->interpreter)
           if $item->name =~ m{^usr/share/doc/[^/]+/examples/};
 
         # Check whether we have correct dependendies on nodejs regardless.
@@ -468,11 +467,11 @@ sub visit_installed_files {
     } elsif ($basename =~ /^php/) {
 
         $self->pointed_hint('php-script-with-unusual-interpreter',
-            $pointer,$item->interpreter)
+            $item->pointer,$item->interpreter)
           if $item->name !~ m{^usr/share/doc/[^/]+/examples/};
 
         $self->pointed_hint('example-php-script-with-unusual-interpreter',
-            $pointer, $item->interpreter)
+            $item->pointer, $item->interpreter)
           if $item->name =~ m{^usr/share/doc/[^/]+/examples/};
 
         # This allows us to still perform the dependencies checks
@@ -498,11 +497,12 @@ sub visit_installed_files {
             push(@private_interpreters, grep { defined } @files);
         }
 
-        $self->pointed_hint('unusual-interpreter', $pointer,$item->interpreter)
+        $self->pointed_hint('unusual-interpreter', $item->pointer,
+            $item->interpreter)
           if (none { $_->is_file && $_->is_executable } @private_interpreters)
           && $item->name !~ m{^usr/share/doc/[^/]+/examples/};
 
-        $self->pointed_hint('example-unusual-interpreter', $pointer,
+        $self->pointed_hint('example-unusual-interpreter', $item->pointer,
             $item->interpreter)
           if (none { $_->is_file && $_->is_executable } @private_interpreters)
           && $item->name =~ m{^usr/share/doc/[^/]+/examples/};
@@ -529,14 +529,14 @@ sub visit_installed_files {
             if ($basename =~ /^php/) {
 
                 $self->pointed_hint('php-script-but-no-php-cli-dep',
-                    $pointer, $item->interpreter,
+                    $item->pointer, $item->interpreter,
                     "(does not satisfy $depends)");
 
             } elsif ($basename =~ /^(python\d|ruby|[mg]awk)$/) {
 
                 $self->pointed_hint((
                     "$basename-script-but-no-$basename-dep",
-                    $pointer,
+                    $item->pointer,
                     $item->interpreter,
                     "(does not satisfy $depends)"
                 ));
@@ -563,7 +563,7 @@ sub visit_installed_files {
             } else {
 
                 $self->pointed_hint('missing-dep-for-interpreter',
-                    $pointer, $item->interpreter,
+                    $item->pointer, $item->interpreter,
                     "(does not satisfy $depends)");
             }
         }
@@ -589,13 +589,13 @@ sub visit_installed_files {
 
                 $self->pointed_hint(
                     "$shell_name-script-but-no-$shell_name-dep",
-                    $pointer, $item->interpreter,
+                    $item->pointer, $item->interpreter,
                     "(does not satisfy $depends)");
 
             } else {
 
                 $self->pointed_hint('missing-dep-for-interpreter',
-                    $pointer, $item->interpreter,
+                    $item->pointer, $item->interpreter,
                     "(does not satisfy $depends)");
             }
         }
@@ -610,13 +610,13 @@ sub visit_installed_files {
             if ($basename =~ /^(python|ruby)/) {
 
                 $self->pointed_hint("$1-script-but-no-$1-dep",
-                    $pointer, $item->interpreter,
+                    $item->pointer, $item->interpreter,
                     "(does not satisfy $depends)");
 
             } else {
 
                 $self->pointed_hint('missing-dep-for-interpreter',
-                    $pointer, $item->interpreter,
+                    $item->pointer, $item->interpreter,
                     "(does not satisfy $depends)");
             }
         }
@@ -631,12 +631,9 @@ sub visit_control_files {
     return
       unless $item->is_maintainer_script;
 
-    my $rough_pointer = Lintian::Pointer::Item->new;
-    $rough_pointer->item($item);
-
     if ($item->is_elf) {
 
-        $self->pointed_hint('elf-maintainer-script', $rough_pointer);
+        $self->pointed_hint('elf-maintainer-script', $item->pointer);
         return;
     }
 
@@ -648,15 +645,15 @@ sub visit_control_files {
 
     if ($interpreter eq $EMPTY) {
 
-        $self->pointed_hint('script-without-interpreter', $rough_pointer);
+        $self->pointed_hint('script-without-interpreter', $item->pointer);
         return;
     }
 
     # tag for statistics
     $self->pointed_hint('maintainer-script-interpreter',
-        $rough_pointer, $interpreter);
+        $item->pointer, $interpreter);
 
-    $self->pointed_hint('interpreter-not-absolute', $rough_pointer,
+    $self->pointed_hint('interpreter-not-absolute', $item->pointer,
         $interpreter)
       unless $interpreter =~ m{^/};
 
@@ -664,7 +661,7 @@ sub visit_control_files {
 
     if ($interpreter =~ m{^/usr/local/}) {
         $self->pointed_hint('control-interpreter-in-usr-local',
-            $rough_pointer, $interpreter);
+            $item->pointer, $interpreter);
 
     } elsif ($basename eq 'sh' || $basename eq 'bash' || $basename eq 'perl') {
         my $expected
@@ -679,17 +676,17 @@ sub visit_control_files {
           : 'wrong-path-for-interpreter';
 
         $self->pointed_hint(
-            $tag_name, $rough_pointer,  $interpreter,
+            $tag_name, $item->pointer,  $interpreter,
             $NOT_EQUAL, $expected
         )unless $interpreter eq $expected;
 
     } elsif ($item->name eq 'config') {
         $self->pointed_hint('forbidden-config-interpreter',
-            $rough_pointer, $interpreter);
+            $item->pointer, $interpreter);
 
     } elsif ($item->name eq 'postrm') {
         $self->pointed_hint('forbidden-postrm-interpreter',
-            $rough_pointer, $interpreter);
+            $item->pointer, $interpreter);
 
     } elsif ($self->INTERPRETERS->recognizes($basename)) {
 
@@ -703,11 +700,11 @@ sub visit_control_files {
           : 'wrong-path-for-interpreter';
 
         $self->pointed_hint(
-            $tag_name, $rough_pointer, $interpreter,
+            $tag_name, $item->pointer, $interpreter,
             $NOT_EQUAL, $expected
         )unless $interpreter eq $expected;
 
-        $self->pointed_hint('unusual-control-interpreter', $rough_pointer,
+        $self->pointed_hint('unusual-control-interpreter', $item->pointer,
             $interpreter);
 
         # Interpreters used by preinst scripts must be in
@@ -722,7 +719,7 @@ sub visit_control_files {
 
                 $self->pointed_hint(
                     'control-interpreter-without-predepends',
-                    $rough_pointer,
+                    $item->pointer,
                     $interpreter,
                     '(does not satisfy ' . $depends->to_string . ')'
                   )
@@ -733,7 +730,7 @@ sub visit_control_files {
 
                 $self->pointed_hint(
                     'control-interpreter-without-depends',
-                    $rough_pointer,
+                    $item->pointer,
                     $interpreter,
                     '(does not satisfy ' . $depends->to_string . ')'
                   )
@@ -743,7 +740,7 @@ sub visit_control_files {
         }
 
     } else {
-        $self->pointed_hint('unknown-control-interpreter', $rough_pointer,
+        $self->pointed_hint('unknown-control-interpreter', $item->pointer,
             $interpreter);
 
         # no use doing further checks if it's not a known interpreter
@@ -770,9 +767,7 @@ sub visit_control_files {
     my $position = 1;
     while (my $line = <$fd>) {
 
-        my $pointer = Lintian::Pointer::Item->new;
-        $pointer->item($item);
-        $pointer->position($position);
+        my $pointer = $item->pointer($position);
 
         $saw_bange = 1
           if $position == 1
@@ -975,10 +970,10 @@ sub visit_control_files {
 
     close $fd;
 
-    $self->pointed_hint('maintainer-script-without-set-e', $rough_pointer)
+    $self->pointed_hint('maintainer-script-without-set-e', $item->pointer)
       if $item->is_shell_script && !$saw_sete && $saw_bange;
 
-    $self->pointed_hint('maintainer-script-ignores-errors', $rough_pointer)
+    $self->pointed_hint('maintainer-script-ignores-errors', $item->pointer)
       if $item->is_shell_script && !$saw_sete && !$saw_bange;
 
     return;
@@ -1010,9 +1005,7 @@ sub generic_check_bad_command {
             # trim both ends
             $bad_command =~ s/^\s+|\s+$//g;
 
-            my $pointer = Lintian::Pointer::Item->new;
-            $pointer->item($script);
-            $pointer->position($position);
+            my $pointer = $script->pointer($position);
 
             $self->pointed_hint($tag_name, $pointer,
                 $DOUBLE_QUOTE . $bad_command . $DOUBLE_QUOTE)

@@ -28,7 +28,6 @@ use utf8;
 
 use Const::Fast;
 
-use Lintian::Pointer::Item;
 use Lintian::Relation;
 
 use Moo;
@@ -61,10 +60,10 @@ sub source {
             my $relation
               = $self->processable->binary_relation($installable,$field);
 
-            my $pointer = Lintian::Pointer::Item->new;
-            $pointer->item(
-                $self->processable->patched->resolve_path('debian/control'));
-            $pointer->position($installable_fields->position($field));
+            my $control_item
+              = $self->processable->patched->resolve_path('debian/control');
+            my $position = $installable_fields->position($field);
+            my $pointer = $control_item->pointer($position);
 
             $self->pointed_hint(
                 'package-depends-on-hardcoded-libc',

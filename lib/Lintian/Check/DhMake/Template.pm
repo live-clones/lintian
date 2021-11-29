@@ -26,8 +26,6 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Lintian::Pointer::Item;
-
 use Moo;
 use namespace::clean;
 
@@ -39,10 +37,7 @@ sub visit_patched_files {
     return
       unless $item->dirname eq 'debian/';
 
-    my $pointer = Lintian::Pointer::Item->new;
-    $pointer->item($item);
-
-    $self->pointed_hint('dh-make-template-in-source', $pointer)
+    $self->pointed_hint('dh-make-template-in-source', $item->pointer)
       if $item->basename =~ m{^ ex[.] | [.]ex $}ix;
 
     return;

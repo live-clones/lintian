@@ -28,8 +28,6 @@ use utf8;
 
 use List::SomeUtils qw(none);
 
-use Lintian::Pointer::Item;
-
 use Moo;
 use namespace::clean;
 
@@ -47,10 +45,10 @@ sub source {
 
         my $field = 'Package';
 
-        my $pointer = Lintian::Pointer::Item->new;
-        $pointer->item(
-            $self->processable->patched->resolve_path('debian/control'));
-        $pointer->position($installable_fields->position($field));
+        my $control_item
+          = $self->processable->patched->resolve_path('debian/control');
+        my $position = $installable_fields->position($field);
+        my $pointer = $control_item->pointer($position);
 
         $self->pointed_hint(
             'debian-control-has-obsolete-dbg-package',$pointer,

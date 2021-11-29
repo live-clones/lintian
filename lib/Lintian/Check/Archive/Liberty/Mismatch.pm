@@ -29,8 +29,6 @@ use utf8;
 use Const::Fast;
 use List::SomeUtils qw(all none);
 
-use Lintian::Pointer::Item;
-
 use Moo;
 use namespace::clean;
 
@@ -90,10 +88,10 @@ sub source {
         next
           if $source_liberty eq 'main' && $installable_liberty eq 'contrib';
 
-        my $pointer = Lintian::Pointer::Item->new;
-        $pointer->item(
-            $self->processable->patched->resolve_path('debian/control'));
-        $pointer->position($installable_fields->position('Section'));
+        my $control_item
+          = $self->processable->patched->resolve_path('debian/control');
+        my $position = $installable_fields->position('Section');
+        my $pointer = $control_item->pointer($position);
 
         $self->pointed_hint('archive-liberty-mismatch', $pointer,
             "(in section for $installable)",
@@ -108,10 +106,10 @@ sub source {
         last
           if $inferior_liberty eq $source_liberty;
 
-        my $pointer = Lintian::Pointer::Item->new;
-        $pointer->item(
-            $self->processable->patched->resolve_path('debian/control'));
-        $pointer->position($source_fields->position('Section'));
+        my $control_item
+          = $self->processable->patched->resolve_path('debian/control');
+        my $position = $source_fields->position('Section');
+        my $pointer = $control_item->pointer($position);
 
         $self->pointed_hint('archive-liberty-mismatch', $pointer,
             '(in source paragraph)',

@@ -28,8 +28,6 @@ use utf8;
 
 use Const::Fast;
 
-use Lintian::Pointer::Item;
-
 use Moo;
 use namespace::clean;
 
@@ -64,10 +62,10 @@ sub source {
               unless $control->installable_fields($installable)
               ->declares($stronger);
 
-            my $pointer = Lintian::Pointer::Item->new;
-            $pointer->item(
-                $self->processable->patched->resolve_path('debian/control'));
-            $pointer->position($installable_fields->position($stronger));
+            my $control_item
+              = $self->processable->patched->resolve_path('debian/control');
+            my $position = $installable_fields->position($stronger);
+            my $pointer = $control_item->pointer($position);
 
             my $relation
               = $self->processable->binary_relation($installable,$stronger);

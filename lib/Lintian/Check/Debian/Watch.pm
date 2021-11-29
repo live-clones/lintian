@@ -31,7 +31,6 @@ use Const::Fast;
 use List::SomeUtils qw(any firstval firstres);
 use Path::Tiny;
 
-use Lintian::Pointer::Item;
 use Lintian::Util qw($PKGREPACK_REGEX);
 
 use Moo;
@@ -59,11 +58,8 @@ sub source {
         return;
     }
 
-    my $rough_pointer = Lintian::Pointer::Item->new;
-    $rough_pointer->item($file);
-
     # Perform the other checks even if it is a native package
-    $self->pointed_hint('debian-watch-file-in-native-package', $rough_pointer)
+    $self->pointed_hint('debian-watch-file-in-native-package', $file->pointer)
       if $self->processable->native;
 
     # Check if the Debian version contains anything that resembles a repackaged
@@ -93,7 +89,7 @@ sub source {
     }
 
     $self->pointed_hint('debian-watch-contains-dh_make-template',
-        $rough_pointer, $templatestring)
+        $file->pointer, $templatestring)
       if length $templatestring;
 
     # remove backslash at end; uscan will catch it
@@ -131,9 +127,7 @@ sub source {
     my $continued = $EMPTY;
     for my $line (@lines) {
 
-        my $pointer = Lintian::Pointer::Item->new;
-        $pointer->item($file);
-        $pointer->position($position);
+        my $pointer = $file->pointer($position);
 
         # strip leading spaces
         $line =~ s/^\s*//;
@@ -307,7 +301,7 @@ sub source {
     }
 
     $self->pointed_hint('debian-watch-does-not-check-gpg-signature',
-        $rough_pointer)
+        $file->pointer)
       unless $withgpgverification;
 
     my $SIGNING_KEY_FILENAMES
@@ -321,12 +315,12 @@ sub source {
 
     # check upstream key is present if needed
     $self->pointed_hint('debian-watch-file-pubkey-file-is-missing',
-        $rough_pointer)
+        $file->pointer)
       if $withgpgverification && !$keyfile;
 
     # check upstream key is used if present
     $self->pointed_hint('debian-watch-could-verify-download',
-        $rough_pointer, $keyfile->name)
+        $file->pointer, $keyfile->name)
       if $keyfile && !$withgpgverification;
 
     if (defined $self->processable->changelog && %dversions) {
@@ -358,7 +352,7 @@ sub source {
 
                 $self->pointed_hint(
                     'debian-watch-file-specifies-wrong-upstream-version',
-                    $rough_pointer, $dversion);
+                    $file->pointer, $dversion);
                 next;
             }
 
@@ -367,7 +361,7 @@ sub source {
 
                 $self->pointed_hint(
                     'debian-watch-file-specifies-old-upstream-version',
-                    $rough_pointer, $dversion);
+                    $file->pointer, $dversion);
                 next;
             }
         }

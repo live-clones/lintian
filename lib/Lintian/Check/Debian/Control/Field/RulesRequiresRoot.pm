@@ -28,8 +28,6 @@ use utf8;
 
 use List::SomeUtils qw(first_value);
 
-use Lintian::Pointer::Item;
-
 use Moo;
 use namespace::clean;
 
@@ -46,19 +44,19 @@ sub source {
 
     for my $field (@r3_misspelled) {
 
-        my $pointer = Lintian::Pointer::Item->new;
-        $pointer->item(
-            $self->processable->patched->resolve_path('debian/control'));
-        $pointer->position($source_fields->position($field));
+        my $control_item
+          = $self->processable->patched->resolve_path('debian/control');
+        my $position = $source_fields->position($field);
+        my $pointer = $control_item->pointer($position);
 
         $self->pointed_hint('spelling-error-in-rules-requires-root',
             $pointer, $field);
     }
 
-    my $pointer = Lintian::Pointer::Item->new;
-    $pointer->item(
-        $self->processable->patched->resolve_path('debian/control'));
-    $pointer->position($source_fields->position('Rules-Requires-Root'));
+    my $control_item
+      = $self->processable->patched->resolve_path('debian/control');
+    my $position = $source_fields->position('Rules-Requires-Root');
+    my $pointer = $control_item->pointer($position);
 
     $self->pointed_hint('rules-do-not-require-root', $pointer)
       if $source_fields->value('Rules-Requires-Root') eq 'no';

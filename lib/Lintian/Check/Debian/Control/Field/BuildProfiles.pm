@@ -26,7 +26,6 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Lintian::Pointer::Item;
 use Lintian::Relation;
 
 use Moo;
@@ -51,10 +50,10 @@ sub source {
         next
           unless $raw;
 
-        my $pointer = Lintian::Pointer::Item->new;
-        $pointer->item(
-            $self->processable->patched->resolve_path('debian/control'));
-        $pointer->position($installable_fields->position($field));
+        my $control_item
+          = $self->processable->patched->resolve_path('debian/control');
+        my $position = $installable_fields->position($field);
+        my $pointer = $control_item->pointer($position);
 
         if (
             $raw!~ m{^\s*              # skip leading whitespace

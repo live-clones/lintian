@@ -27,8 +27,6 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Lintian::Pointer::Item;
-
 use Moo;
 use namespace::clean;
 
@@ -47,9 +45,6 @@ has OBSOLETE_CRYPT_FUNCTIONS => (
 sub visit_installed_files {
     my ($self, $item) = @_;
 
-    my $pointer = Lintian::Pointer::Item->new;
-    $pointer->item($item);
-
     for my $symbol (@{$item->elf->{SYMBOLS} // []}) {
 
         next
@@ -60,7 +55,7 @@ sub visit_installed_files {
 
         my $tag = $self->OBSOLETE_CRYPT_FUNCTIONS->value($symbol->name);
 
-        $self->pointed_hint($tag, $pointer, $symbol->name);
+        $self->pointed_hint($tag, $item->pointer, $symbol->name);
     }
 
     for my $member_name (keys %{$item->elf_by_member}) {
@@ -77,7 +72,7 @@ sub visit_installed_files {
 
             my $tag = $self->OBSOLETE_CRYPT_FUNCTIONS->value($symbol->name);
 
-            $self->pointed_hint($tag, $pointer, "($member_name)",
+            $self->pointed_hint($tag, $item->pointer, "($member_name)",
                 $symbol->name);
         }
     }
