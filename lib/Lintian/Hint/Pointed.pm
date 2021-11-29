@@ -1,4 +1,4 @@
-# Copyright © 2019 Felix Lechner
+# Copyright © 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,11 +16,15 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::Hint::Standard;
+package Lintian::Hint::Pointed;
 
 use v5.20;
 use warnings;
 use utf8;
+
+use Const::Fast;
+
+const my $SPACE => q{ };
 
 use Moo;
 use namespace::clean;
@@ -29,19 +33,25 @@ with 'Lintian::Hint';
 
 =head1 NAME
 
-Lintian::Hint::Standard - standard tag with arguments concatenated by space
+Lintian::Hint::Pointed - pointed tag with arguments concatenated by space
 
 =head1 SYNOPSIS
 
-    use Lintian::Hint::Standard;
+    use Lintian::Hint::Pointed;
 
 =head1 DESCRIPTION
 
-Provides a standard tag whose arguments are concatenated by a space.
+Provides a pointed tag whose arguments are concatenated by a space.
 
 =head1 INSTANCE METHODS
 
 =over 4
+
+=item pointer
+
+=cut
+
+has pointer => (is => 'rw');
 
 =item context
 
@@ -50,7 +60,11 @@ Provides a standard tag whose arguments are concatenated by a space.
 sub context {
     my ($self) = @_;
 
-    return $self->note;
+    my $pointer = $self->pointer->to_string;
+
+    my @context = grep { length } ($self->note, "[$pointer]");
+
+    return join($SPACE, @context);
 }
 
 =back

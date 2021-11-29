@@ -1,6 +1,6 @@
 # Copyright © 2012 Niels Thykier <niels@thykier.net>
-# Copyright © 2019-2020 Felix Lechner <felix.lechner@lease-up.com>
 # Copyright © 2017-2018 Chris Lamb <lamby@debian.org>
+# Copyright © 2019-2021 Felix Lechner <felix.lechner@lease-up.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -28,13 +28,13 @@ use Carp;
 use Const::Fast;
 use Unicode::UTF8 qw(encode_utf8);
 
-use Moo::Role;
-use namespace::clean;
-
 const my $EMPTY => q{};
 const my $SLASH => q{/};
 const my $DOT => q{.};
 const my $UNDERSCORE => q{_};
+
+use Moo::Role;
+use namespace::clean;
 
 =head1 NAME
 
@@ -49,7 +49,7 @@ Lintian::Check -- Common facilities for Lintian checks
 
 =head1 DESCRIPTION
 
-A class for collecting Lintian tags as they are issued
+A class for operating Lintian checks
 
 =head1 INSTANCE METHODS
 
@@ -59,21 +59,13 @@ A class for collecting Lintian tags as they are issued
 
 =item processable
 
-Get processable underlying this check.
-
 =item group
-
-Get group that the processable is in.
 
 =item profile
 
 =cut
 
-has name => (
-    is => 'rw',
-    coerce => sub { my ($string) = @_; return $string // $EMPTY;},
-    default => $EMPTY
-);
+has name => (is => 'rw', default => $EMPTY);
 
 has processable => (is => 'rw', default => sub { {} });
 has group => (is => 'rw', default => sub { {} });
@@ -107,8 +99,6 @@ sub visit_files {
 }
 
 =item run
-
-Run the check.
 
 =cut
 
@@ -187,14 +177,14 @@ sub find_tag {
 =cut
 
 sub pointed_hint {
-    my ($self, $tag_name, $pointer, @context) = @_;
+    my ($self, $tag_name, $pointer, @notes) = @_;
 
     my $tag = $self->find_tag($tag_name);
     return undef
       unless defined $tag;
 
     # pull name from tag; could be name-spaced
-    return $self->processable->pointed_hint($tag->name, $pointer, @context);
+    return $self->processable->pointed_hint($tag->name, $pointer, @notes);
 }
 
 =item hint
@@ -202,14 +192,14 @@ sub pointed_hint {
 =cut
 
 sub hint {
-    my ($self, $tag_name, @context) = @_;
+    my ($self, $tag_name, @notes) = @_;
 
     my $tag = $self->find_tag($tag_name);
     return undef
       unless defined $tag;
 
     # pull name from tag; could be name-spaced
-    return $self->processable->hint($tag->name, @context);
+    return $self->processable->hint($tag->name, @notes);
 }
 
 =back

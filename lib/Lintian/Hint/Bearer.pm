@@ -25,14 +25,14 @@ use utf8;
 use Const::Fast;
 use Unicode::UTF8 qw(encode_utf8);
 
+use Lintian::Hint::Pointed;
 use Lintian::Hint::Standard;
+
+const my $EMPTY => q{};
+const my $SPACE => q{ };
 
 use Moo::Role;
 use namespace::clean;
-
-const my $SPACE => q{ };
-const my $LEFT_SQUARE_BRACKET => q{[};
-const my $RIGHT_SQUARE_BRACKET => q{]};
 
 =head1 NAME
 
@@ -55,35 +55,20 @@ A class for collecting Lintian tags as they are found
 
 =item profile
 =item context_tracker
+=item hints
 
 =cut
 
 has profile => (is => 'rw');
 has context_tracker => (is => 'rw', default => sub { {} });
+has hints => (is => 'rw', default => sub { [] });
 
-=item pointed_hint (ARGS)
-
-Store found tags for later processing.
+=item pointed_hint
 
 =cut
 
 sub pointed_hint {
-    my ($self, $tag_name, $pointer, @context) = @_;
-
-    $self->hint($tag_name, @context,
-        $LEFT_SQUARE_BRACKET . $pointer->to_string . $RIGHT_SQUARE_BRACKET);
-
-    return;
-}
-
-=item hint (ARGS)
-
-Store found tags for later processing.
-
-=cut
-
-sub hint {
-    my ($self, $tag_name, @context_components) = @_;
+    my ($self, $tag_name, $pointer, @notes) = @_;
 
     my $tag = $self->profile->get_tag($tag_name);
     unless (defined $tag) {
@@ -96,12 +81,13 @@ sub hint {
     return
       unless $self->profile->tag_is_enabled($tag_name);
 
-    my @meaningful = grep { length } @context_components;
+    my $hint = Lintian::Hint::Pointed->new;
 
-    # trim both ends of each item
-    s/^\s+|\s+$//g for @meaningful;
+    $hint->tag($tag);
+    $hint->note(stringify(@notes));
+    $hint->pointer($pointer);
 
-    my $context_string = join($SPACE, @meaningful);
+    my $context_string = $hint->context;
     if (exists $self->context_tracker->{$tag_name}{$context_string}) {
 
         my $check_name = $tag->check;
@@ -113,21 +99,74 @@ sub hint {
 
     $self->context_tracker->{$tag_name}{$context_string} = 1;
 
+    push(@{$self->hints}, $hint);
+
+    return;
+}
+
+=item hint
+
+=cut
+
+sub hint {
+    my ($self, $tag_name, @notes) = @_;
+
+    my $tag = $self->profile->get_tag($tag_name);
+    unless (defined $tag) {
+
+        warn encode_utf8("tried to issue unknown tag: $tag_name\n");
+        return;
+    }
+
+    # skip disabled tags
+    return
+      unless $self->profile->tag_is_enabled($tag_name);
+
     my $hint = Lintian::Hint::Standard->new;
 
     $hint->tag($tag);
-    $hint->arguments(\@meaningful);
+    $hint->note(stringify(@notes));
+
+    my $context_string = $hint->context;
+    if (exists $self->context_tracker->{$tag_name}{$context_string}) {
+
+        my $check_name = $tag->check;
+        warn encode_utf8(
+"tried to issue duplicate hint in check $check_name: $tag_name $context_string\n"
+        );
+        return;
+    }
+
+    $self->context_tracker->{$tag_name}{$context_string} = 1;
 
     push(@{$self->hints}, $hint);
 
     return;
 }
 
-=item hints
+no namespace::clean;
+
+=item stringify
 
 =cut
 
-has hints => (is => 'rw', default => sub { [] });
+sub stringify {
+    my (@arguments) = @_;
+
+    # skip empty arguments
+    my @meaningful = grep { length } @arguments;
+
+    # trim both ends of each item
+    s{^ \s+ | \s+ $}{}gx for @meaningful;
+
+    # concatenate with spaces
+    my $text = join($SPACE, @meaningful) // $EMPTY;
+
+    # escape newlines; maybe add others
+    $text =~ s{\n}{\\n}g;
+
+    return $text;
+}
 
 =back
 
