@@ -130,7 +130,7 @@ has patched => (
         chdir($savedir)
           or die encode_utf8("Cannot change to directory $savedir");
 
-        $self->hint('unpack-message-for-source', $_)
+        $self->hint('unpack-message-for-source', 'lintian', $_)
           for uniq
           split(/\n/, $unpack_errors . $index_errors . $permissions_errors);
 

@@ -53,6 +53,8 @@ Common facilities for Lintian tags found and to be issued
 
 =item note
 
+=item issued_by
+
 =item override
 
 =item screen
@@ -61,6 +63,7 @@ Common facilities for Lintian tags found and to be issued
 
 has tag => (is => 'rw');
 has note => (is => 'rw', default => $EMPTY);
+has issued_by => (is => 'rw', default => $EMPTY);
 
 has override => (is => 'rw');
 has screen => (is => 'rw');

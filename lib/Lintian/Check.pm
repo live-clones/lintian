@@ -159,16 +159,6 @@ sub find_tag {
         return undef;
     }
 
-    unless ($tag->check eq $self->name) {
-
-        warn encode_utf8('Check '
-              . $self->name
-              . " has no tag $tag_name (but "
-              . $tag->check
-              . ' does).');
-        return undef;
-    }
-
     return $tag;
 }
 
@@ -184,7 +174,8 @@ sub pointed_hint {
       unless defined $tag;
 
     # pull name from tag; could be name-spaced
-    return $self->processable->pointed_hint($tag->name, $pointer, @notes);
+    return $self->processable->pointed_hint($tag->name, $self->name, $pointer,
+        @notes);
 }
 
 =item hint
@@ -199,7 +190,7 @@ sub hint {
       unless defined $tag;
 
     # pull name from tag; could be name-spaced
-    return $self->processable->hint($tag->name, @notes);
+    return $self->processable->hint($tag->name, $self->name, @notes);
 }
 
 =back

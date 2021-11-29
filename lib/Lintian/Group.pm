@@ -38,9 +38,6 @@ use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Util qw(human_bytes);
 
-use Moo;
-use namespace::clean;
-
 const my $EMPTY => q{};
 const my $SPACE => q{ };
 const my $UNDERSCORE => q{_};
@@ -48,13 +45,16 @@ const my $UNDERSCORE => q{_};
 const my $EXTRA_VERBOSE => 3;
 
 # A private table of supported types.
-my %SUPPORTED_TYPES = (
+const my %SUPPORTED_TYPES => (
     'binary'  => 1,
     'buildinfo' => 1,
     'changes' => 1,
     'source'  => 1,
     'udeb'    => 1,
 );
+
+use Moo;
+use namespace::clean;
 
 =head1 NAME
 
@@ -226,7 +226,7 @@ sub process {
                 for my $context (keys %{$declared_overrides->{$dated}}) {
 
                     # alert user to new tag name
-                    $processable->hint('renamed-tag',
+                    $processable->hint('renamed-tag','lintian',
                         "$dated => $modern in line "
                           .$declared_overrides->{$dated}{$context}{line});
 
@@ -236,7 +236,7 @@ sub process {
                             $declared_overrides->{$dated}{$context}{line},
                             $declared_overrides->{$modern}{$context}{line});
                         $processable->hint('duplicate-override-context',
-                            $modern, 'lines', sort @lines);
+                            'lintian',$modern, 'lines', sort @lines);
 
                         next;
                     }
@@ -263,7 +263,7 @@ sub process {
               keys %{$declared_overrides};
             for my $tag_name (@unknown_overrides) {
 
-                $processable->hint('malformed-override',
+                $processable->hint('malformed-override', 'lintian',
                     "Unknown tag $tag_name in line "
                       . $declared_overrides->{$tag_name}{$_}{line})
                   for keys %{$declared_overrides->{$tag_name}};
@@ -353,12 +353,24 @@ sub process {
 
         $processable->hints($hints);
 
-        $processable->hint('crossing-screens', $_) for @crossing;
+        $processable->hint('crossing-screens', 'lintian', $_) for @crossing;
 
         my %used_overrides;
 
         my @keep_hints;
         for my $hint (@{$processable->hints}) {
+
+            my $issuer = $hint->issued_by;
+            my $tag = $hint->tag;
+
+            my $tag_name = $tag->name;
+            my $owner = $tag->check;
+
+            if ($issuer ne $owner) {
+                warn encode_utf8(
+                    "Check $issuer has no tag $tag_name (but $owner does).");
+                next;
+            }
 
             my $declared = $declared_overrides->{$hint->tag->name};
             if ($declared && !$hint->tag->show_always) {
@@ -424,7 +436,8 @@ sub process {
                   = $declared_overrides->{$tag_name}{$context}{'renamed-from'}
                   // $tag_name;
 
-                $processable->hint($condition, $original_name, $context);
+                $processable->hint($condition, 'lintian', $original_name,
+                    $context);
             }
         }
     }

@@ -160,7 +160,8 @@ has orig => (
                         # shortens paths; keeps same base directory
                         my $sub_errors = $subindex->drop_common_prefix;
 
-                        $self->hint('unpack-message-for-orig', $tarball, $_)
+                        $self->hint('unpack-message-for-orig', 'lintian',
+                            $tarball, $_)
                           for uniq split(/\n/, $sub_errors);
                     }
                 }

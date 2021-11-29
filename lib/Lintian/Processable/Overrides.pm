@@ -130,7 +130,7 @@ sub parse_overrides {
 
         # require and remove colon when any package details are present
         if ($require_colon && $remaining !~ s/^\s*:\s*//) {
-            $self->pointed_hint('malformed-override', $pointer,
+            $self->pointed_hint('malformed-override', 'lintian', $pointer,
                 'Expected a colon');
             next;
         }
@@ -138,7 +138,7 @@ sub parse_overrides {
         my $hint = $remaining;
 
         if (@architectures && $self->architecture eq 'all') {
-            $self->pointed_hint('malformed-override', $pointer,
+            $self->pointed_hint('malformed-override', 'lintian', $pointer,
                 'Architecture list for arch:all package');
             next;
         }
@@ -146,7 +146,7 @@ sub parse_overrides {
         my @invalid
           = grep { !$self->profile->architectures->valid_restriction($_) }
           @architectures;
-        $self->pointed_hint('malformed-override', $pointer,
+        $self->pointed_hint('malformed-override', 'lintian', $pointer,
             "Unknown architecture wildcard $_")
           for @invalid;
 
@@ -158,7 +158,7 @@ sub parse_overrides {
 
         # confirm it is either all or none
         unless ($negations == @architectures || $negations == 0) {
-            $self->pointed_hint('malformed-override', $pointer,
+            $self->pointed_hint('malformed-override', 'lintian', $pointer,
                 'Inconsistent architecture negation');
             next;
         }
@@ -179,7 +179,7 @@ sub parse_overrides {
 
         my ($tag_name, $context) = split($SPACE, $hint, 2);
 
-        $self->pointed_hint('malformed-override', $pointer,
+        $self->pointed_hint('malformed-override', 'lintian', $pointer,
             "Cannot parse line: $line")
           unless length $tag_name;
 
@@ -241,8 +241,8 @@ sub parse_overrides {
 
             my $lines = join($SPACE, sort @same_context);
 
-            $self->pointed_hint('duplicate-override-context', $pointer,
-                $tag_name, "(lines $lines)");
+            $self->pointed_hint('duplicate-override-context', 'lintian',
+                $pointer,$tag_name, "(lines $lines)");
 
             next;
         }

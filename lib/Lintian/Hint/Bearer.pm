@@ -68,7 +68,7 @@ has hints => (is => 'rw', default => sub { [] });
 =cut
 
 sub pointed_hint {
-    my ($self, $tag_name, $pointer, @notes) = @_;
+    my ($self, $tag_name, $check_name, $pointer, @notes) = @_;
 
     my $tag = $self->profile->get_tag($tag_name);
     unless (defined $tag) {
@@ -84,13 +84,13 @@ sub pointed_hint {
     my $hint = Lintian::Hint::Pointed->new;
 
     $hint->tag($tag);
+    $hint->issued_by($check_name);
     $hint->note(stringify(@notes));
     $hint->pointer($pointer);
 
     my $context_string = $hint->context;
     if (exists $self->context_tracker->{$tag_name}{$context_string}) {
 
-        my $check_name = $tag->check;
         warn encode_utf8(
 "tried to issue duplicate hint in check $check_name: $tag_name $context_string\n"
         );
@@ -109,7 +109,7 @@ sub pointed_hint {
 =cut
 
 sub hint {
-    my ($self, $tag_name, @notes) = @_;
+    my ($self, $tag_name, $check_name, @notes) = @_;
 
     my $tag = $self->profile->get_tag($tag_name);
     unless (defined $tag) {
@@ -125,12 +125,12 @@ sub hint {
     my $hint = Lintian::Hint::Standard->new;
 
     $hint->tag($tag);
+    $hint->issued_by($check_name);
     $hint->note(stringify(@notes));
 
     my $context_string = $hint->context;
     if (exists $self->context_tracker->{$tag_name}{$context_string}) {
 
-        my $check_name = $tag->check;
         warn encode_utf8(
 "tried to issue duplicate hint in check $check_name: $tag_name $context_string\n"
         );
