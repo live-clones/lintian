@@ -250,7 +250,8 @@ sub installable {
 
         if (
             not $initd_path
-            or (    not $processable->conffiles->is_known($initd_path->name)
+            or
+            (not $processable->declared_conffiles->is_known($initd_path->name)
                 and not $initd_path->is_symlink)
         ) {
             $self->hint('init.d-script-not-marked-as-conffile',

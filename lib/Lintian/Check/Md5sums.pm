@@ -39,7 +39,7 @@ with 'Lintian::Check';
 has only_conffiles => (is => 'rw', default => 1);
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     # check if package contains non-conffiles
     # debhelper doesn't create entries in md5sums
@@ -48,10 +48,10 @@ sub visit_installed_files {
 
     # Skip non-files, they will not appear in the md5sums file
     return
-      unless $file->is_regular_file;
+      unless $item->is_regular_file;
 
     $self->only_conffiles(0)
-      unless $self->processable->conffiles->is_known($file->name);
+      unless $self->processable->declared_conffiles->is_known($item->name);
 
     return;
 }
@@ -106,17 +106,17 @@ sub binary {
     for my $name ($lc->get_Ronly) {
 
         $self->hint('file-missing-in-md5sums', $name)
-          unless $self->processable->conffiles->is_known($name)
+          unless $self->processable->declared_conffiles->is_known($name)
           || $name =~ m{^var/lib/[ai]spell/.};
     }
 
     # checksum should match for common files
     for my $name ($lc->get_intersection) {
 
-        my $file = $self->processable->installed->lookup($name);
+        my $item = $self->processable->installed->lookup($name);
 
         $self->hint('md5sum-mismatch', $name)
-          unless $file->md5sum eq $noprefix{$name};
+          unless $item->md5sum eq $noprefix{$name};
     }
 
     return;

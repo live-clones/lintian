@@ -1,6 +1,6 @@
-# -*- perl -*- Lintian::Processable::Control::Conffiles
+# -*- perl -*- Lintian::Conffiles::Entry
 #
-# Copyright © 2019-2021 Felix Lechner
+# Copyright © 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -15,20 +15,18 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Lintian::Processable::Control::Conffiles;
+package Lintian::Conffiles::Entry;
 
 use v5.20;
 use warnings;
 use utf8;
 
-use Lintian::Conffiles;
-
-use Moo::Role;
+use Moo;
 use namespace::clean;
 
 =head1 NAME
 
-Lintian::Processable::Control::Conffiles - access to collected control data for conffiles
+Lintian::Conffiles::Entry - access to collected control data for conffiles
 
 =head1 SYNOPSIS
 
@@ -36,42 +34,21 @@ Lintian::Processable::Control::Conffiles - access to collected control data for 
 
 =head1 DESCRIPTION
 
-Lintian::Processable::Control::Conffiles provides an interface to control data for conffiles.
+Lintian::Conffiles::Entry provides an interface to control data for conffiles.
 
 =head1 INSTANCE METHODS
 
 =over 4
 
-=item conffiles_item
+=item instructions
+=item is_relative
+=item position
 
 =cut
 
-has conffiles_item => (
-    is => 'rw',
-    lazy => 1,
-    default => sub {
-        my ($self) = @_;
-
-        return $self->control->resolve_path('conffiles');
-    });
-
-=item declared_conffiles
-
-=cut
-
-has declared_conffiles => (
-    is => 'rw',
-    lazy => 1,
-    default => sub {
-        my ($self) = @_;
-
-        my $item = $self->conffiles_item;
-
-        my $conffiles = Lintian::Conffiles->new;
-        $conffiles->parse($item, $self);
-
-        return $conffiles;
-    });
+has instructions => (is => 'rw', default => sub { [] });
+has is_relative => (is => 'rw');
+has position => (is => 'rw');
 
 =back
 
