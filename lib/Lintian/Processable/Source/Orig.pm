@@ -1,4 +1,4 @@
-# -*- perl -*- Lintian::Processable::Orig
+# -*- perl -*- Lintian::Processable::Source::Orig
 #
 # Copyright © 2020 Felix Lechner
 #
@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Lintian::Processable::Orig;
+package Lintian::Processable::Source::Orig;
 
 use v5.20;
 use warnings;
@@ -38,7 +38,7 @@ const my $SLASH => q{/};
 
 =head1 NAME
 
-Lintian::Processable::Orig - access to collected data about the upstream (orig) sources
+Lintian::Processable::Source::Orig - access to collected data about the upstream (orig) sources
 
 =head1 SYNOPSIS
 
@@ -46,7 +46,7 @@ Lintian::Processable::Orig - access to collected data about the upstream (orig) 
 
 =head1 DESCRIPTION
 
-Lintian::Processable::Orig provides an interface to collected data about the upstream (orig) sources.
+Lintian::Processable::Source::Orig provides an interface to collected data about the upstream (orig) sources.
 
 =head1 INSTANCE METHODS
 

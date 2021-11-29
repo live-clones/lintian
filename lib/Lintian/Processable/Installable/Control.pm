@@ -1,8 +1,5 @@
-# -*- perl -*- Lintian::Processable::Installed
+# -*- perl -*- Lintian::Processable::Installable::Control
 #
-# Copyright © 2008, 2009 Russ Allbery
-# Copyright © 2008 Frank Lichtenheld
-# Copyright © 2012 Kees Cook
 # Copyright © 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify it
@@ -18,7 +15,7 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Lintian::Processable::Installed;
+package Lintian::Processable::Installable::Control;
 
 use v5.20;
 use warnings;
@@ -36,7 +33,7 @@ const my $SLASH => q{/};
 
 =head1 NAME
 
-Lintian::Processable::Installed - access to collected data about the upstream (orig) sources
+Lintian::Processable::Installable::Control - access to collected control file data
 
 =head1 SYNOPSIS
 
@@ -44,36 +41,35 @@ Lintian::Processable::Installed - access to collected data about the upstream (o
 
 =head1 DESCRIPTION
 
-Lintian::Processable::Installed provides an interface to collected data about the upstream (orig) sources.
+Lintian::Processable::Installable::Control provides an interface to control file data.
 
 =head1 INSTANCE METHODS
 
 =over 4
 
-=item installed
+=item control
 
-Returns a index object representing installed files from a binary package.
+Returns the index for a binary control file.
 
 =cut
 
-has installed => (
+has control => (
     is => 'rw',
     lazy => 1,
     default => sub {
         my ($self) = @_;
 
         my $index = Lintian::Index->new;
-        $index->identifier($self->path . ' (installed)');
-        $index->basedir($self->basedir . $SLASH . 'unpacked');
+        $index->identifier($self->path . ' (control)');
+        $index->basedir($self->basedir . $SLASH . 'control');
 
-        # binary packages are anchored to the system root
-        # allow absolute paths and symbolic links
-        $index->anchored(1);
+        # control files are not installed relative to the system root
+        # disallow absolute paths and symbolic links
 
-        my @command = (qw(dpkg-deb --fsys-tarfile), $self->path);
+        my @command = (qw(dpkg-deb --ctrl-tarfile), $self->path);
         my $errors = $index->create_from_piped_tar(\@command);
 
-        $self->hint('unpack-message-for-deb-data', $_)
+        $self->hint('unpack-message-for-deb-control', $_)
           for uniq split(/\n/, $errors);
 
         return $index;

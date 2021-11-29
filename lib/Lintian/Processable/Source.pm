@@ -39,11 +39,11 @@ with
   'Lintian::Processable::Debian::Control',
   'Lintian::Processable::Fields::Files',
   'Lintian::Processable::IsNonFree',
-  'Lintian::Processable::Orig',
-  'Lintian::Processable::Patched',
   'Lintian::Processable::Source::Components',
   'Lintian::Processable::Source::Format',
+  'Lintian::Processable::Source::Orig',
   'Lintian::Processable::Source::Overrides',
+  'Lintian::Processable::Source::Patched',
   'Lintian::Processable::Source::Relation',
   'Lintian::Processable::Source::Repacked';
 

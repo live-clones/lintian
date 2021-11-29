@@ -1,4 +1,4 @@
-# -*- perl -*- Lintian::Processable::Control::Conffiles
+# -*- perl -*- Lintian::Processable::Installable::Conffiles
 #
 # Copyright © 2019 Felix Lechner
 #

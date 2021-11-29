@@ -1,4 +1,4 @@
-# -*- perl -*- Lintian::Processable::Patched
+# -*- perl -*- Lintian::Processable::Source::Patched
 #
 # Copyright © 2008 Russ Allbery
 # Copyright © 2009 Raphael Geissert
@@ -17,7 +17,7 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Lintian::Processable::Patched;
+package Lintian::Processable::Source::Patched;
 
 use v5.20;
 use warnings;
@@ -45,7 +45,7 @@ const my $WAIT_STATUS_SHIFT => 8;
 
 =head1 NAME
 
-Lintian::Processable::Patched - access to sources with Debian patches applied
+Lintian::Processable::Source::Patched - access to sources with Debian patches applied
 
 =head1 SYNOPSIS
 
@@ -53,7 +53,7 @@ Lintian::Processable::Patched - access to sources with Debian patches applied
 
 =head1 DESCRIPTION
 
-Lintian::Processable::Patched provides an interface to collected data about patched sources.
+Lintian::Processable::Source::Patched provides an interface to collected data about patched sources.
 
 =head1 INSTANCE METHODS
 

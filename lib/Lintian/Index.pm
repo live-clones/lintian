@@ -79,7 +79,7 @@ Lintian::Index - access to collected data about the upstream (orig) sources
 
 =head1 DESCRIPTION
 
-Lintian::Processable::Orig::Index provides an interface to collected data about the upstream (orig) sources.
+Lintian::Processable::Source::Orig::Index provides an interface to collected data about the upstream (orig) sources.
 
 =head1 INSTANCE METHODS
 

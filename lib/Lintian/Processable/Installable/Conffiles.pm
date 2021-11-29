@@ -1,6 +1,6 @@
-# -*- perl -*- Lintian::Processable::Control
+# -*- perl -*- Lintian::Processable::Installable::Conffiles
 #
-# Copyright © 2020 Felix Lechner
+# Copyright © 2019-2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -15,25 +15,20 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Lintian::Processable::Control;
+package Lintian::Processable::Installable::Conffiles;
 
 use v5.20;
 use warnings;
 use utf8;
 
-use Const::Fast;
-use List::SomeUtils qw(uniq);
-
-use Lintian::Index;
+use Lintian::Conffiles;
 
 use Moo::Role;
 use namespace::clean;
 
-const my $SLASH => q{/};
-
 =head1 NAME
 
-Lintian::Processable::Control - access to collected control file data
+Lintian::Processable::Installable::Conffiles - access to collected control data for conffiles
 
 =head1 SYNOPSIS
 
@@ -41,38 +36,41 @@ Lintian::Processable::Control - access to collected control file data
 
 =head1 DESCRIPTION
 
-Lintian::Processable::Control provides an interface to control file data.
+Lintian::Processable::Installable::Conffiles provides an interface to control data for conffiles.
 
 =head1 INSTANCE METHODS
 
 =over 4
 
-=item control
-
-Returns the index for a binary control file.
+=item conffiles_item
 
 =cut
 
-has control => (
+has conffiles_item => (
     is => 'rw',
     lazy => 1,
     default => sub {
         my ($self) = @_;
 
-        my $index = Lintian::Index->new;
-        $index->identifier($self->path . ' (control)');
-        $index->basedir($self->basedir . $SLASH . 'control');
+        return $self->control->resolve_path('conffiles');
+    });
 
-        # control files are not installed relative to the system root
-        # disallow absolute paths and symbolic links
+=item declared_conffiles
 
-        my @command = (qw(dpkg-deb --ctrl-tarfile), $self->path);
-        my $errors = $index->create_from_piped_tar(\@command);
+=cut
 
-        $self->hint('unpack-message-for-deb-control', $_)
-          for uniq split(/\n/, $errors);
+has declared_conffiles => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
 
-        return $index;
+        my $item = $self->conffiles_item;
+
+        my $conffiles = Lintian::Conffiles->new;
+        $conffiles->parse($item, $self);
+
+        return $conffiles;
     });
 
 =back
