@@ -1,5 +1,5 @@
 #
-# Lintian::Inspect::Changelog::Entry
+# Lintian::Changelog::Entry
 #
 # Copyright © 2005 Frank Lichtenheld <frank@lichtenheld.de>
 # Copyright © 2019 Felix Lechner <felix.lechner@lease-up.com>
@@ -19,7 +19,7 @@
 #    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 #
 
-package Lintian::Inspect::Changelog::Entry;
+package Lintian::Changelog::Entry;
 
 use v5.20;
 use warnings;
@@ -52,7 +52,7 @@ has position => (is => 'rw');
 
 =head1 NAME
 
-Lintian::Inspect::Changelog::Entry - represents one entry in a Debian changelog
+Lintian::Changelog::Entry - represents one entry in a Debian changelog
 
 =head1 SYNOPSIS
 

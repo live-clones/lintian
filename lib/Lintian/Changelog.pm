@@ -16,7 +16,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::Inspect::Changelog;
+package Lintian::Changelog;
 
 use v5.20;
 use warnings;
@@ -26,7 +26,7 @@ use Carp;
 use Const::Fast;
 use Date::Parse;
 
-use Lintian::Inspect::Changelog::Entry;
+use Lintian::Changelog::Entry;
 
 const my $EMPTY => q{};
 const my $SPACE => q{ };
@@ -38,13 +38,13 @@ use namespace::clean;
 
 =head1 NAME
 
-Lintian::Inspect::Changelog -- Parse a literal version string into its constituents
+Lintian::Changelog -- Parse a literal version string into its constituents
 
 =head1 SYNOPSIS
 
- use Lintian::Inspect::Changelog;
+ use Lintian::Changelog;
 
- my $version = Lintian::Inspect::Changelog->new;
+ my $version = Lintian::Changelog->new;
  $version->set('1.2.3-4', undef);
 
 =head1 DESCRIPTION
@@ -57,7 +57,7 @@ A class for parsing literal version strings
 
 =item new ()
 
-Creates a new Lintian::Inspect::Changelog object.
+Creates a new Lintian::Changelog object.
 
 =cut
 
@@ -107,7 +107,7 @@ sub parse {
 
     # based on /usr/lib/dpkg/parsechangelog/debian
     my $expect='first heading';
-    my $entry = Lintian::Inspect::Changelog::Entry->new;
+    my $entry = Lintian::Changelog::Entry->new;
     my $blanklines = 0;
     my $unknowncounter = 1; # to make version unique, e.g. for using as id
     my $lineno = 0;
@@ -142,7 +142,7 @@ m/^(?<Source>\w[-+0-9a-z.]*) \((?<Version>[^\(\) \t]+)\)(?<Distribution>(?:\s+[-
                 $entry->Closes(find_closes($entry->Changes));
 
                 push @{$self->entries}, $entry;
-                $entry = Lintian::Inspect::Changelog::Entry->new;
+                $entry = Lintian::Changelog::Entry->new;
             }
 
             $entry->position($lineno);
@@ -267,7 +267,7 @@ m/^ \-\- (?<name>.*) <(?<email>.*)>(?<sep>  ?)(?<date>(?:\w+\,\s*)?\d{1,2}\s+\w+
 
                     push @{$self->entries}, $entry;
 
-                    $entry = Lintian::Inspect::Changelog::Entry->new;
+                    $entry = Lintian::Changelog::Entry->new;
                     $entry->Source($UNKNOWN);
                     $entry->Distribution($UNKNOWN);
                     $entry->Urgency($UNKNOWN);

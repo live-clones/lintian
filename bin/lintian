@@ -54,7 +54,7 @@ use Syntax::Keyword::Try;
 use Term::ReadKey;
 use Unicode::UTF8 qw(encode_utf8 decode_utf8);
 
-use Lintian::Inspect::Changelog;
+use Lintian::Changelog;
 use Lintian::IPC::Run3 qw(safe_qx);
 use Lintian::Pool;
 use Lintian::Processable::Installable;
@@ -806,7 +806,7 @@ sub parse_boolean {
 sub _find_changes {
     # read bytes to side-step any encoding errors
     my $contents = path('debian/changelog')->slurp;
-    my $changelog = Lintian::Inspect::Changelog->new;
+    my $changelog = Lintian::Changelog->new;
     $changelog->parse($contents);
     my @entries = @{$changelog->entries};
     my $latest = @entries ? $entries[0] : undef;

@@ -31,8 +31,8 @@ use Cwd;
 use IPC::Run3;
 use Unicode::UTF8 qw(encode_utf8 valid_utf8 decode_utf8);
 
-use Lintian::Inspect::Elf::Section;
-use Lintian::Inspect::Elf::Symbol;
+use Lintian::Elf::Section;
+use Lintian::Elf::Symbol;
 
 use Moo::Role;
 use namespace::clean;
@@ -299,7 +299,7 @@ sub parse_per_file {
         my $section_name = $section_name_by_number{$section_number}
           // $section_number;
 
-        my $symbol = Lintian::Inspect::Elf::Symbol->new;
+        my $symbol = Lintian::Elf::Symbol->new;
         $symbol->section($section_name);
         $symbol->version($symbol_version);
         $symbol->name($symbol_name);
@@ -544,7 +544,7 @@ sub section_headers {
         }
 
         # http://sco.com/developers/gabi/latest/ch4.sheader.html
-        my $section = Lintian::Inspect::Elf::Section->new;
+        my $section = Lintian::Elf::Section->new;
         $section->number($section_header{Nr});
         $section->name($section_header{Name});
         $section->type($section_header{Type});

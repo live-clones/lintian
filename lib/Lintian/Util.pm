@@ -67,7 +67,7 @@ use Path::Tiny;
 use Unicode::UTF8 qw(valid_utf8 encode_utf8);
 
 use Lintian::Deb822;
-use Lintian::Inspect::Changelog;
+use Lintian::Changelog;
 use Lintian::Relation::Version qw(versions_equal versions_comparator);
 
 const my $EMPTY => q{};
@@ -373,7 +373,7 @@ sub version_from_changelog {
       unless -e $changelog_path;
 
     my $contents = path($changelog_path)->slurp_utf8;
-    my $changelog = Lintian::Inspect::Changelog->new;
+    my $changelog = Lintian::Changelog->new;
 
     $changelog->parse($contents);
     my @entries = @{$changelog->entries};

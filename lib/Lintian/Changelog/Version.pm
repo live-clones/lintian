@@ -16,7 +16,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::Inspect::Changelog::Version;
+package Lintian::Changelog::Version;
 
 use v5.20;
 use warnings;
@@ -33,13 +33,13 @@ const my $EMPTY => q{};
 
 =head1 NAME
 
-Lintian::Inspect::Changelog::Version -- Parse a literal version string into its constituents
+Lintian::Changelog::Version -- Parse a literal version string into its constituents
 
 =head1 SYNOPSIS
 
- use Lintian::Inspect::Changelog::Version;
+ use Lintian::Changelog::Version;
 
- my $version = Lintian::Inspect::Changelog::Version->new;
+ my $version = Lintian::Changelog::Version->new;
  $version->assign('1.2.3-4', undef);
 
 =head1 DESCRIPTION
@@ -52,7 +52,7 @@ A class for parsing literal version strings
 
 =item new ()
 
-Creates a new Lintian::Inspect::Changelog::Version object.
+Creates a new Lintian::Changelog::Version object.
 
 =cut
 
@@ -64,7 +64,7 @@ Creates a new Lintian::Inspect::Changelog::Version object.
 
 =item assign (LITERAL, NATIVE)
 
-Assign the various members in the Lintian::Inspect::Changelog::Version object
+Assign the various members in the Lintian::Changelog::Version object
 using the LITERAL version string and the NATIVE boolean selector.
 
 =cut

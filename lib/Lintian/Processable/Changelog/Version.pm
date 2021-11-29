@@ -26,7 +26,7 @@ use utf8;
 
 use Syntax::Keyword::Try;
 
-use Lintian::Inspect::Changelog::Version;
+use Lintian::Changelog::Version;
 
 use Moo::Role;
 use namespace::clean;
@@ -62,7 +62,7 @@ data in memory.
 
 =item changelog_version
 
-Returns a fully parsed Lintian::Inspect::Changelog::Version for the
+Returns a fully parsed Lintian::Changelog::Version for the
 source package's version string.
 
 =cut
@@ -75,7 +75,7 @@ has changelog_version => (
 
         my $versionstring = $self->fields->value('Version');
 
-        my $version = Lintian::Inspect::Changelog::Version->new;
+        my $version = Lintian::Changelog::Version->new;
         try {
             $version->assign($versionstring, $self->native);
 

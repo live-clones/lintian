@@ -16,7 +16,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::Inspect::Elf::Symbol;
+package Lintian::Elf::Section;
 
 use v5.20;
 use warnings;
@@ -31,39 +31,105 @@ use namespace::clean;
 
 =head1 NAME
 
-Lintian::Inspect::Elf::Symbol -- ELF Symbols
+Lintian::Elf::Section -- ELF Sections
 
 =head1 SYNOPSIS
 
- use Lintian::Inspect::Elf::Symbol;
+ use Lintian::Elf::Section;
 
 =head1 DESCRIPTION
 
-A class for storing ELF symbol data
+A class for storing ELF section data
 
 =head1 INSTANCE METHODS
 
 =over 4
 
+=item number
+
 =item name
 
-=item version
+=item type
 
-=item section
+=item address
+
+=item offset
+
+=item size
+
+=item entry_size
+
+=item flags
+
+=item index_link
+
+=item index_info
+
+=item alignment
 
 =cut
+
+has number => (
+    is => 'rw',
+    coerce => sub { my ($number) = @_; return ($number // 0); },
+    default => 0
+);
 
 has name => (
     is => 'rw',
     coerce => sub { my ($text) = @_; return ($text // $EMPTY); },
     default => $EMPTY
 );
-has version => (
+
+has type => (
     is => 'rw',
     coerce => sub { my ($text) = @_; return ($text // $EMPTY); },
     default => $EMPTY
 );
-has section => (
+
+has address => (
+    is => 'rw',
+    coerce => sub { my ($number) = @_; return ($number // 0); },
+    default => 0
+);
+
+has offset => (
+    is => 'rw',
+    coerce => sub { my ($number) = @_; return ($number // 0); },
+    default => 0
+);
+
+has size => (
+    is => 'rw',
+    coerce => sub { my ($number) = @_; return ($number // 0); },
+    default => 0
+);
+
+has entry_size => (
+    is => 'rw',
+    coerce => sub { my ($number) = @_; return ($number // 0); },
+    default => 0
+);
+
+has flags => (
+    is => 'rw',
+    coerce => sub { my ($text) = @_; return ($text // $EMPTY); },
+    default => $EMPTY
+);
+
+has index_link => (
+    is => 'rw',
+    coerce => sub { my ($number) = @_; return ($number // 0); },
+    default => 0
+);
+
+has index_info => (
+    is => 'rw',
+    coerce => sub { my ($number) = @_; return ($number // 0); },
+    default => 0
+);
+
+has alignment => (
     is => 'rw',
     coerce => sub { my ($text) = @_; return ($text // $EMPTY); },
     default => $EMPTY

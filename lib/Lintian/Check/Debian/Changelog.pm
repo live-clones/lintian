@@ -35,8 +35,8 @@ use Path::Tiny;
 use Syntax::Keyword::Try;
 use Unicode::UTF8 qw(valid_utf8 decode_utf8 encode_utf8);
 
-use Lintian::Inspect::Changelog;
-use Lintian::Inspect::Changelog::Version;
+use Lintian::Changelog;
+use Lintian::Changelog::Version;
 use Lintian::IPC::Run3 qw(safe_qx);
 use Lintian::Relation::Version qw(versions_gt);
 use Lintian::Spelling qw(check_spelling);
@@ -88,7 +88,7 @@ sub source {
     }
 
     my $versionstring = $processable->fields->value('Version');
-    my $latest_version = Lintian::Inspect::Changelog::Version->new;
+    my $latest_version = Lintian::Changelog::Version->new;
 
     try {
         $latest_version->assign($versionstring, $processable->native);
@@ -163,7 +163,7 @@ sub source {
         my $latest_timestamp = $latest_entry->Timestamp;
         my $previous_timestamp = $previous_entry->Timestamp;
 
-        my $previous_version = Lintian::Inspect::Changelog::Version->new;
+        my $previous_version = Lintian::Changelog::Version->new;
         try {
             $previous_version->assign($previous_entry->Version,
                 $processable->native);
@@ -381,7 +381,7 @@ sub binary {
         if (valid_utf8($bytes)) {
 
             my $contents = decode_utf8($bytes);
-            my $changelog = Lintian::Inspect::Changelog->new;
+            my $changelog = Lintian::Changelog->new;
             $changelog->parse($contents);
 
             if (my @errors = @{$changelog->errors}) {

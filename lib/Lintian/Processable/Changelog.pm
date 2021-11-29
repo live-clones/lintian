@@ -158,7 +158,7 @@ has changelog => (
     default => sub {
         my ($self) = @_;
 
-        my $changelog = Lintian::Inspect::Changelog->new;
+        my $changelog = Lintian::Changelog->new;
 
         my $dch = $self->changelog_path;
         return $changelog
