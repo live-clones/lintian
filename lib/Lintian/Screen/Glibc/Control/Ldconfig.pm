@@ -28,7 +28,7 @@ use namespace::clean;
 with 'Lintian::Screen';
 
 sub suppress {
-    my ($self, $processable, $context) = @_;
+    my ($self, $processable, $hint) = @_;
 
     return 1
       if $processable->source_name eq 'glibc';

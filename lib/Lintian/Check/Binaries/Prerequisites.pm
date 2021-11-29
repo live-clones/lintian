@@ -30,10 +30,7 @@ use utf8;
 use Const::Fast;
 use List::SomeUtils qw(any none uniq);
 
-use Moo;
-use namespace::clean;
-
-with 'Lintian::Check';
+use Lintian::Pointer::Item;
 
 const my $SPACE => q{ };
 const my $LEFT_PARENTHESIS => q{(};
@@ -42,6 +39,11 @@ const my $RIGHT_PARENTHESIS => q{)};
 # Guile object files do not objdump/strip correctly, so exclude them
 # from a number of tests. (#918444)
 const my $GUILE_PATH_REGEX => qr{^usr/lib(?:/[^/]+)+/guile/[^/]+/.+\.go$};
+
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 has built_with_octave => (
     is => 'rw',
@@ -77,6 +79,9 @@ sub visit_installed_files {
     return
       unless $item->file_type =~ m{ executable | shared [ ] object }x;
 
+    my $pointer = Lintian::Pointer::Item->new;
+    $pointer->item($item);
+
     my $is_shared = $item->file_type =~ m/(shared object|pie executable)/;
 
     for my $library (@{$item->elf->{NEEDED} // [] }) {
@@ -88,7 +93,7 @@ sub visit_installed_files {
     # Some exceptions: kernel modules, syslinux modules, detached
     # debugging information and the dynamic loader (which itself
     # has no dependencies).
-    $self->hint('shared-library-lacks-prerequisites', $item)
+    $self->pointed_hint('shared-library-lacks-prerequisites', $pointer)
       if $is_shared
       && !@{$item->elf->{NEEDED} // []}
       && $item->name !~ m{^boot/modules/}
@@ -105,7 +110,7 @@ sub visit_installed_files {
 
     my $depends = $self->processable->relation('strong');
 
-    $self->hint('undeclared-elf-prerequisites', $item->name,
+    $self->pointed_hint('undeclared-elf-prerequisites', $pointer,
             $LEFT_PARENTHESIS
           . join($SPACE, sort +uniq @{$item->elf->{NEEDED} // []})
           . $RIGHT_PARENTHESIS)
@@ -119,7 +124,7 @@ sub visit_installed_files {
     my $linked_with_libc
       = any { m{^ libc[.]so[.] }x } @{$item->elf->{NEEDED} // []};
 
-    $self->hint('library-not-linked-against-libc', $item)
+    $self->pointed_hint('library-not-linked-against-libc', $pointer)
       if !$linked_with_libc
       && $is_shared
       && @{$item->elf->{NEEDED} // [] }
@@ -128,7 +133,7 @@ sub visit_installed_files {
       && (!$self->built_with_octave
         || $item->name !~ m/\.(?:oct|mex)$/);
 
-    $self->hint('program-not-linked-against-libc', $item)
+    $self->pointed_hint('program-not-linked-against-libc', $pointer)
       if !$linked_with_libc
       && !$is_shared
       && @{$item->elf->{NEEDED} // [] }

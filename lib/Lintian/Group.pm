@@ -334,7 +334,7 @@ sub process {
             next
               if $hint->tag->show_always;
 
-            my @matches = grep { $_->suppress($processable, $hint->context) }
+            my @matches = grep { $_->suppress($processable, $hint) }
               @{$hint->tag->screens};
             next
               unless @matches;

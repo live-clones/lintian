@@ -24,23 +24,28 @@ use v5.20;
 use warnings;
 use utf8;
 
+use Lintian::Pointer::Item;
+
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     # see Bug#959037 for details
     return
       if $self->processable->type eq 'udeb';
 
     return
-      unless $file->name =~ m{^usr/lib/};
+      unless $item->name =~ m{^usr/lib/};
 
-    $self->hint('executable-in-usr-lib', $file->name)
-      if $file->is_file && $file->is_executable;
+    my $pointer = Lintian::Pointer::Item->new;
+    $pointer->item($item);
+
+    $self->pointed_hint('executable-in-usr-lib', $pointer)
+      if $item->is_file && $item->is_executable;
 
     return;
 }

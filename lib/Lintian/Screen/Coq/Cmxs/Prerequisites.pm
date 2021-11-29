@@ -28,10 +28,12 @@ use namespace::clean;
 with 'Lintian::Screen';
 
 sub suppress {
-    my ($self, $processable, $context) = @_;
+    my ($self, $processable, $hint) = @_;
+
+    my $item = $hint->pointer->item;
 
     return 1
-      if $context =~ m{ [.]cmxs $}x
+      if $item->name =~ m{ [.]cmxs $}x
       && ( $processable->type eq 'binary'
         || $processable->type eq 'udeb');
 

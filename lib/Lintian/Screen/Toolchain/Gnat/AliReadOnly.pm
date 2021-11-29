@@ -28,10 +28,12 @@ use namespace::clean;
 with 'Lintian::Screen';
 
 sub suppress {
-    my ($self, $processable, $context) = @_;
+    my ($self, $processable, $hint) = @_;
+
+    my $item = $hint->pointer->item;
 
     return 1
-      if $context
+      if $item->name
       =~ m{^ usr/lib/ [^/]+ /ada/adalib/ [^/]+ / [^/]+ [.] ali \b }x
       && ( $processable->type eq 'binary'
         || $processable->type eq 'udeb')

@@ -28,10 +28,12 @@ use namespace::clean;
 with 'Lintian::Screen';
 
 sub suppress {
-    my ($self, $processable, $context) = @_;
+    my ($self, $processable, $hint) = @_;
+
+    my $item = $hint->pointer->item;
 
     return 1
-      if $context =~ m{^usr/lib/emacsen-common/packages/}
+      if $item->name =~ m{^usr/lib/emacsen-common/packages/}
       && ( $processable->type eq 'binary'
         || $processable->type eq 'udeb')
       && $processable->relation('strong')->satisfies('emacsen-common');
