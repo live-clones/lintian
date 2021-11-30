@@ -189,6 +189,7 @@ sub process {
         local $SIG{__WARN__}
           = sub { warn encode_utf8("Warning in processable $path: $_[0]") };
 
+        my @hints;
         my $declared_overrides;
 
         say {*STDERR}
@@ -223,34 +224,50 @@ sub process {
                 # make space for renamed override
                 $declared_overrides->{$modern} //= {};
 
-                for my $context (keys %{$declared_overrides->{$dated}}) {
+                for my $pattern (keys %{$declared_overrides->{$dated}}) {
+
+                    my $override = $declared_overrides->{$dated}{$pattern};
+                    my $position = $override->{line};
+
+                    my $override_item = $processable->override_file;
+                    my $pointer = $override_item->pointer($position);
 
                     # alert user to new tag name
-                    $processable->hint('renamed-tag','lintian',
-                        "$dated => $modern in line "
-                          .$declared_overrides->{$dated}{$context}{line});
+                    $processable->pointed_hint('renamed-tag','lintian',
+                        $pointer, "$dated => $modern");
 
-                    if (exists $declared_overrides->{$modern}{$context}) {
+                    if (exists $declared_overrides->{$modern}{$pattern}) {
 
-                        my @lines = (
-                            $declared_overrides->{$dated}{$context}{line},
-                            $declared_overrides->{$modern}{$context}{line});
-                        $processable->hint('duplicate-override-context',
-                            'lintian',$modern, 'lines', sort @lines);
+                        my $modern_override
+                          = $declared_overrides->{$modern}{$pattern};
+                        my $modern_position = $modern_override->{line};
+
+                        my @positions = ($position, $modern_position);
+                        my $line_numbers = join($SPACE, (sort @positions));
+
+                        $processable->pointed_hint(
+                            'duplicate-override-context','lintian',
+                            $override_item->pointer, $modern,
+                            "(lines $line_numbers)"
+                        );
 
                         next;
                     }
 
                     # transfer context to current tag name
-                    $declared_overrides->{$modern}{$context}
-                      = $declared_overrides->{$dated}{$context};
+                    $declared_overrides->{$modern}{$pattern}
+                      = $declared_overrides->{$dated}{$pattern};
 
-                    # remember old tag_name
-                    $declared_overrides->{$modern}{$context}{'renamed-from'}
-                      = $dated;
+                    # now it exists
+                    my $modern_override
+                      = $declared_overrides->{$modern}{$pattern};
+
+                    # remember old tag names
+                    $modern_override->{'renamed-from'} = [];
+                    push(@{$modern_override->{'renamed-from'}}, $override);
 
                     # remove the old override context
-                    delete $declared_overrides->{$dated}{$context};
+                    delete $declared_overrides->{$dated}{$pattern};
                 }
 
                 # remove the alias override if there are no contexts left
@@ -263,10 +280,16 @@ sub process {
               keys %{$declared_overrides};
             for my $tag_name (@unknown_overrides) {
 
-                $processable->hint('malformed-override', 'lintian',
-                    "Unknown tag $tag_name in line "
-                      . $declared_overrides->{$tag_name}{$_}{line})
-                  for keys %{$declared_overrides->{$tag_name}};
+                for my $pattern (keys %{$declared_overrides->{$tag_name}}) {
+
+                    my $override_item = $processable->override_file;
+                    my $position
+                      = $declared_overrides->{$tag_name}{$pattern}{line};
+                    my $pointer = $override_item->pointer($position);
+
+                    $processable->pointed_hint('malformed-override', 'lintian',
+                        $pointer, "Unknown tag $tag_name");
+                }
 
                 delete $declared_overrides->{$tag_name};
             }
@@ -280,6 +303,11 @@ sub process {
                 }
             }
         }
+
+        push(@hints, @{$processable->hints});
+        $processable->hints([]);
+
+        my @from_checks;
 
         my @check_names = sort $self->profile->enabled_checks;
         for my $name (@check_names) {
@@ -301,7 +329,8 @@ sub process {
             $check->profile($self->profile);
 
             try {
-                $check->run
+                my @found_here = $check->run;
+                push(@from_checks, @found_here);
 
             } catch {
                 my $message = $@;
@@ -324,41 +353,9 @@ sub process {
               if $option->{'perf-output'};
         }
 
-        my @crossing;
-
-        my $hints = $processable->hints;
-        $processable->hints([]);
-
-        for my $hint (@{$hints}) {
-
-            next
-              if $hint->tag->show_always;
-
-            my @matches = grep { $_->suppress($processable, $hint) }
-              @{$hint->tag->screens};
-            next
-              unless @matches;
-
-            my @sorted = sort { $a->name cmp $b->name } @matches;
-
-            push(@crossing,
-                    $hint->tag->name
-                  . $SPACE
-                  . join($SPACE, map { $_->name } @sorted))
-              if @sorted > 1;
-
-            my $screen = $sorted[0];
-            $hint->screen($screen);
-        }
-
-        $processable->hints($hints);
-
-        $processable->hint('crossing-screens', 'lintian', $_) for @crossing;
-
         my %used_overrides;
 
-        my @keep_hints;
-        for my $hint (@{$processable->hints}) {
+        for my $hint (@from_checks) {
 
             my $issuer = $hint->issued_by;
             my $tag = $hint->tag;
@@ -372,8 +369,26 @@ sub process {
                 next;
             }
 
-            my $declared = $declared_overrides->{$hint->tag->name};
-            if ($declared && !$hint->tag->show_always) {
+            if (!$tag->show_always) {
+
+                my @masks
+                  = grep { $_->suppress($processable, $hint) }@{$tag->screens};
+
+                $hint->screen($masks[0])
+                  if @masks > 0;
+
+                if (@masks > 1) {
+
+                    my @sorted = sort { $a->name cmp $b->name } @masks;
+                    my $mask_list = join($SPACE, map { $_->name } @sorted);
+
+                    $processable->hint('crossing-screens', 'lintian',
+                        $tag_name, "($mask_list)");
+                }
+            }
+
+            my $declared = $declared_overrides->{$tag->name};
+            if ($declared && !$tag->show_always) {
 
                 # empty context in specification matches all
                 my $override = $declared->{$EMPTY};
@@ -397,19 +412,19 @@ sub process {
                       if $match;
                 }
 
-                # new hash keys are autovivified to 0
-                $used_overrides{$hint->tag->name}{$override->{context}}++
+                # new hash values are autovivified to 0
+                $used_overrides{$tag->name}{$override->{context}}++
                   if $override;
 
                 $hint->override($override);
             }
 
-            push(@keep_hints, $hint);
+            push(@hints, $hint);
         }
 
-        $processable->hints(\@keep_hints);
+        $processable->hints(\@hints);
 
-        my %otherwise_visible = map { $_->tag->name => 1 } @keep_hints;
+        my %otherwise_visible = map { $_->tag->name => 1 } @hints;
 
         # look for unused overrides
         for my $tag_name (keys %{$declared_overrides}) {
@@ -417,27 +432,43 @@ sub process {
             next
               unless $self->profile->tag_is_enabled($tag_name);
 
-            my @declared_contexts = keys %{$declared_overrides->{$tag_name}};
-            my @used_contexts = keys %{$used_overrides{$tag_name} // {}};
+            my @declared_patterns = keys %{$declared_overrides->{$tag_name}};
+            my @used_patterns = keys %{$used_overrides{$tag_name} // {}};
 
-            my $context_lc
-              = List::Compare->new(\@declared_contexts, \@used_contexts);
-            my @unused_contexts = $context_lc->get_Lonly;
+            my $pattern_lc
+              = List::Compare->new(\@declared_patterns, \@used_patterns);
+            my @unused_patterns = $pattern_lc->get_Lonly;
 
-            # cannot be overridden or suppressed
             my $condition = 'unused-override';
             $condition = 'mismatched-override'
               if $otherwise_visible{$tag_name};
 
-            for my $context (@unused_contexts) {
+            for my $pattern (@unused_patterns) {
 
-                # for renames, use the original name from overrides
-                my $original_name
-                  = $declared_overrides->{$tag_name}{$context}{'renamed-from'}
-                  // $tag_name;
+                my $override = $declared_overrides->{$tag_name}{$pattern};
+                my @original_overrides = @{$override->{'renamed-from'} // []};
 
-                $processable->hint($condition, 'lintian', $original_name,
-                    $context);
+                # for renamed tags, use the original name from overrides
+                for my $original_override (@original_overrides) {
+
+                    my $override_item = $processable->override_file;
+                    my $original_position = $original_override->{line};
+                    my $pointer = $override_item->pointer($original_position);
+
+                    my $original_name = $original_override->{tag};
+
+                    $processable->pointed_hint($condition, 'lintian',
+                        $pointer, $original_name,$pattern);
+                }
+
+                my $override_item = $processable->override_file;
+                my $position = $override->{line};
+                my $pointer = $override_item->pointer($position);
+
+                # without renames present, just use the current name
+                $processable->pointed_hint($condition, 'lintian', $pointer,
+                    $tag_name,$pattern)
+                  unless @original_overrides;
             }
         }
     }

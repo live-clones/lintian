@@ -128,7 +128,10 @@ sub run {
     $self->always
       if $self->can('always');
 
-    return;
+    my @hints = @{$self->processable->hints};
+    $self->processable->hints([]);
+
+    return @hints;
 }
 
 =item find_tag
