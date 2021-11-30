@@ -54,13 +54,11 @@ A class for collecting Lintian tags as they are found
 =over 4
 
 =item profile
-=item context_tracker
 =item hints
 
 =cut
 
 has profile => (is => 'rw');
-has context_tracker => (is => 'rw', default => sub { {} });
 has hints => (is => 'rw', default => sub { [] });
 
 =item pointed_hint
@@ -87,17 +85,6 @@ sub pointed_hint {
     $hint->issued_by($check_name);
     $hint->note(stringify(@notes));
     $hint->pointer($pointer);
-
-    my $context_string = $hint->context;
-    if (exists $self->context_tracker->{$tag_name}{$context_string}) {
-
-        warn encode_utf8(
-"tried to issue duplicate hint in check $check_name: $tag_name $context_string\n"
-        );
-        return;
-    }
-
-    $self->context_tracker->{$tag_name}{$context_string} = 1;
 
     push(@{$self->hints}, $hint);
 
@@ -127,17 +114,6 @@ sub hint {
     $hint->tag($tag);
     $hint->issued_by($check_name);
     $hint->note(stringify(@notes));
-
-    my $context_string = $hint->context;
-    if (exists $self->context_tracker->{$tag_name}{$context_string}) {
-
-        warn encode_utf8(
-"tried to issue duplicate hint in check $check_name: $tag_name $context_string\n"
-        );
-        return;
-    }
-
-    $self->context_tracker->{$tag_name}{$context_string} = 1;
 
     push(@{$self->hints}, $hint);
 

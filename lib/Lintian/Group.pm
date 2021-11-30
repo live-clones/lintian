@@ -353,6 +353,7 @@ sub process {
               if $option->{'perf-output'};
         }
 
+        my %context_tracker;
         my %used_overrides;
 
         for my $hint (@from_checks) {
@@ -369,6 +370,18 @@ sub process {
                 next;
             }
 
+            my $context = $hint->context;
+
+            if (exists $context_tracker{$tag_name}{$context}) {
+
+                warn encode_utf8(
+"Tried to issue duplicate hint in check $issuer: $tag_name $context\n"
+                );
+                next;
+            }
+
+            $context_tracker{$tag_name}{$context} = 1;
+
             if (!$tag->show_always) {
 
                 my @masks
@@ -378,7 +391,6 @@ sub process {
                   if @masks > 0;
 
                 if (@masks > 1) {
-
                     my @sorted = sort { $a->name cmp $b->name } @masks;
                     my $mask_list = join($SPACE, map { $_->name } @sorted);
 
