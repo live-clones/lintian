@@ -63,9 +63,9 @@ has overrides => (
     default => sub {
         my ($self) = @_;
 
-        my %override_data;
+        my @overrides;
 
-        return \%override_data;
+        return \@overrides;
     });
 
 1;

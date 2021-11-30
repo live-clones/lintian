@@ -1,4 +1,4 @@
-# -*- perl -*- Lintian::Processable::Buildinfo::Overrides
+# -*- perl -*- Lintian::Override
 #
 # Copyright © 2021 Felix Lechner
 #
@@ -15,60 +15,58 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Lintian::Processable::Buildinfo::Overrides;
+package Lintian::Override;
 
 use v5.20;
 use warnings;
 use utf8;
 
-use Moo::Role;
+use Const::Fast;
+
+const my $EMPTY => q{};
+
+use Moo;
 use namespace::clean;
 
 =head1 NAME
 
-Lintian::Processable::Buildinfo::Overrides - access to override data
+Lintian::Override - access to override data
 
 =head1 SYNOPSIS
 
-    use Lintian::Processable;
+    use Lintian::Override;
 
 =head1 DESCRIPTION
 
-Lintian::Processable::Buildinfo::Overrides provides an interface for overrides.
+Lintian::Override provides access to override data.
 
 =head1 INSTANCE METHODS
 
 =over 4
 
-=item override_file
+=item tag_name
+=item architectures
+
+=item pattern
+=item regex
+
+=item comments
+=item position
+
+=item renamed_from
 
 =cut
 
-has override_file => (
-    is => 'rw',
-    lazy => 1,
-    default => sub {
-        my ($self) = @_;
+has tag_name => (is => 'rw', default => $EMPTY);
+has architectures => (is => 'rw', default => sub { [] });
 
-        return undef;
-    });
+has pattern => (is => 'rw', default => $EMPTY);
+has regex => (is => 'rw');
 
-=item overrides
+has comments => (is => 'rw', default => sub { [] });
+has position => (is => 'rw');
 
-=cut
-
-has overrides => (
-    is => 'rw',
-    lazy => 1,
-    default => sub {
-        my ($self) = @_;
-
-        my @overrides;
-
-        return \@overrides;
-    });
-
-1;
+has renamed_from => (is => 'rw', default => sub { [] });
 
 =back
 
@@ -82,6 +80,8 @@ Lintian.
 lintian(1)
 
 =cut
+
+1;
 
 # Local Variables:
 # indent-tabs-mode: nil

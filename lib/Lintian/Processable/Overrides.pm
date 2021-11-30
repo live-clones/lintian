@@ -24,13 +24,15 @@ use utf8;
 use Const::Fast;
 use List::SomeUtils qw(none true);
 
-use Moo::Role;
-use namespace::clean;
+use Lintian::Override;
 
 const my $EMPTY => q{};
 const my $SPACE => q{ };
 const my $ASTERISK => q{*};
 const my $DOT => q{.};
+
+use Moo::Role;
+use namespace::clean;
 
 =head1 NAME
 
@@ -57,17 +59,15 @@ sub parse_overrides {
 
     $contents //= $EMPTY;
 
-    my %override_data;
+    my @declared_overrides;
 
     my @comments;
-    my %previous;
+    my $previous = Lintian::Override->new;
 
     my @lines = split(/\n/, $contents);
 
     my $position = 1;
     for my $line (@lines) {
-
-        my $pointer = $self->override_file->pointer($position);
 
         my $remaining = $line;
 
@@ -79,7 +79,7 @@ sub parse_overrides {
             # also throw away the option of "carrying over" the last
             # comment
             @comments = ();
-            %previous = ();
+            $previous = Lintian::Override->new;
             next;
         }
 
@@ -124,6 +124,8 @@ sub parse_overrides {
             $require_colon = 1;
         }
 
+        my $pointer = $self->override_file->pointer($position);
+
         # require and remove colon when any package details are present
         if ($require_colon && $remaining !~ s/^\s*:\s*//) {
             $self->pointed_hint('malformed-override', 'lintian', $pointer,
@@ -131,7 +133,7 @@ sub parse_overrides {
             next;
         }
 
-        my $hint = $remaining;
+        my $hint_like = $remaining;
 
         if (@architectures && $self->architecture eq 'all') {
             $self->pointed_hint('malformed-override', 'lintian', $pointer,
@@ -173,85 +175,91 @@ sub parse_overrides {
             @architectures
           );
 
-        my ($tag_name, $context) = split($SPACE, $hint, 2);
+        my ($tag_name, $pattern) = split($SPACE, $hint_like, 2);
 
         $self->pointed_hint('malformed-override', 'lintian', $pointer,
             "Cannot parse line: $line")
           unless length $tag_name;
 
-        $context //= $EMPTY;
+        $pattern //= $EMPTY;
 
-        if (($previous{tag} // $EMPTY) eq $tag_name
-            && !scalar @comments){
-            # There are no new comments, no "empty line" in between and
-            # this tag is the same as the last, so we "carry over" the
-            # comment from the previous override (if any).
-            #
-            # Since L::T::Override is (supposed to be) immutable, the new
-            # override can share the reference with the previous one.
-            push(@comments, @{$previous{comments}});
-        }
+        # There are no new comments, no "empty line" in between and
+        # this tag is the same as the last, so we "carry over" the
+        # comment from the previous override (if any).
+        push(@comments, @{$previous->comments})
+          if $tag_name eq $previous->tag_name
+          && !@comments;
 
-        my %current;
-        $current{tag} = $tag_name;
+        my $current = Lintian::Override->new;
 
-        # record line number
-        $current{line} = $position;
+        $current->tag_name($tag_name);
+        $current->architectures(\@architectures);
+        $current->pattern($pattern);
+        $current->position($position);
 
-        $current{context} = $context;
+        if ($pattern =~ m{\*}) {
 
-        if ($context =~ m/\*/) {
-            # It is a pattern, pre-compute it
-            my $pattern = $context;
-            my $end = $EMPTY; # Trailing "match anything" (if any)
-            my $pat = $EMPTY; # The rest of the pattern
-             # Split does not help us if $pattern ends with *
-             # so we deal with that now
-            if ($pattern =~ s/\Q*\E+\z//){
+            # has wild card, pre-compute
+            my $literal = $pattern;
+
+            # trailing match anything, if applicable
+            my $end = $EMPTY;
+
+            # the front of the pattern
+            my $quoted = $EMPTY;
+
+            # split does not help if $literal ends with *
+            if ($literal =~ s{ \*+ $}{}x){
                 $end = $DOT . $ASTERISK;
             }
 
-            # Are there any * left (after the above)?
-            if ($pattern =~ m/\Q*\E/) {
+            # any earlier asterisks?
+            if ($literal =~ m{\*}) {
                 # this works even if $text starts with a *, since
                 # that is split as $EMPTY, <text>
-                my @pargs = split(m/\Q*\E++/, $pattern);
-                $pat = join($DOT . $ASTERISK, map { quotemeta } @pargs);
+                my @pargs = split(qr{\*+}, $literal);
+                $quoted = join($DOT . $ASTERISK, map { quotemeta } @pargs);
             } else {
-                $pat = $pattern;
+                $quoted = $literal;
             }
 
-            $current{pattern} = qr/$pat$end/;
+            $current->regex(qr/$quoted$end/);
         }
 
-        $current{comments} = [];
-        push(@{$current{comments}}, @comments);
+        push(@{$current->comments}, @comments);
         @comments = ();
 
-        $override_data{$tag_name} //= {};
+        push(@declared_overrides, $current);
 
-        if (exists $override_data{$tag_name}{$context}) {
-
-            my @same_context
-              = ($override_data{$tag_name}{$context}{line}, $current{line});
-
-            my $lines = join($SPACE, sort @same_context);
-
-            $self->pointed_hint('duplicate-override-context', 'lintian',
-                $pointer,$tag_name, "(lines $lines)");
-
-            next;
-        }
-
-        $override_data{$tag_name}{$context} = \%current;
-
-        %previous = %current;
+        $previous = $current;
 
     } continue {
         $position++;
     }
 
-    return \%override_data;
+    my $override_item = $self->override_file;
+
+    my %pattern_tracker;
+    push(@{$pattern_tracker{$_->tag_name}{$_->pattern}}, $_)
+      for @declared_overrides;
+
+    for my $tag_name (keys %pattern_tracker) {
+        for my $pattern (keys %{$pattern_tracker{$tag_name}}) {
+
+            my @overrides = @{$pattern_tracker{$tag_name}{$pattern}};
+
+            my @same_context = map { $_->position } @overrides;
+            my $line_numbers = join($SPACE, (sort @same_context));
+
+            $self->pointed_hint(
+                'duplicate-override-context', 'lintian',
+                $override_item->pointer,$tag_name,
+                "(lines $line_numbers)"
+            )if @overrides > 1;
+        }
+    }
+
+    return \@declared_overrides;
 }
 
 1;

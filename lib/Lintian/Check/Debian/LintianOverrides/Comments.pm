@@ -36,41 +36,37 @@ with 'Lintian::Check';
 sub always {
     my ($self) = @_;
 
-    my $declared_overrides = $self->processable->overrides;
-    return
-      unless defined $declared_overrides;
+    my @declared_overrides = @{$self->processable->overrides};
 
-    for my $tag_name (keys %{$declared_overrides}) {
+    for my $override (@declared_overrides) {
 
-        for my $context (keys %{$declared_overrides->{$tag_name}}) {
+        my $tag_name = $override->tag_name;
+        my @comments = @{$override->comments};
 
-            my $entry = $declared_overrides->{$tag_name}{$context};
+        my $position = $override->position - scalar @{$override->comments};
+        for my $comment (@comments) {
 
-            my @comments = @{$entry->{comments}};
-            my $override_position = $entry->{line};
+            my $pointer= $self->processable->override_file->pointer($position);
 
-            my $position = $override_position - scalar @comments;
-            for my $comment (@comments) {
+            check_spelling(
+                $self->profile,
+                $comment,
+                $self->group->spelling_exceptions,
+                $self->emitter(
+                    'spelling-in-override-comment',
+                    $pointer, $tag_name
+                ));
 
-                check_spelling(
-                    $self->profile,
-                    $comment,
-                    $self->group->spelling_exceptions,
-                    $self->emitter(
-                        'spelling-in-override-comment',
-                        "$tag_name (line $position)"
-                    ));
+            check_spelling_picky(
+                $self->profile,
+                $comment,
+                $self->emitter(
+                    'capitalization-in-override-comment',
+                    $pointer,$tag_name
+                ));
 
-                check_spelling_picky(
-                    $self->profile,
-                    $comment,
-                    $self->emitter(
-                        'capitalization-in-override-comment',
-                        "$tag_name (line $position)"
-                    ));
-            } continue {
-                $position++;
-            }
+        } continue {
+            $position++;
         }
     }
 
@@ -78,10 +74,10 @@ sub always {
 }
 
 sub emitter {
-    my ($self, @orig_args) = @_;
+    my ($self, @prefixed) = @_;
 
     return sub {
-        return $self->hint(@orig_args, @_);
+        return $self->pointed_hint(@prefixed, @_);
     };
 }
 

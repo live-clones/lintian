@@ -75,7 +75,7 @@ has overrides => (
     default => sub {
         my ($self) = @_;
 
-        return {}
+        return []
           unless defined $self->override_file;
 
         my $contents = $self->override_file->decoded_utf8;

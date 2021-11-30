@@ -80,7 +80,7 @@ has overrides => (
     default => sub {
         my ($self) = @_;
 
-        return {}
+        return []
           unless defined $self->override_file;
 
         my $contents = $EMPTY;
