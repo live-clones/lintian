@@ -1,4 +1,4 @@
-# Copyright © 2019 Felix Lechner
+# Copyright © 2019-2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -27,13 +27,13 @@ use Const::Fast;
 use List::SomeUtils qw(all);
 use Unicode::UTF8 qw(encode_utf8);
 
-use Moo;
-use namespace::clean;
-
 const my $SPACE => q{ };
 const my $COLON => q{:};
 const my $LEFT_PARENTHESIS => q{(};
 const my $RIGHT_PARENTHESIS => q{)};
+
+use Moo;
+use namespace::clean;
 
 =head1 NAME
 
@@ -53,13 +53,12 @@ A class for printing hints using the 'universal' format.
 
 =item issue_hints
 
-Print all hints passed in array. A separate arguments with processables
-is necessary to report in case no hints were found.
+Passing all groups with all processables in case no hints were found.
 
 =cut
 
 sub issue_hints {
-    my ($self, $groups) = @_;
+    my ($self, $profile, $groups) = @_;
 
     for my $group (@{$groups // []}) {
 
@@ -67,8 +66,6 @@ sub issue_hints {
         for my $processable ($group->get_processables) {
 
             for my $hint (@{$processable->hints}) {
-
-                my $tag = $hint->tag;
 
                 my $line
                   = $processable->name
@@ -78,7 +75,7 @@ sub issue_hints {
                   . $RIGHT_PARENTHESIS
                   . $COLON
                   . $SPACE
-                  . $tag->name;
+                  . $hint->tag_name;
 
                 $line .= $SPACE . $hint->context
                   if length $hint->context;

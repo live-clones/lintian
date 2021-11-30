@@ -1,4 +1,4 @@
-# Copyright © 2020 Felix Lechner
+# Copyright © 2020-2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -30,11 +30,6 @@ use Time::Duration;
 use Time::Moment;
 use Unicode::UTF8 qw(encode_utf8);
 
-use Moo;
-use namespace::clean;
-
-with 'Lintian::Output::Grammar';
-
 const my $EMPTY => q{};
 const my $SPACE => q{ };
 const my $NEWLINE => qq{\n};
@@ -49,6 +44,11 @@ const my %CODE_PRIORITY => (
     'C' => 80,
     'O' => 90,
 );
+
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Output::Grammar';
 
 =head1 NAME
 
@@ -74,7 +74,7 @@ is necessary to report in case no hints were found.
 =cut
 
 sub issue_hints {
-    my ($self, $groups) = @_;
+    my ($self, $profile, $groups) = @_;
 
     $groups //= [];
 
@@ -114,7 +114,7 @@ sub issue_hints {
             my %file_output;
             $file_output{filename} = path($processable->path)->basename;
             $file_output{hints}
-              = $self->hintlist($lintian_version, $processable->hints);
+              = $self->hintlist($profile, $processable->hints);
             push(@allfiles_output, \%file_output);
         }
     }
@@ -138,46 +138,78 @@ sub issue_hints {
 =cut
 
 sub hintlist {
-    my ($self, $lintian_version, $arrayref) = @_;
+    my ($self, $profile, $arrayref) = @_;
 
-    my @hints;
+    my %sorter;
+    for my $hint (@{$arrayref // []}) {
 
-    my @sorted = sort {
-               defined $a->override <=> defined $b->override
-          ||   $CODE_PRIORITY{$a->tag->code}<=> $CODE_PRIORITY{$b->tag->code}
-          || $a->tag->name cmp $b->tag->name
-          || $a->context cmp $b->context
-    } @{$arrayref // []};
+        my $tag = $profile->get_tag($hint->tag_name);
+        my $override_status = defined $hint->override;
+        my $code_priority = $CODE_PRIORITY{$tag->code};
 
-    for my $input (@sorted) {
+        push(
+            @{
+                $sorter{$override_status}{$code_priority}{$tag->name}
+                  {$hint->context}
+            },
+            $hint
+        );
+    }
 
-        my %hint;
-        push(@hints, \%hint);
+    my @sorted;
+    for my $override_status (sort keys %sorter) {
+        my %by_code_priority = %{$sorter{$override_status}};
 
-        $hint{tag_name} = $input->tag->name;
+        for my $code_priority (sort { $a <=> $b } keys %by_code_priority) {
+            my %by_tag_name = %{$by_code_priority{$code_priority}};
 
-        $hint{url} = 'https://lintian.debian.org/tags/' . $input->tag->name;
+            for my $tag_name (sort keys %by_tag_name) {
+                my %by_context = %{$by_tag_name{$tag_name}};
 
-        $hint{context} = $input->context
-          if length $input->context;
+                for my $context (sort keys %by_context) {
 
-        $hint{visibility} = $input->tag->visibility;
-        $hint{code} = uc substr($hint{visibility}, 0, 1);
+                    my $hints
+                      = $sorter{$override_status}{$code_priority}
+                      {$tag_name}{$context};
 
-        $hint{experimental} = 'yes'
-          if $input->tag->experimental;
+                    push(@sorted, $_)for @{$hints};
+                }
+            }
+        }
+    }
 
-        if ($input->override) {
+    my @html_hints;
+    for my $hint (@sorted) {
 
-            $hint{code} = 'O';
+        my $tag = $profile->get_tag($hint->tag_name);
 
-            my @comments = @{ $input->override->{comments} // [] };
-            $hint{comments} = \@comments
+        my %html_hint;
+        push(@html_hints, \%html_hint);
+
+        $html_hint{tag_name} = $hint->tag_name;
+
+        $html_hint{url} = 'https://lintian.debian.org/tags/' . $hint->tag_name;
+
+        $html_hint{context} = $hint->context
+          if length $hint->context;
+
+        $html_hint{visibility} = $tag->visibility;
+        $html_hint{code} = uc substr($html_hint{visibility}, 0, 1);
+
+        $html_hint{experimental} = 'yes'
+          if $tag->experimental;
+
+        if ($hint->override) {
+
+            $html_hint{code} = 'O';
+
+            my @comments = @{ $hint->override->comments // [] };
+            $html_hint{comments} = \@comments
               if @comments;
         }
     }
 
-    return \@hints;
+    return \@html_hints;
 }
 
 =item describe_tags

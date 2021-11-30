@@ -1,4 +1,4 @@
-# Copyright © 2020 Felix Lechner
+# Copyright © 2020-2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -26,9 +26,6 @@ use Const::Fast;
 use Time::Piece;
 use JSON::MaybeXS;
 
-use Moo;
-use namespace::clean;
-
 const my $EMPTY => q{};
 
 const my %CODE_PRIORITY => (
@@ -41,6 +38,9 @@ const my %CODE_PRIORITY => (
     'O' => 90,
     'M' => 100,
 );
+
+use Moo;
+use namespace::clean;
 
 =head1 NAME
 
@@ -66,7 +66,7 @@ is necessary to report in case no hints were found.
 =cut
 
 sub issue_hints {
-    my ($self, $groups) = @_;
+    my ($self, $profile, $groups) = @_;
 
     $groups //= [];
 
@@ -94,7 +94,8 @@ sub issue_hints {
 
             my %file_output;
             $file_output{path} = $processable->path;
-            $file_output{hints} = $self->hintlist($processable->hints);
+            $file_output{hints}
+              = $self->hintlist($profile, $processable->hints);
 
             push(@allfiles_output, \%file_output);
         }
@@ -119,30 +120,62 @@ sub issue_hints {
 =cut
 
 sub hintlist {
-    my ($self, $arrayref) = @_;
+    my ($self, $profile, $arrayref) = @_;
+
+    my %sorter;
+    for my $hint (@{$arrayref // []}) {
+
+        my $tag = $profile->get_tag($hint->tag_name);
+        my $override_status = defined $hint->override;
+        my $code_priority = $CODE_PRIORITY{$tag->code};
+
+        push(
+            @{
+                $sorter{$override_status}{$code_priority}{$tag->name}
+                  {$hint->context}
+            },
+            $hint
+        );
+    }
+
+    my @sorted;
+    for my $override_status (sort keys %sorter) {
+        my %by_code_priority = %{$sorter{$override_status}};
+
+        for my $code_priority (sort { $a <=> $b } keys %by_code_priority) {
+            my %by_tag_name = %{$by_code_priority{$code_priority}};
+
+            for my $tag_name (sort keys %by_tag_name) {
+                my %by_context = %{$by_tag_name{$tag_name}};
+
+                for my $context (sort keys %by_context) {
+
+                    my $hints
+                      = $sorter{$override_status}{$code_priority}
+                      {$tag_name}{$context};
+
+                    push(@sorted, $_)for @{$hints};
+                }
+            }
+        }
+    }
 
     my @hint_dictionaries;
-
-    my @sorted = sort {
-               defined $a->override <=> defined $b->override
-          ||   $CODE_PRIORITY{$a->tag->code}<=> $CODE_PRIORITY{$b->tag->code}
-          || $a->tag->name cmp $b->tag->name
-          || $a->context cmp $b->context
-    } @{$arrayref // []};
-
     for my $hint (@sorted) {
+
+        my $tag = $profile->get_tag($hint->tag_name);
 
         my %hint_dictionary;
         push(@hint_dictionaries, \%hint_dictionary);
 
-        $hint_dictionary{tag} = $hint->tag->name;
+        $hint_dictionary{tag} = $tag->name;
 
         $hint_dictionary{context} = $hint->context
           if length $hint->context;
 
-        $hint_dictionary{visibility} = $hint->tag->visibility;
+        $hint_dictionary{visibility} = $tag->visibility;
         $hint_dictionary{experimental} = 'yes'
-          if $hint->tag->experimental;
+          if $tag->experimental;
 
         $hint_dictionary{screen} = $hint->screen->name
           if defined $hint->screen;
@@ -151,7 +184,7 @@ sub hintlist {
 
             $hint_dictionary{override} = 'yes';
 
-            my @comments = @{ $hint->override->{comments} // [] };
+            my @comments = @{ $hint->override->comments // [] };
             $hint_dictionary{override_comments} = \@comments
               if @comments;
         }

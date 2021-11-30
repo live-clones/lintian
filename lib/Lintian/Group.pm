@@ -1,5 +1,5 @@
 # Copyright © 2011 Niels Thykier <niels@thykier.net>
-# Copyright © 2019 Felix Lechner
+# Copyright © 2019-2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -374,17 +374,43 @@ sub process {
 
         for my $hint (@from_checks) {
 
+            my $tag_name = $hint->tag_name;
+
+            croak encode_utf8('No tag name')
+              unless length $tag_name;
+
             my $issuer = $hint->issued_by;
-            my $tag = $hint->tag;
 
-            my $tag_name = $tag->name;
+            # try local name space
+            my $tag = $self->profile->get_tag("$issuer/$tag_name");
+
+            warn encode_utf8(
+"Using tag $tag_name as name spaced while not so declared (in check $issuer)."
+            )if defined $tag && !$tag->name_spaced;
+
+            # try global name space
+            $tag ||= $self->profile->get_tag($tag_name);
+
+            unless (defined $tag) {
+                warn encode_utf8(
+                    "Tried to issue unknown tag $tag_name in check $issuer.");
+                next;
+            }
+
             my $owner = $tag->check;
-
             if ($issuer ne $owner) {
                 warn encode_utf8(
                     "Check $issuer has no tag $tag_name (but $owner does).");
                 next;
             }
+
+            # pull name from tag; could be name-spaced
+            $hint->tag_name($tag->name);
+            $tag_name = $hint->tag_name;
+
+            # skip disabled tags
+            next
+              unless $self->profile->tag_is_enabled($tag_name);
 
             my $context = $hint->context;
 
@@ -454,7 +480,7 @@ sub process {
 
         $processable->hints(\@hints);
 
-        my %otherwise_visible = map { $_->tag->name => 1 } @hints;
+        my %otherwise_visible = map { $_->tag_name => 1 } @hints;
 
         # look for unused overrides
         for my $tag_name (keys %enabled_overrides) {
@@ -579,12 +605,6 @@ sub add_processable {
       unless $self->pooldir;
 
     $processable->pooldir($self->pooldir);
-
-    # needed to read tag specifications and error reporting
-    croak encode_utf8('Please set profile first.')
-      unless $self->profile;
-
-    $processable->profile($self->profile);
 
     croak encode_utf8('Not a supported type (' . $processable->type . ')')
       unless exists $SUPPORTED_TYPES{$processable->type};

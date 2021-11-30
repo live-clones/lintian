@@ -24,13 +24,10 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Carp;
 use Const::Fast;
 use Unicode::UTF8 qw(encode_utf8);
 
 const my $EMPTY => q{};
-const my $SLASH => q{/};
-const my $DOT => q{.};
 const my $UNDERSCORE => q{_};
 
 use Moo::Role;
@@ -66,7 +63,6 @@ A class for operating Lintian checks
 =cut
 
 has name => (is => 'rw', default => $EMPTY);
-
 has processable => (is => 'rw', default => sub { {} });
 has group => (is => 'rw', default => sub { {} });
 has profile => (is => 'rw');
@@ -134,37 +130,6 @@ sub run {
     return @hints;
 }
 
-=item find_tag
-
-=cut
-
-sub find_tag {
-    my ($self, $tag_name) = @_;
-
-    croak encode_utf8('No tag name')
-      unless length $tag_name;
-
-    # try local name space
-    my $tag = $self->profile->get_tag($self->name . $SLASH . $tag_name);
-
-    warn encode_utf8("Using tag $tag_name as name spaced in "
-          . $self->name
-          . ' while not so declared.')
-      if defined $tag && !$tag->name_spaced;
-
-    # try global name space
-    $tag ||= $self->profile->get_tag($tag_name);
-
-    unless (defined $tag) {
-
-        warn encode_utf8(
-            "Unknown tag $tag_name in check " . $self->name . $DOT);
-        return undef;
-    }
-
-    return $tag;
-}
-
 =item pointed_hint
 
 =cut
@@ -172,12 +137,7 @@ sub find_tag {
 sub pointed_hint {
     my ($self, $tag_name, $pointer, @notes) = @_;
 
-    my $tag = $self->find_tag($tag_name);
-    return undef
-      unless defined $tag;
-
-    # pull name from tag; could be name-spaced
-    return $self->processable->pointed_hint($tag->name, $self->name, $pointer,
+    return $self->processable->pointed_hint($tag_name, $self->name, $pointer,
         @notes);
 }
 
@@ -188,12 +148,7 @@ sub pointed_hint {
 sub hint {
     my ($self, $tag_name, @notes) = @_;
 
-    my $tag = $self->find_tag($tag_name);
-    return undef
-      unless defined $tag;
-
-    # pull name from tag; could be name-spaced
-    return $self->processable->hint($tag->name, $self->name, @notes);
+    return $self->processable->hint($tag_name, $self->name, @notes);
 }
 
 =back

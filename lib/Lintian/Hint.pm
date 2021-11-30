@@ -49,7 +49,7 @@ Common facilities for Lintian tags found and to be issued
 
 =over 4
 
-=item tag
+=item tag_name
 
 =item note
 
@@ -61,7 +61,7 @@ Common facilities for Lintian tags found and to be issued
 
 =cut
 
-has tag => (is => 'rw');
+has tag_name => (is => 'rw', default => $EMPTY);
 has note => (is => 'rw', default => $EMPTY);
 has issued_by => (is => 'rw', default => $EMPTY);
 

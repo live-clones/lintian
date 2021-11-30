@@ -30,11 +30,6 @@ use Term::ANSIColor ();
 use Text::Wrap;
 use Unicode::UTF8 qw(encode_utf8);
 
-use Moo;
-use namespace::clean;
-
-with 'Lintian::Output::Grammar';
-
 # for tty hyperlinks
 const my $OSC_HYPERLINK => qq{\033]8;;};
 const my $OSC_DONE => qq{\033\\};
@@ -88,6 +83,11 @@ const my %TYPE_PRIORITY => (
     'buildinfo' => 70,
 );
 
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Output::Grammar';
+
 =head1 NAME
 
 Lintian::Output::EWI - standard hint output
@@ -115,7 +115,7 @@ has tag_count_by_processable => (is => 'rw', default => sub { {} });
 =cut
 
 sub issue_hints {
-    my ($self, $groups, $option) = @_;
+    my ($self, $profile, $groups, $option) = @_;
 
     my %sorter;
     for my $group (@{$groups // []}) {
@@ -127,7 +127,7 @@ sub issue_hints {
 
             for my $hint (@{$processable->hints}) {
 
-                my $tag = $hint->tag;
+                my $tag = $profile->get_tag($hint->tag_name);
                 my $override_status = defined $hint->override;
                 my $code_priority = $CODE_PRIORITY{$tag->code};
 
@@ -181,7 +181,8 @@ sub issue_hints {
                                 my $hint = $each->{hint};
                                 my $processable = $each->{processable};
 
-                                $self->print_hint($hint, $processable,$option);
+                                $self->print_hint($profile, $hint,
+                                    $processable,$option);
                             }
                         }
                     }
@@ -198,10 +199,10 @@ sub issue_hints {
 =cut
 
 sub print_hint {
-    my ($self, $hint, $processable, $option) = @_;
+    my ($self, $profile, $hint, $processable, $option) = @_;
 
-    my $tag = $hint->tag;
-    my $tag_name = $tag->name;
+    my $tag_name = $hint->tag_name;
+    my $tag = $profile->get_tag($tag_name);
 
     my @want_references = @{$option->{'display-source'} // []};
     my @have_references = @{$tag->see_also};
@@ -270,7 +271,7 @@ sub print_hint {
 
     if ($hint->override) {
         say encode_utf8('N: ' . $self->_quote_print($_))
-          for @{$hint->override->{comments}};
+          for @{$hint->override->comments};
     }
 
     say encode_utf8('N: masked by screen ' . $hint->screen->name)

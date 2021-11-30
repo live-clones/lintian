@@ -1,5 +1,5 @@
 # Copyright © 2011 Niels Thykier <niels@thykier.net>
-# Copyright © 2020 Felix Lechner
+# Copyright © 2020-2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -35,9 +35,6 @@ use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Group;
 
-use Moo;
-use namespace::clean;
-
 const my $SPACE => q{ };
 const my $COMMA => q{,};
 const my $SEMICOLON => q{;};
@@ -47,6 +44,9 @@ const my $PLURAL_S => q{s};
 
 const my $ANY_CHILD => -1;
 const my $WORLD_WRITABLE_FOLDER => oct(777);
+
+use Moo;
+use namespace::clean;
 
 =head1 NAME
 
@@ -171,53 +171,46 @@ sub process{
 
         for my $processable ($group->get_processables){
 
-            my @hints = @{$processable->hints};
+            my @keep;
+            for my $hint (@{$processable->hints}) {
 
-            # remove circular references
-            $processable->hints([]);
+                my $tag = $PROFILE->get_tag($hint->tag_name);
 
-            my @reported = grep { !$_->override } @hints;
-            my @reported_trusted = grep { !$_->tag->experimental } @reported;
-            my @reported_experimental
-              = grep { $_->tag->experimental } @reported;
+                # discard experimental tags
+                next
+                  if $tag->experimental
+                  && !$option->{'display-experimental'};
 
-            my @override = grep { $_->override } @hints;
-            my @override_trusted = grep { !$_->tag->experimental } @override;
-            my @override_experimental
-              = grep { $_->tag->experimental } @override;
+                # discard overridden tags
+                next
+                  if defined $hint->override
+                  && !$option->{'show-overrides'};
 
-            $unused_overrides+= scalar grep {
-                     $_->tag->name eq 'mismatched-override'
-                  || $_->tag->name eq 'unused-override'
-            } @hints;
+                # discard outside the selected display level
+                next
+                  unless $PROFILE->display_level_for_tag($hint->tag_name);
 
-            $reported_count{$_->tag->visibility}++ for @reported_trusted;
-            $reported_count{experimental} += scalar @reported_experimental;
-            $reported_count{override} += scalar @override;
+                if (!defined $hint->override
+                    || $option->{'show-overrides'}) {
 
-            unless ($option->{'no-override'} || $option->{'show-overrides'}) {
+                    ++$reported_count{$tag->visibility}
+                      if !$tag->experimental;
 
-                $override_count{$_->tag->visibility}++ for @override_trusted;
-                $override_count{experimental} += scalar @override_experimental;
+                    ++$reported_count{experimental}
+                      if $tag->experimental;
+                }
+
+                ++$reported_count{override}
+                  if defined $hint->override;
+
+                ++$unused_overrides
+                  if $hint->tag_name eq 'unused-override'
+                  || $hint->tag_name eq 'mismatched-override';
+
+                push(@keep, $hint);
             }
 
-            # discard disabled tags
-            @hints= grep { $PROFILE->tag_is_enabled($_->tag->name) } @hints;
-
-            # discard experimental tags
-            @hints = grep { !$_->tag->experimental } @hints
-              unless $option->{'display-experimental'};
-
-            # discard overridden tags
-            @hints = grep { !defined $_->override } @hints
-              unless $option->{'show-overrides'};
-
-            # discard outside the selected display level
-            @hints
-              = grep { $PROFILE->display_level_for_tag($_->tag->name) }@hints;
-
-            # put hints back into their respective processables
-            $processable->hints(\@hints);
+            $processable->hints(\@keep);
         }
 
         ${$exit_code_ref} = 2
@@ -284,7 +277,7 @@ sub process{
     }
 
     # pass everything, in case some groups or processables have no hints
-    $OUTPUT->issue_hints([values %{$self->groups}], $option);
+    $OUTPUT->issue_hints($PROFILE, [values %{$self->groups}], $option);
 
     my $errors = $override_count{error} // 0;
     my $warnings = $override_count{warning} // 0;

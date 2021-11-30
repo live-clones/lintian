@@ -23,7 +23,6 @@ use warnings;
 use utf8;
 
 use Const::Fast;
-use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Hint::Pointed;
 use Lintian::Hint::Standard;
@@ -53,12 +52,10 @@ A class for collecting Lintian tags as they are found
 
 =over 4
 
-=item profile
 =item hints
 
 =cut
 
-has profile => (is => 'rw');
 has hints => (is => 'rw', default => sub { [] });
 
 =item pointed_hint
@@ -68,20 +65,9 @@ has hints => (is => 'rw', default => sub { [] });
 sub pointed_hint {
     my ($self, $tag_name, $check_name, $pointer, @notes) = @_;
 
-    my $tag = $self->profile->get_tag($tag_name);
-    unless (defined $tag) {
-
-        warn encode_utf8("tried to issue unknown tag: $tag_name\n");
-        return;
-    }
-
-    # skip disabled tags
-    return
-      unless $self->profile->tag_is_enabled($tag_name);
-
     my $hint = Lintian::Hint::Pointed->new;
 
-    $hint->tag($tag);
+    $hint->tag_name($tag_name);
     $hint->issued_by($check_name);
     $hint->note(stringify(@notes));
     $hint->pointer($pointer);
@@ -98,20 +84,9 @@ sub pointed_hint {
 sub hint {
     my ($self, $tag_name, $check_name, @notes) = @_;
 
-    my $tag = $self->profile->get_tag($tag_name);
-    unless (defined $tag) {
-
-        warn encode_utf8("tried to issue unknown tag: $tag_name\n");
-        return;
-    }
-
-    # skip disabled tags
-    return
-      unless $self->profile->tag_is_enabled($tag_name);
-
     my $hint = Lintian::Hint::Standard->new;
 
-    $hint->tag($tag);
+    $hint->tag_name($tag_name);
     $hint->issued_by($check_name);
     $hint->note(stringify(@notes));
 
