@@ -71,6 +71,8 @@ Enable-Tags-From-Check:
  debian/line-separators
  debian/lintian-overrides
  debian/lintian-overrides/comments
+ debian/lintian-overrides/duplicate
+ debian/lintian-overrides/restricted
  debian/maintscript
  debian/manual-pages
  debian/not-installed

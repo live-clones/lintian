@@ -1,3 +1,0 @@
-Testname: duplicate-context-cute-field
-Check: lintian
-Default-Lintian-Options: --pedantic --display-info --display-experimental --display-level +classification --show-overrides --check-part fields/style,lintian

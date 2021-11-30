@@ -22,7 +22,6 @@ use warnings;
 use utf8;
 
 use Const::Fast;
-use List::SomeUtils qw(none true);
 
 use Lintian::Override;
 
@@ -107,8 +106,11 @@ sub parse_overrides {
         }
 
         # remove architecture list
-        if ($remaining =~ s/^\[([^\]]*)\](?=\s|:)//) {
-            @architectures = split($SPACE, $1);
+        if ($remaining =~ s{^ \[ ([^\]]*) \] (?=\s|:)}{}x) {
+
+            my $list = $1;
+
+            @architectures = split($SPACE, $list);
 
             # both spaces or colon were unmatched lookhead
             $remaining =~ s/^\s+//;
@@ -134,46 +136,6 @@ sub parse_overrides {
         }
 
         my $hint_like = $remaining;
-
-        if (@architectures && $self->architecture eq 'all') {
-            $self->pointed_hint('malformed-override', 'lintian', $pointer,
-                'Architecture list for arch:all package');
-            next;
-        }
-
-        my @invalid
-          = grep { !$self->profile->architectures->valid_restriction($_) }
-          @architectures;
-        $self->pointed_hint('malformed-override', 'lintian', $pointer,
-            "Unknown architecture wildcard $_")
-          for @invalid;
-
-        next
-          if @invalid;
-
-        # count negations
-        my $negations = true { /^!/ } @architectures;
-
-        # confirm it is either all or none
-        unless ($negations == @architectures || $negations == 0) {
-            $self->pointed_hint('malformed-override', 'lintian', $pointer,
-                'Inconsistent architecture negation');
-            next;
-        }
-
-        # strip negations if present
-        s/^!// for @architectures;
-
-        # proceed when none specified
-        next
-          if @architectures
-          && (
-            $negations xor none {
-                $self->profile->architectures->restriction_matches($_,
-                    $self->architecture)
-            }
-            @architectures
-          );
 
         my ($tag_name, $pattern) = split($SPACE, $hint_like, 2);
 
@@ -235,28 +197,6 @@ sub parse_overrides {
 
     } continue {
         $position++;
-    }
-
-    my $override_item = $self->override_file;
-
-    my %pattern_tracker;
-    push(@{$pattern_tracker{$_->tag_name}{$_->pattern}}, $_)
-      for @declared_overrides;
-
-    for my $tag_name (keys %pattern_tracker) {
-        for my $pattern (keys %{$pattern_tracker{$tag_name}}) {
-
-            my @overrides = @{$pattern_tracker{$tag_name}{$pattern}};
-
-            my @same_context = map { $_->position } @overrides;
-            my $line_numbers = join($SPACE, (sort @same_context));
-
-            $self->pointed_hint(
-                'duplicate-override-context', 'lintian',
-                $override_item->pointer,$tag_name,
-                "(lines $line_numbers)"
-            )if @overrides > 1;
-        }
     }
 
     return \@declared_overrides;

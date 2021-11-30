@@ -29,7 +29,7 @@ use Cwd;
 use Devel::Size qw(total_size);
 use File::Spec;
 use List::Compare;
-use List::SomeUtils qw(any none uniq firstval);
+use List::SomeUtils qw(any none uniq firstval true);
 use POSIX qw(ENOENT);
 use Syntax::Keyword::Try;
 use Time::HiRes qw(gettimeofday tv_interval);
@@ -190,7 +190,7 @@ sub process {
           = sub { warn encode_utf8("Warning in processable $path: $_[0]") };
 
         my @hints;
-        my %declared_overrides;
+        my %enabled_overrides;
 
         say {*STDERR}
           encode_utf8(
@@ -202,25 +202,49 @@ sub process {
             say {*STDERR} encode_utf8('Loading overrides file (if any) ...')
               if $option->{debug};
 
-            $declared_overrides{$_->tag_name}{$_->pattern} = $_
-              for @{$processable->overrides};
+            # enable overrides for this architecture
+            for my $override (@{$processable->overrides}) {
+
+                my @architectures = @{$override->architectures};
+
+                # count negations
+                my $negations = true { /^!/ } @architectures;
+
+                # strip negations if present
+                s/^!// for @architectures;
+
+                # proceed when none specified
+                next
+                  if @architectures
+                  && (
+                    $negations xor none {
+                        $self->profile->architectures->restriction_matches($_,
+                            $processable->architecture)
+                    }
+                    @architectures
+                  );
+
+                $enabled_overrides{$override->tag_name}{$override->pattern}
+                  = $override;
+            }
 
             my %alias = %{$self->profile->known_aliases};
             my @renamed_overrides
-              = grep { length $alias{$_} } keys %declared_overrides;
+              = grep { length $alias{$_} } keys %enabled_overrides;
 
             # treat renamed tags in overrides
+            # ideally, these would check all architectures
             for my $dated (@renamed_overrides) {
 
                 # get new name
                 my $modern = $alias{$dated};
 
                 # make space for renamed override
-                $declared_overrides{$modern} //= {};
+                $enabled_overrides{$modern} //= {};
 
-                for my $pattern (keys %{$declared_overrides{$dated}}) {
+                for my $pattern (keys %{$enabled_overrides{$dated}}) {
 
-                    my $override = $declared_overrides{$dated}{$pattern};
+                    my $override = $enabled_overrides{$dated}{$pattern};
                     my $position = $override->position;
 
                     my $override_item = $processable->override_file;
@@ -230,10 +254,10 @@ sub process {
                     $processable->pointed_hint('renamed-tag','lintian',
                         $pointer, "$dated => $modern");
 
-                    if (exists $declared_overrides{$modern}{$pattern}) {
+                    if (exists $enabled_overrides{$modern}{$pattern}) {
 
                         my $modern_override
-                          = $declared_overrides{$modern}{$pattern};
+                          = $enabled_overrides{$modern}{$pattern};
                         my $modern_position = $modern_override->position;
 
                         my @positions = ($position, $modern_position);
@@ -249,33 +273,32 @@ sub process {
                     }
 
                     # transfer context to current tag name
-                    $declared_overrides{$modern}{$pattern}
-                      = $declared_overrides{$dated}{$pattern};
+                    $enabled_overrides{$modern}{$pattern}
+                      = $enabled_overrides{$dated}{$pattern};
 
                     # now it exists
-                    my $modern_override
-                      = $declared_overrides{$modern}{$pattern};
+                    my $modern_override= $enabled_overrides{$modern}{$pattern};
 
                     # remember old tag names
                     push(@{$modern_override->renamed_from}, $override);
 
                     # remove the old override context
-                    delete $declared_overrides{$dated}{$pattern};
+                    delete $enabled_overrides{$dated}{$pattern};
                 }
 
                 # remove the alias override if there are no contexts left
-                delete $declared_overrides{$dated}
-                  unless %{$declared_overrides{$dated}};
+                delete $enabled_overrides{$dated}
+                  unless %{$enabled_overrides{$dated}};
             }
 
             # complain about and filter out unknown tags in overrides
             my @unknown_overrides = grep { !$self->profile->get_tag($_) }
-              keys %declared_overrides;
+              keys %enabled_overrides;
             for my $tag_name (@unknown_overrides) {
 
-                for my $pattern (keys %{$declared_overrides{$tag_name}}) {
+                for my $pattern (keys %{$enabled_overrides{$tag_name}}) {
 
-                    my $override = $declared_overrides{$tag_name}{$pattern};
+                    my $override = $enabled_overrides{$tag_name}{$pattern};
 
                     my $override_item = $processable->override_file;
                     my $pointer = $override_item->pointer($override->position);
@@ -284,14 +307,14 @@ sub process {
                         $pointer, "Unknown tag $tag_name");
                 }
 
-                delete $declared_overrides{$tag_name};
+                delete $enabled_overrides{$tag_name};
             }
 
             # treat ignored overrides here
-            for my $tag_name (keys %declared_overrides) {
+            for my $tag_name (keys %enabled_overrides) {
 
                 unless ($self->profile->is_overridable($tag_name)) {
-                    delete $declared_overrides{$tag_name};
+                    delete $enabled_overrides{$tag_name};
                     $ignored_overrides->{$tag_name}++;
                 }
             }
@@ -392,7 +415,7 @@ sub process {
                 }
             }
 
-            my $declared = $declared_overrides{$tag->name};
+            my $declared = $enabled_overrides{$tag->name};
             if ($declared && !$tag->show_always) {
 
                 # empty context in specification matches all
@@ -434,12 +457,12 @@ sub process {
         my %otherwise_visible = map { $_->tag->name => 1 } @hints;
 
         # look for unused overrides
-        for my $tag_name (keys %declared_overrides) {
+        for my $tag_name (keys %enabled_overrides) {
 
             next
               unless $self->profile->tag_is_enabled($tag_name);
 
-            my @declared_patterns = keys %{$declared_overrides{$tag_name}};
+            my @declared_patterns = keys %{$enabled_overrides{$tag_name}};
             my @used_patterns = keys %{$used_overrides{$tag_name} // {}};
 
             my $pattern_lc
@@ -452,7 +475,7 @@ sub process {
 
             for my $pattern (@unused_patterns) {
 
-                my $override = $declared_overrides{$tag_name}{$pattern};
+                my $override = $enabled_overrides{$tag_name}{$pattern};
                 my @original_overrides = @{$override->renamed_from};
 
                 # for renamed tags, use the original name from overrides
