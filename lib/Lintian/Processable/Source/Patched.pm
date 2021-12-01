@@ -33,15 +33,15 @@ use Unicode::UTF8 qw(encode_utf8 decode_utf8);
 use Lintian::Index;
 use Lintian::Index::Item;
 
-use Moo::Role;
-use namespace::clean;
-
 const my $COLON => q{:};
 const my $SLASH => q{/};
 const my $NEWLINE => qq{\n};
 
 const my $NO_UMASK => 0000;
 const my $WAIT_STATUS_SHIFT => 8;
+
+use Moo::Role;
+use namespace::clean;
 
 =head1 NAME
 
@@ -72,7 +72,8 @@ has patched => (
         my ($self) = @_;
 
         my $index = Lintian::Index->new;
-        $index->identifier($self->path . ' (patched)');
+        my $archive = $self->basename;
+        $index->identifier("$archive (patched)");
         $index->basedir($self->basedir . $SLASH . 'unpacked');
 
         # source packages can be unpacked anywhere; no anchored roots

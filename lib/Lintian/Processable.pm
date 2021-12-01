@@ -25,6 +25,7 @@ use utf8;
 use warnings::register;
 
 use Const::Fast;
+use File::Basename;
 use Path::Tiny;
 
 use Moo::Role;
@@ -77,6 +78,10 @@ Returns the version of the package.
 Returns the path to the packaged version of actual package.  This path
 is used in case the data needs to be extracted from the package.
 
+=item basename
+
+Returns the basename of the package path.
+
 =item $proc->architecture
 
 Returns the architecture(s) of the package. May return multiple values
@@ -110,7 +115,16 @@ Returns the base directory of this package inside the lab.
 
 =cut
 
-has path => (is => 'rw', default => $EMPTY);
+has path => (
+    is => 'rw',
+    default => $EMPTY,
+    trigger => sub {
+        my ($self, $path) = @_;
+
+        my $basename = basename($path);
+        $self->basename($basename);
+    });
+has basename => (is => 'rw', default => $EMPTY);
 has type => (is => 'rw', default => $EMPTY);
 
 has architecture => (

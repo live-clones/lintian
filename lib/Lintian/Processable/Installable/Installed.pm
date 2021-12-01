@@ -29,10 +29,10 @@ use List::SomeUtils qw(uniq);
 
 use Lintian::Index;
 
+const my $SLASH => q{/};
+
 use Moo::Role;
 use namespace::clean;
-
-const my $SLASH => q{/};
 
 =head1 NAME
 
@@ -63,7 +63,8 @@ has installed => (
         my ($self) = @_;
 
         my $index = Lintian::Index->new;
-        $index->identifier($self->path . ' (installed)');
+        my $archive = $self->basename;
+        $index->identifier("$archive (installed)");
         $index->basedir($self->basedir . $SLASH . 'unpacked');
 
         # binary packages are anchored to the system root

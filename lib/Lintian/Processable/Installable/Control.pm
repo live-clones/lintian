@@ -26,10 +26,10 @@ use List::SomeUtils qw(uniq);
 
 use Lintian::Index;
 
+const my $SLASH => q{/};
+
 use Moo::Role;
 use namespace::clean;
-
-const my $SLASH => q{/};
 
 =head1 NAME
 
@@ -60,7 +60,8 @@ has control => (
         my ($self) = @_;
 
         my $index = Lintian::Index->new;
-        $index->identifier($self->path . ' (control)');
+        my $archive = $self->basename;
+        $index->identifier("$archive (control)");
         $index->basedir($self->basedir . $SLASH . 'control');
 
         # control files are not installed relative to the system root

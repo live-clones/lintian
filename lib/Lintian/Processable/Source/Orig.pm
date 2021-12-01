@@ -29,12 +29,12 @@ use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Index;
 
-use Moo::Role;
-use namespace::clean;
-
 const my $EMPTY => q{};
 const my $SPACE => q{ };
 const my $SLASH => q{/};
+
+use Moo::Role;
+use namespace::clean;
 
 =head1 NAME
 
@@ -71,7 +71,8 @@ has orig => (
         my ($self) = @_;
 
         my $index = Lintian::Index->new;
-        $index->identifier($self->path . ' (orig)');
+        my $archive = $self->basename;
+        $index->identifier("$archive (orig)");
         $index->basedir($self->basedir . $SLASH . 'orig');
 
         return $index

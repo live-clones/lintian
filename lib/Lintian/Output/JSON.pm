@@ -170,8 +170,28 @@ sub hintlist {
 
         $hint_dictionary{tag} = $tag->name;
 
-        $hint_dictionary{context} = $hint->context
-          if length $hint->context;
+        $hint_dictionary{note} = $hint->note
+          if length $hint->note;
+
+        if ($hint->can('pointer')) {
+            my $pointer = $hint->pointer;
+
+            my %pointer_dictionary;
+
+            if ($pointer->can('item')) {
+                my $item = $pointer->item;
+
+                my %item_dictionary;
+                $item_dictionary{name} = $item->name;
+                $item_dictionary{index} = $item->index->identifier;
+
+                $pointer_dictionary{item} = \%item_dictionary;
+                $item_dictionary{line_position} = $pointer->position
+                  if $pointer->position > 0;
+            }
+
+            $hint_dictionary{pointer} = \%pointer_dictionary;
+        }
 
         $hint_dictionary{visibility} = $tag->visibility;
         $hint_dictionary{experimental} = 'yes'
