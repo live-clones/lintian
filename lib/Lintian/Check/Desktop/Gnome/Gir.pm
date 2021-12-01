@@ -120,13 +120,16 @@ sub installable {
         $expected =~ tr/_/-/;
         my $version = $processable->fields->value('Version');
 
-        foreach my $bin ($group->get_binary_processables) {
-            next unless $bin->name =~ m/^gir1\.2-/;
-            my $other = $bin->name.' (= '.$bin->fields->value('Version').')';
-            if (    $bin->relation('Provides')->satisfies($expected)
-                and $processable->relation('strong')->satisfies($other)) {
-                next GIR;
-            }
+        for my $installable ($group->get_installables) {
+            next
+              unless $installable->name =~ m/^gir1\.2-/;
+
+            my $other = $installable->name.' (= '
+              .$installable->fields->value('Version').')';
+
+            next GIR
+              if $installable->relation('Provides')->satisfies($expected)
+              && $processable->relation('strong')->satisfies($other);
         }
 
         if (

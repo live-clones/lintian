@@ -46,7 +46,7 @@ has development_packages => (
 
         my @development_packages;
 
-        for my $installable ($self->group->get_binary_processables) {
+        for my $installable ($self->group->get_installables) {
 
             push(@development_packages, $installable)
               if $installable->name =~ /-dev$/

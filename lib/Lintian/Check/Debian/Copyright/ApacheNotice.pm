@@ -72,7 +72,7 @@ sub check_apache_notice_files {
     return
       unless @notice_files;
 
-    my @binaries = $self->group->get_processables('binary');
+    my @binaries = grep { $_->type ne 'udeb' } $self->group->get_installables;
     return
       unless @binaries;
 

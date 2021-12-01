@@ -132,9 +132,9 @@ sub add_group {
         }
     }
 
-    foreach my $bin ($group->get_binary_processables){
+    for my $installable ($group->get_installables){
         # New binary package ?
-        my $was_new = $old->add_processable($bin);
+        my $was_new = $old->add_processable($installable);
         $added ||= $was_new;
     }
 

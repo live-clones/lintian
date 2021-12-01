@@ -167,12 +167,14 @@ sub installable {
         \%postrm);
 
     # Populate all_{files,links} from current package and its dependencies
-    foreach my $bin ($group->get_binary_processables) {
+    for my $installable ($group->get_installables) {
         next
-          unless $processable->name eq $bin->name
-          or $processable->relation('strong')->satisfies($bin->name);
-        for my $file (@{$bin->installed->sorted_list}) {
-            add_file_link_info($bin, $file->name, \%all_files,\%all_links);
+          unless $processable->name eq $installable->name
+          || $processable->relation('strong')->satisfies($installable->name);
+
+        for my $file (@{$installable->installed->sorted_list}) {
+            add_file_link_info($installable, $file->name, \%all_files,
+                \%all_links);
         }
     }
 

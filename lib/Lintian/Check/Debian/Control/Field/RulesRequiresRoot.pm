@@ -71,7 +71,7 @@ sub source {
     if (  !$source_fields->declares('Rules-Requires-Root')
         || $source_fields->value('Rules-Requires-Root') eq 'no') {
 
-        for my $installable ($self->group->get_binary_processables) {
+        for my $installable ($self->group->get_installables) {
 
             my $user_owned_item
               = first_value { $_->owner ne 'root' || $_->group ne 'root' }

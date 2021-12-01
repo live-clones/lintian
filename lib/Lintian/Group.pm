@@ -543,7 +543,8 @@ sub process {
         # suppress warnings without reliable sizes
         local $Devel::Size::warn = 0;
 
-        my $pivot = ($self->get_processables)[0];
+        my @processables = $self->get_processables;
+        my $pivot = shift @processables;
         my $group_id
           = $pivot->source_name . $UNDERSCORE . $pivot->source_version;
         my $group_usage
@@ -640,48 +641,32 @@ sub add_processable {
     return 1;
 }
 
-=item $group->get_processables([$type])
+=item get_processables
 
-Returns an array of all processables in $group.  The processables are
-returned in the following order: changes (if any), source (if any),
-all binaries (if any) and all udebs (if any).
-
-This order is based on the original order that Lintian processed
-packages in and some parts of the code relies on this order.
-
-Note if $type is given, then only processables of that type is
-returned.
+Returns an array of all processables in $group.
 
 =cut
 
 sub get_processables {
-    my ($self, $type) = @_;
-    my @result;
-    if (defined $type){
-        # We only want $type
-        if ($type eq 'changes' or $type eq 'source' or $type eq 'buildinfo'){
-            return $self->$type;
-        }
-        return values %{$self->$type}
-          if $type eq 'binary'
-          or $type eq 'udeb';
-        die encode_utf8("Unknown type of processable: $type");
-    }
-    # We return changes, dsc, buildinfo, debs and udebs in that order,
-    # because that is the order lintian used to process a changes
-    # file (modulo debs<->udebs ordering).
-    #
-    # Also correctness of other parts rely on this order.
-    foreach my $type (qw(changes source buildinfo)){
-        push @result, $self->$type if $self->$type;
-    }
-    foreach my $type (qw(binary udeb)){
-        push @result, values %{$self->$type};
-    }
-    return @result;
+    my ($self) = @_;
+
+    my @processables;
+
+    push(@processables, $self->changes)
+      if defined $self->changes;
+
+    push(@processables, $self->source)
+      if defined $self->source;
+
+    push(@processables, $self->buildinfo)
+      if defined $self->buildinfo;
+
+    push(@processables, $self->get_installables);
+
+    return @processables;
 }
 
-=item $group->get_binary_processables
+=item get_installables
 
 Returns all binary (and udeb) processables in $group.
 
@@ -690,13 +675,15 @@ returned.
 
 =cut
 
-sub get_binary_processables {
+sub get_installables {
     my ($self) = @_;
-    my @result;
-    foreach my $type (qw(binary udeb)){
-        push @result, values %{$self->$type};
-    }
-    return @result;
+
+    my @installables;
+
+    push(@installables, values %{$self->binary});
+    push(@installables, values %{$self->udeb});
+
+    return @installables;
 }
 
 =item direct_dependencies (PROC)
@@ -719,16 +706,15 @@ sub direct_dependencies {
 
     unless (keys %{$self->saved_direct_dependencies}) {
 
-        my @processables = $self->get_processables('binary');
-        push @processables, $self->get_processables('udeb');
+        my @processables = $self->get_installables;
 
         my %dependencies;
-        foreach my $that (@processables) {
+        for my $that (@processables) {
 
             my $relation = $that->relation('strong');
             my @specific;
 
-            foreach my $this (@processables) {
+            for my $this (@processables) {
 
                 # Ignore self deps - we have checks for that and it
                 # will just end up complicating "correctness" of
@@ -771,8 +757,7 @@ sub direct_reliants {
 
     unless (keys %{$self->saved_direct_reliants}) {
 
-        my @processables = $self->get_processables('binary');
-        push @processables, $self->get_processables('udeb');
+        my @processables = $self->get_installables;
 
         my %reliants;
         foreach my $that (@processables) {

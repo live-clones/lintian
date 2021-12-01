@@ -44,7 +44,7 @@ has group_ships_examples => (
     default => sub {
         my ($self) = @_;
 
-        my @processables = $self->group->get_processables('binary');
+        my @processables = $self->group->get_installables;
 
         # assume shipped examples if there is a package so named
         return 1
@@ -66,7 +66,7 @@ sub visit_patched_files {
     $self->hint('package-does-not-install-examples', $item)
       if $item->basename eq 'examples'
       && $item->dirname !~ m{(?:^|/)(?:vendor|third_party)/}
-      && $self->group->get_processables('binary')
+      && $self->group->get_installables
       && !$self->group_ships_examples;
 
     return;

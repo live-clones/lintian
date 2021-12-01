@@ -506,7 +506,7 @@ sub check_cross_link {
         # to have the same source (and source version)
         return
           if any { $_->name eq $foreign }
-        $self->group->get_processables('binary');
+        $self->group->get_installables;
 
         # It was not, but since the source package was not present, we cannot
         # tell if it is foreign or not at this point.

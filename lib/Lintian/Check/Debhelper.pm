@@ -538,7 +538,10 @@ sub source {
           && !$strong->satisfies($MISC_DEPENDS);
     }
 
-    for my $installable ($self->group->get_processables('binary')) {
+    for my $installable ($self->group->get_installables) {
+
+        next
+          if $installable->type eq 'udeb';
 
         my $breaks
           = $self->processable->binary_relation($installable->name, 'Breaks');

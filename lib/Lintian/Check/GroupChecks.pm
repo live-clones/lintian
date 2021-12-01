@@ -47,19 +47,20 @@ sub source {
 
     # The packages a.k.a. nodes
     my (@nodes, %edges, $sccs);
-    my @procs = $group->get_processables('binary');
+    my @installables = grep { $_->type ne 'udeb' } $group->get_installables;
 
-    $self->check_file_overlap(@procs);
+    $self->check_file_overlap(@installables);
 
-    foreach my $processable (@procs) {
-        my $deps = $group->direct_dependencies($processable);
+    for my $installable (@installables) {
+
+        my $deps = $group->direct_dependencies($installable);
         if (scalar @{$deps} > 0) {
             # it depends on another package - it can cause
             # a circular dependency
-            my $pname = $processable->name;
+            my $pname = $installable->name;
             push @nodes, $pname;
             $edges{$pname} = [map { $_->name } @{$deps}];
-            $self->check_multiarch($processable, $deps);
+            $self->check_multiarch($installable, $deps);
         }
     }
 

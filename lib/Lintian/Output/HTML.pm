@@ -100,9 +100,10 @@ sub issue_hints {
         $group_output{end} = $end->strftime('%c');
         $group_output{duration} = duration($start->delta_seconds($end));
 
+        my @processables = $group->get_processables;
+        my $any_processable = shift @processables;
         $group_output{'maintainer'}
-          = ($group->get_processables)[0]
-          ->fields->unfolded_value('Maintainer');
+          = $any_processable->fields->value('Maintainer');
 
         push(@allgroups_output, \%group_output);
 

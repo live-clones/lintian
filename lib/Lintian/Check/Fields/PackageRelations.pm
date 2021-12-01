@@ -662,16 +662,17 @@ sub source {
     }
 
     my (@arch_dep_pkgs, @dbg_pkgs);
-    foreach my $gproc ($group->get_binary_processables) {
-        my $binpkg = $gproc->name;
-        if ($binpkg =~ m/-dbg$/) {
-            push(@dbg_pkgs, $gproc);
-        } elsif ($processable->debian_control->installable_fields($binpkg)
-            ->value('Architecture') ne 'all'){
-            push @arch_dep_pkgs, $binpkg;
+    for my $installable ($group->get_installables) {
+
+        if ($installable->name =~ m/-dbg$/) {
+            push(@dbg_pkgs, $installable);
+
+        } elsif ($installable->fields->value('Architecture') ne 'all'){
+            push(@arch_dep_pkgs, $installable);
         }
     }
-    my $dstr = join($VERTICAL_BAR, map { quotemeta($_) } @arch_dep_pkgs);
+
+    my $dstr = join($VERTICAL_BAR, map { quotemeta($_->name) } @arch_dep_pkgs);
     my $depregex = qr/^(?:$dstr)$/;
     for my $dbg_proc (@dbg_pkgs) {
         my $deps = $processable->binary_relation($dbg_proc->name, 'strong');
