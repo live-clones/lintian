@@ -97,6 +97,8 @@ Returns the base directory for file references.
 
 =item C<anchored>
 
+=item unpack_messages
+
 =cut
 
 has identifier => (is => 'rw', default => 'unnamed');
@@ -134,6 +136,7 @@ has basedir => (
 );
 
 has anchored => (is => 'rw', default => 0);
+has unpack_messages => (is => 'rw', default => sub { [] });
 
 has sorted_list => (
     is => 'ro',

@@ -115,7 +115,7 @@ has orig => (
 
             my $errors = $subindex->create_from_piped_tar(\@command);
 
-            $self->hint('unpack-message-for-orig', $tarball, $_)
+            push(@{$index->unpack_messages}, "$tarball . $_")
               for uniq split(/\n/, $errors);
 
             # treat hard links like regular files
@@ -161,8 +161,7 @@ has orig => (
                         # shortens paths; keeps same base directory
                         my $sub_errors = $subindex->drop_common_prefix;
 
-                        $self->hint('unpack-message-for-orig', 'lintian',
-                            $tarball, $_)
+                        push(@{$index->unpack_errors}, "$tarball . $_")
                           for uniq split(/\n/, $sub_errors);
                     }
                 }

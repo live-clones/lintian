@@ -70,8 +70,8 @@ has control => (
         my @command = (qw(dpkg-deb --ctrl-tarfile), $self->path);
         my $errors = $index->create_from_piped_tar(\@command);
 
-        $self->hint('unpack-message-for-deb-control', 'lintian', $_)
-          for uniq split(/\n/, $errors);
+        my @messages = uniq split(/\n/, $errors);
+        push(@{$index->unpack_messages}, @messages);
 
         return $index;
     });

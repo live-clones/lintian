@@ -1,6 +1,6 @@
 Tag: unpack-message-for-deb-control
 Severity: error
-Check: lintian
+Check: unpack
 Explanation: Unpacking the contents of the <code>control.tar.gz</code>
  member of this installable package produced the listed error.
  .
