@@ -1,4 +1,4 @@
-# debian/lintian-overrides/duplicate -- lintian check script -*- perl -*-
+# debian/lintian-overrides/mystery -- lintian check script -*- perl -*-
 
 # Copyright © 2021 Felix Lechner
 #
@@ -18,7 +18,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::Check::Debian::LintianOverrides::Duplicate;
+package Lintian::Check::Debian::LintianOverrides::Mystery;
 
 use v5.20;
 use warnings;
@@ -26,7 +26,7 @@ use utf8;
 
 use Const::Fast;
 
-const my $SPACE => q{ };
+const my $ARROW => q{=>};
 
 use Moo;
 use namespace::clean;
@@ -38,33 +38,21 @@ sub always {
 
     my %alias = %{$self->profile->known_aliases};
 
-    my %pattern_tracker;
     for my $override (@{$self->processable->overrides}) {
 
-        my $pattern = $override->pattern;
-
-        # catch renames
         my $tag_name = $override->tag_name;
-        $tag_name = $alias{$tag_name}
+        next
+          if defined $self->profile->get_tag($tag_name);
+
+        my $override_item = $self->processable->override_file;
+        my $pointer = $override_item->pointer($override->position);
+
+        $self->pointed_hint('alien-tag', $pointer, $tag_name)
+          if !length $alias{$tag_name};
+
+        $self->pointed_hint('renamed-tag', $pointer, $tag_name, $ARROW,
+            $alias{$tag_name})
           if length $alias{$tag_name};
-
-        push(@{$pattern_tracker{$tag_name}{$pattern}}, $override);
-    }
-
-    for my $tag_name (keys %pattern_tracker) {
-        for my $pattern (keys %{$pattern_tracker{$tag_name}}) {
-
-            my @overrides = @{$pattern_tracker{$tag_name}{$pattern}};
-
-            my @same_context = map { $_->position } @overrides;
-            my $line_numbers = join($SPACE, (sort @same_context));
-
-            my $override_item = $self->processable->override_file;
-
-            $self->pointed_hint('duplicate-override-context',
-                $override_item->pointer,$tag_name,"(lines $line_numbers)")
-              if @overrides > 1;
-        }
     }
 
     return;

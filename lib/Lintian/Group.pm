@@ -202,8 +202,15 @@ sub process {
             say {*STDERR} encode_utf8('Loading overrides file (if any) ...')
               if $option->{debug};
 
-            # enable overrides for this architecture
+            my %alias = %{$self->profile->known_aliases};
             for my $override (@{$processable->overrides}) {
+
+                my $tag_name = $override->tag_name;
+                my $pattern = $override->pattern;
+
+                # for mystery tags
+                next
+                  unless defined $self->profile->get_tag($tag_name);
 
                 my @architectures = @{$override->architectures};
 
@@ -213,6 +220,7 @@ sub process {
                 # strip negations if present
                 s/^!// for @architectures;
 
+                # enable overrides for this architecture
                 # proceed when none specified
                 next
                   if @architectures
@@ -224,99 +232,17 @@ sub process {
                     @architectures
                   );
 
-                $enabled_overrides{$override->tag_name}{$override->pattern}
-                  = $override;
-            }
+                # catch renames
+                $tag_name = $alias{$tag_name}
+                  if length $alias{$tag_name};
 
-            my %alias = %{$self->profile->known_aliases};
-            my @renamed_overrides
-              = grep { length $alias{$_} } keys %enabled_overrides;
+                if (!$self->profile->is_overridable($tag_name)) {
 
-            # treat renamed tags in overrides
-            # ideally, these would check all architectures
-            for my $dated (@renamed_overrides) {
-
-                # get new name
-                my $modern = $alias{$dated};
-
-                # make space for renamed override
-                $enabled_overrides{$modern} //= {};
-
-                for my $pattern (keys %{$enabled_overrides{$dated}}) {
-
-                    my $override = $enabled_overrides{$dated}{$pattern};
-                    my $position = $override->position;
-
-                    my $override_item = $processable->override_file;
-                    my $pointer = $override_item->pointer($position);
-
-                    # alert user to new tag name
-                    $processable->pointed_hint('renamed-tag','lintian',
-                        $pointer, "$dated => $modern");
-
-                    if (exists $enabled_overrides{$modern}{$pattern}) {
-
-                        my $modern_override
-                          = $enabled_overrides{$modern}{$pattern};
-                        my $modern_position = $modern_override->position;
-
-                        my @positions = ($position, $modern_position);
-                        my $line_numbers = join($SPACE, (sort @positions));
-
-                        $processable->pointed_hint(
-                            'duplicate-override-context','lintian',
-                            $override_item->pointer, $modern,
-                            "(lines $line_numbers)"
-                        );
-
-                        next;
-                    }
-
-                    # transfer context to current tag name
-                    $enabled_overrides{$modern}{$pattern}
-                      = $enabled_overrides{$dated}{$pattern};
-
-                    # now it exists
-                    my $modern_override= $enabled_overrides{$modern}{$pattern};
-
-                    # remember old tag names
-                    push(@{$modern_override->renamed_from}, $override);
-
-                    # remove the old override context
-                    delete $enabled_overrides{$dated}{$pattern};
+                    ++$ignored_overrides->{$tag_name};
+                    next;
                 }
 
-                # remove the alias override if there are no contexts left
-                delete $enabled_overrides{$dated}
-                  unless %{$enabled_overrides{$dated}};
-            }
-
-            # complain about and filter out unknown tags in overrides
-            my @unknown_overrides = grep { !$self->profile->get_tag($_) }
-              keys %enabled_overrides;
-            for my $tag_name (@unknown_overrides) {
-
-                for my $pattern (keys %{$enabled_overrides{$tag_name}}) {
-
-                    my $override = $enabled_overrides{$tag_name}{$pattern};
-
-                    my $override_item = $processable->override_file;
-                    my $pointer = $override_item->pointer($override->position);
-
-                    $processable->pointed_hint('malformed-override', 'lintian',
-                        $pointer, "Unknown tag $tag_name");
-                }
-
-                delete $enabled_overrides{$tag_name};
-            }
-
-            # treat ignored overrides here
-            for my $tag_name (keys %enabled_overrides) {
-
-                unless ($self->profile->is_overridable($tag_name)) {
-                    delete $enabled_overrides{$tag_name};
-                    $ignored_overrides->{$tag_name}++;
-                }
+                $enabled_overrides{$tag_name}{$pattern} = $override;
             }
         }
 
@@ -424,22 +350,18 @@ sub process {
 
             $context_tracker{$tag_name}{$context} = 1;
 
-            if (!$tag->show_always) {
+            my @masks
+              = grep { $_->suppress($processable, $hint) } @{$tag->screens};
 
-                my @masks
-                  = grep { $_->suppress($processable, $hint) }@{$tag->screens};
+            my @mask_names = map { $_->name } @masks;
+            my $mask_list = join($SPACE, (sort @mask_names));
 
-                $hint->screen($masks[0])
-                  if @masks > 0;
+            warn encode_utf8("Crossing screens for $tag_name ($mask_list)")
+              if @masks > 1;
 
-                if (@masks > 1) {
-                    my @sorted = sort { $a->name cmp $b->name } @masks;
-                    my $mask_list = join($SPACE, map { $_->name } @sorted);
-
-                    $processable->hint('crossing-screens', 'lintian',
-                        $tag_name, "($mask_list)");
-                }
-            }
+            $hint->screen($masks[0])
+              if @masks > 0
+              && !$tag->show_always;
 
             my $declared = $enabled_overrides{$tag->name};
             if ($declared && !$tag->show_always) {

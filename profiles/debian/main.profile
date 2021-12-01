@@ -72,6 +72,8 @@ Enable-Tags-From-Check:
  debian/lintian-overrides
  debian/lintian-overrides/comments
  debian/lintian-overrides/duplicate
+ debian/lintian-overrides/malformed
+ debian/lintian-overrides/mystery
  debian/lintian-overrides/restricted
  debian/maintscript
  debian/manual-pages

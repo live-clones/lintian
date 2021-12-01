@@ -48,7 +48,6 @@ const my $NEWLINE => qq{\n};
 
 my @known_missing = (qw(
       changed-by-invalid-for-derivative
-      crossing-screens
       debian-files-list-in-source
       debian-rules-not-executable
       elf-warning

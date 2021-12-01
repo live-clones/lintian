@@ -24,6 +24,8 @@ use utf8;
 use Moo::Role;
 use namespace::clean;
 
+with 'Lintian::Processable::Overrides';
+
 =head1 NAME
 
 Lintian::Processable::Buildinfo::Overrides - access to override data

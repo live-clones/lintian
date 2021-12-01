@@ -49,6 +49,12 @@ Lintian::Processable::Overrides provides an interface to overrides.
 
 =over 4
 
+=item override_errors
+
+=cut
+
+has override_errors => (is => 'rw', default => sub { [] });
+
 =item parse_overrides
 
 =cut
@@ -130,8 +136,12 @@ sub parse_overrides {
 
         # require and remove colon when any package details are present
         if ($require_colon && $remaining !~ s/^\s*:\s*//) {
-            $self->pointed_hint('malformed-override', 'lintian', $pointer,
-                'Expected a colon');
+
+            my %error;
+            $error{message} = 'Expected a colon';
+            $error{pointer} = $pointer;
+            push(@{$self->override_errors}, \%error);
+
             next;
         }
 
@@ -139,9 +149,15 @@ sub parse_overrides {
 
         my ($tag_name, $pattern) = split($SPACE, $hint_like, 2);
 
-        $self->pointed_hint('malformed-override', 'lintian', $pointer,
-            "Cannot parse line: $line")
-          unless length $tag_name;
+        if (!length $tag_name) {
+
+            my %error;
+            $error{message} = "Cannot parse line: $line";
+            $error{pointer} = $pointer;
+            push(@{$self->override_errors}, \%error);
+
+            next;
+        }
 
         $pattern //= $EMPTY;
 
