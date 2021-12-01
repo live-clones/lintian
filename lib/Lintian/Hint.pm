@@ -57,7 +57,7 @@ Common facilities for Lintian tags found and to be issued
 
 =item override
 
-=item screen
+=item masks
 
 =cut
 
@@ -66,7 +66,7 @@ has note => (is => 'rw', default => $EMPTY);
 has issued_by => (is => 'rw', default => $EMPTY);
 
 has override => (is => 'rw');
-has screen => (is => 'rw');
+has masks => (is => 'rw', default => sub { [] });
 
 =back
 

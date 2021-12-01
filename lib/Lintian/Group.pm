@@ -359,9 +359,8 @@ sub process {
             warn encode_utf8("Crossing screens for $tag_name ($mask_list)")
               if @masks > 1;
 
-            $hint->screen($masks[0])
-              if @masks > 0
-              && !$tag->show_always;
+            $hint->masks(\@masks)
+              if !$tag->show_always;
 
             my $declared = $enabled_overrides{$tag->name};
             if ($declared && !$tag->show_always) {

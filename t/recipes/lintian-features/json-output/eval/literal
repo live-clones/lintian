@@ -67,6 +67,14 @@
                      "visibility" : "pedantic"
                   },
                   {
+                     "tag" : "no-homepage-field",
+                     "visibility" : "pedantic"
+                  },
+                  {
+                     "tag" : "old-source-override-location",
+                     "visibility" : "pedantic"
+                  },
+                  {
                      "experimental" : "yes",
                      "pointer" : {
                         "item" : {
@@ -75,14 +83,6 @@
                         }
                      },
                      "tag" : "debian-watch-does-not-check-gpg-signature",
-                     "visibility" : "pedantic"
-                  },
-                  {
-                     "tag" : "no-homepage-field",
-                     "visibility" : "pedantic"
-                  },
-                  {
-                     "tag" : "old-source-override-location",
                      "visibility" : "pedantic"
                   },
                   {

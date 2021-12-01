@@ -723,16 +723,6 @@ div.clear {
       </ul>
 
       <span class="tinycode" id="code-P">P</span>
-      <span class="tinyhint"><a href="https://lintian.debian.org/tags/debian-watch-does-not-check-gpg-signature">debian-watch-does-not-check-gpg-signature</a></span>
-      <span class="tinycontext">[debian/watch]</span>
-
-    </li>
-    <li class="hintitem">
-
-      <ul class="commentlist">
-      </ul>
-
-      <span class="tinycode" id="code-P">P</span>
       <span class="tinyhint"><a href="https://lintian.debian.org/tags/no-homepage-field">no-homepage-field</a></span>
       <span class="tinycontext"></span>
 
@@ -745,6 +735,16 @@ div.clear {
       <span class="tinycode" id="code-P">P</span>
       <span class="tinyhint"><a href="https://lintian.debian.org/tags/old-source-override-location">old-source-override-location</a></span>
       <span class="tinycontext"></span>
+
+    </li>
+    <li class="hintitem">
+
+      <ul class="commentlist">
+      </ul>
+
+      <span class="tinycode" id="code-P">P</span>
+      <span class="tinyhint"><a href="https://lintian.debian.org/tags/debian-watch-does-not-check-gpg-signature">debian-watch-does-not-check-gpg-signature</a></span>
+      <span class="tinycontext">[debian/watch]</span>
 
     </li>
     <li class="hintitem">

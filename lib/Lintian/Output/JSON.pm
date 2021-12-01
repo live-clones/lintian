@@ -126,8 +126,20 @@ sub hintlist {
     for my $hint (@{$arrayref // []}) {
 
         my $tag = $profile->get_tag($hint->tag_name);
-        my $override_status = defined $hint->override;
-        my $code_priority = $CODE_PRIORITY{$tag->code};
+
+        my $override_status = 0;
+        $override_status = 1
+          if defined $hint->override || @{$hint->masks};
+
+        my $ranking_code = $tag->code;
+        $ranking_code = 'X'
+          if $tag->experimental;
+        $ranking_code = 'O'
+          if defined $hint->override;
+        $ranking_code = 'M'
+          if @{$hint->masks};
+
+        my $code_priority = $CODE_PRIORITY{$ranking_code};
 
         push(
             @{
@@ -197,14 +209,15 @@ sub hintlist {
         $hint_dictionary{experimental} = 'yes'
           if $tag->experimental;
 
-        $hint_dictionary{screen} = $hint->screen->name
-          if defined $hint->screen;
+        my @masks = map { $_->name } @{ $hint->masks };
+        $hint_dictionary{masks} = \@masks
+          if @masks;
 
         if ($hint->override) {
 
             $hint_dictionary{override} = 'yes';
 
-            my @comments = @{ $hint->override->comments // [] };
+            my @comments = @{ $hint->override->comments };
             $hint_dictionary{override_comments} = \@comments
               if @comments;
         }

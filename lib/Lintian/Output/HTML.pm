@@ -145,8 +145,20 @@ sub hintlist {
     for my $hint (@{$arrayref // []}) {
 
         my $tag = $profile->get_tag($hint->tag_name);
-        my $override_status = defined $hint->override;
-        my $code_priority = $CODE_PRIORITY{$tag->code};
+
+        my $override_status = 0;
+        $override_status = 1
+          if defined $hint->override || @{$hint->masks};
+
+        my $ranking_code = $tag->code;
+        $ranking_code = 'X'
+          if $tag->experimental;
+        $ranking_code = 'O'
+          if defined $hint->override;
+        $ranking_code = 'M'
+          if @{$hint->masks};
+
+        my $code_priority = $CODE_PRIORITY{$ranking_code};
 
         push(
             @{
@@ -195,19 +207,26 @@ sub hintlist {
           if length $hint->context;
 
         $html_hint{visibility} = $tag->visibility;
-        $html_hint{code} = uc substr($html_hint{visibility}, 0, 1);
+        $html_hint{code} = $tag->code;
 
         $html_hint{experimental} = 'yes'
           if $tag->experimental;
 
+        my @comments;
         if ($hint->override) {
 
             $html_hint{code} = 'O';
-
-            my @comments = @{ $hint->override->comments // [] };
-            $html_hint{comments} = \@comments
-              if @comments;
+            push(@comments, @{ $hint->override->comments });
         }
+
+        # order matters
+        $html_hint{code} = 'M'
+          if @{ $hint->masks };
+
+        push(@comments, 'masked by screen ' . $_->name)for @{ $hint->masks };
+
+        $html_hint{comments} = \@comments
+          if @comments;
     }
 
     return \@html_hints;

@@ -55,13 +55,14 @@ const my $SCREEN_INDENTATION => 4;
 const my $SCREEN_PREFIX => $COMMENT_PREFIX . $SPACE x $SCREEN_INDENTATION;
 
 const my %COLORS => (
-    'E' => 'red',
-    'W' => 'yellow',
-    'I' => 'cyan',
-    'P' => 'green',
-    'C' => 'blue',
-    'O' => 'bright_black',
-    'M' => 'bright_black',
+    'E' => 'bright_white on_bright_red',
+    'W' => 'black on_bright_yellow',
+    'I' => 'bright_white on_bright_blue',
+    'P' => 'bright_white on_green',
+    'C' => 'bright_white on_bright_magenta',
+    'X' => 'bright_white on_yellow',
+    'O' => 'bright_white on_bright_black',
+    'M' => 'bright_black on_bright_white',
 );
 
 const my %CODE_PRIORITY => (
@@ -128,8 +129,20 @@ sub issue_hints {
             for my $hint (@{$processable->hints}) {
 
                 my $tag = $profile->get_tag($hint->tag_name);
-                my $override_status = defined $hint->override;
-                my $code_priority = $CODE_PRIORITY{$tag->code};
+
+                my $override_status = 0;
+                $override_status = 1
+                  if defined $hint->override || @{$hint->masks};
+
+                my $ranking_code = $tag->code;
+                $ranking_code = 'X'
+                  if $tag->experimental;
+                $ranking_code = 'O'
+                  if defined $hint->override;
+                $ranking_code = 'M'
+                  if @{$hint->masks};
+
+                my $code_priority = $CODE_PRIORITY{$ranking_code};
 
                 my %for_output;
                 $for_output{hint} = $hint;
@@ -250,13 +263,11 @@ sub print_hint {
     my $text = $tag_name;
 
     my $code = $tag->code;
+    $code = 'X' if $tag->experimental;
     $code = 'O' if defined $hint->override;
-    $code = 'M' if defined $hint->screen;
+    $code = 'M' if @{$hint->masks};
 
     my $tag_color = $COLORS{$code};
-
-    # keep original color for tags marked experimental
-    $code = 'X' if $tag->experimental;
 
     $text = Term::ANSIColor::colored($tag_name, $tag_color)
       if $option->{color};
@@ -274,8 +285,7 @@ sub print_hint {
           for @{$hint->override->comments};
     }
 
-    say encode_utf8('N: masked by screen ' . $hint->screen->name)
-      if defined $hint->screen;
+    say encode_utf8('N: masked by screen ' . $_->name)for @{$hint->masks};
 
     my $type = $EMPTY;
     $type = $SPACE . $processable->type
