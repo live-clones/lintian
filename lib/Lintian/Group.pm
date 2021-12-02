@@ -30,8 +30,10 @@ use Devel::Size qw(total_size);
 use File::Spec;
 use List::Compare;
 use List::SomeUtils qw(any none uniq firstval true);
+use List::UtilsBy qw(sort_by);
 use POSIX qw(ENOENT);
 use Syntax::Keyword::Try;
+use Text::Glob qw(match_glob);
 use Time::HiRes qw(gettimeofday tv_interval);
 use Time::Piece;
 use Unicode::UTF8 qw(encode_utf8);
@@ -294,7 +296,6 @@ sub process {
 
         my %context_tracker;
         my %used_overrides;
-        my %otherwise_visible;
 
         for my $hint (@from_checks) {
 
@@ -359,41 +360,37 @@ sub process {
             $hint->masks(\@masks)
               if !$tag->show_always;
 
-            my $declared = $enabled_overrides{$tag->name};
-            if ($declared && !$tag->show_always) {
+            if (exists $enabled_overrides{$tag_name} && !$tag->show_always) {
 
-                # empty context in specification matches all
-                my $override = $declared->{$EMPTY};
+                my $for_tag = $enabled_overrides{$tag_name};
 
-                # matches context exactly
-                $override = $declared->{$hint->context}
-                  unless $override;
+                if (exists $for_tag->{$EMPTY}) {
+                    $hint->override($for_tag->{$EMPTY});
 
-                # look for patterns
-                unless ($override) {
-                    my @candidates= sort grep { length $declared->{$_}->regex }
-                      keys %{$declared};
+                } else {
 
-                    my %regexes;
-                    $regexes{$_} = $declared->{$_}->regex for @candidates;
+                    # overrides without context handled above
+                    my @patterns = grep { length } keys %{$for_tag};
 
-                    my $match= firstval {
-                        $hint->context =~ m/^$regexes{$_}\z/
+                    # try short ones first
+                    my @by_length = sort_by { length } @patterns;
+
+                    local $Text::Glob::strict_leading_dot = 0;
+                    local $Text::Glob::strict_wildcard_slash = 0;
+
+                    my $match = firstval {
+                        match_glob($_, $hint->context)
                     }
-                    @candidates;
+                    @by_length;
 
-                    $override = $declared->{$match}
-                      if $match;
+                    $hint->override($for_tag->{$match})
+                      if defined $match;
                 }
-
-                # new hash values are autovivified to 0
-                $used_overrides{$tag->name}{$override->pattern}++
-                  if $override;
-
-                $hint->override($override);
             }
 
-            $otherwise_visible{$tag->name} = 1;
+            # new hash values autovivify to 0
+            ++$used_overrides{$tag_name}{$hint->override->pattern}
+              if defined $hint->override;
 
             push(@hints, $hint);
         }
@@ -421,7 +418,7 @@ sub process {
 
                 $unused->tag_name('unused-override');
                 $unused->tag_name('mismatched-override')
-                  if $otherwise_visible{$tag_name};
+                  if exists $context_tracker{$tag_name};
 
                 # use the original name, in case the tag was renamed
                 my $original_name = $override->tag_name;

@@ -48,7 +48,6 @@ Lintian::Override provides access to override data.
 =item architectures
 
 =item pattern
-=item regex
 
 =item comments
 =item position
@@ -59,7 +58,6 @@ has tag_name => (is => 'rw', default => $EMPTY);
 has architectures => (is => 'rw', default => sub { [] });
 
 has pattern => (is => 'rw', default => $EMPTY);
-has regex => (is => 'rw');
 
 has comments => (is => 'rw', default => sub { [] });
 has position => (is => 'rw');

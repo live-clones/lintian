@@ -27,8 +27,6 @@ use Lintian::Override;
 
 const my $EMPTY => q{};
 const my $SPACE => q{ };
-const my $ASTERISK => q{*};
-const my $DOT => q{.};
 
 use Moo::Role;
 use namespace::clean;
@@ -174,35 +172,6 @@ sub parse_overrides {
         $current->architectures(\@architectures);
         $current->pattern($pattern);
         $current->position($position);
-
-        if ($pattern =~ m{\*}) {
-
-            # has wild card, pre-compute
-            my $literal = $pattern;
-
-            # trailing match anything, if applicable
-            my $end = $EMPTY;
-
-            # the front of the pattern
-            my $quoted = $EMPTY;
-
-            # split does not help if $literal ends with *
-            if ($literal =~ s{ \*+ $}{}x){
-                $end = $DOT . $ASTERISK;
-            }
-
-            # any earlier asterisks?
-            if ($literal =~ m{\*}) {
-                # this works even if $text starts with a *, since
-                # that is split as $EMPTY, <text>
-                my @pargs = split(qr{\*+}, $literal);
-                $quoted = join($DOT . $ASTERISK, map { quotemeta } @pargs);
-            } else {
-                $quoted = $literal;
-            }
-
-            $current->regex(qr/$quoted$end/);
-        }
 
         push(@{$current->comments}, @comments);
         @comments = ();
