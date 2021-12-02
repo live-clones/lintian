@@ -24,6 +24,7 @@ use utf8;
 
 use Const::Fast;
 
+const my $EMPTY => q{};
 const my $SPACE => q{ };
 
 use Moo;
@@ -47,6 +48,19 @@ Provides a pointed tag whose arguments are concatenated by a space.
 
 =over 4
 
+=item notes
+
+=cut
+
+has notes => (
+    is => 'rw',
+    default => sub { [] },
+    coerce => sub {
+        my ($arrayref) = @_;
+
+        return stringify(@{$arrayref});
+    });
+
 =item pointer
 
 =cut
@@ -62,7 +76,7 @@ sub context {
 
     my $pointer = $self->pointer->to_string;
 
-    my @context = grep { length } ($self->note, "[$pointer]");
+    my @context = grep { length } ($self->notes, "[$pointer]");
 
     return join($SPACE, @context);
 }

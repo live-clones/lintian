@@ -1,4 +1,4 @@
-# Copyright © 2019 Felix Lechner
+# Copyright © 2019-2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,11 +16,15 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::Hint::Standard;
+package Lintian::Hint::Annotated;
 
 use v5.20;
 use warnings;
 use utf8;
+
+use Const::Fast;
+
+const my $EMPTY => q{};
 
 use Moo;
 use namespace::clean;
@@ -29,11 +33,11 @@ with 'Lintian::Hint';
 
 =head1 NAME
 
-Lintian::Hint::Standard - standard tag with arguments concatenated by space
+Lintian::Hint::Annotated - standard tag with arguments concatenated by space
 
 =head1 SYNOPSIS
 
-    use Lintian::Hint::Standard;
+    use Lintian::Hint::Annotated;
 
 =head1 DESCRIPTION
 
@@ -43,6 +47,19 @@ Provides a standard tag whose arguments are concatenated by a space.
 
 =over 4
 
+=item notes
+
+=cut
+
+has notes => (
+    is => 'rw',
+    default => sub { [] },
+    coerce => sub {
+        my ($arrayref) = @_;
+
+        return stringify(@{$arrayref});
+    });
+
 =item context
 
 =cut
@@ -50,7 +67,7 @@ Provides a standard tag whose arguments are concatenated by a space.
 sub context {
     my ($self) = @_;
 
-    return $self->note;
+    return $self->notes;
 }
 
 =back

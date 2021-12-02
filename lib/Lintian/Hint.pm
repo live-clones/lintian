@@ -51,8 +51,6 @@ Common facilities for Lintian tags found and to be issued
 
 =item tag_name
 
-=item note
-
 =item issued_by
 
 =item override
@@ -62,11 +60,34 @@ Common facilities for Lintian tags found and to be issued
 =cut
 
 has tag_name => (is => 'rw', default => $EMPTY);
-has note => (is => 'rw', default => $EMPTY);
 has issued_by => (is => 'rw', default => $EMPTY);
 
 has override => (is => 'rw');
 has masks => (is => 'rw', default => sub { [] });
+
+no namespace::clean;
+
+=item stringify
+
+=cut
+
+sub stringify {
+    my (@arguments) = @_;
+
+    # skip empty arguments
+    my @meaningful = grep { length } @arguments;
+
+    # trim both ends of each item
+    s{^ \s+ | \s+ $}{}gx for @meaningful;
+
+    # concatenate with spaces
+    my $text = join($SPACE, @meaningful) // $EMPTY;
+
+    # escape newlines; maybe add others
+    $text =~ s{\n}{\\n}g;
+
+    return $text;
+}
 
 =back
 

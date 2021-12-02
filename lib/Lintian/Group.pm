@@ -425,7 +425,7 @@ sub process {
 
                 # use the original name, in case the tag was renamed
                 my $original_name = $override->tag_name;
-                $unused->note("$original_name $pattern");
+                $unused->notes([$original_name, $pattern]);
 
                 $unused->pointer($pointer);
 

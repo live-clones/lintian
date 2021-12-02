@@ -27,8 +27,8 @@ use utf8;
 use Const::Fast;
 use Unicode::UTF8 qw(encode_utf8);
 
+use Lintian::Hint::Annotated;
 use Lintian::Hint::Pointed;
-use Lintian::Hint::Standard;
 
 const my $EMPTY => q{};
 const my $SPACE => q{ };
@@ -149,7 +149,7 @@ sub pointed_hint {
 
     $hint->tag_name($tag_name);
     $hint->issued_by($self->name);
-    $hint->note(stringify(@notes));
+    $hint->notes(\@notes);
     $hint->pointer($pointer);
 
     push(@{$self->hints}, $hint);
@@ -164,39 +164,15 @@ sub pointed_hint {
 sub hint {
     my ($self, $tag_name, @notes) = @_;
 
-    my $hint = Lintian::Hint::Standard->new;
+    my $hint = Lintian::Hint::Annotated->new;
 
     $hint->tag_name($tag_name);
     $hint->issued_by($self->name);
-    $hint->note(stringify(@notes));
+    $hint->notes(\@notes);
 
     push(@{$self->hints}, $hint);
 
     return;
-}
-
-no namespace::clean;
-
-=item stringify
-
-=cut
-
-sub stringify {
-    my (@arguments) = @_;
-
-    # skip empty arguments
-    my @meaningful = grep { length } @arguments;
-
-    # trim both ends of each item
-    s{^ \s+ | \s+ $}{}gx for @meaningful;
-
-    # concatenate with spaces
-    my $text = join($SPACE, @meaningful) // $EMPTY;
-
-    # escape newlines; maybe add others
-    $text =~ s{\n}{\\n}g;
-
-    return $text;
 }
 
 =back
