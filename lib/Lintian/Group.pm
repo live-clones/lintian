@@ -248,15 +248,10 @@ sub process {
             }
         }
 
-        my @from_checks;
-
         my @check_names = sort $self->profile->enabled_checks;
-        for my $name (@check_names) {
 
-            my $timer = [gettimeofday];
-            my $procid = $processable->identifier;
-            say {*STDERR} encode_utf8("Running check: $name on $procid  ...")
-              if $option->{debug};
+        my @from_checks;
+        for my $name (@check_names) {
 
             my $absolute = $self->profile->check_path_by_name->{$name};
             require $absolute;
@@ -268,6 +263,11 @@ sub process {
             $check->processable($processable);
             $check->group($self);
             $check->profile($self->profile);
+
+            my $timer = [gettimeofday];
+            my $procid = $processable->identifier;
+            say {*STDERR} encode_utf8("Running check: $name on $procid  ...")
+              if $option->{debug};
 
             try {
                 my @found_here = $check->run;
