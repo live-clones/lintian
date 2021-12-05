@@ -80,6 +80,8 @@ Depends:
  libtimedate-perl,
  libunicode-utf8-perl,
  liburi-perl,
+ libwww-mechanize-perl,
+ libwww-perl,
  libxml-libxml-perl,
  libyaml-libyaml-perl,
  lzip | clzip,

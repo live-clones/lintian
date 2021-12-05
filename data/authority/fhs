@@ -42,7 +42,8 @@ _::Filesystem Hierarchy Standard::https://refspecs.linuxfoundation.org/FHS_3.0/f
 3.9.1::Purpose::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#purpose11
 3.9.2::Requirements::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#requirements5
 3.9.3::Specific Options::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#specificOptions7
-3.10.1::Purpose::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#libltqualgtAlternateFormatEssential">3.10. /lib<em class="replaceable"><code>&lt;qual&gt;</code></em> : Alternate format essential shared libraries (optional)</a></span></dt><dd><dl><dt><span class="section"><a href="#purpose12
+3.10::/lib<qual> : Alternate format essential shared libraries (optional)::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#libltqualgtAlternateFormatEssential
+3.10.1::Purpose::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#purpose12
 3.10.2::Requirements::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#requirements6
 3.11::/media : Mount point for removable media::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#mediaMountPoint
 3.11.1::Purpose::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#purposeMediaMountPoint
@@ -81,7 +82,8 @@ _::Filesystem Hierarchy Standard::https://refspecs.linuxfoundation.org/FHS_3.0/f
 4.6.2::Specific Options::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#specificOptions13
 4.7::/usr/libexec : Binaries run by other programs (optional)::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#usrlibexec
 4.7.1::Purpose::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#usrlibexecPurpose
-4.8.1::Purpose::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#usrlibltqualgtAlternateFormatLibrari">4.8. /usr/lib<em class="replaceable"><code>&lt;qual&gt;</code></em> : Alternate format libraries (optional)</a></span></dt><dd><dl><dt><span class="section"><a href="#purpose23
+4.8::/usr/lib<qual> : Alternate format libraries (optional)::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#usrlibltqualgtAlternateFormatLibrari
+4.8.1::Purpose::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#purpose23
 4.9::/usr/local : Local hierarchy::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#usrlocalLocalHierarchy
 4.9.1::Purpose::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#purpose24
 4.9.2::Requirements::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#requirements10
@@ -160,157 +162,6 @@ _::Filesystem Hierarchy Standard::https://refspecs.linuxfoundation.org/FHS_3.0/f
 6.1.9::/usr/src : Source code::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#usrsrcSourceCode2
 6.1.10::/var/spool/cron : cron and at jobs::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#varspoolcronCronAndAtJobs
 7::Appendix::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#appendix
-7.1::The FHS mailing list::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#theFhsMailingList
-7.2::Background of the FHS::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#backgroundOfTheFhs
-7.3::General Guidelines::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#generalGuidelines
-7.4::Scope::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#scope
-7.5::Acknowledgments::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#acknowledgments
-7.6::Contributors::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#contributors
-1.1::Purpose::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#purpose
-1.2::Conventions::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#conventions
-3.1::Purpose::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#purpose2
-3.2::Requirements::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#requirements
-3.3::Specific Options::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#specificOptions
-3.4::/bin : Essential user command binaries (for use by all users)::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#binEssentialUserCommandBinaries
-3.4.1::Purpose::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#purpose3
-3.4.2::Requirements::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#requirements2
-3.4.3::Specific Options::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#specificOptions2
-3.5::/boot : Static files of the boot loader::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#bootStaticFilesOfTheBootLoader
-3.5.1::Purpose::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#purpose4
-3.5.2::Specific Options::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#specificOptions3
-3.6::/dev : Device files::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#devDeviceFiles
-3.6.1::Purpose::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#purpose5
-3.6.2::Specific Options::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#specificOptions4
-3.7::/etc : Host-specific system configuration::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#etcHostspecificSystemConfiguration
-3.7.1::Purpose::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#purpose6
-3.7.2::Requirements::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#requirements3
-3.7.3::Specific Options::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#specificOptions5
-3.7.4::/etc/opt : Configuration files for /opt::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#etcoptConfigurationFilesForOpt
-3.7.5::/etc/X11 : Configuration for the X Window System (optional)::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#etcx11ConfigurationForTheXWindowS
-3.7.6::/etc/sgml : Configuration files for SGML (optional)::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#etcsgmlConfigurationFilesForSgmlAn
-3.7.7::/etc/xml : Configuration files for XML (optional)::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#idm236088418512
-3.8::/home : User home directories (optional)::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#homeUserHomeDirectories
-3.8.1::Purpose::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#purpose10
-3.8.2::Requirements::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#requirements4a
-3.8.3::Home Directory Specifications and Conventions::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#homeReferences
-3.9::/lib : Essential shared libraries and kernel modules::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#libEssentialSharedLibrariesAndKern
-3.9.1::Purpose::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#purpose11
-3.9.2::Requirements::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#requirements5
-3.9.3::Specific Options::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#specificOptions7
-3.10.1::Purpose::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#libltqualgtAlternateFormatEssential">3.10. /lib<em class="replaceable"><code>&lt;qual&gt;</code></em> : Alternate format essential shared libraries (optional)</a></span></dt><dd><dl><dt><span class="section"><a href="#purpose12
-3.10.2::Requirements::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#requirements6
-3.11::/media : Mount point for removable media::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#mediaMountPoint
-3.11.1::Purpose::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#purposeMediaMountPoint
-3.11.2::Specific Options::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#specificOptionsMediaMount
-3.12::/mnt : Mount point for a temporarily mounted filesystem::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#mntMountPointForATemporarilyMount
-3.12.1::Purpose::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#purpose13
-3.13::/opt : Add-on application software packages::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#optAddonApplicationSoftwarePackages
-3.13.1::Purpose::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#purpose14
-3.13.2::Requirements::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#requirements7
-3.14::/root : Home directory for the root user (optional)::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#rootHomeDirectoryForTheRootUser
-3.14.1::Purpose::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#purpose15
-3.15::/run : Run-time variable data::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#runRuntimeVariableData
-3.15.1::Purpose::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#runPurpose
-3.15.2::Requirements::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#runRequirements
-3.16::/sbin : System binaries::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#sbinSystemBinaries
-3.16.1::Purpose::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#purpose16
-3.16.2::Requirements::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#requirements8
-3.16.3::Specific Options::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#specificOptions8
-3.17::/srv : Data for services provided by this system::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#srvDataForServicesProvidedBySystem
-3.17.1::Purpose::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#purpose16a
-3.18::/tmp : Temporary files::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#tmpTemporaryFiles
-3.18.1::Purpose::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#purpose17
-4.1::Purpose::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#purpose18
-4.2::Requirements::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#requirements9
-4.3::Specific Options::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#specificOptions9
-4.4::/usr/bin : Most user commands::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#usrbinMostUserCommands
-4.4.1::Purpose::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#purpose20
-4.4.2::Requirements::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#requirements9a
-4.4.3::Specific Options::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#specificOptions11
-4.5::/usr/include : Directory for standard include files.::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#usrincludeDirectoryForStandardInclu
-4.5.1::Purpose::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#purpose21
-4.5.2::Specific Options::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#specificOptions12
-4.6::/usr/lib : Libraries for programming and packages::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#usrlibLibrariesForProgrammingAndPa
-4.6.1::Purpose::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#purpose22
-4.6.2::Specific Options::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#specificOptions13
-4.7::/usr/libexec : Binaries run by other programs (optional)::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#usrlibexec
-4.7.1::Purpose::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#usrlibexecPurpose
-4.8.1::Purpose::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#usrlibltqualgtAlternateFormatLibrari">4.8. /usr/lib<em class="replaceable"><code>&lt;qual&gt;</code></em> : Alternate format libraries (optional)</a></span></dt><dd><dl><dt><span class="section"><a href="#purpose23
-4.9::/usr/local : Local hierarchy::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#usrlocalLocalHierarchy
-4.9.1::Purpose::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#purpose24
-4.9.2::Requirements::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#requirements10
-4.9.3::Specific Options::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#specificOptions14
-4.9.4::/usr/local/share : Local architecture-independent hierarchy::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#usrlocalshare1
-4.10::/usr/sbin : Non-essential standard system binaries::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#usrsbinNonessentialStandardSystemBi
-4.10.1::Purpose::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#purpose25
-4.10.2::Requirements::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#requirements10a
-4.11::/usr/share : Architecture-independent data::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#usrshareArchitectureindependentData
-4.11.1::Purpose::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#purpose26
-4.11.2::Requirements::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#requirements11
-4.11.3::Specific Options::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#specificOptions15
-4.11.4::/usr/share/color : Color management information (optional)::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#usrsharecolorColorManagement
-4.11.5::/usr/share/dict : Word lists (optional)::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#usrsharedictWordLists
-4.11.6::/usr/share/man : Manual pages::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#usrsharemanManualPages
-4.11.7::/usr/share/misc : Miscellaneous architecture-independent data::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#usrsharemiscMiscellaneousArchitecture
-4.11.8::/usr/share/ppd : Printer definitions (optional)::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#usrshareppd
-4.11.9::/usr/share/sgml : SGML data (optional)::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#usrsharesgmlSgmlAndXmlData
-4.11.10::/usr/share/xml : XML data (optional)::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#idm236087237360
-4.12::/usr/src : Source code (optional)::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#usrsrcSourceCode
-4.12.1::Purpose::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#purpose30
-5.1::Purpose::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#purpose31
-5.2::Requirements::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#requirements12
-5.3::Specific Options::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#specificOptions20
-5.4::/var/account : Process accounting logs (optional)::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#varaccountProcessAccountingLogs
-5.4.1::Purpose::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#purpose32
-5.5::/var/cache : Application cache data::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#varcacheApplicationCacheData
-5.5.1::Purpose::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#purpose33
-5.5.2::Specific Options::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#specificOptions21
-5.5.3::/var/cache/fonts : Locally-generated fonts (optional)::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#varcachefontsLocallygeneratedFonts
-5.5.4::/var/cache/man : Locally-formatted manual pages (optional)::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#varcachemanLocallyformattedManualPag
-5.6::/var/crash : System crash dumps (optional)::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#varcrashSystemCrashDumps
-5.6.1::Purpose::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#purpose36
-5.7::/var/games : Variable game data (optional)::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#vargamesVariableGameData
-5.7.1::Purpose::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#purpose37
-5.8::/var/lib : Variable state information::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#varlibVariableStateInformation
-5.8.1::Purpose::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#purpose38
-5.8.2::Requirements::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#requirements13
-5.8.3::Specific Options::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#specificOptions23
-5.8.4::/var/lib/<editor> : Editor backup files and state (optional)::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#varliblteditorgtEditorBackupFilesAn
-5.8.5::/var/lib/color : Color management information (optional)::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#varlibcolor
-5.8.6::/var/lib/hwclock : State directory for hwclock (optional)::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#varlibhwclockStateDirectoryForHwclo
-5.8.7::/var/lib/misc : Miscellaneous variable data::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#varlibmiscMiscellaneousVariableData
-5.9::/var/lock : Lock files::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#varlockLockFiles
-5.9.1::Purpose::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#purpose42
-5.10::/var/log : Log files and directories::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#varlogLogFilesAndDirectories
-5.10.1::Purpose::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#purpose43
-5.10.2::Specific Options::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#specificOptions24
-5.11::/var/mail : User mailbox files (optional)::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#varmailUserMailboxFiles
-5.11.1::Purpose::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#purpose44
-5.12::/var/opt : Variable data for /opt::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#varoptVariableDataForOpt
-5.12.1::Purpose::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#purpose45
-5.13::/var/run : Run-time variable data::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#varrunRuntimeVariableData
-5.13.1::Purpose::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#purpose46
-5.13.2::Requirements::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#requirements14
-5.14::/var/spool : Application spool data::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#varspoolApplicationSpoolData
-5.14.1::Purpose::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#purpose47
-5.14.2::Specific Options::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#specificOptions25
-5.14.3::/var/spool/lpd : Line-printer daemon print queues (optional)::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#varspoollpdLineprinterDaemonPrintQu
-5.14.4::/var/spool/rwho : Rwhod files (optional)::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#varspoolrwhoRwhodFiles
-5.15::/var/tmp : Temporary files preserved between system reboots::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#vartmpTemporaryFilesPreservedBetwee
-5.15.1::Purpose::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#purpose50
-5.16::/var/yp : Network Information Service (NIS) database files (optional)::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#varypNetworkInformationService
-5.16.1::Purpose::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#purpose51
-6.1::Linux::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#linux
-6.1.1::/ : Root directory::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#rootDirectory
-6.1.2::/bin : Essential user command binaries (for use by all users)::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#binEssentialUserCommandBinaries2
-6.1.3::/dev : Devices and special files::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#devDevicesAndSpecialFiles
-6.1.4::/etc : Host-specific system configuration::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#etcHostspecificSystemConfiguration2
-6.1.5::/proc : Kernel and process information virtual filesystem::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#procKernelAndProcessInformationVir
-6.1.6::/sbin : Essential system binaries::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#sbinEssentialSystemBinaries
-6.1.7::/sys : Kernel and system information virtual filesystem::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#sysKernelAndSystemInformation
-6.1.8::/usr/include : Header files included by C programs::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#usrincludeHeaderFilesIncludedByCP
-6.1.9::/usr/src : Source code::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#usrsrcSourceCode2
-6.1.10::/var/spool/cron : cron and at jobs::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#varspoolcronCronAndAtJobs
 7.1::The FHS mailing list::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#theFhsMailingList
 7.2::Background of the FHS::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#backgroundOfTheFhs
 7.3::General Guidelines::https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#generalGuidelines

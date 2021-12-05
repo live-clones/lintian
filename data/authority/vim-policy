@@ -15,3 +15,4 @@ _::Debian Packaging Policy for Vim::file:///usr/share/doc/vim/vim-policy.html/in
 3.2::Addon Packages::file:///usr/share/doc/vim/vim-policy.html/x113.html#addon-packages
 3.3::Registry Entries::file:///usr/share/doc/vim/vim-policy.html/x113.html#registry-entry
 4::Tools::file:///usr/share/doc/vim/vim-policy.html/x221.html
+A::Vim Registry Entry Examples::file:///usr/share/doc/vim/vim-policy.html/a245.html
