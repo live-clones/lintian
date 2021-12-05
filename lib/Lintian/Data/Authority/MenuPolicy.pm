@@ -1,7 +1,10 @@
 # -*- perl -*-
 #
 # Copyright © 1998 Christian Schwarz and Richard Braakman
+# Copyright © 2001 Colin Watson
+# Copyright © 2008 Jordà Polo
 # Copyright © 2009 Russ Allbery
+# Copyright © 2017-2019 Chris Lamb <lamby@debian.org>
 # Copyright © 2020-2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify it
@@ -25,11 +28,16 @@ use utf8;
 
 use Carp qw(croak);
 use Const::Fast;
+use Path::Tiny;
+use Unicode::UTF8 qw(encode_utf8);
+use WWW::Mechanize ();
 
 use Lintian::Output::Markdown qw(markdown_authority);
 
 const my $EMPTY => q{};
 const my $SPACE => q{ };
+const my $SLASH => q{/};
+const my $COLON => q{:};
 const my $UNDERSCORE => q{_};
 const my $LEFT_PARENTHESIS => q{(};
 const my $RIGHT_PARENTHESIS => q{)};
@@ -37,6 +45,7 @@ const my $RIGHT_PARENTHESIS => q{)};
 const my $TWO_PARTS => 2;
 
 const my $VOLUME_KEY => $UNDERSCORE;
+const my $SEPARATOR => $COLON x 2;
 
 use Moo;
 use namespace::clean;
@@ -148,6 +157,145 @@ sub markdown_citation {
         $volume_title, $volume_url,$section_key,
         $section_title, $section_url
     );
+}
+
+=item write_line
+
+=cut
+
+sub write_line {
+    my ($data_fd, $section_key, $section_title, $destination) = @_;
+
+    # drop final dots
+    $section_key =~ s{ [.]+ $}{}x;
+
+    # reduce consecutive whitespace
+    $section_title =~ s{ \s+ }{ }gx;
+
+    my $line= join($SEPARATOR,$section_key, $section_title, $destination);
+
+    say {$data_fd} encode_utf8($line);
+
+    return;
+}
+
+=item write_data_file
+
+=cut
+
+sub write_data_file {
+    my ($self, $basedir, $generated) = @_;
+
+    my $header =<<"HEADER";
+# Data about titles, sections, and URLs of manuals, used to expand references
+# in tag descriptions and add links for HTML output.  Each line of this file
+# has three fields separated by double colons:
+#
+#     <section> :: <title> :: <url>
+#
+# If <section> is an underscore, that line specifies the title and URL for the
+# whole manual.
+
+HEADER
+
+    my $data_path = "$basedir/" . $self->location;
+    my $parent_dir = path($data_path)->parent->stringify;
+    path($parent_dir)->mkpath
+      unless -e $parent_dir;
+
+    my $output = encode_utf8($header) . $generated;
+    path($data_path)->spew($output);
+
+    return;
+}
+
+=item extract_sections_from_links
+
+=cut
+
+sub extract_sections_from_links {
+    my ($self, $data_fd, $base_url)= @_;
+
+    my $mechanize = WWW::Mechanize->new();
+    $mechanize->get($base_url);
+
+    my $page_title = $mechanize->title;
+
+    # strip explanatory remark
+    $page_title =~ s{ \s* \N{EM DASH} .* $}{}x;
+
+    # underscore is a token for the whole page
+    write_line($data_fd, $VOLUME_KEY, $page_title, $base_url);
+
+    my %by_section_key;
+    my $in_appendix = 0;
+
+    # https://stackoverflow.com/a/254687
+    for my $link ($mechanize->links) {
+
+        next
+          unless length $link->text;
+
+        next
+          if $link->text !~ qr{^ \s* ([.\d]+) \s+ (.+) $}x;
+
+        my $section_key = $1;
+        my $section_title = $2;
+
+        # drop final dots
+        $section_key =~ s{ [.]+ $}{}x;
+
+        # reduce consecutive whitespace
+        $section_title =~ s{ \s+ }{ }gx;
+
+        my $destination = $base_url . $link->url;
+
+        next
+          if exists $by_section_key{$section_key}
+          && ( $by_section_key{$section_key}{title} eq $section_title
+            || $by_section_key{$section_key}{destination} eq $destination);
+
+        # Some manuals reuse section numbers for different references,
+        # e.g. the Debian Policy's normal and appendix sections are
+        # numbers that clash with each other. Track if we've already
+        # seen a section pointing to some other URL than the current one,
+        # and prepend it with an indicator
+        $in_appendix = 1
+          if exists $by_section_key{$section_key}
+          && $by_section_key{$section_key}{destination} ne $destination;
+
+        $section_key = "appendix-$section_key"
+          if $in_appendix;
+
+        $by_section_key{$section_key}{title} = $section_title;
+        $by_section_key{$section_key}{destination} = $destination;
+
+        write_line($data_fd, $section_key, $section_title, $destination);
+    }
+
+    return;
+}
+
+=item refresh
+
+=cut
+
+sub refresh {
+    my ($self, $archive, $basedir) = @_;
+
+    my $base_url = 'https://www.debian.org/doc/packaging-manuals/menu-policy/';
+
+    my $generated;
+    open(my $memory_fd, '>', \$generated)
+      or die encode_utf8('Cannot open scalar');
+
+    $self->extract_sections_from_links($memory_fd, $base_url);
+
+    close $memory_fd;
+
+    $self->write_data_file($basedir, $generated);
+
+    return;
 }
 
 =back
