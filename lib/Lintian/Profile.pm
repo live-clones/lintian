@@ -63,7 +63,8 @@ with
   'Lintian::Profile::Debhelper::Levels',
   'Lintian::Profile::Fonts',
   'Lintian::Profile::Hardening::Buildflags',
-  'Lintian::Profile::Policy::Releases';
+  'Lintian::Profile::Policy::Releases',
+  'Lintian::Profile::Stylesheet';
 
 const my $EMPTY => q{};
 const my $SPACE => q{ };

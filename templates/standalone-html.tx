@@ -7,7 +7,7 @@
   <link href="data:image/x-icon;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAArUlEQVR4AWOgOhAOqf4vEFh2RkZGRpAsA7jT5/7nSJ97RlJSklwD5vznTJxCgQFpQAMSJlJoQPwEuroAMxA5U2ZSYsA8YCzMp9AFydMpjMakKZSmg8nkG8CVMe8/e9ai80AD5ICYDx0TNiBr0X/m6oOfganxJEfq7KOcSdOOciVMAuKJR0XswnsIGiAQVvOfK3vxf67M+f+5shYA6YVAeuF/3vj+l2LOcRZUz70AF5dRizrcOOQAAAAASUVORK5CYII=" rel="icon" type="image/x-icon" />
   <style type="text/css">
 
-    : include "lintian.css";
+<: $style_sheet :>
 
   </style>
 </head>

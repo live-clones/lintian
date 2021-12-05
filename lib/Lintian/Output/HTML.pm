@@ -25,7 +25,7 @@ use utf8;
 use Const::Fast;
 use Path::Tiny;
 use Text::Markdown::Discount qw(markdown);
-use Text::Xslate;
+use Text::Xslate qw(mark_raw);
 use Time::Duration;
 use Time::Moment;
 use Unicode::UTF8 qw(encode_utf8);
@@ -120,12 +120,15 @@ sub issue_hints {
         }
     }
 
+    my $style_sheet = $profile->style_sheet->css;
+
     my $templatedir = "$ENV{LINTIAN_BASE}/templates";
     my $tx = Text::Xslate->new(path => [$templatedir]);
     my $page = $tx->render(
         'standalone-html.tx',
         {
             title => 'Lintian Tags',
+            style_sheet => mark_raw($style_sheet),
             output => \%output,
         });
 

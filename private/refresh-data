@@ -58,6 +58,7 @@ my @parts = (
     $profile->architectures, $profile->debhelper_addons,
     $profile->debhelper_commands, $profile->fonts,
     $profile->hardening_buildflags,$profile->policy_releases,
+    $profile->style_sheet,
 );
 
 my $archive = Lintian::Archive->new;
