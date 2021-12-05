@@ -31,7 +31,8 @@ include =
 
 [BuiltinFunctions::ProhibitSleepViaSelect]
 
-[-BuiltinFunctions::ProhibitStringyEval]
+[BuiltinFunctions::ProhibitStringyEval]
+allow_includes = 1
 
 [BuiltinFunctions::ProhibitStringySplit]
 
