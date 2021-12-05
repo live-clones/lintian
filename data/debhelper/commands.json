@@ -853,11 +853,6 @@
          ],
          "uses_autoscript" : 1
       },
-      "dh_python-ply" : {
-         "installed_by" : [
-            "python-ply"
-         ]
-      },
       "dh_python2" : {
          "installed_by" : [
             "dh-python"
