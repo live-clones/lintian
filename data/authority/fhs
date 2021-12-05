@@ -6,8 +6,6 @@
 #
 # If <section> is empty, that line specifies the title and URL for the whole
 # manual.  If <url> is empty, that manual is not available on the web.
-#
-# Last updated: 2021-11-28
 
 _::Filesystem Hierarchy Standard::http://www.pathname.com/fhs/pub/fhs-3.0.html
 introduction::1. Introduction::http://www.pathname.com/fhs/pub/fhs-3.0.html#introduction

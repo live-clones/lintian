@@ -6,8 +6,6 @@
 #
 # If <section> is empty, that line specifies the title and URL for the whole
 # manual.  If <url> is empty, that manual is not available on the web.
-#
-# Last updated: 2021-11-28
 
 _::Debian policy for Java::https://www.debian.org/doc/packaging-manuals/java-policy/
 1::Background::https://www.debian.org/doc/packaging-manuals/java-policy/ch01.html

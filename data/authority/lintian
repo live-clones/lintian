@@ -6,8 +6,6 @@
 #
 # If <section> is empty, that line specifies the title and URL for the whole
 # manual.  If <url> is empty, that manual is not available on the web.
-#
-# Last updated: 2021-11-28
 
 _::Lintian User's Manual::https://lintian.debian.org/manual/
 1::Introduction::https://lintian.debian.org/manual/#introduction

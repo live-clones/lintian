@@ -6,8 +6,6 @@
 #
 # If <section> is empty, that line specifies the title and URL for the whole
 # manual.  If <url> is empty, that manual is not available on the web.
-#
-# Last updated: 2021-11-28
 
 _::Debian Python Policy 0.12.0.0 documentation::https://www.debian.org/doc/packaging-manuals/python-policy/
 1::Copyright::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#document-copyright

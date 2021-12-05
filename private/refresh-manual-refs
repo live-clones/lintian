@@ -43,7 +43,6 @@ use constant THISDIR => dirname realpath __FILE__;
 use lib THISDIR . '/../lib';
 
 use List::SomeUtils qw(none);
-use POSIX qw(strftime);
 
 const my $EMPTY => q{};
 const my $UNDERSCORE => q{_};
@@ -208,8 +207,6 @@ exit;
 sub write_data_file {
     my ($generated, $path) = @_;
 
-    my $date = strftime('%Y-%m-%d', gmtime);
-
     my $header =<<"HEADER";
 # Data about titles, sections, and URLs of manuals, used to expand references
 # in tag descriptions and add links for HTML output.  Each line of this file
@@ -219,8 +216,6 @@ sub write_data_file {
 #
 # If <section> is empty, that line specifies the title and URL for the whole
 # manual.  If <url> is empty, that manual is not available on the web.
-#
-# Last updated: $date
 
 HEADER
 

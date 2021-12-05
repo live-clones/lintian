@@ -28,7 +28,6 @@ use Const::Fast;
 use JSON::MaybeXS;
 use List::SomeUtils qw(first_value uniq);
 use Path::Tiny;
-use Time::Piece;
 use Unicode::UTF8 qw(decode_utf8 encode_utf8);
 
 use Lintian::Deb822;
@@ -143,7 +142,6 @@ sub refresh {
     my %preamble;
     $preamble{title} = $self->title;
     $preamble{'dpkg-version'} = $dpkg_version;
-    $preamble{'last-update'} = gmtime->datetime . 'Z';
 
     my %all;
     $all{preamble} = \%preamble;

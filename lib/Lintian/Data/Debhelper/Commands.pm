@@ -31,7 +31,6 @@ use List::SomeUtils qw(first_value any uniq);
 use JSON::MaybeXS;
 use Path::Tiny;
 use PerlIO::gzip;
-use Time::Piece;
 use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Deb822;
@@ -290,7 +289,6 @@ sub refresh {
 
     my %preamble;
     $preamble{title} = $self->title;
-    $preamble{last_update} = gmtime->datetime . 'Z';
 
     my %all;
     $all{preamble} = \%preamble;

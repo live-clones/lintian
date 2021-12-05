@@ -1,7 +1,6 @@
 {
    "preamble" : {
       "dpkg-version" : "1.20.9",
-      "last-update" : "2021-11-24T14:12:56Z",
       "title" : "DEB_HOST_* Variables from Dpkg"
    },
    "variables" : {

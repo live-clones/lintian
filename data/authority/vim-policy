@@ -6,8 +6,6 @@
 #
 # If <section> is empty, that line specifies the title and URL for the whole
 # manual.  If <url> is empty, that manual is not available on the web.
-#
-# Last updated: 2021-11-28
 
 _::Debian Packaging Policy for Vim::http://pkg-vim.alioth.debian.org/vim-policy.html/
 1::Vim Addon Packaging in a Nutshell::http://pkg-vim.alioth.debian.org/vim-policy.html/index.html#nutshell

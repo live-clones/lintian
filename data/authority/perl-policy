@@ -6,8 +6,6 @@
 #
 # If <section> is empty, that line specifies the title and URL for the whole
 # manual.  If <url> is empty, that manual is not available on the web.
-#
-# Last updated: 2021-11-28
 
 _::Debian Perl Policy::https://www.debian.org/doc/packaging-manuals/perl-policy/
 1::About this document::https://www.debian.org/doc/packaging-manuals/perl-policy/ch1.html

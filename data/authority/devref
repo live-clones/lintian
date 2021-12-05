@@ -6,8 +6,6 @@
 #
 # If <section> is empty, that line specifies the title and URL for the whole
 # manual.  If <url> is empty, that manual is not available on the web.
-#
-# Last updated: 2021-11-28
 
 _::Debian Developer&#39;s Reference::https://www.debian.org/doc/developers-reference/
 1::Scope of This Document::https://www.debian.org/doc/developers-reference/scope.html
