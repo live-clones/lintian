@@ -3012,8 +3012,7 @@
       },
       "denemo.ttf" : {
          "installed_by" : [
-            "fonts-denemo",
-            "ttf-denemo"
+            "fonts-denemo"
          ]
       },
       "dented.ttf" : {
@@ -3979,8 +3978,7 @@
       },
       "emmentaler.ttf" : {
          "installed_by" : [
-            "fonts-denemo",
-            "ttf-denemo"
+            "fonts-denemo"
          ]
       },
       "encappln.ttf" : {
@@ -4309,8 +4307,7 @@
       },
       "feta.ttf" : {
          "installed_by" : [
-            "fonts-denemo",
-            "ttf-denemo"
+            "fonts-denemo"
          ]
       },
       "fetteclassicunzfraktur.ttf" : {
