@@ -34,7 +34,7 @@ Depends:
  libapt-pkg-perl,
  libarchive-zip-perl,
  libcapture-tiny-perl,
-# makes Moo faster, https://metacpan.org/pod/Moo#MOO-AND-CLASS::XSACCESSOR
+# Bug#1001173 solved in 2.005004-3; leave for backports for now
  libclass-xsaccessor-perl,
  libclone-perl,
  libconfig-tiny-perl,
