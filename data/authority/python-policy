@@ -4,8 +4,8 @@
 #
 #     <section> :: <title> :: <url>
 #
-# If <section> is empty, that line specifies the title and URL for the whole
-# manual.  If <url> is empty, that manual is not available on the web.
+# If <section> is an underscore, that line specifies the title and URL for the
+# whole manual.
 
 _::Debian Python Policy 0.12.0.0 documentation::https://www.debian.org/doc/packaging-manuals/python-policy/
 1::Copyright::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#document-copyright
@@ -39,14 +39,14 @@ _::Debian Python Policy 0.12.0.0 documentation::https://www.debian.org/doc/packa
 6.1::Building Embedded Programs::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#building-embedded-programs
 6.2::Embedded Python Dependencies::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#embedded-python-dependencies
 7::Interaction with Locally Installed Python Versions::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#document-locally-installed-python
-1*::Build Dependencies::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#document-build-dependencies
-2*::Packaging Tools::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#document-packaging-tools
-2.1*::distutils::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#distutils
-2.2*::setuptools::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#setuptools
-2.3::dh-python::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#dh-python
-2.4::pybuild::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#pybuild
-2.5::CDBS::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#cdbs
-2.6::python-support (removed)::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#python-support-removed
-2.7::python-central (removed)::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#python-central-removed
-3*::Upgrade Procedure::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#document-upgrade-procedure
-4*::This document::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#document-this-document
+appendix-1::Build Dependencies::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#document-build-dependencies
+appendix-2::Packaging Tools::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#document-packaging-tools
+appendix-2.1::distutils::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#distutils
+appendix-2.2::setuptools::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#setuptools
+appendix-2.3::dh-python::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#dh-python
+appendix-2.4::pybuild::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#pybuild
+appendix-2.5::CDBS::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#cdbs
+appendix-2.6::python-support (removed)::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#python-support-removed
+appendix-2.7::python-central (removed)::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#python-central-removed
+appendix-3::Upgrade Procedure::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#document-upgrade-procedure
+appendix-4::This document::https://www.debian.org/doc/packaging-manuals/python-policy/index.html#document-this-document

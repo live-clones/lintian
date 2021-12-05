@@ -4,8 +4,8 @@
 #
 #     <section> :: <title> :: <url>
 #
-# If <section> is empty, that line specifies the title and URL for the whole
-# manual.  If <url> is empty, that manual is not available on the web.
+# If <section> is an underscore, that line specifies the title and URL for the
+# whole manual.
 
 _::Debian Menu System::https://www.debian.org/doc/packaging-manuals/menu.html/
 1::Introduction::https://www.debian.org/doc/packaging-manuals/menu.html/ch1.html

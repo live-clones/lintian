@@ -4,8 +4,8 @@
 #
 #     <section> :: <title> :: <url>
 #
-# If <section> is empty, that line specifies the title and URL for the whole
-# manual.  If <url> is empty, that manual is not available on the web.
+# If <section> is an underscore, that line specifies the title and URL for the
+# whole manual.
 
 _::Debian Policy Manual::https://www.debian.org/doc/debian-policy/
 1::About this manual::https://www.debian.org/doc/debian-policy/ch-scope.html
@@ -56,7 +56,7 @@ _::Debian Policy Manual::https://www.debian.org/doc/debian-policy/
 4.9.1::<code>debian/rules</code> and <code>DEB_BUILD_OPTIONS</code>::https://www.debian.org/doc/debian-policy/ch-source.html#debian-rules-and-deb-build-options
 4.9.2::<code>debian/rules</code> and <code>Rules-Requires-Root</code>::https://www.debian.org/doc/debian-policy/ch-source.html#debian-rules-and-rules-requires-root
 4.10::Variable substitutions: <code>debian/substvars</code>::https://www.debian.org/doc/debian-policy/ch-source.html#variable-substitutions-debian-substvars
-4.11::Optional upstream source location: <code>debian/watch</code>::https://www.debian.org/doc/debian-policy/ch-source.html#optional-upstream-source-location-debian-watch
+4.11::Upstream source location: <code>debian/watch</code>::https://www.debian.org/doc/debian-policy/ch-source.html#upstream-source-location-debian-watch
 4.12::Generated files list: <code>debian/files</code>::https://www.debian.org/doc/debian-policy/ch-source.html#generated-files-list-debian-files
 4.13::Embedded code copies::https://www.debian.org/doc/debian-policy/ch-source.html#embedded-code-copies
 4.14::Source package handling: <code>debian/README.source</code>::https://www.debian.org/doc/debian-policy/ch-source.html#source-package-handling-debian-readme-source
@@ -224,121 +224,56 @@ _::Debian Policy Manual::https://www.debian.org/doc/debian-policy/
 12.5.1::Machine-readable copyright information::https://www.debian.org/doc/debian-policy/ch-docs.html#machine-readable-copyright-information
 12.6::Examples::https://www.debian.org/doc/debian-policy/ch-docs.html#examples
 12.7::Changelog files and release notes::https://www.debian.org/doc/debian-policy/ch-docs.html#changelog-files-and-release-notes
-1*::Introduction and scope of these appendices::https://www.debian.org/doc/debian-policy/ap-pkg-scope.html
-2*::Binary packages (from old Packaging Manual)::https://www.debian.org/doc/debian-policy/ap-pkg-binarypkg.html
-2.1*::Creating package files - <code>dpkg-deb</code>::https://www.debian.org/doc/debian-policy/ap-pkg-binarypkg.html#creating-package-files-dpkg-deb
-2.2*::Package control information files::https://www.debian.org/doc/debian-policy/ap-pkg-binarypkg.html#package-control-information-files
-2.3*::The main control information file: <code>control</code>::https://www.debian.org/doc/debian-policy/ap-pkg-binarypkg.html#the-main-control-information-file-control
-2.4*::Time Stamps::https://www.debian.org/doc/debian-policy/ap-pkg-binarypkg.html#time-stamps
-3*::Source packages (from old Packaging Manual)::https://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html
-3.1*::Tools for processing source packages::https://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#tools-for-processing-source-packages
-3.1.1*::<code>dpkg-source</code> - packs and unpacks Debian source packages::https://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#dpkg-source-packs-and-unpacks-debian-source-packages
-3.1.2::<code>dpkg-buildpackage</code> - overall package-building control script::https://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#dpkg-buildpackage-overall-package-building-control-script
-3.1.3::<code>dpkg-gencontrol</code> - generates binary package control files::https://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#dpkg-gencontrol-generates-binary-package-control-files
-3.1.4::<code>dpkg-shlibdeps</code> - calculates shared library dependencies::https://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#dpkg-shlibdeps-calculates-shared-library-dependencies
-3.1.5::<code>dpkg-distaddfile</code> - adds a file to <code>debian/files</code>::https://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#dpkg-distaddfile-adds-a-file-to-debian-files
-3.1.6::<code>dpkg-genchanges</code> - generates a <code>.changes</code> upload control file::https://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#dpkg-genchanges-generates-a-changes-upload-control-file
-3.1.7::<code>dpkg-parsechangelog</code> - produces parsed representation of a changelog::https://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#dpkg-parsechangelog-produces-parsed-representation-of-a-changelog
-3.1.8::<code>dpkg-architecture</code> - information about the build and host system::https://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#dpkg-architecture-information-about-the-build-and-host-system
-3.2*::The Debian package source tree::https://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#the-debian-package-source-tree
-3.2.1*::<code>debian/rules</code> - the main building script::https://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#debian-rules-the-main-building-script
-3.2.2*::<code>debian/substvars</code> and variable substitutions::https://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#debian-substvars-and-variable-substitutions
-3.2.3::<code>debian/files</code>::https://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#debian-files
-3.2.4::<code>debian/tmp</code>::https://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#debian-tmp
-3.3*::Source packages as archives::https://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#source-packages-as-archives
-3.4*::Unpacking a Debian source package without <code>dpkg-source</code>::https://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#unpacking-a-debian-source-package-without-dpkg-source
-3.4.1*::Restrictions on objects in source packages::https://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#restrictions-on-objects-in-source-packages
-4*::Control files and their fields (from old Packaging Manual)::https://www.debian.org/doc/debian-policy/ap-pkg-controlfields.html
-4.1*::Syntax of control files::https://www.debian.org/doc/debian-policy/ap-pkg-controlfields.html#syntax-of-control-files
-4.2*::List of fields::https://www.debian.org/doc/debian-policy/ap-pkg-controlfields.html#list-of-fields
-4.2.1::<code>Filename</code> and <code>MSDOS-Filename</code>::https://www.debian.org/doc/debian-policy/ap-pkg-controlfields.html#filename-and-msdos-filename
-4.2.2::<code>Size</code> and <code>MD5sum</code>::https://www.debian.org/doc/debian-policy/ap-pkg-controlfields.html#size-and-md5sum
-4.2.3::<code>Status</code>::https://www.debian.org/doc/debian-policy/ap-pkg-controlfields.html#status
-4.2.4::<code>Config-Version</code>::https://www.debian.org/doc/debian-policy/ap-pkg-controlfields.html#config-version
-4.2.5::<code>Conffiles</code>::https://www.debian.org/doc/debian-policy/ap-pkg-controlfields.html#conffiles
-4.2.6::Obsolete fields::https://www.debian.org/doc/debian-policy/ap-pkg-controlfields.html#obsolete-fields
-5*::Configuration file handling (from old Packaging Manual)::https://www.debian.org/doc/debian-policy/ap-pkg-conffiles.html
-5.1*::Automatic handling of configuration files by <code>dpkg</code>::https://www.debian.org/doc/debian-policy/ap-pkg-conffiles.html#automatic-handling-of-configuration-files-by-dpkg
-5.2*::Fully-featured maintainer script configuration handling::https://www.debian.org/doc/debian-policy/ap-pkg-conffiles.html#fully-featured-maintainer-script-configuration-handling
-6*::Alternative versions of an interface - <code>update-alternatives</code> (from old Packaging Manual)::https://www.debian.org/doc/debian-policy/ap-pkg-alternatives.html
-7*::Diversions - overriding a package’s version of a file (from old Packaging Manual)::https://www.debian.org/doc/debian-policy/ap-pkg-diversions.html
-8*::Debian Policy changes process::https://www.debian.org/doc/debian-policy/ap-process.html
-8.1*::Introduction::https://www.debian.org/doc/debian-policy/ap-process.html#introduction
-8.2*::Change Goals::https://www.debian.org/doc/debian-policy/ap-process.html#change-goals
-8.3*::Current Process::https://www.debian.org/doc/debian-policy/ap-process.html#current-process
-8.3.1::State A: More information required::https://www.debian.org/doc/debian-policy/ap-process.html#state-a-more-information-required
-8.3.2::State B: Discussion::https://www.debian.org/doc/debian-policy/ap-process.html#state-b-discussion
-8.3.3::State C: Proposal::https://www.debian.org/doc/debian-policy/ap-process.html#state-c-proposal
-8.3.4::State D: Wording proposed::https://www.debian.org/doc/debian-policy/ap-process.html#state-d-wording-proposed
-8.3.5::State E: Seconded::https://www.debian.org/doc/debian-policy/ap-process.html#state-e-seconded
-8.3.6::State F: Accepted::https://www.debian.org/doc/debian-policy/ap-process.html#state-f-accepted
-8.3.7::State G: Reject::https://www.debian.org/doc/debian-policy/ap-process.html#state-g-reject
-8.4*::Other Tags::https://www.debian.org/doc/debian-policy/ap-process.html#other-tags
-9*::Maintainer script flowcharts::https://www.debian.org/doc/debian-policy/ap-flowcharts.html
-10*::Upgrading checklist::https://www.debian.org/doc/debian-policy/upgrading-checklist.html
-10.1*::About the checklist::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#about-the-checklist
-10.2*::Version 4.5.1::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-4-5-1
-10.3*::Version 4.5.0::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-4-5-0
-10.4*::Version 4.4.1::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-4-4-1
-10.5*::Version 4.4.0::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-4-4-0
-10.6*::Version 4.3.0::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-4-3-0
-10.7*::Version 4.2.1::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-4-2-1
-10.8*::Version 4.2.0::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-4-2-0
-10.9*::Version 4.1.5::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-4-1-5
-10.10*::Version 4.1.4::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-4-1-4
-10.11::Version 4.1.3::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-4-1-3
-10.12::Version 4.1.2::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-4-1-2
-10.13::Version 4.1.1::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-4-1-1
-10.14::Version 4.1.0::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-4-1-0
-10.15::Version 4.0.1::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-4-0-1
-10.16::Version 4.0.0::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-4-0-0
-10.17::Version 3.9.8::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-9-8
-10.18::Version 3.9.7::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-9-7
-10.19::Version 3.9.6::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-9-6
-10.20::Version 3.9.5::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-9-5
-10.21::Version 3.9.4::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-9-4
-10.22::Version 3.9.3::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-9-3
-10.23::Version 3.9.2::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-9-2
-10.24::Version 3.9.1::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-9-1
-10.25::Version 3.9.0::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-9-0
-10.26::Version 3.8.4::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-8-4
-10.27::Version 3.8.3::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-8-3
-10.28::Version 3.8.2::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-8-2
-10.29::Version 3.8.1::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-8-1
-10.30::Version 3.8.0::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-8-0
-10.31::Version 3.7.3::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-7-3
-10.32::Version 3.7.2.2::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-7-2-2
-10.33::Version 3.7.2::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-7-2
-10.34::Version 3.7.1::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-7-1
-10.35::Version 3.7.0::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-7-0
-10.36::Version 3.6.2::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-6-2
-10.37::Version 3.6.1::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-6-1
-10.38::Version 3.6.0::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-6-0
-10.39::Version 3.5.10::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-5-10
-10.40::Version 3.5.9::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-5-9
-10.41::Version 3.5.8::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-5-8
-10.42::Version 3.5.7::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-5-7
-10.43::Version 3.5.6::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-5-6
-10.44::Version 3.5.5::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-5-5
-10.45::Version 3.5.4::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-5-4
-10.46::Version 3.5.3::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-5-3
-10.47::Version 3.5.2::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-5-2
-10.48::Version 3.5.1::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-5-1
-10.49::Version 3.5.0::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-5-0
-10.50::Version 3.2.1.1::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-2-1-1
-10.51::Version 3.2.1::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-2-1
-10.52::Version 3.2.0::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-2-0
-10.53::Version 3.1.1::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-1-1
-10.54::Version 3.1.0::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-1-0
-10.55::Version 3.0.1::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-0-1
-10.56::Version 3.0.0::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-3-0-0
-10.57::Version 2.5.0::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-2-5-0
-10.58::Version 2.4.1::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-2-4-1
-10.59::Version 2.4.0::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-2-4-0
-10.60::Version 2.3.0::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-2-3-0
-10.61::Version 2.2.0::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-2-2-0
-10.62::Version 2.1.3::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-2-1-3
-10.63::Version 2.1.2::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-2-1-2
-10.64::Version 2.1.1::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-2-1-1
-10.65::Version 2.1.0::https://www.debian.org/doc/debian-policy/upgrading-checklist.html#version-2-1-0
-11*::License::https://www.debian.org/doc/debian-policy/ap-license.html
+appendix-1::Introduction and scope of these appendices::https://www.debian.org/doc/debian-policy/ap-pkg-scope.html
+appendix-2::Binary packages (from old Packaging Manual)::https://www.debian.org/doc/debian-policy/ap-pkg-binarypkg.html
+appendix-2.1::Creating package files - <code>dpkg-deb</code>::https://www.debian.org/doc/debian-policy/ap-pkg-binarypkg.html#creating-package-files-dpkg-deb
+appendix-2.2::Package control information files::https://www.debian.org/doc/debian-policy/ap-pkg-binarypkg.html#package-control-information-files
+appendix-2.3::The main control information file: <code>control</code>::https://www.debian.org/doc/debian-policy/ap-pkg-binarypkg.html#the-main-control-information-file-control
+appendix-2.4::Time Stamps::https://www.debian.org/doc/debian-policy/ap-pkg-binarypkg.html#time-stamps
+appendix-3::Source packages (from old Packaging Manual)::https://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html
+appendix-3.1::Tools for processing source packages::https://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#tools-for-processing-source-packages
+appendix-3.1.1::<code>dpkg-source</code> - packs and unpacks Debian source packages::https://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#dpkg-source-packs-and-unpacks-debian-source-packages
+appendix-3.1.2::<code>dpkg-buildpackage</code> - overall package-building control script::https://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#dpkg-buildpackage-overall-package-building-control-script
+appendix-3.1.3::<code>dpkg-gencontrol</code> - generates binary package control files::https://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#dpkg-gencontrol-generates-binary-package-control-files
+appendix-3.1.4::<code>dpkg-shlibdeps</code> - calculates shared library dependencies::https://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#dpkg-shlibdeps-calculates-shared-library-dependencies
+appendix-3.1.5::<code>dpkg-distaddfile</code> - adds a file to <code>debian/files</code>::https://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#dpkg-distaddfile-adds-a-file-to-debian-files
+appendix-3.1.6::<code>dpkg-genchanges</code> - generates a <code>.changes</code> upload control file::https://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#dpkg-genchanges-generates-a-changes-upload-control-file
+appendix-3.1.7::<code>dpkg-parsechangelog</code> - produces parsed representation of a changelog::https://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#dpkg-parsechangelog-produces-parsed-representation-of-a-changelog
+appendix-3.1.8::<code>dpkg-architecture</code> - information about the build and host system::https://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#dpkg-architecture-information-about-the-build-and-host-system
+appendix-3.2::The Debian package source tree::https://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#the-debian-package-source-tree
+appendix-3.2.1::<code>debian/rules</code> - the main building script::https://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#debian-rules-the-main-building-script
+appendix-3.2.2::<code>debian/substvars</code> and variable substitutions::https://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#debian-substvars-and-variable-substitutions
+appendix-3.2.3::<code>debian/files</code>::https://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#debian-files
+appendix-3.2.4::<code>debian/tmp</code>::https://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#debian-tmp
+appendix-3.3::Source packages as archives::https://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#source-packages-as-archives
+appendix-3.4::Unpacking a Debian source package without <code>dpkg-source</code>::https://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#unpacking-a-debian-source-package-without-dpkg-source
+appendix-3.4.1::Restrictions on objects in source packages::https://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#restrictions-on-objects-in-source-packages
+appendix-4::Control files and their fields (from old Packaging Manual)::https://www.debian.org/doc/debian-policy/ap-pkg-controlfields.html
+appendix-4.1::Syntax of control files::https://www.debian.org/doc/debian-policy/ap-pkg-controlfields.html#syntax-of-control-files
+appendix-4.2::List of fields::https://www.debian.org/doc/debian-policy/ap-pkg-controlfields.html#list-of-fields
+appendix-4.2.1::<code>Filename</code> and <code>MSDOS-Filename</code>::https://www.debian.org/doc/debian-policy/ap-pkg-controlfields.html#filename-and-msdos-filename
+appendix-4.2.2::<code>Size</code> and <code>MD5sum</code>::https://www.debian.org/doc/debian-policy/ap-pkg-controlfields.html#size-and-md5sum
+appendix-4.2.3::<code>Status</code>::https://www.debian.org/doc/debian-policy/ap-pkg-controlfields.html#status
+appendix-4.2.4::<code>Config-Version</code>::https://www.debian.org/doc/debian-policy/ap-pkg-controlfields.html#config-version
+appendix-4.2.5::<code>Conffiles</code>::https://www.debian.org/doc/debian-policy/ap-pkg-controlfields.html#conffiles
+appendix-4.2.6::Obsolete fields::https://www.debian.org/doc/debian-policy/ap-pkg-controlfields.html#obsolete-fields
+appendix-5::Configuration file handling (from old Packaging Manual)::https://www.debian.org/doc/debian-policy/ap-pkg-conffiles.html
+appendix-5.1::Automatic handling of configuration files by <code>dpkg</code>::https://www.debian.org/doc/debian-policy/ap-pkg-conffiles.html#automatic-handling-of-configuration-files-by-dpkg
+appendix-5.2::Fully-featured maintainer script configuration handling::https://www.debian.org/doc/debian-policy/ap-pkg-conffiles.html#fully-featured-maintainer-script-configuration-handling
+appendix-6::Alternative versions of an interface - <code>update-alternatives</code> (from old Packaging Manual)::https://www.debian.org/doc/debian-policy/ap-pkg-alternatives.html
+appendix-7::Diversions - overriding a package’s version of a file (from old Packaging Manual)::https://www.debian.org/doc/debian-policy/ap-pkg-diversions.html
+appendix-8::Debian Policy changes process::https://www.debian.org/doc/debian-policy/ap-process.html
+appendix-8.1::Introduction::https://www.debian.org/doc/debian-policy/ap-process.html#introduction
+appendix-8.2::Change Goals::https://www.debian.org/doc/debian-policy/ap-process.html#change-goals
+appendix-8.3::Current Process::https://www.debian.org/doc/debian-policy/ap-process.html#current-process
+appendix-8.3.1::State A: More information required::https://www.debian.org/doc/debian-policy/ap-process.html#state-a-more-information-required
+appendix-8.3.2::State B: Discussion::https://www.debian.org/doc/debian-policy/ap-process.html#state-b-discussion
+appendix-8.3.3::State C: Proposal::https://www.debian.org/doc/debian-policy/ap-process.html#state-c-proposal
+appendix-8.3.4::State D: Wording proposed::https://www.debian.org/doc/debian-policy/ap-process.html#state-d-wording-proposed
+appendix-8.3.5::State E: Seconded::https://www.debian.org/doc/debian-policy/ap-process.html#state-e-seconded
+appendix-8.3.6::State F: Accepted::https://www.debian.org/doc/debian-policy/ap-process.html#state-f-accepted
+appendix-8.3.7::State G: Reject::https://www.debian.org/doc/debian-policy/ap-process.html#state-g-reject
+appendix-8.4::Other Tags::https://www.debian.org/doc/debian-policy/ap-process.html#other-tags
+appendix-9::Maintainer script flowcharts::https://www.debian.org/doc/debian-policy/ap-flowcharts.html
+appendix-10::Upgrading checklist::https://www.debian.org/doc/debian-policy/upgrading-checklist.html
+appendix-11::License::https://www.debian.org/doc/debian-policy/ap-license.html

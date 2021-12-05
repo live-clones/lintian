@@ -32,6 +32,7 @@ use utf8;
 use Const::Fast;
 use Cwd qw(realpath);
 use File::Basename qw(dirname);
+use HTTP::Tiny;
 use Path::Tiny;
 use Unicode::UTF8 qw(decode_utf8 encode_utf8);
 
@@ -49,6 +50,7 @@ const my $UNDERSCORE => q{_};
 const my $ASTERISK => q{*};
 const my $DOLLAR => q{$};
 const my $COLON => q{:};
+const my $SLASH => q{/};
 
 const my $DOUBLE_COLON => $COLON . $COLON;
 
@@ -71,8 +73,6 @@ const my $FHS_FIELDS => 3;
 # of the manual.
 
 my $title_re = qr/<title\s?>(.+?)(?:\s+&#8212.+|\s+v[\d.]+)?<\/title\s?>/i;
-my $link_re
-  = qr/<link href="(.+?)" rel="[\w]+" title="([A-Z]|[A-Z]?[\d\.]+?)\.?\s+([\w\s[:punct:]]+?)">/;
 my $index_re
   = qr/<a href="(.+?)">\s*([A-Z]|[A-Z]?[\d\.]+?)\.?\s+([\w\s[:punct:]]+?)\s*<\/a>/;
 my $sphinx_re
@@ -89,7 +89,6 @@ path($folder)->mkpath
 refresh(
     'policy',
     {
-        local_path => '/usr/share/doc/debian-policy/policy.html/index.html',
         base_url => 'https://www.debian.org/doc/debian-policy/',
         field_regex => $sphinx_re,
         field_order => $PAGE_FIELDS
@@ -98,8 +97,6 @@ refresh(
 refresh(
     'menu-policy',
     {
-        local_path =>
-          '/usr/share/doc/debian-policy/menu-policy.html/index.html',
         base_url =>'https://www.debian.org/doc/packaging-manuals/menu-policy/',
         field_regex => $index_re,
         field_order => $PAGE_FIELDS
@@ -108,8 +105,6 @@ refresh(
 refresh(
     'perl-policy',
     {
-        local_path =>
-          '/usr/share/doc/debian-policy/perl-policy.html/index.html',
         base_url =>'https://www.debian.org/doc/packaging-manuals/perl-policy/',
         field_regex => $index_re,
         field_order => $PAGE_FIELDS
@@ -118,7 +113,6 @@ refresh(
 refresh(
     'python-policy',
     {
-        local_path => '/usr/share/doc/python3/python-policy.html',
         base_url =>
           'https://www.debian.org/doc/packaging-manuals/python-policy/',
         field_regex => $sphinx_re,
@@ -128,27 +122,27 @@ refresh(
 refresh(
     'java-policy',
     {
-        local_path =>
-          '/usr/share/doc/java-policy/debian-java-policy/index.html',
         base_url =>'https://www.debian.org/doc/packaging-manuals/java-policy/',
         field_regex => $dbk_index_re2,
         field_order => $PAGE_FIELDS
     });
 
+# shipped as part of the vim installable
 refresh(
     'vim-policy',
     {
-        local_path => '/usr/share/doc/vim/vim-policy.html/index.html',
-        base_url => 'http://pkg-vim.alioth.debian.org/vim-policy.html/',
+        local_path => '/usr/share/doc/vim/vim-policy.html/',
+        index_name => 'index.html',
         field_regex => $dbk_index_re,
         field_order => $DOCBOOK_FIELDS
     });
 
+# presently not published online
 refresh(
     'lintian',
     {
-        local_path => '/usr/share/doc/lintian/lintian.html',
-        base_url => 'https://lintian.debian.org/manual/',
+        local_path => '/usr/share/doc/lintian/',
+        index_name => 'lintian.html',
         field_regex => $sphinx_re,
         field_order => $PAGE_FIELDS
     });
@@ -156,7 +150,6 @@ refresh(
 refresh(
     'devref',
     {
-        local_path => '/usr/share/doc/developers-reference/docs/index.html',
         base_url => 'https://www.debian.org/doc/developers-reference/',
         field_regex => $sphinx_re,
         field_order => $PAGE_FIELDS,
@@ -167,38 +160,40 @@ qr{<h[45] class="title"><a id="(.+?)"></a>([\d\.]+?)\.? ([\w\s[:punct:]]+?)</h[4
 refresh(
     'menu',
     {
-        local_path => '/usr/share/doc/menu/html/index.html',
         base_url => 'https://www.debian.org/doc/packaging-manuals/menu.html/',
         field_regex => $index_re,
         field_order => $PAGE_FIELDS
     });
 
+# shipped as part of the doc-base installable
 refresh(
     'doc-base',
     {
-        local_path => '/usr/share/doc/doc-base/doc-base.html/index.html',
-        base_url => $EMPTY,
+        local_path => '/usr/share/doc/doc-base/doc-base.html/',
+        index_name => 'index.html',
         field_regex => $index_re,
         field_order => $PAGE_FIELDS
     });
 
+# single page
 refresh(
     'debconf-spec',
     {
-        local_path =>'/usr/share/doc/debian-policy/debconf_specification.html',
-        base_url =>
-'https://www.debian.org/doc/packaging-manuals/debconf_specification.html',
+        base_url =>'https://www.debian.org/doc/packaging-manuals/',
+        index_name => 'debconf_specification.html',
         field_regex => $index_re,
         field_order => $PAGE_FIELDS
     });
 
+# single page version
+# plain directory shows a file list
 refresh(
     'fhs',
     {
-        local_path => '/usr/share/doc/debian-policy/fhs/fhs-3.0.html',
-        base_url => 'http://www.pathname.com/fhs/pub/fhs-3.0.html',
-        field_regex =>qr/<a\s+href="(#.+?)"\s*>(\d[\w\s[:punct:]]*?)<\/a\s*>/i,
-        field_order => $FHS_FIELDS
+        base_url =>'https://refspecs.linuxfoundation.org/FHS_3.0/',
+        index_name => 'fhs-3.0.html',
+        field_regex =>qr/<a\s+href="(.+?)"\s*>(\d[.\d]*)\s+([^<]+)<\/a\s*>/i,
+        field_order => $PAGE_FIELDS
     });
 
 exit;
@@ -207,32 +202,39 @@ sub refresh {
     my ($manual, $manual_data) = @_;
 
     my $local_path = $manual_data->{local_path};
-    my $base_url = $manual_data->{base_url};
+    my $index_name = $manual_data->{index_name};
     my $field_regex = $manual_data->{field_regex};
-    my $field_order = $manual_data->{field_order};
     my $sub_regex = $manual_data->{sub_regex};
 
-    if (!-e $local_path) {
-        say encode_utf8(
-            "Manual \"$manual\" not available (missing: $local_path)\n");
-        return;
+    if (length $local_path) {
+
+        my $file_path = $local_path;
+        $file_path .= $index_name
+          if length $index_name;
+
+        if (!-e $file_path) {
+            say encode_utf8(
+                "Manual '$manual' not available (missing: $local_path)\n");
+            return;
+        }
     }
+
+    say "Working on manual '$manual'.";
 
     my $generated;
     open(my $memory_fd, '>', \$generated)
       or die encode_utf8('Cannot open scalar');
 
     # Extract references from the index.
-    my @subpages
-      = extract_refs($memory_fd, $manual, 0, $local_path, $base_url,
-        $field_regex, $field_order);
+    my @sub_pages
+      = extract_refs($memory_fd, $manual, $manual_data, 0, $index_name,
+        $field_regex);
 
     # Extract additional subsection references if not available in the index.
-    for my $pagename (@subpages) {
+    for my $page_name (@sub_pages) {
 
-        my $page = dirname($local_path) . "/$pagename";
-        extract_refs($memory_fd, $manual, 1, $page, $base_url, $sub_regex,
-            $field_order)
+        extract_refs($memory_fd, $manual, $manual_data, 1, $page_name,
+            $sub_regex)
           if defined $sub_regex;
     }
 
@@ -253,8 +255,8 @@ sub write_data_file {
 #
 #     <section> :: <title> :: <url>
 #
-# If <section> is empty, that line specifies the title and URL for the whole
-# manual.  If <url> is empty, that manual is not available on the web.
+# If <section> is an underscore, that line specifies the title and URL for the
+# whole manual.
 
 HEADER
 
@@ -272,97 +274,137 @@ HEADER
 # to decide whether to look for the title (0) or not (1). It returns a list of
 # pages linked by the extracted references.
 sub extract_refs {
-    my ($data_fd, $manual, $have_overall_title, $page, $base_url,
-        $field_regex,$field_order)
+    my ($data_fd, $manual, $manual_data, $collected_index_page, $page_name,
+        $field_regex)
       = @_;
 
-    open(my $page_fd, '<:utf8_strict', $page)
-      or die encode_utf8("Cannot open $page");
+    $page_name //= $EMPTY;
+
+    my $local_path = $manual_data->{local_path};
+    my $base_url = $manual_data->{base_url};
+    my $index_name = $manual_data->{index_name};
+    my $field_order = $manual_data->{field_order};
+
+    my $page_url;
+    my $page_contents;
+
+    if (length $local_path) {
+
+        $page_url = $local_path . $page_name;
+        $page_contents = path($page_url)->slurp_utf8;
+
+        $page_url = 'file://' . $page_url;
+
+    } else {
+        $page_url = $base_url . $page_name;
+
+        my $response = HTTP::Tiny->new->get($page_url);
+        unless ($response->{success}) {
+            say encode_utf8("Failed to get $page_url!");
+            return;
+        }
+
+        $page_contents = decode_utf8($response->{content});
+    }
 
     # Read until there are 2 newlines. This hack is needed since some lines in
     # the Developer's Reference are cut in the middle of <a>...</a>.
-    local $/ = "\n\n";
+    my @chunks = split(m{\n\n}, $page_contents);
 
-    my %full_url_by_section_key;
+    my %full_destination_by_section_key;
+    my $in_appendix = 0;
 
     my @linked_pages = ();
-    while (my $chunk = <$page_fd>) {
+    while (defined(my $chunk = shift @chunks)) {
 
-        if (!$have_overall_title && $chunk =~ /$title_re/) {
+        if (!$collected_index_page && $chunk =~ /$title_re/) {
 
-            $have_overall_title = 1;
+            $collected_index_page = 1;
 
             # underscore is a token for the whole page
-            my $line = join($DOUBLE_COLON, $UNDERSCORE, $1, $base_url);
+            my $line = join($DOUBLE_COLON, $UNDERSCORE, $1, $page_url);
 
             say {$data_fd} encode_utf8($line);
         }
 
         while ($chunk =~ /$field_regex/g) {
 
-            my $relative_url;
+            my $relative_destination;
             my $section_title;
             my $section_key;
 
             if ($field_order == $PAGE_FIELDS) {
-                $relative_url = $1;
+                $relative_destination = $1;
                 $section_key = $2;
                 $section_title = $3;
             }
 
             if ($field_order == $DOCBOOK_FIELDS) {
-                $relative_url = $2;
+                $relative_destination = $2;
                 $section_key = $1;
                 $section_title = $3;
             }
 
-            if ($field_order == $FHS_FIELDS) {
-                $relative_url = $1;
-                $section_key = $1;
-                $section_title = $2;
+            if ($relative_destination =~ m{^ ( .+? [.]html) }ix) {
+
+                my $no_anchor = $1;
+
+                push(@linked_pages, $no_anchor)
+                  if none { m{\Q$no_anchor\E} } @linked_pages;
             }
 
-            if ($relative_url =~ /^(.+?\.html)#?/i) {
-                push(@linked_pages, $1)
-                  if none { /\Q$1\E/ } @linked_pages;
-            }
+      # If the extracted URL part doesn't look like a URL, assume it is
+      # an anchor and convert to URL accordingly.
+      #$relative_destination = basename($page_url) . "#$relative_destination"
+      #  if $relative_destination && $relative_destination !~ /(?:#|\.html$)/i;
 
-            # If the extracted URL part doesn't look like a URL, assume it is
-            # an anchor and convert to URL accordingly.
-            $relative_url = basename($page) . "#$relative_url"
-              if $relative_url && $relative_url !~ /(?:#|\.html$)/i;
+            my $destination_base = $page_url;
+            $destination_base = dirname($page_url) . $SLASH
+              unless $destination_base =~ m{ / $}x
+              || $relative_destination =~ m{^ [#] }x;
 
-            $section_title =~ s/\s+/ /g;
-            $section_title =~ s{<span[^>]*>(.*?)</span ?>}{$1}ig;
-            $section_title=~ s{<code[^>]*>(.*?)</code ?>}{<code>$1</code>}ig;
+            my $full_destination = $destination_base . $relative_destination;
 
-            my $full_url = $EMPTY;
-            $full_url = "$base_url$relative_url"
-              if length $base_url;
+            # developers reference likes to return locale specific pages
+            $full_destination =~ s{ [.]\w{2}[.]html }{.html}x
+              if $manual eq 'devref';
 
             # drop final dots
             $section_key =~ s{ [.]+ $}{}x;
 
-            $section_key =~ s/^\#(.+)$/\L$1/;
+            $section_key =~ s{^ [#](.+) $}{L$1}x;
             # Some manuals reuse section numbers for different references,
             # e.g. the Debian Policy's normal and appendix sections are
             # numbers that clash with each other. Track if we've already
             # seen a section pointing to some other URL than the current one,
-            # and uniquify it by appending as many asterisks as necessary.
-            $section_key .= $ASTERISK
-              while (exists $full_url_by_section_key{$section_key}
-                && $full_url_by_section_key{$section_key} ne $full_url);
+            # and prepend it with an indicator
+            $in_appendix = 1
+              if exists $full_destination_by_section_key{$section_key}
+              && $full_destination_by_section_key{$section_key} ne
+              $full_destination;
 
-            $full_url_by_section_key{$section_key} = $full_url;
+            $section_key = "appendix-$section_key"
+              if $in_appendix;
 
-            my $line
-              = join($DOUBLE_COLON,$section_key, $section_title, $full_url);
+            # do not collect the upgrading checklists in appendix 10 of policy
+            # the numbering changes all the time
+            next
+              if $manual eq 'policy'
+              && $section_key =~ m{^ appendix-10 [.] }x;
+
+            $full_destination_by_section_key{$section_key} = $full_destination;
+
+            $section_title =~ s{ \s+ }{ }gx;
+            $section_title =~ s{ <span[^>]*> (.*?) </span \s* > }{$1}igx;
+            $section_title
+              =~ s{ <code[^>]*> (.*?) </code \s* > }{<code>$1</code>}igx;
+
+            my $line= join($DOUBLE_COLON,
+                $section_key, $section_title, $full_destination);
 
             say {$data_fd} encode_utf8($line);
         }
     }
-
-    close $page_fd;
 
     return @linked_pages;
 }

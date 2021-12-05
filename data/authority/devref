@@ -4,8 +4,8 @@
 #
 #     <section> :: <title> :: <url>
 #
-# If <section> is empty, that line specifies the title and URL for the whole
-# manual.  If <url> is empty, that manual is not available on the web.
+# If <section> is an underscore, that line specifies the title and URL for the
+# whole manual.
 
 _::Debian Developer&#39;s Reference::https://www.debian.org/doc/developers-reference/
 1::Scope of This Document::https://www.debian.org/doc/developers-reference/scope.html
@@ -130,6 +130,14 @@ _::Debian Developer&#39;s Reference::https://www.debian.org/doc/developers-refer
 5.14.4::Frequently asked questions::https://www.debian.org/doc/developers-reference/pkgs.html#frequently-asked-questions
 5.14.4.1::What are release-critical bugs, and how do they get counted?::https://www.debian.org/doc/developers-reference/pkgs.html#what-are-release-critical-bugs-and-how-do-they-get-counted
 5.14.4.2::How could installing a package into <code>testing</code> possibly break other packages?::https://www.debian.org/doc/developers-reference/pkgs.html#how-could-installing-a-package-into-testing-possibly-break-other-packages
+5.15::The Stable backports archive::https://www.debian.org/doc/developers-reference/pkgs.html#the-stable-backports-archive
+5.15.1::Basics::https://www.debian.org/doc/developers-reference/pkgs.html#backports-rules
+5.15.2::Exception to the testing-first rule::https://www.debian.org/doc/developers-reference/pkgs.html#exception-to-the-testing-first-rule
+5.15.3::Who can maintain packages in the stable-backports archive?::https://www.debian.org/doc/developers-reference/pkgs.html#who-can-maintain-packages-in-the-stable-backports-archive
+5.15.4::When can one start uploading to stable-backports?::https://www.debian.org/doc/developers-reference/pkgs.html#when-can-one-start-uploading-to-stable-backports
+5.15.5::How long must a package be maintained when uploaded to stable-backports?::https://www.debian.org/doc/developers-reference/pkgs.html#how-long-must-a-package-be-maintained-when-uploaded-to-stable-backports
+5.15.6::How often shall one upload to stable-backports?::https://www.debian.org/doc/developers-reference/pkgs.html#how-often-shall-one-upload-to-stable-backports
+5.15.7::How can one learn more about backporting?::https://www.debian.org/doc/developers-reference/pkgs.html#how-can-one-learn-more-about-backporting
 6::Best Packaging Practices::https://www.debian.org/doc/developers-reference/best-pkging-practices.html
 6.1::Best practices for <code>debian/rules</code>::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#best-practices-for-debian-rules
 6.1.1::Helper scripts::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#helper-scripts
@@ -149,45 +157,46 @@ _::Debian Developer&#39;s Reference::https://www.debian.org/doc/developers-refer
 6.3.3::Common misconceptions about changelog entries::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#common-misconceptions-about-changelog-entries
 6.3.4::Common errors in changelog entries::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#common-errors-in-changelog-entries
 6.3.5::Supplementing changelogs with <code>NEWS.Debian</code> files::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#supplementing-changelogs-with-news-debian-files
-6.4::Best practices for maintainer scripts::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#best-practices-for-maintainer-scripts
-6.5::Configuration management with <code>debconf</code>::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#configuration-management-with-debconf
-6.5.1::Do not abuse debconf::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#do-not-abuse-debconf
-6.5.2::General recommendations for authors and translators::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#general-recommendations-for-authors-and-translators
-6.5.2.1::Write correct English::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#write-correct-english
-6.5.2.2::Be kind to translators::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#be-kind-to-translators
-6.5.2.3::Unfuzzy complete translations when correcting typos and spelling::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#unfuzzy-complete-translations-when-correcting-typos-and-spelling
-6.5.2.4::Do not make assumptions about interfaces::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#do-not-make-assumptions-about-interfaces
-6.5.2.5::Do not use first person::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#do-not-use-first-person
-6.5.2.6::Be gender neutral::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#be-gender-neutral
-6.5.3::Templates fields definition::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#templates-fields-definition
-6.5.3.1::Type::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#type
-6.5.3.2::Description: short and extended description::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#description-short-and-extended-description
-6.5.3.3::Choices::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#choices
-6.5.3.4::Default::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#default
-6.5.4::Template fields specific style guide::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#template-fields-specific-style-guide
-6.5.4.1::Type field::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#type-field
-6.5.4.2::Description field::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#description-field
-6.5.4.3::Choices field::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#choices-field
-6.5.4.4::Default field::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#default-field
-6.6::Internationalization::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#internationalization
-6.6.1::Handling debconf translations::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#handling-debconf-translations
-6.6.2::Internationalized documentation::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#internationalized-documentation
-6.7::Common packaging situations::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#common-packaging-situations
-6.7.1::Packages using <code>autoconf</code>/<code>automake</code>::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#packages-using-autoconf-automake
-6.7.2::Libraries::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#libraries
-6.7.3::Documentation::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#documentation
-6.7.4::Specific types of packages::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#specific-types-of-packages
-6.7.5::Architecture-independent data::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#architecture-independent-data
-6.7.6::Needing a certain locale during build::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#needing-a-certain-locale-during-build
-6.7.7::Make transition packages deborphan compliant::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#make-transition-packages-deborphan-compliant
-6.7.8::Best practices for <code>.orig.tar.{gz,bz2,xz}</code> files::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#best-practices-for-orig-tar-gz-bz2-xz-files
-6.7.8.1::Pristine source::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#pristine-source
-6.7.8.2::Repackaged upstream source::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#repackaged-upstream-source
-6.7.8.3::Changing binary files::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#changing-binary-files
-6.7.9::Best practices for debug packages::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#best-practices-for-debug-packages
-6.7.9.1::Automatically generated debug packages::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#automatically-generated-debug-packages
-6.7.9.2::Manual -dbg packages::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#manual-dbg-packages
-6.7.10::Best practices for meta-packages::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#best-practices-for-meta-packages
+6.4::Best practices around security::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#best-practices-around-security
+6.5::Best practices for maintainer scripts::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#best-practices-for-maintainer-scripts
+6.6::Configuration management with <code>debconf</code>::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#configuration-management-with-debconf
+6.6.1::Do not abuse debconf::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#do-not-abuse-debconf
+6.6.2::General recommendations for authors and translators::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#general-recommendations-for-authors-and-translators
+6.6.2.1::Write correct English::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#write-correct-english
+6.6.2.2::Be kind to translators::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#be-kind-to-translators
+6.6.2.3::Unfuzzy complete translations when correcting typos and spelling::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#unfuzzy-complete-translations-when-correcting-typos-and-spelling
+6.6.2.4::Do not make assumptions about interfaces::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#do-not-make-assumptions-about-interfaces
+6.6.2.5::Do not use first person::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#do-not-use-first-person
+6.6.2.6::Be gender neutral::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#be-gender-neutral
+6.6.3::Templates fields definition::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#templates-fields-definition
+6.6.3.1::Type::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#type
+6.6.3.2::Description: short and extended description::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#description-short-and-extended-description
+6.6.3.3::Choices::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#choices
+6.6.3.4::Default::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#default
+6.6.4::Template fields specific style guide::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#template-fields-specific-style-guide
+6.6.4.1::Type field::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#type-field
+6.6.4.2::Description field::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#description-field
+6.6.4.3::Choices field::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#choices-field
+6.6.4.4::Default field::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#default-field
+6.7::Internationalization::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#internationalization
+6.7.1::Handling debconf translations::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#handling-debconf-translations
+6.7.2::Internationalized documentation::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#internationalized-documentation
+6.8::Common packaging situations::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#common-packaging-situations
+6.8.1::Packages using <code>autoconf</code>/<code>automake</code>::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#packages-using-autoconf-automake
+6.8.2::Libraries::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#libraries
+6.8.3::Documentation::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#documentation
+6.8.4::Specific types of packages::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#specific-types-of-packages
+6.8.5::Architecture-independent data::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#architecture-independent-data
+6.8.6::Needing a certain locale during build::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#needing-a-certain-locale-during-build
+6.8.7::Make transition packages deborphan compliant::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#make-transition-packages-deborphan-compliant
+6.8.8::Best practices for <code>.orig.tar.{gz,bz2,xz}</code> files::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#best-practices-for-orig-tar-gz-bz2-xz-files
+6.8.8.1::Pristine source::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#pristine-source
+6.8.8.2::Repackaged upstream source::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#repackaged-upstream-source
+6.8.8.3::Changing binary files::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#changing-binary-files
+6.8.9::Best practices for debug packages::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#best-practices-for-debug-packages
+6.8.9.1::Automatically generated debug packages::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#automatically-generated-debug-packages
+6.8.9.2::Manual -dbg packages::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#manual-dbg-packages
+6.8.10::Best practices for meta-packages::https://www.debian.org/doc/developers-reference/best-pkging-practices.html#best-practices-for-meta-packages
 7::Beyond Packaging::https://www.debian.org/doc/developers-reference/beyond-pkging.html
 7.1::Bug reporting::https://www.debian.org/doc/developers-reference/beyond-pkging.html#bug-reporting
 7.1.1::Reporting lots of bugs at once (mass bug filing)::https://www.debian.org/doc/developers-reference/beyond-pkging.html#reporting-lots-of-bugs-at-once-mass-bug-filing
@@ -214,54 +223,54 @@ _::Debian Developer&#39;s Reference::https://www.debian.org/doc/developers-refer
 8.3.1::How to help the translation effort::https://www.debian.org/doc/developers-reference/l10n.html#how-to-help-the-translation-effort
 8.3.2::How to provide a translation for inclusion in a package::https://www.debian.org/doc/developers-reference/l10n.html#how-to-provide-a-translation-for-inclusion-in-a-package
 8.4::Best current practice concerning l10n::https://www.debian.org/doc/developers-reference/l10n.html#best-current-practice-concerning-l10n
-1*::Overview of Debian Maintainer Tools::https://www.debian.org/doc/developers-reference/tools.html
-1.1::Core tools::https://www.debian.org/doc/developers-reference/tools.html#core-tools
-1.1.1::<code>dpkg-dev</code>::https://www.debian.org/doc/developers-reference/tools.html#dpkg-dev
-1.1.2::<code>debconf</code>::https://www.debian.org/doc/developers-reference/tools.html#debconf
-1.1.3::<code>fakeroot</code>::https://www.debian.org/doc/developers-reference/tools.html#fakeroot
-1.2::Package lint tools::https://www.debian.org/doc/developers-reference/tools.html#package-lint-tools
-1.2.1::<code>lintian</code>::https://www.debian.org/doc/developers-reference/tools.html#lintian
-1.2.2::<code>lintian-brush</code>::https://www.debian.org/doc/developers-reference/tools.html#lintian-brush
-1.2.3::<code>piuparts</code>::https://www.debian.org/doc/developers-reference/tools.html#piuparts
-1.2.4::<code>debdiff</code>::https://www.debian.org/doc/developers-reference/tools.html#debdiff
-1.2.5::<code>diffoscope</code>::https://www.debian.org/doc/developers-reference/tools.html#diffoscope
-1.2.6::<code>duck</code>::https://www.debian.org/doc/developers-reference/tools.html#duck
-1.2.7::<code>adequate</code>::https://www.debian.org/doc/developers-reference/tools.html#adequate
-1.2.8::<code>i18nspector</code>::https://www.debian.org/doc/developers-reference/tools.html#i18nspector
-1.2.9::<code>cme</code>::https://www.debian.org/doc/developers-reference/tools.html#cme
-1.2.10::<code>licensecheck</code>::https://www.debian.org/doc/developers-reference/tools.html#licensecheck
-1.2.11::<code>blhc</code>::https://www.debian.org/doc/developers-reference/tools.html#blhc
-1.3::Helpers for <code>debian/rules</code>::https://www.debian.org/doc/developers-reference/tools.html#helpers-for-debian-rules
-1.3.1::<code>debhelper</code>::https://www.debian.org/doc/developers-reference/tools.html#debhelper
-1.3.2::<code>dh-make</code>::https://www.debian.org/doc/developers-reference/tools.html#dh-make
-1.3.3::<code>equivs</code>::https://www.debian.org/doc/developers-reference/tools.html#equivs
-1.4::Package builders::https://www.debian.org/doc/developers-reference/tools.html#package-builders
-1.4.1::<code>git-buildpackage</code>::https://www.debian.org/doc/developers-reference/tools.html#git-buildpackage
-1.4.2::<code>debootstrap</code>::https://www.debian.org/doc/developers-reference/tools.html#debootstrap
-1.4.3::<code>pbuilder</code>::https://www.debian.org/doc/developers-reference/tools.html#pbuilder
-1.4.4::<code>sbuild</code>::https://www.debian.org/doc/developers-reference/tools.html#sbuild
-1.5::Package uploaders::https://www.debian.org/doc/developers-reference/tools.html#package-uploaders
-1.5.1::<code>dupload</code>::https://www.debian.org/doc/developers-reference/tools.html#dupload
-1.5.2::<code>dput</code>::https://www.debian.org/doc/developers-reference/tools.html#dput
-1.5.3::<code>dcut</code>::https://www.debian.org/doc/developers-reference/tools.html#dcut
-1.6::Maintenance automation::https://www.debian.org/doc/developers-reference/tools.html#maintenance-automation
-1.6.1::<code>devscripts</code>::https://www.debian.org/doc/developers-reference/tools.html#devscripts
-1.6.2::<code>reportbug</code>::https://www.debian.org/doc/developers-reference/tools.html#reportbug
-1.6.3::<code>autotools-dev</code>::https://www.debian.org/doc/developers-reference/tools.html#autotools-dev
-1.6.4::<code>dpkg-repack</code>::https://www.debian.org/doc/developers-reference/tools.html#dpkg-repack
-1.6.5::<code>alien</code>::https://www.debian.org/doc/developers-reference/tools.html#alien
-1.6.6::<code>dpkg-dev-el</code>::https://www.debian.org/doc/developers-reference/tools.html#dpkg-dev-el
-1.6.7::<code>dpkg-depcheck</code>::https://www.debian.org/doc/developers-reference/tools.html#dpkg-depcheck
-1.7::Porting tools::https://www.debian.org/doc/developers-reference/tools.html#porting-tools
-1.7.1::<code>dpkg-cross</code>::https://www.debian.org/doc/developers-reference/tools.html#dpkg-cross
-1.8::Documentation and information::https://www.debian.org/doc/developers-reference/tools.html#documentation-and-information
-1.8.1::<code>debian-policy</code>::https://www.debian.org/doc/developers-reference/tools.html#debian-policy
-1.8.2::<code>doc-debian</code>::https://www.debian.org/doc/developers-reference/tools.html#doc-debian
-1.8.3::<code>developers-reference</code>::https://www.debian.org/doc/developers-reference/tools.html#developers-reference
-1.8.4::<code>maint-guide</code>::https://www.debian.org/doc/developers-reference/tools.html#maint-guide
-1.8.5::<code>packaging-tutorial</code>::https://www.debian.org/doc/developers-reference/tools.html#packaging-tutorial
-1.8.6::<code>how-can-i-help</code>::https://www.debian.org/doc/developers-reference/tools.html#how-can-i-help
-1.8.7::<code>docbook-xml</code>::https://www.debian.org/doc/developers-reference/tools.html#docbook-xml
-1.8.8::<code>debiandoc-sgml</code>::https://www.debian.org/doc/developers-reference/tools.html#debiandoc-sgml
-1.8.9::<code>debian-keyring</code>::https://www.debian.org/doc/developers-reference/tools.html#debian-keyring
-1.8.10::<code>debian-el</code>::https://www.debian.org/doc/developers-reference/tools.html#debian-el
+appendix-1::Overview of Debian Maintainer Tools::https://www.debian.org/doc/developers-reference/tools.html
+appendix-1.1::Core tools::https://www.debian.org/doc/developers-reference/tools.html#core-tools
+appendix-1.1.1::<code>dpkg-dev</code>::https://www.debian.org/doc/developers-reference/tools.html#dpkg-dev
+appendix-1.1.2::<code>debconf</code>::https://www.debian.org/doc/developers-reference/tools.html#debconf
+appendix-1.1.3::<code>fakeroot</code>::https://www.debian.org/doc/developers-reference/tools.html#fakeroot
+appendix-1.2::Package lint tools::https://www.debian.org/doc/developers-reference/tools.html#package-lint-tools
+appendix-1.2.1::<code>lintian</code>::https://www.debian.org/doc/developers-reference/tools.html#lintian
+appendix-1.2.2::<code>lintian-brush</code>::https://www.debian.org/doc/developers-reference/tools.html#lintian-brush
+appendix-1.2.3::<code>piuparts</code>::https://www.debian.org/doc/developers-reference/tools.html#piuparts
+appendix-1.2.4::<code>debdiff</code>::https://www.debian.org/doc/developers-reference/tools.html#debdiff
+appendix-1.2.5::<code>diffoscope</code>::https://www.debian.org/doc/developers-reference/tools.html#diffoscope
+appendix-1.2.6::<code>duck</code>::https://www.debian.org/doc/developers-reference/tools.html#duck
+appendix-1.2.7::<code>adequate</code>::https://www.debian.org/doc/developers-reference/tools.html#adequate
+appendix-1.2.8::<code>i18nspector</code>::https://www.debian.org/doc/developers-reference/tools.html#i18nspector
+appendix-1.2.9::<code>cme</code>::https://www.debian.org/doc/developers-reference/tools.html#cme
+appendix-1.2.10::<code>licensecheck</code>::https://www.debian.org/doc/developers-reference/tools.html#licensecheck
+appendix-1.2.11::<code>blhc</code>::https://www.debian.org/doc/developers-reference/tools.html#blhc
+appendix-1.3::Helpers for <code>debian/rules</code>::https://www.debian.org/doc/developers-reference/tools.html#helpers-for-debian-rules
+appendix-1.3.1::<code>debhelper</code>::https://www.debian.org/doc/developers-reference/tools.html#debhelper
+appendix-1.3.2::<code>dh-make</code>::https://www.debian.org/doc/developers-reference/tools.html#dh-make
+appendix-1.3.3::<code>equivs</code>::https://www.debian.org/doc/developers-reference/tools.html#equivs
+appendix-1.4::Package builders::https://www.debian.org/doc/developers-reference/tools.html#package-builders
+appendix-1.4.1::<code>git-buildpackage</code>::https://www.debian.org/doc/developers-reference/tools.html#git-buildpackage
+appendix-1.4.2::<code>debootstrap</code>::https://www.debian.org/doc/developers-reference/tools.html#debootstrap
+appendix-1.4.3::<code>pbuilder</code>::https://www.debian.org/doc/developers-reference/tools.html#pbuilder
+appendix-1.4.4::<code>sbuild</code>::https://www.debian.org/doc/developers-reference/tools.html#sbuild
+appendix-1.5::Package uploaders::https://www.debian.org/doc/developers-reference/tools.html#package-uploaders
+appendix-1.5.1::<code>dupload</code>::https://www.debian.org/doc/developers-reference/tools.html#dupload
+appendix-1.5.2::<code>dput</code>::https://www.debian.org/doc/developers-reference/tools.html#dput
+appendix-1.5.3::<code>dcut</code>::https://www.debian.org/doc/developers-reference/tools.html#dcut
+appendix-1.6::Maintenance automation::https://www.debian.org/doc/developers-reference/tools.html#maintenance-automation
+appendix-1.6.1::<code>devscripts</code>::https://www.debian.org/doc/developers-reference/tools.html#devscripts
+appendix-1.6.2::<code>reportbug</code>::https://www.debian.org/doc/developers-reference/tools.html#reportbug
+appendix-1.6.3::<code>autotools-dev</code>::https://www.debian.org/doc/developers-reference/tools.html#autotools-dev
+appendix-1.6.4::<code>dpkg-repack</code>::https://www.debian.org/doc/developers-reference/tools.html#dpkg-repack
+appendix-1.6.5::<code>alien</code>::https://www.debian.org/doc/developers-reference/tools.html#alien
+appendix-1.6.6::<code>dpkg-dev-el</code>::https://www.debian.org/doc/developers-reference/tools.html#dpkg-dev-el
+appendix-1.6.7::<code>dpkg-depcheck</code>::https://www.debian.org/doc/developers-reference/tools.html#dpkg-depcheck
+appendix-1.7::Porting tools::https://www.debian.org/doc/developers-reference/tools.html#porting-tools
+appendix-1.7.1::<code>dpkg-cross</code>::https://www.debian.org/doc/developers-reference/tools.html#dpkg-cross
+appendix-1.8::Documentation and information::https://www.debian.org/doc/developers-reference/tools.html#documentation-and-information
+appendix-1.8.1::<code>debian-policy</code>::https://www.debian.org/doc/developers-reference/tools.html#debian-policy
+appendix-1.8.2::<code>doc-debian</code>::https://www.debian.org/doc/developers-reference/tools.html#doc-debian
+appendix-1.8.3::<code>developers-reference</code>::https://www.debian.org/doc/developers-reference/tools.html#developers-reference
+appendix-1.8.4::<code>maint-guide</code>::https://www.debian.org/doc/developers-reference/tools.html#maint-guide
+appendix-1.8.5::<code>packaging-tutorial</code>::https://www.debian.org/doc/developers-reference/tools.html#packaging-tutorial
+appendix-1.8.6::<code>how-can-i-help</code>::https://www.debian.org/doc/developers-reference/tools.html#how-can-i-help
+appendix-1.8.7::<code>docbook-xml</code>::https://www.debian.org/doc/developers-reference/tools.html#docbook-xml
+appendix-1.8.8::<code>debiandoc-sgml</code>::https://www.debian.org/doc/developers-reference/tools.html#debiandoc-sgml
+appendix-1.8.9::<code>debian-keyring</code>::https://www.debian.org/doc/developers-reference/tools.html#debian-keyring
+appendix-1.8.10::<code>debian-el</code>::https://www.debian.org/doc/developers-reference/tools.html#debian-el
