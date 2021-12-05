@@ -8,7 +8,7 @@
 # whole manual.
 
 _::Debian doc-base Manual::file:///usr/share/doc/doc-base/doc-base.html/index.html
-1::About <code>doc-base</code>::file:///usr/share/doc/doc-base/doc-base.html/about.html
+1::About doc-base::file:///usr/share/doc/doc-base/doc-base.html/about.html
 2::The packages interface::file:///usr/share/doc/doc-base/doc-base.html/interface.html
 2.1::Introduction::file:///usr/share/doc/doc-base/doc-base.html/interface.html#s2.1
 2.2::Document IDs::file:///usr/share/doc/doc-base/doc-base.html/interface.html#document-ids
@@ -16,14 +16,14 @@ _::Debian doc-base Manual::file:///usr/share/doc/doc-base/doc-base.html/index.ht
 2.3.1::Example::file:///usr/share/doc/doc-base/doc-base.html/interface.html#s2.3.1
 2.3.2::Syntax of the control file::file:///usr/share/doc/doc-base/doc-base.html/interface.html#s2.3.2
 2.3.2.1::The main section::file:///usr/share/doc/doc-base/doc-base.html/interface.html#main-section
-2.3.2.2::<em>Format</em> sections::file:///usr/share/doc/doc-base/doc-base.html/interface.html#format-sections
-2.3.3::The <code>section</code> field::file:///usr/share/doc/doc-base/doc-base.html/interface.html#section-field
-2.4::Registering Documents With <strong>doc-base</strong>::file:///usr/share/doc/doc-base/doc-base.html/interface.html#registering-documents
+2.3.2.2::Format sections::file:///usr/share/doc/doc-base/doc-base.html/interface.html#format-sections
+2.3.3::The section field::file:///usr/share/doc/doc-base/doc-base.html/interface.html#section-field
+2.4::Registering Documents With doc-base::file:///usr/share/doc/doc-base/doc-base.html/interface.html#registering-documents
 2.5::doc-base 0.8.x features and incompatibilities::file:///usr/share/doc/doc-base/doc-base.html/interface.html#s2.5
 2.5.1::Splitting control files over multiple binary packages::file:///usr/share/doc/doc-base/doc-base.html/interface.html#s2.5.1
 2.5.2::Registering local documents::file:///usr/share/doc/doc-base/doc-base.html/interface.html#s2.5.2
 2.5.3::dpkg triggers::file:///usr/share/doc/doc-base/doc-base.html/interface.html#s2.5.3
-2.6::Checking Syntax of <em>Control Files</em>::file:///usr/share/doc/doc-base/doc-base.html/interface.html#checking-syntax
+2.6::Checking Syntax of Control Files::file:///usr/share/doc/doc-base/doc-base.html/interface.html#checking-syntax
 3::Getting information about installed documents::file:///usr/share/doc/doc-base/doc-base.html/informations.html
 4::TODO List::file:///usr/share/doc/doc-base/doc-base.html/todo.html
 4.1::Roadmap for 0.9.* releases::file:///usr/share/doc/doc-base/doc-base.html/todo.html#s4.1

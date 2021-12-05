@@ -396,8 +396,10 @@ sub extract_refs {
 
             $section_title =~ s{ \s+ }{ }gx;
             $section_title =~ s{ <span[^>]*> (.*?) </span \s* > }{$1}igx;
-            $section_title
-              =~ s{ <code[^>]*> (.*?) </code \s* > }{<code>$1</code>}igx;
+            $section_title =~ s{ <code[^>]*> (.*?) </code \s* > }{$1}igx;
+            $section_title =~ s{ <samp[^>]*> (.*?) </samp \s* > }{$1}igx;
+            $section_title =~ s{ <em[^>]*> (.*?) </em \s* > }{$1}igx;
+            $section_title =~ s{ <strong[^>]*> (.*?) </strong \s* > }{$1}igx;
 
             my $line= join($DOUBLE_COLON,
                 $section_key, $section_title, $full_destination);
