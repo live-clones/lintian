@@ -81,7 +81,7 @@ Depends:
  libunicode-utf8-perl,
  liburi-perl,
  libwww-mechanize-perl,
- # Bug#1001164 solved in 3.16-4; leave for backports for now
+# Bug#1001164 solved in 3.16-4; leave for backports for now
  libwww-perl,
  libxml-libxml-perl,
  libyaml-libyaml-perl,
