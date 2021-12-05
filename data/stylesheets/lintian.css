@@ -59,7 +59,7 @@ h1 {
 }
 
 h2 {
-    margin-top: 28px;
+    margin-top: 25px;
     margin-bottom: 14px;
     padding-bottom: 6px;
     border-bottom: 2px solid #AAA;
@@ -69,10 +69,6 @@ h3 {
     margin: 5px 0 5px 10px;
     color: #444;
     font-size: 1.0em;
-}
-
-p {
-    line-height: 1.4em;
 }
 
 a {
@@ -115,7 +111,6 @@ header p a {
     text-decoration: none;
 }
 
-
 /*
  * 3. Navigation bar
  */
@@ -149,10 +144,8 @@ header p a {
  */
 
 main {
-    display: block;
     margin: 0 40px;
     font-size: 0.9em;
-    line-height: 1.4em;
 }
 
 img.graph {
@@ -245,18 +238,10 @@ div.graph {
     text-align: center;
 }
 
-ul.tag {
-    padding-bottom: 1em;
-}
-
 ul.report li {
     padding-left: 5px;
     padding-bottom: 6px;
     list-style: none;
-}
-
-ul.tag li {
-    list-style: square;
 }
 
 li span {
@@ -347,6 +332,7 @@ span.label {
     margin-top: 20px;
     padding-top: 10px;
     border-top: 2px solid #AAA;
+    clear: both;
 }
 
 span.tinycode {
@@ -371,6 +357,10 @@ span.tinycontext {
 span.tinycomment {
     font-family: 'Roboto', sans-serif;
     font-size: 0.9em;
+}
+
+ul.see-also {
+    padding-bottom: 1em;
 }
 
 ul.filelist {
@@ -453,6 +443,8 @@ div.description {
     margin: 25px 0;
     background-color: #EEE;
     border: 1px solid #BBB;
+    float: left;
+    clear:left;
 }
 
 #description-E {
@@ -500,6 +492,7 @@ div.versions {
     border: 1px solid #AAA;
     padding: 0.5em;
     display: inline-block;
+    float: right;
 }
 
 #version_headline {
