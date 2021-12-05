@@ -32,6 +32,7 @@ use utf8;
 use Const::Fast;
 use Cwd qw(realpath);
 use File::Basename qw(dirname);
+use HTML::HTML5::Entities;
 use HTTP::Tiny;
 use Path::Tiny;
 use Unicode::UTF8 qw(decode_utf8 encode_utf8);
@@ -319,12 +320,15 @@ sub extract_refs {
 
         if (!$collected_index_page && $chunk =~ /$title_re/) {
 
-            $collected_index_page = 1;
+            my $page_title = decode_entities($1);
 
             # underscore is a token for the whole page
-            my $line = join($DOUBLE_COLON, $UNDERSCORE, $1, $page_url);
+            my $line
+              = join($DOUBLE_COLON, $UNDERSCORE, $page_title, $page_url);
 
             say {$data_fd} encode_utf8($line);
+
+            $collected_index_page = 1;
         }
 
         while ($chunk =~ /$field_regex/g) {
@@ -335,14 +339,14 @@ sub extract_refs {
 
             if ($field_order == $PAGE_FIELDS) {
                 $relative_destination = $1;
-                $section_key = $2;
-                $section_title = $3;
+                $section_key = decode_entities($2);
+                $section_title = decode_entities($3);
             }
 
             if ($field_order == $DOCBOOK_FIELDS) {
                 $relative_destination = $2;
-                $section_key = $1;
-                $section_title = $3;
+                $section_key = decode_entities($1);
+                $section_title = decode_entities($3);
             }
 
             if ($relative_destination =~ m{^ ( .+? [.]html) }ix) {

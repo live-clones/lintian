@@ -7,7 +7,7 @@
 # If <section> is an underscore, that line specifies the title and URL for the
 # whole manual.
 
-_::Debian Developer&#39;s Reference::https://www.debian.org/doc/developers-reference/
+_::Debian Developer's Reference::https://www.debian.org/doc/developers-reference/
 1::Scope of This Document::https://www.debian.org/doc/developers-reference/scope.html
 2::Applying to Become a Member::https://www.debian.org/doc/developers-reference/new-maintainer.html
 2.1::Getting started::https://www.debian.org/doc/developers-reference/new-maintainer.html#getting-started
@@ -214,12 +214,12 @@ _::Debian Developer&#39;s Reference::https://www.debian.org/doc/developers-refer
 7.5.3::Handling new maintainer applications::https://www.debian.org/doc/developers-reference/beyond-pkging.html#handling-new-maintainer-applications
 8::Internationalization and Translations::https://www.debian.org/doc/developers-reference/l10n.html
 8.1::How translations are handled within Debian::https://www.debian.org/doc/developers-reference/l10n.html#how-translations-are-handled-within-debian
-8.2::I18N &amp; L10N FAQ for maintainers::https://www.debian.org/doc/developers-reference/l10n.html#i18n-l10n-faq-for-maintainers
+8.2::I18N & L10N FAQ for maintainers::https://www.debian.org/doc/developers-reference/l10n.html#i18n-l10n-faq-for-maintainers
 8.2.1::How to get a given text translated::https://www.debian.org/doc/developers-reference/l10n.html#how-to-get-a-given-text-translated
 8.2.2::How to get a given translation reviewed::https://www.debian.org/doc/developers-reference/l10n.html#how-to-get-a-given-translation-reviewed
 8.2.3::How to get a given translation updated::https://www.debian.org/doc/developers-reference/l10n.html#how-to-get-a-given-translation-updated
 8.2.4::How to handle a bug report concerning a translation::https://www.debian.org/doc/developers-reference/l10n.html#how-to-handle-a-bug-report-concerning-a-translation
-8.3::I18N &amp; L10N FAQ for translators::https://www.debian.org/doc/developers-reference/l10n.html#i18n-l10n-faq-for-translators
+8.3::I18N & L10N FAQ for translators::https://www.debian.org/doc/developers-reference/l10n.html#i18n-l10n-faq-for-translators
 8.3.1::How to help the translation effort::https://www.debian.org/doc/developers-reference/l10n.html#how-to-help-the-translation-effort
 8.3.2::How to provide a translation for inclusion in a package::https://www.debian.org/doc/developers-reference/l10n.html#how-to-provide-a-translation-for-inclusion-in-a-package
 8.4::Best current practice concerning l10n::https://www.debian.org/doc/developers-reference/l10n.html#best-current-practice-concerning-l10n
