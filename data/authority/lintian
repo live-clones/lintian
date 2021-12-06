@@ -7,29 +7,29 @@
 # If <section> is an underscore, that line specifies the title and URL for the
 # whole manual.
 
-_::Lintian User's Manual::file:///usr/share/doc/lintian/lintian.html
-1::Introduction::file:///usr/share/doc/lintian/lintian.html#introduction
-1.1::About Lintian::file:///usr/share/doc/lintian/lintian.html#about-lintian
-1.2::The intention of Lintian::file:///usr/share/doc/lintian/lintian.html#the-intention-of-lintian
-1.3::Design issues::file:///usr/share/doc/lintian/lintian.html#design-issues
-1.4::Disclaimer::file:///usr/share/doc/lintian/lintian.html#disclaimer
-2::Getting started::file:///usr/share/doc/lintian/lintian.html#getting-started
-2.1::Installing Lintian::file:///usr/share/doc/lintian/lintian.html#installing-lintian
-2.2::Running lintian::file:///usr/share/doc/lintian/lintian.html#running-lintian
-2.3::Lintian Tags::file:///usr/share/doc/lintian/lintian.html#lintian-tags
-2.4::Overrides::file:///usr/share/doc/lintian/lintian.html#overrides
-2.4.1::Format of override files::file:///usr/share/doc/lintian/lintian.html#format-of-override-files
-2.4.2::Documenting overrides::file:///usr/share/doc/lintian/lintian.html#documenting-overrides
-2.4.3::Architecture specific overrides::file:///usr/share/doc/lintian/lintian.html#architecture-specific-overrides
-2.5::Vendor Profiles::file:///usr/share/doc/lintian/lintian.html#vendor-profiles
-2.5.1::Rules for profile names and location::file:///usr/share/doc/lintian/lintian.html#rules-for-profile-names-and-location
-2.5.2::Profile syntax and semantics::file:///usr/share/doc/lintian/lintian.html#profile-syntax-and-semantics
-2.6::Vendor specific data files::file:///usr/share/doc/lintian/lintian.html#vendor-specific-data-files
-2.6.1::Load paths and order::file:///usr/share/doc/lintian/lintian.html#load-paths-and-order
-2.6.2::Basic syntax of data files::file:///usr/share/doc/lintian/lintian.html#basic-syntax-of-data-files
-3::Advanced usage::file:///usr/share/doc/lintian/lintian.html#advanced-usage
-3.1::How Lintian works::file:///usr/share/doc/lintian/lintian.html#how-lintian-works
-3.2::The laboratory::file:///usr/share/doc/lintian/lintian.html#the-laboratory
-3.3::Writing your own Lintian checks::file:///usr/share/doc/lintian/lintian.html#writing-your-own-lintian-checks
-3.3.1::Check description file::file:///usr/share/doc/lintian/lintian.html#check-description-file
-3.3.2::Check Perl module file::file:///usr/share/doc/lintian/lintian.html#check-perl-module-file
+_::Lintian User's Manual::https://lintian.debian.org/manual/index.html
+1::Introduction::https://lintian.debian.org/manual/index.html#introduction
+1.1::About Lintian::https://lintian.debian.org/manual/index.html#about-lintian
+1.2::The intention of Lintian::https://lintian.debian.org/manual/index.html#the-intention-of-lintian
+1.3::Design issues::https://lintian.debian.org/manual/index.html#design-issues
+1.4::Disclaimer::https://lintian.debian.org/manual/index.html#disclaimer
+2::Getting started::https://lintian.debian.org/manual/index.html#getting-started
+2.1::Installing Lintian::https://lintian.debian.org/manual/index.html#installing-lintian
+2.2::Running lintian::https://lintian.debian.org/manual/index.html#running-lintian
+2.3::Lintian Tags::https://lintian.debian.org/manual/index.html#lintian-tags
+2.4::Overrides::https://lintian.debian.org/manual/index.html#overrides
+2.4.1::Format of override files::https://lintian.debian.org/manual/index.html#format-of-override-files
+2.4.2::Documenting overrides::https://lintian.debian.org/manual/index.html#documenting-overrides
+2.4.3::Architecture specific overrides::https://lintian.debian.org/manual/index.html#architecture-specific-overrides
+2.5::Vendor Profiles::https://lintian.debian.org/manual/index.html#vendor-profiles
+2.5.1::Rules for profile names and location::https://lintian.debian.org/manual/index.html#rules-for-profile-names-and-location
+2.5.2::Profile syntax and semantics::https://lintian.debian.org/manual/index.html#profile-syntax-and-semantics
+2.6::Vendor specific data files::https://lintian.debian.org/manual/index.html#vendor-specific-data-files
+2.6.1::Load paths and order::https://lintian.debian.org/manual/index.html#load-paths-and-order
+2.6.2::Basic syntax of data files::https://lintian.debian.org/manual/index.html#basic-syntax-of-data-files
+3::Advanced usage::https://lintian.debian.org/manual/index.html#advanced-usage
+3.1::How Lintian works::https://lintian.debian.org/manual/index.html#how-lintian-works
+3.2::The laboratory::https://lintian.debian.org/manual/index.html#the-laboratory
+3.3::Writing your own Lintian checks::https://lintian.debian.org/manual/index.html#writing-your-own-lintian-checks
+3.3.1::Check description file::https://lintian.debian.org/manual/index.html#check-description-file
+3.3.2::Check Perl module file::https://lintian.debian.org/manual/index.html#check-perl-module-file

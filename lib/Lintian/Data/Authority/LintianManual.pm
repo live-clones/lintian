@@ -28,8 +28,10 @@ use utf8;
 
 use Carp qw(croak);
 use Const::Fast;
+use IPC::Run3;
 use Path::Tiny;
 use Unicode::UTF8 qw(encode_utf8);
+use URI::file;
 use WWW::Mechanize ();
 
 use Lintian::Output::Markdown qw(markdown_authority);
@@ -46,6 +48,8 @@ const my $TWO_PARTS => 2;
 
 const my $VOLUME_KEY => $UNDERSCORE;
 const my $SEPARATOR => $COLON x 2;
+
+const my $WAIT_STATUS_SHIFT => 8;
 
 use Moo;
 use namespace::clean;
@@ -209,25 +213,45 @@ HEADER
     return;
 }
 
-=item extract_sections_from_links
+=item refresh
 
 =cut
 
-sub extract_sections_from_links {
-    my ($self, $data_fd, $base_url, $page_name)= @_;
+sub refresh {
+    my ($self, $archive, $basedir) = @_;
 
-    my $page_url = $base_url . $page_name;
+    # WWW::Mechanize will not parse page title without the suffix
+    my $temp_tiny = Path::Tiny->tempfile(
+        TEMPLATE => 'lintian-manual-XXXXXXXX',
+        SUFFIX => '.html'
+    );
+    my $local_uri = URI::file->new_abs($temp_tiny->stringify);
+
+    # for rst2html
+    local $ENV{LC_ALL} = 'en_US.UTF-8';
+
+    my $stderr;
+    run3(['rst2html', "$ENV{LINTIAN_BASE}/doc/lintian.rst"],
+        undef, $local_uri->file, \$stderr);
+    my $status = ($? >> $WAIT_STATUS_SHIFT);
+
+    # stderr already in UTF-8
+    die $stderr
+      if $status;
+
+    my $generated;
+    open(my $memory_fd, '>', \$generated)
+      or die encode_utf8("Cannot open scalar: $!");
+
+    my $page_url = 'https://lintian.debian.org/manual/index.html';
 
     my $mechanize = WWW::Mechanize->new();
-    $mechanize->get($page_url);
+    $mechanize->get($local_uri);
 
     my $page_title = $mechanize->title;
 
-    # strip explanatory remark
-    $page_title =~ s{ \s* \N{EM DASH} .* $}{}x;
-
     # underscore is a token for the whole page
-    write_line($data_fd, $VOLUME_KEY, $page_title, $page_url);
+    write_line($memory_fd, $VOLUME_KEY, $page_title, $page_url);
 
     my %by_section_key;
     my $in_appendix = 0;
@@ -272,28 +296,8 @@ sub extract_sections_from_links {
         $by_section_key{$section_key}{title} = $section_title;
         $by_section_key{$section_key}{destination} = $destination;
 
-        write_line($data_fd, $section_key, $section_title, $destination);
+        write_line($memory_fd, $section_key, $section_title, $destination);
     }
-
-    return;
-}
-
-=item refresh
-
-=cut
-
-sub refresh {
-    my ($self, $archive, $basedir) = @_;
-
-    # presently not published online
-    my $base_url = 'file:///usr/share/doc/lintian/';
-    my $index_name = 'lintian.html';
-
-    my $generated;
-    open(my $memory_fd, '>', \$generated)
-      or die encode_utf8('Cannot open scalar');
-
-    $self->extract_sections_from_links($memory_fd, $base_url, $index_name);
 
     close $memory_fd;
 
