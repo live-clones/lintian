@@ -46,7 +46,7 @@ const my $EMPTY => q{};
 $ENV{LINTIAN_BASE} = realpath(THISDIR . '/..')
   // die encode_utf8('Cannot resolve LINTIAN_BASE');
 
-my $basedir = 'data';
+my $basedir = "$ENV{LINTIAN_BASE}/data";
 
 die encode_utf8("Basedir does not exist at $basedir\n")
   unless -e $basedir;
@@ -54,7 +54,7 @@ die encode_utf8("Basedir does not exist at $basedir\n")
 my $profile = Lintian::Profile->new;
 $profile->load;
 
-my @parts = (
+my @data_sources = (
     $profile->architectures,
     $profile->debconf_specification,
     $profile->developer_reference,
@@ -76,31 +76,39 @@ my @parts = (
     $profile->vim_policy,
 );
 
+my @selected;
+
+if (@ARGV) {
+    my $pattern = $ARGV[0];
+    @selected = grep { $_->title =~ m{\Q$pattern\E}i } @data_sources;
+
+} else {
+    @selected = @data_sources;
+}
+
 my $archive = Lintian::Archive->new;
 
 my $errors = 0;
 
-my $count;
-for my $part (@parts) {
+for my $data_source (@selected) {
 
     next
-      unless $part->can('refresh');
+      unless $data_source->can('refresh');
 
-    my $title = $part->title;
+    my $title = $data_source->title;
 
     say "Refreshing $title...";
 
     try {
-        $part->refresh($archive, $basedir);
+        $data_source->refresh($archive, $basedir);
 
     } catch {
         ++$errors;
         warn encode_utf8("Cannot refresh $title: $@");
     }
-
-} continue {
-    ++$count;
 }
+
+my $count = scalar @selected;
 
 if ($errors) {
     say $EMPTY;
