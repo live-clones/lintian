@@ -28,7 +28,8 @@ use utf8;
 
 use Carp qw(croak);
 use Const::Fast;
-use File::Basename qw(dirname);
+use File::Basename qw(dirname basename);
+use IPC::Run3;
 use Path::Tiny;
 use Unicode::UTF8 qw(encode_utf8);
 use WWW::Mechanize ();
@@ -39,6 +40,7 @@ const my $EMPTY => q{};
 const my $SPACE => q{ };
 const my $SLASH => q{/};
 const my $COLON => q{:};
+const my $INDENT => $SPACE x 4;
 const my $UNDERSCORE => q{_};
 const my $LEFT_PARENTHESIS => q{(};
 const my $RIGHT_PARENTHESIS => q{)};
@@ -47,6 +49,8 @@ const my $TWO_PARTS => 2;
 
 const my $VOLUME_KEY => $UNDERSCORE;
 const my $SEPARATOR => $COLON x 2;
+
+const my $WAIT_STATUS_SHIFT => 8;
 
 use Moo;
 use namespace::clean;
@@ -210,17 +214,137 @@ HEADER
     return;
 }
 
-=item extract_sections_from_links
+=item find_installable_name
 
 =cut
 
-sub extract_sections_from_links {
-    my ($self, $data_fd, $base_url, $page_name)= @_;
+sub find_installable_name {
+    my ($self, $archive, $port, $requested_path) = @_;
 
-    my $page_url = $base_url . $page_name;
+    my @installed_by;
+
+    # find installable package
+    for my $installable_architecture ('all', $port) {
+
+        my $local_path
+          = $archive->contents_gz('sid', 'main', $installable_architecture);
+
+        open(my $fd, '<:gzip', $local_path)
+          or die encode_utf8("Cannot open $local_path.");
+
+        while (my $line = <$fd>) {
+
+            chomp $line;
+
+            my ($path, $finder) = split($SPACE, $line, 2);
+            next
+              unless length $path
+              && length $finder;
+
+            if ($path eq $requested_path) {
+
+                my $name = $1;
+
+                my @locations = split(m{,}, $finder);
+                for my $location (@locations) {
+
+                    my ($section, $installable)= split(m{/}, $location, 2);
+
+                    push(@installed_by, $installable);
+                }
+
+                next;
+            }
+        }
+
+        close $fd;
+    }
+
+    die encode_utf8(
+        "The path $requested_path is not installed by any package.")
+      if @installed_by < 1;
+
+    if (@installed_by > 1) {
+        warn encode_utf8(
+            "The path $requested_path is installed by multiple packages:\n");
+        warn encode_utf8($INDENT . "- $_\n")for @installed_by;
+    }
+
+    my $installable_name = shift @installed_by;
+
+    return $installable_name;
+}
+
+=item refresh
+
+=cut
+
+sub refresh {
+    my ($self, $archive, $basedir) = @_;
+
+    # shipped as part of the doc-base installable
+    my $shipped_base = 'usr/share/doc/doc-base/doc-base.html/';
+    my $index_name = 'index.html';
+
+    my $shipped_path = $shipped_base . $index_name;
+    my $stored_uri = "file:///$shipped_path";
+
+    # neutral sort order
+    local $ENV{LC_ALL} = 'C';
+
+    my $port = 'amd64';
+    my $installable_name
+      = $self->find_installable_name($archive, $port, $shipped_path);
+
+    my $deb822_by_installable_name
+      = $archive->deb822_packages_by_installable_name('sid', 'main', $port);
+
+    my $work_folder
+      = Path::Tiny->tempdir(
+        TEMPLATE => 'refresh-doc-base-specification-XXXXXXXXXX');
+
+    die encode_utf8("Installable $installable_name not shipped in port $port")
+      unless exists $deb822_by_installable_name->{$installable_name};
+
+    my $deb822 = $deb822_by_installable_name->{$installable_name};
+
+    my $pool_path = $deb822->value('Filename');
+
+    my $deb_filename = basename($pool_path);
+    my $deb_local_path = "$work_folder/$deb_filename";
+    my $deb_url = $archive->mirror_base . $SLASH . $pool_path;
+
+    my $stderr;
+    run3([qw{wget --quiet}, "--output-document=$deb_local_path", $deb_url],
+        undef, \$stderr);
+    my $status = ($? >> $WAIT_STATUS_SHIFT);
+
+    # stderr already in UTF-8
+    die $stderr
+      if $status;
+
+    my $extract_folder = "$work_folder/unpacked/$pool_path";
+    path($extract_folder)->mkpath;
+
+    run3([qw{dpkg-deb --extract}, $deb_local_path, $extract_folder],
+        undef, \$stderr);
+    $status = ($? >> $WAIT_STATUS_SHIFT);
+
+    # stderr already in UTF-8
+    die $stderr
+      if $status;
+
+    unlink($deb_local_path)
+      or die encode_utf8("Cannot delete $deb_local_path");
+
+    my $generated;
+    open(my $memory_fd, '>', \$generated)
+      or die encode_utf8('Cannot open scalar');
 
     my $mechanize = WWW::Mechanize->new();
-    $mechanize->get($page_url);
+
+    my $fresh_uri = URI::file->new_abs("/$extract_folder/$shipped_path");
+    $mechanize->get($fresh_uri);
 
     my $page_title = $mechanize->title;
 
@@ -228,7 +352,7 @@ sub extract_sections_from_links {
     $page_title =~ s{ \s* \N{EM DASH} .* $}{}x;
 
     # underscore is a token for the whole page
-    write_line($data_fd, $VOLUME_KEY, $page_title, $page_url);
+    write_line($memory_fd, $VOLUME_KEY, $page_title, $stored_uri);
 
     my %by_section_key;
     my $in_appendix = 0;
@@ -253,8 +377,8 @@ sub extract_sections_from_links {
 
         my $relative_destination = $link->url;
 
-        my $destination_base = $page_url;
-        $destination_base = dirname($page_url) . $SLASH
+        my $destination_base = $stored_uri;
+        $destination_base = dirname($stored_uri) . $SLASH
           unless $destination_base =~ m{ / $}x
           || $relative_destination =~ m{^ [#] }x;
 
@@ -280,28 +404,8 @@ sub extract_sections_from_links {
         $by_section_key{$section_key}{title} = $section_title;
         $by_section_key{$section_key}{destination} = $full_destination;
 
-        write_line($data_fd, $section_key, $section_title, $full_destination);
+        write_line($memory_fd, $section_key, $section_title,$full_destination);
     }
-
-    return;
-}
-
-=item refresh
-
-=cut
-
-sub refresh {
-    my ($self, $archive, $basedir) = @_;
-
-    # shipped as part of the doc-base installable
-    my $base_url = 'file:///usr/share/doc/doc-base/doc-base.html/';
-    my $index_name = 'index.html';
-
-    my $generated;
-    open(my $memory_fd, '>', \$generated)
-      or die encode_utf8('Cannot open scalar');
-
-    $self->extract_sections_from_links($memory_fd, $base_url, $index_name);
 
     close $memory_fd;
 
