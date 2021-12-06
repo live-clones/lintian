@@ -37,8 +37,6 @@ use Const::Fast;
 
 const my $EMPTY => q{};
 const my $SPACE => q{ };
-const my $LEFT_PARENTHESIS => q{(};
-const my $RIGHT_PARENTHESIS => q{)};
 
 =head1 NAME
 
@@ -64,35 +62,40 @@ sub markdown_authority {
     my ($volume_title, $volume_url, $section_key, $section_title,$section_url)
       = @_;
 
-    # start with the citation to the overall manual.
-    my $markdown = markdown_hyperlink($volume_title, $volume_url);
-
-    return $markdown
-      unless length $section_key;
-
-    # Add the section information, if present, and a direct link to that
-    # section of the manual where possible.
-    if ($section_key =~ /^[A-Z]+$/) {
-        $markdown .= " appendix $section_key";
-
-    } elsif ($section_key =~ /^\d+$/) {
-        $markdown .= " chapter $section_key";
-
-    } elsif ($section_key =~ /^[A-Z\d.]+$/) {
-        $markdown .= " section $section_key";
-    }
-
-    return $markdown
-      unless length $section_title
+    my $directed_link;
+    $directed_link = markdown_hyperlink($section_title, $section_url)
+      if length $section_title
       && length $section_url;
 
-    $markdown
-      .= $SPACE
-      . $LEFT_PARENTHESIS
-      . markdown_hyperlink($section_title, $section_url)
-      . $RIGHT_PARENTHESIS;
+    my $pointer;
+    if (length $section_key) {
 
-    return $markdown;
+        if ($section_key =~ /^[A-Z]+$/ || $section_key =~ /^appendix-/) {
+            $pointer = "Appendix $section_key";
+
+        } elsif ($section_key =~ /^\d+$/) {
+            $pointer = "Chapter $section_key";
+
+        } else {
+            $pointer = "Section $section_key";
+        }
+    }
+
+    # overall manual.
+    my $volume_link = markdown_hyperlink($volume_title, $volume_url);
+
+    if (length $directed_link) {
+
+        return "$directed_link ($pointer) in the $volume_title"
+          if length $pointer;
+
+        return "$directed_link in the $volume_title";
+    }
+
+    return "$pointer of the $volume_link"
+      if length $pointer;
+
+    return $volume_link;
 }
 
 =item markdown_bug
