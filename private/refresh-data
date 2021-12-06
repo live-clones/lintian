@@ -35,6 +35,8 @@ use constant THISDIR => dirname realpath __FILE__;
 use lib THISDIR . '/../lib';
 
 use Const::Fast;
+use MCE::Loop;
+use List::SomeUtils qw(true);
 use Syntax::Keyword::Try;
 use Unicode::UTF8 qw(encode_utf8);
 
@@ -42,6 +44,10 @@ use Lintian::Archive;
 use Lintian::Profile;
 
 const my $EMPTY => q{};
+
+const my $REFRESH_SUCCESSFUL => 1;
+const my $REFRESH_INCAPABLE => 0;
+const my $REFRESH_FAILED => -1;
 
 $ENV{LINTIAN_BASE} = realpath(THISDIR . '/..')
   // die encode_utf8('Cannot resolve LINTIAN_BASE');
@@ -66,34 +72,53 @@ if (@ARGV) {
     @selected = @data_sources;
 }
 
+my $total = scalar @selected;
+
+MCE::Loop->init(
+    max_workers => 'auto',
+    chunk_size => 1
+);
+
 my $archive = Lintian::Archive->new;
 
-my $errors = 0;
+my @results = mce_loop {
+    my ($mce, $chunk_ref, $chunk_id) = @_;
 
-for my $data_source (@selected) {
-
-    next
-      unless $data_source->can('refresh');
+    my $data_source = $_;
 
     my $title = $data_source->title;
+    my $counter = sprintf('%*d/%d', length($total), $chunk_id, $total);
 
-    say "Refreshing $title...";
+    if (!$data_source->can('refresh')) {
+
+        $mce->say(encode_utf8("[$counter] $title not implemented."));
+        $mce->gather($REFRESH_INCAPABLE);
+        return;
+    }
+
+    $mce->say(encode_utf8("[$counter] $title refreshing..."));
 
     try {
         $data_source->refresh($archive, $basedir);
 
     } catch {
-        ++$errors;
-        warn encode_utf8("Cannot refresh $title: $@");
+        $mce->say(encode_utf8("[$counter] $title had error: $@"));
+        $mce->gather($REFRESH_FAILED);
+        return;
     }
-}
 
-my $count = scalar @selected;
+    $mce->gather($REFRESH_SUCCESSFUL);
+    $mce->say(encode_utf8("[$counter] $title done."));
+
+}
+@selected;
+
+my $errors = true { $_ == $REFRESH_FAILED } @results;
 
 if ($errors) {
     say $EMPTY;
     warn encode_utf8(
-        "WARNING: $errors data source(s) failed to refresh (out of $count).");
+        "WARNING: $errors data source(s) failed to refresh (out of $total).");
 }
 
 exit;
