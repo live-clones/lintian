@@ -52,6 +52,7 @@ Depends:
  libfile-find-rule-perl,
  libfont-ttf-perl,
  libhtml-html5-entities-perl,
+ libhtml-tokeparser-simple-perl,
  libio-interactive-perl,
  libio-prompt-tiny-perl,
  libipc-run3-perl,
