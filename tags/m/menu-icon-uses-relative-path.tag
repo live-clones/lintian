@@ -1,6 +1,10 @@
 Tag: menu-icon-uses-relative-path
 Severity: warning
 Check: menu-format
-Explanation: This package contains a menu file which references an icon by a relative
- path. However, icons should be referenced by an absolute path in menu files.
-See-Also: menu 3.2, Bug#693477
+Explanation: This package contains a <code>menu</code> file that refers to an icon
+ via a relative path.
+ .
+ Icons should be referenced by their absolute paths.
+See-Also:
+ menu-manual 3.2,
+ Bug#693477

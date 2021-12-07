@@ -1,5 +1,6 @@
 Tag: executable-menu-file
 Severity: warning
 Check: menus
-Explanation: Menu files should normally not be marked as executables. You only
- need to do this if your package has to generate menu entries dynamically.
+Explanation: Menu files should not be marked as executables.
+ .
+ Packages only need to do that when menu entries are generated on the fly.

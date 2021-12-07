@@ -1,15 +1,18 @@
 Tag: desktop-entry-lacks-keywords-entry
 Severity: info
 Check: menu-format
-Explanation: This .desktop file does either not contain a "Keywords" entry or it does
- not contain any keywords not already present in the "Name" or
- "GenericName" entries.
+Explanation: This <code>.desktop</code> file is either missing a <code>Keywords</code>
+ entry, or it does not contain keywords above and beyond those already present in the
+ <code>Name</code> or <code>GenericName</code> entries.
  .
- .desktop files are organized in key/value pairs (similar to .ini files).
- "Keywords" is the name of the entry/key in the .desktop file containing
- keywords relevant for this .desktop file.
+ The <code>Keywords</code> field is intended to show keywords relevant for a
+ <code>.desktop</code> file.
  .
- The desktop-file-validate tool in the desktop-file-utils package is
- useful for checking the syntax of desktop entries.
-See-Also: https://specifications.freedesktop.org/desktop-entry-spec/latest/ar01s06.html,
- Bug#693918, https://wiki.gnome.org/Initiatives/GnomeGoals/DesktopFileKeywords
+ Desktop files are organized in key-value pairs and are similar to INI files.
+ .
+ The <code>desktop-file-validate</code> tool in the <code>desktop-file-utils</code>
+ package may be useful when checking the syntax of desktop entries.
+See-Also:
+ https://specifications.freedesktop.org/desktop-entry-spec/latest/ar01s06.html,
+ Bug#693918,
+ https://wiki.gnome.org/Initiatives/GnomeGoals/DesktopFileKeywords

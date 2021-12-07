@@ -1,14 +1,17 @@
 Tag: pkg-not-in-package-test
 Severity: warning
 Check: menu-format
-Explanation: This menu item doesn't test to see if the package containing it is
- installed. The start of any menu item is a conditional testing whether
- the required packages are installed. Normally this conditional should
- always check at least the package containing it, since menu items should
- be included in the package that provides the application the menu refers
- to.
+Explanation: The given <code>menu</code> item does not check if the package that
+ ships the application is installed.
  .
- This error usually indicates a misspelling of the package name in the
- menu entry or a copied menu entry from another package that doesn't apply
- to this one.
-See-Also: menu 3.2
+ Each <code>menu</code> item should begin with a check that the required packages
+ are installed. At a minimum, the condition should check that the package that
+ ships the application is installed.
+ .
+ Menu items are normally shiiped in the same package that also provides the
+ application the <code>menu</code> item is for.
+ .
+ Sometimes this issue arises the package name was mespelled in the <code>menu</code>
+ entry, or an entry was copied from another package but not properly adjusted.
+See-Also:
+ menu-manual 3.2

@@ -43,11 +43,11 @@ Lintian::Profile::Authority::DocBaseManual provides an interface to manual refer
 
 =over 4
 
-=item doc_base_specification
+=item doc_base_manual
 
 =cut
 
-has doc_base_specification => (
+has doc_base_manual => (
     is => 'rw',
     lazy => 1,
     default => sub {

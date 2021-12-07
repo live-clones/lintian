@@ -1,10 +1,11 @@
 Tag: desktop-entry-lacks-main-category
 Severity: warning
 Check: menu-format
-Explanation: The categories for this desktop entry do not contain any Main
- Categories, only Additional Categories. Additional Categories should
- only be used on conjunction with one or more Main Categories.
+Explanation: The categories for this <code>desktop</code> entry do not contain any
+ "main" categories, but only "additional" ones. Additional categories should only
+ be used on conjunction with one or more main categories.
  .
- The desktop-file-validate tool in the desktop-file-utils package is
- useful for checking the syntax of desktop entries.
-See-Also: https://specifications.freedesktop.org/menu-spec/latest/apa.html
+ The <code>desktop-file-validate</code> tool in the <code>desktop-file-utils</code>
+ package may be useful when checking the syntax of <code>desktop</code> entries.
+See-Also:
+ https://specifications.freedesktop.org/menu-spec/latest/apa.html

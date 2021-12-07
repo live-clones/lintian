@@ -88,7 +88,7 @@ manual references.
 
 has title => (
     is => 'rw',
-    default => 'Doc-Base Specification'
+    default => 'Doc-Base Manual'
 );
 
 has shorthand => (

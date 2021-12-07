@@ -1,10 +1,12 @@
 Tag: su-to-root-with-usr-sbin
 Severity: warning
 Check: menu-format
-Explanation: The menu item or desktop file command uses su-to-root as
- /usr/sbin/su-to-root. Since sarge su-to-root is located in /usr/bin and
- /usr/sbin/su-to-root is only a compatibility symlink that may get dropped
- in the future.
+Explanation: The command in a <code>menu</code> item or in a Desktop file uses
+ refers to the full path <code>/usr/sbin/su-to-root</code>.
  .
- Since su-to-root is now located in /usr/bin you can use it without
- absolute path now.
+ Since the sarge release (Debian 3.1) <code>su-to-root</code> is located in
+ <code>/usr/bin</code>. The location <code>/usr/sbin/su-to-root</code> is a
+ symbolic link to ensure compatibility. It may be dropped in the future.
+ .
+ Since <code>su-to-root</code> is now available in <code>/usr/bin</code> you
+ can use it without an absolute path.

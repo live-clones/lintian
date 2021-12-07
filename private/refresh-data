@@ -55,24 +55,15 @@ my $profile = Lintian::Profile->new;
 $profile->load;
 
 my @data_sources = (
-    $profile->architectures,
-    $profile->debconf_specification,
-    $profile->developer_reference,
-    $profile->debhelper_addons,
-    $profile->debhelper_commands,
-    $profile->doc_base_specification,
-    $profile->filesystem_hierarchy_standard,
-    $profile->fonts,
-    $profile->hardening_buildflags,
-    $profile->java_policy,
-    $profile->lintian_manual,
-    $profile->menu_policy,
-    $profile->menu_specification,
-    $profile->perl_policy,
-    $profile->policy_manual,
-    $profile->policy_releases,
-    $profile->python_policy,
-    $profile->style_sheet,
+    $profile->architectures,$profile->debconf_specification,
+    $profile->developer_reference,$profile->debhelper_addons,
+    $profile->debhelper_commands,$profile->doc_base_manual,
+    $profile->filesystem_hierarchy_standard,$profile->fonts,
+    $profile->hardening_buildflags,$profile->java_policy,
+    $profile->lintian_manual,$profile->menu_policy,
+    $profile->menu_manual,$profile->perl_policy,
+    $profile->policy_manual,$profile->policy_releases,
+    $profile->python_policy,$profile->style_sheet,
     $profile->vim_policy,
 );
 

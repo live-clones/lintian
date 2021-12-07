@@ -1,5 +1,5 @@
 # -*- perl -*-
-# Lintian::Profile::Authority::MenuSpecification
+# Lintian::Profile::Authority::MenuManual
 
 # Copyright © 2021 Felix Lechner
 #
@@ -16,20 +16,20 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Lintian::Profile::Authority::MenuSpecification;
+package Lintian::Profile::Authority::MenuManual;
 
 use v5.20;
 use warnings;
 use utf8;
 
-use Lintian::Data::Authority::MenuSpecification;
+use Lintian::Data::Authority::MenuManual;
 
 use Moo::Role;
 use namespace::clean;
 
 =head1 NAME
 
-Lintian::Profile::Authority::MenuSpecification - Lintian interface to manual references
+Lintian::Profile::Authority::MenuManual - Lintian interface to manual references
 
 =head1 SYNOPSIS
 
@@ -37,23 +37,23 @@ Lintian::Profile::Authority::MenuSpecification - Lintian interface to manual ref
 
 =head1 DESCRIPTION
 
-Lintian::Profile::Authority::MenuSpecification provides an interface to manual references.
+Lintian::Profile::Authority::MenuManual provides an interface to manual references.
 
 =head1 INSTANCE METHODS
 
 =over 4
 
-=item menu_specification
+=item menu_manual
 
 =cut
 
-has menu_specification => (
+has menu_manual => (
     is => 'rw',
     lazy => 1,
     default => sub {
         my ($self) = @_;
 
-        my $manual = Lintian::Data::Authority::MenuSpecification->new;
+        my $manual = Lintian::Data::Authority::MenuManual->new;
         $manual->load($self->data_paths, $self->our_vendor);
 
         return $manual;

@@ -20,7 +20,7 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Lintian::Data::Authority::MenuSpecification;
+package Lintian::Data::Authority::MenuManual;
 
 use v5.20;
 use warnings;
@@ -54,15 +54,15 @@ with 'Lintian::Data';
 
 =head1 NAME
 
-Lintian::Data::Authority::MenuSpecification - Lintian interface for manual references
+Lintian::Data::Authority::MenuManual - Lintian interface for manual references
 
 =head1 SYNOPSIS
 
-    use Lintian::Data::Authority::MenuSpecification;
+    use Lintian::Data::Authority::MenuManual;
 
 =head1 DESCRIPTION
 
-Lintian::Data::Authority::MenuSpecification provides a way to load data files for
+Lintian::Data::Authority::MenuManual provides a way to load data files for
 manual references.
 
 =head1 CLASS METHODS
@@ -83,12 +83,12 @@ manual references.
 
 has title => (
     is => 'rw',
-    default => 'Menu Specification'
+    default => 'Menu Manual'
 );
 
 has shorthand => (
     is => 'rw',
-    default => 'menu'
+    default => 'menu-manual'
 );
 
 has location => (

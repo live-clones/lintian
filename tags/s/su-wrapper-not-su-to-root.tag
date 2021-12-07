@@ -1,9 +1,14 @@
 Tag: su-wrapper-not-su-to-root
 Severity: warning
 Check: menu-format
-Explanation: The menu item or desktop file command uses an su wrapper other than
- su-to-root. On Debian systems, please use <code>su-to-root -X</code>, which
- will pick the correct wrapper based on what's installed on the system and
- the current desktop environment. Using su-to-root is also important for
- Live CD systems which need to use sudo rather than su. su-to-root
- permits global configuration to use sudo.
+Explanation: The commend in a <code>menu</code> item or in a Desktop file uses
+ a <code>su</code> wrapper other than <code>su-to-root</code>.
+ .
+ On Debian systems, please use <code>su-to-root -X</code>. That will pick the
+ best wrapper depending on which software is installed and which desktop
+ environment is being used.
+ .
+ Using <code>su-to-root</code> is especially important for Live CD systems.
+ They need to use <code>sudo</code> rather than <code>su</code>. The
+ <code>su-to-root</code> command can be configured to invoke only
+ <code>sudo</code>.

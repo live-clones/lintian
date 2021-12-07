@@ -1,11 +1,14 @@
 Tag: desktop-entry-limited-to-environments
 Severity: info
 Check: menu-format
-Explanation: This desktop entry uses OnlyShowIn to limit the environments in
- which it's displayed but lists multiple environments. This is often a
- sign of a desktop file written assuming that only GNOME, KDE, and Xfce
- are in use and the desktop file intended to exclude one of them. This
- unintentionally hides the application from desktop environments such as
- LXDE where it would work fine. If this application supports any desktop
- environment except some specific ones, it should list the unsupported
- environments in the NotShowIn key instead.
+Explanation: This desktop entry limits the environments in which it is shown
+ via the <code>OnlyShowIn</code> field but lists multiple environments therein.
+ .
+ The condition often indicates that a desktop file was written under the
+ assumption that only GNOME, KDE, or Xfce are being used, and that the desktop
+ file is in fact intended to exclude one of them.
+ .
+ That the application from desktop environments like LXDE where it may work
+ fine. If this application supports any desktop environment except specific
+ ones, it would be better to instead specify the unsupported environments via
+ the <code>NotShowIn</code> field.

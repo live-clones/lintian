@@ -54,7 +54,7 @@ with
   'Lintian::Profile::Authority::JavaPolicy',
   'Lintian::Profile::Authority::LintianManual',
   'Lintian::Profile::Authority::MenuPolicy',
-  'Lintian::Profile::Authority::MenuSpecification',
+  'Lintian::Profile::Authority::MenuManual',
   'Lintian::Profile::Authority::PerlPolicy',
   'Lintian::Profile::Authority::PythonPolicy',
   'Lintian::Profile::Authority::VimPolicy',
@@ -903,8 +903,8 @@ sub markdown_citation {
         $self->python_policy,$self->java_policy,
         $self->vim_policy,$self->lintian_manual,
         $self->developer_reference,$self->policy_manual,
-        $self->debconf_specification,$self->menu_specification,
-        $self->doc_base_specification,$self->filesystem_hierarchy_standard,
+        $self->debconf_specification,$self->menu_manual,
+        $self->doc_base_manual,$self->filesystem_hierarchy_standard,
     );
 
     my %by_shorthand = map { $_->shorthand => $_ } @MARKDOWN_CAPABLE;

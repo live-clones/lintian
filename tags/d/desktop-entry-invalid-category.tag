@@ -1,12 +1,15 @@
 Tag: desktop-entry-invalid-category
 Severity: warning
 Check: menu-format
-Explanation: This desktop entry lists a category that is not one of the
- registered Main or Additional Categories in the FreeDesktop
- specification. Note that case is significant and whitespace is only
- allowed immediately before and after the equal sign in the Category key,
- not elsewhere in the field.
+Explanation: This <code>desktop</code> entry shows a category that is not
+ among the registered "main" or "additional" categories in the FreeDesktop
+ specification.
  .
- The desktop-file-validate tool in the desktop-file-utils package is
- useful for checking the syntax of desktop entries.
-See-Also: https://specifications.freedesktop.org/menu-spec/latest/apa.html
+ The values are case-sensitive. Whitespace is only allowed just before and
+ after the equals sign in the <code>Category</code> key, and nowhere else.
+ .
+ The <code>desktop-file-validate</code> tool in the
+ <code>desktop-file-utils</code> package is useful when checking the syntax
+ of desktop entries.
+See-Also:
+ https://specifications.freedesktop.org/menu-spec/latest/apa.html

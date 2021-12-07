@@ -5,6 +5,6 @@ Explanation: The package ships a <code>.html</code> or <code>.pdf</code> file un
  <code>/usr/share/doc/</code>. Those files are usually documentation, but no files
  are registered in <code>doc-base</code>.
  .
- Files in folders named <code>examples</code> are exempted from this tag.
+ Files in folders named <code>examples</code> are exempt from this tag.
 See-Also:
  policy 9.10

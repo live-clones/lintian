@@ -1,12 +1,14 @@
 Tag: desktop-entry-file-has-crs
 Severity: warning
 Check: menu-format
-Explanation: The desktop entry file has lines ending in CRLF instead of just LF.
- The Desktop Entry Specification is explicit that lines should end with
- only LF. The CR may be taken by some software as part of the field.
+Explanation: The desktop entry file has lines ending in carriage-return and line-feed
+ instead of just a line-feed. The Desktop Entry Specification says that lines should
+ end with line-feed alone.
  .
- Running the following command against the given file removes any
- <code>CR</code> character in the file:
+ Some software may mistake the carriage-return as a part of the field value.
  .
- <code>sed -i 's/\r//g' path/to/file</code>
-See-Also: https://specifications.freedesktop.org/desktop-entry-spec/latest/ar01s03.html
+ You can run the following command to remove any <code>CR</code> character in a file:
+ .
+      <code>sed -i 's/\r//g' path/to/file</code>
+See-Also:
+ https://specifications.freedesktop.org/desktop-entry-spec/latest/ar01s03.html

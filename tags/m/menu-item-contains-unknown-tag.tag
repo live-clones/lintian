@@ -1,7 +1,10 @@
 Tag: menu-item-contains-unknown-tag
 Severity: warning
 Check: menu-format
-Explanation: The menu item has a line that has a tag in it that is not one
- of the standard tags (needs=, section=, title=, longtitle=, command=, etc).
- While other tags can be used for specialized purposes, this is rare and
- it's more likely the tag's name is misspelled.
+Explanation: The <code>menu</code> item has a line with a tag that is not
+ a standard tags, such as <code>needs=</code>, <code>section=</code>,
+ <code>title=</code>, <code>longtitle=</code>, or <code>command=</code>
+ etc.
+ .
+ While other tags can be used, it is rare. More commonly, the tag name was
+ misspelled.
