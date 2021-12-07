@@ -95,7 +95,7 @@ sub markdown_authority {
     return "$pointer of the $volume_link"
       if length $pointer;
 
-    return $volume_link;
+    return "the $volume_link";
 }
 
 =item markdown_bug
