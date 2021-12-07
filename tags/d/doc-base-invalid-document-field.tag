@@ -1,7 +1,10 @@
 Tag: doc-base-invalid-document-field
 Severity: error
 Check: menus
-Explanation: The Document field should consists only of letters (a-z), digits
- (0-9), plus (+) or minus (-) signs, and dots (.). In particular,
- uppercase letters are not allowed.
-See-Also: doc-base 2.2
+Explanation: The <code>Document</code> field should consist only of lowercase letters
+ (<code>a-z</code>), digits (<code>0-9</code>), the plus sign (<code>+</code>),
+ the minus sign (<code>-</code>) sign, or dots (<code>.</code>).
+ .
+ Uppercase letters are not allowed.
+See-Also:
+ doc-base-manual 2.2

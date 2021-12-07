@@ -49,7 +49,7 @@ with
   'Lintian::Profile::Authority::DebconfSpecification',
   'Lintian::Profile::Authority::DebianPolicy',
   'Lintian::Profile::Authority::DeveloperReference',
-  'Lintian::Profile::Authority::DocBaseSpecification',
+  'Lintian::Profile::Authority::DocBaseManual',
   'Lintian::Profile::Authority::FilesystemHierarchy',
   'Lintian::Profile::Authority::JavaPolicy',
   'Lintian::Profile::Authority::LintianManual',

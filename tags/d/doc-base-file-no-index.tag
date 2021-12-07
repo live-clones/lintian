@@ -1,8 +1,11 @@
 Tag: doc-base-file-no-index
 Severity: error
 Check: menus
-Explanation: Format sections in doc-base control files for HTML or Info documents
- must contain an Index field specifying the starting document for the
- documentation. Even if the documentation is a single file, this field
- must be present.
-See-Also: doc-base 2.3.2.2
+Explanation: The <code>Format</code> sections in the given <code>doc-base</code>
+ control files for <code>HTML</code> or <code>Info</code> documents must also
+ contain an <code>Index</code> field that shows an appropriate starting point
+ for the document series.
+ .
+ The field must be present even if the documentation is a single file.
+See-Also:
+ doc-base-manual 2.3.2.2

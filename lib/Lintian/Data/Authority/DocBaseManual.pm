@@ -20,7 +20,7 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Lintian::Data::Authority::DocBaseSpecification;
+package Lintian::Data::Authority::DocBaseManual;
 
 use v5.20;
 use warnings;
@@ -59,15 +59,15 @@ with 'Lintian::Data';
 
 =head1 NAME
 
-Lintian::Data::Authority::DocBaseSpecification - Lintian interface for manual references
+Lintian::Data::Authority::DocBaseManual - Lintian interface for manual references
 
 =head1 SYNOPSIS
 
-    use Lintian::Data::Authority::DocBaseSpecification;
+    use Lintian::Data::Authority::DocBaseManual;
 
 =head1 DESCRIPTION
 
-Lintian::Data::Authority::DocBaseSpecification provides a way to load data files for
+Lintian::Data::Authority::DocBaseManual provides a way to load data files for
 manual references.
 
 =head1 CLASS METHODS
@@ -93,7 +93,7 @@ has title => (
 
 has shorthand => (
     is => 'rw',
-    default => 'doc-base'
+    default => 'doc-base-manual'
 );
 
 has location => (
@@ -300,8 +300,7 @@ sub refresh {
       = $archive->deb822_packages_by_installable_name('sid', 'main', $port);
 
     my $work_folder
-      = Path::Tiny->tempdir(
-        TEMPLATE => 'refresh-doc-base-specification-XXXXXXXXXX');
+      = Path::Tiny->tempdir(TEMPLATE => 'refresh-doc-base-manual-XXXXXXXXXX');
 
     die encode_utf8("Installable $installable_name not shipped in port $port")
       unless exists $deb822_by_installable_name->{$installable_name};

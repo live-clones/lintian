@@ -1,5 +1,5 @@
 # -*- perl -*-
-# Lintian::Profile::Authority::DocBaseSpecification
+# Lintian::Profile::Authority::DocBaseManual
 
 # Copyright © 2021 Felix Lechner
 #
@@ -16,20 +16,20 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Lintian::Profile::Authority::DocBaseSpecification;
+package Lintian::Profile::Authority::DocBaseManual;
 
 use v5.20;
 use warnings;
 use utf8;
 
-use Lintian::Data::Authority::DocBaseSpecification;
+use Lintian::Data::Authority::DocBaseManual;
 
 use Moo::Role;
 use namespace::clean;
 
 =head1 NAME
 
-Lintian::Profile::Authority::DocBaseSpecification - Lintian interface to manual references
+Lintian::Profile::Authority::DocBaseManual - Lintian interface to manual references
 
 =head1 SYNOPSIS
 
@@ -37,7 +37,7 @@ Lintian::Profile::Authority::DocBaseSpecification - Lintian interface to manual 
 
 =head1 DESCRIPTION
 
-Lintian::Profile::Authority::DocBaseSpecification provides an interface to manual references.
+Lintian::Profile::Authority::DocBaseManual provides an interface to manual references.
 
 =head1 INSTANCE METHODS
 
@@ -53,7 +53,7 @@ has doc_base_specification => (
     default => sub {
         my ($self) = @_;
 
-        my $manual = Lintian::Data::Authority::DocBaseSpecification->new;
+        my $manual = Lintian::Data::Authority::DocBaseManual->new;
         $manual->load($self->data_paths, $self->our_vendor);
 
         return $manual;
