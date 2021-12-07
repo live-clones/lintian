@@ -50,7 +50,7 @@ with
   'Lintian::Profile::Authority::DebianPolicy',
   'Lintian::Profile::Authority::DeveloperReference',
   'Lintian::Profile::Authority::DocBaseSpecification',
-  'Lintian::Profile::Authority::FilesystemHierarchyStandard',
+  'Lintian::Profile::Authority::FilesystemHierarchy',
   'Lintian::Profile::Authority::JavaPolicy',
   'Lintian::Profile::Authority::LintianManual',
   'Lintian::Profile::Authority::MenuPolicy',

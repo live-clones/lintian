@@ -1,5 +1,5 @@
 # -*- perl -*-
-# Lintian::Profile::Authority::FilesystemHierarchyStandard
+# Lintian::Profile::Authority::FilesystemHierarchy
 
 # Copyright © 2021 Felix Lechner
 #
@@ -16,20 +16,20 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Lintian::Profile::Authority::FilesystemHierarchyStandard;
+package Lintian::Profile::Authority::FilesystemHierarchy;
 
 use v5.20;
 use warnings;
 use utf8;
 
-use Lintian::Data::Authority::FilesystemHierarchyStandard;
+use Lintian::Data::Authority::FilesystemHierarchy;
 
 use Moo::Role;
 use namespace::clean;
 
 =head1 NAME
 
-Lintian::Profile::Authority::FilesystemHierarchyStandard - Lintian interface to manual references
+Lintian::Profile::Authority::FilesystemHierarchy - Lintian interface to manual references
 
 =head1 SYNOPSIS
 
@@ -37,7 +37,7 @@ Lintian::Profile::Authority::FilesystemHierarchyStandard - Lintian interface to 
 
 =head1 DESCRIPTION
 
-Lintian::Profile::Authority::FilesystemHierarchyStandard provides an interface to manual references.
+Lintian::Profile::Authority::FilesystemHierarchy provides an interface to manual references.
 
 =head1 INSTANCE METHODS
 
@@ -53,7 +53,7 @@ has filesystem_hierarchy_standard => (
     default => sub {
         my ($self) = @_;
 
-        my $manual= Lintian::Data::Authority::FilesystemHierarchyStandard->new;
+        my $manual= Lintian::Data::Authority::FilesystemHierarchy->new;
         $manual->load($self->data_paths, $self->our_vendor);
 
         return $manual;

@@ -12,4 +12,4 @@ Explanation: Debian packages should not install into <code>/srv</code>. The
  a way that allows the local administrator to specify and preserve their
  chosen directory structure (such as through post-install configuration,
  setup scripts, debconf prompting, etc.).
-See-Also: fhs srvdataforservicesprovidedbysystem
+See-Also: filesystem-hierarchy srvdataforservicesprovidedbysystem

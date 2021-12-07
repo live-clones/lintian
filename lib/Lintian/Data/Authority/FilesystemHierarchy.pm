@@ -20,7 +20,7 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Lintian::Data::Authority::FilesystemHierarchyStandard;
+package Lintian::Data::Authority::FilesystemHierarchy;
 
 use v5.20;
 use warnings;
@@ -55,15 +55,15 @@ with 'Lintian::Data';
 
 =head1 NAME
 
-Lintian::Data::Authority::FilesystemHierarchyStandard - Lintian interface for manual references
+Lintian::Data::Authority::FilesystemHierarchy - Lintian interface for manual references
 
 =head1 SYNOPSIS
 
-    use Lintian::Data::Authority::FilesystemHierarchyStandard;
+    use Lintian::Data::Authority::FilesystemHierarchy;
 
 =head1 DESCRIPTION
 
-Lintian::Data::Authority::FilesystemHierarchyStandard provides a way to load data files for
+Lintian::Data::Authority::FilesystemHierarchy provides a way to load data files for
 manual references.
 
 =head1 CLASS METHODS
@@ -89,7 +89,7 @@ has title => (
 
 has shorthand => (
     is => 'rw',
-    default => 'fhs'
+    default => 'filesystem-hierarchy'
 );
 
 has location => (

@@ -1,7 +1,7 @@
 Tag: dir-or-file-in-var-www
 Severity: error
 Check: files/hierarchy/standard
-See-Also: fhs thevarhierarchy
+See-Also: filesystem-hierarchy thevarhierarchy
 Explanation: Debian packages should not install files under <code>/var/www</code>.
  This is not one of the <code>/var</code> directories in the File Hierarchy
  Standard and is under the control of the local administrator. Packages
