@@ -8,4 +8,4 @@ Explanation: The maintainer keeps a manual page in ./debian. Please forward the
  .
  If the manual page was already forwarded or rejected, or the upstream is
  gone, please override the tag and annotate it with a suitable comment.
-See-Also: social contract item 2, developer-reference 3.1.4, policy 4.3
+See-Also: social contract item 2, developer-reference 3.1.4, debian-policy 4.3

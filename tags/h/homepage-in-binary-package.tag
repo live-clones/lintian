@@ -10,4 +10,4 @@ Explanation: This non-native source package produces at least one binary package
  If you move the <code>Homepage</code> field to the source paragraph in
  <code>debian/control</code> then all binary packages from this source
  will inherit the value by default.
-See-Also: policy 5.6.23
+See-Also: debian-policy 5.6.23

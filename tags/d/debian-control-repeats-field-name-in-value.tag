@@ -6,4 +6,4 @@ Explanation: The field on this line of <code>debian/control</code> repeats
  .
    Maintainer: Maintainer: Some Name &lt;maintainer@mail.example.com&gt;
 See-Also:
- policy 5.1
+ debian-policy 5.1

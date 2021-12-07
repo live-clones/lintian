@@ -3,4 +3,4 @@ Severity: error
 Check: debian/changelog
 Explanation: The Debian changelog file should usually be installed as
  /usr/share/doc/*pkg*/changelog.Debian.gz
-See-Also: policy 12.7
+See-Also: debian-policy 12.7

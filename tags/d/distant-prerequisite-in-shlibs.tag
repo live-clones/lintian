@@ -15,4 +15,4 @@ Explanation: This package declares in its shlibs control file either a dependenc
  In unusual circumstances where it's necessary to declare more complex
  dependencies in the shlibs control file, please add a Lintian override
  for this warning.
-See-Also: policy 8.6
+See-Also: debian-policy 8.6

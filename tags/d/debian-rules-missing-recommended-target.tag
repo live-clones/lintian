@@ -1,24 +1,27 @@
 Tag: debian-rules-missing-recommended-target
 Severity: warning
 Check: debian/rules
-See-Also: policy 4.9
-Explanation: The <code>debian/rules</code> file for this package does not provide
- one of the recommended targets. All of build-arch and build-indep
- should be provided, even if they don't do anything for this package.
- If this package does not currently split building of architecture
+Explanation: The <code>debian/rules</code> file for this package does not
+ provide all recommended targets. Both <code>build-arch</code> and
+ <code>build-indep</code> should be provided, even if they do not do
+ anything.
+ .
+ If this package does not currently split the building of architecture
  dependent and independent packages, the following rules may be added
- to fall back to the build target:
+ to fall back to the <code>build</code> target:
  .
-   build-arch: build
-   build-indep: build
+     build-arch: build
+     build-indep: build
  .
- Note that the following form is recommended however:
+ Note, however, that the following form is recommended:
  .
-   build: build-arch build-indep
-   build-arch: build-stamp
-   build-indep: build-stamp
-   build-stamp:
-   	build here
+     build: build-arch build-indep
+     build-arch: build-stamp
+     build-indep: build-stamp
+     build-stamp:
+         build here
  .
- These targets will be required by policy in the future, so should be
- added to prevent future breakage.
+ Future versions of the policy will require these targets. Please add
+ them to avoid future breakage.
+See-Also:
+ debian-policy 4.9

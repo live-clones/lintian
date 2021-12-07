@@ -15,4 +15,4 @@ Explanation: The specified condition must be satisfied to run the <code>clean</c
  away. You probably also do not need the <code>:any</code> multiarch acceptor,
  if you see one.
 See-Also:
- policy 7.7
+ debian-policy 7.7

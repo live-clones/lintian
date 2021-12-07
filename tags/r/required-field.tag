@@ -11,6 +11,7 @@ Renamed-From:
  package-has-no-description
 Explanation: The named field is required by policy but not present in the
  package's primary control file.
-See-Also: policy 5.3,
- policy 5.5,
- policy 5.6.11
+See-Also:
+ debian-policy 5.3,
+ debian-policy 5.5,
+ debian-policy 5.6.11

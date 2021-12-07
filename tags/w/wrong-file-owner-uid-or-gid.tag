@@ -11,4 +11,4 @@ Explanation: The user or group ID of the owner of the file is invalid. The
  It's possible for a Policy-compliant package to trigger this tag if the
  user is created in the preinst maintainer script, but this is a very rare
  case and doesn't appear to be necessary. 
-See-Also: policy 9.2
+See-Also: debian-policy 9.2

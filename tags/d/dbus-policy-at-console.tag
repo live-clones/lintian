@@ -16,10 +16,13 @@ Explanation: The package contains D-Bus policy configuration that uses the
  The maintainers of D-Bus recommend that services should allow or deny
  method calls according to broad categories that are not typically altered
  by the system administrator (usually either "all users", or only root
- and/or a specified system user). If finer-grained authorization
+ and/or a specified system user).
+ .
+ If finer-grained authorization
  is required, the service should accept the method call message, then call
  out to PolicyKit to decide whether to honor the request. PolicyKit can
  use system-administrator-configurable policies to make that decision,
  including distinguishing between users who are "at the console" and
  those who are not.
-See-Also: https://bugs.freedesktop.org/show_bug.cgi?id=39611
+See-Also:
+ https://bugs.freedesktop.org/show_bug.cgi?id=39611

@@ -1,7 +1,7 @@
 Tag: csh-considered-harmful
 Severity: warning
 Check: shell/csh
-Explanation: The Debian policy for scripts explicitly warns against using csh
- and tcsh as scripting languages.
+Explanation: The Debian policy for scripts explicitly warns against using
+ <code>csh</code> and <code>tcsh</code> as scripting languages.
 See-Also:
- policy 10.4
+ debian-policy 10.4

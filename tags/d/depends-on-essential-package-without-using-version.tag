@@ -1,7 +1,7 @@
 Tag: depends-on-essential-package-without-using-version
 Severity: error
 Check: fields/package-relations
-See-Also: policy 3.5
+See-Also: debian-policy 3.5
 Explanation: The package declares a depends on an essential package, e.g. dpkg,
  without using a versioned depends. Packages do not need to depend on
  essential packages; essential means that they will always be present.

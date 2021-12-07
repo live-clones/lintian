@@ -7,4 +7,4 @@ Explanation: A field in the <code>debian/control</code> file has an unusual
  The syntax for Deb822 files permits any kind of space, but according to Policy
  there is a convention to use a single space after the colon.
 See-Also:
- policy 5.1
+ debian-policy 5.1

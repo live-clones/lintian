@@ -6,4 +6,5 @@ Explanation: GObject-Introspection XML files
  a development package in the <code>libdevel</code> section of the archive.
  This is normally the same <code>libfoo-dev</code> package that contains
  other development files.
-See-Also: /usr/share/doc/gobject-introspection/policy.txt
+See-Also:
+ /usr/share/doc/gobject-introspection/policy.txt

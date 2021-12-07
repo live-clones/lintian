@@ -8,6 +8,6 @@ Explanation: The command is listed both in a <code>menu</code> file and a
  .
  Please remove the <code>menu</code> file from the package.
 See-Also:
- policy 9.6,
+ debian-policy 9.6,
  https://lists.debian.org/debian-devel-announce/2015/09/msg00000.html,
  Bug#741573

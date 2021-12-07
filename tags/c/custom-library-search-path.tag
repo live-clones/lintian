@@ -1,7 +1,8 @@
 Tag: custom-library-search-path
 Severity: error
 Check: binaries/rpath
-Renamed-From: binary-or-shlib-defines-rpath
+Renamed-From:
+ binary-or-shlib-defines-rpath
 Explanation: The binary or shared library sets RPATH or RUNPATH. This
  overrides the normal library search path, possibly interfering with
  local policy and causing problems for multilib, among other issues.
@@ -20,4 +21,5 @@ Explanation: The binary or shared library sets RPATH or RUNPATH. This
      gcc test.o -o test -R/usr/local/lib
  and remove the <code>-Wl,--rpath</code> or <code>-R</code> argument. You can also
  use the chrpath utility to remove the RPATH.
-See-Also: https://wiki.debian.org/RpathIssue
+See-Also:
+ https://wiki.debian.org/RpathIssue

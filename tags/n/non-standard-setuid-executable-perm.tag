@@ -7,4 +7,4 @@ Explanation: The file is setuid or setgid and has a mode different from any of
  no purpose, group-writable setuid or setgid executables are probably bad
  ideas, and setgid executables that are not world-executable serve little
  purpose.
-See-Also: policy 10.9
+See-Also: debian-policy 10.9

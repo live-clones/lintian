@@ -9,4 +9,4 @@ Explanation: The package should not only include the shared library itself, but 
  gets removed.) If the symlink is in the package, check that the SONAME of the
  library matches the info in the shlibs file.
 See-Also:
- policy 8.1
+ debian-policy 8.1

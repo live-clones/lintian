@@ -21,4 +21,5 @@ Explanation: Development packages that contain GObject-Introspection XML files
  entries for <code>gir1.2-gdk-3.0 (= ${binary:Version})</code>
  and <code>gir1.2-gdkx11-3.0 (= ${binary:Version})</code> signals this
  situation to Lintian.
-See-Also: /usr/share/doc/gobject-introspection/policy.txt
+See-Also:
+ /usr/share/doc/gobject-introspection/policy.txt

@@ -8,4 +8,4 @@ Explanation: The short version restrictions <code>&lt;</code> and <code>&gt;</co
  The short forms are obsolete and should no longer be used. Please use the longer forms
  in the parentheses instead.
 See-Also:
- policy 7.1
+ debian-policy 7.1

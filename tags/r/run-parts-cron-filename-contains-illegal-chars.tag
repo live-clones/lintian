@@ -5,4 +5,4 @@ Explanation: The script in /etc/cron.&lt;time-interval&gt; will not be executed 
  run-parts(8) because the filename contains a "." (full stop) or "+" (plus).
  .
  It is recommended to use "&lowbar;" (underscores) instead of these symbols.
-See-Also: run-parts(8), policy 9.5.1
+See-Also: run-parts(8), debian-policy 9.5.1

@@ -14,4 +14,4 @@ Explanation: Symbolic links to the undocumented(7) manual page may be provided
  <code>/usr/share/doc/man-db/examples</code> directory.
  If the package provides <code>--help</code> output, you might want to use
  the <code>help2man</code> utility to generate a simple manual page.
-See-Also: policy 12.1
+See-Also: debian-policy 12.1

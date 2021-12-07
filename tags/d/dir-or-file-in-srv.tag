@@ -1,15 +1,18 @@
 Tag: dir-or-file-in-srv
 Severity: error
 Check: files/hierarchy/standard
-Explanation: Debian packages should not install into <code>/srv</code>. The
- specification of <code>/srv</code> states that its structure is at the
- discretion of the local administrator and no package should rely on any
- particular structure. Debian packages that install files directly into
- <code>/srv</code> can't adjust for local policy about its structure and in
- essence force a particular structure.
+Explanation: Debian packages should install nothing into <code>/srv</code>.
  .
- If a package wishes to put its data in <code>/srv</code>, it must do this in
- a way that allows the local administrator to specify and preserve their
- chosen directory structure (such as through post-install configuration,
- setup scripts, debconf prompting, etc.).
-See-Also: filesystem-hierarchy srvdataforservicesprovidedbysystem
+ The specification for <code>/srv</code> states that its use is at the
+ discretion of the local administrator. No package should rely on a
+ particular layout.
+ .
+ Debian packages that install files there are unable to adjust to any local
+ policy. They force a local administrator's hand.
+ .
+ If a package wishes to place data below <code>/srv</code>, it must do so in
+ a way that permits the local administrator to select the folder (for
+ example, through post-install configuration, setup scripts,
+ <code>debconf</code> promps, or similar).
+See-Also:
+ filesystem-hierarchy srvdataforservicesprovidedbysystem

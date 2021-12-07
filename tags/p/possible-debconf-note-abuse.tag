@@ -15,4 +15,4 @@ Explanation: Debconf notes should be used only for important notes that the
  changes in the package behavior, or to simply drop it if it is not
  needed (e.g. "welcome" notes). Changing the templates type to "error"
  can also be appropriate, such as for input validation errors.
-See-Also: policy 3.9.1
+See-Also: debian-policy 3.9.1

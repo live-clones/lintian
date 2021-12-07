@@ -10,4 +10,4 @@ Explanation: This package build-depends on a patch system such as dpatch or
  instructions, you may want to add a <code>debian/README.source</code>
  referring to <code>/usr/share/doc/quilt/README.source</code>. Similarly, you
  can refer to <code>/usr/share/doc/dpatch/README.source.gz</code> for dpatch.
-See-Also: policy 4.14
+See-Also: debian-policy 4.14

@@ -1,7 +1,7 @@
 Tag: package-supports-alternative-init-but-no-init.d-script
 Severity: info
 Check: init-d
-See-Also: policy 9.11
+See-Also: debian-policy 9.11
 Explanation: The package provides daemon, but contains no init.d script
  Packages that provide services (daemons), like cron daemon or web servers,
  may provide init.d script for starting that services with sysvinit.

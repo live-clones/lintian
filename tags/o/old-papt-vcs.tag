@@ -1,6 +1,5 @@
 Tag: old-papt-vcs
 Severity: error
-See-Also: DPT policy
 Check: fields/vcs
 Explanation: The Python Applications Packaging Team (PAPT) has been merged with
   the Debian Python Module Team (DPMT) to create the new Debian Python Team
@@ -9,3 +8,6 @@ Explanation: The Python Applications Packaging Team (PAPT) has been merged with
  .
  This is not currently the case and the package's VCS should be migrated to the
  proper location.
+See-Also:
+ https://wiki.debian.org/Python/GitPackaging,
+ https://wiki.debian.org/Teams/PythonTeam

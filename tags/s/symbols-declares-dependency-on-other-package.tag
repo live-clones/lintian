@@ -12,4 +12,4 @@ Explanation: This package declares in its symbols control file a dependency on
  In unusual circumstances where it's necessary to declare more complex
  dependencies in the symbols control file, please add a Lintian override
  for this warning.
-See-Also: policy 8.6
+See-Also: debian-policy 8.6

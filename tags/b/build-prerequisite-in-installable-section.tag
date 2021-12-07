@@ -10,4 +10,4 @@ Explanation: The named field appears in an installable section of the
  The field should only appear in the source section of the <code>debian/control</code>
  file.
 See-Also:
- policy 5.2
+ debian-policy 5.2

@@ -5,4 +5,4 @@ Renamed-From:
  shlib-with-executable-bit
 Explanation: Shared libraries should be mode 0644.
 See-Also:
- policy 8.1
+ debian-policy 8.1

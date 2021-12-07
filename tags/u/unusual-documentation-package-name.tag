@@ -6,4 +6,4 @@ Explanation: The specified package appears to be a documentation package
  packages use the more usual "-doc" suffix instead.
  .
  Please remove the superfluous trailing "s" from the package name.
-See-Also: policy 12.3
+See-Also: debian-policy 12.3

@@ -10,7 +10,7 @@ Explanation: The symbols file contains the placeholder  <code>&num;PACKAGE&num;<
  With the information, <code>dpkg-shlibdeps(1)</code> can calculate the
  installation prerequisites for your package from the build prerequisites.
 See-Also:
- policy 8.6.3.2,
+ debian-policy 8.6.3.2,
  deb-symbols(5),
  dpkg-shlibdeps(1),
  https://www.debian.org/doc/manuals/maint-guide/advanced.en.html#librarysymbols,

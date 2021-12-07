@@ -16,5 +16,5 @@ Explanation: The package installs shared libraries in a directory controlled by
  version 9.20151004. In such case, a simple rebuild will often be
  sufficient to fix this issue.
 See-Also:
- policy 8.1.1,
+ debian-policy 8.1.1,
  https://lists.debian.org/debian-devel/2015/08/msg00412.html

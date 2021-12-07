@@ -7,4 +7,4 @@ Explanation: This package installs a manual page in a locale directory that
  directory name unless it indicates a significant difference in the
  language. The known cases where country names are appropriate are pt&lowbar;BR
  and zh&lowbar;&ast;.
-See-Also: policy 12.1
+See-Also: debian-policy 12.1

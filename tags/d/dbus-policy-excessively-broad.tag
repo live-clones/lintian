@@ -26,4 +26,5 @@ Explanation: The package contains D-Bus policy configuration that
    &lt;/policy&gt;
  .
  which correctly allows method calls to that particular service only.
-See-Also: http://www.openwall.com/lists/oss-security/2015/01/27/25
+See-Also:
+ http://www.openwall.com/lists/oss-security/2015/01/27/25

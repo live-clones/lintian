@@ -7,4 +7,4 @@ Explanation: This link goes up, and then back down into the same subdirectory.
  .
  If you use debhelper, running dh&lowbar;link after creating the package structure
  will fix this problem for you.
-See-Also: policy 10.5
+See-Also: debian-policy 10.5

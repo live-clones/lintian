@@ -12,4 +12,4 @@ Explanation: The package changes the search path for the runtime linker, but is
  .
  Without this precaution, conflicting libraries may trigger segmentation
  faults for what should have been a conflict in the package manager.
-See-Also: policy 10.2
+See-Also: debian-policy 10.2

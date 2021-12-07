@@ -13,4 +13,4 @@ Explanation: The date format in the latest changelog entry file appears to be in
  .
    $ date -R -ud '2013-11-05 23:59:59'
    Tue, 05 Nov 2013 23:59:59 +0000
-See-Also: policy 4.4
+See-Also: debian-policy 4.4

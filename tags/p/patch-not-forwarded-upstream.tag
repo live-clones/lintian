@@ -11,5 +11,5 @@ Explanation: According to the DEP-3 headers, this patch has not been forwarded
  header.
 See-Also: social contract item 2,
  developer-reference 3.1.4,
- policy 4.3,
+ debian-policy 4.3,
  Bug#755153

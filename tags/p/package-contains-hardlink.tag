@@ -11,4 +11,4 @@ Explanation: The package contains a hardlink in <code>/etc</code> or across diff
  does dpkg in certain cases.
  .
  A better solution might be using symlinks here.
-See-Also: policy 10.7.3
+See-Also: debian-policy 10.7.3

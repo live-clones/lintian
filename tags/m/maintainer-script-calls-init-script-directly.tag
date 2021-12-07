@@ -8,4 +8,4 @@ Explanation: The named maintainer script appear to run an <code>init</code> scri
  Maintainer scripts may call an init script directly only when <code>invoke-rc.d</code>
  is not available.
 See-Also:
- policy 9.3.3.2
+ debian-policy 9.3.3.2

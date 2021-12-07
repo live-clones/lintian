@@ -18,4 +18,4 @@ Explanation: This package seems to contain the development files fer a
  version of the library does not satisfy the prerequisite, since any minor version change
  might break the <code>&ast;.so</code> links.
 See-Also:
- policy 8.5
+ debian-policy 8.5

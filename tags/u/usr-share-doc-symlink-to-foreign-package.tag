@@ -10,4 +10,4 @@ Explanation: If the package installs a symbolic link
  real /usr/share/doc/*pkg1* directory within *pkg1* with the
  appropriate contents (such as the <code>copyright</code> and
  <code>changelog.Debian.gz</code> files).
-See-Also: policy 12.5
+See-Also: debian-policy 12.5

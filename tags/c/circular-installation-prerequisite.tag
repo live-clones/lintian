@@ -10,4 +10,4 @@ Explanation: The package is its own installation prerquisite in the relevant
  prerequisite, but this may still indicate an oversight, like a misspelling
  or having unintentionally cut and pasted an incorrect package name.
 See-Also:
- policy 7.2
+ debian-policy 7.2

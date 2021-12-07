@@ -19,4 +19,4 @@ Explanation: A "-dev" package is supposed to install a "libsomething.so" symboli
  Implementation detail: This tag is emitted for the library package and not
  the "-dev" package.
 See-Also:
- policy 8.4
+ debian-policy 8.4

@@ -18,4 +18,4 @@ Explanation: If the package installs a symbolic link
  level deep when resolving dependencies. Each package should have a
  direct dependency on the package which includes its documentation
  directory.
-See-Also: policy 12.5
+See-Also: debian-policy 12.5

@@ -16,4 +16,4 @@ Explanation: A stronger field for prerequisites in the <code>debian/control</cod
  such as a misspelling or having forgotten to remove the stronger prereguisite
  when the intent was to move it to a weaker field.
 See-Also:
- policy 7.2
+ debian-policy 7.2

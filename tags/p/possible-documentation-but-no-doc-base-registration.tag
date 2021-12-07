@@ -7,4 +7,4 @@ Explanation: The package ships a <code>.html</code> or <code>.pdf</code> file un
  .
  Files in folders named <code>examples</code> are exempt from this tag.
 See-Also:
- policy 9.10
+ debian-policy 9.10

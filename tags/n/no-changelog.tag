@@ -15,4 +15,4 @@ Explanation: A Debian package that provides a <code>/usr/share/doc/*pkg*</code>
  .
  This tag may also be emitted when the changelog exists but does not
  otherwise resemble a Debian changelog.
-See-Also: policy 12.7
+See-Also: debian-policy 12.7

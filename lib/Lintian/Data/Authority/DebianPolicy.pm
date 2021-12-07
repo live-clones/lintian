@@ -88,7 +88,7 @@ has title => (
 
 has shorthand => (
     is => 'rw',
-    default => 'policy'
+    default => 'debian-policy'
 );
 
 has location => (
@@ -270,8 +270,7 @@ sub extract_sections_from_links {
         # do not collect the upgrading checklists in appendix 10 of policy
         # the numbering changes all the time
         next
-          if $self->shorthand eq 'policy'
-          && $section_key =~ m{^ appendix-10 [.] }x;
+          if $section_key =~ m{^ appendix-10 [.] }x;
 
         $by_section_key{$section_key}{title} = $section_title;
         $by_section_key{$section_key}{destination} = $destination;
