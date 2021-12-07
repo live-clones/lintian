@@ -36,7 +36,6 @@ const my $EMPTY => q{};
 const my $PREAMBLE => q{preamble};
 const my $TITLE => q{title};
 const my $CARGO => q{cargo};
-const my $LAST_MODIFIED => q{last-modified};
 
 =encoding utf-8
 

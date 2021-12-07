@@ -28,29 +28,23 @@ use utf8;
 
 use Carp qw(croak);
 use Const::Fast;
+use List::SomeUtils qw(any first_value);
 use Path::Tiny;
 use Unicode::UTF8 qw(encode_utf8);
 use WWW::Mechanize ();
 
 use Lintian::Output::Markdown qw(markdown_authority);
 
-const my $EMPTY => q{};
-const my $SPACE => q{ };
 const my $SLASH => q{/};
-const my $COLON => q{:};
 const my $UNDERSCORE => q{_};
-const my $LEFT_PARENTHESIS => q{(};
-const my $RIGHT_PARENTHESIS => q{)};
-
-const my $TWO_PARTS => 2;
 
 const my $VOLUME_KEY => $UNDERSCORE;
-const my $SEPARATOR => $COLON x 2;
+const my $SECTIONS => 'sections';
 
 use Moo;
 use namespace::clean;
 
-with 'Lintian::Data::JoinedLines';
+with 'Lintian::Data::PreambledJSON';
 
 =head1 NAME
 
@@ -75,9 +69,7 @@ manual references.
 
 =item location
 
-=item separator
-
-=item accumulator
+=item by_section_key
 
 =cut
 
@@ -97,34 +89,10 @@ has location => (
     default => sub {
         my ($self) = @_;
 
-        return 'authority/' . $self->shorthand;
+        return 'authority/' . $self->shorthand . '.json';
     });
 
-has separator => (
-    is => 'rw',
-    default => sub { qr/::/ });
-
-has accumulator => (
-    is => 'rw',
-    lazy => 1,
-    default => sub {
-        my ($self) = @_;
-
-        return sub {
-            my ($key, $remainder, $previous) = @_;
-
-            return undef
-              if defined $previous;
-
-            my ($title, $url)= split($self->separator, $remainder, $TWO_PARTS);
-
-            my %entry;
-            $entry{title} = $title;
-            $entry{url} = $url;
-
-            return \%entry;
-        };
-    });
+has by_section_key => (is => 'rw', default => sub { {} });
 
 =item markdown_citation
 
@@ -140,7 +108,7 @@ sub markdown_citation {
 
     # start with the citation to the overall manual.
     my $volume_title = $volume_entry->{title};
-    my $volume_url   = $volume_entry->{url};
+    my $volume_url   = $volume_entry->{destination};
 
     my $section_title;
     my $section_url;
@@ -150,7 +118,7 @@ sub markdown_citation {
         my $section_entry = $self->value($section_key);
 
         $section_title = $section_entry->{title};
-        $section_url   = $section_entry->{url};
+        $section_url   = $section_entry->{destination};
     }
 
     return markdown_authority(
@@ -159,75 +127,93 @@ sub markdown_citation {
     );
 }
 
-=item write_line
+=item recognizes (KEY)
+
+Returns true if KEY is known, and false otherwise.
 
 =cut
 
-sub write_line {
-    my ($data_fd, $section_key, $section_title, $destination) = @_;
+sub recognizes {
+    my ($self, $key) = @_;
 
-    # drop final dots
-    $section_key =~ s{ [.]+ $}{}x;
+    return 0
+      unless length $key;
 
-    # reduce consecutive whitespace
-    $section_title =~ s{ \s+ }{ }gx;
+    return 1
+      if exists $self->by_section_key->{$key};
 
-    my $line= join($SEPARATOR,$section_key, $section_title, $destination);
+    return 0;
+}
 
-    say {$data_fd} encode_utf8($line);
+=item value (KEY)
+
+Returns the value attached to KEY if it was listed in the data
+file represented by this Lintian::Data instance and the undefined value
+otherwise.
+
+=cut
+
+sub value {
+    my ($self, $key) = @_;
+
+    return undef
+      unless length $key;
+
+    return $self->by_section_key->{$key};
+}
+
+=item load
+
+=cut
+
+sub load {
+    my ($self, $search_space, $our_vendor) = @_;
+
+    my @candidates = map { $_ . $SLASH . $self->location } @{$search_space};
+    my $path = first_value { -e } @candidates;
+
+    my $reference;
+    $self->read_file($path, \$reference);
+    my @sections = @{$reference // []};
+
+    for my $section (@sections) {
+
+        my $key = $section->{key};
+
+        # only store first value for duplicates
+        # silently ignore later values
+        $self->by_section_key->{$key} //= $section;
+    }
 
     return;
 }
 
-=item write_data_file
+=item refresh
 
 =cut
 
-sub write_data_file {
-    my ($self, $basedir, $generated) = @_;
+sub refresh {
+    my ($self, $archive, $basedir) = @_;
 
-    my $header =<<"HEADER";
-# Data about titles, sections, and URLs of manuals, used to expand references
-# in tag descriptions and add links for HTML output.  Each line of this file
-# has three fields separated by double colons:
-#
-#     <section> :: <title> :: <url>
-#
-# If <section> is an underscore, that line specifies the title and URL for the
-# whole manual.
-
-HEADER
-
-    my $data_path = "$basedir/" . $self->location;
-    my $parent_dir = path($data_path)->parent->stringify;
-    path($parent_dir)->mkpath
-      unless -e $parent_dir;
-
-    my $output = encode_utf8($header) . $generated;
-    path($data_path)->spew($output);
-
-    return;
-}
-
-=item extract_sections_from_links
-
-=cut
-
-sub extract_sections_from_links {
-    my ($self, $data_fd, $base_url)= @_;
+    my $base_url = 'https://www.debian.org/doc/packaging-manuals/java-policy/';
 
     my $mechanize = WWW::Mechanize->new();
     $mechanize->get($base_url);
 
     my $page_title = $mechanize->title;
 
-    # strip explanatory remark
-    $page_title =~ s{ \s* \N{EM DASH} .* $}{}x;
+    my @sections;
 
     # underscore is a token for the whole page
-    write_line($data_fd, $VOLUME_KEY, $page_title, $base_url);
+    my %volume;
+    $volume{key} = $VOLUME_KEY;
+    $volume{title} = $page_title;
+    $volume{destination} = $base_url;
 
-    my %by_section_key;
+    # store array to resemble web layout
+    # may contain duplicates
+    push(@sections, \%volume);
+
     my $in_appendix = 0;
 
     # https://stackoverflow.com/a/254687
@@ -250,10 +236,10 @@ sub extract_sections_from_links {
 
         my $destination = $base_url . $link->url;
 
+        my @similar = grep { $_->{key} eq $section_key } @sections;
         next
-          if exists $by_section_key{$section_key}
-          && ( $by_section_key{$section_key}{title} eq $section_title
-            || $by_section_key{$section_key}{destination} eq $destination);
+          if (any { $_->{title} eq $section_title } @similar)
+          || (any { $_->{destination} eq $destination } @similar);
 
         # Some manuals reuse section numbers for different references,
         # e.g. the Debian Policy's normal and appendix sections are
@@ -261,39 +247,20 @@ sub extract_sections_from_links {
         # seen a section pointing to some other URL than the current one,
         # and prepend it with an indicator
         $in_appendix = 1
-          if exists $by_section_key{$section_key}
-          && $by_section_key{$section_key}{destination} ne $destination;
+          if any { $_->{destination} ne $destination } @similar;
 
         $section_key = "appendix-$section_key"
           if $in_appendix;
 
-        $by_section_key{$section_key}{title} = $section_title;
-        $by_section_key{$section_key}{destination} = $destination;
-
-        write_line($data_fd, $section_key, $section_title, $destination);
+        my %section;
+        $section{key} = $section_key;
+        $section{title} = $section_title;
+        $section{destination} = $destination;
+        push(@sections, \%section);
     }
 
-    return;
-}
-
-=item refresh
-
-=cut
-
-sub refresh {
-    my ($self, $archive, $basedir) = @_;
-
-    my $base_url = 'https://www.debian.org/doc/packaging-manuals/java-policy/';
-
-    my $generated;
-    open(my $memory_fd, '>', \$generated)
-      or die encode_utf8('Cannot open scalar');
-
-    $self->extract_sections_from_links($memory_fd, $base_url);
-
-    close $memory_fd;
-
-    $self->write_data_file($basedir, $generated);
+    my $data_path = "$basedir/" . $self->location;
+    $self->write_file($SECTIONS, \@sections, $data_path);
 
     return;
 }
