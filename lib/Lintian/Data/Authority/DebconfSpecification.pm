@@ -89,7 +89,7 @@ has title => (
 
 has shorthand => (
     is => 'rw',
-    default => 'debconf-spec'
+    default => 'debconf-specification'
 );
 
 has location => (

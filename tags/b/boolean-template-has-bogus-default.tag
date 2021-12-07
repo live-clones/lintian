@@ -1,6 +1,9 @@
 Tag: boolean-template-has-bogus-default
 Severity: error
 Check: debian/debconf
-Explanation: The "boolean" type in a debconf template, can have only two values: true
- and false. The default has been set to something different.
-See-Also: debconf-spec 3.1, debconf-devel(7)
+Explanation: The <code>boolean</code> type in a Debconf template can have
+ only one of two values: <code>true</code> or <code>false</code>. This
+ template tries to use something else as the default value.
+See-Also:
+ debconf-specification 3.1,
+ debconf-devel(7)
