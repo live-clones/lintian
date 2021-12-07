@@ -1,14 +1,15 @@
 Tag: no-strong-digests-in-dsc
 Severity: error
 Check: fields/checksums
-Explanation: This .dsc file contains no Checksum-Sha256 field and hence only
- weak digests.
+Explanation: This <code>.dsc</code> file contains no
+ <code>Checksum-Sha256</code> field and hence only weak digests.
  .
- This issue will only show up for source packages built with
- dpkg-source before 1.14.17 (March 2008) and hence will probably never
- show up when you run Lintian locally but only on
- https://lintian.debian.org/ for source packages in the archive.
+ This tag should show up only for source packages built with
+ <code>dpkg-source</code> older than version 1.14.17 (from March 2008).
+ It will probably not show up when you run Lintian locally but may be
+ seen on
+ https://lintian.debian.org/ for legacy source packages in the archive.
  .
- Accordingly it can be fixed by simply rebuilding the source package
- with a more recent dpkg-source version, i.e. by uploading a new
- Debian release of the package.
+ This tags can be fixed by rebuilding the source package
+ with a more recent version of <code>dpkg-source</code>, i.e. by making
+ a new upload.

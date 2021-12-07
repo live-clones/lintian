@@ -1,14 +1,13 @@
 Tag: unknown-file-in-debian-source
 Severity: error
 Check: debian/source-dir
-Explanation: The source package contains a file in debian/source/ that Lintian
- doesn't know about. Currently the following files are recognized:
+Explanation: The source package contains a file in <code>debian/source/</code>
+ that Lintian does not know about. Currently the following files are recognized:
  .
-  - format
-  - include-binaries
-  - lintian-overrides
-  - options
-  - patch-header
+  - <code>format</code>
+  - <code>include-binaries</code>
+  - <code>lintian-overrides</code>
+  - <code>options</code>
+  - <code>patch-header</code>
  .
- This tag is emitted in case you mistyped the name of one of the above
- files.
+ Perhaps the name of one of the those files was accidentally mistyped.

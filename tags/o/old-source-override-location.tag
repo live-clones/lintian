@@ -8,4 +8,5 @@ Explanation: This Debian package ships Lintian source-level overrides in the
  Please use <code>debian/source/lintian-overrides</code> instead; the
  <code>debian/source</code> directory is preferred to hold "source"-specific
  files.
-See-Also: lintian 2.4
+See-Also:
+ lintian-manual 2.4

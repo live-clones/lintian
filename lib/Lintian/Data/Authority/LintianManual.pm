@@ -92,7 +92,7 @@ has title => (
 
 has shorthand => (
     is => 'rw',
-    default => 'lintian'
+    default => 'lintian-manual'
 );
 
 has location => (

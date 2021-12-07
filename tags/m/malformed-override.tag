@@ -12,4 +12,4 @@ Explanation: Lintian discovered an override entry with an invalid format. An
  default), &lt;tag&gt; is the tag to override, and &lt;extra&gt; is any
  specific information for the particular tag to override.
 See-Also:
- lintian 2.4.1
+ lintian-manual 2.4.1
