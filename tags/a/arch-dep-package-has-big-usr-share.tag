@@ -10,4 +10,4 @@ Explanation: The package has a significant amount of architecture-independent
  If the data in <code>/usr/share</code> is not architecture-independent, this
  is a Policy violation that should be fixed by moving the data elsewhere
  (usually <code>/usr/lib</code>).
-See-Also: devref 6.7.5
+See-Also: developer-reference 6.7.5

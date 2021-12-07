@@ -12,4 +12,4 @@ Explanation: The package synopsis (also known as the "short" description, ie. th
  .
  Note also that the synopsis is not part of the rest of the "long"
  Description: field.
-See-Also: devref 6.2.2
+See-Also: developer-reference 6.2.2

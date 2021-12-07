@@ -10,4 +10,4 @@ Explanation: For licensing reasons, packages in the non-free section are by defa
  paragraph of <code>debian/control</code> and ask for the source to be added to the
  <code>autobuild</code> whitelist.
 See-Also:
- devref 5.10.5
+ developer-reference 5.10.5

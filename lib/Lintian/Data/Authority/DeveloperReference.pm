@@ -88,7 +88,7 @@ has title => (
 
 has shorthand => (
     is => 'rw',
-    default => 'devref'
+    default => 'developer-reference'
 );
 
 has location => (
@@ -251,8 +251,7 @@ sub extract_sections_from_links {
         my $destination = $base_url . $link->url;
 
         # developers reference likes to return locale specific pages
-        $destination =~ s{ [.]\w{2}[.]html }{.html}x
-          if $self->shorthand eq 'devref';
+        $destination =~ s{ [.]\w{2}[.]html }{.html}x;
 
         next
           if exists $by_section_key{$section_key}

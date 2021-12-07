@@ -11,4 +11,4 @@ Explanation: A source NMU should have a Debian revision of "-x.x" (or "+nmuX" fo
  package (not intended for Debian), you can suppress this warning by
  putting "local" in the version number or "local package" on the first
  line of the changelog entry.
-See-Also: devref 5.11.2
+See-Also: developer-reference 5.11.2

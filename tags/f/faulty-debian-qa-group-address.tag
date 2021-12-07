@@ -7,4 +7,4 @@ Explanation: Orphaned packages should no longer have the address
  .
  The correct Maintainer field for orphaned packages is
  Debian QA Group &lt;packages@qa.debian.org&gt;.
-See-Also: devref 5.9.4
+See-Also: developer-reference 5.9.4

@@ -7,4 +7,4 @@ Explanation: The Debian version part (the part after the -) should start with on
  always have a higher version number than a Non-Maintainer upload: a NMU could
  have been prepared which introduces this upstream version with
  Debian-revision -0.1
-See-Also: devref 5.11.2
+See-Also: developer-reference 5.11.2

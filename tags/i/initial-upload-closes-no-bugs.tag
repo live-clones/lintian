@@ -9,4 +9,4 @@ Explanation: This package appears to be the first packaging of a new upstream
  .
  This warning can be ignored if the package is not intended for Debian or
  if it is a split of an existing Debian package.
-See-Also: devref 5.1
+See-Also: developer-reference 5.1

@@ -10,4 +10,4 @@ Explanation: Even though this package provides debconf translation support, ther
  .
   podebconf-report-po --call --withtranslators --deadline="+10 days" \
   --languageteam
-See-Also: devref 6.5.2.2
+See-Also: developer-reference 6.5.2.2

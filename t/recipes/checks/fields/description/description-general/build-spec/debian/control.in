@@ -127,7 +127,7 @@ Architecture: [% $package_architecture %]
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: the synopsis starts with an article
  A good synopsis should start not start with "a", "an" and "the"
- according to devref 6.2.2.
+ according to developer-reference 6.2.2.
  .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd

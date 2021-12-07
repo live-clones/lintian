@@ -11,4 +11,4 @@ Explanation: The Debian portion of the package version contains a reference to a
  testing or stable release is less informative than using the code name or
  version number and may cause annoying version sequencing issues if the
  package doesn't change before the next release cycle starts.
-See-Also: devref 5.14.3
+See-Also: developer-reference 5.14.3

@@ -15,4 +15,4 @@ Explanation: This file is in a location generally used for detached debugging
  If you are using dh&lowbar;strip with the --dbg-package flag, don't also install
  the library in <code>/usr/lib/debug</code>. dh&lowbar;strip does all the work for
  you.
-See-Also: devref 6.7.9
+See-Also: developer-reference 6.7.9
