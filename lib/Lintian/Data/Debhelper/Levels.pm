@@ -26,7 +26,7 @@ use utf8;
 use Moo;
 use namespace::clean;
 
-with 'Lintian::Data';
+with 'Lintian::Data::JoinedLines';
 
 =head1 NAME
 

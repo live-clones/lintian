@@ -1,8 +1,9 @@
 # -*- perl -*-
-# Lintian::Data -- interface to query lists of keywords
+# Lintian::Data::JoinedLines -- interface to query lists of keywords
 
 # Copyright © 2008 Russ Allbery
 # Copyright © 2017-2018 Chris Lamb <lamby@debian.org>
+# Copyright © 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -17,7 +18,7 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Lintian::Data;
+package Lintian::Data::JoinedLines;
 
 use v5.20;
 use warnings;
@@ -36,16 +37,16 @@ const my $SLASH => q{/};
 
 =head1 NAME
 
-Lintian::Data - Lintian interface to query lists of keywords
+Lintian::Data::JoinedLines - Lintian interface to query lists of keywords
 
 =head1 SYNOPSIS
 
     my $keyword;
-    my $list = Lintian::Data->new('type');
+    my $list = Lintian::Data::JoinedLines->new('type');
     if ($list->recognizes($keyword)) {
         # do something ...
     }
-    my $hash = Lintian::Data->new('another-type', qr{\s++});
+    my $hash = Lintian::Data::JoinedLines->new('another-type', qr{\s++});
     if ($hash->value($keyword) > 1) {
         # do something ...
     }
@@ -59,7 +60,7 @@ Lintian::Data - Lintian interface to query lists of keywords
 
 =head1 DESCRIPTION
 
-Lintian::Data provides a way of loading a list of keywords or key/value
+Lintian::Data::JoinedLines provides a way of loading a list of keywords or key/value
 pairs from a file in the Lintian root and then querying that list.
 The lists are stored in the F<data> directory of the Lintian root and
 consist of one keyword or key/value pair per line.  Blank lines and
@@ -74,7 +75,7 @@ This module allows lists such as menu sections, doc-base sections,
 obsolete packages, package fields, and so forth to be stored in simple,
 easily editable files.
 
-NB: By default Lintian::Data is lazy and defers loading of the data
+NB: By default Lintian::Data::JoinedLines is lazy and defers loading of the data
 file until it is actually needed.
 
 =head2 Interface for the CODE argument
@@ -133,7 +134,7 @@ sub all {
 =item recognizes (KEY)
 
 Returns true if KEY was listed in the data file represented by this
-Lintian::Data instance and false otherwise.
+Lintian::Data::JoinedLines instance and false otherwise.
 
 =cut
 
@@ -174,7 +175,7 @@ sub resembles {
 =item value (KEY)
 
 Returns the value attached to KEY if it was listed in the data
-file represented by this Lintian::Data instance and the undefined value
+file represented by this Lintian::Data::JoinedLines instance and the undefined value
 otherwise.
 
 =cut

@@ -33,7 +33,7 @@ use Unicode::UTF8 qw(encode_utf8);
 use Moo;
 use namespace::clean;
 
-with 'Lintian::Data';
+with 'Lintian::Data::JoinedLines';
 
 const my $EMPTY => q{};
 const my $SPACE => q{ };
