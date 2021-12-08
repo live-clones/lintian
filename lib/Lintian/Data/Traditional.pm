@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Lintian::Data::Generic;
+package Lintian::Data::Traditional;
 
 use v5.20;
 use warnings;
@@ -28,15 +28,15 @@ with 'Lintian::Data::JoinedLines';
 
 =head1 NAME
 
-Lintian::Data::Generic - Lintian interface for generic data
+Lintian::Data::Traditional - Lintian interface for generic data
 
 =head1 SYNOPSIS
 
-    use Lintian::Data::Generic;
+    use Lintian::Data::Traditional;
 
 =head1 DESCRIPTION
 
-Lintian::Data::Generic provides a way to load generic, traditional
+Lintian::Data::Traditional provides a way to load generic, traditional
 data files.
 
 =head1 CLASS METHODS

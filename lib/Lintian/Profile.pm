@@ -37,7 +37,7 @@ use Unicode::UTF8 qw(encode_utf8);
 
 use Dpkg::Vendor qw(get_current_vendor get_vendor_info);
 
-use Lintian::Data::Generic;
+use Lintian::Data::Traditional;
 use Lintian::Deb822;
 use Lintian::Tag;
 
@@ -857,7 +857,7 @@ sub load_data {
 
     unless (exists $self->data_cache->{$location}) {
 
-        my $cache = Lintian::Data::Generic->new;
+        my $cache = Lintian::Data::Traditional->new;
         $cache->location($location);
         $cache->separator($separator);
         $cache->accumulator($accumulator);
