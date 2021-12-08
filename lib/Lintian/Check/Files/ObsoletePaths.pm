@@ -37,7 +37,7 @@ has OBSOLETE_PATHS => (
     default => sub {
         my ($self) = @_;
 
-        return $self->profile->load_data(
+        return $self->data->load(
             'files/obsolete-paths',
             qr/\s*\->\s*/,
             sub {

@@ -64,8 +64,7 @@ sub source {
 sub search_for_obsolete_sites {
     my ($self, $dfile, $file) = @_;
 
-    my $OBSOLETE_SITES
-      = $self->profile->load_data('obsolete-sites/obsolete-sites');
+    my $OBSOLETE_SITES= $self->data->load('obsolete-sites/obsolete-sites');
 
     if (defined($dfile) and $dfile->is_regular_file and $dfile->is_open_ok) {
 

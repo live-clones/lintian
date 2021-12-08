@@ -441,7 +441,7 @@ sub visit_installed_files {
             my $stag_emitter
               = $self->spelling_tag_emitter('typo-in-manual-page', $file,
                 "line $position");
-            check_spelling($self->profile, $line,
+            check_spelling($self->data, $line,
                 $self->group->spelling_exceptions,
                 $stag_emitter, 0)
               if $page_path =~ m{/man/man\d/};

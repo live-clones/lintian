@@ -49,7 +49,7 @@ sub visit_installed_files {
 
     my $font = $item->basename;
 
-    my $FONT_PACKAGES = $self->profile->fonts;
+    my $FONT_PACKAGES = $self->data->fonts;
 
     my @declared_shippers = $FONT_PACKAGES->installed_by($font);
 

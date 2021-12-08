@@ -35,8 +35,7 @@ has TRIPLETS => (
     default => sub {
         my ($self) = @_;
 
-        my $DEB_HOST_MULTIARCH
-          = $self->profile->architectures->deb_host_multiarch;
+        my $DEB_HOST_MULTIARCH= $self->data->architectures->deb_host_multiarch;
         my %triplets = map { $DEB_HOST_MULTIARCH->{$_} => $_ }
           keys %{$DEB_HOST_MULTIARCH};
 

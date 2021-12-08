@@ -46,7 +46,7 @@ sub visit_installed_files {
       unless $consumed =~ s{^usr/include/}{};
 
     my @multiarch_folders
-      = values %{$self->profile->architectures->deb_host_multiarch};
+      = values %{$self->data->architectures->deb_host_multiarch};
 
     for my $tuple (@multiarch_folders) {
 

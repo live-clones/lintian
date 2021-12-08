@@ -128,18 +128,18 @@ sub installable {
     my $processable = $self->processable;
     my $group = $self->group;
 
-    my $KNOWN_ESSENTIAL = $self->profile->load_data('fields/essential');
-    my $KNOWN_TOOLCHAIN = $self->profile->load_data('fields/toolchain');
-    my $KNOWN_METAPACKAGES = $self->profile->load_data('fields/metapackages');
+    my $KNOWN_ESSENTIAL = $self->data->load('fields/essential');
+    my $KNOWN_TOOLCHAIN = $self->data->load('fields/toolchain');
+    my $KNOWN_METAPACKAGES = $self->data->load('fields/metapackages');
 
-    my $DH_ADDONS = $self->profile->debhelper_addons;
+    my $DH_ADDONS = $self->data->debhelper_addons;
     my %DH_ADDONS_VALUES
       = map { $_ => 1 } map { $DH_ADDONS->installed_by($_) } $DH_ADDONS->all;
 
     my $OBSOLETE_PACKAGES
-      = $self->profile->load_data('fields/obsolete-packages',qr/\s*=>\s*/);
+      = $self->data->load('fields/obsolete-packages',qr/\s*=>\s*/);
 
-    my $VIRTUAL_PACKAGES= $self->profile->load_data('fields/virtual-packages');
+    my $VIRTUAL_PACKAGES= $self->data->load('fields/virtual-packages');
 
     my $javalib = 0;
     my $replaces = $processable->relation('Replaces');
@@ -429,18 +429,17 @@ sub source {
     my $processable = $self->processable;
     my $group = $self->group;
 
-    my $KNOWN_ESSENTIAL = $self->profile->load_data('fields/essential');
-    my $KNOWN_METAPACKAGES = $self->profile->load_data('fields/metapackages');
-    my $NO_BUILD_DEPENDS= $self->profile->load_data('fields/no-build-depends');
+    my $KNOWN_ESSENTIAL = $self->data->load('fields/essential');
+    my $KNOWN_METAPACKAGES = $self->data->load('fields/metapackages');
+    my $NO_BUILD_DEPENDS= $self->data->load('fields/no-build-depends');
     my $known_build_essential
-      = $self->profile->load_data('fields/build-essential-packages');
-    my $KNOWN_BUILD_PROFILES
-      = $self->profile->load_data('fields/build-profiles');
+      = $self->data->load('fields/build-essential-packages');
+    my $KNOWN_BUILD_PROFILES= $self->data->load('fields/build-profiles');
 
     my $OBSOLETE_PACKAGES
-      = $self->profile->load_data('fields/obsolete-packages',qr/\s*=>\s*/);
+      = $self->data->load('fields/obsolete-packages',qr/\s*=>\s*/);
 
-    my $VIRTUAL_PACKAGES= $self->profile->load_data('fields/virtual-packages');
+    my $VIRTUAL_PACKAGES= $self->data->load('fields/virtual-packages');
 
     my @binpkgs = $processable->debian_control->installables;
 
@@ -503,11 +502,11 @@ sub source {
                             $arch, "[$field: $part_d_orig]")
                           if $arch eq 'all'
                           || (
-                            !$self->profile->architectures
+                            !$self->data->architectures
                             ->is_release_architecture(
                                 $arch)
-                            && !$self->profile->architectures->is_wildcard(
-                                $arch));
+                            && !$self->data->architectures->is_wildcard($arch)
+                          );
                     }
 
                     for my $restrlist (@{$d_restr}) {

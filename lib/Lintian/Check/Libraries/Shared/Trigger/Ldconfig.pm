@@ -101,8 +101,8 @@ sub needs_ldconfig {
    # Libraries that should only be used in the presence of certain capabilities
    # may be located in subdirectories of the standard ldconfig search path with
    # one of the following names.
-    my $HWCAP_DIRS = $self->profile->load_data('shared-libs/hwcap-dirs');
-    my @ldconfig_folders = @{$self->profile->architectures->ldconfig_folders};
+    my $HWCAP_DIRS = $self->data->load('shared-libs/hwcap-dirs');
+    my @ldconfig_folders = @{$self->data->architectures->ldconfig_folders};
 
     my $dirname = $file->dirname;
     my $encapsulator;

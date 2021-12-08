@@ -38,7 +38,7 @@ has STANDARD_FILES => (
     default => sub {
         my ($self) = @_;
 
-        return $self->profile->load_data('files/standard-files');
+        return $self->data->load('files/standard-files');
     });
 
 has is_empty => (is => 'rw', default => 1);

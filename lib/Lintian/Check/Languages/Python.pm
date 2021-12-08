@@ -70,7 +70,7 @@ has ALLOWED_PYTHON_FILES => (
     default => sub {
         my ($self) = @_;
 
-        return $self->profile->load_data('files/allowed-python-files');
+        return $self->data->load('files/allowed-python-files');
     });
 has GENERIC_PYTHON_MODULES => (
     is => 'rw',
@@ -78,7 +78,7 @@ has GENERIC_PYTHON_MODULES => (
     default => sub {
         my ($self) = @_;
 
-        return $self->profile->load_data('files/generic-python-modules');
+        return $self->data->load('files/generic-python-modules');
     });
 
 my @VERSION_FIELDS = qw(X-Python-Version XS-Python-Version X-Python3-Version);
@@ -135,7 +135,7 @@ sub source {
         }
     }
 
-    my $VERSIONS = $self->profile->load_data('python/versions', qr/\s*=\s*/);
+    my $VERSIONS = $self->data->load('python/versions', qr/\s*=\s*/);
 
     foreach my $field (@VERSION_FIELDS) {
 

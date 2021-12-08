@@ -129,8 +129,7 @@ sub installable {
           if length $synopsis > $MAXIMUM_WIDTH;
     }
 
-    my $PLANNED_FEATURES
-      = $self->profile->load_data('description/planned-features');
+    my $PLANNED_FEATURES= $self->data->load('description/planned-features');
 
     my $flagged_homepage;
     my @lines = split(/\n/, $extended);
@@ -262,7 +261,7 @@ sub installable {
 
     if ($synopsis) {
         check_spelling(
-            $self->profile,
+            $self->data,
             $synopsis,
             $group->spelling_exceptions,
             $self->spelling_tag_emitter(
@@ -272,7 +271,7 @@ sub installable {
         # capitalization error, such as "dbus" -> "D-Bus".  Therefore,
         # we exempt auto-generated packages from this check.
         check_spelling_picky(
-            $self->profile,
+            $self->data,
             $synopsis,
             $self->spelling_tag_emitter(
                 'capitalization-error-in-description-synopsis')
@@ -281,10 +280,10 @@ sub installable {
 
     if ($extended) {
         check_spelling(
-            $self->profile,$extended,
+            $self->data,$extended,
             $group->spelling_exceptions,
             $self->spelling_tag_emitter('spelling-error-in-description'));
-        check_spelling_picky($self->profile, $extended,
+        check_spelling_picky($self->data, $extended,
             $self->spelling_tag_emitter('capitalization-error-in-description')
         );
     }

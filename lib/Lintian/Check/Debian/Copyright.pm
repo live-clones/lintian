@@ -211,7 +211,7 @@ sub binary {
     my $wrong_directory_detected = 0;
 
     my $KNOWN_COMMON_LICENSES
-      =  $self->profile->load_data('copyright-file/common-licenses');
+      =  $self->data->load('copyright-file/common-licenses');
 
     if ($contents =~ m{ (usr/share/common-licenses/ ( [^ \t]*? ) \.gz) }xsm) {
         my ($path, $license) = ($1, $2);
@@ -437,7 +437,7 @@ qr/GNU (?:Lesser|Library) General Public License|(?-i:\bLGPL\b)/i
     }
 
     check_spelling(
-        $self->profile,$contents,
+        $self->data,$contents,
         $self->group->spelling_exceptions,
         $self->spelling_tag_emitter('spelling-error-in-copyright'), 0
     );
@@ -471,7 +471,7 @@ qr/GNU (?:Lesser|Library) General Public License|(?-i:\bLGPL\b)/i
 sub depends_on {
     my ($self, $processable, $package) = @_;
 
-    my $KNOWN_ESSENTIAL = $self->profile->load_data('fields/essential');
+    my $KNOWN_ESSENTIAL = $self->data->load('fields/essential');
 
     return 1
       if $KNOWN_ESSENTIAL->recognizes($package);

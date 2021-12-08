@@ -41,7 +41,7 @@ has LENNA_BLACKLIST => (
     default => sub {
         my ($self) = @_;
 
-        return $self->profile->load_data(
+        return $self->data->load(
             'files/banned/lenna/blacklist',
             qr/ \s* ~~ \s* /x,
             sub {
@@ -64,7 +64,7 @@ has LENNA_WHITELIST => (
     default => sub {
         my ($self) = @_;
 
-        return $self->profile->load_data('files/banned/lenna/whitelist');
+        return $self->data->load('files/banned/lenna/whitelist');
     });
 
 sub visit_patched_files {

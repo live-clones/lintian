@@ -37,8 +37,8 @@ sub source {
     my $control = $self->processable->debian_control;
     my $source_fields = $control->source_fields;
 
-    my $KNOWN_SOURCE_FIELDS= $self->profile->load_data('common/source-fields');
-    my $KNOWN_BINARY_FIELDS= $self->profile->load_data('fields/binary-fields');
+    my $KNOWN_SOURCE_FIELDS= $self->data->load('common/source-fields');
+    my $KNOWN_BINARY_FIELDS= $self->data->load('fields/binary-fields');
 
     for my $field ($source_fields->names) {
 

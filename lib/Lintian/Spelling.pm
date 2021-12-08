@@ -90,10 +90,10 @@ Returns the number of spelling mistakes found in TEXT.
 my (%CORRECTIONS, @CORRECTIONS_MULTIWORD);
 
 sub check_spelling {
-    my ($profile, $text, $exceptions, $code_ref, $duplicate_check) = @_;
+    my ($data, $text, $exceptions, $code_ref, $duplicate_check) = @_;
 
-    croak encode_utf8('No profile')
-      unless defined $profile;
+    croak encode_utf8('No spelling data')
+      unless defined $data;
 
     return 0 unless $text;
     if (not $code_ref and $exceptions and ref($exceptions) eq 'CODE') {
@@ -110,8 +110,8 @@ sub check_spelling {
 
     if (!%CORRECTIONS) {
         my $corrections_multiword
-          = $profile->load_data('spelling/corrections-multiword', '\|\|');
-        my $corrections = $profile->load_data('spelling/corrections', '\|\|');
+          = $data->load('spelling/corrections-multiword', '\|\|');
+        my $corrections = $data->load('spelling/corrections', '\|\|');
         for my $misspelled ($corrections->all) {
             $CORRECTIONS{$misspelled} = $corrections->value($misspelled);
         }
@@ -217,15 +217,14 @@ Returns the number of spelling mistakes found in TEXT.
 =cut
 
 sub check_spelling_picky {
-    my ($profile, $text, $code_ref) = @_;
+    my ($data, $text, $code_ref) = @_;
 
-    croak encode_utf8('No profile')
-      unless defined $profile;
+    croak encode_utf8('No spelling data')
+      unless defined $data;
 
     my %seen;
     my $counter = 0;
-    my $corrections_case
-      = $profile->load_data('spelling/corrections-case', '\|\|');
+    my $corrections_case= $data->load('spelling/corrections-case', '\|\|');
 
     # Check this first in case it's contained in square brackets and
     # removed below.

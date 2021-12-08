@@ -44,7 +44,7 @@ has EMBEDDED_LIBRARIES => (
     default => sub {
         my ($self) = @_;
 
-        return $self->profile->load_data(
+        return $self->data->load(
             'binaries/embedded-libs',
             qr/\s*+\|\|/,
             sub {

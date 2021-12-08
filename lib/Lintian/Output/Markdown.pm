@@ -26,6 +26,7 @@ use utf8;
 use Exporter qw(import);
 
 our @EXPORT_OK = qw(
+  markdown_citation
   markdown_authority
   markdown_bug
   markdown_manual_page
@@ -53,6 +54,53 @@ Lintian::Output::Markdown provides functions for Markdown output.
 =head1 FUNCTIONS
 
 =over 4
+
+=item markdown_citation
+
+=cut
+
+sub markdown_citation {
+    my ($data, $citation) = @_;
+
+    if ($citation =~ m{^ ([\w-]+) \s+ (.+) $}x) {
+
+        my $volume = $1;
+        my $section = $2;
+
+        my $markdown = $data->markdown_authority_reference($volume, $section);
+
+        $markdown ||= $citation;
+
+        return $markdown;
+    }
+
+    if ($citation =~ m{^ ([\w.-]+) [(] (\d\w*) [)] $}x) {
+
+        my $name = $1;
+        my $section = $2;
+
+        return markdown_manual_page($name, $section);
+    }
+
+    if ($citation =~ m{^(?:Bug)?#(\d+)$}) {
+
+        my $number = $1;
+        return markdown_bug($number);
+    }
+
+    # turn bare file into file uris
+    $citation =~ s{^ / }{file://}x;
+
+    # strip scheme from uri
+    if ($citation =~ s{^ (\w+) : // }{}x) {
+
+        my $scheme = $1;
+
+        return markdown_uri($scheme, $citation);
+    }
+
+    return $citation;
+}
 
 =item markdown_authority
 

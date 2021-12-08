@@ -55,8 +55,7 @@ sub always {
     my ($epoch, $upstream, $debian)
       = ($dversion->epoch, $dversion->version, $dversion->revision);
 
-    my $PERL_CORE_PROVIDES
-      = $self->profile->load_data('fields/perl-provides', '\s+');
+    my $PERL_CORE_PROVIDES= $self->data->load('fields/perl-provides', '\s+');
 
     my $name = $fields->value('Package');
 

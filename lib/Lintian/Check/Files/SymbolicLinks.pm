@@ -43,7 +43,7 @@ has COMPRESS_FILE_EXTENSIONS => (
     default => sub {
         my ($self) = @_;
 
-        return $self->profile->load_data('files/compressed-file-extensions',
+        return $self->data->load('files/compressed-file-extensions',
             qr/\s++/,sub { return qr/\Q$_[0]\E/ });
     });
 
@@ -99,7 +99,7 @@ sub tag_build_tree_path {
     my ($self, $path, $msg) = @_;
 
     my $BUILD_PATH_REGEX
-      = $self->profile->load_data('files/build-path-regex',qr/~~~~~/,
+      = $self->data->load('files/build-path-regex',qr/~~~~~/,
         sub { return  qr/$_[0]/xsm;});
 
     foreach my $buildpath ($BUILD_PATH_REGEX->all) {

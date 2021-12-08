@@ -375,7 +375,7 @@ sub check_doc_base_field {
     my $pkg = $self->processable->name;
     my $group = $self->group;
 
-    my $SECTIONS = $self->profile->load_data('doc-base/sections');
+    my $SECTIONS = $self->data->load('doc-base/sections');
 
     $self->hint('doc-base-file-unknown-field', "$dbfile:$line", $field)
       unless defined $knownfields->{$field};
@@ -467,12 +467,12 @@ sub check_doc_base_field {
                 'spelling-error-in-doc-base-title-field',
                 "${dbfile}:${line}");
             check_spelling(
-                $self->profile,
+                $self->data,
                 join($SPACE, @{$vals}),
                 $group->spelling_exceptions,
                 $stag_emitter
             );
-            check_spelling_picky($self->profile, join($SPACE, @{$vals}),
+            check_spelling_picky($self->data, join($SPACE, @{$vals}),
                 $stag_emitter);
         }
 
@@ -546,12 +546,12 @@ sub check_doc_base_field {
                 'spelling-error-in-doc-base-abstract-field',
                 "${dbfile}:${line}");
             check_spelling(
-                $self->profile,
+                $self->data,
                 join($SPACE, @{$vals}),
                 $group->spelling_exceptions,
                 $stag_emitter
             );
-            check_spelling_picky($self->profile, join($SPACE, @{$vals}),
+            check_spelling_picky($self->data, join($SPACE, @{$vals}),
                 $stag_emitter);
         }
     }

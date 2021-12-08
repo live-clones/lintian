@@ -71,7 +71,7 @@ sub visit_installed_files {
 
                 # check multi-arch path
                 my $DEB_HOST_MULTIARCH
-                  = $self->profile->architectures->deb_host_multiarch;
+                  = $self->data->architectures->deb_host_multiarch;
                 for my $madir (values %{$DEB_HOST_MULTIARCH}) {
 
                     next

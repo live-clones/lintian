@@ -66,8 +66,7 @@ my %KNOWN_SPECIAL_DEPENDS = map { $_ => 1 } qw(
 sub source {
     my ($self) = @_;
 
-    my $KNOWN_TESTSUITES
-      = $self->profile->load_data('testsuite/known-testsuites');
+    my $KNOWN_TESTSUITES= $self->data->load('testsuite/known-testsuites');
 
     my $debian_control = $self->processable->debian_control;
 
@@ -165,10 +164,9 @@ sub check_control_paragraph {
           || $feature =~ m/^test-name=\S+/;
     }
 
-    my $KNOWN_RESTRICTIONS
-      = $self->profile->load_data('testsuite/known-restrictions');
+    my $KNOWN_RESTRICTIONS= $self->data->load('testsuite/known-restrictions');
     my $KNOWN_OBSOLETE_RESTRICTIONS
-      = $self->profile->load_data('testsuite/known-obsolete-restrictions');
+      = $self->data->load('testsuite/known-obsolete-restrictions');
 
     my @restrictions
       = $section->trimmed_list('Restrictions', qr/ \s* , \s* | \s+ /x);

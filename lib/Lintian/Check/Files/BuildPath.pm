@@ -35,7 +35,7 @@ has BUILD_PATH_REGEX => (
     default => sub {
         my ($self) = @_;
 
-        return $self->profile->load_data('files/build-path-regex',qr/~~~~~/,
+        return $self->data->load('files/build-path-regex',qr/~~~~~/,
             sub { return  qr/$_[0]/xsm;});
     });
 

@@ -35,7 +35,7 @@ with 'Lintian::Check';
 
 # not presently used
 #my $UNKNOWN_SHARED_LIBRARY_EXCEPTIONS
-#  = $self->profile->load_data('shared-libs/unknown-shared-library-exceptions');
+#  = $self->data->load('shared-libs/unknown-shared-library-exceptions');
 
 sub visit_installed_files {
     my ($self, $item) = @_;

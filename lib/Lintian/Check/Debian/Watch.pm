@@ -305,7 +305,7 @@ sub source {
       unless $withgpgverification;
 
     my $SIGNING_KEY_FILENAMES
-      = $self->profile->load_data('common/signing-key-filenames');
+      = $self->data->load('common/signing-key-filenames');
 
     # look for upstream signing key
     my @candidates

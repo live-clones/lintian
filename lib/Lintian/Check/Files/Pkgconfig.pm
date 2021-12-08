@@ -42,7 +42,7 @@ has PKG_CONFIG_BAD_REGEX => (
     default => sub {
         my ($self) = @_;
 
-        return $self->profile->load_data('files/pkg-config-bad-regex',
+        return $self->data->load('files/pkg-config-bad-regex',
             qr/~~~~~/,sub { return  qr/$_[0]/xsm;});
     });
 
@@ -78,7 +78,7 @@ sub visit_installed_files {
             # arch specific dir
 
             my $DEB_HOST_MULTIARCH
-              = $self->profile->architectures->deb_host_multiarch;
+              = $self->data->architectures->deb_host_multiarch;
             for my $madir (values %{$DEB_HOST_MULTIARCH}) {
 
                 next

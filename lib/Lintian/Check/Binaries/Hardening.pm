@@ -38,7 +38,7 @@ has HARDENED_FUNCTIONS => (
     default => sub {
         my ($self) = @_;
 
-        return $self->profile->load_data('binaries/hardened-functions');
+        return $self->data->load('binaries/hardened-functions');
     });
 
 has recommended_hardening_features => (
@@ -49,7 +49,7 @@ has recommended_hardening_features => (
 
         my %recommended_hardening_features;
 
-        my $hardening_buildflags = $self->profile->hardening_buildflags;
+        my $hardening_buildflags = $self->data->hardening_buildflags;
         my $architecture = $self->processable->fields->value('Architecture');
 
         %recommended_hardening_features

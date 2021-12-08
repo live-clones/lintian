@@ -50,7 +50,7 @@ sub visit_installed_files {
     return
       if @{$item->elf->{SONAME} // [] };
 
-    my @ldconfig_folders = @{$self->profile->architectures->ldconfig_folders};
+    my @ldconfig_folders = @{$self->data->architectures->ldconfig_folders};
     return
       if none { $item->dirname eq $_ } @ldconfig_folders;
 

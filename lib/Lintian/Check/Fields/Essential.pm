@@ -61,7 +61,7 @@ sub always {
 
     $self->hint('essential-no-not-needed') if $essential eq 'no';
 
-    my $KNOWN_ESSENTIAL = $self->profile->load_data('fields/essential');
+    my $KNOWN_ESSENTIAL = $self->data->load('fields/essential');
 
     $self->hint('new-essential-package')
       if $essential eq 'yes'

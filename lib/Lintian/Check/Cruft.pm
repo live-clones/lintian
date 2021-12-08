@@ -75,7 +75,7 @@ has RFC_WHITELIST => (
     lazy => 1,
     default => sub {
         my ($self) = @_;
-        return $self->profile->load_data(
+        return $self->data->load(
             'cruft/rfc-whitelist',
             qr/\s*\~\~\s*/,
             sub {
@@ -90,7 +90,7 @@ has BROWSERIFY_REGEX => (
     default => sub {
         my ($self) = @_;
 
-        return $self->profile->load_data(
+        return $self->data->load(
             'cruft/browserify-regex',
             qr/\s*\~\~\s*/,
             sub {
@@ -205,7 +205,7 @@ has GFDL_FRAGMENTS => (
     default => sub {
         my ($self) = @_;
 
-        return $self->profile->load_data(
+        return $self->data->load(
             'cruft/gfdl-license-fragments-checks',
             qr/\s*\~\~\s*/,
             sub {

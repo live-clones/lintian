@@ -49,7 +49,7 @@ sub always {
             my $pointer= $self->processable->override_file->pointer($position);
 
             check_spelling(
-                $self->profile,
+                $self->data,
                 $comment,
                 $self->group->spelling_exceptions,
                 $self->emitter(
@@ -58,7 +58,7 @@ sub always {
                 ));
 
             check_spelling_picky(
-                $self->profile,
+                $self->data,
                 $comment,
                 $self->emitter(
                     'capitalization-in-override-comment',

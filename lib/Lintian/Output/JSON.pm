@@ -26,6 +26,8 @@ use Const::Fast;
 use Time::Piece;
 use JSON::MaybeXS;
 
+use Lintian::Output::Markdown qw(markdown_citation);
+
 const my $EMPTY => q{};
 
 const my %CODE_PRIORITY => (
@@ -232,7 +234,7 @@ sub hintlist {
 =cut
 
 sub describe_tags {
-    my ($self, $tags) = @_;
+    my ($self, $data, $tags) = @_;
 
     my @tag_dictionaries;
 
@@ -248,8 +250,11 @@ sub describe_tags {
           if length $tag->show_always;
 
         $tag_dictionary{explanation} = $tag->explanation;
-        $tag_dictionary{see_also} = $tag->see_also
-          if @{$tag->see_also};
+
+        my @tag_see_also_markdown
+          = map { markdown_citation($data, $_) } @{$tag->see_also};
+        $tag_dictionary{see_also} = \@tag_see_also_markdown
+          if @tag_see_also_markdown;
 
         $tag_dictionary{check} = $tag->check;
         $tag_dictionary{visibility} = $tag->visibility;
@@ -273,8 +278,10 @@ sub describe_tags {
 
             $screen_dictionary{reason} = $screen->reason;
 
-            $screen_dictionary{see_also} = $screen->see_also
-              if @{$screen->see_also};
+            my @screen_see_also_markdown
+              = map { markdown_citation($data, $_) } @{$screen->see_also};
+            $screen_dictionary{see_also} = \@screen_see_also_markdown
+              if @screen_see_also_markdown;
         }
 
         $tag_dictionary{screens} = \@screen_dictionaries;

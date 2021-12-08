@@ -35,8 +35,7 @@ has TRIPLETS => (
     default => sub {
         my ($self) = @_;
 
-        my $DEB_HOST_MULTIARCH
-          = $self->profile->architectures->deb_host_multiarch;
+        my $DEB_HOST_MULTIARCH= $self->data->architectures->deb_host_multiarch;
         my %triplets = map { $DEB_HOST_MULTIARCH->{$_} => $_ }
           keys %{$DEB_HOST_MULTIARCH};
 
@@ -55,7 +54,7 @@ sub visit_installed_files {
     my $architecture = $self->processable->fields->value('Architecture');
     my $multiarch = $self->processable->fields->value('Multi-Arch') || 'no';
 
-    my $DEB_HOST_MULTIARCH= $self->profile->architectures->deb_host_multiarch;
+    my $DEB_HOST_MULTIARCH= $self->data->architectures->deb_host_multiarch;
     my $multiarch_dir = $DEB_HOST_MULTIARCH->{$architecture};
 
     if (   !$file->is_dir

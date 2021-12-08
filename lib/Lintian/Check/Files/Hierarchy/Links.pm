@@ -49,7 +49,7 @@ sub visit_installed_files {
     return
       unless defined $target;
 
-    my @ldconfig_folders = @{$self->profile->architectures->ldconfig_folders};
+    my @ldconfig_folders = @{$self->data->architectures->ldconfig_folders};
 
     my $origin_dirname= first_value { $file->dirname eq $_ } @ldconfig_folders;
 
@@ -65,7 +65,7 @@ sub visit_installed_files {
     $self->hint('ldconfig-escape', $file->name . $ARROW .  $target)
       unless length $target_dirname;
 
-    my @multiarch= values %{$self->profile->architectures->deb_host_multiarch};
+    my @multiarch= values %{$self->data->architectures->deb_host_multiarch};
 
     $self->hint('architecture-escape', $file->name . $ARROW .  $target)
       if (any { basename($origin_dirname) eq $_ } @multiarch)

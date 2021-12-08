@@ -115,8 +115,7 @@ sub source {
         close($git_patches_fd);
     }
 
-    my $KNOWN_FILES
-      = $self->profile->load_data('debian-source-dir/known-files');
+    my $KNOWN_FILES= $self->data->load('debian-source-dir/known-files');
 
     my @files = grep { !$_->is_dir } $dsrc->children;
     for my $file (@files) {

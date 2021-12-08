@@ -69,7 +69,7 @@ sub visit_installed_files {
 
     my $soname = $item->elf->{SONAME}[0];
 
-    my @ldconfig_folders = @{$self->profile->architectures->ldconfig_folders};
+    my @ldconfig_folders = @{$self->data->architectures->ldconfig_folders};
     return
       if none { $item->dirname eq $_ } @ldconfig_folders;
 
@@ -129,8 +129,7 @@ sub visit_installed_files {
         my $gcc_version = $1;
         my $link_basename = basename($unversioned_name);
 
-        my $DEB_HOST_MULTIARCH
-          = $self->profile->architectures->deb_host_multiarch;
+        my $DEB_HOST_MULTIARCH= $self->data->architectures->deb_host_multiarch;
 
         my @multiarch_components;
 

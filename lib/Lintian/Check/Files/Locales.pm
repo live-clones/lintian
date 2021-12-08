@@ -35,7 +35,7 @@ has LOCALE_CODES => (
     default => sub {
         my ($self) = @_;
 
-        return $self->profile->load_data('files/locale-codes', qr/\s++/);
+        return $self->data->load('files/locale-codes', qr/\s++/);
     });
 
 has INCORRECT_LOCALE_CODES => (
@@ -44,8 +44,7 @@ has INCORRECT_LOCALE_CODES => (
     default => sub {
         my ($self) = @_;
 
-        return $self->profile->load_data('files/incorrect-locale-codes',
-            qr/\s++/);
+        return $self->data->load('files/incorrect-locale-codes',qr/\s++/);
     });
 
 sub visit_installed_files {

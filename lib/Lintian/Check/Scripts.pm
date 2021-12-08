@@ -68,7 +68,7 @@ has INTERPRETERS => (
     default => sub {
         my ($self) = @_;
 
-        my $unversioned = $self->profile->load_data(
+        my $unversioned = $self->data->load(
             'scripts/interpreters',
             qr/ \s* => \s* /msx,
             sub {
@@ -123,7 +123,7 @@ has VERSIONED_INTERPRETERS => (
     default => sub {
         my ($self) = @_;
 
-        my $versioned = $self->profile->load_data(
+        my $versioned = $self->data->load(
             'scripts/versioned-interpreters',
             qr/ \s* => \s* /msx,
             sub {
@@ -172,7 +172,7 @@ has BAD_MAINTAINER_COMMANDS => (
     default => sub {
         my ($self) = @_;
 
-        return $self->profile->load_data(
+        return $self->data->load(
             'scripts/maintainer-script-bad-command',
             qr/\s*\~\~/,
             sub {

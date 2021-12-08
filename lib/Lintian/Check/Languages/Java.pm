@@ -74,7 +74,7 @@ sub installable {
 
     my @java_lib_depends = ($depends =~ m/\b(lib[^\s,]+-java)\b/g);
 
-    my $MAX_BYTECODE= $self->profile->load_data('java/constants', qr/\s*=\s*/);
+    my $MAX_BYTECODE= $self->data->load('java/constants', qr/\s*=\s*/);
 
     # We first loop over jar files to find problems
 

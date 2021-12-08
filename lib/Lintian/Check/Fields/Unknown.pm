@@ -38,7 +38,7 @@ with 'Lintian::Check';
 sub source {
     my ($self) = @_;
 
-    my $KNOWN_SOURCE_FIELDS= $self->profile->load_data('common/source-fields');
+    my $KNOWN_SOURCE_FIELDS= $self->data->load('common/source-fields');
     my @unknown= $self->processable->fields->extra($KNOWN_SOURCE_FIELDS->all);
 
     $self->hint('unknown-field', $_)for @unknown;
@@ -49,7 +49,7 @@ sub source {
 sub binary {
     my ($self) = @_;
 
-    my $KNOWN_BINARY_FIELDS= $self->profile->load_data('fields/binary-fields');
+    my $KNOWN_BINARY_FIELDS= $self->data->load('fields/binary-fields');
     my @unknown= $self->processable->fields->extra($KNOWN_BINARY_FIELDS->all);
 
     $self->hint('unknown-field', $_)for @unknown;
@@ -60,7 +60,7 @@ sub binary {
 sub udeb {
     my ($self) = @_;
 
-    my $KNOWN_UDEB_FIELDS = $self->profile->load_data('fields/udeb-fields');
+    my $KNOWN_UDEB_FIELDS = $self->data->load('fields/udeb-fields');
     my @unknown = $self->processable->fields->extra($KNOWN_UDEB_FIELDS->all);
 
     $self->hint('unknown-field', $_)for @unknown;

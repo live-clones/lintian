@@ -101,7 +101,7 @@ sub installable {
     }
 
     check_spelling(
-        $self->profile,$readme,
+        $self->data,$readme,
         $group->spelling_exceptions,
         $self->spelling_tag_emitter('spelling-error-in-readme-debian'));
 

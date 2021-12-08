@@ -45,7 +45,7 @@ has TRIGGER_TYPES => (
     default => sub {
         my ($self) = @_;
 
-        return $self->profile->load_data(
+        return $self->data->load(
             'triggers/trigger-types',
             qr/\s*\Q=>\E\s*/,
             sub {

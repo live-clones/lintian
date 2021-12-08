@@ -40,8 +40,7 @@ has BINARY_SPELLING_EXCEPTIONS => (
     default => sub {
         my ($self) = @_;
 
-        return $self->profile->load_data('binaries/spelling-exceptions',
-            qr/\s+/);
+        return $self->data->load('binaries/spelling-exceptions',qr/\s+/);
     });
 
 sub spelling_tag_emitter {
@@ -69,8 +68,7 @@ sub visit_installed_files {
     my $tag_emitter
       = $self->spelling_tag_emitter('spelling-error-in-binary', $item);
 
-    check_spelling($self->profile, $item->strings, $exceptions,
-        $tag_emitter, 0);
+    check_spelling($self->data, $item->strings, $exceptions,$tag_emitter, 0);
 
     return;
 }

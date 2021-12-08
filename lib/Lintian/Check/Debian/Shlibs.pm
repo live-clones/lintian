@@ -98,7 +98,7 @@ sub installable {
 sub check_shlibs_file {
     my ($self) = @_;
 
-    my @ldconfig_folders = @{$self->profile->architectures->ldconfig_folders};
+    my @ldconfig_folders = @{$self->data->architectures->ldconfig_folders};
 
     # Libraries with no version information can't be represented by
     # the shlibs format (but can be represented by symbols).  We want
@@ -261,7 +261,7 @@ sub check_shlibs_file {
 sub check_symbols_file {
     my ($self) = @_;
 
-    my @ldconfig_folders = @{$self->profile->architectures->ldconfig_folders};
+    my @ldconfig_folders = @{$self->data->architectures->ldconfig_folders};
     my @shared_libraries = keys %{$self->soname_by_filename};
 
     my $fields = $self->processable->fields;

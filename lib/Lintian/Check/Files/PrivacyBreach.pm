@@ -45,7 +45,7 @@ has PRIVACY_BREAKER_WEBSITES => (
     default => sub {
         my ($self) = @_;
 
-        return $self->profile->load_data(
+        return $self->data->load(
             'files/privacy-breaker-websites',
             qr/\s*\~\~/,
             sub {
@@ -77,7 +77,7 @@ has PRIVACY_BREAKER_FRAGMENTS => (
     default => sub {
         my ($self) = @_;
 
-        return $self->profile->load_data(
+        return $self->data->load(
             'files/privacy-breaker-fragments',
             qr/\s*\~\~/,
             sub {
@@ -96,7 +96,7 @@ has PRIVACY_BREAKER_TAG_ATTR => (
     default => sub {
         my ($self) = @_;
 
-        return $self->profile->load_data(
+        return $self->data->load(
             'files/privacy-breaker-tag-attr',
             qr/\s*\~\~\s*/,
             sub {

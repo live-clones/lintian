@@ -103,7 +103,7 @@ sub get_latest_policy {
     my $profile = Lintian::Profile->new;
     $profile->load(undef, undef, 0);
 
-    my $releases = $profile->policy_releases;
+    my $releases = $profile->data->policy_releases;
 
     my $version = $releases->latest_version;
     die encode_utf8('Could not get latest policy version.')
@@ -126,7 +126,7 @@ sub get_recommended_debhelper_version {
     my $profile = Lintian::Profile->new;
     $profile->load(undef, undef, 0);
 
-    my $compat_level = $profile->debhelper_levels;
+    my $compat_level = $profile->data->debhelper_levels;
 
     return $compat_level->value('recommended');
 }

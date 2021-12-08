@@ -57,7 +57,7 @@ sub always {
           if $priority eq 'extra';
     }
 
-    my $KNOWN_PRIOS = $self->profile->load_data('fields/priorities');
+    my $KNOWN_PRIOS = $self->data->load('fields/priorities');
 
     $self->hint('unknown-priority', $priority)
       unless $KNOWN_PRIOS->recognizes($priority);

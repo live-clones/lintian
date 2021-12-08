@@ -37,34 +37,9 @@ use Unicode::UTF8 qw(encode_utf8);
 
 use Dpkg::Vendor qw(get_current_vendor get_vendor_info);
 
-use Lintian::Data::Traditional;
+use Lintian::Data;
 use Lintian::Deb822;
 use Lintian::Tag;
-
-use Moo;
-use namespace::clean;
-
-with
-  'Lintian::Profile::Architectures',
-  'Lintian::Profile::Authority::DebconfSpecification',
-  'Lintian::Profile::Authority::DebianPolicy',
-  'Lintian::Profile::Authority::DeveloperReference',
-  'Lintian::Profile::Authority::DocBaseManual',
-  'Lintian::Profile::Authority::FilesystemHierarchy',
-  'Lintian::Profile::Authority::JavaPolicy',
-  'Lintian::Profile::Authority::LintianManual',
-  'Lintian::Profile::Authority::MenuPolicy',
-  'Lintian::Profile::Authority::MenuManual',
-  'Lintian::Profile::Authority::PerlPolicy',
-  'Lintian::Profile::Authority::PythonPolicy',
-  'Lintian::Profile::Authority::VimPolicy',
-  'Lintian::Profile::Debhelper::Addons',
-  'Lintian::Profile::Debhelper::Commands',
-  'Lintian::Profile::Debhelper::Levels',
-  'Lintian::Profile::Fonts',
-  'Lintian::Profile::Hardening::Buildflags',
-  'Lintian::Profile::Policy::Releases',
-  'Lintian::Profile::Stylesheet';
 
 const my $EMPTY => q{};
 const my $SPACE => q{ };
@@ -86,6 +61,9 @@ const my @VALID_BODY_FIELDS => qw(
   Tags
   Overridable
 );
+
+use Moo;
+use namespace::clean;
 
 =head1 NAME
 
@@ -189,6 +167,21 @@ has non_overridable_tags => (
     coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
     default => sub { {} });
 
+has data => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        my $data = Lintian::Data->new;
+
+        my @DATA_PATHS = $self->search_space('data');
+        $data->data_paths(\@DATA_PATHS);
+        $data->vendor($self->our_vendor);
+
+        return $data;
+    });
+
 has parent_map => (
     is => 'rw',
     coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
@@ -213,19 +206,6 @@ has safe_include_dirs => (
     is => 'rw',
     coerce => sub { my ($arrayref) = @_; return ($arrayref // []); },
     default => sub { [] });
-
-=item data_paths
-
-=cut
-
-# lazy evaluation as an attribute breaks the debhelper check, Bug#977332
-sub data_paths {
-    my ($self) = @_;
-
-    const my @DATA_PATHS => $self->search_space('data');
-
-    return \@DATA_PATHS;
-}
 
 has known_vendors => (
     is => 'rw',
@@ -836,40 +816,6 @@ sub display {
     return;
 }
 
-=item data_cache
-
-=cut
-
-has data_cache => (
-    is => 'rw',
-    coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
-    default => sub { {} });
-
-=item load_data
-
-=cut
-
-sub load_data {
-    my ($self, $location, $separator, $accumulator) = @_;
-
-    croak encode_utf8('no data type specified')
-      unless $location;
-
-    unless (exists $self->data_cache->{$location}) {
-
-        my $cache = Lintian::Data::Traditional->new;
-        $cache->location($location);
-        $cache->separator($separator);
-        $cache->accumulator($accumulator);
-
-        $cache->load($self->data_paths, $self->our_vendor);
-
-        $self->data_cache->{$location} = $cache;
-    }
-
-    return $self->data_cache->{$location};
-}
-
 =item search_space
 
 =cut
@@ -889,32 +835,6 @@ sub search_space {
     my @search_space = grep { -e } @candidates;
 
     return @search_space;
-}
-
-=item markdown_citation
-
-=cut
-
-sub markdown_citation {
-    my ($self, $volume, $section) = @_;
-
-    my @MARKDOWN_CAPABLE = (
-        $self->menu_policy,$self->perl_policy,
-        $self->python_policy,$self->java_policy,
-        $self->vim_policy,$self->lintian_manual,
-        $self->developer_reference,$self->policy_manual,
-        $self->debconf_specification,$self->menu_manual,
-        $self->doc_base_manual,$self->filesystem_hierarchy_standard,
-    );
-
-    my %by_shorthand = map { $_->shorthand => $_ } @MARKDOWN_CAPABLE;
-
-    return $EMPTY
-      unless exists $by_shorthand{$volume};
-
-    my $manual = $by_shorthand{$volume};
-
-    return $manual->markdown_citation($section);
 }
 
 =back

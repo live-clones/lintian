@@ -64,7 +64,7 @@ sub changes {
 
     my $source_maintainer = $source->fields->value('Maintainer');
 
-    my $KNOWN_DISTS = $self->profile->load_data('changes-file/known-dists');
+    my $KNOWN_DISTS = $self->data->load('changes-file/known-dists');
 
     # not for derivatives; https://wiki.ubuntu.com/DebianMaintainerField
     $self->hint('inconsistent-maintainer',

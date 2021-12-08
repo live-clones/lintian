@@ -30,6 +30,8 @@ use Time::Duration;
 use Time::Moment;
 use Unicode::UTF8 qw(encode_utf8);
 
+use Lintian::Output::Markdown qw(markdown_citation);
+
 const my $EMPTY => q{};
 const my $SPACE => q{ };
 const my $NEWLINE => qq{\n};
@@ -120,7 +122,7 @@ sub issue_hints {
         }
     }
 
-    my $style_sheet = $profile->style_sheet->css;
+    my $style_sheet = $profile->data->style_sheet->css;
 
     my $templatedir = "$ENV{LINTIAN_BASE}/templates";
     my $tx = Text::Xslate->new(path => [$templatedir]);
@@ -240,14 +242,14 @@ sub hintlist {
 =cut
 
 sub describe_tags {
-    my ($self, $tags) = @_;
+    my ($self, $data, $tags) = @_;
 
     for my $tag (@{$tags}) {
 
         say encode_utf8('<p>Name: ' . $tag->name . '</p>');
         say encode_utf8($EMPTY);
 
-        print encode_utf8(markdown($self->markdown_description($tag)));
+        print encode_utf8(markdown($self->markdown_description($data, $tag)));
     }
 
     return;
@@ -258,7 +260,7 @@ sub describe_tags {
 =cut
 
 sub markdown_description {
-    my ($self, $tag) = @_;
+    my ($self, $data, $tag) = @_;
 
     my $description = $tag->explanation;
 
@@ -266,9 +268,11 @@ sub markdown_description {
 
     if (@{$tag->see_also}) {
 
+        my @markdown
+          = map { markdown_citation($data, $_) } @{$tag->see_also};
         my $references
           = 'Please refer to '
-          . $self->oxford_enumeration('and', @{$tag->see_also})
+          . $self->oxford_enumeration('and', @markdown)
           . ' for details.';
 
         push(@extras, $references);

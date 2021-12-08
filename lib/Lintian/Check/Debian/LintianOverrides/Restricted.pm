@@ -48,7 +48,7 @@ sub always {
         }
 
         my @invalid
-          = grep { !$self->profile->architectures->valid_restriction($_) }
+          = grep { !$self->data->architectures->valid_restriction($_) }
           @architectures;
         $self->pointed_hint('invalid-override-restriction',
             $pointer,"Unknown architecture wildcard $_")

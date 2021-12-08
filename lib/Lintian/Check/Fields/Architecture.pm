@@ -52,7 +52,7 @@ sub installable {
     for my $installable_architecture (@installable_architectures) {
         $self->hint('arch-wildcard-in-binary-package',
             $installable_architecture)
-          if $self->profile->architectures->is_wildcard(
+          if $self->data->architectures->is_wildcard(
             $installable_architecture);
     }
 
@@ -80,10 +80,9 @@ sub always {
     for my $installable_architecture (@installable_architectures) {
 
         $self->hint('unknown-architecture', $installable_architecture)
-          unless $self->profile->architectures->is_release_architecture(
+          unless $self->data->architectures->is_release_architecture(
             $installable_architecture)
-          || $self->profile->architectures->is_wildcard(
-            $installable_architecture)
+          || $self->data->architectures->is_wildcard($installable_architecture)
           || $installable_architecture eq 'all'
           || (
             $installable_architecture eq 'source'

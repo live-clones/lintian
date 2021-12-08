@@ -44,7 +44,7 @@ has ARCH_REGEX => (
     default => sub {
         my ($self) = @_;
 
-        return $self->profile->load_data('binaries/arch-regex', qr/\s*\~\~/,
+        return $self->data->load('binaries/arch-regex', qr/\s*\~\~/,
             sub { return qr/$_[1]/ });
     });
 
@@ -54,8 +54,7 @@ has ARCH_64BIT_EQUIVS => (
     default => sub {
         my ($self) = @_;
 
-        return $self->profile->load_data('binaries/arch-64bit-equivs',
-            qr/\s*\=\>\s*/);
+        return $self->data->load('binaries/arch-64bit-equivs',qr/\s*\=\>\s*/);
     });
 
 sub from_other_architecture {

@@ -11,7 +11,7 @@ my $PROFILE = Lintian::Profile->new;
 $PROFILE->load('debian/main', [$ENV{'LINTIAN_BASE'}]);
 
 my %recommended_hardening_features
-  = %{$PROFILE->hardening_buildflags->recommended_features};
+  = %{$PROFILE->data->hardening_buildflags->recommended_features};
 
 my ($expected, undef, $calibrated) = @ARGV;
 

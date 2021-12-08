@@ -41,7 +41,7 @@ sub source {
     my $processable = $self->processable;
 
     my $SIGNING_KEY_FILENAMES
-      = $self->profile->load_data('common/signing-key-filenames');
+      = $self->data->load('common/signing-key-filenames');
 
     # Check all possible locations for signing keys
     my %key_locations;

@@ -38,7 +38,7 @@ sub source {
 
     my $control = $self->processable->debian_control;
 
-    my $KNOWN_LEGACY_DBG_PATTERNS= $self->profile->load_data('common/dbg-pkg');
+    my $KNOWN_LEGACY_DBG_PATTERNS= $self->data->load('common/dbg-pkg');
 
     for my $installable ($control->installables) {
         my $installable_fields = $control->installable_fields($installable);

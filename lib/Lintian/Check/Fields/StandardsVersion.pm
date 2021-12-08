@@ -70,7 +70,7 @@ sub source {
     my $compliance_normalized
       = $compliance_major. $DOT. $compliance_minor. $DOT. $compliance_patch;
 
-    my $policy_releases = $self->profile->policy_releases;
+    my $policy_releases = $self->data->policy_releases;
     my $latest_standard = $policy_releases->latest_version;
 
     my ($latest_major, $latest_minor, $latest_patch)

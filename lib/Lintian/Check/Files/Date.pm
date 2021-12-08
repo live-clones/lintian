@@ -40,7 +40,7 @@ has ALLOWED_ANCIENT_FILES => (
     default => sub {
         my ($self) = @_;
 
-        return $self->profile->load_data('files/allowed-ancient-files');
+        return $self->data->load('files/allowed-ancient-files');
     });
 
 sub visit_installed_files {

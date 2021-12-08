@@ -75,6 +75,16 @@ has profile => (is => 'rw');
 
 has hints => (is => 'rw', default => sub { [] });
 
+=item data
+
+=cut
+
+sub data {
+    my ($self) = @_;
+
+    return $self->profile->data;
+}
+
 =item visit_files
 
 =cut

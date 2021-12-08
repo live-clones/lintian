@@ -45,7 +45,7 @@ const my $MD5SUM_DATA_FIELDS => 5;
 sub _md5sum_based_lintian_data {
     my ($self, $filename) = @_;
 
-    return $self->profile->load_data(
+    return $self->data->load(
         $filename,
         qr/\s*\~\~\s*/,
         sub {

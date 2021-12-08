@@ -44,7 +44,7 @@ has DEB_HOST_MULTIARCH => (
     default => sub {
         my ($self) = @_;
 
-        return $self->profile->architectures->deb_host_multiarch;
+        return $self->data->architectures->deb_host_multiarch;
     });
 
 sub installable {

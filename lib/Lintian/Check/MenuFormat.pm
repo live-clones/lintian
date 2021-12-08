@@ -97,7 +97,7 @@ has MENU_SECTIONS => (
     default => sub {
         my ($self) = @_;
 
-        return $self->profile->load_data('menu-format/menu-sections',qr{/},
+        return $self->data->load('menu-format/menu-sections',qr{/},
             \&_menu_sections);
     });
 
@@ -114,7 +114,7 @@ has KNOWN_DESKTOP_KEYS => (
     default => sub {
         my ($self) = @_;
 
-        return $self->profile->load_data('menu-format/known-desktop-keys');
+        return $self->data->load('menu-format/known-desktop-keys');
     });
 
 has DEPRECATED_DESKTOP_KEYS => (
@@ -123,8 +123,7 @@ has DEPRECATED_DESKTOP_KEYS => (
     default => sub {
         my ($self) = @_;
 
-        return $self->profile->load_data(
-            'menu-format/deprecated-desktop-keys');
+        return $self->data->load('menu-format/deprecated-desktop-keys');
     });
 
 # KDE uses some additional keys that should start with X-KDE but don't for
@@ -135,7 +134,7 @@ has KDE_DESKTOP_KEYS => (
     default => sub {
         my ($self) = @_;
 
-        return $self->profile->load_data('menu-format/kde-desktop-keys');
+        return $self->data->load('menu-format/kde-desktop-keys');
     });
 
 # Known types of desktop entries.
@@ -180,7 +179,7 @@ has ADD_CATEGORIES => (
     default => sub {
         my ($self) = @_;
 
-        return $self->profile->load_data('menu-format/add-categories');
+        return $self->data->load('menu-format/add-categories');
     });
 
 # This is a list of Reserved Categories for .desktop files.  To use one of

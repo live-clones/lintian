@@ -400,7 +400,7 @@ sub binary {
                         $news->Distribution);
                 }
                 check_spelling(
-                    $self->profile,
+                    $self->data,
                     $news->Changes,
                     $group->spelling_exceptions,
                     $self->spelling_tag_emitter(
@@ -584,8 +584,7 @@ sub binary {
     }
 
     my $INVALID_DATES
-      = $self->profile->load_data('changelog-file/invalid-dates',
-        qr/\s*=\>\s*/);
+      = $self->data->load('changelog-file/invalid-dates',qr/\s*=\>\s*/);
 
     if (@entries) {
 
@@ -758,7 +757,7 @@ sub binary {
         # positives on changelog entries for spelling fixes.
         $changes =~ s/^.*(?:spelling|typo).*\n//gm;
         check_spelling(
-            $self->profile,$changes,
+            $self->data,$changes,
             $group->spelling_exceptions,
             $self->spelling_tag_emitter('spelling-error-in-changelog'));
     }

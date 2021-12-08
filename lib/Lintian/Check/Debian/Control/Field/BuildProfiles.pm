@@ -38,8 +38,7 @@ sub source {
 
     my $control = $self->processable->debian_control;
 
-    my $KNOWN_BUILD_PROFILES
-      = $self->profile->load_data('fields/build-profiles');
+    my $KNOWN_BUILD_PROFILES= $self->data->load('fields/build-profiles');
 
     for my $installable ($control->installables) {
         my $installable_fields = $control->installable_fields($installable);

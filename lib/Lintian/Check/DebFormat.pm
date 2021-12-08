@@ -43,7 +43,7 @@ const my $INDEX_NOT_FOUND => -1;
 sub installable {
     my ($self) = @_;
 
-    my $EXTRA_MEMBERS = $self->profile->load_data('deb-format/extra-members');
+    my $EXTRA_MEMBERS = $self->data->load('deb-format/extra-members');
 
     my $deb_path = $self->processable->path;
 

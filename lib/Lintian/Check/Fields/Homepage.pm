@@ -82,7 +82,7 @@ sub always {
     $self->hint('bad-homepage', $orig)
       unless $uri->scheme && $uri->scheme =~ /^(?:ftp|https?|gopher)$/;
 
-    my $BAD_HOMEPAGES = $self->profile->load_data('fields/bad-homepages');
+    my $BAD_HOMEPAGES = $self->data->load('fields/bad-homepages');
 
     foreach my $line ($BAD_HOMEPAGES->all) {
         my ($tag, $re) = split(/\s*~~\s*/, $line);

@@ -71,7 +71,7 @@ has COMPRESS_FILE_EXTENSIONS => (
     default => sub {
         my ($self) = @_;
 
-        return $self->profile->load_data('files/compressed-file-extensions',
+        return $self->data->load('files/compressed-file-extensions',
             qr/\s++/,sub { return qr/\Q$_[0]\E/ });
     });
 

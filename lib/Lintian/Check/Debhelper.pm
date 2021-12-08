@@ -156,14 +156,13 @@ sub visit_patched_files {
 sub source {
     my ($self) = @_;
 
-    my @MAINT_COMMANDS = @{$self->profile->debhelper_commands->maint_commands};
+    my @MAINT_COMMANDS = @{$self->data->debhelper_commands->maint_commands};
 
-    my $FILENAME_CONFIGS
-      = $self->profile->load_data('debhelper/filename-config-files');
+    my $FILENAME_CONFIGS= $self->data->load('debhelper/filename-config-files');
 
-    my $DEBHELPER_LEVELS = $self->profile->debhelper_levels;
-    my $DH_ADDONS = $self->profile->debhelper_addons;
-    my $DH_COMMANDS_DEPENDS= $self->profile->debhelper_commands;
+    my $DEBHELPER_LEVELS = $self->data->debhelper_levels;
+    my $DH_ADDONS = $self->data->debhelper_addons;
+    my $DH_COMMANDS_DEPENDS= $self->data->debhelper_commands;
 
     my @KNOWN_DH_COMMANDS;
     for my $command ($DH_COMMANDS_DEPENDS->all) {
@@ -970,7 +969,7 @@ sub check_compat_file {
         return $EMPTY;
     }
 
-    my $DEBHELPER_LEVELS = $self->profile->debhelper_levels;
+    my $DEBHELPER_LEVELS = $self->data->debhelper_levels;
 
     # Recommend people use debhelper-compat (introduced in debhelper
     # 11.1.5~alpha1) over debian/compat, except for experimental/beta

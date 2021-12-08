@@ -535,8 +535,7 @@ sub check_init {
         }
     }
 
-    my $VIRTUAL_FACILITIES
-      = $self->profile->load_data('init.d/virtual_facilities');
+    my $VIRTUAL_FACILITIES= $self->data->load('init.d/virtual_facilities');
 
     # Check syntax rules that apply to all of the keywords.
     for my $keyword (qw(required-start should-start required-stop should-stop))

@@ -42,7 +42,7 @@ sub source {
 
     my $processable = $self->processable;
 
-    my $DERIVATIVE_FIELDS = $self->profile->load_data(
+    my $DERIVATIVE_FIELDS = $self->data->load(
         'fields/derivative-fields',
         qr/\s*\~\~\s*/,
         sub {

@@ -96,10 +96,8 @@ sub source {
 
     $self->hint('debian-rules-not-executable') unless $rules->is_executable;
 
-    my $KNOWN_MAKEFILES
-      = $self->profile->load_data('rules/known-makefiles', '\|\|');
-    my $DEPRECATED_MAKEFILES
-      = $self->profile->load_data('rules/deprecated-makefiles');
+    my $KNOWN_MAKEFILES= $self->data->load('rules/known-makefiles', '\|\|');
+    my $DEPRECATED_MAKEFILES= $self->data->load('rules/deprecated-makefiles');
 
     my $architecture = $self->processable->fields->value('Architecture');
 

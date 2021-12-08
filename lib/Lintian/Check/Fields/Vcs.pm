@@ -215,7 +215,7 @@ sub always {
     $self->hint('package-is-maintained-by-individual')
       if $is_maintained_by_individual;
 
-    my $KNOWN_VCS_HOSTERS= $self->profile->load_data(
+    my $KNOWN_VCS_HOSTERS= $self->data->load(
         'fields/vcs-hosters',
         qr/\s*~~\s*/,
         sub {

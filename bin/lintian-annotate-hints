@@ -166,7 +166,7 @@ while(my $bytes = <STDIN>) {
     next
       unless defined $tag;
 
-    $output->describe_tag($tag, $TERMINAL_WIDTH);
+    $output->describe_tag($profile->data, $tag, $TERMINAL_WIDTH);
 }
 
 exit;

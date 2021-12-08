@@ -95,7 +95,7 @@ has PROVIDED_BY_SYSTEMD => (
     default =>sub {
         my ($self) = @_;
 
-        return $self->profile->load_data('systemd/init-whitelist');
+        return $self->data->load('systemd/init-whitelist');
     });
 
 # array of names provided by the service files.

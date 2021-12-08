@@ -97,7 +97,7 @@ my $exit_code = 0;
 
 unless (@ARGV) {
     my $text = do { local $/ = undef; decode_utf8(<STDIN>) };
-    spellcheck($PROFILE, undef, $picky, $text);
+    spellcheck($PROFILE->data, undef, $picky, $text);
 }
 
 for my $path (@ARGV) {
@@ -110,7 +110,7 @@ for my $path (@ARGV) {
     }
 
     my $text = path($path)->slurp_utf8;
-    spellcheck($PROFILE, $path, $picky, $text);
+    spellcheck($PROFILE->data, $path, $picky, $text);
 }
 
 exit $exit_code;
@@ -138,7 +138,7 @@ EOF
 }
 
 sub spellcheck {
-    my ($profile, $path, $be_picky, $text) = @_;
+    my ($lintian_data, $path, $be_picky, $text) = @_;
 
     my $prefix = $path ? "$path: " : $EMPTY;
 
@@ -147,8 +147,8 @@ sub spellcheck {
         say encode_utf8("$prefix$mistake -> $correction");
     };
 
-    check_spelling($profile, $text, $spelling_error_handler);
-    check_spelling_picky($profile, $text, $spelling_error_handler)
+    check_spelling($lintian_data, $text, $spelling_error_handler);
+    check_spelling_picky($lintian_data, $text, $spelling_error_handler)
       if $be_picky;
 
     return;

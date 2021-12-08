@@ -40,7 +40,7 @@ has ARCH_REGEX => (
     default => sub {
         my ($self) = @_;
 
-        return $self->profile->load_data('binaries/arch-regex', qr/\s*\~\~/,
+        return $self->data->load('binaries/arch-regex', qr/\s*\~\~/,
             sub { return qr/$_[1]/ });
     });
 
@@ -50,7 +50,7 @@ has LFS_SYMBOLS => (
     default => sub {
         my ($self) = @_;
 
-        return $self->profile->load_data('binaries/lfs-symbols');
+        return $self->data->load('binaries/lfs-symbols');
     });
 
 sub visit_installed_files {

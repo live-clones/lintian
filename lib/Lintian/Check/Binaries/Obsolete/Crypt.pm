@@ -38,7 +38,7 @@ has OBSOLETE_CRYPT_FUNCTIONS => (
     default => sub {
         my ($self) = @_;
 
-        return $self->profile->load_data('binaries/obsolete-crypt-functions',
+        return $self->data->load('binaries/obsolete-crypt-functions',
             qr/\s*\|\|\s*/);
     });
 

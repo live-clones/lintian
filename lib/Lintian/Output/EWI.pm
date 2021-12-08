@@ -30,6 +30,8 @@ use Term::ANSIColor ();
 use Text::Wrap;
 use Unicode::UTF8 qw(encode_utf8);
 
+use Lintian::Output::Markdown qw(markdown_citation);
+
 # for tty hyperlinks
 const my $OSC_HYPERLINK => qq{\033]8;;};
 const my $OSC_DONE => qq{\033\\};
@@ -365,7 +367,7 @@ sub issued_tag {
 =cut
 
 sub describe_tags {
-    my ($self, $tags, $columns) = @_;
+    my ($self, $data, $tags, $columns) = @_;
 
     for my $tag (@{$tags}) {
 
@@ -384,7 +386,7 @@ sub describe_tags {
         say encode_utf8('N:');
         say encode_utf8("$code: $name");
 
-        $self->describe_tag($tag, $columns);
+        $self->describe_tag($data, $tag, $columns);
     }
 
     return;
@@ -395,7 +397,7 @@ sub describe_tags {
 =cut
 
 sub describe_tag {
-    my ($self, $tag, $columns) = @_;
+    my ($self, $data, $tag, $columns) = @_;
 
     local $Text::Wrap::columns = $columns;
 
@@ -416,9 +418,11 @@ sub describe_tag {
 
             $wrapped .= $COMMENT_PREFIX . $NEWLINE;
 
+            my @see_also_markdown
+              = map { markdown_citation($data, $_) } @{$tag->see_also};
             my $markdown
               = 'Please refer to '
-              . $self->oxford_enumeration('and', @{$tag->see_also})
+              . $self->oxford_enumeration('and', @see_also_markdown)
               . ' for details.'
               . $NEWLINE;
             my $plain = markdown_to_plain($markdown,
@@ -478,10 +482,14 @@ sub describe_tag {
 
             my $combined = $screen->reason . $NEWLINE;
             if (@{$screen->see_also}) {
+
                 $combined .= $NEWLINE;
+
+                my @see_also_markdown
+                  = map { markdown_citation($data, $_) } @{$screen->see_also};
                 $combined
                   .= 'Read more in '
-                  . $self->oxford_enumeration('and', @{$tag->see_also})
+                  . $self->oxford_enumeration('and', @see_also_markdown)
                   . $DOT
                   . $NEWLINE;
             }

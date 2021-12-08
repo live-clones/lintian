@@ -64,7 +64,7 @@ sub installable {
     my @typelibs;
 
     my $section = $processable->fields->value('Section') || 'NONE';
-    my $DEB_HOST_MULTIARCH= $self->profile->architectures->deb_host_multiarch;
+    my $DEB_HOST_MULTIARCH= $self->data->architectures->deb_host_multiarch;
     my $madir = $DEB_HOST_MULTIARCH->{$processable->architecture};
     # Slightly contrived, but it might be Architecture: all, in which
     # case this is the best we can do
