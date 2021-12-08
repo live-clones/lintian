@@ -237,20 +237,26 @@ sub extract_sections_from_links {
     for my $link ($mechanize->links) {
 
         next
+          unless length $link->url;
+
+        # make lowercase
+        my $section_key = lc($link->url);
+
+        # strip hash; it's a fragment;
+        $section_key =~ s{^ [#] }{}x;
+
+        next
           unless length $link->text;
 
         next
-          if $link->text !~ qr{^ \s* ([.\d]+) \s+ (.+) $}x;
+          if $link->text !~ qr{^ \s* [.\d]+ \s+ (.+) $}x;
 
-        my $section_key = $1;
-        my $section_title = $2;
-
-        # drop final dots
-        $section_key =~ s{ [.]+ $}{}x;
+        my $section_title = $1;
 
         # reduce consecutive whitespace
         $section_title =~ s{ \s+ }{ }gx;
 
+        # includes hash
         my $relative_destination = $link->url;
 
         my $destination_base = $page_url;
@@ -261,21 +267,7 @@ sub extract_sections_from_links {
         my $full_destination = $destination_base . $relative_destination;
 
         next
-          if exists $by_section_key{$section_key}
-          && ( $by_section_key{$section_key}{title} eq $section_title
-            || $by_section_key{$section_key}{destination} eq$full_destination);
-
-        # Some manuals reuse section numbers for different references,
-        # e.g. the Debian Policy's normal and appendix sections are
-        # numbers that clash with each other. Track if we've already
-        # seen a section pointing to some other URL than the current one,
-        # and prepend it with an indicator
-        $in_appendix = 1
-          if exists $by_section_key{$section_key}
-          && $by_section_key{$section_key}{destination} ne$full_destination;
-
-        $section_key = "appendix-$section_key"
-          if $in_appendix;
+          if exists $by_section_key{$section_key};
 
         $by_section_key{$section_key}{title} = $section_title;
         $by_section_key{$section_key}{destination} = $full_destination;
