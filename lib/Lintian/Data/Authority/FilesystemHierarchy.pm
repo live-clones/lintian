@@ -43,7 +43,7 @@ const my $UNDERSCORE => q{_};
 const my $LEFT_PARENTHESIS => q{(};
 const my $RIGHT_PARENTHESIS => q{)};
 
-const my $TWO_PARTS => 2;
+const my $THREE_PARTS => 3;
 
 const my $VOLUME_KEY => $UNDERSCORE;
 const my $SEPARATOR => $COLON x 2;
@@ -117,10 +117,12 @@ has accumulator => (
             return undef
               if defined $previous;
 
-            my ($title, $url)= split($self->separator, $remainder, $TWO_PARTS);
+            my ($number, $title, $url)
+              = split($self->separator, $remainder, $THREE_PARTS);
 
             my %entry;
             $entry{title} = $title;
+            $entry{number} = $number;
             $entry{url} = $url;
 
             return \%entry;
@@ -144,6 +146,7 @@ sub markdown_citation {
     my $volume_url   = $volume_entry->{url};
 
     my $section_title;
+    my $section_number;
     my $section_url;
 
     if ($self->recognizes($section_key)) {
@@ -151,11 +154,12 @@ sub markdown_citation {
         my $section_entry = $self->value($section_key);
 
         $section_title = $section_entry->{title};
-        $section_url   = $section_entry->{url};
+        $section_number = $section_entry->{number};
+        $section_url = $section_entry->{url};
     }
 
     return markdown_authority(
-        $volume_title, $volume_url,$section_key,
+        $volume_title, $volume_url,$section_number,
         $section_title, $section_url
     );
 }
@@ -165,7 +169,8 @@ sub markdown_citation {
 =cut
 
 sub write_line {
-    my ($data_fd, $section_key, $section_title, $destination) = @_;
+    my ($data_fd, $section_key, $section_number, $section_title, $destination)
+      = @_;
 
     # drop final dots
     $section_key =~ s{ [.]+ $}{}x;
@@ -173,7 +178,8 @@ sub write_line {
     # reduce consecutive whitespace
     $section_title =~ s{ \s+ }{ }gx;
 
-    my $line= join($SEPARATOR,$section_key, $section_title, $destination);
+    my $line= join($SEPARATOR,
+        $section_key, $section_number, $section_title, $destination);
 
     say {$data_fd} encode_utf8($line);
 
@@ -228,7 +234,7 @@ sub extract_sections_from_links {
     $page_title =~ s{ \s* \N{EM DASH} .* $}{}x;
 
     # underscore is a token for the whole page
-    write_line($data_fd, $VOLUME_KEY, $page_title, $page_url);
+    write_line($data_fd, $VOLUME_KEY, $EMPTY, $page_title, $page_url);
 
     my %by_section_key;
     my $in_appendix = 0;
@@ -249,9 +255,13 @@ sub extract_sections_from_links {
           unless length $link->text;
 
         next
-          if $link->text !~ qr{^ \s* [.\d]+ \s+ (.+) $}x;
+          if $link->text !~ qr{^ \s* ([.\d]+) \s+ (.+) $}x;
 
-        my $section_title = $1;
+        my $section_number = $1;
+        my $section_title = $2;
+
+        # drop final dot
+        $section_number =~ s{ [.]+ $}{}x;
 
         # reduce consecutive whitespace
         $section_title =~ s{ \s+ }{ }gx;
@@ -270,9 +280,11 @@ sub extract_sections_from_links {
           if exists $by_section_key{$section_key};
 
         $by_section_key{$section_key}{title} = $section_title;
+        $by_section_key{$section_key}{number} = $section_number;
         $by_section_key{$section_key}{destination} = $full_destination;
 
-        write_line($data_fd, $section_key, $section_title, $full_destination);
+        write_line($data_fd, $section_key, $section_number,
+            $section_title, $full_destination);
     }
 
     return;
