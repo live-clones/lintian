@@ -326,7 +326,7 @@ sub runner {
     if ($testcase->declares('Todo')) {
 
         my $explanation = $testcase->unfolded_value('Todo');
-        diag "TODO ($explanation)";
+        diag encode_utf8("TODO ($explanation)");
 
       TODO: {
             local $TODO = $explanation;
@@ -336,7 +336,7 @@ sub runner {
         return;
     }
 
-    diag $_ . $NEWLINE for @errors;
+    diag encode_utf8($_ . $NEWLINE) for @errors;
 
     ok($okay, "Lintian passes for $testname");
 
@@ -444,7 +444,7 @@ sub check_result {
     my @difflines = split(/\n/, $diff);
     chomp @difflines;
 
-    # diag "Difflines: $_" for @difflines;
+    # diag encode_utf8("Difflines: $_") for @difflines;
 
     if(@difflines) {
 
@@ -480,7 +480,7 @@ sub check_result {
     # get expected tags
     my @expected = sort +get_tag_names($expectedpath);
 
-    #diag "=Expected tag: $_" for @expected;
+    #diag encode_utf8("=Expected tag: $_") for @expected;
 
     # look out for tags being tested
     my @related;
@@ -509,20 +509,20 @@ sub check_result {
         @related = @expected;
     }
 
-    #diag "#Related tag: $_" for @related;
+    #diag encode_utf8("#Related tag: $_") for @related;
 
     # calculate Test-For and Test-Against; results are sorted
     my $material = List::Compare->new(\@expected, \@related);
     my @test_for = $material->get_intersection;
     my @test_against = $material->get_Ronly;
 
-    #diag "+Test-For: $_" for @test_for;
-    #diag "-Test-Against (calculated): $_" for @test_against;
+    #diag encode_utf8("+Test-For: $_") for @test_for;
+    #diag encode_utf8("-Test-Against (calculated): $_") for @test_against;
 
     # get actual tags from output
     my @actual = sort +get_tag_names($actualpath);
 
-    #diag "*Actual tag found: $_" for @actual;
+    #diag encode_utf8("*Actual tag found: $_") for @actual;
 
     # check for blacklisted tags; result is sorted
     my @unexpected
