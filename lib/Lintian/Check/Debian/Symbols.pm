@@ -1,6 +1,6 @@
 # debian/symbols -- lintian check script -*- perl -*-
 #
-# Copyright © 2019 Felix Lechner
+# Copyright © 2019-2021 Felix Lechner
 #
 # Parts of the code were taken from the old check script, which
 # was Copyright © 1998 Richard Braakman (also licensed under the
@@ -35,28 +35,20 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-sub source {
-    my ($self) = @_;
+sub visit_patched_files {
+    my ($self, $item) = @_;
 
-    for my $file (@{$self->processable->patched->sorted_list}) {
-
-        # look at symbols files
-        $self->check_symbols_file($file)
-          if $file->name =~ qr{^debian/(?:.+\.)symbols};
-    }
-
-    return;
-}
-
-sub check_symbols_file {
-    my ($self, $file) = @_;
+    # look at symbols files
+    return
+      unless $item->name =~ qr{^ debian/ (?:.+[.]) symbols $}x;
 
     return
-      unless $file->is_file && $file->is_open_ok;
+      unless $item->is_file && $item->is_open_ok;
 
-    open(my $fd, '<', $file->unpacked_path)
-      or die encode_utf8('Cannot open ' . $file->unpacked_path);
+    open(my $fd, '<', $item->unpacked_path)
+      or die encode_utf8('Cannot open ' . $item->unpacked_path);
 
+    my $position = 1;
     while (my $line = <$fd>) {
 
         chop $line;
@@ -70,9 +62,13 @@ sub check_symbols_file {
             my $field = $1;
             my $value = $2;
 
-            $self->hint('package-placeholder-in-symbols-file',"$file, line $.")
+            $self->pointed_hint('package-placeholder-in-symbols-file',
+                $item->pointer($position))
               if $field eq 'Build-Depends-Package' && $value =~ /#PACKAGE#/;
         }
+
+    } continue {
+        ++$position;
     }
 
     return;

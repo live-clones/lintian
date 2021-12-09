@@ -42,7 +42,7 @@ sub visit_patched_files {
     return
       unless $item->is_file;
 
-    $self->hint('readme-source-is-dh_make-template')
+    $self->pointed_hint('readme-source-is-dh_make-template', $item->pointer)
       if $item->name eq 'debian/README.source'
       && $item->bytes
       =~ / \QYou WILL either need to modify or delete this file\E /isx;
@@ -53,11 +53,21 @@ sub visit_patched_files {
         open(my $fd, '<', $item->unpacked_path)
           or die encode_utf8('Cannot open ' . $item->unpacked_path);
 
+        my $position = 1;
         while (my $line = <$fd>) {
-            next unless $line =~ m/(?<!")(FIX_?ME)(?!")/;
-            $self->hint('file-contains-fixme-placeholder',
-                $item->name . ":$. $1");
+
+            next
+              unless $line =~ m/(?<!")(FIX_?ME)(?!")/;
+
+            my $placeholder = $1;
+
+            $self->pointed_hint('file-contains-fixme-placeholder',
+                $item->pointer($position), $placeholder);
+
+        } continue {
+            ++$position;
         }
+
         close $fd;
     }
 

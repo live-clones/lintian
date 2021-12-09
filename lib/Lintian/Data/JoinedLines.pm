@@ -235,7 +235,7 @@ sub load {
     open(my $fd, '<:utf8_strict', $path)
       or die encode_utf8("Cannot open $path: $!");
 
-    local $. = undef;
+    my $position = 1;
     while (my $line = <$fd>) {
 
         # trim both ends
@@ -254,7 +254,7 @@ sub load {
             if ($directive eq 'delete') {
 
                 croak encode_utf8(
-                    "Missing key after \@delete in $path at line $.")
+                    "Missing key after \@delete in $path at line $position")
                   unless length $value;
 
                 @{$self->keyorder} = grep { $_ ne $value } @{$self->keyorder};
@@ -291,7 +291,8 @@ sub load {
 
             } else {
                 croak encode_utf8(
-                    "Unknown operation \@$directive in $path at line $.");
+                    "Unknown operation \@$directive in $path at line $position"
+                );
             }
             next;
         }
@@ -323,6 +324,9 @@ sub load {
           unless exists $self->dataset->{$key};
 
         $self->dataset->{$key} = $value;
+
+    } continue {
+        ++$position;
     }
 
     close $fd;

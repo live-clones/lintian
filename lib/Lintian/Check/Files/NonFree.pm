@@ -90,9 +90,9 @@ sub visit_patched_files {
         my $reason = $nonfree->{'reason'};
         my $link = $nonfree->{'link'};
 
-        $self->hint(
+        $self->pointed_hint(
             'license-problem-md5sum-non-free-file',
-            $item->name, "usual name is $usualname.",
+            $item->pointer, "usual name is $usualname.",
             $reason, "See also $link."
         );
     }
@@ -110,18 +110,18 @@ my @flash_nonfree = (
 );
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     return
-      unless $file->is_file;
+      unless $item->is_file;
 
     # skip packages that declare non-free contents
     return
       if $self->processable->is_non_free;
 
     # non-free .swf files
-    $self->hint('non-free-flash', $file->name)
-      if any { $file->name =~ m{/$_} } @flash_nonfree;
+    $self->pointed_hint('non-free-flash', $item->pointer)
+      if any { $item->name =~ m{/$_} } @flash_nonfree;
 
     return;
 }

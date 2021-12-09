@@ -1,1 +1,1 @@
-control-file-general (source): recommended-field debian/control@source Section
+control-file-general (source): recommended-field (in section for source) Section [debian/control:1]

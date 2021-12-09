@@ -87,9 +87,9 @@ sub visit_patched_files {
         my $reason = $banned->{'reason'};
         my $link = $banned->{'link'};
 
-        $self->hint(
+        $self->pointed_hint(
             'license-problem-md5sum-non-distributable-file',
-            $item->name, "usual name is $usualname.",
+            $item->pointer, "usual name is $usualname.",
             $reason, "See also $link."
         );
     }

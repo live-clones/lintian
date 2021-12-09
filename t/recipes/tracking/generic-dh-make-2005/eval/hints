@@ -20,7 +20,7 @@ generic-dh-make-2005 (source): debian-rules-missing-recommended-target build-arc
 generic-dh-make-2005 (source): debian-rules-ignores-make-clean-error (line 47)
 generic-dh-make-2005 (binary): wrong-bug-number-in-closes #nnnn in the installed changelog (line 3)
 generic-dh-make-2005 (binary): section-is-dh_make-template
-generic-dh-make-2005 (binary): readme-debian-contains-debmake-template
+generic-dh-make-2005 (binary): readme-debian-contains-debmake-template [usr/share/doc/generic-dh-make-2005/README.Debian]
 generic-dh-make-2005 (binary): package-contains-no-arch-dependent-files
 generic-dh-make-2005 (binary): initial-upload-closes-no-bugs
 generic-dh-make-2005 (binary): helper-templates-in-copyright

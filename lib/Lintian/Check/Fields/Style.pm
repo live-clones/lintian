@@ -1,6 +1,6 @@
 # fields/style -- lintian check script -*- perl -*-
 #
-# Copyright © 2020 Felix Lechner
+# Copyright © 2020-2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -24,80 +24,39 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Const::Fast;
-use Path::Tiny;
-
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
 
-const my $AT => q{@};
-
-# policy section 5.2 states unequivocally that the two fields Section
-# and Priority are recommended not only in the source paragraph, but
-# also in the binary paragraphs.
-
-# in the author's opinion, however, it does not make sense to flag them
-# there because the same two fields in the source paragraph provide the
-# default for the fields in the binary package paragraph.
-
-# moreover, such duplicate tags would then trigger the tag
-# binary-control-field-duplicates-source elsewhere, which would be
-# super confusing
-
+# the fields in d/control provide the values for many fields elsewhere
 sub source {
     my ($self) = @_;
 
-    my @control_fields = $self->processable->fields->names;
-
-    my $dscfile = path($self->processable->path)->basename;
-    $self->check_style($dscfile, @control_fields);
-
     my $debian_control = $self->processable->debian_control;
-    my $controlfile = 'debian/control';
+    my $control_item = $debian_control->item;
 
     # look at d/control source paragraph
-    my @source_fields = $debian_control->source_fields->names;
-    $self->check_style($controlfile . $AT . 'source', @source_fields);
+    my $source_fields = $debian_control->source_fields;
 
-    # look at d/control installable paragraphs
+    $self->check_style($source_fields, $control_item);
+
     for my $installable ($debian_control->installables) {
-        my @installable_fields
-          = $debian_control->installable_fields($installable)->names;
-        $self->check_style($controlfile . $AT . $installable,
-            @installable_fields);
+
+        # look at d/control installable paragraphs
+        my $installable_fields
+          = $debian_control->installable_fields($installable);
+
+        $self->check_style($installable_fields, $control_item);
     }
 
     return;
 }
 
-sub installable {
-    my ($self) = @_;
-
-    my @control_fields = $self->processable->fields->names;
-
-    my $debfile = path($self->processable->path)->basename;
-    $self->check_style($debfile, @control_fields);
-
-    return;
-}
-
-sub changes {
-    my ($self) = @_;
-
-    my @control_fields = $self->processable->fields->names;
-
-    my $changesfile = path($self->processable->path)->basename;
-    $self->check_style($changesfile, @control_fields);
-
-    return;
-}
-
 sub check_style {
-    my ($self, $location, @names) = @_;
+    my ($self, $fields, $item) = @_;
 
-    for my $name (@names) {
+    for my $name ($fields->names) {
 
         # title-case the field name
         my $standard = lc $name;
@@ -106,7 +65,10 @@ sub check_style {
         # capitalize up to three letters after an X, if followed by hyphen
         $standard =~ s/^(X[SBC]{1,3})-/\U$1-/i;
 
-        $self->hint('cute-field', $location, "$name vs $standard")
+        my $position = $fields->position($name);
+        my $pointer = $item->pointer($position);
+
+        $self->pointed_hint('cute-field', $pointer, "$name vs $standard")
           unless $name eq $standard;
     }
 

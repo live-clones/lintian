@@ -1,6 +1,7 @@
 # files/obsolete-paths -- lintian check script -*- perl -*-
 
 # Copyright © 1998 Christian Schwarz and Richard Braakman
+# Copyright © 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -59,22 +60,22 @@ has OBSOLETE_PATHS => (
     });
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     # check for generic obsolete path
-    foreach my $obsolete_path ($self->OBSOLETE_PATHS->all) {
+    for my $obsolete_path ($self->OBSOLETE_PATHS->all) {
 
         my $obs_data = $self->OBSOLETE_PATHS->value($obsolete_path);
         my $oldpathmatch = $obs_data->{'match'};
 
-        if ($file->name =~ m{$oldpathmatch}) {
+        if ($item->name =~ m{$oldpathmatch}) {
 
             my $oldpath  = $obs_data->{'olddir'};
             my $newpath  = $obs_data->{'newdir'};
             my $moreinfo = $obs_data->{'moreinfo'};
 
-            $self->hint('package-installs-into-obsolete-dir',
-                $file->name,": $oldpath -> $newpath", $moreinfo);
+            $self->pointed_hint('package-installs-into-obsolete-dir',
+                $item->pointer,": $oldpath -> $newpath", $moreinfo);
         }
     }
 

@@ -41,17 +41,17 @@ my @SOURCE_DEB822 = qw(debian/control);
 sub source {
     my ($self) = @_;
 
-    for my $item (@SOURCE_DEB822) {
+    for my $location (@SOURCE_DEB822) {
 
-        my $file = $self->processable->patched->resolve_path($item);
+        my $item = $self->processable->patched->resolve_path($location);
         return
-          unless defined $file;
+          unless defined $item;
 
         my $deb822 = Lintian::Deb822->new;
 
         my @sections;
         try {
-            @sections = $deb822->read_file($file->unpacked_path)
+            @sections = $deb822->read_file($item->unpacked_path)
 
         } catch {
             next;
@@ -60,11 +60,16 @@ sub source {
         my $count = 1;
         for my $section (@sections) {
 
-            for my $name ($section->names) {
+            for my $field_name ($section->names) {
 
-                my $value = $section->value($name);
-                $self->hint('trimmed-deb822-field', $file, $SECTION . $count,
-                    $name, $value);
+                my $field_value = $section->value($field_name);
+
+                my $position = $section->position($field_name);
+                my $pointer = $item->pointer($position);
+
+                $self->pointed_hint('trimmed-deb822-field', $pointer,
+                    $SECTION . $count,
+                    $field_name, $field_value);
             }
 
         } continue {

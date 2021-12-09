@@ -38,12 +38,12 @@ sub source {
     return
       unless $debian_dir;
 
-    my $file = $debian_dir->child('control');
+    my $item = $debian_dir->child('control');
     return
-      unless $file;
+      unless $item;
 
-    $self->hint('debian-control-file-is-a-symlink')
-      if $file->is_symlink;
+    $self->pointed_hint('debian-control-file-is-a-symlink', $item->pointer)
+      if $item->is_symlink;
 
     return;
 }

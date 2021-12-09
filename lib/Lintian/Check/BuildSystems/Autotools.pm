@@ -46,20 +46,33 @@ sub visit_patched_files {
         open(my $fd, '<', $item->unpacked_path)
           or die encode_utf8('Cannot open ' . $item->unpacked_path);
 
+        my $position = 1;
         while (my $line = <$fd>) {
-            next if $line =~ m{^\s*dnl};
-            $self->hint(
-                'autotools-pkg-config-macro-not-cross-compilation-safe',
-                $item->name, "(line $.)")
-              if $line=~ m{AC_PATH_PROG\s*\([^,]+,\s*\[?pkg-config\]?\s*,};
+
+            next
+              if $line =~ m{^ \s* dnl }x;
+
+            if ($line
+                =~ m{ (AC_PATH_PROG) \s* [(] [^,]+ , \s* \[? pkg-config \]? \s* , }x
+            ){
+
+                my $macro = $1;
+                $self->pointed_hint(
+                    'autotools-pkg-config-macro-not-cross-compilation-safe',
+                    $item->pointer($position), $macro);
+            }
+
+        } continue {
+            ++$position;
         }
-        close($fd);
+
+        close $fd;
     }
 
     # Tests of autotools files are a special case.  Ignore
     # debian/config.cache as anyone doing that probably knows what
     # they're doing and is using it as part of the build.
-    $self->hint('configure-generated-file-in-source', $item->name)
+    $self->pointed_hint('configure-generated-file-in-source', $item->pointer)
       if $item->basename =~ m{\A config.(?:cache|log|status) \Z}xsm
       && $item->name !~ m{^ debian/ }sx;
 

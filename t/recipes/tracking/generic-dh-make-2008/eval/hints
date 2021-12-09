@@ -37,7 +37,7 @@ generic-dh-make-2008 (source): bad-homepage <insert the upstream URL, if relevan
 generic-dh-make-2008 (binary): wrong-bug-number-in-closes #nnnn in the installed changelog (line 3)
 generic-dh-make-2008 (binary): superfluous-clutter-in-homepage <insert the upstream URL, if relevant>
 generic-dh-make-2008 (binary): section-is-dh_make-template
-generic-dh-make-2008 (binary): readme-debian-contains-debmake-template
+generic-dh-make-2008 (binary): readme-debian-contains-debmake-template [usr/share/doc/generic-dh-make-2008/README.Debian]
 generic-dh-make-2008 (binary): package-contains-no-arch-dependent-files
 generic-dh-make-2008 (binary): package-contains-empty-directory usr/sbin/
 generic-dh-make-2008 (binary): package-contains-empty-directory usr/bin/

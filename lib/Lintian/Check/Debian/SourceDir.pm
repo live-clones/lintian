@@ -1,6 +1,7 @@
 # debian/source directory content -- lintian check script -*- perl -*-
 
 # Copyright © 2010 by Raphaël Hertzog
+# Copyright © 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -97,7 +98,10 @@ sub source {
             # gitpkg does not create series as a link, so this is most likely
             # a traversal attempt.
             if (not $dpseries or not $dpseries->is_open_ok) {
-                $self->hint('git-patches-not-exported');
+
+                $self->pointed_hint('git-patches-not-exported',
+                    $git_pfile->pointer);
+
             } else {
                 open(my $series_fd, '<', $dpseries->unpacked_path)
                   or
@@ -105,23 +109,26 @@ sub source {
 
                 my $comment_line = <$series_fd>;
                 my $count = grep { !/^\s*+\#|^\s*+$/ } <$series_fd>;
-                $self->hint('git-patches-not-exported')
+
+                $self->pointed_hint('git-patches-not-exported',
+                    $dpseries->pointer)
                   unless ($count
                     && ($comment_line
                         =~ /^\s*\#.*quilt-patches-deb-export-hook/));
-                close($series_fd);
+
+                close $series_fd;
             }
         }
-        close($git_patches_fd);
+        close $git_patches_fd;
     }
 
     my $KNOWN_FILES= $self->data->load('debian-source-dir/known-files');
 
     my @files = grep { !$_->is_dir } $dsrc->children;
-    for my $file (@files) {
+    for my $item (@files) {
 
-        $self->hint('unknown-file-in-debian-source', $file->basename)
-          unless $KNOWN_FILES->recognizes($file->basename);
+        $self->pointed_hint('unknown-file-in-debian-source', $item->pointer)
+          unless $KNOWN_FILES->recognizes($item->basename);
     }
 
     my $options = $processable->patched->resolve_path('debian/source/options');
@@ -130,12 +137,23 @@ sub source {
         open(my $fd, '<', $options->unpacked_path)
           or die encode_utf8('Cannot open ' . $options->unpacked_path);
 
+        my $position = 1;
         while (my $line = <$fd>) {
-            $self->hint('custom-compression-in-debian-source-options',
-                $1, "(line $.)")
-              if $line =~ /^\s*(compression(?:-level)?\s*=\s+\S+)\n/;
+
+            if ($line =~ /^\s*(compression(?:-level)?\s*=\s+\S+)\n/) {
+
+                my $level = $1;
+
+                $self->pointed_hint(
+                    'custom-compression-in-debian-source-options',
+                    $options->pointer($position), $level);
+            }
+
+        } continue {
+            ++$position;
         }
-        close($fd);
+
+        close $fd;
     }
 
     return;

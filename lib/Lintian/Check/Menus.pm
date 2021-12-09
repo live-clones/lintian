@@ -4,6 +4,7 @@
 
 # Copyright © 1998 Christian Schwarz
 # Copyright © 2018 Chris Lamb <lamby@debian.org>
+# Copyright © 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -722,20 +723,17 @@ sub check_script {
     return
       if $item->is_elf;
 
-    open(my $fd, '<', $item->unpacked_path)
-      or die encode_utf8('Cannot open ' . $item->unpacked_path);
-
-    # discard hashbang line; will get from Index::Item
-    scalar readline $fd;
-
-    my $interp = $item->interpreter || 'unknown';
+    my $interpreter = $item->interpreter || 'unknown';
 
     if ($item->is_shell_script) {
-        $interp = 'sh';
+        $interpreter = 'sh';
 
-    } elsif ($interp =~ m{^/usr/bin/perl}) {
-        $interp = 'perl';
+    } elsif ($interpreter =~ m{^/usr/bin/perl}) {
+        $interpreter = 'perl';
     }
+
+    open(my $fd, '<', $item->unpacked_path)
+      or die encode_utf8('Cannot open ' . $item->unpacked_path);
 
     my $position = 1;
     while (my $line = <$fd>) {

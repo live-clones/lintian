@@ -45,15 +45,14 @@ sub source {
 
     for my $installable ($control->installables) {
 
-        my $description
-          = $control->installable_fields($installable)
-          ->untrimmed_value('Description');
-
-        next
-          unless length $description;
-
         next
           if $control->installable_package_type($installable) eq 'udeb';
+
+        my $installable_fields = $control->installable_fields($installable);
+
+        my $description = $installable_fields->untrimmed_value('Description');
+        next
+          unless length $description;
 
         my ($synopsis, $extended) = split(/\n/, $description, 2);
 
@@ -82,9 +81,11 @@ sub source {
         next
           if $synopsis =~ m/\$\{.+\}/;
 
-        $self->hint('duplicate-short-description',
-            (sort @{$installables_by_synopsis{$synopsis}}))
-          if scalar @{$installables_by_synopsis{$synopsis}} > 1;
+        $self->pointed_hint(
+            'duplicate-short-description',
+            $control->item->pointer,
+            (sort @{$installables_by_synopsis{$synopsis}})
+        )if scalar @{$installables_by_synopsis{$synopsis}} > 1;
     }
 
     # check for duplicate long description
@@ -94,9 +95,11 @@ sub source {
         next
           if $extended =~ m/\$\{.+\}/;
 
-        $self->hint('duplicate-long-description',
-            (sort @{$installables_by_exended{$extended}}))
-          if scalar @{$installables_by_exended{$extended}} > 1;
+        $self->pointed_hint(
+            'duplicate-long-description',
+            $control->item->pointer,
+            (sort @{$installables_by_exended{$extended}})
+        )if scalar @{$installables_by_exended{$extended}} > 1;
     }
 
     return;

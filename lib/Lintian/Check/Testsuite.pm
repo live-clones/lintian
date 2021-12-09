@@ -2,6 +2,7 @@
 
 # Copyright © 2013 Nicolas Boulenguez <nicolas@debian.org>
 # Copyright © 2017-2020 Chris Lamb <lamby@debian.org>
+# Copyright © 2021 Felix Lechner
 
 # This file is part of lintian.
 
