@@ -45,14 +45,15 @@ sub source {
           unless $source_fields->declares($field);
 
         my $position = $source_fields->position($field);
-        my $pointer = "(in source paragraph) [debian/control:$position]";
+        my $pointer = $control->item->pointer($position);
 
         my $raw = $source_fields->value($field);
         my $relation = Lintian::Relation->new->load($raw);
 
         my $condition = 'composer';
 
-        $self->hint('composer-prerequisite', $field, $pointer)
+        $self->pointed_hint('composer-prerequisite', $pointer, $field,
+            '(in source paragraph)')
           if $relation->satisfies($condition);
     }
 
@@ -67,15 +68,15 @@ sub source {
               unless $installable_fields->declares($field);
 
             my $position = $installable_fields->position($field);
-            my $pointer
-              = "(in section for $installable) [debian/control:$position]";
+            my $pointer = $control->item->pointer($position);
 
             my $relation
               = $self->processable->binary_relation($installable, $field);
 
             my $condition = 'composer';
 
-            $self->hint('composer-prerequisite', $field, $pointer)
+            $self->pointed_hint('composer-prerequisite', $pointer, $field,
+                "(in section for $installable)")
               if $relation->satisfies($condition);
         }
     }

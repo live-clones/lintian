@@ -805,7 +805,7 @@ div.clear {
 
       <span class="tinycode" id="code-W">W</span>
       <span class="tinyhint"><a href="https://lintian.debian.org/tags/no-manual-page">no-manual-page</a></span>
-      <span class="tinycontext">usr/bin/script</span>
+      <span class="tinycontext">[usr/bin/script]</span>
 
     </li>
     <li class="hintitem">
@@ -825,7 +825,7 @@ div.clear {
 
       <span class="tinycode" id="code-I">I</span>
       <span class="tinyhint"><a href="https://lintian.debian.org/tags/desktop-entry-limited-to-environments">desktop-entry-limited-to-environments</a></span>
-      <span class="tinycontext">usr/share/applications/script.desktop</span>
+      <span class="tinycontext">[usr/share/applications/script.desktop]</span>
 
     </li>
     <li class="hintitem">

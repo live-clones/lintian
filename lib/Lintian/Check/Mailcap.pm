@@ -35,21 +35,21 @@ use namespace::clean;
 with 'Lintian::Check';
 
 const my $EMPTY => q{};
-const my $COLON => q{:};
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     return
-      unless $file->name =~ m{^usr/lib/mime/packages/};
+      unless $item->name =~ m{^usr/lib/mime/packages/};
 
     return
-      unless $file->is_file && $file->is_open_ok;
+      unless $item->is_file && $item->is_open_ok;
 
-    open(my $fd, '<', $file->unpacked_path);
+    open(my $fd, '<', $item->unpacked_path);
 
     my @continuation;
 
+    my $position = 1;
     while (my $line = <$fd>) {
 
         unless (@continuation) {
@@ -64,16 +64,16 @@ sub visit_installed_files {
 
         # continuation line
         if ($line =~ s/\\$//) {
-            push(@continuation, {string => $line, position => $.});
+            push(@continuation, {string => $line, position => $position});
             next;
         }
 
-        push(@continuation, {string => $line, position => $.});
+        push(@continuation, {string => $line, position => $position});
 
         my $assembled = $EMPTY;
         $assembled .= $_->{string} for @continuation;
 
-        my $position = $continuation[0]->{position};
+        my $start_position = $continuation[0]->{position};
 
         my @quoted
           = extract_multiple($assembled,
@@ -82,16 +82,19 @@ sub visit_installed_files {
 
         my @placeholders = uniq grep { /\%s/ } @quoted;
 
-        $self->hint(
+        $self->pointed_hint(
             'quoted-placeholder-in-mailcap-entry',
-            $file->name . $COLON . $position,
+            $item->pointer($start_position),
             @placeholders
         )if @placeholders;
 
         @continuation = ();
+
+    } continue {
+        ++$position;
     }
 
-    close($fd);
+    close $fd;
 
     return;
 }

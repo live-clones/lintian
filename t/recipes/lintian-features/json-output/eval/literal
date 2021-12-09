@@ -116,7 +116,12 @@
                      "visibility" : "error"
                   },
                   {
-                     "note" : "usr/bin/script",
+                     "pointer" : {
+                        "item" : {
+                           "index" : "json-output_1.0+dsfg-1.1_all.deb (installed)",
+                           "name" : "usr/bin/script"
+                        }
+                     },
                      "tag" : "no-manual-page",
                      "visibility" : "warning"
                   },
@@ -126,7 +131,12 @@
                      "visibility" : "info"
                   },
                   {
-                     "note" : "usr/share/applications/script.desktop",
+                     "pointer" : {
+                        "item" : {
+                           "index" : "json-output_1.0+dsfg-1.1_all.deb (installed)",
+                           "name" : "usr/share/applications/script.desktop"
+                        }
+                     },
                      "tag" : "desktop-entry-limited-to-environments",
                      "visibility" : "info"
                   },
