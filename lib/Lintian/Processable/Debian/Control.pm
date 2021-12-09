@@ -58,11 +58,11 @@ has debian_control => (
 
         my $control = Lintian::Debian::Control->new;
 
-        my $file = $self->patched->resolve_path('debian/control');
+        my $item = $self->patched->resolve_path('debian/control');
         return $control
-          unless defined $file;
+          unless defined $item;
 
-        $control->load($file);
+        $control->load($item);
 
         return $control;
     });

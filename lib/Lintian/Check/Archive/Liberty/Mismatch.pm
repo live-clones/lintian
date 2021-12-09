@@ -88,8 +88,7 @@ sub source {
         next
           if $source_liberty eq 'main' && $installable_liberty eq 'contrib';
 
-        my $control_item
-          = $self->processable->patched->resolve_path('debian/control');
+        my $control_item= $self->processable->debian_control->item;
         my $position = $installable_fields->position('Section');
         my $pointer = $control_item->pointer($position);
 
@@ -106,8 +105,7 @@ sub source {
         last
           if $inferior_liberty eq $source_liberty;
 
-        my $control_item
-          = $self->processable->patched->resolve_path('debian/control');
+        my $control_item= $self->processable->debian_control->item;
         my $position = $source_fields->position('Section');
         my $pointer = $control_item->pointer($position);
 

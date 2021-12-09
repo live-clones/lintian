@@ -571,8 +571,7 @@ sub source {
           | Lintian::Relation::VISIT_STOP_FIRST_MATCH
     );
 
-    my $control_item
-      =$self->processable->patched->resolve_path('debian/control');
+    my $control_item=$self->processable->debian_control->item;
 
     $self->pointed_hint('debhelper-compat-virtual-relation',
         $control_item->pointer, $virtual_compat)

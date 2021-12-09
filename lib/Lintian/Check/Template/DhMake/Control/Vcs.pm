@@ -31,11 +31,12 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-sub visit_patched_files {
-    my ($self, $item) = @_;
+sub source {
+    my ($self) = @_;
 
+    my $item = $self->processable->debian_control->item;
     return
-      unless $item->name eq 'debian/control';
+      unless defined $item;
 
     my @lines = split(/\n/, $item->decoded_utf8);
 

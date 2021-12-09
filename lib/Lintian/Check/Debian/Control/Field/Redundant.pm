@@ -42,8 +42,7 @@ sub source {
 
         for my $field ($installable_fields->names) {
 
-            my $control_item
-              = $self->processable->patched->resolve_path('debian/control');
+            my $control_item= $self->processable->debian_control->item;
             my $position = $installable_fields->position($field);
             my $pointer = $control_item->pointer($position);
 

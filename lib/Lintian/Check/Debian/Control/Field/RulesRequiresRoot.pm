@@ -44,8 +44,7 @@ sub source {
 
     for my $field (@r3_misspelled) {
 
-        my $control_item
-          = $self->processable->patched->resolve_path('debian/control');
+        my $control_item= $self->processable->debian_control->item;
         my $position = $source_fields->position($field);
         my $pointer = $control_item->pointer($position);
 
@@ -53,8 +52,7 @@ sub source {
             $pointer, $field);
     }
 
-    my $control_item
-      = $self->processable->patched->resolve_path('debian/control');
+    my $control_item= $self->processable->debian_control->item;
     my $position = $source_fields->position('Rules-Requires-Root');
     my $pointer = $control_item->pointer($position);
 

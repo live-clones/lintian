@@ -43,8 +43,7 @@ sub source {
     for my $installable ($control->installables) {
         my $installable_fields= $control->installable_fields($installable);
 
-        my $control_item
-          = $self->processable->patched->resolve_path('debian/control');
+        my $control_item= $self->processable->debian_control->item;
         my $position = $installable_fields->position('Package');
 
         $self->pointed_hint(

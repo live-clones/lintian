@@ -48,8 +48,7 @@ sub source {
 
         my $field = 'XS-Autobuild';
 
-        my $control_item
-          = $self->processable->patched->resolve_path('debian/control');
+        my $control_item= $self->processable->debian_control->item;
         my $position = $source_fields->position($field);
         my $pointer = $control_item->pointer($position);
 
