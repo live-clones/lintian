@@ -303,16 +303,21 @@ sub load {
         ($key, $remainder) = split($self->separator, $line, 2)
           if defined $self->separator;
 
-        my $value;
-        if (defined $self->accumulator) {
+        # do not autovivify; 'exists' below
+        my $previous;
+        $previous = $self->dataset->{$key}
+          if exists $self->dataset->{$key};
 
-            # do not autovivify; 'exists' below
-            my $previous;
-            $previous = $self->dataset->{$key}
-              if exists $self->dataset->{$key};
+        my $value;
+        if ($self->can('consumer')) {
+
+            $value = $self->consumer($key, $remainder, $previous);
+            next
+              unless defined $value;
+
+        } elsif ($self->can('accumulator') && defined $self->accumulator) {
 
             $value = $self->accumulator->($key, $remainder, $previous);
-
             next
               unless defined $value;
 

@@ -69,8 +69,6 @@ has separator => (
     is => 'rw',
     default => sub { qr/=/ });
 
-has accumulator => (is => 'rw');
-
 =back
 
 =head1 AUTHOR

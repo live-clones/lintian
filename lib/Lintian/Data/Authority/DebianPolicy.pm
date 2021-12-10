@@ -77,8 +77,6 @@ manual references.
 
 =item separator
 
-=item accumulator
-
 =cut
 
 has title => (
@@ -104,27 +102,24 @@ has separator => (
     is => 'rw',
     default => sub { qr/::/ });
 
-has accumulator => (
-    is => 'rw',
-    lazy => 1,
-    default => sub {
-        my ($self) = @_;
+=item consumer
 
-        return sub {
-            my ($key, $remainder, $previous) = @_;
+=cut
 
-            return undef
-              if defined $previous;
+sub consumer {
+    my ($self, $key, $remainder, $previous) = @_;
 
-            my ($title, $url)= split($self->separator, $remainder, $TWO_PARTS);
+    return undef
+      if defined $previous;
 
-            my %entry;
-            $entry{title} = $title;
-            $entry{url} = $url;
+    my ($title, $url)= split($self->separator, $remainder, $TWO_PARTS);
 
-            return \%entry;
-        };
-    });
+    my %entry;
+    $entry{title} = $title;
+    $entry{url} = $url;
+
+    return \%entry;
+}
 
 =item markdown_citation
 
