@@ -38,28 +38,6 @@ const my $HYPHEN => q{-};
 $ENV{LINTIAN_BASE} = realpath(THISDIR . '/..')
   // die encode_utf8('Cannot resolve LINTIAN_BASE');
 
-# generate main profile
-my $checkdir = "$ENV{LINTIAN_BASE}/lib/Lintian/Check";
-my @modulepaths = File::Find::Rule->file->name('*.pm')->in($checkdir);
-
-my @allchecks;
-for my $modulepath (@modulepaths) {
-    my $relative = path($modulepath)->relative($checkdir)->stringify;
-    my ($name) = ($relative =~ qr/^(.*)\.pm$/);
-
-    $name =~ s{([[:upper:]])}{-\L$1}g;
-    $name =~ s{^-}{};
-    $name =~ s{/-}{/}g;
-
-    push(@allchecks, $name);
-}
-
-generate_profile(
-    'debian', 'main',
-    {
-        'Enable-Tags-From-Check' => \@allchecks,
-    });
-
 # generate profile for FTP Master auto-reject
 my $auto_reject_url = 'https://ftp-master.debian.org/static/lintian.tags';
 my $contents = get($auto_reject_url);

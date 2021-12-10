@@ -33,6 +33,7 @@ use List::Compare;
 use List::SomeUtils qw(any none uniq first_value);
 use Path::Tiny;
 use POSIX qw(ENOENT);
+use Text::Glob qw(match_glob);
 use Unicode::UTF8 qw(encode_utf8);
 
 use Dpkg::Vendor qw(get_current_vendor get_vendor_info);
@@ -578,50 +579,71 @@ sub read_profile {
           . join($SPACE, @unknown_header_fields))
       if @unknown_header_fields;
 
-    my @enable_checks
+    my @enable_check_patterns
       = $header->trimmed_list('Enable-Tags-From-Check', $FIELD_SEPARATOR);
-    my @disable_checks
+    my @disable_check_patterns
       = $header->trimmed_list('Disable-Tags-From-Check', $FIELD_SEPARATOR);
 
-    # List::SomeUtils has 'duplicates' starting at 0.423
-    my @allchecks = (@enable_checks, @disable_checks);
-    my %count;
-    $count{$_}++ for @allchecks;
-    my @duplicate_checks = grep { $count{$_} > 1 } keys %count;
-    die encode_utf8(
-        "These checks appear in profile $profile_name more than once: "
-          . join($SPACE, @duplicate_checks))
-      if @duplicate_checks;
+    my @enable_checks;
+    for my $pattern (@enable_check_patterns) {
+
+        local $Text::Glob::strict_leading_dot = 0;
+        local $Text::Glob::strict_wildcard_slash = 0;
+
+        push(@enable_checks, match_glob($pattern, $self->known_checks));
+    }
+
+    my @disable_checks;
+    for my $pattern (@disable_check_patterns) {
+
+        local $Text::Glob::strict_leading_dot = 0;
+        local $Text::Glob::strict_wildcard_slash = 0;
+
+        push(@disable_checks, match_glob($pattern, $self->known_checks));
+    }
+
+    my @action_checks = uniq(@enable_checks, @disable_checks);
 
     # make sure checks are loaded
     my @needed_checks
-      = grep { !exists $self->check_module_by_name->{$_} } @allchecks;
+      = grep { !exists $self->check_module_by_name->{$_} } @action_checks;
 
     croak encode_utf8("Profile $profile_name references unknown checks: "
           . join($SPACE, @needed_checks))
       if @needed_checks;
 
-    my @enable_tags = $header->trimmed_list('Enable-Tags', $FIELD_SEPARATOR);
-    my @disable_tags = $header->trimmed_list('Disable-Tags', $FIELD_SEPARATOR);
+    my @enable_tag_patterns
+      = $header->trimmed_list('Enable-Tags', $FIELD_SEPARATOR);
+    my @disable_tag_patterns
+      = $header->trimmed_list('Disable-Tags', $FIELD_SEPARATOR);
 
-    # List::SomeUtils has 'duplicates' starting at 0.423
-    my @alltags = (@enable_tags, @disable_tags);
-    %count = ();
-    $count{$_}++ for @alltags;
-    my @duplicate_tags = grep { $count{$_} > 1 } keys %count;
-    die encode_utf8(
-        "These tags appear in in profile $profile_name more than once: "
-          . join($SPACE, @duplicate_tags))
-      if @duplicate_tags;
+    my @enable_tags;
+    for my $pattern (@enable_tag_patterns) {
+
+        local $Text::Glob::strict_leading_dot = 0;
+        local $Text::Glob::strict_wildcard_slash = 0;
+
+        push(@enable_tags, match_glob($pattern, $self->known_tags));
+    }
+
+    my @disable_tags;
+    for my $pattern (@disable_tag_patterns) {
+
+        local $Text::Glob::strict_leading_dot = 0;
+        local $Text::Glob::strict_wildcard_slash = 0;
+
+        push(@disable_tags, match_glob($pattern, $self->known_tags));
+    }
 
     push(@enable_tags, @{$self->tag_names_for_check->{$_} // []})
-      for @enable_checks;
+      for uniq @enable_checks;
 
     push(@disable_tags, @{$self->tag_names_for_check->{$_} // []})
-      for @disable_checks;
+      for uniq @disable_checks;
 
-    $self->enable_tag($_) for @enable_tags;
-    $self->disable_tag($_) for @disable_tags;
+    # disabling after enabling
+    $self->enable_tag($_) for uniq @enable_tags;
+    $self->disable_tag($_) for uniq @disable_tags;
 
     my $section_number = 2;
 
