@@ -38,6 +38,7 @@ use Lintian::Data::Authority::JavaPolicy;
 use Lintian::Data::Authority::LintianManual;
 use Lintian::Data::Authority::MenuPolicy;
 use Lintian::Data::Authority::MenuManual;
+use Lintian::Data::Authority::NewMaintainer;
 use Lintian::Data::Authority::PerlPolicy;
 use Lintian::Data::Authority::PythonPolicy;
 use Lintian::Data::Authority::VimPolicy;
@@ -129,10 +130,10 @@ sub all_sources {
         $self->filesystem_hierarchy_standard,$self->fonts,
         $self->hardening_buildflags,$self->java_policy,
         $self->lintian_manual,$self->menu_policy,
-        $self->menu_manual,$self->perl_policy,
-        $self->policy_manual,$self->policy_releases,
-        $self->python_policy,$self->style_sheet,
-        $self->vim_policy
+        $self->menu_manual,$self->new_maintainer,
+        $self->perl_policy,$self->policy_manual,
+        $self->policy_releases,$self->python_policy,
+        $self->style_sheet,$self->vim_policy
     );
 
     return @sources;
@@ -146,12 +147,13 @@ sub markdown_authority_reference {
     my ($self, $volume, $section) = @_;
 
     my @MARKDOWN_CAPABLE = (
-        $self->menu_policy,$self->perl_policy,
-        $self->python_policy,$self->java_policy,
-        $self->vim_policy,$self->lintian_manual,
-        $self->developer_reference,$self->policy_manual,
-        $self->debconf_specification,$self->menu_manual,
-        $self->doc_base_manual,$self->filesystem_hierarchy_standard,
+        $self->new_maintainer,$self->menu_policy,
+        $self->perl_policy,$self->python_policy,
+        $self->java_policy,$self->vim_policy,
+        $self->lintian_manual,$self->developer_reference,
+        $self->policy_manual,$self->debconf_specification,
+        $self->menu_manual,$self->doc_base_manual,
+        $self->filesystem_hierarchy_standard,
     );
 
     my %by_shorthand = map { $_->shorthand => $_ } @MARKDOWN_CAPABLE;
@@ -383,6 +385,22 @@ has menu_policy => (
         my ($self) = @_;
 
         my $manual = Lintian::Data::Authority::MenuPolicy->new;
+        $manual->load($self->data_paths, $self->vendor);
+
+        return $manual;
+    });
+
+=item menu_policy
+
+=cut
+
+has new_maintainer => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        my $manual = Lintian::Data::Authority::NewMaintainer->new;
         $manual->load($self->data_paths, $self->vendor);
 
         return $manual;

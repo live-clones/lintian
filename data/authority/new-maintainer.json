@@ -1,0 +1,463 @@
+{
+   "preamble" : {
+      "cargo" : "sections",
+      "title" : "New Maintainer's Guide"
+   },
+   "sections" : [
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.html",
+         "key" : "_",
+         "title" : "Debian New Maintainers' Guide"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmlstart.en.html",
+         "key" : "1",
+         "title" : "Getting started The Right Way"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmlstart.en.html#socialdynamics",
+         "key" : "1.1",
+         "title" : "Social dynamics of Debian"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmlstart.en.html#needprogs",
+         "key" : "1.2",
+         "title" : "Programs needed for development"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmlstart.en.html#needdocs",
+         "key" : "1.3",
+         "title" : "Documentation needed for development"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmlstart.en.html#helpme",
+         "key" : "1.4",
+         "title" : "Where to ask for help"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmlfirst.en.html",
+         "key" : "2",
+         "title" : "First steps"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmlfirst.en.html#workflow",
+         "key" : "2.1",
+         "title" : "Debian package building workflow"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmlfirst.en.html#choose",
+         "key" : "2.2",
+         "title" : "Choose your program"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmlfirst.en.html#getit",
+         "key" : "2.3",
+         "title" : "Get the program, and try it out"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmlfirst.en.html#simplemake",
+         "key" : "2.4",
+         "title" : "Simple build systems"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmlfirst.en.html#portable",
+         "key" : "2.5",
+         "title" : "Popular portable build systems"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmlfirst.en.html#namever",
+         "key" : "2.6",
+         "title" : "Package name and version"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmlfirst.en.html#dh-make",
+         "key" : "2.7",
+         "title" : "Setting up dh_make"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmlfirst.en.html#non-native-dh-make",
+         "key" : "2.8",
+         "title" : "Initial non-native Debian package"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmlmodify.en.html",
+         "key" : "3",
+         "title" : "Modifying the source"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmlmodify.en.html#quiltrc",
+         "key" : "3.1",
+         "title" : "Setting up quilt"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmlmodify.en.html#fixupstream",
+         "key" : "3.2",
+         "title" : "Fixing upstream bugs"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmlmodify.en.html#destdir",
+         "key" : "3.3",
+         "title" : "Installation of files to their destination"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmlmodify.en.html#difflibs",
+         "key" : "3.4",
+         "title" : "Differing libraries"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmldreq.en.html",
+         "key" : "4",
+         "title" : "Required files under the debian directory"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmldreq.en.html#control",
+         "key" : "4.1",
+         "title" : "control"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmldreq.en.html#copyright",
+         "key" : "4.2",
+         "title" : "copyright"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmldreq.en.html#changelog",
+         "key" : "4.3",
+         "title" : "changelog"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmldreq.en.html#rules",
+         "key" : "4.4",
+         "title" : "rules"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmldreq.en.html#targets",
+         "key" : "4.4.1",
+         "title" : "Targets of the rules file"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmldreq.en.html#defaultrules",
+         "key" : "4.4.2",
+         "title" : "Default rules file"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmldreq.en.html#customrules",
+         "key" : "4.4.3",
+         "title" : "Customization of rules file"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmldother.en.html",
+         "key" : "5",
+         "title" : "Other files under the debian directory"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmldother.en.html#readme",
+         "key" : "5.1",
+         "title" : "README.Debian"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmldother.en.html#compat",
+         "key" : "5.2",
+         "title" : "compat"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmldother.en.html#conffiles",
+         "key" : "5.3",
+         "title" : "conffiles"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmldother.en.html#crond",
+         "key" : "5.4",
+         "title" : "package.cron.*"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmldother.en.html#dirs",
+         "key" : "5.5",
+         "title" : "dirs"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmldother.en.html#doc-base",
+         "key" : "5.6",
+         "title" : "package.doc-base"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmldother.en.html#docs",
+         "key" : "5.7",
+         "title" : "docs"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmldother.en.html#emacsen",
+         "key" : "5.8",
+         "title" : "emacsen-*"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmldother.en.html#examples",
+         "key" : "5.9",
+         "title" : "package.examples"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmldother.en.html#initd",
+         "key" : "5.10",
+         "title" : "package.init and package.default"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmldother.en.html#install",
+         "key" : "5.11",
+         "title" : "install"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmldother.en.html#info",
+         "key" : "5.12",
+         "title" : "package.info"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmldother.en.html#links",
+         "key" : "5.13",
+         "title" : "package.links"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmldother.en.html#lintian",
+         "key" : "5.14",
+         "title" : "{package.,source/}lintian-overrides"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmldother.en.html#manpage",
+         "key" : "5.15",
+         "title" : "manpage.*"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmldother.en.html#manpage1",
+         "key" : "5.15.1",
+         "title" : "manpage.1.ex"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmldother.en.html#manpagesgml",
+         "key" : "5.15.2",
+         "title" : "manpage.sgml.ex"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmldother.en.html#manpagexml",
+         "key" : "5.15.3",
+         "title" : "manpage.xml.ex"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmldother.en.html#manpages",
+         "key" : "5.16",
+         "title" : "package.manpages"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmldother.en.html#news",
+         "key" : "5.17",
+         "title" : "NEWS"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmldother.en.html#maintscripts",
+         "key" : "5.18",
+         "title" : "{pre,post}{inst,rm}"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmldother.en.html#symbols",
+         "key" : "5.19",
+         "title" : "package.symbols"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmldother.en.html#todo",
+         "key" : "5.20",
+         "title" : "TODO"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmldother.en.html#watch",
+         "key" : "5.21",
+         "title" : "watch"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmldother.en.html#sourcef",
+         "key" : "5.22",
+         "title" : "source/format"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmldother.en.html#sourcel",
+         "key" : "5.23",
+         "title" : "source/local-options"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmldother.en.html#sourceopt",
+         "key" : "5.24",
+         "title" : "source/options"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmldother.en.html#patches",
+         "key" : "5.25",
+         "title" : "patches/*"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmlbuild.en.html",
+         "key" : "6",
+         "title" : "Building the package"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmlbuild.en.html#completebuild",
+         "key" : "6.1",
+         "title" : "Complete (re)build"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmlbuild.en.html#autobuilder",
+         "key" : "6.2",
+         "title" : "Autobuilder"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmlbuild.en.html#debuild",
+         "key" : "6.3",
+         "title" : "debuild command"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmlbuild.en.html#pbuilder",
+         "key" : "6.4",
+         "title" : "pbuilder package"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmlbuild.en.html#git-buildpackage",
+         "key" : "6.5",
+         "title" : "git-buildpackage command and similar"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmlbuild.en.html#quickrebuild",
+         "key" : "6.6",
+         "title" : "Quick rebuild"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmlbuild.en.html#hierarchy",
+         "key" : "6.7",
+         "title" : "Command hierarchy"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmlcheckit.en.html",
+         "key" : "7",
+         "title" : "Checking the package for errors"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmlcheckit.en.html#inadvent",
+         "key" : "7.1",
+         "title" : "Suspicious changes"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmlcheckit.en.html#pinstall",
+         "key" : "7.2",
+         "title" : "Verifying a package's installation"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmlcheckit.en.html#pmaintscripts",
+         "key" : "7.3",
+         "title" : "Verifying a package's maintainer scripts"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmlcheckit.en.html#lintians",
+         "key" : "7.4",
+         "title" : "Using lintian"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmlcheckit.en.html#debc",
+         "key" : "7.5",
+         "title" : "The debc command"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmlcheckit.en.html#debdiff",
+         "key" : "7.6",
+         "title" : "The debdiff command"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmlcheckit.en.html#interdiff",
+         "key" : "7.7",
+         "title" : "The interdiff command"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmlcheckit.en.html#mc",
+         "key" : "7.8",
+         "title" : "The mc command"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmlupdate.en.html",
+         "key" : "8",
+         "title" : "Updating the package"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmlupdate.en.html#newrevision",
+         "key" : "8.1",
+         "title" : "New Debian revision"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmlupdate.en.html#inspectnewupstream",
+         "key" : "8.2",
+         "title" : "Inspection of the new upstream release"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmlupdate.en.html#newupstream",
+         "key" : "8.3",
+         "title" : "New upstream release"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmlupdate.en.html#packagestyle",
+         "key" : "8.4",
+         "title" : "Updating the packaging style"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmlupdate.en.html#utf8",
+         "key" : "8.5",
+         "title" : "UTF-8 conversion"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmlupdate.en.html#reminders",
+         "key" : "8.6",
+         "title" : "Reminders for updating packages"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmlupload.en.html",
+         "key" : "9",
+         "title" : "Uploading the package"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmlupload.en.html#upload-debian",
+         "key" : "9.1",
+         "title" : "Uploading to the Debian archive"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmlupload.en.html#option-sa",
+         "key" : "9.2",
+         "title" : "Including orig.tar.gz for upload"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmlupload.en.html#skipped-uploads",
+         "key" : "9.3",
+         "title" : "Skipped uploads"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmladvanced.en.html",
+         "key" : "A",
+         "title" : "Advanced packaging"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmladvanced.en.html#library",
+         "key" : "A.1",
+         "title" : "Shared libraries"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmladvanced.en.html#librarysymbols",
+         "key" : "A.2",
+         "title" : "Managing debian/package.symbols"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmladvanced.en.html#multiarch",
+         "key" : "A.3",
+         "title" : "Multiarch"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmladvanced.en.html#librarypackage",
+         "key" : "A.4",
+         "title" : "Building a shared library package"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/manuals/maint-guide/index.htmladvanced.en.html#native-dh-make",
+         "key" : "A.5",
+         "title" : "Native Debian package"
+      }
+   ]
+}
