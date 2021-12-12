@@ -34,14 +34,14 @@ generic-dh-make-2008 (source): debian-watch-file-is-missing
 generic-dh-make-2008 (source): debian-rules-missing-recommended-target build-indep
 generic-dh-make-2008 (source): debian-rules-missing-recommended-target build-arch
 generic-dh-make-2008 (source): bad-homepage <insert the upstream URL, if relevant>
-generic-dh-make-2008 (binary): wrong-bug-number-in-closes #nnnn in the installed changelog (line 3)
+generic-dh-make-2008 (binary): wrong-bug-number-in-closes #nnnn [usr/share/doc/generic-dh-make-2008/changelog.Debian.gz:3]
 generic-dh-make-2008 (binary): superfluous-clutter-in-homepage <insert the upstream URL, if relevant>
 generic-dh-make-2008 (binary): section-is-dh_make-template
 generic-dh-make-2008 (binary): readme-debian-contains-debmake-template [usr/share/doc/generic-dh-make-2008/README.Debian]
 generic-dh-make-2008 (binary): package-contains-no-arch-dependent-files
 generic-dh-make-2008 (binary): package-contains-empty-directory usr/sbin/
 generic-dh-make-2008 (binary): package-contains-empty-directory usr/bin/
-generic-dh-make-2008 (binary): initial-upload-closes-no-bugs
+generic-dh-make-2008 (binary): initial-upload-closes-no-bugs [usr/share/doc/generic-dh-make-2008/changelog.Debian.gz:1]
 generic-dh-make-2008 (binary): helper-templates-in-copyright
 generic-dh-make-2008 (binary): extended-description-is-probably-too-short
 generic-dh-make-2008 (binary): empty-binary-package
@@ -50,5 +50,5 @@ generic-dh-make-2008 (binary): copyright-without-copyright-notice
 generic-dh-make-2008 (binary): copyright-with-old-dh-make-debian-copyright
 generic-dh-make-2008 (binary): copyright-has-url-from-dh_make-boilerplate
 generic-dh-make-2008 (binary): copyright-contains-dh_make-todo-boilerplate
-generic-dh-make-2008 (binary): changelog-is-dh_make-template
+generic-dh-make-2008 (binary): changelog-is-dh_make-template [usr/share/doc/generic-dh-make-2008/changelog.Debian.gz:1]
 generic-dh-make-2008 (binary): bad-homepage <insert the upstream URL, if relevant>

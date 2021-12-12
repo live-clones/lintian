@@ -34,11 +34,11 @@ use namespace::clean;
 with
   'Lintian::Processable',
   'Lintian::Processable::Diffstat',
-  'Lintian::Processable::Changelog',
   'Lintian::Processable::Changelog::Version',
   'Lintian::Processable::Debian::Control',
   'Lintian::Processable::Fields::Files',
   'Lintian::Processable::IsNonFree',
+  'Lintian::Processable::Source::Changelog',
   'Lintian::Processable::Source::Components',
   'Lintian::Processable::Source::Format',
   'Lintian::Processable::Source::Orig',

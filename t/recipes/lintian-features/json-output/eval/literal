@@ -7,6 +7,13 @@
                "hints" : [
                   {
                      "note" : "0.0.1-1 -> 1.0+dsfg-1 (missing) -> 1.0+dsfg-1.1",
+                     "pointer" : {
+                        "item" : {
+                           "index" : "json-output_1.0+dsfg-1.1.dsc (patched)",
+                           "line_position" : 1,
+                           "name" : "debian/changelog"
+                        }
+                     },
                      "tag" : "changelog-file-missing-explicit-entry",
                      "visibility" : "warning"
                   },

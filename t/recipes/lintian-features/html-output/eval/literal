@@ -618,7 +618,7 @@ div.clear {
 
       <span class="tinycode" id="code-W">W</span>
       <span class="tinyhint"><a href="https://lintian.debian.org/tags/changelog-file-missing-explicit-entry">changelog-file-missing-explicit-entry</a></span>
-      <span class="tinycontext">0.0.1-1 -&gt; 1.0+dsfg-1 (missing) -&gt; 1.0+dsfg-1.1</span>
+      <span class="tinycontext">0.0.1-1 -&gt; 1.0+dsfg-1 (missing) -&gt; 1.0+dsfg-1.1 [debian/changelog:1]</span>
 
     </li>
     <li class="hintitem">

@@ -34,7 +34,7 @@ use namespace::clean;
 
 with
   'Lintian::Processable',
-  'Lintian::Processable::Changelog',
+  'Lintian::Processable::Installable::Changelog',
   'Lintian::Processable::Installable::Class',
   'Lintian::Processable::Installable::Conffiles',
   'Lintian::Processable::Installable::Control',
