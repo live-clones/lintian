@@ -167,8 +167,8 @@ sub detect_privacy_breach {
             $lowercase =~ s/$x//gs;
         }
 
-        # try generic fragment tagging
-        for my $keyword (keys %{$self->PRIVACY_BREAKER_FRAGMENTS}) {
+        # keep sorted; otherwise 'exists' below produces inconsistent output
+        for my $keyword (sort keys %{$self->PRIVACY_BREAKER_FRAGMENTS}) {
 
             if ($lowercase =~ / \Q$keyword\E /msx) {
                 my $keyvalue= $self->PRIVACY_BREAKER_FRAGMENTS->{$keyword};
