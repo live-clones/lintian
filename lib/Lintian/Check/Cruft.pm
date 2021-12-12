@@ -69,35 +69,6 @@ const my $LICENSE_CHECK_DATA_FIELDS => 5;
 const my $ITEM_NOT_FOUND => -1;
 const my $SKIP_HTML => -1;
 
-# prebuilt-file or forbidden file type
-has RFC_WHITELIST => (
-    is => 'rw',
-    lazy => 1,
-    default => sub {
-        my ($self) = @_;
-        return $self->data->load(
-            'cruft/rfc-whitelist',
-            qr/\s*\~\~\s*/,
-            sub {
-                return qr/$_[0]/xms;
-            });
-    });
-
-# get browserified regexp
-has BROWSERIFY_REGEX => (
-    is => 'rw',
-    lazy => 1,
-    default => sub {
-        my ($self) = @_;
-
-        return $self->data->load(
-            'cruft/browserify-regex',
-            qr/\s*\~\~\s*/,
-            sub {
-                return qr/$_[1]/xms;
-            });
-    });
-
 my %NVIDIA_LICENSE = (
     keywords => [qw{license intellectual retain property}],
     sentences =>[
@@ -205,48 +176,42 @@ has GFDL_FRAGMENTS => (
     default => sub {
         my ($self) = @_;
 
-        return $self->data->load(
-            'cruft/gfdl-license-fragments-checks',
-            qr/\s*\~\~\s*/,
-            sub {
-                my ($gfdlsectionsregex,$secondpart) = @_;
+        my %gfdl_fragments;
 
-                # allow empty parameters
-                $gfdlsectionsregex //= $EMPTY;
+        my $data = $self->data->load('cruft/gfdl-license-fragments-checks',
+            qr/\s*\~\~\s*/);
 
-                # trim both ends
-                $gfdlsectionsregex =~ s/^\s+|\s+$//g;
+        for my $gfdlsectionsregex ($data->all) {
 
-                $secondpart //= $EMPTY;
-                my ($acceptonlyinfile,$applytag)
-                  = split(/\s*\~\~\s*/, $secondpart, 2);
+            my $secondpart = $data->value($gfdlsectionsregex);
 
-                $acceptonlyinfile //= $EMPTY;
-                $applytag //= $EMPTY;
+            # allow empty parameters
+            $secondpart //= $EMPTY;
+            my ($acceptonlyinfile,$applytag)
+              = split(/\s*\~\~\s*/, $secondpart, 2);
 
-                # trim both ends
-                $acceptonlyinfile =~ s/^\s+|\s+$//g;
-                $applytag =~ s/^\s+|\s+$//g;
+            $acceptonlyinfile //= $EMPTY;
+            $applytag //= $EMPTY;
 
-                # empty first field is everything
-                if (length($gfdlsectionsregex) == 0) {
-                    $gfdlsectionsregex = $DOT . $ASTERISK;
-                }
-                # empty regname is none
-                if (length($acceptonlyinfile) == 0) {
-                    $acceptonlyinfile = $DOT . $ASTERISK;
-                }
+            # trim both ends
+            $acceptonlyinfile =~ s/^\s+|\s+$//g;
+            $applytag =~ s/^\s+|\s+$//g;
 
-                my %ret = (
-                    'gfdlsectionsregex'   => qr/$gfdlsectionsregex/xis,
-                    'acceptonlyinfile' => qr/$acceptonlyinfile/xs,
-                );
-                unless ($applytag eq $EMPTY) {
-                    $ret{'tag'} = $applytag;
-                }
+            # accept all files if empty
+            $acceptonlyinfile ||= $DOT . $ASTERISK;
 
-                return \%ret;
-            });
+            my %ret = (
+                'gfdlsectionsregex'   => qr/$gfdlsectionsregex/xis,
+                'acceptonlyinfile' => qr/$acceptonlyinfile/xs,
+            );
+
+            $ret{'tag'} = $applytag
+              if length $applytag;
+
+            $gfdl_fragments{$gfdlsectionsregex} = \%ret;
+        }
+
+        return \%gfdl_fragments;
     });
 
 # Directory checks.  These regexes match a directory that shouldn't be in the
@@ -793,10 +758,15 @@ sub detect_browserify {
     my ($self, $item, $lowercase) = @_;
 
     $lowercase =~ s/\n/ /msg;
-    for my $browserifyregex ($self->BROWSERIFY_REGEX->all) {
 
-        my $regex = $self->BROWSERIFY_REGEX->value($browserifyregex);
-        if ($lowercase =~ m{$regex}) {
+    # get browserified regexp
+    my $BROWSERIFY_REGEX
+      = $self->data->load('cruft/browserify-regex',qr/\s*\~\~\s*/);
+
+    for my $condition ($BROWSERIFY_REGEX->all) {
+
+        my $pattern = $BROWSERIFY_REGEX->value($condition);
+        if ($lowercase =~ m{$pattern}msx) {
 
             my $extra = (defined $1) ? 'code fragment:'.$1 : $EMPTY;
             $self->hint('source-contains-browserified-javascript',
@@ -967,9 +937,9 @@ sub check_gfdl_license_problem {
 
     # GFDL license, assume it is bad unless it
     # explicitly states it has no "bad sections".
-    for my $gfdl_fragment ($self->GFDL_FRAGMENTS->all) {
+    for my $gfdl_fragment (keys %{$self->GFDL_FRAGMENTS}) {
 
-        my $gfdl_data = $self->GFDL_FRAGMENTS->value($gfdl_fragment);
+        my $gfdl_data = $self->GFDL_FRAGMENTS->{$gfdl_fragment};
         my $gfdlsectionsregex = $gfdl_data->{'gfdlsectionsregex'};
         if ($gfdlsections =~ m{$gfdlsectionsregex}) {
 
@@ -1007,11 +977,14 @@ sub rfc_whitelist_filename {
 
     my $lcname = lc($item->basename);
 
-    my @values
-      = map { $self->RFC_WHITELIST->value($_) } $self->RFC_WHITELIST->all;
+    # prebuilt-file or forbidden file type
+    # specified separator protects against spaces in pattern
+    my $RFC_WHITELIST= $self->data->load('cruft/rfc-whitelist',qr/\s*\~\~\s*/);
+
+    my @patterns = $RFC_WHITELIST->all;
 
     return 0
-      if any { $lcname =~ m/ $_ /xms } @values;
+      if any { $lcname =~ m/ $_ /xms } @patterns;
 
     $self->hint($tag_name, $item->name);
 

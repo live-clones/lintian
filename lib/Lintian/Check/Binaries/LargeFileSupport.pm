@@ -40,8 +40,16 @@ has ARCH_REGEX => (
     default => sub {
         my ($self) = @_;
 
-        return $self->data->load('binaries/arch-regex', qr/\s*\~\~/,
-            sub { return qr/$_[1]/ });
+        my %arch_regex;
+
+        my $data = $self->data->load('binaries/arch-regex', qr/\s*\~\~/);
+        for my $architecture ($data->all) {
+
+            my $pattern = $data->value($architecture);
+            $arch_regex{$architecture} = qr{$pattern};
+        }
+
+        return \%arch_regex;
     });
 
 has LFS_SYMBOLS => (
@@ -66,7 +74,7 @@ sub visit_installed_files {
 
     # Only 32bit ELF binaries can lack LFS.
     return
-      unless $item->file_type =~ $self->ARCH_REGEX->value('32');
+      unless $item->file_type =~ $self->ARCH_REGEX->{'32'};
 
     return
       if $item->name =~ m{^usr/lib/debug/};

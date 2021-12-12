@@ -26,76 +26,61 @@ use utf8;
 
 use Const::Fast;
 
+const my $VERTICAL_BAR => q{|};
+
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
 
-const my $VERTICAL_BAR => q{|};
-
-has COMPRESS_FILE_EXTENSIONS => (
-    is => 'rw',
-    lazy => 1,
-    default => sub {
-        my ($self) = @_;
-
-        return $self->data->load('files/compressed-file-extensions',
-            qr/\s++/,sub { return qr/\Q$_[0]\E/ });
-    });
-
-# an OR (|) regex of all compressed extension
-has COMPRESS_FILE_EXTENSIONS_OR_ALL => (
-    is => 'rw',
-    lazy => 1,
-    default => sub {
-        my ($self) = @_;
-
-        my $text = join($VERTICAL_BAR,
-            map {$self->COMPRESS_FILE_EXTENSIONS->value($_) }
-              $self->COMPRESS_FILE_EXTENSIONS->all);
-
-        return qr/$text/;
-    });
-
-# vcs control files
-has VCS_FILES => (
-    is => 'rw',
-    lazy => 1,
-    default => sub {
-        my ($self) = @_;
-
-        my $regex = $self->COMPRESS_FILE_EXTENSIONS_OR_ALL;
-        return $self->data->load(
-            'files/vcs-control-files',
-            qr/\s++/,
-            sub {
-                my $regexp = $_[0];
-                $regexp=~ s/\$[{]COMPRESS_EXT[}]/$regex/g;
-                return qr/(?:$regexp)/x;
-            });
-    });
-
 # an OR (|) regex of all vcs files
-has VCS_FILES_OR_ALL => (
+has VCS_PATTERNS_ORED => (
     is => 'rw',
     lazy => 1,
     default => sub {
         my ($self) = @_;
 
-        my $text = join($VERTICAL_BAR,
-            map { $self->VCS_FILES->value($_) } $self->VCS_FILES->all);
-        return qr/$text/;
+        my @vcs_patterns;
+
+        my $COMPRESS_FILE_EXTENSIONS
+          = $self->data->load('files/compressed-file-extensions',qr/\s+/);
+
+        my @quoted_extension_patterns
+          = map { quotemeta } $COMPRESS_FILE_EXTENSIONS->all;
+        my $ored_extension_patterns= ored_patterns(@quoted_extension_patterns);
+
+        my $VCS_CONTROL_PATTERNS
+          = $self->data->load('files/vcs-control-files', qr/\s+/);
+
+        for my $pattern ($VCS_CONTROL_PATTERNS->all) {
+            $pattern =~ s/\$[{]COMPRESS_EXT[}]/(?:$ored_extension_patterns)/g;
+            push(@vcs_patterns, $pattern);
+        }
+
+        my $ored_vcs_patterns = ored_patterns(@vcs_patterns);
+
+        return $ored_vcs_patterns;
     });
+
+sub ored_patterns {
+    my (@patterns) = @_;
+
+    my @protected = map { "(?:$_)" } @patterns;
+
+    my $ored = join($VERTICAL_BAR, @protected);
+
+    return $ored;
+}
 
 sub visit_installed_files {
     my ($self, $file) = @_;
 
     if ($file->is_file) {
 
-        my $regex = $self->VCS_FILES_OR_ALL;
+        my $pattern = $self->VCS_PATTERNS_ORED;
 
         $self->hint('package-contains-vcs-control-file', $file->name)
-          if $file->name =~ m{$regex}
+          if $file->name =~ m{$pattern}x
           && $file->name !~ m{^usr/share/cargo/registry/};
 
         if ($file->name =~ m/svn-commit.*\.tmp$/) {

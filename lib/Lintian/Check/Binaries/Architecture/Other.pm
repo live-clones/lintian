@@ -44,8 +44,16 @@ has ARCH_REGEX => (
     default => sub {
         my ($self) = @_;
 
-        return $self->data->load('binaries/arch-regex', qr/\s*\~\~/,
-            sub { return qr/$_[1]/ });
+        my %arch_regex;
+
+        my $data = $self->data->load('binaries/arch-regex', qr/\s*\~\~/);
+        for my $architecture ($data->all) {
+
+            my $pattern = $data->value($architecture);
+            $arch_regex{$architecture} = qr{$pattern};
+        }
+
+        return \%arch_regex;
     });
 
 has ARCH_64BIT_EQUIVS => (
@@ -67,8 +75,8 @@ sub from_other_architecture {
 
     # If it matches the architecture regex, it is good
     return 0
-      if $self->ARCH_REGEX->recognizes($architecture)
-      && $item->file_type =~ $self->ARCH_REGEX->value($architecture);
+      if exists $self->ARCH_REGEX->{$architecture}
+      && $item->file_type =~ $self->ARCH_REGEX->{$architecture};
 
     # Special case - "old" multi-arch dirs
     if (   $item->name =~ m{(?:^|/)lib(x?\d\d)/}
@@ -77,8 +85,8 @@ sub from_other_architecture {
         my $bus_width = $1;
 
         return 0
-          if $self->ARCH_REGEX->value($bus_width)
-          && $item->file_type =~ $self->ARCH_REGEX->value($bus_width);
+          if exists $self->ARCH_REGEX->{$bus_width}
+          && $item->file_type =~ $self->ARCH_REGEX->{$bus_width};
     }
 
     # Detached debug symbols could be for a biarch library.
@@ -96,13 +104,13 @@ sub from_other_architecture {
         my $equivalent_64 = $self->ARCH_64BIT_EQUIVS->value($architecture);
 
         return 0
-          if $item->file_type =~ $self->ARCH_REGEX->value($equivalent_64);
+          if $item->file_type =~ $self->ARCH_REGEX->{$equivalent_64};
     }
 
     # Ignore i386 binaries in amd64 packages for right now.
     return 0
       if $architecture eq 'amd64'
-      && $item->file_type =~ $self->ARCH_REGEX->value('i386');
+      && $item->file_type =~ $self->ARCH_REGEX->{i386};
 
     return 1;
 }

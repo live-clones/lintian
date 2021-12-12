@@ -315,12 +315,6 @@ sub load {
             next
               unless defined $value;
 
-        } elsif ($self->can('accumulator') && defined $self->accumulator) {
-
-            $value = $self->accumulator->($key, $remainder, $previous);
-            next
-              unless defined $value;
-
         } else {
             $value = $remainder;
         }

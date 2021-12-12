@@ -42,28 +42,28 @@ has PKG_CONFIG_BAD_REGEX => (
     default => sub {
         my ($self) = @_;
 
-        return $self->data->load('files/pkg-config-bad-regex',
-            qr/~~~~~/,sub { return  qr/$_[0]/xsm;});
+        return $self->data->load('files/pkg-config-bad-regex',qr/~~~~~/);
     });
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     my $architecture = $self->processable->fields->value('Architecture');
 
     # arch-indep pkgconfig
-    if (   $file->is_regular_file
-        && $file->name=~ m{^usr/(lib(/[^/]+)?|share)/pkgconfig/[^/]+\.pc$}){
+    if (   $item->is_regular_file
+        && $item->name=~ m{^usr/(lib(/[^/]+)?|share)/pkgconfig/[^/]+\.pc$}){
 
         my $prefix = $1;
         my $pkg_config_arch = $2 // $EMPTY;
         $pkg_config_arch =~ s{\A/}{}ms;
 
-        $self->hint('pkg-config-unavailable-for-cross-compilation',$file->name)
+        $self->pointed_hint('pkg-config-unavailable-for-cross-compilation',
+            $item->pointer)
           if $prefix eq 'lib';
 
-        open(my $fd, '<:raw', $file->unpacked_path)
-          or die encode_utf8('Cannot open ' . $file->unpacked_path);
+        open(my $fd, '<:raw', $item->unpacked_path)
+          or die encode_utf8('Cannot open ' . $item->unpacked_path);
 
         my $sfd = Lintian::SlidingWindow->new;
         $sfd->handle($fd);
@@ -86,24 +86,22 @@ sub visit_installed_files {
 
                 if ($block =~ m{\W\Q$madir\E(\W|$)}xms) {
 
-                    $self->hint('pkg-config-multi-arch-wrong-dir',
-                        $file->name,
+                    $self->pointed_hint('pkg-config-multi-arch-wrong-dir',
+                        $item->pointer,
                         'full text contains architecture specific dir',$madir);
 
                     last;
                 }
             }
 
-            foreach my $taboo ($self->PKG_CONFIG_BAD_REGEX->all) {
+            for my $pattern ($self->PKG_CONFIG_BAD_REGEX->all) {
 
-                my $regex = $self->PKG_CONFIG_BAD_REGEX->value($taboo);
+                while($block =~ m{$pattern}xmsg) {
 
-                while($block =~ m{$regex}xmsg) {
-                    my $extra = $1 // $EMPTY;
-                    $extra =~ s/\s+/ /g;
+                    my $context = $1;
 
-                    $self->hint('pkg-config-bad-directive', $file->name,
-                        $extra);
+                    $self->pointed_hint('pkg-config-bad-directive',
+                        $item->pointer,$context);
                 }
             }
         }

@@ -41,20 +41,27 @@ has LENNA_BLACKLIST => (
     default => sub {
         my ($self) = @_;
 
-        return $self->data->load(
-            'files/banned/lenna/blacklist',
-            qr/ \s* ~~ \s* /x,
-            sub {
-                my ($sha1, $sha256, $name, $link)
-                  = split(/ \s* ~~ \s* /msx, $_[1]);
+        my %blacklist;
 
-                return {
-                    'sha1'   => $sha1,
-                    'sha256' => $sha256,
-                    'name'   => $name,
-                    'link'   => $link,
-                };
-            });
+        my $data = $self->data->load('files/banned/lenna/blacklist',
+            qr/ \s* ~~ \s* /x);
+
+        for my $md5sum ($data->all) {
+
+            my $value = $data->value($md5sum);
+
+            my ($sha1, $sha256, $name, $link)
+              = split(/ \s* ~~ \s* /msx, $value);
+
+            $blacklist{$md5sum} = {
+                'sha1'   => $sha1,
+                'sha256' => $sha256,
+                'name'   => $name,
+                'link'   => $link,
+            };
+        }
+
+        return \%blacklist;
     });
 
 # known good files
@@ -84,9 +91,9 @@ sub visit_patched_files {
       if $self->LENNA_WHITELIST->recognizes($item->md5sum);
 
     # Lena Söderberg image
-    $self->hint('license-problem-non-free-img-lenna', $item->name)
+    $self->pointed_hint('license-problem-non-free-img-lenna', $item->pointer)
       if $item->basename =~ / ( \b | _ ) lenn?a ( \b | _ ) /ix
-      || $self->LENNA_BLACKLIST->recognizes($item->md5sum);
+      || exists $self->LENNA_BLACKLIST->{$item->md5sum};
 
     return;
 }

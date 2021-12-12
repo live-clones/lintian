@@ -35,34 +35,40 @@ use Const::Fast;
 use List::SomeUtils qw(any);
 use Unicode::UTF8 qw(encode_utf8);
 
+const my $MD5SUM_DATA_FIELDS => 5;
+
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
 
-const my $MD5SUM_DATA_FIELDS => 5;
-
 sub _md5sum_based_lintian_data {
     my ($self, $filename) = @_;
 
-    return $self->data->load(
-        $filename,
-        qr/\s*\~\~\s*/,
-        sub {
-            my ($sha1, $sha256, $name, $reason, $link)
-              = split(/ \s* ~~ \s* /msx, $_[1], $MD5SUM_DATA_FIELDS);
+    my $data = $self->data->load($filename,qr/\s*\~\~\s*/);
 
-            die encode_utf8("Syntax error in $filename $.")
-              if any { !defined } ($sha1, $sha256, $name, $reason, $link);
+    my %md5sum_data;
 
-            return {
-                'sha1'   => $sha1,
-                'sha256' => $sha256,
-                'name'   => $name,
-                'reason' => $reason,
-                'link'   => $link,
-            };
-        });
+    for my $md5sum ($data->all) {
+
+        my $value = $data->value($md5sum);
+
+        my ($sha1, $sha256, $name, $reason, $link)
+          = split(/ \s* ~~ \s* /msx, $value, $MD5SUM_DATA_FIELDS);
+
+        die encode_utf8("Syntax error in $filename $.")
+          if any { !defined } ($sha1, $sha256, $name, $reason, $link);
+
+        $md5sum_data{$md5sum} = {
+            'sha1'   => $sha1,
+            'sha256' => $sha256,
+            'name'   => $name,
+            'reason' => $reason,
+            'link'   => $link,
+        };
+    }
+
+    return \%md5sum_data;
 }
 
 has NON_FREE_FILES => (
@@ -84,7 +90,7 @@ sub visit_patched_files {
     return
       if $self->processable->is_non_free;
 
-    my $nonfree = $self->NON_FREE_FILES->value($item->md5sum);
+    my $nonfree = $self->NON_FREE_FILES->{$item->md5sum};
     if (defined $nonfree) {
         my $usualname = $nonfree->{'name'};
         my $reason = $nonfree->{'reason'};

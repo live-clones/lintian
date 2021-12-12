@@ -68,24 +68,27 @@ has INTERPRETERS => (
     default => sub {
         my ($self) = @_;
 
-        my $unversioned = $self->data->load(
-            'scripts/interpreters',
-            qr/ \s* => \s* /msx,
-            sub {
-                my ($interpreter, $remainder) = @_;
+        my %unversioned;
 
-                my ($folder, $prerequisites)= split(/ \s* , \s* /msx,
-                    $remainder, $UNVERSIONED_INTERPRETER_FIELDS);
+        my $data
+          = $self->data->load('scripts/interpreters',qr/ \s* => \s* /msx);
 
-                $prerequisites //= $EMPTY;
+        for my $interpreter ($data->all) {
 
-                return {
-                    folder => $folder,
-                    prerequisites => $prerequisites
-                };
-            });
+            my $remainder = $data->value($interpreter);
 
-        return $unversioned;
+            my ($folder, $prerequisites)= split(/ \s* , \s* /msx,
+                $remainder, $UNVERSIONED_INTERPRETER_FIELDS);
+
+            $prerequisites //= $EMPTY;
+
+            $unversioned{$interpreter} = {
+                folder => $folder,
+                prerequisites => $prerequisites
+            };
+        }
+
+        return \%unversioned;
     });
 
 # The more complex case of interpreters that may have a version number.
@@ -123,39 +126,41 @@ has VERSIONED_INTERPRETERS => (
     default => sub {
         my ($self) = @_;
 
-        my $versioned = $self->data->load(
-            'scripts/versioned-interpreters',
-            qr/ \s* => \s* /msx,
-            sub {
-                my ($interpreter, $remainder) = @_;
+        my %versioned;
 
-                my ($folder, $regex, $template, $version_list, $prerequisites)
-                  = split(/ \s* , \s* /msx,
-                    $remainder, $VERSIONED_INTERPRETER_FIELDS);
+        my $data = $self->data->load('scripts/versioned-interpreters',
+            qr/ \s* => \s* /msx);
 
-                my @versions = split(/ \s+ /msx, $version_list);
-                $prerequisites //= $EMPTY;
+        for my $interpreter ($data->all) {
 
-                if ($prerequisites eq $AT_SIGN . 'SKIP_UNVERSIONED' . $AT_SIGN)
-                {
-                    $prerequisites = undef;
+            my $remainder = $data->value($interpreter);
 
-                } elsif ($prerequisites =~ / @ /msx) {
-                    die encode_utf8(
+            my ($folder, $pattern, $template, $version_list, $prerequisites)
+              = split(/ \s* , \s* /msx,
+                $remainder, $VERSIONED_INTERPRETER_FIELDS);
+
+            my @versions = split(/ \s+ /msx, $version_list);
+            $prerequisites //= $EMPTY;
+
+            if ($prerequisites eq $AT_SIGN . 'SKIP_UNVERSIONED' . $AT_SIGN) {
+                $prerequisites = undef;
+
+            } elsif ($prerequisites =~ / @ /msx) {
+                die encode_utf8(
 "Unknown magic value $prerequisites for versioned interpreter $interpreter"
-                    );
-                }
+                );
+            }
 
-                return {
-                    folder => $folder,
-                    prerequisites => $prerequisites,
-                    regex => qr/^$regex$/,
-                    template => $template,
-                    versions => \@versions
-                };
-            });
+            $versioned{$interpreter} = {
+                folder => $folder,
+                prerequisites => $prerequisites,
+                regex => qr/^$pattern$/,
+                template => $template,
+                versions => \@versions
+            };
+        }
 
-        return $versioned;
+        return \%versioned;
     });
 
 # When detecting commands inside shell scripts, use this regex to match the
@@ -172,43 +177,49 @@ has BAD_MAINTAINER_COMMANDS => (
     default => sub {
         my ($self) = @_;
 
-        return $self->data->load(
-            'scripts/maintainer-script-bad-command',
-            qr/\s*\~\~/,
-            sub {
-                my ($in_cat,$in_auto,$package_include_pattern,
-                    $script_include_pattern,$command_pattern)
-                  = split(/ \s* ~~ /msx, $_[1],$BAD_MAINTAINER_COMMAND_FIELDS);
+        my %forbidden;
 
-                die encode_utf8(
-                    "Syntax error in scripts/maintainer-script-bad-command: $."
-                  )
-                  if any { !defined }
-                (
-                    $in_cat,$in_auto,$package_include_pattern,
-                    $script_include_pattern,$command_pattern
-                );
+        my $data = $self->data->load('scripts/maintainer-script-bad-command',
+            qr/\s*\~\~/);
 
-                # trim both ends
-                $in_cat =~ s/^\s+|\s+$//g;
-                $in_auto =~ s/^\s+|\s+$//g;
-                $package_include_pattern =~ s/^\s+|\s+$//g;
-                $script_include_pattern =~ s/^\s+|\s+$//g;
+        for my $key ($data->all) {
 
-                $package_include_pattern ||= '\a\Z';
+            my $value = $data->value($key);
 
-                $script_include_pattern ||= $DOT . $ASTERISK;
+            my ($in_cat,$in_auto,$package_include_pattern,
+                $script_include_pattern,$command_pattern)
+              = split(/ \s* ~~ /msx, $value,$BAD_MAINTAINER_COMMAND_FIELDS);
 
-                $command_pattern=~ s/\$[{]LEADING_PATTERN[}]/$LEADING_PATTERN/;
+            die encode_utf8(
+                "Syntax error in scripts/maintainer-script-bad-command: $.")
+              if any { !defined }
+            (
+                $in_cat,$in_auto,$package_include_pattern,
+                $script_include_pattern,$command_pattern
+            );
 
-                return {
-                    ignore_automatic_sections => !!$in_auto,
-                    in_cat_string => !!$in_cat,
-                    package_exclude_regex => qr/$package_include_pattern/x,
-                    script_include_regex => qr/$script_include_pattern/x,
-                    command_pattern => $command_pattern,
-                };
-            });
+            # trim both ends
+            $in_cat =~ s/^\s+|\s+$//g;
+            $in_auto =~ s/^\s+|\s+$//g;
+            $package_include_pattern =~ s/^\s+|\s+$//g;
+            $script_include_pattern =~ s/^\s+|\s+$//g;
+
+            $package_include_pattern ||= '\a\Z';
+
+            $script_include_pattern ||= $DOT . $ASTERISK;
+
+            $command_pattern=~ s/\$[{]LEADING_PATTERN[}]/$LEADING_PATTERN/;
+
+            $forbidden{$key} = {
+                ignore_automatic_sections => !!$in_auto,
+                in_cat_string => !!$in_cat,
+                package_exclude_regex => qr/$package_include_pattern/x,
+                script_include_regex => qr/$script_include_pattern/x,
+                command_pattern => $command_pattern,
+            };
+        }
+
+        return \%forbidden;
     });
 
 # Appearance of one of these regexes in a maintainer script means that there
@@ -381,16 +392,16 @@ sub visit_installed_files {
     # check $INTERPRETERS and %versioned_interpreters.  If not
     # found there, see if it ends in a version number and the base
     # is found in $VERSIONED_INTERPRETERS
-    my $interpreter_data = $self->INTERPRETERS->value($basename);
+    my $interpreter_data = $self->INTERPRETERS->{$basename};
 
     my $versioned = 0;
     unless (defined $interpreter_data) {
 
-        $interpreter_data = $self->VERSIONED_INTERPRETERS->value($basename);
+        $interpreter_data = $self->VERSIONED_INTERPRETERS->{$basename};
 
         if (!defined $interpreter_data && $basename =~ /^(.*[^\d.-])-?[\d.]+$/)
         {
-            $interpreter_data = $self->VERSIONED_INTERPRETERS->value($1);
+            $interpreter_data = $self->VERSIONED_INTERPRETERS->{$1};
             undef $interpreter_data
               unless $interpreter_data
               && $basename =~ /$interpreter_data->{regex}/;
@@ -464,7 +475,7 @@ sub visit_installed_files {
           if $item->name =~ m{^usr/share/doc/[^/]+/examples/};
 
         # Check whether we have correct dependendies on nodejs regardless.
-        $interpreter_data = $self->INTERPRETERS->value('node');
+        $interpreter_data = $self->INTERPRETERS->{'node'};
 
     } elsif ($basename =~ /^php/) {
 
@@ -478,7 +489,7 @@ sub visit_installed_files {
 
         # This allows us to still perform the dependencies checks
         # below even when an unusual interpreter has been found.
-        $interpreter_data = $self->INTERPRETERS->value('php');
+        $interpreter_data = $self->INTERPRETERS->{'php'};
 
     } else {
         my @private_interpreters;
@@ -570,7 +581,7 @@ sub visit_installed_files {
             }
         }
 
-    } elsif ($self->VERSIONED_INTERPRETERS->recognizes($basename)) {
+    } elsif (exists $self->VERSIONED_INTERPRETERS->{$basename}) {
         my @versions = @{ $interpreter_data->{versions} };
 
         my @depends;
@@ -667,9 +678,7 @@ sub visit_control_files {
 
     } elsif ($basename eq 'sh' || $basename eq 'bash' || $basename eq 'perl') {
         my $expected
-          = ($self->INTERPRETERS->value($basename))->{folder}
-          . $SLASH
-          . $basename;
+          = $self->INTERPRETERS->{$basename}->{folder}. $SLASH. $basename;
 
         my $tag_name
           = ($expected eq '/usr/bin/env perl')
@@ -690,9 +699,9 @@ sub visit_control_files {
         $self->pointed_hint('forbidden-postrm-interpreter',
             $item->pointer, $interpreter);
 
-    } elsif ($self->INTERPRETERS->recognizes($basename)) {
+    } elsif (exists $self->INTERPRETERS->{$basename}) {
 
-        my $interpreter_data = $self->INTERPRETERS->value($basename);
+        my $interpreter_data = $self->INTERPRETERS->{$basename};
         my $expected = $interpreter_data->{folder} . $SLASH . $basename;
 
         my $tag_name
@@ -986,9 +995,9 @@ sub generic_check_bad_command {
         $in_automatic_section)
       = @_;
 
-    for my $tag_name ($self->BAD_MAINTAINER_COMMANDS->all) {
+    for my $tag_name (keys %{$self->BAD_MAINTAINER_COMMANDS}) {
 
-        my $command_data= $self->BAD_MAINTAINER_COMMANDS->value($tag_name);
+        my $command_data= $self->BAD_MAINTAINER_COMMANDS->{$tag_name};
 
         next
           if $in_automatic_section

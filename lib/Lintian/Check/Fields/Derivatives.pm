@@ -30,33 +30,45 @@ use utf8;
 
 use Const::Fast;
 
+const my $HYPHEN => q{-};
+
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
 
-const my $HYPHEN => q{-};
+has DERIVATIVE_FIELDS => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        my %fields;
+
+        my $data= $self->data->load('fields/derivative-fields',qr/\s*\~\~\s*/);
+
+        for my $key ($data->all) {
+
+            my $value = $data->value($key);
+            my ($regexp, $explanation) = split(/\s*\~\~\s*/, $value, 2);
+            $fields{$key} = {
+                'regexp' => qr/$regexp/,
+                'explanation' => $explanation,
+            };
+        }
+
+        return \%fields;
+    });
 
 sub source {
     my ($self) = @_;
 
     my $processable = $self->processable;
 
-    my $DERIVATIVE_FIELDS = $self->data->load(
-        'fields/derivative-fields',
-        qr/\s*\~\~\s*/,
-        sub {
-            my ($regexp, $explanation) = split(/\s*\~\~\s*/, $_[1], 2);
-            return {
-                'regexp' => qr/$regexp/,
-                'explanation' => $explanation,
-            };
-        });
-
-    foreach my $field ($DERIVATIVE_FIELDS->all) {
+    for my $field (keys %{$self->DERIVATIVE_FIELDS}) {
 
         my $val = $processable->fields->value($field) || $HYPHEN;
-        my $data = $DERIVATIVE_FIELDS->value($field);
+        my $data = $self->DERIVATIVE_FIELDS->{$field};
 
         $self->hint('invalid-field-for-derivative',
             "$field: $val ($data->{'explanation'})")

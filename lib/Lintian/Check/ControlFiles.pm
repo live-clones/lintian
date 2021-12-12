@@ -27,101 +27,101 @@ use utf8;
 
 use Const::Fast;
 
-use Moo;
-use namespace::clean;
-
-with 'Lintian::Check';
-
 const my $SPACE => q{ };
 const my $SLASH => q{/};
 
 const my $WIDELY_EXECUTABLE => oct(111);
 
-sub octify {
-    my (undef, $val) = @_;
+use Moo;
+use namespace::clean;
 
-    return oct($val);
-}
+with 'Lintian::Check';
 
-sub installable {
-    my ($self) = @_;
+has ships_ctrl_script => (is => 'rw', default =>  0);
+
+sub visit_control_files {
+    my ($self, $item) = @_;
 
     my $type = $self->processable->type;
     my $processable = $self->processable;
 
     my $DEB_PERMISSIONS
-      = $self->data->load('control-files/deb-permissions',qr/\s++/, \&octify);
+      = $self->data->load('control-files/deb-permissions',qr/\s+/);
     my $UDEB_PERMISSIONS
-      = $self->data->load('control-files/udeb-permissions',qr/\s++/, \&octify);
+      = $self->data->load('control-files/udeb-permissions',qr/\s+/);
 
     my $ctrl = $type eq 'udeb' ? $UDEB_PERMISSIONS : $DEB_PERMISSIONS;
     my $ctrl_alt = $type eq 'udeb' ? $DEB_PERMISSIONS : $UDEB_PERMISSIONS;
-    my $has_ctrl_script = 0;
 
-    # process control-index file
-    for my $file (@{$processable->control->sorted_list}) {
+    # the control.tar.gz should only contain files (and the "root"
+    # dir, but that is excluded from the index)
+    if (!$item->is_regular_file) {
 
-        # the control.tar.gz should only contain files (and the "root"
-        # dir, but that is excluded from the index)
-        if (not $file->is_regular_file) {
-            $self->hint('control-file-is-not-a-file', $file);
-            # Doing further checks is probably not going to yield anything
-            # remotely useful.
-            next;
-        }
-
-        # valid control file?
-        unless ($ctrl->recognizes($file)) {
-            if ($ctrl_alt->recognizes($file)) {
-                $self->hint('not-allowed-control-file', $file);
-                next;
-            } else {
-                $self->hint('unknown-control-file', $file);
-                next;
-            }
-        }
-
-        my $experm = $ctrl->value($file);
-
-        if ($file->size == 0 and $file->basename ne 'md5sums') {
-            $self->hint('control-file-is-empty', $file);
-        }
-
-        # skip `control' control file (that's an exception: dpkg
-        # doesn't care and this file isn't installed on the systems
-        # anyways)
-        next if $file eq 'control';
-
-        my $operm = $file->operm;
-        if ($file->is_executable || $experm & $WIDELY_EXECUTABLE) {
-            $has_ctrl_script = 1;
-            $self->hint('ctrl-script', $file);
-        }
-
-        # correct permissions?
-        unless ($operm == $experm) {
-            $self->hint('control-file-has-bad-permissions',
-                sprintf('%s %04o != %04o', $file, $operm, $experm));
-        }
-
-        my $ownership = $file->owner . $SLASH . $file->group;
-
-        # correct owner?
-        unless ($file->identity eq 'root/root' || $file->identity eq '0/0') {
-            $self->hint('control-file-has-bad-owner',
-                    $file->name
-                  . $SPACE
-                  . $file->identity
-                  . ' != root/root (or 0/0)');
-        }
-
-        # for other maintainer scripts checks, see the scripts check
+        $self->pointed_hint('control-file-is-not-a-file', $item->pointer);
+        # Doing further checks is probably not going to yield anything
+        # remotely useful.
+        return;
     }
-    if (not $has_ctrl_script) {
-        $self->hint('no-ctrl-scripts');
+
+    # valid control file?
+    unless ($ctrl->recognizes($item->name)) {
+
+        if ($ctrl_alt->recognizes($item->name)) {
+            $self->pointed_hint('not-allowed-control-file', $item->pointer);
+
+        } else {
+            $self->pointed_hint('unknown-control-file', $item->pointer);
+        }
+
+        return;
     }
+
+    my $experm = oct($ctrl->value($item->name));
+
+    $self->pointed_hint('control-file-is-empty', $item->pointer)
+      if $item->size == 0
+      && $item->basename ne 'md5sums';
+
+    # skip `control' control file (that's an exception: dpkg
+    # doesn't care and this file isn't installed on the systems
+    # anyways)
+    return
+      if $item->name eq 'control';
+
+    my $operm = $item->operm;
+    if ($item->is_executable || $experm & $WIDELY_EXECUTABLE) {
+
+        $self->ships_ctrl_script(1);
+        $self->pointed_hint('ctrl-script', $item->pointer);
+    }
+
+    # correct permissions?
+    unless ($operm == $experm) {
+
+        $self->pointed_hint('control-file-has-bad-permissions',
+            $item->pointer,sprintf('%04o != %04o', $operm, $experm));
+    }
+
+    # correct owner?
+    unless ($item->identity eq 'root/root' || $item->identity eq '0/0') {
+
+        $self->pointed_hint('control-file-has-bad-owner',$item->pointer,
+            $item->identity,'!= root/root (or 0/0)');
+    }
+
+    # for other maintainer scripts checks, see the scripts check
+
     return;
-} # </run>
+}
+
+sub installable {
+    my ($self) = @_;
+
+    $self->hint('no-ctrl-scripts')
+      unless $self->ships_ctrl_script;
+
+    return;
+}
 
 1;
 

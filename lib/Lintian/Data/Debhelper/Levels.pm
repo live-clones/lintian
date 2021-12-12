@@ -51,8 +51,6 @@ This module provides a way to load data files for debhelper.
 
 =item separator
 
-=item accumulator
-
 =cut
 
 has title => (

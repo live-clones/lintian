@@ -32,13 +32,15 @@ use utf8;
 use Const::Fast;
 use List::SomeUtils qw(any);
 
+const my $EMPTY => q{};
+const my $QUESTION_MARK => q{?};
+
+const my $NOT_EQUALS => q{!=};
+
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-const my $EMPTY => q{};
-const my $QUESTION_MARK => q{?};
 
 my %VCS_EXTRACT = (
     Browser => sub { return @_;},
@@ -158,6 +160,27 @@ my %VCS_VALID_URIS = (
     Mtn     => qr{^[\w.-]+$},
 );
 
+has VCS_HOSTERS_BY_PATTERN => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        my %vcs_hosters_by_pattern;
+
+        my $KNOWN_VCS_HOSTERS
+          = $self->data->load('fields/vcs-hosters',qr/\s*~~\s*/);
+
+        for my $pattern ($KNOWN_VCS_HOSTERS->all) {
+
+            my @known_hosters
+              = split(m{,}, $KNOWN_VCS_HOSTERS->value($pattern));
+            $vcs_hosters_by_pattern{$pattern} = \@known_hosters;
+        }
+
+        return \%vcs_hosters_by_pattern;
+    });
+
 sub always {
     my ($self) = @_;
 
@@ -214,14 +237,6 @@ sub always {
       if $is_comaintained;
     $self->hint('package-is-maintained-by-individual')
       if $is_maintained_by_individual;
-
-    my $KNOWN_VCS_HOSTERS= $self->data->load(
-        'fields/vcs-hosters',
-        qr/\s*~~\s*/,
-        sub {
-            my @ret = split(m{,}, $_[1]);
-            return \@ret;
-        });
 
     my %seen_vcs;
     for my $platform (keys %VCS_EXTRACT) {
@@ -283,24 +298,22 @@ sub always {
             $self->hint('vcs-uri', $platform, $uri);
             $seen_vcs{$platform}++;
 
-            foreach my $regex ($KNOWN_VCS_HOSTERS->all) {
-                foreach my $re_vcs (@{$KNOWN_VCS_HOSTERS->value($regex)}) {
+            for my $pattern (keys %{$self->VCS_HOSTERS_BY_PATTERN}) {
 
-                    if (   $uri =~ m/^($regex.*)/xi
-                        && $platform ne $re_vcs
-                        && $platform ne 'Browser') {
+                # warn once
+                my $known_hoster
+                  = @{$self->VCS_HOSTERS_BY_PATTERN->{$pattern}}[0];
 
-                        $self->hint('vcs-field-mismatch',
-                            "Vcs-$platform != Vcs-$re_vcs",$uri);
-
-                        # warn once
-                        last;
-                    }
-                }
+                $self->hint('vcs-field-mismatch',
+                    "Vcs-$platform", $NOT_EQUALS, "Vcs-$known_hoster",$uri)
+                  if $uri =~ m/^ $pattern /xi
+                  && $platform ne $known_hoster
+                  && $platform ne 'Browser';
             }
         }
 
         if ($uri =~ m{//(.+)\.debian\.org/}) {
+
             $self->hint('vcs-obsolete-in-debian-infrastructure',
                 $platform, $uri)
               unless $1 =~ m{^(?:salsa|.*\.dgit)$};
@@ -310,12 +323,15 @@ sub always {
         # orphaned
         if ($maintainer =~ /packages\@qa.debian.org/ && $platform ne 'Browser')
         {
-            if ($uri =~ m{//(.+)\.debian\.org/}) {
+            if ($uri =~ m{//(?:.+)\.debian\.org/}) {
+
                 $self->hint('orphaned-package-maintained-in-private-space',
                     $fieldname, $uri)
                   unless $uri =~ m{//salsa\.debian\.org/debian/}
                   || $uri =~ m{//git\.dgit\.debian\.org/};
+
             } else {
+
                 $self->hint(
                     'orphaned-package-not-maintained-in-debian-infrastructure',
                     $fieldname, $uri
@@ -344,18 +360,16 @@ sub always {
     # Check for missing Vcs-Browser headers
     unless ($processable->fields->declares('Vcs-Browser')) {
 
-        foreach my $regex ($KNOWN_VCS_HOSTERS->all) {
+        for my $pattern (keys %{$self->VCS_HOSTERS_BY_PATTERN}) {
 
-            my $platform = @{$KNOWN_VCS_HOSTERS->value($regex)}[0];
+            # warn once
+            my $platform = @{$self->VCS_HOSTERS_BY_PATTERN->{$pattern}}[0];
+
             my $fieldname = "Vcs-$platform";
+            my $url = $processable->fields->value($fieldname);
 
-            if ($processable->fields->value($fieldname)=~ m/^($regex.*)/xi){
-
-                $self->hint('missing-vcs-browser-field', $fieldname, $1);
-
-                # warn once
-                last;
-            }
+            $self->hint('missing-vcs-browser-field', $fieldname, $url)
+              if $url =~ m/^ $pattern /xi;
         }
     }
 

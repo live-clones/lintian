@@ -61,12 +61,8 @@ sub always {
     my $KNOWN_SECTIONS = $self->data->load('fields/archive-sections');
 
     # Mapping of package names to section names
-    my $NAME_SECTION_MAPPINGS = $self->data->load(
-        'fields/name_section_mappings',
-        qr/\s*=>\s*/,
-        sub {
-            return {'regex' =>  qr/$_[0]/x, 'section' => $_[1]};
-        });
+    my $NAME_SECTION_MAPPINGS
+      = $self->data->load('fields/name_section_mappings',qr/\s*=>\s*/);
 
     my $section = $self->processable->fields->unfolded_value('Section');
 
@@ -97,13 +93,12 @@ sub always {
     # anything go there.
     if ($fraction ne 'oldlibs') {
 
-        foreach my $name_section ($NAME_SECTION_MAPPINGS->all()) {
-            my $regex= $NAME_SECTION_MAPPINGS->value($name_section)->{'regex'};
-            my $want
-              = $NAME_SECTION_MAPPINGS->value($name_section)->{'section'};
+        for my $pattern ($NAME_SECTION_MAPPINGS->all()) {
+
+            my $want = $NAME_SECTION_MAPPINGS->value($pattern);
 
             next
-              unless ($pkg =~ m{$regex});
+              unless $pkg =~ m{$pattern}x;
 
             unless ($fraction eq $want) {
 

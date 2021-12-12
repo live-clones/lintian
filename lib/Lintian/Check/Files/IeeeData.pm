@@ -26,22 +26,12 @@ use utf8;
 
 use Const::Fast;
 
+const my $VERTICAL_BAR => q{|};
+
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-const my $VERTICAL_BAR => q{|};
-
-has COMPRESS_FILE_EXTENSIONS => (
-    is => 'rw',
-    lazy => 1,
-    default => sub {
-        my ($self) = @_;
-
-        return $self->data->load('files/compressed-file-extensions',
-            qr/\s++/,sub { return qr/\Q$_[0]\E/ });
-    });
 
 # an OR (|) regex of all compressed extension
 has COMPRESS_FILE_EXTENSIONS_OR_ALL => (
@@ -50,9 +40,11 @@ has COMPRESS_FILE_EXTENSIONS_OR_ALL => (
     default => sub {
         my ($self) = @_;
 
+        my $COMPRESS_FILE_EXTENSIONS
+          = $self->data->load('files/compressed-file-extensions',qr/\s+/);
+
         my $text = join($VERTICAL_BAR,
-            map {$self->COMPRESS_FILE_EXTENSIONS->value($_) }
-              $self->COMPRESS_FILE_EXTENSIONS->all);
+            map { quotemeta }$COMPRESS_FILE_EXTENSIONS->all);
 
         return qr/$text/;
     });

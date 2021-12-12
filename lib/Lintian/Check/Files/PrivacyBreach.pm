@@ -1,6 +1,7 @@
 # files/privacy-breach -- lintian check script -*- perl -*-
 
 # Copyright © 1998 Christian Schwarz and Richard Braakman
+# Copyright © 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -29,15 +30,15 @@ use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::SlidingWindow;
 
-use Moo;
-use namespace::clean;
-
-with 'Lintian::Check';
-
 const my $BLOCKSIZE => 16_384;
 const my $EMPTY => q{};
 
 const my $PRIVACY_BREAKER_WEBSITES_FIELDS => 3;
+
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 has PRIVACY_BREAKER_WEBSITES => (
     is => 'rw',
@@ -45,30 +46,37 @@ has PRIVACY_BREAKER_WEBSITES => (
     default => sub {
         my ($self) = @_;
 
-        return $self->data->load(
-            'files/privacy-breaker-websites',
-            qr/\s*\~\~/,
-            sub {
-                my ($regex, $tag, $suggest)= split(/ \s* ~~ \s* /msx,
-                    $_[1],$PRIVACY_BREAKER_WEBSITES_FIELDS);
+        my %website;
 
-                $tag //= $EMPTY;
+        my $data
+          = $self->data->load('files/privacy-breaker-websites',qr/\s*\~\~/);
 
-                # trim both ends
-                $tag =~ s/^\s+|\s+$//g;
+        for my $key ($data->all) {
 
-                if (length($tag) == 0) {
-                    $tag = $_[0];
-                }
-                my %ret = (
-                    'tag' => $tag,
-                    'regexp' => qr/$regex/xsm,
-                );
-                if (defined($suggest)) {
-                    $ret{'suggest'} = $suggest;
-                }
-                return \%ret;
-            });
+            my $value = $data->value($key);
+
+            my ($pattern, $tag, $suggest)
+              = split(/ \s* ~~ \s* /msx,
+                $value,$PRIVACY_BREAKER_WEBSITES_FIELDS);
+
+            $tag //= $EMPTY;
+
+            # trim both ends
+            $tag =~ s/^\s+|\s+$//g;
+
+            $tag = $key
+              unless length $tag;
+
+            $website{$key} = {
+                'tag' => $tag,
+                'regexp' => qr/$pattern/xsm,
+            };
+
+            $website{$key}{'suggest'} = $suggest
+              if defined $suggest;
+        }
+
+        return \%website;
     });
 
 has PRIVACY_BREAKER_FRAGMENTS => (
@@ -77,17 +85,25 @@ has PRIVACY_BREAKER_FRAGMENTS => (
     default => sub {
         my ($self) = @_;
 
-        return $self->data->load(
-            'files/privacy-breaker-fragments',
-            qr/\s*\~\~/,
-            sub {
-                my ($regex, $tag) = split(/\s*\~\~\s*/, $_[1], 2);
-                return {
-                    'keyword' => $_[0],
-                    'regex' => qr/$regex/xsm,
-                    'tag' => $tag,
-                };
-            });
+        my %fragment;
+
+        my $data
+          = $self->data->load('files/privacy-breaker-fragments',qr/\s*\~\~/);
+
+        for my $key ($data->all) {
+
+            my $value = $data->value($key);
+
+            my ($pattern, $tag) = split(/\s*\~\~\s*/, $value, 2);
+
+            $fragment{$key} = {
+                'keyword' => $key,
+                'regex' => qr/$pattern/xsm,
+                'tag' => $tag,
+            };
+        }
+
+        return \%fragment;
     });
 
 has PRIVACY_BREAKER_TAG_ATTR => (
@@ -96,23 +112,35 @@ has PRIVACY_BREAKER_TAG_ATTR => (
     default => sub {
         my ($self) = @_;
 
-        return $self->data->load(
-            'files/privacy-breaker-tag-attr',
-            qr/\s*\~\~\s*/,
-            sub {
-                my ($keywords,$regex) = split(/\s*\~\~\s*/, $_[1], 2);
-                $regex =~ s/&URL/(?:(?:ht|f)tps?:)?\/\/[^"\r\n]*/g;
-                my @keywordlist;
-                my @keywordsorraw = split(/\s*\|\|\s*/,$keywords);
-                foreach my $keywordor (@keywordsorraw) {
-                    my @keywordsandraw = split(/\s*&&\s*/,$keywordor);
-                    push(@keywordlist, \@keywordsandraw);
-                }
-                return {
-                    'keywords' => \@keywordlist,
-                    'regex' => qr/$regex/xsm,
-                };
-            });
+        my %attribute;
+
+        my $data
+          = $self->data->load('files/privacy-breaker-tag-attr',qr/\s*\~\~\s*/);
+
+        for my $key ($data->all) {
+
+            my $value = $data->value($key);
+
+            my ($keywords,$pattern) = split(/\s*\~\~\s*/, $value, 2);
+
+            $pattern =~ s/&URL/(?:(?:ht|f)tps?:)?\/\/[^"\r\n]*/g;
+
+            my @keywordlist;
+
+            my @keywordsorraw = split(/\s*\|\|\s*/,$keywords);
+
+            for my $keywordor (@keywordsorraw) {
+                my @keywordsandraw = split(/\s*&&\s*/,$keywordor);
+                push(@keywordlist, \@keywordsandraw);
+            }
+
+            $attribute{$key} = {
+                'keywords' => \@keywordlist,
+                'regex' => qr/$pattern/xsm,
+            };
+        }
+
+        return \%attribute;
     });
 
 sub detect_privacy_breach {
@@ -140,11 +168,10 @@ sub detect_privacy_breach {
         }
 
         # try generic fragment tagging
-        foreach my $keyword ($self->PRIVACY_BREAKER_FRAGMENTS->all) {
+        for my $keyword (keys %{$self->PRIVACY_BREAKER_FRAGMENTS}) {
 
             if ($lowercase =~ / \Q$keyword\E /msx) {
-                my $keyvalue
-                  = $self->PRIVACY_BREAKER_FRAGMENTS->value($keyword);
+                my $keyvalue= $self->PRIVACY_BREAKER_FRAGMENTS->{$keyword};
                 my $regex = $keyvalue->{'regex'};
 
                 if ($lowercase =~ m{($regex)}) {
@@ -194,8 +221,8 @@ sub detect_generic_privacy_breach {
 
     # now check generic tag
   TYPE:
-    foreach my $type ($self->PRIVACY_BREAKER_TAG_ATTR->all) {
-        my $keyvalue = $self->PRIVACY_BREAKER_TAG_ATTR->value($type);
+    for my $type (keys %{$self->PRIVACY_BREAKER_TAG_ATTR}) {
+        my $keyvalue = $self->PRIVACY_BREAKER_TAG_ATTR->{$type};
         my $keywords =  $keyvalue->{'keywords'};
 
         my $orblockok = 0;
@@ -333,9 +360,9 @@ sub check_tag_url_privacy_breach {
     }
 
     # track well known site
-    foreach my $breaker ($self->PRIVACY_BREAKER_WEBSITES->all) {
+    for my $breaker (keys %{$self->PRIVACY_BREAKER_WEBSITES}) {
 
-        my $value = $self->PRIVACY_BREAKER_WEBSITES->value($breaker);
+        my $value = $self->PRIVACY_BREAKER_WEBSITES->{$breaker};
         my $regex = $value->{'regexp'};
 
         if ($website =~ m{$regex}mxs) {

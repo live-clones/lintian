@@ -38,34 +38,34 @@ has OBSOLETE_PATHS => (
     default => sub {
         my ($self) = @_;
 
-        return $self->data->load(
-            'files/obsolete-paths',
-            qr/\s*\->\s*/,
-            sub {
-                my @sliptline =  split(/\s*\~\~\s*/, $_[1], 2);
+        my %obsolete;
 
-                if (scalar(@sliptline) != 2) {
-                    die encode_utf8("Syntax error in files/obsolete-paths $.");
-                }
+        my $data = $self->data->load('files/obsolete-paths',qr/\s*\->\s*/);
 
-                my ($newdir, $moreinfo) =  @sliptline;
+        for my $key ($data->all) {
 
-                return {
-                    'newdir' => $newdir,
-                    'moreinfo' => $moreinfo,
-                    'match' => qr/$_[0]/x,
-                    'olddir' => $_[0],
-                };
-            });
+            my $value = $data->value($key);
+
+            my ($newdir, $moreinfo) = split(/\s*\~\~\s*/, $value, 2);
+
+            $obsolete{$key} = {
+                'newdir' => $newdir,
+                'moreinfo' => $moreinfo,
+                'match' => qr/$key/x,
+                'olddir' => $key,
+            };
+        }
+
+        return \%obsolete;
     });
 
 sub visit_installed_files {
     my ($self, $item) = @_;
 
     # check for generic obsolete path
-    for my $obsolete_path ($self->OBSOLETE_PATHS->all) {
+    for my $obsolete_path (keys %{$self->OBSOLETE_PATHS}) {
 
-        my $obs_data = $self->OBSOLETE_PATHS->value($obsolete_path);
+        my $obs_data = $self->OBSOLETE_PATHS->{$obsolete_path};
         my $oldpathmatch = $obs_data->{'match'};
 
         if ($item->name =~ m{$oldpathmatch}) {

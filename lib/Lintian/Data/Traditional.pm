@@ -47,13 +47,10 @@ data files.
 
 =item separator
 
-=item accumulator
-
 =cut
 
 has location => (is => 'rw');
 has separator => (is => 'rw');
-has accumulator => (is => 'rw');
 
 =back
 

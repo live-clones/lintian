@@ -29,15 +29,15 @@ use Const::Fast;
 use List::SomeUtils qw(any);
 use Unicode::UTF8 qw(encode_utf8);
 
-use Moo;
-use namespace::clean;
-
-with 'Lintian::Check';
-
 const my $VERTICAL_BAR => q{|};
 
 # 276 is 255 bytes (maximal length for a filename) plus gzip overhead
 const my $MAXIMUM_EMPTY_GZIP_SIZE => 276;
+
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 # a list of regex for detecting documentation file checked against basename (xi)
 my @DOCUMENTATION_FILE_REGEXES = qw{
@@ -65,16 +65,6 @@ my @DOCUMENTATION_FILE_REGEXES = qw{
   ^todos?$
 };
 
-has COMPRESS_FILE_EXTENSIONS => (
-    is => 'rw',
-    lazy => 1,
-    default => sub {
-        my ($self) = @_;
-
-        return $self->data->load('files/compressed-file-extensions',
-            qr/\s++/,sub { return qr/\Q$_[0]\E/ });
-    });
-
 # an OR (|) regex of all compressed extension
 has COMPRESS_FILE_EXTENSIONS_OR_ALL => (
     is => 'rw',
@@ -82,9 +72,11 @@ has COMPRESS_FILE_EXTENSIONS_OR_ALL => (
     default => sub {
         my ($self) = @_;
 
+        my $COMPRESS_FILE_EXTENSIONS
+          = $self->data->load('files/compressed-file-extensions',qr/\s+/);
+
         my $text = join($VERTICAL_BAR,
-            map {$self->COMPRESS_FILE_EXTENSIONS->value($_) }
-              $self->COMPRESS_FILE_EXTENSIONS->all);
+            (map { quotemeta } $COMPRESS_FILE_EXTENSIONS->all));
 
         return qr/$text/;
     });

@@ -54,8 +54,7 @@ sub source {
       = ($dversion->epoch, $dversion->version, $dversion->revision);
 
     my $DERIVATIVE_VERSIONS
-      = $self->data->load('fields/derivative-versions',
-        qr/\s*~~\s*/, sub { $_[1]; });
+      = $self->data->load('fields/derivative-versions',qr/\s*~~\s*/);
 
     unless ($self->processable->native) {
 

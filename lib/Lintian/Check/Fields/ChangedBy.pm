@@ -42,8 +42,7 @@ sub changes {
     my $changed_by = $self->processable->fields->value('Changed-By');
 
     my $DERIVATIVE_CHANGED_BY
-      = $self->data->load('common/derivative-changed-by',
-        qr/\s*~~\s*/, sub { $_[1]; });
+      = $self->data->load('common/derivative-changed-by',qr/\s*~~\s*/);
 
     for my $regex ($DERIVATIVE_CHANGED_BY->all) {
 

@@ -96,7 +96,7 @@ has data_cache => (
 =cut
 
 sub load {
-    my ($self, $location, $separator, $accumulator) = @_;
+    my ($self, $location, $separator) = @_;
 
     croak encode_utf8('no data type specified')
       unless $location;
@@ -106,7 +106,6 @@ sub load {
         my $cache = Lintian::Data::Traditional->new;
         $cache->location($location);
         $cache->separator($separator);
-        $cache->accumulator($accumulator);
 
         $cache->load($self->data_paths, $self->vendor);
 

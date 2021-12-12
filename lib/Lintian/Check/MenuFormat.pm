@@ -81,23 +81,27 @@ my @known_tags = qw(
 # in other words).  It's case insensitive, use lower case here.
 my @needs_tag_vals = qw(x11 text vc);
 
-sub _menu_sections {
-    my ($key, $val, $cur) = @_;
-    my $ret;
-    $ret = $cur = {} unless defined $cur;
-    # $val is empty if this is just a root section
-    $cur->{$val} = 1 if $val;
-    return $ret;
-}
-
 has MENU_SECTIONS => (
     is => 'rw',
     lazy => 1,
     default => sub {
         my ($self) = @_;
 
-        return $self->data->load('menu-format/menu-sections',qr{/},
-            \&_menu_sections);
+        my %menu_sections;
+
+        my $data = $self->data->load('menu-format/menu-sections');
+
+        for my $key ($data->all) {
+
+            my ($root, $under) = split(m{/}, $key, 2);
+
+            $under //= $EMPTY;
+
+            # $under is empty if this is just a root section
+            $menu_sections{$root}{$under} = 1;
+        }
+
+        return \%menu_sections;
     });
 
 # Authoritative source of desktop keys:
@@ -512,7 +516,8 @@ sub verify_line {
 
     # Check for Evil new root sections.
     my ($rootsec, $sect) = split(m{/}, $section, 2);
-    my $root_data = $self->MENU_SECTIONS->value($rootsec);
+
+    my $root_data = $self->MENU_SECTIONS->{$rootsec};
 
     if (!defined $root_data) {
 
@@ -522,21 +527,11 @@ sub verify_line {
           unless $rootsec =~ /$pkg/i;
 
     } else {
-        my $ok = 1;
-        if ($sect) {
-            # Using unknown subsection of $rootsec?
-            $ok = 0
-              unless exists $root_data->{$sect};
-
-        } else {
-            # Using root menu when a subsection exists?
-            $ok = 0
-              if %{$root_data};
-        }
 
         $self->pointed_hint('menu-item-creates-new-section',
             $pointer, $vals{section})
-          unless $ok;
+          if (length $sect && !exists $root_data->{$sect})
+          || (!length $sect && !exists $root_data->{$EMPTY});
     }
 
     return;
