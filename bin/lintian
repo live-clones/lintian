@@ -95,6 +95,7 @@ my %PRESERVE_ENV = map { $_ => 1 } qw(
   DEB_VENDOR
   DEBRELEASE_DEBS_DIR
   HOME
+  NO_COLOR
   LANG
   LC_ALL
   LC_MESSAGES
@@ -539,8 +540,15 @@ die encode_utf8("The hyperlink value must be on or off\n")
 
 $selected{hyperlinks} = $hyperlinks_capable && $selected{hyperlinks} eq 'on';
 
-$selected{color} = $selected{color} eq 'always'
-  || ($selected{color} eq 'auto' && is_interactive);
+if ($selected{color} eq 'always') {
+    $selected{color} = 1;
+} elsif (exists $ENV{NO_COLOR}) {
+    $selected{color} = 0;
+} elsif ($selected{color} eq 'auto' && is_interactive) {
+    $selected{color} = 1;
+} else {
+    $selected{color} = 0;
+}
 
 $selected{verbose} = 0
   if $selected{quiet};
