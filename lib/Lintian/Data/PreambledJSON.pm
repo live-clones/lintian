@@ -21,7 +21,6 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Carp qw(croak);
 use Const::Fast;
 use JSON::MaybeXS;
 use Path::Tiny;
@@ -70,8 +69,11 @@ has cargo => (
 sub read_file {
     my ($self, $path, $double_reference) = @_;
 
-    croak encode_utf8("Unknown data file: $path")
-      unless -e $path;
+    if (!length $path || !-e $path) {
+
+        warn encode_utf8("Unknown data file: $path");
+        return;
+    }
 
     my $json = path($path)->slurp;
     my $data = decode_json($json);
@@ -80,7 +82,7 @@ sub read_file {
     my $stored_title = $preamble{$TITLE};
     my $storage_key = $preamble{$CARGO};
 
-    die "Please refresh data file $path: wrong title $stored_title"
+    warn "Please refresh data file $path: wrong title $stored_title"
       unless $stored_title eq $self->title;
 
     die "Please refresh data file $path: disallowed cargo key $storage_key"
