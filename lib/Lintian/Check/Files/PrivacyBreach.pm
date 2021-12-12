@@ -221,7 +221,7 @@ sub detect_generic_privacy_breach {
 
     # now check generic tag
   TYPE:
-    for my $type (keys %{$self->PRIVACY_BREAKER_TAG_ATTR}) {
+    for my $type (sort keys %{$self->PRIVACY_BREAKER_TAG_ATTR}) {
         my $keyvalue = $self->PRIVACY_BREAKER_TAG_ATTR->{$type};
         my $keywords =  $keyvalue->{'keywords'};
 
@@ -360,7 +360,7 @@ sub check_tag_url_privacy_breach {
     }
 
     # track well known site
-    for my $breaker (keys %{$self->PRIVACY_BREAKER_WEBSITES}) {
+    for my $breaker (sort keys %{$self->PRIVACY_BREAKER_WEBSITES}) {
 
         my $value = $self->PRIVACY_BREAKER_WEBSITES->{$breaker};
         my $regex = $value->{'regexp'};
