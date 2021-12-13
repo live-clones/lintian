@@ -163,7 +163,7 @@ has name => (
     default => $EMPTY
 );
 
-has non_overridable_tags => (
+has durable_tags_by_name => (
     is => 'rw',
     coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
     default => sub { {} });
@@ -402,17 +402,17 @@ sub get_tag {
     return $self->known_tags_by_name->{$name};
 }
 
-=item $prof->is_overridable ($tag)
+=item $prof->is_durable ($tag)
 
 Returns a false value if the tag has been marked as
 "non-overridable".  Otherwise it returns a truth value.
 
 =cut
 
-sub is_overridable {
+sub is_durable {
     my ($self, $tag_name) = @_;
 
-    return !exists $self->non_overridable_tags->{$tag_name};
+    return exists $self->durable_tags_by_name->{$tag_name};
 }
 
 =item $prof->known_checks
@@ -681,9 +681,9 @@ sub read_profile {
         for my $tag_name (@tags) {
 
             if ($overridable) {
-                delete $self->non_overridable_tags->{$tag_name};
+                delete $self->durable_tags_by_name->{$tag_name};
             } else {
-                $self->non_overridable_tags->{$tag_name} = 1;
+                $self->durable_tags_by_name->{$tag_name} = 1;
             }
         }
 
@@ -692,6 +692,12 @@ sub read_profile {
     }
 
     $self->our_vendor($self->profile_list->[0]);
+
+    # honor tag settings regardless of profile
+    my @show_always
+      = grep { $_->show_always } values %{$self->known_tags_by_name};
+
+    $self->durable_tags_by_name->{$_} = 1 for map { $_->name } @show_always;
 
     return;
 }

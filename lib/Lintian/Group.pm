@@ -239,7 +239,8 @@ sub process {
                     @architectures
                   );
 
-                if (!$self->profile->is_overridable($tag_name)) {
+                if ($self->profile->is_durable($tag_name)) {
+
                     ++$ignored_overrides->{$tag_name};
                     next;
                 }
@@ -360,7 +361,7 @@ sub process {
             $hint->masks(\@masks)
               if !$tag->show_always;
 
-            if (exists $enabled_overrides{$tag_name} && !$tag->show_always) {
+            if (exists $enabled_overrides{$tag_name}) {
 
                 my $for_tag = $enabled_overrides{$tag_name};
 
