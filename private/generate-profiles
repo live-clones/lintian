@@ -21,12 +21,12 @@ use Const::Fast;
 use File::Find::Rule;
 use List::Compare;
 use List::Util qw(uniq);
-use LWP::Simple;
 use Path::Tiny;
 use Unicode::UTF8 qw(encode_utf8);
-use YAML::XS;
 
+use Lintian::Archive;
 use Lintian::Deb822;
+use Lintian::Profile;
 
 const my $EMPTY => q{};
 const my $SPACE => q{ };
@@ -38,22 +38,16 @@ const my $HYPHEN => q{-};
 $ENV{LINTIAN_BASE} = realpath(THISDIR . '/..')
   // die encode_utf8('Cannot resolve LINTIAN_BASE');
 
-# generate profile for FTP Master auto-reject
-my $auto_reject_url = 'https://ftp-master.debian.org/static/lintian.tags';
-my $contents = get($auto_reject_url);
-die encode_utf8("Couldn't get file from $auto_reject_url")
-  unless defined $contents;
+refresh_data();
 
-my $yaml = Load($contents);
-die encode_utf8("Couldn't parse output from $auto_reject_url")
-  unless defined $yaml;
+# reload
+my $profile = Lintian::Profile->new;
+$profile->load;
 
-my $base = $yaml->{lintian};
-die encode_utf8("Couldn't parse document base for $auto_reject_url")
-  unless defined $base;
+my $data = $profile->data;
 
-my @want_fatal = uniq @{ $base->{fatal} // [] };
-my @want_nonfatal = uniq @{ $base->{nonfatal} // [] };
+my @want_fatal = @{$data->auto_rejection->certain};
+my @want_nonfatal = @{$data->auto_rejection->preventable};
 
 # find all tags known to Lintian
 my @known_tags;
@@ -193,6 +187,25 @@ sub write_paragraph {
       if length $text;
 
     return $text;
+}
+
+sub refresh_data {
+
+    my $refresh_profile = Lintian::Profile->new;
+    $refresh_profile->load;
+
+    my $refresh_data = $refresh_profile->data;
+
+    my $archive = Lintian::Archive->new;
+    my $basedir = "$ENV{LINTIAN_BASE}/data";
+
+    # refresh data
+    $refresh_data->auto_rejection->refresh($archive, $basedir);
+
+    undef $refresh_profile;
+    undef $refresh_data;
+
+    return;
 }
 
 # Local Variables:

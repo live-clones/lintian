@@ -29,6 +29,7 @@ use Const::Fast;
 use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Data::Architectures;
+use Lintian::Data::Archive::AutoRejection;
 use Lintian::Data::Authority::DebconfSpecification;
 use Lintian::Data::Authority::DebianPolicy;
 use Lintian::Data::Authority::DeveloperReference;
@@ -124,16 +125,17 @@ sub all_sources {
     my ($self) = @_;
 
     my @sources = (
-        $self->architectures,$self->debconf_specification,
-        $self->developer_reference,$self->debhelper_addons,
-        $self->debhelper_commands,$self->doc_base_manual,
-        $self->filesystem_hierarchy_standard,$self->fonts,
-        $self->hardening_buildflags,$self->java_policy,
-        $self->lintian_manual,$self->menu_policy,
-        $self->menu_manual,$self->new_maintainer,
-        $self->perl_policy,$self->policy_manual,
-        $self->policy_releases,$self->python_policy,
-        $self->style_sheet,$self->vim_policy
+        $self->architectures,$self->auto_rejection,
+        $self->debconf_specification,$self->developer_reference,
+        $self->debhelper_addons,$self->debhelper_commands,
+        $self->doc_base_manual,$self->filesystem_hierarchy_standard,
+        $self->fonts,$self->hardening_buildflags,
+        $self->java_policy,$self->lintian_manual,
+        $self->menu_policy,$self->menu_manual,
+        $self->new_maintainer,$self->perl_policy,
+        $self->policy_manual,$self->policy_releases,
+        $self->python_policy,$self->style_sheet,
+        $self->vim_policy
     );
 
     return @sources;
@@ -180,6 +182,22 @@ has architectures => (
         $architectures->load($self->data_paths, $self->vendor);
 
         return $architectures;
+    });
+
+=item auto_rejection
+
+=cut
+
+has auto_rejection => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        my $auto_rejection = Lintian::Data::Archive::AutoRejection->new;
+        $auto_rejection->load($self->data_paths, $self->vendor);
+
+        return $auto_rejection;
     });
 
 =item debconf_specification
