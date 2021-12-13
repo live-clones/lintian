@@ -127,10 +127,6 @@ sub source {
     $self->hint('debian-tests-control-autodep8-is-obsolete', $control_autodep8)
       if defined $control_autodep8;
 
-    $self->hint('debian-tests-control-and-control-autodep8',
-        $tests_control,$control_autodep8)
-      if defined $tests_control && defined $control_autodep8;
-
     return;
 }
 
