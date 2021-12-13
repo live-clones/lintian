@@ -77,17 +77,22 @@ sub source {
     my $lc = List::Compare->new(\@testsuites, [$KNOWN_TESTSUITES->all]);
     my @unknown = $lc->get_Lonly;
 
-    $self->hint('unknown-testsuite', $_) for @unknown;
+    my $control_position
+      = $debian_control->source_fields->position('Testsuite');
+    my $control_pointer = $debian_control->item->pointer($control_position);
+
+    $self->pointed_hint('unknown-testsuite', $control_pointer, $_)for @unknown;
 
     my $tests_control
       = $self->processable->patched->resolve_path('debian/tests/control');
 
     # field added automatically since dpkg 1.17 when d/tests/control is present
-    $self->hint('unnecessary-testsuite-autopkgtest-field')
+    $self->pointed_hint('unnecessary-testsuite-autopkgtest-field',
+        $control_pointer)
       if (any { $_ eq 'autopkgtest' } @testsuites) && defined $tests_control;
 
     # need d/tests/control for plain autopkgtest
-    $self->hint('missing-tests-control')
+    $self->pointed_hint('missing-tests-control', $control_pointer)
       if (any { $_ eq 'autopkgtest' } @testsuites) && !defined $tests_control;
 
     die encode_utf8('debian tests control is not a regular file')
@@ -103,20 +108,26 @@ sub source {
 
         my @sections = @{$control_file->sections};
 
-        $self->hint('empty-debian-tests-control')
+        $self->pointed_hint('empty-debian-tests-control',
+            $tests_control->pointer)
           unless @sections;
 
-        $self->check_control_paragraph($_) for @sections;
+        $self->check_control_paragraph($tests_control, $_) for @sections;
 
         my @thorough
           = grep { $_->value('Restrictions') !~ m{\bsuperficial\b} } @sections;
-        $self->hint('superficial-tests')
+        $self->pointed_hint('superficial-tests', $tests_control->pointer)
           if @sections && !@thorough;
 
         if (scalar @sections == 1) {
-            my $command = $sections[0]->unfolded_value('Test-Command');
 
-            $self->hint('no-op-testsuite')
+            my $section = $sections[0];
+
+            my $command = $section->unfolded_value('Test-Command');
+            my $position = $section->position('Test-Command');
+            my $pointer = $tests_control->pointer($position);
+
+            $self->pointed_hint('no-op-testsuite', $pointer)
               if $command =~ m{^ \s* (?:/bin/)? true \s* $}sx;
         }
     }
@@ -124,22 +135,24 @@ sub source {
     my $control_autodep8
       = $self->processable->patched->resolve_path(
         'debian/tests/control.autodep8');
-    $self->hint('debian-tests-control-autodep8-is-obsolete', $control_autodep8)
+    $self->pointed_hint('debian-tests-control-autodep8-is-obsolete',
+        $control_autodep8->pointer)
       if defined $control_autodep8;
 
     return;
 }
 
 sub check_control_paragraph {
-    my ($self, $section) = @_;
+    my ($self, $tests_control, $section) = @_;
 
-    $self->hint('no-tests', 'line ' . $section->position)
+    my $section_pointer = $tests_control->pointer($section->position);
+
+    $self->pointed_hint('no-tests', $section_pointer)
       unless $section->declares('Tests') || $section->declares('Test-Command');
 
-    $self->hint(
-        'exclusive-runtime-tests-field','tests, test-command',
-        'paragraph starting at line', $section->position
-    ) if $section->declares('Tests') && $section->declares('Test-Command');
+    $self->pointed_hint('conflicting-test-fields', $section_pointer, 'Tests',
+        'Test-Command')
+      if $section->declares('Tests') && $section->declares('Test-Command');
 
     my @lowercase_names = map { lc } $section->names;
     my @lowercase_known = map { lc } @KNOWN_FIELDS;
@@ -148,15 +161,17 @@ sub check_control_paragraph {
     my @lowercase_unknown = $lc->get_Lonly;
 
     my @unknown = map { $section->literal_name($_) } @lowercase_unknown;
-    $self->hint('unknown-runtime-tests-field', $_,
-        'in line', $section->position($_))
+    $self->pointed_hint('unknown-runtime-tests-field',
+        $tests_control->pointer($section->position($_)), $_)
       for @unknown;
 
     my @features = $section->trimmed_list('Features', qr/ \s* , \s* | \s+ /x);
     for my $feature (@features) {
 
-        $self->hint('unknown-runtime-tests-feature',
-            $feature,'in line', $section->position('Features'))
+        my $position = $section->position('Features');
+        my $pointer = $tests_control->pointer($position);
+
+        $self->pointed_hint('unknown-runtime-tests-feature',$pointer, $feature)
           unless exists $KNOWN_FEATURES{$feature}
           || $feature =~ m/^test-name=\S+/;
     }
@@ -169,14 +184,15 @@ sub check_control_paragraph {
       = $section->trimmed_list('Restrictions', qr/ \s* , \s* | \s+ /x);
     for my $restriction (@restrictions) {
 
-        my $line = $section->position('Restrictions');
+        my $position = $section->position('Restrictions');
+        my $pointer = $tests_control->pointer($position);
 
-        $self->hint('unknown-runtime-tests-restriction',
-            $restriction,'in line', $line)
+        $self->pointed_hint('unknown-runtime-tests-restriction',
+            $pointer, $restriction)
           unless $KNOWN_RESTRICTIONS->recognizes($restriction);
 
-        $self->hint('obsolete-runtime-tests-restriction',
-            $restriction,'in line', $line)
+        $self->pointed_hint('obsolete-runtime-tests-restriction',
+            $pointer, $restriction)
           if $KNOWN_OBSOLETE_RESTRICTIONS->recognizes($restriction);
     }
 
@@ -185,17 +201,21 @@ sub check_control_paragraph {
     # trim both sides
     $test_command =~ s/^\s+|\s+$//g;
 
-    $self->hint('backgrounded-test-command', $test_command)
+    $self->pointed_hint('backgrounded-test-command',
+        $tests_control->pointer($section->position('Test-Command')),
+        $test_command)
       if $test_command =~ / & $/x;
 
     my $directory = $section->unfolded_value('Tests-Directory')
       || 'debian/tests';
 
-    my $position = $section->position('Tests');
+    my $tests_position = $section->position('Tests');
+    my $tests_pointer = $tests_control->pointer($tests_position);
+
     my @tests = uniq +$section->trimmed_list('Tests', qr/ \s* , \s* | \s+ /x);
 
     my @illegal_names = grep { !m{^ [ [:alnum:] \+ \- \. / ]+ $}x } @tests;
-    $self->hint('illegal-runtime-test-name', $_, 'in line', $position)
+    $self->pointed_hint('illegal-runtime-test-name', $tests_pointer, $_)
       for @illegal_names;
 
     my @paths;
@@ -210,7 +230,19 @@ sub check_control_paragraph {
 
     for my $path (@paths) {
 
-        $self->check_test_file($path, $position, $section);
+        my $item = $self->processable->patched->resolve_path($path);
+        if (defined $item) {
+
+            $self->pointed_hint('runtime-test-file-is-not-a-regular-file',
+                $tests_pointer, $path)
+              if !$item->is_open_ok;
+
+            $self->check_test_file($section, $item);
+
+        } else {
+            $self->pointed_hint('missing-runtime-test-file', $tests_pointer,
+                $path);
+        }
     }
 
     if ($section->declares('Depends')) {
@@ -226,38 +258,32 @@ sub check_control_paragraph {
         my @unparsable = grep { !exists $KNOWN_SPECIAL_DEPENDS{$_} }
           $relation->unparsable_predicates;
 
-        my $line = $section->position('Depends');
-        $self->hint(
-            'testsuite-dependency-has-unparsable-elements',
-            $DOUBLE_QUOTE . $_ . $DOUBLE_QUOTE,
-            "(in line $line)"
-        )for @unparsable;
+        my $position = $section->position('Depends');
+        my $pointer = $tests_control->pointer($position);
+
+        $self->pointed_hint('testsuite-dependency-has-unparsable-elements',
+            $pointer, $DOUBLE_QUOTE . $_ . $DOUBLE_QUOTE)
+          for @unparsable;
     }
 
     return;
 }
 
 sub check_test_file {
-    my ($self, $path, $position, $section) = @_;
+    my ($self, $section, $item) = @_;
 
-    my $file = $self->processable->patched->resolve_path($path);
-    unless (defined $file) {
-        $self->hint('missing-runtime-test-file', $path, "(line $position)");
-        return;
-    }
+    return
+      unless $item->is_open_ok;
 
-    unless ($file->is_open_ok) {
-        $self->hint('runtime-test-file-is-not-a-regular-file',
-            $path, "(line $position)");
-        return;
-    }
+    open(my $fd, '<', $item->unpacked_path)
+      or die encode_utf8('Cannot open ' . $item->unpacked_path);
 
-    open(my $fd, '<', $file->unpacked_path)
-      or die encode_utf8('Cannot open ' . $file->unpacked_path);
-
+    my $position = 1;
     while (my $line = <$fd>) {
 
-        $self->hint('uses-deprecated-adttmp', $path, "(line $.)")
+        my $pointer = $item->pointer($position);
+
+        $self->pointed_hint('uses-deprecated-adttmp', $pointer)
           if $line =~ /ADTTMP/;
 
         if ($line =~ /(py3versions)((?:\s+--?\w+)*)/) {
@@ -265,25 +291,28 @@ sub check_test_file {
             my $command = $1 . $2;
             my $options = $2;
 
-            $self->hint('runtime-test-file-uses-installed-python-versions',
-                $path, $command, "(line $.)")
+            $self->pointed_hint(
+                'runtime-test-file-uses-installed-python-versions',
+                $pointer, $command)
               if $options =~ /\s(?:-\w*i|--installed)/;
 
             my $depends_norestriction = Lintian::Relation->new;
             $depends_norestriction->load($section->unfolded_value('Depends'));
 
-            $self->hint(
+            $self->pointed_hint(
 'runtime-test-file-uses-supported-python-versions-without-test-depends',
-                $path,
-                $command,
-                "(line $.)"
+                $pointer,
+                $command
               )
               if $options =~ /\s(?:-\w*s|--supported)/
               && !$depends_norestriction->satisfies($PYTHON3_ALL_DEPEND);
         }
+
+    } continue {
+        ++$position;
     }
 
-    close($fd);
+    close $fd;
 
     return;
 }
