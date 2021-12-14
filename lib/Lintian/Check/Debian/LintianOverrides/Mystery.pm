@@ -36,23 +36,21 @@ with 'Lintian::Check';
 sub always {
     my ($self) = @_;
 
-    my %alias = %{$self->profile->known_aliases};
-
     for my $override (@{$self->processable->overrides}) {
-
-        my $tag_name = $override->tag_name;
-        next
-          if defined $self->profile->get_tag($tag_name);
 
         my $override_item = $self->processable->override_file;
         my $pointer = $override_item->pointer($override->position);
 
-        $self->pointed_hint('alien-tag', $pointer, $tag_name)
-          if !length $alias{$tag_name};
+        my $mystery_name = $override->tag_name;
+        my $current_name = $self->profile->get_current_name($mystery_name);
 
-        $self->pointed_hint('renamed-tag', $pointer, $tag_name, $ARROW,
-            $alias{$tag_name})
-          if length $alias{$tag_name};
+        $self->pointed_hint('alien-tag', $pointer, $mystery_name)
+          if !length $current_name;
+
+        $self->pointed_hint('renamed-tag', $pointer, $mystery_name, $ARROW,
+            $current_name)
+          if length $current_name
+          && $current_name ne $mystery_name;
     }
 
     return;

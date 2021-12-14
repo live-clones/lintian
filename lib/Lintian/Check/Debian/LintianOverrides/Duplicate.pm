@@ -36,17 +36,13 @@ with 'Lintian::Check';
 sub always {
     my ($self) = @_;
 
-    my %alias = %{$self->profile->known_aliases};
-
     my %pattern_tracker;
     for my $override (@{$self->processable->overrides}) {
 
         my $pattern = $override->pattern;
 
         # catch renames
-        my $tag_name = $override->tag_name;
-        $tag_name = $alias{$tag_name}
-          if length $alias{$tag_name};
+        my $tag_name = $self->profile->get_current_name($override->tag_name);
 
         push(@{$pattern_tracker{$tag_name}{$pattern}}, $override);
     }

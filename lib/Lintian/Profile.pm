@@ -24,7 +24,7 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Carp qw(croak);
+use Carp qw(carp croak);
 use Const::Fast;
 use Cwd qw(realpath);
 use File::BaseDir qw(config_home config_files data_home);
@@ -317,7 +317,7 @@ sub load {
 
             # record known aliases
             my @taken
-              = grep { defined $self->known_aliases->{$_} }
+              = grep { exists $self->known_aliases->{$_} }
               @{$tag->renamed_from};
 
             die encode_utf8('These aliases of the tag '
@@ -326,7 +326,20 @@ sub load {
                   . join($SPACE, @taken))
               if @taken;
 
-            $self->known_aliases->{$_} = $tag->name for @{$tag->renamed_from};
+            for my $old_name (@{$tag->renamed_from}) {
+
+                if (exists $self->known_aliases->{$old_name}) {
+
+                    my $taken = $self->known_aliases->{$old_name};
+                    my $tag_name = $tag->name;
+                    warn encode_utf8(
+"Alias $old_name for $tag_name ignored; already taken by $taken"
+                    );
+
+                } else {
+                    $self->known_aliases->{$old_name} = $tag->name;
+                }
+            }
         }
     }
 
@@ -397,9 +410,53 @@ Otherwise it returns undef.
 =cut
 
 sub get_tag {
-    my ($self, $name) = @_;
+    my ($self, $maybe_historical) = @_;
 
-    return $self->known_tags_by_name->{$name};
+    my $name = $self->get_current_name($maybe_historical);
+    return undef
+      unless length $name;
+
+    return $self->known_tags_by_name->{$name}
+      if exists $self->known_tags_by_name->{$name};
+
+    return undef;
+}
+
+=item get_current_name
+
+=cut
+
+sub get_current_name {
+    my ($self, $tag_name) = @_;
+
+    return $self->known_aliases->{$tag_name}
+      if exists $self->known_aliases->{$tag_name};
+
+    return $tag_name
+      if exists $self->known_tags_by_name->{$tag_name};
+
+    return $EMPTY;
+}
+
+=item set_durable ($tag)
+
+=cut
+
+sub set_durable {
+    my ($self, $maybe_historical, $status) = @_;
+
+    my $tag = $self->get_tag($maybe_historical);
+    croak encode_utf8("Unknown tag $maybe_historical.")
+      unless defined $tag;
+
+    $self->durable_tags_by_name->{$tag->name} = 1
+      if $status;
+
+    # settings from tag govern
+    delete $self->durable_tags_by_name->{$tag->name}
+      if !$status && !$tag->show_always;
+
+    return;
 }
 
 =item $prof->is_durable ($tag)
@@ -410,9 +467,17 @@ Returns a false value if the tag has been marked as
 =cut
 
 sub is_durable {
-    my ($self, $tag_name) = @_;
+    my ($self, $maybe_historical) = @_;
 
-    return exists $self->durable_tags_by_name->{$tag_name};
+    my $tag = $self->get_tag($maybe_historical);
+    croak encode_utf8("Unknown tag $maybe_historical.")
+      unless defined $tag;
+
+    return 1
+      if $tag->show_always
+      || exists $self->durable_tags_by_name->{$tag->name};
+
+    return 0;
 }
 
 =item $prof->known_checks
@@ -442,25 +507,16 @@ Enables a tag.
 =cut
 
 sub enable_tag {
-    my ($self, $name) = @_;
+    my ($self, $maybe_historical) = @_;
 
-    my $renamed = $self->known_aliases->{$name};
-    if (length $renamed) {
-
-        warn encode_utf8(
-"The tag $name was renamed to $renamed. Please adjust your profile.\n"
-        );
-        $name = $renamed;
-    }
-
-    my $tag = $self->known_tags_by_name->{$name};
-    die encode_utf8("Unknown tag $name")
-      unless $tag;
+    my $tag = $self->get_tag($maybe_historical);
+    croak encode_utf8("Unknown tag $maybe_historical.")
+      unless defined $tag;
 
     $self->enabled_checks_by_name->{$tag->check}++
-      unless exists $self->enabled_tags_by_name->{$name};
+      unless exists $self->enabled_tags_by_name->{$tag->name};
 
-    $self->enabled_tags_by_name->{$name} = 1;
+    $self->enabled_tags_by_name->{$tag->name} = 1;
 
     return;
 }
@@ -472,26 +528,17 @@ Disable a tag.
 =cut
 
 sub disable_tag {
-    my ($self, $name) = @_;
+    my ($self, $maybe_historical) = @_;
 
-    my $renamed = $self->known_aliases->{$name};
-    if (length $renamed) {
-
-        warn encode_utf8(
-"The tag $name was renamed to $renamed. Please adjust your profile.\n"
-        );
-        $name = $renamed;
-    }
-
-    my $tag = $self->known_tags_by_name->{$name};
-    die encode_utf8("Unknown tag $name")
-      unless $tag;
+    my $tag = $self->get_tag($maybe_historical);
+    croak encode_utf8("Unknown tag $maybe_historical.")
+      unless defined $tag;
 
     delete $self->enabled_checks_by_name->{$tag->check}
-      unless exists $self->enabled_tags_by_name->{$name}
+      unless exists $self->enabled_tags_by_name->{$tag->name}
       && --$self->enabled_checks_by_name->{$tag->check};
 
-    delete $self->enabled_tags_by_name->{$name};
+    delete $self->enabled_tags_by_name->{$tag->name};
 
     return;
 }
@@ -721,10 +768,14 @@ sub display_level_for_tag {
 =cut
 
 sub tag_is_enabled {
-    my ($self, $tag_name) = @_;
+    my ($self, $maybe_historical) = @_;
+
+    my $tag = $self->get_tag($maybe_historical);
+    croak encode_utf8("Unknown tag $maybe_historical.")
+      unless defined $tag;
 
     return 1
-      if exists $self->enabled_tags_by_name->{$tag_name};
+      if exists $self->enabled_tags_by_name->{$tag->name};
 
     return 0;
 }

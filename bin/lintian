@@ -455,12 +455,6 @@ if ($selected{'packages-from-file'} && $#ARGV+1 > 0) {
     delete($selected{'packages-from-file'});
 }
 
-die encode_utf8("Cannot use profile together with --ftp-master-rejects.\n")
-  if $selected{profile} && $selected{'ftp-master-rejects'};
-# --ftp-master-rejects is implemented in a profile
-$selected{profile} = 'debian/ftp-master-auto-reject'
-  if $selected{'ftp-master-rejects'};
-
 @{$selected{'fail-on'}} = split(/,/, join($COMMA, @{$selected{'fail-on'}}));
 my @known_fail_on = qw(
   error
@@ -506,6 +500,30 @@ $PROFILE->load(
     !$command_line{'no-user-dirs'});
 say {*STDERR} encode_utf8('Using profile ' . $PROFILE->name . $DOT)
   if $selected{debug};
+
+if ($selected{'ftp-master-rejects'}) {
+    say {*STDERR}
+      encode_utf8(
+        'But only with tags enabled from the FTP Master Auto-Reject list.')
+      if $selected{debug};
+
+    my $rejection = $PROFILE->data->auto_rejection;
+
+    my @certain = @{$rejection->certain};
+    my @preventable = @{$rejection->preventable};
+
+    # disable all tags
+    $PROFILE->disable_tag($_) for $PROFILE->known_tags;
+
+    # enable the ones they want
+    $PROFILE->enable_tag($_) for (@certain, @preventable);
+
+    # no overrides allowed
+    $PROFILE->set_durable($_, 1) for @certain;
+
+    # overrides okay
+    $PROFILE->set_durable($_, 0) for @preventable;
+}
 
 my $envlc = List::Compare->new([keys %config], \@ENV_FROM_CONFIG);
 my @from_file = $envlc->get_intersection;

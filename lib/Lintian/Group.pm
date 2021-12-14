@@ -205,17 +205,18 @@ sub process {
             say {*STDERR} encode_utf8('Loading overrides file (if any) ...')
               if $option->{debug};
 
-            my %alias = %{$self->profile->known_aliases};
             for my $override (@{$processable->overrides}) {
 
                 my $pattern = $override->pattern;
 
                 # catch renames
-                my $tag_name = $override->tag_name;
-                $tag_name = $alias{$tag_name}
-                  if length $alias{$tag_name};
+                my $tag_name
+                  = $self->profile->get_current_name($override->tag_name);
 
-                # also catches unknown tags
+                # catches unknown tags
+                next
+                  unless length $tag_name;
+
                 next
                   unless $self->profile->tag_is_enabled($tag_name);
 
