@@ -525,6 +525,11 @@
             "fonts-agave"
          ]
       },
+      "akatab-bold.ttf" : {
+         "installed_by" : [
+            "fonts-sil-akatab"
+         ]
+      },
       "akatab-regular.ttf" : {
          "installed_by" : [
             "fonts-sil-akatab"
@@ -805,7 +810,22 @@
             "fonts-ancient-scripts"
          ]
       },
-      "andika-r.ttf" : {
+      "andika-bold.ttf" : {
+         "installed_by" : [
+            "fonts-sil-andika"
+         ]
+      },
+      "andika-bolditalic.ttf" : {
+         "installed_by" : [
+            "fonts-sil-andika"
+         ]
+      },
+      "andika-italic.ttf" : {
+         "installed_by" : [
+            "fonts-sil-andika"
+         ]
+      },
+      "andika-regular.ttf" : {
          "installed_by" : [
             "fonts-sil-andika"
          ]
@@ -2155,22 +2175,22 @@
             "fonts-uralic"
          ]
       },
-      "charissil-b.ttf" : {
+      "charissil-bold.ttf" : {
          "installed_by" : [
             "fonts-sil-charis"
          ]
       },
-      "charissil-bi.ttf" : {
+      "charissil-bolditalic.ttf" : {
          "installed_by" : [
             "fonts-sil-charis"
          ]
       },
-      "charissil-i.ttf" : {
+      "charissil-italic.ttf" : {
          "installed_by" : [
             "fonts-sil-charis"
          ]
       },
-      "charissil-r.ttf" : {
+      "charissil-regular.ttf" : {
          "installed_by" : [
             "fonts-sil-charis"
          ]
@@ -3110,7 +3130,7 @@
             "fonts-baekmuk"
          ]
       },
-      "doulossil-r.ttf" : {
+      "doulossil-regular.ttf" : {
          "installed_by" : [
             "fonts-sil-doulos"
          ]
@@ -4798,12 +4818,42 @@
             "fonts-sil-gentium"
          ]
       },
-      "gentiumplus-i.ttf" : {
+      "gentiumbookplus-bold.ttf" : {
          "installed_by" : [
             "fonts-sil-gentiumplus"
          ]
       },
-      "gentiumplus-r.ttf" : {
+      "gentiumbookplus-bolditalic.ttf" : {
+         "installed_by" : [
+            "fonts-sil-gentiumplus"
+         ]
+      },
+      "gentiumbookplus-italic.ttf" : {
+         "installed_by" : [
+            "fonts-sil-gentiumplus"
+         ]
+      },
+      "gentiumbookplus-regular.ttf" : {
+         "installed_by" : [
+            "fonts-sil-gentiumplus"
+         ]
+      },
+      "gentiumplus-bold.ttf" : {
+         "installed_by" : [
+            "fonts-sil-gentiumplus"
+         ]
+      },
+      "gentiumplus-bolditalic.ttf" : {
+         "installed_by" : [
+            "fonts-sil-gentiumplus"
+         ]
+      },
+      "gentiumplus-italic.ttf" : {
+         "installed_by" : [
+            "fonts-sil-gentiumplus"
+         ]
+      },
+      "gentiumplus-regular.ttf" : {
          "installed_by" : [
             "fonts-sil-gentiumplus"
          ]
