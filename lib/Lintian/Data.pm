@@ -49,6 +49,7 @@ use Lintian::Data::Debhelper::Levels;
 use Lintian::Data::Fonts;
 use Lintian::Data::Buildflags::Hardening;
 use Lintian::Data::Policy::Releases;
+use Lintian::Data::Provides::MailTransportAgent;
 use Lintian::Data::Stylesheet;
 use Lintian::Data::Traditional;
 
@@ -131,11 +132,11 @@ sub all_sources {
         $self->doc_base_manual,$self->filesystem_hierarchy_standard,
         $self->fonts,$self->hardening_buildflags,
         $self->java_policy,$self->lintian_manual,
-        $self->menu_policy,$self->menu_manual,
-        $self->new_maintainer,$self->perl_policy,
-        $self->policy_manual,$self->policy_releases,
-        $self->python_policy,$self->style_sheet,
-        $self->vim_policy
+        $self->mail_transport_agents,$self->menu_policy,
+        $self->menu_manual,$self->new_maintainer,
+        $self->perl_policy,$self->policy_manual,
+        $self->policy_releases,$self->python_policy,
+        $self->style_sheet,$self->vim_policy
     );
 
     return @sources;
@@ -371,6 +372,22 @@ has lintian_manual => (
         my ($self) = @_;
 
         my $manual = Lintian::Data::Authority::LintianManual->new;
+        $manual->load($self->data_paths, $self->vendor);
+
+        return $manual;
+    });
+
+=item mail_transport_agents
+
+=cut
+
+has mail_transport_agents => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        my $manual = Lintian::Data::Provides::MailTransportAgent->new;
         $manual->load($self->data_paths, $self->vendor);
 
         return $manual;
