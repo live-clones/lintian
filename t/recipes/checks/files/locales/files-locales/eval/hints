@@ -1,4 +1,4 @@
-files-locales (binary): unknown-locale-code zz
-files-locales (binary): incorrect-locale-code ind -> id
-files-locales (binary): incorrect-locale-code en_UK -> en_GB
-files-locales (binary): incorrect-locale-code cz -> cs
+files-locales (binary): unknown-locale-code zz [usr/share/locale/zz/]
+files-locales (binary): incorrect-locale-code ind -> id [usr/share/locale/ind/]
+files-locales (binary): incorrect-locale-code en_UK -> en_GB [usr/share/locale/en_UK/]
+files-locales (binary): incorrect-locale-code cz_CZ -> cs_CZ [usr/share/locale/cz_CZ/]

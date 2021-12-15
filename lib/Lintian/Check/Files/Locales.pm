@@ -1,6 +1,12 @@
 # files/locales -- lintian check script -*- perl -*-
 
 # Copyright © 1998 Christian Schwarz and Richard Braakman
+# Copyright © 2013 Niels Thykier <niels@thykier.net>
+# Copyright © 2019 Adam D. Barratt <adam@adam-barratt.org.uk>
+# Copyright © 2021 Felix Lechner
+#
+# Based in part on a shell script that was:
+#   Copyright © 2010 Raphael Geissert <atomo64@gmail.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -24,10 +30,63 @@ use v5.20;
 use warnings;
 use utf8;
 
+use Const::Fast;
+use JSON::MaybeXS;
+use List::SomeUtils qw(first_value);
+use Path::Tiny;
+
+const my $EMPTY => q{};
+
+const my $ARROW => q{->};
+
+const my $RESERVED => $EMPTY;
+const my $SPECIAL => q{S};
+
+const my %CONFUSING_LANGUAGES => (
+    # Albanian is sq, not al:
+    'al' => 'sq',
+    # Chinese is zh, not cn:
+    'cn' => 'zh',
+    # Czech is cs, not cz:
+    'cz' => 'cs',
+    # Danish is da, not dk:
+    'dk' => 'da',
+    # Greek is el, not gr:
+    'gr' => 'el',
+    # Indonesian is id, not in:
+    'in' => 'id',
+);
+
+const my %CONFUSING_COUNTRIES => (
+    # UK != GB
+    'en_UK' => 'en_GB',
+);
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+has ISO639_3_by_alpha3 => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        local $ENV{LC_ALL} = 'C';
+
+        my $bytes = path('/usr/share/iso-codes/json/iso_639-3.json')->slurp;
+        my $json = decode_json($bytes);
+
+        my %iso639_3;
+        for my $entry (@{$json->{'639-3'}}) {
+
+            my $alpha_3 = $entry->{alpha_3};
+
+            $iso639_3{$alpha_3} = $entry;
+        }
+
+        return \%iso639_3;
+    });
 
 has LOCALE_CODES => (
     is => 'rw',
@@ -35,53 +94,101 @@ has LOCALE_CODES => (
     default => sub {
         my ($self) = @_;
 
-        return $self->data->load('files/locale-codes', qr/\s++/);
-    });
+        local $ENV{LC_ALL} = 'C';
 
-has INCORRECT_LOCALE_CODES => (
-    is => 'rw',
-    lazy => 1,
-    default => sub {
-        my ($self) = @_;
+        my %CODES;
+        for my $entry (values %{$self->ISO639_3_by_alpha3}) {
 
-        return $self->data->load('files/incorrect-locale-codes',qr/\s++/);
+            my $type = $entry->{type};
+
+            # https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=692548#10
+            next
+              if $type eq $RESERVED || $type eq $SPECIAL;
+
+            # also have two letters, ISO 639-1
+            my $two_letters;
+            $two_letters = $entry->{alpha_2}
+              if exists $entry->{alpha_2};
+
+            $CODES{$two_letters} = $EMPTY
+              if length $two_letters;
+
+            # three letters, ISO 639-2
+            my $three_letters = $entry->{alpha_3};
+
+            # a value indicates that two letters are preferred
+            $CODES{$three_letters} = $two_letters || $EMPTY;
+        }
+
+        return \%CODES;
     });
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
-    if (   $file->is_dir
-        && $file->name =~ m{^usr/share/locale/([^/]+)/$}) {
+    return
+      unless $item->is_dir;
 
-        # Without encoding:
-        my ($lwccode) = split(m/[.@]/, $1);
-        # Without country code:
-        my ($lcode) = split(m/_/, $lwccode);
+    return
+      unless $item->name =~ m{^ usr/share/locale/ ([^/]+) / $}x;
 
-        # special exception:
-        if ($lwccode ne 'l10n') {
+    my $folder = $1;
 
-            if ($self->INCORRECT_LOCALE_CODES->recognizes($lwccode)) {
-                $self->hint('incorrect-locale-code',"$lwccode ->",
-                    $self->INCORRECT_LOCALE_CODES->value($lwccode));
+    # without encoding
+    my ($with_country) = split(m/[.@]/, $folder);
 
-            } elsif ($self->INCORRECT_LOCALE_CODES->recognizes($lcode)) {
-                $self->hint('incorrect-locale-code',"$lcode ->",
-                    $self->INCORRECT_LOCALE_CODES->value($lcode));
+    # special exception
+    return
+      if $with_country eq 'l10n';
 
-            } elsif (!$self->LOCALE_CODES->recognizes($lcode)) {
-                $self->hint('unknown-locale-code', $lcode);
+    # without country code
+    my ($two_or_three, $country) = split(m/_/, $with_country);
 
-            } elsif ($self->LOCALE_CODES->recognizes($lcode)
-                && defined($self->LOCALE_CODES->value($lcode))) {
-                # If there's a key-value pair in the codes
-                # list it means the ISO 639-2 code is being
-                # used instead of ISO 639-1's
-                $self->hint('incorrect-locale-code', "$lcode ->",
-                    $self->LOCALE_CODES->value($lcode));
-            }
-        }
+    $country //= $EMPTY;
+
+    return
+      unless length $two_or_three;
+
+    # check some common language errors
+    if (exists $CONFUSING_LANGUAGES{$two_or_three}) {
+
+        my $fixed = $folder;
+        $fixed =~ s{^ $two_or_three }{$CONFUSING_LANGUAGES{$two_or_three}}x;
+
+        $self->pointed_hint('incorrect-locale-code', $item->pointer, $folder,
+            $ARROW,$fixed);
+        return;
     }
+
+    # check some common country errors
+    if (exists $CONFUSING_COUNTRIES{$with_country}) {
+
+        my $fixed = $folder;
+        $fixed =~ s{^ $with_country }{$CONFUSING_COUNTRIES{$with_country}}x;
+
+        $self->pointed_hint('incorrect-locale-code', $item->pointer, $folder,
+            $ARROW,$fixed);
+        return;
+    }
+
+    # check known codes
+    if (exists $self->LOCALE_CODES->{$two_or_three}) {
+
+        my $replacement = $self->LOCALE_CODES->{$two_or_three};
+        return
+          unless length $replacement;
+
+        # a value indicates that two letters are preferred
+        my $fixed = $folder;
+        $fixed =~ s{^ $two_or_three }{$replacement}x;
+
+        $self->pointed_hint('incorrect-locale-code', $item->pointer, $folder,
+            $ARROW,$fixed);
+
+        return;
+    }
+
+    $self->pointed_hint('unknown-locale-code', $item->pointer, $folder);
 
     return;
 }
