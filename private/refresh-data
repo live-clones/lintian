@@ -74,6 +74,8 @@ if (@ARGV) {
 
 my $total = scalar @selected;
 
+say "Refreshing $total data sources.";
+
 MCE::Loop->init(
     max_workers => 'auto',
     chunk_size => 1
@@ -96,8 +98,6 @@ my @results = mce_loop {
         return;
     }
 
-    $mce->say(encode_utf8("[$counter] $title refreshing..."));
-
     try {
         $data_source->refresh($archive, $basedir);
 
@@ -108,7 +108,7 @@ my @results = mce_loop {
     }
 
     $mce->gather($REFRESH_SUCCESSFUL);
-    $mce->say(encode_utf8("[$counter] $title done."));
+    $mce->say(encode_utf8("[$counter] $title"));
 
 }
 @selected;
