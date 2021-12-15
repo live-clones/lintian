@@ -23,26 +23,25 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Carp qw(croak);
 use Const::Fast;
 use File::Basename;
 use IPC::Run3;
 use List::SomeUtils qw(first_value any uniq);
-use JSON::MaybeXS;
 use Path::Tiny;
 use PerlIO::gzip;
 use Unicode::UTF8 qw(encode_utf8);
 
-use Lintian::Deb822;
-
-use Moo;
-use namespace::clean;
-
-const my $EMPTY => q{};
 const my $SPACE => q{ };
 const my $SLASH => q{/};
 
 const my $WAIT_STATUS_SHIFT => 8;
+
+const my $COMMANDS => 'commands';
+
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Data::PreambledJSON';
 
 =head1 NAME
 
@@ -64,8 +63,6 @@ This module provides a way to load data files for debhelper.
 
 =item location
 
-=item preamble
-
 =item installable_names_by_command
 
 =item maint_commands
@@ -84,7 +81,6 @@ has location => (
     default => 'debhelper/commands.json'
 );
 
-has preamble => (is => 'rw');
 has installable_names_by_command => (is => 'rw', default => sub { {} });
 has maint_commands => (is => 'rw', default => sub { [] });
 has misc_depends_commands => (is => 'rw', default => sub { [] });
@@ -127,15 +123,11 @@ sub load {
     my @candidates = map { $_ . $SLASH . $self->location } @{$search_space};
     my $path = first_value { -e } @candidates;
 
-    croak encode_utf8('Unknown data file: ' . $self->location)
-      unless length $path;
+    my $reference;
+    return 0
+      unless $self->read_file($path, \$reference);
 
-    my $json = path($path)->slurp;
-    my $data = decode_json($json);
-
-    $self->preamble($data->{preamble});
-
-    my %commands = %{$data->{commands} // {}};
+    my %commands = %{$reference // {}};
 
     my %installable_names_by_command;
     my @maint_commands;
@@ -160,7 +152,7 @@ sub load {
     $self->maint_commands(\@maint_commands);
     $self->misc_depends_commands(\@misc_depends_commands);
 
-    return;
+    return 1;
 }
 
 =item refresh
@@ -287,30 +279,10 @@ sub refresh {
 
     $commands{$_}{uses_misc_depends} = 1 for @uses_misc_depends;
 
-    my %preamble;
-    $preamble{title} = $self->title;
+    my $data_path = "$basedir/" . $self->location;
+    my $status = $self->write_file($COMMANDS, \%commands,$data_path);
 
-    my %all;
-    $all{preamble} = \%preamble;
-    $all{commands} = \%commands;
-
-    # convert to UTF-8 prior to encoding in JSON
-    my $encoder = JSON->new;
-    $encoder->canonical;
-    $encoder->utf8;
-    $encoder->pretty;
-
-    my $json = $encoder->encode(\%all);
-
-    my $datapath = "$basedir/" . $self->location;
-    my $parentdir = path($datapath)->parent->stringify;
-    path($parentdir)->mkpath
-      unless -e $parentdir;
-
-    # already in UTF-8
-    path($datapath)->spew($json);
-
-    return 1;
+    return $status;
 }
 
 =back

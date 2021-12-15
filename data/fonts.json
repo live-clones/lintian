@@ -28476,6 +28476,7 @@
       }
    },
    "preamble" : {
+      "cargo" : "fonts",
       "title" : "Fonts Available for Installation"
    }
 }

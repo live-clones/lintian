@@ -167,7 +167,9 @@ sub load {
     my $path = first_value { -e } @candidates;
 
     my $reference;
-    $self->read_file($path, \$reference);
+    return 0
+      unless $self->read_file($path, \$reference);
+
     my @releases = @{$reference // []};
 
     my @sorted = rev_nsort_by { $_->{epoch} } @releases;
@@ -186,7 +188,7 @@ sub load {
 
     $self->by_version(\%by_version);
 
-    return;
+    return 1;
 }
 
 =item refresh
@@ -213,11 +215,11 @@ sub refresh {
     my $rfc822;
     my $stderr;
     run3(\@command, \undef, \$rfc822, \$stderr);
-    my $status = ($? >> $WAIT_STATUS_SHIFT);
+    my $dpkg_status = ($? >> $WAIT_STATUS_SHIFT);
 
     # already in UTF-8
     die $stderr
-      if $status;
+      if $dpkg_status;
 
     my $deb822 = Lintian::Deb822->new;
     my @sections = $deb822->parse_string(decode_utf8($rfc822));
@@ -246,9 +248,9 @@ sub refresh {
     my @sorted = rev_nsort_by { $_->{epoch} } @releases;
 
     my $data_path = "$basedir/" . $self->location;
-    $self->write_file($RELEASES, \@releases, $data_path);
+    my $write_status = $self->write_file($RELEASES, \@releases, $data_path);
 
-    return 1;
+    return $write_status;
 }
 
 =back

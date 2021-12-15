@@ -26,19 +26,20 @@ use utf8;
 use Carp qw(croak);
 use Const::Fast;
 use List::SomeUtils qw(first_value any uniq);
-use JSON::MaybeXS;
-use Path::Tiny;
 use PerlIO::gzip;
 use Unicode::UTF8 qw(encode_utf8);
 
-use Moo;
-use namespace::clean;
-
-const my $EMPTY => q{};
 const my $SPACE => q{ };
 const my $SLASH => q{/};
 
 const my $WAIT_STATUS_SHIFT => 8;
+
+const my $ADD_ONS => 'add_ons';
+
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Data::PreambledJSON';
 
 =head1 NAME
 
@@ -60,8 +61,6 @@ This module provides a way to load data files for debhelper.
 
 =item location
 
-=item preamble
-
 =item installable_names_by_add_on
 
 =cut
@@ -76,7 +75,6 @@ has location => (
     default => 'debhelper/add_ons.json'
 );
 
-has preamble => (is => 'rw');
 has installable_names_by_add_on => (is => 'rw', default => sub { {} });
 
 =item all
@@ -117,15 +115,11 @@ sub load {
     my @candidates = map { $_ . $SLASH . $self->location } @{$search_space};
     my $path = first_value { -e } @candidates;
 
-    croak encode_utf8('Unknown data file: ' . $self->location)
-      unless length $path;
+    my $reference;
+    return 0
+      unless $self->read_file($path, \$reference);
 
-    my $json = path($path)->slurp;
-    my $data = decode_json($json);
-
-    $self->preamble($data->{preamble});
-
-    my %add_ons = %{$data->{add_ons} // {}};
+    my %add_ons = %{$reference // {}};
     my %installable_names_by_add_on;
 
     for my $name (keys %add_ons) {
@@ -138,7 +132,7 @@ sub load {
 
     $self->installable_names_by_add_on(\%installable_names_by_add_on);
 
-    return;
+    return 1;
 }
 
 =item refresh
@@ -194,30 +188,10 @@ sub refresh {
         close $fd;
     }
 
-    my %preamble;
-    $preamble{title} = $self->title;
+    my $data_path = "$basedir/" . $self->location;
+    my $status = $self->write_file($ADD_ONS, \%add_ons,$data_path);
 
-    my %all;
-    $all{preamble} = \%preamble;
-    $all{add_ons} = \%add_ons;
-
-    # convert to UTF-8 prior to encoding in JSON
-    my $encoder = JSON->new;
-    $encoder->canonical;
-    $encoder->utf8;
-    $encoder->pretty;
-
-    my $json = $encoder->encode(\%all);
-
-    my $datapath = "$basedir/" . $self->location;
-    my $parentdir = path($datapath)->parent->stringify;
-    path($parentdir)->mkpath
-      unless -e $parentdir;
-
-    # already in UTF-8
-    path($datapath)->spew($json);
-
-    return 1;
+    return $status;
 }
 
 =back

@@ -442,6 +442,7 @@
       }
    },
    "preamble" : {
+      "cargo" : "add_ons",
       "title" : "Debhelper Add-ons"
    }
 }

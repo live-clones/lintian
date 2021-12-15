@@ -173,7 +173,10 @@ sub load {
     my $path = first_value { -e } @candidates;
 
     my $reference;
-    $self->read_file($path, \$reference);
+
+    return 0
+      unless $self->read_file($path, \$reference);
+
     my @sections = @{$reference // []};
 
     for my $section (@sections) {
@@ -185,7 +188,7 @@ sub load {
         $self->by_section_key->{$key} //= $section;
     }
 
-    return;
+    return 1;
 }
 
 =item refresh
@@ -260,9 +263,9 @@ sub refresh {
     }
 
     my $data_path = "$basedir/" . $self->location;
-    $self->write_file($SECTIONS, \@sections, $data_path);
+    my $status = $self->write_file($SECTIONS, \@sections, $data_path);
 
-    return;
+    return $status;
 }
 
 =back

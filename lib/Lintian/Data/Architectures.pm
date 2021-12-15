@@ -373,11 +373,13 @@ sub load {
     my $path = first_value { -e } @candidates;
 
     my $host_variables;
-    $self->read_file($path, \$host_variables);
+
+    return 0
+      unless $self->read_file($path, \$host_variables);
 
     $self->host_variables($host_variables);
 
-    return;
+    return 1;
 }
 
 =item refresh
@@ -413,9 +415,10 @@ sub refresh {
     $self->cargo('host_variables');
 
     my $data_path = "$basedir/" . $self->location;
-    $self->write_file($HOST_VARIABLES, \%host_variables, $data_path);
+    my $status
+      = $self->write_file($HOST_VARIABLES, \%host_variables, $data_path);
 
-    return 1;
+    return $status;
 }
 
 =back

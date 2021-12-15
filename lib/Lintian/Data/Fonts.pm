@@ -21,25 +21,21 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Carp qw(croak);
 use Const::Fast;
 use File::Basename;
-use JSON::MaybeXS;
 use List::SomeUtils qw(first_value uniq);
-use Path::Tiny;
 use PerlIO::gzip;
 use Unicode::UTF8 qw(encode_utf8);
+
+const my $SPACE => q{ };
+const my $SLASH => q{/};
+
+const my $FONTS => 'fonts';
 
 use Moo;
 use namespace::clean;
 
-with 'Lintian::Data::JoinedLines';
-
-const my $EMPTY => q{};
-const my $SPACE => q{ };
-const my $SLASH => q{/};
-
-const my $NEWLINE => qq{\n};
+with 'Lintian::Data::PreambledJSON';
 
 =head1 NAME
 
@@ -61,8 +57,6 @@ This module provides a way to load data files for fonts.
 
 =item location
 
-=item preamble
-
 =item installable_names_by_font
 
 =cut
@@ -77,7 +71,6 @@ has location => (
     default => 'fonts.json'
 );
 
-has preamble => (is => 'rw');
 has installable_names_by_font => (is => 'rw', default => sub { {} });
 
 =item all
@@ -117,15 +110,11 @@ sub load {
     my @candidates = map { $_ . $SLASH . $self->location } @{$search_space};
     my $path = first_value { -e } @candidates;
 
-    croak encode_utf8('Unknown data file: ' . $self->location)
-      unless length $path;
+    my $reference;
+    return 0
+      unless $self->read_file($path, \$reference);
 
-    my $json = path($path)->slurp;
-    my $data = decode_json($json);
-
-    $self->preamble($data->{preamble});
-
-    my %fonts = %{$data->{fonts} // {}};
+    my %fonts = %{$reference // {}};
     my %installable_names_by_font;
 
     for my $name (keys %fonts) {
@@ -138,7 +127,7 @@ sub load {
 
     $self->installable_names_by_font(\%installable_names_by_font);
 
-    return;
+    return 1;
 }
 
 =item refresh
@@ -200,30 +189,10 @@ sub refresh {
         close $fd;
     }
 
-    my %preamble;
-    $preamble{title} = $self->title;
+    my $data_path = "$basedir/" . $self->location;
+    my $status = $self->write_file($FONTS, \%fonts,$data_path);
 
-    my %all;
-    $all{preamble} = \%preamble;
-    $all{fonts} = \%fonts;
-
-    # convert to UTF-8 prior to encoding in JSON
-    my $encoder = JSON->new;
-    $encoder->canonical;
-    $encoder->utf8;
-    $encoder->pretty;
-
-    my $json = $encoder->encode(\%all);
-
-    my $datapath = "$basedir/" . $self->location;
-    my $parentdir = path($datapath)->parent->stringify;
-    path($parentdir)->mkpath
-      unless -e $parentdir;
-
-    # already in UTF-8
-    path($datapath)->spew($json);
-
-    return;
+    return $status;
 }
 
 =back

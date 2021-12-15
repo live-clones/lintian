@@ -21,6 +21,7 @@ use v5.20;
 use warnings;
 use utf8;
 
+use Carp qw(carp);
 use Const::Fast;
 use JSON::MaybeXS;
 use Path::Tiny;
@@ -71,8 +72,8 @@ sub read_file {
 
     if (!length $path || !-e $path) {
 
-        warn encode_utf8("Unknown data file: $path");
-        return;
+        carp encode_utf8("Unknown data file: $path");
+        return 0;
     }
 
     my $json = path($path)->slurp;
@@ -82,18 +83,34 @@ sub read_file {
     my $stored_title = $preamble{$TITLE};
     my $storage_key = $preamble{$CARGO};
 
-    warn "Please refresh data file $path: wrong title $stored_title"
-      unless $stored_title eq $self->title;
+    unless (length $stored_title && length $storage_key) {
+        warn encode_utf8("Please refresh data file $path: invalid format");
+        return 0;
+    }
 
-    die "Please refresh data file $path: disallowed cargo key $storage_key"
-      if $storage_key eq $PREAMBLE;
+    unless ($stored_title eq $self->title) {
+        warn encode_utf8(
+            "Please refresh data file $path: wrong title $stored_title");
+        return 0;
+    }
 
-    die"Please refresh data file $path: cargo key $storage_key not found"
-      unless exists $data->{$storage_key};
+    if ($storage_key eq $PREAMBLE) {
+        warn encode_utf8(
+            "Please refresh data file $path: disallowed cargo key $storage_key"
+        );
+        return 0;
+    }
+
+    if (!exists $data->{$storage_key}) {
+        warn encode_utf8(
+            "Please refresh data file $path: cargo key $storage_key not found"
+        );
+        return 0;
+    }
 
     ${$double_reference} = $data->{$storage_key};
 
-    return;
+    return 1;
 }
 
 =item write_file
@@ -103,7 +120,8 @@ sub read_file {
 sub write_file {
     my ($self, $storage_key, $reference, $path) = @_;
 
-    die "Please refresh data file $path: disallowed cargo key $storage_key"
+    die
+"Cannot write preambled JSON data file $path: disallowed cargo key $storage_key"
       if $storage_key eq $PREAMBLE;
 
     my %preamble;

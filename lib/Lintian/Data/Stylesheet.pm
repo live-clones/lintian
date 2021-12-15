@@ -21,7 +21,7 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Carp qw(croak);
+use Carp qw(carp);
 use Const::Fast;
 use HTTP::Tiny;
 use List::SomeUtils qw(first_value);
@@ -80,14 +80,16 @@ sub load {
     my @candidates = map { $_ . $SLASH . $self->location } @{$search_space};
     my $path = first_value { -e } @candidates;
 
-    croak encode_utf8('Unknown data file: ' . $self->location)
-      unless length $path;
+    unless (length $path) {
+        carp encode_utf8('Unknown data file: ' . $self->location);
+        return 0;
+    }
 
     my $style_sheet = path($path)->slurp_utf8;
 
     $self->css($style_sheet);
 
-    return;
+    return 1;
 }
 
 =item refresh

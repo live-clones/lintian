@@ -24,7 +24,7 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Carp qw(croak);
+use Carp qw(carp croak);
 use Const::Fast;
 use List::SomeUtils qw(any);
 use Unicode::UTF8 qw(encode_utf8);
@@ -218,19 +218,18 @@ sub load {
     my ($self, $search_space, $our_vendor) = @_;
 
     my @remaining_lineage = @{$search_space // []};
-    return 0
-      unless @remaining_lineage;
+    unless (@remaining_lineage) {
+
+        carp encode_utf8('Unknown data file: ' . $self->location);
+        return 0;
+    }
 
     my $directory = shift @remaining_lineage;
 
     my $path = $directory . $SLASH . $self->location;
-    unless (-e $path) {
 
-        $self->load(\@remaining_lineage, $our_vendor)
-          or croak encode_utf8('Unknown data file: ' . $self->location);
-
-        return 1;
-    }
+    return $self->load(\@remaining_lineage, $our_vendor)
+      unless -e $path;
 
     open(my $fd, '<:utf8_strict', $path)
       or die encode_utf8("Cannot open $path: $!");

@@ -92,11 +92,12 @@ sub load {
     my $path = first_value { -e } @candidates;
 
     my $recommended_features;
-    $self->read_file($path, \$recommended_features);
+    return 0
+      unless $self->read_file($path, \$recommended_features);
 
     $self->recommended_features($recommended_features);
 
-    return;
+    return 1;
 }
 
 =item refresh
@@ -132,10 +133,11 @@ sub refresh {
     }
 
     my $data_path = "$basedir/" . $self->location;
-    $self->write_file($RECOMMENDED_FEATURES, \%recommended_features,
+    my $status
+      = $self->write_file($RECOMMENDED_FEATURES, \%recommended_features,
         $data_path);
 
-    return 1;
+    return $status;
 }
 
 =back
