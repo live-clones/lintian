@@ -25,24 +25,10 @@ use warnings;
 use utf8;
 
 use Carp qw(croak);
-use Const::Fast;
 use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Data::Architectures;
 use Lintian::Data::Archive::AutoRejection;
-use Lintian::Data::Authority::DebconfSpecification;
-use Lintian::Data::Authority::DebianPolicy;
-use Lintian::Data::Authority::DeveloperReference;
-use Lintian::Data::Authority::DocBaseManual;
-use Lintian::Data::Authority::FilesystemHierarchy;
-use Lintian::Data::Authority::JavaPolicy;
-use Lintian::Data::Authority::LintianManual;
-use Lintian::Data::Authority::MenuPolicy;
-use Lintian::Data::Authority::MenuManual;
-use Lintian::Data::Authority::NewMaintainer;
-use Lintian::Data::Authority::PerlPolicy;
-use Lintian::Data::Authority::PythonPolicy;
-use Lintian::Data::Authority::VimPolicy;
 use Lintian::Data::Debhelper::Addons;
 use Lintian::Data::Debhelper::Commands;
 use Lintian::Data::Debhelper::Levels;
@@ -53,10 +39,10 @@ use Lintian::Data::Provides::MailTransportAgent;
 use Lintian::Data::Stylesheet;
 use Lintian::Data::Traditional;
 
-const my $EMPTY => q{};
-
 use Moo;
 use namespace::clean;
+
+with 'Lintian::Data::Authorities';
 
 =head1 NAME
 
@@ -142,33 +128,6 @@ sub all_sources {
     return @sources;
 }
 
-=item markdown_authority_reference
-
-=cut
-
-sub markdown_authority_reference {
-    my ($self, $volume, $section) = @_;
-
-    my @MARKDOWN_CAPABLE = (
-        $self->new_maintainer,$self->menu_policy,
-        $self->perl_policy,$self->python_policy,
-        $self->java_policy,$self->vim_policy,
-        $self->lintian_manual,$self->developer_reference,
-        $self->policy_manual,$self->debconf_specification,
-        $self->menu_manual,$self->doc_base_manual,
-        $self->filesystem_hierarchy_standard,
-    );
-
-    my %by_shorthand = map { $_->shorthand => $_ } @MARKDOWN_CAPABLE;
-
-    return $EMPTY
-      unless exists $by_shorthand{$volume};
-
-    my $manual = $by_shorthand{$volume};
-
-    return $manual->markdown_citation($section);
-}
-
 =item architectures
 
 =cut
@@ -199,22 +158,6 @@ has auto_rejection => (
         $auto_rejection->load($self->data_paths, $self->vendor);
 
         return $auto_rejection;
-    });
-
-=item debconf_specification
-
-=cut
-
-has debconf_specification => (
-    is => 'rw',
-    lazy => 1,
-    default => sub {
-        my ($self) = @_;
-
-        my $manual = Lintian::Data::Authority::DebconfSpecification->new;
-        $manual->load($self->data_paths, $self->vendor);
-
-        return $manual;
     });
 
 =item debhelper_addons
@@ -265,54 +208,6 @@ has debhelper_levels => (
         return $levels;
     });
 
-=item developer_reference
-
-=cut
-
-has developer_reference => (
-    is => 'rw',
-    lazy => 1,
-    default => sub {
-        my ($self) = @_;
-
-        my $manual = Lintian::Data::Authority::DeveloperReference->new;
-        $manual->load($self->data_paths, $self->vendor);
-
-        return $manual;
-    });
-
-=item doc_base_manual
-
-=cut
-
-has doc_base_manual => (
-    is => 'rw',
-    lazy => 1,
-    default => sub {
-        my ($self) = @_;
-
-        my $manual = Lintian::Data::Authority::DocBaseManual->new;
-        $manual->load($self->data_paths, $self->vendor);
-
-        return $manual;
-    });
-
-=item filesystem_hierarchy_standard
-
-=cut
-
-has filesystem_hierarchy_standard => (
-    is => 'rw',
-    lazy => 1,
-    default => sub {
-        my ($self) = @_;
-
-        my $manual= Lintian::Data::Authority::FilesystemHierarchy->new;
-        $manual->load($self->data_paths, $self->vendor);
-
-        return $manual;
-    });
-
 =item fonts
 
 =cut
@@ -345,38 +240,6 @@ has hardening_buildflags => (
         return $buildflags;
     });
 
-=item java_policy
-
-=cut
-
-has java_policy => (
-    is => 'rw',
-    lazy => 1,
-    default => sub {
-        my ($self) = @_;
-
-        my $manual = Lintian::Data::Authority::JavaPolicy->new;
-        $manual->load($self->data_paths, $self->vendor);
-
-        return $manual;
-    });
-
-=item lintian_manual
-
-=cut
-
-has lintian_manual => (
-    is => 'rw',
-    lazy => 1,
-    default => sub {
-        my ($self) = @_;
-
-        my $manual = Lintian::Data::Authority::LintianManual->new;
-        $manual->load($self->data_paths, $self->vendor);
-
-        return $manual;
-    });
-
 =item mail_transport_agents
 
 =cut
@@ -388,86 +251,6 @@ has mail_transport_agents => (
         my ($self) = @_;
 
         my $manual = Lintian::Data::Provides::MailTransportAgent->new;
-        $manual->load($self->data_paths, $self->vendor);
-
-        return $manual;
-    });
-
-=item menu_manual
-
-=cut
-
-has menu_manual => (
-    is => 'rw',
-    lazy => 1,
-    default => sub {
-        my ($self) = @_;
-
-        my $manual = Lintian::Data::Authority::MenuManual->new;
-        $manual->load($self->data_paths, $self->vendor);
-
-        return $manual;
-    });
-
-=item menu_policy
-
-=cut
-
-has menu_policy => (
-    is => 'rw',
-    lazy => 1,
-    default => sub {
-        my ($self) = @_;
-
-        my $manual = Lintian::Data::Authority::MenuPolicy->new;
-        $manual->load($self->data_paths, $self->vendor);
-
-        return $manual;
-    });
-
-=item menu_policy
-
-=cut
-
-has new_maintainer => (
-    is => 'rw',
-    lazy => 1,
-    default => sub {
-        my ($self) = @_;
-
-        my $manual = Lintian::Data::Authority::NewMaintainer->new;
-        $manual->load($self->data_paths, $self->vendor);
-
-        return $manual;
-    });
-
-=item perl_policy
-
-=cut
-
-has perl_policy => (
-    is => 'rw',
-    lazy => 1,
-    default => sub {
-        my ($self) = @_;
-
-        my $manual = Lintian::Data::Authority::PerlPolicy->new;
-        $manual->load($self->data_paths, $self->vendor);
-
-        return $manual;
-    });
-
-=item policy_manual
-
-=cut
-
-has policy_manual => (
-    is => 'rw',
-    lazy => 1,
-    default => sub {
-        my ($self) = @_;
-
-        my $manual = Lintian::Data::Authority::DebianPolicy->new;
         $manual->load($self->data_paths, $self->vendor);
 
         return $manual;
@@ -489,22 +272,6 @@ has policy_releases => (
         return $releases;
     });
 
-=item python_policy
-
-=cut
-
-has python_policy => (
-    is => 'rw',
-    lazy => 1,
-    default => sub {
-        my ($self) = @_;
-
-        my $manual = Lintian::Data::Authority::PythonPolicy->new;
-        $manual->load($self->data_paths, $self->vendor);
-
-        return $manual;
-    });
-
 =item style_sheet
 
 =cut
@@ -519,22 +286,6 @@ has style_sheet => (
         $releases->load($self->data_paths, $self->vendor);
 
         return $releases;
-    });
-
-=item vim_policy
-
-=cut
-
-has vim_policy => (
-    is => 'rw',
-    lazy => 1,
-    default => sub {
-        my ($self) = @_;
-
-        my $manual = Lintian::Data::Authority::VimPolicy->new;
-        $manual->load($self->data_paths, $self->vendor);
-
-        return $manual;
     });
 
 =back
