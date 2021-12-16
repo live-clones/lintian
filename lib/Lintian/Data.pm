@@ -29,11 +29,12 @@ use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Data::Architectures;
 use Lintian::Data::Archive::AutoRejection;
+use Lintian::Data::Buildflags::Hardening;
 use Lintian::Data::Debhelper::Addons;
 use Lintian::Data::Debhelper::Commands;
 use Lintian::Data::Debhelper::Levels;
 use Lintian::Data::Fonts;
-use Lintian::Data::Buildflags::Hardening;
+use Lintian::Data::InitD::VirtualFacilities;
 use Lintian::Data::Policy::Releases;
 use Lintian::Data::Provides::MailTransportAgent;
 use Lintian::Data::Stylesheet;
@@ -113,16 +114,11 @@ sub all_sources {
 
     my @sources = (
         $self->architectures,$self->auto_rejection,
-        $self->debconf_specification,$self->developer_reference,
         $self->debhelper_addons,$self->debhelper_commands,
-        $self->doc_base_manual,$self->filesystem_hierarchy_standard,
-        $self->fonts,$self->hardening_buildflags,
-        $self->java_policy,$self->lintian_manual,
-        $self->mail_transport_agents,$self->menu_policy,
-        $self->menu_manual,$self->new_maintainer,
-        $self->perl_policy,$self->policy_manual,
-        $self->policy_releases,$self->python_policy,
-        $self->style_sheet,$self->vim_policy
+        $self->debhelper_levels,$self->fonts,
+        $self->hardening_buildflags,$self->mail_transport_agents,
+        $self->policy_releases,$self->style_sheet,
+        $self->virtual_initd_facilities
     );
 
     return @sources;
@@ -286,6 +282,22 @@ has style_sheet => (
         $releases->load($self->data_paths, $self->vendor);
 
         return $releases;
+    });
+
+=item virtual_initd_facilities
+
+=cut
+
+has virtual_initd_facilities => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        my $facilities = Lintian::Data::InitD::VirtualFacilities->new;
+        $facilities->load($self->data_paths, $self->vendor);
+
+        return $facilities;
     });
 
 =back

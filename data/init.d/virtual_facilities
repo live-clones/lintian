@@ -1,6 +1,5 @@
 # The list of known virtual facilities that init scripts may depend on.
 #
-# Last updated: 2021-12-16
 
 $all
 $local_fs

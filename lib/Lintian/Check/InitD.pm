@@ -640,11 +640,11 @@ sub check_init {
         }
     }
 
-    my $VIRTUAL_FACILITIES= $self->data->load('init.d/virtual_facilities');
+    my $VIRTUAL_FACILITIES= $self->data->virtual_initd_facilities;
 
     # Check syntax rules that apply to all of the keywords.
-    for my $keyword (qw(required-start should-start required-stop should-stop))
-    {
+    for
+      my $keyword (qw(required-start should-start required-stop should-stop)){
         for my $prerequisite (@{$value_by_lsb_keyword{$keyword} // []}) {
 
             if (exists $implied_dependencies{$prerequisite}) {
