@@ -146,8 +146,6 @@ sub refresh {
 
     for my $installable_name (sort @installable_names) {
 
-        say $installable_name;
-
         next
           unless exists $deb822_by_installable_name->{$installable_name};
 
