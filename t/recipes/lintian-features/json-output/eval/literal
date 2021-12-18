@@ -10,9 +10,9 @@
                      "pointer" : {
                         "item" : {
                            "index" : "json-output_1.0+dsfg-1.1.dsc (patched)",
-                           "line_position" : 1,
                            "name" : "debian/changelog"
-                        }
+                        },
+                        "line_position" : 1
                      },
                      "tag" : "changelog-file-missing-explicit-entry",
                      "visibility" : "warning"
@@ -31,9 +31,9 @@
                      "pointer" : {
                         "item" : {
                            "index" : "json-output_1.0+dsfg-1.1.dsc (patched)",
-                           "line_position" : 13,
                            "name" : "debian/control"
-                        }
+                        },
+                        "line_position" : 13
                      },
                      "tag" : "installable-field-mirrors-source",
                      "visibility" : "info"
@@ -66,9 +66,9 @@
                      "pointer" : {
                         "item" : {
                            "index" : "json-output_1.0+dsfg-1.1.dsc (patched)",
-                           "line_position" : 12,
                            "name" : "debian/control"
-                        }
+                        },
+                        "line_position" : 12
                      },
                      "tag" : "debian-control-has-unusual-field-spacing",
                      "visibility" : "pedantic"

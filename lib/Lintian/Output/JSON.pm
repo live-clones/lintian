@@ -201,7 +201,7 @@ sub hintlist {
                 $item_dictionary{index} = $item->index->identifier;
 
                 $pointer_dictionary{item} = \%item_dictionary;
-                $item_dictionary{line_position} = $pointer->position
+                $pointer_dictionary{line_position} = $pointer->position
                   if $pointer->position > 0;
             }
 
