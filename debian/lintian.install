@@ -8,3 +8,4 @@ profiles		usr/share/lintian
 tags			usr/share/lintian
 templates		usr/share/lintian
 vendors 		usr/share/lintian
+integration/emacs/lintian.el /usr/share/emacs/site-lisp/lintian/
