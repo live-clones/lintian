@@ -1,6 +1,7 @@
 ;; Thanks to bpalmer on Libera:#emacs for help with this module
 (require 'shr)
 (defcustom lintian-command "lintian" "*The path to the lintian executable")
+;;;###autoload
 (defun lintian-run-file
     (file) "Runs the lintian executable on the specified FILE."
   (interactive "fFile: ")
