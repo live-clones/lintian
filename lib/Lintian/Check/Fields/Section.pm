@@ -105,7 +105,7 @@ sub always {
                 my $better
                   = (defined $division ? "$division/" : $EMPTY) . $want;
                 $self->hint('wrong-section-according-to-package-name',
-                    "$pkg => $better");
+                    "$section => $better");
             }
 
             last;
@@ -114,7 +114,7 @@ sub always {
 
     if ($fraction eq 'debug') {
 
-        $self->hint('wrong-section-according-to-package-name',"$pkg")
+        $self->hint('wrong-section-according-to-package-name', $section)
           if $pkg !~ /-dbg(?:sym)?$/;
     }
 
