@@ -230,11 +230,12 @@ sub process {
 
                 # enable overrides for this architecture
                 # proceed when none specified
+                my $data = $self->profile->data;
                 next
                   if @architectures
                   && (
                     $negations xor none {
-                        $self->profile->architectures->restriction_matches($_,
+                        $data->architectures->restriction_matches($_,
                             $processable->architecture)
                     }
                     @architectures
