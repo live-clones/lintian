@@ -95,6 +95,8 @@ has changelog => (
         my $changelog = Lintian::Changelog->new;
 
         my $unresolved = $self->changelog_item;
+        return $changelog
+          unless defined $unresolved;
 
         # stop for dangling symbolic link
         my $item = $unresolved->resolve_path;
