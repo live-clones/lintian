@@ -27,7 +27,7 @@ use warnings;
 use utf8;
 
 use Const::Fast;
-use Unicode::UTF8 qw(decode_utf8 valid_utf8);
+use Unicode::UTF8 qw(decode_utf8 encode_utf8 valid_utf8);
 
 use Moo;
 use namespace::clean;
@@ -77,12 +77,12 @@ sub check_for_trojan {
         # all file names
         for my $character (keys %NAMES_BY_CHARACTER) {
 
-            $self->hint(
+            $self->pointed_hint(
                 'unicode-trojan',
+                $item->pointer,
                 'File name',
                 sprintf('U+%vX', $character),
-                $DOUBLE_QUOTE. $NAMES_BY_CHARACTER{$character}. $DOUBLE_QUOTE,
-                $item->name
+                $DOUBLE_QUOTE. $NAMES_BY_CHARACTER{$character}. $DOUBLE_QUOTE
             ) if $decoded_name =~ m{\Q$character\E};
         }
     }
@@ -90,21 +90,37 @@ sub check_for_trojan {
     return
       unless $item->is_script;
 
-    # slurping contents for now in hope of speed
-    my $contents = $item->decoded_utf8;
-    return
-      unless length $contents;
+    open(my $fd, '<', $item->unpacked_path)
+      or die encode_utf8('Cannot open ' . $item->unpacked_path);
 
-    for my $character (keys %NAMES_BY_CHARACTER) {
+    my $position = 1;
+    while (my $line = <$fd>) {
 
-        $self->hint(
-            'unicode-trojan',
-            'Contents',
-            sprintf('U+%vX', $character),
-            $DOUBLE_QUOTE . $NAMES_BY_CHARACTER{$character} . $DOUBLE_QUOTE,
-            $item->name
-        )if $contents =~ m{\Q$character\E};
+        chomp $line;
+
+        next
+          unless valid_utf8($line);
+
+        my $decoded = decode_utf8($line);
+
+        my $pointer = $item->pointer($position);
+
+        for my $character (keys %NAMES_BY_CHARACTER) {
+
+            $self->pointed_hint(
+                'unicode-trojan',
+                $pointer,
+                'Contents',
+                sprintf('U+%vX', $character),
+                $DOUBLE_QUOTE. $NAMES_BY_CHARACTER{$character}. $DOUBLE_QUOTE
+            )if $decoded =~ m{\Q$character\E};
+        }
+
+    } continue {
+        ++$position;
     }
+
+    close $fd;
 
     return;
 }
