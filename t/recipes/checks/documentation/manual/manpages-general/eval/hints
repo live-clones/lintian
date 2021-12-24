@@ -7,7 +7,7 @@ manpages-general (binary): undocumented-manual-page [usr/share/man/man3/function
 manpages-general (binary): undocumented-manual-page [usr/share/man/man1/bin-binary.1.gz]
 manpages-general (binary): uncompressed-manual-page [usr/share/man/man1/usr-bin-binary.1]
 manpages-general (binary): uncompressed-manual-page [usr/share/man/de/man1/binary-without-english-manpage.1]
-manpages-general (binary): typo-in-manual-page speling spelling [usr/share/man/man1/program.1.gz]
+manpages-general (binary): typo-in-manual-page speling spelling [usr/share/man/man1/program.1.gz:42]
 manpages-general (binary): poor-compression-in-manual-page [usr/share/man/man6/usr-games-binary.6.gz]
 manpages-general (binary): pod-conversion-message [usr/share/man/man1/test.1P.gz:19]
 manpages-general (binary): no-manual-page [usr/bin/rstartd]

@@ -59,10 +59,10 @@ const my $WIDE_SCREEN => 120;
 has local_manpages => (is => 'rw', default => sub { {} });
 
 sub spelling_tag_emitter {
-    my ($self, @orig_args) = @_;
+    my ($self, $tag_name, $pointer, @orig_args) = @_;
 
     return sub {
-        return $self->pointed_hint(@orig_args, @_);
+        return $self->pointed_hint($tag_name, $pointer, @orig_args, @_);
     };
 }
 
@@ -402,10 +402,10 @@ sub visit_installed_files {
         }
 
         # Now we search through the whole man page for some common errors
-        my $position = 0;
+        my $position = 1;
         my $seen_python_traceback;
-        foreach my $line (@manfile) {
-            $position++;
+        for my $line (@manfile) {
+
             chomp $line;
 
             next
@@ -471,11 +471,14 @@ sub visit_installed_files {
             # Check for spelling errors if the manpage is English
             my $stag_emitter
               = $self->spelling_tag_emitter('typo-in-manual-page',
-                $item->pointer);
+                $item->pointer($position));
             check_spelling($self->data, $line,
                 $self->group->spelling_exceptions,
                 $stag_emitter, 0)
               if $page_path =~ m{/man/man\d/};
+
+        } continue {
+            ++$position;
         }
     }
 
