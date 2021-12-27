@@ -275,6 +275,13 @@ sub check_test_file {
     return
       unless $item->is_open_ok;
 
+    my $debian_control = $self->processable->debian_control;
+
+    my $depends_norestriction = Lintian::Relation->new;
+    $depends_norestriction->load($section->unfolded_value('Depends'));
+
+    my $queries_all_python_versions = 0;
+
     open(my $fd, '<', $item->unpacked_path)
       or die encode_utf8('Cannot open ' . $item->unpacked_path);
 
@@ -296,9 +303,6 @@ sub check_test_file {
                 $pointer, $command)
               if $options =~ /\s(?:-\w*i|--installed)/;
 
-            my $depends_norestriction = Lintian::Relation->new;
-            $depends_norestriction->load($section->unfolded_value('Depends'));
-
             $self->pointed_hint(
 'runtime-test-file-uses-supported-python-versions-without-test-depends',
                 $pointer,
@@ -306,8 +310,6 @@ sub check_test_file {
               )
               if $options =~ /\s(?:-\w*s|--supported)/
               && !$depends_norestriction->satisfies($PYTHON3_ALL_DEPEND);
-
-            my $debian_control = $self->processable->debian_control;
 
             $self->pointed_hint('declare-python-versions-for-test',
                 $pointer, $command)
@@ -320,6 +322,9 @@ sub check_test_file {
                 $debian_control->source_fields->value('X-Python3-Version'))
               if $options =~ m{ \s (?: -\w*s | --supported ) }x
               && $debian_control->source_fields->declares('X-Python3-Version');
+
+            $queries_all_python_versions = 1
+              if $options =~ m{ \s (?: -\w*s | --supported ) }x;
         }
 
     } continue {
@@ -327,6 +332,10 @@ sub check_test_file {
     }
 
     close $fd;
+
+    $self->pointed_hint('test-leaves-python-version-untested',$item->pointer)
+      if $depends_norestriction->satisfies($PYTHON3_ALL_DEPEND)
+      && !$queries_all_python_versions;
 
     return;
 }

@@ -1,0 +1,3 @@
+Skeleton: source-native
+Testname: should-query-all-python-versions
+Description: Autopkgtest depends on python3-all but does not invoke 'py3versions --supported'
