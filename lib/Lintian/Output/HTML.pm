@@ -228,7 +228,12 @@ sub hintlist {
         $html_hint{code} = 'M'
           if @{ $hint->masks };
 
-        push(@comments, 'masked by screen ' . $_->name)for @{ $hint->masks };
+        for my $mask (@{$hint->masks}) {
+
+            push(@comments, 'masked by screen ' . $mask->screen);
+            push(@comments, $mask->justification)
+              if length $mask->justification;
+        }
 
         $html_hint{comments} = \@comments
           if @comments;

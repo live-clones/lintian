@@ -282,12 +282,28 @@ sub print_hint {
         $output .= $text;
     }
 
+    local $Text::Wrap::columns
+      = $option->{'output-width'} - length $COMMENT_PREFIX;
+
+    # do not wrap long words such as urls; see #719769
+    local $Text::Wrap::huge = 'overflow';
+
     if ($hint->override) {
         say encode_utf8('N: ' . $self->_quote_print($_))
           for @{$hint->override->comments};
     }
 
-    say encode_utf8('N: masked by screen ' . $_->name)for @{$hint->masks};
+    for my $mask (@{$hint->masks}) {
+
+        say encode_utf8($COMMENT_PREFIX . 'masked by screen ' . $mask->screen);
+
+        next
+          unless length $mask->justification;
+
+        my $wrapped
+          = wrap($COMMENT_PREFIX, $COMMENT_PREFIX, $mask->justification);
+        say encode_utf8($wrapped);
+    }
 
     my $type = $EMPTY;
     $type = $SPACE . $processable->type

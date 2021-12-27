@@ -39,6 +39,7 @@ use Time::Piece;
 use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Hint::Pointed;
+use Lintian::Mask;
 use Lintian::Util qw(human_bytes);
 
 const my $EMPTY => q{};
@@ -351,13 +352,22 @@ sub process {
 
             $context_tracker{$tag_name}{$context} = 1;
 
-            my @masks
-              = grep { $_->suppress($processable, $hint) } @{$tag->screens};
+            my @masks;
+            for my $screen (@{$tag->screens}) {
 
-            my @mask_names = map { $_->name } @masks;
-            my $mask_list = join($SPACE, (sort @mask_names));
+                next
+                  unless $screen->suppress($processable, $hint);
 
-            warn encode_utf8("Crossing screens for $tag_name ($mask_list)")
+                my $mask = Lintian::Mask->new;
+                $mask->screen($screen->name);
+
+                push(@masks, $mask);
+            }
+
+            my @screen_names = map { $_->screen } @masks;
+            my $screen_list = join($SPACE, (sort @screen_names));
+
+            warn encode_utf8("Crossing screens for $tag_name ($screen_list)")
               if @masks > 1;
 
             $hint->masks(\@masks)

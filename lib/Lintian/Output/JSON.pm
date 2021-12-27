@@ -212,9 +212,14 @@ sub hintlist {
         $hint_dictionary{experimental} = 'yes'
           if $tag->experimental;
 
-        my @masks = map { $_->name } @{ $hint->masks };
-        $hint_dictionary{masks} = \@masks
-          if @masks;
+        for my $mask (@{ $hint->masks }) {
+
+            my %mask_dictionary;
+            $mask_dictionary{screen} = $mask->screen;
+            $mask_dictionary{justification} = $mask->justification;
+
+            push(@{$hint_dictionary{masks}}, \%mask_dictionary);
+        }
 
         if ($hint->override) {
 
