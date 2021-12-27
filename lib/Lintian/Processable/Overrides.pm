@@ -88,8 +88,13 @@ sub parse_overrides {
 
         if ($remaining =~ s{^ [#] \s* }{}x) {
 
-            $justification .= $SPACE . $remaining
-              if length $remaining;
+            if (length $remaining) {
+
+                $justification .= $SPACE
+                  if length $justification;
+
+                $justification .= $remaining;
+            }
 
             next;
         }
@@ -174,6 +179,9 @@ sub parse_overrides {
         $current->architectures(\@architectures);
         $current->pattern($pattern);
         $current->position($position);
+
+        # combine successive white space
+        $justification =~ s{ \s+ }{ }gx;
 
         $current->justification($justification);
         $justification = $EMPTY;
