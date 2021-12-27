@@ -198,6 +198,17 @@ sub source {
       if $processable->name =~ m/^python\d-/
       and $processable->name ne 'python3-defaults';
 
+    my $bdepends = $processable->fields->value('Build-Depends');
+    my $pyproject = $processable->patched->resolve_path('pyproject.toml');
+
+    if (defined $pyproject) {
+
+        $self->hint('python-poetry-core')
+            if $bdepends =~ m{python3-poetry} and
+            $bdepends !~ m{python3-poetry-core} and
+            $pyproject->bytes =~ m{build-backend = \"poetry\.core\.masonry\.api\"};
+    }
+
     return;
 }
 
