@@ -1,0 +1,3 @@
+Skeleton: source-native
+Testname: python-wrong-poetry
+Description: Check packages that build-depend on python3-poetry.

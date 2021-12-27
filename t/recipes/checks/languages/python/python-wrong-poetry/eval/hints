@@ -1,0 +1,2 @@
+python-wrong-poetry (source): uses-poetry-cli [pyproject.toml:3]
+python-wrong-poetry (source): missing-prerequisite-for-pyproject-backend poetry.core.masonry.api (does not satisfy python3-poetry-core:any, pybuild-plugin-pyproject:any) [pyproject.toml:3]

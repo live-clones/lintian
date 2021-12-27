@@ -27,6 +27,7 @@ use utf8;
 
 use Const::Fast;
 use List::SomeUtils qw(any none);
+use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Relation;
 use Lintian::Relation::Version qw(versions_lte);
@@ -209,6 +210,55 @@ sub source {
     $self->hint('source-package-encodes-python-version')
       if $self->processable->name =~ m/^python\d-/
       && $self->processable->name ne 'python3-defaults';
+
+    my $build_depends = Lintian::Relation->new;
+    $build_depends->load_norestriction(
+        $self->processable->fields->value('Build-Depends'));
+
+    my $pyproject= $self->processable->patched->resolve_path('pyproject.toml');
+    if (defined $pyproject && $pyproject->is_open_ok) {
+
+        my %PYPROJECT_PREREQUISITES = (
+            'poetry.core.masonry.api' => 'python3-poetry-core:any',
+            'flit_core.buildapi' => 'python3-flit:any',
+            'setuptools.build_meta' => 'python3-setuptools:any'
+        );
+
+        open(my $fd, '<', $pyproject->unpacked_path)
+          or die encode_utf8('Cannot open ' . $pyproject->unpacked_path);
+
+        my $position = 1;
+        while (my $line = <$fd>) {
+
+            my $pointer = $pyproject->pointer($position);
+
+            if ($line =~ m{^ \s* build-backend \s* = \s* "([^"]+)" }x) {
+
+                my $backend = $1;
+
+                $self->pointed_hint('uses-poetry-cli', $pointer)
+                  if $backend eq 'poetry.core.masonry.api'
+                  && $build_depends->satisfies('python3-poetry:any')
+                  && !$build_depends->satisfies('python3-poetry-core:any');
+
+                if (exists $PYPROJECT_PREREQUISITES{$backend}) {
+
+                    my $prerequisites = $PYPROJECT_PREREQUISITES{$backend}
+                      . ', pybuild-plugin-pyproject:any';
+
+                    $self->pointed_hint(
+                        'missing-prerequisite-for-pyproject-backend',
+                        $pointer, $backend,"(does not satisfy $prerequisites)")
+                      if !$build_depends->satisfies($prerequisites);
+                }
+            }
+
+        } continue {
+            ++$position;
+        }
+
+        close $fd;
+    }
 
     return;
 }
