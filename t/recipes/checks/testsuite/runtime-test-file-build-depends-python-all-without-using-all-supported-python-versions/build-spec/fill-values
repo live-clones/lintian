@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: runtime-test-file-build-depends-python-all-without-using-all-supported-python-versions
+Description: Tests for python3-all build-depends without using py3versions -s

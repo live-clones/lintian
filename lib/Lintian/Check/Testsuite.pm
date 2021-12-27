@@ -278,6 +278,8 @@ sub check_test_file {
     open(my $fd, '<', $item->unpacked_path)
       or die encode_utf8('Cannot open ' . $item->unpacked_path);
 
+    my $testing_all_pyvers = 0;
+
     my $position = 1;
     while (my $line = <$fd>) {
 
@@ -288,6 +290,7 @@ sub check_test_file {
 
         if ($line =~ /(py3versions)((?:\s+--?\w+)*)/) {
 
+            my $testing_all_pyvers = 1;
             my $command = $1 . $2;
             my $options = $2;
 
@@ -313,6 +316,12 @@ sub check_test_file {
     }
 
     close $fd;
+
+    $self->hint(
+'runtime-test-file-build-depends-python-all-without-using-all-supported-python-versions',
+        $item->name)
+      if !$testing_all_pyvers &&
+         Lintian::Relation->new->satisfies($PYTHON3_ALL_DEPEND);
 
     return;
 }
