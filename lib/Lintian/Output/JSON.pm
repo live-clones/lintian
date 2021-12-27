@@ -223,11 +223,11 @@ sub hintlist {
 
         if ($hint->override) {
 
-            $hint_dictionary{override} = 'yes';
+            my %override_dictionary;
+            $override_dictionary{justification}
+              = $hint->override->justification;
 
-            my @comments = @{ $hint->override->comments };
-            $hint_dictionary{override_comments} = \@comments
-              if @comments;
+            $hint_dictionary{override} = \%override_dictionary;
         }
     }
 

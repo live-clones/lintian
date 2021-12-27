@@ -64,7 +64,7 @@ sub parse_overrides {
 
     my @declared_overrides;
 
-    my @comments;
+    my $justification = $EMPTY;
     my $previous = Lintian::Override->new;
 
     my @lines = split(/\n/, $contents);
@@ -81,14 +81,16 @@ sub parse_overrides {
             # Throw away comments, as they are not attached to a tag
             # also throw away the option of "carrying over" the last
             # comment
-            @comments = ();
+            $justification = $EMPTY;
             $previous = Lintian::Override->new;
             next;
         }
 
-        if ($remaining =~ /^#/) {
-            $remaining =~ s/^# ?//;
-            push(@comments, $remaining);
+        if ($remaining =~ s{^ [#] \s* }{}x) {
+
+            $justification .= $SPACE . $remaining
+              if length $remaining;
+
             next;
         }
 
@@ -162,9 +164,9 @@ sub parse_overrides {
         # There are no new comments, no "empty line" in between and
         # this tag is the same as the last, so we "carry over" the
         # comment from the previous override (if any).
-        push(@comments, @{$previous->comments})
-          if $tag_name eq $previous->tag_name
-          && !@comments;
+        $justification = $previous->justification
+          if !length $justification
+          && $tag_name eq $previous->tag_name;
 
         my $current = Lintian::Override->new;
 
@@ -173,8 +175,8 @@ sub parse_overrides {
         $current->pattern($pattern);
         $current->position($position);
 
-        push(@{$current->comments}, @comments);
-        @comments = ();
+        $current->justification($justification);
+        $justification = $EMPTY;
 
         push(@declared_overrides, $current);
 

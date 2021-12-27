@@ -221,7 +221,9 @@ sub hintlist {
         if ($hint->override) {
 
             $html_hint{code} = 'O';
-            push(@comments, @{ $hint->override->comments });
+
+            push(@comments, $hint->override->justification)
+              if length $hint->override->justification;
         }
 
         # order matters

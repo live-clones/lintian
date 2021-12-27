@@ -1,6 +1,6 @@
 # debian/lintian-overrides/comments -- lintian check script -*- perl -*-
 
-# Copyright © 2020 Felix Lechner
+# Copyright © 2020-2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -40,34 +40,31 @@ sub always {
 
     for my $override (@declared_overrides) {
 
+        next
+          unless length $override->justification;
+
         my $tag_name = $override->tag_name;
-        my @comments = @{$override->comments};
 
-        my $position = $override->position - scalar @{$override->comments};
-        for my $comment (@comments) {
+        # comments appear one or more lines before the override
+        # but they were concatenated
+        my $position = $override->position - 1;
 
-            my $pointer= $self->processable->override_file->pointer($position);
+        my $pointer= $self->processable->override_file->pointer($position);
 
-            check_spelling(
-                $self->data,
-                $comment,
-                $self->group->spelling_exceptions,
-                $self->emitter(
-                    'spelling-in-override-comment',
-                    $pointer, $tag_name
-                ));
+        check_spelling(
+            $self->data,
+            $override->justification,
+            $self->group->spelling_exceptions,
+            $self->emitter('spelling-in-override-comment',$pointer, $tag_name)
+        );
 
-            check_spelling_picky(
-                $self->data,
-                $comment,
-                $self->emitter(
-                    'capitalization-in-override-comment',
-                    $pointer,$tag_name
-                ));
-
-        } continue {
-            $position++;
-        }
+        check_spelling_picky(
+            $self->data,
+            $override->justification,
+            $self->emitter(
+                'capitalization-in-override-comment',
+                $pointer,$tag_name
+            ));
     }
 
     return;

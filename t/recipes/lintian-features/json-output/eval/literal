@@ -94,7 +94,9 @@
                   },
                   {
                      "note" : "1.0+dsfg-1.1",
-                     "override" : "yes",
+                     "override" : {
+                        "justification" : ""
+                     },
                      "tag" : "dfsg-version-misspelled",
                      "visibility" : "warning"
                   }

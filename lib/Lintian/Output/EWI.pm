@@ -288,9 +288,11 @@ sub print_hint {
     # do not wrap long words such as urls; see #719769
     local $Text::Wrap::huge = 'overflow';
 
-    if ($hint->override) {
-        say encode_utf8('N: ' . $self->_quote_print($_))
-          for @{$hint->override->comments};
+    if ($hint->override && length $hint->override->justification) {
+
+        my $wrapped = wrap($COMMENT_PREFIX, $COMMENT_PREFIX,
+            $hint->override->justification);
+        say encode_utf8($wrapped);
     }
 
     for my $mask (@{$hint->masks}) {
