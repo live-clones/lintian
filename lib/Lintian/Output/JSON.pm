@@ -205,7 +205,8 @@ sub hintlist {
         }
 
         $hint_dictionary{visibility} = $tag->visibility;
-        $hint_dictionary{experimental} = ($tag->experimental ? 'yes' : 'no');
+        $hint_dictionary{experimental}
+          = ($tag->experimental ? JSON()->true : JSON()->false);
 
         for my $mask (@{ $hint->masks }) {
 
@@ -244,8 +245,10 @@ sub describe_tags {
         push(@tag_dictionaries, \%tag_dictionary);
 
         $tag_dictionary{name} = $tag->name;
-        $tag_dictionary{name_spaced} = $tag->name_spaced  || 0;
-        $tag_dictionary{show_always} = $tag->show_always  || 0;
+        $tag_dictionary{name_spaced}
+          = ($tag->name_spaced ? JSON()->true : JSON()->false);
+        $tag_dictionary{show_always}
+          = ($tag->show_always ? JSON()->true : JSON()->false);
 
         $tag_dictionary{explanation} = $tag->explanation;
 
@@ -255,7 +258,8 @@ sub describe_tags {
 
         $tag_dictionary{check} = $tag->check;
         $tag_dictionary{visibility} = $tag->visibility;
-        $tag_dictionary{experimental} = $tag->experimental || 0;
+        $tag_dictionary{experimental}
+          = ($tag->experimental ? JSON()->true : JSON()->false);
 
         $tag_dictionary{renamed_from} = $tag->renamed_from;
 

@@ -6,7 +6,7 @@
             {
                "hints" : [
                   {
-                     "experimental" : "no",
+                     "experimental" : false,
                      "note" : "0.0.1-1 -> 1.0+dsfg-1 (missing) -> 1.0+dsfg-1.1",
                      "pointer" : {
                         "item" : {
@@ -19,19 +19,19 @@
                      "visibility" : "warning"
                   },
                   {
-                     "experimental" : "no",
+                     "experimental" : false,
                      "note" : "",
                      "tag" : "format-3.0-but-debian-changes-patch",
                      "visibility" : "warning"
                   },
                   {
-                     "experimental" : "no",
+                     "experimental" : false,
                      "note" : "1.0+dsfg-1.1",
                      "tag" : "maintainer-upload-has-incorrect-version-number",
                      "visibility" : "warning"
                   },
                   {
-                     "experimental" : "no",
+                     "experimental" : false,
                      "note" : "(in section for json-output) Section",
                      "pointer" : {
                         "item" : {
@@ -44,37 +44,37 @@
                      "visibility" : "info"
                   },
                   {
-                     "experimental" : "no",
+                     "experimental" : false,
                      "note" : "3",
                      "tag" : "older-debian-watch-file-standard",
                      "visibility" : "info"
                   },
                   {
-                     "experimental" : "no",
+                     "experimental" : false,
                      "note" : "debian/patches/debian-changes-1.0+dsfg-1.1",
                      "tag" : "patch-not-forwarded-upstream",
                      "visibility" : "info"
                   },
                   {
-                     "experimental" : "no",
+                     "experimental" : false,
                      "note" : "debian/patches/debian-changes-1.0+dsfg-1.1",
                      "tag" : "quilt-patch-using-template-description",
                      "visibility" : "info"
                   },
                   {
-                     "experimental" : "no",
+                     "experimental" : false,
                      "note" : "",
                      "tag" : "upstream-metadata-missing-bug-tracking",
                      "visibility" : "info"
                   },
                   {
-                     "experimental" : "no",
+                     "experimental" : false,
                      "note" : "",
                      "tag" : "upstream-metadata-missing-repository",
                      "visibility" : "info"
                   },
                   {
-                     "experimental" : "no",
+                     "experimental" : false,
                      "note" : "Essential",
                      "pointer" : {
                         "item" : {
@@ -87,19 +87,19 @@
                      "visibility" : "pedantic"
                   },
                   {
-                     "experimental" : "no",
+                     "experimental" : false,
                      "note" : "",
                      "tag" : "no-homepage-field",
                      "visibility" : "pedantic"
                   },
                   {
-                     "experimental" : "no",
+                     "experimental" : false,
                      "note" : "",
                      "tag" : "old-source-override-location",
                      "visibility" : "pedantic"
                   },
                   {
-                     "experimental" : "yes",
+                     "experimental" : true,
                      "note" : "",
                      "pointer" : {
                         "item" : {
@@ -112,7 +112,7 @@
                      "visibility" : "pedantic"
                   },
                   {
-                     "experimental" : "no",
+                     "experimental" : false,
                      "note" : "1.0+dsfg-1.1",
                      "override" : {
                         "justification" : ""
@@ -126,31 +126,31 @@
             {
                "hints" : [
                   {
-                     "experimental" : "no",
+                     "experimental" : false,
                      "note" : "usr/local/share/",
                      "tag" : "dir-in-usr-local",
                      "visibility" : "error"
                   },
                   {
-                     "experimental" : "no",
+                     "experimental" : false,
                      "note" : "usr/local/share/lintian/",
                      "tag" : "dir-in-usr-local",
                      "visibility" : "error"
                   },
                   {
-                     "experimental" : "no",
+                     "experimental" : false,
                      "note" : "var/lock/lintian/",
                      "tag" : "dir-or-file-in-var-lock",
                      "visibility" : "error"
                   },
                   {
-                     "experimental" : "no",
+                     "experimental" : false,
                      "note" : "",
                      "tag" : "new-essential-package",
                      "visibility" : "error"
                   },
                   {
-                     "experimental" : "no",
+                     "experimental" : false,
                      "note" : "",
                      "pointer" : {
                         "item" : {
@@ -163,13 +163,13 @@
                      "visibility" : "warning"
                   },
                   {
-                     "experimental" : "no",
+                     "experimental" : false,
                      "note" : "http://www.example.com/.",
                      "tag" : "description-possibly-contains-homepage",
                      "visibility" : "info"
                   },
                   {
-                     "experimental" : "no",
+                     "experimental" : false,
                      "note" : "",
                      "pointer" : {
                         "item" : {
@@ -182,19 +182,19 @@
                      "visibility" : "info"
                   },
                   {
-                     "experimental" : "no",
+                     "experimental" : false,
                      "note" : "usr/local/share/lintian/",
                      "tag" : "package-contains-empty-directory",
                      "visibility" : "info"
                   },
                   {
-                     "experimental" : "no",
+                     "experimental" : false,
                      "note" : "\"Test Lintian's JSON output format.\"",
                      "tag" : "synopsis-is-a-sentence",
                      "visibility" : "info"
                   },
                   {
-                     "experimental" : "no",
+                     "experimental" : false,
                      "note" : "/usr/bin/foo",
                      "pointer" : {
                         "item" : {
