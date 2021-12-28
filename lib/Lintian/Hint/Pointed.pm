@@ -48,18 +48,11 @@ Provides a pointed tag whose arguments are concatenated by a space.
 
 =over 4
 
-=item notes
+=item note
 
 =cut
 
-has notes => (
-    is => 'rw',
-    default => sub { [] },
-    coerce => sub {
-        my ($arrayref) = @_;
-
-        return stringify(@{$arrayref});
-    });
+has note => (is => 'rw', default => $EMPTY);
 
 =item pointer
 
@@ -75,10 +68,9 @@ sub context {
     my ($self) = @_;
 
     my $pointer = $self->pointer->to_string;
+    my @pieces = grep { length } ($self->note, "[$pointer]");
 
-    my @context = grep { length } ($self->notes, "[$pointer]");
-
-    return join($SPACE, @context);
+    return join($SPACE, @pieces);
 }
 
 =back

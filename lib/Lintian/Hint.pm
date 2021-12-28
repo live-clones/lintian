@@ -67,28 +67,6 @@ has masks => (is => 'rw', default => sub { [] });
 
 no namespace::clean;
 
-=item stringify
-
-=cut
-
-sub stringify {
-    my (@arguments) = @_;
-
-    # skip empty arguments
-    my @meaningful = grep { length } @arguments;
-
-    # trim both ends of each item
-    s{^ \s+ | \s+ $}{}gx for @meaningful;
-
-    # concatenate with spaces
-    my $text = join($SPACE, @meaningful) // $EMPTY;
-
-    # escape newlines; maybe add others
-    $text =~ s{\n}{\\n}g;
-
-    return $text;
-}
-
 =back
 
 =head1 AUTHOR

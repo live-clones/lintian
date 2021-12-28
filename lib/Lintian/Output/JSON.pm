@@ -184,9 +184,9 @@ sub hintlist {
 
         $hint_dictionary{tag} = $tag->name;
 
-        $hint_dictionary{note} = $hint->notes
-          if $hint->can('notes')
-          && length $hint->notes;
+        $hint_dictionary{note} = $hint->note
+          if $hint->can('note')
+          && length $hint->note;
 
         if ($hint->can('pointer')) {
             my $pointer = $hint->pointer;

@@ -47,18 +47,11 @@ Provides a standard tag whose arguments are concatenated by a space.
 
 =over 4
 
-=item notes
+=item note
 
 =cut
 
-has notes => (
-    is => 'rw',
-    default => sub { [] },
-    coerce => sub {
-        my ($arrayref) = @_;
-
-        return stringify(@{$arrayref});
-    });
+has note => (is => 'rw', default => $EMPTY);
 
 =item context
 
@@ -67,7 +60,7 @@ has notes => (
 sub context {
     my ($self) = @_;
 
-    return $self->notes;
+    return $self->note;
 }
 
 =back

@@ -159,7 +159,9 @@ sub pointed_hint {
 
     $hint->tag_name($tag_name);
     $hint->issued_by($self->name);
-    $hint->notes(\@notes);
+
+    my $note = stringify(@notes);
+    $hint->note($note);
     $hint->pointer($pointer);
 
     push(@{$self->hints}, $hint);
@@ -178,11 +180,35 @@ sub hint {
 
     $hint->tag_name($tag_name);
     $hint->issued_by($self->name);
-    $hint->notes(\@notes);
+
+    my $note = stringify(@notes);
+    $hint->note($note);
 
     push(@{$self->hints}, $hint);
 
     return;
+}
+
+=item stringify
+
+=cut
+
+sub stringify {
+    my (@arguments) = @_;
+
+    # skip empty arguments
+    my @meaningful = grep { length } @arguments;
+
+    # trim both ends of each item
+    s{^ \s+ | \s+ $}{}gx for @meaningful;
+
+    # concatenate with spaces
+    my $text = join($SPACE, @meaningful) // $EMPTY;
+
+    # escape newlines; maybe add others
+    $text =~ s{\n}{\\n}g;
+
+    return $text;
 }
 
 =back
