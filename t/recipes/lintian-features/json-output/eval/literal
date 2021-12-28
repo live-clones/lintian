@@ -6,6 +6,7 @@
             {
                "hints" : [
                   {
+                     "experimental" : "no",
                      "note" : "0.0.1-1 -> 1.0+dsfg-1 (missing) -> 1.0+dsfg-1.1",
                      "pointer" : {
                         "item" : {
@@ -18,15 +19,19 @@
                      "visibility" : "warning"
                   },
                   {
+                     "experimental" : "no",
+                     "note" : "",
                      "tag" : "format-3.0-but-debian-changes-patch",
                      "visibility" : "warning"
                   },
                   {
+                     "experimental" : "no",
                      "note" : "1.0+dsfg-1.1",
                      "tag" : "maintainer-upload-has-incorrect-version-number",
                      "visibility" : "warning"
                   },
                   {
+                     "experimental" : "no",
                      "note" : "(in section for json-output) Section",
                      "pointer" : {
                         "item" : {
@@ -39,29 +44,37 @@
                      "visibility" : "info"
                   },
                   {
+                     "experimental" : "no",
                      "note" : "3",
                      "tag" : "older-debian-watch-file-standard",
                      "visibility" : "info"
                   },
                   {
+                     "experimental" : "no",
                      "note" : "debian/patches/debian-changes-1.0+dsfg-1.1",
                      "tag" : "patch-not-forwarded-upstream",
                      "visibility" : "info"
                   },
                   {
+                     "experimental" : "no",
                      "note" : "debian/patches/debian-changes-1.0+dsfg-1.1",
                      "tag" : "quilt-patch-using-template-description",
                      "visibility" : "info"
                   },
                   {
+                     "experimental" : "no",
+                     "note" : "",
                      "tag" : "upstream-metadata-missing-bug-tracking",
                      "visibility" : "info"
                   },
                   {
+                     "experimental" : "no",
+                     "note" : "",
                      "tag" : "upstream-metadata-missing-repository",
                      "visibility" : "info"
                   },
                   {
+                     "experimental" : "no",
                      "note" : "Essential",
                      "pointer" : {
                         "item" : {
@@ -74,25 +87,32 @@
                      "visibility" : "pedantic"
                   },
                   {
+                     "experimental" : "no",
+                     "note" : "",
                      "tag" : "no-homepage-field",
                      "visibility" : "pedantic"
                   },
                   {
+                     "experimental" : "no",
+                     "note" : "",
                      "tag" : "old-source-override-location",
                      "visibility" : "pedantic"
                   },
                   {
                      "experimental" : "yes",
+                     "note" : "",
                      "pointer" : {
                         "item" : {
                            "index" : "json-output_1.0+dsfg-1.1.dsc (patched)",
                            "name" : "debian/watch"
-                        }
+                        },
+                        "line_position" : 0
                      },
                      "tag" : "debian-watch-does-not-check-gpg-signature",
                      "visibility" : "pedantic"
                   },
                   {
+                     "experimental" : "no",
                      "note" : "1.0+dsfg-1.1",
                      "override" : {
                         "justification" : ""
@@ -106,66 +126,82 @@
             {
                "hints" : [
                   {
+                     "experimental" : "no",
                      "note" : "usr/local/share/",
                      "tag" : "dir-in-usr-local",
                      "visibility" : "error"
                   },
                   {
+                     "experimental" : "no",
                      "note" : "usr/local/share/lintian/",
                      "tag" : "dir-in-usr-local",
                      "visibility" : "error"
                   },
                   {
+                     "experimental" : "no",
                      "note" : "var/lock/lintian/",
                      "tag" : "dir-or-file-in-var-lock",
                      "visibility" : "error"
                   },
                   {
+                     "experimental" : "no",
+                     "note" : "",
                      "tag" : "new-essential-package",
                      "visibility" : "error"
                   },
                   {
+                     "experimental" : "no",
+                     "note" : "",
                      "pointer" : {
                         "item" : {
                            "index" : "json-output_1.0+dsfg-1.1_all.deb (installed)",
                            "name" : "usr/bin/script"
-                        }
+                        },
+                        "line_position" : 0
                      },
                      "tag" : "no-manual-page",
                      "visibility" : "warning"
                   },
                   {
+                     "experimental" : "no",
                      "note" : "http://www.example.com/.",
                      "tag" : "description-possibly-contains-homepage",
                      "visibility" : "info"
                   },
                   {
+                     "experimental" : "no",
+                     "note" : "",
                      "pointer" : {
                         "item" : {
                            "index" : "json-output_1.0+dsfg-1.1_all.deb (installed)",
                            "name" : "usr/share/applications/script.desktop"
-                        }
+                        },
+                        "line_position" : 0
                      },
                      "tag" : "desktop-entry-limited-to-environments",
                      "visibility" : "info"
                   },
                   {
+                     "experimental" : "no",
                      "note" : "usr/local/share/lintian/",
                      "tag" : "package-contains-empty-directory",
                      "visibility" : "info"
                   },
                   {
+                     "experimental" : "no",
                      "note" : "\"Test Lintian's JSON output format.\"",
                      "tag" : "synopsis-is-a-sentence",
                      "visibility" : "info"
                   },
                   {
+                     "experimental" : "no",
                      "note" : "/usr/bin/foo",
                      "pointer" : {
                         "item" : {
                            "index" : "json-output_1.0+dsfg-1.1_all.deb (installed)",
                            "name" : "usr/share/doc/json-output/examples/example"
-                        }
+                        },
+                        "line_position" : 0
                      },
                      "tag" : "example-unusual-interpreter",
                      "visibility" : "pedantic"

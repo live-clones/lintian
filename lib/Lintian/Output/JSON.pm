@@ -183,10 +183,7 @@ sub hintlist {
         push(@hint_dictionaries, \%hint_dictionary);
 
         $hint_dictionary{tag} = $tag->name;
-
-        $hint_dictionary{note} = $hint->note
-          if $hint->can('note')
-          && length $hint->note;
+        $hint_dictionary{note} = $hint->note;
 
         if ($hint->can('pointer')) {
             my $pointer = $hint->pointer;
@@ -201,16 +198,14 @@ sub hintlist {
                 $item_dictionary{index} = $item->index->identifier;
 
                 $pointer_dictionary{item} = \%item_dictionary;
-                $pointer_dictionary{line_position} = $pointer->position
-                  if $pointer->position > 0;
+                $pointer_dictionary{line_position} = $pointer->position;
             }
 
             $hint_dictionary{pointer} = \%pointer_dictionary;
         }
 
         $hint_dictionary{visibility} = $tag->visibility;
-        $hint_dictionary{experimental} = 'yes'
-          if $tag->experimental;
+        $hint_dictionary{experimental} = ($tag->experimental ? 'yes' : 'no');
 
         for my $mask (@{ $hint->masks }) {
 
@@ -249,25 +244,20 @@ sub describe_tags {
         push(@tag_dictionaries, \%tag_dictionary);
 
         $tag_dictionary{name} = $tag->name;
-        $tag_dictionary{name_spaced} = $tag->name_spaced
-          if length $tag->name_spaced;
-        $tag_dictionary{show_always} = $tag->show_always
-          if length $tag->show_always;
+        $tag_dictionary{name_spaced} = $tag->name_spaced  || 0;
+        $tag_dictionary{show_always} = $tag->show_always  || 0;
 
         $tag_dictionary{explanation} = $tag->explanation;
 
         my @tag_see_also_markdown
           = map { markdown_citation($data, $_) } @{$tag->see_also};
-        $tag_dictionary{see_also} = \@tag_see_also_markdown
-          if @tag_see_also_markdown;
+        $tag_dictionary{see_also} = \@tag_see_also_markdown;
 
         $tag_dictionary{check} = $tag->check;
         $tag_dictionary{visibility} = $tag->visibility;
-        $tag_dictionary{experimental} = $tag->experimental
-          if length $tag->experimental;
+        $tag_dictionary{experimental} = $tag->experimental || 0;
 
-        $tag_dictionary{renamed_from} = $tag->renamed_from
-          if @{$tag->renamed_from};
+        $tag_dictionary{renamed_from} = $tag->renamed_from;
 
         my @screen_dictionaries;
 
@@ -285,8 +275,7 @@ sub describe_tags {
 
             my @screen_see_also_markdown
               = map { markdown_citation($data, $_) } @{$screen->see_also};
-            $screen_dictionary{see_also} = \@screen_see_also_markdown
-              if @screen_see_also_markdown;
+            $screen_dictionary{see_also} = \@screen_see_also_markdown;
         }
 
         $tag_dictionary{screens} = \@screen_dictionaries;
