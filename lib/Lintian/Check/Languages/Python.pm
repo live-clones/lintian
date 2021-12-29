@@ -366,7 +366,7 @@ sub installable {
     # Python 2 modules
     $self->hint('new-package-should-not-package-python2-module', $pkg)
       if $pkg =~ / ^ python2? - /msx
-      && none { $pkg =~ / \Q$_\E$ /msx } @IGNORE
+      && (none { $pkg =~ m{ $_ }x } @IGNORE)
       && @entries == 1
       && $entries[0]->Changes
       !~ / \b python [ ]? 2 (?:[.]x)? [ ] (?:variant|version) \b /imsx
