@@ -78,6 +78,7 @@ python3        => /usr/bin, python3:any | python3-minimal:any
 pforth         => /usr/bin, pforth:any
 racket         => /usr/bin, racket:any
 rake           => /usr/bin, rake:any
+raku           => /usr/bin, rakudo:any
 r              => /usr/bin, littler:any | r-cran-littler:any
 rackup         => /usr/bin, ruby-rack:any
 rc             => /usr/bin, rc:any
