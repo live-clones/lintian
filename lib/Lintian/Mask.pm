@@ -46,13 +46,13 @@ Lintian::Mask provides access to mask data.
 
 =item screen
 
-=item justification
+=item excuse
 
 =cut
 
 has screen => (is => 'rw', default => $EMPTY);
 
-has justification => (is => 'rw', default => $EMPTY);
+has excuse => (is => 'rw', default => $EMPTY);
 
 =back
 

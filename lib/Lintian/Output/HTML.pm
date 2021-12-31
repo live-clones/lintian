@@ -233,8 +233,8 @@ sub hintlist {
         for my $mask (@{$hint->masks}) {
 
             push(@comments, 'masked by screen ' . $mask->screen);
-            push(@comments, $mask->justification)
-              if length $mask->justification;
+            push(@comments, $mask->excuse)
+              if length $mask->excuse;
         }
 
         $html_hint{comments} = \@comments

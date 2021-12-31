@@ -212,7 +212,7 @@ sub hintlist {
 
             my %mask_dictionary;
             $mask_dictionary{screen} = $mask->screen;
-            $mask_dictionary{justification} = $mask->justification;
+            $mask_dictionary{excuse} = $mask->excuse;
 
             push(@{$hint_dictionary{masks}}, \%mask_dictionary);
         }

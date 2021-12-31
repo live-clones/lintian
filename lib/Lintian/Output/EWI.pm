@@ -300,10 +300,9 @@ sub print_hint {
         say encode_utf8($COMMENT_PREFIX . 'masked by screen ' . $mask->screen);
 
         next
-          unless length $mask->justification;
+          unless length $mask->excuse;
 
-        my $wrapped
-          = wrap($COMMENT_PREFIX, $COMMENT_PREFIX, $mask->justification);
+        my $wrapped= wrap($COMMENT_PREFIX, $COMMENT_PREFIX, $mask->excuse);
         say encode_utf8($wrapped);
     }
 
