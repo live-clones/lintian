@@ -81,6 +81,15 @@ has GENERIC_PYTHON_MODULES => (
         return $self->data->load('files/generic-python-modules');
     });
 
+my %PYPROJECT_BACKENDS = (
+    'poetry'     => { 'package'       => 'python3-poetry-core',
+                      'build-backend' => '\"poetry\.core\.masonry\.api\"' },
+    'flit'       => { 'package'       => 'python3-flit',
+                      'build-backend' => '\"flit_core\.buildapi\"' },
+    'setuptools' => { 'package'       => 'python3-setuptools',
+                      'build-backend' => '\"setuptools\.build_meta\"' }
+);
+
 my @VERSION_FIELDS = qw(X-Python-Version XS-Python-Version X-Python3-Version);
 
 has correct_location => (is => 'rw', default => sub { {} });
@@ -207,6 +216,17 @@ sub source {
             if $bdepends =~ m{python3-poetry} and
             $bdepends !~ m{python3-poetry-core} and
             $pyproject->bytes =~ m{build-backend = \"poetry\.core\.masonry\.api\"};
+
+        foreach my $backend (keys %PYPROJECT_BACKENDS) {
+
+            my $package = $PYPROJECT_BACKENDS{$backend}{'package'};
+            my $build_backend = $PYPROJECT_BACKENDS{$backend}{'build-backend'};
+
+            $self->hint("pyproject-toml-but-not-pybuild-pyproject-${backend}")
+                if $bdepends !~ m{pybuild-plugin-pyproject} and
+                $bdepends !~ m{$package} and
+                $pyproject->bytes =~ m{$build_backend};
+        }
     }
 
     return;
