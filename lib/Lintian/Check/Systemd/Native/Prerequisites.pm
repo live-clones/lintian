@@ -38,7 +38,7 @@ with 'Lintian::Check';
 
 const my $EMPTY => q{};
 
-const my $SYSTEMD_NATIVE_PREREQUISITES => 'init-system-helpers (>= 1.54~)';
+const my $SYSTEMD_NATIVE_PREREQUISITES => 'init-system-helpers';
 
 has satisfies_systemd_native_prerequisites => (
     is => 'rw',
