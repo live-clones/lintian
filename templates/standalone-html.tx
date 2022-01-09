@@ -41,14 +41,14 @@
       <ul class="commentlist">
         : for $subitem.comments -> $comment {
         <li class="commentitem">
-          <span class="tinycomment"><strong>Comment:</strong> <: $comment :></span>
+          <span class="comment tiny"><strong>Comment:</strong> <: $comment :></span>
         </li>
         : }
       </ul>
 
-      <span class="tinycode" id="code-<: $subitem.code :>"><: $subitem.code :></span>
-      <span class="tinyhint"><a href="<: $subitem.url :>"><: $subitem.tag_name :></a></span>
-      <span class="tinycontext"><: $subitem.context :></span>
+      <a class="visibility-symbol" href="https://lintian.debian.org/levels#<: $subitem.code :>"><span class="visibility-symbol tiny <: $subitem.code :>"><: $subitem.code :></span></a>
+      <span class="hint tiny"><a href="<: $subitem.url :>"><: $subitem.tag_name :></a></span>
+      <span class="context tiny"><: $subitem.context :></span>
 
     </li>
     : }

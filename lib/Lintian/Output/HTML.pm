@@ -45,6 +45,7 @@ const my %CODE_PRIORITY => (
     'X' => 70,
     'C' => 80,
     'O' => 90,
+    'M' => 100,
 );
 
 use Moo;
