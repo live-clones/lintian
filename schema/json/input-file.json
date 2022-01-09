@@ -1,0 +1,23 @@
+{
+  "$id": "https://lintian.debian.org/schema/json/lintian/input-file.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A file examined by Lintian",
+  "properties": {
+    "hints": {
+      "description": "Packaging hints for a given input",
+      "items": {
+        "$ref": "/schema/json/lintian/hint.json"
+      },
+      "type": "array"
+    },
+    "path": {
+      "description": "Path as given on the command line",
+      "type": "string"
+    }
+  },
+  "required": [
+    "path"
+  ],
+  "title": "Lintian Input File",
+  "type": "object"
+}

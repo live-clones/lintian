@@ -1,0 +1,19 @@
+{
+  "$id": "https://lintian.debian.org/schema/json/lintian/item-pointer.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A Lintian pointer to an item",
+  "properties": {
+    "item": {
+      "$ref": "/schema/json/lintian/item.json"
+    },
+    "line_position": {
+      "description": "Line number for indicated position",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "item"
+  ],
+  "title": "Lintian Item Pointer",
+  "type": "object"
+}

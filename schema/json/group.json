@@ -1,0 +1,34 @@
+{
+  "$id": "https://lintian.debian.org/schema/json/lintian/group.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A group of related input files examined by Lintian",
+  "properties": {
+    "group_id": {
+      "description": "Lintian's distinctive ID for input files that belong together",
+      "type": "string"
+    },
+    "input_files": {
+      "description": "Files that were analyzed",
+      "items": {
+        "$ref": "/schema/json/lintian/input-file.json"
+      },
+      "type": "array"
+    },
+    "source_name": {
+      "description": "Debian name of source distribution",
+      "type": "string"
+    },
+    "source_version": {
+      "description": "Full debianized version of source distribution",
+      "type": "string"
+    }
+  },
+  "required": [
+    "group_id",
+    "input_files",
+    "source_name",
+    "source_version"
+  ],
+  "title": "Lintian Group",
+  "type": "object"
+}

@@ -1,0 +1,61 @@
+{
+  "$id": "https://lintian.debian.org/schema/json/lintian/hint.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A Lintian packaging hint",
+  "properties": {
+    "masks": {
+      "anyOf": [
+        {
+          "description": "Automated exemption as part of a class",
+          "items": {
+            "$ref": "/schema/json/lintian/mask.json"
+          },
+          "type": [
+            "array"
+          ]
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "note": {
+      "description": "Annotation to aid understanding",
+      "type": "string"
+    },
+    "override": {
+      "anyOf": [
+        {
+          "$ref": "/schema/json/lintian/override.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "pointer": {
+      "anyOf": [
+        {
+          "$ref": "/schema/json/lintian/item-pointer.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "tag": {
+      "description": "Name of Lintian tag",
+      "type": "string"
+    },
+    "visibility": {
+      "description": "User-facing visibility",
+      "type": "string"
+    }
+  },
+  "required": [
+    "tag",
+    "visibility"
+  ],
+  "title": "Lintian Hint",
+  "type": "object"
+}

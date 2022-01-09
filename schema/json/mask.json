@@ -1,0 +1,21 @@
+{
+  "$id": "https://lintian.debian.org/schema/json/lintian/mask.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A Lintian mask",
+  "properties": {
+    "excuse": {
+      "description": "Automated excuse",
+      "type": "string"
+    },
+    "screen": {
+      "description": "Screen granting the exemption",
+      "type": "string"
+    }
+  },
+  "required": [
+    "excuse",
+    "screen"
+  ],
+  "title": "Lintian Mask",
+  "type": "object"
+}
