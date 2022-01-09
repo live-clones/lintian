@@ -91,7 +91,8 @@ my %DH_COMMAND_MANUAL_PREREQUISITES = (
     dh_pgxs_test => 'postgresql-server-dev-all | postgresql-all',
     dh_python2 => 'dh-python | dh-sequence-python2',
     dh_python3 => 'dh-python | dh-sequence-python3',
-    dh_sphinxdoc => 'sphinx | python-sphinx | python3-sphinx',
+    dh_sphinxdoc =>
+      'sphinx | python-sphinx | python3-sphinx | dh-sequence-sphinxdoc',
     dh_xine => 'libxine-dev | libxine2-dev'
 );
 
