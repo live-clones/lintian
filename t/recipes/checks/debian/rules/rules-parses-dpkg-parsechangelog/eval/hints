@@ -1,6 +1,6 @@
-rules-parses-dpkg-parsechangelog (source): debian-rules-parses-dpkg-parsechangelog (line 8)
-rules-parses-dpkg-parsechangelog (source): debian-rules-parses-dpkg-parsechangelog (line 7)
-rules-parses-dpkg-parsechangelog (source): debian-rules-parses-dpkg-parsechangelog (line 6)
-rules-parses-dpkg-parsechangelog (source): debian-rules-parses-dpkg-parsechangelog (line 5)
-rules-parses-dpkg-parsechangelog (source): debian-rules-parses-dpkg-parsechangelog (line 4)
-rules-parses-dpkg-parsechangelog (source): debian-rules-parses-dpkg-parsechangelog (line 3)
+rules-parses-dpkg-parsechangelog (source): debian-rules-parses-dpkg-parsechangelog [debian/rules:8]
+rules-parses-dpkg-parsechangelog (source): debian-rules-parses-dpkg-parsechangelog [debian/rules:7]
+rules-parses-dpkg-parsechangelog (source): debian-rules-parses-dpkg-parsechangelog [debian/rules:6]
+rules-parses-dpkg-parsechangelog (source): debian-rules-parses-dpkg-parsechangelog [debian/rules:5]
+rules-parses-dpkg-parsechangelog (source): debian-rules-parses-dpkg-parsechangelog [debian/rules:4]
+rules-parses-dpkg-parsechangelog (source): debian-rules-parses-dpkg-parsechangelog [debian/rules:3]

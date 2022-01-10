@@ -59,9 +59,9 @@ sub visit_installed_files {
               =~ m{^ usr/lib/python [\d.]+ / (?:site|dist)-packages / }x
               && $item->dirname =~ m{^ usr/share/pyshared/ }x;
 
-            $self->hint(
-                'incorrect-libdir-in-la-file', $item->name,
-                "(line $position)",
+            $self->pointed_hint(
+                'incorrect-libdir-in-la-file',
+                $item->pointer($position),
                 "$own_location != " . $item->dirname
             ) unless $own_location eq $item->dirname;
 
@@ -71,9 +71,9 @@ sub visit_installed_files {
 
             my $prerequisites = $1;
 
-            $self->hint(
+            $self->pointed_hint(
                 'non-empty-dependency_libs-in-la-file',
-                $item, "(line $position)",
+                $item->pointer($position),
                 $prerequisites
             );
         }

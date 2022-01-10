@@ -31,8 +31,8 @@ generic-dh-make-2008 (source): dh-make-template-in-source [debian/emacsen-instal
 generic-dh-make-2008 (source): dh-make-template-in-source [debian/cron.d.ex]
 generic-dh-make-2008 (source): dh-clean-k-is-deprecated [debian/rules]
 generic-dh-make-2008 (source): debian-watch-file-is-missing
-generic-dh-make-2008 (source): debian-rules-missing-recommended-target build-indep
-generic-dh-make-2008 (source): debian-rules-missing-recommended-target build-arch
+generic-dh-make-2008 (source): debian-rules-missing-recommended-target build-indep [debian/rules]
+generic-dh-make-2008 (source): debian-rules-missing-recommended-target build-arch [debian/rules]
 generic-dh-make-2008 (source): bad-homepage <insert the upstream URL, if relevant>
 generic-dh-make-2008 (binary): wrong-bug-number-in-closes #nnnn [usr/share/doc/generic-dh-make-2008/changelog.Debian.gz:3]
 generic-dh-make-2008 (binary): superfluous-clutter-in-homepage <insert the upstream URL, if relevant>

@@ -1,1 +1,1 @@
-debhelper-dh-compat (source): debian-rules-sets-DH_COMPAT (line 3)
+debhelper-dh-compat (source): debian-rules-sets-DH_COMPAT [debian/rules:3]
