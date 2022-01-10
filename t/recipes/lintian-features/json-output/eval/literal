@@ -27,6 +27,13 @@
                   {
                      "experimental" : false,
                      "note" : "1.0+dsfg-1.1",
+                     "pointer" : {
+                        "item" : {
+                           "index" : "json-output_1.0+dsfg-1.1.dsc (patched)",
+                           "name" : "debian/changelog"
+                        },
+                        "line_position" : 1
+                     },
                      "tag" : "maintainer-upload-has-incorrect-version-number",
                      "visibility" : "warning"
                   },

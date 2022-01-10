@@ -45,21 +45,33 @@ sub source {
     my $changelog_mentions_local = 0;
     my $changelog_mentions_qa = 0;
     my $changelog_mentions_team_upload = 0;
+
     my $debian_dir = $processable->patched->resolve_path('debian/');
+
     my $chf;
     $chf = $debian_dir->child('changelog') if $debian_dir;
 
     # This isn't really an NMU check, but right now no other check
     # looks at debian/changelog in source packages.  Catch a
     # debian/changelog file that's a symlink.
-    if ($chf and $chf->is_symlink) {
-        $self->hint('changelog-is-symlink');
-    }
-    return unless $processable->changelog;
+    $self->pointed_hint('changelog-is-symlink', $chf->pointer)
+      if $chf && $chf->is_symlink;
+
+    return
+      unless $processable->changelog;
 
     # Get some data from the changelog file.
     my ($entry) = @{$processable->changelog->entries};
+
+    my $pointer = $chf->pointer($entry->position);
+
     my $uploader = canonicalize($entry->Maintainer // $EMPTY);
+
+    # trim both ends
+    $self->pointed_hint('extra-whitespace-around-name-in-changelog-trailer',
+        $pointer)
+      if $uploader =~ s/^\s+|\s+$//g;
+
     my $changes = $entry->Changes;
     $changes =~ s/^(\s*\n)+//;
     my $firstline = first { /^\s*\*/ } split(/\n/, $changes);
@@ -91,13 +103,6 @@ sub source {
     my $version_local = 0;
     my $upload_is_backport = $version =~ m/~bpo(\d+)\+(\d+)$/;
 
-    if ($uploader =~ m/^\s|\s$/) {
-        $self->hint('extra-whitespace-around-name-in-changelog-trailer');
-
-        # trim both ends
-        $uploader =~ s/^\s+|\s+$//g;
-    }
-
     if ($version =~ /-[^.-]+(\.[^.-]+)?(\.[^.-]+)?$/) {
         $version_nmuness = 1 if defined $1;
         $version_nmuness = 2 if defined $2;
@@ -122,28 +127,45 @@ sub source {
     $upload_is_nmu = 0 if not $uploader;
 
     if ($maintainer =~ /packages\@qa.debian.org/) {
-        $self->hint('uploaders-in-orphan')
+
+        $self->pointed_hint('uploaders-in-orphan', $pointer)
           if $processable->fields->declares('Uploaders');
-        $self->hint('qa-upload-has-incorrect-version-number', $version)
+
+        $self->pointed_hint('qa-upload-has-incorrect-version-number',
+            $pointer, $version)
           if $version_nmuness == 1;
-        $self->hint('no-qa-in-changelog') if !$changelog_mentions_qa;
+
+        $self->pointed_hint('no-qa-in-changelog', $pointer)
+          unless $changelog_mentions_qa;
+
     } elsif ($changelog_mentions_team_upload) {
-        $self->hint('team-upload-has-incorrect-version-number', $version)
+
+        $self->pointed_hint('team-upload-has-incorrect-version-number',
+            $pointer, $version)
           if $version_nmuness == 1;
-        $self->hint('unnecessary-team-upload') unless $upload_is_nmu;
+
+        $self->pointed_hint('unnecessary-team-upload', $pointer)
+          unless $upload_is_nmu;
+
     } else {
         # Local packages may be either NMUs or not.
         unless ($changelog_mentions_local || $version_local) {
-            $self->hint('no-nmu-in-changelog')
+
+            $self->pointed_hint('no-nmu-in-changelog', $pointer)
               if !$changelog_mentions_nmu && $upload_is_nmu;
-            $self->hint('source-nmu-has-incorrect-version-number', $version)
+
+            $self->pointed_hint('source-nmu-has-incorrect-version-number',
+                $pointer, $version)
               if $upload_is_nmu
               && $version_nmuness != 1
               && !$upload_is_backport;
         }
-        $self->hint('nmu-in-changelog')
+
+        $self->pointed_hint('nmu-in-changelog', $pointer)
           if $changelog_mentions_nmu && !$upload_is_nmu;
-        $self->hint('maintainer-upload-has-incorrect-version-number', $version)
+
+        $self->pointed_hint('maintainer-upload-has-incorrect-version-number',
+            $pointer, $version)
           if !$upload_is_nmu && $version_nmuness;
     }
 
@@ -154,7 +176,9 @@ sub source {
 # are case-insensitive in the right-hand side.
 sub canonicalize {
     my ($maintainer) = @_;
+
     $maintainer =~ s/<([^>\@]+\@)([\w.-]+)>/<$1\L$2>/;
+
     return $maintainer;
 }
 

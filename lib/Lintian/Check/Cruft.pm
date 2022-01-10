@@ -265,52 +265,57 @@ sub visit_patched_files {
       && $item->name eq 'debian/README.source';
 
     # prebuilt-file or forbidden file type
-    $self->hint('source-contains-prebuilt-wasm-binary', $item->name)
+    $self->pointed_hint('source-contains-prebuilt-wasm-binary', $item->pointer)
       if $item->file_type =~ m{^WebAssembly \s \(wasm\) \s binary \s module}x;
 
-    $self->hint('source-contains-prebuilt-windows-binary', $item->name)
+    $self->pointed_hint('source-contains-prebuilt-windows-binary',
+        $item->pointer)
       if $item->file_type
       =~ m{\b(?:PE(?:32|64)|(?:MS-DOS|COM)\s executable)\b}x;
 
-    $self->hint('source-contains-prebuilt-silverlight-object', $item->name)
+    $self->pointed_hint('source-contains-prebuilt-silverlight-object',
+        $item->pointer)
       if $item->file_type =~ m{^Zip \s archive \s data}x
       && $item->name =~ m{(?i)\.xac$}x;
 
     if ($item->file_type =~ m{^python \s \d(\.\d+)? \s byte-compiled}x) {
 
-        $self->hint('source-contains-prebuilt-python-object', $item->name);
+        $self->pointed_hint('source-contains-prebuilt-python-object',
+            $item->pointer);
 
-        $self->hint('source-is-missing', $item->name)
+        $self->pointed_hint('source-is-missing', $item->pointer)
           unless $self->find_source($item,
             {'.py' => '(?i)(?:\.cpython-\d{2}|\.pypy)?\.py[co]$'});
     }
 
     if ($item->file_type =~ m{\bELF\b}x) {
-        $self->hint('source-contains-prebuilt-binary', $item->name);
+        $self->pointed_hint('source-contains-prebuilt-binary', $item->pointer);
 
         my %patterns = map {
             $_  =>
 '(?i)(?:[\.-](?:bin|elf|e|hs|linux\d+|oo?|or|out|so(?:\.\d+)*)|static|_o\.golden)?$'
         } qw(.asm .c .cc .cpp .cxx .f .F .i .ml .rc .S);
 
-        $self->hint('source-is-missing', $item->name)
+        $self->pointed_hint('source-is-missing', $item->pointer)
           unless $self->find_source($item, \%patterns);
     }
 
     if ($item->file_type =~ m{^Macromedia \s Flash}x) {
 
-        $self->hint('source-contains-prebuilt-flash-object', $item->name);
+        $self->pointed_hint('source-contains-prebuilt-flash-object',
+            $item->pointer);
 
-        $self->hint('source-is-missing', $item->name)
+        $self->pointed_hint('source-is-missing', $item->pointer)
           unless $self->find_source($item, {'.as' => '(?i)\.swf$'});
     }
 
     if (   $item->file_type =~ m{^Composite \s Document \s File}x
         && $item->name =~ m{(?i)\.fla$}x) {
 
-        $self->hint('source-contains-prebuilt-flash-project', $item->name);
+        $self->pointed_hint('source-contains-prebuilt-flash-project',
+            $item->pointer);
 
-        $self->hint('source-is-missing', $item->name)
+        $self->pointed_hint('source-is-missing', $item->pointer)
           unless $self->find_source($item, {'.as' => '(?i)\.fla$'});
     }
 
@@ -319,13 +324,14 @@ sub visit_patched_files {
         =~ m{(?i)[-._](?:compiled|compressed|lite|min|pack(?:ed)?|prod|umd|yc)\.js$}x
     ) {
 
-        $self->hint('source-contains-prebuilt-javascript-object', $item->name);
+        $self->pointed_hint('source-contains-prebuilt-javascript-object',
+            $item->pointer);
         my %patterns = map {
             $_ =>
 '(?i)(?:[-._](?:compiled|compressed|lite|min|pack(?:ed)?|prod|umd|yc))?\.js$'
         } qw(.js _orig.js .js.orig .src.js -src.js .debug.js -debug.js -nc.js);
 
-        $self->hint('source-is-missing', $item->name)
+        $self->pointed_hint('source-is-missing', $item->pointer)
           unless $self->find_source($item, \%patterns);
     }
 
@@ -375,7 +381,7 @@ sub source {
 
         my $rule = first_value { $directory->name =~ /$_->[0]/s }
         @directory_checks;
-        $self->hint("${prefix}-$rule->[1]", $directory->name)
+        $self->pointed_hint("${prefix}-$rule->[1]", $directory->pointer)
           if defined $rule;
     }
 
@@ -383,7 +389,7 @@ sub source {
     for my $file (@files) {
 
         my $rule = first_value { $file->name =~ /$_->[0]/s } @file_checks;
-        $self->hint("${prefix}-$rule->[1]", $file->name)
+        $self->pointed_hint("${prefix}-$rule->[1]", $file->pointer)
           if defined $rule;
     }
 
@@ -485,7 +491,7 @@ sub full_text_check {
 
     my ($maximum, $position) = $self->maximum_line_length($contents);
 
-    $self->hint('very-long-line-length-in-source-file',$item->name,
+    $self->pointed_hint('very-long-line-length-in-source-file',$item->pointer,
         "line $position is $maximum characters long (>$VERY_LONG_LINE_LENGTH)")
       if $maximum > $VERY_LONG_LINE_LENGTH
       && $item->file_type !~ m{SVG Scalable Vector Graphics image};
@@ -520,8 +526,9 @@ sub full_text_check {
         if ($item->basename eq 'searchindex.js') {
             if ($lowercase =~ m/\A\s*search\.setindex\s* \s* \(\s*\{/xms) {
 
-                $self->hint('source-contains-prebuilt-sphinx-documentation',
-                    $item->dirname);
+                $self->pointed_hint(
+                    'source-contains-prebuilt-sphinx-documentation',
+                    $item->parent->pointer);
                 return;
             }
         }
@@ -529,8 +536,9 @@ sub full_text_check {
         if ($item->basename eq 'search_index.js') {
             if ($lowercase =~ m/\A\s*var\s*search_index\s*=/xms) {
 
-                $self->hint('source-contains-prebuilt-pandoc-documentation',
-                    $item->dirname);
+                $self->pointed_hint(
+                    'source-contains-prebuilt-pandoc-documentation',
+                    $item->parent->pointer);
                 return;
             }
         }
@@ -546,7 +554,7 @@ sub full_text_check {
             if ($lowercase
                 =~ m/(?:\A|\v)\s*var\s+deployJava\s*=\s*function/xmsi) {
 
-                $self->hint('source-is-missing', $item->name)
+                $self->pointed_hint('source-is-missing', $item->pointer)
                   unless $self->find_source($item,
                     {'.txt' => '(?i)\.js$', $EMPTY => $EMPTY});
 
@@ -579,7 +587,7 @@ sub full_text_check {
 
         my $url = $1 // $EMPTY;
 
-        $self->hint('license-problem-cc-by-nc-sa', $item->name)
+        $self->pointed_hint('license-problem-cc-by-nc-sa', $item->pointer)
           if $url =~ m{^https?://creativecommons.org/licenses/by-nc-sa/};
     }
 
@@ -655,8 +663,8 @@ sub check_js_script {
         my $extract = $1;
         $extract =~ s/^\s+|\s+$//g;
 
-        $self->hint('embedded-script-includes-copyright-statement',
-            $item->name,'extract of copyright statement:',$extract);
+        $self->pointed_hint('embedded-script-includes-copyright-statement',
+            $item->pointer,'extract of copyright statement:',$extract);
     }
 
     return;
@@ -681,13 +689,14 @@ sub warn_prebuilt_javascript{
 
     my $extratext= "line $position is $linelength characters long (>$cutoff)";
 
-    $self->hint('source-contains-prebuilt-javascript-object',$item->name);
+    $self->pointed_hint('source-contains-prebuilt-javascript-object',
+        $item->pointer);
 
     # Check for missing source.  It will check
     # for the source file in well known directories
     if ($item->basename =~ m{\.js$}i) {
 
-        $self->hint('source-is-missing', $item->name)
+        $self->pointed_hint('source-is-missing', $item->pointer)
           unless $self->find_source(
             $item,
             {
@@ -698,7 +707,7 @@ sub warn_prebuilt_javascript{
 
     } else  {
         # html file
-        $self->hint('source-is-missing', $item->name)
+        $self->pointed_hint('source-is-missing', $item->pointer)
           unless $self->find_source($item, {'.fragment.js' => $DOLLAR});
     }
 
@@ -769,8 +778,8 @@ sub detect_browserify {
         if ($lowercase =~ m{$pattern}msx) {
 
             my $extra = (defined $1) ? 'code fragment:'.$1 : $EMPTY;
-            $self->hint('source-contains-browserified-javascript',
-                $item->name, $extra);
+            $self->pointed_hint('source-contains-browserified-javascript',
+                $item->pointer, $extra);
 
             last;
         }
@@ -854,9 +863,10 @@ sub warn_long_lines {
 }
 
 sub tag_gfdl {
-    my ($self, $applytag, $name, $gfdlsections) = @_;
+    my ($self, $applytag, $item, $gfdlsections) = @_;
 
-    $self->hint($applytag, $name, 'invariant part is:', $gfdlsections);
+    $self->pointed_hint($applytag, $item->pointer, 'invariant part is:',
+        $gfdlsections);
 
     return;
 }
@@ -907,7 +917,8 @@ sub check_gfdl_license_problem {
     if ($gfdlsections eq $EMPTY) {
 
         # lie in order to check more part
-        $self->hint('license-problem-gfdl-invariants-empty', $item->name);
+        $self->pointed_hint('license-problem-gfdl-invariants-empty',
+            $item->pointer);
 
         return 0;
     }
@@ -949,22 +960,21 @@ sub check_gfdl_license_problem {
                 my $applytag = $gfdl_data->{'tag'};
 
                 # lie will allow checking more blocks
-                $self->tag_gfdl($applytag, $item->name, $gfdlsections)
+                $self->tag_gfdl($applytag, $item, $gfdlsections)
                   if defined $applytag;
 
                 return 0;
 
             } else {
                 $self->tag_gfdl('license-problem-gfdl-invariants',
-                    $item->name, $gfdlsections);
+                    $item, $gfdlsections);
                 return 1;
             }
         }
     }
 
     # catch all
-    $self->tag_gfdl('license-problem-gfdl-invariants',
-        $item->name, $gfdlsections);
+    $self->tag_gfdl('license-problem-gfdl-invariants',$item, $gfdlsections);
 
     return 1;
 }
@@ -986,7 +996,7 @@ sub rfc_whitelist_filename {
     return 0
       if any { $lcname =~ m/ $_ /xms } @patterns;
 
-    $self->hint($tag_name, $item->name);
+    $self->pointed_hint($tag_name, $item->pointer);
 
     return 1;
 }
@@ -1005,7 +1015,7 @@ sub php_source_whitelist {
     return 0
       if $self->processable->source_name =~ /^php\d*(?:\.\d+)?$/xms;
 
-    $self->hint($tag_name, $item->name);
+    $self->pointed_hint($tag_name, $item->pointer);
 
     return 1;
 }
@@ -1164,7 +1174,7 @@ sub check_for_single_bad_license {
     my $callsub = $license_data->{callsub};
     if (!defined $callsub) {
 
-        $self->hint($tag_name, $item->name);
+        $self->pointed_hint($tag_name, $item->pointer);
         return 1;
     }
 

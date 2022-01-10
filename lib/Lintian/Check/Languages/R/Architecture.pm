@@ -37,14 +37,14 @@ with 'Lintian::Check';
 has have_r_files => (is => 'rw', default => 0);
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     return
-      if $file->is_dir;
+      if $item->is_dir;
 
     $self->have_r_files(1)
-      if $file->name =~ m{^usr/lib/R/.*/DESCRIPTION$}
-      && $file->decoded_utf8 =~ /^NeedsCompilation: no/m;
+      if $item->name =~ m{^usr/lib/R/.*/DESCRIPTION$}
+      && $item->decoded_utf8 =~ /^NeedsCompilation: no/m;
 
     return;
 }

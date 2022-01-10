@@ -521,7 +521,7 @@ div.clear {
 
       <a class="visibility-symbol" href="https://lintian.debian.org/levels#W"><span class="visibility-symbol tiny W">W</span></a>
       <span class="hint tiny"><a href="https://lintian.debian.org/tags/maintainer-upload-has-incorrect-version-number">maintainer-upload-has-incorrect-version-number</a></span>
-      <span class="context tiny">1.0+dsfg-1.1</span>
+      <span class="context tiny">1.0+dsfg-1.1 [debian/changelog:1]</span>
 
     </li>
     <li class="hintitem">

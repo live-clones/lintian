@@ -66,13 +66,16 @@ sub source {
         # include original wildcard
         push(@arches, $wildcard);
 
-        foreach my $arch (uniq @arches) {
+        for my $port (uniq @arches) {
 
-            my $specific = "debian/$bin.lintian-overrides.$arch";
+            my $specific = $processable->patched->resolve_path(
+                "debian/$bin.lintian-overrides.$port");
+            next
+              unless defined $specific;
 
-            $self->hint('multi-arch-same-package-has-arch-specific-overrides',
-                $specific)
-              if $processable->patched->resolve_path($specific);
+            $self->pointed_hint(
+                'multi-arch-same-package-has-arch-specific-overrides',
+                $specific->pointer);
         }
     }
 
