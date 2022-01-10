@@ -21,6 +21,13 @@
                   {
                      "experimental" : false,
                      "note" : "",
+                     "pointer" : {
+                        "item" : {
+                           "index" : "json-output_1.0+dsfg-1.1.dsc (patched)",
+                           "name" : "debian/patches/debian-changes-1.0+dsfg-1.1"
+                        },
+                        "line_position" : 0
+                     },
                      "tag" : "format-3.0-but-debian-changes-patch",
                      "visibility" : "warning"
                   },
@@ -53,30 +60,65 @@
                   {
                      "experimental" : false,
                      "note" : "3",
+                     "pointer" : {
+                        "item" : {
+                           "index" : "json-output_1.0+dsfg-1.1.dsc (patched)",
+                           "name" : "debian/watch"
+                        },
+                        "line_position" : 0
+                     },
                      "tag" : "older-debian-watch-file-standard",
                      "visibility" : "info"
                   },
                   {
                      "experimental" : false,
-                     "note" : "debian/patches/debian-changes-1.0+dsfg-1.1",
+                     "note" : "",
+                     "pointer" : {
+                        "item" : {
+                           "index" : "json-output_1.0+dsfg-1.1.dsc (patched)",
+                           "name" : "debian/patches/debian-changes-1.0+dsfg-1.1"
+                        },
+                        "line_position" : 0
+                     },
                      "tag" : "patch-not-forwarded-upstream",
                      "visibility" : "info"
                   },
                   {
                      "experimental" : false,
-                     "note" : "debian/patches/debian-changes-1.0+dsfg-1.1",
+                     "note" : "",
+                     "pointer" : {
+                        "item" : {
+                           "index" : "json-output_1.0+dsfg-1.1.dsc (patched)",
+                           "name" : "debian/patches/debian-changes-1.0+dsfg-1.1"
+                        },
+                        "line_position" : 0
+                     },
                      "tag" : "quilt-patch-using-template-description",
                      "visibility" : "info"
                   },
                   {
                      "experimental" : false,
                      "note" : "",
+                     "pointer" : {
+                        "item" : {
+                           "index" : "json-output_1.0+dsfg-1.1.dsc (patched)",
+                           "name" : "debian/upstream/metadata"
+                        },
+                        "line_position" : 0
+                     },
                      "tag" : "upstream-metadata-missing-bug-tracking",
                      "visibility" : "info"
                   },
                   {
                      "experimental" : false,
                      "note" : "",
+                     "pointer" : {
+                        "item" : {
+                           "index" : "json-output_1.0+dsfg-1.1.dsc (patched)",
+                           "name" : "debian/upstream/metadata"
+                        },
+                        "line_position" : 0
+                     },
                      "tag" : "upstream-metadata-missing-repository",
                      "visibility" : "info"
                   },

@@ -130,7 +130,7 @@ sub check_shlibs_file {
 
     # no shared libraries included in package, thus shlibs control
     # file should not be present
-    $self->hint('empty-shlibs')
+    $self->pointed_hint('empty-shlibs', $shlibs_file->pointer)
       if defined $shlibs_file && !@versioned_libraries;
 
     # shared libraries included, thus shlibs control file has to exist
@@ -195,7 +195,8 @@ sub check_shlibs_file {
                   @{$self->shlibs_positions_by_pretty_soname->{$pretty_soname}}
               ). $RIGHT_PARENTHESIS;
 
-            $self->hint('duplicate-in-shlibs', $indicator,$pretty_soname);
+            $self->pointed_hint('duplicate-in-shlibs', $shlibs_file->pointer,
+                $indicator,$pretty_soname);
         }
 
         my @used_pretty_sonames;
@@ -208,8 +209,8 @@ sub check_shlibs_file {
             push(@used_pretty_sonames, "udeb: $pretty_soname");
 
             # only public shared libraries
-            $self->hint('ships-undeclared-shared-library',
-                $pretty_soname, 'for', $file_name)
+            $self->pointed_hint('ships-undeclared-shared-library',
+                $shlibs_file->pointer,$pretty_soname, 'for', $file_name)
               if (
                 any { (dirname($file_name) . $SLASH) eq $_ }
                 @ldconfig_folders
@@ -224,7 +225,9 @@ sub check_shlibs_file {
             [keys %{$self->shlibs_positions_by_pretty_soname}],
             \@used_pretty_sonames);
 
-        $self->hint('shared-library-not-shipped', $_)for $unused_lc->get_Lonly;
+        $self->pointed_hint('shared-library-not-shipped',
+            $shlibs_file->pointer, $_)
+          for $unused_lc->get_Lonly;
 
         my $fields = $self->processable->fields;
 
@@ -247,10 +250,12 @@ sub check_shlibs_file {
 
         for my $prerequisite (uniq @shlibs_prerequisites) {
 
-            $self->hint('distant-prerequisite-in-shlibs', $prerequisite)
+            $self->pointed_hint('distant-prerequisite-in-shlibs',
+                $shlibs_file->pointer, $prerequisite)
               unless $provides->satisfies($prerequisite);
 
-            $self->hint('outdated-relation-in-shlibs', $prerequisite)
+            $self->pointed_hint('outdated-relation-in-shlibs',
+                $shlibs_file->pointer, $prerequisite)
               if $prerequisite =~ m/\(\s*[><](?![<>=])\s*/;
         }
     }
@@ -298,7 +303,7 @@ sub check_symbols_file {
 
     # no shared libraries included in package, thus symbols
     # control file should not be present
-    $self->hint('empty-shared-library-symbols')
+    $self->pointed_hint('empty-shared-library-symbols', $symbols_file->pointer)
       unless @shared_libraries;
 
     # Assume the version to be a non-native version to avoid
@@ -468,8 +473,8 @@ sub check_symbols_file {
                 );
             }
 
-            $self->hint('invalid-template-id-in-symbols-file',
-                $selector, "(line $position)")
+            $self->pointed_hint('invalid-template-id-in-symbols-file',
+                $symbols_file->pointer($position),$selector)
               if length $selector
               && ($selector !~ m{^ \d+ $}x || $selector > $template_count);
 
@@ -497,11 +502,12 @@ sub check_symbols_file {
 
         my $pretty_soname = human_soname($soname);
 
-        $self->hint('duplicate-entry-in-symbols-control-file',
-            $indicator,$pretty_soname);
+        $self->pointed_hint('duplicate-entry-in-symbols-control-file',
+            $symbols_file->pointer,$indicator,$pretty_soname);
     }
 
-    $self->hint('syntax-error-in-symbols-file',"(line $_)")
+    $self->pointed_hint('syntax-error-in-symbols-file',
+        $symbols_file->pointer($_))
       for uniq @syntax_errors;
 
     # Check that all of the packages listed as dependencies in the symbols
@@ -530,12 +536,16 @@ sub check_symbols_file {
 
         for my $meta_label ($meta_lc->get_Lonly) {
 
-            $self->hint('unknown-meta-field-in-symbols-file',
-                $meta_label, "($soname, line $_)")
+            $self->pointed_hint(
+                'unknown-meta-field-in-symbols-file',
+                $symbols_file->pointer($_),
+                $meta_label, "($soname)"
+              )
               for @{$positions_by_soname_and_meta_label{$soname}{$meta_label}};
         }
 
-        $self->hint('symbols-file-missing-build-depends-package-field',$soname)
+        $self->pointed_hint('symbols-file-missing-build-depends-package-field',
+            $symbols_file->pointer,$soname)
           if none { $_ eq 'Build-Depends-Package' } @used_meta_labels;
 
         my @full_version_symbols
@@ -548,9 +558,9 @@ sub check_symbols_file {
             $context .= ' and ' . (scalar @sorted - 1) . ' others'
               if @sorted > 1;
 
-            $self->hint(
+            $self->pointed_hint(
                 'symbols-file-contains-current-version-with-debian-revision',
-                $context, "($soname)");
+                $symbols_file->pointer,$context, "($soname)");
         }
 
         my @debian_revision_symbols
@@ -563,8 +573,8 @@ sub check_symbols_file {
             $context .= ' and ' . (scalar @sorted - 1) . ' others'
               if @sorted > 1;
 
-            $self->hint('symbols-file-contains-debian-revision',
-                $context, "($soname)");
+            $self->pointed_hint('symbols-file-contains-debian-revision',
+                $symbols_file->pointer,$context, "($soname)");
         }
 
         # Deduplicate the list of dependencies before warning so that we don't
@@ -573,8 +583,8 @@ sub check_symbols_file {
           my $prerequisite (uniq @{$prerequisites_by_soname{$soname} // [] }) {
 
             $prerequisite =~ s/ [ ] [#] MINVER [#] $//x;
-            $self->hint('symbols-declares-dependency-on-other-package',
-                $prerequisite, "($soname)")
+            $self->pointed_hint('symbols-declares-dependency-on-other-package',
+                $symbols_file->pointer,$prerequisite, "($soname)")
               unless $provides->satisfies($prerequisite);
         }
     }
@@ -589,8 +599,8 @@ sub check_symbols_file {
         push(@used_pretty_sonames, "udeb: $pretty_soname");
 
         # only public shared libraries
-        $self->hint('shared-library-symbols-not-tracked',
-            $pretty_soname,'for', $filename)
+        $self->pointed_hint('shared-library-symbols-not-tracked',
+            $symbols_file->pointer,$pretty_soname,'for', $filename)
           if (
             any { (dirname($filename) . $SLASH) eq $_ }
             @ldconfig_folders
@@ -605,7 +615,9 @@ sub check_symbols_file {
     my $unused_lc
       = List::Compare->new(\@available_pretty_sonames,\@used_pretty_sonames);
 
-    $self->hint('surplus-shared-library-symbols', $_)for $unused_lc->get_Lonly;
+    $self->pointed_hint('surplus-shared-library-symbols',
+        $symbols_file->pointer, $_)
+      for $unused_lc->get_Lonly;
 
     return;
 }

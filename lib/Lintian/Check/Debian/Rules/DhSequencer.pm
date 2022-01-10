@@ -30,20 +30,16 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-sub source {
-    my ($self) = @_;
+sub visit_patched_files {
+    my ($self, $item) = @_;
 
-    my $processable = $self->processable;
-    my $group = $self->group;
-
-    my $rules = $processable->patched->resolve_path('debian/rules');
     return
-      unless $rules;
+      unless $item->name eq 'debian/rules';
 
-    my $contents = $rules->bytes;
+    my $bytes = $item->bytes;
 
     # strip comments (see #960485)
-    $contents =~ s/^\h#.*\R?//mg;
+    $bytes =~ s/^\h#.*\R?//mg;
 
     my $plain = qr/\$\@/;
     my $curly = qr/\$\{\@\}/;
@@ -52,10 +48,10 @@ sub source {
     my $rule_altern = qr/(?:$plain|$curly|$asterisk|$parentheses)/;
     my $rule_target = qr/(?:$rule_altern|'$rule_altern'|"$rule_altern")/;
 
-    $self->hint('no-dh-sequencer')
-      unless $contents =~ /^\t+(?:[\+@-])?(?:[^=]+=\S+ )?dh[ \t]+$rule_target/m
-      || $contents =~ m{^\s*include\s+/usr/share/cdbs/1/class/hlibrary.mk\s*$}m
-      || $contents =~ m{\bDEB_CABAL_PACKAGE\b};
+    $self->pointed_hint('no-dh-sequencer', $item->pointer)
+      unless $bytes =~ /^\t+(?:[\+@-])?(?:[^=]+=\S+ )?dh[ \t]+$rule_target/m
+      || $bytes =~ m{^\s*include\s+/usr/share/cdbs/1/class/hlibrary.mk\s*$}m
+      || $bytes =~ m{\bDEB_CABAL_PACKAGE\b};
 
     return;
 }

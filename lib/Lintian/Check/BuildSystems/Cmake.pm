@@ -44,7 +44,7 @@ sub visit_patched_files {
 
     # Check for CMake cache files.  These embed the source path and hence
     # will cause FTBFS on buildds, so they should never be present
-    $self->hint('source-contains-cmake-cache-file', $item->name)
+    $self->pointed_hint('source-contains-cmake-cache-file', $item->pointer)
       if $item->basename eq 'CMakeCache.txt';
 
     return;
@@ -57,8 +57,8 @@ sub visit_installed_files {
       unless $item->is_file;
 
     # /usr/share/cmake-*
-    $self->hint('package-contains-cmake-private-file', $item->name)
-      if $item->name =~ m{^usr/share/cmake-\d+\.\d+/.+}
+    $self->pointed_hint('package-contains-cmake-private-file', $item->pointer)
+      if $item->name =~ m{^ usr/share/cmake- \d+ [.] \d+ / }x
       && $self->processable->source_name ne 'cmake';
 
     return;

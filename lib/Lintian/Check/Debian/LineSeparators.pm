@@ -31,29 +31,24 @@ use v5.20;
 use warnings;
 use utf8;
 
+use List::SomeUtils qw(none);
+
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
 
 # files in ./debian to check for line terminators
-my @CANDIDATES = qw(control changelog);
+my @CANDIDATES = qw(debian/control debian/changelog);
 
-sub source {
-    my ($self) = @_;
+sub visit_patched_files {
+    my ($self, $item) = @_;
 
-    my @files= grep { defined }
-      map { $self->processable->patched->resolve_path("debian/$_") }
-      @CANDIDATES;
+    return
+      if none { $item->name eq $_ } @CANDIDATES;
 
-    for my $file (@files) {
-        my $bytes = $file->bytes;
-        next
-          unless length $bytes;
-
-        $self->hint('carriage-return-line-feed', $file->name)
-          if $bytes =~ m{\r\n\Z}m;
-    }
+    $self->pointed_hint('carriage-return-line-feed', $item->pointer)
+      if $item->bytes =~ m{\r\n\Z}m;
 
     return;
 }

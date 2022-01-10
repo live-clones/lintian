@@ -43,21 +43,25 @@ sub source {
 
     for my $relative (@often_misnamed) {
 
-        my $correct = 'debian/' . $relative->{correct};
-        my $problematic = 'debian/' . $relative->{problematic};
+        my $problematic_item = $self->processable->patched->resolve_path(
+            'debian/' . $relative->{problematic});
 
-        if ($self->processable->patched->resolve_path($problematic)) {
+        next
+          unless defined $problematic_item;
 
-            if ($self->processable->patched->resolve_path($correct)) {
-                $self->hint('duplicate-packaging-file',
-                    "$problematic -> $correct");
+        my $correct_name = 'debian/' . $relative->{correct};
+        if ($self->processable->patched->resolve_path($correct_name)) {
 
-            } else {
-                $self->hint(
-                    'incorrect-packaging-filename',
-                    "$problematic -> $correct"
-                );
-            }
+            $self->pointed_hint('duplicate-packaging-file',
+                $problematic_item->pointer,
+                'better:', $correct_name);
+
+        } else {
+            $self->pointed_hint(
+                'incorrect-packaging-filename',
+                $problematic_item->pointer,
+                'better:', $correct_name
+            );
         }
     }
 

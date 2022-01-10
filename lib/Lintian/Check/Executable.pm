@@ -38,7 +38,7 @@ sub visit_installed_files {
     return
       unless $item->is_file;
 
-    $self->hint('executable-not-elf-or-script', $item->name)
+    $self->pointed_hint('executable-not-elf-or-script', $item->pointer)
       if $item->is_executable
       && $item->file_type !~ / ^ [^,]* \b ELF \b /msx
       && !$item->is_script

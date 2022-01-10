@@ -30,21 +30,19 @@ use namespace::clean;
 with 'Lintian::Check';
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     return
-      unless $file->is_file;
+      unless $item->is_file;
 
     return
-      unless $file->name =~ m{^usr/include/};
+      unless $item->name =~ m{^ usr/include/ }x;
 
     return
-      unless $file->name =~ m{/config.h$};
+      unless $item->name =~ m{ /config.h $}x;
 
-    my $contents = $file->bytes;
-
-    $self->hint('package-name-defined-in-config-h', $file->name)
-      if $contents =~ m{\bPACKAGE_NAME\b};
+    $self->hint('package-name-defined-in-config-h', $item->name)
+      if $item->bytes =~ m{ \b PACKAGE_NAME \b }x;
 
     return;
 }

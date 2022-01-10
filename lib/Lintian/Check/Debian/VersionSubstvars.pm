@@ -83,9 +83,11 @@ sub source {
             my $relation
               = $self->processable->binary_relation($installable, $field);
 
-            $self->hint('substvar-source-version-is-deprecated',
-                $installable, $field, "(line $position)")
-              if $relation->matches(qr/\$[{]Source-Version[}]/);
+            $self->pointed_hint(
+                'substvar-source-version-is-deprecated',
+                $debian_control->item->pointer($position),
+                $installable, $field
+            )if $relation->matches(qr/\$[{]Source-Version[}]/);
 
             my %external;
             my $visitor = sub {
@@ -113,10 +115,12 @@ sub source {
                     # We can't test dependencies on packages whose names are
                     # formed via substvars expanded during the build.  Assume
                     # those maintainers know what they're doing.
-                    $self->hint(
+                    $self->pointed_hint(
                         'version-substvar-for-external-package',
-                        $field,"(line $position)",
-                        $substvar,"$installable -> $other"
+                        $debian_control->item->pointer($position),
+                        $field,
+                        $substvar,
+                        "$installable -> $other"
                       )
                       unless $debian_control->installable_fields($other)
                       ->declares('Architecture')

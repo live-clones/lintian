@@ -79,24 +79,26 @@ my @tolerated_fields = qw(
 sub source {
     my ($self) = @_;
 
-    my $file
+    my $item
       = $self->processable->patched->resolve_path('debian/upstream/metadata');
 
     if ($self->processable->native) {
-        $self->hint('upstream-metadata-in-native-source')
-          if defined $file;
+
+        $self->pointed_hint('upstream-metadata-in-native-source',
+            $item->pointer)
+          if defined $item;
         return;
     }
 
-    unless (defined $file) {
+    unless (defined $item) {
         $self->hint('upstream-metadata-file-is-missing');
         return;
     }
 
-    $self->hint('upstream-metadata-exists');
+    $self->pointed_hint('upstream-metadata-exists', $item->pointer);
 
-    unless ($file->is_open_ok) {
-        $self->hint('upstream-metadata-is-not-a-file');
+    unless ($item->is_open_ok) {
+        $self->pointed_hint('upstream-metadata-is-not-a-file', $item->pointer);
         return;
     }
 
@@ -105,7 +107,7 @@ sub source {
 
     my $yaml;
     try {
-        $yaml = YAML::XS::LoadFile($file->unpacked_path);
+        $yaml = YAML::XS::LoadFile($item->unpacked_path);
 
         die
           unless defined $yaml;
@@ -128,19 +130,23 @@ sub source {
             && length $line
             && length $document);
 
-        $self->hint('upstream-metadata-yaml-invalid', $message);
+        $self->pointed_hint('upstream-metadata-yaml-invalid',
+            $item->pointer, $message);
 
         return;
     }
 
     unless (ref $yaml eq 'HASH') {
-        $self->hint('upstream-metadata-not-yaml-mapping', $file->name);
+
+        $self->pointed_hint('upstream-metadata-not-yaml-mapping',
+            $item->pointer);
         return;
     }
 
     for my $field (keys %{$yaml}) {
 
-        $self->hint('upstream-metadata', $field, $yaml->{$field})
+        $self->pointed_hint('upstream-metadata', $item->pointer, $field,
+            $yaml->{$field})
           if ref($yaml->{$field}) eq $EMPTY;
     }
 
@@ -148,11 +154,14 @@ sub source {
       = List::Compare->new([keys %{$yaml}],[@known_fields, @tolerated_fields]);
     my @invalid_fields = $lc->get_Lonly;
 
-    $self->hint('upstream-metadata-field-unknown', $_)for @invalid_fields;
+    $self->pointed_hint('upstream-metadata-field-unknown', $item->pointer, $_)
+      for @invalid_fields;
 
-    $self->hint('upstream-metadata-missing-repository')
+    $self->pointed_hint('upstream-metadata-missing-repository', $item->pointer)
       if none { defined $yaml->{$_} } qw(Repository Repository-Browse);
-    $self->hint('upstream-metadata-missing-bug-tracking')
+
+    $self->pointed_hint('upstream-metadata-missing-bug-tracking',
+        $item->pointer)
       if none { defined $yaml->{$_} } qw(Bug-Database Bug-Submit);
 
     return;
@@ -166,7 +175,7 @@ sub visit_patched_files {
 
     # here we check old upstream specification
     # debian/upstream should be a directory
-    $self->hint('debian-upstream-obsolete-path', $item->name)
+    $self->pointed_hint('debian-upstream-obsolete-path', $item->pointer)
       if $item->name eq 'debian/upstream'
       || $item->name eq 'debian/upstream-metadata.yaml';
 

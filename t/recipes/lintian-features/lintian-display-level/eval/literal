@@ -1,6 +1,6 @@
 W: lintian-display-level source: changelog-file-missing-explicit-entry 0.0.1-1 -> 1.0+dsfg-1 (missing) -> 1.0+dsfg-1.1 [debian/changelog:1]
 W: lintian-display-level source: dfsg-version-misspelled 1.0+dsfg-1.1
-W: lintian-display-level source: format-3.0-but-debian-changes-patch
+W: lintian-display-level source: format-3.0-but-debian-changes-patch [debian/patches/debian-changes-1.0+dsfg-1.1]
 W: lintian-display-level source: maintainer-upload-has-incorrect-version-number 1.0+dsfg-1.1 [debian/changelog:1]
 W: lintian-display-level: no-manual-page [usr/bin/script]
 P: lintian-display-level source: debian-control-has-unusual-field-spacing Essential [debian/control:12]

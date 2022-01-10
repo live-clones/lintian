@@ -22,16 +22,16 @@ use warnings;
 use utf8;
 
 use Const::Fast;
-use List::SomeUtils qw(any);
+use List::SomeUtils qw(none);
+
+const my @WANTED_FILES => (qr{ (.+ [.])? install }sx, qr{ (.+ [.])? links }sx);
+
+const my @ILLEGAL_VARIABLES => qw(DEB_BUILD_MULTIARCH);
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-const my @FILE_MASKS => (qr{ (.+ [.])? install }sx, qr{ (.+ [.])? links }sx);
-
-const my @ILLEGAL_VARIABLES => qw(DEB_BUILD_MULTIARCH);
 
 sub visit_patched_files {
     my ($self, $item) = @_;
@@ -39,12 +39,13 @@ sub visit_patched_files {
     return
       unless $item->name =~ m{^ debian/ }sx;
 
-    if (any { $item->name =~ m{ / $_ $}sx } @FILE_MASKS) {
+    return
+      if none { $item->name =~ m{ / $_ $}sx } @WANTED_FILES;
 
-        for my $variable (@ILLEGAL_VARIABLES) {
-            $self->hint('illegal-variable', $variable, $item->name)
-              if $item->decoded_utf8 =~ m{ \b $variable \b }msx;
-        }
+    for my $variable (@ILLEGAL_VARIABLES) {
+
+        $self->pointed_hint('illegal-variable', $item->pointer, $variable)
+          if $item->decoded_utf8 =~ m{ \b $variable \b }msx;
     }
 
     return;

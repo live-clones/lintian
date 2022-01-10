@@ -44,10 +44,12 @@ const my $PATCH_DESC_TEMPLATE =>
 const my $EMPTY => q{};
 
 sub spelling_tag_emitter {
-    my ($self, @orig_args) = @_;
+    my ($self, $tag_name, $item, @orig_args) = @_;
+
+    my $pointer = $item->pointer($.);
 
     return sub {
-        return $self->hint(@orig_args, @_);
+        return $self->pointed_hint($tag_name, $pointer, @orig_args, @_);
     };
 }
 
@@ -79,7 +81,8 @@ sub source {
           if $build_deps->satisfies('quilt')
           && (!defined $patch_series || !$patch_series->is_open_ok);
 
-        $self->hint('quilt-series-but-no-build-dep')
+        $self->pointed_hint('quilt-series-but-no-build-dep',
+            $patch_series->pointer)
           if $patch_series
           && $patch_series->is_file
           && !$build_deps->satisfies('quilt');
@@ -90,59 +93,74 @@ sub source {
 
     if ($patch_series && $patch_series->is_open_ok) {
 
-        my (@patch_names, @badopts);
+        my @patch_names;
 
         open(my $series_fd, '<', $patch_series->unpacked_path)
           or die encode_utf8('Cannot open ' . $patch_series->unpacked_path);
 
-        while (my $patch = <$series_fd>) {
-            $patch =~ s/(?:^|\s+)#.*$//; # Strip comment
-            if (rindex($patch,"\n") < 0) {
-                $self->hint('quilt-series-without-trailing-newline');
+        my $position = 1;
+        while (my $line = <$series_fd>) {
+
+            # Strip comment
+            $line =~ s/(?:^|\s+)#.*$//;
+
+            if (rindex($line,"\n") < 0) {
+                $self->pointed_hint('quilt-series-without-trailing-newline',
+                    $patch_series->pointer);
             }
 
             # trim both ends
-            $patch =~ s/^\s+|\s+$//g;
+            $line =~ s/^\s+|\s+$//g;
 
-            next if $patch eq $EMPTY;
-            if ($patch =~ m{^(\S+)\s+(\S.*)$}) {
-                my $patch_options;
-                ($patch, $patch_options) = ($1, $2);
-                if ($patch_options ne '-p1') {
-                    push(@badopts, $patch);
-                }
+            next
+              unless length $line;
+
+            if ($line =~ m{^(\S+)\s+(\S.*)$}) {
+
+                my $patch = $1;
+                my $patch_options = $2;
+
+                push(@patch_names, $patch);
+
+                $self->pointed_hint('quilt-patch-with-non-standard-options',
+                    $patch_series->pointer($position), $line)
+                  unless $patch_options eq '-p1';
+
+            } else {
+                push(@patch_names, $line);
             }
-            push(@patch_names, $patch);
-        }
-        close($series_fd);
 
-        $self->hint('quilt-patch-with-non-standard-options', @badopts)
-          if @badopts;
+        } continue {
+            ++$position;
+        }
+
+        close $series_fd;
 
         my @patch_files;
         for my $name (@patch_names) {
 
-            my $file = $patch_dir->resolve_path($name);
+            my $item = $patch_dir->resolve_path($name);
 
-            if (defined $file && $file->is_file) {
-                push(@patch_files, $file);
+            if (defined $item && $item->is_file) {
+                push(@patch_files, $item);
 
             } else {
-                $self->hint('quilt-series-references-non-existent-patch',
-                    $name);
+                $self->pointed_hint(
+                    'quilt-series-references-non-existent-patch',
+                    $patch_series->pointer, $name);
             }
         }
 
-        for my $file (@patch_files) {
+        for my $item (@patch_files) {
 
             next
-              unless $file->is_open_ok;
+              unless $item->is_open_ok;
 
             my $description = $EMPTY;
             my $has_template_description = 0;
 
-            open(my $patch_fd, '<', $file->unpacked_path)
-              or die encode_utf8('Cannot open ' . $file->unpacked_path);
+            open(my $patch_fd, '<', $item->unpacked_path)
+              or die encode_utf8('Cannot open ' . $item->unpacked_path);
 
             while (my $line = <$patch_fd>) {
 
@@ -160,15 +178,17 @@ sub source {
                 $has_template_description = 1
                   if $line =~ / \Q$PATCH_DESC_TEMPLATE\E /msx;
             }
-            close($patch_fd);
+            close $patch_fd;
 
-            $self->hint('quilt-patch-missing-description', $file->name)
+            $self->pointed_hint('quilt-patch-missing-description',
+                $item->pointer)
               unless length $description;
 
-            $self->hint('quilt-patch-using-template-description', $file->name)
+            $self->pointed_hint('quilt-patch-using-template-description',
+                $item->pointer)
               if $has_template_description;
 
-            $self->check_patch($file, $description);
+            $self->check_patch($item, $description);
         }
     }
 
@@ -181,25 +201,26 @@ sub source {
         $versioned_patch= $patch_dir->resolve_path("debian-changes-$version")
           if $patch_dir;
 
-        if ($versioned_patch and $versioned_patch->is_file) {
-            if (not $patch_header or not $patch_header->is_file) {
-                $self->hint('format-3.0-but-debian-changes-patch');
-            }
+        if (defined $versioned_patch && $versioned_patch->is_file) {
+
+            $self->pointed_hint('format-3.0-but-debian-changes-patch',
+                $versioned_patch->pointer)
+              if !defined $patch_header || !$patch_header->is_file;
         }
     }
 
     if ($patch_dir and $patch_dir->is_dir and $source_format ne '2.0') {
         # Check all series files, including $vendor.series
-        for my $file ($patch_dir->children) {
+        for my $item ($patch_dir->children) {
             next
-              unless $file =~ /\/(.+\.)?series$/;
+              unless $item->name =~ /\/(.+\.)?series$/;
             next
-              unless $file->is_open_ok;
+              unless $item->is_open_ok;
 
-            $known_files{$file->basename}++;
+            $known_files{$item->basename}++;
 
-            open(my $fd, '<', $file->unpacked_path)
-              or die encode_utf8('Cannot open ' . $file->unpacked_path);
+            open(my $fd, '<', $item->unpacked_path)
+              or die encode_utf8('Cannot open ' . $item->unpacked_path);
 
             while (my $line = <$fd>) {
                 $known_files{$1}++
@@ -207,19 +228,23 @@ sub source {
             }
             close($fd);
 
-            $self->hint('package-uses-vendor-specific-patch-series', $file)
-              if $file =~ /\.series$/;
+            $self->pointed_hint('package-uses-vendor-specific-patch-series',
+                $item->pointer)
+              if $item->name =~ m{ [.]series $}x;
         }
 
-        for my $file ($patch_dir->descendants) {
+        for my $item ($patch_dir->descendants) {
             next
-              if $file->basename =~ /^README(\.patches)?$/
-              or $file->basename =~ /\.in/g;
+              if $item->basename =~ /^README(\.patches)?$/
+              || $item->basename =~ /\.in/g;
 
             # Use path relative to debian/patches for "subdir/foo"
-            my $name = substr($file, length $patch_dir);
-            $self->hint('patch-file-present-but-not-mentioned-in-series',$name)
-              unless $known_files{$name} or $file->is_dir;
+            my $name = substr($item, length $patch_dir);
+
+            $self->pointed_hint(
+                'patch-file-present-but-not-mentioned-in-series',
+                $item->pointer)
+              unless $known_files{$name} || $item->is_dir;
         }
     }
 
@@ -228,12 +253,12 @@ sub source {
 
 # Checks on patches common to all build systems.
 sub check_patch {
-    my ($self, $patch_file, $description) = @_;
+    my ($self, $item, $description) = @_;
 
-    unless (any { /(spelling|typo)/i } ($patch_file, $description)) {
+    unless (any { /(spelling|typo)/i } ($item->name, $description)) {
         my $tag_emitter
           = $self->spelling_tag_emitter('spelling-error-in-patch-description',
-            $patch_file);
+            $item);
         check_spelling($self->data, $description,
             $self->group->spelling_exceptions,
             $tag_emitter, 0);
@@ -245,12 +270,12 @@ sub check_patch {
     # patches that modify files in the debian/* directory, but as of
     # 2010-01-01, all cases where the first level of the patch path is
     # "debian/" in the archive are false positives.
-    my $bytes = safe_qx('lsdiff', '--strip=1', $patch_file->unpacked_path);
+    my $bytes = safe_qx('lsdiff', '--strip=1', $item->unpacked_path);
     my $output = decode_utf8($bytes);
 
     my @debian_files = ($output =~ m{^((?:\./)?debian/.*)$}ms);
 
-    $self->hint('patch-modifying-debian-files', $patch_file->name, $_)
+    $self->pointed_hint('patch-modifying-debian-files', $item->pointer, $_)
       for @debian_files;
 
     return;

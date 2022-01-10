@@ -1,1 +1,1 @@
-binary (binary): executable-in-usr-share-doc usr/share/doc/binary/some-file 0755
+binary (binary): executable-in-usr-share-doc 0755 [usr/share/doc/binary/some-file]

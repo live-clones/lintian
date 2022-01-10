@@ -1,7 +1,7 @@
-upstream-metadata-missing-repository (source): upstream-metadata-missing-repository
-upstream-metadata-missing-repository (source): upstream-metadata-exists
-upstream-metadata-missing-repository (source): upstream-metadata Name node-glob
-upstream-metadata-missing-repository (source): upstream-metadata Contact https://github.com/isaacs/node-glob/issues
-upstream-metadata-missing-repository (source): upstream-metadata Bug-Submit https://github.com/isaacs/node-glob/issues/new
-upstream-metadata-missing-repository (source): upstream-metadata Bug-Database https://github.com/isaacs/node-glob/issues
-upstream-metadata-missing-repository (source): upstream-metadata Archive GitHub
+upstream-metadata-missing-repository (source): upstream-metadata-missing-repository [debian/upstream/metadata]
+upstream-metadata-missing-repository (source): upstream-metadata-exists [debian/upstream/metadata]
+upstream-metadata-missing-repository (source): upstream-metadata Name node-glob [debian/upstream/metadata]
+upstream-metadata-missing-repository (source): upstream-metadata Contact https://github.com/isaacs/node-glob/issues [debian/upstream/metadata]
+upstream-metadata-missing-repository (source): upstream-metadata Bug-Submit https://github.com/isaacs/node-glob/issues/new [debian/upstream/metadata]
+upstream-metadata-missing-repository (source): upstream-metadata Bug-Database https://github.com/isaacs/node-glob/issues [debian/upstream/metadata]
+upstream-metadata-missing-repository (source): upstream-metadata Archive GitHub [debian/upstream/metadata]

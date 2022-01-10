@@ -37,7 +37,7 @@ sub source {
     my $control = $self->processable->debian_control;
     my $source_fields = $control->source_fields;
 
-    $self->hint('no-source-section')
+    $self->pointed_hint('no-source-section', $control->item->pointer)
       unless $source_fields->declares('Section');
 
     return;

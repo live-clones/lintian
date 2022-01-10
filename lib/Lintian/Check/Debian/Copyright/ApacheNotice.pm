@@ -90,8 +90,8 @@ sub check_apache_notice_files {
           if any { m{/NOTICE(\.txt)?(\.gz)?$} } @names;
     }
 
-    $self->hint('missing-notice-file-for-apache-license',
-        join($SPACE, @notice_files));
+    $self->pointed_hint('missing-notice-file-for-apache-license', $_->pointer)
+      for @notice_files;
 
     return;
 }

@@ -1,6 +1,7 @@
 # apt -- lintian check script -*- perl -*-
 
 # Copyright © 1998 Christian Schwarz and Richard Braakman
+# Copyright © 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -30,32 +31,30 @@ use namespace::clean;
 with 'Lintian::Check';
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     return
-      unless $file->name =~ m{^etc/apt/};
+      if $self->processable->source_name eq 'apt';
 
     # /etc/apt/preferences
-    unless ($self->processable->source_name eq 'apt') {
-
-        $self->hint('package-installs-apt-preferences', $file->name)
-          if $file->name =~ m{^etc/apt/preferences(?:$|\.d/[^/]+)};
-    }
+    $self->pointed_hint('package-installs-apt-preferences', $item->pointer)
+      if $item->name =~ m{^ etc/apt/preferences (?: $ | [.]d / [^/]+ ) }x;
 
     # /etc/apt/sources
-    unless ($self->processable->source_name eq 'apt'
-        || $self->processable->name =~ /-apt-source$/) {
+    unless ($self->processable->name =~ m{ -apt-source $}x) {
 
-        $self->hint('package-installs-apt-sources', $file->name)
-          if $file->name =~ m{^etc/apt/sources\.list(?:$|\.d/[^/]+)};
+        $self->pointed_hint('package-installs-apt-sources', $item->pointer)
+          if $item->name
+          =~ m{^ etc/apt/sources[.]list (?: $ | [.]d / [^/]+ ) }x;
     }
 
     # /etc/apt/trusted.gpg
-    unless ($self->processable->source_name eq 'apt'
-        || $self->processable->name =~ /(?:-apt-source|-archive-keyring)$/) {
+    unless (
+        $self->processable->name=~ m{ (?: -apt-source | -archive-keyring ) $}x)
+    {
 
-        $self->hint('package-installs-apt-keyring', $file->name)
-          if $file->name =~ m{^etc/apt/trusted\.gpg(?:$|\.d/[^/]+)};
+        $self->pointed_hint('package-installs-apt-keyring', $item->pointer)
+          if $item->name=~ m{^ etc/apt/trusted[.]gpg (?: $ | [.]d / [^/]+ ) }x;
     }
 
     return;

@@ -49,8 +49,8 @@ const my $DMANGLES_AUTOMATICALLY => 4;
 sub source {
     my ($self) = @_;
 
-    my $file = $self->processable->patched->resolve_path('debian/watch');
-    unless ($file && $file->is_file) {
+    my $item = $self->processable->patched->resolve_path('debian/watch');
+    unless ($item && $item->is_file) {
 
         $self->hint('debian-watch-file-is-missing')
           unless $self->processable->native;
@@ -59,7 +59,7 @@ sub source {
     }
 
     # Perform the other checks even if it is a native package
-    $self->pointed_hint('debian-watch-file-in-native-package', $file->pointer)
+    $self->pointed_hint('debian-watch-file-in-native-package', $item->pointer)
       if $self->processable->native;
 
     # Check if the Debian version contains anything that resembles a repackaged
@@ -74,9 +74,9 @@ sub source {
     my ($repack) = ($upstream =~ $PKGREPACK_REGEX);
 
     return
-      unless $file->is_open_ok;
+      unless $item->is_open_ok;
 
-    my $contents = $file->bytes;
+    my $contents = $item->bytes;
 
     # each pattern marks a multi-line (!) selection for the tag message
     my @templatepatterns
@@ -89,7 +89,7 @@ sub source {
     }
 
     $self->pointed_hint('debian-watch-contains-dh_make-template',
-        $file->pointer, $templatestring)
+        $item->pointer, $templatestring)
       if length $templatestring;
 
     # remove backslash at end; uscan will catch it
@@ -127,7 +127,7 @@ sub source {
     my $continued = $EMPTY;
     for my $line (@lines) {
 
-        my $pointer = $file->pointer($position);
+        my $pointer = $item->pointer($position);
 
         # strip leading spaces
         $line =~ s/^\s*//;
@@ -301,7 +301,7 @@ sub source {
     }
 
     $self->pointed_hint('debian-watch-does-not-check-gpg-signature',
-        $file->pointer)
+        $item->pointer)
       unless $withgpgverification;
 
     my $SIGNING_KEY_FILENAMES
@@ -315,12 +315,12 @@ sub source {
 
     # check upstream key is present if needed
     $self->pointed_hint('debian-watch-file-pubkey-file-is-missing',
-        $file->pointer)
+        $item->pointer)
       if $withgpgverification && !$keyfile;
 
     # check upstream key is used if present
     $self->pointed_hint('debian-watch-could-verify-download',
-        $file->pointer, $keyfile->name)
+        $item->pointer, $keyfile->name)
       if $keyfile && !$withgpgverification;
 
     if (defined $self->processable->changelog && %dversions) {
@@ -352,7 +352,7 @@ sub source {
 
                 $self->pointed_hint(
                     'debian-watch-file-specifies-wrong-upstream-version',
-                    $file->pointer, $dversion);
+                    $item->pointer, $dversion);
                 next;
             }
 
@@ -361,7 +361,7 @@ sub source {
 
                 $self->pointed_hint(
                     'debian-watch-file-specifies-old-upstream-version',
-                    $file->pointer, $dversion);
+                    $item->pointer, $dversion);
                 next;
             }
         }

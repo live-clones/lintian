@@ -27,15 +27,10 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Const::Fast;
-
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-const my $LEFT_PARENTHESIS => q{(};
-const my $RIGHT_PARENTHESIS => q{)};
 
 sub visit_installed_files {
     my ($self, $item) = @_;
@@ -43,8 +38,8 @@ sub visit_installed_files {
     return
       unless $item->name =~ m{^ usr/share/bash-completion/completions/ }x;
 
-    $self->hint('bash-completion-with-hashbang',
-        $item->name,$LEFT_PARENTHESIS . $item->hashbang . $RIGHT_PARENTHESIS)
+    $self->pointed_hint('bash-completion-with-hashbang',
+        $item->pointer(1), $item->hashbang)
       if length $item->hashbang;
 
     return;

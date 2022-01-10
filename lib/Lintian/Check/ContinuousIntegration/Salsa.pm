@@ -52,7 +52,7 @@ sub visit_patched_files {
     return
       unless any { $item->name eq $_ } @KNOWN_LOCATIONS;
 
-    $self->hint('specification', $item->name);
+    $self->pointed_hint('specification', $item->pointer);
 
     return
       unless $item->is_open_ok;
@@ -89,7 +89,7 @@ sub visit_patched_files {
         }
     }
 
-    $self->hint('include', $item->name, $_) for @includes;
+    $self->pointed_hint('include', $item->pointer, $_) for @includes;
 
     return;
 }

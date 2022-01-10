@@ -132,7 +132,8 @@ sub source {
             }
             close($fd);
 
-            $self->hint('dpatch-missing-description', $patch_name)
+            $self->pointed_hint('dpatch-missing-description',
+                $patch_file->pointer)
               unless length $description;
         }
     }

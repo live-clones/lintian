@@ -59,7 +59,7 @@ sub visit_patched_files {
     return
       unless $item->is_file;
 
-    $self->hint('ancient-libtool', $item->name)
+    $self->pointed_hint('ancient-libtool', $item->pointer)
       if $item->basename eq 'ltconfig'
       && $item->name !~ m{^ debian/ }sx
       && !$self->libtool_in_build_depends;
@@ -73,7 +73,7 @@ sub visit_patched_files {
 
             $debian //= 0;
 
-            $self->hint('ancient-libtool', $item->name, $version)
+            $self->pointed_hint('ancient-libtool', $item->pointer, $version)
               if $major < $ACCEPTABLE_LIBTOOL_MAJOR
               || (
                 $major == $ACCEPTABLE_LIBTOOL_MAJOR

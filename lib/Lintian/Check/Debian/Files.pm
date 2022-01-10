@@ -36,15 +36,17 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-sub source {
-    my ($self) = @_;
+sub visit_patched_files {
+    my ($self, $item) = @_;
 
-    my $files = $self->processable->patched->resolve_path('debian/files');
     return
-      unless defined $files;
+      unless $item->is_file;
 
-    $self->hint('debian-files-list-in-source')
-      if $files->is_file && $files->size > 0;
+    return
+      unless $item->name eq 'debian/files';
+
+    $self->pointed_hint('debian-files-list-in-source', $item->pointer)
+      if $item->size > 0;
 
     return;
 }

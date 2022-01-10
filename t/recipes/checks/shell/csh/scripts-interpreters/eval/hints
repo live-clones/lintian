@@ -1,1 +1,1 @@
-scripts-interpreters (binary): csh-considered-harmful usr/bin/csh-shell (/bin/csh)
+scripts-interpreters (binary): csh-considered-harmful /bin/csh [usr/bin/csh-shell:1]

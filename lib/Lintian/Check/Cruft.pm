@@ -528,7 +528,7 @@ sub full_text_check {
 
                 $self->pointed_hint(
                     'source-contains-prebuilt-sphinx-documentation',
-                    $item->parent->pointer);
+                    $item->parent_dir->pointer);
                 return;
             }
         }
@@ -538,7 +538,7 @@ sub full_text_check {
 
                 $self->pointed_hint(
                     'source-contains-prebuilt-pandoc-documentation',
-                    $item->parent->pointer);
+                    $item->parent_dir->pointer);
                 return;
             }
         }

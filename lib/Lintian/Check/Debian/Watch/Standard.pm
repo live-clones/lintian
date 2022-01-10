@@ -38,14 +38,13 @@ const my $SPACE => q{ };
 const my @STANDARDS => (2, 3, 4);
 const my $NEWLY_SUPERSEEDED => 3;
 
-sub source {
-    my ($self) = @_;
+sub visit_patched_files {
+    my ($self, $item) = @_;
 
-    my $file = $self->processable->patched->resolve_path('debian/watch');
     return
-      unless $file;
+      unless $item->name eq 'debian/watch';
 
-    my $contents = $file->bytes;
+    my $contents = $item->bytes;
     return
       unless length $contents;
 
@@ -56,30 +55,35 @@ sub source {
 
     if ($has_contents && !@mentioned) {
 
-        $self->hint('missing-debian-watch-file-standard');
+        $self->pointed_hint('missing-debian-watch-file-standard',
+            $item->pointer);
         return;
     }
 
-    $self->hint('multiple-debian-watch-file-standards',
-        join($SPACE, @mentioned))
+    $self->pointed_hint('multiple-debian-watch-file-standards',
+        $item->pointer,join($SPACE, @mentioned))
       if @mentioned > 1;
 
     my $standard_lc = List::Compare->new(\@mentioned, \@STANDARDS);
     my @unknown = $standard_lc->get_Lonly;
     my @known = $standard_lc->get_intersection;
 
-    $self->hint('unknown-debian-watch-file-standard', $_)for @unknown;
+    $self->pointed_hint('unknown-debian-watch-file-standard',
+        $item->pointer, $_)
+      for @unknown;
 
     return
       unless @known;
 
     my $highest = max(@known);
-    $self->hint('debian-watch-file-standard', $highest);
+    $self->pointed_hint('debian-watch-file-standard', $item->pointer,$highest);
 
-    $self->hint('older-debian-watch-file-standard', $highest)
+    $self->pointed_hint('older-debian-watch-file-standard',
+        $item->pointer, $highest)
       if $highest == $NEWLY_SUPERSEEDED;
 
-    $self->hint('obsolete-debian-watch-file-standard', $highest)
+    $self->pointed_hint('obsolete-debian-watch-file-standard',
+        $item->pointer, $highest)
       if $highest < $NEWLY_SUPERSEEDED;
 
     return;

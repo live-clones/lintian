@@ -1,1 +1,1 @@
-upstream-key-nonsense (source): public-upstream-key-unusable upstream/signing-key.asc cannot be processed
+upstream-key-nonsense (source): public-upstream-key-unusable cannot be processed [debian/upstream/signing-key.asc]

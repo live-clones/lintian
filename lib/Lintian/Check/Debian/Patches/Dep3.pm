@@ -31,12 +31,12 @@ use Unicode::UTF8 qw(valid_utf8 decode_utf8);
 
 use Lintian::Deb822;
 
+const my $EMPTY => q{};
+
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-const my $EMPTY => q{};
 
 sub visit_patched_files {
     my ($self, $item) = @_;
@@ -85,7 +85,7 @@ sub visit_patched_files {
     return
       if any { $category eq $_ } qw(upstream backport);
 
-    $self->hint('patch-not-forwarded-upstream', $item->name)
+    $self->pointed_hint('patch-not-forwarded-upstream', $item->pointer)
       if $deb822->last_mention('Forwarded') eq 'no'
       || none { length } (
         $deb822->last_mention('Applied-Upstream'),

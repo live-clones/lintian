@@ -1,45 +1,45 @@
-cruft-minified-js (source): very-long-line-length-in-source-file usr/share/javascript/sourced_variant/sourced.min.js line POSITION is LENGTH characters long (>CUTOFF)
-cruft-minified-js (source): very-long-line-length-in-source-file usr/share/javascript/sourced/sourced.min.js line POSITION is LENGTH characters long (>CUTOFF)
-cruft-minified-js (source): very-long-line-length-in-source-file usr/share/javascript/minwithoutsource/subdir.min.js line POSITION is LENGTH characters long (>CUTOFF)
-cruft-minified-js (source): very-long-line-length-in-source-file usr/share/javascript/minwithoutsource/notsourced.min.js line POSITION is LENGTH characters long (>CUTOFF)
-cruft-minified-js (source): very-long-line-length-in-source-file usr/share/javascript/jswithoutminextwithoutsource/jsonnotsourced.js line POSITION is LENGTH characters long (>CUTOFF)
-cruft-minified-js (source): very-long-line-length-in-source-file usr/share/javascript/jswithoutminext/json.js line POSITION is LENGTH characters long (>CUTOFF)
-cruft-minified-js (source): very-long-line-length-in-source-file usr/share/javascript/json/json.min.js line POSITION is LENGTH characters long (>CUTOFF)
-cruft-minified-js (source): very-long-line-length-in-source-file src/js/foo.html line POSITION is LENGTH characters long (>CUTOFF)
-cruft-minified-js (source): very-long-line-length-in-source-file oldfalsepositives/pandoc/search_index.js line POSITION is LENGTH characters long (>CUTOFF)
-cruft-minified-js (source): very-long-line-length-in-source-file oldfalsepositives/longlicensetext.js line POSITION is LENGTH characters long (>CUTOFF)
-cruft-minified-js (source): very-long-line-length-in-source-file oldfalsepositives/jslint.js line POSITION is LENGTH characters long (>CUTOFF)
-cruft-minified-js (source): very-long-line-length-in-source-file oldfalsepositives/deployJava/deployJava.js line POSITION is LENGTH characters long (>CUTOFF)
-cruft-minified-js (source): very-long-line-length-in-source-file oldfalsepositives/css_browser_selector.js line POSITION is LENGTH characters long (>CUTOFF)
-cruft-minified-js (source): very-long-line-length-in-source-file build/js/foo.min.js line POSITION is LENGTH characters long (>CUTOFF)
-cruft-minified-js (source): source-is-missing usr/share/javascript/minwithoutsource/notsourced.min.js
-cruft-minified-js (source): source-is-missing usr/share/javascript/jswithoutminextwithoutsource/jsonnotsourced.js
-cruft-minified-js (source): source-is-missing src/js/foo.html
-cruft-minified-js (source): source-is-missing deployJava/deployJava.js
-cruft-minified-js (source): source-contains-prebuilt-pandoc-documentation oldfalsepositives/pandoc/
-cruft-minified-js (source): source-contains-prebuilt-javascript-object usr/share/javascript/sourced_variant/sourced.min.js
-cruft-minified-js (source): source-contains-prebuilt-javascript-object usr/share/javascript/sourced/sourced.min.js
-cruft-minified-js (source): source-contains-prebuilt-javascript-object usr/share/javascript/minwithoutsource/subdir.min.js
-cruft-minified-js (source): source-contains-prebuilt-javascript-object usr/share/javascript/minwithoutsource/notsourced.min.js
-cruft-minified-js (source): source-contains-prebuilt-javascript-object usr/share/javascript/jswithoutminextwithoutsource/jsonnotsourced.js
-cruft-minified-js (source): source-contains-prebuilt-javascript-object usr/share/javascript/jswithoutminext/json.js
-cruft-minified-js (source): source-contains-prebuilt-javascript-object usr/share/javascript/json/json.min.js
-cruft-minified-js (source): source-contains-prebuilt-javascript-object src/js/foo.html
-cruft-minified-js (source): source-contains-prebuilt-javascript-object oldfalsepositives/suffix/test_min.js
-cruft-minified-js (source): source-contains-prebuilt-javascript-object oldfalsepositives/suffix/test.min.js
-cruft-minified-js (source): source-contains-prebuilt-javascript-object oldfalsepositives/suffix/test.compressed.js
-cruft-minified-js (source): source-contains-prebuilt-javascript-object oldfalsepositives/suffix/test-yc.js
-cruft-minified-js (source): source-contains-prebuilt-javascript-object oldfalsepositives/suffix/test-packed.js
-cruft-minified-js (source): source-contains-prebuilt-javascript-object oldfalsepositives/suffix/test-pack.js
-cruft-minified-js (source): source-contains-prebuilt-javascript-object oldfalsepositives/suffix/test-min.js
-cruft-minified-js (source): source-contains-prebuilt-javascript-object oldfalsepositives/suffix/test-lite.js
-cruft-minified-js (source): source-contains-prebuilt-javascript-object oldfalsepositives/suffix/test-compressed.js
-cruft-minified-js (source): source-contains-prebuilt-javascript-object oldfalsepositives/suffix/test-compiled.js
-cruft-minified-js (source): source-contains-prebuilt-javascript-object oldfalsepositives/src.js/test.min.js
-cruft-minified-js (source): source-contains-prebuilt-javascript-object oldfalsepositives/nested-dir/dist/fake.min.js
-cruft-minified-js (source): source-contains-prebuilt-javascript-object oldfalsepositives/debug.js/testdebug.js
-cruft-minified-js (source): source-contains-prebuilt-javascript-object oldfalsepositives/-nc.js/test-yc.js
-cruft-minified-js (source): source-contains-prebuilt-javascript-object oldfalsepositives/-debug.js/src/test-min.js
-cruft-minified-js (source): source-contains-prebuilt-javascript-object build/js/foo.min.js
-cruft-minified-js (source): source-contains-browserified-javascript deployJava/deployJava.browser.js code fragment:CODE
-cruft-minified-js (source): embedded-script-includes-copyright-statement src/js/foo.html extract of copyright statement: COPYRIGHT
+cruft-minified-js (source): very-long-line-length-in-source-file line 8 is 1072 characters long (>512) [oldfalsepositives/css_browser_selector.js]
+cruft-minified-js (source): very-long-line-length-in-source-file line 7 is 544 characters long (>512) [oldfalsepositives/longlicensetext.js]
+cruft-minified-js (source): very-long-line-length-in-source-file line 5 is 3595 characters long (>512) [src/js/foo.html]
+cruft-minified-js (source): very-long-line-length-in-source-file line 3 is 706 characters long (>512) [oldfalsepositives/deployJava/deployJava.js]
+cruft-minified-js (source): very-long-line-length-in-source-file line 2 is 3055 characters long (>512) [oldfalsepositives/pandoc/search_index.js]
+cruft-minified-js (source): very-long-line-length-in-source-file line 2 is 1716 characters long (>512) [oldfalsepositives/jslint.js]
+cruft-minified-js (source): very-long-line-length-in-source-file line 1 is 3586 characters long (>512) [usr/share/javascript/sourced_variant/sourced.min.js]
+cruft-minified-js (source): very-long-line-length-in-source-file line 1 is 3586 characters long (>512) [usr/share/javascript/sourced/sourced.min.js]
+cruft-minified-js (source): very-long-line-length-in-source-file line 1 is 3586 characters long (>512) [usr/share/javascript/minwithoutsource/subdir.min.js]
+cruft-minified-js (source): very-long-line-length-in-source-file line 1 is 3586 characters long (>512) [usr/share/javascript/minwithoutsource/notsourced.min.js]
+cruft-minified-js (source): very-long-line-length-in-source-file line 1 is 3586 characters long (>512) [usr/share/javascript/jswithoutminextwithoutsource/jsonnotsourced.js]
+cruft-minified-js (source): very-long-line-length-in-source-file line 1 is 3586 characters long (>512) [usr/share/javascript/jswithoutminext/json.js]
+cruft-minified-js (source): very-long-line-length-in-source-file line 1 is 3586 characters long (>512) [usr/share/javascript/json/json.min.js]
+cruft-minified-js (source): very-long-line-length-in-source-file line 1 is 3586 characters long (>512) [build/js/foo.min.js]
+cruft-minified-js (source): source-is-missing [usr/share/javascript/minwithoutsource/notsourced.min.js]
+cruft-minified-js (source): source-is-missing [usr/share/javascript/jswithoutminextwithoutsource/jsonnotsourced.js]
+cruft-minified-js (source): source-is-missing [src/js/foo.html]
+cruft-minified-js (source): source-is-missing [deployJava/deployJava.js]
+cruft-minified-js (source): source-contains-prebuilt-pandoc-documentation [oldfalsepositives/pandoc/]
+cruft-minified-js (source): source-contains-prebuilt-javascript-object [usr/share/javascript/sourced_variant/sourced.min.js]
+cruft-minified-js (source): source-contains-prebuilt-javascript-object [usr/share/javascript/sourced/sourced.min.js]
+cruft-minified-js (source): source-contains-prebuilt-javascript-object [usr/share/javascript/minwithoutsource/subdir.min.js]
+cruft-minified-js (source): source-contains-prebuilt-javascript-object [usr/share/javascript/minwithoutsource/notsourced.min.js]
+cruft-minified-js (source): source-contains-prebuilt-javascript-object [usr/share/javascript/jswithoutminextwithoutsource/jsonnotsourced.js]
+cruft-minified-js (source): source-contains-prebuilt-javascript-object [usr/share/javascript/jswithoutminext/json.js]
+cruft-minified-js (source): source-contains-prebuilt-javascript-object [usr/share/javascript/json/json.min.js]
+cruft-minified-js (source): source-contains-prebuilt-javascript-object [src/js/foo.html]
+cruft-minified-js (source): source-contains-prebuilt-javascript-object [oldfalsepositives/suffix/test_min.js]
+cruft-minified-js (source): source-contains-prebuilt-javascript-object [oldfalsepositives/suffix/test.min.js]
+cruft-minified-js (source): source-contains-prebuilt-javascript-object [oldfalsepositives/suffix/test.compressed.js]
+cruft-minified-js (source): source-contains-prebuilt-javascript-object [oldfalsepositives/suffix/test-yc.js]
+cruft-minified-js (source): source-contains-prebuilt-javascript-object [oldfalsepositives/suffix/test-packed.js]
+cruft-minified-js (source): source-contains-prebuilt-javascript-object [oldfalsepositives/suffix/test-pack.js]
+cruft-minified-js (source): source-contains-prebuilt-javascript-object [oldfalsepositives/suffix/test-min.js]
+cruft-minified-js (source): source-contains-prebuilt-javascript-object [oldfalsepositives/suffix/test-lite.js]
+cruft-minified-js (source): source-contains-prebuilt-javascript-object [oldfalsepositives/suffix/test-compressed.js]
+cruft-minified-js (source): source-contains-prebuilt-javascript-object [oldfalsepositives/suffix/test-compiled.js]
+cruft-minified-js (source): source-contains-prebuilt-javascript-object [oldfalsepositives/src.js/test.min.js]
+cruft-minified-js (source): source-contains-prebuilt-javascript-object [oldfalsepositives/nested-dir/dist/fake.min.js]
+cruft-minified-js (source): source-contains-prebuilt-javascript-object [oldfalsepositives/debug.js/testdebug.js]
+cruft-minified-js (source): source-contains-prebuilt-javascript-object [oldfalsepositives/-nc.js/test-yc.js]
+cruft-minified-js (source): source-contains-prebuilt-javascript-object [oldfalsepositives/-debug.js/src/test-min.js]
+cruft-minified-js (source): source-contains-prebuilt-javascript-object [build/js/foo.min.js]
+cruft-minified-js (source): source-contains-browserified-javascript code fragment:CODE
+cruft-minified-js (source): embedded-script-includes-copyright-statement extract of copyright statement: COPYRIGHT

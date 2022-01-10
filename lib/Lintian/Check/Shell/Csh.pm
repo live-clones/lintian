@@ -27,16 +27,12 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Const::Fast;
 use File::Basename;
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-const my $LEFT_PARENTHESIS => q{(};
-const my $RIGHT_PARENTHESIS => q{)};
 
 sub visit_installed_files {
     my ($self, $item) = @_;
@@ -50,8 +46,8 @@ sub visit_installed_files {
       if ($item->name =~ m{^usr/share/doc/} || $item->name =~ m{^usr/src/})
       && $item->name !~ m{^usr/share/doc/[^/]+/examples/};
 
-    $self->hint('csh-considered-harmful', $item->name,
-        $LEFT_PARENTHESIS . $item->interpreter . $RIGHT_PARENTHESIS)
+    $self->pointed_hint('csh-considered-harmful', $item->pointer(1),
+        $item->interpreter)
       if $self->is_csh_script($item)
       && $item->name !~ m{^ etc/csh/login[.]d/ }x;
 
@@ -63,8 +59,8 @@ sub visit_control_files {
 
     # perhaps we should warn about *csh even if they're somehow screwed,
     # but that's not really important...
-    $self->hint('csh-considered-harmful', "control/$item",
-        $LEFT_PARENTHESIS . $item->interpreter . $RIGHT_PARENTHESIS)
+    $self->pointed_hint('csh-considered-harmful', $item->pointer(1),
+        $item->interpreter)
       if $self->is_csh_script($item);
 
     return;

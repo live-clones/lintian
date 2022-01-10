@@ -1,1 +1,1 @@
-scripts (binary): script-in-usr-share-doc usr/share/doc/scripts/rubyfoo
+scripts (binary): script-in-usr-share-doc [usr/share/doc/scripts/rubyfoo]

@@ -42,27 +42,38 @@ sub visit_patched_files {
     return
       unless $item->is_file;
 
-    # waf is not allowed
-    if (   $item->basename =~ / \b waf $/sx
-        && $item->is_open_ok) {
+    return
+      unless $item->basename =~ m{ \b waf $}x;
 
-        my $marker = 0;
-        open(my $fd, '<', $item->unpacked_path)
-          or die encode_utf8('Cannot open ' . $item->unpacked_path);
+    return
+      unless $item->is_open_ok;
 
-        while (my $line = <$fd>) {
-            next unless $line =~ m/^#/;
-            if ($marker && $line =~ m/^#BZ[h0][0-9]/) {
-                $self->hint('source-contains-waf-binary', $item->name);
-                last;
-            }
-            $marker = 1 if $line =~ m/^#==>/;
+    open(my $fd, '<', $item->unpacked_path)
+      or die encode_utf8('Cannot open ' . $item->unpacked_path);
 
-            # We could probably stop here, but just in case
-            $marker = 0 if $line =~ m/^#<==/;
+    my $marker = 0;
+
+    while (my $line = <$fd>) {
+
+        next
+          unless $line =~ m/^#/;
+
+        if ($marker && $line =~ m/^#BZ[h0][0-9]/) {
+
+            # waf is not allowed
+            $self->pointed_hint('source-contains-waf-binary', $item->pointer);
+            last;
         }
-        close($fd);
+
+        $marker = 1
+          if $line =~ m/^#==>/;
+
+        # We could probably stop here, but just in case
+        $marker = 0
+          if $line =~ m/^#<==/;
     }
+
+    close $fd;
 
     return;
 }

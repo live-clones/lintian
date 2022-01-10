@@ -43,60 +43,55 @@ const my $LAST_ITEM => -1;
 
 # list of files to check for a trailing whitespace characters
 my %PROHIBITED_TRAILS = (
-    'changelog'        => qr{\s+$},
-    'control'          => qr{\s+$},
+    'debian/changelog'        => qr{\s+$},
+    'debian/control'          => qr{\s+$},
     # allow trailing tabs in make
-    'rules'            => qr{[ ]+$},
+    'debian/rules'            => qr{[ ]+$},
 );
 
-sub source {
-    my ($self) = @_;
+sub visit_patched_files {
+    my ($self, $item) = @_;
 
-    my @files= grep { defined }
-      map { $self->processable->patched->resolve_path("debian/$_") }
-      keys %PROHIBITED_TRAILS;
+    return
+      unless exists $PROHIBITED_TRAILS{$item->name};
 
-    for my $file (@files) {
+    return
+      unless $item->is_valid_utf8;
 
-        next
-          unless $file->is_valid_utf8;
+    my $contents = $item->decoded_utf8;
+    my @lines = split(/\n/, $contents, $KEEP_EMPTY_FIELDS);
 
-        my $contents = $file->decoded_utf8;
-        my @lines = split(/\n/, $contents, $KEEP_EMPTY_FIELDS);
+    my @trailing_whitespace;
+    my @empty_at_end;
 
-        my @trailing_whitespace;
-        my @empty_at_end;
+    my $position = 1;
+    for my $line (@lines) {
 
-        my $position = 1;
-        for my $line (@lines) {
+        push(@trailing_whitespace, $position)
+          if $line =~ $PROHIBITED_TRAILS{$item->name};
 
-            push(@trailing_whitespace, $position)
-              if $line =~ $PROHIBITED_TRAILS{$file->basename};
-
-            # keeps track of any empty lines at the end
-            if (length $line) {
-                @empty_at_end = ();
-            } else {
-                push(@empty_at_end, $position);
-            }
-
-        } continue {
-            ++$position;
-        }
-
-        # require a newline at end and remove it
-        if (scalar @empty_at_end && $empty_at_end[$LAST_ITEM] == scalar @lines)
-        {
-            pop @empty_at_end;
+        # keeps track of any empty lines at the end
+        if (length $line) {
+            @empty_at_end = ();
         } else {
-            $self->hint('no-newline-at-end', $file);
+            push(@empty_at_end, $position);
         }
 
-        push(@trailing_whitespace, @empty_at_end);
-
-        $self->hint('trailing-whitespace', "$file (line $_)")
-          for @trailing_whitespace;
+    } continue {
+        ++$position;
     }
+
+    # require a newline at end and remove it
+    if (scalar @empty_at_end && $empty_at_end[$LAST_ITEM] == scalar @lines){
+        pop @empty_at_end;
+    } else {
+        $self->pointed_hint('no-newline-at-end', $item->pointer);
+    }
+
+    push(@trailing_whitespace, @empty_at_end);
+
+    $self->pointed_hint('trailing-whitespace', $item->pointer($_))
+      for @trailing_whitespace;
 
     return;
 }

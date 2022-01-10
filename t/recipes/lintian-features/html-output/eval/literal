@@ -511,7 +511,7 @@ div.clear {
 
       <a class="visibility-symbol" href="https://lintian.debian.org/levels#W"><span class="visibility-symbol tiny W">W</span></a>
       <span class="hint tiny"><a href="https://lintian.debian.org/tags/format-3.0-but-debian-changes-patch">format-3.0-but-debian-changes-patch</a></span>
-      <span class="context tiny"></span>
+      <span class="context tiny">[debian/patches/debian-changes-1.0+dsfg-1.1]</span>
 
     </li>
     <li class="hintitem">
@@ -541,7 +541,7 @@ div.clear {
 
       <a class="visibility-symbol" href="https://lintian.debian.org/levels#I"><span class="visibility-symbol tiny I">I</span></a>
       <span class="hint tiny"><a href="https://lintian.debian.org/tags/older-debian-watch-file-standard">older-debian-watch-file-standard</a></span>
-      <span class="context tiny">3</span>
+      <span class="context tiny">3 [debian/watch]</span>
 
     </li>
     <li class="hintitem">
@@ -551,7 +551,7 @@ div.clear {
 
       <a class="visibility-symbol" href="https://lintian.debian.org/levels#I"><span class="visibility-symbol tiny I">I</span></a>
       <span class="hint tiny"><a href="https://lintian.debian.org/tags/patch-not-forwarded-upstream">patch-not-forwarded-upstream</a></span>
-      <span class="context tiny">debian/patches/debian-changes-1.0+dsfg-1.1</span>
+      <span class="context tiny">[debian/patches/debian-changes-1.0+dsfg-1.1]</span>
 
     </li>
     <li class="hintitem">
@@ -561,7 +561,7 @@ div.clear {
 
       <a class="visibility-symbol" href="https://lintian.debian.org/levels#I"><span class="visibility-symbol tiny I">I</span></a>
       <span class="hint tiny"><a href="https://lintian.debian.org/tags/quilt-patch-using-template-description">quilt-patch-using-template-description</a></span>
-      <span class="context tiny">debian/patches/debian-changes-1.0+dsfg-1.1</span>
+      <span class="context tiny">[debian/patches/debian-changes-1.0+dsfg-1.1]</span>
 
     </li>
     <li class="hintitem">
@@ -571,7 +571,7 @@ div.clear {
 
       <a class="visibility-symbol" href="https://lintian.debian.org/levels#I"><span class="visibility-symbol tiny I">I</span></a>
       <span class="hint tiny"><a href="https://lintian.debian.org/tags/upstream-metadata-missing-bug-tracking">upstream-metadata-missing-bug-tracking</a></span>
-      <span class="context tiny"></span>
+      <span class="context tiny">[debian/upstream/metadata]</span>
 
     </li>
     <li class="hintitem">
@@ -581,7 +581,7 @@ div.clear {
 
       <a class="visibility-symbol" href="https://lintian.debian.org/levels#I"><span class="visibility-symbol tiny I">I</span></a>
       <span class="hint tiny"><a href="https://lintian.debian.org/tags/upstream-metadata-missing-repository">upstream-metadata-missing-repository</a></span>
-      <span class="context tiny"></span>
+      <span class="context tiny">[debian/upstream/metadata]</span>
 
     </li>
     <li class="hintitem">

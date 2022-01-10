@@ -50,6 +50,7 @@ const my $APPROXIMATE_APACHE_2_LENGTH => 10_000;
 
 sub spelling_tag_emitter {
     my ($self, @orig_args) = @_;
+
     return sub {
         return $self->hint(@orig_args, @_);
     };
@@ -72,7 +73,8 @@ sub source {
     if (@files == 1) {
         my $single = $files[0];
 
-        $self->hint('named-copyright-for-single-installable', $single->name)
+        $self->pointed_hint('named-copyright-for-single-installable',
+            $single->pointer)
           unless $single->name eq 'debian/copyright';
     }
 
@@ -80,7 +82,8 @@ sub source {
       unless @files;
 
     my @symlinks = grep { $_->is_symlink } @files;
-    $self->hint('debian-copyright-is-symlink', $_->name) for @symlinks;
+    $self->pointed_hint('debian-copyright-is-symlink', $_->pointer)
+      for @symlinks;
 
     return;
 }
@@ -98,9 +101,9 @@ sub binary {
 
         # check if this symlink references a directory elsewhere
         if ($doclink->link =~ m{^(?:\.\.)?/}s) {
-            $self->hint(
+            $self->pointed_hint(
                 'usr-share-doc-symlink-points-outside-of-usr-share-doc',
-                $doclink->link);
+                $doclink->pointer, $doclink->link);
             return;
         }
 
@@ -143,19 +146,22 @@ sub binary {
     }
 
     my $found = 0;
-    if ($docdir->child('copyright.gz')) {
-        $self->hint('copyright-file-compressed');
+    my $zipped = $docdir->child('copyright.gz');
+    if (defined $zipped) {
+
+        $self->pointed_hint('copyright-file-compressed', $zipped->pointer);
         $found = 1;
     }
 
     my $linked = 0;
 
-    my $file = $docdir->child('copyright');
-    if ($file) {
+    my $item = $docdir->child('copyright');
+    if (defined $item) {
         $found = 1;
 
-        if ($file->is_symlink) {
-            $self->hint('copyright-file-is-symlink');
+        if ($item->is_symlink) {
+
+            $self->pointed_hint('copyright-file-is-symlink', $item->pointer);
             $linked = 1;
          # fall through; coll/copyright-file prevents reading through evil link
         }

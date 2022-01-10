@@ -32,18 +32,15 @@ with 'Lintian::Check';
 sub source {
     my ($self) = @_;
 
-    my $processable = $self->processable;
+    # automake probably isn't used without a Makefile.am
+    my $makefile = $self->processable->patched->lookup('Makefile.am');
+    return
+      unless defined $makefile;
 
-    my $makefile = $processable->patched->lookup('Makefile.am');
+    my $configure_in = $self->processable->patched->lookup('configure.in');
 
-    # If there's no Makefile.am, automake probably isn't used, we're fine
-    return unless defined $makefile;
-
-    my $deprecated_configure = $processable->patched->lookup('configure.in');
-
-    if (defined $deprecated_configure) {
-        $self->hint('deprecated-configure-filename');
-    }
+    $self->pointed_hint('deprecated-configure-filename',$configure_in->pointer)
+      if defined $configure_in;
 
     return;
 }

@@ -40,7 +40,7 @@ sub visit_patched_files {
     return
       unless $item->is_file;
 
-    $self->hint('source-contains-debian-substvars', $item->name)
+    $self->pointed_hint('source-contains-debian-substvars', $item->pointer)
       if $item->name =~ m{^debian/(?:.+\.)?substvars$}s;
 
     return;
