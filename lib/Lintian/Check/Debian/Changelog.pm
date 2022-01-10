@@ -486,12 +486,13 @@ sub binary {
             # everything is fine
         } elsif (
             my $chg = first {
-                m/^changelog\.debian(?:\.gz)$/i;
+                $_->basename =~ m/^changelog[.]debian(?:\.gz)$/i;
             }
-            map { $_->basename } @doc_files
+            @doc_files
         ) {
-            $self->hint('wrong-name-for-changelog-of-native-package',
-                "usr/share/doc/$pkg/$chg");
+            $self->pointed_hint('wrong-name-for-changelog-of-native-package',
+                $chg->pointer);
+
         } else {
             $self->hint(
                 'no-changelog',
@@ -512,10 +513,13 @@ sub binary {
             # everything is fine
         } else {
             # search for changelogs with wrong file name
-            for (map { $_->basename } @doc_files) {
-                if (m/^change/i and not m/debian/i) {
-                    $self->hint('wrong-name-for-upstream-changelog',
-                        "usr/share/doc/$pkg/$_");
+            for my $item (@doc_files) {
+
+                if (   $item->basename =~ m/^change/i
+                    && $item->basename !~ m/debian/i) {
+
+                    $self->pointed_hint('wrong-name-for-upstream-changelog',
+                        $item->pointer);
                     last;
                 }
             }
@@ -529,15 +533,17 @@ sub binary {
             # everything is fine
         } elsif (
             my $chg = first {
-                m/^changelog\.debian(?:\.gz)?$/i;
+                $_->basename =~ m/^changelog\.debian(?:\.gz)?$/i;
             }
-            map { $_->basename } @doc_files
+            @doc_files
         ) {
-            $self->hint('wrong-name-for-debian-changelog-file',
-                "usr/share/doc/$pkg/$chg");
+            $self->pointed_hint('wrong-name-for-debian-changelog-file',
+                $chg->pointer);
+
         } else {
             if ($foreign_pkg && $found_upstream_text_changelog) {
                 $self->hint('debian-changelog-file-missing-or-wrong-name');
+
             } elsif ($foreign_pkg) {
                 $self->hint(
                     'no-changelog',

@@ -73,31 +73,31 @@ sub ored_patterns {
 }
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
-    if ($file->is_file) {
+    if ($item->is_file) {
 
         my $pattern = $self->VCS_PATTERNS_ORED;
 
-        $self->hint('package-contains-vcs-control-file', $file->name)
-          if $file->name =~ m{$pattern}x
-          && $file->name !~ m{^usr/share/cargo/registry/};
+        $self->pointed_hint('package-contains-vcs-control-file',$item->pointer)
+          if $item->name =~ m{$pattern}x
+          && $item->name !~ m{^usr/share/cargo/registry/};
 
-        if ($file->name =~ m/svn-commit.*\.tmp$/) {
-            $self->hint('svn-commit-file-in-package', $file->name);
+        if ($item->name =~ m/svn-commit.*\.tmp$/) {
+            $self->pointed_hint('svn-commit-file-in-package', $item->pointer);
         }
 
-        if ($file->name =~ m/svk-commit.+\.tmp$/) {
-            $self->hint('svk-commit-file-in-package', $file->name);
+        if ($item->name =~ m/svk-commit.+\.tmp$/) {
+            $self->pointed_hint('svk-commit-file-in-package', $item->pointer);
         }
 
-    } elsif ($file->is_dir) {
+    } elsif ($item->is_dir) {
 
-        $self->hint('package-contains-vcs-control-dir', $file->name)
-          if $file->name =~ m{/CVS/?$}
-          || $file->name =~ m{/\.(?:svn|bzr|git|hg)/?$}
-          || $file->name =~ m{/\.arch-ids/?$}
-          || $file->name =~ m{/\{arch\}/?$};
+        $self->pointed_hint('package-contains-vcs-control-dir', $item->pointer)
+          if $item->name =~ m{/CVS/?$}
+          || $item->name =~ m{/\.(?:svn|bzr|git|hg)/?$}
+          || $item->name =~ m{/\.arch-ids/?$}
+          || $item->name =~ m{/\{arch\}/?$};
     }
 
     return;

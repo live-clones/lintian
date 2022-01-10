@@ -32,20 +32,21 @@ use namespace::clean;
 with 'Lintian::Check';
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
-    if (   $file->name =~ m{^etc/modprobe\.d/(.+)$}
-        && $1 !~ /\.conf$/
-        && !$file->is_dir) {
+    if (   $item->name =~ m{^etc/modprobe\.d/ }x
+        && $item->name !~ m{ [.]conf $}x
+        && !$item->is_dir) {
 
-        $self->hint('non-conf-file-in-modprobe.d', $file->name);
+        $self->pointed_hint('non-conf-file-in-modprobe.d', $item->pointer);
 
-    } elsif ($file->name =~ m{^etc/modprobe\.d/(.+)$}
-        || $file->name =~ m{^etc/modules-load\.d/(.+)$}) {
+    } elsif ($item->name =~ m{^ etc/modprobe[.]d/ }x
+        || $item->name =~ m{^ etc/modules-load\.d/ }x) {
 
-        my @obsolete = uniq($file->bytes =~ /^\s*(install|remove)/mg);
-        $self->hint('obsolete-command-in-modprobe.d-file', $file->name, $_)
-          for @obsolete;
+        my @obsolete = ($item->bytes =~ m{^ \s* ( install | remove ) }gmx);
+        $self->pointed_hint('obsolete-command-in-modprobe.d-file',
+            $item->pointer, $_)
+          for uniq @obsolete;
     }
 
     return;

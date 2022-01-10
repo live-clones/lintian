@@ -55,11 +55,11 @@ sub visit_installed_files {
         if (exists $self->TRIPLETS->{$potential_triplet}) {
 
             my $from_triplet = $self->TRIPLETS->{$potential_triplet};
+            my $port = $self->processable->fields->value('Architecture');
 
-            $self->hint('triplet-dir-and-architecture-mismatch',
-                $item->name, 'is for', $from_triplet)
-              unless $from_triplet eq
-              $self->processable->fields->value('Architecture');
+            $self->pointed_hint('triplet-dir-and-architecture-mismatch',
+                $item->pointer, "is for $from_triplet instead of $port")
+              unless $from_triplet eq $port;
         }
     }
 

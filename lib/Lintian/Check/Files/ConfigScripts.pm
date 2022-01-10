@@ -34,22 +34,22 @@ use namespace::clean;
 with 'Lintian::Check';
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     my $architecture = $self->processable->fields->value('Architecture');
     my $multiarch = $self->processable->fields->value('Multi-Arch') || 'no';
 
     # check old style config scripts
-    if (   $file->name =~ m{^usr/bin/}
-        && $file->name =~ m/-config$/
-        && $file->is_script
-        && $file->is_regular_file) {
+    if (   $item->name =~ m{^usr/bin/}
+        && $item->name =~ m/-config$/
+        && $item->is_script
+        && $item->is_regular_file) {
 
         # try to find some indication of
         # config file (read only one block)
 
-        open(my $fd, '<:raw', $file->unpacked_path)
-          or die encode_utf8('Cannot open ' . $file->unpacked_path);
+        open(my $fd, '<:raw', $item->unpacked_path)
+          or die encode_utf8('Cannot open ' . $item->unpacked_path);
 
         my $sfd = Lintian::SlidingWindow->new;
         $sfd->handle($fd);
@@ -64,7 +64,7 @@ sub visit_installed_files {
                 || $block =~ / pkg-config /msx)
         ) {
 
-            $self->hint('old-style-config-script', $file->name);
+            $self->pointed_hint('old-style-config-script', $item->pointer);
 
             # could be ok but only if multi-arch: no
             if ($multiarch ne 'no' || $architecture eq 'all') {
@@ -79,20 +79,21 @@ sub visit_installed_files {
 
                     # allow files to begin with triplet if it matches arch
                     next
-                      if $file->basename =~ m{^\Q$madir\E}xms;
+                      if $item->basename =~ m{^\Q$madir\E}xms;
 
                     my $tag_name = 'old-style-config-script-multiarch-path';
                     $tag_name .= '-arch-all'
                       if $architecture eq 'all';
 
-                    $self->hint($tag_name, $file->name,
+                    $self->pointed_hint($tag_name, $item->pointer,
                         'full text contains architecture specific dir',$madir);
 
                     last;
                 }
             }
         }
-        close($fd);
+
+        close $fd;
     }
 
     return;

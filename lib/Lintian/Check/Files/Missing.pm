@@ -30,12 +30,12 @@ use namespace::clean;
 with 'Lintian::Check';
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
-    if (   $file->is_dir
-        && $file->faux) {
+    if (   $item->is_dir
+        && $item->faux) {
 
-        $self->hint('missing-intermediate-directory', $file->name);
+        $self->pointed_hint('missing-intermediate-directory', $item->pointer);
     }
 
     return;

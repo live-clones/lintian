@@ -35,28 +35,28 @@ has related => (is => 'rw', default => sub { [] });
 has links => (is => 'rw', default => sub { [] });
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     # *.devhelp and *.devhelp2 files must be accessible from a directory in
     # the devhelp search path: /usr/share/devhelp/books and
     # /usr/share/gtk-doc/html.  We therefore look for any links in one of
     # those directories to another directory.  The presence of such a link
     # blesses any file below that other directory.
-    if (length $file->link
-        && $file->name =~ m{^usr/share/(?:devhelp/books|gtk-doc/html)/}) {
-        my $blessed = $file->link_normalized // '<broken-link>';
+    if (length $item->link
+        && $item->name =~ m{^usr/share/(?:devhelp/books|gtk-doc/html)/}) {
+        my $blessed = $item->link_normalized // '<broken-link>';
         push(@{$self->links}, $blessed);
     }
 
     # .devhelp2? files
     if (
-        $file->name =~ /\.devhelp2?(?:\.gz)?$/
+        $item->name =~ /\.devhelp2?(?:\.gz)?$/
         # If the file is located in a directory not searched by devhelp, we
         # check later to see if it's in a symlinked directory.
-        && $file->name !~ m{^usr/share/(?:devhelp/books|gtk-doc/html)/}
-        && $file->name !~ m{^usr/share/doc/[^/]+/examples/}
+        && $item->name !~ m{^usr/share/(?:devhelp/books|gtk-doc/html)/}
+        && $item->name !~ m{^usr/share/doc/[^/]+/examples/}
     ) {
-        push(@{$self->related}, $file->name);
+        push(@{$self->related}, $item);
     }
 
     return;
@@ -67,10 +67,11 @@ sub installable {
 
     # Check for .devhelp2? files that aren't symlinked into paths searched by
     # devhelp.
-    for my $path (@{$self->related}) {
+    for my $item (@{$self->related}) {
 
-        $self->hint('package-contains-devhelp-file-without-symlink', $path)
-          if none { $path =~ /^\Q$_\E/ } @{$self->links};
+        $self->pointed_hint('package-contains-devhelp-file-without-symlink',
+            $item->pointer)
+          if none { $item->name =~ /^\Q$_\E/ } @{$self->links};
     }
 
     $self->related([]);

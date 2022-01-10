@@ -1,1 +1,1 @@
-bin-sbin-confusion-in-elf (binary): bin-sbin-mismatch usr/bin/calls-sbin usr/sbin/our-script -> usr/bin/our-script
+bin-sbin-confusion-in-elf (binary): bin-sbin-mismatch usr/sbin/our-script -> usr/bin/our-script [usr/bin/calls-sbin]

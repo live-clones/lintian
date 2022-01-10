@@ -47,20 +47,20 @@ has lzip_command => (
     });
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     return
-      unless $file->is_file;
+      unless $item->is_file;
 
     my $command = $self->lzip_command;
     return
       unless length $command;
 
-    if ($file->name =~ /\.lz$/si) {
+    if ($item->name =~ /\.lz$/si) {
 
-        safe_qx($command, '--test', $file->unpacked_path);
+        safe_qx($command, '--test', $item->unpacked_path);
 
-        $self->hint('broken-lz', $file->name)
+        $self->pointed_hint('broken-lz', $item->pointer)
           if $?;
     }
 

@@ -30,11 +30,11 @@ use namespace::clean;
 with 'Lintian::Check';
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
-    $self->hint('non-debug-file-in-debug-package', $file->name)
-      if $file->is_file
-      && $file->name !~ /\.debug$/
+    $self->pointed_hint('non-debug-file-in-debug-package', $item->pointer)
+      if $item->is_file
+      && $item->name !~ /\.debug$/
       && $self->processable->is_debug_package
       && $self->processable->is_auto_generated;
 

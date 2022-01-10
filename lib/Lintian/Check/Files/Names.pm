@@ -36,81 +36,85 @@ my %PATH_DIRECTORIES = map { $_ => 1 } qw(
   bin/ sbin/ usr/bin/ usr/sbin/ usr/games/ );
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     # unusual characters
-    $self->hint('file-name-ends-in-whitespace', $file->name)
-      if $file->name =~ /\s+\z/;
+    $self->pointed_hint('file-name-ends-in-whitespace', $item->pointer)
+      if $item->name =~ /\s+\z/;
 
-    $self->hint('star-file', $file->name)
-      if $file->name =~ m{/\*\z};
+    $self->pointed_hint('star-file', $item->pointer)
+      if $item->name =~ m{/\*\z};
 
-    $self->hint('hyphen-file', $file->name)
-      if $file->name =~ m{/-\z};
+    $self->pointed_hint('hyphen-file', $item->pointer)
+      if $item->name =~ m{/-\z};
 
-    $self->hint('file-name-contains-wildcard-character', $file->name)
-      if $file->name =~ m{[*?]};
+    $self->pointed_hint('file-name-contains-wildcard-character',$item->pointer)
+      if $item->name =~ m{[*?]};
 
-    $self->hint('package-contains-compiled-glib-schema', $file->name)
-      if $file->name
+    $self->pointed_hint('package-contains-compiled-glib-schema',$item->pointer)
+      if $item->name
       =~ m{^ usr/share/ glib-[^/]+ /schemas/ gschemas[.]compiled $}x;
 
-    $self->hint('package-contains-file-in-etc-skel', $file->name)
-      if $file->dirname =~ m{^etc/skel/}
-      && $file->basename
+    $self->pointed_hint('package-contains-file-in-etc-skel', $item->pointer)
+      if $item->dirname =~ m{^etc/skel/}
+      && $item->basename
       !~ m{^ [.]bashrc | [.]bash_logout | [.]m?kshrc | [.]profile $}x;
 
-    $self->hint('package-contains-file-in-usr-share-hal', $file->name)
-      if $file->dirname =~ m{^usr/share/hal/};
+    $self->pointed_hint('package-contains-file-in-usr-share-hal',
+        $item->pointer)
+      if $item->dirname =~ m{^usr/share/hal/};
 
-    $self->hint('package-contains-icon-cache-in-generic-dir', $file->name)
-      if $file->name eq 'usr/share/icons/hicolor/icon-theme.cache';
+    $self->pointed_hint('package-contains-icon-cache-in-generic-dir',
+        $item->pointer)
+      if $item->name eq 'usr/share/icons/hicolor/icon-theme.cache';
 
-    $self->hint('package-contains-python-dot-directory', $file->name)
-      if $file->dirname
+    $self->pointed_hint('package-contains-python-dot-directory',$item->pointer)
+      if $item->dirname
       =~ m{^ usr/lib/python[^/]+ / (?:dist|site)-packages / }x
-      && $file->name =~ m{ / [.][^/]+ / }x;
+      && $item->name =~ m{ / [.][^/]+ / }x;
 
-    $self->hint('package-contains-python-coverage-file', $file->name)
-      if $file->basename eq '.coverage';
+    $self->pointed_hint('package-contains-python-coverage-file',$item->pointer)
+      if $item->basename eq '.coverage';
 
-    $self->hint('package-contains-python-doctree-file', $file->name)
-      if $file->basename =~ m{ [.]doctree (?:[.]gz)? $}x;
+    $self->pointed_hint('package-contains-python-doctree-file', $item->pointer)
+      if $item->basename =~ m{ [.]doctree (?:[.]gz)? $}x;
 
-    $self->hint('package-contains-python-header-in-incorrect-directory',
-        $file->name)
-      if $file->dirname =~ m{^ usr/include/python3[.][01234567]/ }x
-      && $file->name =~ m{ [.]h $}x;
+    $self->pointed_hint(
+        'package-contains-python-header-in-incorrect-directory',
+        $item->pointer)
+      if $item->dirname =~ m{^ usr/include/python3[.][01234567]/ }x
+      && $item->name =~ m{ [.]h $}x;
 
-    $self->hint('package-contains-python-hypothesis-example', $file->name)
-      if $file->dirname =~ m{ /[.]hypothesis/examples/ }x;
+    $self->pointed_hint('package-contains-python-hypothesis-example',
+        $item->pointer)
+      if $item->dirname =~ m{ /[.]hypothesis/examples/ }x;
 
-    $self->hint('package-contains-python-tests-in-global-namespace',
-        $file->name)
-      if $file->name
+    $self->pointed_hint('package-contains-python-tests-in-global-namespace',
+        $item->pointer)
+      if $item->name
       =~ m{^ usr/lib/python[^\/]+ / (?:dist|site)-packages / test_.+[.]py $}x;
 
-    $self->hint('package-contains-sass-cache-directory', $file->name)
-      if $file->name =~ m{ / [.]sass-cache / }x;
+    $self->pointed_hint('package-contains-sass-cache-directory',$item->pointer)
+      if $item->name =~ m{ / [.]sass-cache / }x;
 
-    $self->hint('package-contains-eslint-config-file', $file->name)
-      if $file->basename =~ m{^ [.]eslintrc }x;
+    $self->pointed_hint('package-contains-eslint-config-file', $item->pointer)
+      if $item->basename =~ m{^ [.]eslintrc }x;
 
-    $self->hint('package-contains-npm-ignore-file', $file->name)
-      if $file->basename eq '.npmignore';
+    $self->pointed_hint('package-contains-npm-ignore-file', $item->pointer)
+      if $item->basename eq '.npmignore';
 
-    if (exists($PATH_DIRECTORIES{$file->dirname})) {
+    if (exists($PATH_DIRECTORIES{$item->dirname})) {
 
-        $self->hint('file-name-in-PATH-is-not-ASCII', $file->name)
-          if $file->basename !~ m{\A [[:ascii:]]++ \Z}xsm;
+        $self->pointed_hint('file-name-in-PATH-is-not-ASCII', $item->pointer)
+          if $item->basename !~ m{\A [[:ascii:]]++ \Z}xsm;
 
-        $self->hint('zero-byte-executable-in-path', $file->name)
-          if $file->is_regular_file
-          and $file->is_executable
-          and $file->size == 0;
+        $self->pointed_hint('zero-byte-executable-in-path', $item->pointer)
+          if $item->is_regular_file
+          and $item->is_executable
+          and $item->size == 0;
 
-    } elsif (!valid_utf8($file->name)) {
-        $self->hint('shipped-file-without-utf8-name', $file->name);
+    } elsif (!valid_utf8($item->name)) {
+        $self->pointed_hint('shipped-file-without-utf8-name', $item->pointer);
     }
 
     return;
@@ -124,7 +128,7 @@ sub source {
         my @orig_non_utf8 = grep { !valid_utf8($_->name) }
           @{$self->processable->orig->sorted_list};
 
-        $self->hint('upstream-file-without-utf8-name', $_->name)
+        $self->pointed_hint('upstream-file-without-utf8-name', $_->pointer)
           for @orig_non_utf8;
     }
 

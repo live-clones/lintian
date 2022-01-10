@@ -30,15 +30,16 @@ use namespace::clean;
 with 'Lintian::Check';
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     if (
-           $file->name =~ m{^usr/share/p11-kit/modules/.}
-        && $file->name !~ m{\A usr/share/p11-kit/modules/
+           $item->name =~ m{^usr/share/p11-kit/modules/.}
+        && $item->name !~ m{\A usr/share/p11-kit/modules/
                        [[:alnum:]][[:alnum:]_.-]*\.module\Z
                   }xsm
     ) {
-        $self->hint('incorrect-naming-of-pkcs11-module', $file->name);
+        $self->pointed_hint('incorrect-naming-of-pkcs11-module',
+            $item->pointer);
     }
 
     return;

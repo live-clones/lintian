@@ -32,16 +32,16 @@ use namespace::clean;
 with 'Lintian::Check';
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     return
-      unless $file->is_file;
+      unless $item->is_file;
 
-    if ($file->name =~ /\.bz2$/si) {
+    if ($item->name =~ /\.bz2$/si) {
 
-        safe_qx('bzip2', '--test', $file->unpacked_path);
+        safe_qx('bzip2', '--test', $item->unpacked_path);
 
-        $self->hint('broken-bz2', $file->name)
+        $self->pointed_hint('broken-bz2', $item->pointer)
           if $?;
     }
 

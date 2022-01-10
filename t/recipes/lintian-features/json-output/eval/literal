@@ -142,12 +142,6 @@
                      "visibility" : "pedantic"
                   },
                   {
-                     "experimental" : false,
-                     "note" : "",
-                     "tag" : "old-source-override-location",
-                     "visibility" : "pedantic"
-                  },
-                  {
                      "experimental" : true,
                      "note" : "",
                      "pointer" : {
@@ -176,19 +170,40 @@
                "hints" : [
                   {
                      "experimental" : false,
-                     "note" : "usr/local/share/",
+                     "note" : "",
+                     "pointer" : {
+                        "item" : {
+                           "index" : "json-output_1.0+dsfg-1.1_all.deb (installed)",
+                           "name" : "usr/local/share/"
+                        },
+                        "line_position" : 0
+                     },
                      "tag" : "dir-in-usr-local",
                      "visibility" : "error"
                   },
                   {
                      "experimental" : false,
-                     "note" : "usr/local/share/lintian/",
+                     "note" : "",
+                     "pointer" : {
+                        "item" : {
+                           "index" : "json-output_1.0+dsfg-1.1_all.deb (installed)",
+                           "name" : "usr/local/share/lintian/"
+                        },
+                        "line_position" : 0
+                     },
                      "tag" : "dir-in-usr-local",
                      "visibility" : "error"
                   },
                   {
                      "experimental" : false,
-                     "note" : "var/lock/lintian/",
+                     "note" : "",
+                     "pointer" : {
+                        "item" : {
+                           "index" : "json-output_1.0+dsfg-1.1_all.deb (installed)",
+                           "name" : "var/lock/lintian/"
+                        },
+                        "line_position" : 0
+                     },
                      "tag" : "dir-or-file-in-var-lock",
                      "visibility" : "error"
                   },
@@ -232,7 +247,14 @@
                   },
                   {
                      "experimental" : false,
-                     "note" : "usr/local/share/lintian/",
+                     "note" : "",
+                     "pointer" : {
+                        "item" : {
+                           "index" : "json-output_1.0+dsfg-1.1_all.deb (installed)",
+                           "name" : "usr/local/share/lintian/"
+                        },
+                        "line_position" : 0
+                     },
                      "tag" : "package-contains-empty-directory",
                      "visibility" : "info"
                   },

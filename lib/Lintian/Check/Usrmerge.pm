@@ -30,23 +30,28 @@ use namespace::clean;
 with 'Lintian::Check';
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     return
-      unless $file->name =~ m{^(?:s?bin|lib(?:|[ox]?32|64))/};
+      unless $item->name =~ m{^(?:s?bin|lib(?:|[ox]?32|64))/};
 
-    my $usrfile = $self->processable->installed->lookup("usr/$file");
-
-    return
-      unless $usrfile;
+    my $usrfile = $self->processable->installed->lookup("usr/$item");
 
     return
-      if $file->is_dir and $usrfile->is_dir;
+      unless defined $usrfile;
 
-    if ($file =~ m{^lib.+\.(?:so[\.0-9]*|a)$}) {
-        $self->hint('library-in-root-and-usr', $file, $usrfile);
+    return
+      if $item->is_dir and $usrfile->is_dir;
+
+    if ($item =~ m{^lib.+\.(?:so[\.0-9]*|a)$}) {
+        $self->pointed_hint('library-in-root-and-usr', $item->pointer,
+            'already in:', $usrfile->name);
+
     } else {
-        $self->hint('file-in-root-and-usr', $file, $usrfile);
+        $self->pointed_hint(
+            'file-in-root-and-usr', $item->pointer,
+            'already in:', $usrfile->name
+        );
     }
 
     return;

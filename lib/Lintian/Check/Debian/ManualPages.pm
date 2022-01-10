@@ -44,14 +44,14 @@ sub source {
     my @files = grep { $_->is_file } $debiandir->descendants;
     my @nopatches = grep { $_->name !~ m{^debian/patches/} } @files;
 
-    my @manpages = grep { $_->basename =~ m{\.\d$} } @nopatches;
+    my @manual_pages = grep { $_->basename =~ m{\.\d$} } @nopatches;
 
-    for my $manpage (@manpages) {
+    for my $item (@manual_pages) {
 
-        my $command = $manpage->basename;
+        my $command = $item->basename;
         $command =~ s/ [.] \d $//x;
 
-        $self->hint('maintainer-manual-page', $manpage->name)
+        $self->pointed_hint('maintainer-manual-page', $item->pointer)
           if none { $command eq $_->basename } @files;
     }
 

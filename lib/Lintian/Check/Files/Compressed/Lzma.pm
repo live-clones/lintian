@@ -32,16 +32,16 @@ use namespace::clean;
 with 'Lintian::Check';
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     return
-      unless $file->is_file;
+      unless $item->is_file;
 
-    if ($file->name =~ /\.lzma$/si) {
+    if ($item->name =~ /\.lzma$/si) {
 
-        safe_qx('lzma', '--test', $file->unpacked_path);
+        safe_qx('lzma', '--test', $item->unpacked_path);
 
-        $self->hint('broken-lzma', $file->name)
+        $self->pointed_hint('broken-lzma', $item->pointer)
           if $?;
     }
 

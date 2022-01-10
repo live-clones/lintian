@@ -30,19 +30,19 @@ use namespace::clean;
 with 'Lintian::Check';
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     return
-      unless $file->is_file;
+      unless $item->is_file;
 
     # language extensions
     if (
-        $file->name =~ m{\A
+        $item->name =~ m{\A
                     (?:usr/)?(?:s?bin|games)/[^/]+\.
                     (?:p[ly]|php|rb|[bc]?sh|tcl)
                     \Z}xsm
     ) {
-        $self->hint('script-with-language-extension', $file->name);
+        $self->pointed_hint('script-with-language-extension', $item->pointer);
     }
 
     return;

@@ -30,31 +30,27 @@ use namespace::clean;
 with 'Lintian::Check';
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     my $ppkg = quotemeta($self->processable->name);
 
     # misplaced overrides
-    if ($file->name =~ m{^usr/share/doc/$ppkg/override\.[lL]intian(?:\.gz)?$}
-        || $file->name =~ m{^usr/share/lintian/overrides/$ppkg/.+}) {
+    if ($item->name =~ m{^usr/share/doc/$ppkg/override\.[lL]intian(?:\.gz)?$}
+        || $item->name =~ m{^usr/share/lintian/overrides/$ppkg/.+}) {
 
-        $self->hint('override-file-in-wrong-location', $file->name);
+        $self->pointed_hint('override-file-in-wrong-location', $item->pointer);
 
-    } elsif ($file->name =~ m{^usr/share/lintian/overrides/(.+)/.+$}) {
+    } elsif ($item->name =~ m{^usr/share/lintian/overrides/(.+)/.+$}) {
 
-        $self->hint('override-file-in-wrong-package', $file->name)
-          unless $1 eq $self->processable->name;
+        my $expected = $1;
+
+        $self->pointed_hint('override-file-in-wrong-package',
+            $item->pointer, $expected)
+          unless $self->processable->name eq $expected;
     }
 
-    return;
-}
-
-sub source {
-    my ($self) = @_;
-
-    $self->hint('old-source-override-location')
-      if $self->processable->patched->resolve_path(
-        'debian/source.lintian-overrides');
+    $self->pointed_hint('old-source-override-location', $item->pointer)
+      if $item->name eq 'debian/source.lintian-overrides';
 
     return;
 }

@@ -42,7 +42,7 @@ sub visit_installed_files {
     my $final = $segments[-1];
     my $count = scalar grep { $final eq $_ } @segments;
 
-    $self->hint('repeated-path-segment', $final, $item->name)
+    $self->pointed_hint('repeated-path-segment', $item->pointer, $final)
       if $count > 1;
 
     return;

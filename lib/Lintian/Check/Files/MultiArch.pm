@@ -49,7 +49,7 @@ has has_public_executable => (is => 'rw', default => 0);
 has has_public_shared_library => (is => 'rw', default => 0);
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     my $architecture = $self->processable->fields->value('Architecture');
     my $multiarch = $self->processable->fields->value('Multi-Arch') || 'no';
@@ -57,28 +57,28 @@ sub visit_installed_files {
     my $DEB_HOST_MULTIARCH= $self->data->architectures->deb_host_multiarch;
     my $multiarch_dir = $DEB_HOST_MULTIARCH->{$architecture};
 
-    if (   !$file->is_dir
+    if (   !$item->is_dir
         && defined $multiarch_dir
         && $multiarch eq 'foreign'
-        && $file->name =~ m{^usr/lib/\Q$multiarch_dir\E/(.*)$}) {
+        && $item->name =~ m{^usr/lib/\Q$multiarch_dir\E/(.*)$}) {
 
         my $tail = $1;
 
-        $self->hint('multiarch-foreign-cmake-file', $file->name)
+        $self->pointed_hint('multiarch-foreign-cmake-file', $item->pointer)
           if $tail =~ m{^cmake/.+\.cmake$};
 
-        $self->hint('multiarch-foreign-pkgconfig', $file->name)
+        $self->pointed_hint('multiarch-foreign-pkgconfig', $item->pointer)
           if $tail =~ m{^pkgconfig/[^/]+\.pc$};
 
-        $self->hint('multiarch-foreign-static-library', $file->name)
+        $self->pointed_hint('multiarch-foreign-static-library', $item->pointer)
           if $tail =~ m{^lib[^/]+\.a$};
     }
 
-    if (exists($PATH_DIRECTORIES{$file->dirname})) {
+    if (exists($PATH_DIRECTORIES{$item->dirname})) {
         $self->has_public_executable(1);
     }
 
-    if ($file->name =~ m{^(?:usr/)?lib/(?:([^/]+)/)?lib[^/]*\.so$}) {
+    if ($item->name =~ m{^(?:usr/)?lib/(?:([^/]+)/)?lib[^/]*\.so$}) {
         $self->has_public_shared_library(1)
           if (!defined($1) || exists $self->TRIPLETS->{$1});
     }

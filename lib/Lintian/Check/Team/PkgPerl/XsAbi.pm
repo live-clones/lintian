@@ -79,7 +79,7 @@ sub visit_installed_files {
     return
       unless $item->name =~ m{^usr/lib/perl5/};
 
-    $self->hint('legacy-vendorarch-directory', $item->name)
+    $self->pointed_hint('legacy-vendorarch-directory', $item->pointer)
       if $self->relies_on_modern_api;
 
     return;

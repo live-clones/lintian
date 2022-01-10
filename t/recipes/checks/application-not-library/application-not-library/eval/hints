@@ -1,11 +1,11 @@
-unspecified-something-rb (binary): application-in-library-section ruby usr/bin/unspecified-something-rb
-unspecified-something-py (binary): application-in-library-section python usr/bin/unspecified-something-py
-unspecified-something-pl (binary): application-in-library-section perl usr/bin/unspecified-something-pl
-ruby-something (binary): library-package-name-for-application usr/bin/ruby-something
-ruby-something (binary): application-in-library-section ruby usr/bin/ruby-something
-python-something (binary): library-package-name-for-application usr/bin/python-something
-python-something (binary): application-in-library-section python usr/bin/python-something
-libsomething-else-perl (binary): library-package-name-for-application usr/bin/libsomething-else-perl
-libsomething-else-perl (binary): application-in-library-section perl usr/bin/libsomething-else-perl
-libapp-something-perl (binary): libapp-perl-package-name usr/bin/libapp-something-perl
-libapp-something-perl (binary): application-in-library-section perl usr/bin/libapp-something-perl
+unspecified-something-rb (binary): application-in-library-section ruby [usr/bin/unspecified-something-rb]
+unspecified-something-py (binary): application-in-library-section python [usr/bin/unspecified-something-py]
+unspecified-something-pl (binary): application-in-library-section perl [usr/bin/unspecified-something-pl]
+ruby-something (binary): library-package-name-for-application [usr/bin/ruby-something]
+ruby-something (binary): application-in-library-section ruby [usr/bin/ruby-something]
+python-something (binary): library-package-name-for-application [usr/bin/python-something]
+python-something (binary): application-in-library-section python [usr/bin/python-something]
+libsomething-else-perl (binary): library-package-name-for-application [usr/bin/libsomething-else-perl]
+libsomething-else-perl (binary): application-in-library-section perl [usr/bin/libsomething-else-perl]
+libapp-something-perl (binary): libapp-perl-package-name [usr/bin/libapp-something-perl]
+libapp-something-perl (binary): application-in-library-section perl [usr/bin/libapp-something-perl]

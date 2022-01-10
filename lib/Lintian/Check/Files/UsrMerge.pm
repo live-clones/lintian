@@ -30,15 +30,16 @@ use namespace::clean;
 with 'Lintian::Check';
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
-    my $quotedpath = quotemeta($file->name);
+    my $quotedpath = quotemeta($item->name);
 
-    $self->hint('package-contains-usr-unmerged-pathnames', $file->name)
-      if $file->name =~ m{^(?:bin|sbin|lib.*)/.+$}
-      && !$file->is_symlink
-      && !$file->is_dir
-      && $file->link !~ m{^usr/$quotedpath$};
+    $self->pointed_hint('package-contains-usr-unmerged-pathnames',
+        $item->pointer)
+      if $item->name =~ m{^(?:bin|sbin|lib.*)/.+$}
+      && !$item->is_symlink
+      && !$item->is_dir
+      && $item->link !~ m{^usr/$quotedpath$};
 
     return;
 }

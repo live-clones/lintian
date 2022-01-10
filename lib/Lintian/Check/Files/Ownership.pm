@@ -39,12 +39,12 @@ const my $MINIMUM_HIGH_RESERVED => 60_000;
 const my $NOBODY => 65_534;
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
-    $self->hint('wrong-file-owner-uid-or-gid', $file->name,
-        $file->uid . $SLASH . $file->gid)
-      if out_of_bounds($file->uid)
-      || out_of_bounds($file->gid);
+    $self->pointed_hint('wrong-file-owner-uid-or-gid', $item->pointer,
+        $item->uid . $SLASH . $item->gid)
+      if out_of_bounds($item->uid)
+      || out_of_bounds($item->gid);
 
     return;
 }

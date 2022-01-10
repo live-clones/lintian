@@ -30,11 +30,11 @@ use namespace::clean;
 with 'Lintian::Check';
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     # /usr/lib/sgml
-    $self->hint('file-in-usr-lib-sgml', $file->name)
-      if $file->name =~ m{^usr/lib/sgml/\S};
+    $self->pointed_hint('file-in-usr-lib-sgml', $item->pointer)
+      if $item->name =~ m{^usr/lib/sgml/\S};
 
     return;
 }

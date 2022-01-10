@@ -63,7 +63,7 @@ sub visit_patched_files {
     my ($self, $item) = @_;
 
     # some installation files must be present; see Bug#972614
-    $self->hint('package-does-not-install-examples', $item)
+    $self->pointed_hint('package-does-not-install-examples', $item->pointer)
       if $item->basename eq 'examples'
       && $item->dirname !~ m{(?:^|/)(?:vendor|third_party)/}
       && $self->group->get_installables

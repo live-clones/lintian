@@ -1,1 +1,1 @@
-binary (binary): package-contains-hardlink usr/share/baz -> usr/bar2
+binary (binary): package-contains-hardlink pointing to: usr/bar2 [usr/share/baz]

@@ -52,11 +52,11 @@ sub visit_patched_files {
 
         my ($header)= split(/^---/m, $bytes, 2);
 
-        $self->hint('national-encoding', 'DEP-3 header ' . $item->name)
+        $self->pointed_hint('national-encoding', $item->pointer,'DEP-3 header')
           unless valid_utf8($header);
 
     } else {
-        $self->hint('national-encoding', $item->name)
+        $self->pointed_hint('national-encoding', $item->pointer)
           unless $item->is_valid_utf8;
     }
 
@@ -72,7 +72,7 @@ sub visit_control_files {
     return
       unless $item->file_type =~ /text$/ || $item->is_script;
 
-    $self->hint('national-encoding', 'DEBIAN/' . $item->name)
+    $self->pointed_hint('national-encoding', $item->pointer)
       unless $item->is_valid_utf8;
 
     return;
@@ -95,7 +95,7 @@ sub visit_installed_files {
 
     if ($item->file_type =~ /text$/) {
 
-        $self->hint('national-encoding', $item->name)
+        $self->pointed_hint('national-encoding', $item->pointer)
           unless $item->is_valid_utf8;
     }
 
@@ -109,7 +109,7 @@ sub visit_installed_files {
         gunzip($path => \$bytes)
           or die encode_utf8("gunzip $path failed: $GunzipError");
 
-        $self->hint('national-encoding', $item->name)
+        $self->pointed_hint('national-encoding', $item->pointer)
           unless valid_utf8($bytes);
     }
 

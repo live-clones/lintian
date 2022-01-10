@@ -47,14 +47,15 @@ sub visit_installed_files {
       unless $item->file_type =~ m{ executable | shared [ ] object }x;
 
     # Detached debugging symbols directly in /usr/lib/debug.
-    $self->hint('debug-symbols-directly-in-usr-lib-debug', $item)
+    $self->pointed_hint('debug-symbols-directly-in-usr-lib-debug',
+        $item->pointer)
       if $item->dirname eq 'usr/lib/debug/';
 
     return
       unless $item->name
       =~ m{^ usr/lib/debug/ (?:lib\d*|s?bin|usr|opt|dev|emul|\.build-id) / }x;
 
-    $self->hint('debug-symbols-not-detached', $item)
+    $self->pointed_hint('debug-symbols-not-detached', $item->pointer)
       if exists $item->elf->{NEEDED};
 
     # Something other than detached debugging symbols in
@@ -70,7 +71,7 @@ sub visit_installed_files {
 
     my @have_debug_sections = $lc_name->get_intersection;
 
-    $self->hint('debug-file-with-no-debug-symbols', $item)
+    $self->pointed_hint('debug-file-with-no-debug-symbols', $item->pointer)
       unless @have_debug_sections;
 
     return;

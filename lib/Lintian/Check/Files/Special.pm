@@ -30,12 +30,13 @@ use namespace::clean;
 with 'Lintian::Check';
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     return
-      if $file->is_file || $file->is_dir || $file->is_symlink;
+      if $item->is_file || $item->is_dir || $item->is_symlink;
 
-    $self->hint('special-file', $file->name, sprintf('%04o',$file->operm));
+    $self->pointed_hint('special-file', $item->pointer,
+        sprintf('%04o',$item->operm));
 
     return;
 }

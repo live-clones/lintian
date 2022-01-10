@@ -30,19 +30,20 @@ use namespace::clean;
 with 'Lintian::Check';
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     return
-      unless $file->is_hardlink;
+      unless $item->is_hardlink;
 
-    my $target_dir = $file->link;
+    my $target_dir = $item->link;
     $target_dir =~ s{[^/]*$}{};
 
     # link always sorts after target; hard links are calibrated
-    $self->hint('package-contains-hardlink',$file->name . ' -> ' . $file->link)
-      if $file->name =~ m{^etc/}
-      || $file->link =~ m{^etc/}
-      || $file->name !~ m{^\Q$target_dir\E[^/]*$};
+    $self->pointed_hint('package-contains-hardlink', $item->pointer,
+        'pointing to:', $item->link)
+      if $item->name =~ m{^etc/}
+      || $item->link =~ m{^etc/}
+      || $item->name !~ m{^\Q$target_dir\E[^/]*$};
 
     return;
 }

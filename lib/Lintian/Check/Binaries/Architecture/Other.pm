@@ -124,7 +124,7 @@ sub visit_installed_files {
     return
       unless $item->file_type =~ /^ [^,]* \b ELF \b /x;
 
-    $self->hint('binary-from-other-architecture', $item)
+    $self->pointed_hint('binary-from-other-architecture', $item->pointer)
       if $self->from_other_architecture($item);
 
     return;

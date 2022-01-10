@@ -30,10 +30,10 @@ use namespace::clean;
 with 'Lintian::Check';
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
-    $self->hint('package-modifies-ld.so-search-path', $file->name)
-      if $file->name =~ m{^etc/ld\.so\.conf\.d/.+$}
+    $self->pointed_hint('package-modifies-ld.so-search-path', $item->pointer)
+      if $item->name =~ m{^etc/ld\.so\.conf\.d/.+$}
       && $self->processable->name !~ /^libc/;
 
     return;

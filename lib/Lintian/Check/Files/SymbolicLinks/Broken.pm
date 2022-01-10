@@ -39,18 +39,18 @@ const my $ASTERISK => q{*};
 has wildcard_links => (is => 'rw', default => sub{ [] });
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     return
-      unless $file->is_symlink;
+      unless $item->is_symlink;
 
     # target relative to the package root
-    my $path = $file->link_normalized;
+    my $path = $item->link_normalized;
 
     # unresolvable link
     unless (defined $path) {
 
-        $self->hint('package-contains-unsafe-symlink', $file->name);
+        $self->pointed_hint('package-contains-unsafe-symlink', $item->pointer);
         return;
     }
 
@@ -63,8 +63,8 @@ sub visit_installed_files {
     # ln -s target/*.so link expansion.  We do not bother looking
     # for other broken symlinks as people keep adding new special
     # cases and it is not worth it.
-    push(@{$self->wildcard_links}, $file)
-      if index($file->link, $ASTERISK) >= 0;
+    push(@{$self->wildcard_links}, $item)
+      if index($item->link, $ASTERISK) >= 0;
 
     return;
 }
@@ -79,10 +79,10 @@ sub installable {
     my @prerequisites
       = @{$self->group->direct_dependencies($self->processable)};
 
-    foreach my $file (@{$self->wildcard_links}){
+    for my $item (@{$self->wildcard_links}){
 
         # target relative to the package root
-        my $path = $file->link_normalized;
+        my $path = $item->link_normalized;
 
         # destination is in the package
         next
@@ -97,14 +97,15 @@ sub installable {
         @prerequisites;
 
         # link target
-        my $target = $file->link;
+        my $target = $item->link;
 
         # strip leading slashes for reporting
         $target =~ s{^/+}{};
 
         # nope - not found in any of our direct dependencies.  Ergo it is
         # a broken "ln -s target/*.so link" expansion.
-        $self->hint('package-contains-broken-symlink-wildcard', $file,$target);
+        $self->pointed_hint('package-contains-broken-symlink-wildcard',
+            $item->pointer, $target);
     }
 
     return;

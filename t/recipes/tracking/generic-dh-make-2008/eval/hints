@@ -39,8 +39,8 @@ generic-dh-make-2008 (binary): superfluous-clutter-in-homepage <insert the upstr
 generic-dh-make-2008 (binary): section-is-dh_make-template
 generic-dh-make-2008 (binary): readme-debian-contains-debmake-template [usr/share/doc/generic-dh-make-2008/README.Debian]
 generic-dh-make-2008 (binary): package-contains-no-arch-dependent-files
-generic-dh-make-2008 (binary): package-contains-empty-directory usr/sbin/
-generic-dh-make-2008 (binary): package-contains-empty-directory usr/bin/
+generic-dh-make-2008 (binary): package-contains-empty-directory [usr/sbin/]
+generic-dh-make-2008 (binary): package-contains-empty-directory [usr/bin/]
 generic-dh-make-2008 (binary): initial-upload-closes-no-bugs [usr/share/doc/generic-dh-make-2008/changelog.Debian.gz:1]
 generic-dh-make-2008 (binary): helper-templates-in-copyright
 generic-dh-make-2008 (binary): extended-description-is-probably-too-short

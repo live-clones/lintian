@@ -44,20 +44,20 @@ const my $DEP_NX_FLAG => 0x100;
 const my $UNSAFE_SEH_FLAG => 0x400;
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     return
-      unless $file->is_file;
+      unless $item->is_file;
 
     return
-      unless $file->file_type =~ /^PE32\+? executable/;
+      unless $item->file_type =~ /^PE32\+? executable/;
 
     return
-      unless $file->is_open_ok;
+      unless $item->is_open_ok;
 
     my $buf;
-    open(my $fd, '<', $file->unpacked_path)
-      or die encode_utf8('Cannot open ' . $file->unpacked_path);
+    open(my $fd, '<', $item->unpacked_path)
+      or die encode_utf8('Cannot open ' . $item->unpacked_path);
 
     try {
         # offset to main header
@@ -91,15 +91,15 @@ sub visit_installed_files {
     # Don't check for the x86-specific "SafeSEH" feature for code
     # that is JIT-compiled by the Mono runtime. (#926334)
     delete $features{'SafeSEH'}
-      if $file->file_type =~ / Mono\/.Net assembly, /;
+      if $item->file_type =~ / Mono\/.Net assembly, /;
 
     my @missing = grep { !$features{$_} } sort keys %features;
 
-    $self->hint('portable-executable-missing-security-features',
-        $file,join($SPACE, @missing))
+    $self->pointed_hint('portable-executable-missing-security-features',
+        $item->pointer,join($SPACE, @missing))
       if scalar @missing;
 
-    close($fd);
+    close $fd;
 
     return;
 }

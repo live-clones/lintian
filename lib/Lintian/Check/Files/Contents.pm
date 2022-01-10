@@ -87,14 +87,15 @@ sub check_item {
         || $self->processable->source_name eq 'sensible-utils') {
 
         my $sensible = $item->mentions_in_operation($SENSIBLE_REGEX);
-        $self->hint('missing-depends-on-sensible-utils',$sensible, $item->name)
+        $self->pointed_hint('missing-depends-on-sensible-utils',
+            $item->pointer, $sensible)
           if length $sensible;
     }
 
     unless ($self->processable->fields->value('Section') eq 'debian-installer'
         || any { $_ eq $self->processable->source_name } qw(base-files dpkg)) {
 
-        $self->hint('uses-dpkg-database-directly', $item->name)
+        $self->pointed_hint('uses-dpkg-database-directly', $item->pointer)
           if length $item->mentions_in_operation(qr{/var/lib/dpkg});
     }
 
@@ -105,14 +106,15 @@ sub check_item {
   # may not work as expected on ELF due to ld's SHF_MERGE
   # but word boundaries are also superior in strings spanning multiple commands
         my $correct = $switched_locations{$confused};
-        $self->hint('bin-sbin-mismatch', $item->name,
+        $self->pointed_hint('bin-sbin-mismatch', $item->pointer,
             $confused . $ARROW . $correct)
           if length $item->mentions_in_operation(qr{ \B / \Q$confused\E \b }x);
     }
 
     if (length $self->build_path) {
         my $escaped_path = quotemeta($self->build_path);
-        $self->hint('file-references-package-build-path', $item->name)
+        $self->pointed_hint('file-references-package-build-path',
+            $item->pointer)
           if $item->bytes_match(qr{$escaped_path});
     }
 

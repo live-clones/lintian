@@ -1,1 +1,1 @@
-not-an-lz (binary): broken-lz etc/not-an.lz
+not-an-lz (binary): broken-lz [etc/not-an.lz]

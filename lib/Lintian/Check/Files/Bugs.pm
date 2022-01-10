@@ -30,13 +30,13 @@ use namespace::clean;
 with 'Lintian::Check';
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     return
-      unless $file->is_dir;
+      unless $item->is_dir;
 
-    $self->hint('package-contains-bts-control-dir', $file->name)
-      if $file->name =~ m{/\.(?:be|ditrack)/?$};
+    $self->pointed_hint('package-contains-bts-control-dir', $item->pointer)
+      if $item->name =~ m{/\.(?:be|ditrack)/?$};
 
     return;
 }

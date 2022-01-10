@@ -30,11 +30,12 @@ use namespace::clean;
 with 'Lintian::Check';
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     # /etc/pam.conf
-    $self->hint('config-file-reserved', $file->name, 'by libpam-runtime')
-      if $file->name =~ m{^etc/pam.conf$}
+    $self->pointed_hint('config-file-reserved', $item->pointer,
+        'by libpam-runtime')
+      if $item->name =~ m{^etc/pam.conf$}
       && $self->processable->name ne 'libpam-runtime';
 
     return;

@@ -41,71 +41,79 @@ const my $EMPTY => q{};
 sub binary {
     my ($self) = @_;
 
-    my $processable = $self->processable;
-
-    my $info_dir = $processable->installed->resolve_path('usr/share/info/');
+    my $info_dir
+      = $self->processable->installed->resolve_path('usr/share/info/');
     return
       unless $info_dir;
 
     # Read package contents...
-    foreach my $file ($info_dir->descendants) {
-        # NB: file_type can be undef (e.g. symlinks)
-        my $file_type = $file->file_type // $EMPTY;
-        my $fname = $file->basename;
+    for my $item ($info_dir->descendants) {
 
-        next unless $file->is_symlink or $file->is_file;
+        next
+          unless $item->is_symlink
+          || $item->is_file;
 
         # Ignore dir files.  That's a different error which we already catch in
         # the files check.
-        next if $fname =~ /^dir(?:\.old)?(?:\.gz)?/;
+        next
+          if $item->basename =~ /^dir(?:\.old)?(?:\.gz)?/;
 
         # Analyze the file names making sure the documents are named
         # properly.  Note that Emacs 22 added support for images in
         # info files, so we have to accept those and ignore them.
         # Just ignore .png files for now.
-        my @fname_pieces = split /\./, $fname;
-        my $ext = pop @fname_pieces;
-        if ($ext eq 'gz') { # ok!
-            if ($file->is_file) {
+        my @fname_pieces = split(m{ [.] }x, $item->basename);
+        my $extension = pop @fname_pieces;
+
+        if ($extension eq 'gz') { # ok!
+            if ($item->is_file) {
+
                 # compressed with maximum compression rate?
-                if ($file_type !~ m/gzip compressed data/) {
-                    $self->hint('info-document-not-compressed-with-gzip',
-                        $file);
+                if ($item->file_type !~ m/gzip compressed data/) {
+                    $self->pointed_hint(
+                        'info-document-not-compressed-with-gzip',
+                        $item->pointer);
+
                 } else {
-                    if ($file_type !~ m/max compression/) {
-                        $self->hint(
+                    if ($item->file_type !~ m/max compression/) {
+                        $self->pointed_hint(
 'info-document-not-compressed-with-max-compression',
-                            $file
+                            $item->pointer
                         );
                     }
                 }
             }
-        } elsif ($ext =~ m/^(?:png|jpe?g)$/) {
+
+        } elsif ($extension =~ m/^(?:png|jpe?g)$/) {
             next;
+
         } else {
-            push(@fname_pieces, $ext);
-            $self->hint('info-document-not-compressed', $file);
+            push(@fname_pieces, $extension);
+            $self->pointed_hint('info-document-not-compressed',$item->pointer);
         }
+
         my $infoext = pop @fname_pieces;
         unless ($infoext && $infoext =~ /^info(-\d+)?$/) { # it's not foo.info
 
             # it's not foo{,-{1,2,3,...}}
-            $self->hint('info-document-has-wrong-extension', $file)
+            $self->pointed_hint('info-document-has-wrong-extension',
+                $item->pointer)
               if @fname_pieces;
         }
 
         # If this is the main info file (no numeric extension). make
         # sure it has appropriate dir entry information.
-        if ($fname !~ /-\d+\.gz/ && $file_type =~ /gzip compressed data/) {
-            if (!$file->is_open_ok) {
-                # unsafe symlink, skip.  Actually, this should never
-                # be true as "$file_type" for symlinks will not be
-                # "gzip compressed data".  But for good measure.
-                next;
-            }
+        if (   $item->basename !~ /-\d+\.gz/
+            && $item->file_type =~ /gzip compressed data/) {
 
-            open(my $fd, '<:gzip', $file->unpacked_path)
-              or die encode_utf8('Cannot open ' . $file->unpacked_path);
+            # unsafe symlink, skip.  Actually, this should never
+            # be true as "$file_type" for symlinks will not be
+            # "gzip compressed data".  But for good measure.
+            next
+              unless $item->is_open_ok;
+
+            open(my $fd, '<:gzip', $item->unpacked_path)
+              or die encode_utf8('Cannot open ' . $item->unpacked_path);
 
             my ($section, $start, $end);
             while (my $line = <$fd>) {
@@ -119,12 +127,15 @@ sub binary {
                 $end     = 1
                   if $line =~ /^END-INFO-DIR-ENTRY\b/;
             }
-            close($fd);
 
-            $self->hint('info-document-missing-dir-section', $file)
+            close $fd;
+
+            $self->pointed_hint('info-document-missing-dir-section',
+                $item->pointer)
               unless $section;
 
-            $self->hint('info-document-missing-dir-entry', $file)
+            $self->pointed_hint('info-document-missing-dir-entry',
+                $item->pointer)
               unless $start && $end;
         }
 
@@ -141,10 +152,10 @@ sub binary {
         # the tag() message show $src unbackslashed since that's the
         # filename sought.
         #
-        if ($file->is_file && $fname =~ /\.info(?:-\d+)?\.gz$/) {
+        if ($item->is_file && $item->basename =~ /\.info(?:-\d+)?\.gz$/) {
 
-            open(my $fd, '<:gzip', $file->unpacked_path)
-              or die encode_utf8('Cannot open ' . $file->unpacked_path);
+            open(my $fd, '<:gzip', $item->unpacked_path)
+              or die encode_utf8('Cannot open ' . $item->unpacked_path);
 
             my $position = 1;
             while (my $line = <$fd>) {
@@ -156,19 +167,19 @@ sub binary {
                     $src =~ s/\\(.)/$1/g;   # unbackslash
 
                     push(@missing, $src)
-                      unless $processable->installed->lookup(
+                      unless $self->processable->installed->lookup(
                         normalize_link_target('usr/share/info', $src));
                 }
 
-                $self->hint('info-document-missing-image-file',
-                    $file, "(line $position)", $_)
+                $self->pointed_hint('info-document-missing-image-file',
+                    $item->pointer($position), $_)
                   for uniq @missing;
 
             } continue {
                 ++$position;
             }
 
-            close($fd);
+            close $fd;
         }
     }
 

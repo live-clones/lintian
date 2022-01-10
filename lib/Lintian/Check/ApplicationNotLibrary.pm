@@ -34,62 +34,98 @@ with 'Lintian::Check';
 sub installable {
     my ($self) = @_;
 
-    my $pkg = $self->processable->name;
-    my $processable = $self->processable;
+    # big exception list for all tags
+    return
+      # perl itself
+      if $self->processable->name =~ /^perl(?:-base)?$/
+      # ruby itself
+      || $self->processable->name =~ /^ruby[\d.]*$/
+      # python itself
+      || $self->processable->name =~ /^python[\d.]*(?:-dev|-minimal)?$/
+      # cpan related tools
+      || $self->processable->name =~ /^cpan/
+      # perl module tools
+      || $self->processable->name =~ /^libmodule-.*-perl$/
+      # perl debugging tools
+      || $self->processable->name =~ /^libdevel-.*-perl$/
+      # perl-handling tools
+      || $self->processable->name =~ /^libperl.*-perl$/
+      # perl testing tools
+      || $self->processable->name =~ /^libtest-.*-perl$/
+      # python packaging stuff
+      || $self->processable->name =~ /^python[\d.]*-(?:stdeb|setuptools)$/
+      # ruby packaging stuff
+      || $self->processable->name =~ /^gem2deb/
+      # rendering engine
+      || $self->processable->name =~ /^xulrunner/
+      # generic helpers
+      || $self->processable->name =~ /^lib.*-(?:utils|tools|bin|dev)/
+      # whitelist
+      || (
+        any { $self->processable->name eq $_ }
+        qw(
 
-    return if # Big exception list for all tags
-      $pkg =~ /^perl(?:-base)?$/                    or # perl itself
-      $pkg =~ /^ruby[\d.]*$/                        or # ruby itself
-      $pkg =~ /^python[\d.]*(?:-dev|-minimal)?$/    or # python itself
-      $pkg =~ /^cpan/                               or # cpan related tools
-      $pkg =~ /^libmodule-.*-perl$/                 or # perl module tools
-      $pkg =~ /^libdevel-.*-perl$/                  or # perl debugging tools
-      $pkg =~ /^libperl.*-perl$/                    or # perl-handling tools
-      $pkg =~ /^libtest-.*-perl$/                   or # perl testing tools
-      $pkg =~ /^python[\d.]*-(?:stdeb|setuptools)$/ or # python packaging stuff
-      $pkg =~ /^gem2deb/                            or # ruby packaging stuff
-      $pkg =~ /^xulrunner/                          or # rendering engine
-      $pkg =~ /^lib.*-(?:utils|tools|bin|dev)/      or # generic helpers
-      any { $pkg eq $_ } qw(
+        rake
+        bundler
+        coderay
+        kdelibs-bin
+        libapp-options-perl
 
-      rake
-      bundler
-      coderay
-      kdelibs-bin
-      libapp-options-perl
+        ));
 
-      ); # whitelist
+    my @programs;
+    for my $searched_folder (qw{bin sbin usr/bin usr/sbin usr/games}) {
 
-    my @programs = ();
-    foreach my $binpath (qw(bin sbin usr/bin usr/sbin usr/games)) {
-        my $bindir = $processable->installed->lookup("$binpath/");
-        next unless $bindir;
+        my $directory_item
+          = $self->processable->installed->lookup("$searched_folder/");
+        next
+          unless defined $directory_item;
 
-        push(
-            @programs,
-            grep { !/update$/ }       # ignore library maintenance tools
-              grep { !/properties$/ } # ignore library configuration tools
-              map { $_->name; }
-              grep { $_->basename !~ /^dh_/ } # ignore debhelper plugins
-              $bindir->children
-        );
-    }
+        for my $program_item ($directory_item->children) {
 
-    return unless @programs;
+            # ignore debhelper plugins
+            next
+              if $program_item->basename =~ /^dh_/;
 
-    # Check for library style package names
-    if ($pkg =~ /^lib(?:.+)-perl$|^ruby-|^python[\d.]*-/) {
-        if ($pkg =~ /^libapp(?:.+)-perl$/) {
-            $self->hint('libapp-perl-package-name', @programs);
-        } else {
-            $self->hint('library-package-name-for-application', @programs);
+            # ignore library configuration tools
+            next
+              if $program_item->name =~ /properties$/;
+
+            # ignore library maintenance tools
+            next
+              if $program_item->name  =~ /update$/;
+
+            push(@programs, $program_item);
         }
     }
 
-    # Check for wrong section
-    my $section = $processable->fields->value('Section');
-    if ($section =~ /perl|python|ruby|(?:^|\/)libs/) { # oldlibs is ok
-        $self->hint('application-in-library-section', "$section", @programs);
+    return
+      unless @programs;
+
+    # check for library style package names
+    if (   $self->processable->name =~ m{^ lib (?:.+) -perl $}x
+        || $self->processable->name =~ m{^ruby-}x
+        || $self->processable->name =~ m{^python[\d.]*-}x) {
+
+        if ($self->processable->name =~ m{^ libapp (?:.+) -perl $}x) {
+            $self->pointed_hint('libapp-perl-package-name', $_->pointer)
+              for @programs;
+
+        } else {
+            $self->pointed_hint('library-package-name-for-application',
+                $_->pointer)
+              for @programs;
+        }
+    }
+
+    my $section = $self->processable->fields->value('Section');
+
+    # oldlibs is ok
+    if ($section =~ m{ perl | python | ruby | (?: ^ | / ) libs }x) {
+
+        $self->pointed_hint('application-in-library-section',
+            $_->pointer, $section)
+          for @programs;
     }
 
     return;

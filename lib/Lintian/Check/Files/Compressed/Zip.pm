@@ -32,19 +32,19 @@ use namespace::clean;
 with 'Lintian::Check';
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     return
-      unless $file->is_file;
+      unless $item->is_file;
 
-    if ($file->name =~ /\.zip$/si) {
+    if ($item->name =~ /\.zip$/si) {
 
         # maybe rewrite with Archive::Zip
 
         # may prompt for password with -t; piping yes '' does not work
-        safe_qx('unzip', '-l', $file->unpacked_path);
+        safe_qx('unzip', '-l', $item->unpacked_path);
 
-        $self->hint('broken-zip', $file->name)
+        $self->pointed_hint('broken-zip', $item->pointer)
           if $?;
 
         # should issue a tag for encrypted members, see Bug#935292

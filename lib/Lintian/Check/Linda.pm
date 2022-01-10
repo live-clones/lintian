@@ -30,10 +30,10 @@ use namespace::clean;
 with 'Lintian::Check';
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
-    $self->hint('package-contains-linda-override', $file->name)
-      if $file->name =~ m{^usr/share/linda/overrides/\S+};
+    $self->pointed_hint('package-contains-linda-override', $item->pointer)
+      if $item->name =~ m{^usr/share/linda/overrides/\S+};
 
     return;
 }

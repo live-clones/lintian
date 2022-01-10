@@ -30,18 +30,18 @@ use namespace::clean;
 with 'Lintian::Check';
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     return
-      unless $file->is_file;
+      unless $item->is_file;
 
-    $self->hint('backup-file-in-package', $file->name)
-      if $file->name =~ /~$/
-      || $file->name =~ m{\#[^/]+\#$}
-      || $file->name =~ m{/\.[^/]+\.swp$};
+    $self->pointed_hint('backup-file-in-package', $item->pointer)
+      if $item->name =~ /~$/
+      || $item->name =~ m{\#[^/]+\#$}
+      || $item->name =~ m{/\.[^/]+\.swp$};
 
-    $self->hint('nfs-temporary-file-in-package', $file->name)
-      if $file->name =~ m{/\.nfs[^/]+$};
+    $self->pointed_hint('nfs-temporary-file-in-package', $item->pointer)
+      if $item->name =~ m{/\.nfs[^/]+$};
 
     return;
 }

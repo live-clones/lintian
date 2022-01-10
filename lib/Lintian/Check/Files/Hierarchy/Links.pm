@@ -39,19 +39,19 @@ const my $SLASH => q{/};
 const my $ARROW => q{ -> };
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     # symbolic links only
     return
-      unless $file->is_symlink;
+      unless $item->is_symlink;
 
-    my $target = $file->link_normalized;
+    my $target = $item->link_normalized;
     return
       unless defined $target;
 
     my @ldconfig_folders = @{$self->data->architectures->ldconfig_folders};
 
-    my $origin_dirname= first_value { $file->dirname eq $_ } @ldconfig_folders;
+    my $origin_dirname= first_value { $item->dirname eq $_ } @ldconfig_folders;
 
     # look only at links originating in common ld.so load paths
     return
@@ -62,12 +62,12 @@ sub visit_installed_files {
     $target_dirname //= $EMPTY;
 
     # no subfolders
-    $self->hint('ldconfig-escape', $file->name . $ARROW .  $target)
+    $self->pointed_hint('ldconfig-escape', $item->pointer, $target)
       unless length $target_dirname;
 
     my @multiarch= values %{$self->data->architectures->deb_host_multiarch};
 
-    $self->hint('architecture-escape', $file->name . $ARROW .  $target)
+    $self->pointed_hint('architecture-escape', $item->pointer,  $target)
       if (any { basename($origin_dirname) eq $_ } @multiarch)
       && (any { $target_dirname eq "$_/" } qw{lib usr/lib usr/local/lib});
 

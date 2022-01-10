@@ -56,23 +56,23 @@ has changelog_timestamp => (
     });
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     return
-      unless $file->is_file;
+      unless $item->is_file;
 
-    if ($file->name =~ /\.gz$/si) {
+    if ($item->name =~ /\.gz$/si) {
 
-        safe_qx('gzip', '--test', $file->unpacked_path);
+        safe_qx('gzip', '--test', $item->unpacked_path);
 
-        $self->hint('broken-gz', $file->name)
+        $self->pointed_hint('broken-gz', $item->pointer)
           if $?;
     }
 
     # gzip files
-    if ($file->file_type =~ /gzip compressed/) {
+    if ($item->file_type =~ /gzip compressed/) {
 
-        my $bytes = $file->magic($GZIP_HEADER_SIZE);
+        my $bytes = $item->magic($GZIP_HEADER_SIZE);
         my (undef, $gziptime) = unpack('VV', $bytes);
 
         if (defined $gziptime && $gziptime != 0) {
@@ -86,14 +86,15 @@ sub visit_installed_files {
                 my $multiarch
                   = $self->processable->fields->value('Multi-Arch') || 'no';
 
-                if ($multiarch eq 'same' && $file->name !~ /\Q$architecture\E/)
+                if ($multiarch eq 'same' && $item->name !~ /\Q$architecture\E/)
                 {
-                    $self->hint('gzip-file-is-not-multi-arch-same-safe',
-                        $file->name);
+                    $self->pointed_hint(
+                        'gzip-file-is-not-multi-arch-same-safe',
+                        $item->pointer);
 
                 } else {
-                    $self->hint('package-contains-timestamped-gzip',
-                        $file->name,gmtime($gziptime)->datetime);
+                    $self->pointed_hint('package-contains-timestamped-gzip',
+                        $item->pointer,gmtime($gziptime)->datetime);
                 }
             }
         }

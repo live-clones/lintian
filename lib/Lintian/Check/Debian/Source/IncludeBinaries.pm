@@ -38,11 +38,11 @@ sub source {
     return
       unless $sourcedir;
 
-    my $file = $sourcedir->child('include-binaries');
+    my $item = $sourcedir->child('include-binaries');
     return
-      unless $file && $file->is_open_ok;
+      unless $item && $item->is_open_ok;
 
-    my @lines = path($file->unpacked_path)->lines({ chomp => 1 });
+    my @lines = path($item->unpacked_path)->lines({ chomp => 1 });
 
     # format described in dpkg-source (1)
     my $position = 1;
@@ -57,8 +57,8 @@ sub source {
         # trim both ends
         $line =~ s/^\s+|\s+$//g;
 
-        $self->hint('unused-entry-in-debian-source-include-binaries',
-            $line, "(line $position)")
+        $self->pointed_hint('unused-entry-in-debian-source-include-binaries',
+            $item->pointer($position), $line)
           unless $self->processable->patched->resolve_path($line);
 
     } continue {

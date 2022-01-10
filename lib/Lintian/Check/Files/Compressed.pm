@@ -50,10 +50,10 @@ has COMPRESS_FILE_EXTENSIONS_OR_ALL => (
     });
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     return
-      unless $file->is_file;
+      unless $item->is_file;
 
     my $regex = $self->COMPRESS_FILE_EXTENSIONS_OR_ALL;
 
@@ -61,8 +61,9 @@ sub visit_installed_files {
     my $DUPLICATED_COMPRESSED_FILE_REGEX= qr/^(.+)\.$regex$/;
 
     # both compressed and uncompressed present
-    if ($file->name =~ $DUPLICATED_COMPRESSED_FILE_REGEX) {
-        $self->hint('compressed-duplicate', $file->name)
+    if ($item->name =~ $DUPLICATED_COMPRESSED_FILE_REGEX) {
+
+        $self->pointed_hint('compressed-duplicate', $item->pointer)
           if $self->processable->installed->lookup($1);
     }
 

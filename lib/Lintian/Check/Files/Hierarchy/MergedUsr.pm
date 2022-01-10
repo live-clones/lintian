@@ -30,11 +30,11 @@ use namespace::clean;
 with 'Lintian::Check';
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
-    $self->hint('unmerged-usr', $file->name)
-      if $file->is_file
-      && $file->name =~ m{^(?:lib|bin|sbin)};
+    $self->pointed_hint('unmerged-usr', $item->pointer)
+      if $item->is_file
+      && $item->name =~ m{^(?:lib|bin|sbin)};
 
     return;
 }

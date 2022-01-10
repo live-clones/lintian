@@ -30,7 +30,7 @@ use namespace::clean;
 with 'Lintian::Check';
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     # .desktop files
     # People have placed them everywhere, but nowadays the
@@ -42,8 +42,8 @@ sub visit_installed_files {
     # basedir-spec on fd.org. As distributor, we should only
     # allow /usr/share.
 
-    $self->hint('desktop-file-in-wrong-dir', $file->name)
-      if $file->name =~ m{^usr/share/gnome/apps/.*\.desktop$};
+    $self->pointed_hint('desktop-file-in-wrong-dir', $item->pointer)
+      if $item->name =~ m{^usr/share/gnome/apps/.*\.desktop$};
 
     return;
 }

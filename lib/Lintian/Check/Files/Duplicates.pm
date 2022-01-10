@@ -34,27 +34,27 @@ with 'Lintian::Check';
 has md5map => (is => 'rw', default => sub{ {} });
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     return
-      unless $file->is_regular_file;
+      unless $item->is_regular_file;
 
     # Ignore empty files; in some cases (e.g. python) a file is
     # required even if it is empty and we are never looking at a
     # substantial gain in such a case.  Also see #632789
     return
-      unless $file->size;
+      unless $item->size;
 
-    my $calculated = $file->md5sum;
+    my $calculated = $item->md5sum;
     return
       unless defined $calculated;
 
     return
-      unless $file->name =~ m{\A usr/share/doc/}xsm;
+      unless $item->name =~ m{\A usr/share/doc/}xsm;
 
     $self->md5map->{$calculated} //= [];
 
-    push(@{$self->md5map->{$calculated}}, $file);
+    push(@{$self->md5map->{$calculated}}, $item);
 
     return;
 }
@@ -62,7 +62,7 @@ sub visit_installed_files {
 sub installable {
     my ($self) = @_;
 
-    foreach my $md5 (keys %{$self->md5map}){
+    for my $md5 (keys %{$self->md5map}){
         my @files = @{ $self->md5map->{$md5} };
 
         next

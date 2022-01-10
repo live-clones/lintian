@@ -40,8 +40,8 @@ sub visit_patched_files {
     return
       unless $item->is_file;
 
-    $self->hint('source-contains-prebuilt-doxygen-documentation',
-        $item->dirname)
+    $self->pointed_hint('source-contains-prebuilt-doxygen-documentation',
+        $item->parent_dir->pointer)
       if $item->basename =~ m{^doxygen.(?:png|sty)$}
       && $self->processable->source_name ne 'doxygen';
 
@@ -57,7 +57,8 @@ sub visit_patched_files {
     # Identify and ignore documentation templates by looking
     # for the use of various interpolated variables.
     # <http://www.doxygen.nl/manual/config.html#cfg_html_header>
-    $self->hint('source-contains-prebuilt-doxygen-documentation',$item)
+    $self->pointed_hint('source-contains-prebuilt-doxygen-documentation',
+        $item->pointer)
       if $lowercase =~ m{<meta \s+ name="generator" \s+ content="doxygen}smx
       && $lowercase
       !~ /\$(?:doxygenversion|projectname|projectnumber|projectlogo)\b/;

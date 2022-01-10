@@ -72,8 +72,9 @@ sub visit_installed_files {
                                    All\s*Rights\s*Reserved\.?\s*
                                        \Z}xsmi
             ) {
-                $self->hint('license-problem-font-adobe-copyrighted-fragment',
-                    $item);
+                $self->pointed_hint(
+                    'license-problem-font-adobe-copyrighted-fragment',
+                    $item->pointer);
 
                 last;
             }
@@ -91,9 +92,9 @@ sub visit_installed_files {
         # in the black book copyrighted fragment
         if ($line =~ m/startlock\s*get\s*exec/) {
 
-            $self->hint(
+            $self->pointed_hint(
                 'license-problem-font-adobe-copyrighted-fragment-no-credit',
-                $item->name);
+                $item->pointer);
 
             last;
         }

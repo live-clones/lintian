@@ -50,18 +50,18 @@ has COMPRESS_FILE_EXTENSIONS_OR_ALL => (
     });
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     my $regex = $self->COMPRESS_FILE_EXTENSIONS_OR_ALL;
 
-    if (   $file->is_regular_file
-        && $file->name
+    if (   $item->is_regular_file
+        && $item->name
         =~ m{/(?:[^/]-)?(?:oui|iab)(?:\.(txt|idx|db))?(?:\.$regex)?\Z}x) {
 
         # see #785662
-        if ($file->name =~ / oui /msx || $file->name =~ / iab /msx) {
+        if ($item->name =~ / oui /msx || $item->name =~ / iab /msx) {
 
-            $self->hint('package-installs-ieee-data', $file->name)
+            $self->pointed_hint('package-installs-ieee-data', $item->pointer)
               unless $self->processable->source_name eq 'ieee-data';
         }
     }

@@ -44,13 +44,14 @@ has ALLOWED_ANCIENT_FILES => (
     });
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
-    my ($year) = ($file->date =~ /^(\d{4})/);
+    my ($year) = ($item->date =~ /^(\d{4})/);
 
-    $self->hint('package-contains-ancient-file', $file->name, $file->date)
+    $self->pointed_hint('package-contains-ancient-file',
+        $item->pointer, $item->date)
       if $year <= $DINSTALL_CUTOFF_YEAR
-      && !$self->ALLOWED_ANCIENT_FILES->matches_any($file->name);
+      && !$self->ALLOWED_ANCIENT_FILES->matches_any($item->name);
 
     return;
 }

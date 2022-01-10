@@ -30,11 +30,11 @@ use namespace::clean;
 with 'Lintian::Check';
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
-    $self->hint('nested-examples-directory', $file->name)
-      if $file->is_dir
-      && $file->name =~ m{^usr/share/doc/[^/]+/examples/examples/?$};
+    $self->pointed_hint('nested-examples-directory', $item->pointer)
+      if $item->is_dir
+      && $item->name =~ m{^usr/share/doc/[^/]+/examples/examples/?$};
 
     return;
 }

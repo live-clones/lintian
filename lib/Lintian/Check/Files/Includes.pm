@@ -54,7 +54,7 @@ sub visit_installed_files {
           if $consumed =~ s{^$tuple/}{};
     }
 
-    $self->hint('header-has-overly-generic-name', $item->name)
+    $self->pointed_hint('header-has-overly-generic-name', $item->pointer)
       if any { $consumed =~ m{ $_ }isx } @GENERIC_PATHS;
 
     return;

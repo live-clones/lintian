@@ -610,16 +610,6 @@ div.clear {
       </ul>
 
       <a class="visibility-symbol" href="https://lintian.debian.org/levels#P"><span class="visibility-symbol tiny P">P</span></a>
-      <span class="hint tiny"><a href="https://lintian.debian.org/tags/old-source-override-location">old-source-override-location</a></span>
-      <span class="context tiny"></span>
-
-    </li>
-    <li class="hintitem">
-
-      <ul class="commentlist">
-      </ul>
-
-      <a class="visibility-symbol" href="https://lintian.debian.org/levels#P"><span class="visibility-symbol tiny P">P</span></a>
       <span class="hint tiny"><a href="https://lintian.debian.org/tags/debian-watch-does-not-check-gpg-signature">debian-watch-does-not-check-gpg-signature</a></span>
       <span class="context tiny">[debian/watch]</span>
 
@@ -648,7 +638,7 @@ div.clear {
 
       <a class="visibility-symbol" href="https://lintian.debian.org/levels#E"><span class="visibility-symbol tiny E">E</span></a>
       <span class="hint tiny"><a href="https://lintian.debian.org/tags/dir-in-usr-local">dir-in-usr-local</a></span>
-      <span class="context tiny">usr/local/share/</span>
+      <span class="context tiny">[usr/local/share/]</span>
 
     </li>
     <li class="hintitem">
@@ -658,7 +648,7 @@ div.clear {
 
       <a class="visibility-symbol" href="https://lintian.debian.org/levels#E"><span class="visibility-symbol tiny E">E</span></a>
       <span class="hint tiny"><a href="https://lintian.debian.org/tags/dir-in-usr-local">dir-in-usr-local</a></span>
-      <span class="context tiny">usr/local/share/lintian/</span>
+      <span class="context tiny">[usr/local/share/lintian/]</span>
 
     </li>
     <li class="hintitem">
@@ -668,7 +658,7 @@ div.clear {
 
       <a class="visibility-symbol" href="https://lintian.debian.org/levels#E"><span class="visibility-symbol tiny E">E</span></a>
       <span class="hint tiny"><a href="https://lintian.debian.org/tags/dir-or-file-in-var-lock">dir-or-file-in-var-lock</a></span>
-      <span class="context tiny">var/lock/lintian/</span>
+      <span class="context tiny">[var/lock/lintian/]</span>
 
     </li>
     <li class="hintitem">
@@ -718,7 +708,7 @@ div.clear {
 
       <a class="visibility-symbol" href="https://lintian.debian.org/levels#I"><span class="visibility-symbol tiny I">I</span></a>
       <span class="hint tiny"><a href="https://lintian.debian.org/tags/package-contains-empty-directory">package-contains-empty-directory</a></span>
-      <span class="context tiny">usr/local/share/lintian/</span>
+      <span class="context tiny">[usr/local/share/lintian/]</span>
 
     </li>
     <li class="hintitem">

@@ -90,10 +90,10 @@ sub visit_installed_files {
       unless $item->file_type =~ /^ [^,]* \b ELF \b /x
       || $item->file_type =~ / \b current [ ] ar [ ] archive \b /x;
 
-    $self->hint('binary-in-etc', $item)
+    $self->pointed_hint('binary-in-etc', $item->pointer)
       if $item->name =~ m{^etc/};
 
-    $self->hint('arch-dependent-file-in-usr-share', $item)
+    $self->pointed_hint('arch-dependent-file-in-usr-share', $item->pointer)
       if $item->name =~ m{^usr/share/};
 
     my $fields = $self->processable->fields;
@@ -104,7 +104,8 @@ sub visit_installed_files {
     my $gnu_triplet_pattern = $self->gnu_triplet_pattern;
     my $ruby_triplet_pattern = $self->ruby_triplet_pattern;
 
-    $self->hint('arch-dependent-file-not-in-arch-specific-directory',$item)
+    $self->pointed_hint('arch-dependent-file-not-in-arch-specific-directory',
+        $item->pointer)
       if $multiarch eq 'same'
       && length $gnu_triplet_pattern
       && $item->name !~ m{\b$gnu_triplet_pattern(?:\b|_)}
@@ -116,7 +117,8 @@ sub visit_installed_files {
     return
       unless $item->file_type =~ /^ [^,]* \b ELF \b /x;
 
-    $self->hint('development-package-ships-elf-binary-in-path', $item)
+    $self->pointed_hint('development-package-ships-elf-binary-in-path',
+        $item->pointer)
       if exists $PATH_DIRECTORIES{$item->dirname}
       && $fields->value('Section') =~ m{ (?:^|/) libdevel $}x
       && $fields->value('Multi-Arch') ne 'foreign';
