@@ -31,18 +31,16 @@ use namespace::clean;
 with 'Lintian::Check';
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     return
-      unless $file->is_file;
+      unless $item->is_file;
 
     # embedded Feedparser library
-    if (    $file->name =~ m{/feedparser\.py$}
-        and $self->processable->source_name ne 'feedparser'){
-
-        $self->hint('embedded-feedparser-library', $file->name)
-          if $file->bytes =~ /Universal feed parser/;
-    }
+    $self->pointed_hint('embedded-feedparser-library', $item->pointer)
+      if $item->name =~ m{ / feedparser[.]py $}x
+      && $item->bytes =~ /Universal feed parser/
+      && $self->processable->source_name ne 'feedparser';
 
     return;
 }

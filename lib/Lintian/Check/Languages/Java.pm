@@ -1,6 +1,7 @@
 # languages/java -- lintian check script -*- perl -*-
 
 # Copyright © 2011 Vincent Fourmond
+# Copyright © 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -30,15 +31,17 @@ use List::SomeUtils qw(any none);
 
 use Lintian::Util qw(normalize_link_target $PKGNAME_REGEX $PKGVERSION_REGEX);
 
+const my $EMPTY => q{};
+const my $HYPHEN => q{-};
+
+const my $ARROW => q{->};
+
+const my $BYTE_CODE_VERSION_OFFSET => 44;
+
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-const my $EMPTY => q{};
-const my $HYPHEN => q{-};
-
-const my $BYTE_CODE_VERSION_OFFSET => 44;
 
 our $CLASS_REGEX = qr/\.(?:class|cljc?)/;
 
@@ -50,7 +53,8 @@ sub visit_patched_files {
       unless scalar keys %{$java_info};
 
     my $files = $java_info->{files};
-    $self->hint('source-contains-prebuilt-java-object', $item)
+
+    $self->pointed_hint('source-contains-prebuilt-java-object', $item->pointer)
       if any { m/$CLASS_REGEX$/i } keys %{$files};
 
     return;
@@ -59,15 +63,12 @@ sub visit_patched_files {
 sub installable {
     my ($self) = @_;
 
-    my $pkg = $self->processable->name;
-    my $type = $self->processable->type;
-    my $processable = $self->processable;
-
     my $missing_jarwrapper = 0;
     my $has_public_jars = 0;
     my $jmajlow = $HYPHEN;
 
-    my $depends = $processable->relation('strong')->to_string;
+    my $depends = $self->processable->relation('strong')->to_string;
+
     # Remove all libX-java-doc packages to avoid thinking they are java libs
     #  - note the result may not be a valid dependency listing
     $depends =~ s/lib[^\s,]+-java-doc//g;
@@ -78,47 +79,52 @@ sub installable {
 
     # We first loop over jar files to find problems
 
-    for my $file (@{$processable->installed->sorted_list}) {
+    for my $item (@{$self->processable->installed->sorted_list}) {
 
-        my $java_info = $file->java_info;
+        my $java_info = $item->java_info;
         next
           unless scalar keys %{$java_info};
 
         my $files = $java_info->{files};
         my $manifest = $java_info->{manifest};
-        my $jar_dir = dirname($file);
+        my $jar_dir = dirname($item->name);
         my $classes = 0;
         my $datafiles = 1;
-        my $cp = $EMPTY;
+        my $class_path = $EMPTY;
         my $bsname = $EMPTY;
 
         if (exists $java_info->{error}) {
-            $self->hint('zip-parse-error', "$file:",$java_info->{error});
+            $self->pointed_hint('zip-parse-error', $item->pointer,
+                $java_info->{error});
             next;
         }
 
         # The Java Policy says very little about requires for (jars in) JVMs
         next
-          if $file->name =~ m{^usr/lib/jvm(?:-exports)?/[^/]+/};
+          if $item->name =~ m{^usr/lib/jvm(?:-exports)?/[^/]+/};
 
         # Ignore Mozilla's jar files, see #635495
         next
-          if $file->name =~ m{^usr/lib/xul(?:-ext|runner[^/]*+)/};
+          if $item->name =~ m{^usr/lib/xul(?:-ext|runner[^/]*+)/};
 
-        if ($file->name =~ m{^usr/share/java/[^/]+\.jar$}) {
+        if ($item->name =~ m{^usr/share/java/[^/]+\.jar$}) {
             $has_public_jars = 1;
 
             # java policy requires package version too; see Bug#976681
-            $self->hint('bad-jar-name', $file)
-              unless basename($file->name)
+            $self->pointed_hint('bad-jar-name', $item->pointer)
+              unless basename($item->name)
               =~ /^$PKGNAME_REGEX-$PKGVERSION_REGEX\.jar$/;
         }
+
         # check for common code files like .class or .clj (Clojure files)
-        foreach my $class (grep { m/$CLASS_REGEX$/i } sort keys %{$files}){
-            my $mver = $files->{$class};
+        for my $class (grep { m/$CLASS_REGEX$/i } sort keys %{$files}){
+
+            my $module_version = $files->{$class};
             (my $src = $class) =~ s/\.[^.]+$/\.java/;
-            $self->hint('jar-contains-source', $file, $src)
+
+            $self->pointed_hint('jar-contains-source', $item->pointer, $src)
               if %{$files}{$src};
+
             $classes = 1;
 
             next
@@ -126,14 +132,18 @@ sub installable {
 
             # .class but no major version?
             next
-              if $mver eq $HYPHEN;
-            if (   $mver <= $MAX_BYTECODE->value('min-bytecode-version') - 1
-                or $mver
+              if $module_version eq $HYPHEN;
+
+            if ($module_version
+                <= $MAX_BYTECODE->value('min-bytecode-version') - 1
+                || $module_version
                 > $MAX_BYTECODE->value('max-bytecode-existing-version')) {
+
                 # First public major version was 45 (Java1), latest
                 # version is 55 (Java11).
-                $self->hint('unknown-java-class-version', $file,
-                    "($class -> $mver)");
+                $self->pointed_hint('unknown-java-class-version',
+                    $item->pointer,$class, $ARROW, $module_version);
+
                 # Skip the rest of this Jar.
                 last;
             }
@@ -143,29 +153,35 @@ sub installable {
             # JVM cases.
             if ($jmajlow eq $HYPHEN) {
                 # first;
-                $jmajlow = $mver;
+                $jmajlow = $module_version;
+
             } else {
-                $jmajlow = $mver if $mver < $jmajlow;
+                $jmajlow = $module_version
+                  if $module_version < $jmajlow;
             }
         }
 
         $datafiles = 0
           if none { /\.(?:xml|properties|x?html|xhp)$/i } keys %{$files};
 
-        if ($file->is_executable) {
+        if ($item->is_executable) {
 
-            $self->hint('executable-jar-without-main-class', $file->name)
+            $self->pointed_hint('executable-jar-without-main-class',
+                $item->pointer)
               unless $manifest && $manifest->{'Main-Class'};
 
             # Here, we need to check that the package depends on
             # jarwrapper.
             $missing_jarwrapper = 1
-              unless $processable->relation('strong')->satisfies('jarwrapper');
-        } elsif ($file->name !~ m{^usr/share/}) {
-            $self->hint('jar-not-in-usr-share', $file->name);
+              unless $self->processable->relation('strong')
+              ->satisfies('jarwrapper');
+
+        } elsif ($item->name !~ m{^usr/share/}) {
+
+            $self->pointed_hint('jar-not-in-usr-share', $item->pointer);
         }
 
-        $cp = $manifest->{'Class-Path'}//$EMPTY if $manifest;
+        $class_path = $manifest->{'Class-Path'}//$EMPTY if $manifest;
         $bsname = $manifest->{'Bundle-SymbolicName'}//$EMPTY if $manifest;
 
         if ($manifest) {
@@ -177,24 +193,25 @@ sub installable {
                #   classes but HTML files, images and CSS files
                 if ((
                            $bsname !~ m/\.source$/
-                        && $file->name
+                        && $item->name
                         !~ m{^usr/share/maven-repo/.*-javadoc\.jar}
-                        && $file->name !~ m{\.doc(?:\.(?:user|isv))?_[^/]+.jar}
-                        && $file->name !~ m{\.source_[^/]+.jar}
+                        && $item->name !~ m{\.doc(?:\.(?:user|isv))?_[^/]+.jar}
+                        && $item->name !~ m{\.source_[^/]+.jar}
                     )
-                    || $cp
+                    || $class_path
                 ) {
-                    $self->hint('codeless-jar', $file->name);
+                    $self->pointed_hint('codeless-jar', $item->pointer);
                 }
             }
+
         } elsif ($classes) {
-            $self->hint('missing-manifest', $file->name);
+            $self->pointed_hint('missing-manifest', $item->pointer);
         }
 
-        if ($cp) {
+        if ($class_path) {
             # Only run the tests when a classpath is present
             my @relative;
-            my @paths = split(m/\s++/, $cp);
+            my @paths = split(m/\s++/, $class_path);
             for my $p (@paths) {
                 if ($p) {
                     # Strip leading ./
@@ -209,7 +226,7 @@ sub installable {
                         next
                           if $target =~ m{^usr/share/java/[^/]+.jar$}
                           && @java_lib_depends;
-                        $tinfo = $processable->installed->lookup($target);
+                        $tinfo= $self->processable->installed->lookup($target);
                         # Points to file or link in this package,
                         #  which is sometimes easier than
                         #  re-writing the classpath.
@@ -224,19 +241,17 @@ sub installable {
                 }
             }
 
-            $self->hint(
-                'classpath-contains-relative-path',
-                $file->name . ': ' . join(', ', @relative))if @relative;
+            $self->pointed_hint('classpath-contains-relative-path',
+                $item->pointer, join(', ', @relative))
+              if @relative;
         }
 
-        if (   $has_public_jars
-            && $pkg =~ /^lib.*maven.*plugin.*/
-            && $file->name !~ m{^usr/share/maven-repo/.*\.jar}) {
-            # Trigger a warning when a maven plugin lib is installed in
-            # /usr/share/java/
-            $self->hint('maven-plugin-in-usr-share-java', $file->name);
-        }
-
+        # Trigger a warning when a maven plugin lib is installed in
+        # /usr/share/java/
+        $self->pointed_hint('maven-plugin-in-usr-share-java', $item->pointer)
+          if    $has_public_jars
+          && $self->processable->name =~ /^lib.*maven.*plugin.*/
+          && $item->name !~ m{^usr/share/maven-repo/.*\.jar};
     }
 
     $self->hint('missing-dep-on-jarwrapper') if $missing_jarwrapper;
@@ -264,6 +279,7 @@ sub installable {
         if ($bad) {
             # Map the Class version to a Java version.
             my $java_version = $jmajlow - $BYTE_CODE_VERSION_OFFSET;
+
             $self->hint('incompatible-java-bytecode-format',
                 "Java$java_version version (Class format: $jmajlow)");
         }
@@ -271,10 +287,12 @@ sub installable {
 
     if (   !$has_public_jars
         && !$self->processable->is_transitional
-        && $pkg =~ /^lib[^\s,]+-java$/){
+        && $self->processable->name =~ /^lib[^\s,]+-java$/){
 
         # Skip this if it installs a symlink in usr/share/java
-        my $java_dir= $processable->installed->resolve_path('usr/share/java/');
+        my $java_dir
+          = $self->processable->installed->resolve_path('usr/share/java/');
+
         my $has_jars = 0;
         $has_jars = 1
           if $java_dir

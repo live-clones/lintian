@@ -100,16 +100,16 @@ qr{(?i)/mootools(?:(?:\.v|-)[\d\.]+)?(?:-(?:(?:core(?:-server)?)|more)(?:-(?:yc|
 );
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     return
-      unless $file->is_file;
+      unless $item->is_file;
 
     # ignore embedded jQuery libraries for Doxygen (#736360)
     my $doxygen = $self->processable->installed->resolve_path(
-        $file->dirname . 'doxygen.css');
+        $item->dirname . 'doxygen.css');
     return
-      if $file->basename eq 'jquery.js'
+      if $item->basename eq 'jquery.js'
       && defined $doxygen;
 
     # embedded javascript
@@ -119,13 +119,13 @@ sub visit_installed_files {
           if $self->processable->name =~ /^$provider$/;
 
         next
-          unless $file->name =~ /$JS_FILES{$provider}/;
+          unless $item->name =~ /$JS_FILES{$provider}/;
 
         next
           if length $JS_MAGIC{$provider}
-          && !length $file->bytes_match($JS_MAGIC{$provider});
+          && !length $item->bytes_match($JS_MAGIC{$provider});
 
-        $self->hint('embedded-javascript-library', $file->name,
+        $self->pointed_hint('embedded-javascript-library', $item->pointer,
             'please use', $provider);
     }
 

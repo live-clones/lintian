@@ -1,2 +1,2 @@
-files-embedded (binary): embedded-php-library usr/share/php/streams.php please use php-php-gettext
-files-embedded (binary): embedded-php-library usr/share/php/rss_parse.php please use libphp-magpierss
+files-embedded (binary): embedded-php-library please use php-php-gettext [usr/share/php/streams.php]
+files-embedded (binary): embedded-php-library please use libphp-magpierss [usr/share/php/rss_parse.php]

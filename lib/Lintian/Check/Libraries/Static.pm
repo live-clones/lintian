@@ -88,7 +88,7 @@ sub visit_installed_files {
         );
     }
 
-    $self->hint('unstripped-static-library', $item->name,
+    $self->pointed_hint('unstripped-static-library', $item->pointer,
             $LEFT_PARENTHESIS
           . join($SPACE, sort +uniq @unstripped_members)
           . $RIGHT_PARENTHESIS)
@@ -99,9 +99,9 @@ sub visit_installed_files {
     # unneeded sections in those.
     for my $member (keys %stripped_sections_by_member) {
 
-        $self->hint(
+        $self->pointed_hint(
             'static-library-has-unneeded-sections',
-            $item->name,
+            $item->pointer,
             "($member)",
             join($SPACE, sort +uniq @{$stripped_sections_by_member{$member}}))
           if @{$stripped_sections_by_member{$member}}

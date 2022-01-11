@@ -55,7 +55,8 @@ sub visit_installed_files {
       if none { $item->dirname eq $_ } @ldconfig_folders;
 
     # disregard executables
-    $self->hint('sharedobject-in-library-directory-missing-soname',$item->name)
+    $self->pointed_hint('sharedobject-in-library-directory-missing-soname',
+        $item->pointer)
       if !$item->is_executable
       || !defined $item->elf->{DEBUG}
       || $item->name =~ / [.]so (?: [.] | $ ) /msx;

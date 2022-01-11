@@ -57,7 +57,8 @@ sub visit_installed_files {
           && $architecture ne 'hppa';
     }
 
-    $self->hint('binary-compiled-with-profiling-enabled', $item->name)
+    $self->pointed_hint('binary-compiled-with-profiling-enabled',
+        $item->pointer)
       if $is_profiled;
 
     return;

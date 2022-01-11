@@ -34,10 +34,10 @@ with 'Lintian::Check';
 has r_site_libraries => (is => 'rw', default => sub { [] });
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     # R site libraries
-    if ($file->name =~ m{^usr/lib/R/site-library/(.*)/DESCRIPTION$}) {
+    if ($item->name =~ m{^usr/lib/R/site-library/(.*)/DESCRIPTION$}) {
         push(@{$self->r_site_libraries}, $1);
     }
 

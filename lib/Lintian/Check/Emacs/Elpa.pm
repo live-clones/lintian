@@ -32,15 +32,12 @@ with 'Lintian::Check';
 sub installable {
     my ($self) = @_;
 
-    my $processable = $self->processable;
-
     $self->hint('emacsen-common-without-dh-elpa')
-      if (
-        $processable->installed->lookup(
-            'usr/lib/emacsen-common/packages/install/')
-        && (
-            not $processable->installed->lookup(
-                'usr/share/emacs/site-lisp/elpa-src/')));
+      if defined $self->processable->installed->lookup(
+        'usr/lib/emacsen-common/packages/install/')
+      && !
+      defined $self->processable->installed->lookup(
+        'usr/share/emacs/site-lisp/elpa-src/');
 
     return;
 }

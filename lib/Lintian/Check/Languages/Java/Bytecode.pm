@@ -34,15 +34,15 @@ with 'Lintian::Check';
 const my $MAGIC_BYTE_SIZE => 4;
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     # .class (compiled Java files)
-    if (   $file->name =~ /\.class$/
-        && $file->name !~ /(?:WEB-INF|demo|doc|example|sample|test)/) {
+    if (   $item->name =~ /\.class$/
+        && $item->name !~ /(?:WEB-INF|demo|doc|example|sample|test)/) {
 
-        my $magic = $file->magic($MAGIC_BYTE_SIZE);
+        my $magic = $item->magic($MAGIC_BYTE_SIZE);
 
-        $self->hint('package-installs-java-bytecode', $file->name)
+        $self->pointed_hint('package-installs-java-bytecode', $item->pointer)
           if $magic eq "\xCA\xFE\xBA\xBE";
     }
 

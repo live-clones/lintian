@@ -1,1 +1,1 @@
-binaries-general (binary): binary-compiled-with-profiling-enabled usr/share/foo/basic
+binaries-general (binary): binary-compiled-with-profiling-enabled [usr/share/foo/basic]

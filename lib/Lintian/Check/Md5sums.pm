@@ -88,7 +88,8 @@ sub binary {
 
     my ($md5sums, $errors) = read_md5sums($text);
 
-    $self->hint('malformed-md5sums-control-file', $_)for @{$errors};
+    $self->pointed_hint('malformed-md5sums-control-file',$control->pointer, $_)
+      for @{$errors};
 
     my %noprefix
       = map { drop_relative_prefix($_) => $md5sums->{$_} } keys %{$md5sums};
@@ -100,12 +101,13 @@ sub binary {
     my $lc = List::Compare->new(\@listed, \@found);
 
     # find files that should exist but do not
-    $self->hint('md5sums-lists-nonexistent-file', $_)for $lc->get_Lonly;
+    $self->pointed_hint('md5sums-lists-nonexistent-file',$control->pointer, $_)
+      for $lc->get_Lonly;
 
     # find files that should be listed but are not
     for my $name ($lc->get_Ronly) {
 
-        $self->hint('file-missing-in-md5sums', $name)
+        $self->pointed_hint('file-missing-in-md5sums', $control->pointer,$name)
           unless $self->processable->declared_conffiles->is_known($name)
           || $name =~ m{^var/lib/[ai]spell/.};
     }
@@ -115,7 +117,7 @@ sub binary {
 
         my $item = $self->processable->installed->lookup($name);
 
-        $self->hint('md5sum-mismatch', $name)
+        $self->pointed_hint('md5sum-mismatch', $control->pointer, $name)
           unless $item->md5sum eq $noprefix{$name};
     }
 

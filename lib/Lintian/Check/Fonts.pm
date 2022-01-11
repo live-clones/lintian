@@ -64,17 +64,18 @@ sub visit_installed_files {
           . join($SPACE, (sort @renamed))
           . $RIGHT_PARENTHESIS;
 
-        $self->hint('duplicate-font-file', $item->name, 'also in', $list)
+        $self->pointed_hint('duplicate-font-file', $item->pointer, 'also in',
+            $list)
           unless (any { $_ eq $self->processable->name } @renamed)
           || $self->processable->type eq 'udeb';
 
     } else {
         unless ($item->name =~ m{^usr/lib/R/site-library/}) {
 
-            $self->hint('font-in-non-font-package', $item->name)
+            $self->pointed_hint('font-in-non-font-package', $item->pointer)
               unless $self->processable->name =~ m/^(?:[ot]tf|t1|x?fonts)-/;
 
-            $self->hint('font-outside-font-dir', $item->name)
+            $self->pointed_hint('font-outside-font-dir', $item->pointer)
               unless $item->name =~ m{^usr/share/fonts/};
         }
     }

@@ -37,12 +37,12 @@ sub visit_installed_files {
     $no_extension =~ s{ [.] [^.]+ $}{}x;
 
     # For each .cmxa file, there must be a matching .a file (#528367)
-    $self->hint('ocaml-dangling-cmxa', $item->name)
+    $self->pointed_hint('ocaml-dangling-cmxa', $item->pointer)
       if $item->name =~ m{ [.]cmxa $}x
       && !$item->parent_dir->child($no_extension . '.a');
 
     # $somename.cmo should usually not be shipped with $somename.cma
-    $self->hint('ocaml-stray-cmo', $item->name)
+    $self->pointed_hint('ocaml-stray-cmo', $item->pointer)
       if $item->name =~ m{ [.]cma $}x
       && $item->parent_dir->child($no_extension . '.cmo');
 

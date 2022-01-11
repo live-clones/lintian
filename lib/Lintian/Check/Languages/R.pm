@@ -31,12 +31,12 @@ use utf8;
 
 use Const::Fast;
 
+const my $RDATA_MAGIC_LENGTH => 4;
+
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-const my $RDATA_MAGIC_LENGTH => 4;
 
 sub visit_patched_files {
     my ($self, $item) = @_;
@@ -58,7 +58,7 @@ sub visit_patched_files {
 
         close($fd);
 
-        $self->hint('r-data-without-readme-source', $item->name)
+        $self->pointed_hint('r-data-without-readme-source', $item->pointer)
           if $magic eq 'RDX2';
     }
 

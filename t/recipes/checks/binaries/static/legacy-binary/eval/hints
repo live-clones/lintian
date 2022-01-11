@@ -1,1 +1,1 @@
-binary (binary): statically-linked-binary usr/bin/static-hello
+binary (binary): statically-linked-binary [usr/bin/static-hello]

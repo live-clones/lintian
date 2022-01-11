@@ -38,18 +38,18 @@ with 'Lintian::Check';
 sub source {
     my ($self) = @_;
 
-    my $control = $self->processable->debian_control;
+    my $debian_control = $self->processable->debian_control;
 
-    for my $installable ($control->installables) {
+    for my $installable ($debian_control->installables) {
 
         next
           unless $installable =~ m{ gir [\d.]+ - .* - [\d.]+ $}x;
 
         my $relation= $self->processable->binary_relation($installable, 'all');
 
-        $self->hint(
+        $self->pointed_hint(
             'gobject-introspection-package-missing-depends-on-gir-depends',
-            $installable)
+            $debian_control->item->pointer,$installable)
           unless $relation->satisfies($DOLLAR . '{gir:Depends}');
     }
 

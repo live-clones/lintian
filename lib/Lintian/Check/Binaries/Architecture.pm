@@ -44,7 +44,8 @@ sub visit_installed_files {
 
     my $architecture = $self->processable->fields->value('Architecture');
 
-    $self->hint('arch-independent-package-contains-binary-or-object',$item)
+    $self->pointed_hint('arch-independent-package-contains-binary-or-object',
+        $item->pointer)
       if $architecture eq 'all';
 
     return;

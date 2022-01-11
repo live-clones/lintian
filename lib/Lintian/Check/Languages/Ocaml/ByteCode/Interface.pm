@@ -44,7 +44,7 @@ sub visit_installed_files {
     my $interface_name = (split(/__/, $no_extension))[$LAST_ITEM];
 
     # $somename.cmi should be shipped with $somename.mli or $somename.ml
-    $self->hint('ocaml-dangling-cmi', $item->name)
+    $self->pointed_hint('ocaml-dangling-cmi', $item->pointer)
       if $item->name =~ m{ [.]cmi $}x
       && !$item->parent_dir->child($interface_name . '.mli')
       && !$item->parent_dir->child(lc($interface_name) . '.mli')

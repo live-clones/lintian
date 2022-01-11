@@ -30,11 +30,12 @@ use namespace::clean;
 with 'Lintian::Check';
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     # /etc/gconf/schemas
-    $self->hint('package-installs-into-etc-gconf-schemas', $file->name)
-      if $file->name =~ m{^etc/gconf/schemas/\S};
+    $self->pointed_hint('package-installs-into-etc-gconf-schemas',
+        $item->pointer)
+      if $item->name =~ m{^etc/gconf/schemas/\S};
 
     return;
 }

@@ -30,19 +30,22 @@ use namespace::clean;
 with 'Lintian::Check';
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
-    if ($file->name =~ m{^usr/share/applications/mimeinfo.cache(?:\.gz)?$}){
-        $self->hint('package-contains-mimeinfo.cache-file', $file->name);
+    if ($item->name =~ m{^usr/share/applications/mimeinfo.cache(?:\.gz)?$}){
+        $self->pointed_hint('package-contains-mimeinfo.cache-file',
+            $item->pointer);
 
-    }elsif ($file->name =~ m{^usr/share/mime/.+}) {
+    }elsif ($item->name =~ m{^usr/share/mime/.+}) {
 
-        if ($file->name =~ m{^usr/share/mime/[^/]+$}) {
-            $self->hint('package-contains-mime-cache-file', $file->name);
+        if ($item->name =~ m{^usr/share/mime/[^/]+$}) {
+            $self->pointed_hint('package-contains-mime-cache-file',
+                $item->pointer);
 
-        } elsif ($file->name !~ m{^usr/share/mime/packages/}) {
-            $self->hint('package-contains-mime-file-outside-package-dir',
-                $file->name);
+        } elsif ($item->name !~ m{^usr/share/mime/packages/}) {
+            $self->pointed_hint(
+                'package-contains-mime-file-outside-package-dir',
+                $item->pointer);
         }
     }
 

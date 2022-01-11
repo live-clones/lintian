@@ -30,6 +30,8 @@ use Const::Fast;
 
 const my $DOLLAR => q{$};
 
+const my $NONE => q{NONE};
+
 use Moo;
 use namespace::clean;
 
@@ -38,16 +40,15 @@ with 'Lintian::Check';
 sub source {
     my ($self) = @_;
 
-    my $processable = $self->processable;
+    my $debian_control = $self->processable->debian_control;
 
-    foreach my $bin ($processable->debian_control->installables) {
-        if ($bin =~ m/^gir1\.2-/) {
-            if (
-                not $processable->binary_relation($bin, 'strong')
-                ->satisfies($DOLLAR . '{gir:Depends}')) {
-                $self->hint(('typelib-missing-gir-depends', $bin));
-            }
-        }
+    for my $installable ($debian_control->installables) {
+
+        $self->pointed_hint('typelib-missing-gir-depends',
+            $debian_control->item->pointer, $installable)
+          if $installable =~ m/^gir1\.2-/
+          && !$self->processable->binary_relation($installable, 'strong')
+          ->satisfies($DOLLAR . '{gir:Depends}');
     }
 
     return;
@@ -56,103 +57,101 @@ sub source {
 sub installable {
     my ($self) = @_;
 
-    my $pkg = $self->processable->name;
-    my $processable = $self->processable;
-    my $group = $self->group;
-
-    my @girs;
-    my @typelibs;
-
-    my $section = $processable->fields->value('Section') || 'NONE';
     my $DEB_HOST_MULTIARCH= $self->data->architectures->deb_host_multiarch;
-    my $madir = $DEB_HOST_MULTIARCH->{$processable->architecture};
+    my $triplet = $DEB_HOST_MULTIARCH->{$self->processable->architecture};
+
     # Slightly contrived, but it might be Architecture: all, in which
     # case this is the best we can do
-    $madir = $DOLLAR . '{DEB_HOST_MULTIARCH}'
-      unless defined $madir;
+    $triplet = $DOLLAR . '{DEB_HOST_MULTIARCH}'
+      unless defined $triplet;
 
-    if (my $xmldir
-        = $processable->installed->resolve_path('usr/share/gir-1.0/')) {
-        foreach my $child ($xmldir->children) {
-            next unless $child =~ m/\.gir$/;
-            push @girs, $child;
-        }
+    my $xml_dir
+      = $self->processable->installed->resolve_path('usr/share/gir-1.0/');
+
+    my @girs;
+    @girs = grep { $_->name =~ m{ [.]gir $}x } $xml_dir->children
+      if defined $xml_dir;
+
+    my @type_libs;
+
+    my $old_dir
+      = $self->processable->installed->resolve_path(
+        'usr/lib/girepository-1.0/');
+
+    if (defined $old_dir) {
+
+        $self->pointed_hint('typelib-not-in-multiarch-directory',
+            $_->pointer,"usr/lib/$triplet/girepository-1.0")
+          for $old_dir->children;
+
+        push(@type_libs, $old_dir->children);
     }
 
-    if (my $dir
-        = $processable->installed->resolve_path('usr/lib/girepository-1.0/')) {
-        push @typelibs, $dir->children;
-        foreach my $typelib ($dir->children) {
-            $self->hint((
-                'typelib-not-in-multiarch-directory',$typelib,
-                "usr/lib/$madir/girepository-1.0"
-            ));
-        }
-    }
+    my $multiarch_dir= $self->processable->installed->resolve_path(
+        "usr/lib/$triplet/girepository-1.0");
+    push(@type_libs, $multiarch_dir->children)
+      if defined $multiarch_dir;
 
-    if (
-        my $dir= $processable->installed->resolve_path(
-            "usr/lib/$madir/girepository-1.0")
-    ){
-        push @typelibs, $dir->children;
-    }
-
+    my $section = $self->processable->fields->value('Section');
     if ($section ne 'libdevel' && $section ne 'oldlibs') {
-        foreach my $gir (@girs) {
-            $self->hint(('gir-section-not-libdevel', $gir, $section));
-        }
+
+        $self->pointed_hint('gir-section-not-libdevel', $_->pointer,
+            $section || $NONE)
+          for @girs;
     }
 
     if ($section ne 'introspection' && $section ne 'oldlibs') {
-        foreach my $typelib (@typelibs) {
-            $self->hint(
-                ('typelib-section-not-introspection', $typelib, $section));
-        }
+
+        $self->pointed_hint('typelib-section-not-introspection',
+            $_->pointer, $section || $NONE)
+          for @type_libs;
     }
 
-    if ($processable->architecture eq 'all') {
-        foreach my $gir (@girs) {
-            $self->hint(('gir-in-arch-all-package', $gir));
-        }
-        foreach my $typelib (@typelibs) {
-            $self->hint(('typelib-in-arch-all-package', $typelib));
-        }
+    if ($self->processable->architecture eq 'all') {
+
+        $self->pointed_hint('gir-in-arch-all-package', $_->pointer)for @girs;
+
+        $self->pointed_hint('typelib-in-arch-all-package', $_->pointer)
+          for @type_libs;
     }
 
-  GIR: foreach my $gir (@girs) {
+  GIR: for my $gir (@girs) {
+
         my $expected = 'gir1.2-' . lc($gir->basename);
         $expected =~ s/\.gir$//;
         $expected =~ tr/_/-/;
-        my $version = $processable->fields->value('Version');
 
-        for my $installable ($group->get_installables) {
+        for my $installable ($self->group->get_installables) {
             next
               unless $installable->name =~ m/^gir1\.2-/;
 
-            my $other = $installable->name.' (= '
-              .$installable->fields->value('Version').')';
+            my $name = $installable->name;
+            my $version = $installable->fields->value('Version');
 
             next GIR
               if $installable->relation('Provides')->satisfies($expected)
-              && $processable->relation('strong')->satisfies($other);
+              && $self->processable->relation('strong')
+              ->satisfies("$name (= $version)");
         }
 
-        if (
-            not $processable->relation('strong')
-            ->satisfies("$expected (= $version)")) {
-            $self->hint(('gir-missing-typelib-dependency', $gir, $expected));
-        }
+        my $our_version = $self->processable->fields->value('Version');
+
+        $self->pointed_hint('gir-missing-typelib-dependency',
+            $gir->pointer, $expected)
+          unless $self->processable->relation('strong')
+          ->satisfies("$expected (= $our_version)");
     }
 
-    foreach my $typelib (@typelibs) {
-        my $expected = 'gir1.2-' . lc($typelib->basename);
+    for my $type_lib (@type_libs) {
+
+        my $expected = 'gir1.2-' . lc($type_lib->basename);
         $expected =~ s/\.typelib$//;
         $expected =~ tr/_/-/;
-        if ($pkg ne $expected
-            and not $processable->relation('Provides')->satisfies($expected)) {
-            $self->hint(
-                ('typelib-package-name-does-not-match', $typelib, $expected));
-        }
+
+        $self->pointed_hint('typelib-package-name-does-not-match',
+            $type_lib->pointer, $expected)
+          if $self->processable->name ne $expected
+          && !$self->processable->relation('Provides')->satisfies($expected);
     }
 
     return;

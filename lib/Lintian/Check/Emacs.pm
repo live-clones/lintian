@@ -26,24 +26,24 @@ use utf8;
 
 use Const::Fast;
 
+const my $WIDELY_READABLE => oct(644);
+
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
 
-const my $WIDELY_READABLE => oct(644);
-
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     # /etc/emacs.*
-    if (   $file->is_file
-        && $file->name =~ m{^etc/emacs.*/\S}
-        && $file->operm != $WIDELY_READABLE) {
+    if (   $item->is_file
+        && $item->name =~ m{^etc/emacs.*/\S}
+        && $item->operm != $WIDELY_READABLE) {
 
-        $self->hint('bad-permissions-for-etc-emacs-script',
-            $file->name,
-            sprintf('%04o != %04o', $file->operm, $WIDELY_READABLE));
+        $self->pointed_hint('bad-permissions-for-etc-emacs-script',
+            $item->pointer,
+            sprintf('%04o != %04o', $item->operm, $WIDELY_READABLE));
     }
 
     return;

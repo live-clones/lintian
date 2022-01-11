@@ -30,12 +30,12 @@ use namespace::clean;
 with 'Lintian::Check';
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
-    $self->hint('image-file-in-usr-lib', $file->name)
-      if $file->name =~ m{^usr/lib/}
-      && $file->name =~ m{\.(?:bmp|gif|jpe?g|png|tiff|x[pb]m)$}
-      && !length $file->link;
+    $self->pointed_hint('image-file-in-usr-lib', $item->pointer)
+      if $item->name =~ m{^usr/lib/}
+      && $item->name =~ m{\.(?:bmp|gif|jpe?g|png|tiff|x[pb]m)$}
+      && !length $item->link;
 
     return;
 }

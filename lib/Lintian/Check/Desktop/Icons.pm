@@ -30,29 +30,32 @@ use namespace::clean;
 with 'Lintian::Check';
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
-    if ($file->name =~ m{/icons/[^/]+/(\d+)x(\d+)/(?!animations/).*\.png$}){
+    if ($item->name =~ m{/icons/[^/]+/(\d+)x(\d+)/(?!animations/).*\.png$}){
 
-        my ($directory_width, $directory_height) = ($1, $2);
-        my $resolved = $file->resolve_path;
+        my $directory_width = $1;
+        my $directory_height = $2;
+
+        my $resolved = $item->resolve_path;
 
         if ($resolved && $resolved->file_type =~ m/,\s*(\d+)\s*x\s*(\d+)\s*,/){
 
-            my ($file_width, $file_height) = ($1, $2);
+            my $file_width = $1;
+            my $file_height = $2;
+
             my $width_delta = abs($directory_width - $file_width);
             my $height_delta = abs($directory_height - $file_height);
 
-            $self->hint('icon-size-and-directory-name-mismatch',
-                $file->name,$file_width.'x'.$file_height)
+            $self->pointed_hint('icon-size-and-directory-name-mismatch',
+                $item->pointer, $file_width.'x'.$file_height)
               if $width_delta > 2 || $height_delta > 2;
         }
     }
 
-    if (   $file->is_file
-        && $file->name =~ m{/icons/[^/]+/scalable/.*\.(?:png|xpm)$}) {
-        $self->hint('raster-image-in-scalable-directory', $file->name);
-    }
+    $self->pointed_hint('raster-image-in-scalable-directory', $item->pointer)
+      if $item->is_file
+      && $item->name =~ m{/icons/[^/]+/scalable/.*\.(?:png|xpm)$};
 
     return;
 }

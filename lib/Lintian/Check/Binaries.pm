@@ -57,7 +57,7 @@ sub visit_installed_files {
     if (   $item->file_type !~ m{ \b not [ ] stripped \b }x
         && $item->name !~ m{^ (?:usr/)? lib/ (?: debug | profile ) / }x) {
 
-        $self->hint('binary-has-unneeded-section', $item->name, $_)
+        $self->pointed_hint('binary-has-unneeded-section', $item->pointer, $_)
           for @have_stripped_sections;
     }
 

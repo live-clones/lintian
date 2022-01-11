@@ -49,14 +49,14 @@ sub visit_installed_files {
     # designed to do something useful when executed, so don't
     # report an error.  Also give ld.so a pass, since it's
     # special.
-    $self->hint('shared-library-is-executable',
-        $item->name, $item->octal_permissions)
+    $self->pointed_hint('shared-library-is-executable',
+        $item->pointer, $item->octal_permissions)
       if $item->is_executable
       && !$item->elf->{INTERP}
       && $item->name !~ m{^lib.*/ld-[\d.]+\.so$};
 
-    $self->hint('odd-permissions-on-shared-library',
-        $item->name, $item->octal_permissions)
+    $self->pointed_hint('odd-permissions-on-shared-library',
+        $item->pointer, $item->octal_permissions)
       if !$item->is_executable
       && $item->operm != $WIDELY_READABLE;
 

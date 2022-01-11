@@ -26,47 +26,48 @@ use utf8;
 
 use Const::Fast;
 use JSON::MaybeXS;
-use List::SomeUtils qw(any);
+use List::SomeUtils qw(any none first_value);
 use Path::Tiny;
 use Syntax::Keyword::Try;
 use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Relation;
 
+const my $SLASH => q{/};
+const my $DOT => q{.};
+
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
 
-const my $SLASH => q{/};
-const my $DOT => q{.};
-
 sub source {
     my ($self) = @_;
 
-    my $pkg = $self->processable->name;
-    my $processable = $self->processable;
+    my $debian_control = $self->processable->debian_control;
 
     # debian/control check
-    my @testsuites= split(m/\s*,\s*/,
-        $processable->debian_control->source_fields->value('Testsuite'));
+    my @testsuites
+      = split(m/\s*,\s*/,$debian_control->source_fields->value('Testsuite'));
 
     if (any { $_ eq 'autopkgtest-pkg-nodejs' } @testsuites) {
-        # Check control file exists in sources
-        my $filename = 'debian/tests/pkg-js/test';
-        my $path = $processable->patched->resolve_path($filename);
 
-        # Ensure test file contains something
-        if ($path and $path->is_open_ok) {
-            $self->hint('pkg-js-autopkgtest-test-is-empty', $filename)
-              unless any { /^[^#]*\w/m } $path->bytes;
+        my $item = $self->processable->patched->resolve_path(
+            'debian/tests/pkg-js/test');
+        if (defined $item) {
+
+            $self->pointed_hint('pkg-js-autopkgtest-test-is-empty',
+                $item->pointer)
+              if none { /^[^#]*\w/m } $item->bytes;
+
         } else {
-            $self->hint('pkg-js-autopkgtest-test-is-missing', $filename);
+            $self->hint('pkg-js-autopkgtest-test-is-missing');
         }
 
         # Ensure all files referenced in debian/tests/pkg-js/files exist
         my $files
-          = $processable->patched->resolve_path('debian/tests/pkg-js/files');
+          = $self->processable->patched->resolve_path(
+            'debian/tests/pkg-js/files');
         if (defined $files) {
 
             my @patterns = path($files->unpacked_path)->lines;
@@ -82,8 +83,11 @@ sub source {
     }
 
     # debian/rules check
-    my $droot = $processable->patched->resolve_path('debian/') or return;
-    my $drules = $droot->child('rules') or return;
+    my $droot = $self->processable->patched->resolve_path('debian/')
+      or return;
+    my $drules = $droot->child('rules')
+      or return;
+
     return
       unless $drules->is_open_ok;
 
@@ -92,7 +96,7 @@ sub source {
 
     my $command_prefix_pattern = qr/\s+[@+-]?(?:\S+=\S+\s+)*/;
     my ($seen_nodejs,$override_test,$seen_dh_dynamic);
-    my $bdepends = $processable->relation('Build-Depends-All');
+    my $bdepends = $self->processable->relation('Build-Depends-All');
     $seen_nodejs = 1 if $bdepends->satisfies('dh-sequence-nodejs');
 
     while (my $line = <$rules_fd>) {
@@ -122,55 +126,61 @@ sub source {
         }
     }
 
-    if(     $seen_nodejs
-        and not $override_test
-        and not $seen_dh_dynamic) {
-        my ($filename,$path);
+    if(    $seen_nodejs
+        && !$override_test
+        && !$seen_dh_dynamic) {
+
         # pkg-js-tools search build test in the following order
-        foreach (qw(debian/nodejs/test debian/tests/pkg-js/test)) {
-            $filename = $_;
-            $path = $processable->patched->resolve_path($filename);
-            last if $path;
-        }
+        my @candidates = qw{debian/nodejs/test debian/tests/pkg-js/test};
+
+        my $item = first_value { defined }
+        map { $self->processable->patched->resolve_path($_) } @candidates;
+
         # Ensure test file contains something
-        if ($path) {
-            $self->hint('pkg-js-tools-test-is-empty', $filename)
-              unless any { /^[^#]*\w/m } $path->bytes;
+        if (defined $item) {
+            $self->pointed_hint('pkg-js-tools-test-is-empty', $item->pointer)
+              unless any { /^[^#]*\w/m } $item->bytes;
+
         } else {
-            $self->hint('pkg-js-tools-test-is-missing', $filename);
+            $self->hint('pkg-js-tools-test-is-missing');
         }
     }
+
     return;
 }
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
-    return if $file->is_dir;
+    my ($self, $item) = @_;
+
+    return
+      if $item->is_dir;
 
     return
       if $self->processable->name =~ /-dbg$/;
 
     # Warn if a file is installed in old nodejs root dir
-    $self->hint('nodejs-module-installed-in-usr-lib', $file->name)
-      if $file->name =~ m{^usr/lib/nodejs/.*};
+    $self->pointed_hint('nodejs-module-installed-in-usr-lib', $item->pointer)
+      if $item->name =~ m{^usr/lib/nodejs/.*};
 
     # Warn if package is not installed in a subdirectory of nodejs root
     # directories
-    $self->hint('node-package-install-in-nodejs-rootdir', $file->name)
-      if $file->name
+    $self->pointed_hint('node-package-install-in-nodejs-rootdir',
+        $item->pointer)
+      if $item->name
       =~ m{^usr/(?:share|lib(?:/[^/]+)?)/nodejs/(?:package\.json|[^/]*\.js)$};
 
     # Now we have to open package.json
-    return unless $file->is_open_ok;
+    return
+      unless $item->is_open_ok;
 
     # Return an error if a package-lock.json or a yanr.lock file is installed
-    $self->hint('nodejs-lock-file', $file->name)
-      if $file->name
+    $self->pointed_hint('nodejs-lock-file', $item->pointer)
+      if $item->name
       =~ m{^usr/(?:share|lib(?:/[^/]+)?)/nodejs/([^/]+)(.*/)(package-lock\.json|yarn\.lock)$};
 
     # Look only nodejs package.json files
     return
-      unless $file->name
+      unless $item->name
       =~ m{^usr/(?:share|lib(?:/[^/]+)?)/nodejs/([^\@/]+|\@[^/]+/[^/]+)(.*/)package\.json$};
 
     # First regexp arg: directory in /**/nodejs or @foo/bar when dir starts
@@ -180,13 +190,15 @@ sub visit_installed_files {
     my $subpath = $2;
 
     my $declared = $self->processable->name;
-    my $processable = $self->processable;
-    my $version = $processable->fields->value('Version');
-    $declared .= "( = $version)" if length $version;
+    my $version = $self->processable->fields->value('Version');
+    $declared .= "( = $version)"
+      if length $version;
     $version ||= '0-1';
-    my $provides = $processable->relation('Provides')->logical_and($declared);
 
-    my $content = $file->bytes;
+    my $provides
+      = $self->processable->relation('Provides')->logical_and($declared);
+
+    my $content = $item->bytes;
 
     # Look only valid package.json files
     my $pac;
@@ -199,18 +211,19 @@ sub visit_installed_files {
     }
 
     # Store node module name & version (classification)
-    $self->hint('nodejs-module', $pac->{name},$pac->{version} // 'undef',
-        $file->name);
+    $self->pointed_hint('nodejs-module', $item->pointer, $pac->{name},
+        $pac->{version} // 'undef');
 
     # Warn if version is 0.0.0-development
-    $self->hint('nodejs-missing-version-override',
-        $file->name, $pac->{name}, $pac->{version})
+    $self->pointed_hint('nodejs-missing-version-override',
+        $item->pointer, $pac->{name}, $pac->{version})
       if $pac->{version} and $pac->{version} =~ /^0\.0\.0-dev/;
 
     # Warn if module name is not equal to nodejs directory
     if ($subpath eq $SLASH && $dirname ne $pac->{name}) {
-        $self->hint('nodejs-module-installed-in-bad-directory',
-            $file->name, $pac->{name}, $dirname);
+        $self->pointed_hint('nodejs-module-installed-in-bad-directory',
+            $item->pointer, $pac->{name}, $dirname);
+
     } else {
         # Else verify that module is declared at least in Provides: field
         my $name = 'node-' . lc($pac->{name});
@@ -218,10 +231,12 @@ sub visit_installed_files {
         # (replace invalid characters by "-")
         $name =~ s{[/_\@]}{-}g;
         $name =~ s/-+/-/g;
-        $self->hint('nodejs-module-not-declared', $name, $file->name)
+
+        $self->pointed_hint('nodejs-module-not-declared', $item->pointer,$name)
           if $subpath eq $SLASH
           && !$provides->satisfies($name);
     }
+
     return;
 }
 

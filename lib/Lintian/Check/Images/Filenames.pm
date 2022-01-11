@@ -69,16 +69,16 @@ my @image_formats = ({
 # ICO format developed into a container and may contain PNG
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     return
-      unless $file->is_file;
+      unless $item->is_file;
 
     my $our_format;
 
     for my $format (@image_formats) {
 
-        if ($file->file_type =~ $format->{file_type}) {
+        if ($item->file_type =~ $format->{file_type}) {
             $our_format = $format;
             last;
         }
@@ -89,14 +89,14 @@ sub visit_installed_files {
       unless $our_format;
 
     return
-      if $our_format->{good_name}->($file->name);
+      if $our_format->{good_name}->($item->name);
 
     my $conflicting_format;
 
     my @other_formats = grep { $_ != $our_format } @image_formats;
     for my $format (@other_formats) {
 
-        if ($format->{good_name}->($file->name)) {
+        if ($format->{good_name}->($item->name)) {
             $conflicting_format = $format;
             last;
         }
@@ -104,13 +104,13 @@ sub visit_installed_files {
 
     if ($conflicting_format) {
 
-        $self->hint('image-file-has-conflicting-name',
-            $file->name . ' (is ' . $our_format->{name} . ')')
-          unless $our_format->{good_name}->($file->name);
+        $self->pointed_hint('image-file-has-conflicting-name',
+            $item->pointer, '(is ' . $our_format->{name} . ')')
+          unless $our_format->{good_name}->($item->name);
 
     } else {
-        $self->hint('image-file-has-unexpected-name',
-            $file->name . ' (is ' . $our_format->{name} . ')');
+        $self->pointed_hint('image-file-has-unexpected-name',
+            $item->pointer, '(is ' . $our_format->{name} . ')');
     }
 
     return;

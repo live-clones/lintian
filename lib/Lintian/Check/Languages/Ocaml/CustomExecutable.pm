@@ -42,7 +42,7 @@ sub visit_installed_files {
       unless $item->file_type =~ /^ [^,]* \b ELF \b /x;
 
     # Check for OCaml custom executables (#498138)
-    $self->hint('ocaml-custom-executable', $item)
+    $self->pointed_hint('ocaml-custom-executable', $item->pointer)
       if $item->file_type =~ m{ \b not [ ] stripped \b }x
       && $item->file_type =~ m{ \b executable \b }x
       && $item->strings =~ m{^ Caml1999X0 [0-9] [0-9] $}mx;

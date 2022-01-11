@@ -27,39 +27,39 @@ use utf8;
 use Const::Fast;
 use Unicode::UTF8 qw(encode_utf8);
 
+const my $NEWLINE => qq{\n};
+
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
 
-const my $NEWLINE => qq{\n};
-
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     # file-info would be great, but files are zipped
     return
-      unless $file->name =~ m{\.mod$};
+      unless $item->name =~ m{\.mod$};
 
     return
-      unless $file->name =~ m{^usr/lib/};
+      unless $item->name =~ m{^usr/lib/};
 
     # do not look at flang, grub or libreoffice modules
     return
-         if $file->name =~ m{/flang-\d+/}
-      || $file->name =~ m{^usr/lib/grub}
-      || $file->name =~ m{^usr/lib/libreoffice};
+         if $item->name =~ m{/flang-\d+/}
+      || $item->name =~ m{^usr/lib/grub}
+      || $item->name =~ m{^usr/lib/libreoffice};
 
     return
-         unless $file->is_file
-      && $file->is_open_ok
-      && $file->file_type =~ /\bgzip compressed\b/;
+         unless $item->is_file
+      && $item->is_open_ok
+      && $item->file_type =~ /\bgzip compressed\b/;
 
     my $module_version;
 
-    open(my $fd, '<:gzip', $file->unpacked_path)
+    open(my $fd, '<:gzip', $item->unpacked_path)
       or die encode_utf8(
-        'Cannot open gz file ' . $file->unpacked_path . $NEWLINE);
+        'Cannot open gz file ' . $item->unpacked_path . $NEWLINE);
 
     while (my $line = <$fd>) {
         next
@@ -72,12 +72,14 @@ sub visit_installed_files {
     close $fd;
 
     unless (length $module_version) {
-        $self->hint('gfortran-module-does-not-declare-version', $file->name);
+        $self->pointed_hint('gfortran-module-does-not-declare-version',
+            $item->pointer);
         return;
     }
 
     my $depends = $self->processable->fields->value('Depends');
-    $self->hint('missing-prerequisite-for-gfortran-module', $file->name)
+    $self->pointed_hint('missing-prerequisite-for-gfortran-module',
+        $item->pointer)
       unless $depends =~ /\bgfortran-mod-$module_version\b/;
 
     return;

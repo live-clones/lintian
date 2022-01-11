@@ -30,18 +30,19 @@ use namespace::clean;
 with 'Lintian::Check';
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     return
-      unless $file->is_file;
+      unless $item->is_file;
 
     return
-      unless $file->file_type =~ /^[^,]*\bELF\b/;
+      unless $item->file_type =~ /^[^,]*\bELF\b/;
 
-    my @needed = @{$file->elf->{NEEDED} // []};
+    my @needed = @{$item->elf->{NEEDED} // []};
     my @obsolete = grep { /^libcblas\.so\.\d/ } @needed;
 
-    $self->hint('linked-with-obsolete-library', $_, $file->name) for @obsolete;
+    $self->pointed_hint('linked-with-obsolete-library', $item->pointer, $_)
+      for @obsolete;
 
     return;
 }

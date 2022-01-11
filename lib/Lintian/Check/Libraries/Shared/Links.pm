@@ -83,22 +83,29 @@ sub visit_installed_files {
 
     my $installed = $self->processable->installed;
 
-    $self->hint('lacks-versioned-link-to-shared-library',
-        $versioned_name, $item->name, $soname)
+    $self->pointed_hint('lacks-versioned-link-to-shared-library',
+        $item->pointer, $versioned_name)
       unless defined $installed->lookup($versioned_name);
 
-    $self->hint(
+    $self->pointed_hint(
         'ldconfig-symlink-referencing-wrong-file',
-        $versioned_name,$ARROW,$installed->lookup($versioned_name)->link,
-        'instead of',$item->basename
+        $installed->lookup($versioned_name)->pointer,
+        'should point to',
+        $installed->lookup($versioned_name)->link,
+        'instead of',
+        $item->basename
       )
       if $versioned_name ne $item->name
       && defined $installed->lookup($versioned_name)
       && $installed->lookup($versioned_name)->is_symlink
       && $installed->lookup($versioned_name)->link ne $item->basename;
 
-    $self->hint('ldconfig-symlink-is-not-a-symlink',
-        $item->name, $versioned_name)
+    $self->pointed_hint(
+        'ldconfig-symlink-is-not-a-symlink',
+        $installed->lookup($versioned_name)->pointer,
+        'should point to',
+        $item->name
+      )
       if $versioned_name ne $item->name
       && defined $installed->lookup($versioned_name)
       && !$installed->lookup($versioned_name)->is_symlink;
@@ -107,8 +114,11 @@ sub visit_installed_files {
     # if shlib doesn't _have_ a version, then $unversioned_name and
     # $item->name will be equal, and it's not a development link,
     # so don't complain.
-    $self->hint('link-to-shared-library-in-wrong-package',
-        $item->name, $unversioned_name)
+    $self->pointed_hint(
+        'link-to-shared-library-in-wrong-package',
+        $installed->lookup($unversioned_name)->pointer,
+        $item->name
+      )
       if $unversioned_name ne $item->name
       && defined $installed->lookup($unversioned_name);
 
@@ -185,8 +195,8 @@ sub visit_installed_files {
     }
 
     # found -dev package; library needs a symlink
-    $self->hint('lacks-unversioned-link-to-shared-library',
-        $item->name, $unversioned_name)
+    $self->pointed_hint('lacks-unversioned-link-to-shared-library',
+        $item->pointer, $unversioned_name)
       if ($unversioned_name eq $item->name
         || !defined $installed->lookup($unversioned_name))
       && @{$self->development_packages}

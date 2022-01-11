@@ -55,7 +55,7 @@ sub visit_installed_files {
     # If it has an INTERP section it might be an application with
     # a SONAME (hi openjdk-6, see #614305).  Also see the comment
     # for "shared-library-is-executable" below.
-    $self->hint('exit-in-shared-library', $item->name)
+    $self->pointed_hint('exit-in-shared-library', $item->pointer)
       if (any { m/^_?exit$/ } @symbol_names)
       && (none { $_ eq 'fork' } @symbol_names)
       && !length $item->elf->{INTERP};

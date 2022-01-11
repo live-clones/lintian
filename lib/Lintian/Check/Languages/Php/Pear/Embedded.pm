@@ -59,10 +59,10 @@ my %PEAR_FILES = (
 );
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     return
-      unless $file->is_file;
+      unless $item->is_file;
 
     # embedded PEAR
     for my $provider (keys %PEAR_FILES) {
@@ -71,13 +71,13 @@ sub visit_installed_files {
           if $self->processable->name =~ /^$provider$/;
 
         next
-          unless $file->name =~ /$PEAR_FILES{$provider}/;
+          unless $item->name =~ /$PEAR_FILES{$provider}/;
 
         next
-          unless length $file->bytes_match($PEAR_MAGIC);
+          unless length $item->bytes_match($PEAR_MAGIC);
 
-        $self->hint('embedded-pear-module', $file->name, 'please use',
-            $provider);
+        $self->pointed_hint('embedded-pear-module', $item->pointer,
+            'please use',$provider);
     }
 
     return;

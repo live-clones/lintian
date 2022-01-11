@@ -45,7 +45,7 @@ sub visit_installed_files {
 
     if ($shortened =~ s{ _s[.]a $}{.a}x) {
 
-        $self->hint('odd-static-library-name', $item->name)
+        $self->pointed_hint('odd-static-library-name', $item->pointer)
           unless defined $self->processable->installed->lookup($shortened);
     }
 

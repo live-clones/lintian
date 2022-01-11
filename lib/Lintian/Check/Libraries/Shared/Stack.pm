@@ -41,11 +41,11 @@ sub visit_installed_files {
     return
       unless @{$item->elf->{SONAME} // [] };
 
-    $self->hint('shared-library-lacks-stack-section',$item->name)
+    $self->pointed_hint('shared-library-lacks-stack-section',$item->pointer)
       if $self->processable->fields->declares('Architecture')
       && !exists $item->elf->{PH}{STACK};
 
-    $self->hint('executable-stack-in-shared-library', $item->name)
+    $self->pointed_hint('executable-stack-in-shared-library', $item->pointer)
       if exists $item->elf->{PH}{STACK}
       && $item->elf->{PH}{STACK}{flags} ne 'rw-';
 

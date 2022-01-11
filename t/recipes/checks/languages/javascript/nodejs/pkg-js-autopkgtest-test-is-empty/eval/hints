@@ -1,1 +1,1 @@
-pkg-js-autopkgtest-test-is-empty (source): pkg-js-autopkgtest-test-is-empty debian/tests/pkg-js/test
+pkg-js-autopkgtest-test-is-empty (source): pkg-js-autopkgtest-test-is-empty [debian/tests/pkg-js/test]

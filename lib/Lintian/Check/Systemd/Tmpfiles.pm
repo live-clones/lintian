@@ -37,11 +37,11 @@ with 'Lintian::Check';
 sub visit_installed_files {
     my ($self, $item) = @_;
 
-    $self->hint('systemd-tmpfile-in-var-run', $item->name)
+    $self->pointed_hint('systemd-tmpfile-in-var-run', $item->pointer)
       if $item->name =~ m{^ usr/lib/tmpfiles[.]d/ .* [.]conf $}sx
       && $item->decoded_utf8 =~ m{^ d \s+ /var/run/ }msx;
 
-    $self->hint('misplaced-systemd-tmpfiles', $item->name)
+    $self->pointed_hint('misplaced-systemd-tmpfiles', $item->pointer)
       if $item->name =~ m{^ etc/tmpfiles[.]d/ .* [.]conf $}sx
       && $item->is_file;
 

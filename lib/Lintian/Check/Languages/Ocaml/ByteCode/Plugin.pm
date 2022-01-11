@@ -38,7 +38,7 @@ sub visit_installed_files {
 
     # For each .cmxs file, there must be a matching .cma or .cmo file
     # (at least, in library packages)
-    $self->hint('ocaml-dangling-cmxs', $item->name)
+    $self->pointed_hint('ocaml-dangling-cmxs', $item->pointer)
       if $item->name =~ m{ [.]cmxs $}x
       && !$item->parent_dir->child($no_extension . '.cma')
       && !$item->parent_dir->child($no_extension . '.cmo')

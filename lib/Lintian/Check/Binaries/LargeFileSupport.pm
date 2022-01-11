@@ -91,7 +91,7 @@ sub visit_installed_files {
 
     # Using a 32bit only interface call, some parts of the
     # binary are built without LFS
-    $self->hint('binary-file-built-without-LFS-support', $item->name)
+    $self->pointed_hint('binary-file-built-without-LFS-support',$item->pointer)
       if any { $self->LFS_SYMBOLS->recognizes($_) } @unresolved_symbols;
 
     return;

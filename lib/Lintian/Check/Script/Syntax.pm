@@ -59,13 +59,14 @@ sub visit_installed_files {
     # Syntax-check most shell scripts, but don't syntax-check
     # scripts that end in .dpatch.  bash -n doesn't stop checking
     # at exit 0 and goes on to blow up on the patch itself.
-    $self->hint('shell-script-fails-syntax-check',$item->name)
+    $self->pointed_hint('shell-script-fails-syntax-check',$item->pointer)
       if $self->fails_syntax_check($item)
       && $item->name !~ m{^usr/share/doc/[^/]+/examples/}
       && $item->name !~ /\.dpatch$/
       && $item->name !~ /\.erb$/;
 
-    $self->hint('example-shell-script-fails-syntax-check',$item->name)
+    $self->pointed_hint('example-shell-script-fails-syntax-check',
+        $item->pointer)
       if $self->fails_syntax_check($item)
       && $item->name =~ m{^usr/share/doc/[^/]+/examples/}
       && $item->name !~ /\.dpatch$/
@@ -77,7 +78,8 @@ sub visit_installed_files {
 sub visit_control_files {
     my ($self, $item) = @_;
 
-    $self->hint('maintainer-shell-script-fails-syntax-check',"control/$item")
+    $self->pointed_hint('maintainer-shell-script-fails-syntax-check',
+        $item->pointer)
       if $self->fails_syntax_check($item);
 
     return;

@@ -96,7 +96,7 @@ sub installable {
 }
 
 sub needs_ldconfig {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
    # Libraries that should only be used in the presence of certain capabilities
    # may be located in subdirectories of the standard ldconfig search path with
@@ -104,7 +104,7 @@ sub needs_ldconfig {
     my $HWCAP_DIRS = $self->data->load('shared-libs/hwcap-dirs');
     my @ldconfig_folders = @{$self->data->architectures->ldconfig_folders};
 
-    my $dirname = $file->dirname;
+    my $dirname = $item->dirname;
     my $encapsulator;
     do {
         $dirname =~ s{ ([^/]+) / $}{}x;

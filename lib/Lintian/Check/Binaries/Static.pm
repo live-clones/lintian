@@ -75,7 +75,7 @@ sub visit_installed_files {
     # klibc binaries appear to be static.
     # Location of debugging symbols.
     # ldconfig must be static.
-    $self->hint('statically-linked-binary', $item)
+    $self->pointed_hint('statically-linked-binary', $item->pointer)
       if !$is_shared
       && !exists $item->elf->{NEEDED}
       && $item->name !~ m{^boot/}

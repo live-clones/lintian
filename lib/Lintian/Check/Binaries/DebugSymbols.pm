@@ -50,7 +50,7 @@ sub visit_installed_files {
     # Is it an object file (which generally cannot be
     # stripped), a kernel module, debugging symbols, or
     # perhaps a debugging package?
-    $self->hint('unstripped-binary-or-object', $item)
+    $self->pointed_hint('unstripped-binary-or-object', $item->pointer)
       if $item->file_type =~ m{ \b not [ ] stripped \b }x
       && $item->name !~ m{ [.]k?o $}x
       && $self->processable->name !~ m{ -dbg $}x

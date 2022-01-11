@@ -43,7 +43,7 @@ sub visit_installed_files {
 
     # Now that we're sure this is really a shared library, report on
     # non-PIC problems.
-    $self->hint('specific-address-in-shared-library', $item->name)
+    $self->pointed_hint('specific-address-in-shared-library', $item->pointer)
       if $item->elf->{TEXTREL};
 
     return;

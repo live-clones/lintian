@@ -1,10 +1,10 @@
-gir (source): typelib-missing-gir-depends gir1.2-bad
-gir1.2-good-42 (binary): typelib-not-in-multiarch-directory usr/lib/girepository-1.0/GoodExtras-42.typelib usr/lib/MULTIARCH/girepository-1.0
-gir1.2-good-42 (binary): typelib-not-in-multiarch-directory usr/lib/girepository-1.0/Good-42.typelib usr/lib/MULTIARCH/girepository-1.0
-gir1.2-bad (binary): typelib-section-not-introspection usr/lib/girepository-1.0/Bad-23.typelib misc
-gir1.2-bad (binary): typelib-package-name-does-not-match usr/lib/girepository-1.0/Bad-23.typelib gir1.2-bad-23
-gir1.2-bad (binary): typelib-not-in-multiarch-directory usr/lib/girepository-1.0/Bad-23.typelib usr/lib/${DEB_HOST_MULTIARCH}/girepository-1.0
-gir1.2-bad (binary): typelib-in-arch-all-package usr/lib/girepository-1.0/Bad-23.typelib
-gir1.2-bad (binary): gir-section-not-libdevel usr/share/gir-1.0/Bad-23.gir misc
-gir1.2-bad (binary): gir-missing-typelib-dependency usr/share/gir-1.0/Bad-23.gir gir1.2-bad-23
-gir1.2-bad (binary): gir-in-arch-all-package usr/share/gir-1.0/Bad-23.gir
+gir (source): typelib-missing-gir-depends gir1.2-bad [debian/control]
+gir1.2-good-42 (binary): typelib-not-in-multiarch-directory usr/lib/x86_64-linux-gnu/girepository-1.0 [usr/lib/girepository-1.0/GoodExtras-42.typelib]
+gir1.2-good-42 (binary): typelib-not-in-multiarch-directory usr/lib/x86_64-linux-gnu/girepository-1.0 [usr/lib/girepository-1.0/Good-42.typelib]
+gir1.2-bad (binary): typelib-section-not-introspection misc [usr/lib/girepository-1.0/Bad-23.typelib]
+gir1.2-bad (binary): typelib-package-name-does-not-match gir1.2-bad-23 [usr/lib/girepository-1.0/Bad-23.typelib]
+gir1.2-bad (binary): typelib-not-in-multiarch-directory usr/lib/${DEB_HOST_MULTIARCH}/girepository-1.0 [usr/lib/girepository-1.0/Bad-23.typelib]
+gir1.2-bad (binary): typelib-in-arch-all-package [usr/lib/girepository-1.0/Bad-23.typelib]
+gir1.2-bad (binary): gir-section-not-libdevel misc [usr/share/gir-1.0/Bad-23.gir]
+gir1.2-bad (binary): gir-missing-typelib-dependency gir1.2-bad-23 [usr/share/gir-1.0/Bad-23.gir]
+gir1.2-bad (binary): gir-in-arch-all-package [usr/share/gir-1.0/Bad-23.gir]

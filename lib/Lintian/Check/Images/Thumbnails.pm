@@ -30,18 +30,18 @@ use namespace::clean;
 with 'Lintian::Check';
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
-    if (   $file->is_dir
-        && $file->name =~ m{/\.xvpics/?$}) {
+    if (   $item->is_dir
+        && $item->name =~ m{/\.xvpics/?$}) {
 
-        $self->hint('package-contains-xvpics-dir', $file->name);
+        $self->pointed_hint('package-contains-xvpics-dir', $item->pointer);
     }
 
-    if (   $file->is_dir
-        && $file->name =~ m{/\.thumbnails/?$}) {
+    if (   $item->is_dir
+        && $item->name =~ m{/\.thumbnails/?$}) {
 
-        $self->hint('package-contains-thumbnails-dir', $file->name);
+        $self->pointed_hint('package-contains-thumbnails-dir', $item->pointer);
     }
 
     return;

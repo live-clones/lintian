@@ -44,10 +44,13 @@ has BINARY_SPELLING_EXCEPTIONS => (
     });
 
 sub spelling_tag_emitter {
-    my ($self, @orig_args) = @_;
+    my ($self, $tag_name, $item, @orig_args) = @_;
 
     return sub {
-        return $self->hint(@orig_args, @_);
+
+        my $pointer = $item->pointer($.);
+
+        return $self->pointed_hint($tag_name, $pointer, @orig_args, @_);
     };
 }
 

@@ -41,7 +41,8 @@ sub visit_patched_files {
       unless $item->is_file;
 
     # Find mentioning of usr/lib/perl5 inside the packaging
-    $self->hint('mentions-deprecated-usr-lib-perl5-directory', $item->name)
+    $self->pointed_hint('mentions-deprecated-usr-lib-perl5-directory',
+        $item->pointer)
       if $item->basename ne 'changelog'
       && $item->name =~ m{^ debian/ }sx
       && $item->name !~ m{^ debian/patches/ }sx

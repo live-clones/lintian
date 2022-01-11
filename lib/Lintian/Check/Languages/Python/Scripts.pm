@@ -30,16 +30,17 @@ use namespace::clean;
 with 'Lintian::Check';
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     return
-      unless $file->name =~ m{(?:usr/)?bin/[^/]+};
+      unless $item->name =~ m{(?:usr/)?bin/[^/]+};
 
     return
-      unless $file->is_script;
+      unless $item->is_script;
 
-    $self->hint('script-uses-unversioned-python-in-shebang', $file)
-      if $file->interpreter =~ m{^(?:/usr/bin/)?python$};
+    $self->pointed_hint('script-uses-unversioned-python-in-shebang',
+        $item->pointer)
+      if $item->interpreter =~ m{^(?:/usr/bin/)?python$};
 
     return;
 }

@@ -62,10 +62,10 @@ qr{(?i)/phpsysinfo\.dtd|/class\.(?:Linux|(?:Open|Net|Free|)BSD)\.inc\.php$},
 );
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     return
-      unless $file->is_file;
+      unless $item->is_file;
 
     # embedded PHP
     for my $provider (keys %PHP_FILES) {
@@ -74,10 +74,10 @@ sub visit_installed_files {
           if $self->processable->name =~ /^$provider$/;
 
         next
-          unless $file->name =~ /$PHP_FILES{$provider}/;
+          unless $item->name =~ /$PHP_FILES{$provider}/;
 
-        $self->hint('embedded-php-library', $file->name, 'please use',
-            $provider);
+        $self->pointed_hint('embedded-php-library', $item->pointer,
+            'please use',$provider);
     }
 
     return;

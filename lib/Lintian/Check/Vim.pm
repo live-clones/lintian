@@ -30,15 +30,15 @@ use namespace::clean;
 with 'Lintian::Check';
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
-    if ($file->name =~ m{^usr/share/vim/vim(?:current|\d\d)/([^/]+)}){
+    if ($item->name =~ m{^usr/share/vim/vim(?:current|\d\d)/([^/]+)}){
         my $is_vimhelp
           = $1 eq 'doc' && $self->processable->name =~ /^vimhelp-\w+$/;
         my $is_vim = $self->processable->source_name =~ /vim/;
 
-        $self->hint('vim-addon-within-vim-runtime-path', $file->name)
-          unless $is_vim or $is_vimhelp;
+        $self->pointed_hint('vim-addon-within-vim-runtime-path',$item->pointer)
+          unless $is_vim || $is_vimhelp;
     }
 
     return;

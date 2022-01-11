@@ -67,7 +67,7 @@ sub visit_installed_files {
     # matching .o file, which can be there by itself, or embedded in a
     # .a file in the same directory
     # dirname ends with a slash
-    $self->hint('ocaml-dangling-cmx', $item->name)
+    $self->pointed_hint('ocaml-dangling-cmx', $item->pointer)
       if $item->name =~ m{ [.]cmx $}x
       && !$item->parent_dir->child($no_extension . '.o')
       && !exists $self->provided_o->{$item->dirname . $no_extension . '.o'};

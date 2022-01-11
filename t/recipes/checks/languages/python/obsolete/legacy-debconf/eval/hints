@@ -1,2 +1,2 @@
-debconf (source): debian-pyversions-is-obsolete
-debconf (source): debian-pycompat-is-obsolete
+debconf (source): debian-pyversions-is-obsolete [debian/pyversions]
+debconf (source): debian-pycompat-is-obsolete [debian/pycompat]
