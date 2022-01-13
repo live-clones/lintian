@@ -49,6 +49,7 @@ const my $NEWLINE => qq{\n};
 my @known_missing = (qw(
       changed-by-invalid-for-derivative
       debian-files-list-in-source
+      debian-rules-missing-recommended-target
       debian-rules-not-executable
       elf-warning
       embedded-pear-module

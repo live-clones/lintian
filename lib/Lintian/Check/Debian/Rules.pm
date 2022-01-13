@@ -55,8 +55,8 @@ my %TAG_FOR_POLICY_TARGET = (
     'binary-arch' => 'debian-rules-missing-required-target',
     'binary-indep' => 'debian-rules-missing-required-target',
     clean => 'debian-rules-missing-required-target',
-    'build-arch' => 'debian-rules-missing-recommended-target',
-    'build-indep' => 'debian-rules-missing-recommended-target'
+    'build-arch' => 'debian-rules-missing-required-target',
+    'build-indep' => 'debian-rules-missing-required-target'
 );
 
 # Rules about required debhelper command ordering.  Each command is put into a
