@@ -805,7 +805,7 @@ sub source {
 
         # As a special case, the python3 addon needs a dependency on
         # dh-python unless the -dev packages are used.
-        my $python_source = 'dh-python:any';
+        my $python_source = 'dh-python:any | pybuild-plugin-pyproject:any';
 
         $self->pointed_hint('missing-build-dependency-for-dh-addon',
             $drules->pointer,$addon, "(does not satisfy $python_source)")
