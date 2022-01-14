@@ -3,20 +3,24 @@ Severity: warning
 Check: libraries/shared/links
 Renamed-From:
  dev-pkg-without-shlib-symlink
-Explanation: A "-dev" package is supposed to install a "libsomething.so" symbolic
- link referencing the corresponding shared library. Notice how the link name
- doesn't include the version number -- this is because such a link is used
- by the linker when other programs are built against this shared library.
+Explanation: A <code>-dev</code> package is supposed to install an unversioned
+ symbolic link that references the shared library by name.
  .
- The symlink is generally expected in the same directory as the library
- itself. The major exception to this rule is if the library is installed
- in (or beneath) <code>/lib</code>, where the symlink must be installed in the
- same dir beneath <code>/usr</code>.
+ There is no requirement that the names are otherwise related.
  .
- Example: If the library is installed in <code>/lib/i386-linux-gnu/libXYZ.so.V</code>,
- the symlink is expected at <code>/usr/lib/i386-linux-gnu/libXYZ.so</code>.
+ The dynamic linker uses the link to load the executable into memory.
  .
- Implementation detail: This tag is emitted for the library package and not
- the "-dev" package.
+ In most cases, the symbolic link should be in the same folder as the library itself.
+ A major exception are libraries installed under <code>/lib</code>. In those cases,
+ the links should go into the corresponding folders under <code>/usr</code>.
+ .
+ For a library installed as <code>/lib/i386-linux-gnu/libXYZ.so.V</code>, a good link
+ would be <code>/usr/lib/i386-linux-gnu/libXYZ.so</code>.
+ .
+ This tag is emitted for the library package and not for the <code>-dev</code> package.
+ That is because Lintian looks for links after locating the library. The links can be
+ in any of several installables, but there is only one library for each set of links
+ pointing to it.
 See-Also:
  debian-policy 8.4
+ Bug#963099
