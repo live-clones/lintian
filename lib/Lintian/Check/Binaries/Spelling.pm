@@ -63,15 +63,15 @@ sub visit_installed_files {
     return
       unless $item->file_type =~ /^ [^,]* \b ELF \b /x;
 
-    my $exceptions = {
-        %{ $self->group->spelling_exceptions },
-        map { $_ => 1} $self->BINARY_SPELLING_EXCEPTIONS->all
-    };
+    my @acceptable = (
+        @{ $self->group->spelling_exceptions },
+        $self->BINARY_SPELLING_EXCEPTIONS->all
+    );
 
     my $tag_emitter
       = $self->spelling_tag_emitter('spelling-error-in-binary', $item);
 
-    check_spelling($self->data, $item->strings, $exceptions,$tag_emitter, 0);
+    check_spelling($self->data, $item->strings, \@acceptable, $tag_emitter, 0);
 
     return;
 }

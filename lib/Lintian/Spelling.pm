@@ -78,8 +78,8 @@ misspelling with the following arguments:
 
 =back
 
-If EXCEPTIONS is given, it will be used as a hash ref of exceptions.
-Any lowercase word appearing as a key of this hash ref will never be
+If EXCEPTIONS is given, it will be used as an array ref of exceptions.
+Any lowercase word appearing as a key of that array will never be
 considered a spelling mistake (exception being if it is a part of a
 multiword misspelling).
 
@@ -90,19 +90,25 @@ Returns the number of spelling mistakes found in TEXT.
 my (%CORRECTIONS, @CORRECTIONS_MULTIWORD);
 
 sub check_spelling {
-    my ($data, $text, $exceptions, $code_ref, $duplicate_check) = @_;
+    my ($data, $text, $acceptable, $code_ref, $duplicate_check) = @_;
 
     croak encode_utf8('No spelling data')
       unless defined $data;
 
-    return 0 unless $text;
-    if (not $code_ref and $exceptions and ref($exceptions) eq 'CODE') {
-        $code_ref = $exceptions;
-        $exceptions = {};
-    } else {
-        $exceptions //= {};
+    return 0
+      unless $text;
+
+    if (  !defined $code_ref
+        && defined $acceptable
+        && ref($acceptable) eq 'CODE') {
+        $code_ref = $acceptable;
+        $acceptable = [];
     }
+
+    $acceptable //= [];
     $duplicate_check //= 1;
+
+    my %exceptions = map { $_ => 1 } @{$acceptable};
 
     my (%seen, %duplicates, $last_word, $quoted);
     my $counter = 0;
@@ -155,20 +161,30 @@ sub check_spelling {
         } else {
             $last_word = undef;
         }
-        next if ($word =~ /^[A-Z]{1,5}\z/);
+
+        next
+          if $word =~ /^[A-Z]{1,5}\z/;
+
         # Some exceptions are based on case (e.g. "teH").
-        next if exists($exceptions->{$word});
+        next
+          if exists $exceptions{$word};
+
         my $lcword = lc $word;
-        if (exists($CORRECTIONS{$lcword})
-            &&!exists($exceptions->{$lcword})) {
+        if (exists $CORRECTIONS{$lcword}
+            && !exists $exceptions{$lcword}) {
+
             $counter++;
             my $correction = $CORRECTIONS{$lcword};
+
             if ($word =~ /^[A-Z]+$/) {
                 $correction = uc $correction;
             } elsif ($word =~ /^[A-Z]/) {
                 $correction = ucfirst $correction;
             }
-            next if $seen{$lcword}++;
+
+            next
+              if $seen{$lcword}++;
+
             $code_ref->($word, $correction);
         }
     }

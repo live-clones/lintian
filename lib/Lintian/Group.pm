@@ -27,6 +27,7 @@ use Carp qw(croak);
 use Const::Fast;
 use Cwd;
 use Devel::Size qw(total_size);
+use Email::Address::XS;
 use File::Spec;
 use List::Compare;
 use List::SomeUtils qw(any none uniq firstval true);
@@ -723,21 +724,43 @@ has spelling_exceptions => (
     default => sub {
         my ($self) = @_;
 
-        my %exceptions;
+        my @acceptable;
 
+        # this run may not have all types
         for my $processable ($self->get_processables) {
 
-            my @names = ($processable->name, $processable->source_name);
-            push(@names, $processable->debian_control->installables)
+            # all processables have those
+            my @package_names= ($processable->name, $processable->source_name);
+
+            # for sources we have d/control
+            push(@package_names, $processable->debian_control->installables)
               if $processable->type eq 'source';
 
-            foreach my $name (@names) {
-                $exceptions{$name} = 1;
-                $exceptions{$_} = 1 for split m/-/, $name;
+            push(@acceptable, @package_names);
+
+            # exempt pieces, too
+            my @package_pieces = map { split(m{-}) } @package_names;
+            push(@acceptable, @package_pieces);
+
+            my @people_names;
+            for my $role (qw(Maintainer Uploaders Changed-By)) {
+
+                my $value = $processable->fields->value($role);
+                for my $parsed (Email::Address::XS->parse($value)) {
+
+                    push(@people_names, $parsed->phrase)
+                      if length $parsed->phrase;
+                }
             }
+
+            push(@acceptable, @people_names);
+
+            # exempt first and last name separately, too
+            my @people_pieces = map { split($SPACE) } @people_names;
+            push(@acceptable, @people_pieces);
         }
 
-        return \%exceptions;
+        return [uniq @acceptable];
     });
 
 =back
