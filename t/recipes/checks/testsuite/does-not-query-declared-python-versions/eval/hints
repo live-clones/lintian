@@ -1,4 +1,4 @@
-does-not-query-declared-python-versions (source): query-requested-python-versions-in-test >= 3.4 [debian/tests/script:13]
-does-not-query-declared-python-versions (source): query-requested-python-versions-in-test >= 3.4 [debian/tests/script:12]
-does-not-query-declared-python-versions (source): query-requested-python-versions-in-test >= 3.4 [debian/tests/script:11]
-does-not-query-declared-python-versions (source): query-requested-python-versions-in-test >= 3.4 [debian/tests/script:10]
+does-not-query-declared-python-versions (source): query-declared-python-versions-in-test >= 3.4 [debian/tests/script:13]
+does-not-query-declared-python-versions (source): query-declared-python-versions-in-test >= 3.4 [debian/tests/script:12]
+does-not-query-declared-python-versions (source): query-declared-python-versions-in-test >= 3.4 [debian/tests/script:11]
+does-not-query-declared-python-versions (source): query-declared-python-versions-in-test >= 3.4 [debian/tests/script:10]

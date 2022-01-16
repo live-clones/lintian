@@ -1,6 +1,8 @@
-Tag: declare-requested-python-versions-for-test
+Tag: declare-python-versions-for-test
 Severity: warning
 Check: testsuite
+Renamed-from:
+ declare-requested-python-versions-for-test
 Explanation: The specified test attempts to query the Python versions
  <em>requested</em> by your sources with the command
  <code>py3versions --requested</code> but your sources do not actually

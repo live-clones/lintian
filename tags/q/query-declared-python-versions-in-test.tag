@@ -1,6 +1,8 @@
-Tag: query-requested-python-versions-in-test
+Tag:  query-declared-python-versions-in-test
 Severity: warning
 Check: testsuite
+Renamed-From:
+ query-requested-python-versions-in-test
 Explanation: The specified test queries all <em>supported</em> Python versions
  with the command <code>py3versions --supported</code> but your sources request
  a specific set of versions via the field <code>X-Python3-Version</code>.
