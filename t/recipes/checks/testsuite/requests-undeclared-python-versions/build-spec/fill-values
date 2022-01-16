@@ -1,0 +1,3 @@
+Skeleton: source-native
+Testname: requests-undeclared-python-versions
+Description: Tests for py3versions -r without X-Python3-Version

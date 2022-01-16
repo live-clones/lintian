@@ -306,6 +306,20 @@ sub check_test_file {
               )
               if $options =~ /\s(?:-\w*s|--supported)/
               && !$depends_norestriction->satisfies($PYTHON3_ALL_DEPEND);
+
+            my $debian_control = $self->processable->debian_control;
+
+            $self->pointed_hint('declare-requested-python-versions-for-test',
+                $pointer, $command)
+              if $options =~ m{ \s (?: -\w*r | --requested ) }x
+              && !$debian_control->source_fields->declares(
+                'X-Python3-Version');
+
+            $self->pointed_hint('query-requested-python-versions-in-test',
+                $pointer,
+                $debian_control->source_fields->value('X-Python3-Version'))
+              if $options =~ m{ \s (?: -\w*s | --supported ) }x
+              && $debian_control->source_fields->declares('X-Python3-Version');
         }
 
     } continue {
