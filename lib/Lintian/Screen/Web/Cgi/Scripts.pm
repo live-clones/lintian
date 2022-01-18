@@ -33,7 +33,7 @@ sub suppress {
     my $item = $hint->pointer->item;
 
     return 1
-      if $item->is_script
+      if ($item->is_script || $item->is_elf)
       && $item->name =~ m{^ usr/lib/cgi-bin/ }x;
 
     return 0;
