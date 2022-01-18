@@ -14,9 +14,9 @@ Explanation: The specified test attempts to query the Python versions
  <code>--requested</code> with <code>--supported</code>. That will
  exercise the test with all available Python versions.
  .
- Should the test require specific Python versions, please add the field
- <code>X-Python3-Version</code> with the appropriate information to the
- source stanza in the <code>debian/control</code> file.
+ Should your installable require only specific Python versions, please add
+ the field <code>X-Python3-Version</code> with the appropriate information
+ to the source stanza in the <code>debian/control</code> file.
  .
  No redirection of the output, as in <code>2 &gt; /dev/null</code>, is
  needed in either case.
