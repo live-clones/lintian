@@ -128,8 +128,6 @@ sub visit_installed_files {
           || $item->dirname eq 'usr/share/snmp/mibs/'
           # see Bug#904852
           || $item->dirname =~ m{templates?(?:[.]d)?/}
-          || ( $item->basename =~ m{[.]txt$}
-            && $item->dirname =~ m{^usr/lib/python3/.*[.]egg-info/}s)
           || ( $item->basename =~ m{^README}xi
             && $item->bytes =~ m{this directory}xi);
     }
