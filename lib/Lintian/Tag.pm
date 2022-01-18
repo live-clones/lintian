@@ -28,6 +28,7 @@ use Carp qw(croak);
 use Const::Fast;
 use Email::Address::XS;
 use List::SomeUtils qw(none first_value);
+use Syntax::Keyword::Try;
 use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Deb822;
@@ -203,14 +204,25 @@ sub load {
         $relative =~ s{/([[:lower:]])}{/\U$1}g;
         $relative =~ s{-([[:lower:]])}{\U$1}g;
 
-        my @candidates = map {
-            ("$_/lib/Lintian/Screen/$relative.pm", "$_/screens/relative.pm")
-        } @{$profile->safe_include_dirs};
+        $relative .= '.pm';
+
+        my @candidates
+          = map {("$_/lib/Lintian/Screen/$relative", "$_/screens/$relative")}
+          @{$profile->safe_include_dirs};
 
         my $absolute = first_value { -e } @candidates;
-        require $absolute;
+        die encode_utf8(
+            "Cannot find screen $screen_name (looking for $relative)")
+          unless length $absolute;
+
+        try {
+            require $absolute;
+        } catch {
+            die encode_utf8("Cannot load screen $absolute: $@");
+        }
 
         my $module = $relative;
+        $module =~ s{ [.]pm $}{}x;
         $module =~ s{/}{::}g;
 
         my $screen = "Lintian::Screen::$module"->new;
