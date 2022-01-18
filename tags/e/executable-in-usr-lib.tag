@@ -29,3 +29,13 @@ Reason: The <code>emacsen-common</code> package places installation
 See-Also:
  Bug#974175,
  Bug#954149
+
+Screen: web/cgi/scripts
+Advocates: Andrius Merkys <merkys@debian.org>
+Reason: The folder <code>/usr/lib/cgi-bin/</code> is designated for
+ scripts in the Common Gateway Interface (CGI). They require the
+ executable bit so the server can run them.
+See-Also:
+ https://en.wikipedia.org/wiki/Common_Gateway_Interface,
+ https://datatracker.ietf.org/doc/html/rfc3875.html,
+ Bug#1003941
