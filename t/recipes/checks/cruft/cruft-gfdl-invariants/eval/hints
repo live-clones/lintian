@@ -1,3 +1,4 @@
+cruft-gfdl-invariants (source): source-is-missing [src/oldfalsepositive/fontsMX.html]
 cruft-gfdl-invariants (source): license-problem-gfdl-non-official-text invariant part is: without any invariant sections [src/oldfalsepositive/parsewiki.txt]
 cruft-gfdl-invariants (source): license-problem-gfdl-non-official-text invariant part is: with the no invariant sections, with the no front-cover texts, and with no back-cover texts [src/oldfalsepositive/partedvariant.txt]
 cruft-gfdl-invariants (source): license-problem-gfdl-non-official-text invariant part is: with the invariant sections being no invariant sections, with the front-cover texts being no front-cover texts, and with the back-cover texts being no back-cover texts [src/oldfalsepositive/oidentd.8]

@@ -46,17 +46,9 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-# Half of the size used in the "sliding window" for detecting bad
-# licenses like GFDL with invariant sections.
-# NB: Keep in sync cruft-gfdl-fp-sliding-win/pre_build.
-# not less than 8192 for source missing
-const my $LARGE_BLOCK_SIZE => 16_384;
-
-const my $SMALL_BLOCK_SIZE => 8_192;
-
 # very long line lengths
 const my $VERY_LONG_LINE_LENGTH => 512;
-const my $SAFE_LINE_LENGTH => 256;
+const my $TOO_MANY_SEMICOLONS => 1;
 
 const my $EMPTY => q{};
 const my $ASTERISK => q{*};
@@ -64,10 +56,7 @@ const my $DOLLAR => q{$};
 const my $DOT => q{.};
 const my $DOUBLE_DOT => q{..};
 
-const my $LICENSE_CHECK_DATA_FIELDS => 5;
-
 const my $ITEM_NOT_FOUND => -1;
-const my $SKIP_HTML => -1;
 
 my %NVIDIA_LICENSE = (
     keywords => [qw{license intellectual retain property}],
@@ -333,6 +322,52 @@ sub visit_patched_files {
 
         $self->pointed_hint('source-is-missing', $item->pointer)
           unless $self->find_source($item, \%patterns);
+
+        return;
+    }
+
+    my @lines = split(/\n/, $item->bytes);
+    my %line_length;
+    my %semicolon_count;
+
+    my $position = 1;
+    for my $line (@lines) {
+
+        $line_length{$position} = length $line;
+        $semicolon_count{$position} = ($line =~ tr/;/;/);
+
+    } continue {
+        ++$position;
+    }
+
+    my $longest = max_by { $line_length{$_} } keys %line_length;
+    my $most = max_by { $semicolon_count{$_} } keys %semicolon_count;
+
+    return
+      if !defined $longest || $line_length{$longest} <= $VERY_LONG_LINE_LENGTH;
+
+    if ($item->basename =~ m{\.js$}i) {
+
+        $self->pointed_hint('source-contains-prebuilt-javascript-object',
+            $item->pointer);
+
+        # Check for missing source.  It will check
+        # for the source file in well known directories
+        $self->pointed_hint('source-is-missing', $item->pointer)
+          unless $self->find_source(
+            $item,
+            {
+                '.debug.js' => '(?i)\.js$',
+                '-debug.js' => '(?i)\.js$',
+                $EMPTY => $EMPTY
+            });
+    }
+
+    if ($item->basename =~ /\.(?:x?html?\d?|xht)$/i) {
+
+        # html file
+        $self->pointed_hint('source-is-missing', $item->pointer)
+          unless $self->find_source($item, {'.fragment.js' => $DOLLAR});
     }
 
     return;
@@ -386,10 +421,10 @@ sub source {
     }
 
     my @files = grep { $_->is_file } @added_by_debian;
-    for my $file (@files) {
+    for my $item (@files) {
 
-        my $rule = first_value { $file->name =~ /$_->[0]/s } @file_checks;
-        $self->pointed_hint("${prefix}-$rule->[1]", $file->pointer)
+        my $rule = first_value { $item->name =~ /$_->[0]/s } @file_checks;
+        $self->pointed_hint("${prefix}-$rule->[1]", $item->pointer)
           if defined $rule;
     }
 
@@ -397,12 +432,12 @@ sub source {
 }
 
 sub find_source {
-    my ($self, $file, $patternref) = @_;
+    my ($self, $item, $patternref) = @_;
 
     $patternref //= {};
 
     return undef
-      unless $file->is_regular_file;
+      unless $item->is_regular_file;
 
     return undef
       if $self->processable->is_non_free;
@@ -412,7 +447,7 @@ sub find_source {
     my @alternatives;
     for my $replacement (keys %patterns) {
 
-        my $newname = $file->basename;
+        my $newname = $item->basename;
 
         # empty pattern would repeat the last regex compiled
         my $pattern = $patterns{$replacement};
@@ -428,11 +463,11 @@ sub find_source {
 
     # add standard locations
     push(@candidates,
-        $index->resolve_path('debian/missing-sources/' . $file->name));
+        $index->resolve_path('debian/missing-sources/' . $item->name));
     push(@candidates,
-        $index->resolve_path('debian/missing-sources/' . $file->basename));
+        $index->resolve_path('debian/missing-sources/' . $item->basename));
 
-    my $dirname = $file->dirname;
+    my $dirname = $item->dirname;
     my $parentname = basename($dirname);
 
     my @absolute = (
@@ -467,14 +502,14 @@ sub find_source {
     );
 
     for my $relative (@relative) {
-        push(@candidates, $file->resolve_path("$relative/$_"))
+        push(@candidates, $item->resolve_path("$relative/$_"))
           for @alternatives;
     }
 
     my @found = grep { defined } @candidates;
 
     # careful with behavior around empty arrays
-    my $source = first_value { $_->name ne $file->name } @found;
+    my $source = first_value { $_->name ne $item->name } @found;
 
     return $source;
 }
@@ -511,10 +546,108 @@ sub full_text_check {
         }
     }
 
-    $self->check_html_cruft($item, $lowercase)
-      if $item->basename =~ /\.(?:x?html?\d?|xht)$/i;
+    # check javascript in html file
+    if ($item->basename =~ /\.(?:x?html?\d?|xht)$/i) {
 
-    if ($self->_is_javascript_but_not_minified($item->name)) {
+        my $blockscript = $lowercase;
+        my $indexscript;
+
+        while (
+            ($indexscript = index($blockscript, '<script')) > $ITEM_NOT_FOUND){
+
+            $blockscript = substr($blockscript,$indexscript);
+
+            # sourced script ok
+            if ($blockscript =~ m{\A<script\s+[^>]*?src="[^"]+?"[^>]*?>}sm) {
+
+                $blockscript = substr($blockscript,$+[0]);
+                next;
+            }
+
+            # extract script
+            if ($blockscript =~ m{<script[^>]*?>(.*?)</script>}sm) {
+
+                $blockscript = substr($blockscript,$+[0]);
+
+                my $lcscript = $1;
+
+                # check if js script is minified
+                my $firstline = $EMPTY;
+                for my $line (split /\n/, $lcscript) {
+
+                    if ($line =~ /^\s*$/) {
+                        next;
+
+                    } else {
+                        $firstline = $line;
+                        last;
+                    }
+                }
+
+                if ($firstline
+                    =~ m/.{0,20}((?:\bcopyright\b|[\(]c[\)]\s*\w|©).{0,50})/){
+
+                    my $extract = $1;
+                    $extract =~ s/^\s+|\s+$//g;
+
+                    $self->pointed_hint(
+                        'embedded-script-includes-copyright-statement',
+                        $item->pointer,'extract of copyright statement:',
+                        $extract);
+                }
+
+                # clean up jslint craps line
+                my $cleaned = $lcscript;
+                $cleaned =~ s{^\s*/[*][^\n]*[*]/\s*$}{}gm;
+                $cleaned =~ s{^\s*//[^\n]*$}{}gm;
+                $cleaned =~ s/^\s+//gm;
+
+                # strip indentation
+                $cleaned =~ s/^\s+//mg;
+                $cleaned = _strip_c_comments($cleaned);
+                # strip empty line
+                $cleaned =~ s/^\s*\n//mg;
+                # remove last \n
+                $cleaned =~ s/\n\Z//m;
+
+# detect browserified javascript (comment are removed here and code is stripped)
+                my $contiguous = $cleaned;
+                $contiguous =~ s/\n/ /msg;
+
+                # get browserified regexp
+                my $BROWSERIFY_REGEX
+                  = $self->data->load('cruft/browserify-regex',qr/\s*\~\~\s*/);
+
+                for my $condition ($BROWSERIFY_REGEX->all) {
+
+                    my $pattern = $BROWSERIFY_REGEX->value($condition);
+                    if ($contiguous =~ m{$pattern}msx) {
+
+                        my $extra= (defined $1) ? 'code fragment:'.$1 : $EMPTY;
+                        $self->pointed_hint(
+                            'source-contains-browserified-javascript',
+                            $item->pointer, $extra);
+
+                        last;
+                    }
+                }
+
+                next;
+            }
+
+            last;
+        }
+    }
+
+    # check if file is javascript but not minified
+    my $isjsfile = ($item->name =~ m/\.js$/) ? 1 : 0;
+    if ($isjsfile) {
+        my $minjsregexp
+          = qr/(?i)[-._](?:compiled|compressed|lite|min|pack(?:ed)?|prod|umd|yc)\.js$/;
+        $isjsfile = ($item->name =~ m{$minjsregexp}) ? 0 : 1;
+    }
+
+    if ($isjsfile) {
         # exception sphinx documentation
         if ($item->basename eq 'searchindex.js') {
             if ($lowercase =~ m/\A\s*search\.setindex\s* \s* \(\s*\{/xms) {
@@ -567,7 +700,41 @@ sub full_text_check {
         }
 
         # now search hidden minified
-        $self->warn_long_lines($item, $lowercase);
+
+        # clean up jslint craps line
+        my $cleaned = $lowercase;
+        $cleaned =~ s{^\s*/[*][^\n]*[*]/\s*$}{}gm;
+        $cleaned =~ s{^\s*//[^\n]*$}{}gm;
+        $cleaned =~ s/^\s+//gm;
+
+        # strip indentation
+        $cleaned =~ s/^\s+//mg;
+        $cleaned = _strip_c_comments($cleaned);
+        # strip empty line
+        $cleaned =~ s/^\s*\n//mg;
+        # remove last \n
+        $cleaned =~ s/\n\Z//m;
+
+# detect browserified javascript (comment are removed here and code is stripped)
+        my $contiguous = $cleaned;
+        $contiguous =~ s/\n/ /msg;
+
+        # get browserified regexp
+        my $BROWSERIFY_REGEX
+          = $self->data->load('cruft/browserify-regex',qr/\s*\~\~\s*/);
+
+        for my $condition ($BROWSERIFY_REGEX->all) {
+
+            my $pattern = $BROWSERIFY_REGEX->value($condition);
+            if ($contiguous =~ m{$pattern}msx) {
+
+                my $extra = (defined $1) ? 'code fragment:'.$1 : $EMPTY;
+                $self->pointed_hint('source-contains-browserified-javascript',
+                    $item->pointer, $extra);
+
+                last;
+            }
+        }
     }
 
     # search link rel header
@@ -585,149 +752,6 @@ sub full_text_check {
     }
 
     return;
-}
-
-# check javascript in html file
-sub check_html_cruft {
-    my ($self, $item, $lowercase) = @_;
-
-    my $blockscript = $lowercase;
-    my $indexscript;
-
-    while (($indexscript = index($blockscript, '<script')) > $ITEM_NOT_FOUND) {
-
-        $blockscript = substr($blockscript,$indexscript);
-
-        # sourced script ok
-        if ($blockscript =~ m{\A<script\s+[^>]*?src="[^"]+?"[^>]*?>}sm) {
-
-            $blockscript = substr($blockscript,$+[0]);
-            next;
-        }
-
-        # extract script
-        if ($blockscript =~ m{<script[^>]*?>(.*?)</script>}sm) {
-
-            $blockscript = substr($blockscript,$+[0]);
-
-            my $lcscript = $1;
-            $self->check_js_script($item, $lcscript);
-
-            return 0
-              if $self->warn_long_lines($item, $lcscript);
-
-            next;
-        }
-
-        # here we know that we have partial script. Do the check nevertheless
-        # first check if we have the full <script> tag and do the check
-        # if we get <script src="  "
-        # then skip
-        if ($blockscript =~ /\A<script[^>]*?>/sm) {
-
-            $blockscript = substr($blockscript,$+[0]);
-            $self->check_js_script($item, $blockscript);
-        }
-
-        return 0;
-    }
-
-    return 1;
-}
-
-# check if js script is minified
-sub check_js_script {
-    my ($self, $item, $lcscript) = @_;
-
-    my $firstline = $EMPTY;
-    for my $line (split /\n/, $lcscript) {
-
-        if ($line =~ /^\s*$/) {
-            next;
-
-        } else {
-            $firstline = $line;
-            last;
-        }
-    }
-
-    if ($firstline =~ m/.{0,20}((?:\bcopyright\b|[\(]c[\)]\s*\w|©).{0,50})/) {
-
-        my $extract = $1;
-        $extract =~ s/^\s+|\s+$//g;
-
-        $self->pointed_hint('embedded-script-includes-copyright-statement',
-            $item->pointer,'extract of copyright statement:',$extract);
-    }
-
-    return;
-}
-
-# check if file is javascript but not minified
-sub _is_javascript_but_not_minified {
-    my ($self, $name) = @_;
-
-    my $isjsfile = ($name =~ m/\.js$/) ? 1 : 0;
-    if ($isjsfile) {
-        my $minjsregexp
-          = qr/(?i)[-._](?:compiled|compressed|lite|min|pack(?:ed)?|prod|umd|yc)\.js$/;
-        $isjsfile = ($name =~ m{$minjsregexp}) ? 0 : 1;
-    }
-
-    return $isjsfile;
-}
-
-sub warn_prebuilt_javascript{
-    my ($self, $item, $linelength, $position, $cutoff) = @_;
-
-    my $extratext= "line $position is $linelength characters long (>$cutoff)";
-
-    $self->pointed_hint('source-contains-prebuilt-javascript-object',
-        $item->pointer);
-
-    # Check for missing source.  It will check
-    # for the source file in well known directories
-    if ($item->basename =~ m{\.js$}i) {
-
-        $self->pointed_hint('source-is-missing', $item->pointer)
-          unless $self->find_source(
-            $item,
-            {
-                '.debug.js' => '(?i)\.js$',
-                '-debug.js' => '(?i)\.js$',
-                $EMPTY => $EMPTY
-            });
-
-    } else  {
-        # html file
-        $self->pointed_hint('source-is-missing', $item->pointer)
-          unless $self->find_source($item, {'.fragment.js' => $DOLLAR});
-    }
-
-    return;
-}
-
-sub maximum_line_length {
-    my ($self, $text) = @_;
-
-    my @lines = split(/\n/, $text);
-    my %line_lengths;
-
-    my $position = 1;
-    for my $line (@lines) {
-
-        $line_lengths{$position} = length $line;
-
-    } continue {
-        ++$position;
-    }
-
-    my $longest = max_by { $line_lengths{$_} } keys %line_lengths;
-
-    return (0, 0)
-      unless defined $longest;
-
-    return ($line_lengths{$longest}, $longest);
 }
 
 # strip C comment
@@ -753,115 +777,6 @@ sub _strip_c_comments {
                }{defined $1 ? $1 : ""}xgse;
 
     return $lowercase;
-}
-
-# detect browserified javascript (comment are removed here and code is stripped)
-sub detect_browserify {
-    my ($self, $item, $lowercase) = @_;
-
-    $lowercase =~ s/\n/ /msg;
-
-    # get browserified regexp
-    my $BROWSERIFY_REGEX
-      = $self->data->load('cruft/browserify-regex',qr/\s*\~\~\s*/);
-
-    for my $condition ($BROWSERIFY_REGEX->all) {
-
-        my $pattern = $BROWSERIFY_REGEX->value($condition);
-        if ($lowercase =~ m{$pattern}msx) {
-
-            my $extra = (defined $1) ? 'code fragment:'.$1 : $EMPTY;
-            $self->pointed_hint('source-contains-browserified-javascript',
-                $item->pointer, $extra);
-
-            last;
-        }
-    }
-    return;
-}
-
-sub warn_long_lines {
-    my ($self, $item, $lowercase) = @_;
-
-    my ($maximum, $position) = $self->maximum_line_length($lowercase);
-   # first check if line >  $VERY_LONG_LINE_LENGTH that is likely minification
-   # avoid problem by recursive regex with longline
-    if ($maximum > $VERY_LONG_LINE_LENGTH) {
-
-        # clean up jslint craps line
-        $lowercase =~ s{^\s*/[*][^\n]*[*]/\s*$}{}gm;
-        $lowercase =~ s{^\s*//[^\n]*$}{}gm;
-        $lowercase =~ s/^\s+//gm;
-    }
-
-    # strip indentation
-    $lowercase =~ s/^\s+//mg;
-    $lowercase = _strip_c_comments($lowercase);
-    # strip empty line
-    $lowercase =~ s/^\s*\n//mg;
-    # remove last \n
-    $lowercase =~ s/\n\Z//m;
-
-    # detect browserification
-    $self->detect_browserify($item, $lowercase);
-
-    # retry very long line length test now: likely minified
-    ($maximum, $position)= $self->maximum_line_length($lowercase);
-
-    if ($maximum > $VERY_LONG_LINE_LENGTH) {
-
-        $self->warn_prebuilt_javascript($item, $maximum, $position,
-            $VERY_LONG_LINE_LENGTH);
-        return 1;
-    }
-
-    while (length $lowercase) {
-
-        # check line above > $SAFE_LINE_LENGTH
-        my $line = $EMPTY;
-        my $linelength = 0;
-
-        my $nextposition = 0;
-        while ($lowercase =~ /([^\n]+)\n?/g) {
-
-            $line = $1;
-            $linelength = length($line);
-
-            if ($linelength > $SAFE_LINE_LENGTH) {
-                $lowercase = substr($lowercase, pos($lowercase));
-
-                last;
-            }
-
-            $linelength = 0;
-
-        } continue {
-            ++$nextposition;
-        }
-
-        # no long line
-        return 0
-          unless $linelength;
-
-        # compute number of ;
-        if (($line =~ tr/;/;/) > 1) {
-
-            $self->warn_prebuilt_javascript($item, $linelength, $nextposition,
-                $SAFE_LINE_LENGTH);
-            return 1;
-        }
-    }
-
-    return 0;
-}
-
-sub tag_gfdl {
-    my ($self, $applytag, $item, $gfdlsections) = @_;
-
-    $self->pointed_hint($applytag, $item->pointer, 'invariant part is:',
-        $gfdlsections);
-
-    return;
 }
 
 # return True in case of license problem
@@ -953,21 +868,30 @@ sub check_gfdl_license_problem {
                 my $applytag = $gfdl_data->{'tag'};
 
                 # lie will allow checking more blocks
-                $self->tag_gfdl($applytag, $item, $gfdlsections)
+                $self->pointed_hint($applytag, $item->pointer,
+                    'invariant part is:',
+                    $gfdlsections)
                   if defined $applytag;
 
                 return 0;
 
             } else {
-                $self->tag_gfdl('license-problem-gfdl-invariants',
-                    $item, $gfdlsections);
+                $self->pointed_hint(
+                    'license-problem-gfdl-invariants',
+                    $item->pointer,'invariant part is:',
+                    $gfdlsections
+                );
                 return 1;
             }
         }
     }
 
     # catch all
-    $self->tag_gfdl('license-problem-gfdl-invariants',$item, $gfdlsections);
+    $self->pointed_hint(
+        'license-problem-gfdl-invariants',
+        $item->pointer,'invariant part is:',
+        $gfdlsections
+    );
 
     return 1;
 }
