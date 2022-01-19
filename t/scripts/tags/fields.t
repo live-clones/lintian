@@ -156,13 +156,11 @@ for my $tag_path (@tag_paths) {
     select $fh;
 
     print "<!DOCTYPE html><head><title>$tag_name</title></head><body>";
-    $html_output->describe_tags([$tag]);
+    $html_output->describe_tags($profile->data, [$tag]);
     say '</body>';
 
     select *STDOUT;
     close $fh;
-
-    print $html_description;
 
     my $tidy_out;
     my $tidy_err;
