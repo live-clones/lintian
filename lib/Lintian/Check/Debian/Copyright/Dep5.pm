@@ -604,6 +604,7 @@ sub check_dep5_copyright {
     my %sections_by_wildcard;
     my %wildcard_by_file;
     my %required_standalone;
+    my %positions_by_debian_year;
     my @redundant_wildcards;
 
     my $section_count = 0;
@@ -643,22 +644,12 @@ sub check_dep5_copyright {
 
         my @rightholders = $section->trimmed_list('Copyright', qr{ \n }x);
         my @years = map { /(\d{4})/g } @rightholders;
-        my @changelog_entries = @{$self->processable->changelog->entries};
 
-        if (   @years
-            && @changelog_entries
-            && (any { m{^ debian (?: / | $) }x } @wildcards)) {
+        if (any { m{^ debian (?: / | $) }x } @wildcards) {
 
-            my @descending = reverse sort { $a <=> $b } @years;
-            my $latest_copyright = $descending[0];
+            my $position = $section->position('Copyright');
 
-            my $tp = Time::Piece->strptime($changelog_entries[0]->Date,
-                '%a, %d %b %Y %T %z');
-            my $latest_changelog = $tp->year;
-
-            $self->pointed_hint('update-debian-copyright', $copyright_pointer,
-                $latest_copyright, 'vs', $tp->year)
-              if $latest_copyright < $tp->year;
+            push(@{$positions_by_debian_year{$_}}, $position)for @years;
         }
 
         for my $wildcard (@wildcards) {
@@ -750,6 +741,30 @@ sub check_dep5_copyright {
 
     } continue {
         $section_count++;
+    }
+
+    my @debian_years = keys %positions_by_debian_year;
+    my @changelog_entries = @{$self->processable->changelog->entries};
+
+    if (@debian_years && @changelog_entries) {
+
+        my @descending = reverse sort { $a <=> $b } @debian_years;
+        my $most_recent_copyright = $descending[0];
+
+        my $tp = Time::Piece->strptime($changelog_entries[0]->Date,
+            '%a, %d %b %Y %T %z');
+        my $most_recent_changelog = $tp->year;
+
+        my @candidates = @{$positions_by_debian_year{$most_recent_copyright}};
+        my @sorted = sort { $a <=> $b } @candidates;
+
+        # pick the topmost, which should be the broadest pattern
+        my $position = $candidates[0];
+
+        $self->pointed_hint('update-debian-copyright',
+            $copyright_file->pointer($position),
+            $most_recent_copyright, 'vs', $most_recent_changelog)
+          if $most_recent_copyright < $most_recent_changelog;
     }
 
     if ($check_wildcards) {
