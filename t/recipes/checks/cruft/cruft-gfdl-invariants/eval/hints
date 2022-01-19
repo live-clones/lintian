@@ -1,5 +1,3 @@
-cruft-gfdl-invariants (source): very-long-line-length-in-source-file line 16 is 974 characters long (>512) [src/false-positive.rtf]
-cruft-gfdl-invariants (source): very-long-line-length-in-source-file line 1 is 1162 characters long (>512) [src/oldfalsepositive/fontsMX.html]
 cruft-gfdl-invariants (source): license-problem-gfdl-non-official-text invariant part is: without any invariant sections [src/oldfalsepositive/parsewiki.txt]
 cruft-gfdl-invariants (source): license-problem-gfdl-non-official-text invariant part is: with the no invariant sections, with the no front-cover texts, and with no back-cover texts [src/oldfalsepositive/partedvariant.txt]
 cruft-gfdl-invariants (source): license-problem-gfdl-non-official-text invariant part is: with the invariant sections being no invariant sections, with the front-cover texts being no front-cover texts, and with the back-cover texts being no back-cover texts [src/oldfalsepositive/oidentd.8]

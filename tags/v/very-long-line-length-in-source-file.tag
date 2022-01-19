@@ -1,6 +1,6 @@
 Tag: very-long-line-length-in-source-file
 Severity: pedantic
-Check: cruft
+Check: files/contents/line-length
 Explanation: The source file includes a line length that is well beyond
  the normally human made code line length.
  .
