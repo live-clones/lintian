@@ -25,7 +25,7 @@ Screen: autotools/long-lines
 Advocates: Russ Allbery <rra@debian.org>
 Reason:
  Upstream sources using <code>autoconf</code> have traditionally been
- distributed with generated <code>./configure<code> scripts as well as
+ distributed with generated <code>./configure</code> scripts as well as
  other third-party <code>m4</code> macro files such as <code>libtool</code>.
  .
  When paired with <code>automake</code>, there may also be some intermediate
