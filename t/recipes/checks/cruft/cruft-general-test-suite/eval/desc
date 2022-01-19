@@ -9,7 +9,6 @@ Test-Against:
  source-contains-git-control-dir
  source-contains-hg-control-dir
  source-contains-hg-tags-file
- source-contains-prebuilt-binary
  source-contains-svk-commit-file
  source-contains-svn-commit-file
  source-contains-svn-conflict-file

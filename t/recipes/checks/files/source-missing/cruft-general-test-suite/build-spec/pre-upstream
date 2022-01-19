@@ -1,0 +1,35 @@
+#!/bin/sh
+#
+# Create all the various junk that shouldn't exist upstream.  We do much of it
+# here rather than in the template so that Lintian itself can be imported into
+# revision control systems.
+
+set -e
+dir="$1"
+
+mkdir -p "${dir}/t/CVS"
+echo 'source-contains-cvs-control-dir' > "${dir}/t/CVS/Entries"
+mkdir -p "${dir}/foo/t/.svn"
+echo 'source-contains-svn-control-dir' > "${dir}/foo/t/.svn/format"
+mkdir -p "${dir}/test/.bzr"
+echo 'source-contains-bzr-control-dir' > "${dir}/test/.bzr/foo"
+mkdir -p "${dir}/bar/test/{arch}"
+echo 'source-contains-arch-control-dir' > "${dir}/bar/test/{arch}/foo"
+mkdir -p "${dir}/tests/.git"
+echo 'source-contains-git-control-dir' > "${dir}/tests/.git/foo"
+mkdir -p "${dir}/baz/foo/tests/.hg"
+echo 'source-contains-hg-control-dir' > "${dir}/baz/foo/tests/.hg/foo"
+mkdir -p "${dir}/testset/.be"
+echo 'source-contains-bts-control-dir' > "${dir}/testset/.be/foo"
+
+echo 'source-contains-svn-commit-file' > "${dir}/t/svn-commit.tmp"
+echo 'source-contains-svk-commit-file' > "${dir}/t/svk-commit444.tmp"
+echo 'source-contains-arch-inventory-file' > "${dir}/t/.arch-inventory"
+echo 'source-contains-hg-tags-file' > "${dir}/t/.hgtags"
+echo 'source-contains-cvs-conflict-copy' > "${dir}/t/.#foo.1.1"
+echo 'source-contains-svn-conflict-file' > "${dir}/t/foo.r1352"
+
+echo 'configure-generated-file-in-source' > "${dir}/tests/config.cache"
+
+cd "$1"
+gcc -o t/hello hello.c

@@ -32,29 +32,16 @@ use warnings;
 use utf8;
 
 use Const::Fast;
-use File::Basename qw(basename);
 use List::SomeUtils qw(any none first_value);
-use List::UtilsBy qw(max_by);
-use Path::Tiny;
-use Unicode::UTF8 qw(encode_utf8);
-
-use Lintian::Relation;
-use Lintian::Util qw(normalize_pkg_path);
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
 
-# very long line lengths
-const my $VERY_LONG_LINE_LENGTH => 512;
-const my $TOO_MANY_SEMICOLONS => 1;
-
 const my $EMPTY => q{};
 const my $ASTERISK => q{*};
-const my $DOLLAR => q{$};
 const my $DOT => q{.};
-const my $DOUBLE_DOT => q{..};
 
 const my $ITEM_NOT_FOUND => -1;
 
@@ -253,123 +240,6 @@ sub visit_patched_files {
       && $item->name eq 'debian/README.Debian'
       && $item->name eq 'debian/README.source';
 
-    # prebuilt-file or forbidden file type
-    $self->pointed_hint('source-contains-prebuilt-wasm-binary', $item->pointer)
-      if $item->file_type =~ m{^WebAssembly \s \(wasm\) \s binary \s module}x;
-
-    $self->pointed_hint('source-contains-prebuilt-windows-binary',
-        $item->pointer)
-      if $item->file_type
-      =~ m{\b(?:PE(?:32|64)|(?:MS-DOS|COM)\s executable)\b}x;
-
-    $self->pointed_hint('source-contains-prebuilt-silverlight-object',
-        $item->pointer)
-      if $item->file_type =~ m{^Zip \s archive \s data}x
-      && $item->name =~ m{(?i)\.xac$}x;
-
-    if ($item->file_type =~ m{^python \s \d(\.\d+)? \s byte-compiled}x) {
-
-        $self->pointed_hint('source-contains-prebuilt-python-object',
-            $item->pointer);
-
-        $self->pointed_hint('source-is-missing', $item->pointer)
-          unless $self->find_source($item,
-            {'.py' => '(?i)(?:\.cpython-\d{2}|\.pypy)?\.py[co]$'});
-    }
-
-    if ($item->file_type =~ m{\bELF\b}x) {
-        $self->pointed_hint('source-contains-prebuilt-binary', $item->pointer);
-
-        my %patterns = map {
-            $_  =>
-'(?i)(?:[\.-](?:bin|elf|e|hs|linux\d+|oo?|or|out|so(?:\.\d+)*)|static|_o\.golden)?$'
-        } qw(.asm .c .cc .cpp .cxx .f .F .i .ml .rc .S);
-
-        $self->pointed_hint('source-is-missing', $item->pointer)
-          unless $self->find_source($item, \%patterns);
-    }
-
-    if ($item->file_type =~ m{^Macromedia \s Flash}x) {
-
-        $self->pointed_hint('source-contains-prebuilt-flash-object',
-            $item->pointer);
-
-        $self->pointed_hint('source-is-missing', $item->pointer)
-          unless $self->find_source($item, {'.as' => '(?i)\.swf$'});
-    }
-
-    if (   $item->file_type =~ m{^Composite \s Document \s File}x
-        && $item->name =~ m{(?i)\.fla$}x) {
-
-        $self->pointed_hint('source-contains-prebuilt-flash-project',
-            $item->pointer);
-
-        $self->pointed_hint('source-is-missing', $item->pointer)
-          unless $self->find_source($item, {'.as' => '(?i)\.fla$'});
-    }
-
-    # do not forget to change also $JS_EXT in file.pm
-    if ($item->name
-        =~ m{(?i)[-._](?:compiled|compressed|lite|min|pack(?:ed)?|prod|umd|yc)\.js$}x
-    ) {
-
-        $self->pointed_hint('source-contains-prebuilt-javascript-object',
-            $item->pointer);
-        my %patterns = map {
-            $_ =>
-'(?i)(?:[-._](?:compiled|compressed|lite|min|pack(?:ed)?|prod|umd|yc))?\.js$'
-        } qw(.js _orig.js .js.orig .src.js -src.js .debug.js -debug.js -nc.js);
-
-        $self->pointed_hint('source-is-missing', $item->pointer)
-          unless $self->find_source($item, \%patterns);
-
-        return;
-    }
-
-    my @lines = split(/\n/, $item->bytes);
-    my %line_length;
-    my %semicolon_count;
-
-    my $position = 1;
-    for my $line (@lines) {
-
-        $line_length{$position} = length $line;
-        $semicolon_count{$position} = ($line =~ tr/;/;/);
-
-    } continue {
-        ++$position;
-    }
-
-    my $longest = max_by { $line_length{$_} } keys %line_length;
-    my $most = max_by { $semicolon_count{$_} } keys %semicolon_count;
-
-    return
-      if !defined $longest || $line_length{$longest} <= $VERY_LONG_LINE_LENGTH;
-
-    if ($item->basename =~ m{\.js$}i) {
-
-        $self->pointed_hint('source-contains-prebuilt-javascript-object',
-            $item->pointer);
-
-        # Check for missing source.  It will check
-        # for the source file in well known directories
-        $self->pointed_hint('source-is-missing', $item->pointer)
-          unless $self->find_source(
-            $item,
-            {
-                '.debug.js' => '(?i)\.js$',
-                '-debug.js' => '(?i)\.js$',
-                $EMPTY => $EMPTY
-            });
-    }
-
-    if ($item->basename =~ /\.(?:x?html?\d?|xht)$/i) {
-
-        # html file
-        $self->pointed_hint('source-is-missing', $item->pointer)
-          unless $self->find_source($item, {'.fragment.js' => $DOLLAR});
-    }
-
     return;
 }
 
@@ -429,89 +299,6 @@ sub source {
     }
 
     return;
-}
-
-sub find_source {
-    my ($self, $item, $patternref) = @_;
-
-    $patternref //= {};
-
-    return undef
-      unless $item->is_regular_file;
-
-    return undef
-      if $self->processable->is_non_free;
-
-    my %patterns = %{$patternref};
-
-    my @alternatives;
-    for my $replacement (keys %patterns) {
-
-        my $newname = $item->basename;
-
-        # empty pattern would repeat the last regex compiled
-        my $pattern = $patterns{$replacement};
-        $newname =~ s/$pattern/$replacement/
-          if length $pattern;
-
-        push(@alternatives, $newname)
-          if length $newname;
-    }
-
-    my $index = $self->processable->patched;
-    my @candidates;
-
-    # add standard locations
-    push(@candidates,
-        $index->resolve_path('debian/missing-sources/' . $item->name));
-    push(@candidates,
-        $index->resolve_path('debian/missing-sources/' . $item->basename));
-
-    my $dirname = $item->dirname;
-    my $parentname = basename($dirname);
-
-    my @absolute = (
-        # libtool
-        '.libs',
-        ".libs/$dirname",
-        # mathjax
-        'unpacked',
-        # for missing source set in debian
-        'debian',
-        'debian/missing-sources',
-        "debian/missing-sources/$dirname"
-    );
-
-    for my $absolute (@absolute) {
-        push(@candidates, $index->resolve_path("$absolute/$_"))
-          for @alternatives;
-    }
-
-    my @relative = (
-        # likely in current dir
-        $DOT,
-        # for binary object built by libtool
-        $DOUBLE_DOT,
-        # maybe in src subdir
-        './src',
-        # maybe in ../src subdir
-        '../src',
-        "../../src/$parentname",
-        # emscripten
-        './flash-src/src/net/gimite/websocket',
-    );
-
-    for my $relative (@relative) {
-        push(@candidates, $item->resolve_path("$relative/$_"))
-          for @alternatives;
-    }
-
-    my @found = grep { defined } @candidates;
-
-    # careful with behavior around empty arrays
-    my $source = first_value { $_->name ne $item->name } @found;
-
-    return $source;
 }
 
 # do basic license check against well known offender
@@ -673,19 +460,6 @@ sub full_text_check {
 
             return
               if $lowercase=~ m/\A\s*profiles \s* = \s* new \s* Array\s*\(/xms;
-        }
-        # see #745152
-        # Be robust check also .js
-        elsif ($item->basename eq 'deployJava.js') {
-            if ($lowercase
-                =~ m/(?:\A|\v)\s*var\s+deployJava\s*=\s*function/xmsi) {
-
-                $self->pointed_hint('source-is-missing', $item->pointer)
-                  unless $self->find_source($item,
-                    {'.txt' => '(?i)\.js$', $EMPTY => $EMPTY});
-
-                return;
-            }
         }
         # https://github.com/rafaelp/css_browser_selector is actually the
         # original source. (#874381)

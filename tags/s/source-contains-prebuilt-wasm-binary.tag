@@ -1,6 +1,6 @@
 Tag: source-contains-prebuilt-wasm-binary
 Severity: pedantic
-Check: cruft
+Check: files/source-missing
 Explanation: The source tarball contains a prebuilt binary wasm object.
  They are usually provided for the convenience of users. These files
  usually just take up space in the tarball and need to be rebuilt from
