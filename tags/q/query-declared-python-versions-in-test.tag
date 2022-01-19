@@ -1,4 +1,4 @@
-Tag:  query-declared-python-versions-in-test
+Tag: query-declared-python-versions-in-test
 Severity: warning
 Check: testsuite
 Renamed-From:
