@@ -1,6 +1,6 @@
 Tag: source-contains-svn-control-dir
 Severity: pedantic
-Check: cruft
+Check: files/artifact
 Explanation: The upstream source contains an .svn directory. It was most likely
  included by accident since Subversion version control directories
  usually don't belong in releases. When packaging a Subversion snapshot,

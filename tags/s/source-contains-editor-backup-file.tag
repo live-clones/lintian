@@ -1,6 +1,6 @@
 Tag: source-contains-editor-backup-file
 Severity: warning
-Check: cruft
+Check: files/artifact
 Explanation: The Debian diff or native package contains a file ending in
  <code>~</code> or of the form <code>.xxx.swp</code>, which is normally either an
  Emacs or vim backup file or a backup file created by programs such as

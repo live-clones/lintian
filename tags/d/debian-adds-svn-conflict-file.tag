@@ -1,6 +1,6 @@
 Tag: debian-adds-svn-conflict-file
 Severity: warning
-Check: cruft
+Check: files/artifact
 Renamed-From:
  diff-contains-svn-conflict-file
 Explanation: The Debian diff or native package contains a file that looks like a

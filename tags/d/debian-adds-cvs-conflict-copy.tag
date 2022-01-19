@@ -1,6 +1,6 @@
 Tag: debian-adds-cvs-conflict-copy
 Severity: warning
-Check: cruft
+Check: files/artifact
 Renamed-From:
  diff-contains-cvs-conflict-copy
 Explanation: The Debian diff or native package contains a CVS conflict copy.

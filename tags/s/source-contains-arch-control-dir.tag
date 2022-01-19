@@ -1,6 +1,6 @@
 Tag: source-contains-arch-control-dir
 Severity: pedantic
-Check: cruft
+Check: files/artifact
 Explanation: The upstream source contains an {arch} or .arch-ids directory or a
  directory starting with <code>,,</code> (used by baz for debugging traces).
  It was most likely included by accident since Arch version control

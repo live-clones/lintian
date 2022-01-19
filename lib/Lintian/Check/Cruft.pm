@@ -32,18 +32,18 @@ use warnings;
 use utf8;
 
 use Const::Fast;
-use List::SomeUtils qw(any none first_value);
-
-use Moo;
-use namespace::clean;
-
-with 'Lintian::Check';
+use List::SomeUtils qw(any none);
 
 const my $EMPTY => q{};
 const my $ASTERISK => q{*};
 const my $DOT => q{.};
 
 const my $ITEM_NOT_FOUND => -1;
+
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 my %NVIDIA_LICENSE = (
     keywords => [qw{license intellectual retain property}],
@@ -190,41 +190,6 @@ has GFDL_FRAGMENTS => (
         return \%gfdl_fragments;
     });
 
-# Directory checks.  These regexes match a directory that shouldn't be in the
-# source package and associate it with a tag (minus the leading
-# source-contains or debian-adds).  Note that only one of these regexes
-# should trigger for any single directory.
-my @directory_checks = (
-    [qr{^(.+/)?CVS/?$}        => 'cvs-control-dir'],
-    [qr{^(.+/)?\.svn/?$}      => 'svn-control-dir'],
-    [qr{^(.+/)?\.bzr/?$}      => 'bzr-control-dir'],
-    [qr{^(.+/)?\{arch\}/?$}   => 'arch-control-dir'],
-    [qr{^(.+/)?\.arch-ids/?$} => 'arch-control-dir'],
-    [qr{^(.+/)?,,.+/?$}       => 'arch-control-dir'],
-    [qr{^(.+/)?\.git/?$}      => 'git-control-dir'],
-    [qr{^(.+/)?\.hg/?$}       => 'hg-control-dir'],
-    [qr{^(.+/)?\.be/?$}       => 'bts-control-dir'],
-    [qr{^(.+/)?\.ditrack/?$}  => 'bts-control-dir'],
-
-    # Special case (can only be triggered for diffs)
-    [qr{^(.+/)?\.pc/?$} => 'quilt-control-dir'],
-);
-
-# File checks.  These regexes match files that shouldn't be in the source
-# package and associate them with a tag (minus the leading source-contains or
-# debian-adds).  Note that only one of these regexes should trigger for any
-# given file.
-my @file_checks = (
-    [qr{^(.+/)?svn-commit\.(.+\.)?tmp$} => 'svn-commit-file'],
-    [qr{^(.+/)?svk-commit.+\.tmp$}      => 'svk-commit-file'],
-    [qr{^(.+/)?\.arch-inventory$}       => 'arch-inventory-file'],
-    [qr{^(.+/)?\.hgtags$}               => 'hg-tags-file'],
-    [qr{^(.+/)?\.\#(.+?)\.\d+(\.\d+)*$} => 'cvs-conflict-copy'],
-    [qr{^(.+/)?(.+?)\.(r[1-9]\d*)$}     => 'svn-conflict-file'],
-    [qr{\.(orig|rej)$}                  => 'patch-failure-file'],
-    [qr{((^|/)[^/]+\.swp|~)$}           => 'editor-backup-file'],
-);
-
 sub visit_patched_files {
     my ($self, $item) = @_;
 
@@ -239,64 +204,6 @@ sub visit_patched_files {
       unless $item->name eq 'debian/changelog'
       && $item->name eq 'debian/README.Debian'
       && $item->name eq 'debian/README.source';
-
-    return;
-}
-
-sub source {
-    my ($self) = @_;
-
-    my @added_by_debian;
-    my $prefix;
-    if ($self->processable->native) {
-
-        @added_by_debian = @{$self->processable->patched->sorted_list};
-        $prefix = 'source-contains';
-
-    } else {
-        my $patched = $self->processable->patched;
-        my $orig = $self->processable->orig;
-
-        @added_by_debian
-          = grep { !defined $orig->lookup($_->name) } @{$patched->sorted_list};
-
-        # remove root quilt control folder and all paths in it
-        # created when 3.0 (quilt) source packages are unpacked
-        @added_by_debian = grep { $_->name !~ m{^.pc/} } @added_by_debian
-          if $self->processable->source_format eq '3.0 (quilt)';
-
-        my @common_items
-          = grep { defined $orig->lookup($_->name) } @{$patched->sorted_list};
-        my @touched_by_debian
-          = grep { $_->md5sum ne $orig->lookup($_->name)->md5sum }
-          @common_items;
-
-        $self->hint('no-debian-changes')
-          unless @added_by_debian || @touched_by_debian;
-
-        $prefix = 'debian-adds';
-    }
-
-    # ignore lintian test set; should use automatic loop in the future
-    @added_by_debian = grep { $_->name !~ m{^t/} } @added_by_debian
-      if $self->processable->source_name eq 'lintian';
-
-    my @directories = grep { $_->is_dir } @added_by_debian;
-    for my $directory (@directories) {
-
-        my $rule = first_value { $directory->name =~ /$_->[0]/s }
-        @directory_checks;
-        $self->pointed_hint("${prefix}-$rule->[1]", $directory->pointer)
-          if defined $rule;
-    }
-
-    my @files = grep { $_->is_file } @added_by_debian;
-    for my $item (@files) {
-
-        my $rule = first_value { $item->name =~ /$_->[0]/s } @file_checks;
-        $self->pointed_hint("${prefix}-$rule->[1]", $item->pointer)
-          if defined $rule;
-    }
 
     return;
 }

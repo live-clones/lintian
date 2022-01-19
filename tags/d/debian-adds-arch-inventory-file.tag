@@ -1,6 +1,6 @@
 Tag: debian-adds-arch-inventory-file
 Severity: warning
-Check: cruft
+Check: files/artifact
 Renamed-From:
  diff-contains-arch-inventory-file
 Explanation: The Debian diff or native package contains an

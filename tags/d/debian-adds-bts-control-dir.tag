@@ -1,6 +1,6 @@
 Tag: debian-adds-bts-control-dir
 Severity: warning
-Check: cruft
+Check: files/artifact
 Renamed-From:
  diff-contains-bts-control-dir
 Explanation: The Debian diff or native package contains files in a directory
@@ -8,4 +8,5 @@ Explanation: The Debian diff or native package contains files in a directory
  package. <code>dpkg-source</code> will automatically exclude these if it
  is passed <code>-I</code> or <code>-i</code> for native and non-native packages
  respectively.
-See-Also: dpkg-source(1)
+See-Also:
+ dpkg-source(1)

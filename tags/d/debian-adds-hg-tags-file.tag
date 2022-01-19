@@ -1,6 +1,6 @@
 Tag: debian-adds-hg-tags-file
 Severity: warning
-Check: cruft
+Check: files/artifact
 Renamed-From:
  diff-contains-hg-tags-file
 Explanation: The Debian diff or native package contains an <code>.hgtags</code>

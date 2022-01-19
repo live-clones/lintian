@@ -1,6 +1,6 @@
 Tag: debian-adds-editor-backup-file
 Severity: warning
-Check: cruft
+Check: files/artifact
 Renamed-From:
  diff-contains-editor-backup-file
 Explanation: The Debian diff or native package contains a file ending in
