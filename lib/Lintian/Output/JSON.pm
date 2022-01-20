@@ -198,7 +198,10 @@ sub hintlist {
                 $item_dictionary{index} = $item->index->identifier;
 
                 $pointer_dictionary{item} = \%item_dictionary;
-                $pointer_dictionary{line_position} = $pointer->position;
+
+                # numerify to force JSON integer
+                # https://metacpan.org/pod/JSON::XS#simple-scalars
+                $pointer_dictionary{line_position} = $pointer->position + 0;
             }
 
             $hint_dictionary{pointer} = \%pointer_dictionary;
