@@ -317,7 +317,7 @@ sub check_test_file {
               && !$debian_control->source_fields->declares(
                 'X-Python3-Version');
 
-            $self->pointed_hint('query-declared-python-versions-in-test',
+            $self->pointed_hint('drop-python-version-declaration',
                 $pointer,
                 $debian_control->source_fields->value('X-Python3-Version'))
               if $options =~ m{ \s (?: -\w*s | --supported ) }x
