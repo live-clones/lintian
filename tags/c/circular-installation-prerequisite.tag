@@ -3,11 +3,11 @@ Severity: warning
 Check: debian/control/prerequisite/circular
 Renamed-From:
  package-depends-on-itself
-Explanation: The package is its own installation prerquisite in the relevant
- <code>debian/control</code> stanza.
+Explanation: The installable declares itself as its own installation prerequisite
+ in the relevant <code>debian/control</code> stanza.
  .
  Current versions of <code>dpkg-gencontrol</code> will silently ignore the
- prerequisite, but this may still indicate an oversight, like a misspelling
- or having unintentionally cut and pasted an incorrect package name.
+ prerequisite, but it may still indicate an oversight. It could be a misspelling
+ or having cut and pasted an incorrect package name.
 See-Also:
  debian-policy 7.2
