@@ -208,8 +208,12 @@ if (exists $command_line{'hide-overrides'}) {
     );
 }
 
-$command_line{'tag-display-limit'} = 0
-  if exists $command_line{'no-tag-display-limit'};
+if (exists $command_line{'no-tag-display-limit'}) {
+    $command_line{'tag-display-limit'} = 0;
+    warn encode_utf8(
+"A future release will drop --no-tag-display-limit; please use '--tag-display-limit 0' instead.\n"
+    );
+}
 
 my $LINTIAN_CFG = $command_line{cfg};
 
@@ -1024,18 +1028,16 @@ Behavior options:
     --pedantic                display "P:" tags (normally suppressed)
     --profile X               Use the profile X or use vendor X checks
     --show-overrides          output tags that have been overridden
-    --hide-overrides          do not output tags that have been overridden (default)
     --suppress-tags T,...     don't show the specified tags
     --suppress-tags-from-file X don't show the tags listed in file X
-    --tag-display-limit X     Specify "tag per package" display limit
-    --no-tag-display-limit    Disable "tag per package" display limit
-                              (equivalent to --tag-display-limit=0)
+    --tag-display-limit NUM   Specify "tag per package" display limit
+
 Configuration options:
     --cfg CONFIGFILE          read CONFIGFILE for configuration
     --no-cfg                  do not read any config files
     --ignore-lintian-env      ignore LINTIAN_* env variables
     --include-dir DIR         include checks, libraries (etc.) from DIR
-    -j X, --jobs X            limit the number of parallel unpacking jobs to X
+    -j NUM, --jobs NUM        limit the number of parallel jobs to NUM
     --[no-]user-dirs          whether to use files from user directories
 
 Some options were omitted. Please check the manual page for the complete list.

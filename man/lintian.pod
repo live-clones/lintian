@@ -230,7 +230,10 @@ addition to the lintian error tags. To print a long tag description
 without running lintian, see L<lintian-explain-tags(1)> or check
 the website at https://lintian.debian.org.
 
-This option overrides B<info> variable in the configuration file.
+To negate it, please use B<--no-info>.
+
+This option overrides B<info> (or B<no-info>) variable in the configuration
+file.
 
 =item B<-I>, B<--display-info>
 
@@ -331,7 +334,7 @@ If not specified, the default value is I<{VENDOR}/main>.
 Please Refer to the Lintian User Manual for the full documentation of
 profiles.
 
-=item B<--show-overrides>, B<--hide-overrides>
+=item B<--show-overrides>
 
 Controls whether tags that have been overridden should be shown.
 
@@ -343,9 +346,10 @@ also be displayed (unless --quiet is used).  Please refer to the Lintian
 User Manual for the documentation on how lintian relates comments to a
 given override.
 
+To negate it, please use B<--no-show-overrides>.
 
-These options override the B<show-overrides> variable in the
-configuration file.
+This option overrides the B<show-overrides> (or B<no-show-overrides>) variable
+in the configuration file.
 
 =item B<--suppress-tags> tag1,tag2,...
 
@@ -371,19 +375,17 @@ the exit status of Lintian.
 Tags parsed from the file will be handled as if they had been given to
 the B<--suppress-tags> option (e.g. ignored if B<--tags> is used).
 
-=item B<--tag-display-limit>[=X]
+=item B<--tag-display-limit>[=NUM]
 
 By default, lintian limits itself to emitting at most 4 instances of each
-tag per processable when STDOUT is a TTY.  This option specified that limit.
-See also B<--no-tag-display-limit>.
+tag per processable when STDOUT is a TTY.  This option specifies that limit.
 
-=item B<--no-tag-display-limit>
+When STDOUT is not a TTY, lintian has no limit.
 
-By default, lintian limits itself to emitting at most 4 instances of each
-tag per processable when STDOUT is a TTY.  This option disables that limit.
+To disable the limit, please use a value of zero.
 
-When STDOUT is not a TTY, lintian has no limit. See also
-B<--tag-display-limit>.
+This option overrides the B<tag-display-limit> variable in the
+configuration file.
 
 =back
 

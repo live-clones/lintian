@@ -257,7 +257,7 @@ sub print_hint {
           if $emitted_count >= $limit;
 
         my $msg
-          = ' ... use --no-tag-display-limit to see all (or pipe to a file/program)';
+          = ' ... use "--tag-display-limit 0" to see all (or pipe to a file/program)';
         $information = $self->_quote_print($msg)
           if $emitted_count >= $limit-1;
     }
