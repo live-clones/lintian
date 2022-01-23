@@ -187,14 +187,7 @@ on your system.
 
 The only known caveat of using Lintian from the source directory is that
 Lintian requires a C.UTF-8 (or en_US.UTF-8) locale to correctly process
-some files. Lintian 2.5.5 supports using the C.UTF-8 locale from the
-libc-bin in Debian Wheezy.
-
-If either your version of libc-bin or Lintian are too old, you can work
-around this issue by generating an en_US.UTF-8 locale. Alternatively,
-installing a copy of lintian should solve this, as older versions of
-Lintian generates a private locale at install time. Note, older versions
-of Lintian can only use the en_US.UTF-8 locale.
+some files. (Is that still true?)
 
 .. _section-2.2:
 
@@ -206,14 +199,10 @@ udeb or source packages like this:
 
 ::
 
-   $ lintian libc5_5.4.38-1.deb
-   W: libc5: old-fsf-address-in-copyright-file
-   W: libc5: shlib-without-dependency-information usr/lib/libgnumalloc.so.5.4.38
-   W: libc5: shlib-without-dependency-information lib/libc.so.5.4.38
-   W: libc5: shlib-without-dependency-information lib/libm.so.5.0.9
-   E: libc5: shlib-with-executable-bit lib/libc.so.5.4.38 0755
-   E: libc5: shlib-with-executable-bit lib/libm.so.5.0.9 0755
-   E: libc5: shlib-missing-in-control-file libgnumalloc usr/lib/libgnumalloc.so.5.4.38
+   $ lintian etm_3.2.30-1.1_all.deb
+   E: etm: appstream-metadata-legacy-format [usr/share/appdata/etm.appdata.xml]
+   W: etm: appstream-metadata-in-legacy-location [usr/share/appdata/etm.appdata.xml]
+   I: etm: package-contains-documentation-outside-usr-share-doc [usr/share/etm/etmTk/help/UserManual.html]
    $
 
 Please note that some checks are cross-package checks and can only be
@@ -223,7 +212,7 @@ to process all packages listed in the changes file.
 
 Lintian supports a number of command line options, which are documented
 in the manpage of lintian(1). Some of the options may appear in the
-lintianrc file (without the leading dashes) in Lintian 2.5.1 (or newer).
+lintianrc file without leading dashes.
 
 .. _section-2.3:
 
@@ -295,18 +284,18 @@ the reported tags:
 
 ::
 
-   $ lintian -i libc5_5.4.38-1.deb
-   W: libc5: old-fsf-address-in-copyright-file
+   $ lintian --info --tags appstream-metadata-in-legacy-location etm_3.2.30-1.1_all.deb
    N:
-   N:   The /usr/share/doc/<pkg>/copyright file refers to the old postal
-   N:   address of the Free Software Foundation (FSF). The new address is:
-   N:   
-   N:     Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
-   N:     MA 02110-1301, USA.
-   N:   
+   W: etm: appstream-metadata-in-legacy-location [usr/share/appdata/etm.appdata.xml]
+   N:
+   N:   AppStream metadata file was found in /usr/share/appdata/. The AppStream XML files should be placed in /usr/share/metainfo/.
+   N:
+   N:   Please refer to https://wiki.debian.org/AppStream/Guidelines for details.
+   N:
    N:   Visibility: warning
+   N:   Show-Always: no
+   N:   Check: appstream-metadata
    N:
-   [...]
    $
 
 In some cases, the messages contain some additional text with a leading
@@ -409,10 +398,6 @@ will match arbitrary strings similar to the shell wildcard. For example:
    # The "help text" must also be covered by the override
    source-is-missing apidoc/html/api_data.js *
 
-The first wildcard support appeared in Lintian 2.0.0, which only allowed
-the wildcards in the very beginning or end. Version 2.5.0~rc4 extended
-this to allow wildcards any where in the additional info.
-
 .. _section-2.4.2:
 
 Documenting overrides
@@ -484,11 +469,9 @@ Examples:
    # also works
    [linux-any]: tag-only-for-linux optional-extra.
 
-Support for architecture specific overrides was added in Lintian 2.5.0.
-Wildcard support was added in 2.5.5. Basic sanity checking was also
-added in 2.5.5, where unknown architectures trigger a
-``malformed-override`` tag. As does an architecture specific override
-for architecture independent packages.
+An unknown architecture will trigger a packaging hint. So will an
+architecture-specific override in an architecture-independent
+installable.
 
 .. _section-2.5:
 
@@ -687,10 +670,9 @@ common spelling mistakes to lists of architectures. While some of these
 data files are generally applicable for all vendors (or Debian
 derivatives), others are not.
 
-Starting with version 2.5.7, Lintian supports vendor specific data
-files. This allows vendors to deploy their own data files tailored for
-their kind of system. Lintian supports both extending an existing data
-file and completely overriding it.
+Lintian supports vendor specific data files. This allows vendors to deploy
+their own data files tailored for their kind of system. Lintian supports
+both extending an existing data file and completely overriding it.
 
 .. _section-2.6.1:
 
