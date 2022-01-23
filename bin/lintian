@@ -133,7 +133,7 @@ if (my $coverage_arg = $ENV{LINTIAN_COVERAGE}) {
 }
 
 my @getoptions = qw(
-  allow-root
+  allow-root!
   cfg=s
   check|c
   check-part|C=s@
@@ -153,7 +153,7 @@ my @getoptions = qw(
   hyperlinks=s
   ignore-lintian-env
   include-dir=s@
-  info|i
+  info|i!
   jobs|j=i
   no-cfg
   no-override|o
