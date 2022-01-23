@@ -197,7 +197,10 @@ sub issue_hints {
                                 my $processable = $each->{processable};
 
                                 $self->print_hint($profile, $hint,
-                                    $processable,$option);
+                                    $processable,$option)
+                                  if ( !defined $hint->override
+                                    && !@{$hint->masks})
+                                  || $option->{'show-overrides'};
                             }
                         }
                     }

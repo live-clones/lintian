@@ -165,7 +165,7 @@ my @getoptions = qw(
   print-version
   profile=s
   quiet|q
-  show-overrides
+  show-overrides!
   status-log=s
   suppress-tags=s@
   suppress-tags-from-file=s
@@ -201,8 +201,12 @@ if (exists $command_line{'print-version'}) {
 show_help()
   if exists $command_line{help};
 
-$command_line{'show-overrides'} = 0
-  if exists $command_line{'hide-overrides'};
+if (exists $command_line{'hide-overrides'}) {
+    $command_line{'show-overrides'} = 0;
+    warn encode_utf8(
+"A future release will drop --hide-overrides; please use --no-show-overrides instead.\n"
+    );
+}
 
 $command_line{'tag-display-limit'} = 0
   if exists $command_line{'no-tag-display-limit'};
