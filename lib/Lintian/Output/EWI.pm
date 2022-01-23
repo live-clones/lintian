@@ -322,7 +322,8 @@ sub print_hint {
 
     if ($option->{info}) {
 
-        $self->describe_tag($tag, $option->{'output-width'})
+        # show only on first issuance
+        $self->describe_tag($profile->data, $tag, $option->{'output-width'})
           unless $self->issued_tag($tag->name);
     }
 
