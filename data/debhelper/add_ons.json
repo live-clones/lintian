@@ -20,6 +20,11 @@
             "dictionaries-common-dev"
          ]
       },
+      "asterisk" : {
+         "installed_by" : [
+            "asterisk-dev"
+         ]
+      },
       "autoreconf" : {
          "installed_by" : [
             "dh-autoreconf"

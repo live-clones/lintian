@@ -750,6 +750,11 @@
             "fonts-aenigma"
          ]
       },
+      "amiga-regular.ttf" : {
+         "installed_by" : [
+            "fonts-amiga"
+         ]
+      },
       "amiri-bold.ttf" : {
          "installed_by" : [
             "fonts-hosny-amiri"
@@ -1878,6 +1883,11 @@
       "busra-r.ttf" : {
          "installed_by" : [
             "fonts-sil-mondulkiri"
+         ]
+      },
+      "c-64-regular.ttf" : {
+         "installed_by" : [
+            "fonts-sixtyfour"
          ]
       },
       "c0419bt_.pfb" : {

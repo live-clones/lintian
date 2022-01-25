@@ -33,6 +33,11 @@
             "debhelper"
          ]
       },
+      "dh_asterisk" : {
+         "installed_by" : [
+            "asterisk-dev"
+         ]
+      },
       "dh_auto_build" : {
          "installed_by" : [
             "debhelper"
