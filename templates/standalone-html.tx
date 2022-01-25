@@ -16,6 +16,8 @@
 
 <main>
 
+<article>
+
 <h1>Lintian Hints</h1>
 
 <div>Produced by Lintian version <: $output["lintian-version"] :>.</div>
@@ -41,12 +43,12 @@
       <ul class="commentlist">
         : for $subitem.comments -> $comment {
         <li class="commentitem">
-          <span class="comment tiny"><strong>Comment:</strong> <: $comment :></span>
+          <span class="comment tiny"># <: $comment :></span>
         </li>
         : }
       </ul>
 
-      <a class="visibility-symbol" href="https://lintian.debian.org/levels#<: $subitem.code :>"><span class="visibility-symbol tiny <: $subitem.code :>"><: $subitem.code :></span></a>
+      <a class="visibility-symbol tiny <: $subitem.visibility :>" href="https://lintian.debian.org/levels#<: $subitem.visibility :>"></a>
       <span class="hint tiny"><a href="<: $subitem.url :>"><: $subitem.tag_name :></a></span>
       <span class="context tiny"><: $subitem.context :></span>
 
@@ -63,6 +65,8 @@
 </ul>
 
 : }
+
+</article>
 
 </main>
 

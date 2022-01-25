@@ -213,22 +213,21 @@ sub hintlist {
           if length $hint->context;
 
         $html_hint{visibility} = $tag->visibility;
-        $html_hint{code} = $tag->code;
 
-        $html_hint{experimental} = 'yes'
+        $html_hint{visibility} = 'experimental'
           if $tag->experimental;
 
         my @comments;
         if ($hint->override) {
 
-            $html_hint{code} = 'O';
+            $html_hint{visibility} = 'override';
 
             push(@comments, $hint->override->justification)
               if length $hint->override->justification;
         }
 
         # order matters
-        $html_hint{code} = 'M'
+        $html_hint{visibility} = 'mask'
           if @{ $hint->masks };
 
         for my $mask (@{$hint->masks}) {

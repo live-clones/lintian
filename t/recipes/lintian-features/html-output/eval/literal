@@ -50,12 +50,12 @@
           box-sizing: border-box;
 }
 
-body {
+html, body {
     margin: 0;
     padding: 0;
-    color: #222;
-    background-color: white;
+
     font-family: 'Roboto', serif;
+    color: #222;
 }
 
 h1, h2 {
@@ -64,7 +64,11 @@ h1, h2 {
 }
 
 h1 {
-    margin-bottom: 25px;
+    margin-top: 0;
+}
+
+article h1 {
+    font-size: 28px;
 }
 
 h2 {
@@ -100,60 +104,58 @@ hr {
  * 2. Header title
  */
 
-header {
-    display: block; /* HTML5 compat */
-    margin: 0 0 28px 0;
-    padding: 5px 20px;
+body > header {
     background: #F3F3F3 url("/images/logo-small.png") no-repeat right;
     border-bottom: 1px solid #AAA;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    color: #333;
+
+    height: 50px;
+    padding-right: 85px; /* space for logo */
 }
 
-header p {
-    float: left;
-    margin: 5px 0;
-    color: #444;
+body > header h1 {
+    font-family: 'Roboto', serif;
     font-size: 1.2em;
+    margin: 20px 20px;
 }
 
-header p a {
-    color: #444;
+body > header a {
+    color: inherit;
     text-decoration: none;
 }
 
-/*
- * 3. Navigation bar
- */
-
-#nav {
-    float: right;
-    margin: 9px 65px 5px 0;
+body > header nav ul {
+    list-style: none;
+    margin: 0;
     padding: 0;
 }
 
-#nav li {
-    display: inline;
-    margin-left: 5px;
+body > header nav li {
+    display: inline-block;
 }
 
-#nav a {
+body > header nav a {
+    display: block;
     padding: 3px 5px;
-    color: #333;
     font-size: 0.9em;
-    text-decoration: none;
+    border-bottom: 2px solid #f3f3f4;
 }
 
-#nav a:hover {
-    background-color: #F3F3F3;
+body > header nav a:hover {
     border-bottom: 2px solid #D70751;
 }
-
 
 /*
  * 4. Main content
  */
 
 main {
-    margin: 0 40px;
+    margin: 40px 40px 0;
     font-size: 0.9em;
 }
 
@@ -194,32 +196,16 @@ li span {
 
 /* E/W/I colors */
 
-span.visibility-symbol {
-    font-family: monospace;
-    font-size: 1.1em;
-}
-
-.visibility-symbol.big {
-    padding: 1px 5px;
-    margin-right: 5px;
-    font-weight: normal;
-}
-
 span.label {
     font-family: 'Roboto Condensed', sans-serif;
     font-weight: 700;
 }
 
-.hints-by-source {
+article#hints {
     margin-top: 20px;
     padding-top: 10px;
     border-top: 2px solid #AAA;
     clear: both;
-}
-
-.visibility-symbol.tiny {
-    font-weight: bold;
-    padding: 1px 3px;
 }
 
 .hint.tiny {
@@ -278,6 +264,11 @@ li.fileitem {
     margin: 10px 0 5px 0;
 }
 
+span.visibility-symbol {
+    font-family: monospace;
+    font-size: 1.1em;
+}
+
 a.visibility-symbol {
     text-decoration: none;
 }
@@ -286,91 +277,123 @@ a.visibility-symbol:hover {
     filter: invert(100%);
 }
 
-.visibility-symbol.E {
-    color: #ffffff;
+a.visibility-symbol.big {
+    padding: 1px 5px;
+    margin-right: 5px;
+    font-weight: normal;
+}
+
+a.visibility-symbol.tiny {
+    font-weight: bold;
+    padding: 1px 3px;
+}
+
+a.visibility-symbol::before {
+    border: 1px solid;
+    display: inline-block;
+    width: 1em;
+    font-family: monospace;
+    font-size: 1.1em;
+    text-align: center;
+}
+
+a.visibility-symbol.error::before {
+    content: 'E';
+    color: #fff;
+    border-color: #fff;
     background-color: #fc0905;
-    border: 1px solid #ffffff;
 }
 
-.visibility-symbol.W {
-    color: #111111;
+a.visibility-symbol.warning::before {
+    content: 'W';
+    color: #111;
+    border-color: #888;
     background-color: #fceb02;
-    border: 1px solid #888888;
 }
 
-.visibility-symbol.I {
-    color: #ffffff;
+a.visibility-symbol.info::before {
+    content: 'I';
+    color: #fff;
+    border-color: #fff;
     background-color: #465efc;
-    border: 1px solid #ffffff;
 }
 
-.visibility-symbol.P {
-    color: #ffffff;
+a.visibility-symbol.pedantic::before {
+    content: 'P';
+    color: #fff;
+    border-color: #fff;
     background-color: #00c627;
-    border: 1px solid #ffffff;
 }
 
-.visibility-symbol.X {
-    color: #ffffff;
+a.visibility-symbol.experimental::before {
+    content: 'X';
+    color: #fff;
+    border-color: #fff;
     background-color: #9e8040;
-    border: 1px solid #ffffff;
 }
 
-.visibility-symbol.O {
-    color: #ffffff;
-    background-color: #444444;
-    border: 1px solid #ffffff;
+a.visibility-symbol.mask::before {
+    content: 'M';
+    color: #111;
+    border-color: #444;
+    background-color: #ddd;
 }
 
-.visibility-symbol.M {
-    color: #111111;
-    background-color: #dddddd;
-    border: 1px solid #444444;
+a.visibility-symbol.override::before {
+    content: 'O';
+    color: #fff;
+    border-color: #fff;
+    background-color: #444;
 }
 
-.visibility-symbol.C {
-    color: #ffffff;
+a.visibility-symbol.classification::before {
+    content: 'C';
+    color: #fff;
+    border-color: #fff;
     background-color: #bc55fc;
-    border: 1px solid #ffffff;
 }
 
-div.explanation {
+section.explanation {
     padding: 8px 28px;
-    margin: 25px 0;
     background-color: #EEE;
     border: 1px solid #BBB;
     float: left;
     clear:left;
 }
 
-.explanation.E {
+.explanation.error {
     background-color: #fccac9;
     border: 1px solid #fc0905;
 }
 
-.explanation.W {
+.explanation.warning {
     background-color: #fcf9c9;
     border: 1px solid #fceb02;
 }
 
-.explanation.I {
+.explanation.info {
     background-color: #dee2fc;
     border: 1px solid #465efc;
 }
 
-.explanation.P {
+.explanation.pedantic {
     background-color: #d4fcdc;
     border: 1px solid #00c627;
 }
 
-.explanation.X {
+.explanation.experimental {
     background-color: #fcf2de;
     border: 1px solid #9e8040;
 }
 
-.explanation.C {
+.explanation.classification {
     background-color: #f4e8fc;
     border: 1px solid #bc55fc;
+}
+
+section.auxiliary {
+    margin: 20px 0;
+    float: left;
 }
 
 div.terminal {
@@ -383,32 +406,45 @@ p.terminal {
     margin-bottom: 0;
 }
 
-div.versions {
+article.version {
+    display: flex;
+    gap: 1em;
+    align-items: flex-start;
+}
+
+article.version nav.version-selector {
+    flex: 0 auto;
+    order: 2;
+}
+
+nav.version-selector {
     background-color: #F3F3F3;
     border: 1px solid #AAA;
-    padding: 0.5em;
+    padding: 0.8em;
+    margin: 0 0 20px 20px;
     display: inline-block;
     float: right;
 }
 
-ul.versions {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-}
-
-p.versions {
+.version-selector h3 {
     font-weight: bold;
     text-align: center;
+    white-space: nowrap;
     margin: 0;
     margin-bottom: 0.5em;
 }
 
-span.versions.highlight {
-    color: #D70751;
+.version-selector ul {
+    list-style: none;
+    padding: 0;
 }
 
-a.versions {
+.version-selector li {
+    white-space: nowrap;
+}
+
+.version-selector span.highlight {
+    color: #D70751;
 }
 
 span.maintenance_links {
@@ -462,22 +498,14 @@ footer p {
 }
 
 
-/*
- * 6. Other
- */
-
-div.clear {
-    clear: both;
-}
-
-
-
   </style>
 </head>
 
 <body>
 
 <main>
+
+<article>
 
 <h1>Lintian Hints</h1>
 
@@ -499,7 +527,7 @@ div.clear {
       <ul class="commentlist">
       </ul>
 
-      <a class="visibility-symbol" href="https://lintian.debian.org/levels#W"><span class="visibility-symbol tiny W">W</span></a>
+      <a class="visibility-symbol tiny warning" href="https://lintian.debian.org/levels#warning"></a>
       <span class="hint tiny"><a href="https://lintian.debian.org/tags/changelog-file-missing-explicit-entry">changelog-file-missing-explicit-entry</a></span>
       <span class="context tiny">0.0.1-1 -&gt; 1.0+dsfg-1 (missing) -&gt; 1.0+dsfg-1.1 [debian/changelog:1]</span>
 
@@ -509,7 +537,7 @@ div.clear {
       <ul class="commentlist">
       </ul>
 
-      <a class="visibility-symbol" href="https://lintian.debian.org/levels#W"><span class="visibility-symbol tiny W">W</span></a>
+      <a class="visibility-symbol tiny warning" href="https://lintian.debian.org/levels#warning"></a>
       <span class="hint tiny"><a href="https://lintian.debian.org/tags/format-3.0-but-debian-changes-patch">format-3.0-but-debian-changes-patch</a></span>
       <span class="context tiny">[debian/patches/debian-changes-1.0+dsfg-1.1]</span>
 
@@ -519,7 +547,7 @@ div.clear {
       <ul class="commentlist">
       </ul>
 
-      <a class="visibility-symbol" href="https://lintian.debian.org/levels#W"><span class="visibility-symbol tiny W">W</span></a>
+      <a class="visibility-symbol tiny warning" href="https://lintian.debian.org/levels#warning"></a>
       <span class="hint tiny"><a href="https://lintian.debian.org/tags/maintainer-upload-has-incorrect-version-number">maintainer-upload-has-incorrect-version-number</a></span>
       <span class="context tiny">1.0+dsfg-1.1 [debian/changelog:1]</span>
 
@@ -529,7 +557,7 @@ div.clear {
       <ul class="commentlist">
       </ul>
 
-      <a class="visibility-symbol" href="https://lintian.debian.org/levels#I"><span class="visibility-symbol tiny I">I</span></a>
+      <a class="visibility-symbol tiny info" href="https://lintian.debian.org/levels#info"></a>
       <span class="hint tiny"><a href="https://lintian.debian.org/tags/installable-field-mirrors-source">installable-field-mirrors-source</a></span>
       <span class="context tiny">(in section for html-output) Section [debian/control:13]</span>
 
@@ -539,7 +567,7 @@ div.clear {
       <ul class="commentlist">
       </ul>
 
-      <a class="visibility-symbol" href="https://lintian.debian.org/levels#I"><span class="visibility-symbol tiny I">I</span></a>
+      <a class="visibility-symbol tiny info" href="https://lintian.debian.org/levels#info"></a>
       <span class="hint tiny"><a href="https://lintian.debian.org/tags/older-debian-watch-file-standard">older-debian-watch-file-standard</a></span>
       <span class="context tiny">3 [debian/watch]</span>
 
@@ -549,7 +577,7 @@ div.clear {
       <ul class="commentlist">
       </ul>
 
-      <a class="visibility-symbol" href="https://lintian.debian.org/levels#I"><span class="visibility-symbol tiny I">I</span></a>
+      <a class="visibility-symbol tiny info" href="https://lintian.debian.org/levels#info"></a>
       <span class="hint tiny"><a href="https://lintian.debian.org/tags/patch-not-forwarded-upstream">patch-not-forwarded-upstream</a></span>
       <span class="context tiny">[debian/patches/debian-changes-1.0+dsfg-1.1]</span>
 
@@ -559,7 +587,7 @@ div.clear {
       <ul class="commentlist">
       </ul>
 
-      <a class="visibility-symbol" href="https://lintian.debian.org/levels#I"><span class="visibility-symbol tiny I">I</span></a>
+      <a class="visibility-symbol tiny info" href="https://lintian.debian.org/levels#info"></a>
       <span class="hint tiny"><a href="https://lintian.debian.org/tags/quilt-patch-using-template-description">quilt-patch-using-template-description</a></span>
       <span class="context tiny">[debian/patches/debian-changes-1.0+dsfg-1.1]</span>
 
@@ -569,7 +597,7 @@ div.clear {
       <ul class="commentlist">
       </ul>
 
-      <a class="visibility-symbol" href="https://lintian.debian.org/levels#I"><span class="visibility-symbol tiny I">I</span></a>
+      <a class="visibility-symbol tiny info" href="https://lintian.debian.org/levels#info"></a>
       <span class="hint tiny"><a href="https://lintian.debian.org/tags/upstream-metadata-missing-bug-tracking">upstream-metadata-missing-bug-tracking</a></span>
       <span class="context tiny">[debian/upstream/metadata]</span>
 
@@ -579,7 +607,7 @@ div.clear {
       <ul class="commentlist">
       </ul>
 
-      <a class="visibility-symbol" href="https://lintian.debian.org/levels#I"><span class="visibility-symbol tiny I">I</span></a>
+      <a class="visibility-symbol tiny info" href="https://lintian.debian.org/levels#info"></a>
       <span class="hint tiny"><a href="https://lintian.debian.org/tags/upstream-metadata-missing-repository">upstream-metadata-missing-repository</a></span>
       <span class="context tiny">[debian/upstream/metadata]</span>
 
@@ -589,7 +617,7 @@ div.clear {
       <ul class="commentlist">
       </ul>
 
-      <a class="visibility-symbol" href="https://lintian.debian.org/levels#P"><span class="visibility-symbol tiny P">P</span></a>
+      <a class="visibility-symbol tiny pedantic" href="https://lintian.debian.org/levels#pedantic"></a>
       <span class="hint tiny"><a href="https://lintian.debian.org/tags/debian-control-has-unusual-field-spacing">debian-control-has-unusual-field-spacing</a></span>
       <span class="context tiny">Essential [debian/control:12]</span>
 
@@ -599,7 +627,7 @@ div.clear {
       <ul class="commentlist">
       </ul>
 
-      <a class="visibility-symbol" href="https://lintian.debian.org/levels#P"><span class="visibility-symbol tiny P">P</span></a>
+      <a class="visibility-symbol tiny pedantic" href="https://lintian.debian.org/levels#pedantic"></a>
       <span class="hint tiny"><a href="https://lintian.debian.org/tags/no-homepage-field">no-homepage-field</a></span>
       <span class="context tiny"></span>
 
@@ -609,7 +637,7 @@ div.clear {
       <ul class="commentlist">
       </ul>
 
-      <a class="visibility-symbol" href="https://lintian.debian.org/levels#P"><span class="visibility-symbol tiny P">P</span></a>
+      <a class="visibility-symbol tiny experimental" href="https://lintian.debian.org/levels#experimental"></a>
       <span class="hint tiny"><a href="https://lintian.debian.org/tags/debian-watch-does-not-check-gpg-signature">debian-watch-does-not-check-gpg-signature</a></span>
       <span class="context tiny">[debian/watch]</span>
 
@@ -619,7 +647,7 @@ div.clear {
       <ul class="commentlist">
       </ul>
 
-      <a class="visibility-symbol" href="https://lintian.debian.org/levels#O"><span class="visibility-symbol tiny O">O</span></a>
+      <a class="visibility-symbol tiny override" href="https://lintian.debian.org/levels#override"></a>
       <span class="hint tiny"><a href="https://lintian.debian.org/tags/dfsg-version-misspelled">dfsg-version-misspelled</a></span>
       <span class="context tiny">1.0+dsfg-1.1</span>
 
@@ -636,7 +664,7 @@ div.clear {
       <ul class="commentlist">
       </ul>
 
-      <a class="visibility-symbol" href="https://lintian.debian.org/levels#E"><span class="visibility-symbol tiny E">E</span></a>
+      <a class="visibility-symbol tiny error" href="https://lintian.debian.org/levels#error"></a>
       <span class="hint tiny"><a href="https://lintian.debian.org/tags/dir-in-usr-local">dir-in-usr-local</a></span>
       <span class="context tiny">[usr/local/share/]</span>
 
@@ -646,7 +674,7 @@ div.clear {
       <ul class="commentlist">
       </ul>
 
-      <a class="visibility-symbol" href="https://lintian.debian.org/levels#E"><span class="visibility-symbol tiny E">E</span></a>
+      <a class="visibility-symbol tiny error" href="https://lintian.debian.org/levels#error"></a>
       <span class="hint tiny"><a href="https://lintian.debian.org/tags/dir-in-usr-local">dir-in-usr-local</a></span>
       <span class="context tiny">[usr/local/share/lintian/]</span>
 
@@ -656,7 +684,7 @@ div.clear {
       <ul class="commentlist">
       </ul>
 
-      <a class="visibility-symbol" href="https://lintian.debian.org/levels#E"><span class="visibility-symbol tiny E">E</span></a>
+      <a class="visibility-symbol tiny error" href="https://lintian.debian.org/levels#error"></a>
       <span class="hint tiny"><a href="https://lintian.debian.org/tags/dir-or-file-in-var-lock">dir-or-file-in-var-lock</a></span>
       <span class="context tiny">[var/lock/lintian/]</span>
 
@@ -666,7 +694,7 @@ div.clear {
       <ul class="commentlist">
       </ul>
 
-      <a class="visibility-symbol" href="https://lintian.debian.org/levels#E"><span class="visibility-symbol tiny E">E</span></a>
+      <a class="visibility-symbol tiny error" href="https://lintian.debian.org/levels#error"></a>
       <span class="hint tiny"><a href="https://lintian.debian.org/tags/new-essential-package">new-essential-package</a></span>
       <span class="context tiny"></span>
 
@@ -676,7 +704,7 @@ div.clear {
       <ul class="commentlist">
       </ul>
 
-      <a class="visibility-symbol" href="https://lintian.debian.org/levels#W"><span class="visibility-symbol tiny W">W</span></a>
+      <a class="visibility-symbol tiny warning" href="https://lintian.debian.org/levels#warning"></a>
       <span class="hint tiny"><a href="https://lintian.debian.org/tags/no-manual-page">no-manual-page</a></span>
       <span class="context tiny">[usr/bin/script]</span>
 
@@ -686,7 +714,7 @@ div.clear {
       <ul class="commentlist">
       </ul>
 
-      <a class="visibility-symbol" href="https://lintian.debian.org/levels#I"><span class="visibility-symbol tiny I">I</span></a>
+      <a class="visibility-symbol tiny info" href="https://lintian.debian.org/levels#info"></a>
       <span class="hint tiny"><a href="https://lintian.debian.org/tags/description-possibly-contains-homepage">description-possibly-contains-homepage</a></span>
       <span class="context tiny">http://www.example.com/.</span>
 
@@ -696,7 +724,7 @@ div.clear {
       <ul class="commentlist">
       </ul>
 
-      <a class="visibility-symbol" href="https://lintian.debian.org/levels#I"><span class="visibility-symbol tiny I">I</span></a>
+      <a class="visibility-symbol tiny info" href="https://lintian.debian.org/levels#info"></a>
       <span class="hint tiny"><a href="https://lintian.debian.org/tags/desktop-entry-limited-to-environments">desktop-entry-limited-to-environments</a></span>
       <span class="context tiny">[usr/share/applications/script.desktop]</span>
 
@@ -706,7 +734,7 @@ div.clear {
       <ul class="commentlist">
       </ul>
 
-      <a class="visibility-symbol" href="https://lintian.debian.org/levels#I"><span class="visibility-symbol tiny I">I</span></a>
+      <a class="visibility-symbol tiny info" href="https://lintian.debian.org/levels#info"></a>
       <span class="hint tiny"><a href="https://lintian.debian.org/tags/package-contains-empty-directory">package-contains-empty-directory</a></span>
       <span class="context tiny">[usr/local/share/lintian/]</span>
 
@@ -716,7 +744,7 @@ div.clear {
       <ul class="commentlist">
       </ul>
 
-      <a class="visibility-symbol" href="https://lintian.debian.org/levels#I"><span class="visibility-symbol tiny I">I</span></a>
+      <a class="visibility-symbol tiny info" href="https://lintian.debian.org/levels#info"></a>
       <span class="hint tiny"><a href="https://lintian.debian.org/tags/synopsis-is-a-sentence">synopsis-is-a-sentence</a></span>
       <span class="context tiny">&quot;Test Lintian&#39;s HTML output format.&quot;</span>
 
@@ -726,7 +754,7 @@ div.clear {
       <ul class="commentlist">
       </ul>
 
-      <a class="visibility-symbol" href="https://lintian.debian.org/levels#P"><span class="visibility-symbol tiny P">P</span></a>
+      <a class="visibility-symbol tiny pedantic" href="https://lintian.debian.org/levels#pedantic"></a>
       <span class="hint tiny"><a href="https://lintian.debian.org/tags/example-unusual-interpreter">example-unusual-interpreter</a></span>
       <span class="context tiny">/usr/bin/foo [usr/share/doc/html-output/examples/example]</span>
 
@@ -753,6 +781,8 @@ div.clear {
 
 </ul>
 
+
+</article>
 
 </main>
 
