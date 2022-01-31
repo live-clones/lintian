@@ -53,11 +53,14 @@ use Lintian::Version qw(guess_version);
 const my $EMPTY => q{};
 const my $SPACE => q{ };
 
+const my $DEFAULT_OUTPUT_WIDTH => 80;
+
 const my $NEW_PROGRAM_NAME => q{lintian-annotate-hints};
 
 my $TERMINAL_WIDTH;
 ($TERMINAL_WIDTH, undef, undef, undef) = GetTerminalSize()
   if is_interactive;
+$TERMINAL_WIDTH //= $DEFAULT_OUTPUT_WIDTH;
 
 if (my $coverage_arg = $ENV{'LINTIAN_COVERAGE'}) {
     my $p5opt = $ENV{'PERL5OPT'}//$EMPTY;
