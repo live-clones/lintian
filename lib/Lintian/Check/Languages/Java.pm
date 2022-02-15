@@ -75,7 +75,7 @@ sub installable {
 
     my @java_lib_depends = ($depends =~ m/\b(lib[^\s,]+-java)\b/g);
 
-    my $MAX_BYTECODE= $self->data->load('java/constants', qr/\s*=\s*/);
+    my $JAVA_BYTECODES= $self->data->load('java/constants', qr/\s*=\s*/);
 
     # We first loop over jar files to find problems
 
@@ -135,9 +135,9 @@ sub installable {
               if $module_version eq $HYPHEN;
 
             if ($module_version
-                <= $MAX_BYTECODE->value('min-bytecode-version') - 1
+                < $JAVA_BYTECODES->value('lowest-known-bytecode-version')
                 || $module_version
-                > $MAX_BYTECODE->value('max-bytecode-existing-version')) {
+                > $JAVA_BYTECODES->value('highest-known-bytecode-version')) {
 
                 # First public major version was 45 (Java1), latest
                 # version is 55 (Java11).
@@ -270,7 +270,7 @@ sub installable {
         # If the lowest version used is greater than the requested
         # limit, then flag it.
         $bad = 1
-          if $jmajlow > $MAX_BYTECODE->value('max-bytecode-version');
+          if $jmajlow > $JAVA_BYTECODES->value('default-bytecode-version');
 
         # Technically we ought to do some checks with Java6 class
         # files and dependencies/package types, but for now just skip
