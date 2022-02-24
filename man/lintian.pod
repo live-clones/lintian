@@ -767,7 +767,7 @@ If you discover any other bugs in lintian, please contact the authors.
 L<lintian-explain-tags(1)>, Lintian User Manual
 (/usr/share/doc/lintian/lintian.html)
 
-Packaging tools: L<debhelper(7)>, L<dh_make(8)>,
+Packaging tools: L<debhelper(7)>, L<dh_make(1)>,
 L<dpkg-buildpackage(1)>.
 
 =head1 AUTHORS
