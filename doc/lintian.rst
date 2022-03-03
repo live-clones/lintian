@@ -233,9 +233,9 @@ Currently, the following types are supported:
 
 *Warnings (W)*
    The displayed message might be a policy violation or packaging error.
-   A warning is usually an indication that the test is known to
+   A warning is usually an indication that the check is known to
    sometimes produce false positive alarms, because either the
-   corresponding rule in policy has many exceptions or the test uses
+   corresponding rule in policy has many exceptions or the check uses
    some sort of heuristic to find errors.
 
 *Info (I)*
