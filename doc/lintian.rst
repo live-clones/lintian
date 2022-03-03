@@ -826,17 +826,11 @@ Existing checks can be shadowed by placing a check with the same name in
 a directory appearing earlier in the list. This also holds for the
 checks provided by Lintian itself.
 
-Checks in Lintian consist of a description file (.desc) and a Perl
-module implementing the actual check (.pm). The names of these checks
-must consist entirely of the lower case characters ([a-z]), digits
-([0-9]), underscore (_), dash (-), period (.) and forward slashes (/).
+Checks in Lintian consist of a Perl module implementing the actual check
+(.pm). The files names of such checks are expected to be in CamelCase. For
+the check name used on the command line, case transitions are replaced with
+hyphens. Perl's two colons (::) are replaced with a slash.
 
-The check name must be a valid Perl unique module name after the
-following transformations. All periods and dashes are replaced with
-underscores. All forward slashes are replaced with two colons (::).
-
-Check names without a forward slash (e.g. "fields") and names starting
-with either "lintian/" or "coll/" are reserved for the Lintian core.
 Vendors are recommended to use their vendor name before the first slash
 (e.g. "ubuntu/fields").
 
