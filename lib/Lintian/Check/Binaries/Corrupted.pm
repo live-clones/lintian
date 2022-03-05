@@ -53,8 +53,11 @@ sub visit_installed_files {
 sub check_elf_issues {
     my ($self, $item) = @_;
 
-    $self->pointed_hint('elf-error',$item->pointer, $_)
-      for uniq @{$item->elf->{ERRORS} // []};
+    for (uniq @{$item->elf->{ERRORS} // []}) {
+        $self->pointed_hint('elf-error',$item->pointer, $_)
+          if $_ !~ m{In program headers: Unable to find program interpreter name}
+          || $item->name !~ m{^usr/lib/debug/};
+    }
 
     $self->pointed_hint('elf-warning', $item->pointer, $_)
       for uniq @{$item->elf->{WARNINGS} // []};
