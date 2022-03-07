@@ -8,6 +8,12 @@ build-testing:
     RELEASE: 'testing'
   extends: .build-package
 
+build-bullseye-backports:
+  variables:
+    RELEASE: 'bullseye-backports'
+  extends: .build-package
+  allow_failure: true
+
 build-buster-backports:
   variables:
     RELEASE: 'buster-backports'
