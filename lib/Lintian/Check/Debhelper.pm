@@ -606,13 +606,6 @@ sub source {
     # prefers DH_COMPAT over debian/compat
     $debhelper_level ||= $from_compat_file;
 
-    if (length $debhelper_level && $debhelper_level !~ m/^\d+$/) {
-
-        $self->hint('debhelper-compatibility-level-not-a-number',
-            $debhelper_level);
-        $debhelper_level =~ s/[^\d]//g;
-    }
-
     $self->hint('debhelper-compat-level', $debhelper_level)
       if length $debhelper_level;
 
