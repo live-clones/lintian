@@ -13,3 +13,9 @@ Explanation: The named file is not in the Devhelp search path
  <code>/usr/share/gtk-doc/html</code> that points to the documentation directory.
 See-Also:
  https://apps.gnome.org/app/org.gnome.Devhelp/
+
+Screen: examples/ship/devhelp
+Advocates: Lintian Maintainers <lintian-maint@debian.org>
+Reason:
+ Any Devhelp files shipped in the examples are not expected to be discoverable by
+ the Devhelp browsing tool.

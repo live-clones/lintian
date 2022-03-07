@@ -68,19 +68,11 @@ has reachable_folders => (
 sub visit_installed_files {
     my ($self, $item) = @_;
 
-    return
-      unless $item->name =~ m{ [.]devhelp2? (?: [.]gz )? $}x;
-
-    # If the file is located in a directory not searched by devhelp, we
-    # check later to see if it's in a symlinked directory.
-    return
-      if $item->name=~ m{^ usr/share/ (?: devhelp/books | gtk-doc/html ) / }x;
-
-    # Check for .devhelp2? files that aren't symlinked into paths searched by
-    # devhelp.
+    # locate Devhelp files not discoverable by Devhelp
     $self->pointed_hint('stray-devhelp-documentation', $item->pointer)
-      if (none { $item->name =~ /^\Q$_\E/ } @{$self->reachable_folders})
-      && $item->name !~ m{^ usr/share/doc/ [^/]+ /examples/ }x;
+      if $item->name =~ m{ [.]devhelp2? (?: [.]gz )? $}x
+      && $item->name !~ m{^ usr/share/ (?: devhelp/books | gtk-doc/html ) / }x
+      && (none { $item->name =~ /^\Q$_\E/ } @{$self->reachable_folders});
 
     return;
 }
