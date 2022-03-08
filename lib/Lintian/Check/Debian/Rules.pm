@@ -252,7 +252,7 @@ sub source {
                 $includes = 1;
             }
 
-            $self->peinted_hint('debian-rules-uses-deprecated-makefile',
+            $self->pointed_hint('debian-rules-uses-deprecated-makefile',
                 $pointer, $makefile)
               if $DEPRECATED_MAKEFILES->recognizes($makefile);
         }
