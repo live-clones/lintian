@@ -40,7 +40,7 @@ its input on stdin. Thus, the output of B<lintian> can either be piped
 through B<lintian-annotate-hints> or a log file produced by B<lintian> can be
 processed with this command.
 
-  (Note, though, that the B<lintian> command has a command line option
+(Note, though, that the B<lintian> command has a command line option
 B<-i> to display the same results as B<lintian-annotate-hints>, so you
 normally do not need to pipe the output of B<lintian> through this
 command to see the extra information.)
