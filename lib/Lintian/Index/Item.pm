@@ -1233,10 +1233,6 @@ files.
 
 =item strings
 
-=item elf
-
-=item elf_by_member
-
 =item C<basedir>
 
 =item index
@@ -1360,14 +1356,6 @@ has strings => (
     coerce => sub { my ($text) = @_; return ($text // $EMPTY); },
     default => $EMPTY
 );
-has elf => (
-    is => 'rw',
-    coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
-    default => sub { {} });
-has elf_by_member => (
-    is => 'rw',
-    coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
-    default => sub { {} });
 has ar_info => (
     is => 'rw',
     coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
@@ -1392,6 +1380,49 @@ has parent_dir => (
         return $self->index->lookup($self->dirname);
     });
 has dereferenced => (is => 'rw');
+
+=item elf
+
+=cut
+
+sub elf {
+    my ($self, @args) = @_;
+
+    if (@args) {
+
+        $self->index->elf_storage->{$self->name} = $args[0];
+
+        return ();
+    }
+
+    my %copy = %{$self->index->elf_storage->{$self->name} // {} };
+
+    return \%copy;
+}
+
+=item elf_by_member
+
+=cut
+
+sub elf_by_member {
+    my ($self, @args) = @_;
+
+    if (@args) {
+
+        my $object_name = $args[0];
+        my $by_object = $args[1];
+
+        my $tmp = $self->index->elf_storage_by_member->{$self->name} // {};
+        $tmp->{$object_name} = $by_object;
+        $self->index->elf_storage_by_member->{$self->name} = $tmp;
+
+        return ();
+    }
+
+    my %copy = %{$self->index->elf_storage_by_member->{$self->name} // {} };
+
+    return \%copy;
+}
 
 =item pointer
 

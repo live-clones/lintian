@@ -3,7 +3,7 @@
 # Copyright © 1998 Christian Schwarz
 # Copyright © 2008 Adam D. Barratt
 # Copyright © 2017-2018 Chris Lamb <lamby@debian.org>
-# Copyright © 2020 Felix Lechner
+# Copyright © 2020-2022 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -33,6 +33,7 @@ use Unicode::UTF8 qw(encode_utf8 valid_utf8 decode_utf8);
 
 use Lintian::Elf::Section;
 use Lintian::Elf::Symbol;
+use Lintian::Storage::MLDBM;
 
 use Moo::Role;
 use namespace::clean;
@@ -59,6 +60,38 @@ Lintian::Index::Elf binary symbol information.
 =head1 INSTANCE METHODS
 
 =over 4
+
+=item elf_storage
+
+=cut
+
+has elf_storage => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        my $storage = Lintian::Storage::MLDBM->new;
+        $storage->create('elf');
+
+        return $storage;
+    });
+
+=item elf_storage_by_member
+
+=cut
+
+has elf_storage_by_member => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        my $storage = Lintian::Storage::MLDBM->new;
+        $storage->create('elf-by-member');
+
+        return $storage;
+    });
 
 =item add_elf
 
@@ -195,15 +228,6 @@ sub parse_per_file {
 
     my %by_object;
 
-    if (length $object_name) {
-
-        # object file in a static lib.
-        $file->elf_by_member->{$object_name} = \%by_object;
-
-    } else {
-        $file->elf(\%by_object);
-    }
-
     $by_object{READELF} = $from_readelf;
 
     # sometimes there are three blank lines; seen on armhf
@@ -305,6 +329,15 @@ sub parse_per_file {
         $symbol->name($symbol_name);
 
         push(@{ $by_object{SYMBOLS} }, $symbol);
+    }
+
+    if (length $object_name) {
+
+        # object file in a static lib.
+        $file->elf_by_member($object_name, \%by_object);
+
+    } else {
+        $file->elf(\%by_object);
     }
 
     return;

@@ -34,6 +34,7 @@ Depends:
  iso-codes,
  libapt-pkg-perl,
  libarchive-zip-perl,
+ libberkeleydb-perl,
  libcapture-tiny-perl,
 # Bug#1001173 solved in 2.005004-3; leave for backports for now
  libclass-xsaccessor-perl,
@@ -61,6 +62,7 @@ Depends:
  liblist-compare-perl,
  liblist-someutils-perl,
  liblist-utilsby-perl,
+ libmldbm-perl,
  libmoo-perl,
  libmoox-aliases-perl,
  libnamespace-clean-perl,
