@@ -50,10 +50,13 @@ Lintian::Storage::MLDBM provides an interface to store data on disk to preserve 
 
 =over 4
 
+=item tempfile
+
 =item tied_hash
 
 =cut
 
+has tempfile => (is => 'rw');
 has tied_hash => (is => 'rw', default => sub { {} });
 
 =item create
@@ -70,8 +73,9 @@ sub create {
 
     my $stem = "mldbm-$description";
 
-    # deleted once the last reference is lost
-    my $tempfile= Path::Tiny->tempfile(TEMPLATE => $stem . 'XXXXXXXX',);
+    my $tempfile
+      = Path::Tiny->tempfile(TEMPLATE => $stem . 'XXXXXXXX', UNLINK => 0);
+    $self->tempfile($tempfile);
 
     try {
         tie(
@@ -95,6 +99,9 @@ sub DEMOLISH {
     my ($self, $in_global_destruction) = @_;
 
     untie %{$self->tied_hash};
+
+    $self->tempfile->remove
+      if defined $self->tempfile;
 
     return;
 }
