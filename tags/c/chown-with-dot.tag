@@ -7,3 +7,5 @@ Explanation: The named script uses a dot to separate owner and group in
  Please use a colon instead, as in:
  .
  <code>chown user:group</code>.
+See-Also:
+ https://lists.debian.org/debian-devel/2022/03/msg00138.html
