@@ -1,8 +1,6 @@
 Tag: missing-systemd-timer-for-cron-script
-Severity: pedantic
-Experimental: yes
+Severity: warning
 Check: systemd
-See-Also: systemd.timer(5), anacron(8)
 Explanation: This package ships the specified cron script but does not ship a
  equivalent systemd <code>.timer</code> unit.
  .
@@ -12,3 +10,7 @@ Explanation: This package ships the specified cron script but does not ship a
  .
  Please consider shipping an equivalent <code>.timer</code> file for this
  script.
+See-Also:
+ systemd.timer(5),
+ anacron(8),
+ Bug#1007257
