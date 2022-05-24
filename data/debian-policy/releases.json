@@ -8,18 +8,42 @@
          "author" : "Sean Whitton <spwhitton@spwhitton.name>",
          "changes" : [
             "",
-            "debian-policy (4.6.0.2) UNRELEASED; urgency=medium",
+            "debian-policy (4.6.1.0) unstable; urgency=medium",
+            "",
+            "  * Policy: Allow non-64-bit packages to install to /usr/lib64",
+            "    Wording: Sean Whitton <spwhitton@spwhitton.name>",
+            "    Seconded: Simon McVittie <smcv@debian.org>",
+            "    Seconded: Russ Allbery <rra@debian.org>",
+            "    Closes: #992601",
+            "  * Policy: Define 'upstream' & document several version conventions",
+            "    Wording: Russ Allbery <rra@debian.org>",
+            "    Seconded: Sam Hartman <hartmans@debian.org>",
+            "    Seconded: Sean Whitton <spwhitton@spwhitton.name>",
+            "    Closes: #542288, #850729",
+            "  * virtual-package-names-list: Add {default,}dbus-system-bus (Closes: #998063).",
+            "    Thanks to Simon McVittie for the patch.",
+            "  * Update 9.7.2 and 9.7.3 for package split of bin:mime-support into",
+            "    bin:media-types and bin:mailcap (Closes: #1008480).",
+            "    Thanks to Charles Plessy for the patch.",
             "",
             "  * Fix several problems with footnote regarding the autobuilders and",
             "    build dependency alternatives (Closes: #999826).",
-            "    Thanks to Johannes Schauer Marin Rodrigues for the report and patch."
+            "    Thanks to Johannes Schauer Marin Rodrigues for the report and patch.",
+            "  * Use syntax highlighting for some source code blocks (Closes: #999566).",
+            "    Thanks to Stéphane Blondon for the patch."
          ],
          "closes" : [
-            999826.0
+            999826,
+            992601,
+            542288,
+            850729,
+            998063,
+            1008480,
+            999566
          ],
-         "epoch" : 1640320759,
-         "timestamp" : "2021-12-24T04:39:19Z",
-         "version" : "4.6.0.2"
+         "epoch" : 1652292179,
+         "timestamp" : "2022-05-11T18:02:59+00:00",
+         "version" : "4.6.1.0"
       },
       {
          "author" : "Sean Whitton <spwhitton@spwhitton.name>",
