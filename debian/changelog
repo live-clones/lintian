@@ -2,7 +2,7 @@ lintian (2.114.0+git) UNRELEASED; urgency=medium
 
   * WIP (generated at release time: please do not add entries below).
 
- -- Chris Lamb <lamby@debian.org>  Sat, 27 Nov 2021 09:26:13 -0800
+ -- Axel Beckert <abe@debian.org>  Fri, 10 Jun 2022 05:00:35 +0200
 
 lintian (2.114.0) unstable; urgency=medium
 
