@@ -3,7 +3,7 @@ Section: devel
 Priority: optional
 Maintainer: Debian Lintian Maintainers <lintian-maint@debian.org>
 Uploaders:
- Chris Lamb <lamby@debian.org>,
+ Axel Beckert <abe@debian.org>
 Build-Depends:
  debhelper-compat (= 13),
  dpkg (>= 1.17.14),
