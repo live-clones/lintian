@@ -95,7 +95,7 @@ sub check_file_overlap {
 
         my @provides_one = $one->fields->trimmed_list('Provides', qr{,});
         my $relation_one = Lintian::Relation->new->load(
-            join(' |̈́ ', $one->name, @provides_one));
+            join(' | ', $one->name, @provides_one));
 
         for my $two (@remaining) {
 
