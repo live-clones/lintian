@@ -52,7 +52,7 @@ sub t {
 my $s = "A familar brown gnu allows\nto jump over the lazy dog.\n";
 
 t($s,
-        'familar -> familiar'
+    'familar -> familiar'
       . $NEWLINE
       . '"allows to" -> "allows one to"'
       . $NEWLINE);

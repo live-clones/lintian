@@ -46,7 +46,8 @@ use Test::Lintian::Output::Universal qw(tag_name);
 const my $SPACE => q{ };
 const my $NEWLINE => qq{\n};
 
-my @known_missing = (qw(
+my @known_missing = (
+    qw(
       changed-by-invalid-for-derivative
       debian-files-list-in-source
       debian-rules-missing-recommended-target
@@ -67,7 +68,7 @@ my @known_missing = (qw(
       unpack-message-for-deb-control
       unpack-message-for-orig
       uses-deprecated-adttmp
-      ),
+    ),
 
 # the following tags are not testable due to restrictions in reprotest
 # building the tests causes regressions due to an unknown problem, maybe in docker
@@ -78,7 +79,8 @@ my @known_missing = (qw(
       bad-owner-for-doc-file
       non-standard-game-executable-perm
       rules-silently-require-root
-));
+    )
+);
 
 my $profile = Lintian::Profile->new;
 $profile->load(undef, undef, 0);

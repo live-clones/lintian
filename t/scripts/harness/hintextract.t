@@ -85,7 +85,8 @@ sub hintextract {
         system(
             'hintextract', '-f',$format,
             $inpath->stringify,$outpath->stringify
-        ));
+        )
+      );
 
     return $outpath->slurp;
 }
