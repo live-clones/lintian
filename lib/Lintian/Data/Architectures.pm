@@ -231,7 +231,7 @@ has names => (
 
             if ($os eq 'linux') {
 
-                # Per Policy §11.1 (3.9.3):
+                # Per Policy section 11.1 (3.9.3):
                 #
                 #"""[architecture] strings are in the format "os-arch", though
                 # the OS part is sometimes elided, as when the OS is Linux."""

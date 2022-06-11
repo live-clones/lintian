@@ -1,6 +1,6 @@
 # apache2 -- lintian check script -*- perl -*-
 #
-# Copyright (C) 2012 Arno Töll
+# Copyright (C) 2012 Arno Toell
 # Copyright (C) 2017-2018 Chris Lamb <lamby@debian.org>
 #
 # This program is free software; you can redistribute it and/or modify

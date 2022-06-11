@@ -1,6 +1,6 @@
 # debian/version-substvars -- lintian check script -*- perl -*-
 #
-# Copyright (C) 2006 Adeodato Simó
+# Copyright (C) 2006 Adeodato Simo
 # Copyright (C) 2019 Chris Lamb <lamby@debian.org>
 # Copyright (C) 2021 Felix Lechner
 #

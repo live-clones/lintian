@@ -5,7 +5,7 @@
 # Copyright (C) 2021 Felix Lechner
 #
 # based on the apache2 checks file by:
-# Copyright (C) 2012 Arno Töll
+# Copyright (C) 2012 Arno Toell
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

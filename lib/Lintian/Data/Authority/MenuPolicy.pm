@@ -2,7 +2,7 @@
 #
 # Copyright (C) 1998 Christian Schwarz and Richard Braakman
 # Copyright (C) 2001 Colin Watson
-# Copyright (C) 2008 Jordà Polo
+# Copyright (C) 2008 Jorda Polo
 # Copyright (C) 2009 Russ Allbery
 # Copyright (C) 2017-2019 Chris Lamb <lamby@debian.org>
 # Copyright (C) 2020-2021 Felix Lechner

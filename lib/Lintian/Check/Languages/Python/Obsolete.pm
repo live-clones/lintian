@@ -4,7 +4,7 @@
 # Copyright (C) 2000 Sean 'Shaleh' Perry
 # Copyright (C) 2002 Josip Rodin
 # Copyright (C) 2007 Russ Allbery
-# Copyright (C) 2013-2018 Bastien ROUCARIÈS
+# Copyright (C) 2013-2018 Bastien ROUCARIES
 # Copyright (C) 2017-2020 Chris Lamb <lamby@debian.org>
 # Copyright (C) 2020 Felix Lechner
 #

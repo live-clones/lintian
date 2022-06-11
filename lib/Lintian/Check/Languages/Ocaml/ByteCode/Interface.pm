@@ -1,6 +1,6 @@
 # languages/ocaml/byte-code/interface -- lintian check script -*- perl -*-
 #
-# Copyright (C) 2009 Stéphane Glondu
+# Copyright (C) 2009 Stephane Glondu
 # Copyright (C) 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify

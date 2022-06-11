@@ -3,7 +3,7 @@
 # Copyright (C) 2000 Sean 'Shaleh' Perry
 # Copyright (C) 2002 Josip Rodin
 # Copyright (C) 2007 Russ Allbery
-# Copyright (C) 2013-2018 Bastien ROUCARIÈS
+# Copyright (C) 2013-2018 Bastien ROUCARIES
 # Copyright (C) 2017-2020 Chris Lamb <lamby@debian.org>
 # Copyright (C) 2020-2021 Felix Lechner
 #
@@ -92,7 +92,7 @@ sub visit_patched_files {
     return
       if $self->LENNA_WHITELIST->recognizes($item->md5sum);
 
-    # Lena Söderberg image
+    # Lena Soderberg image
     $self->pointed_hint('license-problem-non-free-img-lenna', $item->pointer)
       if $item->basename =~ / ( \b | _ ) lenn?a ( \b | _ ) /ix
       || exists $self->LENNA_BLACKLIST->{$item->md5sum};

@@ -1,6 +1,6 @@
 # -*- perl -*-
 
-# Copyright (C) 2013 Bastien ROUCARIÈS
+# Copyright (C) 2013 Bastien ROUCARIES
 # Copyright (C) 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify it

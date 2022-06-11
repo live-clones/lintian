@@ -1,6 +1,6 @@
 # desktop/dbus -- lintian check script, vaguely based on apache2 -*- perl -*-
 #
-# Copyright (C) 2012 Arno Töll
+# Copyright (C) 2012 Arno Toell
 # Copyright (C) 2014 Collabora Ltd.
 # Copyright (C) 2021 Felix Lechner
 #

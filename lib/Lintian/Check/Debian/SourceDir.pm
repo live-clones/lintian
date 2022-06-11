@@ -1,6 +1,6 @@
 # debian/source directory content -- lintian check script -*- perl -*-
 
-# Copyright (C) 2010 by Raphaël Hertzog
+# Copyright (C) 2010 by Raphael Hertzog
 # Copyright (C) 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify

@@ -1,7 +1,7 @@
 # debian/variables -- lintian check script -*- perl -*-
 
 # Copyright (C) 2006 Russ Allbery <rra@debian.org>
-# Copyright (C) 2005 René van Bevern <rvb@pro-linux.de>
+# Copyright (C) 2005 Rene van Bevern <rvb@pro-linux.de>
 # Copyright (C) 2019-2020 Chris Lamb <lamby@debian.org>
 # Copyright (C) 2021 Felix Lechner
 #

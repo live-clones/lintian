@@ -2,7 +2,7 @@
 
 # Copyright (C) 2016 Petter Reinholdtsen
 # Copyright (C) 2020 Chris Lamb <lamby@debian.org>
-# Copyright (C) 2021 Jelmer Vernooĳ
+# Copyright (C) 2021 Jelmer Vernooij
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
