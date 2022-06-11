@@ -1,9 +1,9 @@
 # -*- perl -*- Lintian::Index::Elf
 #
-# Copyright © 1998 Christian Schwarz
-# Copyright © 2008 Adam D. Barratt
-# Copyright © 2017-2018 Chris Lamb <lamby@debian.org>
-# Copyright © 2020-2022 Felix Lechner
+# Copyright (C) 1998 Christian Schwarz
+# Copyright (C) 2008 Adam D. Barratt
+# Copyright (C) 2017-2018 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2020-2022 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free

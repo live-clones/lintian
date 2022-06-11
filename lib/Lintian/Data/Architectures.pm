@@ -1,8 +1,8 @@
 # -*- perl -*-
 
-# Copyright © 2011-2012 Niels Thykier <niels@thykier.net>
+# Copyright (C) 2011-2012 Niels Thykier <niels@thykier.net>
 #  - Based on a shell script by Raphael Geissert <atomo64@gmail.com>
-# Copyright © 2020-2021 Felix Lechner
+# Copyright (C) 2020-2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free

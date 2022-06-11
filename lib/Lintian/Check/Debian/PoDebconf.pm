@@ -1,7 +1,7 @@
 # debian/po-debconf -- lintian check script -*- perl -*-
 
-# Copyright © 2002-2004 by Denis Barbier <barbier@linuxfr.org>
-# Copyright © 2021 Felix Lechner
+# Copyright (C) 2002-2004 by Denis Barbier <barbier@linuxfr.org>
+# Copyright (C) 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

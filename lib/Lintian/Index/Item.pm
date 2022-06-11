@@ -1,8 +1,8 @@
 # -*- perl -*-
 # Lintian::Index::Item -- Representation of path entry in a package
 #
-# Copyright © 2011 Niels Thykier
-# Copyright © 2020 Felix Lechner
+# Copyright (C) 2011 Niels Thykier
+# Copyright (C) 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free

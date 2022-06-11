@@ -1,7 +1,7 @@
 # origtar -- lintian check script -*- perl -*-
 #
-# Copyright © 2008 Bernhard R. Link
-# Copyright © 2019 Felix Lechner
+# Copyright (C) 2008 Bernhard R. Link
+# Copyright (C) 2019 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

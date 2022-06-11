@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
-# Copyright © 2014-2016 Jakub Wilk <jwilk@jwilk.net>
-# Copyright © 2017 Axel Beckert <abe@debian.org>
+# Copyright (C) 2014-2016 Jakub Wilk <jwilk@jwilk.net>
+# Copyright (C) 2017 Axel Beckert <abe@debian.org>
 #
 # This program is free software.  It is distributed under the terms of
 # the GNU General Public License as published by the Free Software

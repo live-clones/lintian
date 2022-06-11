@@ -1,7 +1,7 @@
 # files/compressed/lz -- lintian check script -*- perl -*-
 
-# Copyright © 2020 Chris Lamb
-# Copyright © 2020 Felix Lechner
+# Copyright (C) 2020 Chris Lamb
+# Copyright (C) 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

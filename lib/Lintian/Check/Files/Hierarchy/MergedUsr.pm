@@ -1,6 +1,6 @@
 # files/hierarchy/merged-usr -- lintian check script -*- perl -*-
 #
-# Copyright © 2021 Felix Lechner
+# Copyright (C) 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

@@ -1,8 +1,8 @@
 # desktop/gnome/gir -- lintian check script for GObject-Introspection -*- perl -*-
 #
-# Copyright © 2012 Arno Töll
-# Copyright © 2014 Collabora Ltd.
-# Copyright © 2016 Simon McVittie
+# Copyright (C) 2012 Arno Töll
+# Copyright (C) 2014 Collabora Ltd.
+# Copyright (C) 2016 Simon McVittie
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

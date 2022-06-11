@@ -1,10 +1,10 @@
 # shell/non-posix/bash-centric -- lintian check script -*- perl -*-
 #
-# Copyright © 1998 Richard Braakman
-# Copyright © 2002 Josip Rodin
-# Copyright © 2016-2019 Chris Lamb <lamby@debian.org>
-# Copyright © 2021 Felix Lechner
-# Copyright © 2021 Rafael Laboissière
+# Copyright (C) 1998 Richard Braakman
+# Copyright (C) 2002 Josip Rodin
+# Copyright (C) 2016-2019 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2021 Felix Lechner
+# Copyright (C) 2021 Rafael Laboissière
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

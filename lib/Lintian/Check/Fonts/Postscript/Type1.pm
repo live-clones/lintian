@@ -1,7 +1,7 @@
 # fonts/postscript/type1 -- lintian check script -*- perl -*-
 
-# Copyright © 1998 Christian Schwarz and Richard Braakman
-# Copyright © 2020 Felix Lechner
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

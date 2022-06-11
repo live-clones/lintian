@@ -1,8 +1,8 @@
 # team/pkg-perl/xs-abi -- lintian check script for XS target directory -*- perl -*-
 #
-# Copyright © 2014 Damyan Ivanov <dmn@debian.org>
-# Copyright © 2014 Axel Beckert <abe@debian.org>
-# Copyright © 2020 Felix Lechner
+# Copyright (C) 2014 Damyan Ivanov <dmn@debian.org>
+# Copyright (C) 2014 Axel Beckert <abe@debian.org>
+# Copyright (C) 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

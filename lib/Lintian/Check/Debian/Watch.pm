@@ -1,9 +1,9 @@
 # debian/watch -- lintian check script -*- perl -*-
 #
-# Copyright © 2008 Patrick Schoenfeld
-# Copyright © 2008 Russ Allbery
-# Copyright © 2008 Raphael Geissert
-# Copyright © 2019 Felix Lechner
+# Copyright (C) 2008 Patrick Schoenfeld
+# Copyright (C) 2008 Russ Allbery
+# Copyright (C) 2008 Raphael Geissert
+# Copyright (C) 2019 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

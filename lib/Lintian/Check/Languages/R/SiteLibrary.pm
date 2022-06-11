@@ -1,6 +1,6 @@
 # languages/r/site-library -- lintian check script -*- perl -*-
 
-# Copyright © 2020 Dylan Aïssi
+# Copyright (C) 2020 Dylan Aïssi
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

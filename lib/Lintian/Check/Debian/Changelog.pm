@@ -1,8 +1,8 @@
 # debian/changelog -- lintian check script -*- perl -*-
 
-# Copyright © 1998 Christian Schwarz
-# Copyright © 2019-2020 Chris Lamb <lamby@debian.org>
-# Copyright © 2021 Felix Lechner
+# Copyright (C) 1998 Christian Schwarz
+# Copyright (C) 2019-2020 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

@@ -1,8 +1,8 @@
 # obsolete-sites -- lintian check script -*- perl -*-
 
-# Copyright © 2015 Axel Beckert <abe@debian.org>
-# Copyright © 2017-2018 Chris Lamb <lamby@debian.org>
-# Copyright © 2021 Felix Lechner
+# Copyright (C) 2015 Axel Beckert <abe@debian.org>
+# Copyright (C) 2017-2018 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

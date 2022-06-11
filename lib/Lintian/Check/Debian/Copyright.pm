@@ -1,9 +1,9 @@
 # copyright -- lintian check script -*- perl -*-
 
-# Copyright © 1998 Christian Schwarz
-# Copyright © 1998 Richard Braakman
-# Copyright © 2011 Jakub Wilk
-# Copyright © 2020 Felix Lechner
+# Copyright (C) 1998 Christian Schwarz
+# Copyright (C) 1998 Richard Braakman
+# Copyright (C) 2011 Jakub Wilk
+# Copyright (C) 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

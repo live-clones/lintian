@@ -1,9 +1,9 @@
 # binaries/hardening -- lintian check script -*- perl -*-
 
-# Copyright © 1998 Christian Schwarz and Richard Braakman
-# Copyright © 2012 Kees Cook
-# Copyright © 2017-2020 Chris Lamb <lamby@debian.org>
-# Copyright © 2021 Felix Lechner
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 2012 Kees Cook
+# Copyright (C) 2017-2020 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

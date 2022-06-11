@@ -1,7 +1,7 @@
 # -*- perl -*- Lintian::Processable::Installable::Changelog -- access to collected changelog data
 #
-# Copyright © 1998 Richard Braakman
-# Copyright © 2019-2021 Felix Lechner
+# Copyright (C) 1998 Richard Braakman
+# Copyright (C) 2019-2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free

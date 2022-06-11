@@ -1,8 +1,8 @@
 # debhelper format -- lintian check script -*- perl -*-
 
-# Copyright © 1999 by Joey Hess
-# Copyright © 2016-2020 Chris Lamb <lamby@debian.org>
-# Copyright © 2021 Felix Lechner
+# Copyright (C) 1999 by Joey Hess
+# Copyright (C) 2016-2020 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

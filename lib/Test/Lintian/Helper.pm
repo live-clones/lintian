@@ -1,7 +1,7 @@
-# Copyright © 1998 Richard Braakman
-# Copyright © 2008 Frank Lichtenheld
-# Copyright © 2008, 2009 Russ Allbery
-# Copyright © 2018 Felix Lechner
+# Copyright (C) 1998 Richard Braakman
+# Copyright (C) 2008 Frank Lichtenheld
+# Copyright (C) 2008, 2009 Russ Allbery
+# Copyright (C) 2018 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

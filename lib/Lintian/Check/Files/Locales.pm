@@ -1,12 +1,12 @@
 # files/locales -- lintian check script -*- perl -*-
 
-# Copyright © 1998 Christian Schwarz and Richard Braakman
-# Copyright © 2013 Niels Thykier <niels@thykier.net>
-# Copyright © 2019 Adam D. Barratt <adam@adam-barratt.org.uk>
-# Copyright © 2021 Felix Lechner
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 2013 Niels Thykier <niels@thykier.net>
+# Copyright (C) 2019 Adam D. Barratt <adam@adam-barratt.org.uk>
+# Copyright (C) 2021 Felix Lechner
 #
 # Based in part on a shell script that was:
-#   Copyright © 2010 Raphael Geissert <atomo64@gmail.com>
+#   Copyright (C) 2010 Raphael Geissert <atomo64@gmail.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

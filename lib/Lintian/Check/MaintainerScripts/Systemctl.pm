@@ -1,11 +1,11 @@
 # masitainer-scripts/systemctl -- lintian check script -*- perl -*-
 #
-# Copyright © 2013 Michael Stapelberg
-# Copyright © 2016-2020 Chris Lamb <lamby@debian.org>
-# Copyright © 2021 Felix Lechner
+# Copyright (C) 2013 Michael Stapelberg
+# Copyright (C) 2016-2020 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2021 Felix Lechner
 #
 # based on the apache2 checks file by:
-# Copyright © 2012 Arno Töll
+# Copyright (C) 2012 Arno Töll
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

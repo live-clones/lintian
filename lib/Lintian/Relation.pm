@@ -1,10 +1,10 @@
 # -*- perl -*-
 # Lintian::Relation -- operations on dependencies and relationships
 
-# Copyright © 1998 Christian Schwarz and Richard Braakman
-# Copyright © 2004-2009 Russ Allbery <rra@debian.org>
-# Copyright © 2018 Chris Lamb <lamby@debian.org>
-# Copyright © 2020 Felix Lechner
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 2004-2009 Russ Allbery <rra@debian.org>
+# Copyright (C) 2018 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free

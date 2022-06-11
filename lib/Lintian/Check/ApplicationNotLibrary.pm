@@ -1,6 +1,6 @@
 # application-not-library -- find applications packaged like a library -*- perl -*-
 #
-# Copyright © 2014-2015 Axel Beckert <abe@debian.org>
+# Copyright (C) 2014-2015 Axel Beckert <abe@debian.org>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

@@ -1,8 +1,8 @@
 # md5sums -- lintian check script -*- perl -*-
 
-# Copyright © 1998 Christian Schwarz and Richard Braakman
-# Copyright © 2020 Felix Lechner
-# Copyright © 2018, 2020 Chris Lamb <lamby@debian.org>
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 2020 Felix Lechner
+# Copyright (C) 2018, 2020 Chris Lamb <lamby@debian.org>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

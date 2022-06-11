@@ -1,9 +1,9 @@
 # fields/source -- lintian check script (rewrite) -*- perl -*-
 #
-# Copyright © 2004 Marc Brockschmidt
+# Copyright (C) 2004 Marc Brockschmidt
 #
 # Parts of the code were taken from the old check script, which
-# was Copyright © 1998 Richard Braakman (also licensed under the
+# was Copyright (C) 1998 Richard Braakman (also licensed under the
 # GPL 2 or higher)
 #
 # This program is free software; you can redistribute it and/or modify

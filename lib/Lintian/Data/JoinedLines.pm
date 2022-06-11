@@ -1,9 +1,9 @@
 # -*- perl -*-
 # Lintian::Data::JoinedLines -- interface to query lists of keywords
 
-# Copyright © 2008 Russ Allbery
-# Copyright © 2017-2018 Chris Lamb <lamby@debian.org>
-# Copyright © 2021 Felix Lechner
+# Copyright (C) 2008 Russ Allbery
+# Copyright (C) 2017-2018 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free

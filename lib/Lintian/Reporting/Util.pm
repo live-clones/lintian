@@ -1,7 +1,7 @@
 # Hey emacs! This is a -*- Perl -*- script!
 # Lintian::Reporting::Util -- Perl utility functions for lintian's reporting framework
 
-# Copyright © 1998 Christian Schwarz
+# Copyright (C) 1998 Christian Schwarz
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

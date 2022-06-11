@@ -1,8 +1,8 @@
 # desktop/dbus -- lintian check script, vaguely based on apache2 -*- perl -*-
 #
-# Copyright © 2012 Arno Töll
-# Copyright © 2014 Collabora Ltd.
-# Copyright © 2021 Felix Lechner
+# Copyright (C) 2012 Arno Töll
+# Copyright (C) 2014 Collabora Ltd.
+# Copyright (C) 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

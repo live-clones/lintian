@@ -1,9 +1,9 @@
 #!/usr/bin/perl
 
-# Copyright © 1998 Christian Schwarz, Richard Braakman (and others)
-# Copyright © 2013 Niels Thykier
-# Copyright © 2014 Jakub Wilk <jwilk@jwilk.net>
-# Copyright © 2020 Felix Lechner
+# Copyright (C) 1998 Christian Schwarz, Richard Braakman (and others)
+# Copyright (C) 2013 Niels Thykier
+# Copyright (C) 2014 Jakub Wilk <jwilk@jwilk.net>
+# Copyright (C) 2020 Felix Lechner
 
 # This program is free software.  It is distributed under the terms of
 # the GNU General Public License as published by the Free Software

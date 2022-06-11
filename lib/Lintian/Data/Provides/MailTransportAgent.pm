@@ -1,8 +1,8 @@
 # -*- perl -*-
 #
-# Copyright © 2008 Niko Tyni
-# Copyright © 2018 Chris Lamb <lamby@debian.org>
-# Copyright © 2021 Felix Lechner
+# Copyright (C) 2008 Niko Tyni
+# Copyright (C) 2018 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
