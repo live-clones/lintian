@@ -45,7 +45,7 @@ Copyright: 1998, Christian Schwarz
            1998-1999, Joey Hess
            1999, Darren Benham
            2000, Sean 'Shaleh' Perry
-           2001-2008, Colin Watson
+           2001-2017, Colin Watson
            2001-2003, Josip Rodin
 	   2002-2004, Denis Barbier
 	   2004-2008, Marc Brockschmidt
@@ -53,19 +53,19 @@ Copyright: 1998, Christian Schwarz
 	   2004-2006, Jeroen van Wolffelaar
 	   2005, René van Bevern
 	   2006, Adeodato Simó
-	   2007-2010, Russ Allbery
+	   2007-2013, Russ Allbery
 	   2008, Patrick Schoenfeld
 	   2008, Niko Tyni
-	   2008-2015, Raphael Geissert
-	   2008-2014, Adam D. Barratt
+	   2008-2017, Raphael Geissert
+	   2008-2019, Adam D. Barratt
 	   2009, Stéphane Glondu
 	   2010, Raphaël Hertzog
-	   2010-2016, Niels Thykier
+	   2010-2019, Niels Thykier
 	   2011, Gerfried Fuchs
 	   2011-2016, Jakub Wilk
-	   2013-2015, Bastien ROUCARIÈS
-	   2014-2016, Axel Beckert
-	   2016, Chris Lamb
+	   2013-2018, Bastien ROUCARIÈS
+	   2014-2022, Axel Beckert
+	   2016-2021, Chris Lamb
 	   2017, Edward Betts
 License: GPL-2+
  This program is free software; you may redistribute it and/or modify
