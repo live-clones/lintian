@@ -31,7 +31,7 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-const my $ARROW => q{ » };
+const my $ARROW => qq{ \N{RIGHT-POINTING DOUBLE ANGLE QUOTATION MARK} };
 
 my %team_names = (
     'debian-go@lists.debian.org' => 'golang',

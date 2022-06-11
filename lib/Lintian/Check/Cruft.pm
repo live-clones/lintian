@@ -282,7 +282,8 @@ sub full_text_check {
                 }
 
                 if ($firstline
-                    =~ m/.{0,20}((?:\bcopyright\b|[\(]c[\)]\s*\w|©).{0,50})/){
+                    =~ m/.{0,20}((?:\bcopyright\b|[\(]c[\)]\s*\w|\N{COPYRIGHT SIGN}).{0,50})/
+                ){
 
                     my $extract = $1;
                     $extract =~ s/^\s+|\s+$//g;

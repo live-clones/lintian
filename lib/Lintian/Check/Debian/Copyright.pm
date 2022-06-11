@@ -440,7 +440,7 @@ qr/GNU (?:Lesser|Library) General Public License|(?-i:\bLGPL\b)/i
     if ($found && !$linked) {
         $self->hint('copyright-without-copyright-notice')
           unless $contents
-          =~ m{(?:Copyright|Copr\.|©)(?:.*|[\(C\):\s]+)\b\d{4}\b
+          =~ m{(?:Copyright|Copr\.|\N{COPYRIGHT SIGN})(?:.*|[\(C\):\s]+)\b\d{4}\b
                |\bpublic(?:\s+|-)domain\b}xi;
     }
 

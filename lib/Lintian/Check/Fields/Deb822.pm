@@ -34,7 +34,7 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-const my $SECTION => q{§};
+const my $SECTION => qq{\N{SECTION SIGN}};
 
 my @SOURCE_DEB822 = qw(debian/control);
 
