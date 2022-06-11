@@ -91,10 +91,9 @@ sub installable {
 
         # does the link point to any prerequisites in same source package
         next
-          if any {
-            $_->installed->lookup($path) || $_->installed->lookup("$path/")
-        }
-        @prerequisites;
+          if
+          any {$_->installed->lookup($path) || $_->installed->lookup("$path/")}
+          @prerequisites;
 
         # link target
         my $target = $item->link;

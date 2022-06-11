@@ -33,7 +33,7 @@ sub visit_installed_files {
     my ($self, $item) = @_;
 
     if (
-           $item->name =~ m{^usr/share/p11-kit/modules/.}
+        $item->name =~ m{^usr/share/p11-kit/modules/.}
         && $item->name !~ m{\A usr/share/p11-kit/modules/
                        [[:alnum:]][[:alnum:]_.-]*\.module\Z
                   }xsm

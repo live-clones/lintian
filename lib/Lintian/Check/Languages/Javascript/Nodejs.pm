@@ -248,7 +248,7 @@ sub path_exists {
 
     return 1
       if any { m{^ $expression /? $}sx }
-    @{$self->processable->patched->sorted_list};
+      @{$self->processable->patched->sorted_list};
 
     return 0;
 }

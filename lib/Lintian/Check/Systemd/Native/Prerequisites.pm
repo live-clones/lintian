@@ -49,7 +49,8 @@ has satisfies_systemd_native_prerequisites => (
         my $pre_depends = $self->processable->relation('Pre-Depends');
 
         return $pre_depends->satisfies($SYSTEMD_NATIVE_PREREQUISITES);
-    });
+    }
+);
 
 sub visit_control_files {
     my ($self, $item) = @_;

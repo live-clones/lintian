@@ -79,7 +79,8 @@ has location => (
 has recommended_features => (
     is => 'rw',
     default => sub { {} },
-    coerce => sub { my ($hashref) = @_; return ($hashref // {}); });
+    coerce => sub { my ($hashref) = @_; return ($hashref // {}); }
+);
 
 =item load
 

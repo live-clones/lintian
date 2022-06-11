@@ -140,7 +140,8 @@ sub install_resource {
             croak encode_utf8(
                 join($SPACE,
                     qq(Resource "${resource_name}" must not contain "/"),
-                    'when source_file is given'));
+                    'when source_file is given')
+            );
         }
     } else {
         $basename = basename($resource_name);
@@ -178,7 +179,8 @@ sub install_resource {
         croak encode_utf8(
             join($SPACE,
                 "Unknown install method ${method}",
-                '- please use "move" or "copy"'));
+                '- please use "move" or "copy"')
+        );
     }
     $self->{'_resource_cache'}{$basename} = $target_file;
     $self->{'_resource_integrity'}{$basename} = "sha256-${b64digest}";

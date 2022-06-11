@@ -55,15 +55,18 @@ has override_file => (
         my ($self) = @_;
 
         # prefer source/lintian-overrides to source.lintian-overrides
-        my @candidates = ('debian/source/lintian-overrides',
-            'debian/source.lintian-overrides');
+        my @candidates = (
+            'debian/source/lintian-overrides',
+            'debian/source.lintian-overrides'
+        );
 
         # pick the first
         my $override_item= first_value { defined }
         map { $self->patched->lookup($_) } @candidates;
 
         return $override_item;
-    });
+    }
+);
 
 =item overrides
 
@@ -81,7 +84,8 @@ has overrides => (
         my $contents = $self->override_file->decoded_utf8;
 
         return $self->parse_overrides($contents);
-    });
+    }
+);
 
 1;
 

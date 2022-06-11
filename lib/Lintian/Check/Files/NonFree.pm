@@ -78,7 +78,8 @@ has NON_FREE_FILES => (
         my ($self) = @_;
 
         return $self->_md5sum_based_lintian_data('cruft/non-free-files');
-    });
+    }
+);
 
 sub visit_patched_files {
     my ($self, $item) = @_;

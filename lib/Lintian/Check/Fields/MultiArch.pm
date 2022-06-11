@@ -61,7 +61,9 @@ sub source {
                 safe_qx(
                     'dpkg-architecture', '--match-wildcard',
                     $wildcard,           '--list-known'
-                )));
+                )
+            )
+        );
 
         # include original wildcard
         push(@arches, $wildcard);

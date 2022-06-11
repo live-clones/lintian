@@ -47,7 +47,8 @@ has soname_by_filename => (
         }
 
         return \%soname_by_filename;
-    });
+    }
+);
 
 has must_call_ldconfig => (is => 'rw', default => sub { [] });
 

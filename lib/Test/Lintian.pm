@@ -449,7 +449,7 @@ sub test_load_checks {
 
         # setup and breakdown should only be used together with files
         my $has_entrypoint = any { $module->can($_) }
-        qw(source binary udeb installable changes always files);
+          qw(source binary udeb installable changes always files);
 
         if (
             !$builder->ok(

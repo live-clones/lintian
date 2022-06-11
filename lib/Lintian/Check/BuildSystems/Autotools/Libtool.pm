@@ -51,7 +51,8 @@ has libtool_in_build_depends => (
 
         return $self->processable->relation('Build-Depends-All')
           ->satisfies($LIBTOOL);
-    });
+    }
+);
 
 sub visit_patched_files {
     my ($self, $item) = @_;
@@ -80,7 +81,9 @@ sub visit_patched_files {
                 && (
                     $minor < $ACCEPTABLE_LIBTOOL_MINOR
                     || (   $minor == $ACCEPTABLE_LIBTOOL_MINOR
-                        && $debian < $ACCEPTABLE_LIBTOOL_DEBIAN)));
+                        && $debian < $ACCEPTABLE_LIBTOOL_DEBIAN)
+                )
+              );
         }
     }
 

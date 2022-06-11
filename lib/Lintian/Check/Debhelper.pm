@@ -777,10 +777,8 @@ sub source {
 
         next
           if $debhelper_level >= $REQUIRES_AUTOTOOLS
-          && (
-            any { $_ eq $prerequisite }
-            qw(autotools-dev:any dh-strip-nondeterminism:any)
-          );
+          && (any { $_ eq $prerequisite }
+            qw(autotools-dev:any dh-strip-nondeterminism:any));
 
         $self->pointed_hint('missing-build-dependency-for-dh_-command',
             $drules->pointer,$command, "(does not satisfy $prerequisite)")

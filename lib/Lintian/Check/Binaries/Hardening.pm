@@ -39,7 +39,8 @@ has HARDENED_FUNCTIONS => (
         my ($self) = @_;
 
         return $self->data->load('binaries/hardened-functions');
-    });
+    }
+);
 
 has recommended_hardening_features => (
     is => 'rw',
@@ -58,7 +59,8 @@ has recommended_hardening_features => (
           if $architecture ne 'all';
 
         return \%recommended_hardening_features;
-    });
+    }
+);
 
 has built_with_golang => (
     is => 'rw',
@@ -76,7 +78,8 @@ has built_with_golang => (
           if defined $source;
 
         return $built_with_golang;
-    });
+    }
+);
 
 sub visit_installed_files {
     my ($self, $item) = @_;

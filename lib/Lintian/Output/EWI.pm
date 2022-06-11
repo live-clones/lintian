@@ -475,7 +475,7 @@ sub describe_tag {
         if (@{$tag->renamed_from}) {
 
             $wrapped .= wrap($DESCRIPTION_PREFIX, $DESCRIPTION_PREFIX,
-                    'Renamed from: '
+                'Renamed from: '
                   . join($SPACE, @{$tag->renamed_from})
                   . $NEWLINE);
         }

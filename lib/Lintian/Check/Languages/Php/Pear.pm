@@ -39,10 +39,8 @@ sub source {
     my ($self) = @_;
 
     # Don't check package if it doesn't contain a .php file
-    if (
-        none { $_->basename =~ m/\.php$/i && !$_->is_dir }
-        @{$self->processable->patched->sorted_list}
-    ){
+    if (none { $_->basename =~ m/\.php$/i && !$_->is_dir }
+        @{$self->processable->patched->sorted_list}){
         return;
     }
 

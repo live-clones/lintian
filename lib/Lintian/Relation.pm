@@ -383,8 +383,7 @@ sub implies_array {
             for my $p_branch (@p_branches) {
 
                 return 0
-                  unless any { implies_array($p_branch, $_) }
-                @q_branches;
+                  unless any { implies_array($p_branch, $_) }@q_branches;
             }
 
             return 1;

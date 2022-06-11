@@ -65,7 +65,8 @@ has debian_control => (
         $control->load($item);
 
         return $control;
-    });
+    }
+);
 
 =back
 

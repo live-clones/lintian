@@ -65,7 +65,8 @@ has location => (
 
 has separator => (
     is => 'rw',
-    default => sub { qr/=/ });
+    default => sub { qr/=/ }
+);
 
 =back
 

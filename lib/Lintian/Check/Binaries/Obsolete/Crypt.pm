@@ -40,7 +40,8 @@ has OBSOLETE_CRYPT_FUNCTIONS => (
 
         return $self->data->load('binaries/obsolete-crypt-functions',
             qr/\s*\|\|\s*/);
-    });
+    }
+);
 
 sub visit_installed_files {
     my ($self, $item) = @_;

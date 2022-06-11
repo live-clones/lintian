@@ -54,7 +54,8 @@ has changelog_item => (
         my $item = $self->patched->resolve_path('debian/changelog');
 
         return $item;
-    });
+    }
+);
 
 =item changelog
 
@@ -83,7 +84,8 @@ has changelog => (
         $changelog->parse($item->decoded_utf8);
 
         return $changelog;
-    });
+    }
+);
 
 1;
 

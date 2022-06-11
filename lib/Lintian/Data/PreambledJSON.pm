@@ -61,7 +61,8 @@ Routines for access and management of preambled JSON data files.
 
 has cargo => (
     is => 'rw',
-    coerce => sub { my ($scalar) = @_; return ($scalar // $EMPTY); });
+    coerce => sub { my ($scalar) = @_; return ($scalar // $EMPTY); }
+);
 
 =item read_file
 

@@ -62,7 +62,8 @@ has source_format => (
         my $format = $self->fields->value('Format') || '1.0';
 
         return $format;
-    });
+    }
+);
 
 =item native
 
@@ -110,7 +111,8 @@ has native => (
           if exists $self->files->{$diffname};
 
         return 1;
-    });
+    }
+);
 
 =back
 

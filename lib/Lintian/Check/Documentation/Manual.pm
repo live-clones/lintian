@@ -177,8 +177,9 @@ sub visit_installed_files {
             #    ../../man/man?/undocumented...
             #    ../../../share/man/man?/undocumented...
             #    ../../../../usr/share/man/man?/undocumented...
-            if ((
-                       $item->link =~ m{^undocumented\.([237])\.gz}
+            if (
+                (
+                    $item->link =~ m{^undocumented\.([237])\.gz}
                     && $page_path =~ m{^usr/share/man/man$1}
                 )
                 || $item->link =~ m{^\.\./man[237]/undocumented\.[237]\.gz$}
@@ -607,7 +608,7 @@ sub installable {
 
     my @english_missing = grep {
         none {$_->{language} eq $EMPTY}
-        @{$related_manpages{$_} // []}
+          @{$related_manpages{$_} // []}
     } @documented;
 
     for my $command (keys %local_admin_executables) {

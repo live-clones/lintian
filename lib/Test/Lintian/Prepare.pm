@@ -451,7 +451,8 @@ sub combine_fields {
         $testcase->store(
             $destination,
             join($delimiter,
-                grep { length }($testcase->value($destination),$content)));
+                grep { length }($testcase->value($destination),$content))
+        );
     }
 
     # delete the combined entry if it is empty

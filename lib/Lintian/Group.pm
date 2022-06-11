@@ -239,8 +239,7 @@ sub process {
                     $negations xor none {
                         $data->architectures->restriction_matches($_,
                             $processable->architecture)
-                    }
-                    @architectures
+                    }@architectures
                   );
 
                 if ($self->profile->is_durable($tag_name)) {
@@ -521,7 +520,8 @@ sub add_processable {
             sprintf(
                 "warning: tainted %1\$s package '%2\$s', skipping\n",
                 $processable->type, $processable->name
-            ));
+            )
+        );
         return 0;
     }
 
@@ -772,7 +772,8 @@ has spelling_exceptions => (
         }
 
         return [uniq @acceptable];
-    });
+    }
+);
 
 =back
 

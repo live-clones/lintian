@@ -49,7 +49,8 @@ my %NVIDIA_LICENSE = (
     keywords => [qw{license intellectual retain property}],
     sentences =>[
 'retain all intellectual property and proprietary rights in and to this software and related documentation'
-    ]);
+    ]
+);
 
 my %NON_FREE_LICENSES = (
 # first field is tag
@@ -143,7 +144,8 @@ qr{microsoft [ ] visual [ ] c[+][+] [ ] generated (?![ ] by [ ] freeze\.py)}msx
         sentences => ['the fall-through switches in utf-8 reading'],
         regex =>
 qr{the [ ] fall-through [ ] switches [ ] in [ ] utf-8 [ ] reading [ ] code [ ] save}msx
-    });
+    }
+);
 
 # get usual data about admissible/not admissible GFDL invariant part of license
 has GFDL_FRAGMENTS => (
@@ -188,7 +190,8 @@ has GFDL_FRAGMENTS => (
         }
 
         return \%gfdl_fragments;
-    });
+    }
+);
 
 sub visit_patched_files {
     my ($self, $item) = @_;
@@ -762,8 +765,7 @@ sub check_for_single_bad_license {
       if none { $lowercase =~ / \Q$_\E /msx } @{$license_data->{keywords}};
 
     return 0
-      if none { $clean =~ / \Q$_\E /msx }
-    @{$license_data->{sentences}};
+      if none { $clean =~ / \Q$_\E /msx }@{$license_data->{sentences}};
 
     my $regex = $license_data->{regex};
     return 0

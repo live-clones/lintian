@@ -44,7 +44,8 @@ has lzip_command => (
         my $command = first_value { locate_executable($_) } qw(lzip clzip);
 
         return $command;
-    });
+    }
+);
 
 sub visit_installed_files {
     my ($self, $item) = @_;

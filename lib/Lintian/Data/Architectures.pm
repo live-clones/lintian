@@ -90,7 +90,8 @@ has location => (
 has host_variables => (
     is => 'rw',
     default => sub { {} },
-    coerce => sub { my ($hashref) = @_; return ($hashref // {}); });
+    coerce => sub { my ($hashref) = @_; return ($hashref // {}); }
+);
 
 has deb_host_multiarch => (
     is => 'rw',
@@ -106,7 +107,8 @@ has deb_host_multiarch => (
           for keys %{$self->host_variables};
 
         return \%deb_host_multiarch;
-    });
+    }
+);
 
 # The list of directories searched by default by the dynamic linker.
 # Packages installing shared libraries into these directories must call
@@ -146,7 +148,8 @@ has ldconfig_folders => (
         my @with_slash = map { $_ . $SLASH } @ldconfig_folders;
 
         return \@with_slash;
-    });
+    }
+);
 
 # Valid architecture wildcards.
 has wildcards => (
@@ -202,7 +205,8 @@ has wildcards => (
         }
 
         return \%wildcards;
-    });
+    }
+);
 
 # Maps aliases to the "original" arch name.
 # (e.g. "linux-amd64" => "amd64")
@@ -252,7 +256,8 @@ has names => (
         }
 
         return \%names;
-    });
+    }
+);
 
 =item is_wildcard ($wildcard)
 
@@ -337,7 +342,7 @@ sub valid_restriction {
     $restriction =~ s/^!//;
 
     return
-         $self->is_release_architecture($restriction)
+      $self->is_release_architecture($restriction)
       || $self->is_wildcard($restriction)
       || $restriction eq 'all';
 }
@@ -402,7 +407,9 @@ sub refresh {
         my @lines= split(
             /\n/,
             decode_utf8(
-                safe_qx(qw{dpkg-architecture --host-arch}, $architecture)));
+                safe_qx(qw{dpkg-architecture --host-arch}, $architecture)
+            )
+        );
 
         for my $line (@lines) {
             my ($key, $value) = split(/=/, $line, 2);

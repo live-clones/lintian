@@ -89,7 +89,7 @@ sub visit_installed_files {
     }
 
     $self->pointed_hint('unstripped-static-library', $item->pointer,
-            $LEFT_PARENTHESIS
+        $LEFT_PARENTHESIS
           . join($SPACE, sort +uniq @unstripped_members)
           . $RIGHT_PARENTHESIS)
       if @unstripped_members
@@ -103,7 +103,8 @@ sub visit_installed_files {
             'static-library-has-unneeded-sections',
             $item->pointer,
             "($member)",
-            join($SPACE, sort +uniq @{$stripped_sections_by_member{$member}}))
+            join($SPACE, sort +uniq @{$stripped_sections_by_member{$member}})
+          )
           if @{$stripped_sections_by_member{$member}}
           && $item->name !~ m{ _g [.]a $}x;
     }

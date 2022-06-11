@@ -96,39 +96,46 @@ relationship a superset of another relationship."
 has literal => (
     is => 'rw',
     default => $EMPTY,
-    coerce => sub { my ($text) = @_; return ($text // $EMPTY); });
+    coerce => sub { my ($text) = @_; return ($text // $EMPTY); }
+);
 
 has parsable => (is => 'rw', default => $FALSE);
 
 has name => (
     is => 'rw',
     default => $EMPTY,
-    coerce => sub { my ($text) = @_; return ($text // $EMPTY); });
+    coerce => sub { my ($text) = @_; return ($text // $EMPTY); }
+);
 
 has multiarch_acceptor => (
     is => 'rw',
     default => $EMPTY,
-    coerce => sub { my ($text) = @_; return ($text // $EMPTY); });
+    coerce => sub { my ($text) = @_; return ($text // $EMPTY); }
+);
 
 has version_operator => (
     is => 'rw',
     default => $EMPTY,
-    coerce => sub { my ($text) = @_; return ($text // $EMPTY); });
+    coerce => sub { my ($text) = @_; return ($text // $EMPTY); }
+);
 
 has reference_version => (
     is => 'rw',
     default => $EMPTY,
-    coerce => sub { my ($text) = @_; return ($text // $EMPTY); });
+    coerce => sub { my ($text) = @_; return ($text // $EMPTY); }
+);
 
 has build_architecture => (
     is => 'rw',
     default => $EMPTY,
-    coerce => sub { my ($text) = @_; return ($text // $EMPTY); });
+    coerce => sub { my ($text) = @_; return ($text // $EMPTY); }
+);
 
 has build_profile => (
     is => 'rw',
     default => $EMPTY,
-    coerce => sub { my ($text) = @_; return ($text // $EMPTY); });
+    coerce => sub { my ($text) = @_; return ($text // $EMPTY); }
+);
 
 =item parse
 

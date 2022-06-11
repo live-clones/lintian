@@ -70,7 +70,8 @@ has work_folder => (
           = Path::Tiny->tempdir(TEMPLATE => 'lintian-archive-XXXXXXXXXX');
 
         return $work_folder;
-    });
+    }
+);
 
 has packages => (is => 'rw', default => sub { {} });
 

@@ -450,7 +450,8 @@ sub binary {
                     $group->spelling_exceptions,
                     $self->spelling_tag_emitter(
                         'spelling-error-in-news-debian', $news_item
-                    ));
+                    )
+                );
 
                 $self->pointed_hint('debian-news-entry-uses-asterisk',$pointer)
                   if $news->Changes =~ /^ \s* [*] \s /x;
@@ -484,12 +485,9 @@ sub binary {
         # native Debian package
         if (any { m/^changelog(?:\.gz)?$/} map { $_->basename } @doc_files) {
             # everything is fine
-        } elsif (
-            my $chg = first {
-                $_->basename =~ m/^changelog[.]debian(?:\.gz)$/i;
-            }
-            @doc_files
-        ) {
+        } elsif (my $chg
+            = first {$_->basename =~ m/^changelog[.]debian(?:\.gz)$/i;}
+            @doc_files) {
             $self->pointed_hint('wrong-name-for-changelog-of-native-package',
                 $chg->pointer);
 
@@ -531,12 +529,9 @@ sub binary {
             map { $_->basename } @doc_files
         ) {
             # everything is fine
-        } elsif (
-            my $chg = first {
-                $_->basename =~ m/^changelog\.debian(?:\.gz)?$/i;
-            }
-            @doc_files
-        ) {
+        } elsif (my $chg
+            = first {$_->basename =~ m/^changelog\.debian(?:\.gz)?$/i;}
+            @doc_files) {
             $self->pointed_hint('wrong-name-for-debian-changelog-file',
                 $chg->pointer);
 
@@ -609,10 +604,8 @@ sub binary {
                 next;
             }
 
-            unless (
-                all { length }
-                ($parsed->address, $parsed->user, $parsed->host)
-            ) {
+            unless (all { length }
+                ($parsed->address, $parsed->user, $parsed->host)) {
                 $self->pointed_hint(
                     'bogus-mail-host-in-debian-changelog',
                     $pointer,$parsed->format,"(for version $version)",
@@ -869,7 +862,8 @@ sub binary {
             $group->spelling_exceptions,
             $self->spelling_tag_emitter(
                 'spelling-error-in-changelog', $changelog_item
-            ));
+            )
+        );
     }
 
     return;

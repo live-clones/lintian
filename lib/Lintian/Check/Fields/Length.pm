@@ -59,8 +59,7 @@ sub always {
 
     # longer than maximum
     my @long= grep {
-        length $self->processable->fields->untrimmed_value($_)
-          > $MAXIMUM_LENGTH
+        length $self->processable->fields->untrimmed_value($_)> $MAXIMUM_LENGTH
     }@all;
 
     # filter allowed fields

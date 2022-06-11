@@ -122,7 +122,8 @@ has catalog => (
         $catalog{$EMPTY} = $root;
 
         return \%catalog;
-    });
+    }
+);
 
 has basedir => (
     is => 'rw',
@@ -156,7 +157,8 @@ has sorted_list => (
         const my @IMMUTABLE => @sorted;
 
         return \@IMMUTABLE;
-    });
+    }
+);
 
 =item lookup (FILE)
 
@@ -374,7 +376,8 @@ sub load {
             $operm | (
                 $FILE_CODE2LPATH_TYPE{$raw_type}
                   // Lintian::Index::Item::TYPE_OTHER
-            ));
+            )
+        );
     }
 
     # find all entries that are not regular files

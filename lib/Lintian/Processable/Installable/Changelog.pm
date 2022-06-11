@@ -73,7 +73,8 @@ has changelog_item => (
           = first_value { $_->is_file || length $_->link } @candidate_items;
 
         return $item;
-    });
+    }
+);
 
 =item changelog
 
@@ -125,7 +126,8 @@ has changelog => (
         $changelog->parse($item->decoded_utf8);
 
         return $changelog;
-    });
+    }
+);
 
 1;
 

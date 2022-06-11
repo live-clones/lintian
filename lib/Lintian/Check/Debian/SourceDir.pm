@@ -112,9 +112,11 @@ sub source {
 
                 $self->pointed_hint('git-patches-not-exported',
                     $dpseries->pointer)
-                  unless ($count
+                  unless (
+                    $count
                     && ($comment_line
-                        =~ /^\s*\#.*quilt-patches-deb-export-hook/));
+                        =~ /^\s*\#.*quilt-patches-deb-export-hook/)
+                  );
 
                 close $series_fd;
             }

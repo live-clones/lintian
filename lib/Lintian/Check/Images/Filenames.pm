@@ -29,7 +29,8 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-my @image_formats = ({
+my @image_formats = (
+    {
         name => 'PNG',
         file_type => qr/^PNG image data/,
         good_name => sub { $_[0] =~ /\.(?:png|PNG)$/ }

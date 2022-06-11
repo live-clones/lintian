@@ -403,21 +403,23 @@ sub check_dep5_copyright {
       && (none { $header->declares($_) } qw{Comment Files-Excluded});
 
     my @ambiguous_sections = grep {
-             $_->declares('License')
+        $_->declares('License')
           && $_->declares('Copyright')
           && !$_->declares('Files')
     } @followers;
 
     $self->pointed_hint(
         'ambiguous-paragraph-in-dep5-copyright',
-        $copyright_file->pointer($_->position))for @ambiguous_sections;
+        $copyright_file->pointer($_->position)
+    )for @ambiguous_sections;
 
     my @unknown_sections
       = grep {!$_->declares('License')&& !$_->declares('Files')} @followers;
 
     $self->pointed_hint(
         'unknown-paragraph-in-dep5-copyright',
-        $copyright_file->pointer($_->position))for @unknown_sections;
+        $copyright_file->pointer($_->position)
+    )for @unknown_sections;
 
     my @shipped_items;
 
@@ -785,10 +787,13 @@ sub check_dep5_copyright {
         # do not issue next tag for duplicates or redundant wildcards
         my $wildcard_lc = List::Compare->new(
             [keys %sections_by_wildcard],
-            [(
+            [
+                (
                     values %wildcard_by_file, @duplicate_wildcards,
                     @redundant_wildcards
-                )]);
+                )
+            ]
+        );
         my @matches_nothing = $wildcard_lc->get_Lonly;
 
         for my $wildcard (@matches_nothing) {
@@ -810,7 +815,8 @@ sub check_dep5_copyright {
 
             push(
                 @{$sections_by_file{$name}},
-                @{$sections_by_wildcard{$wildcard}});
+                @{$sections_by_wildcard{$wildcard}}
+            );
         }
 
         my %license_identifiers_by_file;

@@ -64,7 +64,8 @@ has switched_locations => (
         }
 
         return \%switched_locations;
-    });
+    }
+);
 
 sub build_path {
     my ($self) = @_;

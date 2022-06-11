@@ -183,8 +183,10 @@ sub installable {
     # diversion name normalise them all
     if ($self->expand_diversions) {
 
-        for my $divert (keys %{$self->removed_diversions},
-            keys %{$self->added_diversions}) {
+        for my $divert (
+            keys %{$self->removed_diversions},
+            keys %{$self->added_diversions}
+        ) {
 
             # if a wider regex was found, the entries might no longer be there
             next
@@ -212,7 +214,8 @@ sub installable {
                 }
             } (
                 keys %{$self->removed_diversions},
-                keys %{$self->added_diversions});
+                keys %{$self->added_diversions}
+            );
 
             # replace all the occurrences with the widest regex:
             for my $k (@matches) {
@@ -306,8 +309,7 @@ sub installable {
 
             $self->pointed_hint('diversion-for-unknown-file', $pointer,
                 $unquoted)
-              unless (
-                any { /$divertrx/ }
+              unless (any { /$divertrx/ }
                 @{$self->processable->installed->sorted_list});
 
         } else {

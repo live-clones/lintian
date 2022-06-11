@@ -71,12 +71,8 @@ sub installable {
             $self->hint('malformed-deb-archive',
                 "first member $members[0] not debian-binary");
 
-        } elsif (
-            $count == $MINIMUM_DEB_ARCHIVE_MEMBERS && none {
-                substr($_, 0, 1) eq '_';
-            }
-            @members
-        ) {
+        } elsif ($count == $MINIMUM_DEB_ARCHIVE_MEMBERS
+            && none {substr($_, 0, 1) eq '_';}@members) {
             # Fairly common case - if there are only 3 members without
             # "_", we can trivially determine their (expected)
             # positions.  We only use this case when there are no
@@ -143,7 +139,8 @@ sub installable {
                     'malformed-deb-archive',
                     join($SPACE,
                         "second (official) member $ctrl_member",
-                        'not control.tar.(gz|xz)'));
+                        'not control.tar.(gz|xz)')
+                );
                 $failed = 1;
             } elsif ($ctrl_member eq 'control.tar') {
                 $self->hint('uses-no-compression-for-control-tarball');
@@ -168,7 +165,8 @@ sub installable {
                     'malformed-deb-archive',
                     join($SPACE,
                         "third (official) member $data_member",
-                        'not data.tar.(gz|xz|bz2|lzma)'));
+                        'not data.tar.(gz|xz|bz2|lzma)')
+                );
                 $failed = 1;
             } elsif ($self->processable->type eq 'udeb'
                 && $data_member !~ m/^data\.tar\.[gx]z$/) {

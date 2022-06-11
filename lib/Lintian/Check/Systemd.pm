@@ -96,7 +96,8 @@ has PROVIDED_BY_SYSTEMD => (
         my ($self) = @_;
 
         return $self->data->load('systemd/init-whitelist');
-    });
+    }
+);
 
 # array of names provided by the service files.
 # This includes Alias= directives, so after parsing
@@ -145,11 +146,13 @@ sub visit_installed_files {
     push(@{$self->cron_scripts}, $item)
       if $item->dirname =~ m{^ etc/cron[.][^\/]+ / $}x;
 
-    if (   $item->dirname eq 'etc/init.d/'
+    if (
+        $item->dirname eq 'etc/init.d/'
         && !$item->is_dir
         && (none { $item->basename eq $_} qw{README skeleton rc rcS})
         && $self->processable->name ne 'initscripts'
-        && $item->link ne 'lib/init/upstart-job') {
+        && $item->link ne 'lib/init/upstart-job'
+    ) {
 
         unless ($item->is_file) {
 
@@ -300,7 +303,7 @@ sub check_systemd_service_file {
         $self->pointed_hint('systemd-service-file-wraps-init-script',
             $item->pointer, $key)
           if any { m{^/etc/init\.d/} }
-        $self->extract_service_file_values($item, 'Service', $key);
+          $self->extract_service_file_values($item, 'Service', $key);
     }
 
     unless ($item->link eq '/dev/null') {
@@ -308,7 +311,7 @@ sub check_systemd_service_file {
         my @wanted_by
           = $self->extract_service_file_values($item, 'Install', 'WantedBy');
         my $is_oneshot = any { $_ eq 'oneshot' }
-        $self->extract_service_file_values($item, 'Service', 'Type');
+          $self->extract_service_file_values($item, 'Service', 'Type');
 
         # We are a "standalone" service file if we have no .path or .timer
         # equivalent.
@@ -386,7 +389,7 @@ sub check_systemd_service_file {
 
         my $seen_hardening
           = any { $self->extract_service_file_values($item, 'Service', $_) }
-        @HARDENING_FLAGS;
+          @HARDENING_FLAGS;
 
         $self->pointed_hint('systemd-service-file-missing-hardening-features',
             $item->pointer)
@@ -422,7 +425,7 @@ sub check_systemd_service_file {
             $self->pointed_hint('systemd-service-file-uses-nobody-or-nogroup',
                 $item->pointer, "$key=$value")
               if any { $_ eq $value }
-            $self->extract_service_file_values($item, 'Service',$key);
+              $self->extract_service_file_values($item, 'Service',$key);
         }
 
         for my $key (qw(StandardError StandardOutput)) {
@@ -432,7 +435,7 @@ sub check_systemd_service_file {
                     'systemd-service-file-uses-deprecated-syslog-facility',
                     $item->pointer, "$key=$value")
                   if any { $_ eq $value }
-                $self->extract_service_file_values($item, 'Service',$key);
+                  $self->extract_service_file_values($item, 'Service',$key);
             }
         }
     }

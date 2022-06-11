@@ -94,7 +94,8 @@ has basedir => (
         $absolute->mkpath({mode => $WORLD_WRITABLE_FOLDER});
 
         return $absolute;
-    });
+    }
+);
 
 =item $pool->basedir
 
@@ -234,13 +235,15 @@ sub process{
                 say encode_utf8(
                     sprintf(
                         $FORMAT,'PID', 'TTY', 'STATUS', 'START', 'COMMAND'
-                    ));
+                    )
+                );
 
                 say encode_utf8(
                     sprintf($FORMAT,
                         $_->pid,$_->ttydev,
                         $_->state,scalar(localtime($_->start)),
-                        $_->cmndline))for @leftover;
+                        $_->cmndline)
+                )for @leftover;
 
                 ${$exit_code_ref} = 1;
                 die encode_utf8("Aborting.\n");

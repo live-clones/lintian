@@ -60,7 +60,8 @@ has VCS_PATTERNS_ORED => (
         my $ored_vcs_patterns = ored_patterns(@vcs_patterns);
 
         return $ored_vcs_patterns;
-    });
+    }
+);
 
 sub ored_patterns {
     my (@patterns) = @_;

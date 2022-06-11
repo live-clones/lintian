@@ -80,7 +80,8 @@ my $ANY_DEBCONF = Lintian::Relation->new->load(
     join(
         ' | ', qw(debconf debconf-2.0 cdebconf
           cdebconf-udeb libdebconfclient0 libdebconfclient0-udeb)
-    ));
+    )
+);
 
 sub source {
     my ($self) = @_;
@@ -121,7 +122,8 @@ sub source {
         $self->pointed_hint(
             'template-uses-unsplit-choices',
             $item->pointer($_->position('_Choices')),
-            $_->value('Template'))for @unsplit_choices;
+            $_->value('Template')
+        )for @unsplit_choices;
     }
 
     return;
@@ -171,7 +173,7 @@ sub installable {
     # the confmodule in the postinst so that debconf can register
     # their templates.
     return
-         unless $seenconfig
+      unless $seenconfig
       or $seentemplates
       or $usespreinst;
 
@@ -533,7 +535,7 @@ sub installable {
                 my $pointer = $item->pointer($position);
 
                 if (
-                      !$obsoleteconfmodule
+                    !$obsoleteconfmodule
                     && $line =~ m{(/usr/share/debconf/confmodule\.sh|
                    Debian::DebConf::Client::ConfModule)}x
                 ) {
@@ -586,8 +588,10 @@ sub installable {
                             $potential_db_abuse{$unmangled}
                             and (
                                 not($potential_makedev->{($position - 1)}
-                                    and ($priority eq 'low')))
-                            and ($priority eq 'low' || $priority eq 'medium'));
+                                    and ($priority eq 'low'))
+                            )
+                            and ($priority eq 'low' || $priority eq 'medium')
+                          );
                     }
                 }
 

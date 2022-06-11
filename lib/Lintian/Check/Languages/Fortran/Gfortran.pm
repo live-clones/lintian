@@ -46,12 +46,12 @@ sub visit_installed_files {
 
     # do not look at flang, grub or libreoffice modules
     return
-         if $item->name =~ m{/flang-\d+/}
+      if $item->name =~ m{/flang-\d+/}
       || $item->name =~ m{^usr/lib/grub}
       || $item->name =~ m{^usr/lib/libreoffice};
 
     return
-         unless $item->is_file
+      unless $item->is_file
       && $item->is_open_ok
       && $item->file_type =~ /\bgzip compressed\b/;
 

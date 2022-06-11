@@ -53,7 +53,8 @@ has changelog_timestamp => (
         }
 
         return 0;
-    });
+    }
+);
 
 sub visit_installed_files {
     my ($self, $item) = @_;

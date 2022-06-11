@@ -265,7 +265,8 @@ sub installable {
             $synopsis,
             $group->spelling_exceptions,
             $self->spelling_tag_emitter(
-                'spelling-error-in-description-synopsis'));
+                'spelling-error-in-description-synopsis')
+        );
         # Auto-generated dbgsym packages will use the package name in
         # their synopsis.  Unfortunately, some package names trigger a
         # capitalization error, such as "dbus" -> "D-Bus".  Therefore,
@@ -282,7 +283,8 @@ sub installable {
         check_spelling(
             $self->data,$extended,
             $group->spelling_exceptions,
-            $self->spelling_tag_emitter('spelling-error-in-description'));
+            $self->spelling_tag_emitter('spelling-error-in-description')
+        );
         check_spelling_picky($self->data, $extended,
             $self->spelling_tag_emitter('capitalization-error-in-description')
         );

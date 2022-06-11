@@ -77,7 +77,8 @@ has PRIVACY_BREAKER_WEBSITES => (
         }
 
         return \%website;
-    });
+    }
+);
 
 has PRIVACY_BREAKER_FRAGMENTS => (
     is => 'rw',
@@ -104,7 +105,8 @@ has PRIVACY_BREAKER_FRAGMENTS => (
         }
 
         return \%fragment;
-    });
+    }
+);
 
 has PRIVACY_BREAKER_TAG_ATTR => (
     is => 'rw',
@@ -141,7 +143,8 @@ has PRIVACY_BREAKER_TAG_ATTR => (
         }
 
         return \%attribute;
-    });
+    }
+);
 
 sub detect_privacy_breach {
     my ($self, $file) = @_;

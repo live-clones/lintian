@@ -90,7 +90,8 @@ has location => (
         my ($self) = @_;
 
         return 'authority/' . $self->shorthand . '.json';
-    });
+    }
+);
 
 has by_section_key => (is => 'rw', default => sub { {} });
 

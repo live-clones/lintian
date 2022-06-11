@@ -64,7 +64,8 @@ sub always {
             $self->emitter(
                 'capitalization-in-override-comment',
                 $pointer,$tag_name
-            ));
+            )
+        );
     }
 
     return;

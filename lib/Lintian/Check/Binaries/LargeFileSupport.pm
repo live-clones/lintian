@@ -50,7 +50,8 @@ has ARCH_REGEX => (
         }
 
         return \%arch_regex;
-    });
+    }
+);
 
 has LFS_SYMBOLS => (
     is => 'rw',
@@ -59,7 +60,8 @@ has LFS_SYMBOLS => (
         my ($self) = @_;
 
         return $self->data->load('binaries/lfs-symbols');
-    });
+    }
+);
 
 sub visit_installed_files {
     my ($self, $item) = @_;

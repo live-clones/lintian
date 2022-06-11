@@ -48,7 +48,8 @@ sub source {
         $self->pointed_hint(
             'built-using-field-on-arch-all-package',$pointer,
             "(in section for $installable)", $field,
-            $installable_fields->value($field))
+            $installable_fields->value($field)
+          )
           if $installable_fields->declares($field)
           && $installable_fields->value('Architecture') eq 'all';
     }

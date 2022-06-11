@@ -74,7 +74,8 @@ has control => (
         push(@{$index->unpack_messages}, @messages);
 
         return $index;
-    });
+    }
+);
 
 =back
 

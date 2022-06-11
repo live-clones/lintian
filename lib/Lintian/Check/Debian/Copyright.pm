@@ -289,7 +289,8 @@ sub binary {
                 $contents =~ m{ \b \QGNU GENERAL PUBLIC LICENSE\E
                                    \s* \QVersion 3\E }msx
                 && $contents =~ m{ \b \QTERMS AND CONDITIONS\E \s }msx
-            ))
+            )
+        )
     ) {
         $self->hint('copyright-file-contains-full-gpl-license');
         $gpl = 1;
@@ -326,7 +327,7 @@ sub binary {
     # e-mail discussions of licensing are included in the copyright
     # file but aren't referring to the license of the package.
     unless (
-           $contents =~ m{/usr/share/common-licenses}
+        $contents =~ m{/usr/share/common-licenses}
         || $contents =~ m/Zope Public License/
         || $contents =~ m/LICENSE AGREEMENT FOR PYTHON 1.6.1/
         || $contents =~ m/LaTeX Project Public License/
@@ -389,7 +390,8 @@ qr/GNU (?:Lesser|Library) General Public License|(?-i:\bLGPL\b)/i
                 $text
                   =~ /(?:under )?(?:the )?(?:same )?(?:terms )?as Perl itself\b/i
                   && $text !~ m{usr/share/common-licenses/};
-            })
+            }
+        )
     ) {
         $self->hint('copyright-file-lacks-pointer-to-perl-license');
     }
@@ -463,8 +465,7 @@ qr/GNU (?:Lesser|Library) General Public License|(?-i:\bLGPL\b)/i
           = split(/\s*,\s*/,$self->processable->fields->value('Pre-Depends'));
 
         $self->hint('possible-gpl-code-linked-with-openssl')
-          if any { /^libssl[0-9.]+(?:\s|\z)/ && !/\|/ }
-        (@depends, @predepends);
+          if any { /^libssl[0-9.]+(?:\s|\z)/ && !/\|/ }(@depends, @predepends);
     }
 
     return;
@@ -511,8 +512,7 @@ sub check_cross_link {
         # be present anyway;  If they are in the same group, they claim
         # to have the same source (and source version)
         return
-          if any { $_->name eq $foreign }
-        $self->group->get_installables;
+          if any { $_->name eq $foreign }$self->group->get_installables;
 
         # It was not, but since the source package was not present, we cannot
         # tell if it is foreign or not at this point.

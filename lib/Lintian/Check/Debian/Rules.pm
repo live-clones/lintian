@@ -604,16 +604,17 @@ sub source {
 
             $self->pointed_hint(
                 "override_$cmd-does-not-call-$cmd",
-                $rules->pointer($memorized_position))
+                $rules->pointer($memorized_position)
+              )
               if none { m/^\t\s*-?($cmd\b|\$\(overridden_command\))/ }
-            @{$rules_per_target{"override_$cmd$suffix"}};
+              @{$rules_per_target{"override_$cmd$suffix"}};
         }
     }
 
     if (my $memorized_position = $overridden{'dh_auto_test'}) {
 
         my @rules = grep {
-                 !m{^\t\s*[\:\[]}
+            !m{^\t\s*[\:\[]}
               && !m{^\s*$}
               && !m{\bdh_auto_test\b}
               && !

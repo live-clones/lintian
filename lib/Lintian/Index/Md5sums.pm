@@ -93,7 +93,8 @@ sub add_md5sums {
             my ($partial_sums, undef) = read_md5sums($stdout);
 
             $md5sums{$_} = $partial_sums->{$_}for @partial;
-        });
+        }
+    );
 
     $_->md5sum($md5sums{$_->name}) for @files;
 

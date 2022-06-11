@@ -127,7 +127,8 @@ sub source {
                 $self->pointed_hint(
                     'redundant-control-relation', $pointer,
                     "(in section for $installable)", $field,
-                    join(', ', sort @{$redundant_set}));
+                    join(', ', sort @{$redundant_set})
+                );
             }
 
             my $raw = $installable_fields->value($field);

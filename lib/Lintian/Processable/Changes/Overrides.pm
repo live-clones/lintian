@@ -53,7 +53,8 @@ has override_file => (
         my ($self) = @_;
 
         return undef;
-    });
+    }
+);
 
 =item overrides
 
@@ -68,7 +69,8 @@ has overrides => (
         my @overrides;
 
         return \@overrides;
-    });
+    }
+);
 
 1;
 

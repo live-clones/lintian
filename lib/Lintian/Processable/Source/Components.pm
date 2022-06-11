@@ -102,7 +102,8 @@ has components => (
         }
 
         return \%components;
-    });
+    }
+);
 
 =back
 

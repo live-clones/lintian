@@ -71,7 +71,8 @@ sub installable {
         kdelibs-bin
         libapp-options-perl
 
-        ));
+        )
+      );
 
     my @programs;
     for my $searched_folder (qw{bin sbin usr/bin usr/sbin usr/games}) {

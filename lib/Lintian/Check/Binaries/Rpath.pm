@@ -45,7 +45,8 @@ has DEB_HOST_MULTIARCH => (
         my ($self) = @_;
 
         return $self->data->architectures->deb_host_multiarch;
-    });
+    }
+);
 
 has multiarch_component => (
     is => 'rw',
@@ -57,7 +58,8 @@ has multiarch_component => (
         my $multiarch_component = $self->DEB_HOST_MULTIARCH->{$architecture};
 
         return $multiarch_component;
-    });
+    }
+);
 
 has private_folders => (
     is => 'rw',
@@ -84,7 +86,8 @@ has private_folders => (
           (@lib_folders, @usrlib_folders, @game_folders);
 
         return \@private_folders;
-    });
+    }
+);
 
 sub visit_installed_files {
     my ($self, $item) = @_;

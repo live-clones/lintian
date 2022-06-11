@@ -50,7 +50,8 @@ has satisfies_perl4_prerequisites => (
 
         return $self->processable->relation('strong')
           ->satisfies($PERL4_PREREQUISITES);
-    });
+    }
+);
 
 sub visit_installed_files {
     my ($self, $item) = @_;

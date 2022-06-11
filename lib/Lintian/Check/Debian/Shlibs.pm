@@ -63,7 +63,8 @@ has soname_by_filename => (
         }
 
         return \%soname_by_filename;
-    });
+    }
+);
 
 has shlibs_positions_by_pretty_soname => (is => 'rw', default => sub { {} });
 has symbols_positions_by_soname => (is => 'rw', default => sub { {} });
@@ -211,10 +212,8 @@ sub check_shlibs_file {
             # only public shared libraries
             $self->pointed_hint('ships-undeclared-shared-library',
                 $shlibs_file->pointer,$pretty_soname, 'for', $file_name)
-              if (
-                any { (dirname($file_name) . $SLASH) eq $_ }
-                @ldconfig_folders
-              )
+              if (any { (dirname($file_name) . $SLASH) eq $_ }
+                @ldconfig_folders)
               && !@{$self->shlibs_positions_by_pretty_soname->{$pretty_soname}
                   // []}
               && !is_nss_plugin($file_name);
@@ -289,10 +288,8 @@ sub check_symbols_file {
             # Skip Objective C libraries as instance/class methods do not
             # appear in the symbol table
             $self->hint('no-symbols-control-file', $file_name)
-              if (
-                any { (dirname($file_name) . $SLASH) eq $_ }
-                @ldconfig_folders
-              )
+              if (any { (dirname($file_name) . $SLASH) eq $_ }
+                @ldconfig_folders)
               && (none { $_->name =~ m/^__objc_/ } @symbols)
               && !is_nss_plugin($file_name);
         }
@@ -601,10 +598,7 @@ sub check_symbols_file {
         # only public shared libraries
         $self->pointed_hint('shared-library-symbols-not-tracked',
             $symbols_file->pointer,$pretty_soname,'for', $filename)
-          if (
-            any { (dirname($filename) . $SLASH) eq $_ }
-            @ldconfig_folders
-          )
+          if (any { (dirname($filename) . $SLASH) eq $_ }@ldconfig_folders)
           && !@{$self->symbols_positions_by_soname->{$soname}// [] }
           && !is_nss_plugin($filename);
     }

@@ -79,7 +79,8 @@ has NON_DISTRIBUTABLE_FILES => (
 
         return $self->_md5sum_based_lintian_data(
             'cruft/non-distributable-files');
-    });
+    }
+);
 
 sub visit_patched_files {
     my ($self, $item) = @_;

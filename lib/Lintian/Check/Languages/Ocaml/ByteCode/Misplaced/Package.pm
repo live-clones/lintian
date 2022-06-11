@@ -59,7 +59,8 @@ has is_dev_package => (
           );
 
         return 0;
-    });
+    }
+);
 
 sub visit_installed_files {
     my ($self, $item) = @_;

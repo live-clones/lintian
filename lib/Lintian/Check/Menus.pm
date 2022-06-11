@@ -545,7 +545,8 @@ sub check_doc_base_field {
             } elsif (/^(\s+)\.(\s*)$/ and ($1 ne $SPACE or $2)) {
                 $self->pointed_hint(
                     'doc-base-abstract-field-separator-extra-whitespace',
-                    $item->pointer($position - $#{$vals} + $idx));
+                    $item->pointer($position - $#{$vals} + $idx)
+                );
 
             } elsif (!$leadsp && /^(\s+)(\S)/) {
                 # The regexp should always match.
@@ -766,7 +767,8 @@ sub check_script {
             if (not $pres->{'checks-for-updatemenus'} and $pkg ne 'menu') {
                 $self->pointed_hint(
 'maintainer-script-does-not-check-for-existence-of-updatemenus',
-                    $item->pointer($position)) unless $no_check_menu++;
+                    $item->pointer($position)
+                ) unless $no_check_menu++;
             }
         }
 
@@ -793,7 +795,8 @@ sub check_script {
             if (not $pres->{'checks-for-installdocs'}) {
                 $self->pointed_hint(
 'maintainer-script-does-not-check-for-existence-of-installdocs',
-                    $item->pointer($position)) unless $no_check_installdocs++;
+                    $item->pointer($position)
+                ) unless $no_check_installdocs++;
             }
         }
 

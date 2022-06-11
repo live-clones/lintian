@@ -55,7 +55,8 @@ has x_fonts => (
           @{$self->processable->installed->sorted_list};
 
         return \@x_fonts;
-    });
+    }
+);
 
 sub visit_control_files {
     my ($self, $item) = @_;

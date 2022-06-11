@@ -26,9 +26,11 @@ use v5.20;
 use warnings;
 use utf8;
 
-our @EXPORT_OK = (qw(
+our @EXPORT_OK = (
+    qw(
       guess_version
-));
+    )
+);
 
 use Exporter qw(import);
 

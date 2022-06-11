@@ -93,12 +93,14 @@ object will be empty (always present and satisfies nothing).
 has saved_relations => (
     is => 'rw',
     coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
-    default => sub { {} });
+    default => sub { {} }
+);
 
 my %alias = (
     all    => [qw(Pre-Depends Depends Recommends Suggests)],
     strong => [qw(Pre-Depends Depends)],
-    weak   => [qw(Recommends Suggests)]);
+    weak   => [qw(Recommends Suggests)]
+);
 
 my %known = map { $_ => 1 }
   qw(pre-depends depends recommends suggests enhances breaks

@@ -54,7 +54,8 @@ has ARCH_REGEX => (
         }
 
         return \%arch_regex;
-    });
+    }
+);
 
 has ARCH_64BIT_EQUIVS => (
     is => 'rw',
@@ -63,7 +64,8 @@ has ARCH_64BIT_EQUIVS => (
         my ($self) = @_;
 
         return $self->data->load('binaries/arch-64bit-equivs',qr/\s*\=\>\s*/);
-    });
+    }
+);
 
 sub from_other_architecture {
     my ($self, $item) = @_;

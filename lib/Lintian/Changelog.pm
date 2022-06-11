@@ -138,10 +138,12 @@ sub parse {
 
             unless ($expect eq 'first heading'
                 || $expect eq 'next heading or eof') {
-                $entry->ERROR([
-                    $position,
-                    "found start of entry where expected $expect",$line
-                ]);
+                $entry->ERROR(
+                    [
+                        $position,
+                        "found start of entry where expected $expect",$line
+                    ]
+                );
                 push @{$self->errors}, $entry->ERROR;
             }
 
@@ -284,10 +286,12 @@ sub parse {
                     $entry->Urgency_LC($UNKNOWN);
                     $entry->Version($UNKNOWN . (++$unknown_version_counter));
                     $entry->Urgency_Comment($EMPTY);
-                    $entry->ERROR([
-                        $position,
-                        "found change data where expected $expect",$line
-                    ]);
+                    $entry->ERROR(
+                        [
+                            $position,
+                            "found change data where expected $expect",$line
+                        ]
+                    );
                 }
               };
             $entry->{'Changes'} .= (" \n" x $blanklines)." $line\n";

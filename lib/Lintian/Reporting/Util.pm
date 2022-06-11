@@ -61,11 +61,13 @@ use YAML::XS ();
 
 use Lintian::Relation::Version qw(versions_equal versions_comparator);
 
-our @EXPORT_OK = (qw(
+our @EXPORT_OK = (
+    qw(
       load_state_cache
       save_state_cache
       find_backlog
-));
+    )
+);
 
 const my $WIDELY_READABLE => oct(644);
 

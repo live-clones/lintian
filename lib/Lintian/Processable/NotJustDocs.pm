@@ -88,7 +88,8 @@ has not_just_docs => (
         }
 
         return 1;
-    });
+    }
+);
 
 =back
 

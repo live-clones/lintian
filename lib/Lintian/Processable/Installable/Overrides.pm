@@ -68,7 +68,8 @@ has override_file => (
         map { $self->installed->lookup($_) } @candidates;
 
         return $override_item;
-    });
+    }
+);
 
 =item overrides
 
@@ -105,7 +106,8 @@ has overrides => (
         }
 
         return $self->parse_overrides($contents);
-    });
+    }
+);
 
 1;
 

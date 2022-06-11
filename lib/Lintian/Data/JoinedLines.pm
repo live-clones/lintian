@@ -111,12 +111,14 @@ is a hashref, new keys can be inserted etc.
 has dataset => (
     is => 'rw',
     coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
-    default => sub { {} });
+    default => sub { {} }
+);
 
 has keyorder => (
     is => 'rw',
     coerce => sub { my ($arrayref) = @_; return ($arrayref // []); },
-    default => sub { [] });
+    default => sub { [] }
+);
 
 =item all
 

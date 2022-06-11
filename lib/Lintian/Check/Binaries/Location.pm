@@ -46,7 +46,8 @@ has DEB_HOST_MULTIARCH => (
         my ($self) = @_;
 
         return $self->data->architectures->deb_host_multiarch;
-    });
+    }
+);
 
 has gnu_triplet_pattern => (
     is => 'rw',
@@ -65,7 +66,8 @@ has gnu_triplet_pattern => (
         }
 
         return $gnu_triplet_pattern;
-    });
+    }
+);
 
 has ruby_triplet_pattern => (
     is => 'rw',
@@ -78,7 +80,8 @@ has ruby_triplet_pattern => (
         $ruby_triplet_pattern =~ s{linux\\-gnu}{linux\\-};
 
         return $ruby_triplet_pattern;
-    });
+    }
+);
 
 sub visit_installed_files {
     my ($self, $item) = @_;

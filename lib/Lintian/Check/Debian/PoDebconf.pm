@@ -360,8 +360,10 @@ sub source {
           for grep { $_ ne 'PATH' && $_ ne 'TMPDIR' } keys %ENV;
         local $ENV{LC_ALL} = 'C';
 
-        my @command = ('msgfmt', '-o', '/dev/null', '--statistics',
-            $po_item->unpacked_path);
+        my @command = (
+            'msgfmt', '-o', '/dev/null', '--statistics',
+            $po_item->unpacked_path
+        );
 
         run3(\@command, \undef, \undef, \$stats);
 

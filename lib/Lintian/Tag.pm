@@ -136,17 +136,20 @@ has explanation => (
 has see_also => (
     is => 'rw',
     coerce => sub { my ($arrayref) = @_; return ($arrayref // []); },
-    default => sub { [] });
+    default => sub { [] }
+);
 
 has renamed_from => (
     is => 'rw',
     coerce => sub { my ($arrayref) = @_; return ($arrayref // []); },
-    default => sub { [] });
+    default => sub { [] }
+);
 
 has screens => (
     is => 'rw',
     coerce => sub { my ($arrayref) = @_; return ($arrayref // []); },
-    default => sub { [] });
+    default => sub { [] }
+);
 
 =item load(PATH)
 

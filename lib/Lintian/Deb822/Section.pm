@@ -84,7 +84,8 @@ has legend => (
         }
 
         return \%legend;
-    });
+    }
+);
 
 has verbatim => (is => 'rw', default => sub { {} });
 has unfolded => (is => 'rw', default => sub { {} });

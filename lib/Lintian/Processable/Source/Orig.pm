@@ -175,7 +175,8 @@ has orig => (
         }
 
         return $index;
-    });
+    }
+);
 
 =back
 

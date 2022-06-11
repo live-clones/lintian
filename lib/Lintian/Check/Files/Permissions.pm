@@ -60,7 +60,8 @@ has component => (
         my ($self) = @_;
 
         return path($self->processable->path)->basename;
-    });
+    }
+);
 
 has linked_against_libvga => (
     is => 'rw',
@@ -80,7 +81,8 @@ has linked_against_libvga => (
         }
 
         return \%linked_against_libvga;
-    });
+    }
+);
 
 sub visit_installed_files {
     my ($self, $item) = @_;
@@ -88,7 +90,7 @@ sub visit_installed_files {
     if ($item->is_file) {
 
         if (
-               $item->is_executable
+            $item->is_executable
             && $item->identity eq 'root/games'
             && (   !$item->is_setgid
                 || !$item->all_bits_set($STANDARD_EXECUTABLE))
@@ -99,7 +101,8 @@ sub visit_installed_files {
                 $item->pointer,
                 $item->octal_permissions,
                 $NOT_EQUAL,
-                sprintf('%04o', $SET_GROUP_ID | $STANDARD_EXECUTABLE));
+                sprintf('%04o', $SET_GROUP_ID | $STANDARD_EXECUTABLE)
+            );
 
             return;
         }
@@ -125,14 +128,14 @@ sub visit_installed_files {
 
         # program is using svgalib
         return
-             if $item->is_setuid
+          if $item->is_setuid
           && !$item->is_setgid
           && $item->owner eq 'root'
           && exists $self->linked_against_libvga->{$item->name};
 
         # program is a setgid game
         return
-             if $item->is_setgid
+          if $item->is_setgid
           && !$item->is_setuid
           && $item->group eq 'games'
           && $item->name =~ m{^ usr/ (?:lib/)? games/ \S+ }msx;
@@ -160,7 +163,7 @@ sub visit_installed_files {
 
             # game data
             return
-                 if $item->operm == $GAME_DATA
+              if $item->operm == $GAME_DATA
               && $item->identity eq 'root/games'
               && $item->name =~ m{^ var/ (?:lib/)? games/ \S+ }msx;
 
@@ -204,26 +207,26 @@ sub visit_installed_files {
 
         # game directory with setgid bit
         return
-             if $item->operm == $GAME_FOLDER
+          if $item->operm == $GAME_FOLDER
           && $item->identity eq 'root/games'
           && $item->name =~ m{^ var/ (?:lib/)? games/ \S+ }msx;
 
         # shipping files here triggers warnings elsewhere
         return
-             if $item->operm == $VAR_LOCK_FOLDER
+          if $item->operm == $VAR_LOCK_FOLDER
           && $item->identity eq 'root/root'
           && ( $item->name =~ m{^ (?:var/)? tmp/ }msx
             || $item->name eq 'var/lock/');
 
         # shipping files here triggers warnings elsewhere
         return
-             if $item->operm == $VAR_LOCAL_FOLDER
+          if $item->operm == $VAR_LOCAL_FOLDER
           && $item->identity eq 'root/staff'
           && $item->name eq 'var/local/';
 
         # /usr/src created by base-files
         return
-             if $item->operm == $USR_SRC_FOLDER
+          if $item->operm == $USR_SRC_FOLDER
           && $item->identity eq 'root/src'
           && $item->name eq 'usr/src/';
 

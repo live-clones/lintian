@@ -90,7 +90,8 @@ sub visit_patched_files {
       || none { length } (
         $deb822->last_mention('Applied-Upstream'),
         $deb822->last_mention('Bug'),
-        $deb822->last_mention('Forwarded'));
+        $deb822->last_mention('Forwarded')
+      );
 
     return;
 }

@@ -186,7 +186,7 @@ sub installable {
             $self->hint('virtual-package-depends-without-real-package-depends',
                 "$field: $alternatives[0][0]")
               if (
-                   $VIRTUAL_PACKAGES->recognizes($alternatives[0][0])
+                $VIRTUAL_PACKAGES->recognizes($alternatives[0][0])
                 && ($field eq 'Depends' || $field eq 'Pre-Depends')
                 && ($pkg ne 'base-files' || $alternatives[0][0] ne 'awk')
                 # ignore phpapi- dependencies as adding an
@@ -223,9 +223,7 @@ sub installable {
                   if ($field eq 'Conflicts' && $d_version->[0]);
 
                 $self->hint('obsolete-relation-form', "$field: $part_d_orig")
-                  if (
-                    $d_version && any { $d_version->[0] eq $_ }
-                    ('<', '>'));
+                  if ($d_version && any { $d_version->[0] eq $_ }('<', '>'));
 
                 $self->hint('bad-version-in-relation', "$field: $part_d_orig")
                   if ($d_version->[0] && !version_check($d_version->[1]));
@@ -338,10 +336,11 @@ sub installable {
                 # the Java Core API.
                 $self->hint('depends-on-specific-java-doc-package',$field)
                   if (
-                       $is_dep_field
+                    $is_dep_field
                     && $pkg ne 'default-jdk-doc'
                     && (   $d_pkg eq 'classpath-doc'
-                        || $d_pkg =~ /openjdk-\d+-doc/));
+                        || $d_pkg =~ /openjdk-\d+-doc/)
+                  );
 
                 if ($javalib && $field eq 'Depends'){
                     foreach my $reg (@known_java_pkg){
@@ -473,7 +472,7 @@ sub source {
         if ($processable->fields->declares($field)) {
 
             my $is_dep_field = any { $field eq $_ }
-            qw(Build-Depends Build-Depends-Indep Build-Depends-Arch);
+              qw(Build-Depends Build-Depends-Indep Build-Depends-Arch);
 
             # get data and clean it
             my $data = $processable->fields->unfolded_value($field);
@@ -631,7 +630,8 @@ sub source {
     my @to_check = (
         ['Build-Depends'],
         ['Build-Depends', 'Build-Depends-Indep'],
-        ['Build-Depends', 'Build-Depends-Arch']);
+        ['Build-Depends', 'Build-Depends-Arch']
+    );
 
     for my $fields (@to_check) {
         my $relation = Lintian::Relation->new->logical_and(
@@ -641,7 +641,8 @@ sub source {
 
             $self->hint(
                 'redundant-build-prerequisites',
-                join(', ', sort @{$redundant_set}));
+                join(', ', sort @{$redundant_set})
+            );
         }
     }
 

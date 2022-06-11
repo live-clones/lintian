@@ -50,7 +50,8 @@ sub visit_installed_files {
         $item->pointer,
         $item->octal_permissions,
         $NOT_EQUAL,
-        sprintf('%04o', $EXECUTABLE_PERMISSIONS))
+        sprintf('%04o', $EXECUTABLE_PERMISSIONS)
+      )
       if $item->name =~ m{^etc/init\.d/\S}
       && $item->name !~ m{^etc/init\.d/(?:README|skeleton)$}
       && $item->operm != $EXECUTABLE_PERMISSIONS

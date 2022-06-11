@@ -74,7 +74,8 @@ has repacked => (
         my $upstream = $self->changelog_version->upstream;
 
         return $upstream =~ $PKGREPACK_REGEX;
-    });
+    }
+);
 
 =back
 

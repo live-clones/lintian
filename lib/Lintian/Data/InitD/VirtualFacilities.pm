@@ -81,7 +81,8 @@ has location => (
 
 has separator => (
     is => 'rw',
-    default => sub { qr{ \s+ }x });
+    default => sub { qr{ \s+ }x }
+);
 
 =item refresh
 

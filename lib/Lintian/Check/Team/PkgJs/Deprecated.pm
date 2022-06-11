@@ -45,7 +45,8 @@ has javascript_team_maintained => (
           =~ /pkg-javascript-maintainers\@lists\.alioth\.debian\.org/;
 
         return 0;
-    });
+    }
+);
 
 sub visit_installed_files {
     my ($self, $item) = @_;

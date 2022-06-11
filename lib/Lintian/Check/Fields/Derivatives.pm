@@ -58,7 +58,8 @@ has DERIVATIVE_FIELDS => (
         }
 
         return \%fields;
-    });
+    }
+);
 
 sub source {
     my ($self) = @_;

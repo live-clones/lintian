@@ -72,7 +72,8 @@ has ALLOWED_PYTHON_FILES => (
         my ($self) = @_;
 
         return $self->data->load('files/allowed-python-files');
-    });
+    }
+);
 has GENERIC_PYTHON_MODULES => (
     is => 'rw',
     lazy => 1,
@@ -80,7 +81,8 @@ has GENERIC_PYTHON_MODULES => (
         my ($self) = @_;
 
         return $self->data->load('files/generic-python-modules');
-    });
+    }
+);
 
 my @VERSION_FIELDS = qw(X-Python-Version XS-Python-Version X-Python3-Version);
 
@@ -106,8 +108,7 @@ sub source {
               if any {
                 $self->processable->binary_relation($_, 'all')
                   ->satisfies($DOLLAR . '{python3:Depends}')
-            }
-            @installable_names;
+              }@installable_names;
 
             $self->hint('python-foo-but-no-python3-foo', $installable_name);
         }
@@ -162,7 +163,8 @@ sub source {
             ['\d+\.\d+', '\d+\.\d+'],['\d+\.\d+'],
             ['\>=\s*\d+\.\d+', '\<\<\s*\d+\.\d+'],['\>=\s*\d+\.\d+'],
             ['current', '\>=\s*\d+\.\d+'],['current'],
-            ['all']);
+            ['all']
+        );
 
         my @pyversion = split(/\s*,\s*/, $pyversion);
 
@@ -179,12 +181,14 @@ sub source {
             for my $rule (@valid) {
                 if (
                     $pyversion[0] =~ /^$rule->[0]$/
-                    && ((
-                               $pyversion[1]
+                    && (
+                        (
+                            $pyversion[1]
                             && $rule->[1]
                             && $pyversion[1] =~ /^$rule->[1]$/
                         )
-                        || (!$pyversion[1] && !$rule->[1]))
+                        || (!$pyversion[1] && !$rule->[1])
+                    )
                 ) {
                     $okay = 1;
                     last;
@@ -468,8 +472,10 @@ sub installable {
           unless $self->processable->relation('strong')->satisfies($basepkg);
     }
 
-    if ($self->processable->name =~ /^python([23]?)-/
-        && (none { $self->processable->name =~ /$_/ } @IGNORE)) {
+    if (
+        $self->processable->name =~ /^python([23]?)-/
+        && (none { $self->processable->name =~ /$_/ } @IGNORE)
+    ) {
         my $version = $1 || '2'; # Assume python-foo is a Python 2.x package
         my @prefixes = ($version eq '2') ? 'python3' : qw(python python2);
 

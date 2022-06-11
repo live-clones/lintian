@@ -57,7 +57,8 @@ has group_ships_examples => (
           if any { m{^usr/share/doc/(.+/)?examples/?$} } @shipped;
 
         return 0;
-    });
+    }
+);
 
 sub visit_patched_files {
     my ($self, $item) = @_;

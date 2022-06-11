@@ -39,7 +39,8 @@ has STANDARD_FILES => (
         my ($self) = @_;
 
         return $self->data->load('files/standard-files');
-    });
+    }
+);
 
 has is_empty => (is => 'rw', default => 1);
 has is_dummy => (
@@ -54,7 +55,8 @@ has is_dummy => (
           || $self->processable->is_meta_package;
 
         return 0;
-    });
+    }
+);
 
 sub visit_installed_files {
     my ($self, $item) = @_;

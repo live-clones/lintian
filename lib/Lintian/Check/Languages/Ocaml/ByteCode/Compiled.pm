@@ -55,7 +55,8 @@ has provided_o => (
         }
 
         return \%provided_o;
-    });
+    }
+);
 
 sub visit_installed_files {
     my ($self, $item) = @_;

@@ -314,10 +314,8 @@ sub installable {
     for my $script ($initd_dir->children) {
 
         next
-          if !$script->is_dir && (
-            any {$script->basename eq $_}
-            qw(README skeleton rc rcS)
-          );
+          if !$script->is_dir
+          && (any {$script->basename eq $_}qw(README skeleton rc rcS));
 
         my $tag_name = 'script-in-etc-init.d-not-registered-via-update-rc.d';
 
@@ -475,10 +473,9 @@ sub check_init {
         }
 
         if (
-               $line =~ m{^\s*\.\s+/lib/lsb/init-functions}
+            $line =~ m{^\s*\.\s+/lib/lsb/init-functions}
             && !$processable->relation('strong')->satisfies('lsb-base:any')
-            && (
-                none { $_->basename =~ m/\.service$/ && !$_->is_dir }
+            && (none { $_->basename =~ m/\.service$/ && !$_->is_dir }
                 @{$processable->installed->sorted_list})
         ) {
             $self->pointed_hint('init.d-script-needs-depends-on-lsb-base',
@@ -628,10 +625,8 @@ sub check_init {
         my @required = @{$value_by_lsb_keyword{'required-stop'} // []};
 
         if ($needs_fs) {
-            if (
-                none { /^(?:\$(?:local|remote)_fs|\$all|umountn?fs)\z/ }
-                @required
-            ) {
+            if (none { /^(?:\$(?:local|remote)_fs|\$all|umountn?fs)\z/ }
+                @required) {
 
                 $self->pointed_hint(
                     'init.d-script-missing-dependency-on-local_fs',

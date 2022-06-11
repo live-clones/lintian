@@ -45,7 +45,8 @@ has DEB_HOST_MULTIARCH => (
         my ($self) = @_;
 
         return $self->data->architectures->deb_host_multiarch;
-    });
+    }
+);
 
 sub installable {
     my ($self) = @_;
@@ -100,7 +101,7 @@ sub installable {
         my $lowercase = lc $soname;
 
         $match_found = any { $lowercase eq $_ }
-        ($self->processable->name, $shortened_name);
+          ($self->processable->name, $shortened_name);
 
         last
           if $match_found;

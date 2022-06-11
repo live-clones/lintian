@@ -123,7 +123,8 @@ has path => (
 
         my $basename = basename($path);
         $self->basename($basename);
-    });
+    }
+);
 has basename => (is => 'rw', default => $EMPTY);
 has type => (is => 'rw', default => $EMPTY);
 
@@ -210,7 +211,8 @@ has basedir => (
         my $basedir = $self->pooldir . "/$path";
 
         return $basedir;
-    });
+    }
+);
 
 =item C<identifier>
 

@@ -66,10 +66,9 @@ sub always {
       if $self->processable->name =~ /^lib/
       && $self->processable->name !~ /-bin$/
       && $self->processable->name !~ /^libc[0-9.]+$/
-      && (
-        any { $_ eq $self->processable->fields->value('Section') }
-        qw(libdevel libs)
-      )&& (any { $_ eq $priority } qw(required important standard));
+      && (any { $_ eq $self->processable->fields->value('Section') }
+        qw(libdevel libs))
+      && (any { $_ eq $priority } qw(required important standard));
 
     return;
 }

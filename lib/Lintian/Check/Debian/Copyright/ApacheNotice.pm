@@ -65,7 +65,7 @@ sub check_apache_notice_files {
       unless $contents =~ /apache[-\s]+2\./i;
 
     my @notice_files = grep {
-              $_->basename =~ /^NOTICE(\.txt)?$/
+        $_->basename =~ /^NOTICE(\.txt)?$/
           and $_->is_open_ok
           and $_->bytes =~ /apache/i
     } @{$self->processable->patched->sorted_list};

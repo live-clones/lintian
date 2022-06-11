@@ -43,7 +43,8 @@ has PKG_CONFIG_BAD_REGEX => (
         my ($self) = @_;
 
         return $self->data->load('files/pkg-config-bad-regex',qr/~~~~~/);
-    });
+    }
+);
 
 sub visit_installed_files {
     my ($self, $item) = @_;

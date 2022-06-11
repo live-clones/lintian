@@ -54,10 +54,8 @@ sub visit_installed_files {
             $self->pointed_hint('file-in-discouraged-x11-font-directory',
                 $item->pointer);
 
-        } elsif (
-            none { $subdir eq $_ }
-            qw(100dpi 75dpi misc Type1 encodings util)
-        ) {
+        } elsif (none { $subdir eq $_ }
+            qw(100dpi 75dpi misc Type1 encodings util)) {
             $self->pointed_hint('file-in-unknown-x11-font-directory',
                 $item->pointer);
 

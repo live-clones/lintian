@@ -63,7 +63,8 @@ has reachable_folders => (
         }
 
         return \@reachable_folders;
-    });
+    }
+);
 
 sub visit_installed_files {
     my ($self, $item) = @_;

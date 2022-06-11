@@ -57,7 +57,8 @@ has OBSOLETE_PATHS => (
         }
 
         return \%obsolete;
-    });
+    }
+);
 
 sub visit_installed_files {
     my ($self, $item) = @_;

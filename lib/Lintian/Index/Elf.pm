@@ -75,7 +75,8 @@ has elf_storage => (
         $storage->create('elf');
 
         return $storage;
-    });
+    }
+);
 
 =item elf_storage_by_member
 
@@ -91,7 +92,8 @@ has elf_storage_by_member => (
         $storage->create('elf-by-member');
 
         return $storage;
-    });
+    }
+);
 
 =item add_elf
 

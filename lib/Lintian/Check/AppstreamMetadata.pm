@@ -59,7 +59,8 @@ sub installable {
         defined(
             my $dir
               = $processable->installed->resolve_path(
-                'usr/share/applications/'))
+                'usr/share/applications/')
+        )
     ) {
         for my $item ($dir->descendants) {
             $desktopfiles{$item} = 1 if ($item->is_file);
@@ -68,7 +69,8 @@ sub installable {
     if (
         defined(
             my $dir
-              = $processable->installed->resolve_path('usr/share/metainfo/'))
+              = $processable->installed->resolve_path('usr/share/metainfo/')
+        )
     ) {
         for my $item ($dir->children) {
             if ($item->is_file) {
@@ -80,7 +82,8 @@ sub installable {
     if (
         defined(
             my $dir
-              = $processable->installed->resolve_path('usr/share/appdata/'))
+              = $processable->installed->resolve_path('usr/share/appdata/')
+        )
     ) {
         for my $item ($dir->descendants) {
             if ($item->is_file) {

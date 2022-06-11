@@ -79,7 +79,8 @@ has COMPRESS_FILE_EXTENSIONS_OR_ALL => (
             (map { quotemeta } $COMPRESS_FILE_EXTENSIONS->all));
 
         return qr/$text/;
-    });
+    }
+);
 
 sub visit_installed_files {
     my ($self, $item) = @_;

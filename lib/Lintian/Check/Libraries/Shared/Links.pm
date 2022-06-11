@@ -53,7 +53,8 @@ has development_packages => (
         }
 
         return \@development_packages;
-    });
+    }
+);
 
 sub visit_installed_files {
     my ($self, $item) = @_;

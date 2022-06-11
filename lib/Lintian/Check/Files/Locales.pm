@@ -86,7 +86,8 @@ has ISO639_3_by_alpha3 => (
         }
 
         return \%iso639_3;
-    });
+    }
+);
 
 has LOCALE_CODES => (
     is => 'rw',
@@ -121,7 +122,8 @@ has LOCALE_CODES => (
         }
 
         return \%CODES;
-    });
+    }
+);
 
 sub visit_installed_files {
     my ($self, $item) = @_;

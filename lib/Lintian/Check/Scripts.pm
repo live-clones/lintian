@@ -89,7 +89,8 @@ has INTERPRETERS => (
         }
 
         return \%unversioned;
-    });
+    }
+);
 
 # The more complex case of interpreters that may have a version number.
 #
@@ -161,7 +162,8 @@ has VERSIONED_INTERPRETERS => (
         }
 
         return \%versioned;
-    });
+    }
+);
 
 # When detecting commands inside shell scripts, use this regex to match the
 # beginning of the command rather than checking whether the command is at the
@@ -192,11 +194,10 @@ has BAD_MAINTAINER_COMMANDS => (
 
             die encode_utf8(
                 "Syntax error in scripts/maintainer-script-bad-command: $.")
-              if any { !defined }
-            (
+              if any { !defined }(
                 $in_cat,$in_auto,$package_include_pattern,
                 $script_include_pattern,$command_pattern
-            );
+              );
 
             # trim both ends
             $in_cat =~ s/^\s+|\s+$//g;
@@ -220,7 +221,8 @@ has BAD_MAINTAINER_COMMANDS => (
         }
 
         return \%forbidden;
-    });
+    }
+);
 
 # Appearance of one of these regexes in a maintainer script means that there
 # must be a dependency (or pre-dependency) on the given package.  The tag
@@ -250,7 +252,8 @@ has all_prerequisites => (
             $self->processable->name);
 
         return $all_prerequisites;
-    });
+    }
+);
 
 has strong_prerequisites => (
     is => 'rw',
@@ -261,7 +264,8 @@ has strong_prerequisites => (
         my $strong_prerequisites = $self->processable->relation('strong');
 
         return $strong_prerequisites;
-    });
+    }
+);
 
 sub visit_installed_files {
     my ($self, $item) = @_;
@@ -547,12 +551,14 @@ sub visit_installed_files {
 
             } elsif ($basename =~ /^(python\d|ruby|[mg]awk)$/) {
 
-                $self->pointed_hint((
-                    "$basename-script-but-no-$basename-dep",
-                    $item->pointer,
-                    $item->interpreter,
-                    "(does not satisfy $depends)"
-                ));
+                $self->pointed_hint(
+                    (
+                        "$basename-script-but-no-$basename-dep",
+                        $item->pointer,
+                        $item->interpreter,
+                        "(does not satisfy $depends)"
+                    )
+                );
 
             } elsif ($basename eq 'csh'
                 && $item->name =~ m{^etc/csh/login\.d/}){

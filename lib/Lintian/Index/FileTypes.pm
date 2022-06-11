@@ -115,7 +115,8 @@ sub add_file_types {
             }
 
             return;
-        });
+        }
+    );
 
     $_->file_type($file_types{$_->name}) for @files;
 

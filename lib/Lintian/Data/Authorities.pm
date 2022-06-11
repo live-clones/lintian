@@ -102,7 +102,8 @@ has debconf_specification => (
         $manual->load($self->data_paths, $self->vendor);
 
         return $manual;
-    });
+    }
+);
 
 =item developer_reference
 
@@ -118,7 +119,8 @@ has developer_reference => (
         $manual->load($self->data_paths, $self->vendor);
 
         return $manual;
-    });
+    }
+);
 
 =item doc_base_manual
 
@@ -134,7 +136,8 @@ has doc_base_manual => (
         $manual->load($self->data_paths, $self->vendor);
 
         return $manual;
-    });
+    }
+);
 
 =item filesystem_hierarchy_standard
 
@@ -150,7 +153,8 @@ has filesystem_hierarchy_standard => (
         $manual->load($self->data_paths, $self->vendor);
 
         return $manual;
-    });
+    }
+);
 
 =item java_policy
 
@@ -166,7 +170,8 @@ has java_policy => (
         $manual->load($self->data_paths, $self->vendor);
 
         return $manual;
-    });
+    }
+);
 
 =item lintian_manual
 
@@ -182,7 +187,8 @@ has lintian_manual => (
         $manual->load($self->data_paths, $self->vendor);
 
         return $manual;
-    });
+    }
+);
 
 =item menu_manual
 
@@ -198,7 +204,8 @@ has menu_manual => (
         $manual->load($self->data_paths, $self->vendor);
 
         return $manual;
-    });
+    }
+);
 
 =item menu_policy
 
@@ -214,7 +221,8 @@ has menu_policy => (
         $manual->load($self->data_paths, $self->vendor);
 
         return $manual;
-    });
+    }
+);
 
 =item menu_policy
 
@@ -230,7 +238,8 @@ has new_maintainer => (
         $manual->load($self->data_paths, $self->vendor);
 
         return $manual;
-    });
+    }
+);
 
 =item perl_policy
 
@@ -246,7 +255,8 @@ has perl_policy => (
         $manual->load($self->data_paths, $self->vendor);
 
         return $manual;
-    });
+    }
+);
 
 =item policy_manual
 
@@ -262,7 +272,8 @@ has policy_manual => (
         $manual->load($self->data_paths, $self->vendor);
 
         return $manual;
-    });
+    }
+);
 
 =item python_policy
 
@@ -278,7 +289,8 @@ has python_policy => (
         $manual->load($self->data_paths, $self->vendor);
 
         return $manual;
-    });
+    }
+);
 
 =item vim_policy
 
@@ -294,7 +306,8 @@ has vim_policy => (
         $manual->load($self->data_paths, $self->vendor);
 
         return $manual;
-    });
+    }
+);
 
 =back
 

@@ -62,7 +62,8 @@ has LENNA_BLACKLIST => (
         }
 
         return \%blacklist;
-    });
+    }
+);
 
 # known good files
 has LENNA_WHITELIST => (
@@ -72,7 +73,8 @@ has LENNA_WHITELIST => (
         my ($self) = @_;
 
         return $self->data->load('files/banned/lenna/whitelist');
-    });
+    }
+);
 
 sub visit_patched_files {
     my ($self, $item) = @_;
@@ -81,7 +83,7 @@ sub visit_patched_files {
       unless $item->is_file;
 
     return
-         unless $item->file_type =~ /\bimage\b/i
+      unless $item->file_type =~ /\bimage\b/i
       || $item->file_type =~ /^Matlab v\d+ mat/i
       || $item->file_type =~ /\bbitmap\b/i
       || $item->file_type =~ /^PDF Document\b/i

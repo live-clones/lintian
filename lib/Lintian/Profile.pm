@@ -107,22 +107,26 @@ to create this instance of the profile (e.g. due to symlinks).
 has known_aliases => (
     is => 'rw',
     coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
-    default => sub { {} });
+    default => sub { {} }
+);
 
 has check_module_by_name => (
     is => 'rw',
     coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
-    default => sub { {} });
+    default => sub { {} }
+);
 
 has check_path_by_name => (
     is => 'rw',
     coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
-    default => sub { {} });
+    default => sub { {} }
+);
 
 has tag_names_for_check => (
     is => 'rw',
     coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
-    default => sub { {} });
+    default => sub { {} }
+);
 
 has display_level_lookup => (
     is => 'rw',
@@ -135,27 +139,32 @@ has display_level_lookup => (
             warning        => 1,
             error          => 1,
         }
-    });
+    }
+);
 
 has enabled_checks_by_name => (
     is => 'rw',
     coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
-    default => sub { {} });
+    default => sub { {} }
+);
 
 has enabled_tags_by_name => (
     is => 'rw',
     coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
-    default => sub { {} });
+    default => sub { {} }
+);
 
 has files => (
     is => 'rw',
     coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
-    default => sub { {} });
+    default => sub { {} }
+);
 
 has known_tags_by_name => (
     is => 'rw',
     coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
-    default => sub { {} });
+    default => sub { {} }
+);
 
 has name => (
     is => 'rw',
@@ -166,7 +175,8 @@ has name => (
 has durable_tags_by_name => (
     is => 'rw',
     coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
-    default => sub { {} });
+    default => sub { {} }
+);
 
 has data => (
     is => 'rw',
@@ -181,24 +191,28 @@ has data => (
         $data->vendor($self->our_vendor);
 
         return $data;
-    });
+    }
+);
 
 has parent_map => (
     is => 'rw',
     coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
-    default => sub { {} });
+    default => sub { {} }
+);
 
 has profile_list => (
     is => 'rw',
     coerce => sub { my ($arrayref) = @_; return ($arrayref // []); },
-    default => sub { [] });
+    default => sub { [] }
+);
 
 has our_vendor => (is => 'rw');
 
 has include_dirs => (
     is => 'rw',
     coerce => sub { my ($arrayref) = @_; return ($arrayref // []); },
-    default => sub { [] });
+    default => sub { [] }
+);
 
 # Temporary until aptdaemon (etc.) has been upgraded to handle
 # Lintian loading code from user dirs.
@@ -206,7 +220,8 @@ has include_dirs => (
 has safe_include_dirs => (
     is => 'rw',
     coerce => sub { my ($arrayref) = @_; return ($arrayref // []); },
-    default => sub { [] });
+    default => sub { [] }
+);
 
 has known_vendors => (
     is => 'rw',
@@ -234,7 +249,8 @@ has known_vendors => (
         }
 
         return \@vendors;
-    });
+    }
+);
 
 has user_dirs => (
     is => 'ro',
@@ -258,7 +274,8 @@ has user_dirs => (
         const my @IMMUTABLE => grep { length && -e } @user_data;
 
         return \@IMMUTABLE;
-    });
+    }
+);
 
 =item load ([$profname[, $ipath[, $extra]]])
 

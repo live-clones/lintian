@@ -58,7 +58,8 @@ has built_with_octave => (
           if defined $source;
 
         return $built_with_octave;
-    });
+    }
+);
 
 has files_by_library => (is => 'rw', default => sub  { {} });
 
@@ -106,7 +107,7 @@ sub visit_installed_files {
     my $depends = $self->processable->relation('strong');
 
     $self->pointed_hint('undeclared-elf-prerequisites', $item->pointer,
-            $LEFT_PARENTHESIS
+        $LEFT_PARENTHESIS
           . join($SPACE, sort +uniq @{$item->elf->{NEEDED} // []})
           . $RIGHT_PARENTHESIS)
       if @{$item->elf->{NEEDED} // [] }
@@ -132,9 +133,8 @@ sub visit_installed_files {
       if !$linked_with_libc
       && !$is_shared
       && @{$item->elf->{NEEDED} // [] }
-      && (
-        none { /^libstdc[+][+][.]so[.]/ }
-        @{$item->elf->{NEEDED} // [] })&& !$self->built_with_octave;
+      && (none { /^libstdc[+][+][.]so[.]/ }@{$item->elf->{NEEDED} // [] })
+      && !$self->built_with_octave;
 
     return;
 }

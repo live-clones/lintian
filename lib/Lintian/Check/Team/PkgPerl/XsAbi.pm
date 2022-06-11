@@ -68,7 +68,8 @@ has relies_on_modern_api => (
           if version_compare_relation($api_version, REL_GE, '5.19.11');
 
         return 0;
-    });
+    }
+);
 
 sub visit_installed_files {
     my ($self, $item) = @_;

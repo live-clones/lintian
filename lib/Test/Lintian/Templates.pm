@@ -107,8 +107,12 @@ sub copy_skeleton_template_sets {
             "Cannot find template set '$name' at $templatesetpath.")
           unless -d $templatesetpath;
 
-        say encode_utf8("Installing template set '$name'"
-              . ($relative ne $DOT ? " to ./$relative." : $EMPTY));
+        say encode_utf8(
+            "Installing template set '$name'"
+              . (
+                $relative ne $DOT ? " to ./$relative." : $EMPTY
+              )
+        );
 
         # create directory
         my $destination = "$runpath/$relative";
@@ -176,19 +180,27 @@ sub fill_skeleton_templates {
 
             say encode_utf8($EMPTY);
 
-            say encode_utf8('Generate files '
-                  . ($relative ne $DOT ? "in ./$relative " : $EMPTY)
-                  . "from templates using whitelist '$name'.");
+            say encode_utf8(
+                'Generate files '
+                  . (
+                    $relative ne $DOT ? "in ./$relative " : $EMPTY
+                  )
+                  . "from templates using whitelist '$name'."
+            );
             my $whitelist = read_config($whitelistpath);
 
             my @candidates = $whitelist->trimmed_list('May-Generate');
             my $destination = "$runpath/$relative";
 
-            say encode_utf8('Fill templates'
-                  . ($relative ne $DOT ? " in ./$relative" : $EMPTY)
+            say encode_utf8(
+                'Fill templates'
+                  . (
+                    $relative ne $DOT ? " in ./$relative" : $EMPTY
+                  )
                   . $COLON
                   . $SPACE
-                  . join($SPACE, @candidates));
+                  . join($SPACE, @candidates)
+            );
 
             foreach my $candidate (@candidates) {
                 my $generated = rel2abs($candidate, $destination);

@@ -36,7 +36,8 @@ our @EXPORT_OK;
 
 BEGIN {
 
-    @EXPORT_OK = (qw(
+    @EXPORT_OK = (
+        qw(
           get_file_checksum
           get_file_digest
           human_bytes
@@ -54,7 +55,8 @@ BEGIN {
           $PKGNAME_REGEX
           $PKGREPACK_REGEX
           $PKGVERSION_REGEX
-    ));
+        )
+    );
 }
 
 use Carp qw(croak);

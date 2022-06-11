@@ -179,7 +179,8 @@ has VCS_HOSTERS_BY_PATTERN => (
         }
 
         return \%vcs_hosters_by_pattern;
-    });
+    }
+);
 
 sub always {
     my ($self) = @_;

@@ -87,7 +87,8 @@ sub always {
           || (
             $installable_architecture eq 'source'
             && (   $self->processable->type eq 'changes'
-                || $self->processable->type eq 'buildinfo'));
+                || $self->processable->type eq 'buildinfo')
+          );
     }
 
     # check for magic installable architecture combinations
@@ -98,7 +99,7 @@ sub always {
         if (any { $_ eq 'all' } @installable_architectures) {
             $magic_error++
               unless any { $self->processable->type eq $_ }
-            qw(source changes buildinfo);
+              qw(source changes buildinfo);
         }
 
         my $anylc = List::Compare->new(\@installable_architectures, ['any']);
@@ -110,7 +111,7 @@ sub always {
             # (#626775)
             @errorset = grep { $_ ne 'all' } @errorset
               if any { $self->processable->type eq $_ }
-            qw(source changes buildinfo);
+              qw(source changes buildinfo);
 
             $magic_error++
               if @errorset;

@@ -157,7 +157,8 @@ sub check_multiarch {
                     'dependency-is-not-multi-archified',
                     join(q{ },
                         $processable->name, 'depends on',
-                        $dep->name, "(multi-arch: $dma)"));
+                        $dep->name, "(multi-arch: $dma)")
+                );
             }
         }
     } elsif ($ma ne 'same'
@@ -182,7 +183,7 @@ sub check_multiarch {
                     $processable->name . ' => ' . $dep->name
                   )
                   unless any { $processable->name =~ m/$_/xms }
-                $KNOWN_DBG_PACKAGE->all;
+                  $KNOWN_DBG_PACKAGE->all;
             }
         }
     }

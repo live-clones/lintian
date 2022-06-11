@@ -48,7 +48,8 @@ has built_with_golang => (
           if defined $source;
 
         return $built_with_golang;
-    });
+    }
+);
 
 sub visit_installed_files {
     my ($self, $item) = @_;

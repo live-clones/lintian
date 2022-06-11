@@ -133,7 +133,8 @@ sub issue_hints {
             title => 'Lintian Tags',
             style_sheet => mark_raw($style_sheet),
             output => \%output,
-        });
+        }
+    );
 
     print encode_utf8($page);
 
@@ -188,8 +189,8 @@ sub hintlist {
                 for my $context (sort keys %by_context) {
 
                     my $hints
-                      = $sorter{$override_status}{$code_priority}
-                      {$tag_name}{$context};
+                      = $sorter{$override_status}{$code_priority}{$tag_name}
+                      {$context};
 
                     push(@sorted, $_)for @{$hints};
                 }

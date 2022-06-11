@@ -191,8 +191,9 @@ sub installable {
                #   these do not ship classes but java files and other sources.
                # Javadoc jars deployed in the Maven repository also do not ship
                #   classes but HTML files, images and CSS files
-                if ((
-                           $bsname !~ m/\.source$/
+                if (
+                    (
+                        $bsname !~ m/\.source$/
                         && $item->name
                         !~ m{^usr/share/maven-repo/.*-javadoc\.jar}
                         && $item->name !~ m{\.doc(?:\.(?:user|isv))?_[^/]+.jar}

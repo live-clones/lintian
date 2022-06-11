@@ -101,11 +101,13 @@ has location => (
         my ($self) = @_;
 
         return 'authority/' . $self->shorthand;
-    });
+    }
+);
 
 has separator => (
     is => 'rw',
-    default => sub { qr/::/ });
+    default => sub { qr/::/ }
+);
 
 =item consumer
 

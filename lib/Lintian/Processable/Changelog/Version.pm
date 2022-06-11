@@ -83,7 +83,8 @@ has changelog_version => (
         }
 
         return $version;
-    });
+    }
+);
 
 =back
 

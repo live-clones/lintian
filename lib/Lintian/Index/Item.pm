@@ -129,7 +129,8 @@ my %T = (
     (map {sprintf('%o',$_) => chr} 0..($BYTE_MAXIMUM & $SINGLE_OCTAL_MASK)),
     (map {sprintf('%02o',$_) => chr} 0..($BYTE_MAXIMUM & $DUAL_OCTAL_MASK)),
     (map {sprintf('%03o',$_) => chr} 0..$BYTE_MAXIMUM),
-    (split //, "r\rn\nb\ba\af\ft\tv\013"));
+    (split //, "r\rn\nb\ba\af\ft\tv\013")
+);
 
 sub unescape_c_style {
     my ($escaped) = @_;
@@ -375,7 +376,8 @@ has hashbang => (
         $trimmed_bytes =~ s/^\s+|\s+$//g;
 
         return $trimmed_bytes;
-    });
+    }
+);
 
 =item interpreter_with_options
 
@@ -395,7 +397,8 @@ has interpreter_with_options => (
         $with_options =~ s{^/usr/bin/env\s+}{};
 
         return $with_options;
-    });
+    }
+);
 
 =item interpreter
 
@@ -415,7 +418,8 @@ has interpreter => (
         $interpreter =~ s/^(\S+).*/$1/;
 
         return $interpreter;
-    });
+    }
+);
 
 =item C<calls_env>
 
@@ -434,7 +438,8 @@ has calls_env => (
           if $self->hashbang =~ m{^/usr/bin/env\s+};
 
         return 0;
-    });
+    }
+);
 
 =item C<is_shell_script>
 
@@ -458,7 +463,8 @@ has is_shell_script => (
           if $basename =~ /^(?:[bd]?a|t?c|(?:pd|m)?k|z)?sh$/;
 
         return 0;
-    });
+    }
+);
 
 =item is_elf
 
@@ -476,7 +482,8 @@ has is_elf => (
           if $self->magic($ELF_MAGIC_SIZE) eq "\x7FELF";
 
         return 0;
-    });
+    }
+);
 
 =item is_script
 
@@ -498,7 +505,8 @@ has is_script => (
           unless $self->magic($SHELL_SCRIPT_MAGIC_SIZE) eq $HASHBANG;
 
         return 1;
-    });
+    }
+);
 
 =item is_maintainer_script
 
@@ -517,7 +525,8 @@ has is_maintainer_script => (
           && $self->is_open_ok;
 
         return 0;
-    });
+    }
+);
 
 =item identity
 
@@ -757,7 +766,8 @@ has link_normalized => (
         my $target = normalize_link_target($dir, $link);
 
         return $target;
-    });
+    }
+);
 
 =item is_readable
 
@@ -1305,13 +1315,15 @@ has date => (
     default => sub {
         my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = gmtime;
         return sprintf('%04d-%02d-%02d', $year, $mon, $mday);
-    });
+    }
+);
 has time => (
     is => 'rw',
     default => sub {
         my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = gmtime;
         return sprintf('%02d:%02d:%02d', $hour, $min, $sec);
-    });
+    }
+);
 
 has perm => (is => 'rw');
 has path_info => (is => 'rw');
@@ -1350,7 +1362,8 @@ has file_type => (
 has java_info => (
     is => 'rw',
     coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
-    default => sub { {} });
+    default => sub { {} }
+);
 has strings => (
     is => 'rw',
     coerce => sub { my ($text) = @_; return ($text // $EMPTY); },
@@ -1359,7 +1372,8 @@ has strings => (
 has ar_info => (
     is => 'rw',
     coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
-    default => sub { {} });
+    default => sub { {} }
+);
 
 has index => (is => 'rw');
 has childnames => (is => 'rw', default => sub { {} });
@@ -1378,7 +1392,8 @@ has parent_dir => (
 
         # returns root by default
         return $self->index->lookup($self->dirname);
-    });
+    }
+);
 has dereferenced => (is => 'rw');
 
 =item elf

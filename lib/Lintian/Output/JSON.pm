@@ -165,8 +165,8 @@ sub hintlist {
                 for my $context (sort keys %by_context) {
 
                     my $hints
-                      = $sorter{$override_status}{$code_priority}
-                      {$tag_name}{$context};
+                      = $sorter{$override_status}{$code_priority}{$tag_name}
+                      {$context};
 
                     push(@sorted, $_)for @{$hints};
                 }

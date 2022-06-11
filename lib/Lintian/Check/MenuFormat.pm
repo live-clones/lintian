@@ -102,7 +102,8 @@ has MENU_SECTIONS => (
         }
 
         return \%menu_sections;
-    });
+    }
+);
 
 # Authoritative source of desktop keys:
 # https://specifications.freedesktop.org/desktop-entry-spec/latest/
@@ -118,7 +119,8 @@ has KNOWN_DESKTOP_KEYS => (
         my ($self) = @_;
 
         return $self->data->load('menu-format/known-desktop-keys');
-    });
+    }
+);
 
 has DEPRECATED_DESKTOP_KEYS => (
     is => 'rw',
@@ -127,7 +129,8 @@ has DEPRECATED_DESKTOP_KEYS => (
         my ($self) = @_;
 
         return $self->data->load('menu-format/deprecated-desktop-keys');
-    });
+    }
+);
 
 # KDE uses some additional keys that should start with X-KDE but don't for
 # historical reasons.
@@ -138,7 +141,8 @@ has KDE_DESKTOP_KEYS => (
         my ($self) = @_;
 
         return $self->data->load('menu-format/kde-desktop-keys');
-    });
+    }
+);
 
 # Known types of desktop entries.
 # https://specifications.freedesktop.org/desktop-entry-spec/latest/ar01s06.html
@@ -183,7 +187,8 @@ has ADD_CATEGORIES => (
         my ($self) = @_;
 
         return $self->data->load('menu-format/add-categories');
-    });
+    }
+);
 
 # This is a list of Reserved Categories for .desktop files.  To use one of
 # these, the desktop entry must also have an OnlyShowIn key limiting the
@@ -561,7 +566,8 @@ sub verify_icon {
 
     my @packages = (
         $self->processable,
-        @{ $self->group->direct_dependencies($self->processable) });
+        @{ $self->group->direct_dependencies($self->processable) }
+    );
 
     my @candidates;
     for my $processable (@packages) {
@@ -674,7 +680,8 @@ sub verify_desktop_file {
                         [
                             'desktop-entry-contains-deprecated-key',
                             $pointer, $tag
-                        ]);
+                        ]
+                    );
                 }
             } elsif (not $self->KNOWN_DESKTOP_KEYS->recognizes($basetag)
                 and not $self->KDE_DESKTOP_KEYS->recognizes($basetag)

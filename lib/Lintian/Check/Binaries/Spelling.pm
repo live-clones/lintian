@@ -41,7 +41,8 @@ has BINARY_SPELLING_EXCEPTIONS => (
         my ($self) = @_;
 
         return $self->data->load('binaries/spelling-exceptions',qr/\s+/);
-    });
+    }
+);
 
 sub spelling_tag_emitter {
     my ($self, $tag_name, $item, @orig_args) = @_;

@@ -71,7 +71,8 @@ has TRIGGER_TYPES => (
         }
 
         return \%trigger_types;
-    });
+    }
+);
 
 sub visit_control_files {
     my ($self, $item) = @_;

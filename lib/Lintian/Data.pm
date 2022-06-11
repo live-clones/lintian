@@ -74,12 +74,14 @@ has vendor => (is => 'rw');
 has data_paths => (
     is => 'rw',
     coerce => sub { my ($arrayref) = @_; return ($arrayref // []); },
-    default => sub { [] });
+    default => sub { [] }
+);
 
 has data_cache => (
     is => 'rw',
     coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
-    default => sub { {} });
+    default => sub { {} }
+);
 
 =item load
 
@@ -138,7 +140,8 @@ has architectures => (
         $architectures->load($self->data_paths, $self->vendor);
 
         return $architectures;
-    });
+    }
+);
 
 =item auto_rejection
 
@@ -154,7 +157,8 @@ has auto_rejection => (
         $auto_rejection->load($self->data_paths, $self->vendor);
 
         return $auto_rejection;
-    });
+    }
+);
 
 =item debhelper_addons
 
@@ -170,7 +174,8 @@ has debhelper_addons => (
         $addons->load($self->data_paths, $self->vendor);
 
         return $addons;
-    });
+    }
+);
 
 =item debhelper_commands
 
@@ -186,7 +191,8 @@ has debhelper_commands => (
         $commands->load($self->data_paths, $self->vendor);
 
         return $commands;
-    });
+    }
+);
 
 =item debhelper_levels
 
@@ -202,7 +208,8 @@ has debhelper_levels => (
         $levels->load($self->data_paths, $self->vendor);
 
         return $levels;
-    });
+    }
+);
 
 =item fonts
 
@@ -218,7 +225,8 @@ has fonts => (
         $fonts->load($self->data_paths, $self->vendor);
 
         return $fonts;
-    });
+    }
+);
 
 =item hardening_buildflags
 
@@ -234,7 +242,8 @@ has hardening_buildflags => (
         $buildflags->load($self->data_paths, $self->vendor);
 
         return $buildflags;
-    });
+    }
+);
 
 =item mail_transport_agents
 
@@ -250,7 +259,8 @@ has mail_transport_agents => (
         $manual->load($self->data_paths, $self->vendor);
 
         return $manual;
-    });
+    }
+);
 
 =item policy_releases
 
@@ -266,7 +276,8 @@ has policy_releases => (
         $releases->load($self->data_paths, $self->vendor);
 
         return $releases;
-    });
+    }
+);
 
 =item style_sheet
 
@@ -282,7 +293,8 @@ has style_sheet => (
         $releases->load($self->data_paths, $self->vendor);
 
         return $releases;
-    });
+    }
+);
 
 =item virtual_initd_facilities
 
@@ -298,7 +310,8 @@ has virtual_initd_facilities => (
         $facilities->load($self->data_paths, $self->vendor);
 
         return $facilities;
-    });
+    }
+);
 
 =back
 

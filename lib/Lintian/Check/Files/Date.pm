@@ -41,7 +41,8 @@ has ALLOWED_ANCIENT_FILES => (
         my ($self) = @_;
 
         return $self->data->load('files/allowed-ancient-files');
-    });
+    }
+);
 
 sub visit_installed_files {
     my ($self, $item) = @_;

@@ -177,7 +177,8 @@ sub visit_patched_files {
                 '.debug.js' => '(?i)\.js$',
                 '-debug.js' => '(?i)\.js$',
                 $EMPTY => $EMPTY
-            });
+            }
+          );
     }
 
     if ($item->basename =~ /\.(?:x?html?\d?|xht)$/i) {

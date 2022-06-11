@@ -67,7 +67,8 @@ has old_versions => (
         }
 
         return \%old_versions;
-    });
+    }
+);
 
 sub visit_control_files {
     my ($self, $item) = @_;

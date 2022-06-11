@@ -42,7 +42,8 @@ const my $MAXIMUM_LINES_ANALYZED => 54;
 # exclude some shells. zsh -n is broken, see #485885
 const my %SYNTAX_CHECKERS => (
     sh => [qw{/bin/dash -n}],
-    bash => [qw{/bin/bash -n}]);
+    bash => [qw{/bin/bash -n}]
+);
 
 sub visit_installed_files {
     my ($self, $item) = @_;

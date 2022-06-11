@@ -40,7 +40,8 @@ has TRIPLETS => (
           keys %{$DEB_HOST_MULTIARCH};
 
         return \%triplets;
-    });
+    }
+);
 
 has depends_on_architecture => (is => 'rw', default => 0);
 

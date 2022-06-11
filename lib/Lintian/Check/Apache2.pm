@@ -57,7 +57,8 @@ has is_apache2_related => (
         }
 
         return 0;
-    });
+    }
+);
 
 sub visit_installed_files {
     my ($self, $item) = @_;

@@ -237,8 +237,10 @@ sub runner {
         my $match = 0;
         for my $wildcard (@wildcards) {
 
-            my @command = (qw{dpkg-architecture -a},
-                $ENV{'DEB_HOST_ARCH'}, '-i', $wildcard);
+            my @command = (
+                qw{dpkg-architecture -a},
+                $ENV{'DEB_HOST_ARCH'}, '-i', $wildcard
+            );
             run3(\@command, \undef, \undef, \undef);
             my $status = ($? >> $WAIT_STATUS_SHIFT);
 

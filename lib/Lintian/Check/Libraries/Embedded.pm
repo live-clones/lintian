@@ -83,7 +83,8 @@ has EMBEDDED_LIBRARIES => (
         }
 
         return \%embedded_libraries;
-    });
+    }
+);
 
 sub visit_installed_files {
     my ($self, $item) = @_;

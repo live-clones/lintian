@@ -91,7 +91,8 @@ sub installable {
         || !$depends->matches(
             qr/^python3-numpy \(<[<=][^\|]+$/,
             Lintian::Relation::VISIT_OR_CLAUSE_FULL
-        ))&& $self->processable->name !~ m{\A python3?-numpy \Z}xsm;
+        )
+      )&& $self->processable->name !~ m{\A python3?-numpy \Z}xsm;
 
     return;
 }

@@ -40,7 +40,8 @@ has TRIPLETS => (
           keys %{$DEB_HOST_MULTIARCH};
 
         return \%triplets;
-    });
+    }
+);
 
 my %PATH_DIRECTORIES = map { $_ => 1 } qw(
   bin/ sbin/ usr/bin/ usr/sbin/ usr/games/ );

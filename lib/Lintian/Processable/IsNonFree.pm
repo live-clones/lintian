@@ -83,7 +83,8 @@ has is_non_free => (
           if $section =~ m{^(?:non-free|restricted|multiverse)/};
 
         return 0;
-    });
+    }
+);
 
 =back
 

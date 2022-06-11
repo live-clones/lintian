@@ -53,7 +53,8 @@ has conffiles_item => (
         my ($self) = @_;
 
         return $self->control->resolve_path('conffiles');
-    });
+    }
+);
 
 =item declared_conffiles
 
@@ -71,7 +72,8 @@ has declared_conffiles => (
         $conffiles->parse($item, $self);
 
         return $conffiles;
-    });
+    }
+);
 
 =back
 

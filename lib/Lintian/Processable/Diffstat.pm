@@ -137,7 +137,8 @@ has diffstat => (
         }
 
         return \%diffstat;
-    });
+    }
+);
 
 1;
 
