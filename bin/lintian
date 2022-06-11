@@ -505,7 +505,8 @@ my $PROFILE = Lintian::Profile->new;
 $PROFILE->load(
     $selected{profile},
     $selected{'include-dir'},
-    !$command_line{'no-user-dirs'});
+    !$command_line{'no-user-dirs'}
+);
 say {*STDERR} encode_utf8('Using profile ' . $PROFILE->name . $DOT)
   if $selected{debug};
 
@@ -538,7 +539,7 @@ my @from_file = $envlc->get_intersection;
 
 my @already = grep { defined $ENV{$_} } @from_file;
 warn encode_utf8(
-        'The environment overrides these settings in the configuration file: '
+    'The environment overrides these settings in the configuration file: '
       . join($SPACE, @already)
       . $NEWLINE)
   if @already;

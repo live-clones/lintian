@@ -129,8 +129,7 @@ if (($ENV{LINTIAN_TEST_INSTALLED} // 'no') eq 'yes') {
     $ENV{LINTIAN_UNDER_TEST} = realpath(THISDIR . '/../bin/lintian');
 }
 
-$ENV{LINTIAN_BASE}
-  = realpath(dirname(dirname($ENV{LINTIAN_UNDER_TEST})))
+$ENV{LINTIAN_BASE}= realpath(dirname(dirname($ENV{LINTIAN_UNDER_TEST})))
   // die encode_utf8('Cannot resolve LINTIAN_BASE');
 
 # options
@@ -304,21 +303,27 @@ say encode_utf8($EMPTY);
 
 my $status = 0;
 
-my $formatter = TAP::Formatter::File->new({
-    errors => 1,
-    jobs => $numjobs,
-});
-$formatter = TAP::Formatter::Console->new({
+my $formatter = TAP::Formatter::File->new(
+    {
+        errors => 1,
+        jobs => $numjobs,
+    }
+);
+$formatter = TAP::Formatter::Console->new(
+    {
         errors => 1,
         jobs => $numjobs,
         color => 1,
-    }) if is_interactive;
+    }
+) if is_interactive;
 
-my $harness = TAP::Harness->new({
-    formatter => $formatter,
-    jobs => $numjobs,
-    lib => ["$ENV{'LINTIAN_BASE'}/lib"],
-});
+my $harness = TAP::Harness->new(
+    {
+        formatter => $formatter,
+        jobs => $numjobs,
+        lib => ["$ENV{'LINTIAN_BASE'}/lib"],
+    }
+);
 
 my $aggregator = TAP::Parser::Aggregator->new;
 $aggregator->start;
@@ -600,7 +605,8 @@ if (is_interactive && !$unattended) {
             my $decision_bytes = prompt(
                 encode_utf8(
 '>>>  Fix test (y), accept all (a), do not fix (n), quit (q/default)?'
-                ));
+                )
+            );
             my $decision = decode_utf8($decision_bytes);
 
             last
