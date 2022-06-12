@@ -36,8 +36,7 @@ use List::SomeUtils qw(uniq);
 use Path::Tiny;
 use Test::More;
 
-use FindBin;
-use lib "$FindBin::Bin/../../../lib";
+use lib "$ENV{'LINTIAN_BASE'}/lib";
 
 use Lintian::Profile;
 use Test::Lintian::ConfigFile qw(read_config);
