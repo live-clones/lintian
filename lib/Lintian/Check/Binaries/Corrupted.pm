@@ -55,7 +55,7 @@ sub check_elf_issues {
 
     for (uniq @{$item->elf->{ERRORS} // []}) {
         $self->pointed_hint('elf-error',$item->pointer, $_)
-          if $_ !~ m{In program headers: Unable to find program interpreter name}
+          if !m{In program headers: Unable to find program interpreter name}
           || $item->name !~ m{^usr/lib/debug/};
     }
 
