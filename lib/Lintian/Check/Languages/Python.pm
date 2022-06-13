@@ -224,7 +224,7 @@ sub source {
 
         my %PYPROJECT_PREREQUISITES = (
             'poetry.core.masonry.api' => 'python3-poetry-core:any',
-            'flit_core.buildapi' => 'python3-flit:any',
+            'flit_core.buildapi' => 'flit:any',
             'setuptools.build_meta' => 'python3-setuptools:any'
         );
 
