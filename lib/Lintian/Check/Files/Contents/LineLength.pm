@@ -35,6 +35,7 @@ use List::UtilsBy qw(max_by);
 use Unicode::UTF8 qw(encode_utf8 decode_utf8 valid_utf8);
 
 const my $GREATER_THAN => q{>};
+const my $VERTICAL_BAR => q{|};
 
 const my $VERY_LONG => 512;
 
@@ -43,11 +44,39 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
+# an OR (|) regex of all compressed extension
+has BINARY_FILE_EXTENSIONS_OR_ALL => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        my $BINARY_FILE_EXTENSIONS
+          = $self->data->load('files/binary-file-extensions',qr/\s+/);
+        my $COMPRESSED_FILE_EXTENSIONS
+          = $self->data->load('files/compressed-file-extensions',qr/\s+/);
+
+        my $text = join(
+            $VERTICAL_BAR,
+            (
+                map { quotemeta } $BINARY_FILE_EXTENSIONS->all,
+                $COMPRESSED_FILE_EXTENSIONS->all
+            )
+        );
+
+        return qr/$text/i;
+    }
+);
+
 sub visit_patched_files {
     my ($self, $item) = @_;
 
     return
       unless $item->is_regular_file;
+
+    my $pattern = $self->BINARY_FILE_EXTENSIONS_OR_ALL;
+    return
+      if $item->basename =~ qr{ [.] ($pattern) \s* $}x;
 
     return
       unless $item->is_open_ok;
