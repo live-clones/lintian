@@ -5,7 +5,7 @@ init.d-general-bugs (binary): init.d-script-does-not-implement-required-option s
 init.d-general-bugs (binary): init.d-script-does-not-implement-required-option start [etc/init.d/init.d-general-bugs]
 init.d-general-bugs (binary): init.d-script-does-not-implement-required-option restart [etc/init.d/init.d-general-bugs]
 init.d-general-bugs (binary): init.d-script-does-not-implement-required-option force-reload [etc/init.d/init.d-general-bugs]
-init.d-general-bugs (binary): duplicate-updaterc.d-calls-in-postinst init.d-general-bugs [postinst:17]
+init.d-general-bugs (binary): duplicate-updaterc.d-calls-in-postinst init.d-general-bugs [postinst:8]
 init.d-general (binary): init.d-script-should-always-start-service [etc/default/init.d-general:8]
 init.d-general (binary): init.d-script-should-always-start-service [etc/default/init.d-general:7]
 init.d-general (binary): init.d-script-should-always-start-service [etc/default/init.d-general:6]
