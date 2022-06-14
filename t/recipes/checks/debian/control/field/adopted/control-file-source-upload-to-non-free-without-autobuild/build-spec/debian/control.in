@@ -6,6 +6,7 @@ Standards-Version: [% $standards_version %]
 Build-Depends: [% $build_depends %]
 Rules-Requires-Root: no
 XS-Autobuild: no
+Autobuild: no
 
 Package: [% $source %]
 Architecture: [% $package_architecture %]

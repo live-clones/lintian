@@ -2,7 +2,6 @@
 #  - please keep it sorted
 
 Architecture
-Autobuild
 Binary
 Bugs
 Build-Conflicts
@@ -36,7 +35,6 @@ Dgit
 Dm-Upload-Allowed
 Files
 Format
-Go-Import-Path
 Homepage
 Maintainer
 Origin
@@ -49,8 +47,6 @@ Origin
 @if-vendor-is-not debian Original-Maintainer
 
 Package-List
-Python-Version
-Ruby-Versions
 Rules-Requires-Root
 Source
 Standards-Version
@@ -68,3 +64,27 @@ Vcs-Hg
 Vcs-Mtn
 Vcs-Svn
 Version
+
+# These fields require their X[BS]- prefix, see #999768. TODO: Then
+# again, these fields in here don't seem to make any difference in any
+# test, not even in
+#
+# t/recipes/checks/debian/control/field/adopted/control-file-golang-xs-go-import-path/build-spec/debian/control.in
+# t/recipes/checks/debian/control/field/adopted/control-file-source-upload-to-non-free-without-autobuild/build-spec/debian/control.in
+# t/recipes/checks/fields/unknown/fields-unknown-fields/build-spec/debian/control.in
+#
+# despite I would have expected an "unknown-field" tag being emitted
+# if used without X[BS]- prefix as they should according to the
+# comments in #999768.
+#
+# Run tests with:
+# private/runtests -o check:fields/unknown,check:archive/non-free/autobuild,check:debian/control/field/adopted
+
+X-Python-Version
+X-Python3-Version
+
+XB-Ruby-Versions
+
+XS-Autobuild
+XS-Go-Import-Path
+XS-Ruby-Versions
