@@ -310,7 +310,8 @@ sub load {
     const my @ALL_INCLUDE_DIRS => @all_dirs;
     $self->include_dirs(\@ALL_INCLUDE_DIRS);
 
-    for my $tagdir (map { "$_/tags" } @{$self->safe_include_dirs}) {
+    for
+      my $tagdir (map { ($_ // q{.}) . '/tags' } @{$self->safe_include_dirs}) {
 
         next
           unless -d $tagdir;
@@ -360,7 +361,8 @@ sub load {
         }
     }
 
-    my @check_bases =map { ("$_/lib/Lintian/Check", "$_/checks") }
+    my @check_bases
+      = map {(($_ // q{.}).'/lib/Lintian/Check', ($_ // q{.}).'/checks')}
       @{$self->safe_include_dirs};
     for my $check_base (@check_bases) {
 
@@ -583,7 +585,8 @@ sub read_profile {
     }
 
     my @candidates;
-    for my $include_dir (map { "$_/profiles" } @{$self->include_dirs}) {
+    for my $include_dir ( map { ($_ // q{.}) . '/profiles' }
+        @{$self->include_dirs} ) {
         push(@candidates, map { "$include_dir/$_.profile" } @search_space);
     }
 

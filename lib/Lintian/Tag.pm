@@ -209,9 +209,12 @@ sub load {
 
         $relative .= '.pm';
 
-        my @candidates
-          = map {("$_/lib/Lintian/Screen/$relative", "$_/screens/$relative")}
-          @{$profile->safe_include_dirs};
+        my @candidates= map {
+            (
+                ($_ // q{.})."/lib/Lintian/Screen/$relative",
+                ($_ // q{.})."/screens/$relative"
+            )
+        } @{$profile->safe_include_dirs};
 
         my $absolute = first_value { -e } @candidates;
         die encode_utf8(
