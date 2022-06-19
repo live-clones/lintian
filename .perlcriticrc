@@ -435,7 +435,7 @@ terminal_funcs = CORE::exec fatal_error internal_error Lintian::Util::internal_e
 [Variables::ProhibitMatchVars]
 
 [Variables::ProhibitPackageVars]
-add_packages = Devel::Size Module::CoreList Text::Glob Text::Wrap YAML::XS
+add_packages = Devel::Size Module::CoreList Text::Wrap YAML::XS
 
 [Variables::ProhibitPerl4PackageNames]
 

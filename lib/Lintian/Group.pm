@@ -34,14 +34,13 @@ use List::SomeUtils qw(any none uniq firstval true);
 use List::UtilsBy qw(sort_by);
 use POSIX qw(ENOENT);
 use Syntax::Keyword::Try;
-use Text::Glob qw(match_glob);
 use Time::HiRes qw(gettimeofday tv_interval);
 use Time::Piece;
 use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Hint::Pointed;
 use Lintian::Mask;
-use Lintian::Util qw(human_bytes);
+use Lintian::Util qw(human_bytes match_glob);
 
 const my $EMPTY => q{};
 const my $SPACE => q{ };
@@ -398,9 +397,6 @@ sub process {
 
                     # try short ones first
                     my @by_length = sort_by { length } @patterns;
-
-                    local $Text::Glob::strict_leading_dot = 0;
-                    local $Text::Glob::strict_wildcard_slash = 0;
 
                     my $match = firstval {
                         match_glob($_, $hint->context)

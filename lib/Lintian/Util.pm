@@ -43,6 +43,7 @@ BEGIN {
           human_bytes
           perm2oct
           locate_executable
+          match_glob
           normalize_pkg_path
           normalize_link_target
           is_ancestor_of
@@ -66,6 +67,7 @@ use Digest::MD5;
 use Digest::SHA;
 use List::SomeUtils qw(first_value);
 use Path::Tiny;
+use Regexp::Wildcards;
 use Unicode::UTF8 qw(valid_utf8 encode_utf8);
 
 use Lintian::Deb822;
@@ -111,6 +113,8 @@ my %OCTAL_LOOKUP = map { $_ => perm2oct($_) } qw(
   drwxr-sr-x
   lrwxrwxrwx
 );
+
+my $rw = Regexp::Wildcards->new(type => 'jokers');
 
 =head1 NAME
 
@@ -384,6 +388,21 @@ sub version_from_changelog {
       if @entries;
 
     return $EMPTY;
+}
+
+=item match_glob( $glob, @things_to_test )
+
+Resembles the same semantic as Text::Glob's match_glob(), but with the
+proper escaping of Regexp::Wildcards and pre-configured for Lintian's
+purpose. No more directly having to access module variables either.
+
+=cut
+
+sub match_glob {
+    my ($glob, @things_to_test) = @_;
+    my $re = $rw->convert($glob);
+
+    return grep { /$re/ } @things_to_test;
 }
 
 =item normalize_pkg_path(PATH)

@@ -33,7 +33,6 @@ use List::Compare;
 use List::SomeUtils qw(any none uniq first_value);
 use Path::Tiny;
 use POSIX qw(ENOENT);
-use Text::Glob qw(match_glob);
 use Unicode::UTF8 qw(encode_utf8);
 
 use Dpkg::Vendor qw(get_current_vendor get_vendor_info);
@@ -41,6 +40,7 @@ use Dpkg::Vendor qw(get_current_vendor get_vendor_info);
 use Lintian::Data;
 use Lintian::Deb822;
 use Lintian::Tag;
+use Lintian::Util qw(match_glob);
 
 const my $EMPTY => q{};
 const my $SPACE => q{ };
@@ -653,19 +653,11 @@ sub read_profile {
 
     my @enable_checks;
     for my $pattern (@enable_check_patterns) {
-
-        local $Text::Glob::strict_leading_dot = 0;
-        local $Text::Glob::strict_wildcard_slash = 0;
-
         push(@enable_checks, match_glob($pattern, $self->known_checks));
     }
 
     my @disable_checks;
     for my $pattern (@disable_check_patterns) {
-
-        local $Text::Glob::strict_leading_dot = 0;
-        local $Text::Glob::strict_wildcard_slash = 0;
-
         push(@disable_checks, match_glob($pattern, $self->known_checks));
     }
 
@@ -686,19 +678,11 @@ sub read_profile {
 
     my @enable_tags;
     for my $pattern (@enable_tag_patterns) {
-
-        local $Text::Glob::strict_leading_dot = 0;
-        local $Text::Glob::strict_wildcard_slash = 0;
-
         push(@enable_tags, match_glob($pattern, $self->known_tags));
     }
 
     my @disable_tags;
     for my $pattern (@disable_tag_patterns) {
-
-        local $Text::Glob::strict_leading_dot = 0;
-        local $Text::Glob::strict_wildcard_slash = 0;
-
         push(@disable_tags, match_glob($pattern, $self->known_tags));
     }
 

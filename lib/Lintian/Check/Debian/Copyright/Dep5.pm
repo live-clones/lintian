@@ -30,12 +30,13 @@ use Const::Fast;
 use List::Compare;
 use List::SomeUtils qw(any all none uniq);
 use Syntax::Keyword::Try;
-use Text::Glob qw(match_glob);
+use Regexp::Wildcards;
 use Time::Piece;
 use XML::LibXML;
 
 use Lintian::Deb822;
 use Lintian::Relation::Version qw(versions_compare);
+use Lintian::Util qw(match_glob);
 
 use Moo;
 use namespace::clean;
@@ -470,14 +471,7 @@ sub check_dep5_copyright {
               if defined $item && $item->is_dir;
         }
 
-        local $Text::Glob::strict_leading_dot = 0;
-        local $Text::Glob::strict_wildcard_slash = 0;
-
-        # disable Text::Glob character classes and alternations
-        my $dulled = $wildcard;
-        $dulled =~ s/([{}\[\]])/\\$1/g;
-
-        my @match = match_glob($dulled, @shipped_names);
+        my @match = match_glob($wildcard, @shipped_names);
 
         # do not flag missing matches; uscan already excluded them
         push(@excluded, @match);
@@ -511,14 +505,7 @@ sub check_dep5_copyright {
               if defined $item && $item->is_dir;
         }
 
-        local $Text::Glob::strict_leading_dot = 0;
-        local $Text::Glob::strict_wildcard_slash = 0;
-
-        # disable Text::Glob character classes and alternations
-        my $dulled = $wildcard;
-        $dulled =~ s/([{}\[\]])/\\$1/g;
-
-        my @match = match_glob($dulled, @shipped_names);
+        my @match = match_glob($wildcard, @shipped_names);
 
         $self->pointed_hint(
             'superfluous-file-pattern', $pointer,
@@ -687,14 +674,7 @@ sub check_dep5_copyright {
             next
               if @offenders;
 
-            local $Text::Glob::strict_leading_dot = 0;
-            local $Text::Glob::strict_wildcard_slash = 0;
-
-            # disable Text::Glob character classes and alternations
-            my $dulled = $wildcard;
-            $dulled =~ s/([{}\[\]])/\\$1/g;
-
-            my @covered = match_glob($dulled, @shipped_names);
+            my @covered = match_glob($wildcard, @shipped_names);
 
             for my $name (@covered) {
                 $wildcards_same_section_by_file{$name} //= [];
