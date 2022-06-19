@@ -100,6 +100,11 @@ most important ones:
 
 =over 4
 
+=item Check
+
+A library checking specific aspects of a package, changes file,
+etc. which usually can emit multiple tags.
+
 =item Emit (Tag)
 
 Tag that was not suppressed and was triggered.
@@ -132,6 +137,10 @@ counted in statistics.  Not to be confused with "Overridden".
 =item Tag
 
 Issue reported by Lintian.
+
+=item Test
+
+An internal test of Lintian.
 
 =back
 
