@@ -1,10 +1,10 @@
 # -*- perl -*-
 #
-# Use "perldoc doc/README.developers" to read it like a manpage.
+# Use "perldoc doc/README.developers.pod" to read it like a manpage.
 
 =head1 NAME
 
-README.developers -- README file for developers of Lintian
+README.developers.pod -- README file for developers of Lintian
 
 =head1 SYNOPSIS
 
