@@ -24,8 +24,8 @@ This document describes how you can contribute to Lintian's
 development as well as adapt it to your needs.
 
 Lintian has a large code base which has as its starting point the
-directory "frontend". This directory holds the "lintian" executable.
-This is what gets called when a user calls lintian. The frontend
+directory "bin". This directory holds the "lintian" executable.
+This is what gets called when a user calls lintian. This frontend
 then calls the lintian checks which run over the Debian package
 that Lintian is checking.
 
@@ -57,7 +57,7 @@ contains Debian packaging
 
 contains the User Manuals and general docs (see man/ below)
 
-=item frontend
+=item bin
 
 contains the frontends (e.g. code installed in /usr/bin)
 
@@ -67,7 +67,7 @@ contains Perl modules/library for common tasks.
 
 =item man
 
-contains the manpages for tools in frontend/
+contains the manpages for tools in bin/
 
 =item private
 
@@ -154,7 +154,7 @@ used for 2.5.17 and earlier:
  # ONLY FOR << 2.5.18~ OR EARLIER.  Lintian (>= 2.5.18~) will DTRT.
  LINTIAN_BASE="<INSERT PATH TO LINTIAN GIT DIR>"
  export LINTIAN_BASE
- exec "$LINTIAN_BASE/frontend/lintian" "$@"
+ exec "$LINTIAN_BASE/bin/lintian" "$@"
 
 Beware of two things: If LINTIAN_BASE is not set, Lintian (<< 2.5.18~)
 will attempt to use the code from the installed version (in
