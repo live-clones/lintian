@@ -1,4 +1,4 @@
-# -*- perl -*-
+# -*- pod -*-
 #
 # Use "perldoc doc/README.developers.pod" to read it like a manpage.
 
