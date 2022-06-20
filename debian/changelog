@@ -1,8 +1,163 @@
 lintian (2.114.0+git) UNRELEASED; urgency=medium
 
-  * WIP (generated at release time: please do not add entries below).
+  [ Axel Beckert ]
+  * Remove Chris Lamb from Uploaders and re-add myself
+  * Workarounds until
+    https://github.com/Perl-Critic/Perl-Critic/issues/925 is fixed:
+    + Replace all occurrences of "Copyright ©" with "Copyright (C)" again.
+    + Remove unnecessary usage of UTF-8 from bin/lintian.
+    + Replace UTF-8 characters in mostly Copyright comments.
+    + Replace UTF-8 characters in code with \N{…}.
+  * Remove literal unicode character U+0334 COMBINING TILDE OVERLAY which
+    likely had been added accidentally. (Triggered by the symptoms of
+    https://github.com/Perl-Critic/Perl-Critic/issues/925, but permanent.)
+  * Update copyright years in debian/copyright.
+  * Run perltidy over lib, bin/lintian, private/refresh-perl-provides,
+    private/runtests and several files in t/scripts/.
+  * data/…/perl-provides updated by running "debian/rules
+    refresh-perl-provides".
+  * Add Felix Lechner to debian/copyright based on copyright statements
+    elsewhere. Thanks for all your contributions!
+  * Update t/recipes/README: "debian/rules runtests" → "private/runtests"
+  * Follow module renaming: Perl::Critic::Freenode → Perl::…::Community.
+  * t/s…/h…/tag-coverage.t: Replace "$ENV{'LINTIAN_BASE'}" with
+    "$ENV{'LINTIAN_BASE'} // '.'" to be able to run it with "prove -l".
+  * init.d-general check: Avoid relying on line numbers in #DEBHELPER#
+    replacement code.
+  * very-long-line-length-in-source-file: Ignore files listed in new data
+    file binary-file-extensions. (Closes: #1005046)
+  * Fix false positives for adopted-extended-field with X- prefixed
+    fields. (Closes: #999768)
+    + Empty hints files seem to require a Test-Against field in desc.
+  * Update own source lintian-overrides for "pointed hints".
+    + Make them work with old and new lintian versions by using wildcards.
+  * Rename README.developers to have a proper file suffix (.pod).
+  * Switch syntax marker of README.developers.pod from "perl" to "pod".
+  * Documentation update: Replace directory "frontend/" with "bin/".
+  * Fix a bunch of "Use of uninitialized value $_ in concatenation"
+    warnings when running tests with "prove -l" directly.
+  * README.developers.pod: Explain the difference between check and test.
+  * lintian(1): Drop mentioning of never existing --no-overrides option.
+  * Replace unfitting Text::Glob with more flexible Regexp::Wildcards
+    (Closes: #1003353)
+    + Add unit test for Lintian::Util::match_glob. The current testsuite
+      does not seem to be able to cover such a case.
+  * Declare compliance with Debian Policy 4.6.1. (No changes needed.)
 
- -- Axel Beckert <abe@debian.org>  Fri, 10 Jun 2022 05:00:35 +0200
+  [ Felix Lechner ]
+  * Refresh manual references.
+  * Use Text::Glob to match hint contexts with override patterns. Replaces
+    a trusted homegrown routine. (Closes: #1003272)
+  * Refresh list of available Debhelper commands.
+  * Refresh list of installable fonts.
+  * Generate section references for Lintian manual from repo; point to
+    website.
+  * Accept globbing patterns in profiles when enabling and disabling
+    checks or tags.
+  * Refresh data sources in parallel.
+  * Add the New Maintainer's Guide to the list of quotable authorities.
+  * Eliminate unpredictable output in the check siles/privacy-breach.
+  * Honor the environment variable NO_COLOR as specified in
+    https://no-color.org/.
+  * More attempts to eliminate unpredictable output in the check
+    files/privacy-breach.
+  * Drop the tag debian-tests-control-and-control-autodep8.
+  * Set authority references apart from other data sources.
+  * Provide rudimentary Emacs integration. (See: #968758)
+  * Associate Emacs modules with the 'editors' archive section.
+  * Recognize /usr/bin/raku as a known interpreter for scripts. (Closes:
+    #1002828)
+  * Do not depend on any particular Lzip implementation. (Closes:
+    #1001655)
+  * Exempt installables designated as documentation from warning about new
+    Python2 packages. (Closes: #995286)
+  * Update citations in two tags. (Closes: #1003131)
+  * Drop version requirement from
+    skip-systemd-native-flag-missing-pre-depends. (See: #1003271)
+  * Import new CSS style sheet from the website.
+  * Recognize dh-sequence-sphinxdoc as a valid prerequisite for
+    dh_sphinxdoc. (Closes: #999810)
+  * Tolerate multiarch acceptors in prerequisites for Debhelper commands
+    and addons. (Closes: #1000234)
+  * Issue yet more pointed hints.
+  * Recognize pybuild-plugin-pyproject as a valid prerequisite for the
+    python3 Debhelper plugin. (Closes: #1003668)
+  * Exempt bullseye backports from changelog-file-missing-explicit-entry.
+    (Closes: #941656)
+  * Mask long source lines in autotools-generated files. (Closes: #996740)
+  * Turn embedded-library into a classification tag. (Closes: #932634)
+  * Require the targets build-arch and build-indep in debian/rules.
+    (Closes: #657390)
+  * Do not insist on a particular name for unversioned links to a shared
+    library. (Closes: #963099)
+  * Exempt the names of Debian folks associated with a package from
+    spelling checks. (Closes: #989381)
+  * Require py3version invocation consistent with presence of
+    X-Python3-Version in d/control. (See: #1001677)
+  * Exempt CGI scripts from executable-in-usr-lib. (Closes: #1003941)
+  * CGI scripts can be ELF executables. (See: #1003941)
+  * Exempt Python's .dist-info and .egg-info folders everywhere from
+    documentation-outside-usr-share. (Closes: #1003913)
+  * Flag an outdated Debian copyright just once; use the most recent
+    year. (Closes: #1003817)
+  * Implement '--no-show-overrides'; honor it for overrides and masks
+    alike. (See: #1004240)
+  * Allow the command-line option '--no-info' to reverse 'info=yes' in the
+    configuration file. (Closes: #1004240)
+  * Elide manual references to ancient Lintian versions; use modern
+    examples. (Closes: #1004231)
+  * Deprecate --no-tag-display-limit for '--tag-display-limit 0'; update
+    documentation. (Closes: #1004239)
+  * Also provide a default output width for
+    lintian-annotate-hints. (Closes: #1004660)
+  * Mask examples in tests from
+    package-does-not-install-examples. (Closes: #1005184)
+  * Recognize Java 18 in unstable, and Java 19 as otherwise
+    available. (Closes: #1005762)
+  * Leave default Java bytecode version at 56. (See: #1005762)
+  * Adjust documentation reference to manual page for dh_make. (Closes:
+    #1006390)
+  * Warn about devhelp index files that use version 1. (Closes: #1006859)
+  * Store ELF information from readelf in an MLDBM database. (Closes:
+    #1003456)
+  * Issue pedantic hint for dot in 'chown user.group' instead of a
+    colon. (Closes: #1007140)
+  * Upgrade missing-systemd-timer-for-cron-script to warning; no longer
+    experimental. (Closes: #1007257)
+
+  [ Ryan Finnie ]
+  * Provide a constant citation for
+    systemd-service-file-uses-nobody-or-nogroup. (Closes: !385)
+
+  [ Louis-Philippe Véronneau ]
+  * Check that tests pulling in all Python versions also query which ones
+    are available. (Closes: !361)
+  * Add new Python tags for pyproject.toml build backends according to
+    PEP-517. (Closes: !384)
+  * Rename 'python3-flit' to 'flit', as there is no 'python3-flit'
+    package. (Closes: !386)
+
+  [ Daniel Kahn Gillmor ]
+  * Correct lintian-annotate-hints manpage.
+
+  [ Simon McVittie ]
+  * Silence a very widespread false positive for detached debug symbols.
+    (Closes: #1000977, !387)
+
+  [ Simon Quigley ]
+  * Add "kinetic" as a known Ubuntu distribution. (Closes: !392)
+
+  [ xiao sheng wen(肖盛文) ]
+  * Add riscv64 support (Closes: #1012090, !394)
+
+  [ Damyan Ivanov ]
+  * Update releases.json data for Debian policy releases (4.6.1 added;
+    closes: !393)
+
+  [ Paul Wise ]
+  * Add more obsolete domains for former source code hosting services.
+
+ -- Axel Beckert <abe@debian.org>  Mon, 20 Jun 2022 04:19:35 +0200
 
 lintian (2.114.0) unstable; urgency=medium
 
