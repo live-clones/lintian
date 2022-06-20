@@ -338,15 +338,16 @@ profiles.
 
 Controls whether tags that have been overridden should be shown.
 
-The B<--show-overrides> differs from B<--no-overrides> in that shown overridden
-tags will still be marked as overridden (using an "O" code).
+B<--show-overrides> will show overridden tags and mark them as
+overridden (using an "O" code).
 
 If the overridden tags are shown, the related override comments will
 also be displayed (unless --quiet is used).  Please refer to the Lintian
 User Manual for the documentation on how lintian relates comments to a
 given override.
 
-To negate it, please use B<--no-show-overrides>.
+To negate it, i.e. suppress the showing of overriden tags, please use
+B<--no-show-overrides>.
 
 This option overrides the B<show-overrides> (or B<no-show-overrides>) variable
 in the configuration file.
