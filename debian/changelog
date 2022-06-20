@@ -68,6 +68,7 @@ lintian (2.114.0+git) UNRELEASED; urgency=medium
   * Fix "Use of uninitialized value $step in concatenation" in
     Lintian::Version which showed up as unrecognized tag (!) when running
     the test suite on the git repo already tagged for a release.
+  * debian/gbp.conf: Declare so far used tag format so that gbp uses it.
 
   [ Felix Lechner ]
   * Refresh manual references.
