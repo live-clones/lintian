@@ -1,5 +1,25 @@
 lintian (2.114.0+git) UNRELEASED; urgency=medium
 
+  * Summary of tag changes:
+    + Added:
+      - alien-tag
+      - chown-with-dot
+      - conflicting-test-fields
+      - declare-python-versions-for-test
+      - drop-python-version-declaration
+      - invalid-override-restriction
+      - missing-prerequisite-for-pyproject-backend
+      - old-devhelp-standard
+      - stray-devhelp-documentation
+      - test-leaves-python-version-untested
+      - uses-poetry-cli
+    + Removed:
+      - crossing-screens
+      - debhelper-compatibility-level-not-a-number
+      - debian-tests-control-and-control-autodep8
+      - exclusive-runtime-tests-field
+      - package-contains-devhelp-file-without-symlink
+
   [ Axel Beckert ]
   * Remove Chris Lamb from Uploaders and re-add myself
   * Workarounds until
