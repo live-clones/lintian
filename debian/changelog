@@ -1,4 +1,6 @@
-lintian (2.114.0+git) UNRELEASED; urgency=medium
+lintian (2.115.0) unstable; urgency=medium
+
+  The Lintian Resurrection Release.
 
   * Summary of tag changes:
     + Added:
@@ -21,7 +23,8 @@ lintian (2.114.0+git) UNRELEASED; urgency=medium
       - package-contains-devhelp-file-without-symlink
 
   [ Axel Beckert ]
-  * Remove Chris Lamb from Uploaders and re-add myself
+  * Adopting Lintian. (Changes #1012289 from ITA to pure RFH.)
+    + Remove Chris Lamb from Uploaders (see #1012289) and re-add myself.
   * Workarounds until
     https://github.com/Perl-Critic/Perl-Critic/issues/925 is fixed:
     + Replace all occurrences of "Copyright ©" with "Copyright (C)" again.
@@ -187,7 +190,7 @@ lintian (2.114.0+git) UNRELEASED; urgency=medium
   [ Paul Wise ]
   * Add more obsolete domains for former source code hosting services.
 
- -- Axel Beckert <abe@debian.org>  Mon, 20 Jun 2022 04:19:35 +0200
+ -- Axel Beckert <abe@debian.org>  Mon, 20 Jun 2022 13:23:02 +0200
 
 lintian (2.114.0) unstable; urgency=medium
 
