@@ -43,6 +43,8 @@ lintian (2.114.0+git) UNRELEASED; urgency=medium
     + Add unit test for Lintian::Util::match_glob. The current testsuite
       does not seem to be able to cover such a case.
   * Declare compliance with Debian Policy 4.6.1. (No changes needed.)
+  * Refresh data using private/refresh-data. Skip unreleased policy though
+    for now.
 
   [ Felix Lechner ]
   * Refresh manual references.

@@ -174,6 +174,11 @@
          ],
          "uses_autoscript" : 1
       },
+      "dh_coq" : {
+         "installed_by" : [
+            "dh-coq"
+         ]
+      },
       "dh_cpack_generate" : {
          "installed_by" : [
             "dh-cmake"
@@ -246,7 +251,7 @@
       },
       "dh_dkms" : {
          "installed_by" : [
-            "dkms"
+            "dh-dkms"
          ],
          "uses_autoscript" : 1,
          "uses_misc_depends" : 1
@@ -361,12 +366,62 @@
             "haskell-devscripts-minimal"
          ]
       },
+      "dh_haskell_compiler" : {
+         "installed_by" : [
+            "haskell-devscripts-minimal"
+         ]
+      },
       "dh_haskell_depends" : {
          "installed_by" : [
             "haskell-devscripts-minimal"
          ]
       },
-      "dh_haskell_extra_depends" : {
+      "dh_haskell_depends_cabal" : {
+         "installed_by" : [
+            "haskell-devscripts-minimal"
+         ]
+      },
+      "dh_haskell_depends_haddock" : {
+         "installed_by" : [
+            "haskell-devscripts-minimal"
+         ]
+      },
+      "dh_haskell_depends_hugs" : {
+         "installed_by" : [
+            "haskell-devscripts-minimal"
+         ]
+      },
+      "dh_haskell_description" : {
+         "installed_by" : [
+            "haskell-devscripts-minimal"
+         ]
+      },
+      "dh_haskell_extra_depends_ghc" : {
+         "installed_by" : [
+            "haskell-devscripts-minimal"
+         ]
+      },
+      "dh_haskell_install_development_libs" : {
+         "installed_by" : [
+            "haskell-devscripts-minimal"
+         ]
+      },
+      "dh_haskell_install_ghc_registration" : {
+         "installed_by" : [
+            "haskell-devscripts-minimal"
+         ]
+      },
+      "dh_haskell_install_haddock" : {
+         "installed_by" : [
+            "haskell-devscripts-minimal"
+         ]
+      },
+      "dh_haskell_install_htmldocs" : {
+         "installed_by" : [
+            "haskell-devscripts-minimal"
+         ]
+      },
+      "dh_haskell_install_profiling_libs" : {
          "installed_by" : [
             "haskell-devscripts-minimal"
          ]
@@ -376,7 +431,22 @@
             "haskell-devscripts-minimal"
          ]
       },
+      "dh_haskell_provides_ghc" : {
+         "installed_by" : [
+            "haskell-devscripts-minimal"
+         ]
+      },
+      "dh_haskell_recommends_documentation_references" : {
+         "installed_by" : [
+            "haskell-devscripts-minimal"
+         ]
+      },
       "dh_haskell_shlibdeps" : {
+         "installed_by" : [
+            "haskell-devscripts-minimal"
+         ]
+      },
+      "dh_haskell_suggests" : {
          "installed_by" : [
             "haskell-devscripts-minimal"
          ]
@@ -613,7 +683,7 @@
       },
       "dh_kodiaddon_depends" : {
          "installed_by" : [
-            "kodi-addons-dev-common"
+            "kodi-addons-dev"
          ]
       },
       "dh_libva" : {
@@ -705,6 +775,16 @@
             "pkg-kde-tools"
          ]
       },
+      "dh_nodejs_autodocs" : {
+         "installed_by" : [
+            "dh-nodejs"
+         ]
+      },
+      "dh_nodejs_substvars" : {
+         "installed_by" : [
+            "dh-nodejs"
+         ]
+      },
       "dh_numpy3" : {
          "installed_by" : [
             "python3-numpy"
@@ -764,6 +844,11 @@
       "dh_octave_version" : {
          "installed_by" : [
             "dh-octave"
+         ]
+      },
+      "dh_package_notes" : {
+         "installed_by" : [
+            "dh-package-notes"
          ]
       },
       "dh_pdl" : {

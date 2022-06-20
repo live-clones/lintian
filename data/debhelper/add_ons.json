@@ -80,6 +80,11 @@
             "config-package-dev"
          ]
       },
+      "coq" : {
+         "installed_by" : [
+            "dh-coq"
+         ]
+      },
       "cpack" : {
          "installed_by" : [
             "dh-cmake"
@@ -102,7 +107,7 @@
       },
       "dkms" : {
          "installed_by" : [
-            "dkms"
+            "dh-dkms"
          ]
       },
       "dpatch" : {
@@ -153,6 +158,11 @@
       "golang" : {
          "installed_by" : [
             "dh-golang"
+         ]
+      },
+      "haskell" : {
+         "installed_by" : [
+            "dh-haskell"
          ]
       },
       "installinitramfs" : {
@@ -217,7 +227,12 @@
       },
       "nodejs" : {
          "installed_by" : [
-            "pkg-js-tools"
+            "dh-nodejs"
+         ]
+      },
+      "nodejs_no_lerna" : {
+         "installed_by" : [
+            "dh-nodejs"
          ]
       },
       "numpy3" : {
@@ -233,6 +248,11 @@
       "octave" : {
          "installed_by" : [
             "dh-octave"
+         ]
+      },
+      "package_notes" : {
+         "installed_by" : [
+            "dh-package-notes"
          ]
       },
       "perl6" : {

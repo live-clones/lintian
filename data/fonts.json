@@ -2690,6 +2690,11 @@
             "fonts-aenigma"
          ]
       },
+      "courier.ttf" : {
+         "installed_by" : [
+            "fonts-wine"
+         ]
+      },
       "cousine-bold.ttf" : {
          "installed_by" : [
             "fonts-croscore"
@@ -4201,6 +4206,11 @@
             "fonts-aenigma"
          ]
       },
+      "fantasma-bold.otf" : {
+         "installed_by" : [
+            "fonts-fantasma"
+         ]
+      },
       "fantasquesansmono-bold.otf" : {
          "installed_by" : [
             "fonts-fantasque-sans",
@@ -4380,6 +4390,16 @@
             "fonts-firacode"
          ]
       },
+      "fixedsys.ttf" : {
+         "installed_by" : [
+            "fonts-wine"
+         ]
+      },
+      "fixedsys_jp.ttf" : {
+         "installed_by" : [
+            "fonts-wine"
+         ]
+      },
       "flatline.ttf" : {
          "installed_by" : [
             "fonts-dustin"
@@ -4416,11 +4436,6 @@
          "installed_by" : [
             "fonts-fork-awesome",
             "fonts-fork-awesome"
-         ]
-      },
-      "foulisgreek.ttf" : {
-         "installed_by" : [
-            "fonts-junicode"
          ]
       },
       "freaktur.ttf" : {
@@ -6219,22 +6234,192 @@
             "fonts-junction"
          ]
       },
-      "junicode-bold.ttf" : {
+      "junicodetwobeta-bold.otf" : {
          "installed_by" : [
             "fonts-junicode"
          ]
       },
-      "junicode-bolditalic.ttf" : {
+      "junicodetwobeta-bolditalic.otf" : {
          "installed_by" : [
             "fonts-junicode"
          ]
       },
-      "junicode-italic.ttf" : {
+      "junicodetwobeta-condensed.otf" : {
          "installed_by" : [
             "fonts-junicode"
          ]
       },
-      "junicode.ttf" : {
+      "junicodetwobeta-condenseditalic.otf" : {
+         "installed_by" : [
+            "fonts-junicode"
+         ]
+      },
+      "junicodetwobeta-condensedlight.otf" : {
+         "installed_by" : [
+            "fonts-junicode"
+         ]
+      },
+      "junicodetwobeta-condensedlightitalic.otf" : {
+         "installed_by" : [
+            "fonts-junicode"
+         ]
+      },
+      "junicodetwobeta-condensedmedium.otf" : {
+         "installed_by" : [
+            "fonts-junicode"
+         ]
+      },
+      "junicodetwobeta-condensedmediumitalic.otf" : {
+         "installed_by" : [
+            "fonts-junicode"
+         ]
+      },
+      "junicodetwobeta-expanded.otf" : {
+         "installed_by" : [
+            "fonts-junicode"
+         ]
+      },
+      "junicodetwobeta-expandedbold.otf" : {
+         "installed_by" : [
+            "fonts-junicode"
+         ]
+      },
+      "junicodetwobeta-expandedbolditalic.otf" : {
+         "installed_by" : [
+            "fonts-junicode"
+         ]
+      },
+      "junicodetwobeta-expandeditalic.otf" : {
+         "installed_by" : [
+            "fonts-junicode"
+         ]
+      },
+      "junicodetwobeta-expandedmedium.otf" : {
+         "installed_by" : [
+            "fonts-junicode"
+         ]
+      },
+      "junicodetwobeta-expandedmediumitalic.otf" : {
+         "installed_by" : [
+            "fonts-junicode"
+         ]
+      },
+      "junicodetwobeta-expandedsemibold.otf" : {
+         "installed_by" : [
+            "fonts-junicode"
+         ]
+      },
+      "junicodetwobeta-expandedsemibolditalic.otf" : {
+         "installed_by" : [
+            "fonts-junicode"
+         ]
+      },
+      "junicodetwobeta-italic.otf" : {
+         "installed_by" : [
+            "fonts-junicode"
+         ]
+      },
+      "junicodetwobeta-light.otf" : {
+         "installed_by" : [
+            "fonts-junicode"
+         ]
+      },
+      "junicodetwobeta-lightitalic.otf" : {
+         "installed_by" : [
+            "fonts-junicode"
+         ]
+      },
+      "junicodetwobeta-medium.otf" : {
+         "installed_by" : [
+            "fonts-junicode"
+         ]
+      },
+      "junicodetwobeta-mediumitalic.otf" : {
+         "installed_by" : [
+            "fonts-junicode"
+         ]
+      },
+      "junicodetwobeta-regular.otf" : {
+         "installed_by" : [
+            "fonts-junicode"
+         ]
+      },
+      "junicodetwobeta-semibold.otf" : {
+         "installed_by" : [
+            "fonts-junicode"
+         ]
+      },
+      "junicodetwobeta-semibolditalic.otf" : {
+         "installed_by" : [
+            "fonts-junicode"
+         ]
+      },
+      "junicodetwobeta-semicondensed.otf" : {
+         "installed_by" : [
+            "fonts-junicode"
+         ]
+      },
+      "junicodetwobeta-semicondenseditalic.otf" : {
+         "installed_by" : [
+            "fonts-junicode"
+         ]
+      },
+      "junicodetwobeta-semicondensedlight.otf" : {
+         "installed_by" : [
+            "fonts-junicode"
+         ]
+      },
+      "junicodetwobeta-semicondensedlightitalic.otf" : {
+         "installed_by" : [
+            "fonts-junicode"
+         ]
+      },
+      "junicodetwobeta-semicondensedmedium.otf" : {
+         "installed_by" : [
+            "fonts-junicode"
+         ]
+      },
+      "junicodetwobeta-semicondensedmediumitalic.otf" : {
+         "installed_by" : [
+            "fonts-junicode"
+         ]
+      },
+      "junicodetwobeta-semiexpanded.otf" : {
+         "installed_by" : [
+            "fonts-junicode"
+         ]
+      },
+      "junicodetwobeta-semiexpandedbold.otf" : {
+         "installed_by" : [
+            "fonts-junicode"
+         ]
+      },
+      "junicodetwobeta-semiexpandedbolditalic.otf" : {
+         "installed_by" : [
+            "fonts-junicode"
+         ]
+      },
+      "junicodetwobeta-semiexpandeditalic.otf" : {
+         "installed_by" : [
+            "fonts-junicode"
+         ]
+      },
+      "junicodetwobeta-semiexpandedmedium.otf" : {
+         "installed_by" : [
+            "fonts-junicode"
+         ]
+      },
+      "junicodetwobeta-semiexpandedmediumitalic.otf" : {
+         "installed_by" : [
+            "fonts-junicode"
+         ]
+      },
+      "junicodetwobeta-semiexpandedsemibold.otf" : {
+         "installed_by" : [
+            "fonts-junicode"
+         ]
+      },
+      "junicodetwobeta-semiexpandedsemibolditalic.otf" : {
          "installed_by" : [
             "fonts-junicode"
          ]
@@ -8532,7 +8717,7 @@
             "fonts-ldco"
          ]
       },
-      "mitra.ttf" : {
+      "mitramono.ttf" : {
          "installed_by" : [
             "fonts-beng-extra"
          ]
@@ -9032,6 +9217,11 @@
             "fonts-kacst"
          ]
       },
+      "ms_sans_serif.ttf" : {
+         "installed_by" : [
+            "fonts-wine"
+         ]
+      },
       "msam10.ttf" : {
          "installed_by" : [
             "fonts-lyx"
@@ -9052,12 +9242,12 @@
             "fonts-motoya-l-maruberi"
          ]
       },
-      "muktinarrow.ttf" : {
+      "mukti.ttf" : {
          "installed_by" : [
             "fonts-beng-extra"
          ]
       },
-      "muktinarrowbold.ttf" : {
+      "muktibold.ttf" : {
          "installed_by" : [
             "fonts-beng-extra"
          ]
@@ -9485,6 +9675,26 @@
       "nanumsquareroundr.ttf" : {
          "installed_by" : [
             "fonts-nanum"
+         ]
+      },
+      "nationalpark-heavy.otf" : {
+         "installed_by" : [
+            "fonts-national-park"
+         ]
+      },
+      "nationalpark-outline.otf" : {
+         "installed_by" : [
+            "fonts-national-park"
+         ]
+      },
+      "nationalpark-regular.otf" : {
+         "installed_by" : [
+            "fonts-national-park"
+         ]
+      },
+      "nationalpark-thin.otf" : {
+         "installed_by" : [
+            "fonts-national-park"
          ]
       },
       "nats.ttf" : {
@@ -23491,6 +23701,51 @@
             "fonts-aenigma"
          ]
       },
+      "routed-gothic-half-italic.ttf" : {
+         "installed_by" : [
+            "fonts-routed-gothic"
+         ]
+      },
+      "routed-gothic-italic.ttf" : {
+         "installed_by" : [
+            "fonts-routed-gothic"
+         ]
+      },
+      "routed-gothic-narrow-half-italic.ttf" : {
+         "installed_by" : [
+            "fonts-routed-gothic"
+         ]
+      },
+      "routed-gothic-narrow-italic.ttf" : {
+         "installed_by" : [
+            "fonts-routed-gothic"
+         ]
+      },
+      "routed-gothic-narrow.ttf" : {
+         "installed_by" : [
+            "fonts-routed-gothic"
+         ]
+      },
+      "routed-gothic-wide-half-italic.ttf" : {
+         "installed_by" : [
+            "fonts-routed-gothic"
+         ]
+      },
+      "routed-gothic-wide-italic.ttf" : {
+         "installed_by" : [
+            "fonts-routed-gothic"
+         ]
+      },
+      "routed-gothic-wide.ttf" : {
+         "installed_by" : [
+            "fonts-routed-gothic"
+         ]
+      },
+      "routed-gothic.ttf" : {
+         "installed_by" : [
+            "fonts-routed-gothic"
+         ]
+      },
       "rsfs10.ttf" : {
          "installed_by" : [
             "fonts-lyx"
@@ -24079,6 +24334,16 @@
       "slenstub.ttf" : {
          "installed_by" : [
             "fonts-aenigma"
+         ]
+      },
+      "small_fonts.ttf" : {
+         "installed_by" : [
+            "fonts-wine"
+         ]
+      },
+      "small_fonts_jp.ttf" : {
+         "installed_by" : [
+            "fonts-wine"
          ]
       },
       "snailets.ttf" : {
@@ -24959,6 +25224,11 @@
       "syracuse.ttf" : {
          "installed_by" : [
             "fonts-aenigma"
+         ]
+      },
+      "system.ttf" : {
+         "installed_by" : [
+            "fonts-wine"
          ]
       },
       "tagbanwa.ttf" : {
@@ -26874,6 +27144,11 @@
             "fonts-unifont"
          ]
       },
+      "unifont_jp.ttf" : {
+         "installed_by" : [
+            "fonts-unifont"
+         ]
+      },
       "unifont_sample.ttf" : {
          "installed_by" : [
             "fonts-unifont"
@@ -26892,6 +27167,11 @@
       "unikuweb.ttf" : {
          "installed_by" : [
             "fonts-unikurdweb"
+         ]
+      },
+      "uniol.ttf" : {
+         "installed_by" : [
+            "fonts-uniol"
          ]
       },
       "united.ttf" : {
@@ -27489,6 +27769,11 @@
             "fonts-aenigma"
          ]
       },
+      "webdings.ttf" : {
+         "installed_by" : [
+            "fonts-wine"
+         ]
+      },
       "whatever.ttf" : {
          "installed_by" : [
             "fonts-aenigma"
@@ -27654,7 +27939,7 @@
             "fonts-yanone-kaffeesatz"
          ]
       },
-      "yanonekaffeesatz-bold.ttf" : {
+      "yanonekaffeesatz-extralight.otf" : {
          "installed_by" : [
             "fonts-yanone-kaffeesatz"
          ]
@@ -27664,7 +27949,7 @@
             "fonts-yanone-kaffeesatz"
          ]
       },
-      "yanonekaffeesatz-light.ttf" : {
+      "yanonekaffeesatz-medium.otf" : {
          "installed_by" : [
             "fonts-yanone-kaffeesatz"
          ]
@@ -27674,17 +27959,7 @@
             "fonts-yanone-kaffeesatz"
          ]
       },
-      "yanonekaffeesatz-regular.ttf" : {
-         "installed_by" : [
-            "fonts-yanone-kaffeesatz"
-         ]
-      },
-      "yanonekaffeesatz-thin.otf" : {
-         "installed_by" : [
-            "fonts-yanone-kaffeesatz"
-         ]
-      },
-      "yanonekaffeesatz-thin.ttf" : {
+      "yanonekaffeesatz-semibold.otf" : {
          "installed_by" : [
             "fonts-yanone-kaffeesatz"
          ]

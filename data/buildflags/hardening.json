@@ -18,6 +18,14 @@
          "stackprotector",
          "stackprotectorstrong"
       ],
+      "aix-arc" : [
+         "bindnow",
+         "format",
+         "fortify",
+         "relro",
+         "stackprotector",
+         "stackprotectorstrong"
+      ],
       "aix-arm" : [
          "bindnow",
          "format",
@@ -286,6 +294,15 @@
          "stackprotector",
          "stackprotectorstrong"
       ],
+      "arc" : [
+         "bindnow",
+         "format",
+         "fortify",
+         "pie",
+         "relro",
+         "stackprotector",
+         "stackprotectorstrong"
+      ],
       "arm" : [
          "bindnow",
          "format",
@@ -351,6 +368,14 @@
          "relro"
       ],
       "darwin-amd64" : [
+         "bindnow",
+         "format",
+         "fortify",
+         "relro",
+         "stackprotector",
+         "stackprotectorstrong"
+      ],
+      "darwin-arc" : [
          "bindnow",
          "format",
          "fortify",
@@ -624,6 +649,14 @@
          "stackprotector",
          "stackprotectorstrong"
       ],
+      "dragonflybsd-arc" : [
+         "bindnow",
+         "format",
+         "fortify",
+         "relro",
+         "stackprotector",
+         "stackprotectorstrong"
+      ],
       "dragonflybsd-arm" : [
          "bindnow",
          "format",
@@ -883,6 +916,14 @@
          "relro"
       ],
       "freebsd-amd64" : [
+         "bindnow",
+         "format",
+         "fortify",
+         "relro",
+         "stackprotector",
+         "stackprotectorstrong"
+      ],
+      "freebsd-arc" : [
          "bindnow",
          "format",
          "fortify",
@@ -1154,6 +1195,15 @@
          "relro"
       ],
       "hurd-amd64" : [
+         "bindnow",
+         "format",
+         "fortify",
+         "pie",
+         "relro",
+         "stackprotector",
+         "stackprotectorstrong"
+      ],
+      "hurd-arc" : [
          "bindnow",
          "format",
          "fortify",
@@ -1475,6 +1525,15 @@
          "stackprotector",
          "stackprotectorstrong"
       ],
+      "kfreebsd-arc" : [
+         "bindnow",
+         "format",
+         "fortify",
+         "pie",
+         "relro",
+         "stackprotector",
+         "stackprotectorstrong"
+      ],
       "kfreebsd-arm" : [
          "bindnow",
          "format",
@@ -1783,6 +1842,15 @@
          "stackprotector",
          "stackprotectorstrong"
       ],
+      "knetbsd-arc" : [
+         "bindnow",
+         "format",
+         "fortify",
+         "pie",
+         "relro",
+         "stackprotector",
+         "stackprotectorstrong"
+      ],
       "knetbsd-arm" : [
          "bindnow",
          "format",
@@ -2073,6 +2141,14 @@
          "relro"
       ],
       "kopensolaris-amd64" : [
+         "bindnow",
+         "format",
+         "fortify",
+         "relro",
+         "stackprotector",
+         "stackprotectorstrong"
+      ],
+      "kopensolaris-arc" : [
          "bindnow",
          "format",
          "fortify",
@@ -2482,6 +2558,15 @@
          "stackprotector",
          "stackprotectorstrong"
       ],
+      "musl-linux-arc" : [
+         "bindnow",
+         "format",
+         "fortify",
+         "pie",
+         "relro",
+         "stackprotector",
+         "stackprotectorstrong"
+      ],
       "musl-linux-arm" : [
          "bindnow",
          "format",
@@ -2788,6 +2873,14 @@
          "stackprotector",
          "stackprotectorstrong"
       ],
+      "netbsd-arc" : [
+         "bindnow",
+         "format",
+         "fortify",
+         "relro",
+         "stackprotector",
+         "stackprotectorstrong"
+      ],
       "netbsd-arm" : [
          "bindnow",
          "format",
@@ -3054,6 +3147,14 @@
          "relro"
       ],
       "openbsd-amd64" : [
+         "bindnow",
+         "format",
+         "fortify",
+         "relro",
+         "stackprotector",
+         "stackprotectorstrong"
+      ],
+      "openbsd-arc" : [
          "bindnow",
          "format",
          "fortify",
@@ -3444,6 +3545,14 @@
          "stackprotector",
          "stackprotectorstrong"
       ],
+      "solaris-arc" : [
+         "bindnow",
+         "format",
+         "fortify",
+         "relro",
+         "stackprotector",
+         "stackprotectorstrong"
+      ],
       "solaris-arm" : [
          "bindnow",
          "format",
@@ -3731,6 +3840,15 @@
          "relro"
       ],
       "uclibc-linux-amd64" : [
+         "bindnow",
+         "format",
+         "fortify",
+         "pie",
+         "relro",
+         "stackprotector",
+         "stackprotectorstrong"
+      ],
+      "uclibc-linux-arc" : [
          "bindnow",
          "format",
          "fortify",
@@ -4038,6 +4156,14 @@
          "relro"
       ],
       "uclinux-amd64" : [
+         "bindnow",
+         "format",
+         "fortify",
+         "relro",
+         "stackprotector",
+         "stackprotectorstrong"
+      ],
+      "uclinux-arc" : [
          "bindnow",
          "format",
          "fortify",
