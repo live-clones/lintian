@@ -402,7 +402,7 @@ sub match_glob {
     my ($glob, @things_to_test) = @_;
     my $re = $rw->convert($glob);
 
-    return grep { /$re/ } @things_to_test;
+    return grep { /^$re\z/ } @things_to_test;
 }
 
 =item normalize_pkg_path(PATH)
