@@ -65,6 +65,9 @@ lintian (2.114.0+git) UNRELEASED; urgency=medium
   * Declare compliance with Debian Policy 4.6.1. (No changes needed.)
   * Refresh data using private/refresh-data. Skip unreleased policy though
     for now.
+  * Fix "Use of uninitialized value $step in concatenation" in
+    Lintian::Version which showed up as unrecognized tag (!) when running
+    the test suite on the git repo already tagged for a release.
 
   [ Felix Lechner ]
   * Refresh manual references.
