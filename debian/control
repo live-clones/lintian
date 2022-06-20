@@ -13,7 +13,7 @@ Build-Depends:
  libpath-tiny-perl,
  libunicode-utf8-perl,
  python3-docutils,
-Standards-Version: 4.6.0.1
+Standards-Version: 4.6.1
 Rules-Requires-Root: no
 Vcs-Git: https://salsa.debian.org/lintian/lintian.git
 Vcs-Browser: https://salsa.debian.org/lintian/lintian
