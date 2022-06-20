@@ -346,7 +346,7 @@ also be displayed (unless --quiet is used).  Please refer to the Lintian
 User Manual for the documentation on how lintian relates comments to a
 given override.
 
-To negate it, i.e. suppress the showing of overriden tags, please use
+To negate it, i.e. suppress the showing of overridden tags, please use
 B<--no-show-overrides>.
 
 This option overrides the B<show-overrides> (or B<no-show-overrides>) variable
