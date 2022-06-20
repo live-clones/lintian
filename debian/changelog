@@ -69,6 +69,10 @@ lintian (2.114.0+git) UNRELEASED; urgency=medium
     Lintian::Version which showed up as unrecognized tag (!) when running
     the test suite on the git repo already tagged for a release.
   * debian/gbp.conf: Declare so far used tag format so that gbp uses it.
+  * Add lintian override for very-long-line-length-in-source-file in
+    Lintian::Check::Cruft as well as test-leaves-python-version-untested.
+  * Use versioned Breaks instead of Conflicts against lzd, see #1001655.
+    Thanks Lintian for reporting ;-) and Paul Gevers for the sanity check!
 
   [ Felix Lechner ]
   * Refresh manual references.
