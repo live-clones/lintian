@@ -51,7 +51,7 @@ Lintian::Data - Data parser for Lintian
 
 =head1 SYNOPSIS
 
- my $profile = Lintian::Data->new ('debian');
+ my $profile = Lintian::Data->new (vendor => 'debian');
 
 =head1 DESCRIPTION
 
