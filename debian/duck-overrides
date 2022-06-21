@@ -1,0 +1,5 @@
+# Reported as parked, false positive
+https://www.freedesktop.org/wiki/Software/dbus/
+
+# True positive, but part of a lintian test to find such stuff. :-)
+https://example.com/%i/
