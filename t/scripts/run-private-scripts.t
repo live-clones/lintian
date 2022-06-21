@@ -24,44 +24,43 @@ use warnings;
 
 use Const::Fast;
 use IPC::Run3;
-use Test::More tests => 9;
+use Test::More tests => 3;
 
 const my $DOT => q{.};
 const my $WAIT_STATUS_SHIFT => 8;
-const my $SKIP_NUMBER_OF_TESTS_UNDER_AUTOPKGTEST => 6;
 
 $ENV{'LINTIAN_BASE'} //= $DOT;
 my $cmd_dir = "$ENV{LINTIAN_BASE}/private";
 
 sub t {
     my ($cmd, $expected, $expected_stderr) = @_;
-    $expected_stderr //= qr/\A\Z/;
-    my $input = undef;
 
-    my @command = ("$cmd_dir/$cmd");
-    my $output;
-    my $error;
-    run3(\@command, \$input, \$output, \$error);
+    subtest $cmd => sub {
+        my $command = "$cmd_dir/$cmd";
+        if (-x $command) {
+            plan tests => 3;
 
-    my $status = ($? >> $WAIT_STATUS_SHIFT);
-    is($status, 0, "Exit status 0 of $cmd");
-    like($error, $expected_stderr, "STDERR of $cmd matches $expected_stderr");
-    like($output, $expected, "Expected output of $cmd");
+            $expected_stderr //= qr/\A\Z/;
+            my $input = undef;
+            my $output;
+            my $error;
+            run3([$command], \$input, \$output, \$error);
+
+            my $status = ($? >> $WAIT_STATUS_SHIFT);
+            is($status, 0, "Exit status 0 of $cmd");
+            like($error, $expected_stderr,
+                "STDERR of $cmd matches $expected_stderr");
+            like($output, $expected, "Expected output of $cmd");
+        } else {
+            plan skip_all =>'due to script not present (likely not installed)';
+        }
+    };
 
     return;
 }
 
-SKIP: {
-    skip 'due to not being shipped in binary package'
-      . ' (only in the source package)',
-      $SKIP_NUMBER_OF_TESTS_UNDER_AUTOPKGTEST
-      if defined $ENV{AUTOPKGTEST_TMP};
-
-    t('auto-reject-diff', qr/Found \d+ certain/);
-    t('generate-tag-summary', qr/Assuming commit range to be/, qr/tags/);
-}
-
-# TODO: Check needs to be moved  once #968000 is fixed
+t('auto-reject-diff', qr/Found \d+ certain/);
+t('generate-tag-summary', qr/Assuming commit range to be/, qr/tags/);
 t('latest-policy-version', qr/^(\d+\.){3}/);
 
 done_testing();
