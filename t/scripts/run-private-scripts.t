@@ -28,6 +28,7 @@ use Test::More tests => 9;
 
 const my $DOT => q{.};
 const my $WAIT_STATUS_SHIFT => 8;
+const my $SKIP_NUMBER_OF_TESTS_UNDER_AUTOPKGTEST => 6;
 
 $ENV{'LINTIAN_BASE'} //= $DOT;
 my $cmd_dir = "$ENV{LINTIAN_BASE}/private";
@@ -44,14 +45,23 @@ sub t {
 
     my $status = ($? >> $WAIT_STATUS_SHIFT);
     is($status, 0, "Exit status 0 of $cmd");
-    like($error, $expected_stderr, 'STDERR of $cmd matches $expected_stderr');
+    like($error, $expected_stderr, "STDERR of $cmd matches $expected_stderr");
     like($output, $expected, "Expected output of $cmd");
 
     return;
 }
 
-t('auto-reject-diff', qr/Found \d+ certain/);
-t('generate-tag-summary', qr/Assuming commit range to be/, qr/tags/);
+SKIP: {
+    skip 'due to not being shipped in binary package'
+      . ' (only in the source package)',
+      $SKIP_NUMBER_OF_TESTS_UNDER_AUTOPKGTEST
+      if defined $ENV{AUTOPKGTEST_TMP};
+
+    t('auto-reject-diff', qr/Found \d+ certain/);
+    t('generate-tag-summary', qr/Assuming commit range to be/, qr/tags/);
+}
+
+# TODO: Check needs to be moved  once #968000 is fixed
 t('latest-policy-version', qr/^(\d+\.){3}/);
 
 done_testing();
