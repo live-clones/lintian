@@ -24,7 +24,7 @@ use warnings;
 
 use Const::Fast;
 use IPC::Run3;
-use Test::More;
+use Test::More tests => 9;
 
 const my $NEWLINE => qq{\n};
 const my $DOT => q{.};
