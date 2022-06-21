@@ -1,8 +1,24 @@
-lintian (2.115.0+git) UNRELEASED; urgency=medium
+lintian (2.115.1) unstable; urgency=medium
 
-  * WIP (generated at release time: please do not add entries below).
+  The "Things we never tested" Release.
 
- -- Axel Beckert <abe@debian.org>  Mon, 20 Jun 2022 15:40:51 +0200
+  [ Axel Beckert ]
+  * Write a test which catches run-time errors of lightweight private
+    scripts. Triggered by libconfig-model-dpkg-perl's autopkgtest failure
+    since it runs private/latest-policy-version and failed.
+  * Fix private/latest-policy-version: $p…->policy_releases →
+    $p…->data->policy_releases. Seems to have been forgotten when
+    policy_releases() moved from Lintian::Profile to Lintian::Data.
+    Should fix libconfig-model-dpkg-perl's autopkgtest failure.
+  * Fix documentation of Lintian::Data->new().
+  * Switch all GPL URLs in boilerplates and debian/copyright to HTTPS.
+  * Add a debian/duck-override file with some false positives. Lintian is
+    now also DUCK-clean!
+
+  [ Simon McVittie ]
+  * data: Register *.xcf as binary files
+
+ -- Axel Beckert <abe@debian.org>  Tue, 21 Jun 2022 20:53:27 +0200
 
 lintian (2.115.0) unstable; urgency=medium
 
