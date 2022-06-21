@@ -26,7 +26,6 @@ use Const::Fast;
 use IPC::Run3;
 use Test::More tests => 9;
 
-const my $NEWLINE => qq{\n};
 const my $DOT => q{.};
 const my $WAIT_STATUS_SHIFT => 8;
 
