@@ -130,7 +130,9 @@ sub visit_installed_files {
           # see Bug#904852
           || $item->dirname =~ m{templates?(?:[.]d)?/}
           || ( $item->basename =~ m{^README}xi
-            && $item->bytes =~ m{this directory}xi);
+            && $item->bytes =~ m{this directory}xi)
+          # see Bug#1009679
+	  || $item->name =~ m{^var/lib/ocaml/lintian/.+[.]info$};
     }
 
     if ($item->name =~ m{^usr/share/doc/\S}) {
