@@ -1,6 +1,7 @@
 # Copyright (C) 2011 Niels Thykier <niels@thykier.net>
 # Copyright (C) 2018 Chris Lamb <lamby@debian.org>
 # Copyright (C) 2021 Felix Lechner
+# Copyright (C) 2022 Axel Beckert
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -29,6 +30,7 @@ use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Data::Architectures;
 use Lintian::Data::Archive::AutoRejection;
+use Lintian::Data::Archive::Sections;
 use Lintian::Data::Buildflags::Hardening;
 use Lintian::Data::Debhelper::Addons;
 use Lintian::Data::Debhelper::Commands;
@@ -119,8 +121,8 @@ sub all_sources {
         $self->debhelper_addons,$self->debhelper_commands,
         $self->debhelper_levels,$self->fonts,
         $self->hardening_buildflags,$self->mail_transport_agents,
-        $self->policy_releases,$self->style_sheet,
-        $self->virtual_initd_facilities
+        $self->policy_releases,$self->sections,
+        $self->style_sheet,$self->virtual_initd_facilities
     );
 
     return @sources;
@@ -276,6 +278,23 @@ has policy_releases => (
         $releases->load($self->data_paths, $self->vendor);
 
         return $releases;
+    }
+);
+
+=item sections
+
+=cut
+
+has sections => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        my $sections = Lintian::Data::Archive::Sections->new;
+        $sections->load($self->data_paths, $self->vendor);
+
+        return $sections;
     }
 );
 

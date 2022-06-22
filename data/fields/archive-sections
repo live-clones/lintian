@@ -1,6 +1,3 @@
-# Manually maintained list of sections in the Debian archive
-#  - please keep this list sorted.
-
 admin
 cli-mono
 comm

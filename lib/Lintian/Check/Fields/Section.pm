@@ -58,7 +58,7 @@ sub always {
     return
       unless $self->processable->fields->declares('Section');
 
-    my $KNOWN_SECTIONS = $self->data->load('fields/archive-sections');
+    my $KNOWN_SECTIONS = $self->data->sections;
 
     # Mapping of package names to section names
     my $NAME_SECTION_MAPPINGS
