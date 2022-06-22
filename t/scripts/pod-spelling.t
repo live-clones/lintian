@@ -83,6 +83,7 @@ Niels Thykier
 Bastien ROUCARIES
 Felix Lechner
 Schwarz
+Axel Beckert
 
 lintian Lintian Lintian's # ' # hi emacs
 dpkg
