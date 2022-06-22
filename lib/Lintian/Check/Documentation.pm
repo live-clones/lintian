@@ -131,7 +131,7 @@ sub visit_installed_files {
           || $item->dirname =~ m{templates?(?:[.]d)?/}
           || ( $item->basename =~ m{^README}xi
             && $item->bytes =~ m{this directory}xi)
-          # see Bug#1009679
+          # see Bug#1009679, not documentation, just an unlucky suffix
           || $item->name =~ m{^var/lib/ocaml/lintian/.+[.]info$}
           # see Bug#970275
           || $item->name =~ m{^usr/share/gtk-doc/html/.+[.]html?$};
