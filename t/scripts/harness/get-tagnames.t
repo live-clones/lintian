@@ -21,10 +21,7 @@
 use strict;
 use warnings;
 
-BEGIN {
-    die('Cannot find LINTIAN_BASE')
-      unless length $ENV{'LINTIAN_BASE'};
-}
+BEGIN { $ENV{'LINTIAN_BASE'} //= q{.}; }
 
 use List::SomeUtils qw(uniq);
 use Path::Tiny;

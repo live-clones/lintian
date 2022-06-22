@@ -12,6 +12,7 @@ plan skip_all => 'Not needed for coverage of Lintian'
 plan skip_all => 'Need newer version of aspell-en (>= 7.1)'
   if not check_aspell();
 
+BEGIN { $ENV{'LINTIAN_BASE'} //= q{.}; }
 use lib "$ENV{'LINTIAN_BASE'}/lib";
 
 use Test::Lintian;

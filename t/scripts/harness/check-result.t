@@ -22,8 +22,7 @@ use strict;
 use warnings;
 
 BEGIN {
-    die('Cannot find LINTIAN_BASE')
-      unless length $ENV{'LINTIAN_BASE'};
+    $ENV{'LINTIAN_BASE'} //= q{.};
 }
 
 use File::Basename qw(basename);
