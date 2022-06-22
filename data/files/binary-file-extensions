@@ -12,3 +12,5 @@ tiff
 wav
 xcf
 icns
+sqlite
+sqlite3
