@@ -1,8 +1,33 @@
-lintian (2.115.1+git) UNRELEASED; urgency=medium
+lintian (2.115.2) unstable; urgency=medium
 
-  * WIP (generated at release time: please do not add entries below).
+  The "FFP (Fixing False Positives)" Release.
 
- -- Axel Beckert <abe@debian.org>  Wed, 22 Jun 2022 01:49:23 +0200
+  [ Axel Beckert ]
+  * Automate importing of Debian archive sections. Thanks to Andrius
+    Merkys. (Closes: #973308)
+  * Make more testsuite scripts being able to simply run under "prove -l".
+  * Move libio-prompt-tiny-perl dependency to debian/tests/control.
+    Cherry-picked from Ubuntu's patches. (LP: #1959004)
+  * Recognise Mac OS X icons (.icns), SQLite files (.sqlite and .sqlite3)
+    and PDF (.pdf) documents as binary files.
+  * Allow HTML files in /usr/share/gtk-doc/html/. (Closes: #970275)
+    Thanks to Simon McVittie, Daniel Kahn Gillmor and Unit193!
+  * Refresh (fonts) data.
+  * Also check dh level for missing-build-dependency-for-dh-addon, not
+    just for missing-build-dependency-for-dh_-command. (Closes: #1000610)
+  * Retroactively mention commit fcaded19 in debian/changelog entry of
+    2.115.0 as it was erroneously marked with "Gbp-Dch: Ignore".
+
+  [ Guillem Jover ]
+  * data/fields/name_section_mappings: Add golang section (Closes:
+    #880701)
+
+  [ Rafael Laboissière ]
+  * Ignore files /var/lib/ocaml/lintian/*.info in test for
+    package-contains-documentation-outside-usr-share-doc (Closes:
+    #1009679)
+
+ -- Axel Beckert <abe@debian.org>  Wed, 29 Jun 2022 02:56:42 +0200
 
 lintian (2.115.1) unstable; urgency=medium
 
@@ -185,6 +210,8 @@ lintian (2.115.0) unstable; urgency=medium
     colon. (Closes: #1007140)
   * Upgrade missing-systemd-timer-for-cron-script to warning; no longer
     experimental. (Closes: #1007257)
+  * Read locale codes directly from /usr/share/locale/json/. Add
+    dependency on iso-codes for that.
 
   [ Ryan Finnie ]
   * Provide a constant citation for
