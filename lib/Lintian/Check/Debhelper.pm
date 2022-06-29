@@ -790,8 +790,8 @@ sub source {
         my $addon = $addon_by_prerequisite{$prerequisite};
 
         next
-            if $debhelper_level >= $REQUIRES_AUTOTOOLS
-            && $addon eq 'autoreconf';
+          if $debhelper_level >= $REQUIRES_AUTOTOOLS
+          && $addon eq 'autoreconf';
 
         $self->pointed_hint('missing-build-dependency-for-dh-addon',
             $drules->pointer,$addon, "(does not satisfy $prerequisite)")
