@@ -151,12 +151,12 @@ Behavior options for B<lintian>.
 
 =over 4
 
-=item B<--color> (never|always|auto|html)
+=item B<--color> (auto|never|always|html)
 
 Whether to colorize tags in lintian output based on their visibility.
-The default is "never", which never uses color.  "always" will always
-use color, "auto" will use color only if the output is going to a
-terminal, and "html" will use HTML E<lt>spanE<gt> tags with a color style
+The default is "auto" will use color only if the output is going to a
+terminal. "never" will never use color, "always" will always use
+color, and "html" will use HTML E<lt>spanE<gt> tags with a color style
 attribute (instead of ANSI color escape sequences).
 
 This option overrides the B<color> variable in the configuration file.
