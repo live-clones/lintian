@@ -1,0 +1,69 @@
+#!/usr/bin/perl
+#
+# lintian-migrate-overrides-to-pointed-hints -- migrate lintian
+# overrides to new "pointed hints" format.
+#
+# Copyright (C) 2022 Axel Beckert
+#
+# This program is free software.  It is distributed under the terms of
+# the GNU General Public License as published by the Free Software
+# Foundation; either version 2 of the License, or (at your option) any
+# later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+use strict;
+use warnings;
+use 5.010;
+
+use Path::Tiny qw(path cwd);
+
+# Change rules
+my %affected_tags = (
+    # Syntax: 'tag' => [ qr/old/, 'new' ],
+    'spelling-error-in-binary' => [ qr/(\S+) (\S*[ *]\S*)$/, '$2 [$1]' ],
+    'package-contains-documentation-outside-usr-share-doc' =>
+      [ qr/(.*)$/, '[$1]' ],
+);
+
+die "Needs to be run from inside an unpacked Debian source package.\n"
+  unless (-d 'debian' and -e 'debian/changelog' and -e 'debian/rules');
+
+# Where to look for override files.
+my @override_files
+  = glob('debian/*lintian-overrides debian/source/lintian[-]overrides');
+
+unless (@override_files) {
+    warn "No override files found in the source package at ".cwd."/.\n";
+    exit 0;
+}
+
+foreach my $override_file (@override_files) {
+    my $path = path($override_file);
+    my @overrides = $path->lines_utf8();
+
+    foreach my $override_line (@overrides) {
+        foreach my $tag (keys %affected_tags) {
+            my ($pattern, $transform) = @{$affected_tags{$tag}};
+            my $expr
+              = '$override_line =~ s/\b\Q'
+              .$tag.'\E '
+              ."$pattern/$tag $transform/";
+            #say $expr;
+
+            if ($override_line =~ /^(?:[^#]*[^-]\b)?\Q$tag\E /) {
+                eval($expr);
+            }
+        }
+        print $override_line;
+    }
+}
