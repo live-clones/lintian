@@ -47,8 +47,7 @@ unless (@override_files) {
     exit 0;
 }
 
-sub expand
-{
+sub expand {
     local ($_) = @_;
     my $pattern = "$`$&$'";
     my @ms = @-;
@@ -64,7 +63,8 @@ foreach my $override_file (@override_files) {
     foreach my $override_line (@overrides) {
         foreach my $tag (keys %affected_tags) {
             my ($pattern, $transform) = @{$affected_tags{$tag}};
-            $override_line =~ s{^(?:[^#]*[^-]\b)?\Q$tag\E \K$pattern}{expand($transform)}e;
+            $override_line
+              =~ s{^(?:[^#]*[^-]\b)?\Q$tag\E \K$pattern}{expand($transform)}e;
         }
         print $override_line;
     }
