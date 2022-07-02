@@ -23,11 +23,12 @@
 
 use strict;
 use warnings;
-use 5.020;
+use 5.020; # Performance gain with $`, $&, and $'.
 
 use Path::Tiny qw(path cwd);
+use Getopt::Long ();
 
-# Change rules
+### Rules what needs to be changed how, i.e. kinda configuration
 my %affected_tags = (
     # Syntax: 'tag' => [ qr/old/, 'new' ],
     'spelling-error-in-binary' => [ qr/(\S+) (\S*[ *]\S*)$/, '$2 [$1]' ],
@@ -35,8 +36,28 @@ my %affected_tags = (
       [ qr/(.*)$/, '[$1]' ],
 );
 
+### Sanity check
 die "Needs to be run from inside an unpacked Debian source package.\n"
   unless (-d 'debian' and -e 'debian/changelog' and -e 'debian/rules');
+
+### Commandline option parsing
+# Available commandline options
+my @getoptions = qw(
+  inline|i!
+);
+
+# Default values
+my %command_line = (
+    inline => -d '.git' ? 1 : 0,
+);
+
+# Configure commandline option parsing
+Getopt::Long::Configure('default', 'bundling',
+    'no_getopt_compat','no_auto_abbrev','permute');
+
+# Parse the commandline and store the settings in %command_line
+Getopt::Long::GetOptions(\%command_line, @getoptions)
+  or die "error parsing options\n";
 
 # Where to look for override files.
 my @override_files
@@ -59,6 +80,7 @@ sub expand {
 foreach my $override_file (@override_files) {
     my $path = path($override_file);
     my @overrides = $path->lines_utf8();
+    my @new_overrides = ();
 
     foreach my $override_line (@overrides) {
         foreach my $tag (keys %affected_tags) {
@@ -66,6 +88,15 @@ foreach my $override_file (@override_files) {
             $override_line
               =~ s{^(?:[^#]*[^-]\b)?\Q$tag\E \K$pattern}{expand($transform)}e;
         }
-        print $override_line;
+
+        if ($command_line{'inline'}) {
+            push(@new_overrides, $override_line);
+        } else {
+            print $override_line;
+        }
+    }
+
+    if (@new_overrides) {
+        $path->spew_utf8(@new_overrides);
     }
 }
