@@ -44,11 +44,13 @@ die "Needs to be run from inside an unpacked Debian source package.\n"
 # Available commandline options
 my @getoptions = qw(
   inline|i!
+  compat|c|*
 );
 
 # Default values
 my %command_line = (
     inline => -d '.git' ? 1 : 0,
+    compat => 0,
 );
 
 # Configure commandline option parsing
@@ -74,6 +76,7 @@ sub expand {
     my @ms = @-;
     my @me = @+;
     s/\$(\d+)/substr($pattern, $ms[$1], $me[$1] - $ms[$1])/eg;
+    s/[][]/*/g if $command_line{'compat'};
     $_;
 }
 
