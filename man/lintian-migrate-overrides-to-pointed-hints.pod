@@ -1,0 +1,90 @@
+# Copyright (C) Axel Beckert <abe@debian.org>
+#
+# This manual page is free software.  It is distributed under the
+# terms of the GNU General Public License as published by the Free
+# Software Foundation; either version 2 of the License, or (at your
+# option) any later version.
+#
+# This manual page is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this manual page; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301
+# USA
+#
+
+=head1 NAME
+
+lintian-migrate-overrides-to-pointed-hints - Convert lintian overrides to new pointed hints syntax
+
+=head1 SYNOPSIS
+
+B<lintian-migrate-overrides-to-pointed-hints> [-i|--inline|--no-inline] [--compat|-c|-*]
+
+It needs to be called inside an unpacked Debian source package.
+
+=head1 DESCRIPTION
+
+Felix Lechner did a lot of work to standardise the syntax of Lintian
+tags to make the output, especially file names and line numbers better
+parseable for downstream consumption, e.g. the
+L<https://lintian.debian.org/> website, L<lintian-brush(1)>.
+
+L<https://lintian.debian.org/> uses this to create direct deep links
+to the right line number in the right file on
+L<https://sources.debian.org/> as requested in
+L<https://bugs.debian.org/743226>.
+
+This unfortunately has the downside that many overrides from before
+these changes no more match and need to be updated. Because this is a
+rather tedious work, this helper script has been written. See
+L<https://bugs.debian.org/1007002> for the according discussion.
+
+=head1 OPTIONS
+
+B<lintian-migrate-overrides-to-pointed-hints> has no parameters and
+knows only a few options:
+
+=over 4
+
+=item B<--inline>, B<-i>
+
+Edit lintian override files directly ("inline") instead of printing
+the updated files to STDOUT.
+
+This is the default if called inside a packaging git repository,
+i.e. if a directory called B<.git> exists at the same level as the
+B<debian> directory.
+
+=item B<--no-inline>
+
+Disable inline editing of lintian override files even if called inside
+a git repository.
+
+=item B<--compat>, B<-c>, B<-*>
+
+Output asterisk wildcards (C<*>) instead of brackets to make the
+lintian override backwards compatible with Lintian in Debian 11
+Bullseye, at least of the order of parameters hasn't changed.
+
+=back
+
+=head1 SEE ALSO
+
+L<https://bugs.debian.org/743226>, L<https://bugs.debian.org/1007002>,
+L<lintian>
+
+=head1 AUTHORS
+
+Axel Beckert <abe@debian.org>, Jakub Wilk <jwilk@debian.org>
+
+Please use the email address <lintian-maint@debian.org> for
+comments related to this script.
+
+Bug reports should be sent to the Debian Bug Tracking System and filed
+against the package B<lintian>.
+
+=cut
