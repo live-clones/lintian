@@ -47,6 +47,16 @@ unless (@override_files) {
     exit 0;
 }
 
+sub expand
+{
+    local ($_) = @_;
+    my $pattern = "$`$&$'";
+    my @ms = @-;
+    my @me = @+;
+    s/\$(\d+)/substr($pattern, $ms[$1], $me[$1] - $ms[$1])/eg;
+    $_;
+}
+
 foreach my $override_file (@override_files) {
     my $path = path($override_file);
     my @overrides = $path->lines_utf8();
@@ -54,15 +64,7 @@ foreach my $override_file (@override_files) {
     foreach my $override_line (@overrides) {
         foreach my $tag (keys %affected_tags) {
             my ($pattern, $transform) = @{$affected_tags{$tag}};
-            my $expr
-              = '$override_line =~ s/\b\Q'
-              .$tag.'\E '
-              ."$pattern/$tag $transform/";
-            #say $expr;
-
-            if ($override_line =~ /^(?:[^#]*[^-]\b)?\Q$tag\E /) {
-                eval($expr);
-            }
+            $override_line =~ s{^(?:[^#]*[^-]\b)?\Q$tag\E \K$pattern}{expand($transform)}e;
         }
         print $override_line;
     }
