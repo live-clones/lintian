@@ -6,4 +6,4 @@ Explanation: The extended description of a debconf template should never include
  .
  If this template is only used internally by the package and not displayed
  to the user, put "for internal use" in the short description.
-See-Also: devref 6.5.3.2
+See-Also: developer-reference 6.5.3.2

@@ -1,0 +1,4 @@
+Testname: arch-bingo
+Skeleton: upload-native
+Description: Override with 'bingo' architecture restriction on an Arch: any installable
+Package-Architecture: any

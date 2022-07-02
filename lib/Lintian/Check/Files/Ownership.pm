@@ -1,6 +1,6 @@
 # files/ownership -- lintian check script -*- perl -*-
 
-# Copyright © 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -39,12 +39,12 @@ const my $MINIMUM_HIGH_RESERVED => 60_000;
 const my $NOBODY => 65_534;
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
-    $self->hint('wrong-file-owner-uid-or-gid', $file->name,
-        $file->uid . $SLASH . $file->gid)
-      if out_of_bounds($file->uid)
-      || out_of_bounds($file->gid);
+    $self->pointed_hint('wrong-file-owner-uid-or-gid', $item->pointer,
+        $item->uid . $SLASH . $item->gid)
+      if out_of_bounds($item->uid)
+      || out_of_bounds($item->gid);
 
     return;
 }

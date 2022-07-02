@@ -1,8 +1,8 @@
 # debian/version-substvars -- lintian check script -*- perl -*-
 #
-# Copyright © 2006 Adeodato Simó
-# Copyright © 2019 Chris Lamb <lamby@debian.org>
-# Copyright © 2021 Felix Lechner
+# Copyright (C) 2006 Adeodato Simo
+# Copyright (C) 2019 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -83,9 +83,11 @@ sub source {
             my $relation
               = $self->processable->binary_relation($installable, $field);
 
-            $self->hint('substvar-source-version-is-deprecated',
-                $installable, $field, "(line $position)")
-              if $relation->matches(qr/\$[{]Source-Version[}]/);
+            $self->pointed_hint(
+                'substvar-source-version-is-deprecated',
+                $debian_control->item->pointer($position),
+                $installable, $field
+            )if $relation->matches(qr/\$[{]Source-Version[}]/);
 
             my %external;
             my $visitor = sub {
@@ -113,10 +115,12 @@ sub source {
                     # We can't test dependencies on packages whose names are
                     # formed via substvars expanded during the build.  Assume
                     # those maintainers know what they're doing.
-                    $self->hint(
+                    $self->pointed_hint(
                         'version-substvar-for-external-package',
-                        $field,"(line $position)",
-                        $substvar,"$installable -> $other"
+                        $debian_control->item->pointer($position),
+                        $field,
+                        $substvar,
+                        "$installable -> $other"
                       )
                       unless $debian_control->installable_fields($other)
                       ->declares('Architecture')

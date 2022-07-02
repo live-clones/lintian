@@ -1,9 +1,9 @@
 # binaries/profiling -- lintian check script -*- perl -*-
 
-# Copyright © 1998 Christian Schwarz and Richard Braakman
-# Copyright © 2012 Kees Cook
-# Copyright © 2017-2020 Chris Lamb <lamby@debian.org>
-# Copyright © 2021 Felix Lechner
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 2012 Kees Cook
+# Copyright (C) 2017-2020 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -35,35 +35,30 @@ with 'Lintian::Check';
 sub visit_installed_files {
     my ($self, $item) = @_;
 
-    # $object_name can be an object inside a static lib.  These do
-    # not appear in the output of our file_info collection.
-    my $objdump = $self->processable->objdump_info->{$item->name};
-    return
-      unless defined $objdump;
-
     my $architecture = $self->processable->fields->value('Architecture');
 
     my $is_profiled = 0;
 
-    for my $entry (@{$objdump->{SYMBOLS} // [] }) {
-        my ($section, $version, $symbol) = @{$entry};
+    for my $symbol (@{$item->elf->{SYMBOLS} // [] }) {
 
         # According to the binutils documentation[1], the profiling symbol
         # can be named "mcount", "_mcount" or even "__mcount".
         # [1] http://sourceware.org/binutils/docs/gprof/Implementation.html
         $is_profiled = 1
-          if $version =~ /^GLIBC_.*/
-          && $symbol =~ m{\A _?+ _?+ (gnu_)?+mcount(_nc)?+ \Z}xsm;
+          if $symbol->version =~ /^GLIBC_.*/
+          && $symbol->name =~ m{\A _?+ _?+ (gnu_)?+mcount(_nc)?+ \Z}xsm
+          && ($symbol->section eq 'UND' || $symbol->section eq '.text');
 
         # This code was used to detect profiled code in Wheezy and earlier
         $is_profiled = 1
-          if $section eq '.text'
-          && $version eq 'Base'
-          && $symbol eq '__gmon_start__'
+          if $symbol->section eq '.text'
+          && $symbol->version eq 'Base'
+          && $symbol->name eq '__gmon_start__'
           && $architecture ne 'hppa';
     }
 
-    $self->hint('binary-compiled-with-profiling-enabled', $item->name)
+    $self->pointed_hint('binary-compiled-with-profiling-enabled',
+        $item->pointer)
       if $is_profiled;
 
     return;

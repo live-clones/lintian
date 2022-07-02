@@ -1,6 +1,6 @@
 # pe -- lintian check script -*- perl -*-
 
-# Copyright © 2017-2019 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2017-2019 Chris Lamb <lamby@debian.org>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -25,6 +25,7 @@ use warnings;
 use utf8;
 
 use Const::Fast;
+use Syntax::Keyword::Try;
 use Unicode::UTF8 qw(encode_utf8);
 
 use Moo;
@@ -43,22 +44,22 @@ const my $DEP_NX_FLAG => 0x100;
 const my $UNSAFE_SEH_FLAG => 0x400;
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     return
-      unless $file->is_file;
+      unless $item->is_file;
 
     return
-      unless $file->file_info =~ /^PE32\+? executable/;
+      unless $item->file_type =~ /^PE32\+? executable/;
 
     return
-      unless $file->is_open_ok;
+      unless $item->is_open_ok;
 
     my $buf;
-    open(my $fd, '<', $file->unpacked_path)
-      or die encode_utf8('Cannot open ' . $file->unpacked_path);
+    open(my $fd, '<', $item->unpacked_path)
+      or die encode_utf8('Cannot open ' . $item->unpacked_path);
 
-    eval {
+    try {
         # offset to main header
         seek($fd, $MAIN_HEADER, 0)
           or die encode_utf8("seek: $!");
@@ -75,7 +76,10 @@ sub visit_installed_files {
         # get DLLCharacteristics value
         read($fd, $buf, 2)
           or die encode_utf8("read: $!");
-    };
+
+    } catch {
+        die $@;
+    }
 
     my $characteristics = unpack('v', $buf);
     my %features = (
@@ -87,15 +91,15 @@ sub visit_installed_files {
     # Don't check for the x86-specific "SafeSEH" feature for code
     # that is JIT-compiled by the Mono runtime. (#926334)
     delete $features{'SafeSEH'}
-      if $file->file_info =~ / Mono\/.Net assembly, /;
+      if $item->file_type =~ / Mono\/.Net assembly, /;
 
     my @missing = grep { !$features{$_} } sort keys %features;
 
-    $self->hint('portable-executable-missing-security-features',
-        $file,join($SPACE, @missing))
+    $self->pointed_hint('portable-executable-missing-security-features',
+        $item->pointer,join($SPACE, @missing))
       if scalar @missing;
 
-    close($fd);
+    close $fd;
 
     return;
 }

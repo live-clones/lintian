@@ -1,6 +1,6 @@
 Tag: no-debian-changes
 Severity: warning
-Check: cruft
+Check: files/artifact
 Renamed-From:
  empty-debian-diff
 Explanation: This non-native package makes no changes to the upstream sources

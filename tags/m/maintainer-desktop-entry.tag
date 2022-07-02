@@ -7,4 +7,4 @@ Explanation: The maintainer keeps a desktop entry in ./debian. Please forward
  .
  If the desktop entry was already forwarded or rejected, or the upstream
  is gone, please override the tag and annotate it with a suitable comment.
-See-Also: social contract item 2, devref 3.1.4, policy 4.3
+See-Also: social contract item 2, developer-reference 3.1.4, debian-policy 4.3

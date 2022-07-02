@@ -1,8 +1,10 @@
 Tag: debian-control-has-unusual-field-spacing
 Severity: pedantic
-Check: debian/control
-See-Also: policy 5.1
-Explanation: The field on this line of <code>debian/control</code> has whitespace
- other than a single space after the colon. This is explicitly permitted
- in the syntax of Debian control files, but as Policy says, it is
- conventional to put a single space after the colon.
+Check: debian/control/field/spacing
+Explanation: A field in the <code>debian/control</code> file has an unusual
+ amount of whitespace after the colon.
+ .
+ The syntax for Deb822 files permits any kind of space, but according to Policy
+ there is a convention to use a single space after the colon.
+See-Also:
+ debian-policy 5.1

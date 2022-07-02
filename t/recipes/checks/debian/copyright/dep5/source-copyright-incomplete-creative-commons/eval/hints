@@ -1,10 +1,11 @@
-source-copyright-incomplete-creative-commons (source): superfluous-file-pattern debian/copyright sounds/* (Files, line 19)
-source-copyright-incomplete-creative-commons (source): superfluous-file-pattern debian/copyright resources/ts/zh_CN.ts (Files, line 59)
-source-copyright-incomplete-creative-commons (source): superfluous-file-pattern debian/copyright resources/ts/it_IT.ts (Files, line 47)
-source-copyright-incomplete-creative-commons (source): superfluous-file-pattern debian/copyright resources/ts/fr_FR.ts (Files, line 53)
-source-copyright-incomplete-creative-commons (source): superfluous-file-pattern debian/copyright resources/theme/default/os-custom-icons/* (Files, line 32)
-source-copyright-incomplete-creative-commons (source): superfluous-file-pattern debian/copyright resources/templates/eco_alt_template.opensesame.tar.gz (Files, line 66)
-source-copyright-incomplete-creative-commons (source): superfluous-file-pattern debian/copyright resources/*.ttf (Files, line 12)
-source-copyright-incomplete-creative-commons (source): superfluous-file-pattern debian/copyright * (Files, line 6)
-source-copyright-incomplete-creative-commons (source): insecure-copyright-format-uri debian/copyright http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-source-copyright-incomplete-creative-commons (source): incomplete-creative-commons-license debian/copyright cc-by-3.0 (line 70)
+source-copyright-incomplete-creative-commons (source): update-debian-copyright 2012 vs CHANGELOG-YEAR [debian/copyright:41]
+source-copyright-incomplete-creative-commons (source): superfluous-file-pattern sounds/* [debian/copyright:19]
+source-copyright-incomplete-creative-commons (source): superfluous-file-pattern resources/ts/zh_CN.ts [debian/copyright:59]
+source-copyright-incomplete-creative-commons (source): superfluous-file-pattern resources/ts/it_IT.ts [debian/copyright:47]
+source-copyright-incomplete-creative-commons (source): superfluous-file-pattern resources/ts/fr_FR.ts [debian/copyright:53]
+source-copyright-incomplete-creative-commons (source): superfluous-file-pattern resources/theme/default/os-custom-icons/* [debian/copyright:32]
+source-copyright-incomplete-creative-commons (source): superfluous-file-pattern resources/templates/eco_alt_template.opensesame.tar.gz [debian/copyright:66]
+source-copyright-incomplete-creative-commons (source): superfluous-file-pattern resources/*.ttf [debian/copyright:12]
+source-copyright-incomplete-creative-commons (source): superfluous-file-pattern * [debian/copyright:6]
+source-copyright-incomplete-creative-commons (source): insecure-copyright-format-uri http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/ [debian/copyright]
+source-copyright-incomplete-creative-commons (source): incomplete-creative-commons-license cc-by-3.0 [debian/copyright:70]

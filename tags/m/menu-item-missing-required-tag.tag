@@ -1,6 +1,9 @@
 Tag: menu-item-missing-required-tag
 Severity: error
 Check: menu-format
-Explanation: The menu item has a line that is missing a required tag. It's likely
- that the line will have no effect without this tag. <code>install-menu</code> may
- report this as an error during package installation.
+Explanation: A line in the given <code>menu</code> item is missing a
+ required tag.
+ .
+ Without the tag, the line probably has no effect whatsoever, except
+ <code>install-menu</code> may report an error during package
+ installation.

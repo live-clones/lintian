@@ -12,3 +12,14 @@ Explanation: The original source tarball contains the specified examples
  <code>/usr/share/doc</code> in all binary packages.
 See-Also:
  dh_installexamples(1)
+
+Screen: examples/in-tests
+Advocates: Scott Kitterman <debian@kitterman.com>
+Reason:
+ Some sources like python-tomlkit trigger this tag for tests because of files
+ in ./tests/examples/. They are not examples for tomlkit, however. They are
+ examples of TOML files used in the tests.
+ .
+ Overall, the check is probably better off not looking in test directories.
+See-Also:
+ Bug#1005184

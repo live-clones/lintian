@@ -1,4 +1,4 @@
-# Copyright © 2019 Felix Lechner
+# Copyright (C) 2019-2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -12,7 +12,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -27,13 +27,13 @@ use Const::Fast;
 use List::SomeUtils qw(all);
 use Unicode::UTF8 qw(encode_utf8);
 
-use Moo;
-use namespace::clean;
-
 const my $SPACE => q{ };
 const my $COLON => q{:};
-const my $LPARENS => q{(};
-const my $RPARENS => q{)};
+const my $LEFT_PARENTHESIS => q{(};
+const my $RIGHT_PARENTHESIS => q{)};
+
+use Moo;
+use namespace::clean;
 
 =head1 NAME
 
@@ -53,72 +53,42 @@ A class for printing hints using the 'universal' format.
 
 =item issue_hints
 
-Print all hints passed in array. A separate arguments with processables
-is necessary to report in case no hints were found.
+Passing all groups with all processables in case no hints were found.
 
 =cut
 
 sub issue_hints {
-    my ($self, $groups) = @_;
+    my ($self, $profile, $groups) = @_;
 
-    my @processables = map { $_->get_processables } @{$groups // []};
+    for my $group (@{$groups // []}) {
 
-    my @pending;
-    for my $processable (@processables) {
+        my @by_group;
+        for my $processable ($group->get_processables) {
 
-        # get hints
-        my @hints = @{$processable->hints};
+            for my $hint (@{$processable->hints}) {
 
-        # associate hints with processable
-        $_->processable($processable) for @hints;
+                my $line
+                  = $processable->name
+                  . $SPACE
+                  . $LEFT_PARENTHESIS
+                  . $processable->type
+                  . $RIGHT_PARENTHESIS
+                  . $COLON
+                  . $SPACE
+                  . $hint->tag_name;
 
-        # remove circular references
-        $processable->hints([]);
+                $line .= $SPACE . $hint->context
+                  if length $hint->context;
 
-        push(@pending, @hints);
-    }
-
-    my %hintlist;
-
-    for my $hint (@pending) {
-        $hintlist{$hint->processable} //= [];
-        push(@{$hintlist{$hint->processable}}, $hint);
-    }
-
-    my @lines;
-
-    for my $processable (@processables) {
-
-        my $object = 'package';
-        $object = 'file'
-          if $processable->type eq 'changes';
-
-        my @subset = @{$hintlist{$processable} // []};
-
-        for my $hint (@subset) {
-
-            my $details = $hint->context;
-
-            my $line
-              = $processable->name
-              . $SPACE
-              . $LPARENS
-              . $processable->type
-              . $RPARENS
-              . $COLON
-              . $SPACE
-              . $hint->tag->name;
-            $line .= $SPACE . $details
-              if length $details;
-
-            push(@lines, $line);
+                push(@by_group, $line);
+            }
         }
+
+        my @sorted
+          = reverse sort { order($a) cmp order($b) } @by_group;
+
+        say encode_utf8($_) for @sorted;
     }
-
-    my @sorted
-      = reverse sort { order($a) cmp order($b) } @lines;
-
-    say encode_utf8($_) for @sorted;
 
     return;
 }

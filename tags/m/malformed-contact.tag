@@ -12,6 +12,6 @@ Renamed-From:
  changed-by-address-malformed
 Explanation: The named field identifying contact persons could not be
  parsed according to the rules in the Policy Manual.
-See-Also: policy 5.6.2,
- policy 5.6.3,
- policy 5.6.4
+See-Also: debian-policy 5.6.2,
+ debian-policy 5.6.3,
+ debian-policy 5.6.4

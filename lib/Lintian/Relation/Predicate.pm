@@ -1,10 +1,10 @@
 # -*- perl -*-
 # Lintian::Relation::Predicate -- relationship predicates
 
-# Copyright © 1998 Christian Schwarz and Richard Braakman
-# Copyright © 2004-2009 Russ Allbery <rra@debian.org>
-# Copyright © 2018 Chris Lamb <lamby@debian.org>
-# Copyright © 2020-2021 Felix Lechner
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 2004-2009 Russ Allbery <rra@debian.org>
+# Copyright (C) 2018 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2020-2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -96,39 +96,46 @@ relationship a superset of another relationship."
 has literal => (
     is => 'rw',
     default => $EMPTY,
-    coerce => sub { my ($text) = @_; return ($text // $EMPTY); });
+    coerce => sub { my ($text) = @_; return ($text // $EMPTY); }
+);
 
 has parsable => (is => 'rw', default => $FALSE);
 
 has name => (
     is => 'rw',
     default => $EMPTY,
-    coerce => sub { my ($text) = @_; return ($text // $EMPTY); });
+    coerce => sub { my ($text) = @_; return ($text // $EMPTY); }
+);
 
 has multiarch_acceptor => (
     is => 'rw',
     default => $EMPTY,
-    coerce => sub { my ($text) = @_; return ($text // $EMPTY); });
+    coerce => sub { my ($text) = @_; return ($text // $EMPTY); }
+);
 
 has version_operator => (
     is => 'rw',
     default => $EMPTY,
-    coerce => sub { my ($text) = @_; return ($text // $EMPTY); });
+    coerce => sub { my ($text) = @_; return ($text // $EMPTY); }
+);
 
 has reference_version => (
     is => 'rw',
     default => $EMPTY,
-    coerce => sub { my ($text) = @_; return ($text // $EMPTY); });
+    coerce => sub { my ($text) = @_; return ($text // $EMPTY); }
+);
 
 has build_architecture => (
     is => 'rw',
     default => $EMPTY,
-    coerce => sub { my ($text) = @_; return ($text // $EMPTY); });
+    coerce => sub { my ($text) = @_; return ($text // $EMPTY); }
+);
 
 has build_profile => (
     is => 'rw',
     default => $EMPTY,
-    coerce => sub { my ($text) = @_; return ($text // $EMPTY); });
+    coerce => sub { my ($text) = @_; return ($text // $EMPTY); }
+);
 
 =item parse
 
@@ -199,6 +206,7 @@ sub parse {
           if $self->version_operator eq $GREATER_THAN;
 
         unless ($with_restrictions) {
+            $self->multiarch_acceptor('any');
             $self->version_operator($EMPTY);
             $self->reference_version($EMPTY);
             $self->build_architecture($EMPTY);

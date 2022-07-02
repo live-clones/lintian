@@ -1,11 +1,11 @@
 # systemd -- lintian check script -*- perl -*-
 #
-# Copyright © 2013 Michael Stapelberg
-# Copyright © 2016-2020 Chris Lamb <lamby@debian.org>
-# Copyright © 2021 Felix Lechner
+# Copyright (C) 2013 Michael Stapelberg
+# Copyright (C) 2016-2020 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2021 Felix Lechner
 #
 # based on the apache2 checks file by:
-# Copyright © 2012 Arno Töll
+# Copyright (C) 2012 Arno Toell
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -37,11 +37,11 @@ with 'Lintian::Check';
 sub visit_installed_files {
     my ($self, $item) = @_;
 
-    $self->hint('systemd-tmpfile-in-var-run', $item->name)
+    $self->pointed_hint('systemd-tmpfile-in-var-run', $item->pointer)
       if $item->name =~ m{^ usr/lib/tmpfiles[.]d/ .* [.]conf $}sx
       && $item->decoded_utf8 =~ m{^ d \s+ /var/run/ }msx;
 
-    $self->hint('misplaced-systemd-tmpfiles', $item->name)
+    $self->pointed_hint('misplaced-systemd-tmpfiles', $item->pointer)
       if $item->name =~ m{^ etc/tmpfiles[.]d/ .* [.]conf $}sx
       && $item->is_file;
 

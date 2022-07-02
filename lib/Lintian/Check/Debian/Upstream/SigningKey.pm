@@ -1,6 +1,6 @@
 # debian/upstream/signing-key -- lintian check script -*- perl -*-
 
-# Copyright © 2018 Felix Lechner
+# Copyright (C) 2018 Felix Lechner
 #
 # This program is free software.  It is distributed under the terms of
 # the GNU General Public License as published by the Free Software
@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -38,30 +38,31 @@ with 'Lintian::Check';
 sub source {
     my ($self) = @_;
 
-    my $processable = $self->processable;
-
     my $SIGNING_KEY_FILENAMES
-      = $self->profile->load_data('common/signing-key-filenames');
+      = $self->data->load('common/signing-key-filenames');
 
     # Check all possible locations for signing keys
-    my %key_locations;
+    my %key_items;
     for my $key_name ($SIGNING_KEY_FILENAMES->all) {
-        my $path = $processable->patched->resolve_path("debian/$key_name");
-        $key_locations{$key_name} = $path->unpacked_path
-          if $path && $path->is_file;
+        my $item
+          = $self->processable->patched->resolve_path("debian/$key_name");
+        $key_items{$key_name} = $item
+          if $item && $item->is_file;
     }
 
     # Check if more than one signing key is present
     $self->hint('public-upstream-keys-in-multiple-locations',
-        sort keys %key_locations)
-      if scalar keys %key_locations > 1;
+        (sort keys %key_items))
+      if scalar keys %key_items > 1;
 
     # Go through signing keys and run checks for each
-    for my $key_name (sort keys %key_locations) {
+    for my $key_name (sort keys %key_items) {
 
         # native packages should not have such keys
-        if ($processable->native) {
-            $self->hint('public-upstream-key-in-native-package', $key_name);
+        if ($self->processable->native) {
+
+            $self->pointed_hint('public-upstream-key-in-native-package',
+                $key_items{$key_name}->pointer);
             next;
         }
 
@@ -75,12 +76,16 @@ sub source {
             '--attribute-fd', '1',
             '--status-fd', '2',
             '--with-colons', '--list-packets',
-            $key_locations{$key_name});
+            $key_items{$key_name}->unpacked_path
+        );
         my $bytes = safe_qx(@command);
 
         if ($?) {
-            $self->hint('public-upstream-key-unusable',
-                $key_name,'cannot be processed');
+            $self->pointed_hint(
+                'public-upstream-key-unusable',
+                $key_items{$key_name}->pointer,
+                'cannot be processed'
+            );
             next;
         }
 
@@ -96,8 +101,11 @@ sub source {
         shift @keys;
 
         unless (scalar @keys) {
-            $self->hint('public-upstream-key-unusable',
-                $key_name,'contains no keys');
+            $self->pointed_hint(
+                'public-upstream-key-unusable',
+                $key_items{$key_name}->pointer,
+                'contains no keys'
+            );
             next;
         }
 
@@ -109,15 +117,21 @@ sub source {
 
             # require at least one packet
             unless (length $public_key) {
-                $self->hint('public-upstream-key-unusable',
-                    $key_name,'has no public key');
+                $self->pointed_hint(
+                    'public-upstream-key-unusable',
+                    $key_items{$key_name}->pointer,
+                    'has no public key'
+                );
                 next;
             }
 
             # look for key identifier
             unless ($public_key =~ qr/^\s*keyid:\s+(\S+)$/m) {
-                $self->hint('public-upstream-key-unusable',
-                    $key_name, 'has no keyid');
+                $self->pointed_hint(
+                    'public-upstream-key-unusable',
+                    $key_items{$key_name}->pointer,
+                    'has no keyid'
+                );
                 next;
             }
             my $keyid = $1;
@@ -139,10 +153,11 @@ sub source {
             my $extrasignatures = scalar @thirdparty;
 
             # export-minimal strips such signatures
-            $self->hint('public-upstream-key-not-minimal',
-                $key_name,
-                "has $extrasignatures extra signature(s) for keyid $keyid")
-              if $extrasignatures;
+            $self->pointed_hint(
+                'public-upstream-key-not-minimal',
+                $key_items{$key_name}->pointer,
+                "has $extrasignatures extra signature(s) for keyid $keyid"
+            )if $extrasignatures;
         }
     }
 

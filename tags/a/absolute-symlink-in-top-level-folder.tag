@@ -2,11 +2,14 @@ Tag: absolute-symlink-in-top-level-folder
 Severity: warning
 Check: files/symbolic-links
 Renamed-From: symlink-should-be-relative
-Explanation: Symlinks to files which are in the same top-level directory should be
- relative according to policy. (In other words, a link in /usr to another
- file in /usr should be relative, while a link in /usr to a file in /etc
- should be absolute.)
+Explanation: Symbolic links to files in the same top-level directory should be
+ relative.
  .
- If you use debhelper, running dh&lowbar;link after creating the package structure
- will fix this problem for you.
-See-Also: policy 10.5
+ As an example, a link in <code>/usr</code> to another file in <code>/usr</code>
+ should be relative, while a link in <code>/usr</code> to a file in
+ <code>/etc</code> should be absolute.
+ .
+ With Debhelper, running dh&lowbar;link after creating the package structure
+ will fix the issue for you.
+See-Also:
+ debian-policy 10.5

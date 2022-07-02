@@ -1,8 +1,8 @@
 # libraries/shared/links -- lintian check script -*- perl -*-
 
-# Copyright © 1998 Christian Schwarz
-# Copyright © 2018-2019 Chris Lamb <lamby@debian.org>
-# Copyright © 2021 Felix Lechner
+# Copyright (C) 1998 Christian Schwarz
+# Copyright (C) 2018-2019 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -27,16 +27,14 @@ use warnings;
 use utf8;
 
 use Const::Fast;
-use File::Basename;
-use List::SomeUtils qw(any none);
+use List::SomeUtils qw(none);
+
+const my $ARROW => q{->};
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-const my $EMPTY => q{};
-const my $ARROW => q{->};
 
 has development_packages => (
     is => 'rw',
@@ -46,7 +44,7 @@ has development_packages => (
 
         my @development_packages;
 
-        for my $installable ($self->group->get_binary_processables) {
+        for my $installable ($self->group->get_installables) {
 
             push(@development_packages, $installable)
               if $installable->name =~ /-dev$/
@@ -55,7 +53,8 @@ has development_packages => (
         }
 
         return \@development_packages;
-    });
+    }
+);
 
 sub visit_installed_files {
     my ($self, $item) = @_;
@@ -64,17 +63,19 @@ sub visit_installed_files {
       unless $item->is_file;
 
     # shared library
-    my $objdump = $self->processable->objdump_info->{$item->name};
     return
-      unless @{$objdump->{SONAME} // [] };
+      unless @{$item->elf->{SONAME} // [] };
 
-    my $soname = $objdump->{SONAME}[0];
+    my $soname = $item->elf->{SONAME}[0];
 
-    my @ldconfig_folders = @{$self->profile->architectures->ldconfig_folders};
+    my @ldconfig_folders = @{$self->data->architectures->ldconfig_folders};
     return
       if none { $item->dirname eq $_ } @ldconfig_folders;
 
+    my $installed = $self->processable->installed;
+
     my $versioned_name = $item->dirname . $soname;
+    my $versioned_item = $installed->lookup($versioned_name);
 
     my $unversioned_name = $versioned_name;
     # libtool "-release" variant
@@ -82,34 +83,38 @@ sub visit_installed_files {
     # determine shlib link name (w/o version)
     $unversioned_name =~ s/\.so.+$/.so/;
 
-    my $installed = $self->processable->installed;
+    $self->pointed_hint('lacks-versioned-link-to-shared-library',
+        $item->pointer, $versioned_name)
+      unless defined $versioned_item;
 
-    $self->hint('lacks-versioned-link-to-shared-library',
-        $versioned_name, $item->name, $soname)
-      unless defined $installed->lookup($versioned_name);
-
-    $self->hint(
+    $self->pointed_hint(
         'ldconfig-symlink-referencing-wrong-file',
-        $versioned_name,$ARROW,$installed->lookup($versioned_name)->link,
-        'instead of',$item->basename
+        $versioned_item->pointer,'should point to',
+        $versioned_item->link,'instead of',$item->basename
       )
       if $versioned_name ne $item->name
-      && defined $installed->lookup($versioned_name)
-      && $installed->lookup($versioned_name)->is_symlink
-      && $installed->lookup($versioned_name)->link ne $item->basename;
+      && defined $versioned_item
+      && $versioned_item->is_symlink
+      && $versioned_item->link ne $item->basename;
 
-    $self->hint('ldconfig-symlink-is-not-a-symlink',
-        $item->name, $versioned_name)
+    $self->pointed_hint(
+        'ldconfig-symlink-is-not-a-symlink',
+        $versioned_item->pointer,'should point to',
+        $item->name
+      )
       if $versioned_name ne $item->name
-      && defined $installed->lookup($versioned_name)
-      && !$installed->lookup($versioned_name)->is_symlink;
+      && defined $versioned_item
+      && !$versioned_item->is_symlink;
 
     # shlib symlink may not exist.
     # if shlib doesn't _have_ a version, then $unversioned_name and
     # $item->name will be equal, and it's not a development link,
     # so don't complain.
-    $self->hint('link-to-shared-library-in-wrong-package',
-        $item->name, $unversioned_name)
+    $self->pointed_hint(
+        'link-to-shared-library-in-wrong-package',
+        $installed->lookup($unversioned_name)->pointer,
+        $item->name
+      )
       if $unversioned_name ne $item->name
       && defined $installed->lookup($unversioned_name);
 
@@ -118,81 +123,37 @@ sub visit_installed_files {
     $unversioned_name = "usr/$unversioned_name"
       unless $item->name =~ m{^usr/};
 
-    my @candidates;
-    push(@candidates, $unversioned_name);
+    my @dev_links;
+    for my $dev_installable (@{$self->development_packages}) {
+        for my $dev_item (@{$dev_installable->installed->sorted_list}) {
 
-    if ($self->processable->source_name =~ /^gcc-(\d+(?:.\d+)?)$/) {
-        # gcc has a lot of bi-arch libs and puts the dev symlink
-        # in slightly different directories (to be co-installable
-        # with itself I guess).  Allegedly, clang (etc.) have to
-        # handle these special cases, so it should be
-        # acceptable...
-        my $gcc_version = $1;
-        my $link_basename = basename($unversioned_name);
+            next
+              unless $dev_item->is_symlink;
 
-        my $DEB_HOST_MULTIARCH
-          = $self->profile->architectures->deb_host_multiarch;
+            next
+              unless $dev_item->name =~ m{^ usr/lib/ }x;
 
-        my @multiarch_components;
+            # try absolute first
+            my $resolved = $installed->resolve_path($dev_item->link);
 
-        my $madir= $DEB_HOST_MULTIARCH->{$self->processable->architecture};
-        if (length $madir) {
+            # otherwise relative
+            $resolved
+              = $installed->resolve_path($dev_item->dirname . $dev_item->link)
+              unless defined $resolved;
 
-            # For i386-*, the triplet GCC uses can be i586-* or i686-*.
-            if ($madir =~ /^i386-/) {
-                my $five = $madir;
-                $five =~ s/^ i. /i5/msx;
-                my $six = $madir;
-                $six =~ s/^ i. /i6/msx;
-                push(@multiarch_components, $five, $six);
+            next
+              unless defined $resolved;
 
-            } else {
-                push(@multiarch_components, $madir);
-            }
+            push(@dev_links, $dev_item)
+              if $resolved->name eq $item->name;
         }
-
-        # Generally we are looking for
-        #  * usr/lib/gcc/MA-TRIPLET/$gcc_version/${BIARCH}$link_basename
-        #
-        # Where BIARCH is one of {,64/,32/,n32/,x32/,sf/,hf/}.  Note
-        # the "empty string" as a possible option.
-        #
-        # The two-three letter name directory before the
-        # basename is bi-arch names.
-        my @stems;
-        push(@stems,
-            map { "usr/lib/gcc/$_/$gcc_version" } @multiarch_components);
-
-        # But in the rare case we don't know the Multi-arch dir,
-        # just do without it as often (but not always) works.
-        push(@stems, "usr/lib/gcc/$gcc_version")
-          unless @multiarch_components;
-
-        for my $stem (@stems) {
-            push(@candidates,
-                map { "$stem/$_$link_basename" }
-                  ($EMPTY, qw(64/ 32/ n32/ x32/ sf/ hf/)));
-        }
-    }
-
-    my $found_in_dev_package = 0;
-
-    for my $devpkg (@{$self->development_packages}) {
-
-        $found_in_dev_package
-          = any { defined $devpkg->installed->lookup($_) } @candidates;
-
-        last
-          if $found_in_dev_package;
     }
 
     # found -dev package; library needs a symlink
-    $self->hint('lacks-unversioned-link-to-shared-library',
-        $item->name, $unversioned_name)
-      if ($unversioned_name eq $item->name
-        || !defined $installed->lookup($unversioned_name))
-      && @{$self->development_packages}
-      && !$found_in_dev_package;
+    $self->pointed_hint('lacks-unversioned-link-to-shared-library',
+        $item->pointer, "example: $unversioned_name")
+      if @{$self->development_packages}
+      && (none { $_->name =~ m{ [.]so $}x } @dev_links);
 
     return;
 }

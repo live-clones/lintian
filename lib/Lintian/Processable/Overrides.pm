@@ -1,6 +1,6 @@
-# -*- perl -*- Lintian::Processable::Overrides -- access to override data
+# -*- perl -*- Lintian::Processable::Overrides
 #
-# Copyright © 2019 Felix Lechner
+# Copyright (C) 2019-2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -22,18 +22,14 @@ use warnings;
 use utf8;
 
 use Const::Fast;
-use IPC::Run3;
-use List::SomeUtils qw(none true first_value);
-use Path::Tiny;
-use Unicode::UTF8 qw(valid_utf8 decode_utf8 encode_utf8);
 
-use Moo::Role;
-use namespace::clean;
+use Lintian::Override;
 
 const my $EMPTY => q{};
 const my $SPACE => q{ };
-const my $ASTERISK => q{*};
-const my $DOT => q{.};
+
+use Moo::Role;
+use namespace::clean;
 
 =head1 NAME
 
@@ -45,271 +41,161 @@ Lintian::Processable::Overrides - access to override data
 
 =head1 DESCRIPTION
 
-Lintian::Processable::Overrides provides an interface to package data for overrides.
+Lintian::Processable::Overrides provides an interface to overrides.
 
 =head1 INSTANCE METHODS
 
 =over 4
 
-=item overrides
+=item override_errors
 
 =cut
 
-has overrides => (
-    is => 'rw',
-    lazy => 1,
-    default => sub {
-        my ($self) = @_;
+has override_errors => (is => 'rw', default => sub { [] });
 
-        my $index;
+=item parse_overrides
 
-        # pick the first
-        my @candidates;
-        if ($self->type eq 'source') {
+=cut
 
-            $index = $self->patched;
+sub parse_overrides {
+    my ($self, $contents) = @_;
 
-            # prefer source/lintian-overrides to source.lintian-overrides
-            @candidates = (
-                'debian/source/lintian-overrides',
-                'debian/source.lintian-overrides'
-            );
+    $contents //= $EMPTY;
 
-        } elsif ($self->type eq 'binary' || $self->type eq 'udeb') {
-            $index = $self->installed;
+    my @declared_overrides;
 
-            @candidates = ('usr/share/lintian/overrides/' . $self->name);
+    my $justification = $EMPTY;
+    my $previous = Lintian::Override->new;
 
-        } else {
-            return {};
+    my @lines = split(/\n/, $contents);
+
+    my $position = 1;
+    for my $line (@lines) {
+
+        my $remaining = $line;
+
+        # trim both ends
+        $remaining =~ s/^\s+|\s+$//g;
+
+        if ($remaining eq $EMPTY) {
+            # Throw away comments, as they are not attached to a tag
+            # also throw away the option of "carrying over" the last
+            # comment
+            $justification = $EMPTY;
+            $previous = Lintian::Override->new;
+            next;
         }
 
-        @candidates = map { ($_, "$_.gz") } @candidates;
-        my $override_item
-          = first_value { defined } map { $index->lookup($_) } @candidates;
+        if ($remaining =~ s{^ [#] \s* }{}x) {
 
-        return {}
-          unless defined $override_item;
+            if (length $remaining) {
 
-        my $contents;
-        if ($override_item->name =~ /\.gz$/) {
+                $justification .= $SPACE
+                  if length $justification;
 
-            my @command
-              = (qw{gzip --decompress --stdout}, $override_item->name);
-            my $stdout;
-            my $stderr;
+                $justification .= $remaining;
+            }
 
-            run3(\@command, \undef, \$stdout, \$stderr);
-
-            $stdout = decode_utf8($stdout)
-              if length $stdout;
-            $stderr = decode_utf8($stderr)
-              if length $stderr;
-
-            die encode_utf8("gunzip $override_item failed: $stderr")
-              if length $stderr;
-
-            $contents = $stdout;
-
-        } else {
-            $contents = $override_item->decoded_utf8;
+            next;
         }
 
-        return {}
-          unless length $contents;
+        # reduce white space
+        $remaining =~ s/\s+/ /g;
 
-        my %override_data;
-        my @comments;
-        my %previous;
+        # [[pkg-name] [arch-list] [pkg-type]:] <tag> [context]
+        my $require_colon = 0;
+        my @architectures;
 
-        my $position = 1;
+        # strip package name, if present; require name
+        # parsing overrides is ambiguous (see #699628)
+        my $package = $self->name;
+        if ($remaining =~ s/^\Q$package\E(?=\s|:)//) {
 
-        my @lines = split(/\n/, $contents);
-        for my $line (@lines) {
-
-            my $remaining = $line;
-
-            # trim both ends
-            $remaining =~ s/^\s+|\s+$//g;
-
-            if ($remaining eq $EMPTY) {
-                # Throw away comments, as they are not attached to a tag
-                # also throw away the option of "carrying over" the last
-                # comment
-                @comments = ();
-                %previous = ();
-                next;
-            }
-
-            if ($remaining =~ /^#/) {
-                $remaining =~ s/^# ?//;
-                push(@comments, $remaining);
-                next;
-            }
-
-            # reduce white space
-            $remaining =~ s/\s+/ /g;
-
-            # [[pkg-name] [arch-list] [pkg-type]:] <tag> [context]
-            my $require_colon = 0;
-            my @architectures;
-
-            # strip package name, if present; require name
-            # parsing overrides is ambiguous (see #699628)
-            my $package = $self->name;
-            if ($remaining =~ s/^\Q$package\E(?=\s|:)//) {
-
-                # both spaces or colon were unmatched lookhead
-                $remaining =~ s/^\s+//;
-                $require_colon = 1;
-            }
-
-            # remove architecture list
-            if ($remaining =~ s/^\[([^\]]*)\](?=\s|:)//) {
-                @architectures = split($SPACE, $1);
-
-                # both spaces or colon were unmatched lookhead
-                $remaining =~ s/^\s+//;
-                $require_colon = 1;
-            }
-
-            # remove package type
-            my $type = $self->type;
-            if ($remaining =~ s/^\Q$type\E(?=\s|:)//) {
-
-                # both spaces or colon were unmatched lookhead
-                $remaining =~ s/^\s+//;
-                $require_colon = 1;
-            }
-
-            # require and remove colon when any package details are present
-            if ($require_colon && $remaining !~ s/^\s*:\s*//) {
-                $self->hint('malformed-override',
-                    "Expected a colon in line $position");
-                next;
-            }
-
-            my $hint = $remaining;
-
-            if (@architectures && $self->architecture eq 'all') {
-                $self->hint('malformed-override',
-                    "Architecture list for arch:all package in line $position"
-                );
-                next;
-            }
-
-            my @invalid
-              = grep { !$self->profile->architectures->valid_restriction($_) }
-              @architectures;
-            $self->hint('malformed-override',
-                "Unknown architecture wildcard $_ in line $position")
-              for @invalid;
-
-            next
-              if @invalid;
-
-            # count negations
-            my $negations = true { /^!/ } @architectures;
-
-            # confirm it is either all or none
-            unless ($negations == @architectures || $negations == 0) {
-                $self->hint('malformed-override',
-                    "Inconsistent architecture negation in line $position");
-                next;
-            }
-
-            # strip negations if present
-            s/^!// for @architectures;
-
-            # proceed when none specified
-            next
-              if @architectures
-              && (
-                $negations xor none {
-                    $self->profile->architectures->restriction_matches($_,
-                        $self->architecture)
-                }
-                @architectures
-              );
-
-            my ($tagname, $context) = split($SPACE, $hint, 2);
-
-            $self->hint('malformed-override',
-                "Cannot parse line $position: $line")
-              unless length $tagname;
-
-            $context //= $EMPTY;
-
-            if (($previous{tag} // $EMPTY) eq $tagname
-                && !scalar @comments){
-                # There are no new comments, no "empty line" in between and
-                # this tag is the same as the last, so we "carry over" the
-                # comment from the previous override (if any).
-                #
-                # Since L::T::Override is (supposed to be) immutable, the new
-                # override can share the reference with the previous one.
-                push(@comments, @{$previous{comments}});
-            }
-
-            my %current;
-            $current{tag} = $tagname;
-
-            # record line number
-            $current{line} = $position;
-
-            $current{context} = $context;
-
-            if ($context =~ m/\*/) {
-                # It is a pattern, pre-compute it
-                my $pattern = $context;
-                my $end = $EMPTY; # Trailing "match anything" (if any)
-                my $pat = $EMPTY; # The rest of the pattern
-                 # Split does not help us if $pattern ends with *
-                 # so we deal with that now
-                if ($pattern =~ s/\Q*\E+\z//){
-                    $end = $DOT . $ASTERISK;
-                }
-
-                # Are there any * left (after the above)?
-                if ($pattern =~ m/\Q*\E/) {
-                    # this works even if $text starts with a *, since
-                    # that is split as $EMPTY, <text>
-                    my @pargs = split(m/\Q*\E++/, $pattern);
-                    $pat = join($DOT . $ASTERISK, map { quotemeta } @pargs);
-                } else {
-                    $pat = $pattern;
-                }
-
-                $current{pattern} = qr/$pat$end/;
-            }
-
-            $current{comments} = [];
-            push(@{$current{comments}}, @comments);
-            @comments = ();
-
-            $override_data{$tagname} //= {};
-
-            if (exists $override_data{$tagname}{$context}) {
-
-                my @same_context
-                  = ($override_data{$tagname}{$context}{line}, $current{line});
-
-                $self->hint('duplicate-override-context', $tagname, 'lines',
-                    sort @same_context);
-
-                next;
-            }
-
-            $override_data{$tagname}{$context} = \%current;
-
-            %previous = %current;
-
-        } continue {
-            $position++;
+            # both spaces or colon were unmatched lookhead
+            $remaining =~ s/^\s+//;
+            $require_colon = 1;
         }
 
-        return \%override_data;
-    });
+        # remove architecture list
+        if ($remaining =~ s{^ \[ ([^\]]*) \] (?=\s|:)}{}x) {
+
+            my $list = $1;
+
+            @architectures = split($SPACE, $list);
+
+            # both spaces or colon were unmatched lookhead
+            $remaining =~ s/^\s+//;
+            $require_colon = 1;
+        }
+
+        # remove package type
+        my $type = $self->type;
+        if ($remaining =~ s/^\Q$type\E(?=\s|:)//) {
+
+            # both spaces or colon were unmatched lookhead
+            $remaining =~ s/^\s+//;
+            $require_colon = 1;
+        }
+
+        my $pointer = $self->override_file->pointer($position);
+
+        # require and remove colon when any package details are present
+        if ($require_colon && $remaining !~ s/^\s*:\s*//) {
+
+            my %error;
+            $error{message} = 'Expected a colon';
+            $error{pointer} = $pointer;
+            push(@{$self->override_errors}, \%error);
+
+            next;
+        }
+
+        my $hint_like = $remaining;
+
+        my ($tag_name, $pattern) = split($SPACE, $hint_like, 2);
+
+        if (!length $tag_name) {
+
+            my %error;
+            $error{message} = "Cannot parse line: $line";
+            $error{pointer} = $pointer;
+            push(@{$self->override_errors}, \%error);
+
+            next;
+        }
+
+        $pattern //= $EMPTY;
+
+        # There are no new comments, no "empty line" in between and
+        # this tag is the same as the last, so we "carry over" the
+        # comment from the previous override (if any).
+        $justification = $previous->justification
+          if !length $justification
+          && $tag_name eq $previous->tag_name;
+
+        my $current = Lintian::Override->new;
+
+        $current->tag_name($tag_name);
+        $current->architectures(\@architectures);
+        $current->pattern($pattern);
+        $current->position($position);
+
+        # combine successive white space
+        $justification =~ s{ \s+ }{ }gx;
+
+        $current->justification($justification);
+        $justification = $EMPTY;
+
+        push(@declared_overrides, $current);
+
+        $previous = $current;
+
+    } continue {
+        $position++;
+    }
+
+    return \@declared_overrides;
+}
 
 1;
 

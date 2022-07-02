@@ -1,6 +1,6 @@
 # files/build-path -- lintian check script -*- perl -*-
 
-# Copyright © 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -29,30 +29,18 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-has BUILD_PATH_REGEX => (
-    is => 'rw',
-    lazy => 1,
-    default => sub {
-        my ($self) = @_;
-
-        return $self->profile->load_data('files/build-path-regex',qr/~~~~~/,
-            sub { return  qr/$_[0]/xsm;});
-    });
-
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
-    # build directory
-    unless ($self->processable->source_name eq 'sbuild'
-        || $self->processable->source_name eq 'pbuilder') {
+    my $BUILD_PATH_REGEX
+      = $self->data->load('files/build-path-regex', qr/~~~~~/);
 
-        foreach my $buildpath ($self->BUILD_PATH_REGEX->all) {
-            my $regex = $self->BUILD_PATH_REGEX->value($buildpath);
-            if ($file->name =~ m{$regex}xms) {
+    for my $pattern ($BUILD_PATH_REGEX->all) {
 
-                $self->hint('dir-or-file-in-build-tree', $file->name);
-            }
-        }
+        $self->pointed_hint('dir-or-file-in-build-tree', $item->pointer)
+          if $item->name =~ m{$pattern}xms
+          && $self->processable->source_name ne 'sbuild'
+          && $self->processable->source_name ne 'pbuilder';
     }
 
     return;

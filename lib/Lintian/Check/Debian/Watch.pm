@@ -1,9 +1,9 @@
 # debian/watch -- lintian check script -*- perl -*-
 #
-# Copyright © 2008 Patrick Schoenfeld
-# Copyright © 2008 Russ Allbery
-# Copyright © 2008 Raphael Geissert
-# Copyright © 2019 Felix Lechner
+# Copyright (C) 2008 Patrick Schoenfeld
+# Copyright (C) 2008 Russ Allbery
+# Copyright (C) 2008 Raphael Geissert
+# Copyright (C) 2019 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -49,15 +49,17 @@ const my $DMANGLES_AUTOMATICALLY => 4;
 sub source {
     my ($self) = @_;
 
-    my $file = $self->processable->patched->resolve_path('debian/watch');
-    unless ($file && $file->is_file) {
+    my $item = $self->processable->patched->resolve_path('debian/watch');
+    unless ($item && $item->is_file) {
+
         $self->hint('debian-watch-file-is-missing')
           unless $self->processable->native;
+
         return;
     }
 
     # Perform the other checks even if it is a native package
-    $self->hint('debian-watch-file-in-native-package')
+    $self->pointed_hint('debian-watch-file-in-native-package', $item->pointer)
       if $self->processable->native;
 
     # Check if the Debian version contains anything that resembles a repackaged
@@ -72,9 +74,9 @@ sub source {
     my ($repack) = ($upstream =~ $PKGREPACK_REGEX);
 
     return
-      unless $file->is_open_ok;
+      unless $item->is_open_ok;
 
-    my $contents = $file->bytes;
+    my $contents = $item->bytes;
 
     # each pattern marks a multi-line (!) selection for the tag message
     my @templatepatterns
@@ -86,7 +88,8 @@ sub source {
         last if defined $templatestring;
     }
 
-    $self->hint('debian-watch-contains-dh_make-template', $templatestring)
+    $self->pointed_hint('debian-watch-contains-dh_make-template',
+        $item->pointer, $templatestring)
       if length $templatestring;
 
     # remove backslash at end; uscan will catch it
@@ -117,13 +120,14 @@ sub source {
     # allow spaces for all watch file versions (#950250, #950277)
     my $separator = qr/\s*,\s*/;
 
-    my @errors;
     my $withgpgverification = 0;
     my %dversions;
 
     my $position = 1;
     my $continued = $EMPTY;
     for my $line (@lines) {
+
+        my $pointer = $item->pointer($position);
 
         # strip leading spaces
         $line =~ s/^\s*//;
@@ -160,7 +164,8 @@ sub source {
         }
 
         unless (length $remainder) {
-            push(@errors, $line);
+
+            $self->pointed_hint('debian-watch-line-invalid', $pointer, $line);
             next;
         }
 
@@ -194,16 +199,29 @@ sub source {
             $withgpgverification = 1
               if $option =~ /^pgpsigurlmangle\s*=\s*/
               || $option =~ /^pgpmode\s*=\s*(?!none\s*$)\S.*$/;
+
+            my ($name, $value) = split(m{ \s* = \s* }x, $option, 2);
+
+            next
+              unless length $name;
+
+            $value //= $EMPTY;
+
+            $self->pointed_hint('prefer-uscan-symlink',$pointer, $name, $value)
+              if $name eq 'filenamemangle';
         }
 
-        $self->hint('debian-watch-file-uses-deprecated-sf-redirector-method',
-            $remainder)
+        $self->pointed_hint(
+            'debian-watch-file-uses-deprecated-sf-redirector-method',
+            $pointer,$remainder)
           if $remainder =~ m{qa\.debian\.org/watch/sf\.php\?};
 
-        $self->hint('debian-watch-file-uses-deprecated-githubredir',$remainder)
+        $self->pointed_hint('debian-watch-file-uses-deprecated-githubredir',
+            $pointer, $remainder)
           if $remainder =~ m{githubredir\.debian\.net};
 
-        $self->hint('debian-watch-lacks-sourceforge-redirector', $remainder)
+        $self->pointed_hint('debian-watch-lacks-sourceforge-redirector',
+            $pointer, $remainder)
           if $remainder =~ m{ (?:https?|ftp)://
                               (?:(?:.+\.)?dl|(?:pr)?downloads?|ftp\d?|upload) \.
                               (?:sourceforge|sf)\.net}xsm
@@ -212,8 +230,9 @@ sub source {
           || $remainder =~ m{https?://(?:www\.)?(?:sourceforge|sf)\.net
                   /projects/.+/files}xsm;
 
-        $self->hint('debian-watch-uses-insecure-uri', $1, "(line $position)")
-          if $remainder =~ m{((?:http|ftp):(?!//sf.net/)\S+)};
+        if ($remainder =~ m{((?:http|ftp):(?!//sf.net/)\S+)}) {
+            $self->pointed_hint('debian-watch-uses-insecure-uri', $pointer,$1);
+        }
 
         # This bit is as-is from uscan.pl:
         my ($base, $filepattern, $lastversion, $action)
@@ -240,19 +259,24 @@ sub source {
         # If the version of the package contains dfsg, assume that it needs
         # to be mangled to get reasonable matches with upstream.
         my $needs_repack_mangling = ($repack && $lastversion eq 'debian');
-        $self->hint('debian-watch-not-mangling-version', $line)
+
+        $self->pointed_hint('debian-watch-not-mangling-version',
+            $pointer, $line)
           if $needs_repack_mangling
           && !$repack_mangle
           && !$repack_dmangle_auto;
 
-        $self->hint('debian-watch-mangles-debian-version-improperly',$line)
+        $self->pointed_hint('debian-watch-mangles-debian-version-improperly',
+            $pointer, $line)
           if $needs_repack_mangling
           && $repack_mangle
           && !$repack_dmangle;
 
         my $needs_prerelease_mangling
           = ($prerelease && $lastversion eq 'debian');
-        $self->hint('debian-watch-mangles-upstream-version-improperly',$line)
+
+        $self->pointed_hint('debian-watch-mangles-upstream-version-improperly',
+            $pointer, $line)
           if $needs_prerelease_mangling
           && $prerelease_mangle
           && !$prerelease_umangle;
@@ -264,9 +288,11 @@ sub source {
 
         for my $option (@options) {
             if ($option =~ /^ component = (.+) $/x) {
+
                 my $component = $1;
-                $self->hint('debian-watch-upstream-component',
-                    $upstream_url, $component, "(line $position)");
+
+                $self->pointed_hint('debian-watch-upstream-component',
+                    $pointer, $upstream_url, $component);
             }
         }
 
@@ -274,13 +300,12 @@ sub source {
         ++$position;
     }
 
-    $self->hint('debian-watch-line-invalid', $_)for @errors;
-
-    $self->hint('debian-watch-does-not-check-gpg-signature')
+    $self->pointed_hint('debian-watch-does-not-check-gpg-signature',
+        $item->pointer)
       unless $withgpgverification;
 
     my $SIGNING_KEY_FILENAMES
-      = $self->profile->load_data('common/signing-key-filenames');
+      = $self->data->load('common/signing-key-filenames');
 
     # look for upstream signing key
     my @candidates
@@ -289,11 +314,13 @@ sub source {
     my $keyfile = firstval {$_ && $_->is_file} @candidates;
 
     # check upstream key is present if needed
-    $self->hint('debian-watch-file-pubkey-file-is-missing')
+    $self->pointed_hint('debian-watch-file-pubkey-file-is-missing',
+        $item->pointer)
       if $withgpgverification && !$keyfile;
 
     # check upstream key is used if present
-    $self->hint('debian-watch-could-verify-download', $keyfile->name)
+    $self->pointed_hint('debian-watch-could-verify-download',
+        $item->pointer, $keyfile->name)
       if $keyfile && !$withgpgverification;
 
     if (defined $self->processable->changelog && %dversions) {
@@ -314,20 +341,27 @@ sub source {
         }
 
         for my $dversion (sort keys %dversions) {
+
             next
               if $dversion eq 'debian';
+
             local $" = ', ';
+
             if (!$self->processable->native
                 && exists($changelog_versions{'orig'}{$dversion})) {
-                $self->hint(
+
+                $self->pointed_hint(
                     'debian-watch-file-specifies-wrong-upstream-version',
-                    $dversion);
+                    $item->pointer, $dversion);
                 next;
             }
+
             if (exists $changelog_versions{'mangled'}{$dversion}
                 && $changelog_versions{'mangled'}{$dversion} != 1) {
-                $self->hint('debian-watch-file-specifies-old-upstream-version',
-                    $dversion);
+
+                $self->pointed_hint(
+                    'debian-watch-file-specifies-old-upstream-version',
+                    $item->pointer, $dversion);
                 next;
             }
         }

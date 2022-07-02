@@ -4,4 +4,4 @@ Check: init-d
 Explanation: An <code>/etc/init.d</code> script which has been registered in the
  <code>postinst</code> script is not de-registered in the
  <code>postrm</code> script.
-See-Also: policy 9.3.3.1
+See-Also: debian-policy 9.3.3.1

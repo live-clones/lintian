@@ -8,4 +8,4 @@ Explanation: Each Debian package (which provides a /usr/share/doc/*pkg*
  A common error is to name the Debian changelog like an upstream changelog
  (/usr/share/doc/*pkg*/changelog.gz); therefore, Lintian will apply
  further checks to such a file if it exists even after issuing this error.
-See-Also: policy 12.7
+See-Also: debian-policy 12.7

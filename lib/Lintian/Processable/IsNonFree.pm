@@ -1,9 +1,9 @@
 # -*- perl -*-
 # Lintian::Processable::IsNonFree -- interface to source package data collection
 
-# Copyright © 2008 Russ Allbery
-# Copyright © 2009 Raphael Geissert
-# Copyright © 2020 Felix Lechner
+# Copyright (C) 2008 Russ Allbery
+# Copyright (C) 2009 Raphael Geissert
+# Copyright (C) 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -83,7 +83,8 @@ has is_non_free => (
           if $section =~ m{^(?:non-free|restricted|multiverse)/};
 
         return 0;
-    });
+    }
+);
 
 =back
 

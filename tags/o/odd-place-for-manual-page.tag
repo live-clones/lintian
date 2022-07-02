@@ -8,4 +8,4 @@ Explanation: The manual page should be installed in the correct directory below
  .
  The section number in the filename should correspond with the section
  number in the directory name.
-See-Also: policy 12.1
+See-Also: debian-policy 12.1

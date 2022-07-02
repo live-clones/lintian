@@ -1,8 +1,8 @@
 # changed-by -- lintian check script -*- perl -*-
 
-# Copyright © 1998 Christian Schwarz and Richard Braakman
-# Copyright © 2017-2019 Chris Lamb <lamby@debian.org>
-# Copyright © 2020 Felix Lechner
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 2017-2019 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2020 Felix Lechner
 #
 # This program is free software.  It is distributed under the terms of
 # the GNU General Public License as published by the Free Software
@@ -16,7 +16,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -42,8 +42,7 @@ sub changes {
     my $changed_by = $self->processable->fields->value('Changed-By');
 
     my $DERIVATIVE_CHANGED_BY
-      = $self->profile->load_data('common/derivative-changed-by',
-        qr/\s*~~\s*/, sub { $_[1]; });
+      = $self->data->load('common/derivative-changed-by',qr/\s*~~\s*/);
 
     for my $regex ($DERIVATIVE_CHANGED_BY->all) {
 

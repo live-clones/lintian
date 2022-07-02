@@ -9,4 +9,4 @@ Explanation: The named maintainer script appears to access a file or a directory
  Please consider using the <code>mktemp</code> utility from the <code>coreutils</code>
  package when creating temporary files or directories.
 See-Also:
- policy 10.4
+ debian-policy 10.4

@@ -1,6 +1,6 @@
 # maintainer_scripts::adduser -- lintian check script -*- perl -*-
 
-# Copyright © 2020 Topi Miettinen
+# Copyright (C) 2020 Topi Miettinen
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -24,64 +24,65 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Path::Tiny;
+use Unicode::UTF8 qw(encode_utf8);
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
 
-sub installable {
-    my ($self) = @_;
-
-    my @homevarrun;
+sub visit_control_files {
+    my ($self, $item) = @_;
 
     # get maintainer scripts
-    my @control
-      = grep { $_->is_maintainer_script }
-      @{$self->processable->control->sorted_list};
+    return
+      unless $item->is_maintainer_script;
 
-    for my $file (@control) {
+    return
+      unless $item->is_open_ok;
 
-        next
-          unless $file->is_open_ok;
+    open(my $fd, '<', $item->unpacked_path)
+      or die encode_utf8('Cannot open ' . $item->unpacked_path);
 
-        my @lines = path($file->unpacked_path)->lines;
-        my $continuation = undef;
+    my $continuation = undef;
 
-        for (@lines) {
-            chomp;
+    my $position = 1;
+    while (my $line = <$fd>) {
 
-            # merge lines ending with '\'
-            if (defined($continuation)) {
-                $_ = $continuation . $_;
-                $continuation = undef;
-            }
-            if (/\\$/) {
-                $continuation = $_;
-                $continuation =~ s/\\$/ /;
-                next;
-            }
+        chomp $line;
 
-            # trim right
-            s/\s+$//;
-
-            # skip empty lines
-            next
-              if /^\s*$/;
-
-            # skip comments
-            next
-              if /^[#\n]/;
-
-            if (/adduser .*--home +\/var\/run/) {
-                push(@homevarrun, $file);
-                next;
-            }
+        # merge lines ending with '\'
+        if (defined $continuation) {
+            $line = $continuation . $line;
+            $continuation = undef;
         }
+
+        if ($line =~ /\\$/) {
+            $continuation = $line;
+            $continuation =~ s/\\$/ /;
+            next;
+        }
+
+        # trim right
+        $line =~ s/\s+$//;
+
+        # skip empty lines
+        next
+          if $line =~ /^\s*$/;
+
+        # skip comments
+        next
+          if $line =~ /^[#\n]/;
+
+        $self->pointed_hint('adduser-with-home-var-run',
+            $item->pointer($position))
+          if $line =~ /adduser .*--home +\/var\/run/;
+
+    } continue {
+        ++$position;
     }
 
-    $self->hint('adduser-with-home-var-run', $_->name) for @homevarrun;
+    close $fd;
 
     return;
 }

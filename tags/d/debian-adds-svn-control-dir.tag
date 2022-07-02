@@ -1,6 +1,6 @@
 Tag: debian-adds-svn-control-dir
 Severity: warning
-Check: cruft
+Check: files/artifact
 Renamed-From:
  diff-contains-svn-control-dir
 Explanation: The Debian diff or native package contains files in an .svn

@@ -16,4 +16,4 @@ Explanation: This script is marked as running under <code>/bin/sh</code>, but it
  - <code>[[ test ]]</code> instead of <code>[ test ]</code> (requires a Korn shell)
  - <code>type</code> instead of <code>which</code> or <code>command -v</code>
 See-Also:
- policy 10.4
+ debian-policy 10.4

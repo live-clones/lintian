@@ -1,9 +1,9 @@
 # -*- perl -*-
 # Lintian::Processable::Fields::Files -- interface to .buildinfo file data collection
 #
-# Copyright © 2010 Adam D. Barratt
-# Copyright © 2018 Chris Lamb
-# Copyright © 2019-2020 Felix Lechner
+# Copyright (C) 2010 Adam D. Barratt
+# Copyright (C) 2018 Chris Lamb
+# Copyright (C) 2019-2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -157,7 +157,8 @@ has files => (
         }
 
         return \%files;
-    });
+    }
+);
 
 =back
 

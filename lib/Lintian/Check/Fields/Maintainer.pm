@@ -1,11 +1,11 @@
 # fields/maintainer -- lintian check script (rewrite) -*- perl -*-
 #
-# Copyright © 2004 Marc Brockschmidt
-# Copyright © 2020 Felix Lechner
-# Copyright © 2020 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2004 Marc Brockschmidt
+# Copyright (C) 2020 Felix Lechner
+# Copyright (C) 2020 Chris Lamb <lamby@debian.org>
 #
 # Parts of the code were taken from the old check script, which
-# was Copyright © 1998 Richard Braakman (also licensed under the
+# was Copyright (C) 1998 Richard Braakman (also licensed under the
 # GPL 2 or higher)
 #
 # This program is free software; you can redistribute it and/or modify
@@ -20,7 +20,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -64,7 +64,7 @@ sub changes {
 
     my $source_maintainer = $source->fields->value('Maintainer');
 
-    my $KNOWN_DISTS = $self->profile->load_data('changes-file/known-dists');
+    my $KNOWN_DISTS = $self->data->load('changes-file/known-dists');
 
     # not for derivatives; https://wiki.ubuntu.com/DebianMaintainerField
     $self->hint('inconsistent-maintainer',

@@ -6,4 +6,4 @@ Explanation: The keyword value of the "Urgency" field in the .changes file is no
  (case-insensitive). This value normally taken from the first line of the
  most recent entry in <code>debian/changelog</code>, which is probably where
  the error is.
-See-Also: policy 5.6.17
+See-Also: debian-policy 5.6.17

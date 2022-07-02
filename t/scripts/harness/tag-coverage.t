@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# Copyright © 2019 Felix Lechner
+# Copyright (C) 2019 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -36,7 +36,7 @@ use List::SomeUtils qw(uniq);
 use Path::Tiny;
 use Test::More;
 
-use lib "$ENV{'LINTIAN_BASE'}/lib";
+use lib ($ENV{'LINTIAN_BASE'} // q{.}) . '/lib';
 
 use Lintian::Profile;
 use Test::Lintian::ConfigFile qw(read_config);
@@ -46,11 +46,13 @@ use Test::Lintian::Output::Universal qw(tag_name);
 const my $SPACE => q{ };
 const my $NEWLINE => qq{\n};
 
-my @known_missing = (qw(
+my @known_missing = (
+    qw(
       changed-by-invalid-for-derivative
-      crossing-screens
       debian-files-list-in-source
+      debian-rules-missing-recommended-target
       debian-rules-not-executable
+      elf-warning
       embedded-pear-module
       invalid-field-for-derivative
       invalid-version-number-for-derivative
@@ -66,7 +68,7 @@ my @known_missing = (qw(
       unpack-message-for-deb-control
       unpack-message-for-orig
       uses-deprecated-adttmp
-      ),
+    ),
 
 # the following tags are not testable due to restrictions in reprotest
 # building the tests causes regressions due to an unknown problem, maybe in docker
@@ -77,7 +79,8 @@ my @known_missing = (qw(
       bad-owner-for-doc-file
       non-standard-game-executable-perm
       rules-silently-require-root
-));
+    )
+);
 
 my $profile = Lintian::Profile->new;
 $profile->load(undef, undef, 0);
@@ -86,11 +89,12 @@ $profile->load(undef, undef, 0);
 my @known = uniq $profile->known_checks;
 
 my %checktags;
-$checktags{$_} = $profile->tagnames_for_check->{$_}for @known;
+$checktags{$_} = $profile->tag_names_for_check->{$_}for @known;
 
 my %seen;
 
-my @descpaths = File::Find::Rule->file()->name('desc')->in('t/recipes');
+# require tags tested in their check; otherwise path could be t/recipes
+my @descpaths = File::Find::Rule->file()->name('desc')->in('t/recipes/checks');
 for my $descpath (@descpaths) {
 
     my $testcase = read_config($descpath);

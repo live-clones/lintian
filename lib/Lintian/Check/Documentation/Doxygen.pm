@@ -1,11 +1,11 @@
-# Copyright © 1998 Christian Schwarz and Richard Braakman
-# Copyright © 1999 Joey Hess
-# Copyright © 2000 Sean 'Shaleh' Perry
-# Copyright © 2002 Josip Rodin
-# Copyright © 2007 Russ Allbery
-# Copyright © 2013-2018 Bastien ROUCARIÈS
-# Copyright © 2017-2020 Chris Lamb <lamby@debian.org>
-# Copyright © 2020-2021 Felix Lechner
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 1999 Joey Hess
+# Copyright (C) 2000 Sean 'Shaleh' Perry
+# Copyright (C) 2002 Josip Rodin
+# Copyright (C) 2007 Russ Allbery
+# Copyright (C) 2013-2018 Bastien ROUCARIES
+# Copyright (C) 2017-2020 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2020-2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -40,8 +40,8 @@ sub visit_patched_files {
     return
       unless $item->is_file;
 
-    $self->hint('source-contains-prebuilt-doxygen-documentation',
-        $item->dirname)
+    $self->pointed_hint('source-contains-prebuilt-doxygen-documentation',
+        $item->parent_dir->pointer)
       if $item->basename =~ m{^doxygen.(?:png|sty)$}
       && $self->processable->source_name ne 'doxygen';
 
@@ -57,7 +57,8 @@ sub visit_patched_files {
     # Identify and ignore documentation templates by looking
     # for the use of various interpolated variables.
     # <http://www.doxygen.nl/manual/config.html#cfg_html_header>
-    $self->hint('source-contains-prebuilt-doxygen-documentation',$item)
+    $self->pointed_hint('source-contains-prebuilt-doxygen-documentation',
+        $item->pointer)
       if $lowercase =~ m{<meta \s+ name="generator" \s+ content="doxygen}smx
       && $lowercase
       !~ /\$(?:doxygenversion|projectname|projectnumber|projectlogo)\b/;

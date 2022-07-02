@@ -14,4 +14,4 @@ Explanation: The contact's mail address either loops back to itself or is known
  The mail address must accept messages from role accounts used to send
  automated mails regarding the package, including those from the bug
  tracking system.
-See-Also: policy 3.3
+See-Also: debian-policy 3.3

@@ -1,6 +1,6 @@
 # -*- perl -*- Lintian::Index::Strings
 #
-# Copyright © 2020 Felix Lechner
+# Copyright (C) 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -65,7 +65,7 @@ sub add_strings {
 
         # skip non-binaries
         next
-          unless $file->file_info =~ /\bELF\b/;
+          unless $file->file_type =~ /\bELF\b/;
 
         # prior implementations sometimes made the list unique
         my $allstrings

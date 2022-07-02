@@ -1,6 +1,6 @@
 # files/vcs -- lintian check script -*- perl -*-
 
-# Copyright © 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -26,93 +26,79 @@ use utf8;
 
 use Const::Fast;
 
+const my $VERTICAL_BAR => q{|};
+
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
 
-const my $VERTICAL_BAR => q{|};
-
-has COMPRESS_FILE_EXTENSIONS => (
-    is => 'rw',
-    lazy => 1,
-    default => sub {
-        my ($self) = @_;
-
-        return $self->profile->load_data('files/compressed-file-extensions',
-            qr/\s++/,sub { return qr/\Q$_[0]\E/ });
-    });
-
-# an OR (|) regex of all compressed extension
-has COMPRESS_FILE_EXTENSIONS_OR_ALL => (
-    is => 'rw',
-    lazy => 1,
-    default => sub {
-        my ($self) = @_;
-
-        my $text = join($VERTICAL_BAR,
-            map {$self->COMPRESS_FILE_EXTENSIONS->value($_) }
-              $self->COMPRESS_FILE_EXTENSIONS->all);
-
-        return qr/$text/;
-    });
-
-# vcs control files
-has VCS_FILES => (
-    is => 'rw',
-    lazy => 1,
-    default => sub {
-        my ($self) = @_;
-
-        my $regex = $self->COMPRESS_FILE_EXTENSIONS_OR_ALL;
-        return $self->profile->load_data(
-            'files/vcs-control-files',
-            qr/\s++/,
-            sub {
-                my $regexp = $_[0];
-                $regexp=~ s/\$[{]COMPRESS_EXT[}]/$regex/g;
-                return qr/(?:$regexp)/x;
-            });
-    });
-
 # an OR (|) regex of all vcs files
-has VCS_FILES_OR_ALL => (
+has VCS_PATTERNS_ORED => (
     is => 'rw',
     lazy => 1,
     default => sub {
         my ($self) = @_;
 
-        my $text = join($VERTICAL_BAR,
-            map { $self->VCS_FILES->value($_) } $self->VCS_FILES->all);
-        return qr/$text/;
-    });
+        my @vcs_patterns;
+
+        my $COMPRESS_FILE_EXTENSIONS
+          = $self->data->load('files/compressed-file-extensions',qr/\s+/);
+
+        my @quoted_extension_patterns
+          = map { quotemeta } $COMPRESS_FILE_EXTENSIONS->all;
+        my $ored_extension_patterns= ored_patterns(@quoted_extension_patterns);
+
+        my $VCS_CONTROL_PATTERNS
+          = $self->data->load('files/vcs-control-files', qr/\s+/);
+
+        for my $pattern ($VCS_CONTROL_PATTERNS->all) {
+            $pattern =~ s/\$[{]COMPRESS_EXT[}]/(?:$ored_extension_patterns)/g;
+            push(@vcs_patterns, $pattern);
+        }
+
+        my $ored_vcs_patterns = ored_patterns(@vcs_patterns);
+
+        return $ored_vcs_patterns;
+    }
+);
+
+sub ored_patterns {
+    my (@patterns) = @_;
+
+    my @protected = map { "(?:$_)" } @patterns;
+
+    my $ored = join($VERTICAL_BAR, @protected);
+
+    return $ored;
+}
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
-    if ($file->is_file) {
+    if ($item->is_file) {
 
-        my $regex = $self->VCS_FILES_OR_ALL;
+        my $pattern = $self->VCS_PATTERNS_ORED;
 
-        $self->hint('package-contains-vcs-control-file', $file->name)
-          if $file->name =~ m{$regex}
-          && $file->name !~ m{^usr/share/cargo/registry/};
+        $self->pointed_hint('package-contains-vcs-control-file',$item->pointer)
+          if $item->name =~ m{$pattern}x
+          && $item->name !~ m{^usr/share/cargo/registry/};
 
-        if ($file->name =~ m/svn-commit.*\.tmp$/) {
-            $self->hint('svn-commit-file-in-package', $file->name);
+        if ($item->name =~ m/svn-commit.*\.tmp$/) {
+            $self->pointed_hint('svn-commit-file-in-package', $item->pointer);
         }
 
-        if ($file->name =~ m/svk-commit.+\.tmp$/) {
-            $self->hint('svk-commit-file-in-package', $file->name);
+        if ($item->name =~ m/svk-commit.+\.tmp$/) {
+            $self->pointed_hint('svk-commit-file-in-package', $item->pointer);
         }
 
-    } elsif ($file->is_dir) {
+    } elsif ($item->is_dir) {
 
-        $self->hint('package-contains-vcs-control-dir', $file->name)
-          if $file->name =~ m{/CVS/?$}
-          || $file->name =~ m{/\.(?:svn|bzr|git|hg)/?$}
-          || $file->name =~ m{/\.arch-ids/?$}
-          || $file->name =~ m{/\{arch\}/?$};
+        $self->pointed_hint('package-contains-vcs-control-dir', $item->pointer)
+          if $item->name =~ m{/CVS/?$}
+          || $item->name =~ m{/\.(?:svn|bzr|git|hg)/?$}
+          || $item->name =~ m{/\.arch-ids/?$}
+          || $item->name =~ m{/\{arch\}/?$};
     }
 
     return;

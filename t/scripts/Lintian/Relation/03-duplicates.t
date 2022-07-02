@@ -17,7 +17,7 @@ my $relation_b
 
 is_deeply(
     $relation_a->redundancies,
-    (['pkgA', 'pkgA | pkgD']),
+    (['pkgA:any', 'pkgA:any | pkgD:any']),
     'Find redundancies'
 );
 is($relation_b->redundancies, 0, 'No redundancies');

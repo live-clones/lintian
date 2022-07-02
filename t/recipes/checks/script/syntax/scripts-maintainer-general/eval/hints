@@ -1,1 +1,1 @@
-scripts-maintainer-general (binary): maintainer-shell-script-fails-syntax-check control/prerm
+scripts-maintainer-general (binary): maintainer-shell-script-fails-syntax-check [prerm]

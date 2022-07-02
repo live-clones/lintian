@@ -1,5 +1,5 @@
-# Copyright © 2011 Niels Thykier <niels@thykier.net>
-# Copyright © 2019-2020 Felix Lechner
+# Copyright (C) 2011 Niels Thykier <niels@thykier.net>
+# Copyright (C) 2019-2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -13,7 +13,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -25,13 +25,12 @@ use utf8;
 use warnings::register;
 
 use Const::Fast;
+use File::Basename;
 use Path::Tiny;
 
 use Moo::Role;
 use MooX::Aliases;
 use namespace::clean;
-
-with 'Lintian::Hint::Bearer';
 
 const my $EMPTY => q{};
 const my $COLON => q{:};
@@ -68,6 +67,8 @@ Returns the name of the package.
 
 Returns the type of package (e.g. binary, source, udeb ...)
 
+=item hints
+
 =item $proc->version
 
 Returns the version of the package.
@@ -76,6 +77,10 @@ Returns the version of the package.
 
 Returns the path to the packaged version of actual package.  This path
 is used in case the data needs to be extracted from the package.
+
+=item basename
+
+Returns the basename of the package path.
 
 =item $proc->architecture
 
@@ -110,8 +115,20 @@ Returns the base directory of this package inside the lab.
 
 =cut
 
-has path => (is => 'rw', default => $EMPTY);
+has path => (
+    is => 'rw',
+    default => $EMPTY,
+    trigger => sub {
+        my ($self, $path) = @_;
+
+        my $basename = basename($path);
+        $self->basename($basename);
+    }
+);
+has basename => (is => 'rw', default => $EMPTY);
 has type => (is => 'rw', default => $EMPTY);
+
+has hints => (is => 'rw', default => sub { [] });
 
 has architecture => (
     is => 'rw',
@@ -194,7 +211,8 @@ has basedir => (
         my $basedir = $self->pooldir . "/$path";
 
         return $basedir;
-    });
+    }
+);
 
 =item C<identifier>
 
@@ -215,22 +233,6 @@ sub identifier {
     $id =~ s/\s+/_/g;
 
     return $id;
-}
-
-=item remove
-
-Removes all unpacked parts of the package in the lab.  Returns a truth
-value if successful.
-
-=cut
-
-sub remove {
-    my ($self) = @_;
-
-    path($self->basedir)->remove_tree
-      if -e $self->basedir;
-
-    return;
 }
 
 =item clean_field
@@ -267,17 +269,6 @@ sub guess_name {
     # 'path/lintian_2.5.2_amd64.changes' became 'lintian'
     return $guess;
 }
-
-=item unfolded_field (FIELD)
-
-This method returns the unfolded value of the control field FIELD in
-the control file for the package.  For a source package, this is the
-*.dsc file; for a binary package, this is the control file in the
-control section of the package.
-
-If FIELD is passed but not present, then this method returns undef.
-
-=cut
 
 =back
 

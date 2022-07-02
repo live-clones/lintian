@@ -1,13 +1,13 @@
 # Check::Examples -- lintian check script -*- perl -*-
 #
 # based on debhelper check,
-# Copyright © 1999 Joey Hess
-# Copyright © 2000 Sean 'Shaleh' Perry
-# Copyright © 2002 Josip Rodin
-# Copyright © 2007 Russ Allbery
-# Copyright © 2013-2018 Bastien ROUCARIÈS
-# Copyright © 2017-2020 Chris Lamb <lamby@debian.org>
-# Copyright © 2020-2021 Felix Lechner
+# Copyright (C) 1999 Joey Hess
+# Copyright (C) 2000 Sean 'Shaleh' Perry
+# Copyright (C) 2002 Josip Rodin
+# Copyright (C) 2007 Russ Allbery
+# Copyright (C) 2013-2018 Bastien ROUCARIES
+# Copyright (C) 2017-2020 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2020-2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -44,7 +44,7 @@ has group_ships_examples => (
     default => sub {
         my ($self) = @_;
 
-        my @processables = $self->group->get_processables('binary');
+        my @processables = $self->group->get_installables;
 
         # assume shipped examples if there is a package so named
         return 1
@@ -57,16 +57,17 @@ has group_ships_examples => (
           if any { m{^usr/share/doc/(.+/)?examples/?$} } @shipped;
 
         return 0;
-    });
+    }
+);
 
 sub visit_patched_files {
     my ($self, $item) = @_;
 
     # some installation files must be present; see Bug#972614
-    $self->hint('package-does-not-install-examples', $item)
+    $self->pointed_hint('package-does-not-install-examples', $item->pointer)
       if $item->basename eq 'examples'
       && $item->dirname !~ m{(?:^|/)(?:vendor|third_party)/}
-      && $self->group->get_processables('binary')
+      && $self->group->get_installables
       && !$self->group_ships_examples;
 
     return;

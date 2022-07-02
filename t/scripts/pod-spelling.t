@@ -82,6 +82,7 @@ Lichtenheld
 Niels Thykier
 Bastien ROUCARIES
 Felix Lechner
+Chritian Schwarz
 
 lintian Lintian Lintian's # ' # hi emacs
 dpkg
@@ -123,9 +124,9 @@ multiarch relationA relationB Multi natively unordered arg CVE autodie
 hashrefs namespace subdir SIGPIPE SIG blocknumber blocksub readwindow
 REMOVESLASH STAMPFILE TAGNAME TCODE TESTDATA BLOCKSIZE jN
 POSIX t1c2pfb init runtime txt executability writability
-INHANDLE OUTHANDLES UTC timestamp faux tagname READMEs Testname
+INHANDLE OUTHANDLES UTC timestamp faux tag_name READMEs Testname
 debhelper compat dh buildpackage uaccess udev AppStream plugdev dbgsym
-buildinfo dfsg
+buildinfo dfsg addons
 
 Buildflags
 __END__

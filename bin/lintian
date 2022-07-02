@@ -2,10 +2,10 @@
 #
 # Lintian -- Debian package checker
 #
-# Copyright © 1998 Christian Schwarz and Richard Braakman
-# Copyright © 2013 Niels Thykier
-# Copyright © 2017-2019 Chris Lamb <lamby@debian.org>
-# Copyright © 2020 Felix Lechner
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 2013 Niels Thykier
+# Copyright (C) 2017-2019 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2020 Felix Lechner
 #
 # This program is free software.  It is distributed under the terms of
 # the GNU General Public License as published by the Free Software
@@ -19,7 +19,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -50,11 +50,11 @@ use List::Compare;
 use List::SomeUtils qw(any none first_value);
 use Path::Tiny;
 use POSIX qw(:sys_wait_h);
+use Syntax::Keyword::Try;
 use Term::ReadKey;
 use Unicode::UTF8 qw(encode_utf8 decode_utf8);
 
-use Lintian::Deb822::Parser qw(parse_dpkg_control_string);
-use Lintian::Inspect::Changelog;
+use Lintian::Changelog;
 use Lintian::IPC::Run3 qw(safe_qx);
 use Lintian::Pool;
 use Lintian::Processable::Installable;
@@ -95,6 +95,7 @@ my %PRESERVE_ENV = map { $_ => 1 } qw(
   DEB_VENDOR
   DEBRELEASE_DEBS_DIR
   HOME
+  NO_COLOR
   LANG
   LC_ALL
   LC_MESSAGES
@@ -132,7 +133,7 @@ if (my $coverage_arg = $ENV{LINTIAN_COVERAGE}) {
 }
 
 my @getoptions = qw(
-  allow-root
+  allow-root!
   cfg=s
   check|c
   check-part|C=s@
@@ -152,7 +153,7 @@ my @getoptions = qw(
   hyperlinks=s
   ignore-lintian-env
   include-dir=s@
-  info|i
+  info|i!
   jobs|j=i
   no-cfg
   no-override|o
@@ -164,7 +165,7 @@ my @getoptions = qw(
   print-version
   profile=s
   quiet|q
-  show-overrides
+  show-overrides!
   status-log=s
   suppress-tags=s@
   suppress-tags-from-file=s
@@ -200,11 +201,19 @@ if (exists $command_line{'print-version'}) {
 show_help()
   if exists $command_line{help};
 
-$command_line{'show-overrides'} = 0
-  if exists $command_line{'hide-overrides'};
+if (exists $command_line{'hide-overrides'}) {
+    $command_line{'show-overrides'} = 0;
+    warn encode_utf8(
+"A future release will drop --hide-overrides; please use --no-show-overrides instead.\n"
+    );
+}
 
-$command_line{'tag-display-limit'} = 0
-  if exists $command_line{'no-tag-display-limit'};
+if (exists $command_line{'no-tag-display-limit'}) {
+    $command_line{'tag-display-limit'} = 0;
+    warn encode_utf8(
+"A future release will drop --no-tag-display-limit; please use '--tag-display-limit 0' instead.\n"
+    );
+}
 
 my $LINTIAN_CFG = $command_line{cfg};
 
@@ -454,12 +463,6 @@ if ($selected{'packages-from-file'} && $#ARGV+1 > 0) {
     delete($selected{'packages-from-file'});
 }
 
-die encode_utf8("Cannot use profile together with --ftp-master-rejects.\n")
-  if $selected{profile} && $selected{'ftp-master-rejects'};
-# --ftp-master-rejects is implemented in a profile
-$selected{profile} = 'debian/ftp-master-auto-reject'
-  if $selected{'ftp-master-rejects'};
-
 @{$selected{'fail-on'}} = split(/,/, join($COMMA, @{$selected{'fail-on'}}));
 my @known_fail_on = qw(
   error
@@ -502,16 +505,41 @@ my $PROFILE = Lintian::Profile->new;
 $PROFILE->load(
     $selected{profile},
     $selected{'include-dir'},
-    !$command_line{'no-user-dirs'});
+    !$command_line{'no-user-dirs'}
+);
 say {*STDERR} encode_utf8('Using profile ' . $PROFILE->name . $DOT)
   if $selected{debug};
+
+if ($selected{'ftp-master-rejects'}) {
+    say {*STDERR}
+      encode_utf8(
+        'But only with tags enabled from the FTP Master Auto-Reject list.')
+      if $selected{debug};
+
+    my $rejection = $PROFILE->data->auto_rejection;
+
+    my @certain = @{$rejection->certain};
+    my @preventable = @{$rejection->preventable};
+
+    # disable all tags
+    $PROFILE->disable_tag($_) for $PROFILE->known_tags;
+
+    # enable the ones they want
+    $PROFILE->enable_tag($_) for (@certain, @preventable);
+
+    # no overrides allowed
+    $PROFILE->set_durable($_, 1) for @certain;
+
+    # overrides okay
+    $PROFILE->set_durable($_, 0) for @preventable;
+}
 
 my $envlc = List::Compare->new([keys %config], \@ENV_FROM_CONFIG);
 my @from_file = $envlc->get_intersection;
 
 my @already = grep { defined $ENV{$_} } @from_file;
 warn encode_utf8(
-        'The environment overrides these settings in the configuration file: '
+    'The environment overrides these settings in the configuration file: '
       . join($SPACE, @already)
       . $NEWLINE)
   if @already;
@@ -532,15 +560,22 @@ $selected{hyperlinks} //= 'off'
   if $selected{color} eq 'never';
 
 # change to 'on' after gcc's terminal blacklist was implemented here
-$selected{hyperlinks} //= 'off';
+$selected{hyperlinks} //= 'on';
 
 die encode_utf8("The hyperlink value must be on or off\n")
   unless any { $selected{hyperlinks} eq $_ } qw(on off);
 
 $selected{hyperlinks} = $hyperlinks_capable && $selected{hyperlinks} eq 'on';
 
-$selected{color} = $selected{color} eq 'always'
-  || ($selected{color} eq 'auto' && is_interactive);
+if ($selected{color} eq 'always') {
+    $selected{color} = 1;
+} elsif (exists $ENV{NO_COLOR}) {
+    $selected{color} = 0;
+} elsif ($selected{color} eq 'auto' && is_interactive) {
+    $selected{color} = 1;
+} else {
+    $selected{color} = 0;
+}
 
 $selected{verbose} = 0
   if $selected{quiet};
@@ -580,7 +615,6 @@ if ($selected{debug}) {
     say {*STDERR} encode_utf8("Lintian v$ENV{LINTIAN_VERSION}");
     say {*STDERR} encode_utf8("Lintian root directory: $ENV{LINTIAN_BASE}");
     say {*STDERR} encode_utf8("Configuration file: $LINTIAN_CFG");
-    say {*STDERR} encode_utf8('UTF-8: ✓ (☃)');
 }
 
 if (defined $selected{LINTIAN_PROFILE}) {
@@ -608,31 +642,31 @@ if (@{$selected{'check-part'}} || @{$selected{tags}}) {
         $PROFILE->enable_tag($_) for @{$selected{tags}};
 
     } else {
-        for my $checkname (@{$selected{'check-part'}}) {
-            if ($checkname eq 'all') {
-                my @tags = map { @{$PROFILE->tagnames_for_check->{$_} // []} }
+        for my $check_name (@{$selected{'check-part'}}) {
+            if ($check_name eq 'all') {
+                my @tags = map { @{$PROFILE->tag_names_for_check->{$_} // []} }
                   $PROFILE->known_checks;
                 $PROFILE->enable_tag($_) for @tags;
                 next;
             }
 
-            die encode_utf8("Unrecognized check (via -C): $checkname\n")
-              unless exists $PROFILE->check_module_by_name->{$checkname};
+            die encode_utf8("Unrecognized check (via -C): $check_name\n")
+              unless exists $PROFILE->check_module_by_name->{$check_name};
 
             $PROFILE->enable_tag($_)
-              for @{$PROFILE->tagnames_for_check->{$checkname} // []};
+              for @{$PROFILE->tag_names_for_check->{$check_name} // []};
         }
     }
 
 } elsif (@{$selected{'dont-check-part'}}) {
     # we are disabling checks
-    for my $checkname (@{$selected{'dont-check-part'}}) {
+    for my $check_name (@{$selected{'dont-check-part'}}) {
 
-        die encode_utf8("Unrecognized check (via -X): $checkname\n")
-          unless exists $PROFILE->check_module_by_name->{$checkname};
+        die encode_utf8("Unrecognized check (via -X): $check_name\n")
+          unless exists $PROFILE->check_module_by_name->{$check_name};
 
         $PROFILE->disable_tag($_)
-          for @{$PROFILE->tagnames_for_check->{$checkname} // []};
+          for @{$PROFILE->tag_names_for_check->{$check_name} // []};
     }
 }
 
@@ -676,7 +710,7 @@ for my $subject (@subjects) {
 "bad package file name $subject (neither .deb, .udeb, .ddeb, .changes, .dsc or .buildinfo file)\n"
     ) unless $subject =~ /\.(?:[u|d]?deb|dsc|changes|buildinfo)$/;
 
-    eval {
+    try {
         # create a new group
         my $group = Lintian::Group->new;
         $group->pooldir($pool->basedir);
@@ -713,8 +747,8 @@ for my $subject (@subjects) {
         }
 
         $pool->add_group($group);
-    };
-    if ($@) {
+
+    } catch {
         warn encode_utf8("Skipping $subject: $@\n");
         $exit_code = 1;
     }
@@ -806,7 +840,7 @@ sub parse_boolean {
 sub _find_changes {
     # read bytes to side-step any encoding errors
     my $contents = path('debian/changelog')->slurp;
-    my $changelog = Lintian::Inspect::Changelog->new;
+    my $changelog = Lintian::Changelog->new;
     $changelog->parse($contents);
     my @entries = @{$changelog->entries};
     my $latest = @entries ? $entries[0] : undef;
@@ -994,18 +1028,16 @@ Behavior options:
     --pedantic                display "P:" tags (normally suppressed)
     --profile X               Use the profile X or use vendor X checks
     --show-overrides          output tags that have been overridden
-    --hide-overrides          do not output tags that have been overridden (default)
     --suppress-tags T,...     don't show the specified tags
     --suppress-tags-from-file X don't show the tags listed in file X
-    --tag-display-limit X     Specify "tag per package" display limit
-    --no-tag-display-limit    Disable "tag per package" display limit
-                              (equivalent to --tag-display-limit=0)
+    --tag-display-limit NUM   Specify "tag per package" display limit
+
 Configuration options:
     --cfg CONFIGFILE          read CONFIGFILE for configuration
     --no-cfg                  do not read any config files
     --ignore-lintian-env      ignore LINTIAN_* env variables
     --include-dir DIR         include checks, libraries (etc.) from DIR
-    -j X, --jobs X            limit the number of parallel unpacking jobs to X
+    -j NUM, --jobs NUM        limit the number of parallel jobs to NUM
     --[no-]user-dirs          whether to use files from user directories
 
 Some options were omitted. Please check the manual page for the complete list.

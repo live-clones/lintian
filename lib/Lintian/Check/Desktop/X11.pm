@@ -1,6 +1,6 @@
 # desktop/x11 -- lintian check script -*- perl -*-
 
-# Copyright © 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -34,34 +34,35 @@ with 'Lintian::Check';
 has fontdirs => (is => 'rw', default => sub { {} });
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     # links to FHS locations are allowed
-    $self->hint('package-installs-file-to-usr-x11r6', $file->name)
-      if $file->name =~ m{^usr/X11R6/} && !$file->is_symlink;
+    $self->pointed_hint('package-installs-file-to-usr-x11r6', $item->pointer)
+      if $item->name =~ m{^usr/X11R6/} && !$item->is_symlink;
 
     return
-      if $file->is_dir;
+      if $item->is_dir;
 
     # /usr/share/fonts/X11
-    my ($subdir) = ($file->name =~ m{^usr/share/fonts/X11/([^/]+)/\S+});
+    my ($subdir) = ($item->name =~ m{^usr/share/fonts/X11/([^/]+)/\S+});
     if (defined $subdir) {
 
         $self->fontdirs->{$subdir}++
           if any { $subdir eq $_ } qw(100dpi 75dpi misc);
 
         if (any { $subdir eq $_ } qw(PEX CID Speedo cyrillic)) {
-            $self->hint('file-in-discouraged-x11-font-directory', $file->name);
+            $self->pointed_hint('file-in-discouraged-x11-font-directory',
+                $item->pointer);
 
-        } elsif (
-            none { $subdir eq $_ }
-            qw(100dpi 75dpi misc Type1 encodings util)
-        ) {
-            $self->hint('file-in-unknown-x11-font-directory', $file->name);
+        } elsif (none { $subdir eq $_ }
+            qw(100dpi 75dpi misc Type1 encodings util)) {
+            $self->pointed_hint('file-in-unknown-x11-font-directory',
+                $item->pointer);
 
-        } elsif ($file->basename eq 'encodings.dir'
-            or $file->basename =~ m{fonts\.(dir|scale|alias)}) {
-            $self->hint('package-contains-compiled-font-file', $file->name);
+        } elsif ($item->basename eq 'encodings.dir'
+            or $item->basename =~ m{fonts\.(dir|scale|alias)}) {
+            $self->pointed_hint('package-contains-compiled-font-file',
+                $item->pointer);
         }
     }
 

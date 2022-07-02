@@ -1,4 +1,4 @@
-# Copyright © 2014 Niels Thykier <niels@thykier.net>
+# Copyright (C) 2014 Niels Thykier <niels@thykier.net>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -12,7 +12,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -140,7 +140,8 @@ sub install_resource {
             croak encode_utf8(
                 join($SPACE,
                     qq(Resource "${resource_name}" must not contain "/"),
-                    'when source_file is given'));
+                    'when source_file is given')
+            );
         }
     } else {
         $basename = basename($resource_name);
@@ -178,7 +179,8 @@ sub install_resource {
         croak encode_utf8(
             join($SPACE,
                 "Unknown install method ${method}",
-                '- please use "move" or "copy"'));
+                '- please use "move" or "copy"')
+        );
     }
     $self->{'_resource_cache'}{$basename} = $target_file;
     $self->{'_resource_integrity'}{$basename} = "sha256-${b64digest}";

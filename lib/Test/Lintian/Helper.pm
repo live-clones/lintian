@@ -1,7 +1,7 @@
-# Copyright © 1998 Richard Braakman
-# Copyright © 2008 Frank Lichtenheld
-# Copyright © 2008, 2009 Russ Allbery
-# Copyright © 2018 Felix Lechner
+# Copyright (C) 1998 Richard Braakman
+# Copyright (C) 2008 Frank Lichtenheld
+# Copyright (C) 2008, 2009 Russ Allbery
+# Copyright (C) 2018 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA
 
@@ -103,7 +103,7 @@ sub get_latest_policy {
     my $profile = Lintian::Profile->new;
     $profile->load(undef, undef, 0);
 
-    my $releases = $profile->policy_releases;
+    my $releases = $profile->data->policy_releases;
 
     my $version = $releases->latest_version;
     die encode_utf8('Could not get latest policy version.')
@@ -126,7 +126,7 @@ sub get_recommended_debhelper_version {
     my $profile = Lintian::Profile->new;
     $profile->load(undef, undef, 0);
 
-    my $compat_level = $profile->debhelper_levels;
+    my $compat_level = $profile->data->debhelper_levels;
 
     return $compat_level->value('recommended');
 }

@@ -1,0 +1,18 @@
+# Data about titles, sections, and URLs of manuals, used to expand references
+# in tag descriptions and add links for HTML output.  Each line of this file
+# has three fields separated by double colons:
+#
+#     <section> :: <title> :: <url>
+#
+# If <section> is an underscore, that line specifies the title and URL for the
+# whole manual.
+
+_::Debian Packaging Policy for Vim::file:///usr/share/doc/vim/vim-policy.html/index.html
+1::Vim Addon Packaging in a Nutshell::file:///usr/share/doc/vim/vim-policy.html/index.html#nutshell
+2::Vim Packaging::file:///usr/share/doc/vim/vim-policy.html/x73.html
+3::Packaging of Vim Addons::file:///usr/share/doc/vim/vim-policy.html/x113.html
+3.1::Addon Structure::file:///usr/share/doc/vim/vim-policy.html/x113.html#addon-structure
+3.2::Addon Packages::file:///usr/share/doc/vim/vim-policy.html/x113.html#addon-packages
+3.3::Registry Entries::file:///usr/share/doc/vim/vim-policy.html/x113.html#registry-entry
+4::Tools::file:///usr/share/doc/vim/vim-policy.html/x221.html
+A::Vim Registry Entry Examples::file:///usr/share/doc/vim/vim-policy.html/a245.html

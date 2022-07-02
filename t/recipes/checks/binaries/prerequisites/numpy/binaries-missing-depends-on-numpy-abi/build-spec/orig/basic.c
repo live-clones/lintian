@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
+
 static void
 hardening_trigger(char *p, int i, void (*f)(char *))
 {

@@ -1,6 +1,6 @@
 # files/p11-kit -- lintian check script -*- perl -*-
 
-# Copyright © 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -30,15 +30,16 @@ use namespace::clean;
 with 'Lintian::Check';
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     if (
-           $file->name =~ m{^usr/share/p11-kit/modules/.}
-        && $file->name !~ m{\A usr/share/p11-kit/modules/
+        $item->name =~ m{^usr/share/p11-kit/modules/.}
+        && $item->name !~ m{\A usr/share/p11-kit/modules/
                        [[:alnum:]][[:alnum:]_.-]*\.module\Z
                   }xsm
     ) {
-        $self->hint('incorrect-naming-of-pkcs11-module', $file->name);
+        $self->pointed_hint('incorrect-naming-of-pkcs11-module',
+            $item->pointer);
     }
 
     return;

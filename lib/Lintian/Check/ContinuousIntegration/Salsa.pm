@@ -1,6 +1,6 @@
 # continuous-integration/salsa -- lintian check script -*- perl -*-
 
-# Copyright © 2020 Felix Lechner
+# Copyright (C) 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -52,7 +52,7 @@ sub visit_patched_files {
     return
       unless any { $item->name eq $_ } @KNOWN_LOCATIONS;
 
-    $self->hint('specification', $item->name);
+    $self->pointed_hint('specification', $item->pointer);
 
     return
       unless $item->is_open_ok;
@@ -89,7 +89,7 @@ sub visit_patched_files {
         }
     }
 
-    $self->hint('include', $item->name, $_) for @includes;
+    $self->pointed_hint('include', $item->pointer, $_) for @includes;
 
     return;
 }

@@ -7,4 +7,4 @@ Explanation: The specified package is in the contrib or non-free archive
  .
  Please add a brief comment why this package cannot be part of the
  main Debian distribution.
-See-Also: policy 12.5
+See-Also: debian-policy 12.5

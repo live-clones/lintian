@@ -1,4 +1,4 @@
-# Copyright © 2020 Felix Lechner
+# Copyright (C) 2020-2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -12,7 +12,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -26,8 +26,7 @@ use Const::Fast;
 use Time::Piece;
 use JSON::MaybeXS;
 
-use Moo;
-use namespace::clean;
+use Lintian::Output::Markdown qw(markdown_citation);
 
 const my $EMPTY => q{};
 
@@ -41,6 +40,9 @@ const my %CODE_PRIORITY => (
     'O' => 90,
     'M' => 100,
 );
+
+use Moo;
+use namespace::clean;
 
 =head1 NAME
 
@@ -66,7 +68,7 @@ is necessary to report in case no hints were found.
 =cut
 
 sub issue_hints {
-    my ($self, $groups) = @_;
+    my ($self, $profile, $groups) = @_;
 
     $groups //= [];
 
@@ -94,7 +96,8 @@ sub issue_hints {
 
             my %file_output;
             $file_output{path} = $processable->path;
-            $file_output{hints} = $self->hintlist($processable->hints);
+            $file_output{hints}
+              = $self->hintlist($profile, $processable->hints);
 
             push(@allfiles_output, \%file_output);
         }
@@ -119,41 +122,111 @@ sub issue_hints {
 =cut
 
 sub hintlist {
-    my ($self, $arrayref) = @_;
+    my ($self, $profile, $arrayref) = @_;
+
+    my %sorter;
+    for my $hint (@{$arrayref // []}) {
+
+        my $tag = $profile->get_tag($hint->tag_name);
+
+        my $override_status = 0;
+        $override_status = 1
+          if defined $hint->override || @{$hint->masks};
+
+        my $ranking_code = $tag->code;
+        $ranking_code = 'X'
+          if $tag->experimental;
+        $ranking_code = 'O'
+          if defined $hint->override;
+        $ranking_code = 'M'
+          if @{$hint->masks};
+
+        my $code_priority = $CODE_PRIORITY{$ranking_code};
+
+        push(
+            @{
+                $sorter{$override_status}{$code_priority}{$tag->name}
+                  {$hint->context}
+            },
+            $hint
+        );
+    }
+
+    my @sorted;
+    for my $override_status (sort keys %sorter) {
+        my %by_code_priority = %{$sorter{$override_status}};
+
+        for my $code_priority (sort { $a <=> $b } keys %by_code_priority) {
+            my %by_tag_name = %{$by_code_priority{$code_priority}};
+
+            for my $tag_name (sort keys %by_tag_name) {
+                my %by_context = %{$by_tag_name{$tag_name}};
+
+                for my $context (sort keys %by_context) {
+
+                    my $hints
+                      = $sorter{$override_status}{$code_priority}{$tag_name}
+                      {$context};
+
+                    push(@sorted, $_)for @{$hints};
+                }
+            }
+        }
+    }
 
     my @hint_dictionaries;
-
-    my @sorted = sort {
-               defined $a->override <=> defined $b->override
-          ||   $CODE_PRIORITY{$a->tag->code}<=> $CODE_PRIORITY{$b->tag->code}
-          || $a->tag->name cmp $b->tag->name
-          || $a->context cmp $b->context
-    } @{$arrayref // []};
-
     for my $hint (@sorted) {
+
+        my $tag = $profile->get_tag($hint->tag_name);
 
         my %hint_dictionary;
         push(@hint_dictionaries, \%hint_dictionary);
 
-        $hint_dictionary{tag} = $hint->tag->name;
+        $hint_dictionary{tag} = $tag->name;
+        $hint_dictionary{note} = $hint->note;
 
-        $hint_dictionary{context} = $hint->context
-          if length $hint->context;
+        if ($hint->can('pointer')) {
+            my $pointer = $hint->pointer;
 
-        $hint_dictionary{visibility} = $hint->tag->visibility;
-        $hint_dictionary{experimental} = 'yes'
-          if $hint->tag->experimental;
+            my %pointer_dictionary;
 
-        $hint_dictionary{screen} = $hint->screen->name
-          if defined $hint->screen;
+            if ($pointer->can('item')) {
+                my $item = $pointer->item;
+
+                my %item_dictionary;
+                $item_dictionary{name} = $item->name;
+                $item_dictionary{index} = $item->index->identifier;
+
+                $pointer_dictionary{item} = \%item_dictionary;
+
+                # numerify to force JSON integer
+                # https://metacpan.org/pod/JSON::XS#simple-scalars
+                $pointer_dictionary{line_position} = $pointer->position + 0;
+            }
+
+            $hint_dictionary{pointer} = \%pointer_dictionary;
+        }
+
+        $hint_dictionary{visibility} = $tag->visibility;
+        $hint_dictionary{experimental}
+          = ($tag->experimental ? JSON()->true : JSON()->false);
+
+        for my $mask (@{ $hint->masks }) {
+
+            my %mask_dictionary;
+            $mask_dictionary{screen} = $mask->screen;
+            $mask_dictionary{excuse} = $mask->excuse;
+
+            push(@{$hint_dictionary{masks}}, \%mask_dictionary);
+        }
 
         if ($hint->override) {
 
-            $hint_dictionary{override} = 'yes';
+            my %override_dictionary;
+            $override_dictionary{justification}
+              = $hint->override->justification;
 
-            my @comments = @{ $hint->override->{comments} // [] };
-            $hint_dictionary{override_comments} = \@comments
-              if @comments;
+            $hint_dictionary{override} = \%override_dictionary;
         }
     }
 
@@ -165,7 +238,7 @@ sub hintlist {
 =cut
 
 sub describe_tags {
-    my ($self, $tags) = @_;
+    my ($self, $data, $tags) = @_;
 
     my @tag_dictionaries;
 
@@ -175,22 +248,23 @@ sub describe_tags {
         push(@tag_dictionaries, \%tag_dictionary);
 
         $tag_dictionary{name} = $tag->name;
-        $tag_dictionary{name_spaced} = $tag->name_spaced
-          if length $tag->name_spaced;
-        $tag_dictionary{show_always} = $tag->show_always
-          if length $tag->show_always;
+        $tag_dictionary{name_spaced}
+          = ($tag->name_spaced ? JSON()->true : JSON()->false);
+        $tag_dictionary{show_always}
+          = ($tag->show_always ? JSON()->true : JSON()->false);
 
         $tag_dictionary{explanation} = $tag->explanation;
-        $tag_dictionary{see_also} = $tag->see_also
-          if @{$tag->see_also};
+
+        my @tag_see_also_markdown
+          = map { markdown_citation($data, $_) } @{$tag->see_also};
+        $tag_dictionary{see_also} = \@tag_see_also_markdown;
 
         $tag_dictionary{check} = $tag->check;
         $tag_dictionary{visibility} = $tag->visibility;
-        $tag_dictionary{experimental} = $tag->experimental
-          if length $tag->experimental;
+        $tag_dictionary{experimental}
+          = ($tag->experimental ? JSON()->true : JSON()->false);
 
-        $tag_dictionary{renamed_from} = $tag->renamed_from
-          if @{$tag->renamed_from};
+        $tag_dictionary{renamed_from} = $tag->renamed_from;
 
         my @screen_dictionaries;
 
@@ -206,8 +280,9 @@ sub describe_tags {
 
             $screen_dictionary{reason} = $screen->reason;
 
-            $screen_dictionary{see_also} = $screen->see_also
-              if @{$screen->see_also};
+            my @screen_see_also_markdown
+              = map { markdown_citation($data, $_) } @{$screen->see_also};
+            $screen_dictionary{see_also} = \@screen_see_also_markdown;
         }
 
         $tag_dictionary{screens} = \@screen_dictionaries;

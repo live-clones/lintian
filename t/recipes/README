@@ -276,14 +276,14 @@ checkout.
 RUNNING THE TEST SUITE
 ======================
 
-The complete test suite will be run with debian/rules runtests, but
+The complete test suite will be run with private/runtests, but
 this can take quite a lot of time.  Normally this is only necessary
 after significant structural changes or before a release as a final
 check.
 
 To run a specific test case, run:
 
-    debian/rules runtests onlyrun=test:<path>
+    private/runtests onlyrun=test:<path>
 
 You can also run groups of tests defined by selectors such as:
 

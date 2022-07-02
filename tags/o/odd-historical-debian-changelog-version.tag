@@ -12,4 +12,5 @@ Explanation: The version string in a historical changelog entry was not parsed
  naive to non-native, or the other way around. It can only say whether
  the historical changelog entries comply with the current nativeness of a
  package.
-See-Also: policy 5.6.12
+See-Also:
+ debian-policy 5.6.12

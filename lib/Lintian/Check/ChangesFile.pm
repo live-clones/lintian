@@ -1,7 +1,7 @@
 # changes-file -- lintian check script -*- perl -*-
 
-# Copyright © 1998 Christian Schwarz and Richard Braakman
-# Copyright © 2017-2019 Chris Lamb <lamby@debian.org>
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 2017-2019 Chris Lamb <lamby@debian.org>
 #
 # This program is free software.  It is distributed under the terms of
 # the GNU General Public License as published by the Free Software
@@ -15,7 +15,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -25,9 +25,14 @@ use v5.20;
 use warnings;
 use utf8;
 
+use Const::Fast;
+use List::Compare;
+use List::SomeUtils qw(uniq);
 use Path::Tiny;
 
 use Lintian::Util qw(get_file_checksum);
+
+const my $NOT_EQUALS => q{!=};
 
 use Moo;
 use namespace::clean;
@@ -37,76 +42,71 @@ with 'Lintian::Check';
 sub changes {
     my ($self) = @_;
 
-    my $group = $self->group;
-    my $files = $self->processable->files;
+    my %count_by_algorithm;
 
-    my $parentdir = path($self->processable->path)->parent->stringify;
+    for my $basename (keys %{$self->processable->files}) {
 
-    my %num_checksums;
+        my $details = $self->processable->files->{$basename};
 
-    for my $file (keys %{$files}) {
-        my $file_info = $files->{$file};
-
-        # check section
-        if (   ($file_info->{section} eq 'non-free')
-            or ($file_info->{section} eq 'contrib')) {
-            $self->hint('bad-section-in-changes-file', $file,
-                $file_info->{section});
-        }
-
-        for my $alg (qw(Sha1 Sha256)) {
-            my $checksum_info = $file_info->{checksums}{$alg};
-            if (defined $checksum_info) {
-                if ($file_info->{size} != $checksum_info->{filesize}) {
-                    $self->hint('file-size-mismatch-in-changes-file', $file,
-                           $file_info->{size} . ' != '
-                          .$checksum_info->{filesize});
-                }
-            }
-        }
+        $self->hint('bad-section-in-changes-file', $basename,
+            $details->{section})
+          if $details->{section} eq 'non-free'
+          || $details->{section} eq 'contrib';
 
         # take from location near input file
-        my $filename = path($parentdir)->child($file)->stringify;
+        my $physical_path
+          = path($self->processable->path)->sibling($basename)->stringify;
+        my $actual_size = -s $physical_path;
 
         # check size
-        my $size = -s $filename;
-        if ($size != $file_info->{size}) {
-            $self->hint('file-size-mismatch-in-changes-file',
-                $file, $file_info->{size} . " != $size");
-        }
+        $self->hint('file-size-mismatch-in-changes-file',
+            $basename, $details->{size}, $NOT_EQUALS, $actual_size)
+          unless $details->{size} == $actual_size;
 
-        # check checksums
-        for my $alg (qw(Md5 Sha1 Sha256)) {
+        for my $algorithm (qw(Md5 Sha1 Sha256)) {
+
+            my $checksum_info = $details->{checksums}{$algorithm};
             next
-              unless exists $file_info->{checksums}{$alg};
+              unless defined $checksum_info;
 
-            my $real_checksum = get_file_checksum($alg, $filename);
-            $num_checksums{$alg}++;
+            $self->hint('file-size-mismatch-in-changes-file',
+                $basename,$details->{size}, $NOT_EQUALS,
+                $checksum_info->{filesize})
+              unless $details->{size} == $checksum_info->{filesize};
 
-            if ($real_checksum ne $file_info->{checksums}{$alg}{sum}) {
-                $self->hint('checksum-mismatch-in-changes-file',
-                    "Checksum-$alg", $file);
-            }
+            my $actual_checksum= get_file_checksum($algorithm, $physical_path);
+
+            $self->hint('checksum-mismatch-in-changes-file',
+                "Checksum-$algorithm", $basename)
+              unless $checksum_info->{sum} eq $actual_checksum;
+
+            ++$count_by_algorithm{$algorithm};
         }
     }
 
-    my %debs = map { m/^([^_]+)_/ => 1 } grep { m/\.deb$/ } keys %{$files};
-    for my $pkg_name (keys %debs) {
-        if ($pkg_name =~ m/^(.+)-dbgsym$/) {
-            $self->hint('package-builds-dbg-and-dbgsym-variants',
-                "$1-{dbg,dbgsym}")
-              if exists $debs{"$1-dbg"};
-        }
+    my @installables= grep { m{ [.]deb $}x } keys %{$self->processable->files};
+    my @installable_names = map { m{^ ([^_]+) _ }x } @installables;
+    my @stems = uniq map { m{^ (.+) -dbg (?:sym) $}x } @installable_names;
+
+    for my $stem (@stems) {
+
+        my @conflicting = ("$stem-dbg", "$stem-dbgsym");
+
+        my $lc = List::Compare->new(\@conflicting, \@installable_names);
+        $self->hint('package-builds-dbg-and-dbgsym-variants',
+            (sort @conflicting))
+          if $lc->is_LsubsetR;
     }
 
     # Check that we have a consistent number of checksums and files
-    for my $alg (keys %num_checksums) {
-        my $seen = $num_checksums{$alg};
-        my $expected = keys %{$files};
-        $self->hint(
-            'checksum-count-mismatch-in-changes-file',
-            "$seen Checksum-$alg checksums != $expected files"
-        ) if $seen != $expected;
+    for my $algorithm (keys %count_by_algorithm) {
+
+        my $actual_count = $count_by_algorithm{$algorithm};
+        my $expected_count = scalar keys %{$self->processable->files};
+
+        $self->hint('checksum-count-mismatch-in-changes-file',
+"$actual_count Checksum-$algorithm checksums != $expected_count files"
+        ) if $actual_count != $expected_count;
     }
 
     return;

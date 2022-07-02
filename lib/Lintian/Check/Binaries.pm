@@ -1,9 +1,9 @@
 # binaries -- lintian check script -*- perl -*-
 
-# Copyright © 1998 Christian Schwarz and Richard Braakman
-# Copyright © 2012 Kees Cook
-# Copyright © 2017-2020 Chris Lamb <lamby@debian.org>
-# Copyright © 2021 Felix Lechner
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 2012 Kees Cook
+# Copyright (C) 2017-2020 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -27,8 +27,7 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Const::Fast;
-use List::SomeUtils qw(any);
+use List::Compare;
 
 use Moo;
 use namespace::clean;
@@ -42,21 +41,24 @@ sub visit_installed_files {
       unless $item->is_file;
 
     return
-      unless $item->file_info =~ /^ [^,]* \b ELF \b /x;
+      unless $item->file_type =~ /^ [^,]* \b ELF \b /x;
 
-    my $objdump = $self->processable->objdump_info->{$item->name};
-    return
-      unless defined $objdump;
+    my @KNOWN_STRIPPED_SECTION_NAMES = qw{.note .comment};
 
-    my @EXTRA_SECTIONS = qw{.note .comment};
-    my @unneeded_sections = grep { exists $objdump->{SH}{$_} } @EXTRA_SECTIONS;
+    my @elf_sections = values %{$item->elf->{'SECTION-HEADERS'}};
+    my @have_section_names = map { $_->name } @elf_sections;
+
+    my $lc_name = List::Compare->new(\@have_section_names,
+        \@KNOWN_STRIPPED_SECTION_NAMES);
+
+    my @have_stripped_sections = $lc_name->get_intersection;
 
     # appropriately stripped, but is it stripped enough?
-    if (   $item->file_info !~ m{ \b not [ ] stripped \b }x
+    if (   $item->file_type !~ m{ \b not [ ] stripped \b }x
         && $item->name !~ m{^ (?:usr/)? lib/ (?: debug | profile ) / }x) {
 
-        $self->hint('binary-has-unneeded-section', $item->name, $_)
-          for @unneeded_sections;
+        $self->pointed_hint('binary-has-unneeded-section', $item->pointer, $_)
+          for @have_stripped_sections;
     }
 
     return;

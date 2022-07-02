@@ -1,10 +1,10 @@
 # languages/r/architecture -- lintian check script (rewrite) -*- perl -*-
 #
-# Copyright © 2004 Marc Brockschmidt
-# Copyright © 2021 Felix Lechner
+# Copyright (C) 2004 Marc Brockschmidt
+# Copyright (C) 2021 Felix Lechner
 #
 # Parts of the code were taken from the old check script, which
-# was Copyright © 1998 Richard Braakman (also licensed under the
+# was Copyright (C) 1998 Richard Braakman (also licensed under the
 # GPL 2 or higher)
 #
 # This program is free software; you can redistribute it and/or modify
@@ -19,7 +19,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -37,14 +37,14 @@ with 'Lintian::Check';
 has have_r_files => (is => 'rw', default => 0);
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     return
-      if $file->is_dir;
+      if $item->is_dir;
 
     $self->have_r_files(1)
-      if $file->name =~ m{^usr/lib/R/.*/DESCRIPTION$}
-      && $file->decoded_utf8 =~ /^NeedsCompilation: no/m;
+      if $item->name =~ m{^usr/lib/R/.*/DESCRIPTION$}
+      && $item->decoded_utf8 =~ /^NeedsCompilation: no/m;
 
     return;
 }

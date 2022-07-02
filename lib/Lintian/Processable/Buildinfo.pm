@@ -1,4 +1,4 @@
-# Copyright © 2019-2020 Felix Lechner
+# Copyright (C) 2019-2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -12,7 +12,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -25,13 +25,15 @@ use utf8;
 use Carp qw(croak);
 use Unicode::UTF8 qw(encode_utf8);
 
-use Lintian::Deb822::File;
+use Lintian::Deb822;
 
 use Moo;
 use namespace::clean;
 
-with 'Lintian::Processable::Fields::Files', 'Lintian::Processable::Overrides',
-  'Lintian::Processable';
+with
+  'Lintian::Processable',
+  'Lintian::Processable::Fields::Files',
+  'Lintian::Processable::Buildinfo::Overrides';
 
 =for Pod::Coverage BUILDARGS
 
@@ -71,7 +73,7 @@ sub init_from_file {
     $self->path($file);
     $self->type('buildinfo');
 
-    my $primary = Lintian::Deb822::File->new;
+    my $primary = Lintian::Deb822->new;
     my @sections = $primary->read_file($self->path)
       or croak encode_utf8(
         $self->path. ' is not a valid '. $self->type . ' file');

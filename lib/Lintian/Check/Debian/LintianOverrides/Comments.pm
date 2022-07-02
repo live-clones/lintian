@@ -1,6 +1,6 @@
 # debian/lintian-overrides/comments -- lintian check script -*- perl -*-
 
-# Copyright © 2020 Felix Lechner
+# Copyright (C) 2020-2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -36,52 +36,46 @@ with 'Lintian::Check';
 sub always {
     my ($self) = @_;
 
-    my $declared_overrides = $self->processable->overrides;
-    return
-      unless defined $declared_overrides;
+    my @declared_overrides = @{$self->processable->overrides};
 
-    for my $tagname (keys %{$declared_overrides}) {
+    for my $override (@declared_overrides) {
 
-        for my $context (keys %{$declared_overrides->{$tagname}}) {
+        next
+          unless length $override->justification;
 
-            my $entry = $declared_overrides->{$tagname}{$context};
+        my $tag_name = $override->tag_name;
 
-            my @comments = @{$entry->{comments}};
-            my $override_position = $entry->{line};
+        # comments appear one or more lines before the override
+        # but they were concatenated
+        my $position = $override->position - 1;
 
-            my $position = $override_position - scalar @comments;
-            for my $comment (@comments) {
+        my $pointer= $self->processable->override_file->pointer($position);
 
-                check_spelling(
-                    $self->profile,
-                    $comment,
-                    $self->group->spelling_exceptions,
-                    $self->emitter(
-                        'spelling-in-override-comment',
-                        "$tagname (line $position)"
-                    ));
+        check_spelling(
+            $self->data,
+            $override->justification,
+            $self->group->spelling_exceptions,
+            $self->emitter('spelling-in-override-comment',$pointer, $tag_name)
+        );
 
-                check_spelling_picky(
-                    $self->profile,
-                    $comment,
-                    $self->emitter(
-                        'capitalization-in-override-comment',
-                        "$tagname (line $position)"
-                    ));
-            } continue {
-                $position++;
-            }
-        }
+        check_spelling_picky(
+            $self->data,
+            $override->justification,
+            $self->emitter(
+                'capitalization-in-override-comment',
+                $pointer,$tag_name
+            )
+        );
     }
 
     return;
 }
 
 sub emitter {
-    my ($self, @orig_args) = @_;
+    my ($self, @prefixed) = @_;
 
     return sub {
-        return $self->hint(@orig_args, @_);
+        return $self->pointed_hint(@prefixed, @_);
     };
 }
 

@@ -1,9 +1,9 @@
 # fields/architecture -- lintian check script (rewrite) -*- perl -*-
 #
-# Copyright © 2004 Marc Brockschmidt
+# Copyright (C) 2004 Marc Brockschmidt
 #
 # Parts of the code were taken from the old check script, which
-# was Copyright © 1998 Richard Braakman (also licensed under the
+# was Copyright (C) 1998 Richard Braakman (also licensed under the
 # GPL 2 or higher)
 #
 # This program is free software; you can redistribute it and/or modify
@@ -18,7 +18,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -52,11 +52,11 @@ sub installable {
     for my $installable_architecture (@installable_architectures) {
         $self->hint('arch-wildcard-in-binary-package',
             $installable_architecture)
-          if $self->profile->architectures->is_wildcard(
+          if $self->data->architectures->is_wildcard(
             $installable_architecture);
     }
 
-    $self->hint('too-many-architectures', sort @installable_architectures)
+    $self->hint('too-many-architectures', (sort @installable_architectures))
       if @installable_architectures > 1;
 
     my $installable_architecture = $installable_architectures[0];
@@ -80,15 +80,15 @@ sub always {
     for my $installable_architecture (@installable_architectures) {
 
         $self->hint('unknown-architecture', $installable_architecture)
-          unless $self->profile->architectures->is_release_architecture(
+          unless $self->data->architectures->is_release_architecture(
             $installable_architecture)
-          || $self->profile->architectures->is_wildcard(
-            $installable_architecture)
+          || $self->data->architectures->is_wildcard($installable_architecture)
           || $installable_architecture eq 'all'
           || (
             $installable_architecture eq 'source'
             && (   $self->processable->type eq 'changes'
-                || $self->processable->type eq 'buildinfo'));
+                || $self->processable->type eq 'buildinfo')
+          );
     }
 
     # check for magic installable architecture combinations
@@ -99,7 +99,7 @@ sub always {
         if (any { $_ eq 'all' } @installable_architectures) {
             $magic_error++
               unless any { $self->processable->type eq $_ }
-            qw(source changes buildinfo);
+              qw(source changes buildinfo);
         }
 
         my $anylc = List::Compare->new(\@installable_architectures, ['any']);
@@ -111,7 +111,7 @@ sub always {
             # (#626775)
             @errorset = grep { $_ ne 'all' } @errorset
               if any { $self->processable->type eq $_ }
-            qw(source changes buildinfo);
+              qw(source changes buildinfo);
 
             $magic_error++
               if @errorset;

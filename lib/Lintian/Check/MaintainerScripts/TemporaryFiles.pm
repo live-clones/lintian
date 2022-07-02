@@ -1,9 +1,9 @@
 # maintainer-scripts/temporary-files -- lintian check script -*- perl -*-
 #
-# Copyright © 1998 Richard Braakman
-# Copyright © 2002 Josip Rodin
-# Copyright © 2016-2019 Chris Lamb <lamby@debian.org>
-# Copyright © 2021 Felix Lechner
+# Copyright (C) 1998 Richard Braakman
+# Copyright (C) 2002 Josip Rodin
+# Copyright (C) 2016-2019 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -57,6 +57,8 @@ sub visit_control_files {
     my $position = 1;
     while (my $possible_continuation = <$fd>) {
 
+        my $pointer = $item->pointer($position);
+
         chomp $possible_continuation;
 
         # skip empty lines
@@ -85,10 +87,10 @@ sub visit_control_files {
 
             my $indicator = $1;
 
-            $self->hint(
+            $self->pointed_hint(
                 'possibly-insecure-handling-of-tmp-files-in-maintainer-script',
-                $indicator,
-                "[control/$item:$position]"
+                $pointer,
+                $indicator
               )
               if $line !~ /\bmks?temp\b/
               && $line !~ /\btempfile\b/

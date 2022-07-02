@@ -10,6 +10,6 @@ Explanation: According to the DEP-3 headers, this patch has not been forwarded
  <code>not-needed</code> in the <code>Forwarded</code> field of the patch
  header.
 See-Also: social contract item 2,
- devref 3.1.4,
- policy 4.3,
+ developer-reference 3.1.4,
+ debian-policy 4.3,
  Bug#755153

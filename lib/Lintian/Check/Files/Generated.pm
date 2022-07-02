@@ -1,6 +1,6 @@
 # files/generated -- lintian check script -*- perl -*-
 
-# Copyright © 2021 Felix Lechner
+# Copyright (C) 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -30,10 +30,7 @@ use Unicode::UTF8 qw(encode_utf8);
 use Moo;
 use namespace::clean;
 
-const my $COLON => q{:};
 const my $DOUBLE_QUOTE => q{"};
-const my $LEFT_SQUARE_BRACKET => q{[};
-const my $RIGHT_SQUARE_BRACKET => q{]};
 
 with 'Lintian::Check';
 
@@ -61,14 +58,10 @@ sub visit_patched_files {
 
             my $marker = $1;
 
-            $self->hint(
+            $self->pointed_hint(
                 'generated-file',
-                $DOUBLE_QUOTE . $marker . $DOUBLE_QUOTE,
-                $LEFT_SQUARE_BRACKET
-                  . $item->name
-                  . $COLON
-                  . $position
-                  . $RIGHT_SQUARE_BRACKET
+                $item->pointer($position),
+                $DOUBLE_QUOTE . $marker . $DOUBLE_QUOTE
             );
         }
 

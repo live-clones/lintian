@@ -6,4 +6,4 @@ Explanation: Packages must not set links with targets pointing into <code>/tmp</
  may be removed by the administrator and that programs may not depend on
  any files in <code>/tmp</code> being preserved across invocations, which
  combined mean that it makes no sense to ship files in these directories.
-See-Also: fhs tmptemporaryfiles, fhs vartmptemporaryfilespreservedbetwee
+See-Also: filesystem-hierarchy tmptemporaryfiles, filesystem-hierarchy vartmptemporaryfilespreservedbetwee

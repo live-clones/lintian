@@ -1,4 +1,0 @@
-#!/bin/sh
-
-mkdir -p data/stylesheets || true
-wget --output-document=data/stylesheets/lintian.css https://lintian.debian.org/stylesheets/lintian.css

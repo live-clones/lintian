@@ -1,7 +1,7 @@
 Tag: build-depends-on-build-essential-package-without-using-version
 Severity: error
 Check: fields/package-relations
-See-Also: policy 4.2
+See-Also: debian-policy 4.2
 Explanation: The package declares a build-depends on a build essential package
  without using a versioned depends. Packages do not have to depend on any
  package included in build-essential. It is the responsibility of anyone

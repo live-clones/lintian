@@ -1,6 +1,6 @@
 # files/encoding -- lintian check script -*- perl -*-
 
-# Copyright © 2020 Felix Lechner
+# Copyright (C) 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -42,7 +42,7 @@ sub visit_patched_files {
       unless $item->is_file;
 
     return
-      unless $item->file_info =~ /text$/;
+      unless $item->file_type =~ /text$/;
 
     if ($item->name =~ m{^debian/patches/}) {
 
@@ -52,11 +52,11 @@ sub visit_patched_files {
 
         my ($header)= split(/^---/m, $bytes, 2);
 
-        $self->hint('national-encoding', 'DEP-3 header ' . $item->name)
+        $self->pointed_hint('national-encoding', $item->pointer,'DEP-3 header')
           unless valid_utf8($header);
 
     } else {
-        $self->hint('national-encoding', $item->name)
+        $self->pointed_hint('national-encoding', $item->pointer)
           unless $item->is_valid_utf8;
     }
 
@@ -70,9 +70,9 @@ sub visit_control_files {
       unless $item->is_file;
 
     return
-      unless $item->file_info =~ /text$/ || $item->is_script;
+      unless $item->file_type =~ /text$/ || $item->is_script;
 
-    $self->hint('national-encoding', 'DEBIAN/' . $item->name)
+    $self->pointed_hint('national-encoding', $item->pointer)
       unless $item->is_valid_utf8;
 
     return;
@@ -93,15 +93,15 @@ sub visit_installed_files {
     #   || $item->name =~ m{\.(?:p[myl]|php|rb|tcl|sh|txt)(?:\.gz)?$}
     #   || $item->name =~ m{^usr/share/doc};
 
-    if ($item->file_info =~ /text$/) {
+    if ($item->file_type =~ /text$/) {
 
-        $self->hint('national-encoding', $item->name)
+        $self->pointed_hint('national-encoding', $item->pointer)
           unless $item->is_valid_utf8;
     }
 
     # for man pages also look at compressed files
     if (   $item->name =~ m{^usr/share/man/}
-        && $item->file_info =~ /gzip compressed/) {
+        && $item->file_type =~ /gzip compressed/) {
 
         my $bytes;
 
@@ -109,7 +109,7 @@ sub visit_installed_files {
         gunzip($path => \$bytes)
           or die encode_utf8("gunzip $path failed: $GunzipError");
 
-        $self->hint('national-encoding', $item->name)
+        $self->pointed_hint('national-encoding', $item->pointer)
           unless valid_utf8($bytes);
     }
 

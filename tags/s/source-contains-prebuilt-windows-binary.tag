@@ -1,6 +1,6 @@
 Tag: source-contains-prebuilt-windows-binary
 Severity: warning
-Check: cruft
+Check: files/source-missing
 Explanation: The source tarball contains a prebuilt binary for Microsoft Windows.
  They are usually provided for the convenience of users. These files
  usually just take up space in the tarball.

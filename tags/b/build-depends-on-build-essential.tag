@@ -4,4 +4,4 @@ Explanation: You depend on the build-essential package, which is only a
  build environments.
 Severity: error
 Check: fields/package-relations
-See-Also: policy 7.7
+See-Also: debian-policy 7.7

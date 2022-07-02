@@ -1,6 +1,6 @@
 # files/unwanted -- lintian check script -*- perl -*-
 
-# Copyright © 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -30,18 +30,18 @@ use namespace::clean;
 with 'Lintian::Check';
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     return
-      unless $file->is_file;
+      unless $item->is_file;
 
-    $self->hint('backup-file-in-package', $file->name)
-      if $file->name =~ /~$/
-      || $file->name =~ m{\#[^/]+\#$}
-      || $file->name =~ m{/\.[^/]+\.swp$};
+    $self->pointed_hint('backup-file-in-package', $item->pointer)
+      if $item->name =~ /~$/
+      || $item->name =~ m{\#[^/]+\#$}
+      || $item->name =~ m{/\.[^/]+\.swp$};
 
-    $self->hint('nfs-temporary-file-in-package', $file->name)
-      if $file->name =~ m{/\.nfs[^/]+$};
+    $self->pointed_hint('nfs-temporary-file-in-package', $item->pointer)
+      if $item->name =~ m{/\.nfs[^/]+$};
 
     return;
 }

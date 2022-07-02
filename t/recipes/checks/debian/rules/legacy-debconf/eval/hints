@@ -1,2 +1,2 @@
-debconf (source): debian-rules-calls-debhelper-in-odd-order dh_makeshlibs (line 58)
-debconf (source): debian-rules-calls-debhelper-in-odd-order dh_makeshlibs (line 54)
+debconf (source): debian-rules-calls-debhelper-in-odd-order dh_makeshlibs [debian/rules:58]
+debconf (source): debian-rules-calls-debhelper-in-odd-order dh_makeshlibs [debian/rules:54]

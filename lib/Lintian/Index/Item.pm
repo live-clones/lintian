@@ -1,8 +1,8 @@
 # -*- perl -*-
 # Lintian::Index::Item -- Representation of path entry in a package
 #
-# Copyright © 2011 Niels Thykier
-# Copyright © 2020 Felix Lechner
+# Copyright (C) 2011 Niels Thykier
+# Copyright (C) 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -29,9 +29,11 @@ use Const::Fast;
 use Date::Parse qw(str2time);
 use List::SomeUtils qw(all);
 use Path::Tiny;
+use Syntax::Keyword::Try;
 use Text::Balanced qw(extract_delimited);
 use Unicode::UTF8 qw(valid_utf8 decode_utf8 encode_utf8);
 
+use Lintian::Pointer::Item;
 use Lintian::SlidingWindow;
 use Lintian::Util qw(normalize_link_target);
 
@@ -127,7 +129,8 @@ my %T = (
     (map {sprintf('%o',$_) => chr} 0..($BYTE_MAXIMUM & $SINGLE_OCTAL_MASK)),
     (map {sprintf('%02o',$_) => chr} 0..($BYTE_MAXIMUM & $DUAL_OCTAL_MASK)),
     (map {sprintf('%03o',$_) => chr} 0..$BYTE_MAXIMUM),
-    (split //, "r\rn\nb\ba\af\ft\tv\013"));
+    (split //, "r\rn\nb\ba\af\ft\tv\013")
+);
 
 sub unescape_c_style {
     my ($escaped) = @_;
@@ -166,7 +169,8 @@ sub init_from_tar_output {
     my ($initial, $size, $date, $time, $remainder)
       = split(/\s+(\d+)\s+($datepattern)\s+($timepattern)\s+/, $line,2);
 
-    die encode_utf8("Cannot parse tar output: $line")
+    die encode_utf8(
+        $self->index->identifier . ": Cannot parse tar output: $line")
       unless all { defined } ($initial, $size, $date, $time, $remainder);
 
     $self->size($size);
@@ -174,21 +178,23 @@ sub init_from_tar_output {
     $self->time($time);
 
     my ($permissions, $ownership) = split(/\s+/, $initial, 2);
-    die encode_utf8(
-        "Cannot parse permissions and ownership in tar output: $line")
+    die encode_utf8($self->index->identifier
+          .": Cannot parse permissions and ownership in tar output: $line")
       unless all { defined } ($permissions, $ownership);
 
     $self->perm($permissions);
 
     my ($owner, $group) = split(qr{/}, $ownership, 2);
-    die encode_utf8("Cannot parse owner and group in tar output: $line")
+    die encode_utf8($self->index->identifier
+          . ": Cannot parse owner and group in tar output: $line")
       unless all { defined } ($owner, $group);
 
     $self->owner($owner);
     $self->group($group);
 
     my ($name, $extra) = get_quoted_filename($remainder, $EMPTY);
-    die encode_utf8("Cannot parse file name in tar output: $line")
+    die encode_utf8($self->index->identifier
+          . ": Cannot parse file name in tar output: $line")
       unless all { defined } ($name, $extra);
 
     # strip relative prefix
@@ -211,8 +217,8 @@ sub init_from_tar_output {
     if ($self->perm =~ /^l/) {
 
         my ($linktarget, undef) = get_quoted_filename($extra, $symlinkpattern);
-        die encode_utf8(
-            "Cannot parse symbolic link target in tar output: $line")
+        die encode_utf8($self->index->identifier
+              .": Cannot parse symbolic link target in tar output: $line")
           unless defined $linktarget;
 
         # do not remove multiple slashes from symlink targets
@@ -227,7 +233,8 @@ sub init_from_tar_output {
     if ($self->perm =~ /^h/) {
 
         my ($linktarget, undef)= get_quoted_filename($extra, $hardlinkpattern);
-        die encode_utf8("Cannot parse hard link target in tar output: $line")
+        die encode_utf8($self->index->identifier
+              . ": Cannot parse hard link target in tar output: $line")
           unless defined $linktarget;
 
         # strip relative prefix
@@ -316,12 +323,20 @@ sub magic {
     my ($self, $count) = @_;
 
     return $EMPTY
+      if length $self->link;
+
+    return $EMPTY
       if $self->size < $count;
+
+    return $EMPTY
+      unless $self->is_open_ok;
 
     my $magic;
 
     open(my $fd, '<', $self->unpacked_path);
-    die encode_utf8("Could not read $count bytes from " . $self->name)
+    die encode_utf8($self->index->identifier
+          . ": Could not read $count bytes from "
+          . $self->name)
       unless read($fd, $magic, $count) == $count;
     close $fd;
 
@@ -361,7 +376,8 @@ has hashbang => (
         $trimmed_bytes =~ s/^\s+|\s+$//g;
 
         return $trimmed_bytes;
-    });
+    }
+);
 
 =item interpreter_with_options
 
@@ -381,7 +397,8 @@ has interpreter_with_options => (
         $with_options =~ s{^/usr/bin/env\s+}{};
 
         return $with_options;
-    });
+    }
+);
 
 =item interpreter
 
@@ -401,7 +418,8 @@ has interpreter => (
         $interpreter =~ s/^(\S+).*/$1/;
 
         return $interpreter;
-    });
+    }
+);
 
 =item C<calls_env>
 
@@ -420,7 +438,8 @@ has calls_env => (
           if $self->hashbang =~ m{^/usr/bin/env\s+};
 
         return 0;
-    });
+    }
+);
 
 =item C<is_shell_script>
 
@@ -444,7 +463,8 @@ has is_shell_script => (
           if $basename =~ /^(?:[bd]?a|t?c|(?:pd|m)?k|z)?sh$/;
 
         return 0;
-    });
+    }
+);
 
 =item is_elf
 
@@ -462,7 +482,8 @@ has is_elf => (
           if $self->magic($ELF_MAGIC_SIZE) eq "\x7FELF";
 
         return 0;
-    });
+    }
+);
 
 =item is_script
 
@@ -484,7 +505,8 @@ has is_script => (
           unless $self->magic($SHELL_SCRIPT_MAGIC_SIZE) eq $HASHBANG;
 
         return 1;
-    });
+    }
+);
 
 =item is_maintainer_script
 
@@ -503,7 +525,8 @@ has is_maintainer_script => (
           && $self->is_open_ok;
 
         return 0;
-    });
+    }
+);
 
 =item identity
 
@@ -561,10 +584,10 @@ NB: Returns the empty list for non-dir entries.
 sub children {
     my ($self) = @_;
 
-    my @names = values %{$self->childnames};
-
     croak encode_utf8('No index in ' . $self->name)
       unless defined $self->index;
+
+    my @names = values %{$self->childnames};
 
     return map { $self->index->lookup($_) } @names;
 }
@@ -626,15 +649,15 @@ Example:
 sub child {
     my ($self, $basename) = @_;
 
-    croak encode_utf8('Basename is required')
+    croak encode_utf8('No index in ' . $self->name)
+      unless defined $self->index;
+
+    croak encode_utf8($self->index->identifier . ': Basename is required')
       unless length $basename;
 
     my $childname = $self->childnames->{$basename};
     return undef
       unless $childname;
-
-    croak encode_utf8('No index in ' . $self->name)
-      unless defined $self->index;
 
     return $self->index->lookup($childname);
 }
@@ -731,7 +754,7 @@ has link_normalized => (
         my $name = $self->name;
         my $link = $self->link;
 
-        croak encode_utf8("$name is not a link")
+        croak encode_utf8($self->index->identifier . ": $name is not a link")
           unless length $link;
 
         my $dir = $self->dirname;
@@ -743,7 +766,8 @@ has link_normalized => (
         my $target = normalize_link_target($dir, $link);
 
         return $target;
-    });
+    }
+);
 
 =item is_readable
 
@@ -850,7 +874,7 @@ sub unpacked_path {
 
     my $basedir = $self->index->basedir;
 
-    croak encode_utf8('No base directory')
+    croak encode_utf8($self->index->identifier . ': No base directory')
       unless length $basedir;
 
     my $unpacked = path($basedir)->child($self->name)->stringify;
@@ -883,10 +907,14 @@ sub is_open_ok {
     return 0
       if $path_info & ACCESS_INFO;
 
-    eval {$self->_check_open;};
+    try {
+        $self->_check_open;
 
-    return 0
-      if $@;
+    } catch {
+        return 0;
+
+        # perlcritic 1.140-1 requires the semicolon on the next line
+    };
 
     return 1;
 }
@@ -908,8 +936,8 @@ sub _check_access {
         # NB: We are deliberately vague here to avoid suggesting
         # whether $path exists.  In some cases (e.g. lintian.d.o)
         # the output is readily available to wider public.
-        confess encode_utf8(
-            'Attempt to access through broken or unsafe symlink: '
+        confess encode_utf8($self->index->identifier
+              .': Attempt to access through broken or unsafe symlink: '
               . $self->name);
     }
 
@@ -928,8 +956,9 @@ sub _check_open {
     # Leave "_path_access" here as _check_access marks it either as
     # "UNSAFE_PATH" or "FS_PATH_IS_OK"
 
-    confess encode_utf8(
-        'Opening of irregular file not supported: ' . $self->name)
+    confess encode_utf8($self->index->identifier
+          .': Opening of irregular file not supported: '
+          . $self->name)
       unless $self->is_file || ($self->is_symlink && -e $self->unpacked_path);
 
     $self->path_info($self->path_info | OPEN_IS_OK);
@@ -976,7 +1005,9 @@ sub follow {
         $reference = $self->parent_dir;
     }
 
-    croak encode_utf8('No parent reference for link in ' . $self->name)
+    croak encode_utf8($self->index->identifier
+          . ': No parent reference for link in '
+          . $self->name)
       unless defined $reference;
 
     # follow link
@@ -1034,13 +1065,14 @@ Examples:
 sub resolve_path {
     my ($self, $request, $maxlinks) = @_;
 
-    croak encode_utf8('Can only resolve string arguments')
+    croak encode_utf8('No index in ' . $self->name)
+      unless defined $self->index;
+
+    croak encode_utf8(
+        $self->index->identifier . ': Can only resolve string arguments')
       if defined $request && ref($request) ne $EMPTY;
 
     $request //= $EMPTY;
-
-    croak encode_utf8('No index in ' . $self->name)
-      unless defined $self->index;
 
     if (length $self->link) {
         # follow the link
@@ -1102,7 +1134,8 @@ sub resolve_path {
         return $child->resolve_path($request, $maxlinks);
     }
 
-    croak encode_utf8("Cannot parse path resolution request: $request")
+    croak encode_utf8($self->index->identifier
+          . ": Cannot parse path resolution request: $request")
       if length $request;
 
     # nothing else to resolve
@@ -1199,7 +1232,7 @@ NB: If the gid is not available, 0 will be returned.
 This usually happens if the numerical data is not collected (e.g. in
 source packages)
 
-=item file_info
+=item file_type
 
 Return the data from L<file(1)> if it has been collected.
 
@@ -1209,8 +1242,6 @@ files.
 =item java_info
 
 =item strings
-
-=item objdump
 
 =item C<basedir>
 
@@ -1284,13 +1315,15 @@ has date => (
     default => sub {
         my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = gmtime;
         return sprintf('%04d-%02d-%02d', $year, $mon, $mday);
-    });
+    }
+);
 has time => (
     is => 'rw',
     default => sub {
         my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = gmtime;
         return sprintf('%02d:%02d:%02d', $hour, $min, $sec);
-    });
+    }
+);
 
 has perm => (is => 'rw');
 has path_info => (is => 'rw');
@@ -1321,7 +1354,7 @@ has md5sum => (
     coerce => sub { my ($checksum) = @_; return ($checksum // 0); },
     default => 0
 );
-has file_info => (
+has file_type => (
     is => 'rw',
     coerce => sub { my ($text) = @_; return ($text // $EMPTY); },
     default => $EMPTY
@@ -1329,13 +1362,9 @@ has file_info => (
 has java_info => (
     is => 'rw',
     coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
-    default => sub { {} });
-has strings => (
-    is => 'rw',
-    coerce => sub { my ($text) = @_; return ($text // $EMPTY); },
-    default => $EMPTY
+    default => sub { {} }
 );
-has objdump => (
+has strings => (
     is => 'rw',
     coerce => sub { my ($text) = @_; return ($text // $EMPTY); },
     default => $EMPTY
@@ -1343,7 +1372,8 @@ has objdump => (
 has ar_info => (
     is => 'rw',
     coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
-    default => sub { {} });
+    default => sub { {} }
+);
 
 has index => (is => 'rw');
 has childnames => (is => 'rw', default => sub { {} });
@@ -1362,8 +1392,66 @@ has parent_dir => (
 
         # returns root by default
         return $self->index->lookup($self->dirname);
-    });
+    }
+);
 has dereferenced => (is => 'rw');
+
+=item elf
+
+=cut
+
+sub elf {
+    my ($self, @args) = @_;
+
+    if (@args) {
+
+        $self->index->elf_storage->{$self->name} = $args[0];
+
+        return ();
+    }
+
+    my %copy = %{$self->index->elf_storage->{$self->name} // {} };
+
+    return \%copy;
+}
+
+=item elf_by_member
+
+=cut
+
+sub elf_by_member {
+    my ($self, @args) = @_;
+
+    if (@args) {
+
+        my $object_name = $args[0];
+        my $by_object = $args[1];
+
+        my $tmp = $self->index->elf_storage_by_member->{$self->name} // {};
+        $tmp->{$object_name} = $by_object;
+        $self->index->elf_storage_by_member->{$self->name} = $tmp;
+
+        return ();
+    }
+
+    my %copy = %{$self->index->elf_storage_by_member->{$self->name} // {} };
+
+    return \%copy;
+}
+
+=item pointer
+
+=cut
+
+sub pointer {
+    my ($self, $position) = @_;
+
+    my $pointer = Lintian::Pointer::Item->new;
+    $pointer->item($self);
+    $pointer->position($position);
+
+    return $pointer;
+}
 
 =item bytes
 

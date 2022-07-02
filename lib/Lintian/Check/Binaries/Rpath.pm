@@ -1,9 +1,9 @@
 # binaries/rpath -- lintian check script -*- perl -*-
 
-# Copyright © 1998 Christian Schwarz and Richard Braakman
-# Copyright © 2012 Kees Cook
-# Copyright © 2017-2020 Chris Lamb <lamby@debian.org>
-# Copyright © 2021 Felix Lechner
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 2012 Kees Cook
+# Copyright (C) 2017-2020 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -44,8 +44,9 @@ has DEB_HOST_MULTIARCH => (
     default => sub {
         my ($self) = @_;
 
-        return $self->profile->architectures->deb_host_multiarch;
-    });
+        return $self->data->architectures->deb_host_multiarch;
+    }
+);
 
 has multiarch_component => (
     is => 'rw',
@@ -57,7 +58,8 @@ has multiarch_component => (
         my $multiarch_component = $self->DEB_HOST_MULTIARCH->{$architecture};
 
         return $multiarch_component;
-    });
+    }
+);
 
 has private_folders => (
     is => 'rw',
@@ -83,17 +85,9 @@ has private_folders => (
           = map { $_ . $SLASH . $self->processable->source_name }
           (@lib_folders, @usrlib_folders, @game_folders);
 
-        my @normalized;
-        for my $folder (@private_folders) {
-
-            $folder .= $SLASH
-              unless $folder =~ m{/\z};
-
-            push(@normalized, $folder);
-        }
-
-        return \@normalized;
-    });
+        return \@private_folders;
+    }
+);
 
 sub visit_installed_files {
     my ($self, $item) = @_;
@@ -102,44 +96,41 @@ sub visit_installed_files {
       unless $item->is_file;
 
     return
-      unless $item->file_info =~ /^ [^,]* \b ELF \b /x;
-
-    my $objdump = $self->processable->objdump_info->{$item->name};
+      unless $item->file_type =~ /^ [^,]* \b ELF \b /x;
 
     for my $section (qw{RPATH RUNPATH}) {
 
-        my @rpaths = keys %{$objdump->{$section} // {}};
+        my @rpaths = keys %{$item->elf->{$section} // {}};
 
         my @no_origin = grep { !m{^ \$ \{? ORIGIN \}? }x } @rpaths;
 
         my @canonical = map { File::Spec->canonpath($_) } @no_origin;
 
-        my @normalized;
-        for my $path (@canonical) {
-
-            $path =~ s{^/}{};
-            $path .= $SLASH
-              unless $path =~ m{/\z};
-
-            push(@normalized, $path);
-        }
-
         my @custom;
-        for my $folder (@normalized) {
+        for my $folder (@canonical) {
 
             # for shipped folders, would have to disallow system locations
             next
-              if any { $folder =~ m{^\Q$_\E} } @{$self->private_folders};
+              if any { $folder =~ m{^ / \Q$_\E }x } @{$self->private_folders};
 
             # GHC in Debian uses a scheme for RPATH (#914873)
             next
-              if $folder =~ m{^usr/lib/ghc/};
+              if $folder =~ m{^ /usr/lib/ghc (?: / | $ ) }x;
 
             push(@custom, $folder);
         }
 
-        $self->hint('custom-library-search-path', $item, $section, $_)
-          for @custom;
+        my @absolute = grep { m{^ / }x } @custom;
+
+        $self->pointed_hint('custom-library-search-path',
+            $item->pointer, $section, $_)
+          for @absolute;
+
+        my @relative = grep { m{^ [^/] }x } @custom;
+
+        $self->pointed_hint('relative-library-search-path',
+            $item->pointer, $section, $_)
+          for @relative;
     }
 
     return;

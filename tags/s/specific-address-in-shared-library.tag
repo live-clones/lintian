@@ -18,4 +18,4 @@ Explanation: The listed shared libraries contain object code that was compiled
  -d</code> on the shared library. If a tag of type TEXTREL is present, the
  shared library contains non-PIC code.
 See-Also:
- policy 10.2
+ debian-policy 10.2

@@ -12,7 +12,7 @@ use File::Find::Rule;
 use Path::Tiny;
 use Test::More;
 
-use Lintian::Deb822::File;
+use Lintian::Deb822;
 
 const my $EMPTY => q{};
 const my $TESTS_PER_TAG => 3;
@@ -47,7 +47,7 @@ my %TAGS;
 my @tag_paths = File::Find::Rule->file->name('*.tag')->in("$root/tags");
 for my $tag_path (@tag_paths) {
 
-    my $deb822 = Lintian::Deb822::File->new;
+    my $deb822 = Lintian::Deb822->new;
     my @sections = $deb822->read_file($tag_path);
 
     BAIL_OUT("$tag_path does not have at least one paragraph")
@@ -69,57 +69,6 @@ for my $tag_path (@tag_paths) {
 }
 
 $known_tests += $TESTS_PER_TAG * scalar @tag_paths;
-
-my @profilepaths
-  = File::Find::Rule->file->name('*.profile')->in("$root/profiles");
-for my $profile (@profilepaths) {
-
-    my $deb822 = Lintian::Deb822::File->new;
-    my ($header, @sections) = $deb822->read_file($profile);
-
-    my @checks
-      = $header->trimmed_list('Enable-Tags-From-Check', $FIELD_SEPARATOR);
-    for my $check (@checks) {
-        ok(exists $CHECKS{$check}, "Check $check exists in profile $profile");
-
-        # count tags
-        $TAGS{$_}++ for @{$CHECKS{$check}};
-    }
-
-    my @tags = $header->trimmed_list('Enable-Tags', $FIELD_SEPARATOR);
-    for my $tag (@tags) {
-        ok(exists $TAGS{$tag}, "Tag $tag exists in profile $profile");
-
-        # count tags
-        $TAGS{$tag}++;
-    }
-
-    my @disabled_checks
-      = $header->trimmed_list('Disable-Tags-From-Check', $FIELD_SEPARATOR);
-    ok(exists $CHECKS{$_}, "Disabled check $_ exists in profile $profile")
-      for @disabled_checks;
-
-    my @disabled_tags= $header->trimmed_list('Disable-Tags', $FIELD_SEPARATOR);
-    ok(exists $TAGS{$_}, "Tag $_ exists in profile $profile")
-      for @disabled_tags;
-
-    $known_tests += @checks + @tags + @disabled_checks + @disabled_tags;
-
-    for my $section (@sections) {
-        my @sectiontags = $section->trimmed_list('Tags', $FIELD_SEPARATOR);
-        ok(exists $TAGS{$_},
-            "Tag $_ in section $section exists in profile $profile")
-          for @sectiontags;
-
-        $known_tests += @sectiontags;
-    }
-}
-
-cmp_ok($TAGS{$_}, '>', 0,
-    "Tag $_ is covered by a profile. Maybe run private/generate-profiles ?")
-  for sort keys %TAGS;
-
-$known_tests += keys %TAGS;
 
 done_testing($known_tests);
 

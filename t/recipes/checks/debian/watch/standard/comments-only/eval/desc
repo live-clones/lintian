@@ -1,3 +1,7 @@
 Testname: comments-only
 Check: debian/watch/standard
-See-Also: Bug#965385
+Test-Against:
+ missing-debian-watch-file-standard
+See-Also:
+ Bug#965385,
+ Bug#992569

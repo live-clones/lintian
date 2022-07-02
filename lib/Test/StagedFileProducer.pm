@@ -1,4 +1,4 @@
-# Copyright © 2018 Felix Lechner
+# Copyright (C) 2018 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -12,7 +12,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA
 
@@ -169,7 +169,7 @@ sub run {
 
     # take an mtime inventory of all files in path
     $self->{mtimes}
-      = { map { $_ => stat($_)->mtime }
+      = { map { $_ => path($_)->stat->mtime }
           File::Find::Rule->file->in($self->{path}) };
 
     say encode_utf8(
@@ -267,7 +267,7 @@ sub _process_remaining_stages {
         say encode_utf8($EMPTY) if $self->{verbose};
 
         my $product_epoch
-          = min(map { -e $_ ? stat($_)->mtime : 0 } @products);
+          = min(map { -e ? path($_)->stat->mtime : 0 } @products);
         if($product_epoch) {
             say encode_utf8(
                 'Products modified on         : '. rfc822date($product_epoch))

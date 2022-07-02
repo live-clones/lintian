@@ -1,0 +1,58 @@
+{
+   "preamble" : {
+      "cargo" : "sections",
+      "title" : "Java Policy"
+   },
+   "sections" : [
+      {
+         "destination" : "https://www.debian.org/doc/packaging-manuals/java-policy/",
+         "key" : "_",
+         "title" : "Debian policy for Java"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/packaging-manuals/java-policy/ch01.html",
+         "key" : "1",
+         "title" : "Background"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/packaging-manuals/java-policy/ch02.html",
+         "key" : "2",
+         "title" : "Policy"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/packaging-manuals/java-policy/ch02.html#policy-vm",
+         "key" : "2.1",
+         "title" : "Virtual machines"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/packaging-manuals/java-policy/ch02.html#build-pkg",
+         "key" : "2.2",
+         "title" : "Building Java packages"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/packaging-manuals/java-policy/ch02.html#policy-programs",
+         "key" : "2.3",
+         "title" : "Java programs"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/packaging-manuals/java-policy/ch02.html#policy-libraries",
+         "key" : "2.4",
+         "title" : "Java libraries"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/packaging-manuals/java-policy/ch02.html#policy-politics",
+         "key" : "2.5",
+         "title" : "Main, contrib or non-free"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/packaging-manuals/java-policy/ch03.html",
+         "key" : "3",
+         "title" : "Issues to discuss"
+      },
+      {
+         "destination" : "https://www.debian.org/doc/packaging-manuals/java-policy/ch04.html",
+         "key" : "4",
+         "title" : "Advice to Java packagers"
+      }
+   ]
+}

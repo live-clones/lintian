@@ -10,4 +10,5 @@ Explanation: The description contains an invalid control statement.
  The "empty-line" control statement does not permit any characters
  following it on the same line. Therefore, the line must consist
  entirely of a space followed by a dot.
-See-Also: policy 5.6.13
+See-Also:
+ debian-policy 5.6.13

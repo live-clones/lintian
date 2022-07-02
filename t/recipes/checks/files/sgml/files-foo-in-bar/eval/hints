@@ -1,1 +1,1 @@
-files-foo-in-bar (binary): file-in-usr-lib-sgml usr/lib/sgml/bar
+files-foo-in-bar (binary): file-in-usr-lib-sgml [usr/lib/sgml/bar]

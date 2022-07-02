@@ -1,9 +1,9 @@
 # Hey emacs! This is a -*- Perl -*- script!
 # Lintian::Util -- Perl utility functions for lintian
 
-# Copyright © 1998 Christian Schwarz
-# Copyright © 2018-2019 Chris Lamb <lamby@debian.org>
-# Copyright © 2020 Felix Lechner
+# Copyright (C) 1998 Christian Schwarz
+# Copyright (C) 2018-2019 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -36,12 +36,14 @@ our @EXPORT_OK;
 
 BEGIN {
 
-    @EXPORT_OK = (qw(
+    @EXPORT_OK = (
+        qw(
           get_file_checksum
           get_file_digest
           human_bytes
           perm2oct
           locate_executable
+          match_glob
           normalize_pkg_path
           normalize_link_target
           is_ancestor_of
@@ -54,7 +56,8 @@ BEGIN {
           $PKGNAME_REGEX
           $PKGREPACK_REGEX
           $PKGVERSION_REGEX
-    ));
+        )
+    );
 }
 
 use Carp qw(croak);
@@ -64,10 +67,11 @@ use Digest::MD5;
 use Digest::SHA;
 use List::SomeUtils qw(first_value);
 use Path::Tiny;
+use Regexp::Wildcards;
 use Unicode::UTF8 qw(valid_utf8 encode_utf8);
 
-use Lintian::Deb822::File;
-use Lintian::Inspect::Changelog;
+use Lintian::Deb822;
+use Lintian::Changelog;
 use Lintian::Relation::Version qw(versions_equal versions_comparator);
 
 const my $EMPTY => q{};
@@ -109,6 +113,8 @@ my %OCTAL_LOOKUP = map { $_ => perm2oct($_) } qw(
   drwxr-sr-x
   lrwxrwxrwx
 );
+
+my $rw = Regexp::Wildcards->new(type => 'jokers');
 
 =head1 NAME
 
@@ -373,7 +379,7 @@ sub version_from_changelog {
       unless -e $changelog_path;
 
     my $contents = path($changelog_path)->slurp_utf8;
-    my $changelog = Lintian::Inspect::Changelog->new;
+    my $changelog = Lintian::Changelog->new;
 
     $changelog->parse($contents);
     my @entries = @{$changelog->entries};
@@ -382,6 +388,21 @@ sub version_from_changelog {
       if @entries;
 
     return $EMPTY;
+}
+
+=item match_glob( $glob, @things_to_test )
+
+Resembles the same semantic as Text::Glob's match_glob(), but with the
+proper escaping of Regexp::Wildcards and pre-configured for Lintian's
+purpose. No more directly having to access module variables either.
+
+=cut
+
+sub match_glob {
+    my ($glob, @things_to_test) = @_;
+    my $re = $rw->convert($glob);
+
+    return grep { /^$re\z/ } @things_to_test;
 }
 
 =item normalize_pkg_path(PATH)

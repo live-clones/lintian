@@ -1,6 +1,6 @@
 Tag: dfsg-version-misspelled
 Severity: warning
-Check: fields/version
-Explanation: The version number of this package contains "dsfg". You probably
- meant "dfsg", the conventional marker for upstream packages that are
- repackaged for Debian Free Software Guidelines compliance reasons.
+Check: fields/version/repack/typo
+Explanation: The version contains the string <code>dsfg</code>. You probably
+ meant <code>dfsg</code>. That is the conventional marker for upstream sources
+ that were repackaged in order to comply with the Debian Free Software Guidelines.

@@ -1,6 +1,6 @@
 # build-systems/automake -- lintian check script -*- perl -*-
 #
-# Copyright © 2013 Gautier Minster
+# Copyright (C) 2013 Gautier Minster
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -32,18 +32,15 @@ with 'Lintian::Check';
 sub source {
     my ($self) = @_;
 
-    my $processable = $self->processable;
+    # automake probably isn't used without a Makefile.am
+    my $makefile = $self->processable->patched->lookup('Makefile.am');
+    return
+      unless defined $makefile;
 
-    my $makefile = $processable->patched->lookup('Makefile.am');
+    my $configure_in = $self->processable->patched->lookup('configure.in');
 
-    # If there's no Makefile.am, automake probably isn't used, we're fine
-    return unless defined $makefile;
-
-    my $deprecated_configure = $processable->patched->lookup('configure.in');
-
-    if (defined $deprecated_configure) {
-        $self->hint('deprecated-configure-filename');
-    }
+    $self->pointed_hint('deprecated-configure-filename',$configure_in->pointer)
+      if defined $configure_in;
 
     return;
 }

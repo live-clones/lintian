@@ -1,6 +1,6 @@
 # debian/manual-pages -- lintian check script -*- perl -*-
 
-# Copyright © 2020 Felix Lechner
+# Copyright (C) 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -44,14 +44,14 @@ sub source {
     my @files = grep { $_->is_file } $debiandir->descendants;
     my @nopatches = grep { $_->name !~ m{^debian/patches/} } @files;
 
-    my @manpages = grep { $_->basename =~ m{\.\d$} } @nopatches;
+    my @manual_pages = grep { $_->basename =~ m{\.\d$} } @nopatches;
 
-    for my $manpage (@manpages) {
+    for my $item (@manual_pages) {
 
-        my $command = $manpage->basename;
+        my $command = $item->basename;
         $command =~ s/ [.] \d $//x;
 
-        $self->hint('maintainer-manual-page', $manpage->name)
+        $self->pointed_hint('maintainer-manual-page', $item->pointer)
           if none { $command eq $_->basename } @files;
     }
 

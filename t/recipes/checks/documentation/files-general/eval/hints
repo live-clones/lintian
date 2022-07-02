@@ -1,1 +1,1 @@
-files-general (binary): package-contains-info-dir-file usr/share/info/dir.gz
+files-general (binary): package-contains-info-dir-file [usr/share/info/dir.gz]

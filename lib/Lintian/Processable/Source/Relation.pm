@@ -1,9 +1,9 @@
 # -*- perl -*-
 # Lintian::Processable::Source::Relation -- interface to source package data collection
 
-# Copyright © 2008 Russ Allbery
-# Copyright © 2009 Raphael Geissert
-# Copyright © 2020 Felix Lechner
+# Copyright (C) 2008 Russ Allbery
+# Copyright (C) 2009 Raphael Geissert
+# Copyright (C) 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -97,12 +97,14 @@ relation as packages named after the substvar.
 has saved_binary_relations => (
     is => 'rw',
     coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
-    default => sub { {} });
+    default => sub { {} }
+);
 
 my %alias = (
     all    => [qw(Pre-Depends Depends Recommends Suggests)],
     strong => [qw(Pre-Depends Depends)],
-    weak   => [qw(Recommends Suggests)]);
+    weak   => [qw(Recommends Suggests)]
+);
 
 my %known = map { $_ => 1 }
   qw(pre-depends depends recommends suggests enhances breaks
@@ -174,7 +176,8 @@ object will be empty (present but satisfies nothing).
 has saved_relations => (
     is => 'rw',
     coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
-    default => sub { {} });
+    default => sub { {} }
+);
 
 sub relation {
     my ($self, $name) = @_;
@@ -221,7 +224,8 @@ restrictions and build profile restrictions in the FIELD field.
 has saved_relations_norestriction => (
     is => 'rw',
     coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
-    default => sub { {} });
+    default => sub { {} }
+);
 
 sub relation_norestriction {
     my ($self, $name) = @_;

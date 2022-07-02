@@ -1,0 +1,130 @@
+#!/usr/bin/perl
+#
+# Copyright (C) 2008 by Raphael Geissert <atomo64@gmail.com>
+# Copyright (C) 2017-2018 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2021 Felix Lechner
+#
+# This program is free software.  It is distributed under the terms of
+# the GNU General Public License as published by the Free Software
+# Foundation; either version 2 of the License, or (at your option) any
+# later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+use v5.20;
+use warnings;
+use utf8;
+
+use Cwd qw(realpath);
+use File::Basename qw(dirname);
+
+# neither Path::This nor lib::relative are in Debian
+use constant THISFILE => realpath __FILE__;
+use constant THISDIR => dirname realpath __FILE__;
+
+# use Lintian modules that belong to this program
+use lib THISDIR . '/../lib';
+
+use Const::Fast;
+use MCE::Loop;
+use List::SomeUtils qw(true);
+use Syntax::Keyword::Try;
+use Unicode::UTF8 qw(encode_utf8);
+
+use Lintian::Archive;
+use Lintian::Profile;
+
+const my $EMPTY => q{};
+
+const my $REFRESH_SUCCESSFUL => 1;
+const my $REFRESH_INCAPABLE => 0;
+const my $REFRESH_FAILED => -1;
+
+$ENV{LINTIAN_BASE} = realpath(THISDIR . '/..')
+  // die encode_utf8('Cannot resolve LINTIAN_BASE');
+
+my $basedir = "$ENV{LINTIAN_BASE}/data";
+
+die encode_utf8("Basedir does not exist at $basedir\n")
+  unless -e $basedir;
+
+my $profile = Lintian::Profile->new;
+$profile->load;
+
+my @data_sources = $profile->data->all_sources;
+
+my @selected;
+
+if (@ARGV) {
+    my $pattern = $ARGV[0];
+    @selected = grep { $_->title =~ m{\Q$pattern\E}i } @data_sources;
+
+} else {
+    @selected = @data_sources;
+}
+
+my $total = scalar @selected;
+
+say "Refreshing $total data sources.";
+
+MCE::Loop->init(
+    max_workers => 'auto',
+    chunk_size => 1
+);
+
+my $archive = Lintian::Archive->new;
+
+my @results = mce_loop {
+    my ($mce, $chunk_ref, $chunk_id) = @_;
+
+    my $data_source = $_;
+
+    my $title = $data_source->title;
+    my $counter = sprintf('%*d/%d', length($total), $chunk_id, $total);
+
+    if (!$data_source->can('refresh')) {
+
+        $mce->say(encode_utf8("[$counter] $title not implemented."));
+        $mce->gather($REFRESH_INCAPABLE);
+        return;
+    }
+
+    try {
+        $data_source->refresh($archive, $basedir);
+
+    } catch {
+        $mce->say(encode_utf8("[$counter] $title had error: $@"));
+        $mce->gather($REFRESH_FAILED);
+        return;
+    }
+
+    $mce->gather($REFRESH_SUCCESSFUL);
+    $mce->say(encode_utf8("[$counter] $title"));
+
+}
+@selected;
+
+my $errors = true { $_ == $REFRESH_FAILED } @results;
+
+if ($errors) {
+    say $EMPTY;
+    warn encode_utf8(
+        "WARNING: $errors data source(s) failed to refresh (out of $total).");
+}
+
+exit;
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

@@ -1,7 +1,11 @@
 Tag: doc-base-file-separator-extra-whitespace
 Severity: warning
 Check: menus
-Explanation: Unnecessary spaces were found in the doc-base file sections'
- separator. The section separator is an empty line and should not contain
- any whitespace.
-See-Also: doc-base 2.3.2
+Explanation: The separating line between two <code>File</code> sections
+ in the given <code>doc-base</code> control file contains additional
+ whitespace.
+ .
+ The section separator should be just an empty line without any other
+ whitespace.
+See-Also:
+ doc-base-manual 2.3.2

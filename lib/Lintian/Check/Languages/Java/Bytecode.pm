@@ -1,6 +1,6 @@
 # languages/java/bytecode -- lintian check script -*- perl -*-
 
-# Copyright © 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -34,15 +34,15 @@ with 'Lintian::Check';
 const my $MAGIC_BYTE_SIZE => 4;
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     # .class (compiled Java files)
-    if (   $file->name =~ /\.class$/
-        && $file->name !~ /(?:WEB-INF|demo|doc|example|sample|test)/) {
+    if (   $item->name =~ /\.class$/
+        && $item->name !~ /(?:WEB-INF|demo|doc|example|sample|test)/) {
 
-        my $magic = $file->magic($MAGIC_BYTE_SIZE);
+        my $magic = $item->magic($MAGIC_BYTE_SIZE);
 
-        $self->hint('package-installs-java-bytecode', $file->name)
+        $self->pointed_hint('package-installs-java-bytecode', $item->pointer)
           if $magic eq "\xCA\xFE\xBA\xBE";
     }
 

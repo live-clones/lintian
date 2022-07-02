@@ -1,9 +1,9 @@
 # -*- perl -*-
 # Lintian::Debian::Control -- object for fields in d/control
 
-# Copyright © 2008 Russ Allbery
-# Copyright © 2009 Raphael Geissert
-# Copyright © 2020 Felix Lechner
+# Copyright (C) 2008 Russ Allbery
+# Copyright (C) 2009 Raphael Geissert
+# Copyright (C) 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -25,9 +25,10 @@ use warnings;
 use utf8;
 
 use Path::Tiny;
+use Syntax::Keyword::Try;
 use Unicode::UTF8 qw(valid_utf8 decode_utf8 encode_utf8);
 
-use Lintian::Deb822::File;
+use Lintian::Deb822;
 use Lintian::Deb822::Section;
 use Lintian::Util qw($PKGNAME_REGEX);
 
@@ -50,10 +51,13 @@ Lintian::Debian::Control provides access to fields in d/control.
 
 =over 4
 
+=item item
 =item source_fields
 =item installable_fields_by_name
 
 =cut
+
+has item => (is => 'rw');
 
 has source_fields => (
     is => 'rw',
@@ -75,29 +79,23 @@ has installable_fields_by_name => (
 =cut
 
 sub load {
-    my ($self, $path) = @_;
+    my ($self, $item) = @_;
 
     return
-      unless defined $path;
+      unless defined $item;
+
+    $self->item($item);
 
     return
-      unless -r $path;
+      unless -r $item->unpacked_path;
 
-    my $bytes = path($path)->slurp;
-    return
-      unless length $bytes;
-
-    return
-      unless valid_utf8($bytes);
-
-    my $contents = decode_utf8($bytes);
-
-    my $deb822 = Lintian::Deb822::File->new;
+    my $deb822 = Lintian::Deb822->new;
 
     my @sections;
-    eval {@sections = $deb822->parse_string($contents);};
+    try {
+        @sections = $deb822->read_file($item->unpacked_path);
 
-    if (length $@) {
+    } catch {
         # If it is a syntax error, ignore it (we emit
         # syntax-error-in-control-file in this case via
         # control-file).

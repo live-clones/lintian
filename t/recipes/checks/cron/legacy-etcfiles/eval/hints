@@ -1,1 +1,1 @@
-etcfiles (binary): run-parts-cron-filename-contains-illegal-chars etc/cron.daily/cronfile-contains.fullstop
+etcfiles (binary): run-parts-cron-filename-contains-illegal-chars [etc/cron.daily/cronfile-contains.fullstop]

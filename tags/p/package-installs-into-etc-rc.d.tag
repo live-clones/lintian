@@ -3,4 +3,4 @@ Severity: error
 Check: files/init
 Explanation: The package installs files into the <code>/etc/rc.d</code> or
  <code>/etc/rc?.d</code> which is not allowed.
-See-Also: policy 9.3.3
+See-Also: debian-policy 9.3.3

@@ -10,5 +10,5 @@ Explanation: The package installs a library which is not dynamically linked
  libraries that they use symbols from in the same way that binaries
  are".
 See-Also:
- policy 10.2,
+ debian-policy 10.2,
  Bug#698720

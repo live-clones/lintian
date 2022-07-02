@@ -1,9 +1,9 @@
 # copyright -- lintian check script -*- perl -*-
 
-# Copyright © 1998 Christian Schwarz
-# Copyright © 1998 Richard Braakman
-# Copyright © 2011 Jakub Wilk
-# Copyright © 2020 Felix Lechner
+# Copyright (C) 1998 Christian Schwarz
+# Copyright (C) 1998 Richard Braakman
+# Copyright (C) 2011 Jakub Wilk
+# Copyright (C) 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -30,9 +30,10 @@ use utf8;
 use Const::Fast;
 use List::SomeUtils qw(any all none uniq);
 use Path::Tiny;
+use Syntax::Keyword::Try;
 use Unicode::UTF8 qw(valid_utf8 decode_utf8 encode_utf8);
 
-use Lintian::Deb822::Parser qw(parse_dpkg_control_string);
+use Lintian::Deb822;
 use Lintian::IPC::Run3 qw(safe_qx);
 use Lintian::Spelling qw(check_spelling);
 
@@ -49,6 +50,7 @@ const my $APPROXIMATE_APACHE_2_LENGTH => 10_000;
 
 sub spelling_tag_emitter {
     my ($self, @orig_args) = @_;
+
     return sub {
         return $self->hint(@orig_args, @_);
     };
@@ -71,7 +73,8 @@ sub source {
     if (@files == 1) {
         my $single = $files[0];
 
-        $self->hint('named-copyright-for-single-installable', $single->name)
+        $self->pointed_hint('named-copyright-for-single-installable',
+            $single->pointer)
           unless $single->name eq 'debian/copyright';
     }
 
@@ -79,7 +82,8 @@ sub source {
       unless @files;
 
     my @symlinks = grep { $_->is_symlink } @files;
-    $self->hint('debian-copyright-is-symlink', $_->name) for @symlinks;
+    $self->pointed_hint('debian-copyright-is-symlink', $_->pointer)
+      for @symlinks;
 
     return;
 }
@@ -97,9 +101,9 @@ sub binary {
 
         # check if this symlink references a directory elsewhere
         if ($doclink->link =~ m{^(?:\.\.)?/}s) {
-            $self->hint(
+            $self->pointed_hint(
                 'usr-share-doc-symlink-points-outside-of-usr-share-doc',
-                $doclink->link);
+                $doclink->pointer, $doclink->link);
             return;
         }
 
@@ -142,19 +146,22 @@ sub binary {
     }
 
     my $found = 0;
-    if ($docdir->child('copyright.gz')) {
-        $self->hint('copyright-file-compressed');
+    my $zipped = $docdir->child('copyright.gz');
+    if (defined $zipped) {
+
+        $self->pointed_hint('copyright-file-compressed', $zipped->pointer);
         $found = 1;
     }
 
     my $linked = 0;
 
-    my $file = $docdir->child('copyright');
-    if ($file) {
+    my $item = $docdir->child('copyright');
+    if (defined $item) {
         $found = 1;
 
-        if ($file->is_symlink) {
-            $self->hint('copyright-file-is-symlink');
+        if ($item->is_symlink) {
+
+            $self->pointed_hint('copyright-file-is-symlink', $item->pointer);
             $linked = 1;
          # fall through; coll/copyright-file prevents reading through evil link
         }
@@ -210,7 +217,7 @@ sub binary {
     my $wrong_directory_detected = 0;
 
     my $KNOWN_COMMON_LICENSES
-      =  $self->profile->load_data('copyright-file/common-licenses');
+      =  $self->data->load('copyright-file/common-licenses');
 
     if ($contents =~ m{ (usr/share/common-licenses/ ( [^ \t]*? ) \.gz) }xsm) {
         my ($path, $license) = ($1, $2);
@@ -282,7 +289,8 @@ sub binary {
                 $contents =~ m{ \b \QGNU GENERAL PUBLIC LICENSE\E
                                    \s* \QVersion 3\E }msx
                 && $contents =~ m{ \b \QTERMS AND CONDITIONS\E \s }msx
-            ))
+            )
+        )
     ) {
         $self->hint('copyright-file-contains-full-gpl-license');
         $gpl = 1;
@@ -319,7 +327,7 @@ sub binary {
     # e-mail discussions of licensing are included in the copyright
     # file but aren't referring to the license of the package.
     unless (
-           $contents =~ m{/usr/share/common-licenses}
+        $contents =~ m{/usr/share/common-licenses}
         || $contents =~ m/Zope Public License/
         || $contents =~ m/LICENSE AGREEMENT FOR PYTHON 1.6.1/
         || $contents =~ m/LaTeX Project Public License/
@@ -382,7 +390,8 @@ qr/GNU (?:Lesser|Library) General Public License|(?-i:\bLGPL\b)/i
                 $text
                   =~ /(?:under )?(?:the )?(?:same )?(?:terms )?as Perl itself\b/i
                   && $text !~ m{usr/share/common-licenses/};
-            })
+            }
+        )
     ) {
         $self->hint('copyright-file-lacks-pointer-to-perl-license');
     }
@@ -431,12 +440,12 @@ qr/GNU (?:Lesser|Library) General Public License|(?-i:\bLGPL\b)/i
     if ($found && !$linked) {
         $self->hint('copyright-without-copyright-notice')
           unless $contents
-          =~ m{(?:Copyright|Copr\.|©)(?:.*|[\(C\):\s]+)\b\d{4}\b
+          =~ m{(?:Copyright|Copr\.|\N{COPYRIGHT SIGN})(?:.*|[\(C\):\s]+)\b\d{4}\b
                |\bpublic(?:\s+|-)domain\b}xi;
     }
 
     check_spelling(
-        $self->profile,$contents,
+        $self->data,$contents,
         $self->group->spelling_exceptions,
         $self->spelling_tag_emitter('spelling-error-in-copyright'), 0
     );
@@ -456,8 +465,7 @@ qr/GNU (?:Lesser|Library) General Public License|(?-i:\bLGPL\b)/i
           = split(/\s*,\s*/,$self->processable->fields->value('Pre-Depends'));
 
         $self->hint('possible-gpl-code-linked-with-openssl')
-          if any { /^libssl[0-9.]+(?:\s|\z)/ && !/\|/ }
-        (@depends, @predepends);
+          if any { /^libssl[0-9.]+(?:\s|\z)/ && !/\|/ }(@depends, @predepends);
     }
 
     return;
@@ -470,7 +478,7 @@ qr/GNU (?:Lesser|Library) General Public License|(?-i:\bLGPL\b)/i
 sub depends_on {
     my ($self, $processable, $package) = @_;
 
-    my $KNOWN_ESSENTIAL = $self->profile->load_data('fields/essential');
+    my $KNOWN_ESSENTIAL = $self->data->load('fields/essential');
 
     return 1
       if $KNOWN_ESSENTIAL->recognizes($package);
@@ -504,8 +512,7 @@ sub check_cross_link {
         # be present anyway;  If they are in the same group, they claim
         # to have the same source (and source version)
         return
-          if any { $_->name eq $foreign }
-        $self->group->get_processables('binary');
+          if any { $_->name eq $foreign }$self->group->get_installables;
 
         # It was not, but since the source package was not present, we cannot
         # tell if it is foreign or not at this point.
@@ -539,16 +546,18 @@ sub check_names_texts {
         };
     }
 
+    my $deb822 = Lintian::Deb822->new;
+
     my @paragraphs;
+    try {
+        @paragraphs = $deb822->parse_string($contents);
 
-    local $@ = undef;
-    eval {@paragraphs = parse_dpkg_control_string($contents);};
+    } catch {
+        # parse error: copyright not in new format, just check text
+        return $text_check->(\$contents);
+    }
 
-    # parse error: copyright not in new format, just check text
-    return $text_check->(\$contents)
-      if $@;
-
-    my @licenses = grep { length } map { $_->{License} } @paragraphs;
+    my @licenses = grep { length } map { $_->value('License') } @paragraphs;
     for my $license (@licenses) {
 
         my ($name, $text) = ($license =~ /^\s*([^\r\n]+)\r?\n(.*)\z/s);

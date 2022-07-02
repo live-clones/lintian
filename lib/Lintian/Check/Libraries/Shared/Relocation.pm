@@ -1,8 +1,8 @@
 # libraries/shared/relocation -- lintian check script -*- perl -*-
 
-# Copyright © 1998 Christian Schwarz
-# Copyright © 2018-2019 Chris Lamb <lamby@debian.org>
-# Copyright © 2021 Felix Lechner
+# Copyright (C) 1998 Christian Schwarz
+# Copyright (C) 2018-2019 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -25,8 +25,6 @@ package Lintian::Check::Libraries::Shared::Relocation;
 use v5.20;
 use warnings;
 use utf8;
-
-use List::SomeUtils qw(any none);
 
 use Moo;
 use namespace::clean;
@@ -40,14 +38,13 @@ sub visit_installed_files {
       unless $item->is_file;
 
     # shared library
-    my $objdump = $self->processable->objdump_info->{$item->name};
     return
-      unless @{$objdump->{SONAME} // [] };
+      unless @{$item->elf->{SONAME} // [] };
 
     # Now that we're sure this is really a shared library, report on
     # non-PIC problems.
-    $self->hint('specific-address-in-shared-library', $item->name)
-      if $objdump->{TEXTREL};
+    $self->pointed_hint('specific-address-in-shared-library', $item->pointer)
+      if $item->elf->{TEXTREL};
 
     return;
 }

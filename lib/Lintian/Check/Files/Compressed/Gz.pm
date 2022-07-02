@@ -1,6 +1,6 @@
 # files/compressed/gz -- lintian check script -*- perl -*-
 
-# Copyright © 2020 Felix Lechner
+# Copyright (C) 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -53,26 +53,27 @@ has changelog_timestamp => (
         }
 
         return 0;
-    });
+    }
+);
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     return
-      unless $file->is_file;
+      unless $item->is_file;
 
-    if ($file->name =~ /\.gz$/si) {
+    if ($item->name =~ /\.gz$/si) {
 
-        safe_qx('gzip', '--test', $file->unpacked_path);
+        safe_qx('gzip', '--test', $item->unpacked_path);
 
-        $self->hint('broken-gz', $file->name)
+        $self->pointed_hint('broken-gz', $item->pointer)
           if $?;
     }
 
     # gzip files
-    if ($file->file_info =~ /gzip compressed/) {
+    if ($item->file_type =~ /gzip compressed/) {
 
-        my $bytes = $file->magic($GZIP_HEADER_SIZE);
+        my $bytes = $item->magic($GZIP_HEADER_SIZE);
         my (undef, $gziptime) = unpack('VV', $bytes);
 
         if (defined $gziptime && $gziptime != 0) {
@@ -86,14 +87,15 @@ sub visit_installed_files {
                 my $multiarch
                   = $self->processable->fields->value('Multi-Arch') || 'no';
 
-                if ($multiarch eq 'same' && $file->name !~ /\Q$architecture\E/)
+                if ($multiarch eq 'same' && $item->name !~ /\Q$architecture\E/)
                 {
-                    $self->hint('gzip-file-is-not-multi-arch-same-safe',
-                        $file->name);
+                    $self->pointed_hint(
+                        'gzip-file-is-not-multi-arch-same-safe',
+                        $item->pointer);
 
                 } else {
-                    $self->hint('package-contains-timestamped-gzip',
-                        $file->name,gmtime($gziptime)->datetime);
+                    $self->pointed_hint('package-contains-timestamped-gzip',
+                        $item->pointer,gmtime($gziptime)->datetime);
                 }
             }
         }

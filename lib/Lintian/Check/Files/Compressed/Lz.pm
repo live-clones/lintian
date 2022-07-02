@@ -1,7 +1,7 @@
 # files/compressed/lz -- lintian check script -*- perl -*-
 
-# Copyright © 2020 Chris Lamb
-# Copyright © 2020 Felix Lechner
+# Copyright (C) 2020 Chris Lamb
+# Copyright (C) 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -44,23 +44,24 @@ has lzip_command => (
         my $command = first_value { locate_executable($_) } qw(lzip clzip);
 
         return $command;
-    });
+    }
+);
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     return
-      unless $file->is_file;
+      unless $item->is_file;
 
     my $command = $self->lzip_command;
     return
       unless length $command;
 
-    if ($file->name =~ /\.lz$/si) {
+    if ($item->name =~ /\.lz$/si) {
 
-        safe_qx($command, '--test', $file->unpacked_path);
+        safe_qx($command, '--test', $item->unpacked_path);
 
-        $self->hint('broken-lz', $file->name)
+        $self->pointed_hint('broken-lz', $item->pointer)
           if $?;
     }
 

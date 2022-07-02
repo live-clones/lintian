@@ -1,0 +1,4 @@
+Skeleton: source-native
+Testname: no-section-in-source-stanza
+Description: No Section declared in source stanza of d/control
+

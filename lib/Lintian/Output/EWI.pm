@@ -1,5 +1,5 @@
-# Copyright © 2008 Frank Lichtenheld <frank@lichtenheld.de>
-# Copyright © 2021 Felix Lechner
+# Copyright (C) 2008 Frank Lichtenheld <frank@lichtenheld.de>
+# Copyright (C) 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -13,7 +13,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -25,18 +25,17 @@ use utf8;
 
 use Const::Fast;
 use HTML::HTML5::Entities;
+use List::Compare;
 use Term::ANSIColor ();
 use Text::Wrap;
 use Unicode::UTF8 qw(encode_utf8);
 
-use Moo;
-use namespace::clean;
-
-with 'Lintian::Output::Grammar';
+use Lintian::Output::Markdown qw(markdown_citation);
 
 # for tty hyperlinks
 const my $OSC_HYPERLINK => qq{\033]8;;};
 const my $OSC_DONE => qq{\033\\};
+const my $BEL => qq{\a};
 
 const my $EMPTY => q{};
 const my $SPACE => q{ };
@@ -58,13 +57,14 @@ const my $SCREEN_INDENTATION => 4;
 const my $SCREEN_PREFIX => $COMMENT_PREFIX . $SPACE x $SCREEN_INDENTATION;
 
 const my %COLORS => (
-    'E' => 'red',
-    'W' => 'yellow',
-    'I' => 'cyan',
-    'P' => 'green',
-    'C' => 'blue',
-    'O' => 'bright_black',
-    'M' => 'bright_black',
+    'E' => 'bright_white on_bright_red',
+    'W' => 'black on_bright_yellow',
+    'I' => 'bright_white on_bright_blue',
+    'P' => 'bright_white on_green',
+    'C' => 'bright_white on_bright_magenta',
+    'X' => 'bright_white on_yellow',
+    'O' => 'bright_white on_bright_black',
+    'M' => 'bright_black on_bright_white',
 );
 
 const my %CODE_PRIORITY => (
@@ -85,6 +85,11 @@ const my %TYPE_PRIORITY => (
     'changes' => 60,
     'buildinfo' => 70,
 );
+
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Output::Grammar';
 
 =head1 NAME
 
@@ -110,61 +115,130 @@ has tag_count_by_processable => (is => 'rw', default => sub { {} });
 
 =item issue_hints
 
-Print all hints passed in array. A separate arguments with processables
-is necessary to report in case no hints were found.
-
 =cut
 
 sub issue_hints {
-    my ($self, $groups, $option) = @_;
+    my ($self, $profile, $groups, $option) = @_;
 
-    my @processables = map { $_->get_processables } @{$groups // []};
+    my %sorter;
+    for my $group (@{$groups // []}) {
 
-    my @pending;
-    for my $processable (@processables) {
+        for my $processable ($group->get_processables) {
 
-        # get hints
-        my @hints = @{$processable->hints};
+            my $type = $processable->type;
+            my $type_priority = $TYPE_PRIORITY{$type};
 
-        # associate hints with processable
-        $_->processable($processable) for @hints;
+            for my $hint (@{$processable->hints}) {
 
-        # remove circular references
-        $processable->hints([]);
+                my $tag = $profile->get_tag($hint->tag_name);
 
-        push(@pending, @hints);
+                my $override_status = 0;
+                $override_status = 1
+                  if defined $hint->override || @{$hint->masks};
+
+                my $ranking_code = $tag->code;
+                $ranking_code = 'X'
+                  if $tag->experimental;
+                $ranking_code = 'O'
+                  if defined $hint->override;
+                $ranking_code = 'M'
+                  if @{$hint->masks};
+
+                my $code_priority = $CODE_PRIORITY{$ranking_code};
+
+                my %for_output;
+                $for_output{hint} = $hint;
+                $for_output{processable} = $processable;
+
+                push(
+                    @{
+                        $sorter{$override_status}{$code_priority}{$tag->name}
+                          {$type_priority}{$processable->name}{$hint->context}
+                    },
+                    \%for_output
+                );
+            }
+        }
     }
 
-    my @sorted = sort {
-             defined $a->override <=> defined $b->override
-          || $CODE_PRIORITY{$a->tag->code} <=> $CODE_PRIORITY{$b->tag->code}
-          || $a->tag->name cmp $b->tag->name
-          || $TYPE_PRIORITY{$a->processable->type}
-          <=> $TYPE_PRIORITY{$b->processable->type}
-          || $a->processable->name cmp $b->processable->name
-          || $a->context cmp $b->context
-    } @pending;
+    for my $override_status (sort keys %sorter) {
 
-    $self->print_hint($_, $option) for @sorted;
+        my %by_code_priority = %{$sorter{$override_status}};
+
+        for my $code_priority (sort { $a <=> $b } keys %by_code_priority) {
+
+            my %by_tag_name = %{$by_code_priority{$code_priority}};
+
+            for my $tag_name (sort keys %by_tag_name) {
+
+                my %by_type_priority = %{$by_tag_name{$tag_name}};
+
+                for
+                  my $type_priority (sort { $a <=> $b }keys %by_type_priority){
+
+                    my %by_processable_name
+                      = %{$by_type_priority{$type_priority}};
+
+                    for my $processable_name (sort keys %by_processable_name) {
+
+                        my %by_context
+                          = %{$by_processable_name{$processable_name}};
+
+                        for my $context (sort keys %by_context) {
+
+                            my $for_output
+                              = $sorter{$override_status}{$code_priority}
+                              {$tag_name}{$type_priority}{$processable_name}
+                              {$context};
+
+                            for my $each (@{$for_output}) {
+
+                                my $hint = $each->{hint};
+                                my $processable = $each->{processable};
+
+                                $self->print_hint($profile, $hint,
+                                    $processable,$option)
+                                  if ( !defined $hint->override
+                                    && !@{$hint->masks})
+                                  || $option->{'show-overrides'};
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     return;
 }
 
-=item C<print_hint($pkg_info, $tag, $context, $override)>
-
-Print a hint.  The first two arguments are hash reference with the
-information about the package and the hint, $context is the context
-information for the hint (if any) as an array reference, and $override
-is either undef if the hint is not overridden or a hash with
-override info for this hint.
+=item C<print_hint>
 
 =cut
 
 sub print_hint {
-    my ($self, $hint, $option) = @_;
+    my ($self, $profile, $hint, $processable, $option) = @_;
 
-    my $tag = $hint->tag;
-    my $tag_name = $tag->name;
+    my $tag_name = $hint->tag_name;
+    my $tag = $profile->get_tag($tag_name);
+
+    my @want_references = @{$option->{'display-source'} // []};
+    my @have_references = @{$tag->see_also};
+
+    # keep only the first word
+    s{^ ([\w-]+) \s }{$1}x for @have_references;
+
+    # drop anything in parentheses at the end
+    s{ [(] \S+ [)] $}{}x for @have_references;
+
+    # check if hint refers to the selected references
+    my $reference_lc= List::Compare->new(\@have_references, \@want_references);
+
+    my @found_references = $reference_lc->get_intersection;
+
+    return
+      if @want_references
+      && !@found_references;
 
     my $information = $hint->context;
     $information = $SPACE . $self->_quote_print($information)
@@ -175,7 +249,7 @@ sub print_hint {
     my $limit = $option->{'tag-display-limit'};
     if ($limit) {
 
-        my $processable_id = $hint->processable->identifier;
+        my $processable_id = $processable->identifier;
         my $emitted_count
           = $self->tag_count_by_processable->{$processable_id}{$tag_name}++;
 
@@ -183,7 +257,7 @@ sub print_hint {
           if $emitted_count >= $limit;
 
         my $msg
-          = ' ... use --no-tag-display-limit to see all (or pipe to a file/program)';
+          = ' ... use "--tag-display-limit 0" to see all (or pipe to a file/program)';
         $information = $self->_quote_print($msg)
           if $emitted_count >= $limit-1;
     }
@@ -194,13 +268,11 @@ sub print_hint {
     my $text = $tag_name;
 
     my $code = $tag->code;
+    $code = 'X' if $tag->experimental;
     $code = 'O' if defined $hint->override;
-    $code = 'M' if defined $hint->screen;
+    $code = 'M' if @{$hint->masks};
 
     my $tag_color = $COLORS{$code};
-
-    # keep original color for tags marked experimental
-    $code = 'X' if $tag->experimental;
 
     $text = Term::ANSIColor::colored($tag_name, $tag_color)
       if $option->{color};
@@ -213,22 +285,38 @@ sub print_hint {
         $output .= $text;
     }
 
-    if ($hint->override) {
-        say encode_utf8('N: ' . $self->_quote_print($_))
-          for @{$hint->override->{comments}};
+    local $Text::Wrap::columns
+      = $option->{'output-width'} - length $COMMENT_PREFIX;
+
+    # do not wrap long words such as urls; see #719769
+    local $Text::Wrap::huge = 'overflow';
+
+    if ($hint->override && length $hint->override->justification) {
+
+        my $wrapped = wrap($COMMENT_PREFIX, $COMMENT_PREFIX,
+            $hint->override->justification);
+        say encode_utf8($wrapped);
     }
 
-    say encode_utf8('N: masked by screen ' . $hint->screen->name)
-      if defined $hint->screen;
+    for my $mask (@{$hint->masks}) {
+
+        say encode_utf8($COMMENT_PREFIX . 'masked by screen ' . $mask->screen);
+
+        next
+          unless length $mask->excuse;
+
+        my $wrapped= wrap($COMMENT_PREFIX, $COMMENT_PREFIX, $mask->excuse);
+        say encode_utf8($wrapped);
+    }
 
     my $type = $EMPTY;
-    $type = $SPACE . $hint->processable->type
-      unless $hint->processable->type eq 'binary';
+    $type = $SPACE . $processable->type
+      unless $processable->type eq 'binary';
 
     say encode_utf8($code
           . $COLON
           . $SPACE
-          . $hint->processable->name
+          . $processable->name
           . $type
           . $COLON
           . $SPACE
@@ -237,7 +325,8 @@ sub print_hint {
 
     if ($option->{info}) {
 
-        $self->describe_tag($tag, $option->{'output-width'})
+        # show only on first issuance
+        $self->describe_tag($profile->data, $tag, $option->{'output-width'})
           unless $self->issued_tag($tag->name);
     }
 
@@ -267,8 +356,8 @@ sub _quote_print {
 sub osc_hyperlink {
     my ($self, $text, $target) = @_;
 
-    my $start = $OSC_HYPERLINK . $target . $OSC_DONE;
-    my $end = $OSC_HYPERLINK . $OSC_DONE;
+    my $start = $OSC_HYPERLINK . $target . $BEL;
+    my $end = $OSC_HYPERLINK . $BEL;
 
     return $start . $text . $end;
 }
@@ -299,7 +388,7 @@ sub issued_tag {
 =cut
 
 sub describe_tags {
-    my ($self, $tags, $columns) = @_;
+    my ($self, $data, $tags, $columns) = @_;
 
     for my $tag (@{$tags}) {
 
@@ -318,7 +407,7 @@ sub describe_tags {
         say encode_utf8('N:');
         say encode_utf8("$code: $name");
 
-        $self->describe_tag($tag, $columns);
+        $self->describe_tag($data, $tag, $columns);
     }
 
     return;
@@ -329,7 +418,7 @@ sub describe_tags {
 =cut
 
 sub describe_tag {
-    my ($self, $tag, $columns) = @_;
+    my ($self, $data, $tag, $columns) = @_;
 
     local $Text::Wrap::columns = $columns;
 
@@ -350,9 +439,11 @@ sub describe_tag {
 
             $wrapped .= $COMMENT_PREFIX . $NEWLINE;
 
+            my @see_also_markdown
+              = map { markdown_citation($data, $_) } @{$tag->see_also};
             my $markdown
               = 'Please refer to '
-              . $self->oxford_enumeration('and', @{$tag->see_also})
+              . $self->oxford_enumeration('and', @see_also_markdown)
               . ' for details.'
               . $NEWLINE;
             my $plain = markdown_to_plain($markdown,
@@ -384,7 +475,7 @@ sub describe_tag {
         if (@{$tag->renamed_from}) {
 
             $wrapped .= wrap($DESCRIPTION_PREFIX, $DESCRIPTION_PREFIX,
-                    'Renamed from: '
+                'Renamed from: '
                   . join($SPACE, @{$tag->renamed_from})
                   . $NEWLINE);
         }
@@ -412,10 +503,14 @@ sub describe_tag {
 
             my $combined = $screen->reason . $NEWLINE;
             if (@{$screen->see_also}) {
+
                 $combined .= $NEWLINE;
+
+                my @see_also_markdown
+                  = map { markdown_citation($data, $_) } @{$screen->see_also};
                 $combined
                   .= 'Read more in '
-                  . $self->oxford_enumeration('and', @{$tag->see_also})
+                  . $self->oxford_enumeration('and', @see_also_markdown)
                   . $DOT
                   . $NEWLINE;
             }

@@ -1,6 +1,6 @@
 # -*- perl -*- Lintian::Index
 #
-# Copyright © 2020 Felix Lechner
+# Copyright (C) 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -35,20 +35,13 @@ use Lintian::IPC::Run3 qw(safe_qx);
 
 use Lintian::Util qw(perm2oct);
 
-use Moo;
-use namespace::clean;
-
-with
-  'Lintian::Index::Ar',
-  'Lintian::Index::FileInfo',
-  'Lintian::Index::Java',
-  'Lintian::Index::Md5sums',
-  'Lintian::Index::Objdump',
-  'Lintian::Index::Strings';
-
 const my $EMPTY => q{};
+const my $SPACE => q{ };
 const my $SLASH => q{/};
+const my $BACKSLASH => q{\\};
+const my $ZERO => q{0};
 const my $HYPHEN => q{-};
+const my $PERCENT => q{%};
 const my $NEWLINE => qq{\n};
 
 const my $WAIT_STATUS_SHIFT => 8;
@@ -56,6 +49,17 @@ const my $NO_LIMIT => -1;
 const my $LINES_PER_FILE => 3;
 const my $WIDELY_READABLE_FOLDER => oct(755);
 const my $WORLD_WRITABLE_FOLDER => oct(777);
+
+use Moo;
+use namespace::clean;
+
+with
+  'Lintian::Index::Ar',
+  'Lintian::Index::Elf',
+  'Lintian::Index::FileTypes',
+  'Lintian::Index::Java',
+  'Lintian::Index::Md5sums',
+  'Lintian::Index::Strings';
 
 my %FILE_CODE2LPATH_TYPE = (
     $HYPHEN => Lintian::Index::Item::TYPE_FILE
@@ -79,11 +83,13 @@ Lintian::Index - access to collected data about the upstream (orig) sources
 
 =head1 DESCRIPTION
 
-Lintian::Processable::Orig::Index provides an interface to collected data about the upstream (orig) sources.
+Lintian::Processable::Source::Orig::Index provides an interface to collected data about the upstream (orig) sources.
 
 =head1 INSTANCE METHODS
 
 =over 4
+
+=item identifier
 
 =item catalog
 
@@ -95,7 +101,11 @@ Returns the base directory for file references.
 
 =item C<anchored>
 
+=item unpack_messages
+
 =cut
+
+has identifier => (is => 'rw', default => 'unnamed');
 
 has catalog => (
     is => 'rw',
@@ -112,7 +122,8 @@ has catalog => (
         $catalog{$EMPTY} = $root;
 
         return \%catalog;
-    });
+    }
+);
 
 has basedir => (
     is => 'rw',
@@ -130,6 +141,7 @@ has basedir => (
 );
 
 has anchored => (is => 'rw', default => 0);
+has unpack_messages => (is => 'rw', default => sub { [] });
 
 has sorted_list => (
     is => 'ro',
@@ -145,7 +157,8 @@ has sorted_list => (
         const my @IMMUTABLE => @sorted;
 
         return \@IMMUTABLE;
-    });
+    }
+);
 
 =item lookup (FILE)
 
@@ -167,7 +180,7 @@ sub lookup {
     # get root dir by default
     $name //= $EMPTY;
 
-    croak encode_utf8('Name is not a string')
+    croak encode_utf8($self->identifier . ': Name is not a string')
       unless ref $name eq $EMPTY;
 
     my $found = $self->catalog->{$name};
@@ -197,18 +210,29 @@ sub create_from_basedir {
 
     my $savedir = getcwd;
     chdir($self->basedir)
-      or die encode_utf8('Cannot change to directory ' . $self->basedir);
+      or die encode_utf8(
+        $self->identifier . ': Cannot change to directory ' . $self->basedir);
 
     # get times in UTC
+    my $TIME_STAMP
+      = $PERCENT . q{M} . $SPACE . $PERCENT . q{s} . $SPACE . $PERCENT . q{A+};
+    my $FILE_NAME = $PERCENT . q{p};
+    my $LINK_DESTINATION = $PERCENT . q{l};
+    my $NULL_BREAK = $BACKSLASH . $ZERO;
+
+    my @REQUESTED_FIELDS
+      = map { $_ . $NULL_BREAK } ($TIME_STAMP, $FILE_NAME, $LINK_DESTINATION);
+
     my @index_command
-      = ('env', 'TZ=UTC', 'find', '-printf', '%M %s %A+\0%p\0%l\0');
+      = ('env', 'TZ=UTC', 'find', '-printf', join($EMPTY, @REQUESTED_FIELDS));
     my $index_output;
     my $index_errors;
 
     run3(\@index_command, \undef, \$index_output, \$index_errors);
 
     chdir($savedir)
-      or die encode_utf8("Cannot change to directory $savedir");
+      or die encode_utf8(
+        $self->identifier . ": Cannot change to directory $savedir");
 
     # allow processing of file names with non UTF-8 bytes
     $index_errors = decode_utf8($index_errors)
@@ -225,8 +249,8 @@ sub create_from_basedir {
     $index_output =~ s/\0$//;
 
     my @lines = split(/\0/, $index_output, $NO_LIMIT);
-    die encode_utf8(
-        "Did not get a multiple of $LINES_PER_FILE lines from find.")
+    die encode_utf8($self->identifier
+          . ": Did not get a multiple of $LINES_PER_FILE lines from find.")
       unless @lines % $LINES_PER_FILE == 0;
 
     while (defined(my $first = shift @lines)) {
@@ -310,8 +334,9 @@ sub create_from_piped_tar {
         my $entry = Lintian::Index::Item->new;
         $entry->init_from_tar_output($line);
 
-        die encode_utf8(
-            'Numerical index lists extra files for file name '. $entry->name)
+        die encode_utf8($self->identifier
+              . ': Numerical index lists extra files for file name '
+              . $entry->name)
           unless exists $catalog{$entry->name};
 
         # keep numerical uid and gid
@@ -351,7 +376,8 @@ sub load {
             $operm | (
                 $FILE_CODE2LPATH_TYPE{$raw_type}
                   // Lintian::Index::Item::TYPE_OTHER
-            ));
+            )
+        );
     }
 
     # find all entries that are not regular files
@@ -386,11 +412,12 @@ sub load {
     }
 
     # disallow absolute names
-    die encode_utf8('Index contains absolute path names')
+    die encode_utf8($self->identifier . ': Index contains absolute path names')
       if any { $_->name =~ m{^/}s } values %all;
 
     # disallow absolute hardlink targets
-    die encode_utf8('Index contains absolute hardlink targets')
+    die encode_utf8(
+        $self->identifier . ': Index contains absolute hardlink targets')
       if any { $_->link =~ m{^/}s } grep { $_->is_hardlink } values %all;
 
     # add entries for missing directories
@@ -469,7 +496,7 @@ sub load {
     }
 
     # ensure root is not its own child; may create leaks like #695866
-    die encode_utf8('Root directory is its own parent')
+    die encode_utf8($self->identifier . ': Root directory is its own parent')
       if defined $all{$EMPTY} && defined $all{$EMPTY}->parent_dir;
 
     # find all hard links
@@ -533,11 +560,11 @@ sub load {
     $self->catalog(\%all);
 
     $errors .= $self->add_md5sums;
-    $errors .= $self->add_fileinfo;
+    $errors .= $self->add_file_types;
 
     $errors .= $self->add_ar;
+    $errors .= $self->add_elf;
     $errors .= $self->add_java;
-    $errors .= $self->add_objdump;
     $errors .= $self->add_strings;
 
     return $errors;
@@ -550,12 +577,13 @@ sub load {
 sub merge_in {
     my ($self, $other) = @_;
 
-    die encode_utf8('Need same base directory ('
+    die encode_utf8($self->identifier
+          . ': Need same base directory ('
           . $self->basedir . ' vs '
           . $other->basedir . ')')
       unless $self->basedir eq $other->basedir;
 
-    die encode_utf8('Need same anchoring status')
+    die encode_utf8($self->identifier . ': Need same anchoring status')
       unless $self->anchored == $other->anchored;
 
     # associate all new items with this index
@@ -608,7 +636,7 @@ sub capture_common_prefix {
       if $new_basedir eq $SLASH;
 
     my $segment = path($self->basedir)->basename;
-    die encode_utf8('Common path segment has no length')
+    die encode_utf8($self->identifier . ': Common path segment has no length')
       unless length $segment;
 
     my $prefix;
@@ -677,15 +705,15 @@ sub drop_common_prefix {
 
     my @childnames = keys %{$self->catalog->{$EMPTY}->childnames};
 
-    die encode_utf8('Not exactly one top-level child')
+    die encode_utf8($self->identifier . ': Not exactly one top-level child')
       unless @childnames == 1;
 
     my $segment = $childnames[0];
-    die encode_utf8('Common path segment has no length')
+    die encode_utf8($self->identifier . ': Common path segment has no length')
       unless length $segment;
 
     my $new_root = $self->lookup($segment . $SLASH);
-    die encode_utf8('New root is not a directory')
+    die encode_utf8($self->identifier . ': New root is not a directory')
       unless $new_root->is_dir;
 
     my $prefix;
@@ -747,15 +775,16 @@ sub drop_basedir_segment {
     my $errors = $EMPTY;
 
     my $obsolete = path($self->basedir)->basename;
-    die encode_utf8('Base directory has no name')
+    die encode_utf8($self->identifier . ': Base directory has no name')
       unless length $obsolete;
 
     my $parent_dir = path($self->basedir)->parent->stringify;
-    die encode_utf8('Base directory has no parent')
+    die encode_utf8($self->identifier . ': Base directory has no parent')
       if $parent_dir eq $SLASH;
 
     my $grandparent_dir = path($parent_dir)->parent->stringify;
-    die encode_utf8('Will not do anything in file system root')
+    die encode_utf8(
+        $self->identifier . ': Will not do anything in file system root')
       if $grandparent_dir eq $SLASH;
 
     # destroyed when object is lost

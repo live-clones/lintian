@@ -1,6 +1,6 @@
 # files/duplicates -- lintian check script -*- perl -*-
 
-# Copyright © 2011 Niels Thykier
+# Copyright (C) 2011 Niels Thykier
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -34,27 +34,27 @@ with 'Lintian::Check';
 has md5map => (is => 'rw', default => sub{ {} });
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     return
-      unless $file->is_regular_file;
+      unless $item->is_regular_file;
 
     # Ignore empty files; in some cases (e.g. python) a file is
     # required even if it is empty and we are never looking at a
     # substantial gain in such a case.  Also see #632789
     return
-      unless $file->size;
+      unless $item->size;
 
-    my $calculated = $file->md5sum;
+    my $calculated = $item->md5sum;
     return
       unless defined $calculated;
 
     return
-      unless $file->name =~ m{\A usr/share/doc/}xsm;
+      unless $item->name =~ m{\A usr/share/doc/}xsm;
 
     $self->md5map->{$calculated} //= [];
 
-    push(@{$self->md5map->{$calculated}}, $file);
+    push(@{$self->md5map->{$calculated}}, $item);
 
     return;
 }
@@ -62,17 +62,17 @@ sub visit_installed_files {
 sub installable {
     my ($self) = @_;
 
-    foreach my $md5 (keys %{$self->md5map}){
+    for my $md5 (keys %{$self->md5map}){
         my @files = @{ $self->md5map->{$md5} };
 
         next
           if scalar @files < 2;
 
         if (any { m/changelog/i} @files) {
-            $self->hint('duplicate-changelog-files', sort @files);
+            $self->hint('duplicate-changelog-files', (sort @files));
 
         } else {
-            $self->hint('duplicate-files', sort @files);
+            $self->hint('duplicate-files', (sort @files));
         }
     }
 

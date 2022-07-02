@@ -16,4 +16,4 @@ Explanation: The specified file under <code>/etc/default/</code> includes a line
  Please remove this mechanism and disable enabling the daemon on install
  via <code>dh&lowbar;installinit --no-enable</code> or move to automatically
  starting it.
-See-Also: policy 9.3.3.1, update-rc.d(8), dh_installinit(1)
+See-Also: debian-policy 9.3.3.1, update-rc.d(8), dh_installinit(1)

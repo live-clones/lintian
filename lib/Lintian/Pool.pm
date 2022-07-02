@@ -1,5 +1,5 @@
-# Copyright © 2011 Niels Thykier <niels@thykier.net>
-# Copyright © 2020 Felix Lechner
+# Copyright (C) 2011 Niels Thykier <niels@thykier.net>
+# Copyright (C) 2020-2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -13,7 +13,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -35,9 +35,6 @@ use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Group;
 
-use Moo;
-use namespace::clean;
-
 const my $SPACE => q{ };
 const my $COMMA => q{,};
 const my $SEMICOLON => q{;};
@@ -47,6 +44,9 @@ const my $PLURAL_S => q{s};
 
 const my $ANY_CHILD => -1;
 const my $WORLD_WRITABLE_FOLDER => oct(777);
+
+use Moo;
+use namespace::clean;
 
 =head1 NAME
 
@@ -94,7 +94,8 @@ has basedir => (
         $absolute->mkpath({mode => $WORLD_WRITABLE_FOLDER});
 
         return $absolute;
-    });
+    }
+);
 
 =item $pool->basedir
 
@@ -132,9 +133,9 @@ sub add_group {
         }
     }
 
-    foreach my $bin ($group->get_binary_processables){
+    for my $installable ($group->get_installables){
         # New binary package ?
-        my $was_new = $old->add_processable($bin);
+        my $was_new = $old->add_processable($installable);
         $added ||= $was_new;
     }
 
@@ -155,6 +156,7 @@ sub process{
         return;
     }
 
+    my %reported_count;
     my %override_count;
     my %ignored_overrides;
     my $unused_overrides = 0;
@@ -168,84 +170,52 @@ sub process{
 
         my $success= $group->process(\%ignored_overrides, $option);
 
-        # associate all hints with processable
         for my $processable ($group->get_processables){
-            $_->processable($processable) for @{$processable->hints};
-        }
 
-        my @hints = map { @{$_->hints} } $group->get_processables;
+            my @keep;
+            for my $hint (@{$processable->hints}) {
 
-        # remove circular references
-        $_->hints([]) for $group->get_processables;
+                my $tag = $PROFILE->get_tag($hint->tag_name);
 
-        my @reported = grep { !$_->override } @hints;
-        my @reported_trusted = grep { !$_->tag->experimental } @reported;
-        my @reported_experimental = grep { $_->tag->experimental } @reported;
+                # discard experimental tags
+                next
+                  if $tag->experimental
+                  && !$option->{'display-experimental'};
 
-        my @override = grep { $_->override } @hints;
-        my @override_trusted = grep { !$_->tag->experimental } @override;
-        my @override_experimental = grep { $_->tag->experimental } @override;
+                # discard overridden tags
+                next
+                  if defined $hint->override
+                  && !$option->{'show-overrides'};
 
-        $unused_overrides+= scalar grep {
-                 $_->tag->name eq 'mismatched-override'
-              || $_->tag->name eq 'unused-override'
-        } @hints;
+                # discard outside the selected display level
+                next
+                  unless $PROFILE->display_level_for_tag($hint->tag_name);
 
-        my %reported_count;
-        $reported_count{$_->tag->visibility}++ for @reported_trusted;
-        $reported_count{experimental} += scalar @reported_experimental;
-        $reported_count{override} += scalar @override;
+                if (!defined $hint->override
+                    || $option->{'show-overrides'}) {
 
-        unless ($option->{'no-override'} || $option->{'show-overrides'}) {
+                    ++$reported_count{$tag->visibility}
+                      if !$tag->experimental;
 
-            $override_count{$_->tag->visibility}++ for @override_trusted;
-            $override_count{experimental} += scalar @override_experimental;
+                    ++$reported_count{experimental}
+                      if $tag->experimental;
+                }
+
+                ++$reported_count{override}
+                  if defined $hint->override;
+
+                ++$unused_overrides
+                  if $hint->tag_name eq 'unused-override'
+                  || $hint->tag_name eq 'mismatched-override';
+
+                push(@keep, $hint);
+            }
+
+            $processable->hints(\@keep);
         }
 
         ${$exit_code_ref} = 2
           if $success && any { $reported_count{$_} } @{$option->{'fail-on'}};
-
-        # discard disabled tags
-        @hints= grep { $PROFILE->tag_is_enabled($_->tag->name) } @hints;
-
-        # discard experimental tags
-        @hints = grep { !$_->tag->experimental } @hints
-          unless $option->{'display-experimental'};
-
-        # discard overridden tags
-        @hints = grep { !defined $_->override } @hints
-          unless $option->{'show-overrides'};
-
-        # discard outside the selected display level
-        @hints= grep { $PROFILE->display_level_for_tag($_->tag->name) }@hints;
-
-        my $reference_limit = $option->{'display-source'} // [];
-        if (@{$reference_limit}) {
-
-            my @topic_hints;
-            for my $hint (@hints) {
-                my @references = split(/,/, $hint->tag->references);
-
-                # retain the first word
-                s/^([\w-]+)\s.*/$1/ for @references;
-
-                # remove anything in parentheses at the end
-                s/\(\S+\)$// for @references;
-
-                # check if hint refers to the selected references
-                my $referencelc
-                  = List::Compare->new(\@references, $reference_limit);
-                next
-                  unless $referencelc->get_intersection;
-
-                push(@topic_hints, $hint);
-            }
-
-            @hints = @topic_hints;
-        }
-
-        # put hints back into their respective processables
-        push(@{$_->processable->hints}, $_) for @hints;
 
         # interruptions can leave processes behind (manpages); wait and reap
         if (${$exit_code_ref} == 1) {
@@ -265,13 +235,15 @@ sub process{
                 say encode_utf8(
                     sprintf(
                         $FORMAT,'PID', 'TTY', 'STATUS', 'START', 'COMMAND'
-                    ));
+                    )
+                );
 
                 say encode_utf8(
                     sprintf($FORMAT,
                         $_->pid,$_->ttydev,
                         $_->state,scalar(localtime($_->start)),
-                        $_->cmndline))for @leftover;
+                        $_->cmndline)
+                )for @leftover;
 
                 ${$exit_code_ref} = 1;
                 die encode_utf8("Aborting.\n");
@@ -308,7 +280,7 @@ sub process{
     }
 
     # pass everything, in case some groups or processables have no hints
-    $OUTPUT->issue_hints([values %{$self->groups}], $option);
+    $OUTPUT->issue_hints($PROFILE, [values %{$self->groups}], $option);
 
     my $errors = $override_count{error} // 0;
     my $warnings = $override_count{warning} // 0;
@@ -414,26 +386,6 @@ sub empty{
     my ($self) = @_;
 
     return scalar keys %{$self->groups} == 0;
-}
-
-=item DEMOLISH
-
-Removes the lab and everything in it.  Any reference to an entry
-returned from this lab will immediately become invalid.
-
-=cut
-
-sub DEMOLISH {
-    my ($self, $in_global_destruction) = @_;
-
-    # change back to where we were; otherwise removal may fail
-    chdir($self->savedir)
-      or die encode_utf8('Cannot change to directory ' . $self->savedir);
-
-    path($self->basedir)->remove_tree
-      if length $self->basedir && -d $self->basedir;
-
-    return;
 }
 
 =back

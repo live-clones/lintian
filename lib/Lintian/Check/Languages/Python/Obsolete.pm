@@ -1,12 +1,12 @@
 # languages/python/obsolete -- lintian check script -*- perl -*-
 #
-# Copyright © 1999 Joey Hess
-# Copyright © 2000 Sean 'Shaleh' Perry
-# Copyright © 2002 Josip Rodin
-# Copyright © 2007 Russ Allbery
-# Copyright © 2013-2018 Bastien ROUCARIÈS
-# Copyright © 2017-2020 Chris Lamb <lamby@debian.org>
-# Copyright © 2020 Felix Lechner
+# Copyright (C) 1999 Joey Hess
+# Copyright (C) 2000 Sean 'Shaleh' Perry
+# Copyright (C) 2002 Josip Rodin
+# Copyright (C) 2007 Russ Allbery
+# Copyright (C) 2013-2018 Bastien ROUCARIES
+# Copyright (C) 2017-2020 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -39,15 +39,17 @@ sub source {
     my ($self) = @_;
 
     my $pycompat= $self->processable->patched->resolve_path('debian/pycompat');
-    if (defined $pycompat) {
-        $self->hint('debian-pycompat-is-obsolete') if $pycompat->is_file;
-    }
+
+    $self->pointed_hint('debian-pycompat-is-obsolete', $pycompat->pointer)
+      if defined $pycompat
+      && $pycompat->is_file;
 
     my $pyversions
       = $self->processable->patched->resolve_path('debian/pyversions');
-    if (defined $pyversions) {
-        $self->hint('debian-pyversions-is-obsolete') if $pyversions->is_file;
-    }
+
+    $self->pointed_hint('debian-pyversions-is-obsolete', $pyversions->pointer)
+      if defined $pyversions
+      && $pyversions->is_file;
 
     return;
 }

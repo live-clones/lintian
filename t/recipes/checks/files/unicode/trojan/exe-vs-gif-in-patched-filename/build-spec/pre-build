@@ -1,0 +1,9 @@
+#!/bin/bash
+
+set -e
+
+DIR="$1"
+
+mkdir -p "$DIR/scripts"
+NAME=`echo -e 'example\xE2\x80\xAEfig.exe'`
+touch "$DIR/scripts/$NAME"

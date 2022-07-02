@@ -1,0 +1,13 @@
+# Data about titles, sections, and URLs of manuals, used to expand references
+# in tag descriptions and add links for HTML output.  Each line of this file
+# has three fields separated by double colons:
+#
+#     <section> :: <title> :: <url>
+#
+# If <section> is an underscore, that line specifies the title and URL for the
+# whole manual.
+
+_::The Debian Menu sub-policy::https://www.debian.org/doc/packaging-manuals/menu-policy/
+1::About this document::https://www.debian.org/doc/packaging-manuals/menu-policy/ch1.html
+2::Menu Structure::https://www.debian.org/doc/packaging-manuals/menu-policy/ch2.html
+2.1::Preferred menu structure::https://www.debian.org/doc/packaging-manuals/menu-policy/ch2.html#s2.1

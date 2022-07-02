@@ -18,7 +18,7 @@ Explanation: The symbols file for this package does not contain a
  Please do not use the placeholder <code>&#35;PACKAGE&#35;</code>. The
  development package for your shared library must be stated explicitly.
 See-Also:
- policy 8.6.3.2,
+ debian-policy 8.6.3.2,
  deb-symbols(5),
  dpkg-shlibdeps(1),
  https://www.debian.org/doc/manuals/maint-guide/advanced.en.html#librarysymbols,

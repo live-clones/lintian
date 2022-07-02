@@ -1,7 +1,7 @@
 # debian/debconf -- lintian check script -*- perl -*-
 
-# Copyright © 2001 Colin Watson
-# Copyright © 2020 Felix Lechner
+# Copyright (C) 2001 Colin Watson
+# Copyright (C) 2020-21 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -28,10 +28,11 @@ use utf8;
 use Const::Fast;
 use List::SomeUtils qw(none);
 use Path::Tiny;
+use Syntax::Keyword::Try;
 use Unicode::UTF8 qw(encode_utf8);
 
-use Lintian::Deb822::File;
-use Lintian::Deb822::Parser qw(:constants);
+use Lintian::Deb822;
+use Lintian::Deb822::Constants qw(DCTRL_DEBCONF_TEMPLATE);
 use Lintian::Relation;
 use Lintian::Util qw($PKGNAME_REGEX);
 
@@ -79,7 +80,8 @@ my $ANY_DEBCONF = Lintian::Relation->new->load(
     join(
         ' | ', qw(debconf debconf-2.0 cdebconf
           cdebconf-udeb libdebconfclient0 libdebconfclient0-udeb)
-    ));
+    )
+);
 
 sub source {
     my ($self) = @_;
@@ -92,22 +94,23 @@ sub source {
       map { $self->processable->patched->resolve_path("debian/$_") } @catalogs;
 
     my @utf8 = grep { $_->is_valid_utf8 } @files;
-    for my $file (@utf8) {
+    for my $item (@utf8) {
 
-        my $contents = $file->decoded_utf8;
-        my $deb822 = Lintian::Deb822::File->new;
+        my $deb822 = Lintian::Deb822->new;
 
         my @templates;
-        eval {
+        try {
             @templates
-              = $deb822->parse_string($contents, DCTRL_DEBCONF_TEMPLATE);
-        };
+              = $deb822->read_file($item->unpacked_path,
+                DCTRL_DEBCONF_TEMPLATE);
 
-        if (length $@) {
-            chomp $@;
+        } catch {
+            my $error = $@;
+            chomp $error;
+            $error =~ s{^syntax error in }{};
 
-            $@ =~ s/^syntax error in //;
-            $self->hint('syntax-error-in-debconf-template',"$file: $@");
+            $self->pointed_hint('syntax-error-in-debconf-template',
+                $item->pointer, $error);
 
             next;
         }
@@ -116,9 +119,11 @@ sub source {
           = grep {$_->declares('Template') && $_->declares('_Choices')}
           @templates;
 
-        $self->hint('template-uses-unsplit-choices',
-            $file->name, $_->value('Template'))
-          for @unsplit_choices;
+        $self->pointed_hint(
+            'template-uses-unsplit-choices',
+            $item->pointer($_->position('_Choices')),
+            $_->value('Template')
+        )for @unsplit_choices;
     }
 
     return;
@@ -152,7 +157,8 @@ sub installable {
     my $ctrl_config = $self->processable->control->lookup('config');
     if (defined $ctrl_config && $ctrl_config->is_file) {
 
-        $self->hint('debconf-config-not-executable')
+        $self->pointed_hint('debconf-config-not-executable',
+            $ctrl_config->pointer)
           unless $ctrl_config->is_executable;
 
         $seenconfig = 1;
@@ -167,7 +173,7 @@ sub installable {
     # the confmodule in the postinst so that debconf can register
     # their templates.
     return
-         unless $seenconfig
+      unless $seenconfig
       or $seentemplates
       or $usespreinst;
 
@@ -196,11 +202,14 @@ sub installable {
 
     # Check that both debconf control area files are present.
     if ($seenconfig and not $seentemplates and not $usesdbconfig) {
+
         $self->hint('no-debconf-templates');
+
     } elsif ($seentemplates
         and not $seenconfig
         and not $usespreinst
         and $self->processable->type ne 'udeb') {
+
         $self->hint('no-debconf-config');
     }
 
@@ -210,54 +219,60 @@ sub installable {
     if ($seentemplates) {
 
         if ($ctrl_templates->is_valid_utf8) {
-            my $contents = $ctrl_templates->decoded_utf8;
-            my $deb822 = Lintian::Deb822::File->new;
+            my $deb822 = Lintian::Deb822->new;
 
-            eval {
+            try {
                 # $seentemplates (above) will be false if $ctrl_templates is a
                 # symlink or not a file, so this should be safe without
                 # (re-checking) with -f/-l.
-                @templates
-                  = $deb822->parse_string($contents,DCTRL_DEBCONF_TEMPLATE);
-            };
+                @templates= $deb822->read_file($ctrl_templates->unpacked_path,
+                    DCTRL_DEBCONF_TEMPLATE);
 
-            if (length $@) {
-                chomp $@;
+            } catch {
+                my $error = $@;
+                chomp $error;
+                $error =~ s{^syntax error in }{};
 
-                $@ =~ s/^syntax error in //;
-                $self->hint(
-                    'syntax-error-in-debconf-template',
-                    "DEBIAN/$ctrl_templates: $@"
-                );
+                $self->pointed_hint('syntax-error-in-debconf-template',
+                    $ctrl_templates->pointer, $error);
 
                 @templates = ();
             }
         }
     }
 
-    my @templates_seen;
+    my %template_by_name;
     my %potential_db_abuse;
     for my $template (@templates) {
-        my $isselect = $EMPTY;
 
+        my $isselect = $EMPTY;
         my $name = $template->value('Template');
+
         if (!$template->declares('Template')) {
-            $self->hint('no-template-name');
+            $self->pointed_hint('no-template-name',
+                $ctrl_templates->pointer($template->position));
             $name = 'no-template-name';
 
         } else {
-            push @templates_seen, $name;
-            $self->hint('malformed-template-name', $name)
+            $template_by_name{$name} = $template;
+
+            $self->pointed_hint('malformed-template-name',
+                $ctrl_templates->pointer($template->position('Template')),
+                $name)
               unless $name =~ m{[A-Za-z0-9.+-](?:/[A-Za-z0-9.+-])};
         }
 
         my $type = $template->value('Type');
         if (!$template->declares('Type')) {
-            $self->hint('no-template-type', $name);
+
+            $self->pointed_hint('no-template-type',
+                $ctrl_templates->pointer($template->position), $name);
 
         } elsif (!$valid_types{$type}) {
+
             # cdebconf has a special "entropy" type
-            $self->hint('unknown-template-type', $type)
+            $self->pointed_hint('unknown-template-type',
+                $ctrl_templates->pointer($template->position('Type')), $type)
               unless $type eq 'entropy'
               && $alldependencies->satisfies('cdebconf');
 
@@ -265,8 +280,14 @@ sub installable {
             $isselect = 1;
 
         } elsif ($type eq 'boolean') {
+
             my $default = $template->value('Default');
-            $self->hint('boolean-template-has-bogus-default', $name, $default)
+
+            $self->pointed_hint(
+                'boolean-template-has-bogus-default',
+                $ctrl_templates->pointer($template->position('Default')),
+                $name, $default
+              )
               if $template->declares('Default')
               && (none { $default eq $_ } qw(true false));
         }
@@ -279,32 +300,52 @@ sub installable {
 
                 if ($key =~ /^Choices-/) {
                     my $translated = $template->value($key);
+
                     if (!length($translated) || $translated =~ /^\s*$/){
-                        $self->hint('empty-translated-choices', $name, $key);
+                        $self->pointed_hint(
+                            'empty-translated-choices',
+                            $ctrl_templates->pointer(
+                                $template->position('Choices')
+                            ),
+                            $name, $key
+                        );
                     }
 
                     if (count_choices($translated) != $nrchoices) {
-                        $self->hint('mismatch-translated-choices', $name,$key);
+                        $self->pointed_hint(
+                            'mismatch-translated-choices',
+                            $ctrl_templates->pointer(
+                                $template->position('Choices')
+                            ),
+                            $name,$key
+                        );
                     }
                 }
             }
 
-            $self->hint('select-with-boolean-choices', $name)
+            $self->pointed_hint('select-with-boolean-choices',
+                $ctrl_templates->pointer($template->position('Choices')),$name)
               if $choices =~ /^\s*(yes\s*,\s*no|no\s*,\s*yes)\s*$/i;
         }
 
-        $self->hint('select-without-choices', $name)
+        $self->pointed_hint('select-without-choices',
+            $ctrl_templates->pointer($template->position), $name)
           if $isselect && !$template->declares('Choices');
 
         my $description = $template->value('Description');
-        $self->hint('no-template-description', $name)
+
+        $self->pointed_hint('no-template-description',
+            $ctrl_templates->pointer($template->position), $name)
           unless length $description
           || length $template->value('_Description');
 
         if ($description =~ /^\s*(.*?)\s*?\n\s*\1\s*$/){
+
             # Check for duplication. Should all this be folded into the
             # description checks?
-            $self->hint('duplicate-long-description-in-template',$name);
+            $self->pointed_hint('duplicate-long-description-in-template',
+                $ctrl_templates->pointer($template->position('Description')),
+                $name);
         }
 
         my %languages;
@@ -318,7 +359,9 @@ sub installable {
             $stripped =~ s/^_//;
             unless ($template_fields{$stripped}) {
                 # Ignore language codes here
-                $self->hint('unknown-field-in-templates',$name, $field);
+                $self->pointed_hint('unknown-field-in-templates',
+                    $ctrl_templates->pointer($template->position($field)),
+                    $name, $field);
             }
         }
 
@@ -344,6 +387,10 @@ sub installable {
 
         my $ttype = $type;
         unless ($short =~ /for internal use/i) {
+
+            my $pointer
+              = $ctrl_templates->pointer($template->position('Description'));
+
             my $isprompt = grep { $_ eq $ttype } qw(string password);
             if ($isprompt) {
                 if (
@@ -351,31 +398,36 @@ sub installable {
                     && (   $short !~ m/:$/
                         || $short =~ m/^(what|who|when|where|which|how)/i)
                 ) {
-                    $self->hint('malformed-prompt-in-templates',$name);
+                    $self->pointed_hint('malformed-prompt-in-templates',
+                        $pointer, $name);
                 }
             }
             if ($isselect) {
                 if ($short =~ /^(Please|Cho+se|Enter|Select|Specify|Give)/) {
-                    $self->hint('using-imperative-form-in-templates',$name);
+                    $self->pointed_hint('using-imperative-form-in-templates',
+                        $pointer, $name);
                 }
             }
             if ($ttype eq 'boolean') {
                 if ($short !~ /\?/) {
-                    $self->hint('malformed-question-in-templates',$name);
+                    $self->pointed_hint('malformed-question-in-templates',
+                        $pointer, $name);
                 }
             }
             if (defined $extended && $extended =~ /[^\?]\?(\s+|$)/) {
-                $self->hint(
+                $self->pointed_hint(
                     'using-question-in-extended-description-in-templates',
-                    $name);
+                    $pointer, $name);
             }
             if ($ttype eq 'note') {
                 if ($short =~ /[.?;:]$/) {
-                    $self->hint('malformed-title-in-templates',$name);
+                    $self->pointed_hint('malformed-title-in-templates',
+                        $pointer, $name);
                 }
             }
             if (length $short > $MAXIMUM_TEMPLATE_SYNOPSIS) {
-                $self->hint('too-long-short-description-in-templates',$name)
+                $self->pointed_hint('too-long-short-description-in-templates',
+                    $pointer, $name)
                   unless $self->processable->type eq 'udeb'
                   && $ttype eq 'text';
             }
@@ -383,37 +435,49 @@ sub installable {
                 if ($description
                     =~ /(\A|\s)(I|[Mm]y|[Ww]e|[Oo]ur|[Oo]urs|mine|myself|ourself|me|us)(\Z|\s)/
                 ) {
-                    $self->hint('using-first-person-in-templates',$name);
+                    $self->pointed_hint('using-first-person-in-templates',
+                        $pointer,$name);
                 }
                 if (    $description =~ /[ \'\"]yes[ \'\",;.]/i
                     and $ttype eq 'boolean') {
-                    $self->hint(
+
+                    $self->pointed_hint(
                         'making-assumptions-about-interfaces-in-templates',
-                        $name);
+                        $pointer, $name);
                 }
             }
 
             # Check whether the extended description is too long.
             if ($extended) {
+
                 my $lines = 0;
                 for my $string (split(/\n/, $extended)) {
+
                     while (length $string > $MAXIMUM_LINE_LENGTH) {
-                        my $pos= rindex($string, $SPACE, $MAXIMUM_LINE_LENGTH);
-                        if ($pos == $ITEM_NOT_FOUND) {
-                            $pos = index($string, $SPACE);
+
+                        my $index
+                          = rindex($string, $SPACE, $MAXIMUM_LINE_LENGTH);
+
+                        if ($index == $ITEM_NOT_FOUND) {
+                            $index = index($string, $SPACE);
                         }
-                        if ($pos == $ITEM_NOT_FOUND) {
+
+                        if ($index == $ITEM_NOT_FOUND) {
                             $string = $EMPTY;
+
                         } else {
-                            $string = substr($string, $pos + 1);
+                            $string = substr($string, $index + 1);
                             $lines++;
                         }
                     }
+
                     $lines++;
                 }
+
                 if ($lines > $MAXIMUM_LINES) {
-                    $self->hint('too-long-extended-description-in-templates',
-                        $name);
+                    $self->pointed_hint(
+                        'too-long-extended-description-in-templates',
+                        $pointer, $name);
                 }
             }
         }
@@ -424,13 +488,17 @@ sub installable {
     my ($config_calls_db_input, $db_purge);
     my (%templates_used, %template_aliases);
     for my $file (qw(config prerm postrm preinst postinst)) {
+
         my $potential_makedev = {};
-        my $path = $self->processable->control->lookup($file);
-        if ($path and $path->is_file and $path->is_open_ok) {
+
+        my $item = $self->processable->control->lookup($file);
+
+        if (defined $item && $item->is_file && $item->is_open_ok) {
+
             my ($usesconfmodule, $obsoleteconfmodule, $db_input, $isdefault);
 
-            open(my $fd, '<', $path->unpacked_path)
-              or die encode_utf8('Cannot open ' . $path->unpacked_path);
+            open(my $fd, '<', $item->unpacked_path)
+              or die encode_utf8('Cannot open ' . $item->unpacked_path);
 
             # Only check scripts.
             my $fl = <$fd>;
@@ -439,6 +507,7 @@ sub installable {
                 next;
             }
 
+            my $position = 1;
             while (my $line = <$fd>) {
 
                 # not perfect for Perl, but should be OK
@@ -449,8 +518,11 @@ sub installable {
 
                 while ($line =~ s{\\$}{}) {
                     my $next = <$fd>;
+                    ++$position;
+
                     last
                       unless $next;
+
                     $line .= $next;
                 }
 
@@ -460,56 +532,66 @@ sub installable {
                     $usesconfmodule=1;
                 }
 
+                my $pointer = $item->pointer($position);
+
                 if (
-                      !$obsoleteconfmodule
+                    !$obsoleteconfmodule
                     && $line =~ m{(/usr/share/debconf/confmodule\.sh|
                    Debian::DebConf::Client::ConfModule)}x
                 ) {
-                    my $cmod = $1;
-                    $self->hint('loads-obsolete-confmodule', "$file:$. $cmod");
+                    my $module = $1;
+
+                    $self->pointed_hint('loads-obsolete-confmodule', $pointer,
+                        $module);
+
                     $usesconfmodule = 1;
                     $obsoleteconfmodule = 1;
                 }
 
-                if ($file eq 'config' && $line =~ /db_input/) {
+                if ($item->name eq 'config' && $line =~ /db_input/) {
                     $config_calls_db_input = 1;
                 }
 
-                if (   $file eq 'postinst'
+                if (   $item->name eq 'postinst'
                     && !$db_input
                     && $line =~ /db_input/
                     && !$config_calls_db_input) {
 
                     # TODO: Perl?
-                    $self->hint('postinst-uses-db-input')
+                    $self->pointed_hint('postinst-uses-db-input', $pointer)
                       unless $self->processable->type eq 'udeb';
                     $db_input=1;
                 }
 
                 if ($line =~ m{/dev/}) {
-                    $potential_makedev->{$.} = 1;
+                    $potential_makedev->{$position} = 1;
                 }
 
                 if (
                     $line =~m{\A \s*(?:db_input|db_text)\s+
                      [\"\']? (\S+?) [\"\']? \s+ (\S+)\s}xsm
                 ) {
-                    my ($priority, $template) = ($1, $2);
-                    $templates_used{$self->get_template_name($template)}= 1;
+                    my $priority = $1;
+                    my $unmangled = $2;
+
+                    $templates_used{$self->get_template_name($unmangled)}= 1;
 
                     if ($priority !~ /^\$\S+$/) {
 
-                        $self->hint('unknown-debconf-priority', "$file:$. $1")
+                        $self->pointed_hint('unknown-debconf-priority',
+                            $pointer, $priority)
                           unless ($valid_priorities{$priority});
 
-                        $self->hint('possible-debconf-note-abuse',
-                            "$file:$. $template")
+                        $self->pointed_hint('possible-debconf-note-abuse',
+                            $pointer, $unmangled)
                           if (
-                            $potential_db_abuse{$template}
+                            $potential_db_abuse{$unmangled}
                             and (
-                                not($potential_makedev->{($. - 1)}
-                                    and ($priority eq 'low')))
-                            and ($priority eq 'low' || $priority eq 'medium'));
+                                not($potential_makedev->{($position - 1)}
+                                    and ($priority eq 'low'))
+                            )
+                            and ($priority eq 'low' || $priority eq 'medium')
+                          );
                     }
                 }
 
@@ -534,57 +616,67 @@ sub installable {
                 }
                 if (!$isdefault && $line =~ /db_fset.*isdefault/) {
                     # TODO: Perl?
-                    $self->hint('isdefault-flag-is-deprecated', $file);
+                    $self->pointed_hint('isdefault-flag-is-deprecated',
+                        $pointer);
                     $isdefault = 1;
                 }
 
                 if (!$db_purge && $line =~ /db_purge/) {    # TODO: Perl?
                     $db_purge = 1;
                 }
+
+            } continue {
+                ++$position;
             }
 
-            if ($self->processable->type ne 'udeb') {
-                if ($file eq 'config' || ($seenconfig && $file eq 'postinst')){
+            close $fd;
 
-                    $self->hint("$file-does-not-load-confmodule")
+            if ($self->processable->type ne 'udeb') {
+                if ($item->name eq 'config'
+                    || ($seenconfig && $item->name eq 'postinst')){
+
+                    $self->pointed_hint("$file-does-not-load-confmodule",
+                        $item->pointer)
                       unless $usesconfmodule;
                 }
             }
 
-            if ($file eq 'postrm') {
+            if ($item->name eq 'postrm') {
                 # If we haven't seen db_purge we emit the tag unless the
                 # package is a debconf provider (in which case db_purge
                 # won't be available)
                 unless ($db_purge or $selfrelation->satisfies($ANY_DEBCONF)) {
-                    $self->hint('postrm-does-not-purge-debconf');
+
+                    $self->pointed_hint('postrm-does-not-purge-debconf',
+                        $item->pointer);
                 }
             }
 
-            close($fd);
-
         } elsif ($file eq 'postinst') {
-            $self->hint('postinst-does-not-load-confmodule')
+
+            $self->hint('postinst-does-not-load-confmodule', $file)
               if $self->processable->type ne 'udeb' && $seenconfig;
 
         } elsif ($file eq 'postrm') {
             # Make an exception for debconf providing packages as some of
             # them (incl. "debconf" itself) cleans up in prerm and have no
             # postrm script at all.
-            $self->hint('postrm-does-not-purge-debconf')
+            $self->hint('postrm-does-not-purge-debconf', $file)
               unless $self->processable->type eq 'udeb'
               or $selfrelation->satisfies($ANY_DEBCONF);
         }
     }
 
-    foreach my $template (@templates_seen) {
-        $template =~ s/\s+\Z//;
+    for my $name (keys %template_by_name) {
+
+        $name =~ s/\s+\Z//;
 
         my $used = 0;
 
-        if ($templates_used{$template}) {
+        if ($templates_used{$name}) {
             $used = 1;
         } else {
-            foreach my $alias (@{$template_aliases{$template}}) {
+            foreach my $alias (@{$template_aliases{$name}}) {
                 if ($templates_used{$alias}) {
                     $used = 1;
                     last;
@@ -592,9 +684,13 @@ sub installable {
             }
         }
 
-        $self->hint('unused-debconf-template', $template)
-          unless $template =~ m{^shared/packages-(wordlist|ispell)$}
-          || $template =~ m{/languages$}
+        my $template = $template_by_name{$name};
+        my $position = $template->position('Template');
+        my $pointer = $ctrl_templates->pointer($position);
+
+        $self->pointed_hint('unused-debconf-template', $pointer, $name)
+          unless $name =~ m{^shared/packages-(wordlist|ispell)$}
+          || $name =~ m{/languages$}
           || $used
           || $self->processable->name eq 'debconf'
           || $self->processable->type eq 'udeb';
@@ -627,26 +723,33 @@ sub installable {
 
     my @scripts
       = grep { $_->is_script } @{$self->processable->installed->sorted_list};
-    foreach my $file (@scripts) {
+    for my $item (@scripts) {
 
         next
-          unless $file->is_open_ok;
+          unless $item->is_open_ok;
 
-        open(my $fd, '<', $file->unpacked_path)
-          or die encode_utf8('Cannot open ' . $file->unpacked_path);
+        open(my $fd, '<', $item->unpacked_path)
+          or die encode_utf8('Cannot open ' . $item->unpacked_path);
 
+        my $position = 1;
         while (my $line = <$fd>) {
 
-            $line =~ s/#.*//;    # Not perfect for Perl, but should be OK
+            # Not perfect for Perl, but should be OK
+            $line =~ s/#.*//;
 
             if (   $line =~ m{/usr/share/debconf/confmodule}
                 || $line =~ /(?:Debconf|Debian::DebConf)::Client::ConfModule/){
 
-                $self->hint('debconf-is-not-a-registry', $file->name);
+                $self->pointed_hint('debconf-is-not-a-registry',
+                    $item->pointer($position));
                 last;
             }
+
+        } continue {
+            ++$position;
         }
-        close($fd);
+
+        close $fd;
     }
 
     return;

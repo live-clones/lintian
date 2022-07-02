@@ -7,4 +7,4 @@ Explanation: The first line of the "Description:" should omit any initial indefi
  into this formula:
  .
  The package <code>name</code> provides {a,an,the,some} <code>synopsis</code>.
-See-Also: devref 6.2.2
+See-Also: developer-reference 6.2.2

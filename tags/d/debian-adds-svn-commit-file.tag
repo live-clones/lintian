@@ -1,6 +1,6 @@
 Tag: debian-adds-svn-commit-file
 Severity: warning
-Check: cruft
+Check: files/artifact
 Renamed-From:
  diff-contains-svn-commit-file
 Explanation: The Debian diff or native package contains an

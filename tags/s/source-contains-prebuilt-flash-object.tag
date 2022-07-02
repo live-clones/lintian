@@ -1,6 +1,6 @@
 Tag: source-contains-prebuilt-flash-object
 Severity: pedantic
-Check: cruft
+Check: files/source-missing
 Explanation: The source tarball contains a prebuilt file in the Shockwave Flash (SWF)
  or Flash Video (FLV) format. These are often included by mistake when
  developers generate a tarball without cleaning the source directory

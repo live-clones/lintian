@@ -1,7 +1,7 @@
 # appstream-metadata -- lintian check script -*- perl -*-
 
-# Copyright © 2016 Petter Reinholdtsen
-# Copyright © 2017-2018 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2016 Petter Reinholdtsen
+# Copyright (C) 2017-2018 Chris Lamb <lamby@debian.org>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -36,6 +36,7 @@ use utf8;
 use autodie qw(open);
 
 use File::Basename qw(basename);
+use Syntax::Keyword::Try;
 use XML::LibXML;
 
 use Moo;
@@ -58,33 +59,38 @@ sub installable {
         defined(
             my $dir
               = $processable->installed->resolve_path(
-                'usr/share/applications/'))
+                'usr/share/applications/')
+        )
     ) {
-        for my $file ($dir->descendants) {
-            $desktopfiles{$file} = 1 if ($file->is_file);
+        for my $item ($dir->descendants) {
+            $desktopfiles{$item} = 1 if ($item->is_file);
         }
     }
     if (
         defined(
             my $dir
-              = $processable->installed->resolve_path('usr/share/metainfo/'))
+              = $processable->installed->resolve_path('usr/share/metainfo/')
+        )
     ) {
-        for my $file ($dir->children) {
-            if ($file->is_file) {
-                $metainfo{$file} = 1;
-                $found_modalias|= $self->check_modalias($file, $modaliases);
+        for my $item ($dir->children) {
+            if ($item->is_file) {
+                $metainfo{$item} = 1;
+                $found_modalias|= $self->check_modalias($item, $modaliases);
             }
         }
     }
     if (
         defined(
             my $dir
-              = $processable->installed->resolve_path('usr/share/appdata/'))
+              = $processable->installed->resolve_path('usr/share/appdata/')
+        )
     ) {
-        for my $file ($dir->descendants) {
-            if ($file->is_file) {
-                $self->hint(('appstream-metadata-in-legacy-location', $file));
-                $found_modalias|= $self->check_modalias($file, $modaliases);
+        for my $item ($dir->descendants) {
+            if ($item->is_file) {
+
+                $self->pointed_hint('appstream-metadata-in-legacy-location',
+                    $item->pointer);
+                $found_modalias|= $self->check_modalias($item, $modaliases);
             }
         }
     }
@@ -93,14 +99,15 @@ sub installable {
             my $dir= $processable->installed->resolve_path('lib/udev/rules.d/')
         )
     ) {
-        for my $file ($dir->descendants) {
-            push(@udevrules, $file) if ($file->is_file);
+        for my $item ($dir->descendants) {
+            push(@udevrules, $item) if ($item->is_file);
         }
     }
 
     for my $udevrule (@udevrules) {
         if ($self->check_udev_rules($udevrule, $modaliases)
             && !$found_modalias) {
+
             $self->hint('appstream-metadata-missing-modalias-provide',
                 $udevrule);
         }
@@ -109,9 +116,9 @@ sub installable {
 }
 
 sub check_modalias {
-    my ($self, $metadatafile, $modaliases) = @_;
+    my ($self, $item, $modaliases) = @_;
 
-    if (!$metadatafile->is_open_ok) {
+    if (!$item->is_open_ok) {
         # FIXME report this as an error
         return 0;
     }
@@ -119,10 +126,14 @@ sub check_modalias {
     my $parser = XML::LibXML->new;
     $parser->set_option('no_network', 1);
 
-    my $doc = eval {$parser->parse_file($metadatafile->unpacked_path);};
-    if ($@) {
-        $self->hint('appstream-metadata-invalid',
-            basename($metadatafile->unpacked_path));
+    my $doc;
+    try {
+        $doc = $parser->parse_file($item->unpacked_path);
+
+    } catch {
+
+        $self->pointed_hint('appstream-metadata-invalid',$item->pointer);
+
         return 0;
     }
 
@@ -130,7 +141,8 @@ sub check_modalias {
       unless $doc;
 
     if ($doc->findnodes('/application')) {
-        $self->hint('appstream-metadata-legacy-format', $metadatafile);
+
+        $self->pointed_hint('appstream-metadata-legacy-format',$item->pointer);
         return 0;
     }
 
@@ -155,8 +167,8 @@ sub check_modalias {
 
         push(@{$modaliases}, $alias);
 
-        $self->hint('appstream-metadata-malformed-modalias-provide',
-            $metadatafile,
+        $self->pointed_hint('appstream-metadata-malformed-modalias-provide',
+            $item->pointer,
             "include non-valid hex digit in USB matching rule '$alias'")
           if $alias =~ /^usb:v[0-9a-f]{4}p[0-9a-f]{4}d/i
           && $alias !~ /^usb:v[0-9A-F]{4}p[0-9A-F]{4}d/;
@@ -166,7 +178,7 @@ sub check_modalias {
 }
 
 sub provides_user_device {
-    my ($self, $udevrulefile, $linenum, $rule, $data) = @_;
+    my ($self, $item, $position, $rule, $data) = @_;
 
     my $retval = 0;
 
@@ -195,30 +207,30 @@ sub provides_user_device {
                     $foundmatch = 1;
                 }
             }
-            if (!$foundmatch) {
-                $self->hint((
-                    'appstream-metadata-missing-modalias-provide',
-                    "$udevrulefile:$linenum",
-                    "match rule $match*"
-                ));
-            }
+
+            $self->pointed_hint(
+                'appstream-metadata-missing-modalias-provide',
+                $item->pointer($position),
+                "match rule $match*"
+            ) unless $foundmatch;
         }
     }
+
     return $retval;
 }
 
 sub check_udev_rules {
-    my ($self, $file, $data) = @_;
+    my ($self, $item, $data) = @_;
 
-    open(my $fd, '<', $file->unpacked_path);
-    my $linenum = 0;
+    open(my $fd, '<', $item->unpacked_path);
+
     my $cont;
     my $retval = 0;
 
+    my $position = 0;
     while (my $line = <$fd>) {
 
         chomp $line;
-        $linenum++;
 
         if (defined $cont) {
             $line = $cont . $line;
@@ -234,10 +246,13 @@ sub check_udev_rules {
         next
           if $line =~ /^#.*/;
 
-        $retval |= $self->provides_user_device($file, $linenum, $line, $data);
+        $retval |= $self->provides_user_device($item, $position, $line, $data);
+
+    } continue {
+        ++$position;
     }
 
-    close($fd);
+    close $fd;
 
     return $retval;
 }

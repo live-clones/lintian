@@ -8,4 +8,4 @@ Explanation: The given <code>/etc/init.d</code> script seems to be sourcing an
  gracefully. For example:
  .
   [ -r /etc/default/foo ] && . /etc/default/foo
-See-Also: policy 9.3.2
+See-Also: debian-policy 9.3.2

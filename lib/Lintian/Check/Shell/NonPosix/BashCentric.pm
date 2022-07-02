@@ -1,9 +1,10 @@
 # shell/non-posix/bash-centric -- lintian check script -*- perl -*-
 #
-# Copyright © 1998 Richard Braakman
-# Copyright © 2002 Josip Rodin
-# Copyright © 2016-2019 Chris Lamb <lamby@debian.org>
-# Copyright © 2021 Felix Lechner
+# Copyright (C) 1998 Richard Braakman
+# Copyright (C) 2002 Josip Rodin
+# Copyright (C) 2016-2019 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2021 Felix Lechner
+# Copyright (C) 2021 Rafael Laboissiere
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,7 +18,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -40,9 +41,6 @@ with 'Lintian::Check';
 
 const my $EMPTY => q{};
 const my $SLASH => q{/};
-const my $COLON => q{:};
-const my $LEFT_SQUARE_BRACKET => q{[};
-const my $RIGHT_SQUARE_BRACKET => q{]};
 
 # When detecting commands inside shell scripts, use this regex to match the
 # beginning of the command rather than checking whether the command is at the
@@ -125,7 +123,6 @@ my @bashism_regexes = (
     $LEADING_REGEX . qr/export\s+-[^p]/,  # export only takes -p as an option
     $LEADING_REGEX . qr/ulimit(\s|\Z)/,
     $LEADING_REGEX . qr/shopt(\s|\Z)/,
-    $LEADING_REGEX . qr/type\s/,
     $LEADING_REGEX . qr/time\s/,
     $LEADING_REGEX . qr/dirs(\s|\Z)/,
     qr/(?:^|\s+)[<>]\(.*?\)/,       # <() process substitution
@@ -146,7 +143,7 @@ sub visit_installed_files {
     return
       unless $basename eq 'sh';
 
-    $self->check_bash_centric($item, 'bash-term-in-posix-shell', $item->name);
+    $self->check_bash_centric($item, 'bash-term-in-posix-shell');
 
     return;
 }
@@ -162,14 +159,13 @@ sub visit_control_files {
     return
       unless $basename eq 'sh';
 
-    $self->check_bash_centric($item, 'possible-bashism-in-maintainer-script',
-        "control/$item");
+    $self->check_bash_centric($item, 'possible-bashism-in-maintainer-script');
 
     return;
 }
 
 sub check_bash_centric {
-    my ($self, $item, $tag_name, $label) = @_;
+    my ($self, $item, $tag_name) = @_;
 
     return
       unless $item->is_open_ok;
@@ -206,12 +202,11 @@ sub check_bash_centric {
         my $line = $stashed . $no_comment;
         $stashed = $EMPTY;
 
-        my $pointer
-          = $LEFT_SQUARE_BRACKET
-          . $label
-          . $COLON
-          . $position
-          . $RIGHT_SQUARE_BRACKET;
+        # see Bug#999756 and tclsh(1)
+        last
+          if $line =~ m{^ exec \s }x;
+
+        my $pointer = $item->pointer($position);
 
         my @matches = uniq +$self->check_line($line);
 
@@ -221,7 +216,7 @@ sub check_bash_centric {
             $printable = '{hex:' . sprintf('%vX', $match) . '}'
               if $match =~ /\P{XPosixPrint}/;
 
-            $self->hint($tag_name, $pointer, $printable);
+            $self->pointed_hint($tag_name, $pointer, $printable);
         }
 
     } continue {

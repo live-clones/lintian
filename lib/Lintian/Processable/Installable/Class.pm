@@ -1,10 +1,10 @@
 # -*- perl -*-
 # Lintian::Processable::Installable::Class -- interface to binary package data collection
 
-# Copyright © 2008, 2009 Russ Allbery
-# Copyright © 2008 Frank Lichtenheld
-# Copyright © 2012 Kees Cook
-# Copyright © 2020-2021 Felix Lechner
+# Copyright (C) 2008, 2009 Russ Allbery
+# Copyright (C) 2008 Frank Lichtenheld
+# Copyright (C) 2012 Kees Cook
+# Copyright (C) 2020-2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free

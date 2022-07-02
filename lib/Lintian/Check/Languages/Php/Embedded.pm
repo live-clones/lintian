@@ -1,7 +1,7 @@
 # languages/php/embedded -- lintian check script -*- perl -*-
 
-# Copyright © 1998 Christian Schwarz and Richard Braakman
-# Copyright © 2020 Felix Lechner
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -62,10 +62,10 @@ qr{(?i)/phpsysinfo\.dtd|/class\.(?:Linux|(?:Open|Net|Free|)BSD)\.inc\.php$},
 );
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     return
-      unless $file->is_file;
+      unless $item->is_file;
 
     # embedded PHP
     for my $provider (keys %PHP_FILES) {
@@ -74,10 +74,10 @@ sub visit_installed_files {
           if $self->processable->name =~ /^$provider$/;
 
         next
-          unless $file->name =~ /$PHP_FILES{$provider}/;
+          unless $item->name =~ /$PHP_FILES{$provider}/;
 
-        $self->hint('embedded-php-library', $file->name, 'please use',
-            $provider);
+        $self->pointed_hint('embedded-php-library', $item->pointer,
+            'please use',$provider);
     }
 
     return;

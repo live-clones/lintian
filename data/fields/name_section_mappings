@@ -18,7 +18,8 @@
 ^(?:python-)?zope                       => zope
 ^python3?-                              => python
 ^r-(?:cran|bioc|other)-                 => gnu-r
-^(?:cl|elpa)-                           => lisp
+^elpa-                                  => editors
+^cl-                                    => lisp
 -elisp(?:-.*)$                          => lisp
 ^lib.*-guile$                           => lisp
 ^guile-                                 => lisp

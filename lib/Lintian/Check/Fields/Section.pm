@@ -1,9 +1,9 @@
 # fields/section -- lintian check script (rewrite) -*- perl -*-
 #
-# Copyright © 2004 Marc Brockschmidt
+# Copyright (C) 2004 Marc Brockschmidt
 #
 # Parts of the code were taken from the old check script, which
-# was Copyright © 1998 Richard Braakman (also licensed under the
+# was Copyright (C) 1998 Richard Braakman (also licensed under the
 # GPL 2 or higher)
 #
 # This program is free software; you can redistribute it and/or modify
@@ -18,7 +18,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -58,15 +58,11 @@ sub always {
     return
       unless $self->processable->fields->declares('Section');
 
-    my $KNOWN_SECTIONS = $self->profile->load_data('fields/archive-sections');
+    my $KNOWN_SECTIONS = $self->data->load('fields/archive-sections');
 
     # Mapping of package names to section names
-    my $NAME_SECTION_MAPPINGS = $self->profile->load_data(
-        'fields/name_section_mappings',
-        qr/\s*=>\s*/,
-        sub {
-            return {'regex' =>  qr/$_[0]/x, 'section' => $_[1]};
-        });
+    my $NAME_SECTION_MAPPINGS
+      = $self->data->load('fields/name_section_mappings',qr/\s*=>\s*/);
 
     my $section = $self->processable->fields->unfolded_value('Section');
 
@@ -97,20 +93,19 @@ sub always {
     # anything go there.
     if ($fraction ne 'oldlibs') {
 
-        foreach my $name_section ($NAME_SECTION_MAPPINGS->all()) {
-            my $regex= $NAME_SECTION_MAPPINGS->value($name_section)->{'regex'};
-            my $want
-              = $NAME_SECTION_MAPPINGS->value($name_section)->{'section'};
+        for my $pattern ($NAME_SECTION_MAPPINGS->all()) {
+
+            my $want = $NAME_SECTION_MAPPINGS->value($pattern);
 
             next
-              unless ($pkg =~ m{$regex});
+              unless $pkg =~ m{$pattern}x;
 
             unless ($fraction eq $want) {
 
                 my $better
                   = (defined $division ? "$division/" : $EMPTY) . $want;
                 $self->hint('wrong-section-according-to-package-name',
-                    "$pkg => $better");
+                    "$section => $better");
             }
 
             last;
@@ -119,7 +114,7 @@ sub always {
 
     if ($fraction eq 'debug') {
 
-        $self->hint('wrong-section-according-to-package-name',"$pkg")
+        $self->hint('wrong-section-according-to-package-name', $section)
           if $pkg !~ /-dbg(?:sym)?$/;
     }
 

@@ -1,6 +1,6 @@
 # languages/php -- lintian check script -*- perl -*-
 
-# Copyright © 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -30,14 +30,15 @@ use namespace::clean;
 with 'Lintian::Check';
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     # /etc/php/*/mods-available/*.ini
-    if (   $file->is_file
-        && $file->name =~ m{^etc/php/.*/mods-available/.+\.ini$}) {
+    if (   $item->is_file
+        && $item->name =~ m{^etc/php/.*/mods-available/.+\.ini$}) {
 
-        $self->hint('obsolete-comments-style-in-php-ini', $file->name)
-          if $file->decoded_utf8 =~ /^\s*#/m;
+        $self->pointed_hint('obsolete-comments-style-in-php-ini',
+            $item->pointer)
+          if $item->decoded_utf8 =~ /^\s*#/m;
     }
 
     return;

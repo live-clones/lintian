@@ -20,4 +20,4 @@ Explanation: Each binary in <code>/usr/bin</code>, <code>/usr/sbin</code>, <code
  available. In this case, after confirming that all binaries do have
  manual pages after this package and its dependencies are installed, please
  add a Lintian override.
-See-Also: policy 12.1
+See-Also: debian-policy 12.1

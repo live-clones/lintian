@@ -1,4 +1,4 @@
-# Copyright © 2018 Felix Lechner
+# Copyright (C) 2018 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -12,7 +12,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA
 
@@ -159,7 +159,7 @@ sub find_missing_prerequisites {
     # without prerequisites, no need to look
     return undef
       unless any { $testcase->declares($_) }
-    qw(Build-Depends Build-Conflicts Test-Depends Test-Conflicts);
+      qw(Build-Depends Build-Conflicts Test-Depends Test-Conflicts);
 
     # create a temporary file
     my $temp = Path::Tiny->tempfile(
@@ -172,7 +172,8 @@ sub find_missing_prerequisites {
     my $build_depends = join(
         ', ',
         grep { length }(
-            $testcase->value('Build-Depends'),$testcase->value('Test-Depends'))
+            $testcase->value('Build-Depends'),$testcase->value('Test-Depends')
+        )
     );
 
     push(@lines, "Build-Depends: $build_depends")
@@ -182,7 +183,9 @@ sub find_missing_prerequisites {
         ', ',
         grep { length }(
             $testcase->value('Build-Conflicts'),
-            $testcase->value('Test-Conflicts')));
+            $testcase->value('Test-Conflicts')
+        )
+    );
     push(@lines, "Build-Conflicts: $build_conflicts")
       if length $build_conflicts;
 

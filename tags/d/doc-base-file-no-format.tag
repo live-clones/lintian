@@ -1,6 +1,9 @@
 Tag: doc-base-file-no-format
 Severity: error
 Check: menus
-Explanation: A format section of this doc-base control file didn't specify a
- format. Each section after the first must specify a format.
-See-Also: doc-base 2.3.2.2
+Explanation: A <code>Format</code> sections in the given <code>doc-base</code>
+ control file does not actually specify a format.
+ .
+ Each section, except the first, must specify a format.
+See-Also:
+ doc-base-manual 2.3.2.2

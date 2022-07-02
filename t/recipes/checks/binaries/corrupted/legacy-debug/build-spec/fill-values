@@ -1,6 +1,8 @@
 Skeleton: upload-native
 Testname: legacy-debug
 Source: debug
-Default-Build-Depends: debhelper (>= 9.20151004~)
+Default-Build-Depends:
+ debhelper (>= 9.20151004~),
+ binutils (>= 2.37.50.20211102)
 Dh-Compat-Level: 7
 Description: Legacy test "debug"

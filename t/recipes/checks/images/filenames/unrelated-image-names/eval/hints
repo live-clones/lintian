@@ -1,7 +1,7 @@
-unrelated-image-names (binary): image-file-has-unexpected-name usr/share/images/is_xpm (is XPM)
-unrelated-image-names (binary): image-file-has-unexpected-name usr/share/images/is_tiff (is TIFF)
-unrelated-image-names (binary): image-file-has-unexpected-name usr/share/images/is_svg (is SVG)
-unrelated-image-names (binary): image-file-has-unexpected-name usr/share/images/is_png (is PNG)
-unrelated-image-names (binary): image-file-has-unexpected-name usr/share/images/is_pbm (is Netpbm)
-unrelated-image-names (binary): image-file-has-unexpected-name usr/share/images/is_jpg (is JPEG)
-unrelated-image-names (binary): image-file-has-unexpected-name usr/share/images/is_gif (is GIF)
+unrelated-image-names (binary): image-file-has-unexpected-name (is XPM) [usr/share/images/is_xpm]
+unrelated-image-names (binary): image-file-has-unexpected-name (is TIFF) [usr/share/images/is_tiff]
+unrelated-image-names (binary): image-file-has-unexpected-name (is SVG) [usr/share/images/is_svg]
+unrelated-image-names (binary): image-file-has-unexpected-name (is PNG) [usr/share/images/is_png]
+unrelated-image-names (binary): image-file-has-unexpected-name (is Netpbm) [usr/share/images/is_pbm]
+unrelated-image-names (binary): image-file-has-unexpected-name (is JPEG) [usr/share/images/is_jpg]
+unrelated-image-names (binary): image-file-has-unexpected-name (is GIF) [usr/share/images/is_gif]

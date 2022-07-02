@@ -1,9 +1,9 @@
 # script/syntax -- lintian check script -*- perl -*-
 #
-# Copyright © 1998 Richard Braakman
-# Copyright © 2002 Josip Rodin
-# Copyright © 2016-2019 Chris Lamb <lamby@debian.org>
-# Copyright © 2021 Felix Lechner
+# Copyright (C) 1998 Richard Braakman
+# Copyright (C) 2002 Josip Rodin
+# Copyright (C) 2016-2019 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -42,7 +42,8 @@ const my $MAXIMUM_LINES_ANALYZED => 54;
 # exclude some shells. zsh -n is broken, see #485885
 const my %SYNTAX_CHECKERS => (
     sh => [qw{/bin/dash -n}],
-    bash => [qw{/bin/bash -n}]);
+    bash => [qw{/bin/bash -n}]
+);
 
 sub visit_installed_files {
     my ($self, $item) = @_;
@@ -59,13 +60,14 @@ sub visit_installed_files {
     # Syntax-check most shell scripts, but don't syntax-check
     # scripts that end in .dpatch.  bash -n doesn't stop checking
     # at exit 0 and goes on to blow up on the patch itself.
-    $self->hint('shell-script-fails-syntax-check',$item->name)
+    $self->pointed_hint('shell-script-fails-syntax-check',$item->pointer)
       if $self->fails_syntax_check($item)
       && $item->name !~ m{^usr/share/doc/[^/]+/examples/}
       && $item->name !~ /\.dpatch$/
       && $item->name !~ /\.erb$/;
 
-    $self->hint('example-shell-script-fails-syntax-check',$item->name)
+    $self->pointed_hint('example-shell-script-fails-syntax-check',
+        $item->pointer)
       if $self->fails_syntax_check($item)
       && $item->name =~ m{^usr/share/doc/[^/]+/examples/}
       && $item->name !~ /\.dpatch$/
@@ -77,7 +79,8 @@ sub visit_installed_files {
 sub visit_control_files {
     my ($self, $item) = @_;
 
-    $self->hint('maintainer-shell-script-fails-syntax-check',"control/$item")
+    $self->pointed_hint('maintainer-shell-script-fails-syntax-check',
+        $item->pointer)
       if $self->fails_syntax_check($item);
 
     return;

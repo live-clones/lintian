@@ -1,10 +1,10 @@
 # -*- perl -*-
 # Lintian::Relation -- operations on dependencies and relationships
 
-# Copyright © 1998 Christian Schwarz and Richard Braakman
-# Copyright © 2004-2009 Russ Allbery <rra@debian.org>
-# Copyright © 2018 Chris Lamb <lamby@debian.org>
-# Copyright © 2020 Felix Lechner
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 2004-2009 Russ Allbery <rra@debian.org>
+# Copyright (C) 2018 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -383,8 +383,7 @@ sub implies_array {
             for my $p_branch (@p_branches) {
 
                 return 0
-                  unless any { implies_array($p_branch, $_) }
-                @q_branches;
+                  unless any { implies_array($p_branch, $_) }@q_branches;
             }
 
             return 1;

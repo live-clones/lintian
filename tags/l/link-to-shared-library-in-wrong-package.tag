@@ -16,4 +16,4 @@ Explanation: Although this package is not a "-dev" package, it installs a
  development libraries, this is not a bug. In the latter case, please
  override this warning.
 See-Also:
- policy 8.4
+ debian-policy 8.4

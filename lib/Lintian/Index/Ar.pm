@@ -1,6 +1,6 @@
 # -*- perl -*- Lintian::Index::Ar
 #
-# Copyright © 2020 Felix Lechner
+# Copyright (C) 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -59,7 +59,8 @@ sub add_ar {
 
     my $savedir = getcwd;
     chdir($self->basedir)
-      or die encode_utf8('Cannot change to directory ' . $self->basedir);
+      or die encode_utf8(
+        $self->identifier . ': Cannot change to directory ' . $self->basedir);
 
     my $errors = $EMPTY;
 
@@ -99,7 +100,8 @@ sub add_ar {
     }
 
     chdir($savedir)
-      or die encode_utf8("Cannot change to directory $savedir");
+      or die encode_utf8(
+        $self->identifier . ": Cannot change to directory $savedir");
 
     return $errors;
 }

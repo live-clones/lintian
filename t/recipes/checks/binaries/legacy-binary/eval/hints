@@ -1,1 +1,1 @@
-binary (binary): binary-has-unneeded-section usr/bin/hello-static .comment
+binary (binary): binary-has-unneeded-section .comment [usr/bin/hello-static]

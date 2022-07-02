@@ -1,8 +1,8 @@
 #
-# Copyright © 1998 Christian Schwarz and Richard Braakman
-# Copyright © 2013 Niels Thykier
-# Copyright © 2017 Chris Lamb <lamby@debian.org>
-# Copyright © 2020 Felix Lechner
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 2013 Niels Thykier
+# Copyright (C) 2017 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -26,9 +26,11 @@ use v5.20;
 use warnings;
 use utf8;
 
-our @EXPORT_OK = (qw(
+our @EXPORT_OK = (
+    qw(
       guess_version
-));
+    )
+);
 
 use Exporter qw(import);
 
@@ -86,6 +88,9 @@ sub version_from_git {
     chomp $describe;
 
     my ($guess, $step, $commit) = split(/-/, $describe);
+    return $EMPTY
+      unless defined $step;
+
     $guess =~ s/ [.] 0 $/.$step/sx;
 
     return ($guess // $EMPTY);

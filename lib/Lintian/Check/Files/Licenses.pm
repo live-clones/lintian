@@ -1,6 +1,6 @@
 # files/licenses -- lintian check script -*- perl -*-
 
-# Copyright © 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -30,11 +30,11 @@ use namespace::clean;
 with 'Lintian::Check';
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     # license files
     if (
-        $file->basename =~ m{ \A
+        $item->basename =~ m{ \A
                 # Look for commonly used names for license files
                 (?: copying | licen[cs]e | l?gpl | bsd | artistic )
                 # ... possibly followed by a version
@@ -64,41 +64,40 @@ sub visit_installed_files {
         # Ignore extra license files in examples, since various
         # package building software includes example packages with
         # licenses.
-        && !$file->is_executable
-        && $file->name !~ m{ \. (?:
+        && !$item->is_executable
+        && $item->name !~ m{ \. (?:
                   # Common "non-license" file extensions...
                    el|[ch]|cc|p[ylmc]|[hu]i|p_hi|html|php|rb|xpm
                      |png|jpe?g|gif|svg|dtd|mk|lisp|yml|rs|ogg|xbm
                ) \Z}xsm
-        && $file->name !~ m{^usr/share/zope/Products/.*\.(?:dtml|pt|cpt)$}
-        && $file->name !~ m{/under\S+License\.docbook$}
-        && $file->name !~ m{^usr/share/doc/[^/]+/examples/}
+        && $item->name !~ m{^usr/share/zope/Products/.*\.(?:dtml|pt|cpt)$}
+        && $item->name !~ m{/under\S+License\.docbook$}
+        && $item->name !~ m{^usr/share/doc/[^/]+/examples/}
         # liblicense has a manpage called license
-        && $file->name !~ m{^usr/share/man/(?:[^/]+/)?man\d/}
+        && $item->name !~ m{^usr/share/man/(?:[^/]+/)?man\d/}
         # liblicense (again)
-        && $file->name !~ m{^usr/share/pyshared-data/}
+        && $item->name !~ m{^usr/share/pyshared-data/}
         # Rust crate unmodified upstream sources
-        && $file->name !~ m{^usr/share/cargo/registry/}
+        && $item->name !~ m{^usr/share/cargo/registry/}
         # Some GNOME/GTK software uses these to show the "license
         # header".
-        && $file->name !~ m{
+        && $item->name !~ m{
                ^usr/share/(?:gnome/)?help/[^/]+/[^/]+/license\.page$
              }x
         # base-files (which is required to ship them)
-        && $file->name !~ m{^usr/share/common-licenses/[^/]+$}
-        && !length($file->link)
+        && $item->name !~ m{^usr/share/common-licenses/[^/]+$}
+        && !length($item->link)
         # Sphinx includes various license files
-        && $file->name !~ m{/_sources/license(?:\.rst)?\.txt$}i
+        && $item->name !~ m{/_sources/license(?:\.rst)?\.txt$}i
     ) {
 
         # okay, we cannot rule it out based on file name; but if
         # it is an elf or a static library, we also skip it.  (In
         # case you hadn't guessed; liblicense)
-        my $fileinfo = $file->file_info;
 
-        $self->hint('extra-license-file', $file->name)
-          unless $fileinfo and ($fileinfo =~ m/^[^,]*\bELF\b/)
-          or ($fileinfo =~ m/\bcurrent ar archive\b/);
+        $self->pointed_hint('extra-license-file', $item->pointer)
+          unless $item->file_type =~ m/^[^,]*\bELF\b/
+          || $item->file_type =~ m/\bcurrent ar archive\b/;
     }
 
     return;

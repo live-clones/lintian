@@ -1,6 +1,6 @@
 # debian/patches/dep3 -- lintian check script -*- perl -*-
 
-# Copyright © 2020 Felix Lechner
+# Copyright (C) 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -26,16 +26,17 @@ use utf8;
 
 use Const::Fast;
 use List::SomeUtils qw(any none);
+use Syntax::Keyword::Try;
 use Unicode::UTF8 qw(valid_utf8 decode_utf8);
 
-use Lintian::Deb822::File;
+use Lintian::Deb822;
+
+const my $EMPTY => q{};
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-const my $EMPTY => q{};
 
 sub visit_patched_files {
     my ($self, $item) = @_;
@@ -63,12 +64,15 @@ sub visit_patched_files {
     return
       unless length $header;
 
-    my $deb822 = Lintian::Deb822::File->new;
+    my $deb822 = Lintian::Deb822->new;
 
     my @sections;
-    eval { @sections = $deb822->parse_string($header) };
-    return
-      if length $@;
+    try {
+        @sections = $deb822->parse_string($header);
+
+    } catch {
+        return;
+    }
 
     return
       unless @sections;
@@ -81,12 +85,13 @@ sub visit_patched_files {
     return
       if any { $category eq $_ } qw(upstream backport);
 
-    $self->hint('patch-not-forwarded-upstream', $item->name)
+    $self->pointed_hint('patch-not-forwarded-upstream', $item->pointer)
       if $deb822->last_mention('Forwarded') eq 'no'
       || none { length } (
         $deb822->last_mention('Applied-Upstream'),
         $deb822->last_mention('Bug'),
-        $deb822->last_mention('Forwarded'));
+        $deb822->last_mention('Forwarded')
+      );
 
     return;
 }

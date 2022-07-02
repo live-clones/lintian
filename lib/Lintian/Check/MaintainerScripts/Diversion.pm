@@ -1,9 +1,9 @@
 # maintainer-scripts/diversion -- lintian check script -*- perl -*-
 #
-# Copyright © 1998 Richard Braakman
-# Copyright © 2002 Josip Rodin
-# Copyright © 2016-2019 Chris Lamb <lamby@debian.org>
-# Copyright © 2021 Felix Lechner
+# Copyright (C) 1998 Richard Braakman
+# Copyright (C) 2002 Josip Rodin
+# Copyright (C) 2016-2019 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -69,6 +69,8 @@ sub visit_control_files {
     my $position = 1;
     while (my $possible_continuation = <$fd>) {
 
+        my $pointer = $item->pointer($position);
+
         chomp $possible_continuation;
 
         # skip empty lines
@@ -96,8 +98,7 @@ sub visit_control_files {
         if (   $line =~ m{$LEADING_REGEX(?:/usr/sbin/)?dpkg-divert\s}
             && $line !~ /--(?:help|list|truename|version)/) {
 
-            $self->hint('package-uses-local-diversion',
-                "[control/$item:$position]")
+            $self->pointed_hint('package-uses-local-diversion',$pointer)
               if $line =~ /--local/;
 
             my $mode = $line =~ /--remove/ ? 'remove' : 'add';
@@ -182,8 +183,10 @@ sub installable {
     # diversion name normalise them all
     if ($self->expand_diversions) {
 
-        for my $divert (keys %{$self->removed_diversions},
-            keys %{$self->added_diversions}) {
+        for my $divert (
+            keys %{$self->removed_diversions},
+            keys %{$self->added_diversions}
+        ) {
 
             # if a wider regex was found, the entries might no longer be there
             next
@@ -211,7 +214,8 @@ sub installable {
                 }
             } (
                 keys %{$self->removed_diversions},
-                keys %{$self->added_diversions});
+                keys %{$self->added_diversions}
+            );
 
             # replace all the occurrences with the widest regex:
             for my $k (@matches) {
@@ -254,16 +258,18 @@ sub installable {
                 my $position = $item->{position};
 
                 next
-                  unless $script eq 'postrm';
+                  unless $script->name eq 'postrm';
 
                 # Allow preinst and postinst to remove diversions the
                 # package doesn't add to clean up after previous
                 # versions of the package.
 
                 my $unquoted = unquote($divert, $self->expand_diversions);
-                my $pointer = "[control/$script:$position]";
 
-                $self->hint('remove-of-unknown-diversion', $unquoted,$pointer);
+                my $pointer = $script->pointer($position);
+
+                $self->pointed_hint('remove-of-unknown-diversion', $pointer,
+                    $unquoted);
             }
         }
     }
@@ -273,12 +279,13 @@ sub installable {
         my $script = $self->added_diversions->{$divert}{script};
         my $position = $self->added_diversions->{$divert}{position};
 
-        my $pointer = "[control/$script:$position]";
+        my $pointer = $script->pointer($script);
+        $pointer->position($position);
 
         my $divertrx = $divert;
         my $unquoted = unquote($divert, $self->expand_diversions);
 
-        $self->hint('orphaned-diversion', $unquoted, $pointer)
+        $self->pointed_hint('orphaned-diversion', $pointer, $unquoted)
           unless exists $self->added_diversions->{$divertrx}{removed};
 
         # Handle man page diversions somewhat specially.  We may
@@ -299,13 +306,15 @@ sub installable {
         }
 
         if ($self->expand_diversions) {
-            $self->hint('diversion-for-unknown-file', $unquoted, $pointer)
-              unless (
-                any { /$divertrx/ }
+
+            $self->pointed_hint('diversion-for-unknown-file', $pointer,
+                $unquoted)
+              unless (any { /$divertrx/ }
                 @{$self->processable->installed->sorted_list});
 
         } else {
-            $self->hint('diversion-for-unknown-file', $unquoted, $pointer)
+            $self->pointed_hint('diversion-for-unknown-file', $pointer,
+                $unquoted)
               unless $self->processable->installed->lookup($unquoted);
         }
     }

@@ -1,6 +1,6 @@
 Tag: source-contains-cvs-control-dir
 Severity: pedantic
-Check: cruft
+Check: files/artifact
 Explanation: The upstream source contains a CVS directory. It was most likely
  included by accident since CVS directories usually don't belong in
  releases. When packaging a CVS snapshot, export from CVS rather than use

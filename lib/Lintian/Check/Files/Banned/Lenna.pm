@@ -1,11 +1,11 @@
-# Copyright © 1998 Christian Schwarz and Richard Braakman
-# Copyright © 1999 Joey Hess
-# Copyright © 2000 Sean 'Shaleh' Perry
-# Copyright © 2002 Josip Rodin
-# Copyright © 2007 Russ Allbery
-# Copyright © 2013-2018 Bastien ROUCARIÈS
-# Copyright © 2017-2020 Chris Lamb <lamby@debian.org>
-# Copyright © 2020-2021 Felix Lechner
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 1999 Joey Hess
+# Copyright (C) 2000 Sean 'Shaleh' Perry
+# Copyright (C) 2002 Josip Rodin
+# Copyright (C) 2007 Russ Allbery
+# Copyright (C) 2013-2018 Bastien ROUCARIES
+# Copyright (C) 2017-2020 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2020-2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -41,21 +41,29 @@ has LENNA_BLACKLIST => (
     default => sub {
         my ($self) = @_;
 
-        return $self->profile->load_data(
-            'files/banned/lenna/blacklist',
-            qr/ \s* ~~ \s* /x,
-            sub {
-                my ($sha1, $sha256, $name, $link)
-                  = split(/ \s* ~~ \s* /msx, $_[1]);
+        my %blacklist;
 
-                return {
-                    'sha1'   => $sha1,
-                    'sha256' => $sha256,
-                    'name'   => $name,
-                    'link'   => $link,
-                };
-            });
-    });
+        my $data = $self->data->load('files/banned/lenna/blacklist',
+            qr/ \s* ~~ \s* /x);
+
+        for my $md5sum ($data->all) {
+
+            my $value = $data->value($md5sum);
+
+            my ($sha1, $sha256, $name, $link)
+              = split(/ \s* ~~ \s* /msx, $value);
+
+            $blacklist{$md5sum} = {
+                'sha1'   => $sha1,
+                'sha256' => $sha256,
+                'name'   => $name,
+                'link'   => $link,
+            };
+        }
+
+        return \%blacklist;
+    }
+);
 
 # known good files
 has LENNA_WHITELIST => (
@@ -64,8 +72,9 @@ has LENNA_WHITELIST => (
     default => sub {
         my ($self) = @_;
 
-        return $self->profile->load_data('files/banned/lenna/whitelist');
-    });
+        return $self->data->load('files/banned/lenna/whitelist');
+    }
+);
 
 sub visit_patched_files {
     my ($self, $item) = @_;
@@ -74,19 +83,19 @@ sub visit_patched_files {
       unless $item->is_file;
 
     return
-         unless $item->file_info =~ /\bimage\b/i
-      || $item->file_info =~ /^Matlab v\d+ mat/i
-      || $item->file_info =~ /\bbitmap\b/i
-      || $item->file_info =~ /^PDF Document\b/i
-      || $item->file_info =~ /^Postscript Document\b/i;
+      unless $item->file_type =~ /\bimage\b/i
+      || $item->file_type =~ /^Matlab v\d+ mat/i
+      || $item->file_type =~ /\bbitmap\b/i
+      || $item->file_type =~ /^PDF Document\b/i
+      || $item->file_type =~ /^Postscript Document\b/i;
 
     return
       if $self->LENNA_WHITELIST->recognizes($item->md5sum);
 
-    # Lena Söderberg image
-    $self->hint('license-problem-non-free-img-lenna', $item->name)
+    # Lena Soderberg image
+    $self->pointed_hint('license-problem-non-free-img-lenna', $item->pointer)
       if $item->basename =~ / ( \b | _ ) lenn?a ( \b | _ ) /ix
-      || $self->LENNA_BLACKLIST->recognizes($item->md5sum);
+      || exists $self->LENNA_BLACKLIST->{$item->md5sum};
 
     return;
 }

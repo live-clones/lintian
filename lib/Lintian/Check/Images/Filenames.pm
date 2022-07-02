@@ -1,6 +1,6 @@
 # images/filenames -- lintian check script -*- perl -*-
 
-# Copyright © 2019 Felix Lechner
+# Copyright (C) 2019 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -29,39 +29,40 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-my @image_formats = ({
+my @image_formats = (
+    {
         name => 'PNG',
-        file_info => qr/^PNG image data/,
+        file_type => qr/^PNG image data/,
         good_name => sub { $_[0] =~ /\.(?:png|PNG)$/ }
     },
     {
         name => 'JPEG',
-        file_info => qr/^JPEG image data/,
+        file_type => qr/^JPEG image data/,
         good_name => sub { $_[0] =~ /\.(?:jpg|JPG|jpeg|JPEG)$/ }
     },
     {
         name => 'GIF',
-        file_info => qr/^GIF image data/,
+        file_type => qr/^GIF image data/,
         good_name => sub { $_[0] =~ /\.(?:gif|GIF)$/ }
     },
     {
         name => 'TIFF',
-        file_info => qr/^TIFF image data/,
+        file_type => qr/^TIFF image data/,
         good_name => sub { $_[0] =~ /\.(?:tiff|TIFF|tif|TIF)$/ }
     },
     {
         name => 'XPM',
-        file_info => qr/^X pixmap image/,
+        file_type => qr/^X pixmap image/,
         good_name => sub { $_[0] =~ /\.(?:xpm|XPM)$/ }
     },
     {
         name => 'Netpbm',
-        file_info => qr/^Netpbm image data/,
+        file_type => qr/^Netpbm image data/,
         good_name => sub { $_[0] =~ /\.(?:pbm|PBM|pgm|PGM|ppm|PPM|pnm|PNM)$/ }
     },
     {
         name => 'SVG',
-        file_info => qr/^SVG Scalable Vector Graphics image/,
+        file_type => qr/^SVG Scalable Vector Graphics image/,
         good_name => sub { $_[0] =~ /\.(?:svg|SVG)$/ }
     },
 );
@@ -69,16 +70,16 @@ my @image_formats = ({
 # ICO format developed into a container and may contain PNG
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     return
-      unless $file->is_file;
+      unless $item->is_file;
 
     my $our_format;
 
     for my $format (@image_formats) {
 
-        if ($file->file_info =~ $format->{file_info}) {
+        if ($item->file_type =~ $format->{file_type}) {
             $our_format = $format;
             last;
         }
@@ -89,14 +90,14 @@ sub visit_installed_files {
       unless $our_format;
 
     return
-      if $our_format->{good_name}->($file->name);
+      if $our_format->{good_name}->($item->name);
 
     my $conflicting_format;
 
     my @other_formats = grep { $_ != $our_format } @image_formats;
     for my $format (@other_formats) {
 
-        if ($format->{good_name}->($file->name)) {
+        if ($format->{good_name}->($item->name)) {
             $conflicting_format = $format;
             last;
         }
@@ -104,13 +105,13 @@ sub visit_installed_files {
 
     if ($conflicting_format) {
 
-        $self->hint('image-file-has-conflicting-name',
-            $file->name . ' (is ' . $our_format->{name} . ')')
-          unless $our_format->{good_name}->($file->name);
+        $self->pointed_hint('image-file-has-conflicting-name',
+            $item->pointer, '(is ' . $our_format->{name} . ')')
+          unless $our_format->{good_name}->($item->name);
 
     } else {
-        $self->hint('image-file-has-unexpected-name',
-            $file->name . ' (is ' . $our_format->{name} . ')');
+        $self->pointed_hint('image-file-has-unexpected-name',
+            $item->pointer, '(is ' . $our_format->{name} . ')');
     }
 
     return;

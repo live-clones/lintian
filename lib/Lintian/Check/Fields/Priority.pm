@@ -1,9 +1,9 @@
 # fields/priority -- lintian check script (rewrite) -*- perl -*-
 #
-# Copyright © 2004 Marc Brockschmidt
+# Copyright (C) 2004 Marc Brockschmidt
 #
 # Parts of the code were taken from the old check script, which
-# was Copyright © 1998 Richard Braakman (also licensed under the
+# was Copyright (C) 1998 Richard Braakman (also licensed under the
 # GPL 2 or higher)
 #
 # This program is free software; you can redistribute it and/or modify
@@ -18,7 +18,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -57,7 +57,7 @@ sub always {
           if $priority eq 'extra';
     }
 
-    my $KNOWN_PRIOS = $self->profile->load_data('fields/priorities');
+    my $KNOWN_PRIOS = $self->data->load('fields/priorities');
 
     $self->hint('unknown-priority', $priority)
       unless $KNOWN_PRIOS->recognizes($priority);
@@ -66,10 +66,9 @@ sub always {
       if $self->processable->name =~ /^lib/
       && $self->processable->name !~ /-bin$/
       && $self->processable->name !~ /^libc[0-9.]+$/
-      && (
-        any { $_ eq $self->processable->fields->value('Section') }
-        qw(libdevel libs)
-      )&& (any { $_ eq $priority } qw(required important standard));
+      && (any { $_ eq $self->processable->fields->value('Section') }
+        qw(libdevel libs))
+      && (any { $_ eq $priority } qw(required important standard));
 
     return;
 }

@@ -1,1 +1,1 @@
-files-embedded (binary): embedded-feedparser-library usr/share/php/feedparser.py
+files-embedded (binary): embedded-feedparser-library [usr/share/php/feedparser.py]

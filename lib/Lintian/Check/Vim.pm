@@ -1,6 +1,6 @@
 # vim -- lintian check script -*- perl -*-
 
-# Copyright © 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -30,15 +30,15 @@ use namespace::clean;
 with 'Lintian::Check';
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
-    if ($file->name =~ m{^usr/share/vim/vim(?:current|\d\d)/([^/]+)}){
+    if ($item->name =~ m{^usr/share/vim/vim(?:current|\d\d)/([^/]+)}){
         my $is_vimhelp
           = $1 eq 'doc' && $self->processable->name =~ /^vimhelp-\w+$/;
         my $is_vim = $self->processable->source_name =~ /vim/;
 
-        $self->hint('vim-addon-within-vim-runtime-path', $file->name)
-          unless $is_vim or $is_vimhelp;
+        $self->pointed_hint('vim-addon-within-vim-runtime-path',$item->pointer)
+          unless $is_vim || $is_vimhelp;
     }
 
     return;

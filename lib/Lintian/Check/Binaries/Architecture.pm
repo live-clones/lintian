@@ -1,9 +1,9 @@
 # binaries/architecture -- lintian check script -*- perl -*-
 
-# Copyright © 1998 Christian Schwarz and Richard Braakman
-# Copyright © 2012 Kees Cook
-# Copyright © 2017-2020 Chris Lamb <lamby@debian.org>
-# Copyright © 2021 Felix Lechner
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 2012 Kees Cook
+# Copyright (C) 2017-2020 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -39,12 +39,13 @@ sub visit_installed_files {
       unless $item->is_file;
 
     return
-      unless $item->file_info =~ m{^ [^,]* \b ELF \b }x
-      || $item->file_info =~ m{ \b current [ ] ar [ ] archive \b }x;
+      unless $item->file_type =~ m{^ [^,]* \b ELF \b }x
+      || $item->file_type =~ m{ \b current [ ] ar [ ] archive \b }x;
 
     my $architecture = $self->processable->fields->value('Architecture');
 
-    $self->hint('arch-independent-package-contains-binary-or-object',$item)
+    $self->pointed_hint('arch-independent-package-contains-binary-or-object',
+        $item->pointer)
       if $architecture eq 'all';
 
     return;

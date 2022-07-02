@@ -1,4 +1,4 @@
-# Copyright © 2018 Felix Lechner
+# Copyright (C) 2018 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -12,7 +12,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA
 
@@ -52,7 +52,7 @@ use List::SomeUtils qw(any);
 use Path::Tiny;
 use Unicode::UTF8 qw(encode_utf8);
 
-use Lintian::Deb822::File;
+use Lintian::Deb822;
 
 const my $SPACE => q{ };
 const my $COLON => q{:};
@@ -75,7 +75,7 @@ sub read_config {
     croak encode_utf8("Cannot find file $configpath.")
       unless -e $configpath;
 
-    my $deb822 = Lintian::Deb822::File->new;
+    my $deb822 = Lintian::Deb822->new;
     my @sections = $deb822->read_file($configpath);
     die encode_utf8("$configpath does not have exactly one paragraph")
       unless @sections == 1;
@@ -104,7 +104,7 @@ sub write_config {
 
         # multi-line output for some fields
         if (@elements > 1
-            && any { fc($_) eq fc($name) } qw(Test-For Test-Against)) {
+            && any { fc eq fc($name) } qw(Test-For Test-Against)) {
             push(@lines, $name . $COLON . $NEWLINE);
             push(@lines, $SPACE . $_ . $NEWLINE) for @elements;
             next;

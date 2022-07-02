@@ -7,4 +7,4 @@ Explanation: Packages must not depend on X Window System font packages.
  of the package with which they are associated the font package may be
  Recommended; if the fonts merely provide an enhancement, a Suggests
  relationship may be used.
-See-Also: policy 11.8.5
+See-Also: debian-policy 11.8.5

@@ -7,4 +7,4 @@ Explanation: When scripts are installed into a directory in the system PATH, the
  implement it. The implementation language may change; if it does,
  leaving the name the same would be confusing and changing it would be
  disruptive.
-See-Also: policy 10.4
+See-Also: debian-policy 10.4

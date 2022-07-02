@@ -1,6 +1,6 @@
 # fields/deb822 -- lintian check script -*- perl -*-
 #
-# Copyright © 2020 Felix Lechner
+# Copyright (C) 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -25,42 +25,51 @@ use warnings;
 use utf8;
 
 use Const::Fast;
+use Syntax::Keyword::Try;
 
-use Lintian::Deb822::File;
+use Lintian::Deb822;
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
 
-const my $SECTION => q{§};
+const my $SECTION => qq{\N{SECTION SIGN}};
 
 my @SOURCE_DEB822 = qw(debian/control);
 
 sub source {
     my ($self) = @_;
 
-    for my $item (@SOURCE_DEB822) {
+    for my $location (@SOURCE_DEB822) {
 
-        my $file = $self->processable->patched->resolve_path($item);
+        my $item = $self->processable->patched->resolve_path($location);
         return
-          unless defined $file;
+          unless defined $item;
 
-        my $deb822 = Lintian::Deb822::File->new;
+        my $deb822 = Lintian::Deb822->new;
 
         my @sections;
-        eval { @sections = $deb822->parse_string($file->decoded_utf8) };
-        next
-          if length $@;
+        try {
+            @sections = $deb822->read_file($item->unpacked_path)
+
+        } catch {
+            next;
+        }
 
         my $count = 1;
         for my $section (@sections) {
 
-            for my $name ($section->names) {
+            for my $field_name ($section->names) {
 
-                my $value = $section->value($name);
-                $self->hint('trimmed-deb822-field', $file, $SECTION . $count,
-                    $name, $value);
+                my $field_value = $section->value($field_name);
+
+                my $position = $section->position($field_name);
+                my $pointer = $item->pointer($position);
+
+                $self->pointed_hint('trimmed-deb822-field', $pointer,
+                    $SECTION . $count,
+                    $field_name, $field_value);
             }
 
         } continue {

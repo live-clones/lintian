@@ -21,4 +21,4 @@ Explanation: The listed shared library in a public library directory has an
  There are some special stub libraries or special-purpose shared objects
  for which an ABI version is not meaningful. If this is one of those
  cases, please add an override.
-See-Also: policy 10.2, policy 8.6
+See-Also: debian-policy 10.2, debian-policy 8.6

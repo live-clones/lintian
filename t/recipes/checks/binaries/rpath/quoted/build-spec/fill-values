@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: quoted
+Description: RPATH in double quotes
+Package-Architecture: any

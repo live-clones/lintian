@@ -1,23 +1,21 @@
 Tag: missing-xs-go-import-path-for-golang-package
 Severity: info
-Check: debian/control
-Explanation: This source package does not specify a <code>XS-Go-Import-Path</code>
- control field.
+Check: languages/golang/import-path
+Explanation: This Golang source does not declare a <code>XS-Go-Import-Path</code>
+ field in the <code>debian/control</code> file..
  .
- The <code>XS-Go-Import-Path</code> exposes the import path of the Go
- package to the Debian archive in an easily machine-readable form which
- is then used by tools such as <code>dh-make-golang(1)</code> to resolve
- dependencies, avoid accidental duplication in the archive, or in
+ Many tools like <code>dh-make-golang(1)</code> use the field to resolve
+ resolve prerequisites correctly. It is also used in the Golang team's CI.
+ .
+ When using <code>dh-golang</code>, the field's value should be the same as
+ <code>DH&lowbar;GOPKG</code> in <code>debian/rules</code>. The
+ <code>dh-golang</code> build system then automatically sets <code>DH&lowbar;GOPKG</code>
+ to the value from <code>XS-Go-Import-Path</code>.
+ .
+ For packages that do not use <code>dh-golang</code>, or for packages whose upstream
+ does not publish the sources in a way compatible with <code>go get</code> (and hence
+ does not have a canonical import path) you should use a fake import path. Please
+ contact the Golang team at for more advice.
+See-Also:
+ https://go-team.pages.debian.net,
  https://go-team.pages.debian.net/ci.html.
- .
- For packages using <code>dh-golang</code>, the field should be set to the same
- value as the <code>DH&lowbar;GOPKG</code> variable in <code>debian/rules</code>.
- <code>dh-golang</code> will automatically set <code>DH&lowbar;GOPKG</code> to the
- <code>XS-Go-Import-Path</code> value.
- .
- For packages which do not use <code>dh-golang</code> (or where upstream does
- not publish the source in a way that is compatible with <code>go get</code>
- and hence does not have a canonical import path) it is preferred to
- set a fake import path. Please contact the pkg-go team at
- https://go-team.pages.debian.net/ for more specific advice in this
- situation.

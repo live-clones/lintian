@@ -7,6 +7,6 @@ Renamed-From:
  changed-by-address-is-on-localhost
 Explanation: The host part of the named contact address is not known or not
  globally routables, such as localhost(.localdomain).
-See-Also: policy 5.6.2,
- policy 5.6.3,
- policy 5.6.4
+See-Also: debian-policy 5.6.2,
+ debian-policy 5.6.3,
+ debian-policy 5.6.4

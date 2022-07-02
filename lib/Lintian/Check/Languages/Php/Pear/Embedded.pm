@@ -1,7 +1,7 @@
 # languages/php/pear/embedded -- lintian check script -*- perl -*-
 
-# Copyright © 1998 Christian Schwarz and Richard Braakman
-# Copyright © 2020 Felix Lechner
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -59,10 +59,10 @@ my %PEAR_FILES = (
 );
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     return
-      unless $file->is_file;
+      unless $item->is_file;
 
     # embedded PEAR
     for my $provider (keys %PEAR_FILES) {
@@ -71,13 +71,13 @@ sub visit_installed_files {
           if $self->processable->name =~ /^$provider$/;
 
         next
-          unless $file->name =~ /$PEAR_FILES{$provider}/;
+          unless $item->name =~ /$PEAR_FILES{$provider}/;
 
         next
-          unless length $file->bytes_match($PEAR_MAGIC);
+          unless length $item->bytes_match($PEAR_MAGIC);
 
-        $self->hint('embedded-pear-module', $file->name, 'please use',
-            $provider);
+        $self->pointed_hint('embedded-pear-module', $item->pointer,
+            'please use',$provider);
     }
 
     return;

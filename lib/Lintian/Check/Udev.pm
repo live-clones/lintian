@@ -1,7 +1,7 @@
 # udev -- lintian check script -*- perl -*-
 
-# Copyright © 2016 Petter Reinholdtsen
-# Copyright © 2018 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2016 Petter Reinholdtsen
+# Copyright (C) 2018 Chris Lamb <lamby@debian.org>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -28,12 +28,12 @@ use autodie qw(open);
 
 use Const::Fast;
 
+const my $EMPTY => q{};
+
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-const my $EMPTY => q{};
 
 # Check /lib/udev/rules.d/, detect use of MODE="0666" and use of
 # GROUP="plugdev" without TAG+="uaccess".
@@ -41,82 +41,80 @@ const my $EMPTY => q{};
 sub installable {
     my ($self) = @_;
 
-    my $pkg = $self->processable->name;
-    my $type = $self->processable->type;
-    my $processable = $self->processable;
-    my $group = $self->group;
+    my $rules_dir
+      = $self->processable->installed->resolve_path('lib/udev/rules.d/');
+    return
+      unless $rules_dir;
 
-    my $rules_dir = $processable->installed->resolve_path('lib/udev/rules.d/');
-    return unless $rules_dir;
-    foreach my $file ($rules_dir->children) {
-        if (!$file->is_open_ok) {
-            $self->hint('udev-rule-unreadable', $file);
+    for my $item ($rules_dir->children) {
+
+        if (!$item->is_open_ok) {
+
+            $self->pointed_hint('udev-rule-unreadable', $item->pointer);
             next;
         }
-        $self->check_udev_rules($file);
+
+        $self->check_udev_rules($item);
     }
+
     return;
 }
 
 sub check_rule {
-    my ($self, $file, $linenum, $in_goto, $rule) = @_;
+    my ($self, $item, $position, $in_goto, $rule) = @_;
 
     # for USB, if everyone or the plugdev group members are
     # allowed access, the uaccess tag should be used too.
-    if (
-        $rule =~ m/SUBSYSTEM=="usb"/
-        && (   $rule =~ m/GROUP="plugdev"/
-            || $rule =~ m/MODE="0666"/)
-        && $rule !~ m/ENV\{COLOR_MEASUREMENT_DEVICE\}/
-        && $rule !~ m/ENV\{DDC_DEVICE\}/
-        && $rule !~ m/ENV\{ID_CDROM\}/
-        && $rule !~ m/ENV\{ID_FFADO\}/
-        && $rule !~ m/ENV\{ID_GPHOTO2\}/
-        && $rule !~ m/ENV\{ID_HPLIP\}/
-        && $rule !~ m/ENV\{ID_INPUT_JOYSTICK\}/
-        && $rule !~ m/ENV\{ID_MAKER_TOOL\}/
-        && $rule !~ m/ENV\{ID_MEDIA_PLAYER\}/
-        && $rule !~ m/ENV\{ID_PDA\}/
-        && $rule !~ m/ENV\{ID_REMOTE_CONTROL\}/
-        && $rule !~ m/ENV\{ID_SECURITY_TOKEN\}/
-        && $rule !~ m/ENV\{ID_SMARTCARD_READER\}/
-        && $rule !~ m/ENV\{ID_SOFTWARE_RADIO\}/
-        && $rule !~ m/TAG\+="uaccess"/
-    ) {
-        $self->hint((
-            'udev-rule-missing-uaccess',
-            "$file:$linenum",
-            'user accessible device missing TAG+="uaccess"'
-        ));
-    }
+    $self->pointed_hint(
+        'udev-rule-missing-uaccess',
+        $item->pointer($position),
+        'user accessible device missing TAG+="uaccess"'
+      )
+      if $rule =~ m/SUBSYSTEM=="usb"/
+      && ( $rule =~ m/GROUP="plugdev"/
+        || $rule =~ m/MODE="0666"/)
+      && $rule !~ m/ENV\{COLOR_MEASUREMENT_DEVICE\}/
+      && $rule !~ m/ENV\{DDC_DEVICE\}/
+      && $rule !~ m/ENV\{ID_CDROM\}/
+      && $rule !~ m/ENV\{ID_FFADO\}/
+      && $rule !~ m/ENV\{ID_GPHOTO2\}/
+      && $rule !~ m/ENV\{ID_HPLIP\}/
+      && $rule !~ m/ENV\{ID_INPUT_JOYSTICK\}/
+      && $rule !~ m/ENV\{ID_MAKER_TOOL\}/
+      && $rule !~ m/ENV\{ID_MEDIA_PLAYER\}/
+      && $rule !~ m/ENV\{ID_PDA\}/
+      && $rule !~ m/ENV\{ID_REMOTE_CONTROL\}/
+      && $rule !~ m/ENV\{ID_SECURITY_TOKEN\}/
+      && $rule !~ m/ENV\{ID_SMARTCARD_READER\}/
+      && $rule !~ m/ENV\{ID_SOFTWARE_RADIO\}/
+      && $rule !~ m/TAG\+="uaccess"/;
 
     # Matching rules mentioning vendor/product should also specify
     # subsystem, as vendor/product is subsystem specific.
-    if (   $rule =~ m/ATTR\{idVendor\}=="[0-9a-fA-F]+"/
-        && $rule =~ m/ATTR\{idProduct\}=="[0-9a-fA-F]*"/
-        && !$in_goto
-        && $rule !~ m/SUBSYSTEM=="[^"]+"/) {
-        $self->hint((
-            'udev-rule-missing-subsystem',
-            "$file:$linenum",
-            'vendor/product matching missing SUBSYSTEM specifier'
-        ));
-    }
+    $self->pointed_hint(
+        'udev-rule-missing-subsystem',
+        $item->pointer($position),
+        'vendor/product matching missing SUBSYSTEM specifier'
+      )
+      if $rule =~ m/ATTR\{idVendor\}=="[0-9a-fA-F]+"/
+      && $rule =~ m/ATTR\{idProduct\}=="[0-9a-fA-F]*"/
+      && !$in_goto
+      && $rule !~ m/SUBSYSTEM=="[^"]+"/;
 
     return 0;
 }
 
 sub check_udev_rules {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
-    my $contents = $file->decoded_utf8;
+    my $contents = $item->decoded_utf8;
     my @lines = split(/\n/, $contents);
 
     my $continued = $EMPTY;
     my $in_goto = $EMPTY;
     my $result = 0;
 
-    my $linenum = 1;
+    my $position = 1;
     while (defined(my $line = shift @lines)) {
 
         if (length $continued) {
@@ -140,24 +138,24 @@ sub check_udev_rules {
           if $line =~ /SUBSYSTEM!="[^"]+"/
           && $line =~ /GOTO="[^"]+"/;
 
-        $result |= $self->check_rule($file, $linenum, $in_goto, $line);
+        $result |= $self->check_rule($item, $position, $in_goto, $line);
 
     } continue {
-        $linenum++;
+        $position++;
     }
 
     return $result;
 }
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     return
-      unless $file->name =~ m{^etc/udev/};
+      unless $item->name =~ m{^etc/udev/};
 
     # /etc/udev/rules.d
-    $self->hint('udev-rule-in-etc', $file->name)
-      if $file->name =~ m{^etc/udev/rules\.d/\S};
+    $self->pointed_hint('udev-rule-in-etc', $item->pointer)
+      if $item->name =~ m{^etc/udev/rules\.d/\S};
 
     return;
 }

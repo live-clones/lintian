@@ -9,4 +9,4 @@ Explanation: Packages using the X Window System should not be configured to inst
  at compile time to use /usr/ instead of /usr/X11R6/. Packages that use
  imake must build-depend on xutils-dev (&gt;= 1:1.0.2-2) for the correct
  paths.
-See-Also: policy 11.8.7
+See-Also: debian-policy 11.8.7

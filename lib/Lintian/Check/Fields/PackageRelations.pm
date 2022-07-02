@@ -1,10 +1,10 @@
 # fields/package-relations -- lintian check script (rewrite) -*- perl -*-
 #
-# Copyright © 2004 Marc Brockschmidt
-# Copyright © 2019-2020 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2004 Marc Brockschmidt
+# Copyright (C) 2019-2020 Chris Lamb <lamby@debian.org>
 #
 # Parts of the code were taken from the old check script, which
-# was Copyright © 1998 Richard Braakman (also licensed under the
+# was Copyright (C) 1998 Richard Braakman (also licensed under the
 # GPL 2 or higher)
 #
 # This program is free software; you can redistribute it and/or modify
@@ -19,7 +19,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -118,7 +118,7 @@ my @known_java_pkg = map { qr/$_/ } (
 # dependencies for architecture-independent source packages.
 our $PYTHON_DEV = join(' | ',
     qw(python3-dev python3-all-dev),
-    map { "python$_-dev" } qw(2.7 3 3.7 3.8 3.9));
+    map { "python$_-dev:any" } qw(2.7 3 3.7 3.8 3.9));
 
 sub installable {
     my ($self) = @_;
@@ -128,17 +128,18 @@ sub installable {
     my $processable = $self->processable;
     my $group = $self->group;
 
-    my $KNOWN_ESSENTIAL = $self->profile->load_data('fields/essential');
-    my $KNOWN_TOOLCHAIN = $self->profile->load_data('fields/toolchain');
-    my $KNOWN_METAPACKAGES = $self->profile->load_data('fields/metapackages');
+    my $KNOWN_ESSENTIAL = $self->data->load('fields/essential');
+    my $KNOWN_TOOLCHAIN = $self->data->load('fields/toolchain');
+    my $KNOWN_METAPACKAGES = $self->data->load('fields/metapackages');
 
-    my $DH_ADDONS = $self->profile->load_data('common/dh_addons', $EQUAL);
-    my %DH_ADDONS_VALUES = map { $DH_ADDONS->value($_) => 1 } $DH_ADDONS->all;
+    my $DH_ADDONS = $self->data->debhelper_addons;
+    my %DH_ADDONS_VALUES
+      = map { $_ => 1 } map { $DH_ADDONS->installed_by($_) } $DH_ADDONS->all;
 
     my $OBSOLETE_PACKAGES
-      = $self->profile->load_data('fields/obsolete-packages',qr/\s*=>\s*/);
+      = $self->data->load('fields/obsolete-packages',qr/\s*=>\s*/);
 
-    my $VIRTUAL_PACKAGES= $self->profile->load_data('fields/virtual-packages');
+    my $VIRTUAL_PACKAGES= $self->data->load('fields/virtual-packages');
 
     my $javalib = 0;
     my $replaces = $processable->relation('Replaces');
@@ -185,7 +186,7 @@ sub installable {
             $self->hint('virtual-package-depends-without-real-package-depends',
                 "$field: $alternatives[0][0]")
               if (
-                   $VIRTUAL_PACKAGES->recognizes($alternatives[0][0])
+                $VIRTUAL_PACKAGES->recognizes($alternatives[0][0])
                 && ($field eq 'Depends' || $field eq 'Pre-Depends')
                 && ($pkg ne 'base-files' || $alternatives[0][0] ne 'awk')
                 # ignore phpapi- dependencies as adding an
@@ -222,9 +223,7 @@ sub installable {
                   if ($field eq 'Conflicts' && $d_version->[0]);
 
                 $self->hint('obsolete-relation-form', "$field: $part_d_orig")
-                  if (
-                    $d_version && any { $d_version->[0] eq $_ }
-                    ('<', '>'));
+                  if ($d_version && any { $d_version->[0] eq $_ }('<', '>'));
 
                 $self->hint('bad-version-in-relation', "$field: $part_d_orig")
                   if ($d_version->[0] && !version_check($d_version->[1]));
@@ -337,10 +336,11 @@ sub installable {
                 # the Java Core API.
                 $self->hint('depends-on-specific-java-doc-package',$field)
                   if (
-                       $is_dep_field
+                    $is_dep_field
                     && $pkg ne 'default-jdk-doc'
                     && (   $d_pkg eq 'classpath-doc'
-                        || $d_pkg =~ /openjdk-\d+-doc/));
+                        || $d_pkg =~ /openjdk-\d+-doc/)
+                  );
 
                 if ($javalib && $field eq 'Depends'){
                     foreach my $reg (@known_java_pkg){
@@ -428,18 +428,17 @@ sub source {
     my $processable = $self->processable;
     my $group = $self->group;
 
-    my $KNOWN_ESSENTIAL = $self->profile->load_data('fields/essential');
-    my $KNOWN_METAPACKAGES = $self->profile->load_data('fields/metapackages');
-    my $NO_BUILD_DEPENDS= $self->profile->load_data('fields/no-build-depends');
+    my $KNOWN_ESSENTIAL = $self->data->load('fields/essential');
+    my $KNOWN_METAPACKAGES = $self->data->load('fields/metapackages');
+    my $NO_BUILD_DEPENDS= $self->data->load('fields/no-build-depends');
     my $known_build_essential
-      = $self->profile->load_data('fields/build-essential-packages');
-    my $KNOWN_BUILD_PROFILES
-      = $self->profile->load_data('fields/build-profiles');
+      = $self->data->load('fields/build-essential-packages');
+    my $KNOWN_BUILD_PROFILES= $self->data->load('fields/build-profiles');
 
     my $OBSOLETE_PACKAGES
-      = $self->profile->load_data('fields/obsolete-packages',qr/\s*=>\s*/);
+      = $self->data->load('fields/obsolete-packages',qr/\s*=>\s*/);
 
-    my $VIRTUAL_PACKAGES= $self->profile->load_data('fields/virtual-packages');
+    my $VIRTUAL_PACKAGES= $self->data->load('fields/virtual-packages');
 
     my @binpkgs = $processable->debian_control->installables;
 
@@ -473,7 +472,7 @@ sub source {
         if ($processable->fields->declares($field)) {
 
             my $is_dep_field = any { $field eq $_ }
-            qw(Build-Depends Build-Depends-Indep Build-Depends-Arch);
+              qw(Build-Depends Build-Depends-Indep Build-Depends-Arch);
 
             # get data and clean it
             my $data = $processable->fields->unfolded_value($field);
@@ -502,11 +501,11 @@ sub source {
                             $arch, "[$field: $part_d_orig]")
                           if $arch eq 'all'
                           || (
-                            !$self->profile->architectures
+                            !$self->data->architectures
                             ->is_release_architecture(
                                 $arch)
-                            && !$self->profile->architectures->is_wildcard(
-                                $arch));
+                            && !$self->data->architectures->is_wildcard($arch)
+                          );
                     }
 
                     for my $restrlist (@{$d_restr}) {
@@ -631,7 +630,8 @@ sub source {
     my @to_check = (
         ['Build-Depends'],
         ['Build-Depends', 'Build-Depends-Indep'],
-        ['Build-Depends', 'Build-Depends-Arch']);
+        ['Build-Depends', 'Build-Depends-Arch']
+    );
 
     for my $fields (@to_check) {
         my $relation = Lintian::Relation->new->logical_and(
@@ -641,36 +641,40 @@ sub source {
 
             $self->hint(
                 'redundant-build-prerequisites',
-                join(', ', sort @{$redundant_set}));
+                join(', ', sort @{$redundant_set})
+            );
         }
     }
 
     # Make sure build dependencies and conflicts are consistent.
     my $build_all = $processable->relation('Build-Depends-All');
-    for (
-        $depend{'Build-Conflicts'},
-        $depend{'Build-Conflicts-Indep'},
-        $depend{'Build-Conflicts-Arch'}
-    ) {
-        next unless $_;
-        for my $conflict (split /\s*,\s*/, $_) {
-            if ($build_all->satisfies($conflict)) {
-                $self->hint('build-conflicts-with-build-dependency',$conflict);
-            }
-        }
+
+    for my $field (
+        qw{Build-Conflicts Build-Conflicts-Indep Build-Conflicts-Arch}) {
+
+        my @conflicts= $processable->fields->trimmed_list($field, qr{\s*,\s*});
+        my @contradictions = grep { $build_all->satisfies($_) } @conflicts;
+
+        my $position = $processable->fields->position($field);
+        my $pointer = $processable->debian_control->item->pointer($position);
+
+        $self->pointed_hint('build-conflicts-with-build-dependency',
+            $pointer, $field, $_)
+          for @contradictions;
     }
 
     my (@arch_dep_pkgs, @dbg_pkgs);
-    foreach my $gproc ($group->get_binary_processables) {
-        my $binpkg = $gproc->name;
-        if ($binpkg =~ m/-dbg$/) {
-            push(@dbg_pkgs, $gproc);
-        } elsif ($processable->debian_control->installable_fields($binpkg)
-            ->value('Architecture') ne 'all'){
-            push @arch_dep_pkgs, $binpkg;
+    for my $installable ($group->get_installables) {
+
+        if ($installable->name =~ m/-dbg$/) {
+            push(@dbg_pkgs, $installable);
+
+        } elsif ($installable->fields->value('Architecture') ne 'all'){
+            push(@arch_dep_pkgs, $installable);
         }
     }
-    my $dstr = join($VERTICAL_BAR, map { quotemeta($_) } @arch_dep_pkgs);
+
+    my $dstr = join($VERTICAL_BAR, map { quotemeta($_->name) } @arch_dep_pkgs);
     my $depregex = qr/^(?:$dstr)$/;
     for my $dbg_proc (@dbg_pkgs) {
         my $deps = $processable->binary_relation($dbg_proc->name, 'strong');
@@ -697,7 +701,7 @@ sub source {
     my $bdepends = $processable->relation('Build-Depends');
 
     # libmodule-build-perl
-    # matches() instead of satisifies() because of possible OR relation
+    # matches() instead of satisfies() because of possible OR relation
     $self->hint('libmodule-build-perl-needs-to-be-in-build-depends')
       if $processable->relation('Build-Depends-Indep')
       ->equals('libmodule-build-perl', Lintian::Relation::VISIT_PRED_NAME)
@@ -708,7 +712,7 @@ sub source {
     $self->hint('libmodule-build-tiny-perl-needs-to-be-in-build-depends')
       if $processable->relation('Build-Depends-Indep')
       ->satisfies('libmodule-build-tiny-perl')
-      && !$bdepends->satisfies('libmodule-build-tiny-perl');
+      && !$bdepends->satisfies('libmodule-build-tiny-perl:any');
 
     return;
 }

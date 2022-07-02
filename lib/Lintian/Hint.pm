@@ -1,4 +1,4 @@
-# Copyright © 2019 Felix Lechner
+# Copyright (C) 2019-2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -12,7 +12,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -24,11 +24,11 @@ use utf8;
 
 use Const::Fast;
 
-use Moo::Role;
-use namespace::clean;
-
 const my $EMPTY => q{};
 const my $SPACE => q{ };
+
+use Moo::Role;
+use namespace::clean;
 
 =head1 NAME
 
@@ -49,38 +49,23 @@ Common facilities for Lintian tags found and to be issued
 
 =over 4
 
-=item arguments
-=item tag
+=item tag_name
+
+=item issued_by
+
 =item override
-=item screen
-=item processable
 
-=item context
-
-Calculate the string representation commonly referred to as 'context'.
+=item masks
 
 =cut
 
-has arguments => (is => 'rw', default => sub { [] });
-has tag => (is => 'rw');
+has tag_name => (is => 'rw', default => $EMPTY);
+has issued_by => (is => 'rw', default => $EMPTY);
+
 has override => (is => 'rw');
-has screen => (is => 'rw');
-has processable => (is => 'rw');
+has masks => (is => 'rw', default => sub { [] });
 
-sub context {
-    my ($self) = @_;
-
-    # skip empty arguments
-    my @relevant = grep { length } @{$self->arguments};
-
-    # concatenate with spaces
-    my $context = join($SPACE, @relevant) // $EMPTY;
-
-    # escape newlines; maybe add others
-    $context =~ s/\n/\\n/g;
-
-    return $context;
-}
+no namespace::clean;
 
 =back
 

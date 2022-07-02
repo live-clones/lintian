@@ -1,7 +1,7 @@
 Tag: bad-permissions-for-ali-file
 Severity: warning
 Check: files/permissions
-See-Also: policy 8.4
+See-Also: debian-policy 8.4
 Explanation: Ada Library Information (&ast;.ali) files are required to be read-only
  (mode 0444) by GNAT.
  .

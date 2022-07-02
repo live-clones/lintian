@@ -1,9 +1,9 @@
 # binaries/debug-symbols/detached -- lintian check script -*- perl -*-
 
-# Copyright © 1998 Christian Schwarz and Richard Braakman
-# Copyright © 2012 Kees Cook
-# Copyright © 2017-2020 Chris Lamb <lamby@debian.org>
-# Copyright © 2021 Felix Lechner
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 2012 Kees Cook
+# Copyright (C) 2017-2020 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -27,7 +27,7 @@ use v5.20;
 use warnings;
 use utf8;
 
-use List::SomeUtils qw(none);
+use List::Compare;
 
 use Moo;
 use namespace::clean;
@@ -41,31 +41,38 @@ sub visit_installed_files {
       unless $item->is_file;
 
     return
-      unless $item->file_info =~ /^ [^,]* \b ELF \b /x;
+      unless $item->file_type =~ /^ [^,]* \b ELF \b /x;
 
     return
-      unless $item->file_info =~ m{ executable | shared [ ] object }x;
+      unless $item->file_type =~ m{ executable | shared [ ] object }x;
 
     # Detached debugging symbols directly in /usr/lib/debug.
-    $self->hint('debug-symbols-directly-in-usr-lib-debug', $item)
+    $self->pointed_hint('debug-symbols-directly-in-usr-lib-debug',
+        $item->pointer)
       if $item->dirname eq 'usr/lib/debug/';
 
     return
       unless $item->name
       =~ m{^ usr/lib/debug/ (?:lib\d*|s?bin|usr|opt|dev|emul|\.build-id) / }x;
 
-    my $objdump = $self->processable->objdump_info->{$item->name};
-    return
-      unless defined $objdump;
-
-    $self->hint('debug-symbols-not-detached', $item)
-      if exists $objdump->{NEEDED};
+    $self->pointed_hint('debug-symbols-not-detached', $item->pointer)
+      if exists $item->elf->{NEEDED};
 
     # Something other than detached debugging symbols in
     # /usr/lib/debug paths.
-    my @DEBUG_SECTIONS = qw{.debug_line .zdebug_line .debug_str .zdebug_str};
-    $self->hint('debug-file-with-no-debug-symbols', $item)
-      if none { exists $objdump->{SH}{$_} } @DEBUG_SECTIONS;
+    my @KNOWN_DEBUG_SECTION_NAMES
+      = qw{.debug_line .zdebug_line .debug_str .zdebug_str};
+
+    my @elf_sections = values %{$item->elf->{'SECTION-HEADERS'}};
+    my @have_section_names = map { $_->name } @elf_sections;
+
+    my $lc_name
+      = List::Compare->new(\@have_section_names, \@KNOWN_DEBUG_SECTION_NAMES);
+
+    my @have_debug_sections = $lc_name->get_intersection;
+
+    $self->pointed_hint('debug-file-with-no-debug-symbols', $item->pointer)
+      unless @have_debug_sections;
 
     return;
 }

@@ -1,9 +1,9 @@
 # binaries/prerequisites -- lintian check script -*- perl -*-
 
-# Copyright © 1998 Christian Schwarz and Richard Braakman
-# Copyright © 2012 Kees Cook
-# Copyright © 2017-2020 Chris Lamb <lamby@debian.org>
-# Copyright © 2021 Felix Lechner
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 2012 Kees Cook
+# Copyright (C) 2017-2020 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -30,12 +30,6 @@ use utf8;
 use Const::Fast;
 use List::SomeUtils qw(any none uniq);
 
-use Moo;
-use namespace::clean;
-
-with 'Lintian::Check';
-
-const my $EMPTY => q{};
 const my $SPACE => q{ };
 const my $LEFT_PARENTHESIS => q{(};
 const my $RIGHT_PARENTHESIS => q{)};
@@ -43,6 +37,11 @@ const my $RIGHT_PARENTHESIS => q{)};
 # Guile object files do not objdump/strip correctly, so exclude them
 # from a number of tests. (#918444)
 const my $GUILE_PATH_REGEX => qr{^usr/lib(?:/[^/]+)+/guile/[^/]+/.+\.go$};
+
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 has built_with_octave => (
     is => 'rw',
@@ -55,11 +54,12 @@ has built_with_octave => (
         my $source = $self->group->source;
 
         $built_with_octave
-          = $source->relation('Build-Depends')->satisfies('dh-octave')
+          = $source->relation('Build-Depends')->satisfies('dh-octave:any')
           if defined $source;
 
         return $built_with_octave;
-    });
+    }
+);
 
 has files_by_library => (is => 'rw', default => sub  { {} });
 
@@ -73,15 +73,14 @@ sub visit_installed_files {
       unless $item->is_file;
 
     return
-      unless $item->file_info =~ /^ [^,]* \b ELF \b /x;
+      unless $item->file_type =~ /^ [^,]* \b ELF \b /x;
 
     return
-      unless $item->file_info =~ m{ executable | shared [ ] object }x;
+      unless $item->file_type =~ m{ executable | shared [ ] object }x;
 
-    my $is_shared = $item->file_info =~ m/(shared object|pie executable)/;
-    my $objdump = $self->processable->objdump_info->{$item->name};
+    my $is_shared = $item->file_type =~ m/(shared object|pie executable)/;
 
-    for my $library (@{$objdump->{NEEDED} // [] }) {
+    for my $library (@{$item->elf->{NEEDED} // [] }) {
 
         $self->files_by_library->{$library} //= [];
         push(@{$self->files_by_library->{$library}}, $item->name);
@@ -90,9 +89,9 @@ sub visit_installed_files {
     # Some exceptions: kernel modules, syslinux modules, detached
     # debugging information and the dynamic loader (which itself
     # has no dependencies).
-    $self->hint('shared-library-lacks-prerequisites', $item)
+    $self->pointed_hint('shared-library-lacks-prerequisites', $item->pointer)
       if $is_shared
-      && !@{$objdump->{NEEDED} // []}
+      && !@{$item->elf->{NEEDED} // []}
       && $item->name !~ m{^boot/modules/}
       && $item->name !~ m{^lib/modules/}
       && $item->name !~ m{^usr/lib/debug/}
@@ -107,11 +106,11 @@ sub visit_installed_files {
 
     my $depends = $self->processable->relation('strong');
 
-    $self->hint('undeclared-elf-prerequisites', $item->name,
-            $LEFT_PARENTHESIS
-          . join($SPACE, sort +uniq @{$objdump->{NEEDED}})
+    $self->pointed_hint('undeclared-elf-prerequisites', $item->pointer,
+        $LEFT_PARENTHESIS
+          . join($SPACE, sort +uniq @{$item->elf->{NEEDED} // []})
           . $RIGHT_PARENTHESIS)
-      if @{$objdump->{NEEDED} // [] }
+      if @{$item->elf->{NEEDED} // [] }
       && $depends->is_empty;
 
     # If there is no libc dependency, then it is most likely a
@@ -119,22 +118,22 @@ sub visit_installed_files {
     # but these tend to link against libstdc++ instead.  (see
     # #719806)
     my $linked_with_libc
-      = any { m{^ libc[.]so[.] }x } @{$objdump->{NEEDED} // []};
+      = any { m{^ libc[.]so[.] }x } @{$item->elf->{NEEDED} // []};
 
-    $self->hint('library-not-linked-against-libc', $item)
+    $self->pointed_hint('library-not-linked-against-libc', $item->pointer)
       if !$linked_with_libc
       && $is_shared
-      && @{$objdump->{NEEDED} // [] }
-      && (none { /^libc[.]so[.]/ } @{$objdump->{NEEDED} // [] })
+      && @{$item->elf->{NEEDED} // [] }
+      && (none { /^libc[.]so[.]/ } @{$item->elf->{NEEDED} // [] })
       && $item->name !~ m{/libc\b}
       && (!$self->built_with_octave
         || $item->name !~ m/\.(?:oct|mex)$/);
 
-    $self->hint('program-not-linked-against-libc', $item)
+    $self->pointed_hint('program-not-linked-against-libc', $item->pointer)
       if !$linked_with_libc
       && !$is_shared
-      && @{$objdump->{NEEDED} // [] }
-      && (none { /^libstdc[+][+][.]so[.]/ } @{$objdump->{NEEDED} // [] })
+      && @{$item->elf->{NEEDED} // [] }
+      && (none { /^libstdc[+][+][.]so[.]/ }@{$item->elf->{NEEDED} // [] })
       && !$self->built_with_octave;
 
     return;

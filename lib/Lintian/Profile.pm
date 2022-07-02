@@ -1,6 +1,6 @@
-# Copyright © 2011 Niels Thykier <niels@thykier.net>
-# Copyright © 2018 Chris Lamb <lamby@debian.org>
-# Copyright © 2020 Felix Lechner
+# Copyright (C) 2011 Niels Thykier <niels@thykier.net>
+# Copyright (C) 2018 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -24,7 +24,7 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Carp qw(croak);
+use Carp qw(carp croak);
 use Const::Fast;
 use Cwd qw(realpath);
 use File::BaseDir qw(config_home config_files data_home);
@@ -37,18 +37,10 @@ use Unicode::UTF8 qw(encode_utf8);
 
 use Dpkg::Vendor qw(get_current_vendor get_vendor_info);
 
-use Lintian::Data::Generic;
-use Lintian::Deb822::File;
+use Lintian::Data;
+use Lintian::Deb822;
 use Lintian::Tag;
-
-use Moo;
-use namespace::clean;
-
-with 'Lintian::Profile::Architectures',
-  'Lintian::Profile::Debhelper::Levels',
-  'Lintian::Profile::Hardening::Buildflags',
-  'Lintian::Profile::Manual::References',
-  'Lintian::Profile::Policy::Releases';
+use Lintian::Util qw(match_glob);
 
 const my $EMPTY => q{};
 const my $SPACE => q{ };
@@ -70,6 +62,9 @@ const my @VALID_BODY_FIELDS => qw(
   Tags
   Overridable
 );
+
+use Moo;
+use namespace::clean;
 
 =head1 NAME
 
@@ -112,22 +107,26 @@ to create this instance of the profile (e.g. due to symlinks).
 has known_aliases => (
     is => 'rw',
     coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
-    default => sub { {} });
+    default => sub { {} }
+);
 
 has check_module_by_name => (
     is => 'rw',
     coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
-    default => sub { {} });
+    default => sub { {} }
+);
 
 has check_path_by_name => (
     is => 'rw',
     coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
-    default => sub { {} });
+    default => sub { {} }
+);
 
-has tagnames_for_check => (
+has tag_names_for_check => (
     is => 'rw',
     coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
-    default => sub { {} });
+    default => sub { {} }
+);
 
 has display_level_lookup => (
     is => 'rw',
@@ -140,27 +139,32 @@ has display_level_lookup => (
             warning        => 1,
             error          => 1,
         }
-    });
+    }
+);
 
 has enabled_checks_by_name => (
     is => 'rw',
     coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
-    default => sub { {} });
+    default => sub { {} }
+);
 
 has enabled_tags_by_name => (
     is => 'rw',
     coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
-    default => sub { {} });
+    default => sub { {} }
+);
 
 has files => (
     is => 'rw',
     coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
-    default => sub { {} });
+    default => sub { {} }
+);
 
 has known_tags_by_name => (
     is => 'rw',
     coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
-    default => sub { {} });
+    default => sub { {} }
+);
 
 has name => (
     is => 'rw',
@@ -168,27 +172,47 @@ has name => (
     default => $EMPTY
 );
 
-has non_overridable_tags => (
+has durable_tags_by_name => (
     is => 'rw',
     coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
-    default => sub { {} });
+    default => sub { {} }
+);
+
+has data => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        my $data = Lintian::Data->new;
+
+        my @DATA_PATHS = $self->search_space('data');
+        $data->data_paths(\@DATA_PATHS);
+        $data->vendor($self->our_vendor);
+
+        return $data;
+    }
+);
 
 has parent_map => (
     is => 'rw',
     coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
-    default => sub { {} });
+    default => sub { {} }
+);
 
 has profile_list => (
     is => 'rw',
     coerce => sub { my ($arrayref) = @_; return ($arrayref // []); },
-    default => sub { [] });
+    default => sub { [] }
+);
 
 has our_vendor => (is => 'rw');
 
 has include_dirs => (
     is => 'rw',
     coerce => sub { my ($arrayref) = @_; return ($arrayref // []); },
-    default => sub { [] });
+    default => sub { [] }
+);
 
 # Temporary until aptdaemon (etc.) has been upgraded to handle
 # Lintian loading code from user dirs.
@@ -196,20 +220,8 @@ has include_dirs => (
 has safe_include_dirs => (
     is => 'rw',
     coerce => sub { my ($arrayref) = @_; return ($arrayref // []); },
-    default => sub { [] });
-
-=item data_paths
-
-=cut
-
-# lazy evaluation as an attribute breaks the debhelper check, Bug#977332
-sub data_paths {
-    my ($self) = @_;
-
-    const my @DATA_PATHS => $self->search_space('data');
-
-    return \@DATA_PATHS;
-}
+    default => sub { [] }
+);
 
 has known_vendors => (
     is => 'rw',
@@ -237,7 +249,8 @@ has known_vendors => (
         }
 
         return \@vendors;
-    });
+    }
+);
 
 has user_dirs => (
     is => 'ro',
@@ -261,7 +274,8 @@ has user_dirs => (
         const my @IMMUTABLE => grep { length && -e } @user_data;
 
         return \@IMMUTABLE;
-    });
+    }
+);
 
 =item load ([$profname[, $ipath[, $extra]]])
 
@@ -296,7 +310,8 @@ sub load {
     const my @ALL_INCLUDE_DIRS => @all_dirs;
     $self->include_dirs(\@ALL_INCLUDE_DIRS);
 
-    for my $tagdir (map { "$_/tags" } @{$self->safe_include_dirs}) {
+    for
+      my $tagdir (map { ($_ // q{.}) . '/tags' } @{$self->safe_include_dirs}) {
 
         next
           unless -d $tagdir;
@@ -306,8 +321,7 @@ sub load {
         for my $tagpath (@tagpaths) {
 
             my $tag = Lintian::Tag->new;
-            $tag->profile($self);
-            $tag->load($tagpath);
+            $tag->load($self, $tagpath);
 
             die encode_utf8("Tag in $tagpath is not associated with a check")
               unless length $tag->check;
@@ -316,12 +330,12 @@ sub load {
               if exists $self->known_tags_by_name->{$tag->name};
 
             $self->known_tags_by_name->{$tag->name} = $tag;
-            $self->tagnames_for_check->{$tag->check} //= [];
-            push(@{$self->tagnames_for_check->{$tag->check}},$tag->name);
+            $self->tag_names_for_check->{$tag->check} //= [];
+            push(@{$self->tag_names_for_check->{$tag->check}},$tag->name);
 
             # record known aliases
             my @taken
-              = grep { defined $self->known_aliases->{$_} }
+              = grep { exists $self->known_aliases->{$_} }
               @{$tag->renamed_from};
 
             die encode_utf8('These aliases of the tag '
@@ -330,11 +344,25 @@ sub load {
                   . join($SPACE, @taken))
               if @taken;
 
-            $self->known_aliases->{$_} = $tag->name for @{$tag->renamed_from};
+            for my $old_name (@{$tag->renamed_from}) {
+
+                if (exists $self->known_aliases->{$old_name}) {
+
+                    my $taken = $self->known_aliases->{$old_name};
+                    my $tag_name = $tag->name;
+                    warn encode_utf8(
+"Alias $old_name for $tag_name ignored; already taken by $taken"
+                    );
+
+                } else {
+                    $self->known_aliases->{$old_name} = $tag->name;
+                }
+            }
         }
     }
 
-    my @check_bases =map { ("$_/lib/Lintian/Check", "$_/checks") }
+    my @check_bases
+      = map {(($_ // q{.}).'/lib/Lintian/Check', ($_ // q{.}).'/checks')}
       @{$self->safe_include_dirs};
     for my $check_base (@check_bases) {
 
@@ -401,22 +429,74 @@ Otherwise it returns undef.
 =cut
 
 sub get_tag {
-    my ($self, $name) = @_;
+    my ($self, $maybe_historical) = @_;
 
-    return $self->known_tags_by_name->{$name};
+    my $name = $self->get_current_name($maybe_historical);
+    return undef
+      unless length $name;
+
+    return $self->known_tags_by_name->{$name}
+      if exists $self->known_tags_by_name->{$name};
+
+    return undef;
 }
 
-=item $prof->is_overridable ($tag)
+=item get_current_name
+
+=cut
+
+sub get_current_name {
+    my ($self, $tag_name) = @_;
+
+    return $self->known_aliases->{$tag_name}
+      if exists $self->known_aliases->{$tag_name};
+
+    return $tag_name
+      if exists $self->known_tags_by_name->{$tag_name};
+
+    return $EMPTY;
+}
+
+=item set_durable ($tag)
+
+=cut
+
+sub set_durable {
+    my ($self, $maybe_historical, $status) = @_;
+
+    my $tag = $self->get_tag($maybe_historical);
+    croak encode_utf8("Unknown tag $maybe_historical.")
+      unless defined $tag;
+
+    $self->durable_tags_by_name->{$tag->name} = 1
+      if $status;
+
+    # settings from tag govern
+    delete $self->durable_tags_by_name->{$tag->name}
+      if !$status && !$tag->show_always;
+
+    return;
+}
+
+=item $prof->is_durable ($tag)
 
 Returns a false value if the tag has been marked as
 "non-overridable".  Otherwise it returns a truth value.
 
 =cut
 
-sub is_overridable {
-    my ($self, $tagname) = @_;
+sub is_durable {
+    my ($self, $maybe_historical) = @_;
 
-    return !exists $self->non_overridable_tags->{$tagname};
+    my $tag = $self->get_tag($maybe_historical);
+    croak encode_utf8("Unknown tag $maybe_historical.")
+      unless defined $tag;
+
+    return 1
+      if $tag->show_always
+      || exists $self->durable_tags_by_name->{$tag->name};
+
+    return 0;
 }
 
 =item $prof->known_checks
@@ -446,25 +526,16 @@ Enables a tag.
 =cut
 
 sub enable_tag {
-    my ($self, $name) = @_;
+    my ($self, $maybe_historical) = @_;
 
-    my $renamed = $self->known_aliases->{$name};
-    if (length $renamed) {
-
-        warn encode_utf8(
-"The tag $name was renamed to $renamed. Please adjust your profile.\n"
-        );
-        $name = $renamed;
-    }
-
-    my $tag = $self->known_tags_by_name->{$name};
-    die encode_utf8("Unknown tag $name")
-      unless $tag;
+    my $tag = $self->get_tag($maybe_historical);
+    croak encode_utf8("Unknown tag $maybe_historical.")
+      unless defined $tag;
 
     $self->enabled_checks_by_name->{$tag->check}++
-      unless exists $self->enabled_tags_by_name->{$name};
+      unless exists $self->enabled_tags_by_name->{$tag->name};
 
-    $self->enabled_tags_by_name->{$name} = 1;
+    $self->enabled_tags_by_name->{$tag->name} = 1;
 
     return;
 }
@@ -476,26 +547,17 @@ Disable a tag.
 =cut
 
 sub disable_tag {
-    my ($self, $name) = @_;
+    my ($self, $maybe_historical) = @_;
 
-    my $renamed = $self->known_aliases->{$name};
-    if (length $renamed) {
-
-        warn encode_utf8(
-"The tag $name was renamed to $renamed. Please adjust your profile.\n"
-        );
-        $name = $renamed;
-    }
-
-    my $tag = $self->known_tags_by_name->{$name};
-    die encode_utf8("Unknown tag $name")
-      unless $tag;
+    my $tag = $self->get_tag($maybe_historical);
+    croak encode_utf8("Unknown tag $maybe_historical.")
+      unless defined $tag;
 
     delete $self->enabled_checks_by_name->{$tag->check}
-      unless exists $self->enabled_tags_by_name->{$name}
+      unless exists $self->enabled_tags_by_name->{$tag->name}
       && --$self->enabled_checks_by_name->{$tag->check};
 
-    delete $self->enabled_tags_by_name->{$name};
+    delete $self->enabled_tags_by_name->{$tag->name};
 
     return;
 }
@@ -523,7 +585,8 @@ sub read_profile {
     }
 
     my @candidates;
-    for my $include_dir (map { "$_/profiles" } @{$self->include_dirs}) {
+    for my $include_dir ( map { ($_ // q{.}) . '/profiles' }
+        @{$self->include_dirs} ) {
         push(@candidates, map { "$include_dir/$_.profile" } @search_space);
     }
 
@@ -533,7 +596,7 @@ sub read_profile {
         'Could not find a profile matching: ' . join($SPACE, @search_space))
       unless length $path;
 
-    my $deb822 = Lintian::Deb822::File->new;
+    my $deb822 = Lintian::Deb822->new;
     my @paragraphs = $deb822->read_file($path);
 
     my ($header, @sections) = @paragraphs;
@@ -583,50 +646,55 @@ sub read_profile {
           . join($SPACE, @unknown_header_fields))
       if @unknown_header_fields;
 
-    my @enable_checks
+    my @enable_check_patterns
       = $header->trimmed_list('Enable-Tags-From-Check', $FIELD_SEPARATOR);
-    my @disable_checks
+    my @disable_check_patterns
       = $header->trimmed_list('Disable-Tags-From-Check', $FIELD_SEPARATOR);
 
-    # List::SomeUtils has 'duplicates' starting at 0.423
-    my @allchecks = (@enable_checks, @disable_checks);
-    my %count;
-    $count{$_}++ for @allchecks;
-    my @duplicate_checks = grep { $count{$_} > 1 } keys %count;
-    die encode_utf8(
-        "These checks appear in profile $profile_name more than once: "
-          . join($SPACE, @duplicate_checks))
-      if @duplicate_checks;
+    my @enable_checks;
+    for my $pattern (@enable_check_patterns) {
+        push(@enable_checks, match_glob($pattern, $self->known_checks));
+    }
+
+    my @disable_checks;
+    for my $pattern (@disable_check_patterns) {
+        push(@disable_checks, match_glob($pattern, $self->known_checks));
+    }
+
+    my @action_checks = uniq(@enable_checks, @disable_checks);
 
     # make sure checks are loaded
     my @needed_checks
-      = grep { !exists $self->check_module_by_name->{$_} } @allchecks;
+      = grep { !exists $self->check_module_by_name->{$_} } @action_checks;
 
     croak encode_utf8("Profile $profile_name references unknown checks: "
           . join($SPACE, @needed_checks))
       if @needed_checks;
 
-    my @enable_tags = $header->trimmed_list('Enable-Tags', $FIELD_SEPARATOR);
-    my @disable_tags = $header->trimmed_list('Disable-Tags', $FIELD_SEPARATOR);
+    my @enable_tag_patterns
+      = $header->trimmed_list('Enable-Tags', $FIELD_SEPARATOR);
+    my @disable_tag_patterns
+      = $header->trimmed_list('Disable-Tags', $FIELD_SEPARATOR);
 
-    # List::SomeUtils has 'duplicates' starting at 0.423
-    my @alltags = (@enable_tags, @disable_tags);
-    %count = ();
-    $count{$_}++ for @alltags;
-    my @duplicate_tags = grep { $count{$_} > 1 } keys %count;
-    die encode_utf8(
-        "These tags appear in in profile $profile_name more than once: "
-          . join($SPACE, @duplicate_tags))
-      if @duplicate_tags;
+    my @enable_tags;
+    for my $pattern (@enable_tag_patterns) {
+        push(@enable_tags, match_glob($pattern, $self->known_tags));
+    }
 
-    push(@enable_tags, @{$self->tagnames_for_check->{$_} // []})
-      for @enable_checks;
+    my @disable_tags;
+    for my $pattern (@disable_tag_patterns) {
+        push(@disable_tags, match_glob($pattern, $self->known_tags));
+    }
 
-    push(@disable_tags, @{$self->tagnames_for_check->{$_} // []})
-      for @disable_checks;
+    push(@enable_tags, @{$self->tag_names_for_check->{$_} // []})
+      for uniq @enable_checks;
 
-    $self->enable_tag($_) for @enable_tags;
-    $self->disable_tag($_) for @disable_tags;
+    push(@disable_tags, @{$self->tag_names_for_check->{$_} // []})
+      for uniq @disable_checks;
+
+    # disabling after enabling
+    $self->enable_tag($_) for uniq @enable_tags;
+    $self->disable_tag($_) for uniq @disable_tags;
 
     my $section_number = 2;
 
@@ -661,12 +729,12 @@ sub read_profile {
             }
         }
 
-        for my $tagname (@tags) {
+        for my $tag_name (@tags) {
 
             if ($overridable) {
-                delete $self->non_overridable_tags->{$tagname};
+                delete $self->durable_tags_by_name->{$tag_name};
             } else {
-                $self->non_overridable_tags->{$tagname} = 1;
+                $self->durable_tags_by_name->{$tag_name} = 1;
             }
         }
 
@@ -676,6 +744,12 @@ sub read_profile {
 
     $self->our_vendor($self->profile_list->[0]);
 
+    # honor tag settings regardless of profile
+    my @show_always
+      = grep { $_->show_always } values %{$self->known_tags_by_name};
+
+    $self->durable_tags_by_name->{$_} = 1 for map { $_->name } @show_always;
+
     return;
 }
 
@@ -684,10 +758,10 @@ sub read_profile {
 =cut
 
 sub display_level_for_tag {
-    my ($self, $tagname) = @_;
+    my ($self, $tag_name) = @_;
 
-    my $tag = $self->get_tag($tagname);
-    croak encode_utf8("Unknown tag $tagname")
+    my $tag = $self->get_tag($tag_name);
+    croak encode_utf8("Unknown tag $tag_name")
       unless defined $tag;
 
     return $self->display_level_lookup->{$tag->visibility};
@@ -698,10 +772,14 @@ sub display_level_for_tag {
 =cut
 
 sub tag_is_enabled {
-    my ($self, $tagname) = @_;
+    my ($self, $maybe_historical) = @_;
+
+    my $tag = $self->get_tag($maybe_historical);
+    croak encode_utf8("Unknown tag $maybe_historical.")
+      unless defined $tag;
 
     return 1
-      if exists $self->enabled_tags_by_name->{$tagname};
+      if exists $self->enabled_tags_by_name->{$tag->name};
 
     return 0;
 }
@@ -819,40 +897,6 @@ sub display {
     }
 
     return;
-}
-
-=item data_cache
-
-=cut
-
-has data_cache => (
-    is => 'rw',
-    coerce => sub { my ($hashref) = @_; return ($hashref // {}); },
-    default => sub { {} });
-
-=item load_data
-
-=cut
-
-sub load_data {
-    my ($self, $location, $separator, $accumulator) = @_;
-
-    croak encode_utf8('no data type specified')
-      unless $location;
-
-    unless (exists $self->data_cache->{$location}) {
-
-        my $cache = Lintian::Data::Generic->new;
-        $cache->location($location);
-        $cache->separator($separator);
-        $cache->accumulator($accumulator);
-
-        $cache->load($self->data_paths, $self->our_vendor);
-
-        $self->data_cache->{$location} = $cache;
-    }
-
-    return $self->data_cache->{$location};
 }
 
 =item search_space

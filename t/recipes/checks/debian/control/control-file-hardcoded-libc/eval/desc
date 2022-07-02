@@ -1,3 +1,0 @@
-Testname: control-file-hardcoded-libc
-See-Also: Debian Bug#512196
-Check: debian/control

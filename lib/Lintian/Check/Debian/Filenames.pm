@@ -1,6 +1,6 @@
 # debian/filenames -- lintian check script -*- perl -*-
 
-# Copyright © 2019 Felix Lechner
+# Copyright (C) 2019 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -39,25 +39,30 @@ sub source {
         { correct => 'NEWS', problematic => 'NEWS.Debian' },
         { correct => 'NEWS', problematic => 'NEWS.debian' },
         { correct => 'TODO', problematic => 'TODO.Debian' },
-        { correct => 'TODO', problematic => 'TODO.debian' });
+        { correct => 'TODO', problematic => 'TODO.debian' }
+    );
 
     for my $relative (@often_misnamed) {
 
-        my $correct = 'debian/' . $relative->{correct};
-        my $problematic = 'debian/' . $relative->{problematic};
+        my $problematic_item = $self->processable->patched->resolve_path(
+            'debian/' . $relative->{problematic});
 
-        if ($self->processable->patched->resolve_path($problematic)) {
+        next
+          unless defined $problematic_item;
 
-            if ($self->processable->patched->resolve_path($correct)) {
-                $self->hint('duplicate-packaging-file',
-                    "$problematic -> $correct");
+        my $correct_name = 'debian/' . $relative->{correct};
+        if ($self->processable->patched->resolve_path($correct_name)) {
 
-            } else {
-                $self->hint(
-                    'incorrect-packaging-filename',
-                    "$problematic -> $correct"
-                );
-            }
+            $self->pointed_hint('duplicate-packaging-file',
+                $problematic_item->pointer,
+                'better:', $correct_name);
+
+        } else {
+            $self->pointed_hint(
+                'incorrect-packaging-filename',
+                $problematic_item->pointer,
+                'better:', $correct_name
+            );
         }
     }
 

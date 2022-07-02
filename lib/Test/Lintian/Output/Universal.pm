@@ -1,4 +1,4 @@
-# Copyright © 2019 Felix Lechner
+# Copyright (C) 2019 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -12,7 +12,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA
 
@@ -24,10 +24,10 @@ Test::Lintian::Output::Universal -- routines to process universal hints
 
 =head1 SYNOPSIS
 
-  use Test::Lintian::Output::Universal qw(get_tagnames);
+  use Test::Lintian::Output::Universal qw(get_tag_names);
 
   my $filepath = "path to a universal hint file";
-  my @tags = get_tagnames($filepath);
+  my @tags = get_tag_names($filepath);
 
 =head1 DESCRIPTION
 
@@ -45,7 +45,7 @@ use Exporter qw(import);
 
 BEGIN {
     our @EXPORT_OK = qw(
-      get_tagnames
+      get_tag_names
       order
       package_name
       package_type
@@ -71,14 +71,14 @@ const my $RPARENS => q{)};
 
 =over 4
 
-=item get_tagnames(PATH)
+=item get_tag_names(PATH)
 
 Gets all the tag names mentioned in universal hint file located
 at PATH.
 
 =cut
 
-sub get_tagnames {
+sub get_tag_names {
     my ($path) = @_;
 
     my @lines = path($path)->lines_utf8({ chomp => 1 });

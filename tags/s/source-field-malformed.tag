@@ -9,4 +9,4 @@ Explanation: In <code>debian/control</code> or a <code>.dsc</code> file, the Sou
  Source package names must consist only of lowercase letters, digits,
  plus and minus signs, and periods. They must be at least two characters
  long and must start with an alphanumeric character.
-See-Also: policy 5.6.1
+See-Also: debian-policy 5.6.1

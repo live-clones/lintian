@@ -1,6 +1,6 @@
 # debian/source/include-binaries -- lintian check script -*- perl -*-
 
-# Copyright © 2019 Felix Lechner
+# Copyright (C) 2019 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -38,11 +38,11 @@ sub source {
     return
       unless $sourcedir;
 
-    my $file = $sourcedir->child('include-binaries');
+    my $item = $sourcedir->child('include-binaries');
     return
-      unless $file && $file->is_open_ok;
+      unless $item && $item->is_open_ok;
 
-    my @lines = path($file->unpacked_path)->lines({ chomp => 1 });
+    my @lines = path($item->unpacked_path)->lines({ chomp => 1 });
 
     # format described in dpkg-source (1)
     my $position = 1;
@@ -57,8 +57,8 @@ sub source {
         # trim both ends
         $line =~ s/^\s+|\s+$//g;
 
-        $self->hint('unused-entry-in-debian-source-include-binaries',
-            $line, "(line $position)")
+        $self->pointed_hint('unused-entry-in-debian-source-include-binaries',
+            $item->pointer($position), $line)
           unless $self->processable->patched->resolve_path($line);
 
     } continue {

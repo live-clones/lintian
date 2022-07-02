@@ -1,6 +1,6 @@
 Tag: debian-adds-patch-failure-file
 Severity: warning
-Check: cruft
+Check: files/artifact
 Renamed-From:
  diff-contains-patch-failure-file
 Explanation: The Debian diff or native package contains a file that looks like

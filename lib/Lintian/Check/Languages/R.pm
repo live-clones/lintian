@@ -1,11 +1,11 @@
-# Copyright © 1998 Christian Schwarz and Richard Braakman
-# Copyright © 1999 Joey Hess
-# Copyright © 2000 Sean 'Shaleh' Perry
-# Copyright © 2002 Josip Rodin
-# Copyright © 2007 Russ Allbery
-# Copyright © 2013-2018 Bastien ROUCARIÈS
-# Copyright © 2017-2020 Chris Lamb <lamby@debian.org>
-# Copyright © 2020-2021 Felix Lechner
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 1999 Joey Hess
+# Copyright (C) 2000 Sean 'Shaleh' Perry
+# Copyright (C) 2002 Josip Rodin
+# Copyright (C) 2007 Russ Allbery
+# Copyright (C) 2013-2018 Bastien ROUCARIES
+# Copyright (C) 2017-2020 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2020-2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -31,12 +31,12 @@ use utf8;
 
 use Const::Fast;
 
+const my $RDATA_MAGIC_LENGTH => 4;
+
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-const my $RDATA_MAGIC_LENGTH => 4;
 
 sub visit_patched_files {
     my ($self, $item) = @_;
@@ -47,7 +47,7 @@ sub visit_patched_files {
     # Ensure we have a README.source for R data files
     if (   $item->basename =~ /\.(?:rda|Rda|rdata|Rdata|RData)$/
         && $item->is_open_ok
-        && $item->file_info =~ /gzip compressed data/
+        && $item->file_type =~ /gzip compressed data/
         && !$self->processable->patched->resolve_path('debian/README.source')){
 
         open(my $fd, '<:gzip', $item->unpacked_path)
@@ -58,7 +58,7 @@ sub visit_patched_files {
 
         close($fd);
 
-        $self->hint('r-data-without-readme-source', $item->name)
+        $self->pointed_hint('r-data-without-readme-source', $item->pointer)
           if $magic eq 'RDX2';
     }
 

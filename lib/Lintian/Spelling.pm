@@ -1,9 +1,9 @@
 # -*- perl -*-
 # Lintian::Spelling -- Lintian spelling checks shared between multiple scripts
 
-# Copyright © 2009 Russ Allbery
-# Copyright © 2004 Marc Brockschmidt
-# Copyright © 1998 Richard Braakman
+# Copyright (C) 2009 Russ Allbery
+# Copyright (C) 2004 Marc Brockschmidt
+# Copyright (C) 1998 Richard Braakman
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -78,8 +78,8 @@ misspelling with the following arguments:
 
 =back
 
-If EXCEPTIONS is given, it will be used as a hash ref of exceptions.
-Any lowercase word appearing as a key of this hash ref will never be
+If EXCEPTIONS is given, it will be used as an array ref of exceptions.
+Any lowercase word appearing as a key of that array will never be
 considered a spelling mistake (exception being if it is a part of a
 multiword misspelling).
 
@@ -90,19 +90,25 @@ Returns the number of spelling mistakes found in TEXT.
 my (%CORRECTIONS, @CORRECTIONS_MULTIWORD);
 
 sub check_spelling {
-    my ($profile, $text, $exceptions, $code_ref, $duplicate_check) = @_;
+    my ($data, $text, $acceptable, $code_ref, $duplicate_check) = @_;
 
-    croak encode_utf8('No profile')
-      unless defined $profile;
+    croak encode_utf8('No spelling data')
+      unless defined $data;
 
-    return 0 unless $text;
-    if (not $code_ref and $exceptions and ref($exceptions) eq 'CODE') {
-        $code_ref = $exceptions;
-        $exceptions = {};
-    } else {
-        $exceptions //= {};
+    return 0
+      unless $text;
+
+    if (  !defined $code_ref
+        && defined $acceptable
+        && ref($acceptable) eq 'CODE') {
+        $code_ref = $acceptable;
+        $acceptable = [];
     }
+
+    $acceptable //= [];
     $duplicate_check //= 1;
+
+    my %exceptions = map { $_ => 1 } @{$acceptable};
 
     my (%seen, %duplicates, $last_word, $quoted);
     my $counter = 0;
@@ -110,8 +116,8 @@ sub check_spelling {
 
     if (!%CORRECTIONS) {
         my $corrections_multiword
-          = $profile->load_data('spelling/corrections-multiword', '\|\|');
-        my $corrections = $profile->load_data('spelling/corrections', '\|\|');
+          = $data->load('spelling/corrections-multiword', '\|\|');
+        my $corrections = $data->load('spelling/corrections', '\|\|');
         for my $misspelled ($corrections->all) {
             $CORRECTIONS{$misspelled} = $corrections->value($misspelled);
         }
@@ -155,20 +161,30 @@ sub check_spelling {
         } else {
             $last_word = undef;
         }
-        next if ($word =~ /^[A-Z]{1,5}\z/);
+
+        next
+          if $word =~ /^[A-Z]{1,5}\z/;
+
         # Some exceptions are based on case (e.g. "teH").
-        next if exists($exceptions->{$word});
+        next
+          if exists $exceptions{$word};
+
         my $lcword = lc $word;
-        if (exists($CORRECTIONS{$lcword})
-            &&!exists($exceptions->{$lcword})) {
+        if (exists $CORRECTIONS{$lcword}
+            && !exists $exceptions{$lcword}) {
+
             $counter++;
             my $correction = $CORRECTIONS{$lcword};
+
             if ($word =~ /^[A-Z]+$/) {
                 $correction = uc $correction;
             } elsif ($word =~ /^[A-Z]/) {
                 $correction = ucfirst $correction;
             }
-            next if $seen{$lcword}++;
+
+            next
+              if $seen{$lcword}++;
+
             $code_ref->($word, $correction);
         }
     }
@@ -217,15 +233,14 @@ Returns the number of spelling mistakes found in TEXT.
 =cut
 
 sub check_spelling_picky {
-    my ($profile, $text, $code_ref) = @_;
+    my ($data, $text, $code_ref) = @_;
 
-    croak encode_utf8('No profile')
-      unless defined $profile;
+    croak encode_utf8('No spelling data')
+      unless defined $data;
 
     my %seen;
     my $counter = 0;
-    my $corrections_case
-      = $profile->load_data('spelling/corrections-case', '\|\|');
+    my $corrections_case= $data->load('spelling/corrections-case', '\|\|');
 
     # Check this first in case it's contained in square brackets and
     # removed below.

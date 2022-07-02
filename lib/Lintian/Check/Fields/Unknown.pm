@@ -1,9 +1,9 @@
 # fields/unknown -- lintian check script (rewrite) -*- perl -*-
 #
-# Copyright © 2004 Marc Brockschmidt
+# Copyright (C) 2004 Marc Brockschmidt
 #
 # Parts of the code were taken from the old check script, which
-# was Copyright © 1998 Richard Braakman (also licensed under the
+# was Copyright (C) 1998 Richard Braakman (also licensed under the
 # GPL 2 or higher)
 #
 # This program is free software; you can redistribute it and/or modify
@@ -18,7 +18,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -38,7 +38,7 @@ with 'Lintian::Check';
 sub source {
     my ($self) = @_;
 
-    my $KNOWN_SOURCE_FIELDS= $self->profile->load_data('common/source-fields');
+    my $KNOWN_SOURCE_FIELDS= $self->data->load('common/source-fields');
     my @unknown= $self->processable->fields->extra($KNOWN_SOURCE_FIELDS->all);
 
     $self->hint('unknown-field', $_)for @unknown;
@@ -49,7 +49,7 @@ sub source {
 sub binary {
     my ($self) = @_;
 
-    my $KNOWN_BINARY_FIELDS= $self->profile->load_data('fields/binary-fields');
+    my $KNOWN_BINARY_FIELDS= $self->data->load('fields/binary-fields');
     my @unknown= $self->processable->fields->extra($KNOWN_BINARY_FIELDS->all);
 
     $self->hint('unknown-field', $_)for @unknown;
@@ -60,7 +60,7 @@ sub binary {
 sub udeb {
     my ($self) = @_;
 
-    my $KNOWN_UDEB_FIELDS = $self->profile->load_data('fields/udeb-fields');
+    my $KNOWN_UDEB_FIELDS = $self->data->load('fields/udeb-fields');
     my @unknown = $self->processable->fields->extra($KNOWN_UDEB_FIELDS->all);
 
     $self->hint('unknown-field', $_)for @unknown;

@@ -17,4 +17,5 @@ Explanation: Your package specifies the named override but there were no
  Sometimes, overrides end up not being used because a tag appears
  only on some architectures. In that case, overrides can be equipped
  with an architecture qualifier.
-See-Also: lintian 2.4.3
+See-Also:
+ lintian-manual 2.4.3

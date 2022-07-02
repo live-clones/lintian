@@ -1,9 +1,9 @@
 # binaries/corrupted -- lintian check script -*- perl -*-
 
-# Copyright © 1998 Christian Schwarz and Richard Braakman
-# Copyright © 2012 Kees Cook
-# Copyright © 2017-2020 Chris Lamb <lamby@debian.org>
-# Copyright © 2021 Felix Lechner
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 2012 Kees Cook
+# Copyright (C) 2017-2020 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -27,25 +27,56 @@ use v5.20;
 use warnings;
 use utf8;
 
+use List::SomeUtils qw(uniq);
+
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
 
+sub visit_patched_files {
+    my ($self, $item) = @_;
+
+    $self->check_elf_issues($item);
+
+    return;
+}
+
 sub visit_installed_files {
     my ($self, $item) = @_;
 
-    # $object_name can be an object inside a static lib.  These do
-    # not appear in the output of our file_info collection.
-    my $objdump = $self->processable->objdump_info->{$item->name};
-    return
-      unless defined $objdump;
+    $self->check_elf_issues($item);
 
-    $self->hint('apparently-corrupted-elf-binary', $item->name)
-      if $objdump->{ERRORS};
+    return;
+}
 
-    $self->hint('binary-with-bad-dynamic-table', $item->name)
-      if $objdump->{'BAD-DYNAMIC-TABLE'}
+sub check_elf_issues {
+    my ($self, $item) = @_;
+
+    for (uniq @{$item->elf->{ERRORS} // []}) {
+        $self->pointed_hint('elf-error',$item->pointer, $_)
+          unless (
+            m{In program headers: Unable to find program interpreter name}
+            and $item->name =~ m{^usr/lib/debug/});
+    }
+
+    $self->pointed_hint('elf-warning', $item->pointer, $_)
+      for uniq @{$item->elf->{WARNINGS} // []};
+
+    # static library
+    for my $member_name (keys %{$item->elf_by_member}) {
+
+        my $member_elf = $item->elf_by_member->{$member_name};
+
+        $self->pointed_hint('elf-error', $item->pointer, $member_name, $_)
+          for uniq @{$member_elf->{ERRORS} // []};
+
+        $self->pointed_hint('elf-warning', $item->pointer, $member_name, $_)
+          for uniq @{$member_elf->{WARNINGS} // []};
+    }
+
+    $self->pointed_hint('binary-with-bad-dynamic-table', $item->pointer)
+      if $item->elf->{'BAD-DYNAMIC-TABLE'}
       && $item->name !~ m{^usr/lib/debug/};
 
     return;

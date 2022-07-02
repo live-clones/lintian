@@ -1,7 +1,7 @@
 # files/permissions -- lintian check script -*- perl -*-
 
-# Copyright © 1998 Christian Schwarz and Richard Braakman
-# Copyright © 2020 Felix Lechner
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -28,12 +28,6 @@ use utf8;
 use Const::Fast;
 use Path::Tiny;
 
-use Moo;
-use namespace::clean;
-
-with 'Lintian::Check';
-
-const my $EMPTY => q{};
 const my $NOT_EQUAL => q{!=};
 
 const my $STANDARD_EXECUTABLE => oct(755);
@@ -54,6 +48,11 @@ const my $USR_SRC_FOLDER => oct(2775);
 
 const my $WORLD_READABLE => oct(444);
 
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
+
 has component => (
     is => 'rw',
     lazy => 1,
@@ -61,7 +60,8 @@ has component => (
         my ($self) = @_;
 
         return path($self->processable->path)->basename;
-    });
+    }
+);
 
 has linked_against_libvga => (
     is => 'rw',
@@ -71,173 +71,170 @@ has linked_against_libvga => (
 
         my %linked_against_libvga;
 
-        # read data from objdump-info file
-        my $table = $self->processable->objdump_info;
+        for my $item (@{$self->processable->installed->sorted_list}) {
 
-        for my $file (sort keys %{$table}) {
-            my $objdump = $table->{$file};
+            for my $library (@{$item->elf->{NEEDED} // []}){
 
-            next
-              unless defined $objdump->{NEEDED};
-
-            for my $lib (@{$objdump->{NEEDED}}) {
-                $linked_against_libvga{$file} = 1
-                  if $lib =~ /^libvga\.so\./;
+                $linked_against_libvga{$item->name} = 1
+                  if $library =~ m{^ libvga[.]so[.] }x;
             }
         }
 
         return \%linked_against_libvga;
-    });
+    }
+);
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
-    if ($file->is_file) {
+    if ($item->is_file) {
 
         if (
-               $file->is_executable
-            && $file->identity eq 'root/games'
-            && (   !$file->is_setuid
-                || !$file->all_bits_set($STANDARD_EXECUTABLE))
+            $item->is_executable
+            && $item->identity eq 'root/games'
+            && (   !$item->is_setgid
+                || !$item->all_bits_set($STANDARD_EXECUTABLE))
         ) {
 
-            $self->hint(
+            $self->pointed_hint(
                 'non-standard-game-executable-perm',
-                $file->name,
-                $file->octal_permissions,
+                $item->pointer,
+                $item->octal_permissions,
                 $NOT_EQUAL,
-                sprintf('%04o', $SET_USER_ID & $STANDARD_EXECUTABLE));
-
-            return;
-        }
-
-        $self->hint('executable-is-not-world-readable',
-            $file->name, $file->octal_permissions)
-          if $file->is_executable
-          && !$file->all_bits_set($WORLD_READABLE);
-
-        if ($file->is_setuid || $file->is_setgid) {
-
-            $self->hint('non-standard-setuid-executable-perm',
-                $file->name, $file->octal_permissions)
-              unless (($file->operm & ~($SET_USER_ID | $SET_GROUP_ID))
-                == $STANDARD_EXECUTABLE)
-              || $file->operm == $SETGID_EXECUTABLE;
-        }
-
-        # allow anything with suid in the name
-        return
-          if ($file->is_setuid || $file->is_setgid)
-          && $self->processable->name =~ / -suid /msx;
-
-        # program is using svgalib
-        return
-             if $file->is_setuid
-          && !$file->is_setgid
-          && $file->owner eq 'root'
-          && exists $self->linked_against_libvga->{$file->name};
-
-        # program is a setgid game
-        return
-             if $file->is_setgid
-          && !$file->is_setuid
-          && $file->group eq 'games'
-          && $file->name =~ m{^ usr/ (?:lib/)? games/ \S+ }msx;
-
-        if ($file->is_setuid || $file->is_setgid) {
-            $self->hint(
-                'elevated-privileges', $file->name,
-                $file->octal_permissions, $file->identity
+                sprintf('%04o', $SET_GROUP_ID | $STANDARD_EXECUTABLE)
             );
 
             return;
         }
 
-        if (   $file->is_executable
-            && $file->operm != $STANDARD_EXECUTABLE) {
+        $self->pointed_hint('executable-is-not-world-readable',
+            $item->pointer, $item->octal_permissions)
+          if $item->is_executable
+          && !$item->all_bits_set($WORLD_READABLE);
 
-            $self->hint('non-standard-executable-perm',
-                $file->name, $file->octal_permissions, $NOT_EQUAL,
+        if ($item->is_setuid || $item->is_setgid) {
+
+            $self->pointed_hint('non-standard-setuid-executable-perm',
+                $item->pointer, $item->octal_permissions)
+              unless (($item->operm & ~($SET_USER_ID | $SET_GROUP_ID))
+                == $STANDARD_EXECUTABLE)
+              || $item->operm == $SETGID_EXECUTABLE;
+        }
+
+        # allow anything with suid in the name
+        return
+          if ($item->is_setuid || $item->is_setgid)
+          && $self->processable->name =~ / -suid /msx;
+
+        # program is using svgalib
+        return
+          if $item->is_setuid
+          && !$item->is_setgid
+          && $item->owner eq 'root'
+          && exists $self->linked_against_libvga->{$item->name};
+
+        # program is a setgid game
+        return
+          if $item->is_setgid
+          && !$item->is_setuid
+          && $item->group eq 'games'
+          && $item->name =~ m{^ usr/ (?:lib/)? games/ \S+ }msx;
+
+        if ($item->is_setuid || $item->is_setgid) {
+            $self->pointed_hint(
+                'elevated-privileges', $item->pointer,
+                $item->octal_permissions, $item->identity
+            );
+
+            return;
+        }
+
+        if (   $item->is_executable
+            && $item->operm != $STANDARD_EXECUTABLE) {
+
+            $self->pointed_hint('non-standard-executable-perm',
+                $item->pointer, $item->octal_permissions, $NOT_EQUAL,
                 sprintf('%04o', $STANDARD_EXECUTABLE));
 
             return;
         }
 
-        if (!$file->is_executable) {
+        if (!$item->is_executable) {
 
             # game data
             return
-                 if $file->operm == $GAME_DATA
-              && $file->identity eq 'root/games'
-              && $file->name =~ m{^ var/ (?:lib/)? games/ \S+ }msx;
+              if $item->operm == $GAME_DATA
+              && $item->identity eq 'root/games'
+              && $item->name =~ m{^ var/ (?:lib/)? games/ \S+ }msx;
 
             # GNAT compiler wants read-only Ada library information.
-            if (   $file->name =~ m{^ usr/lib/ .* [.]ali $}msx
-                && $file->operm != $WORLD_READABLE) {
+            if (   $item->name =~ m{^ usr/lib/ .* [.]ali $}msx
+                && $item->operm != $WORLD_READABLE) {
 
-                $self->hint('bad-permissions-for-ali-file', $file->name);
+                $self->pointed_hint('bad-permissions-for-ali-file',
+                    $item->pointer);
 
                 return;
             }
 
             # backupninja expects configurations files to be oct(600)
             return
-              if $file->operm == $BACKUP_NINJA_FILE
-              && $file->name =~ m{^ etc/backup.d/ }msx;
+              if $item->operm == $BACKUP_NINJA_FILE
+              && $item->name =~ m{^ etc/backup.d/ }msx;
 
-            if ($file->name =~ m{^ etc/sudoers.d/ }msx) {
+            if ($item->name =~ m{^ etc/sudoers.d/ }msx) {
 
                 # sudo requires sudoers files to be mode oct(440)
-                $self->hint(
-                    'bad-perm-for-file-in-etc-sudoers.d',$file->name,
-                    $file->octal_permissions, $NOT_EQUAL,
+                $self->pointed_hint(
+                    'bad-perm-for-file-in-etc-sudoers.d',$item->pointer,
+                    $item->octal_permissions, $NOT_EQUAL,
                     sprintf('%04o', $SUDOERS_FILE)
-                )unless $file->operm == $SUDOERS_FILE;
+                )unless $item->operm == $SUDOERS_FILE;
 
                 return;
             }
 
-            $self->hint(
-                'non-standard-file-perm', $file->name,
-                $file->octal_permissions, $NOT_EQUAL,
+            $self->pointed_hint(
+                'non-standard-file-perm', $item->pointer,
+                $item->octal_permissions, $NOT_EQUAL,
                 sprintf('%04o', $STANDARD_FILE)
-            )unless $file->operm == $STANDARD_FILE;
+            )unless $item->operm == $STANDARD_FILE;
         }
 
     }
 
-    if ($file->is_dir) {
+    if ($item->is_dir) {
 
         # game directory with setgid bit
         return
-             if $file->operm == $GAME_FOLDER
-          && $file->identity eq 'root/games'
-          && $file->name =~ m{^ var/ (?:lib/)? games/ \S+ }msx;
+          if $item->operm == $GAME_FOLDER
+          && $item->identity eq 'root/games'
+          && $item->name =~ m{^ var/ (?:lib/)? games/ \S+ }msx;
 
         # shipping files here triggers warnings elsewhere
         return
-             if $file->operm == $VAR_LOCK_FOLDER
-          && $file->identity eq 'root/root'
-          && ( $file->name =~ m{^ (?:var/)? tmp/ }msx
-            || $file->name eq 'var/lock/');
+          if $item->operm == $VAR_LOCK_FOLDER
+          && $item->identity eq 'root/root'
+          && ( $item->name =~ m{^ (?:var/)? tmp/ }msx
+            || $item->name eq 'var/lock/');
 
         # shipping files here triggers warnings elsewhere
         return
-             if $file->operm == $VAR_LOCAL_FOLDER
-          && $file->identity eq 'root/staff'
-          && $file->name eq 'var/local/';
+          if $item->operm == $VAR_LOCAL_FOLDER
+          && $item->identity eq 'root/staff'
+          && $item->name eq 'var/local/';
 
         # /usr/src created by base-files
         return
-             if $file->operm == $USR_SRC_FOLDER
-          && $file->identity eq 'root/src'
-          && $file->name eq 'usr/src/';
+          if $item->operm == $USR_SRC_FOLDER
+          && $item->identity eq 'root/src'
+          && $item->name eq 'usr/src/';
 
-        $self->hint(
-            'non-standard-dir-perm', $file->name,
-            $file->octal_permissions, $NOT_EQUAL,
+        $self->pointed_hint(
+            'non-standard-dir-perm', $item->pointer,
+            $item->octal_permissions, $NOT_EQUAL,
             sprintf('%04o', $STANDARD_FOLDER)
-        )unless $file->operm == $STANDARD_FOLDER;
+        )unless $item->operm == $STANDARD_FOLDER;
     }
 
     return;

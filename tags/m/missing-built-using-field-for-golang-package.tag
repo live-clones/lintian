@@ -1,12 +1,14 @@
 Tag: missing-built-using-field-for-golang-package
 Severity: info
-Check: debian/control
-Explanation: This package builds a binary package which does not include
- <code>${misc:Built-Using}</code> in its <code>Built-Using</code> control field.
+Check: languages/golang/built-using
+Explanation: The stanza for a Golang installation package in the
+ <code>debian/control</code> file does not include a
+ <code>Built-Using</code> field that contains the <code>${misc:Built-Using}</code>
+ substitution variable. 
  .
- The <code>${misc:Built-Using}</code> substvar is populated by
- <code>dh-golang(1)</code> and used for scheduling binNMUs.
+ The <code>dh-golang(1)</code> build system provides the <code>${misc:Built-Using}</code>
+ variable. It is used when scheduling binNMUs.
  .
- Please add the following line to your package definition:
+ Please add the following line to the relevant stanza:
  .
   <code>Built-Using: ${misc:Built-Using}</code>

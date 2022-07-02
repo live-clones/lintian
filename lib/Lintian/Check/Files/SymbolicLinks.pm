@@ -1,6 +1,6 @@
 # files/symbolic-links -- lintian check script -*- perl -*-
 
-# Copyright © 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -37,16 +37,6 @@ const my $DOUBLE_DOT => q{..};
 const my $VERTICAL_BAR => q{|};
 const my $ARROW => q{->};
 
-has COMPRESS_FILE_EXTENSIONS => (
-    is => 'rw',
-    lazy => 1,
-    default => sub {
-        my ($self) = @_;
-
-        return $self->profile->load_data('files/compressed-file-extensions',
-            qr/\s++/,sub { return qr/\Q$_[0]\E/ });
-    });
-
 # an OR (|) regex of all compressed extension
 has COMPRESS_FILE_EXTENSIONS_OR_ALL => (
     is => 'rw',
@@ -54,12 +44,15 @@ has COMPRESS_FILE_EXTENSIONS_OR_ALL => (
     default => sub {
         my ($self) = @_;
 
+        my $COMPRESS_FILE_EXTENSIONS
+          = $self->data->load('files/compressed-file-extensions',qr/\s+/);
+
         my $text = join($VERTICAL_BAR,
-            map {$self->COMPRESS_FILE_EXTENSIONS->value($_) }
-              $self->COMPRESS_FILE_EXTENSIONS->all);
+            (map { quotemeta } $COMPRESS_FILE_EXTENSIONS->all));
 
         return qr/$text/;
-    });
+    }
+);
 
 sub visit_patched_files {
     my ($self, $item) = @_;
@@ -71,14 +64,14 @@ sub visit_patched_files {
     if ($item->link =~ m{^/}) {
 
         # allow /dev/null link target for masked systemd service files
-        $self->hint('absolute-symbolic-link-target-in-source',
-            $item->name, $ARROW, $item->link)
+        $self->pointed_hint('absolute-symbolic-link-target-in-source',
+            $item->pointer, $item->link)
           unless $item->link eq '/dev/null';
     }
 
     # some relative links cannot be resolved inside the source
-    $self->hint('wayward-symbolic-link-target-in-source',
-        $item->name, $ARROW, $item->link)
+    $self->pointed_hint('wayward-symbolic-link-target-in-source',
+        $item->pointer, $item->link)
       unless defined $_->link_normalized || $item->link =~ m{^/};
 
     return;
@@ -95,37 +88,21 @@ sub is_tmp_path {
     return 0;
 }
 
-sub tag_build_tree_path {
-    my ($self, $path, $msg) = @_;
-
-    my $BUILD_PATH_REGEX
-      = $self->profile->load_data('files/build-path-regex',qr/~~~~~/,
-        sub { return  qr/$_[0]/xsm;});
-
-    foreach my $buildpath ($BUILD_PATH_REGEX->all) {
-        my $regex = $BUILD_PATH_REGEX->value($buildpath);
-        if ($path =~ m{$regex}xms) {
-            $self->hint('symlink-target-in-build-tree', $msg);
-        }
-    }
-    return;
-}
-
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     return
-      unless $file->is_symlink;
+      unless $item->is_symlink;
 
-    my $mylink = $file->link;
-    $self->hint('symlink-has-double-slash', $file->name, $file->link)
+    my $mylink = $item->link;
+    $self->pointed_hint('symlink-has-double-slash', $item->pointer,$item->link)
       if $mylink =~ s{//+}{/}g;
 
-    $self->hint('symlink-ends-with-slash', $file->name, $file->link)
+    $self->pointed_hint('symlink-ends-with-slash', $item->pointer, $item->link)
       if $mylink =~ s{(.)/$}{$1};
 
     # determine top-level directory of file
-    $file->name =~ m{^/?([^/]*)};
+    $item->name =~ m{^/?([^/]*)};
     my $filetop = $1;
 
     if ($mylink =~ m{^/([^/]*)}) {
@@ -136,38 +113,44 @@ sub visit_installed_files {
 
         if ($self->processable->type ne 'udeb' and $filetop eq $linktop) {
             # absolute links within one toplevel directory are _not_ ok!
-            $self->hint('absolute-symlink-in-top-level-folder',
-                $file->name, $file->link);
+            $self->pointed_hint('absolute-symlink-in-top-level-folder',
+                $item->pointer, $item->link);
         }
 
-        $self->tag_build_tree_path($flinkname,
-            "symlink $file point to $mylink");
+        my $BUILD_PATH_REGEX
+          = $self->data->load('files/build-path-regex',qr/~~~~~/);
 
-        if(is_tmp_path($flinkname)) {
-            $self->hint('symlink-target-in-tmp', 'symlink', $file->name,
-                "point to $mylink");
+        for my $pattern ($BUILD_PATH_REGEX->all) {
+
+            $self->pointed_hint('symlink-target-in-build-tree',
+                $item->pointer, $mylink)
+              if $flinkname =~ m{$pattern}xms;
         }
+
+        $self->pointed_hint('symlink-target-in-tmp', $item->pointer,$mylink)
+          if is_tmp_path($flinkname);
 
         # Any other case is already definitely non-recursive
-        $self->hint('symlink-is-self-recursive', $file->name, $file->link)
+        $self->pointed_hint('symlink-is-self-recursive', $item->pointer,
+            $item->link)
           if $mylink eq $SLASH;
 
     } else {
         # relative link, we can assume from here that the link
         # starts nor ends with /
 
-        my @filecomponents = split(m{/}, $file->name);
+        my @filecomponents = split(m{/}, $item->name);
         # chop off the name of the symlink
         pop @filecomponents;
 
         my @linkcomponents = split(m{/}, $mylink);
 
-        # handle `../' at beginning of $file->link
+        # handle `../' at beginning of $item->link
         my ($lastpop, $linkcomponent);
         while ($linkcomponent = shift @linkcomponents) {
             if ($linkcomponent eq $DOT) {
-                $self->hint('symlink-contains-spurious-segments',
-                    $file->name, $file->link)
+                $self->pointed_hint('symlink-contains-spurious-segments',
+                    $item->pointer, $item->link)
                   unless $mylink eq $DOT;
                 next;
             }
@@ -175,15 +158,16 @@ sub visit_installed_files {
             if (@filecomponents) {
                 $lastpop = pop @filecomponents;
             } else {
-                $self->hint('symlink-has-too-many-up-segments',
-                    $file->name, $file->link);
+                $self->pointed_hint('symlink-has-too-many-up-segments',
+                    $item->pointer, $item->link);
                 goto NEXT_LINK;
             }
         }
 
         if (!defined $linkcomponent) {
             # After stripping all starting .. components, nothing left
-            $self->hint('symlink-is-self-recursive', $file->name, $file->link);
+            $self->pointed_hint('symlink-is-self-recursive', $item->pointer,
+                $item->link);
         }
 
         # does the link go up and then down into the same
@@ -193,7 +177,7 @@ sub visit_installed_files {
         if (   defined $lastpop
             && defined $linkcomponent
             && $linkcomponent eq $lastpop) {
-            $self->hint('lengthy-symlink', $file->name,  $file->link);
+            $self->pointed_hint('lengthy-symlink', $item->pointer,$item->link);
         }
 
         unless (@filecomponents) {
@@ -201,35 +185,36 @@ sub visit_installed_files {
             if (   ($self->processable->type ne 'udeb')
                 && (!defined $linkcomponent)
                 || ($filetop ne $linkcomponent)) {
+
                 # relative link into other toplevel directory.
                 # this hits a relative symbolic link in the root too.
-                $self->hint('relative-symlink', $file->name,$file->link);
+                $self->pointed_hint('relative-symlink', $item->pointer,
+                    $item->link);
             }
         }
 
         # check additional segments for mistakes like `foo/../bar/'
         foreach (@linkcomponents) {
             if ($_ eq $DOUBLE_DOT || $_ eq $DOT) {
-                $self->hint('symlink-contains-spurious-segments',
-                    $file->name, $file->link);
+                $self->pointed_hint('symlink-contains-spurious-segments',
+                    $item->pointer, $item->link);
                 last;
             }
         }
     }
   NEXT_LINK:
 
-    my $regex = $self->COMPRESS_FILE_EXTENSIONS_OR_ALL;
+    my $pattern = $self->COMPRESS_FILE_EXTENSIONS_OR_ALL;
 
-    # see tag compressed-symlink-with-wrong-ext
-    my $COMPRESSED_SYMLINK_POINTING_TO_COMPRESSED_REGEX= qr/\.($regex)\s*$/;
+    # symlink pointing to a compressed file
+    if ($item->link =~ qr{ [.] ($pattern) \s* $}x) {
 
-    if ($file->link =~ $COMPRESSED_SYMLINK_POINTING_TO_COMPRESSED_REGEX) {
-        # symlink is pointing to a compressed file
+        my $extension = $1;
 
         # symlink has correct extension?
-        $self->hint('compressed-symlink-with-wrong-ext',
-            $file->name,$file->link)
-          unless $file->name =~ /\.$1\s*$/;
+        $self->pointed_hint('compressed-symlink-with-wrong-ext',
+            $item->pointer, $item->link)
+          unless $item->name =~ qr{[.]$extension\s*$};
     }
 
     return;

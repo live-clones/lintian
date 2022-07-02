@@ -9,4 +9,4 @@ Explanation: The package ships two files with the same name installed both in
  Shared library files, both static and dynamic, must be installed in
  the correct directories as documented in Policy 8.1.
 See-Also: https://wiki.debian.org/UsrMerge,
-     policy 8.1
+     debian-policy 8.1

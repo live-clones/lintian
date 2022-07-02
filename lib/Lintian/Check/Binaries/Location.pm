@@ -1,9 +1,9 @@
 # binaries/location -- lintian check script -*- perl -*-
 
-# Copyright © 1998 Christian Schwarz and Richard Braakman
-# Copyright © 2012 Kees Cook
-# Copyright © 2017-2020 Chris Lamb <lamby@debian.org>
-# Copyright © 2021 Felix Lechner
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 2012 Kees Cook
+# Copyright (C) 2017-2020 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -45,8 +45,9 @@ has DEB_HOST_MULTIARCH => (
     default => sub {
         my ($self) = @_;
 
-        return $self->profile->architectures->deb_host_multiarch;
-    });
+        return $self->data->architectures->deb_host_multiarch;
+    }
+);
 
 has gnu_triplet_pattern => (
     is => 'rw',
@@ -65,7 +66,8 @@ has gnu_triplet_pattern => (
         }
 
         return $gnu_triplet_pattern;
-    });
+    }
+);
 
 has ruby_triplet_pattern => (
     is => 'rw',
@@ -78,7 +80,8 @@ has ruby_triplet_pattern => (
         $ruby_triplet_pattern =~ s{linux\\-gnu}{linux\\-};
 
         return $ruby_triplet_pattern;
-    });
+    }
+);
 
 sub visit_installed_files {
     my ($self, $item) = @_;
@@ -87,13 +90,13 @@ sub visit_installed_files {
       unless $item->is_file;
 
     return
-      unless $item->file_info =~ /^ [^,]* \b ELF \b /x
-      || $item->file_info =~ / \b current [ ] ar [ ] archive \b /x;
+      unless $item->file_type =~ /^ [^,]* \b ELF \b /x
+      || $item->file_type =~ / \b current [ ] ar [ ] archive \b /x;
 
-    $self->hint('binary-in-etc', $item)
+    $self->pointed_hint('binary-in-etc', $item->pointer)
       if $item->name =~ m{^etc/};
 
-    $self->hint('arch-dependent-file-in-usr-share', $item)
+    $self->pointed_hint('arch-dependent-file-in-usr-share', $item->pointer)
       if $item->name =~ m{^usr/share/};
 
     my $fields = $self->processable->fields;
@@ -104,7 +107,8 @@ sub visit_installed_files {
     my $gnu_triplet_pattern = $self->gnu_triplet_pattern;
     my $ruby_triplet_pattern = $self->ruby_triplet_pattern;
 
-    $self->hint('arch-dependent-file-not-in-arch-specific-directory',$item)
+    $self->pointed_hint('arch-dependent-file-not-in-arch-specific-directory',
+        $item->pointer)
       if $multiarch eq 'same'
       && length $gnu_triplet_pattern
       && $item->name !~ m{\b$gnu_triplet_pattern(?:\b|_)}
@@ -114,9 +118,10 @@ sub visit_installed_files {
       && $item->name !~ m{/[.]build-id/};
 
     return
-      unless $item->file_info =~ /^ [^,]* \b ELF \b /x;
+      unless $item->file_type =~ /^ [^,]* \b ELF \b /x;
 
-    $self->hint('development-package-ships-elf-binary-in-path', $item)
+    $self->pointed_hint('development-package-ships-elf-binary-in-path',
+        $item->pointer)
       if exists $PATH_DIRECTORIES{$item->dirname}
       && $fields->value('Section') =~ m{ (?:^|/) libdevel $}x
       && $fields->value('Multi-Arch') ne 'foreign';

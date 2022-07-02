@@ -1,7 +1,7 @@
 # team/pkg-js/deprecated -- lintian check script for deprecated javascript -*- perl -*-
 #
-# Copyright © 2019 Xavier Guimard <yadd@debian.org>
-# Copyright © 2020 Felix Lechner
+# Copyright (C) 2019 Xavier Guimard <yadd@debian.org>
+# Copyright (C) 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -45,7 +45,8 @@ has javascript_team_maintained => (
           =~ /pkg-javascript-maintainers\@lists\.alioth\.debian\.org/;
 
         return 0;
-    });
+    }
+);
 
 sub visit_installed_files {
     my ($self, $item) = @_;
@@ -60,7 +61,7 @@ sub visit_installed_files {
     return
       unless length $bytes;
 
-    $self->hint('nodejs-bad-buffer-usage')
+    $self->pointed_hint('nodejs-bad-buffer-usage', $item->pointer)
       if $bytes =~ /\bnew\s+Buffer\(/;
 
     return;

@@ -4,13 +4,10 @@ PERL ?= /usr/bin/perl
 
 VER := $(shell head -1 debian/changelog | sed -e 's/^.*(//' -e 's/).*$$//')
 tmp := $(CURDIR)/debian/lintian
-profiles := profiles/debian/main.profile \
-	    profiles/debian/ftp-master-auto-reject.profile
 pod2man := pod2man --center "Debian Package Checker" --release "Lintian v$(VER)"
 pod2mansources := $(wildcard man/*.pod)
 docsources := doc/lintian.rst README.md $(pod2mansources)
 perlprovides := data/fields/perl-provides
-autoreject_data := $(wildcard private/build-time-data/*)
 
 ifneq (,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
 	jobs = $(patsubst parallel=%,%,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
@@ -35,11 +32,6 @@ override_dh_install:
 	echo "Setting LINTIAN_VERSION to $(VER)"
 	$(PERL) -p -i -e 's/my \$$LINTIAN_VERSION;/my \$$LINTIAN_VERSION = q{$(VER)};/;' \
 	    $(tmp)/usr/share/lintian/bin/*
-
-profiles: $(profiles);
-
-$(profiles): $(autoreject_data) private/generate-profiles
-	private/generate-profiles
 
 api-doc:
 	private/generate-html-docs doc/api.html

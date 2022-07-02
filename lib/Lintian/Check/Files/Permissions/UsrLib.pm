@@ -1,6 +1,6 @@
 # files/permissions/usr-lib -- lintian check script -*- perl -*-
 
-# Copyright © 2020 Felix Lechner
+# Copyright (C) 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -30,17 +30,17 @@ use namespace::clean;
 with 'Lintian::Check';
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     # see Bug#959037 for details
     return
       if $self->processable->type eq 'udeb';
 
     return
-      unless $file->name =~ m{^usr/lib/};
+      unless $item->name =~ m{^usr/lib/};
 
-    $self->hint('executable-in-usr-lib', $file->name)
-      if $file->is_file && $file->is_executable;
+    $self->pointed_hint('executable-in-usr-lib', $item->pointer)
+      if $item->is_file && $item->is_executable;
 
     return;
 }

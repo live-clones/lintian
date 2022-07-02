@@ -1,6 +1,5 @@
 # The list of known virtual facilities that init scripts may depend on.
 #
-# Last updated: 2014-09-06
 
 $all
 $local_fs
@@ -12,4 +11,3 @@ $remote_fs
 $syslog
 $time
 $x-display-manager
-$x-font-server

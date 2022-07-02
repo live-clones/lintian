@@ -1,6 +1,7 @@
 # languages/perl -- lintian check script -*- perl -*-
 
-# Copyright © 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +15,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -35,41 +36,42 @@ has perl_sources_in_lib => (is => 'rw', default => sub { [] });
 has has_perl_binaries => (is => 'rw', default => 0);
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     # perllocal.pod
-    $self->hint('package-installs-perllocal-pod', $file->name)
-      if $file->name =~ m{^usr/lib/perl.*/perllocal.pod$};
+    $self->pointed_hint('package-installs-perllocal-pod', $item->pointer)
+      if $item->name =~ m{^usr/lib/perl.*/perllocal.pod$};
 
     # .packlist files
-    if ($file->name =~ m{^usr/lib/perl.*/.packlist$}) {
-        $self->hint('package-installs-packlist', $file->name);
+    if ($item->name =~ m{^usr/lib/perl.*/.packlist$}) {
+        $self->pointed_hint('package-installs-packlist', $item->pointer);
 
-    }elsif ($file->name =~ m{^usr/lib/(?:[^/]+/)?perl5/.*\.p[lm]$}) {
-        push @{$self->perl_sources_in_lib}, $file->name;
+    }elsif ($item->name =~ m{^usr/lib/(?:[^/]+/)?perl5/.*\.p[lm]$}) {
+        push @{$self->perl_sources_in_lib}, $item;
 
-    }elsif ($file->name =~ m{^usr/lib/(?:[^/]+/)?perl5/.*\.(?:bs|so)$}) {
+    }elsif ($item->name =~ m{^usr/lib/(?:[^/]+/)?perl5/.*\.(?:bs|so)$}) {
         $self->has_perl_binaries(1);
     }
 
     # perl modules
-    if ($file->name =~ m{^usr/(?:share|lib)/perl/\S}) {
+    if ($item->name =~ m{^usr/(?:share|lib)/perl/\S}) {
 
         # check if it's the "perl" package itself
-        $self->hint('perl-module-in-core-directory', $file)
+        $self->pointed_hint('perl-module-in-core-directory', $item->pointer)
           unless $self->processable->source_name eq 'perl';
     }
 
     # perl modules using old libraries
     # we do the same check on perl scripts in checks/scripts
     my $dep = $self->processable->relation('strong');
-    if (   $file->is_file
-        && $file->name =~ /\.pm$/
+    if (   $item->is_file
+        && $item->name =~ /\.pm$/
         && !$dep->satisfies('libperl4-corelibs-perl | perl (<< 5.12.3-7)')) {
 
-        open(my $fd, '<', $file->unpacked_path)
-          or die encode_utf8('Cannot open ' . $file->unpacked_path);
+        open(my $fd, '<', $item->unpacked_path)
+          or die encode_utf8('Cannot open ' . $item->unpacked_path);
 
+        my $position = 1;
         while (my $line = <$fd>) {
             if (
                 $line =~ m{ (?:do|require)\s+['"] # do/require
@@ -85,11 +87,17 @@ sub visit_installed_files {
                    \.pl['"]
              }xsm
             ) {
-                $self->hint('perl-module-uses-perl4-libs-without-dep',
-                    "$file:$. ${1}.pl");
+                my $module = $1;
+
+                $self->pointed_hint('perl-module-uses-perl4-libs-without-dep',
+                    $item->pointer($position), "$module.pl");
             }
+
+        } continue {
+            ++$position;
         }
-        close($fd);
+
+        close $fd;
     }
 
     return;
@@ -100,12 +108,10 @@ sub installable {
 
     unless ($self->has_perl_binaries) {
 
-        $self->hint('package-installs-nonbinary-perl-in-usr-lib-perl5', $_)
+        $self->pointed_hint('package-installs-nonbinary-perl-in-usr-lib-perl5',
+            $_->pointer)
           for @{$self->perl_sources_in_lib};
     }
-
-    $self->perl_sources_in_lib([]);
-    $self->has_perl_binaries(0);
 
     return;
 }

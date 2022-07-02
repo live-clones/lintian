@@ -1,7 +1,7 @@
 Tag: upstream-file-without-utf8-name
 Severity: info
 Check: files/names
-See-Also: policy 10.10
+See-Also: debian-policy 10.10
 Explanation: The file name in the upstream source tree is not valid UTF-8.
  There is probably not much a maintainer can do other than ask upstream
  to package the sources differently.

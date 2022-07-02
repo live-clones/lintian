@@ -1,0 +1,166 @@
+#!/usr/bin/perl
+#
+# Copyright (C) 2021 Felix Lechner
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+use v5.20;
+use warnings;
+use utf8;
+
+use Cwd qw(realpath);
+use File::Basename qw(dirname);
+
+# neither Path::This nor lib::relative are in Debian
+use constant THISFILE => realpath __FILE__;
+use constant THISDIR => dirname realpath __FILE__;
+
+# use Lintian modules that belong to this program
+use lib THISDIR . '/../lib';
+
+use Const::Fast;
+use List::Compare;
+use List::Util qw(uniq);
+use Unicode::UTF8 qw(encode_utf8);
+
+use Lintian::Archive;
+use Lintian::Profile;
+
+const my $SPACE => q{ };
+const my $INDENT => $SPACE x 4;
+const my $HYPHEN => q{-};
+
+$ENV{LINTIAN_BASE} = realpath(THISDIR . '/..')
+  // die encode_utf8('Cannot resolve LINTIAN_BASE');
+
+refresh_auto_reject_data();
+
+# reload
+my $profile = Lintian::Profile->new;
+$profile->load;
+
+my $data = $profile->data;
+
+my @want_certain = @{$data->auto_rejection->certain};
+my @want_preventable = @{$data->auto_rejection->preventable};
+
+# find all tags known to Lintian
+my @known_tags = $profile->known_tags;
+my %new_name;
+
+for my $tag_name (@known_tags) {
+
+    my $tag = $profile->get_tag($tag_name);
+
+    my @renamed_from = @{$tag->renamed_from};
+
+    my @taken = grep { exists $new_name{$_} } @renamed_from;
+
+    say encode_utf8(
+"Warning: Ignoring $_ as an alias for $new_name{$_} in favor of $tag_name."
+    )for @taken;
+
+    $new_name{$_} = $tag_name for @renamed_from;
+}
+
+my $old_certain_lc= List::Compare->new(\@want_certain, [keys %new_name]);
+my $old_preventable_lc
+  = List::Compare->new(\@want_preventable, [keys %new_name]);
+
+my @old_certain_names = $old_certain_lc->get_intersection;
+my @old_preventable_names = $old_preventable_lc->get_intersection;
+
+say encode_utf8('FTP Master uses those old tag names for auto-rejection:')
+  if @old_certain_names || @old_preventable_names;
+say encode_utf8($INDENT . "-   [certain]   $_  =>  $new_name{$_}")
+  for @old_certain_names;
+say encode_utf8($INDENT . "- [preventable] $_  =>  $new_name{$_}")
+  for @old_preventable_names;
+
+my $new_certain_lc
+  = List::Compare->new(\@want_certain,
+    [map { $new_name{$_} } @old_certain_names]);
+my $new_preventable_lc
+  = List::Compare->new(\@want_preventable,
+    [map { $new_name{$_} } @old_preventable_names]);
+
+my @aware_certain_names = $new_certain_lc->get_intersection;
+my @aware_preventable_names = $new_preventable_lc->get_intersection;
+
+say encode_utf8('They already know about those tags:')
+  if @aware_certain_names || @aware_preventable_names;
+say encode_utf8($INDENT . "-   [certain]   $_") for @aware_certain_names;
+say encode_utf8($INDENT . "- [preventable] $_") for @aware_preventable_names;
+
+my @unaware_certain_names = $new_certain_lc->get_Ronly;
+my @unaware_preventable_names = $new_preventable_lc->get_Ronly;
+
+say encode_utf8('The following tags have to be added:')
+  if @unaware_certain_names || @unaware_preventable_names;
+say encode_utf8($INDENT . "-   [certain]   $_") for @unaware_certain_names;
+say encode_utf8($INDENT . "- [preventable] $_") for @unaware_preventable_names;
+
+# replace old names
+@want_certain = uniq map { $new_name{$_} // $_ } @want_certain;
+@want_preventable = uniq map { $new_name{$_} // $_ } @want_preventable;
+
+my $certain_lc = List::Compare->new(\@want_certain, \@known_tags);
+my @unknown_certain = $certain_lc->get_Lonly;
+my @certain = $certain_lc->get_intersection;
+
+my $preventable_lc = List::Compare->new(\@want_preventable, \@known_tags);
+my @unknown_preventable = $preventable_lc->get_Lonly;
+my @preventable = $preventable_lc->get_intersection;
+my @unknown = (@unknown_certain, @unknown_preventable);
+
+say encode_utf8(
+    'Warning, disregarding unknown tags for FTP Master Auto-Rejects:')
+  if @unknown;
+say encode_utf8($INDENT . $HYPHEN . $SPACE . $_) for @unknown;
+
+say encode_utf8('Found '
+      . scalar @certain
+      . ' certain and '
+      . scalar @preventable
+      . ' preventable tags for FTP Master Auto-Rejects.');
+
+exit 0;
+
+sub refresh_auto_reject_data {
+
+    my $refresh_profile = Lintian::Profile->new;
+    $refresh_profile->load;
+
+    my $refresh_data = $refresh_profile->data;
+
+    my $archive = Lintian::Archive->new;
+    my $basedir = "$ENV{LINTIAN_BASE}/data";
+
+    # refresh data
+    $refresh_data->auto_rejection->refresh($archive, $basedir);
+
+    undef $refresh_profile;
+    undef $refresh_data;
+
+    return;
+}
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

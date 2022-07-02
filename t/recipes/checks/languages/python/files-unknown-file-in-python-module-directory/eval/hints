@@ -1,1 +1,1 @@
-python3-foo (binary): unknown-file-in-python-module-directory usr/lib/python3/dist-packages/bad
+python3-foo (binary): unknown-file-in-python-module-directory [usr/lib/python3/dist-packages/bad]

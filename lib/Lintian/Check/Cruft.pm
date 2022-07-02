@@ -1,13 +1,13 @@
 # cruft -- lintian check script -*- perl -*-
 #
 # based on debhelper check,
-# Copyright © 1999 Joey Hess
-# Copyright © 2000 Sean 'Shaleh' Perry
-# Copyright © 2002 Josip Rodin
-# Copyright © 2007 Russ Allbery
-# Copyright © 2013-2018 Bastien ROUCARIÈS
-# Copyright © 2017-2020 Chris Lamb <lamby@debian.org>
-# Copyright © 2020-2021 Felix Lechner
+# Copyright (C) 1999 Joey Hess
+# Copyright (C) 2000 Sean 'Shaleh' Perry
+# Copyright (C) 2002 Josip Rodin
+# Copyright (C) 2007 Russ Allbery
+# Copyright (C) 2013-2018 Bastien ROUCARIES
+# Copyright (C) 2017-2020 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2020-2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -32,77 +32,25 @@ use warnings;
 use utf8;
 
 use Const::Fast;
-use File::Basename qw(basename);
-use List::SomeUtils qw(any none first_value);
-use List::UtilsBy qw(max_by);
-use Path::Tiny;
-use Unicode::UTF8 qw(encode_utf8);
+use List::SomeUtils qw(any none);
 
-use Lintian::Relation;
-use Lintian::Util qw(normalize_pkg_path);
+const my $EMPTY => q{};
+const my $ASTERISK => q{*};
+const my $DOT => q{.};
+
+const my $ITEM_NOT_FOUND => -1;
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
 
-# Half of the size used in the "sliding window" for detecting bad
-# licenses like GFDL with invariant sections.
-# NB: Keep in sync cruft-gfdl-fp-sliding-win/pre_build.
-# not less than 8192 for source missing
-const my $LARGE_BLOCK_SIZE => 16_384;
-
-const my $SMALL_BLOCK_SIZE => 8_192;
-
-# very long line lengths
-const my $VERY_LONG_LINE_LENGTH => 512;
-const my $SAFE_LINE_LENGTH => 256;
-
-const my $EMPTY => q{};
-const my $ASTERISK => q{*};
-const my $DOLLAR => q{$};
-const my $DOT => q{.};
-const my $DOUBLE_DOT => q{..};
-
-const my $LICENSE_CHECK_DATA_FIELDS => 5;
-
-const my $ITEM_NOT_FOUND => -1;
-const my $SKIP_HTML => -1;
-
-# prebuilt-file or forbidden file type
-has RFC_WHITELIST => (
-    is => 'rw',
-    lazy => 1,
-    default => sub {
-        my ($self) = @_;
-        return $self->profile->load_data(
-            'cruft/rfc-whitelist',
-            qr/\s*\~\~\s*/,
-            sub {
-                return qr/$_[0]/xms;
-            });
-    });
-
-# get browserified regexp
-has BROWSERIFY_REGEX => (
-    is => 'rw',
-    lazy => 1,
-    default => sub {
-        my ($self) = @_;
-
-        return $self->profile->load_data(
-            'cruft/browserify-regex',
-            qr/\s*\~\~\s*/,
-            sub {
-                return qr/$_[1]/xms;
-            });
-    });
-
 my %NVIDIA_LICENSE = (
     keywords => [qw{license intellectual retain property}],
     sentences =>[
 'retain all intellectual property and proprietary rights in and to this software and related documentation'
-    ]);
+    ]
+);
 
 my %NON_FREE_LICENSES = (
 # first field is tag
@@ -196,7 +144,8 @@ qr{microsoft [ ] visual [ ] c[+][+] [ ] generated (?![ ] by [ ] freeze\.py)}msx
         sentences => ['the fall-through switches in utf-8 reading'],
         regex =>
 qr{the [ ] fall-through [ ] switches [ ] in [ ] utf-8 [ ] reading [ ] code [ ] save}msx
-    });
+    }
+);
 
 # get usual data about admissible/not admissible GFDL invariant part of license
 has GFDL_FRAGMENTS => (
@@ -205,83 +154,43 @@ has GFDL_FRAGMENTS => (
     default => sub {
         my ($self) = @_;
 
-        return $self->profile->load_data(
-            'cruft/gfdl-license-fragments-checks',
-            qr/\s*\~\~\s*/,
-            sub {
-                my ($gfdlsectionsregex,$secondpart) = @_;
+        my %gfdl_fragments;
 
-                # allow empty parameters
-                $gfdlsectionsregex //= $EMPTY;
+        my $data = $self->data->load('cruft/gfdl-license-fragments-checks',
+            qr/\s*\~\~\s*/);
 
-                # trim both ends
-                $gfdlsectionsregex =~ s/^\s+|\s+$//g;
+        for my $gfdlsectionsregex ($data->all) {
 
-                $secondpart //= $EMPTY;
-                my ($acceptonlyinfile,$applytag)
-                  = split(/\s*\~\~\s*/, $secondpart, 2);
+            my $secondpart = $data->value($gfdlsectionsregex);
 
-                $acceptonlyinfile //= $EMPTY;
-                $applytag //= $EMPTY;
+            # allow empty parameters
+            $secondpart //= $EMPTY;
+            my ($acceptonlyinfile,$applytag)
+              = split(/\s*\~\~\s*/, $secondpart, 2);
 
-                # trim both ends
-                $acceptonlyinfile =~ s/^\s+|\s+$//g;
-                $applytag =~ s/^\s+|\s+$//g;
+            $acceptonlyinfile //= $EMPTY;
+            $applytag //= $EMPTY;
 
-                # empty first field is everything
-                if (length($gfdlsectionsregex) == 0) {
-                    $gfdlsectionsregex = $DOT . $ASTERISK;
-                }
-                # empty regname is none
-                if (length($acceptonlyinfile) == 0) {
-                    $acceptonlyinfile = $DOT . $ASTERISK;
-                }
+            # trim both ends
+            $acceptonlyinfile =~ s/^\s+|\s+$//g;
+            $applytag =~ s/^\s+|\s+$//g;
 
-                my %ret = (
-                    'gfdlsectionsregex'   => qr/$gfdlsectionsregex/xis,
-                    'acceptonlyinfile' => qr/$acceptonlyinfile/xs,
-                );
-                unless ($applytag eq $EMPTY) {
-                    $ret{'tag'} = $applytag;
-                }
+            # accept all files if empty
+            $acceptonlyinfile ||= $DOT . $ASTERISK;
 
-                return \%ret;
-            });
-    });
+            my %ret = (
+                'gfdlsectionsregex'   => qr/$gfdlsectionsregex/xis,
+                'acceptonlyinfile' => qr/$acceptonlyinfile/xs,
+            );
 
-# Directory checks.  These regexes match a directory that shouldn't be in the
-# source package and associate it with a tag (minus the leading
-# source-contains or debian-adds).  Note that only one of these regexes
-# should trigger for any single directory.
-my @directory_checks = (
-    [qr{^(.+/)?CVS/?$}        => 'cvs-control-dir'],
-    [qr{^(.+/)?\.svn/?$}      => 'svn-control-dir'],
-    [qr{^(.+/)?\.bzr/?$}      => 'bzr-control-dir'],
-    [qr{^(.+/)?\{arch\}/?$}   => 'arch-control-dir'],
-    [qr{^(.+/)?\.arch-ids/?$} => 'arch-control-dir'],
-    [qr{^(.+/)?,,.+/?$}       => 'arch-control-dir'],
-    [qr{^(.+/)?\.git/?$}      => 'git-control-dir'],
-    [qr{^(.+/)?\.hg/?$}       => 'hg-control-dir'],
-    [qr{^(.+/)?\.be/?$}       => 'bts-control-dir'],
-    [qr{^(.+/)?\.ditrack/?$}  => 'bts-control-dir'],
+            $ret{'tag'} = $applytag
+              if length $applytag;
 
-    # Special case (can only be triggered for diffs)
-    [qr{^(.+/)?\.pc/?$} => 'quilt-control-dir'],
-);
+            $gfdl_fragments{$gfdlsectionsregex} = \%ret;
+        }
 
-# File checks.  These regexes match files that shouldn't be in the source
-# package and associate them with a tag (minus the leading source-contains or
-# debian-adds).  Note that only one of these regexes should trigger for any
-# given file.
-my @file_checks = (
-    [qr{^(.+/)?svn-commit\.(.+\.)?tmp$} => 'svn-commit-file'],
-    [qr{^(.+/)?svk-commit.+\.tmp$}      => 'svk-commit-file'],
-    [qr{^(.+/)?\.arch-inventory$}       => 'arch-inventory-file'],
-    [qr{^(.+/)?\.hgtags$}               => 'hg-tags-file'],
-    [qr{^(.+/)?\.\#(.+?)\.\d+(\.\d+)*$} => 'cvs-conflict-copy'],
-    [qr{^(.+/)?(.+?)\.(r[1-9]\d*)$}     => 'svn-conflict-file'],
-    [qr{\.(orig|rej)$}                  => 'patch-failure-file'],
-    [qr{((^|/)[^/]+\.swp|~)$}           => 'editor-backup-file'],
+        return \%gfdl_fragments;
+    }
 );
 
 sub visit_patched_files {
@@ -299,213 +208,7 @@ sub visit_patched_files {
       && $item->name eq 'debian/README.Debian'
       && $item->name eq 'debian/README.source';
 
-    # prebuilt-file or forbidden file type
-    $self->hint('source-contains-prebuilt-wasm-binary', $item->name)
-      if $item->file_info =~ m{^WebAssembly \s \(wasm\) \s binary \s module}x;
-
-    $self->hint('source-contains-prebuilt-windows-binary', $item->name)
-      if $item->file_info
-      =~ m{\b(?:PE(?:32|64)|(?:MS-DOS|COM)\s executable)\b}x;
-
-    $self->hint('source-contains-prebuilt-silverlight-object', $item->name)
-      if $item->file_info =~ m{^Zip \s archive \s data}x
-      && $item->name =~ m{(?i)\.xac$}x;
-
-    if ($item->file_info =~ m{^python \s \d(\.\d+)? \s byte-compiled}x) {
-
-        $self->hint('source-contains-prebuilt-python-object', $item->name);
-
-        $self->hint('source-is-missing', $item->name)
-          unless $self->find_source($item,
-            {'.py' => '(?i)(?:\.cpython-\d{2}|\.pypy)?\.py[co]$'});
-    }
-
-    if ($item->file_info =~ m{\bELF\b}x) {
-        $self->hint('source-contains-prebuilt-binary', $item->name);
-
-        my %patterns = map {
-            $_  =>
-'(?i)(?:[\.-](?:bin|elf|e|hs|linux\d+|oo?|or|out|so(?:\.\d+)*)|static|_o\.golden)?$'
-        } qw(.asm .c .cc .cpp .cxx .f .F .i .ml .rc .S);
-
-        $self->hint('source-is-missing', $item->name)
-          unless $self->find_source($item, \%patterns);
-    }
-
-    if ($item->file_info =~ m{^Macromedia \s Flash}x) {
-
-        $self->hint('source-contains-prebuilt-flash-object', $item->name);
-
-        $self->hint('source-is-missing', $item->name)
-          unless $self->find_source($item, {'.as' => '(?i)\.swf$'});
-    }
-
-    if (   $item->file_info =~ m{^Composite \s Document \s File}x
-        && $item->name =~ m{(?i)\.fla$}x) {
-
-        $self->hint('source-contains-prebuilt-flash-project', $item->name);
-
-        $self->hint('source-is-missing', $item->name)
-          unless $self->find_source($item, {'.as' => '(?i)\.fla$'});
-    }
-
-    # do not forget to change also $JS_EXT in file.pm
-    if ($item->name
-        =~ m{(?i)[-._](?:compiled|compressed|lite|min|pack(?:ed)?|prod|umd|yc)\.js$}x
-    ) {
-
-        $self->hint('source-contains-prebuilt-javascript-object', $item->name);
-        my %patterns = map {
-            $_ =>
-'(?i)(?:[-._](?:compiled|compressed|lite|min|pack(?:ed)?|prod|umd|yc))?\.js$'
-        } qw(.js _orig.js .js.orig .src.js -src.js .debug.js -debug.js -nc.js);
-
-        $self->hint('source-is-missing', $item->name)
-          unless $self->find_source($item, \%patterns);
-    }
-
     return;
-}
-
-sub source {
-    my ($self) = @_;
-
-    my @added_by_debian;
-    my $prefix;
-    if ($self->processable->native) {
-
-        @added_by_debian = @{$self->processable->patched->sorted_list};
-        $prefix = 'source-contains';
-
-    } else {
-        my $patched = $self->processable->patched;
-        my $orig = $self->processable->orig;
-
-        @added_by_debian
-          = grep { !defined $orig->lookup($_->name) } @{$patched->sorted_list};
-
-        # remove root quilt control folder and all paths in it
-        # created when 3.0 (quilt) source packages are unpacked
-        @added_by_debian = grep { $_->name !~ m{^.pc/} } @added_by_debian
-          if $self->processable->source_format eq '3.0 (quilt)';
-
-        my @common_items
-          = grep { defined $orig->lookup($_->name) } @{$patched->sorted_list};
-        my @touched_by_debian
-          = grep { $_->md5sum ne $orig->lookup($_->name)->md5sum }
-          @common_items;
-
-        $self->hint('no-debian-changes')
-          unless @added_by_debian || @touched_by_debian;
-
-        $prefix = 'debian-adds';
-    }
-
-    # ignore lintian test set; should use automatic loop in the future
-    @added_by_debian = grep { $_->name !~ m{^t/} } @added_by_debian
-      if $self->processable->source_name eq 'lintian';
-
-    my @directories = grep { $_->is_dir } @added_by_debian;
-    for my $directory (@directories) {
-
-        my $rule = first_value { $directory->name =~ /$_->[0]/s }
-        @directory_checks;
-        $self->hint("${prefix}-$rule->[1]", $directory->name)
-          if defined $rule;
-    }
-
-    my @files = grep { $_->is_file } @added_by_debian;
-    for my $file (@files) {
-
-        my $rule = first_value { $file->name =~ /$_->[0]/s } @file_checks;
-        $self->hint("${prefix}-$rule->[1]", $file->name)
-          if defined $rule;
-    }
-
-    return;
-}
-
-sub find_source {
-    my ($self, $file, $patternref) = @_;
-
-    $patternref //= {};
-
-    return undef
-      unless $file->is_regular_file;
-
-    return undef
-      if $self->processable->is_non_free;
-
-    my %patterns = %{$patternref};
-
-    my @alternatives;
-    for my $replacement (keys %patterns) {
-
-        my $newname = $file->basename;
-
-        # empty pattern would repeat the last regex compiled
-        my $pattern = $patterns{$replacement};
-        $newname =~ s/$pattern/$replacement/
-          if length $pattern;
-
-        push(@alternatives, $newname)
-          if length $newname;
-    }
-
-    my $index = $self->processable->patched;
-    my @candidates;
-
-    # add standard locations
-    push(@candidates,
-        $index->resolve_path('debian/missing-sources/' . $file->name));
-    push(@candidates,
-        $index->resolve_path('debian/missing-sources/' . $file->basename));
-
-    my $dirname = $file->dirname;
-    my $parentname = basename($dirname);
-
-    my @absolute = (
-        # libtool
-        '.libs',
-        ".libs/$dirname",
-        # mathjax
-        'unpacked',
-        # for missing source set in debian
-        'debian',
-        'debian/missing-sources',
-        "debian/missing-sources/$dirname"
-    );
-
-    for my $absolute (@absolute) {
-        push(@candidates, $index->resolve_path("$absolute/$_"))
-          for @alternatives;
-    }
-
-    my @relative = (
-        # likely in current dir
-        $DOT,
-        # for binary object built by libtool
-        $DOUBLE_DOT,
-        # maybe in src subdir
-        './src',
-        # maybe in ../src subdir
-        '../src',
-        "../../src/$parentname",
-        # emscripten
-        './flash-src/src/net/gimite/websocket',
-    );
-
-    for my $relative (@relative) {
-        push(@candidates, $file->resolve_path("$relative/$_"))
-          for @alternatives;
-    }
-
-    my @found = grep { defined } @candidates;
-
-    # careful with behavior around empty arrays
-    my $source = first_value { $_->name ne $file->name } @found;
-
-    return $source;
 }
 
 # do basic license check against well known offender
@@ -517,13 +220,6 @@ sub full_text_check {
     my $contents = $item->decoded_utf8;
     return
       unless length $contents;
-
-    my ($maximum, $position) = $self->maximum_line_length($contents);
-
-    $self->hint('very-long-line-length-in-source-file',$item->name,
-        "line $position is $maximum characters long (>$VERY_LONG_LINE_LENGTH)")
-      if $maximum > $VERY_LONG_LINE_LENGTH
-      && $item->file_info !~ m{SVG Scalable Vector Graphics image};
 
     my $lowercase = lc($contents);
     my $clean = clean_text($lowercase);
@@ -547,16 +243,116 @@ sub full_text_check {
         }
     }
 
-    $self->check_html_cruft($item, $lowercase)
-      if $item->basename =~ /\.(?:x?html?\d?|xht)$/i;
+    # check javascript in html file
+    if ($item->basename =~ /\.(?:x?html?\d?|xht)$/i) {
 
-    if ($self->_is_javascript_but_not_minified($item->name)) {
+        my $blockscript = $lowercase;
+        my $indexscript;
+
+        while (
+            ($indexscript = index($blockscript, '<script')) > $ITEM_NOT_FOUND){
+
+            $blockscript = substr($blockscript,$indexscript);
+
+            # sourced script ok
+            if ($blockscript =~ m{\A<script\s+[^>]*?src="[^"]+?"[^>]*?>}sm) {
+
+                $blockscript = substr($blockscript,$+[0]);
+                next;
+            }
+
+            # extract script
+            if ($blockscript =~ m{<script[^>]*?>(.*?)</script>}sm) {
+
+                $blockscript = substr($blockscript,$+[0]);
+
+                my $lcscript = $1;
+
+                # check if js script is minified
+                my $firstline = $EMPTY;
+                for my $line (split /\n/, $lcscript) {
+
+                    if ($line =~ /^\s*$/) {
+                        next;
+
+                    } else {
+                        $firstline = $line;
+                        last;
+                    }
+                }
+
+                if ($firstline
+                    =~ m/.{0,20}((?:\bcopyright\b|[\(]c[\)]\s*\w|\N{COPYRIGHT SIGN}).{0,50})/
+                ){
+
+                    my $extract = $1;
+                    $extract =~ s/^\s+|\s+$//g;
+
+                    $self->pointed_hint(
+                        'embedded-script-includes-copyright-statement',
+                        $item->pointer,'extract of copyright statement:',
+                        $extract);
+                }
+
+                # clean up jslint craps line
+                my $cleaned = $lcscript;
+                $cleaned =~ s{^\s*/[*][^\n]*[*]/\s*$}{}gm;
+                $cleaned =~ s{^\s*//[^\n]*$}{}gm;
+                $cleaned =~ s/^\s+//gm;
+
+                # strip indentation
+                $cleaned =~ s/^\s+//mg;
+                $cleaned = _strip_c_comments($cleaned);
+                # strip empty line
+                $cleaned =~ s/^\s*\n//mg;
+                # remove last \n
+                $cleaned =~ s/\n\Z//m;
+
+# detect browserified javascript (comment are removed here and code is stripped)
+                my $contiguous = $cleaned;
+                $contiguous =~ s/\n/ /msg;
+
+                # get browserified regexp
+                my $BROWSERIFY_REGEX
+                  = $self->data->load('cruft/browserify-regex',qr/\s*\~\~\s*/);
+
+                for my $condition ($BROWSERIFY_REGEX->all) {
+
+                    my $pattern = $BROWSERIFY_REGEX->value($condition);
+                    if ($contiguous =~ m{$pattern}msx) {
+
+                        my $extra= (defined $1) ? 'code fragment:'.$1 : $EMPTY;
+                        $self->pointed_hint(
+                            'source-contains-browserified-javascript',
+                            $item->pointer, $extra);
+
+                        last;
+                    }
+                }
+
+                next;
+            }
+
+            last;
+        }
+    }
+
+    # check if file is javascript but not minified
+    my $isjsfile = ($item->name =~ m/\.js$/) ? 1 : 0;
+    if ($isjsfile) {
+        my $minjsregexp
+          = qr/(?i)[-._](?:compiled|compressed|lite|min|pack(?:ed)?|prod|umd|yc)\.js$/;
+        $isjsfile = ($item->name =~ m{$minjsregexp}) ? 0 : 1;
+    }
+
+    if ($isjsfile) {
         # exception sphinx documentation
         if ($item->basename eq 'searchindex.js') {
             if ($lowercase =~ m/\A\s*search\.setindex\s* \s* \(\s*\{/xms) {
 
-                $self->hint('source-contains-prebuilt-sphinx-documentation',
-                    $item->dirname);
+                $self->pointed_hint(
+                    'source-contains-prebuilt-sphinx-documentation',
+                    $item->parent_dir->pointer);
                 return;
             }
         }
@@ -564,8 +360,9 @@ sub full_text_check {
         if ($item->basename eq 'search_index.js') {
             if ($lowercase =~ m/\A\s*var\s*search_index\s*=/xms) {
 
-                $self->hint('source-contains-prebuilt-pandoc-documentation',
-                    $item->dirname);
+                $self->pointed_hint(
+                    'source-contains-prebuilt-pandoc-documentation',
+                    $item->parent_dir->pointer);
                 return;
             }
         }
@@ -574,19 +371,6 @@ sub full_text_check {
 
             return
               if $lowercase=~ m/\A\s*profiles \s* = \s* new \s* Array\s*\(/xms;
-        }
-        # see #745152
-        # Be robust check also .js
-        elsif ($item->basename eq 'deployJava.js') {
-            if ($lowercase
-                =~ m/(?:\A|\v)\s*var\s+deployJava\s*=\s*function/xmsi) {
-
-                $self->hint('source-is-missing', $item->name)
-                  unless $self->find_source($item,
-                    {'.txt' => '(?i)\.js$', $EMPTY => $EMPTY});
-
-                return;
-            }
         }
         # https://github.com/rafaelp/css_browser_selector is actually the
         # original source. (#874381)
@@ -601,7 +385,41 @@ sub full_text_check {
         }
 
         # now search hidden minified
-        $self->warn_long_lines($item, $lowercase);
+
+        # clean up jslint craps line
+        my $cleaned = $lowercase;
+        $cleaned =~ s{^\s*/[*][^\n]*[*]/\s*$}{}gm;
+        $cleaned =~ s{^\s*//[^\n]*$}{}gm;
+        $cleaned =~ s/^\s+//gm;
+
+        # strip indentation
+        $cleaned =~ s/^\s+//mg;
+        $cleaned = _strip_c_comments($cleaned);
+        # strip empty line
+        $cleaned =~ s/^\s*\n//mg;
+        # remove last \n
+        $cleaned =~ s/\n\Z//m;
+
+# detect browserified javascript (comment are removed here and code is stripped)
+        my $contiguous = $cleaned;
+        $contiguous =~ s/\n/ /msg;
+
+        # get browserified regexp
+        my $BROWSERIFY_REGEX
+          = $self->data->load('cruft/browserify-regex',qr/\s*\~\~\s*/);
+
+        for my $condition ($BROWSERIFY_REGEX->all) {
+
+            my $pattern = $BROWSERIFY_REGEX->value($condition);
+            if ($contiguous =~ m{$pattern}msx) {
+
+                my $extra = (defined $1) ? 'code fragment:'.$1 : $EMPTY;
+                $self->pointed_hint('source-contains-browserified-javascript',
+                    $item->pointer, $extra);
+
+                last;
+            }
+        }
     }
 
     # search link rel header
@@ -614,153 +432,11 @@ sub full_text_check {
 
         my $url = $1 // $EMPTY;
 
-        $self->hint('license-problem-cc-by-nc-sa', $item->name)
+        $self->pointed_hint('license-problem-cc-by-nc-sa', $item->pointer)
           if $url =~ m{^https?://creativecommons.org/licenses/by-nc-sa/};
     }
 
     return;
-}
-
-# check javascript in html file
-sub check_html_cruft {
-    my ($self, $item, $lowercase) = @_;
-
-    my $blockscript = $lowercase;
-    my $indexscript;
-
-    while (($indexscript = index($blockscript, '<script')) > $ITEM_NOT_FOUND) {
-
-        $blockscript = substr($blockscript,$indexscript);
-
-        # sourced script ok
-        if ($blockscript =~ m{\A<script\s+[^>]*?src="[^"]+?"[^>]*?>}sm) {
-
-            $blockscript = substr($blockscript,$+[0]);
-            next;
-        }
-
-        # extract script
-        if ($blockscript =~ m{<script[^>]*?>(.*?)</script>}sm) {
-
-            $blockscript = substr($blockscript,$+[0]);
-
-            my $lcscript = $1;
-            $self->check_js_script($item, $lcscript);
-
-            return 0
-              if $self->warn_long_lines($item, $lcscript);
-
-            next;
-        }
-
-        # here we know that we have partial script. Do the check nevertheless
-        # first check if we have the full <script> tag and do the check
-        # if we get <script src="  "
-        # then skip
-        if ($blockscript =~ /\A<script[^>]*?>/sm) {
-
-            $blockscript = substr($blockscript,$+[0]);
-            $self->check_js_script($item, $blockscript);
-        }
-
-        return 0;
-    }
-
-    return 1;
-}
-
-# check if js script is minified
-sub check_js_script {
-    my ($self, $item, $lcscript) = @_;
-
-    my $firstline = $EMPTY;
-    for my $line (split /\n/, $lcscript) {
-
-        if ($line =~ /^\s*$/) {
-            next;
-
-        } else {
-            $firstline = $line;
-            last;
-        }
-    }
-
-    if ($firstline =~ m/.{0,20}((?:\bcopyright\b|[\(]c[\)]\s*\w|©).{0,50})/) {
-
-        my $extract = $1;
-        $extract =~ s/^\s+|\s+$//g;
-
-        $self->hint('embedded-script-includes-copyright-statement',
-            $item->name,'extract of copyright statement:',$extract);
-    }
-
-    return;
-}
-
-# check if file is javascript but not minified
-sub _is_javascript_but_not_minified {
-    my ($self, $name) = @_;
-
-    my $isjsfile = ($name =~ m/\.js$/) ? 1 : 0;
-    if ($isjsfile) {
-        my $minjsregexp
-          = qr/(?i)[-._](?:compiled|compressed|lite|min|pack(?:ed)?|prod|umd|yc)\.js$/;
-        $isjsfile = ($name =~ m{$minjsregexp}) ? 0 : 1;
-    }
-
-    return $isjsfile;
-}
-
-sub warn_prebuilt_javascript{
-    my ($self, $item, $linelength, $position, $cutoff) = @_;
-
-    my $extratext= "line $position is $linelength characters long (>$cutoff)";
-
-    $self->hint('source-contains-prebuilt-javascript-object',$item->name);
-
-    # Check for missing source.  It will check
-    # for the source file in well known directories
-    if ($item->basename =~ m{\.js$}i) {
-
-        $self->hint('source-is-missing', $item->name)
-          unless $self->find_source(
-            $item,
-            {
-                '.debug.js' => '(?i)\.js$',
-                '-debug.js' => '(?i)\.js$',
-                $EMPTY => $EMPTY
-            });
-
-    } else  {
-        # html file
-        $self->hint('source-is-missing', $item->name)
-          unless $self->find_source($item, {'.fragment.js' => $DOLLAR});
-    }
-
-    return;
-}
-
-sub maximum_line_length {
-    my ($self, $text) = @_;
-
-    my @lines = split(/\n/, $text);
-    my %line_lengths;
-
-    my $position = 1;
-    for my $line (@lines) {
-
-        $line_lengths{$position} = length $line;
-
-    } continue {
-        ++$position;
-    }
-
-    my $longest = max_by { $line_lengths{$_} } keys %line_lengths;
-
-    return (0, 0)
-      unless defined $longest;
-
-    return ($line_lengths{$longest}, $longest);
 }
 
 # strip C comment
@@ -786,109 +462,6 @@ sub _strip_c_comments {
                }{defined $1 ? $1 : ""}xgse;
 
     return $lowercase;
-}
-
-# detect browserified javascript (comment are removed here and code is stripped)
-sub detect_browserify {
-    my ($self, $item, $lowercase) = @_;
-
-    $lowercase =~ s/\n/ /msg;
-    for my $browserifyregex ($self->BROWSERIFY_REGEX->all) {
-
-        my $regex = $self->BROWSERIFY_REGEX->value($browserifyregex);
-        if ($lowercase =~ m{$regex}) {
-
-            my $extra = (defined $1) ? 'code fragment:'.$1 : $EMPTY;
-            $self->hint('source-contains-browserified-javascript',
-                $item->name, $extra);
-
-            last;
-        }
-    }
-    return;
-}
-
-sub warn_long_lines {
-    my ($self, $item, $lowercase) = @_;
-
-    my ($maximum, $position) = $self->maximum_line_length($lowercase);
-   # first check if line >  $VERY_LONG_LINE_LENGTH that is likely minification
-   # avoid problem by recursive regex with longline
-    if ($maximum > $VERY_LONG_LINE_LENGTH) {
-
-        # clean up jslint craps line
-        $lowercase =~ s{^\s*/[*][^\n]*[*]/\s*$}{}gm;
-        $lowercase =~ s{^\s*//[^\n]*$}{}gm;
-        $lowercase =~ s/^\s+//gm;
-    }
-
-    # strip indentation
-    $lowercase =~ s/^\s+//mg;
-    $lowercase = _strip_c_comments($lowercase);
-    # strip empty line
-    $lowercase =~ s/^\s*\n//mg;
-    # remove last \n
-    $lowercase =~ s/\n\Z//m;
-
-    # detect browserification
-    $self->detect_browserify($item, $lowercase);
-
-    # retry very long line length test now: likely minified
-    ($maximum, $position)= $self->maximum_line_length($lowercase);
-
-    if ($maximum > $VERY_LONG_LINE_LENGTH) {
-
-        $self->warn_prebuilt_javascript($item, $maximum, $position,
-            $VERY_LONG_LINE_LENGTH);
-        return 1;
-    }
-
-    while (length $lowercase) {
-
-        # check line above > $SAFE_LINE_LENGTH
-        my $line = $EMPTY;
-        my $linelength = 0;
-
-        my $nextposition = 0;
-        while ($lowercase =~ /([^\n]+)\n?/g) {
-
-            $line = $1;
-            $linelength = length($line);
-
-            if ($linelength > $SAFE_LINE_LENGTH) {
-                $lowercase = substr($lowercase, pos($lowercase));
-
-                last;
-            }
-
-            $linelength = 0;
-
-        } continue {
-            ++$nextposition;
-        }
-
-        # no long line
-        return 0
-          unless $linelength;
-
-        # compute number of ;
-        if (($line =~ tr/;/;/) > 1) {
-
-            $self->warn_prebuilt_javascript($item, $linelength, $nextposition,
-                $SAFE_LINE_LENGTH);
-            return 1;
-        }
-    }
-
-    return 0;
-}
-
-sub tag_gfdl {
-    my ($self, $applytag, $name, $gfdlsections) = @_;
-
-    $self->hint($applytag, $name, 'invariant part is:', $gfdlsections);
-
-    return;
 }
 
 # return True in case of license problem
@@ -937,7 +510,8 @@ sub check_gfdl_license_problem {
     if ($gfdlsections eq $EMPTY) {
 
         # lie in order to check more part
-        $self->hint('license-problem-gfdl-invariants-empty', $item->name);
+        $self->pointed_hint('license-problem-gfdl-invariants-empty',
+            $item->pointer);
 
         return 0;
     }
@@ -967,9 +541,9 @@ sub check_gfdl_license_problem {
 
     # GFDL license, assume it is bad unless it
     # explicitly states it has no "bad sections".
-    for my $gfdl_fragment ($self->GFDL_FRAGMENTS->all) {
+    for my $gfdl_fragment (keys %{$self->GFDL_FRAGMENTS}) {
 
-        my $gfdl_data = $self->GFDL_FRAGMENTS->value($gfdl_fragment);
+        my $gfdl_data = $self->GFDL_FRAGMENTS->{$gfdl_fragment};
         my $gfdlsectionsregex = $gfdl_data->{'gfdlsectionsregex'};
         if ($gfdlsections =~ m{$gfdlsectionsregex}) {
 
@@ -979,22 +553,30 @@ sub check_gfdl_license_problem {
                 my $applytag = $gfdl_data->{'tag'};
 
                 # lie will allow checking more blocks
-                $self->tag_gfdl($applytag, $item->name, $gfdlsections)
+                $self->pointed_hint($applytag, $item->pointer,
+                    'invariant part is:',
+                    $gfdlsections)
                   if defined $applytag;
 
                 return 0;
 
             } else {
-                $self->tag_gfdl('license-problem-gfdl-invariants',
-                    $item->name, $gfdlsections);
+                $self->pointed_hint(
+                    'license-problem-gfdl-invariants',
+                    $item->pointer,'invariant part is:',
+                    $gfdlsections
+                );
                 return 1;
             }
         }
     }
 
     # catch all
-    $self->tag_gfdl('license-problem-gfdl-invariants',
-        $item->name, $gfdlsections);
+    $self->pointed_hint(
+        'license-problem-gfdl-invariants',
+        $item->pointer,'invariant part is:',
+        $gfdlsections
+    );
 
     return 1;
 }
@@ -1007,13 +589,16 @@ sub rfc_whitelist_filename {
 
     my $lcname = lc($item->basename);
 
-    my @values
-      = map { $self->RFC_WHITELIST->value($_) } $self->RFC_WHITELIST->all;
+    # prebuilt-file or forbidden file type
+    # specified separator protects against spaces in pattern
+    my $RFC_WHITELIST= $self->data->load('cruft/rfc-whitelist',qr/\s*\~\~\s*/);
+
+    my @patterns = $RFC_WHITELIST->all;
 
     return 0
-      if any { $lcname =~ m/ $_ /xms } @values;
+      if any { $lcname =~ m/ $_ /xms } @patterns;
 
-    $self->hint($tag_name, $item->name);
+    $self->pointed_hint($tag_name, $item->pointer);
 
     return 1;
 }
@@ -1032,7 +617,7 @@ sub php_source_whitelist {
     return 0
       if $self->processable->source_name =~ /^php\d*(?:\.\d+)?$/xms;
 
-    $self->hint($tag_name, $item->name);
+    $self->pointed_hint($tag_name, $item->pointer);
 
     return 1;
 }
@@ -1181,8 +766,7 @@ sub check_for_single_bad_license {
       if none { $lowercase =~ / \Q$_\E /msx } @{$license_data->{keywords}};
 
     return 0
-      if none { $clean =~ / \Q$_\E /msx }
-    @{$license_data->{sentences}};
+      if none { $clean =~ / \Q$_\E /msx }@{$license_data->{sentences}};
 
     my $regex = $license_data->{regex};
     return 0
@@ -1191,7 +775,7 @@ sub check_for_single_bad_license {
     my $callsub = $license_data->{callsub};
     if (!defined $callsub) {
 
-        $self->hint($tag_name, $item->name);
+        $self->pointed_hint($tag_name, $item->pointer);
         return 1;
     }
 

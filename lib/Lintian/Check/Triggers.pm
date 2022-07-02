@@ -1,7 +1,7 @@
 # triggers -- lintian check script -*- perl -*-
 
-# Copyright © 2017 Niels Thykier
-# Copyright © 2021 Felix Lechner
+# Copyright (C) 2017 Niels Thykier
+# Copyright (C) 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -45,29 +45,34 @@ has TRIGGER_TYPES => (
     default => sub {
         my ($self) = @_;
 
-        return $self->profile->load_data(
-            'triggers/trigger-types',
-            qr/\s*\Q=>\E\s*/,
-            sub {
-                my ($type, $attributes) = @_;
+        my %trigger_types;
 
-                my %trigger_types;
+        my $data
+          = $self->data->load('triggers/trigger-types',qr{ \s* => \s* }x);
+        for my $type ($data->all) {
 
-                for my $pair (split(m{ \s* , \s* }x, $attributes)) {
+            my $attributes  = $data->value($type);
 
-                    my ($flag, $setting) = split(m{ \s* = \s* }x, $pair, 2);
-                    $trigger_types{$flag} = $setting;
-                }
+            my %one_type;
 
-                die encode_utf8(
+            for my $pair (split(m{ \s* , \s* }x, $attributes)) {
+
+                my ($flag, $setting) = split(m{ \s* = \s* }x, $pair, 2);
+                $one_type{$flag} = $setting;
+            }
+
+            die encode_utf8(
 "Invalid trigger-types: $type is defined as implicit-await but not await"
-                  )
-                  if $trigger_types{'implicit-await'}
-                  && !$trigger_types{await};
+              )
+              if $one_type{'implicit-await'}
+              && !$one_type{await};
 
-                return \%trigger_types;
-            });
-    });
+            $trigger_types{$type} = \%one_type;
+        }
+
+        return \%trigger_types;
+    }
+);
 
 sub visit_control_files {
     my ($self, $item) = @_;
@@ -95,15 +100,17 @@ sub visit_control_files {
         $positions_by_trigger_name{$trigger_name} //= [];
         push(@{$positions_by_trigger_name{$trigger_name}}, $position);
 
-        my $trigger_info = $self->TRIGGER_TYPES->value($trigger_type);
+        my $trigger_info = $self->TRIGGER_TYPES->{$trigger_type};
         if (!$trigger_info) {
 
-            $self->hint('unknown-trigger', $trigger_type, "(line $position)");
+            $self->pointed_hint('unknown-trigger', $item->pointer($position),
+                $trigger_type);
             next;
         }
 
-        $self->hint('uses-implicit-await-trigger', $trigger_type,
-            "(line $position)")
+        $self->pointed_hint('uses-implicit-await-trigger',
+            $item->pointer($position),
+            $trigger_type)
           if $trigger_info->{'implicit-await'};
 
     } continue {
@@ -122,7 +129,8 @@ sub visit_control_files {
             sort { $a <=> $b }@{$positions_by_trigger_name{$trigger_name}})
           . $RIGHT_PARENTHESIS;
 
-        $self->hint('repeated-trigger-name', $trigger_name, $indicator);
+        $self->pointed_hint('repeated-trigger-name', $item->pointer,
+            $trigger_name, $indicator);
     }
 
     return;

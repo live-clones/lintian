@@ -1,6 +1,6 @@
 Tag: unpack-message-for-orig
 Severity: error
-Check: lintian
+Check: unpack
 Explanation: Unpacking the contents of this source package produced the
  listed error.
  .

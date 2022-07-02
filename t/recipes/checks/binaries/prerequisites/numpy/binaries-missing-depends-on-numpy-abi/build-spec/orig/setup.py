@@ -1,5 +1,9 @@
-import distutils.core
+import setuptools
+import numpy
 
-distutils.core.setup(
-	ext_modules=[distutils.core.Extension('basic', ['basic.c'])]
+setuptools.setup(
+    ext_modules=[
+        setuptools.Extension('basic', ['basic.c'],
+            include_dirs=[numpy.get_include()]),
+    ],
 )

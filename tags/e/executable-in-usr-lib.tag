@@ -1,15 +1,19 @@
 Tag: executable-in-usr-lib
 Severity: pedantic
+Experimental: yes
 Check: files/permissions/usr-lib
 Explanation: The package ships an executable file in /usr/lib.
  .
  Please move the file to <code>/usr/libexec</code>.
  .
- Debian adopted the Filesystem Hierarchy Specification (FHS)
- version 3.0 starting with our policy revision 4.1.5. The
- FHS 3.0 describes <code>/usr/libexec</code>. Please use that
+ With policy revision 4.1.5, Debian adopted the Filesystem
+ Hierarchy Specification (FHS) version 3.0.
+ .
+ The FHS 3.0 describes <code>/usr/libexec</code>. Please use that
  location for executables.
-See-Also: policy 9.1.1,
+See-Also:
+ debian-policy 9.1.1,
+ filesystem-hierarchy,
  https://refspecs.linuxfoundation.org/FHS_3.0/fhs/ch04s07.html,
  Bug#954149
 
@@ -23,4 +27,15 @@ Reason: The <code>emacsen-common</code> package places installation
  them declare <code>emacsen-common</code> as an installation
  prerequisite.
 See-Also:
- Bug#974175
+ Bug#974175,
+ Bug#954149
+
+Screen: web/cgi/scripts
+Advocates: Andrius Merkys <merkys@debian.org>
+Reason: The folder <code>/usr/lib/cgi-bin/</code> is designated for
+ scripts in the Common Gateway Interface (CGI). They require the
+ executable bit so the server can run them.
+See-Also:
+ https://en.wikipedia.org/wiki/Common_Gateway_Interface,
+ https://datatracker.ietf.org/doc/html/rfc3875.html,
+ Bug#1003941

@@ -1,3 +1,348 @@
+lintian (2.115.1) unstable; urgency=medium
+
+  The "Things we never tested" Release.
+
+  [ Axel Beckert ]
+  * Write a test which catches run-time errors of lightweight private
+    scripts. Triggered by libconfig-model-dpkg-perl's autopkgtest failure
+    since it runs private/latest-policy-version and failed.
+  * Fix private/latest-policy-version: $p…->policy_releases →
+    $p…->data->policy_releases. Seems to have been forgotten when
+    policy_releases() moved from Lintian::Profile to Lintian::Data.
+    Should fix libconfig-model-dpkg-perl's autopkgtest failure.
+  * Fix documentation of Lintian::Data->new().
+  * Switch all GPL URLs in boilerplates and debian/copyright to HTTPS.
+  * Add a debian/duck-override file with some false positives. Lintian is
+    now also DUCK-clean!
+
+  [ Simon McVittie ]
+  * data: Register *.xcf as binary files
+
+ -- Axel Beckert <abe@debian.org>  Tue, 21 Jun 2022 20:53:27 +0200
+
+lintian (2.115.0) unstable; urgency=medium
+
+  The Lintian Resurrection Release.
+
+  * Summary of tag changes:
+    + Added:
+      - alien-tag
+      - chown-with-dot
+      - conflicting-test-fields
+      - declare-python-versions-for-test
+      - drop-python-version-declaration
+      - invalid-override-restriction
+      - missing-prerequisite-for-pyproject-backend
+      - old-devhelp-standard
+      - stray-devhelp-documentation
+      - test-leaves-python-version-untested
+      - uses-poetry-cli
+    + Removed:
+      - crossing-screens
+      - debhelper-compatibility-level-not-a-number
+      - debian-tests-control-and-control-autodep8
+      - exclusive-runtime-tests-field
+      - package-contains-devhelp-file-without-symlink
+
+  [ Axel Beckert ]
+  * Adopting Lintian. (Changes #1012289 from ITA to pure RFH.)
+    + Remove Chris Lamb from Uploaders (see #1012289) and re-add myself.
+  * Workarounds until
+    https://github.com/Perl-Critic/Perl-Critic/issues/925 is fixed:
+    + Replace all occurrences of "Copyright ©" with "Copyright (C)" again.
+    + Remove unnecessary usage of UTF-8 from bin/lintian.
+    + Replace UTF-8 characters in mostly Copyright comments.
+    + Replace UTF-8 characters in code with \N{…}.
+  * Remove literal unicode character U+0334 COMBINING TILDE OVERLAY which
+    likely had been added accidentally. (Triggered by the symptoms of
+    https://github.com/Perl-Critic/Perl-Critic/issues/925, but permanent.)
+  * Update copyright years in debian/copyright.
+  * Run perltidy over lib, bin/lintian, private/refresh-perl-provides,
+    private/runtests and several files in t/scripts/.
+  * data/…/perl-provides updated by running "debian/rules
+    refresh-perl-provides".
+  * Add Felix Lechner to debian/copyright based on copyright statements
+    elsewhere. Thanks for all your contributions!
+  * Update t/recipes/README: "debian/rules runtests" → "private/runtests"
+  * Follow module renaming: Perl::Critic::Freenode → Perl::…::Community.
+  * t/s…/h…/tag-coverage.t: Replace "$ENV{'LINTIAN_BASE'}" with
+    "$ENV{'LINTIAN_BASE'} // '.'" to be able to run it with "prove -l".
+  * init.d-general check: Avoid relying on line numbers in #DEBHELPER#
+    replacement code.
+  * very-long-line-length-in-source-file: Ignore files listed in new data
+    file binary-file-extensions. (Closes: #1005046)
+  * Fix false positives for adopted-extended-field with X- prefixed
+    fields. (Closes: #999768)
+    + Empty hints files seem to require a Test-Against field in desc.
+  * Update own source lintian-overrides for "pointed hints".
+    + Make them work with old and new lintian versions by using wildcards.
+  * Rename README.developers to have a proper file suffix (.pod).
+  * Switch syntax marker of README.developers.pod from "perl" to "pod".
+  * Documentation update: Replace directory "frontend/" with "bin/".
+  * Fix a bunch of "Use of uninitialized value $_ in concatenation"
+    warnings when running tests with "prove -l" directly.
+  * README.developers.pod: Explain the difference between check and test.
+  * lintian(1): Drop mentioning of never existing --no-overrides option.
+  * Replace unfitting Text::Glob with more flexible Regexp::Wildcards
+    (Closes: #1003353)
+    + Add unit test for Lintian::Util::match_glob. The current testsuite
+      does not seem to be able to cover such a case.
+  * Declare compliance with Debian Policy 4.6.1. (No changes needed.)
+  * Refresh data using private/refresh-data. Skip unreleased policy though
+    for now.
+  * Fix "Use of uninitialized value $step in concatenation" in
+    Lintian::Version which showed up as unrecognized tag (!) when running
+    the test suite on the git repo already tagged for a release.
+  * debian/gbp.conf: Declare so far used tag format so that gbp uses it.
+  * Add lintian override for very-long-line-length-in-source-file in
+    Lintian::Check::Cruft as well as test-leaves-python-version-untested.
+  * Use versioned Breaks instead of Conflicts against lzd, see #1001655.
+    Thanks Lintian for reporting ;-) and Paul Gevers for the sanity check!
+
+  [ Felix Lechner ]
+  * Refresh manual references.
+  * Use Text::Glob to match hint contexts with override patterns. Replaces
+    a trusted homegrown routine. (Closes: #1003272)
+  * Refresh list of available Debhelper commands.
+  * Refresh list of installable fonts.
+  * Generate section references for Lintian manual from repo; point to
+    website.
+  * Accept globbing patterns in profiles when enabling and disabling
+    checks or tags.
+  * Refresh data sources in parallel.
+  * Add the New Maintainer's Guide to the list of quotable authorities.
+  * Eliminate unpredictable output in the check siles/privacy-breach.
+  * Honor the environment variable NO_COLOR as specified in
+    https://no-color.org/.
+  * More attempts to eliminate unpredictable output in the check
+    files/privacy-breach.
+  * Drop the tag debian-tests-control-and-control-autodep8.
+  * Set authority references apart from other data sources.
+  * Provide rudimentary Emacs integration. (See: #968758)
+  * Associate Emacs modules with the 'editors' archive section.
+  * Recognize /usr/bin/raku as a known interpreter for scripts. (Closes:
+    #1002828)
+  * Do not depend on any particular Lzip implementation. (Closes:
+    #1001655)
+  * Exempt installables designated as documentation from warning about new
+    Python2 packages. (Closes: #995286)
+  * Update citations in two tags. (Closes: #1003131)
+  * Drop version requirement from
+    skip-systemd-native-flag-missing-pre-depends. (See: #1003271)
+  * Import new CSS style sheet from the website.
+  * Recognize dh-sequence-sphinxdoc as a valid prerequisite for
+    dh_sphinxdoc. (Closes: #999810)
+  * Tolerate multiarch acceptors in prerequisites for Debhelper commands
+    and addons. (Closes: #1000234)
+  * Issue yet more pointed hints.
+  * Recognize pybuild-plugin-pyproject as a valid prerequisite for the
+    python3 Debhelper plugin. (Closes: #1003668)
+  * Exempt bullseye backports from changelog-file-missing-explicit-entry.
+    (Closes: #941656)
+  * Mask long source lines in autotools-generated files. (Closes: #996740)
+  * Turn embedded-library into a classification tag. (Closes: #932634)
+  * Require the targets build-arch and build-indep in debian/rules.
+    (Closes: #657390)
+  * Do not insist on a particular name for unversioned links to a shared
+    library. (Closes: #963099)
+  * Exempt the names of Debian folks associated with a package from
+    spelling checks. (Closes: #989381)
+  * Require py3version invocation consistent with presence of
+    X-Python3-Version in d/control. (See: #1001677)
+  * Exempt CGI scripts from executable-in-usr-lib. (Closes: #1003941)
+  * CGI scripts can be ELF executables. (See: #1003941)
+  * Exempt Python's .dist-info and .egg-info folders everywhere from
+    documentation-outside-usr-share. (Closes: #1003913)
+  * Flag an outdated Debian copyright just once; use the most recent
+    year. (Closes: #1003817)
+  * Implement '--no-show-overrides'; honor it for overrides and masks
+    alike. (See: #1004240)
+  * Allow the command-line option '--no-info' to reverse 'info=yes' in the
+    configuration file. (Closes: #1004240)
+  * Elide manual references to ancient Lintian versions; use modern
+    examples. (Closes: #1004231)
+  * Deprecate --no-tag-display-limit for '--tag-display-limit 0'; update
+    documentation. (Closes: #1004239)
+  * Also provide a default output width for
+    lintian-annotate-hints. (Closes: #1004660)
+  * Mask examples in tests from
+    package-does-not-install-examples. (Closes: #1005184)
+  * Recognize Java 18 in unstable, and Java 19 as otherwise
+    available. (Closes: #1005762)
+  * Leave default Java bytecode version at 56. (See: #1005762)
+  * Adjust documentation reference to manual page for dh_make. (Closes:
+    #1006390)
+  * Warn about devhelp index files that use version 1. (Closes: #1006859)
+  * Store ELF information from readelf in an MLDBM database. (Closes:
+    #1003456)
+  * Issue pedantic hint for dot in 'chown user.group' instead of a
+    colon. (Closes: #1007140)
+  * Upgrade missing-systemd-timer-for-cron-script to warning; no longer
+    experimental. (Closes: #1007257)
+
+  [ Ryan Finnie ]
+  * Provide a constant citation for
+    systemd-service-file-uses-nobody-or-nogroup. (Closes: !385)
+
+  [ Louis-Philippe Véronneau ]
+  * Check that tests pulling in all Python versions also query which ones
+    are available. (Closes: !361)
+  * Add new Python tags for pyproject.toml build backends according to
+    PEP-517. (Closes: !384)
+  * Rename 'python3-flit' to 'flit', as there is no 'python3-flit'
+    package. (Closes: !386)
+
+  [ Daniel Kahn Gillmor ]
+  * Correct lintian-annotate-hints manpage.
+
+  [ Simon McVittie ]
+  * Silence a very widespread false positive for detached debug symbols.
+    (Closes: #1000977, !387)
+
+  [ Simon Quigley ]
+  * Add "kinetic" as a known Ubuntu distribution. (Closes: !392)
+
+  [ xiao sheng wen(肖盛文) ]
+  * Add riscv64 support (Closes: #1012090, !394)
+
+  [ Damyan Ivanov ]
+  * Update releases.json data for Debian policy releases (4.6.1 added;
+    closes: !393)
+
+  [ Paul Wise ]
+  * Add more obsolete domains for former source code hosting services.
+
+ -- Axel Beckert <abe@debian.org>  Mon, 20 Jun 2022 13:23:02 +0200
+
+lintian (2.114.0) unstable; urgency=medium
+
+  [ Felix Lechner ]
+  * Issue no-code-sections only for entire archives that contain no code
+    sections at all. (Closes: #1000469)
+  * Provide better file pointers for defective override files.
+    (Closes: #1000494)
+  * In the refresh script fetching font data, use the new Contents-all.gz
+    file served by the Debian archive.
+  * Refresh fonts data using new script and record all installables in
+    which font is shipped.
+  * Refresh Debhelper add-ons and commands and recognize click and
+    dh_click from click-dev.
+
+  [ Rafael Laboissière ]
+  * Stop checking for bash-centric terms after 'exec' in shell scripts.
+    (Closes: #999756)
+
+ -- Chris Lamb <lamby@debian.org>  Sat, 27 Nov 2021 17:20:56 +0000
+
+lintian (2.113.0) unstable; urgency=medium
+
+  * Summary of tag changes:
+    + Added:
+      - anticipated-repack-count
+      - dfsg-version-with-tilde
+      - dot-before-repack-count
+      - elf-error
+      - elf-warning
+      - no-code-sections
+      - static-link-time-optimization
+    + Removed:
+      - apparently-corrupted-elf-binary
+
+  [ Felix Lechner ]
+  * Bump the maximum plausible bug number to 1,500,000. (Closes: #1000148)
+  * Flag static archives without code sections, as can happen with LTO
+    objects. (Closes: #977596)
+  * Flag use of link-time-optimization (LTO) in static archives.
+    (Closes: #963057)
+  * Exempt Coq's cmxs files from the shared-library-lacks-prerequisites
+    tag. (Closes: #999602)
+  * Accommodate dune's file names for the bytecode in OCaml interfaces.
+    (Closes: #999601)
+  * Drop 'type' from the list of bash-centric expressions.
+    (Closes: #999878)
+  * Fix CI failure on armhf due to a parsing failure of readelf output.
+  * Adjust refresh script fetching debhelper data for the new
+    Contents-all.gz served by archive.
+  * Refresh debhelper data.
+
+  [ Kentaro Hayashi ]
+  * Add the dfsg-version-with-tilde tag, as opposed to a plus.
+  * Add a new tag about a possibly unnecessary repack count for upstream
+    sources.
+  * Add a tag about source versions with a dot before the repack count.
+
+ -- Chris Lamb <lamby@debian.org>  Sat, 20 Nov 2021 16:43:03 +0000
+
+lintian (2.112.0) unstable; urgency=medium
+
+  * Summary of tag changes:
+    + Added:
+      - add-component-copyright
+      - adopted-extended-field
+      - archive-liberty-mismatch
+      - build-prerequisite-in-installable-section
+      - circular-installation-prerequisite
+      - composer-prerequisite
+      - control-file-contains-dh-make-vcs-comment
+      - installable-field-mirrors-source
+      - invalid-systemd-documentation
+      - kill-mode-none
+      - no-source-section
+      - prefer-uscan-symlink
+      - redundant-installation-prerequisite
+      - relative-library-search-path
+      - rules-do-not-require-root
+      - rules-require-root-explicitly
+      - unicode-trojan
+      - update-debian-copyright
+      - upstream-metadata
+    + Removed:
+      - binary-control-field-duplicates-source
+      - build-info-in-binary-control-file-section
+      - control-file-contains-dh_make-vcs-comment
+      - package-depends-on-itself
+      - rules-does-not-require-root
+      - rules-requires-root-explicitly
+      - section-area-mismatch
+      - stronger-dependency-implies-weaker
+      - upstream-metadata-field-present
+      - xc-package-type-in-debian-control
+      - xs-testsuite-field-in-debian-control
+      - xs-vcs-field-in-debian-control
+
+  [ Felix Lechner ]
+  * Flag potential 'trojan' Unicode codepoints.
+  * In debian/watch, suggest the use of 'USCAN_SYMLINK=rename' when
+    'filenamemangle' is present.
+  * Add field content to and rename old tag to 'upstream-metadata'.
+    (Closes: #993813)
+  * Find invalid URIs for Documentation in systemd .service files.
+    (Closes: #980447)
+  * Flag 'KillMode=none' in systemd service files. (Closes: #978048)
+  * Flag outdated copyright years for debian files relative to latest
+    changelog entry. (Closes: #949201)
+  * Flag relative RPATHS separately and use a regular tag for absolute
+    RPATHS only. (Closes: #732682)
+  * Flag missing versions in debian/watch only for files with meaningful
+    content. (Closes: #992569)
+  * Flag when orig source components are not mentioned by name in
+    debian/copyright. (Closes: #915384)
+  * Flag sources declaring a package relationship on the PHP composer.
+    (Closes: #977150)
+  * Fix path to external documentation in tag description.
+    (Closes: #999477)
+  * Allow the "Description" field in .dsc and in source stanzas of
+    debian/control. (Closes: #998115)
+  * Re-enable OSC 8 terminal hyperlinks following GCC's lead.
+
+  [ Stephen Kitt ]
+  * Calculate game executable permissions correctly.
+
+  [ xiao sheng wen ]
+  * Update tags/g/groff-message.tag for LC_ALL=C.UTF-8.
+
+ -- Chris Lamb <lamby@debian.org>  Sat, 13 Nov 2021 15:25:15 +0000
+
 lintian (2.111.0~bpo11+1) bullseye-backports; urgency=medium
 
   * Rebuild for bullseye-backports.

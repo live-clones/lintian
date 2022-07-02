@@ -1,9 +1,9 @@
 # binaries/spelling -- lintian check script -*- perl -*-
 
-# Copyright © 1998 Christian Schwarz and Richard Braakman
-# Copyright © 2012 Kees Cook
-# Copyright © 2017-2020 Chris Lamb <lamby@debian.org>
-# Copyright © 2021 Felix Lechner
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 2012 Kees Cook
+# Copyright (C) 2017-2020 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -40,15 +40,18 @@ has BINARY_SPELLING_EXCEPTIONS => (
     default => sub {
         my ($self) = @_;
 
-        return $self->profile->load_data('binaries/spelling-exceptions',
-            qr/\s+/);
-    });
+        return $self->data->load('binaries/spelling-exceptions',qr/\s+/);
+    }
+);
 
 sub spelling_tag_emitter {
-    my ($self, @orig_args) = @_;
+    my ($self, $tag_name, $item, @orig_args) = @_;
 
     return sub {
-        return $self->hint(@orig_args, @_);
+
+        my $pointer = $item->pointer($.);
+
+        return $self->pointed_hint($tag_name, $pointer, @orig_args, @_);
     };
 }
 
@@ -59,18 +62,17 @@ sub visit_installed_files {
       unless $item->is_file;
 
     return
-      unless $item->file_info =~ /^ [^,]* \b ELF \b /x;
+      unless $item->file_type =~ /^ [^,]* \b ELF \b /x;
 
-    my $exceptions = {
-        %{ $self->group->spelling_exceptions },
-        map { $_ => 1} $self->BINARY_SPELLING_EXCEPTIONS->all
-    };
+    my @acceptable = (
+        @{ $self->group->spelling_exceptions },
+        $self->BINARY_SPELLING_EXCEPTIONS->all
+    );
 
     my $tag_emitter
       = $self->spelling_tag_emitter('spelling-error-in-binary', $item);
 
-    check_spelling($self->profile, $item->strings, $exceptions,
-        $tag_emitter, 0);
+    check_spelling($self->data, $item->strings, \@acceptable, $tag_emitter, 0);
 
     return;
 }

@@ -3,9 +3,10 @@
 use strict;
 use warnings;
 
+use Syntax::Keyword::Try;
 use Test::More;
 
-use Lintian::Deb822::Parser qw(visit_dpkg_paragraph_string);
+use Lintian::Deb822;
 
 my %TESTS_BAD = (
     'pgp-sig-before-start' => qr/PGP signature before message/,
@@ -35,25 +36,25 @@ plan skip_all => 'Data files not available'
 
 plan tests => scalar keys %TESTS_BAD;
 
-foreach my $filename (sort keys %TESTS_BAD) {
-    my $fail_regex = $TESTS_BAD{$filename};
+for my $filename (sort keys %TESTS_BAD) {
 
     my $path = "$DATADIR/$filename";
-    open(my $fd, '<', $path)
-      or die "Cannot open $path";
 
-    local $/ = undef;
-    my $string = <$fd>;
-    close $fd;
+    my $deb822 = Lintian::Deb822->new;
 
-    eval {
-        visit_dpkg_paragraph_string(sub {}, $string);
-    };
-    if (my $err = $@) {
-        like($err, $fail_regex, $filename);
-    } else {
-        fail("$path was parsed successfully");
+    try {
+        $deb822->read_file($path);
+
+    } catch {
+        my $error = $@;
+
+        my $fail_regex = $TESTS_BAD{$filename};
+        like($error, $fail_regex, $filename);
+
+        next;
     }
+
+    fail("$path was parsed successfully");
 }
 
 # Local Variables:

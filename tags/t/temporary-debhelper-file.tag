@@ -1,8 +1,10 @@
 Tag: temporary-debhelper-file
 Severity: error
-Check: debhelper
-See-Also: dh_clean(1)
-Explanation: The package contains temporary debhelper files, which are normally
- removed by <code>dh&lowbar;clean</code>. The most common cause for this is that a
- binary package has been renamed or removed without cleaning the build
- directory first.
+Check: debhelper/temporary
+Explanation: The named file is a temporary Debhelper file.
+ .
+ The file should have been removed by <code>dh&lowbar;clean</code>. Sometimes
+ that happens when an installable package was renamed or removed before the
+ build directory was cleaned up.
+See-Also:
+ dh_clean(1)

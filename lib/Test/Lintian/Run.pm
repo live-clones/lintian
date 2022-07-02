@@ -1,5 +1,5 @@
-# Copyright © 2018 Felix Lechner
-# Copyright © 2019 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2018 Felix Lechner
+# Copyright (C) 2019 Chris Lamb <lamby@debian.org>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -13,7 +13,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA
 
@@ -63,19 +63,19 @@ use IPC::Run3;
 use List::Compare;
 use List::Util qw(max min any all);
 use Path::Tiny;
+use Syntax::Keyword::Try;
 use Test::More;
 use Text::Diff;
-use Try::Tiny;
 use Unicode::UTF8 qw(encode_utf8 decode_utf8);
 
-use Lintian::Deb822::File;
+use Lintian::Deb822;
 use Lintian::Profile;
 
 use Test::Lintian::ConfigFile qw(read_config);
 use Test::Lintian::Helper qw(rfc822date);
 use Test::Lintian::Hooks
   qw(find_missing_prerequisites sed_hook sort_lines calibrate);
-use Test::Lintian::Output::Universal qw(get_tagnames order);
+use Test::Lintian::Output::Universal qw(get_tag_names order);
 
 const my $EMPTY => q{};
 const my $SPACE => q{ };
@@ -120,10 +120,10 @@ sub logged_runner {
             # call runner
             runner($runpath, $logpath)
 
-        }catch {
+        } catch {
             # catch any error
-            $error = $_;
-        };
+            $error = $@;
+        }
     };
 
     my $log = decode_utf8($log_bytes);
@@ -237,8 +237,10 @@ sub runner {
         my $match = 0;
         for my $wildcard (@wildcards) {
 
-            my @command = (qw{dpkg-architecture -a},
-                $ENV{'DEB_HOST_ARCH'}, '-i', $wildcard);
+            my @command = (
+                qw{dpkg-architecture -a},
+                $ENV{'DEB_HOST_ARCH'}, '-i', $wildcard
+            );
             run3(\@command, \undef, \undef, \undef);
             my $status = ($? >> $WAIT_STATUS_SHIFT);
 
@@ -326,7 +328,7 @@ sub runner {
     if ($testcase->declares('Todo')) {
 
         my $explanation = $testcase->unfolded_value('Todo');
-        diag "TODO ($explanation)";
+        diag encode_utf8("TODO ($explanation)");
 
       TODO: {
             local $TODO = $explanation;
@@ -336,7 +338,7 @@ sub runner {
         return;
     }
 
-    diag $_ . $NEWLINE for @errors;
+    diag encode_utf8($_ . $NEWLINE) for @errors;
 
     ok($okay, "Lintian passes for $testname");
 
@@ -444,7 +446,7 @@ sub check_result {
     my @difflines = split(/\n/, $diff);
     chomp @difflines;
 
-    # diag "Difflines: $_" for @difflines;
+    # diag encode_utf8("Difflines: $_") for @difflines;
 
     if(@difflines) {
 
@@ -478,9 +480,9 @@ sub check_result {
       unless $match_strategy eq 'hints';
 
     # get expected tags
-    my @expected = sort +get_tagnames($expectedpath);
+    my @expected = sort +get_tag_names($expectedpath);
 
-    #diag "=Expected tag: $_" for @expected;
+    #diag encode_utf8("=Expected tag: $_") for @expected;
 
     # look out for tags being tested
     my @related;
@@ -499,7 +501,7 @@ sub check_result {
         die encode_utf8('Unknown Lintian checks: ' . join($SPACE, @unknown))
           if @unknown;
 
-        push(@related, @{$profile->tagnames_for_check->{$_} // []})
+        push(@related, @{$profile->tag_names_for_check->{$_} // []})
           for @check_names;
 
         @related = sort @related;
@@ -509,20 +511,20 @@ sub check_result {
         @related = @expected;
     }
 
-    #diag "#Related tag: $_" for @related;
+    #diag encode_utf8("#Related tag: $_") for @related;
 
     # calculate Test-For and Test-Against; results are sorted
     my $material = List::Compare->new(\@expected, \@related);
     my @test_for = $material->get_intersection;
     my @test_against = $material->get_Ronly;
 
-    #diag "+Test-For: $_" for @test_for;
-    #diag "-Test-Against (calculated): $_" for @test_against;
+    #diag encode_utf8("+Test-For: $_") for @test_for;
+    #diag encode_utf8("-Test-Against (calculated): $_") for @test_against;
 
     # get actual tags from output
-    my @actual = sort +get_tagnames($actualpath);
+    my @actual = sort +get_tag_names($actualpath);
 
-    #diag "*Actual tag found: $_" for @actual;
+    #diag encode_utf8("*Actual tag found: $_") for @actual;
 
     # check for blacklisted tags; result is sorted
     my @unexpected

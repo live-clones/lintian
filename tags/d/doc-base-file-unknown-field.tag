@@ -1,8 +1,12 @@
 Tag: doc-base-file-unknown-field
 Severity: error
 Check: menus
-Explanation: The doc-base control file contains field which is either unknown
- or not valid for the section where was found. Possible reasons for this
- error are: a typo in field name, missing empty line between control file
- sections, or an extra empty line separating sections.
-See-Also: doc-base 2.3.2.1, doc-base 2.3.2.2
+Explanation: The <code>doc-base</code> control file contains a field that
+ is either unknown or invalid in the section in which it appears.
+ .
+ Possible reasons are a typo in field name, a missing empty line between
+ sections in the <doc-base> control file, or an extra empty line between
+ sections.
+See-Also:
+ doc-base-manual 2.3.2.1,
+ doc-base-manual 2.3.2.2

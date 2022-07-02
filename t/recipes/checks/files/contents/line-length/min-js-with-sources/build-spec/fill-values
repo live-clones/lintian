@@ -1,0 +1,4 @@
+Skeleton: source-native
+Testname: min-js-with-sources
+Description: Minified JavaScript with sources
+Extra-Build-Depends: uglifyjs

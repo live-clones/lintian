@@ -11,4 +11,4 @@ Explanation: The maintainer script apparently runs the service command. This
  <code>invoke-rc.d(8)</code>. If your package installs this service, this
  can be automated using <code>dh&lowbar;installinit(1)</code> or
  <code>dh&lowbar;installsystemd(1)</code>.
-See-Also: policy 9.3.3
+See-Also: debian-policy 9.3.3

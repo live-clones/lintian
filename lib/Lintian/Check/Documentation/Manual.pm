@@ -1,7 +1,7 @@
 # documentation/manual -- lintian check script -*- perl -*-
 
-# Copyright © 1998 Christian Schwarz
-# Copyright © 2019-2020 Felix Lechner
+# Copyright (C) 1998 Christian Schwarz
+# Copyright (C) 2019-2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -59,9 +59,10 @@ const my $WIDE_SCREEN => 120;
 has local_manpages => (is => 'rw', default => sub { {} });
 
 sub spelling_tag_emitter {
-    my ($self, @orig_args) = @_;
+    my ($self, $tag_name, $pointer, @orig_args) = @_;
+
     return sub {
-        return $self->hint(@orig_args, @_);
+        return $self->pointed_hint($tag_name, $pointer, @orig_args, @_);
     };
 }
 
@@ -69,34 +70,34 @@ my @user_locations= qw(bin/ usr/bin/ usr/bin/X11/ usr/bin/mh/ usr/games/);
 my @admin_locations= qw(sbin/ usr/sbin/);
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     # no man pages in udebs
     return
       if $self->processable->type eq 'udeb';
 
-    if ($file->name =~ m{^usr/share/man/\S+}) {
+    if ($item->name =~ m{^usr/share/man/\S+}) {
 
-        $self->hint('manual-page-in-udeb', $file->name)
+        $self->pointed_hint('manual-page-in-udeb', $item->pointer)
           if $self->processable->type eq 'udeb';
 
-        if ($file->is_dir) {
-            $self->hint('stray-folder-in-manual', $file->name)
-              unless $file->name
+        if ($item->is_dir) {
+            $self->pointed_hint('stray-folder-in-manual', $item->pointer)
+              unless $item->name
               =~ m{^usr/(?:X11R6|share)/man/(?:[^/]+/)?(?:man\d/)?$};
 
-        } elsif ($file->is_file && $file->is_executable) {
-            $self->hint('executable-manual-page', $file->name);
+        } elsif ($item->is_file && $item->is_executable) {
+            $self->pointed_hint('executable-manual-page', $item->pointer);
         }
     }
 
     return
-      unless $file->is_file || $file->is_symlink;
+      unless $item->is_file || $item->is_symlink;
 
-    my ($manpage, $page_path, undef) = fileparse($file);
+    my ($manpage, $page_path, undef) = fileparse($item);
 
     if ($page_path eq 'usr/share/man/' && $manpage ne $EMPTY) {
-        $self->hint('odd-place-for-manual-page', $file);
+        $self->pointed_hint('odd-place-for-manual-page', $item->pointer);
         return;
     }
 
@@ -105,15 +106,15 @@ sub visit_installed_files {
     return
       unless defined $subdir;
 
-    $self->hint('build-path-in-manual', $file)
-      if $file =~ m{/_build_} || $file =~ m{_tmp_buildd};
+    $self->pointed_hint('build-path-in-manual', $item->pointer)
+      if $item =~ m{/_build_} || $item =~ m{_tmp_buildd};
 
-    $self->hint('manual-page-with-generic-name', $file)
-      if $file =~ m{/README\.};
+    $self->pointed_hint('manual-page-with-generic-name', $item->pointer)
+      if $item =~ m{/README\.};
 
     my ($section) = ($subdir =~ m{^.*man(\d)/$});
     unless (defined $section) {
-        $self->hint('odd-place-for-manual-page', $file);
+        $self->pointed_hint('odd-place-for-manual-page', $item->pointer);
         return;
     }
 
@@ -123,113 +124,134 @@ sub visit_installed_files {
     # The country should not be part of the man page locale
     # directory unless it's one of the known cases where the
     # language is significantly different between countries.
-    $self->hint('country-in-manual', $file)
+    $self->pointed_hint('country-in-manual', $item->pointer)
       if $language =~ /_/ && $language !~ /^(?:pt_BR|zh_[A-Z][A-Z])$/;
-
-    my $file_info = $file->file_info;
 
     my @pieces = split(/\./, $manpage);
     my $ext = pop @pieces;
+
     if ($ext ne 'gz') {
+
         push @pieces, $ext;
-        $self->hint('uncompressed-manual-page', $file);
-    } elsif ($file->is_file) { # so it's .gz... files first; links later
-        if ($file_info !~ m/gzip compressed data/) {
-            $self->hint('wrong-compression-in-manual-page', $file);
-        } elsif ($file_info !~ m/max compression/) {
-            $self->hint('poor-compression-in-manual-page',$file);
+        $self->pointed_hint('uncompressed-manual-page', $item->pointer);
+
+    } elsif ($item->is_file) { # so it's .gz... files first; links later
+
+        if ($item->file_type !~ m/gzip compressed data/) {
+            $self->pointed_hint('wrong-compression-in-manual-page',
+                $item->pointer);
+
+        } elsif ($item->file_type !~ m/max compression/) {
+            $self->pointed_hint('poor-compression-in-manual-page',
+                $item->pointer);
         }
     }
+
     my $fn_section = pop @pieces;
     my $section_num = $fn_section;
+
     if (scalar @pieces && $section_num =~ s/^(\d).*$/$1/) {
+
         my $bin = join($DOT, @pieces);
         $self->local_manpages->{$bin} = []
           unless $self->local_manpages->{$bin};
+
         push @{$self->local_manpages->{$bin}},
-          { file => $file, language => $language, section => $section };
+          { file => $item, language => $language, section => $section };
 
         # number of directory and manpage extension equal?
         if ($section_num != $section) {
-            $self->hint('odd-place-for-manual-page', $file);
+            $self->pointed_hint('odd-place-for-manual-page', $item->pointer);
         }
+
     } else {
-        $self->hint('wrong-name-for-manual-page', $file);
+        $self->pointed_hint('wrong-name-for-manual-page', $item->pointer);
     }
 
     # check symbolic links to other manual pages
-    if ($file->is_symlink) {
-        if ($file->link =~ m{(^|/)undocumented}) {
+    if ($item->is_symlink) {
+        if ($item->link =~ m{(^|/)undocumented}) {
             # undocumented link in /usr/share/man -- possibilities
             #    undocumented... (if in the appropriate section)
             #    ../man?/undocumented...
             #    ../../man/man?/undocumented...
             #    ../../../share/man/man?/undocumented...
             #    ../../../../usr/share/man/man?/undocumented...
-            if ((
-                       $file->link =~ m{^undocumented\.([237])\.gz}
+            if (
+                (
+                    $item->link =~ m{^undocumented\.([237])\.gz}
                     && $page_path =~ m{^usr/share/man/man$1}
                 )
-                || $file->link =~ m{^\.\./man[237]/undocumented\.[237]\.gz$}
-                || $file->link
+                || $item->link =~ m{^\.\./man[237]/undocumented\.[237]\.gz$}
+                || $item->link
                 =~ m{^\.\./\.\./man/man[237]/undocumented\.[237]\.gz$}
-                || $file->link
+                || $item->link
                 =~ m{^\.\./\.\./\.\./share/man/man[237]/undocumented\.[237]\.gz$}
-                || $file->link
+                || $item->link
                 =~ m{^\.\./\.\./\.\./\.\./usr/share/man/man[237]/undocumented\.[237]\.gz$}
             ) {
-                $self->hint('undocumented-manual-page', $file);
+                $self->pointed_hint('undocumented-manual-page',$item->pointer);
             } else {
-                $self->hint('broken-link-to-undocumented', $file);
+                $self->pointed_hint('broken-link-to-undocumented',
+                    $item->pointer);
             }
         }
     } else { # not a symlink
 
         my $fd;
-        if ($file_info =~ m/gzip compressed/) {
+        if ($item->file_type =~ m/gzip compressed/) {
 
-            open($fd, '<:gzip', $file->unpacked_path)
-              or die encode_utf8('Cannot open ' . $file->unpacked_path);
+            open($fd, '<:gzip', $item->unpacked_path)
+              or die encode_utf8('Cannot open ' . $item->unpacked_path);
 
         } else {
 
-            open($fd, '<', $file->unpacked_path)
-              or die encode_utf8('Cannot open ' . $file->unpacked_path);
+            open($fd, '<', $item->unpacked_path)
+              or die encode_utf8('Cannot open ' . $item->unpacked_path);
         }
 
         my @manfile = <$fd>;
         close $fd;
 
         # Is it a .so link?
-        if ($file->size < $MINIMUM_SHARED_OBJECT_SIZE) {
+        if ($item->size < $MINIMUM_SHARED_OBJECT_SIZE) {
+
             my ($i, $first) = (0, $EMPTY);
             do {
                 $first = $manfile[$i++] || $EMPTY;
             } while ($first =~ /^\.\\"/ && $manfile[$i]); #");
 
             unless ($first) {
-                $self->hint('empty-manual-page', $file);
+                $self->pointed_hint('empty-manual-page', $item->pointer);
                 return;
+
             } elsif ($first =~ /^\.so\s+(.+)?$/) {
                 my $dest = $1;
                 if ($dest =~ m{^([^/]+)/(.+)$}) {
+
                     my ($manxorlang, $remainder) = ($1, $2);
+
                     if ($manxorlang !~ /^man\d+$/) {
                         # then it's likely a language subdir, so let's run
                         # the other component through the same check
                         if ($remainder =~ m{^([^/]+)/(.+)$}) {
 
                             my $rest = $2;
-                            $self->hint('bad-so-link-within-manual-page',$file)
+                            $self->pointed_hint(
+                                'bad-so-link-within-manual-page',
+                                $item->pointer)
                               unless $rest =~ m{^[^/]+\.\d(?:\S+)?(?:\.gz)?$};
 
                         } else {
-                            $self->hint('bad-so-link-within-manual-page',
-                                $file);
+                            $self->pointed_hint(
+                                'bad-so-link-within-manual-page',
+                                $item->pointer);
                         }
                     }
+
                 } else {
-                    $self->hint('bad-so-link-within-manual-page', $file);
+                    $self->pointed_hint('bad-so-link-within-manual-page',
+                        $item->pointer);
                 }
                 return;
             }
@@ -251,7 +273,7 @@ sub visit_installed_files {
               for grep { $_ ne 'PATH' && $_ ne 'TMPDIR' } keys %ENV;
             local $ENV{LC_ALL} = 'C.UTF-8';
 
-            my @command = ('lexgrog', $file->unpacked_path);
+            my @command = ('lexgrog', $item->unpacked_path);
 
             my $stdout;
             my $stderr;
@@ -261,7 +283,7 @@ sub visit_installed_files {
             my $exitcode = $?;
             my $status = ($exitcode >> $WAIT_STATUS_SHIFT);
 
-            $self->hint('bad-whatis-entry', $file)
+            $self->pointed_hint('bad-whatis-entry', $item->pointer)
               if $status == 2;
 
             if ($status != 0 && $status != 2) {
@@ -276,10 +298,11 @@ sub visit_installed_files {
                 $desc =~ s/^[^:]+: \"(.*)\"$/$1/;
 
                 if ($desc =~ /(\S+)\s+-\s+manual page for \1/i) {
-                    $self->hint('useless-whatis-entry', $file);
+                    $self->pointed_hint('useless-whatis-entry',$item->pointer);
 
                 } elsif ($desc =~ /\S+\s+-\s+programs? to do something/i) {
-                    $self->hint('manual-page-from-template', $file);
+                    $self->pointed_hint('manual-page-from-template',
+                        $item->pointer);
                 }
             }
         }
@@ -303,9 +326,9 @@ sub visit_installed_files {
             my $stderr;
 
             my @command = qw(man --warnings -E UTF-8 -l -Tutf8 -Z);
-            push(@command, $file->unpacked_path);
+            push(@command, $item->unpacked_path);
 
-            my $localdir = path($file->unpacked_path)->parent->stringify;
+            my $localdir = path($item->unpacked_path)->parent->stringify;
             $localdir =~ s{^(.*)/man\d\b}{$1}s;
 
             my $savedir = getcwd;
@@ -368,7 +391,8 @@ sub visit_installed_files {
                 $line =~ s/^[^:]+: //;
                 $line =~ s/^<standard input>://;
 
-                $self->hint('groff-message', $file, "(line $position)", $line);
+                $self->pointed_hint('groff-message',
+                    $item->pointer($position), $line);
             } continue {
                 ++$position;
             }
@@ -379,10 +403,10 @@ sub visit_installed_files {
         }
 
         # Now we search through the whole man page for some common errors
-        my $position = 0;
+        my $position = 1;
         my $seen_python_traceback;
-        foreach my $line (@manfile) {
-            $position++;
+        for my $line (@manfile) {
+
             chomp $line;
 
             next
@@ -418,46 +442,57 @@ sub visit_installed_files {
                     $th_section = $1;
                 }
 
-                $self->hint('wrong-manual-section',
-                    $file->name . ":$position $fn_section != $th_section")
-                  if length $th_section && fc($th_section) ne fc($fn_section);
+                $self->pointed_hint(
+                    'wrong-manual-section',
+                    $item->pointer($position),
+                    "$fn_section != $th_section"
+                )if length $th_section && fc($th_section) ne fc($fn_section);
             }
 
             if (   ($line =~ m{(/usr/(dict|doc|etc|info|man|adm|preserve)/)})
                 || ($line =~ m{(/var/(adm|catman|named|nis|preserve)/)})){
                 # FSSTND dirs in man pages
                 # regexes taken from checks/files
-                $self->hint('FSSTND-dir-in-manual-page', "$file:$position $1");
+                $self->pointed_hint('FSSTND-dir-in-manual-page',
+                    $item->pointer($position), $1);
             }
+
             if ($line eq '.SH "POD ERRORS"') {
-                $self->hint('pod-conversion-message', "$file:$position");
+                $self->pointed_hint('pod-conversion-message',
+                    $item->pointer($position));
             }
+
             if ($line =~ /Traceback \(most recent call last\):/) {
-                $self->hint('python-traceback-in-manpage', $file)
+                $self->pointed_hint('python-traceback-in-manpage',
+                    $item->pointer)
                   unless $seen_python_traceback;
                 $seen_python_traceback = 1;
             }
+
             # Check for spelling errors if the manpage is English
             my $stag_emitter
-              = $self->spelling_tag_emitter('typo-in-manual-page', $file,
-                "line $position");
-            check_spelling($self->profile, $line,
+              = $self->spelling_tag_emitter('typo-in-manual-page',
+                $item->pointer($position));
+            check_spelling($self->data, $line,
                 $self->group->spelling_exceptions,
                 $stag_emitter, 0)
               if $page_path =~ m{/man/man\d/};
+
+        } continue {
+            ++$position;
         }
     }
 
     # most man pages are zipped
     my $bytes;
-    if ($file->file_info =~ /gzip compressed/) {
+    if ($item->file_type =~ /gzip compressed/) {
 
-        my $path = $file->unpacked_path;
+        my $path = $item->unpacked_path;
         gunzip($path => \$bytes)
           or die encode_utf8("gunzip $path failed: $GunzipError");
 
-    } elsif ($file->file_info =~ /^troff/ || $file->file_info =~ /text$/) {
-        $bytes = $file->bytes;
+    } elsif ($item->file_type =~ /^troff/ || $item->file_type =~ /text$/) {
+        $bytes = $item->bytes;
     }
 
     return
@@ -474,8 +509,8 @@ sub visit_installed_files {
     for my $line (@lines) {
 
         # see Bug#554897 and Bug#507673; exclude string variables
-        $self->hint('acute-accent-in-manual-page',
-            $file->name . $COLON . $position)
+        $self->pointed_hint('acute-accent-in-manual-page',
+            $item->pointer($position))
           if $line =~ /\\'/ && $line !~ /^\.\s*ds\s/;
 
     } continue {
@@ -495,17 +530,17 @@ sub installable {
     my %local_user_executables;
     my %local_admin_executables;
 
-    for my $file (@{$self->processable->installed->sorted_list}) {
+    for my $item (@{$self->processable->installed->sorted_list}) {
 
         next
-          unless $file->is_symlink || $file->is_file;
+          unless $item->is_symlink || $item->is_file;
 
-        my ($name, $path, undef) = fileparse($file->name);
+        my ($name, $path, undef) = fileparse($item->name);
 
-        $local_user_executables{$name} = $file
+        $local_user_executables{$name} = $item
           if any { $path eq $_ } @user_locations;
 
-        $local_admin_executables{$name} = $file
+        $local_admin_executables{$name} = $item
           if any { $path eq $_ } @admin_locations;
     }
 
@@ -518,14 +553,14 @@ sub installable {
 
     # for executables, look at packages relying on the current processable
     my %distant_executables;
-    for my $file (@reliant_files) {
+    for my $item (@reliant_files) {
 
         next
-          unless $file->is_file || $file->is_symlink;
+          unless $item->is_file || $item->is_symlink;
 
-        my ($name, $path, undef) = fileparse($file, qr{\..+$});
+        my ($name, $path, undef) = fileparse($item, qr{\..+$});
 
-        $distant_executables{$name} = $file
+        $distant_executables{$name} = $item
           if any { $path eq $_ } (@user_locations, @admin_locations);
     }
 
@@ -539,12 +574,12 @@ sub installable {
 
     # for manpages, look at packages the current processable relies upon
     my %distant_manpages;
-    for my $file (@prerequisite_files) {
+    for my $item (@prerequisite_files) {
 
         next
-          unless $file->is_file || $file->is_symlink;
+          unless $item->is_file || $item->is_symlink;
 
-        my ($name, $path, undef) = fileparse($file, qr{\..+$});
+        my ($name, $path, undef) = fileparse($item, qr{\..+$});
 
         next
           unless $path =~ m{^usr/share/man/\S+};
@@ -559,7 +594,7 @@ sub installable {
         $distant_manpages{$name} //= [];
 
         push @{$distant_manpages{$name}},
-          {file => $file, language => $language};
+          {file => $item, language => $language};
     }
 
     my %local_manpages = %{$self->local_manpages};
@@ -573,24 +608,24 @@ sub installable {
 
     my @english_missing = grep {
         none {$_->{language} eq $EMPTY}
-        @{$related_manpages{$_} // []}
+          @{$related_manpages{$_} // []}
     } @documented;
 
     for my $command (keys %local_admin_executables) {
 
-        my $file = $local_admin_executables{$command};
+        my $item = $local_admin_executables{$command};
         my @manpages = @{$related_manpages{$command} // []};
 
         my @sections = grep { defined } map { $_->{section} } @manpages;
-        $self->hint('manual-page-for-system-command', $file)
-          if $file->is_regular_file
+        $self->pointed_hint('manual-page-for-system-command', $item->pointer)
+          if $item->is_regular_file
           && any { $_ == $USER_COMMAND_SECTION } @sections;
     }
 
-    $self->hint('no-english-manual-page', $_)
+    $self->pointed_hint('no-english-manual-page', $_->pointer)
       for map {$local_executables{$_}} @english_missing;
 
-    $self->hint('no-manual-page', $_)
+    $self->pointed_hint('no-manual-page', $_->pointer)
       for map {$local_executables{$_}} @manpage_missing;
 
     # surplus manpages only for this package; provides sorted output
@@ -604,10 +639,10 @@ sub installable {
 
     for my $manpage (map { @{$local_manpages{$_} // []} } @surplus_manpages) {
 
-        my $file = $manpage->{file};
+        my $item = $manpage->{file};
         my $section = $manpage->{section};
 
-        $self->hint('spare-manual-page', $file)
+        $self->pointed_hint('spare-manual-page', $item->pointer)
           if $section == $USER_COMMAND_SECTION
           || $section == $SYSTEM_COMMAND_SECTION;
     }

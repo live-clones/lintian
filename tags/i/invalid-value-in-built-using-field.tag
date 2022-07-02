@@ -8,4 +8,4 @@ Explanation: The Built-Using field contains invalid fields.
  relation.
  .
  Only first issue is shown.
-See-Also: policy 7.8
+See-Also: debian-policy 7.8

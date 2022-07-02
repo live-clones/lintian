@@ -1,1 +1,1 @@
-scripts-maintainer-general (binary): uses-dpkg-database-directly postinst
+scripts-maintainer-general (binary): uses-dpkg-database-directly [postinst]

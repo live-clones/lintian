@@ -12,4 +12,4 @@ Explanation: The listed file appears to be linked against the C library, but the
  files must then depend on ${shlibs:Depends} in <code>debian/control</code> to
  get the proper package dependencies for those libraries.
 See-Also:
- policy 8.6.1
+ debian-policy 8.6.1

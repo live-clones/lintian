@@ -1,9 +1,9 @@
 # fields/multi-arch -- lintian check script (rewrite) -*- perl -*-
 #
-# Copyright © 2004 Marc Brockschmidt
+# Copyright (C) 2004 Marc Brockschmidt
 #
 # Parts of the code were taken from the old check script, which
-# was Copyright © 1998 Richard Braakman (also licensed under the
+# was Copyright (C) 1998 Richard Braakman (also licensed under the
 # GPL 2 or higher)
 #
 # This program is free software; you can redistribute it and/or modify
@@ -18,7 +18,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -61,18 +61,23 @@ sub source {
                 safe_qx(
                     'dpkg-architecture', '--match-wildcard',
                     $wildcard,           '--list-known'
-                )));
+                )
+            )
+        );
 
         # include original wildcard
         push(@arches, $wildcard);
 
-        foreach my $arch (uniq @arches) {
+        for my $port (uniq @arches) {
 
-            my $specific = "debian/$bin.lintian-overrides.$arch";
+            my $specific = $processable->patched->resolve_path(
+                "debian/$bin.lintian-overrides.$port");
+            next
+              unless defined $specific;
 
-            $self->hint('multi-arch-same-package-has-arch-specific-overrides',
-                $specific)
-              if $processable->patched->resolve_path($specific);
+            $self->pointed_hint(
+                'multi-arch-same-package-has-arch-specific-overrides',
+                $specific->pointer);
         }
     }
 

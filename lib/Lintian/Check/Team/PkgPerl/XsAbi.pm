@@ -1,8 +1,8 @@
 # team/pkg-perl/xs-abi -- lintian check script for XS target directory -*- perl -*-
 #
-# Copyright © 2014 Damyan Ivanov <dmn@debian.org>
-# Copyright © 2014 Axel Beckert <abe@debian.org>
-# Copyright © 2020 Felix Lechner
+# Copyright (C) 2014 Damyan Ivanov <dmn@debian.org>
+# Copyright (C) 2014 Axel Beckert <abe@debian.org>
+# Copyright (C) 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -68,7 +68,8 @@ has relies_on_modern_api => (
           if version_compare_relation($api_version, REL_GE, '5.19.11');
 
         return 0;
-    });
+    }
+);
 
 sub visit_installed_files {
     my ($self, $item) = @_;
@@ -79,7 +80,7 @@ sub visit_installed_files {
     return
       unless $item->name =~ m{^usr/lib/perl5/};
 
-    $self->hint('legacy-vendorarch-directory', $item->name)
+    $self->pointed_hint('legacy-vendorarch-directory', $item->pointer)
       if $self->relies_on_modern_api;
 
     return;

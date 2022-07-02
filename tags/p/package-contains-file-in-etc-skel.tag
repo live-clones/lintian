@@ -10,4 +10,4 @@ Explanation: This package ships the specified file under <code>/etc/skel</code>.
  .
  Please remove the installation of this file, ensuring this package
  can automatically create them or can otherwise function without them.
-See-Also: policy 10.7.5
+See-Also: debian-policy 10.7.5

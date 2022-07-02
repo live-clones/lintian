@@ -1,9 +1,9 @@
 # languages/perl/perl4/prerequisites -- lintian check script -*- perl -*-
 #
-# Copyright © 1998 Richard Braakman
-# Copyright © 2002 Josip Rodin
-# Copyright © 2016-2019 Chris Lamb <lamby@debian.org>
-# Copyright © 2021 Felix Lechner
+# Copyright (C) 1998 Richard Braakman
+# Copyright (C) 2002 Josip Rodin
+# Copyright (C) 2016-2019 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -38,12 +38,9 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-const my $COLON => q{:};
-const my $LEFT_SQUARE_BRACKET => q{[};
-const my $RIGHT_SQUARE_BRACKET => q{]};
-
 # check for obsolete perl libraries
-const my $PERL4_PREREQUISITES => 'libperl4-corelibs-perl | perl (<< 5.12.3-7)';
+const my $PERL4_PREREQUISITES =>
+  'libperl4-corelibs-perl:any | perl:any (<< 5.12.3-7)';
 
 has satisfies_perl4_prerequisites => (
     is => 'rw',
@@ -53,7 +50,8 @@ has satisfies_perl4_prerequisites => (
 
         return $self->processable->relation('strong')
           ->satisfies($PERL4_PREREQUISITES);
-    });
+    }
+);
 
 sub visit_installed_files {
     my ($self, $item) = @_;
@@ -99,16 +97,12 @@ sub visit_installed_files {
 
             my $module = "$1.pl";
 
-            $self->hint(
-                'script-uses-perl4-libs-without-dep',
-                $module,
-                $LEFT_SQUARE_BRACKET
-                  . $item->name
-                  . $COLON
-                  . $position
-                  . $RIGHT_SQUARE_BRACKET,
-                "(does not satisfy $PERL4_PREREQUISITES)"
-            )unless $self->satisfies_perl4_prerequisites;
+            my $pointer = $item->pointer($position);
+
+            $self->pointed_hint(
+                'script-uses-perl4-libs-without-dep',$pointer,
+                "(does not satisfy $PERL4_PREREQUISITES)",$module
+            ) unless $self->satisfies_perl4_prerequisites;
 
         }
 

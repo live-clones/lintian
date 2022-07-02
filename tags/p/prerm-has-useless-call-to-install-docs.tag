@@ -1,7 +1,10 @@
 Tag: prerm-has-useless-call-to-install-docs
 Severity: warning
 Check: menus
-Explanation: Explicitly calling <code>install-docs</code> in <code>prerm</code> is no
- longer required since doc-base file processing is handled by triggers.
- If the <code>install-docs</code> call was added by debhelper, rebuilding the
- package with debhelper 7.2.3 or later will fix this problem.
+Explanation: It is no longer necessary to call <code>install-docs</code> in
+ the <code>prerm</code> maintainer script. The processing of
+ <code>doc-base</code> files is now handled by triggers.
+ .
+ If the <code>install-docs</code> call was added by Debhelper, the issue
+ can be fixed by rebuilding the package with Debhelper version 7.2.3 or
+ later.

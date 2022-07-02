@@ -3,7 +3,7 @@ Severity: warning
 Check: files/permissions
 Explanation: The file has a mode different from 0644. In some cases this is
  intentional, but in other cases this is a bug.
-See-Also: policy 10.9
+See-Also: debian-policy 10.9
 
 Screen: toolchain/gnat/ali-read-only
 Advocates: Nicolas Boulenguez <nicolas@debian.org>
@@ -28,5 +28,5 @@ Reason: In GNAT, the compiler also deals with dependencies and rebuild order.
  <code>GNAT</code> will not attempt to recompile them. This overrides the normal
  file mode requirements given in "Permissions and owners."
 See-Also:
- policy 8.4,
+ debian-policy 8.4,
  Bug#986400

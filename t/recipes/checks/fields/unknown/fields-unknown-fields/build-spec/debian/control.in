@@ -7,6 +7,11 @@ Build-Depends: [% $build_depends %]
 Rules-Require-Root: no
 Rules-Requires-Root: no
 XS-Comment: This is random comment ending up in the dsc file.
+Autobuild: no
+Go-Import-Path: github.com/example/example
+Ruby-Versions: ${ruby:Versions}
+Python-Version: 2.7
+Python3-Version: 3.7
 
 Package: [% $source %]
 Architecture: [% $package_architecture %]

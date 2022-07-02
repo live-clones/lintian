@@ -1,6 +1,9 @@
 Tag: select-without-choices
 Severity: error
 Check: debian/debconf
-Explanation: Templates using the "select" or "multiselect" data types must provide
- a "Choices:" field listing the possible values of the template.
-See-Also: debconf-spec 3.1, debconf-devel(7)
+Explanation: Templates using the <code>select</code> or <code>multiselect</code>
+ data types must provide a <code>Choices:</code> field that lists all possible
+ values.
+See-Also:
+ debconf-specification 3.1,
+ debconf-devel(7)

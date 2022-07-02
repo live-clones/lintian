@@ -1,6 +1,6 @@
 # languages/r/site-library -- lintian check script -*- perl -*-
 
-# Copyright © 2020 Dylan Aïssi
+# Copyright (C) 2020 Dylan Aissi
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -34,10 +34,10 @@ with 'Lintian::Check';
 has r_site_libraries => (is => 'rw', default => sub { [] });
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     # R site libraries
-    if ($file->name =~ m{^usr/lib/R/site-library/(.*)/DESCRIPTION$}) {
+    if ($item->name =~ m{^usr/lib/R/site-library/(.*)/DESCRIPTION$}) {
         push(@{$self->r_site_libraries}, $1);
     }
 

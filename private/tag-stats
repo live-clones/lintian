@@ -25,7 +25,7 @@ use constant THISDIR => dirname realpath __FILE__;
 # use Lintian modules that belong to this program
 use lib THISDIR . '/../lib';
 
-use Lintian::Deb822::Parser qw(read_dpkg_control);
+use Lintian::Profile;
 use Lintian::Tag;
 
 const my $SPACE => q{ };
@@ -45,35 +45,28 @@ my $percent = 0;
 
 my $verbose = $ARGV[0] ? ($ARGV[0] =~ s/v/v/g) : 0;
 
-opendir(my $checkdir, "$ENV{LINTIAN_BASE}/checks");
-for my $check (readdir($checkdir)) {
-    next unless $check =~ /\.desc$/;
+my $profile = Lintian::Profile->new;
+$profile->load;
 
-    my @tags = read_dpkg_control("$ENV{LINTIAN_BASE}/checks/$check");
-    my $desc = $tags[0];
+for my $tag_name ($profile->known_tags) {
 
-    shift(@tags);
+    my $tag = $profile->get_tag($tag_name);
 
-    foreach my $tag (@tags) {
-        my $name = $tag->{Tag};
-        my $severity = $tag->{Severity};
+    my $name = $tag->name;
+    my $severity = $tag->visibility;
+    my $code = $tag->code;
 
-        $severity = 'unclassified' if not $severity;
+    $severity = 'unclassified'
+      unless length $severity;
 
-        my $info
-          = Lintian::Tag->new($tag, $desc->{'Check-Script'},$desc->{'Type'});
-        my $code = $info->code;
+    push(@{$stats{severity}{$severity}}, $name);
+    push(@{$stats{type}{severity}{$code}{$severity}}, $name);
 
-        push(@{$stats{severity}{$severity}}, $name);
-        push(@{$stats{type}{severity}{$code}{$severity}}, $name);
-
-        $num_tags++;
-    }
+    $num_tags++;
 }
 
-closedir($checkdir);
-
 print encode_utf8("Severity\n");
+
 foreach my $s (@severities) {
     my $tags = $stats{severity}{$s} // [];
     print encode_utf8("  $s: " . @{$tags} . "\n");

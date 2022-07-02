@@ -1,0 +1,45 @@
+#!/usr/bin/perl
+
+# Attempt to break the GFDL so that the "redeeming" part of the
+# license gets in the window /after/ the triggering part.  c/cruft
+# handles this case correctly now and we don't want to mess that up
+# later.
+
+use strict;
+use warnings;
+
+# Keep in sync with checks/cruft
+use constant BLOCK_SIZE => 16_384;
+
+my ($rootdir) = @ARGV;
+my $dir = "$rootdir/debian/src";
+my $file = "$dir/good.texi";
+
+unless (-d $dir) {
+    mkdir $dir or die "mkdir $dir: $!";
+}
+
+my $slash = '/';
+my $gfdl_start = <<EOT ;
+Permission is granted to copy, distribute and${slash}or modify this
+document under the terms of the GNU Free Documentation License,
+version 1.3 or any later version published by the Free Software
+Foundation;
+EOT
+
+my $gfdl_end = <<EOT;
+with no Invariant Sections, no Front-Cover Texts and
+no Back-Cover Texts.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+EOT
+
+my $fill = BLOCK_SIZE - length $gfdl_start;
+my $prefix = ' ' x ($fill - 1);
+
+open my $fd, '>', $file or die "open $file: $!";
+
+print {$fd} $prefix, "\n";
+print {$fd} $gfdl_start;
+print {$fd} $gfdl_end;
+
+close $fd or die "close $file: $!";

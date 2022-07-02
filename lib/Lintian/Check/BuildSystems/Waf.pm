@@ -1,11 +1,11 @@
-# Copyright © 1998 Christian Schwarz and Richard Braakman
-# Copyright © 1999 Joey Hess
-# Copyright © 2000 Sean 'Shaleh' Perry
-# Copyright © 2002 Josip Rodin
-# Copyright © 2007 Russ Allbery
-# Copyright © 2013-2018 Bastien ROUCARIÈS
-# Copyright © 2017-2020 Chris Lamb <lamby@debian.org>
-# Copyright © 2020-2021 Felix Lechner
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 1999 Joey Hess
+# Copyright (C) 2000 Sean 'Shaleh' Perry
+# Copyright (C) 2002 Josip Rodin
+# Copyright (C) 2007 Russ Allbery
+# Copyright (C) 2013-2018 Bastien ROUCARIES
+# Copyright (C) 2017-2020 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2020-2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -28,6 +28,8 @@ package Lintian::Check::BuildSystems::Waf;
 use v5.20;
 use warnings;
 use utf8;
+
+use Unicode::UTF8 qw(encode_utf8);
 
 use Moo;
 use namespace::clean;
@@ -40,27 +42,38 @@ sub visit_patched_files {
     return
       unless $item->is_file;
 
-    # waf is not allowed
-    if (   $item->basename =~ / \b waf $/sx
-        && $item->is_open_ok) {
+    return
+      unless $item->basename =~ m{ \b waf $}x;
 
-        my $marker = 0;
-        open(my $fd, '<', $item->unpacked_path)
-          or die encode_utf8('Cannot open ' . $item->unpacked_path);
+    return
+      unless $item->is_open_ok;
 
-        while (my $line = <$fd>) {
-            next unless $line =~ m/^#/;
-            if ($marker && $line =~ m/^#BZ[h0][0-9]/) {
-                $self->hint('source-contains-waf-binary', $item->name);
-                last;
-            }
-            $marker = 1 if $line =~ m/^#==>/;
+    open(my $fd, '<', $item->unpacked_path)
+      or die encode_utf8('Cannot open ' . $item->unpacked_path);
 
-            # We could probably stop here, but just in case
-            $marker = 0 if $line =~ m/^#<==/;
+    my $marker = 0;
+
+    while (my $line = <$fd>) {
+
+        next
+          unless $line =~ m/^#/;
+
+        if ($marker && $line =~ m/^#BZ[h0][0-9]/) {
+
+            # waf is not allowed
+            $self->pointed_hint('source-contains-waf-binary', $item->pointer);
+            last;
         }
-        close($fd);
+
+        $marker = 1
+          if $line =~ m/^#==>/;
+
+        # We could probably stop here, but just in case
+        $marker = 0
+          if $line =~ m/^#<==/;
     }
+
+    close $fd;
 
     return;
 }

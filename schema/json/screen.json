@@ -1,0 +1,35 @@
+{
+  "$id": "https://lintian.debian.org/schema/json/lintian/screen.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A Lintian screen declaration",
+  "properties": {
+    "advocates": {
+      "description": "Advocates for exemption",
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "name": {
+      "description": "Screen name",
+      "type": "string"
+    },
+    "reason": {
+      "description": "Screen explanation",
+      "type": "string"
+    },
+    "see_also": {
+      "description": "Reference citations",
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "name",
+    "reason"
+  ],
+  "title": "Lintian Screen",
+  "type": "object"
+}

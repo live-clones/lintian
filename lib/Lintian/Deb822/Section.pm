@@ -1,4 +1,4 @@
-# Copyright © 2020 Felix Lechner
+# Copyright (C) 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -12,7 +12,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -77,10 +77,15 @@ has legend => (
 
         my %legend;
 
-        $legend{lc $_} = $_ for keys %{$self->verbatim};
+        for my $key (keys %{$self->verbatim}) {
+
+            my $lowercase = lc $key;
+            $legend{$lowercase} = $key;
+        }
 
         return \%legend;
-    });
+    }
+);
 
 has verbatim => (is => 'rw', default => sub { {} });
 has unfolded => (is => 'rw', default => sub { {} });

@@ -1,6 +1,6 @@
-# Copyright © 1998 Richard Braakman
-# Copyright © 2012 Niels Thykier
-# Copyright © 2018 Chris Lamb <lamby@debian.org>
+# Copyright (C) 1998 Richard Braakman
+# Copyright (C) 2012 Niels Thykier
+# Copyright (C) 2018 Chris Lamb <lamby@debian.org>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -74,10 +74,11 @@ use File::Basename qw(basename);
 use File::Find ();
 use List::SomeUtils qw{any};
 use Path::Tiny;
+use Syntax::Keyword::Try;
 use Unicode::UTF8 qw(valid_utf8 decode_utf8 encode_utf8);
 
 use Lintian::Spelling qw(check_spelling);
-use Lintian::Deb822::Parser qw(parse_dpkg_control_string);
+use Lintian::Deb822;
 use Lintian::Profile;
 use Lintian::Tag;
 
@@ -88,10 +89,6 @@ const my $MAXIMUM_TAG_LENGTH => 68;
 my %visibilities = map { $_ => 1 } @Lintian::Tag::VISIBILITIES;
 my %check_types = map { $_ => 1 } qw(binary changes source udeb);
 my %known_html_tags = map { $_ => 1 } qw(a em i tt);
-
-# We use this to check for explicit links where it is possible to use
-# a manual ref.
-my $MANUALS;
 
 # lazy-load this (so loading a profile can affect it)
 my %URLS;
@@ -161,23 +158,32 @@ sub test_check_desc {
 
     my @descs = map { _find_check($find_opt, $_) } @dirs;
     foreach my $desc_file (@descs) {
-        my ($header, @tagpara);
+
         my $bytes = path($desc_file)->slurp;
         $builder->ok(valid_utf8($bytes),
             "File $desc_file does not use a national encoding.");
         next
           unless valid_utf8($bytes);
-        my $contents = decode_utf8($bytes);
-        eval {($header, @tagpara) = parse_dpkg_control_string($contents);};
-        if (my $err = $@) {
+
+        my $deb822 = Lintian::Deb822->new;
+
+        my @sections;
+        try {
+            @sections = $deb822->read_file($desc_file);
+
+        } catch {
+            my $err = $@;
             $err =~ s/ at .*? line \d+\s*\n//;
             $builder->ok(0, "Cannot parse $desc_file");
             $builder->diag("Error: $err");
             next;
         }
+
+        my ($header, @tagpara) = @sections;
+
         my $content_type = 'Check';
-        my $cname = $header->{'Check-Script'}//$EMPTY;
-        my $ctype = $header->{'Type'} // $EMPTY;
+        my $cname = $header->value('Check-Script');
+        my $ctype = $header->value('Type');
         my $i = 1; # paragraph counter.
         $builder->ok(1, "Can parse check $desc_file");
 
@@ -210,9 +216,11 @@ sub test_check_desc {
         }
 
         for my $tpara (@tagpara) {
-            my $tag = $tpara->{'Tag'}//$EMPTY;
-            my $visibility = $tpara->{'Severity'}//$EMPTY;
-            my $explanation = $tpara->{'Explanation'} // $EMPTY;
+
+            my $tag = $tpara->value('Tag');
+            my $visibility = $tpara->value('Severity');
+            my $explanation = $tpara->value('Explanation');
+
             my (@htmltags, %seen);
 
             $i++;
@@ -253,7 +261,7 @@ sub test_check_desc {
 
             $builder->ok(
                 $explanation !~ /(\S\w)\. [^ ]/
-                  || $1 =~ '/^\.[ge]$/', # for 'e.g.'/'i.e.'
+                  || $1 =~ /^\.[ge]$/, # for 'e.g.'/'i.e.'
                 'Tag explanation uses two spaces after a full stop'
             ) or $builder->diag("$content_type $cname: $tag\n");
 
@@ -281,9 +289,13 @@ sub test_check_desc {
                 'Tag explanation has no stray angle brackets')
               or $builder->diag("$content_type $cname: $tag\n");
 
-            if ($tpara->{'See-Also'}) {
-                my @issues = _check_reference($tpara->{'See-Also'});
+            if ($tpara->declares('See-Also')) {
+
+                my @issues = map { _check_reference($_) }
+                  $tpara->trimmed_list('See-Also', qr{ \s* , \s* }x);
+
                 my $text = join("\n\t", @issues);
+
                 $builder->ok(!@issues, 'Proper references are used')
                   or $builder->diag("$content_type $cname: $tag\n\t$text");
             }
@@ -310,13 +322,16 @@ This sub will do one test per profile loaded.
 
 sub test_load_profiles {
     my ($dir, @inc) = @_;
+
     my $builder = $CLASS->builder;
     my $absdir = realpath $dir;
     my $sre;
     my %opt = ('no_chdir' => 1,);
+
     if (not defined $absdir) {
         die encode_utf8("$dir cannot be resolved: $!");
     }
+
     $absdir = "$absdir/profiles";
     $sre = qr{\Q$absdir\E/};
 
@@ -331,11 +346,15 @@ sub test_load_profiles {
 
         my $profile = Lintian::Profile->new;
 
-        eval {$profile->load($profname, \@inc, 0);};
-        my $err = $@;
+        try {
+            $profile->load($profname, \@inc, 0);
 
-        $builder->ok($profile, "$profname is loadable.")
-          or $builder->diag("Load error: $err\n");
+        } catch {
+            $builder->diag("Load error: $@\n");
+            $profile = 0;
+        }
+
+        $builder->ok($profile, "$profname is loadable.");
     };
 
     File::Find::find(\%opt, $absdir);
@@ -390,50 +409,53 @@ only be processed if it has the proper extension (i.e. with I<.desc>).
 =cut
 
 sub test_load_checks {
-    my ($opts, $dir, @checknames) = @_;
+    my ($opts, $dir, @check_names) = @_;
 
     my $builder = $CLASS->builder;
 
-    unless (@checknames) {
+    unless (@check_names) {
         my $find_opt = {'want-check-name' => 1,};
         $find_opt->{'filter'} = $opts->{'filter'} if exists $opts->{'filter'};
-        @checknames = _find_check($find_opt, $dir);
+        @check_names = _find_check($find_opt, $dir);
     } else {
         $builder->skip('Given an explicit list of checks');
     }
 
     $builder->skip('No desc files found')
-      unless @checknames;
+      unless @check_names;
 
     my $profile = load_profile_for_test();
 
-    foreach my $checkname (@checknames) {
+    foreach my $check_name (@check_names) {
 
-        my $path = $profile->check_path_by_name->{$checkname};
-        eval { require $path; };
-        if (
-            !$builder->is_eq(
-                $@//$EMPTY, $EMPTY, "Check $checkname can be loaded"
-            )
-        ){
+        my $path = $profile->check_path_by_name->{$check_name};
+        try {
+            require $path;
+
+        } catch {
             $builder->skip(
-                "Cannot check if $checkname has entry points due to load error"
+"Cannot check if $check_name has entry points due to load error"
             );
             next;
         }
 
-        my $module = $profile->check_module_by_name->{$checkname};
+        $builder->ok(1, "Check $check_name can be loaded");
+
+        my $module = $profile->check_module_by_name->{$check_name};
 
         $builder->diag(
-            "Warning: check $checkname uses old entry point ::run\n")
+            "Warning: check $check_name uses old entry point ::run\n")
           if $module->can('run') && !$module->DOES('Lintian::Check');
 
         # setup and breakdown should only be used together with files
         my $has_entrypoint = any { $module->can($_) }
-        qw(source binary udeb installable changes always files);
+          qw(source binary udeb installable changes always files);
 
-        if (!$builder->ok($has_entrypoint, "Check $checkname has entry point"))
-        {
+        if (
+            !$builder->ok(
+                $has_entrypoint, "Check $check_name has entry point"
+            )
+        ){
             $builder->diag("Expected package name is $module\n");
         }
     }
@@ -484,57 +506,87 @@ sub load_profile_for_test {
     $PROFILE = Lintian::Profile->new;
     $PROFILE->load($profname, [@inc, $ENV{'LINTIAN_BASE'}]);
 
-    $MANUALS = $PROFILE->manual_references;
-
     $ENV{'LINTIAN_CONFIG_DIRS'} = join($COLON, @inc);
 
     return $PROFILE;
 }
 
 sub _check_reference {
-    my ($refdata) = @_;
+    my ($see_also) = @_;
+
     my @issues;
 
+    my @MARKDOWN_CAPABLE = (
+        $PROFILE->menu_policy,
+        $PROFILE->perl_policy,
+        $PROFILE->python_policy,
+        $PROFILE->java_policy,
+        $PROFILE->vim_policy,
+        $PROFILE->lintian_manual,
+        $PROFILE->developer_reference,
+        $PROFILE->policy_manual,
+        $PROFILE->debconf_specification,
+        $PROFILE->menu_specification,
+        $PROFILE->doc_base_specification,
+        $PROFILE->filesystem_hierarchy_standard,
+    );
+
+    my %by_shorthand = map { $_->shorthand => $_ } @MARKDOWN_CAPABLE;
+
+    # We use this to check for explicit links where it is possible to use
+    # a manual ref.
     unless (%URLS) {
-        $MANUALS->recognizes($EMPTY); # force it to load the manual refs
-        foreach my $manid ($MANUALS->all) {
-            my $table = $MANUALS->value($manid);
-            foreach my $section (keys %{$table}) {
-                my $url = $table->{$section}{url};
-                next unless $url;
-                $URLS{$url} = "$manid $section";
+        for my $manual (@MARKDOWN_CAPABLE) {
+
+            my $volume = $manual->shorthand;
+
+            for my $section_key ($manual->all){
+                my $entry = $manual->value($section_key);
+
+                my $url = $entry->{$section_key}{url};
+                next
+                  unless length $url;
+
+                $URLS{$url} = "$volume $section_key";
             }
         }
     }
 
-    foreach my $reference (split /\s*,\s*/, $refdata) {
-        if (   $reference =~ m{^https?://bugs.debian.org/(\d++)$}
-            || $reference
-            =~ m{^https?://bugs.debian.org/cgi-bin/bugreport.cgi\?/.*bug=(\d++).*$}
-        ) {
-            push @issues, "replace \"$reference\" with \"#$1\"";
-        } elsif (exists $URLS{$reference}) {
-            push @issues, "replace \"$reference\" with \"$URLS{$reference}\"";
-        } elsif ($reference =~ m/^([\w-]++)\s++(\S++)$/) {
-            my ($manual, $section) = ($1, $2);
-            if ($MANUALS->recognizes($manual)) {
-                push @issues, "unknown section \"$section\" in $manual"
-                  unless exists $MANUALS->value($manual)->{$section};
-            } else {
-                push @issues, "unknown manual \"$manual\"";
-            }
+    if (   $see_also =~ m{^https?://bugs.debian.org/(\d++)$}
+        || $see_also
+        =~ m{^https?://bugs.debian.org/cgi-bin/bugreport.cgi\?/.*bug=(\d++).*$}
+    ) {
+        push(@issues, "replace '$see_also' with '#$1'");
+
+    } elsif (exists $URLS{$see_also}) {
+        push(@issues, "replace '$see_also' with '$URLS{$see_also}'");
+
+    } elsif ($see_also =~ m/^([\w-]++)\s++(\S++)$/) {
+
+        my $volume = $1;
+        my $section = $2;
+
+        if (exists $by_shorthand{$volume}) {
+
+            my $manual = $by_shorthand{$volume};
+
+            push(@issues, "unknown section '$section' in $volume")
+              unless length $manual->markdown_citation($section);
+
         } else {
-            # Check it is a valid reference like URLs or #123456
-            # NB: "policy 10.1" references already covered above
-            my $ok = 0;
-            $ok = 1 if $reference =~ /^#\d+$/; # debbugs reference
-            $ok = 1 if $reference =~ m{^(?:ftp|https?)://}; # browser URL
-            $ok = 1 if $reference =~ m{^/}; # local file reference
-            $ok = 1 if $reference =~ m{[\w_-]+\(\d\w*\)$}; # man reference
-            push @issues, "unknown/malformed reference \"$reference\""
-              unless $ok;
+            push(@issues, "unknown manual '$volume'");
         }
+
+    } else {
+        # Check it is a valid reference like URLs or #123456
+        # NB: "policy 10.1" references already covered above
+        push(@issues, "unknown or malformed reference '$see_also'")
+          if $see_also !~ /^#\d+$/ # debbugs reference
+          && $see_also !~ m{^(?:ftp|https?)://} # browser URL
+          && $see_also !~ m{^/} # local file reference
+          && $see_also !~ m{[\w_-]+\(\d\w*\)$}; # man reference
     }
+
     return @issues;
 }
 
@@ -560,11 +612,11 @@ sub _find_check {
                 if (not $filter->($_)) {
                     # filtered out; if a dir - filter the
                     # entire dir.
-                    $File::Find::prune = 1 if -d $_;
+                    $File::Find::prune = 1 if -d;
                     return;
                 }
             }
-            return unless m/\.desc$/ and -e $_;
+            return unless m/\.desc$/ and -e;
             if ($regex) {
                 s/$regex//;
                 s/\.desc$//;

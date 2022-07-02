@@ -1,15 +1,17 @@
 Tag: desktop-entry-lacks-icon-entry
 Severity: info
 Check: menu-format
-Explanation: This .desktop file does not contain an "Icon" entry.
+Explanation: This <code>.desktop</code> file does not contain an <code>Icon</code>
+ entry.
  .
- "Icon" is the name of the file (without the extension) of the icon displayed
- by this .desktop file. The icon is searched in the different icon themes.
- If the name is an absolute path, the given file will be used.
- The icon should be unique enough to help the user to recognise the application.
+ The <code>Icon</code> field should contain the name of the icon file, without the
+ extension, that is displayed. The different icon themes are searched to locate it.
+ For absolute paths, the name given will be used. The icon should be sufficiently
+ unique so that the user can recognize the application.
  .
- The desktop-file-validate tool in the desktop-file-utils package is
- useful for checking the syntax of desktop entries.
-See-Also: https://specifications.freedesktop.org/desktop-entry-spec/latest/ar01s06.html,
+ The <code>desktop-file-validate</code> tool in the <code>desktop-file-utils</code>
+ package may be useful for checking the syntax of desktop entries.
+See-Also:
+ https://specifications.freedesktop.org/desktop-entry-spec/latest/ar01s06.html,
  https://specifications.freedesktop.org/icon-theme-spec/icon-theme-spec-latest.html,
  Bug#854132

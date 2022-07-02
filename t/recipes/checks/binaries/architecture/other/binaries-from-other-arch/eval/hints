@@ -1,1 +1,1 @@
-binaries-from-other-arch (binary): binary-from-other-architecture usr/bin/elfobject
+binaries-from-other-arch (binary): binary-from-other-architecture [usr/bin/elfobject]

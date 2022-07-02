@@ -14,4 +14,4 @@ Explanation: The "Section:" field in this package's control file is not one of
  The section name should be preceded by "non-free/" if the package
  is in the non-free archive area, and by "contrib/" if the package
  is in the contrib archive area.
-See-Also: policy 2.4
+See-Also: debian-policy 2.4

@@ -1,6 +1,6 @@
 # files/date -- lintian check script -*- perl -*-
 
-# Copyright © 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -40,17 +40,19 @@ has ALLOWED_ANCIENT_FILES => (
     default => sub {
         my ($self) = @_;
 
-        return $self->profile->load_data('files/allowed-ancient-files');
-    });
+        return $self->data->load('files/allowed-ancient-files');
+    }
+);
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
-    my ($year) = ($file->date =~ /^(\d{4})/);
+    my ($year) = ($item->date =~ /^(\d{4})/);
 
-    $self->hint('package-contains-ancient-file', $file->name, $file->date)
+    $self->pointed_hint('package-contains-ancient-file',
+        $item->pointer, $item->date)
       if $year <= $DINSTALL_CUTOFF_YEAR
-      && !$self->ALLOWED_ANCIENT_FILES->matches_any($file->name);
+      && !$self->ALLOWED_ANCIENT_FILES->matches_any($item->name);
 
     return;
 }

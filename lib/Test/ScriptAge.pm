@@ -1,4 +1,4 @@
-# Copyright © 2019 Felix Lechner
+# Copyright (C) 2019 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -12,7 +12,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA
 
@@ -52,6 +52,7 @@ BEGIN {
 use File::stat;
 use File::Spec::Functions qw(rel2abs);
 use List::Util qw(max);
+use Path::Tiny;
 use Unicode::UTF8 qw(encode_utf8);
 
 =head1 FUNCTIONS
@@ -83,7 +84,7 @@ sub our_modification_epoch {
         warn encode_utf8(
             'Relative paths in running_epoch: '.join(', ', @relative));
     }
-    my @epochs = map { stat($_)->mtime } @paths;
+    my @epochs = map { path($_)->stat->mtime } @paths;
     return max @epochs;
 }
 

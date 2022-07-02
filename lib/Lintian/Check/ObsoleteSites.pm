@@ -1,7 +1,8 @@
 # obsolete-sites -- lintian check script -*- perl -*-
 
-# Copyright © 2015 Axel Beckert <abe@debian.org>
-# Copyright © 2017-2018 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2015 Axel Beckert <abe@debian.org>
+# Copyright (C) 2017-2018 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,7 +16,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -24,6 +25,8 @@ package Lintian::Check::ObsoleteSites;
 use v5.20;
 use warnings;
 use utf8;
+
+use List::SomeUtils qw(any);
 
 use Moo;
 use namespace::clean;
@@ -35,54 +38,50 @@ my @interesting_files = qw(
   copyright
   watch
   upstream
+  upstream/metadata
   upstream-metadata.yaml
 );
 
-sub source {
-    my ($self) = @_;
+sub visit_patched_files {
+    my ($self, $item) = @_;
 
-    my $pkg = $self->processable->name;
-    my $type = $self->processable->type;
-    my $processable = $self->processable;
+    return
+      unless $item->is_regular_file;
 
-    my $debian_dir = $processable->patched->resolve_path('debian/');
-    return unless $debian_dir;
-    foreach my $file (@interesting_files) {
-        my $dfile = $debian_dir->child($file);
-        $self->search_for_obsolete_sites($dfile, "debian/$file");
-    }
-
-    my $upstream_dir = $processable->patched->resolve_path('debian/upstream');
-    return unless $upstream_dir;
-
-    my $dfile = $upstream_dir->child('metadata');
-    $self->search_for_obsolete_sites($dfile, 'debian/upstream/metadata');
+    $self->search_for_obsolete_sites($item)
+      if any { $item->name =~ m{^ debian/$_ $}x } @interesting_files;
 
     return;
 }
 
 sub search_for_obsolete_sites {
-    my ($self, $dfile, $file) = @_;
+    my ($self, $item) = @_;
 
-    my $OBSOLETE_SITES
-      = $self->profile->load_data('obsolete-sites/obsolete-sites');
+    return
+      unless $item->is_open_ok;
 
-    if (defined($dfile) and $dfile->is_regular_file and $dfile->is_open_ok) {
+    my $OBSOLETE_SITES= $self->data->load('obsolete-sites/obsolete-sites');
 
-        my $dcontents = $dfile->bytes;
+    my $bytes = $item->bytes;
 
-        # Strip comments
-        $dcontents =~ s/^\s*#.*$//gm;
+    # strip comments
+    $bytes =~ s/^ \s* [#] .* $//gmx;
 
-        foreach my $site ($OBSOLETE_SITES->all) {
-            if ($dcontents
-                =~ m{(\w+://(?:[\w.]*\.)?\Q$site\E[/:][^\s\"<>\$]*)}i) {
-                $self->hint('obsolete-url-in-packaging', $file, $1);
-            }
+    for my $site ($OBSOLETE_SITES->all) {
+
+        if ($bytes
+            =~ m{ (\w+:// (?: [\w.]* [.] )? \Q$site\E [/:] [^\s"<>\$]* ) }ix) {
+
+            my $url = $1;
+            $self->pointed_hint('obsolete-url-in-packaging', $item->pointer,
+                $url);
         }
+    }
 
-        $self->hint('obsolete-url-in-packaging', $file, $1)
-          if $dcontents =~m{(ftp://(?:ftp|security)\.debian\.org)}i;
+    if ($bytes =~ m{ (ftp:// (?:ftp|security) [.]debian[.]org) }ix) {
+
+        my $url = $1;
+        $self->pointed_hint('obsolete-url-in-packaging', $item->pointer, $url);
     }
 
     return;

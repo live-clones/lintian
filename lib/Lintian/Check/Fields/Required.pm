@@ -1,6 +1,6 @@
 # fields/required -- lintian check script -*- perl -*-
 #
-# Copyright © 2020 Felix Lechner
+# Copyright (C) 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -54,9 +54,6 @@ my @CHANGES = qw(Format Date Source Architecture Version Distribution
 sub source {
     my ($self) = @_;
 
-    my $fields = $self->processable->fields;
-    my $debian_control = $self->processable->debian_control;
-
     #my $all_udeb = 1;
     #$all_udeb = 0
     #  if any {
@@ -64,28 +61,43 @@ sub source {
     #  }
     #  $debian_control->installables;
 
+    my $fields = $self->processable->fields;
     my @missing_dsc = grep { !$fields->declares($_) } @DSC;
 
     my $dscfile = path($self->processable->path)->basename;
     $self->hint('required-field', $dscfile, $_) for @missing_dsc;
 
-    # look at d/control source paragraph
-    my @missing_control_source
-      = grep { !$debian_control->source_fields->declares($_) }
-      @DEBIAN_CONTROL_SOURCE;
+    my $debian_control = $self->processable->debian_control;
+    my $control_item = $debian_control->item;
 
-    my $controlfile = 'debian/control';
-    $self->hint('required-field', $controlfile . $AT . 'source', $_)
+    # look at d/control source paragraph
+    my $source_fields = $debian_control->source_fields;
+
+    my @missing_control_source
+      = grep { !$source_fields->declares($_) }@DEBIAN_CONTROL_SOURCE;
+
+    my $source_position = $source_fields->position;
+    my $source_pointer = $control_item->pointer($source_position);
+
+    $self->pointed_hint('required-field', $source_pointer,
+        '(in section for source)', $_)
       for @missing_control_source;
 
     # look at d/control installable paragraphs
     for my $installable ($debian_control->installables) {
 
-        my @missing_control_installable= grep {
-            !$debian_control->installable_fields($installable)->declares($_)
-        }@DEBIAN_CONTROL_INSTALLABLE;
+        my $installable_fields
+          = $debian_control->installable_fields($installable);
 
-        $self->hint('required-field', $controlfile . $AT . $installable, $_)
+        my @missing_control_installable
+          = grep {!$installable_fields->declares($_)}
+          @DEBIAN_CONTROL_INSTALLABLE;
+
+        my $installable_position = $installable_fields->position;
+        my $installable_pointer= $control_item->pointer($installable_position);
+
+        $self->pointed_hint('required-field', $installable_pointer,
+            "(in section for $installable)", $_)
           for @missing_control_installable;
     }
 

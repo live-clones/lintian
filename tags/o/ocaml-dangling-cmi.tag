@@ -1,8 +1,9 @@
 Tag: ocaml-dangling-cmi
 Severity: info
-Check: languages/ocaml
-Explanation: This package installs a compiled interface (<code>.cmi</code>) without
- its text version (<code>.mli</code>). The text version should also be
- installed for documentation purpose. If the module involved doesn't have
- a <code>.mli</code>, its source code (<code>.ml</code>) should be installed
- instead.
+Check: languages/ocaml/byte-code/interface
+Explanation: This OCaml package ships a byte code interface file <code>&ast;.cmi</code>
+ without the text version in a <code>&ast;.mli</code> file.
+ .
+ The text version should be shipped for documentation. If the module does not have
+ a <code>&ast;.mli</code> file, the source code in a <code>&ast;.ml</code> file
+ should be shipped instead.

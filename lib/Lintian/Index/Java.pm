@@ -1,6 +1,6 @@
 # -*- perl -*- Lintian::Index::Java
 #
-# Copyright © 2020 Felix Lechner
+# Copyright (C) 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -63,7 +63,8 @@ sub add_java {
 
     my $savedir = getcwd;
     chdir($self->basedir)
-      or die encode_utf8('Cannot change to directory ' . $self->basedir);
+      or die encode_utf8(
+        $self->identifier . ': Cannot change to directory ' . $self->basedir);
 
     my $errors = $EMPTY;
 
@@ -73,7 +74,7 @@ sub add_java {
     # Newer versions seem to call them "Java Jar file".
     # Jessie also introduced "Java archive data (JAR)"...
     my @java_files = grep {
-        $_->file_info=~ m{
+        $_->file_type=~ m{
             Java [ ] (?:Jar [ ] file|archive [ ] data)
             | Zip [ ] archive
             | JAR }x;
@@ -124,7 +125,8 @@ sub add_java {
     $_->java_info($java_info{$_->name}) for @java_files;
 
     chdir($savedir)
-      or die encode_utf8("Cannot change to directory $savedir");
+      or die encode_utf8(
+        $self->identifier . ": Cannot change to directory $savedir");
 
     return $errors;
 }

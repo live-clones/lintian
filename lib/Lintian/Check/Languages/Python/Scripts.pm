@@ -1,6 +1,6 @@
 # languages/python/scripts -- lintian check script -*- perl -*-
 #
-# Copyright © 2016 Chris Lamb
+# Copyright (C) 2016 Chris Lamb
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -30,16 +30,17 @@ use namespace::clean;
 with 'Lintian::Check';
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     return
-      unless $file->name =~ m{(?:usr/)?bin/[^/]+};
+      unless $item->name =~ m{(?:usr/)?bin/[^/]+};
 
     return
-      unless $file->is_script;
+      unless $item->is_script;
 
-    $self->hint('script-uses-unversioned-python-in-shebang', $file)
-      if $file->interpreter =~ m{^(?:/usr/bin/)?python$};
+    $self->pointed_hint('script-uses-unversioned-python-in-shebang',
+        $item->pointer)
+      if $item->interpreter =~ m{^(?:/usr/bin/)?python$};
 
     return;
 }

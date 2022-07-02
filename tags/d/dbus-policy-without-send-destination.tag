@@ -32,4 +32,6 @@ Explanation: The package contains D-Bus policy configuration that uses
  name, so <code>send&lowbar;destination</code> is not easily applicable.
  However, such rules should still be made as specific as possible to
  avoid undesired side-effects.
-See-Also: https://bugs.freedesktop.org/show_bug.cgi?id=18961,http://lists.freedesktop.org/archives/dbus/2008-February/009401.html
+See-Also:
+ https://bugs.freedesktop.org/show_bug.cgi?id=18961,
+ http://lists.freedesktop.org/archives/dbus/2008-February/009401.html

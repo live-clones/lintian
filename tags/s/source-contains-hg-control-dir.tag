@@ -1,6 +1,6 @@
 Tag: source-contains-hg-control-dir
 Severity: pedantic
-Check: cruft
+Check: files/artifact
 Explanation: The upstream source contains a .hg directory. It was most likely
  included by accident since hg version control directories usually don't
  belong in releases and may contain a complete copy of the repository. If

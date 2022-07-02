@@ -1,8 +1,9 @@
 # conffiles -- lintian check script -*- perl -*-
 
-# Copyright © 1998 Christian Schwarz
-# Copyright © 2000 Sean 'Shaleh' Perry
-# Copyright © 2017 Chris Lamb <lamby@debian.org>
+# Copyright (C) 1998 Christian Schwarz
+# Copyright (C) 2000 Sean 'Shaleh' Perry
+# Copyright (C) 2017 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,7 +17,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -26,7 +27,14 @@ use v5.20;
 use warnings;
 use utf8;
 
+use Const::Fast;
+use List::Compare;
 use List::SomeUtils qw(any none);
+use Path::Tiny;
+
+const my $SPACE => q{ };
+
+const my @KNOWN_INSTRUCTIONS => qw(remove-on-upgrade);
 
 use Moo;
 use namespace::clean;
@@ -39,34 +47,20 @@ sub visit_installed_files {
     return
       if $self->processable->type =~ 'udeb';
 
-    my $conffiles = $self->processable->conffiles;
+    my $declared_conffiles = $self->processable->declared_conffiles;
 
     unless ($item->is_file) {
-        $self->hint('conffile-has-bad-file-type', $item)
-          if $conffiles->is_known($item->name);
+        $self->pointed_hint('conffile-has-bad-file-type', $item->pointer)
+          if $declared_conffiles->is_known($item->name);
         return;
     }
 
     # files /etc must be conffiles, with some exceptions).
-    $self->hint('file-in-etc-not-marked-as-conffile', $item)
+    $self->pointed_hint('file-in-etc-not-marked-as-conffile',$item->pointer)
       if $item->name =~ m{^etc/}
-      && !$conffiles->is_known($item->name)
+      && !$declared_conffiles->is_known($item->name)
       && $item->name !~ m{/README$}
       && $item->name !~ m{^ etc/init[.]d/ (?: skeleton | rc S? ) $}x;
-
-    $self->hint('file-in-etc-rc.d-marked-as-conffile', $item)
-      if $conffiles->is_known($item->name)
-      && $item->name =~ m{^etc/rc.\.d/};
-
-    if ($conffiles->is_known($item->name) && $item->name !~ m{^etc/}) {
-
-        if ($item->name =~ m{^usr/}) {
-            $self->hint('file-in-usr-marked-as-conffile', $item);
-
-        } else {
-            $self->hint('non-etc-file-marked-as-conffile', $item);
-        }
-    }
 
     return;
 }
@@ -74,21 +68,60 @@ sub visit_installed_files {
 sub binary {
     my ($self) = @_;
 
-    my $conffiles = $self->processable->conffiles;
+    my $declared_conffiles = $self->processable->declared_conffiles;
+    for my $relative ($declared_conffiles->all) {
 
-    for my $relative ($conffiles->all) {
+        my $item = $self->processable->conffiles_item;
 
-        my @instructions = @{$conffiles->instructions->{$relative}};
-        my $should_exist = none { $_ eq 'remove-on-upgrade' } @instructions;
-        my $may_not_exist = any { $_ eq 'remove-on-upgrade' } @instructions;
+        my @entries = @{$declared_conffiles->by_file->{$relative}};
 
-        my $shipped = $self->processable->installed->lookup($relative);
+        my @positions = map { $_->position } @entries;
+        my $lines = join($SPACE, (sort { $a <=> $b } @positions));
 
-        $self->hint('missing-conffile', $relative)
-          if $should_exist && !defined $shipped;
+        $self->pointed_hint('duplicate-conffile', $item->pointer,
+            $relative, "(lines $lines)")
+          if @entries > 1;
 
-        $self->hint('unexpected-conffile', $relative)
-          if $may_not_exist && defined $shipped;
+        for my $entry (@entries) {
+
+            my $conffiles_item = $self->processable->conffiles_item;
+            my $pointer = $conffiles_item->pointer($entry->position);
+
+            $self->pointed_hint('relative-conffile', $pointer,$relative)
+              if $entry->is_relative;
+
+            $self->pointed_hint('file-in-etc-rc.d-marked-as-conffile',
+                $pointer, $relative)
+              if $relative =~ m{^etc/rc.\.d/};
+
+            $self->pointed_hint('file-in-usr-marked-as-conffile',
+                $pointer, $relative)
+              if $relative =~ m{^usr/};
+
+            $self->pointed_hint('non-etc-file-marked-as-conffile',
+                $pointer, $relative)
+              unless $relative =~ m{^etc/};
+
+            my @instructions = @{$entry->instructions};
+
+            my $instruction_lc
+              = List::Compare->new(\@instructions, \@KNOWN_INSTRUCTIONS);
+            my @unknown = $instruction_lc->get_Lonly;
+
+            $self->pointed_hint('unknown-conffile-instruction', $pointer, $_)
+              for @unknown;
+
+            my $should_exist= none { $_ eq 'remove-on-upgrade' } @instructions;
+            my $may_not_exist= any { $_ eq 'remove-on-upgrade' } @instructions;
+
+            my $shipped = $self->processable->installed->lookup($relative);
+
+            $self->pointed_hint('missing-conffile', $pointer, $relative)
+              if $should_exist && !defined $shipped;
+
+            $self->pointed_hint('unexpected-conffile', $pointer, $relative)
+              if $may_not_exist && defined $shipped;
+        }
     }
 
     return;

@@ -8,4 +8,4 @@ Explanation: The VCS-&ast; field contains more spaces than expected or spaces at
  .
  This may be caused by incorrect use of the <code>-b</code> branch
  separator.
-See-Also: policy 5.6.26
+See-Also: debian-policy 5.6.26

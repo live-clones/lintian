@@ -1,1 +1,1 @@
-libbaz1 (binary): shared-library-is-executable usr/lib/libfoo2.so.1.0.3b 0755
+libbaz1 (binary): shared-library-is-executable 0755 [usr/lib/libfoo2.so.1.0.3b]

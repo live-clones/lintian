@@ -31,7 +31,8 @@ include =
 
 [BuiltinFunctions::ProhibitSleepViaSelect]
 
-[-BuiltinFunctions::ProhibitStringyEval]
+[BuiltinFunctions::ProhibitStringyEval]
+allow_includes = 1
 
 [BuiltinFunctions::ProhibitStringySplit]
 
@@ -39,7 +40,7 @@ include =
 
 [BuiltinFunctions::ProhibitUniversalIsa]
 
-[-BuiltinFunctions::ProhibitUselessTopic]
+[BuiltinFunctions::ProhibitUselessTopic]
 
 [BuiltinFunctions::ProhibitVoidGrep]
 
@@ -153,57 +154,57 @@ include =
 
 [-ErrorHandling::RequireCheckingReturnValueOfEval]
 
-[Freenode::AmpersandSubCalls]
+[Community::AmpersandSubCalls]
 
-[Freenode::ArrayAssignAref]
+[Community::ArrayAssignAref]
 
-[Freenode::BarewordFilehandles]
+[Community::BarewordFilehandles]
 
-[Freenode::ConditionalDeclarations]
+[Community::ConditionalDeclarations]
 
-[Freenode::ConditionalImplicitReturn]
+[Community::ConditionalImplicitReturn]
 
-[Freenode::DeprecatedFeatures]
+[Community::DeprecatedFeatures]
 
-[Freenode::DiscouragedModules]
+[Community::DiscouragedModules]
 
-[Freenode::DollarAB]
+[Community::DollarAB]
 
-[Freenode::Each]
+[Community::Each]
 
-[Freenode::EmptyReturn]
+[Community::EmptyReturn]
 
-[Freenode::IndirectObjectNotation]
+[Community::IndirectObjectNotation]
 
-[Freenode::LexicalForeachIterator]
+[Community::LexicalForeachIterator]
 
-[Freenode::LoopOnHash]
+[Community::LoopOnHash]
 
-[-Freenode::ModPerl]
+[-Community::ModPerl]
 
-[Freenode::MultidimensionalArrayEmulation]
+[Community::MultidimensionalArrayEmulation]
 
-[Freenode::OpenArgs]
+[Community::OpenArgs]
 
-[Freenode::OverloadOptions]
+[Community::OverloadOptions]
 
-[Freenode::PackageMatchesFilename]
+[Community::PackageMatchesFilename]
 
-[Freenode::POSIXImports]
+[Community::POSIXImports]
 
-[Freenode::PreferredAlternatives]
+[Community::PreferredAlternatives]
 
-[Freenode::Prototypes]
+[Community::Prototypes]
 
-[Freenode::StrictWarnings]
+[Community::StrictWarnings]
 
-[Freenode::Threads]
+[Community::Threads]
 
-[Freenode::Wantarray]
+[Community::Wantarray]
 
-[Freenode::WarningsSwitch]
+[Community::WarningsSwitch]
 
-[Freenode::WhileDiamondDefaultAssignment]
+[Community::WhileDiamondDefaultAssignment]
 
 [InputOutput::ProhibitBacktickOperators]
 
@@ -220,7 +221,7 @@ include =
 [InputOutput::ProhibitReadlineInForLoop]
 
 [-InputOutput::ProhibitTwoArgOpen]
-# not needed with Freenode::OpenArgs
+# not needed with Community::OpenArgs
 
 [InputOutput::RequireBracedFileHandleWithPrint]
 
@@ -262,7 +263,7 @@ functions = open opendir chdir read readdir readline closedir sysopen sysread sy
 [Modules::ProhibitMultiplePackages]
 
 [-Modules::ProhibitPOSIXimport]
-# not needed with Freenode::POSIXImports
+# not needed with Community::POSIXImports
 
 [Modules::ProhibitUseQuotedVersion]
 
@@ -273,7 +274,7 @@ functions = open opendir chdir read readdir readline closedir sysopen sysread sy
 [Modules::RequireExplicitPackage]
 
 [-Modules::RequireFilenameMatchesPackage]
-# not needed with Freenode::PackageMatchesFilename
+# not needed with Community::PackageMatchesFilename
 
 [Modules::RequireNoMatchVarsWithUseEnglish]
 
@@ -318,7 +319,7 @@ allow_all_brackets = 1
 [-RegularExpressions::RequireLineBoundaryMatching]
 
 [-Subroutines::ProhibitAmpersandSigils]
-# not needed with Freenode::AmpersandSubCalls
+# not needed with Community::AmpersandSubCalls
 
 [Subroutines::ProhibitBuiltinHomonyms]
 
@@ -333,7 +334,7 @@ allow_all_brackets = 1
 [Subroutines::ProhibitReturnSort]
 
 [-Subroutines::ProhibitSubroutinePrototypes]
-# not needed with Freenode::Prototypes
+# not needed with Community::Prototypes
 
 [Subroutines::ProhibitUnusedPrivateSubroutines]
 
@@ -353,17 +354,17 @@ terminal_funcs = CORE::exec fatal_error internal_error Lintian::Util::internal_e
 [-TestingAndDebugging::RequireTestLabels]
 
 [-TestingAndDebugging::RequireUseStrict]
-# not needed with Freenode::StrictWarnings]
+# not needed with Community::StrictWarnings]
 
 [-TestingAndDebugging::RequireUseWarnings]
-# not needed with Freenode::StrictWarnings]
+# not needed with Community::StrictWarnings]
 
 [ValuesAndExpressions::ConstantBeforeLt]
 
 [ValuesAndExpressions::NotWithCompare]
 
 [-ValuesAndExpressions::ProhibitArrayAssignAref]
-# not needed with Freenode::ArrayAssignAref
+# not needed with Community::ArrayAssignAref
 
 [ValuesAndExpressions::ProhibitBarewordDoubleColon]
 
@@ -434,7 +435,7 @@ terminal_funcs = CORE::exec fatal_error internal_error Lintian::Util::internal_e
 [Variables::ProhibitMatchVars]
 
 [Variables::ProhibitPackageVars]
-add_packages = Devel::Size Module::CoreList Text::Glob Text::Wrap YAML::XS
+add_packages = Devel::Size Module::CoreList Text::Wrap YAML::XS
 
 [Variables::ProhibitPerl4PackageNames]
 

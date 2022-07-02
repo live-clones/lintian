@@ -8,4 +8,4 @@ Explanation: There is no "Format" field in your .changes file. This probably
  .
  Since Lintian was unable to parse this .changes file, any further checks
  on it were skipped.
-See-Also: policy 5.5
+See-Also: debian-policy 5.5

@@ -1,6 +1,6 @@
-# -*- perl -*- Lintian::Processable::Control::Conffiles
+# -*- perl -*- Lintian::Processable::Installable::Conffiles
 #
-# Copyright © 2019 Felix Lechner
+# Copyright (C) 2019 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -22,17 +22,17 @@ use warnings;
 use utf8;
 
 use Const::Fast;
-use List::Compare;
-use Path::Tiny;
+
+use Lintian::Conffiles::Entry;
+
+const my $SPACE => q{ };
+const my $NEWLINE => qq{\n};
+
+const my $TRUE => 1;
+const my $FALSE => 0;
 
 use Moo;
 use namespace::clean;
-
-const my $SPACE => q{ };
-const my $SLASH => q{/};
-const my $NEWLINE => qq{\n};
-
-const my @KNOWN_INSTRUCTIONS => qw(remove-on-upgrade);
 
 =head1 NAME
 
@@ -50,23 +50,23 @@ Lintian::Conffiles provides an interface to control data for conffiles.
 
 =over 4
 
-=item instructions
+=item by_file
 
 =cut
 
-has instructions => (is => 'rw', default => sub { {} });
+has by_file => (is => 'rw', default => sub { {} });
 
 =item parse
 
 =cut
 
 sub parse {
-    my ($self, $file, $processable) = @_;
+    my ($self, $item) = @_;
 
     return
-      unless $file && $file->is_valid_utf8;
+      unless $item && $item->is_valid_utf8;
 
-    my @lines = split($NEWLINE, $file->decoded_utf8);
+    my @lines = split($NEWLINE, $item->decoded_utf8);
 
     # dpkg strips whitespace (using isspace) from the right hand
     # side of the file name.
@@ -81,24 +81,23 @@ sub parse {
           unless length $line;
 
         my @words = split($SPACE, $line);
-        my $path = pop @words;
+        my $relative = pop @words;
+
+        my $conffile = Lintian::Conffiles::Entry->new;
 
         # path must be absolute
-        if ($path !~ s{^/}{}) {
-            $processable->hint('relative-conffile', $path, "(line $position)");
+        if ($relative =~ s{^ / }{}x) {
+            $conffile->is_relative($FALSE);
+        } else {
+            $conffile->is_relative($TRUE);
         }
 
-        my $lc = List::Compare->new(\@words, \@KNOWN_INSTRUCTIONS);
-        $processable->hint('unknown-conffile-instruction',
-            $_,"(line $position)")
-          for $lc->get_Lonly;
+        $conffile->instructions(\@words);
+        $conffile->position($position);
 
-        if (exists $self->instructions->{$path}) {
-            $processable->hint('duplicate-conffile', $path,"(line $position)");
-            next;
-        }
-
-        $self->instructions->{$path} = \@words;
+        # but use relative path as key
+        $self->by_file->{$relative} //= [];
+        push(@{$self->by_file->{$relative}}, $conffile);
 
     } continue {
         ++$position;
@@ -116,7 +115,7 @@ Returns a list of absolute filenames found for conffiles.
 sub all {
     my ($self) = @_;
 
-    return keys %{$self->instructions};
+    return keys %{$self->by_file};
 }
 
 =item is_known (FILE)
@@ -136,7 +135,7 @@ sub is_known {
     my ($self, $relative) = @_;
 
     return 1
-      if exists $self->instructions->{$relative};
+      if exists $self->by_file->{$relative};
 
     return 0;
 }

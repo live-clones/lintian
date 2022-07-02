@@ -1,4 +1,4 @@
-debhelper-unused-cdbs (source): unused-build-dependency-on-cdbs
-debhelper-unused-cdbs (source): debian-build-system dh
-debhelper-unused-cdbs (source): debhelper-compat-virtual-relation 13
+debhelper-unused-cdbs (source): unused-build-dependency-on-cdbs [debian/rules]
+debhelper-unused-cdbs (source): debian-build-system dh [debian/rules]
+debhelper-unused-cdbs (source): debhelper-compat-virtual-relation 13 [debian/control]
 debhelper-unused-cdbs (source): debhelper-compat-level 13

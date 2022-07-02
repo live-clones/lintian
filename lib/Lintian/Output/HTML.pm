@@ -1,4 +1,4 @@
-# Copyright © 2020 Felix Lechner
+# Copyright (C) 2020-2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -12,7 +12,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -25,15 +25,12 @@ use utf8;
 use Const::Fast;
 use Path::Tiny;
 use Text::Markdown::Discount qw(markdown);
-use Text::Xslate;
+use Text::Xslate qw(mark_raw);
 use Time::Duration;
 use Time::Moment;
 use Unicode::UTF8 qw(encode_utf8);
 
-use Moo;
-use namespace::clean;
-
-with 'Lintian::Output::Grammar';
+use Lintian::Output::Markdown qw(markdown_citation);
 
 const my $EMPTY => q{};
 const my $SPACE => q{ };
@@ -48,7 +45,13 @@ const my %CODE_PRIORITY => (
     'X' => 70,
     'C' => 80,
     'O' => 90,
+    'M' => 100,
 );
+
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Output::Grammar';
 
 =head1 NAME
 
@@ -74,7 +77,7 @@ is necessary to report in case no hints were found.
 =cut
 
 sub issue_hints {
-    my ($self, $groups) = @_;
+    my ($self, $profile, $groups) = @_;
 
     $groups //= [];
 
@@ -100,9 +103,10 @@ sub issue_hints {
         $group_output{end} = $end->strftime('%c');
         $group_output{duration} = duration($start->delta_seconds($end));
 
+        my @processables = $group->get_processables;
+        my $any_processable = shift @processables;
         $group_output{'maintainer'}
-          = ($group->get_processables)[0]
-          ->fields->unfolded_value('Maintainer');
+          = $any_processable->fields->value('Maintainer');
 
         push(@allgroups_output, \%group_output);
 
@@ -114,10 +118,12 @@ sub issue_hints {
             my %file_output;
             $file_output{filename} = path($processable->path)->basename;
             $file_output{hints}
-              = $self->hintlist($lintian_version, $processable->hints);
+              = $self->hintlist($profile, $processable->hints);
             push(@allfiles_output, \%file_output);
         }
     }
+
+    my $style_sheet = $profile->data->style_sheet->css;
 
     my $templatedir = "$ENV{LINTIAN_BASE}/templates";
     my $tx = Text::Xslate->new(path => [$templatedir]);
@@ -125,8 +131,10 @@ sub issue_hints {
         'standalone-html.tx',
         {
             title => 'Lintian Tags',
+            style_sheet => mark_raw($style_sheet),
             output => \%output,
-        });
+        }
+    );
 
     print encode_utf8($page);
 
@@ -138,46 +146,103 @@ sub issue_hints {
 =cut
 
 sub hintlist {
-    my ($self, $lintian_version, $arrayref) = @_;
+    my ($self, $profile, $arrayref) = @_;
 
-    my @hints;
+    my %sorter;
+    for my $hint (@{$arrayref // []}) {
 
-    my @sorted = sort {
-               defined $a->override <=> defined $b->override
-          ||   $CODE_PRIORITY{$a->tag->code}<=> $CODE_PRIORITY{$b->tag->code}
-          || $a->tag->name cmp $b->tag->name
-          || $a->context cmp $b->context
-    } @{$arrayref // []};
+        my $tag = $profile->get_tag($hint->tag_name);
 
-    for my $input (@sorted) {
+        my $override_status = 0;
+        $override_status = 1
+          if defined $hint->override || @{$hint->masks};
 
-        my %hint;
-        push(@hints, \%hint);
+        my $ranking_code = $tag->code;
+        $ranking_code = 'X'
+          if $tag->experimental;
+        $ranking_code = 'O'
+          if defined $hint->override;
+        $ranking_code = 'M'
+          if @{$hint->masks};
 
-        $hint{tag_name} = $input->tag->name;
+        my $code_priority = $CODE_PRIORITY{$ranking_code};
 
-        $hint{url} = 'https://lintian.debian.org/tags/' . $input->tag->name;
+        push(
+            @{
+                $sorter{$override_status}{$code_priority}{$tag->name}
+                  {$hint->context}
+            },
+            $hint
+        );
+    }
 
-        $hint{context} = $input->context
-          if length $input->context;
+    my @sorted;
+    for my $override_status (sort keys %sorter) {
+        my %by_code_priority = %{$sorter{$override_status}};
 
-        $hint{visibility} = $input->tag->visibility;
-        $hint{code} = uc substr($hint{visibility}, 0, 1);
+        for my $code_priority (sort { $a <=> $b } keys %by_code_priority) {
+            my %by_tag_name = %{$by_code_priority{$code_priority}};
 
-        $hint{experimental} = 'yes'
-          if $input->tag->experimental;
+            for my $tag_name (sort keys %by_tag_name) {
+                my %by_context = %{$by_tag_name{$tag_name}};
 
-        if ($input->override) {
+                for my $context (sort keys %by_context) {
 
-            $hint{code} = 'O';
+                    my $hints
+                      = $sorter{$override_status}{$code_priority}{$tag_name}
+                      {$context};
 
-            my @comments = @{ $input->override->{comments} // [] };
-            $hint{comments} = \@comments
-              if @comments;
+                    push(@sorted, $_)for @{$hints};
+                }
+            }
         }
     }
 
-    return \@hints;
+    my @html_hints;
+    for my $hint (@sorted) {
+
+        my $tag = $profile->get_tag($hint->tag_name);
+
+        my %html_hint;
+        push(@html_hints, \%html_hint);
+
+        $html_hint{tag_name} = $hint->tag_name;
+
+        $html_hint{url} = 'https://lintian.debian.org/tags/' . $hint->tag_name;
+
+        $html_hint{context} = $hint->context
+          if length $hint->context;
+
+        $html_hint{visibility} = $tag->visibility;
+
+        $html_hint{visibility} = 'experimental'
+          if $tag->experimental;
+
+        my @comments;
+        if ($hint->override) {
+
+            $html_hint{visibility} = 'override';
+
+            push(@comments, $hint->override->justification)
+              if length $hint->override->justification;
+        }
+
+        # order matters
+        $html_hint{visibility} = 'mask'
+          if @{ $hint->masks };
+
+        for my $mask (@{$hint->masks}) {
+
+            push(@comments, 'masked by screen ' . $mask->screen);
+            push(@comments, $mask->excuse)
+              if length $mask->excuse;
+        }
+
+        $html_hint{comments} = \@comments
+          if @comments;
+    }
+
+    return \@html_hints;
 }
 
 =item describe_tags
@@ -185,14 +250,14 @@ sub hintlist {
 =cut
 
 sub describe_tags {
-    my ($self, $tags) = @_;
+    my ($self, $data, $tags) = @_;
 
     for my $tag (@{$tags}) {
 
         say encode_utf8('<p>Name: ' . $tag->name . '</p>');
         say encode_utf8($EMPTY);
 
-        print encode_utf8(markdown($self->markdown_description($tag)));
+        print encode_utf8(markdown($self->markdown_description($data, $tag)));
     }
 
     return;
@@ -203,7 +268,7 @@ sub describe_tags {
 =cut
 
 sub markdown_description {
-    my ($self, $tag) = @_;
+    my ($self, $data, $tag) = @_;
 
     my $description = $tag->explanation;
 
@@ -211,9 +276,11 @@ sub markdown_description {
 
     if (@{$tag->see_also}) {
 
+        my @markdown
+          = map { markdown_citation($data, $_) } @{$tag->see_also};
         my $references
           = 'Please refer to '
-          . $self->oxford_enumeration('and', @{$tag->see_also})
+          . $self->oxford_enumeration('and', @markdown)
           . ' for details.';
 
         push(@extras, $references);

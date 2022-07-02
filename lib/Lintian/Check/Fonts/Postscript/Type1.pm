@@ -1,7 +1,7 @@
 # fonts/postscript/type1 -- lintian check script -*- perl -*-
 
-# Copyright © 1998 Christian Schwarz and Richard Braakman
-# Copyright © 2020 Felix Lechner
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -25,12 +25,17 @@ use v5.20;
 use warnings;
 use utf8;
 
+use Const::Fast;
 use Encode qw(decode);
+use Syntax::Keyword::Try;
 
 use Lintian::IPC::Run3 qw(safe_qx);
 
 use Moo;
 use namespace::clean;
+
+const my $SPACE => q{ };
+const my $COLON => q{:};
 
 with 'Lintian::Check';
 
@@ -41,13 +46,19 @@ sub visit_installed_files {
       unless $item->is_file;
 
     return
-      unless $item->file_info =~ m/PostScript Type 1 font program data/;
+      unless $item->file_type =~ m/PostScript Type 1 font program data/;
 
     my @command = ('t1disasm', $item->unpacked_path);
     my $bytes = safe_qx(@command);
 
-    # iso-8859-1 works too, but the Font 1 standard could be older
-    my $output = decode('cp1252', $bytes, Encode::FB_CROAK);
+    my $output;
+    try {
+        # iso-8859-1 works too, but the Font 1 standard could be older
+        $output = decode('cp1252', $bytes, Encode::FB_CROAK);
+
+    } catch {
+        die 'In file ' . $item->name . $COLON . $SPACE . $@;
+    }
 
     my @lines = split(/\n/, $output);
 
@@ -61,8 +72,9 @@ sub visit_installed_files {
                                    All\s*Rights\s*Reserved\.?\s*
                                        \Z}xsmi
             ) {
-                $self->hint('license-problem-font-adobe-copyrighted-fragment',
-                    $item);
+                $self->pointed_hint(
+                    'license-problem-font-adobe-copyrighted-fragment',
+                    $item->pointer);
 
                 last;
             }
@@ -80,9 +92,9 @@ sub visit_installed_files {
         # in the black book copyrighted fragment
         if ($line =~ m/startlock\s*get\s*exec/) {
 
-            $self->hint(
+            $self->pointed_hint(
                 'license-problem-font-adobe-copyrighted-fragment-no-credit',
-                $item->name);
+                $item->pointer);
 
             last;
         }

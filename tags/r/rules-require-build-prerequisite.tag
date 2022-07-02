@@ -22,4 +22,4 @@ Explanation:
  you see a list, more than likely only one member is needed to make this tag go
  away. You probably also do not need the <code>:any</code> multiarch acceptor,
  if you see one.
-See-Also: policy 4.2
+See-Also: debian-policy 4.2

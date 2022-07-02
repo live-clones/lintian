@@ -1,0 +1,11 @@
+#!/bin/bash
+
+set -e
+
+DIR="$1"
+
+mkdir -p "$DIR/scripts"
+
+echo -e '#!/bin/sh\n\npotential\xE2\x80\xABtrojan' > "$DIR/scripts/careful"
+
+chmod +x "$DIR/scripts/careful"

@@ -1,4 +1,4 @@
-# Copyright © 2020 Felix Lechner
+# Copyright (C) 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -12,7 +12,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -195,16 +195,16 @@ sub find_selected_lintian_testpaths {
 
             my %wanted = map { $_ => 1 } @{$filter->{check}};
 
-            for my $tagname (@{$filter->{tag}}) {
+            for my $tag_name (@{$filter->{tag}}) {
 
-                my $tag = $profile->get_tag($tagname);
+                my $tag = $profile->get_tag($tag_name);
                 unless ($tag) {
-                    say encode_utf8("Tag $tagname not found");
+                    say encode_utf8("Tag $tag_name not found");
                     return ();
                 }
 
-                if (none { $tagname eq $_ } $profile->enabled_tags) {
-                    say encode_utf8("Tag $tagname not enabled");
+                if (none { $tag_name eq $_ } $profile->enabled_tags) {
+                    say encode_utf8("Tag $tag_name not enabled");
                     return ();
                 }
 
@@ -322,7 +322,7 @@ sub find_all_tags {
 
     my %tags;
     for my $name (@check_names) {
-        $tags{$_} = 1 for @{$profile->tagnames_for_check->{$name}};
+        $tags{$_} = 1 for @{$profile->tag_names_for_check->{$name}};
     }
 
     return keys %tags

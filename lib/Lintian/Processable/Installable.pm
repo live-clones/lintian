@@ -1,4 +1,4 @@
-# Copyright © 2019-2020 Felix Lechner
+# Copyright (C) 2019-2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -12,7 +12,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -27,24 +27,23 @@ use Const::Fast;
 use IPC::Run3;
 use Unicode::UTF8 qw(encode_utf8 decode_utf8 valid_utf8);
 
-use Lintian::Deb822::File;
+use Lintian::Deb822;
 
 use Moo;
 use namespace::clean;
 
 with
+  'Lintian::Processable',
+  'Lintian::Processable::Installable::Changelog',
   'Lintian::Processable::Installable::Class',
+  'Lintian::Processable::Installable::Conffiles',
+  'Lintian::Processable::Installable::Control',
+  'Lintian::Processable::Installable::Installed',
+  'Lintian::Processable::Installable::Overrides',
   'Lintian::Processable::Installable::Relation',
-  'Lintian::Processable::Changelog',
-  'Lintian::Processable::Control',
-  'Lintian::Processable::Control::Conffiles',
-  'Lintian::Processable::Installed',
   'Lintian::Processable::IsNonFree',
   'Lintian::Processable::Hardening',
-  'Lintian::Processable::Objdump',
-  'Lintian::Processable::NotJustDocs',
-  'Lintian::Processable::Overrides',
-  'Lintian::Processable';
+  'Lintian::Processable::NotJustDocs';
 
 # read up to 40kB at a time.  this happens to be 4096 "tar records"
 # (with a block-size of 512 and a block factor of 20, which appear to
@@ -130,7 +129,7 @@ sub init_from_file {
 
     my $stdout = decode_utf8($stdout_bytes);
 
-    my $deb822 = Lintian::Deb822::File->new;
+    my $deb822 = Lintian::Deb822->new;
     my @sections = $deb822->parse_string($stdout);
     croak encode_utf8(
         'Not exactly one section with installable control data in '

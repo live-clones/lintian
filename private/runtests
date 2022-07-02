@@ -1,10 +1,10 @@
 #!/usr/bin/perl
 
-# Copyright © 1998 Richard Braakman
-# Copyright © 2008 Frank Lichtenheld
-# Copyright © 2008, 2009 Russ Allbery
-# Copyright © 2014 Niels Thykier
-# Copyright © 2020 Felix Lechner
+# Copyright (C) 1998 Richard Braakman
+# Copyright (C) 2008 Frank Lichtenheld
+# Copyright (C) 2008, 2009 Russ Allbery
+# Copyright (C) 2014 Niels Thykier
+# Copyright (C) 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -59,6 +59,7 @@ use IO::Interactive qw(is_interactive);
 use IO::Prompt::Tiny qw(prompt);
 use MCE::Loop;
 use Path::Tiny;
+use Syntax::Keyword::Try;
 use TAP::Formatter::Console;
 use TAP::Formatter::File;
 use TAP::Harness;
@@ -67,7 +68,6 @@ use Term::ANSIColor;
 use Time::Duration;
 use Time::Moment;
 use Time::Piece;
-use Try::Tiny;
 use Unicode::UTF8 qw(encode_utf8 decode_utf8);
 
 use Lintian::IPC::Run3 qw(safe_qx);
@@ -129,8 +129,7 @@ if (($ENV{LINTIAN_TEST_INSTALLED} // 'no') eq 'yes') {
     $ENV{LINTIAN_UNDER_TEST} = realpath(THISDIR . '/../bin/lintian');
 }
 
-$ENV{LINTIAN_BASE}
-  = realpath(dirname(dirname($ENV{LINTIAN_UNDER_TEST})))
+$ENV{LINTIAN_BASE}= realpath(dirname(dirname($ENV{LINTIAN_UNDER_TEST})))
   // die encode_utf8('Cannot resolve LINTIAN_BASE');
 
 # options
@@ -205,7 +204,7 @@ my @lintianfiles
   = map { File::Find::Rule->file->in("$ENV{'LINTIAN_BASE'}/$_") }@lintianparts;
 push(@lintianfiles, Cwd::realpath($ENV{'LINTIAN_UNDER_TEST'}));
 $ENV{'LINTIAN_EPOCH'}
-  = max(map { -e $_ ? stat($_)->mtime : time } @lintianfiles);
+  = max(map { -e ? path($_)->stat->mtime : time } @lintianfiles);
 say encode_utf8('Lintian modified on '. rfc822date($ENV{'LINTIAN_EPOCH'}));
 
 my $lintian_error;
@@ -288,7 +287,7 @@ my @harnessparts
 my @harnessfiles
   = map { File::Find::Rule->file->in("$ENV{'LINTIAN_BASE'}/$_") }@harnessparts;
 my $harness_files_epoch
-  = max(map { -e $_ ? stat($_)->mtime : time } @harnessfiles);
+  = max(map { -e ? path($_)->stat->mtime : time } @harnessfiles);
 $ENV{'HARNESS_EPOCH'}
   = max(our_modification_epoch, perl_modification_epoch, $harness_files_epoch);
 say encode_utf8('Harness modified on '. rfc822date($ENV{'HARNESS_EPOCH'}));
@@ -304,21 +303,27 @@ say encode_utf8($EMPTY);
 
 my $status = 0;
 
-my $formatter = TAP::Formatter::File->new({
-    errors => 1,
-    jobs => $numjobs,
-});
-$formatter = TAP::Formatter::Console->new({
+my $formatter = TAP::Formatter::File->new(
+    {
+        errors => 1,
+        jobs => $numjobs,
+    }
+);
+$formatter = TAP::Formatter::Console->new(
+    {
         errors => 1,
         jobs => $numjobs,
         color => 1,
-    }) if is_interactive;
+    }
+) if is_interactive;
 
-my $harness = TAP::Harness->new({
-    formatter => $formatter,
-    jobs => $numjobs,
-    lib => ["$ENV{'LINTIAN_BASE'}/lib"],
-});
+my $harness = TAP::Harness->new(
+    {
+        formatter => $formatter,
+        jobs => $numjobs,
+        lib => ["$ENV{'LINTIAN_BASE'}/lib"],
+    }
+);
 
 my $aggregator = TAP::Parser::Aggregator->new;
 $aggregator->start;
@@ -600,7 +605,8 @@ if (is_interactive && !$unattended) {
             my $decision_bytes = prompt(
                 encode_utf8(
 '>>>  Fix test (y), accept all (a), do not fix (n), quit (q/default)?'
-                ));
+                )
+            );
             my $decision = decode_utf8($decision_bytes);
 
             last
@@ -711,10 +717,10 @@ sub prepare_build {
             prepare("$recipe_root/$recipe/build-spec",
                 $source_path, $testset, $force_rebuild);
 
-        }catch {
+        } catch {
             # catch any error
-            $error = $_;
-        };
+            $error = $@;
+        }
     };
 
     my $log = decode_utf8($log_bytes);
@@ -785,10 +791,11 @@ sub build_package {
         try {
             # call runner
             build_subject($source_path, $build_path);
-        }catch {
+
+        } catch {
             # catch any error
-            $error = $_;
-        };
+            $error = $@;
+        }
     };
 
     my $log = decode_utf8($log_bytes);
@@ -855,8 +862,8 @@ sub prepare_test {
 
         }catch {
             # catch any error
-            $error = $_;
-        };
+            $error = $@;
+        }
     };
 
     my $log = decode_utf8($log_bytes);

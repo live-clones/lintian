@@ -1,8 +1,8 @@
 # desktop/dbus -- lintian check script, vaguely based on apache2 -*- perl -*-
 #
-# Copyright © 2012 Arno Töll
-# Copyright © 2014 Collabora Ltd.
-# Copyright © 2021 Felix Lechner
+# Copyright (C) 2012 Arno Toell
+# Copyright (C) 2014 Collabora Ltd.
+# Copyright (C) 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -29,12 +29,12 @@ use utf8;
 use Const::Fast;
 use List::UtilsBy qw(uniq_by);
 
+const my $EMPTY => q{};
+
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-const my $EMPTY => q{};
 
 sub installable {
     my ($self) = @_;
@@ -55,15 +55,15 @@ sub installable {
 
     my @unique = uniq_by { $_->name } @files;
 
-    $self->check_policy($_)for @unique;
+    $self->check_policy($_) for @unique;
 
     if (my $folder= $index->resolve_path('usr/share/dbus-1/services')) {
 
-        $self->check_service($_, session => 1)for $folder->children;
+        $self->check_service($_, session => 1) for $folder->children;
     }
 
     if (my $folder= $index->resolve_path('usr/share/dbus-1/system-services')) {
-        $self->check_service($_)for $folder->children;
+        $self->check_service($_) for $folder->children;
     }
 
     return;
@@ -72,9 +72,9 @@ sub installable {
 my $PROPERTIES = 'org.freedesktop.DBus.Properties';
 
 sub check_policy {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
-    my $xml = $file->decoded_utf8;
+    my $xml = $item->decoded_utf8;
     return
       unless length $xml;
 
@@ -90,8 +90,10 @@ sub check_policy {
     {
         if (defined $1) {
             $policy = $1;
+
         } elsif (defined $2) {
             $policy = $EMPTY;
+
         } else {
             push(@rules, $policy.$3);
         }
@@ -114,8 +116,8 @@ sub check_policy {
                 # because root can do anything anyway
 
             } else {
-                $self->hint('dbus-policy-without-send-destination',
-                    $file, "(rule $position)", $rule);
+                $self->pointed_hint('dbus-policy-without-send-destination',
+                    $item->pointer($position), $rule);
 
                 if (   $rule =~ m{send_interface=}
                     && $rule !~ m{send_interface=['"]\Q${PROPERTIES}\E['"]}) {
@@ -131,13 +133,14 @@ sub check_policy {
                 } elsif ($rule =~ m{<allow}) {
                     # Looks like CVE-2014-8148 or similar. This is really bad;
                     # emit an additional tag.
-                    $self->hint('dbus-policy-excessively-broad',
-                        $file, "(rule $position)", $rule);
+                    $self->pointed_hint('dbus-policy-excessively-broad',
+                        $item->pointer($position), $rule);
                 }
             }
         }
 
-        $self->hint('dbus-policy-at-console', $file, "(rule $position)", $rule)
+        $self->pointed_hint('dbus-policy-at-console',
+            $item->pointer($position), $rule)
           if $rule =~ m{at_console=['"]true};
 
     } continue {
@@ -148,9 +151,9 @@ sub check_policy {
 }
 
 sub check_service {
-    my ($self, $file, %kwargs) = @_;
+    my ($self, $item, %kwargs) = @_;
 
-    my $text = $file->decoded_utf8;
+    my $text = $item->decoded_utf8;
     return
       unless length $text;
 
@@ -159,14 +162,15 @@ sub check_service {
         my $name = $1;
 
         next
-          if $file->basename eq "${name}.service";
+          if $item->basename eq "${name}.service";
 
         if ($kwargs{session}) {
-            $self->hint('dbus-session-service-wrong-name',
-                "${name}.service", $file);
+            $self->pointed_hint('dbus-session-service-wrong-name',
+                $item->pointer,"better: ${name}.service");
+
         } else {
-            $self->hint(
-                ('dbus-system-service-wrong-name',"${name}.service", $file));
+            $self->pointed_hint('dbus-system-service-wrong-name',
+                $item->pointer, "better: ${name}.service");
         }
     }
 

@@ -14,4 +14,4 @@ Explanation: In the Unix tradition, Debian packages should have human-readable a
  for questions. If you maintain a package containing such a program,
  please install an override. Other exceptions to this check include
  configuration scripts called from the package's post-installation script.
-See-Also: devref 6.5.1, debconf-devel(7)
+See-Also: developer-reference 6.5.1, debconf-devel(7)

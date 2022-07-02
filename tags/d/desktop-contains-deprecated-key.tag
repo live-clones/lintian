@@ -1,10 +1,13 @@
 Tag: desktop-contains-deprecated-key
 Severity: warning
 Check: menu-format
-Explanation: The key on this line of the desktop entry has been deprecated in the
- FreeDesktop specification. If the key is "KDE Desktop Entry", the right
- fix is normally changing it to "Desktop Entry".
+Explanation: The key on this line of the desktop entry was deprecated in the
+ FreeDesktop specification.
  .
- The desktop-file-validate tool in the desktop-file-utils package is
- useful for checking the syntax of desktop entries.
-See-Also: https://specifications.freedesktop.org/desktop-entry-spec/latest/apc.html
+ If that key is <code>KDE Desktop Entry</code>, the fix for this condition is
+ usually to change it to <code>Desktop Entry</code>.
+ .
+ The <code>desktop-file-validate</code> tool in the <code>desktop-file-utils</code>
+ package may be useful when checking the syntax of desktop entries.
+See-Also:
+ https://specifications.freedesktop.org/desktop-entry-spec/latest/apc.html

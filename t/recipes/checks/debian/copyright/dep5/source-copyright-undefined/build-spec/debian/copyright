@@ -10,12 +10,12 @@ License: Fixme
 
 
 Files: debian/*
-Copyright: 2014, somebody2
+Copyright: 2015, somebody2
 License: unknown
  Fixme
 
 Files: debian/a
-Copyright: 2014, somebody2
+Copyright: 2016, somebody2
 License: unknow
  Fixme
 
@@ -26,7 +26,7 @@ License: todo
 
 Files: debian/c
 comment: some spacing
-Copyright: 2014, somebody2
+Copyright: 2017, somebody2
 License:            -
  Fixme
 

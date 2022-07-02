@@ -6,4 +6,4 @@ Explanation: This package contains a <code>postrm</code> maintainer script that 
  <code>postrm</code> can only rely on essential packages, which means the
  interpreter used by <code>postrm</code> must be one of the essential ones
  (<code>sh</code>, <code>bash</code>, or <code>perl</code>).
-See-Also: policy 7.2
+See-Also: debian-policy 7.2

@@ -1,8 +1,7 @@
 Tag: malformed-override
 Severity: error
 Show-Always: yes
-Check: lintian
-See-Also: lintian 2.4.1
+Check: debian/lintian-overrides/malformed
 Explanation: Lintian discovered an override entry with an invalid format. An
  override entry should have the format:
  .
@@ -11,4 +10,6 @@ Explanation: Lintian discovered an override entry with an invalid format. An
  where &lt;package&gt; is the package name, &lt;archlist&gt; is an
  architecture list, &lt;type&gt; specifies the package type (binary is the
  default), &lt;tag&gt; is the tag to override, and &lt;extra&gt; is any
-  specific information for the particular tag to override.
+ specific information for the particular tag to override.
+See-Also:
+ lintian-manual 2.4.1

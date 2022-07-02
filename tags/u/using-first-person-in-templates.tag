@@ -8,4 +8,4 @@ Explanation: You should avoid the use of first person ("I will do this..." or
  .
  If this template is only used internally by the package and not displayed
  to the user, put "for internal use" in the short description.
-See-Also: devref 6.5.2.5
+See-Also: developer-reference 6.5.2.5

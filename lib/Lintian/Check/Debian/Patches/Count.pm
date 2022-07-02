@@ -1,6 +1,6 @@
 # debian/patches/count -- lintian check script -*- perl -*-
 #
-# Copyright © 2020 Felix Lechner
+# Copyright (C) 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -29,20 +29,18 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-sub source {
-    my ($self) = @_;
+sub visit_patched_files {
+    my ($self, $item) = @_;
 
-    my $series
-      = $self->processable->patched->resolve_path('debian/patches/series');
     return
-      unless defined $series;
+      unless $item->name eq 'debian/patches/series';
 
-    my @lines = split(/\n/, $series->decoded_utf8);
+    my @lines = split(/\n/, $item->decoded_utf8);
 
     # remove lines containing only comments
     my @patches = grep { !/^\s*(?:#|$)/ } @lines;
 
-    $self->hint('number-of-patches', scalar @patches);
+    $self->pointed_hint('number-of-patches', $item->pointer, scalar @patches);
 
     return;
 }

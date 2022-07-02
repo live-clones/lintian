@@ -1,9 +1,9 @@
 # binaries/static -- lintian check script -*- perl -*-
 
-# Copyright © 1998 Christian Schwarz and Richard Braakman
-# Copyright © 2012 Kees Cook
-# Copyright © 2017-2020 Chris Lamb <lamby@debian.org>
-# Copyright © 2021 Felix Lechner
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 2012 Kees Cook
+# Copyright (C) 2017-2020 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -48,7 +48,8 @@ has built_with_golang => (
           if defined $source;
 
         return $built_with_golang;
-    });
+    }
+);
 
 sub visit_installed_files {
     my ($self, $item) = @_;
@@ -60,16 +61,12 @@ sub visit_installed_files {
       unless $item->is_file;
 
     return
-      unless $item->file_info =~ /^ [^,]* \b ELF \b /x;
+      unless $item->file_type =~ /^ [^,]* \b ELF \b /x;
 
     return
-      unless $item->file_info =~ m{ executable | shared [ ] object }x;
+      unless $item->file_type =~ m{ executable | shared [ ] object }x;
 
-    my $objdump = $self->processable->objdump_info->{$item->name};
-    return
-      unless defined $objdump;
-
-    my $is_shared = $item->file_info =~ m/(shared object|pie executable)/;
+    my $is_shared = $item->file_type =~ m/(shared object|pie executable)/;
 
     # Some exceptions: files in /boot, /usr/lib/debug/*,
     # named *-static or *.static, or *-static as
@@ -79,15 +76,15 @@ sub visit_installed_files {
     # klibc binaries appear to be static.
     # Location of debugging symbols.
     # ldconfig must be static.
-    $self->hint('statically-linked-binary', $item)
+    $self->pointed_hint('statically-linked-binary', $item->pointer)
       if !$is_shared
-      && !exists $objdump->{NEEDED}
+      && !exists $item->elf->{NEEDED}
       && $item->name !~ m{^boot/}
       && $item->name !~ /[\.-]static$/
       && $self->processable->name !~ /-static$/
       && !$self->built_with_golang
-      && (!exists $objdump->{INTERP}
-        || $objdump->{INTERP} !~ m{/lib/klibc-\S+\.so})
+      && (!exists $item->elf->{INTERP}
+        || $item->elf->{INTERP} !~ m{/lib/klibc-\S+\.so})
       && $item->name !~ m{^usr/lib/debug/}
       && $item->name ne 'sbin/ldconfig';
 

@@ -1,7 +1,7 @@
 # group-checks -- lintian check script -*- perl -*-
 
-# Copyright © 2011 Niels Thykier <niels@thykier.net>
-# Copyright © 2018 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2011 Niels Thykier <niels@thykier.net>
+# Copyright (C) 2018 Chris Lamb <lamby@debian.org>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -47,19 +47,20 @@ sub source {
 
     # The packages a.k.a. nodes
     my (@nodes, %edges, $sccs);
-    my @procs = $group->get_processables('binary');
+    my @installables = grep { $_->type ne 'udeb' } $group->get_installables;
 
-    $self->check_file_overlap(@procs);
+    $self->check_file_overlap(@installables);
 
-    foreach my $processable (@procs) {
-        my $deps = $group->direct_dependencies($processable);
+    for my $installable (@installables) {
+
+        my $deps = $group->direct_dependencies($installable);
         if (scalar @{$deps} > 0) {
             # it depends on another package - it can cause
             # a circular dependency
-            my $pname = $processable->name;
+            my $pname = $installable->name;
             push @nodes, $pname;
             $edges{$pname} = [map { $_->name } @{$deps}];
-            $self->check_multiarch($processable, $deps);
+            $self->check_multiarch($installable, $deps);
         }
     }
 
@@ -73,7 +74,8 @@ sub source {
         # It takes two to tango... erh. make a circular dependency.
         next if scalar @{$comp} < 2;
 
-        $self->hint('intra-source-package-circular-dependency', sort @{$comp});
+        $self->hint('intra-source-package-circular-dependency',
+            (sort @{$comp}));
     }
 
     return;
@@ -93,7 +95,7 @@ sub check_file_overlap {
 
         my @provides_one = $one->fields->trimmed_list('Provides', qr{,});
         my $relation_one = Lintian::Relation->new->load(
-            join(' |̈́ ', $one->name, @provides_one));
+            join(' | ', $one->name, @provides_one));
 
         for my $two (@remaining) {
 
@@ -142,9 +144,7 @@ sub check_file_overlap {
 sub check_multiarch {
     my ($self, $processable, $deps) = @_;
 
-    my $KNOWN_DBG_PACKAGE
-      = $self->profile->load_data('common/dbg-pkg',qr/\s*\~\~\s*/,
-        sub { return qr/$_[0]/xms; });
+    my $KNOWN_DBG_PACKAGE= $self->data->load('common/dbg-pkg',qr/\s*\~\~\s*/);
 
     my $ma = $processable->fields->value('Multi-Arch') || 'no';
     if ($ma eq 'same') {
@@ -157,7 +157,8 @@ sub check_multiarch {
                     'dependency-is-not-multi-archified',
                     join(q{ },
                         $processable->name, 'depends on',
-                        $dep->name, "(multi-arch: $dma)"));
+                        $dep->name, "(multi-arch: $dma)")
+                );
             }
         }
     } elsif ($ma ne 'same'
@@ -182,7 +183,7 @@ sub check_multiarch {
                     $processable->name . ' => ' . $dep->name
                   )
                   unless any { $processable->name =~ m/$_/xms }
-                $KNOWN_DBG_PACKAGE->all;
+                  $KNOWN_DBG_PACKAGE->all;
             }
         }
     }

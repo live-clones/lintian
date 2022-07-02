@@ -1,8 +1,8 @@
 # libraries/shared/trigger/ldconfig -- lintian check script -*- perl -*-
 
-# Copyright © 1998 Christian Schwarz
-# Copyright © 2018-2019 Chris Lamb <lamby@debian.org>
-# Copyright © 2021 Felix Lechner
+# Copyright (C) 1998 Christian Schwarz
+# Copyright (C) 2018-2019 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -33,23 +33,22 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-has soname_by_file => (
+has soname_by_filename => (
     is => 'rw',
     lazy => 1,
     default => sub {
         my ($self) = @_;
 
-        my $objdump = $self->processable->objdump_info;
+        my %soname_by_filename;
+        for my $item (@{$self->processable->installed->sorted_list}) {
 
-        my %soname_by_file;
-        for my $name (keys %{$objdump}) {
-
-            $soname_by_file{$name} = $objdump->{$name}{SONAME}[0]
-              if exists $objdump->{$name}{SONAME};
+            $soname_by_filename{$item->name}= $item->elf->{SONAME}[0]
+              if exists $item->elf->{SONAME};
         }
 
-        return \%soname_by_file;
-    });
+        return \%soname_by_filename;
+    }
+);
 
 has must_call_ldconfig => (is => 'rw', default => sub { [] });
 
@@ -65,7 +64,7 @@ sub visit_installed_files {
     # hardware capabilities.
     # yes! so postinst must call ldconfig
     push(@{$self->must_call_ldconfig}, $resolved_name)
-      if exists $self->soname_by_file->{$resolved_name}
+      if exists $self->soname_by_filename->{$resolved_name}
       && $self->needs_ldconfig($item);
 
     return;
@@ -89,7 +88,7 @@ sub installable {
       && $self->processable->type ne 'udeb';
 
     $self->hint('lacks-ldconfig-trigger',
-        sort +uniq @{$self->must_call_ldconfig})
+        (sort +uniq @{$self->must_call_ldconfig}))
       if @{$self->must_call_ldconfig}
       && !$we_trigger_ldconfig
       && $self->processable->type ne 'udeb';
@@ -98,15 +97,15 @@ sub installable {
 }
 
 sub needs_ldconfig {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
    # Libraries that should only be used in the presence of certain capabilities
    # may be located in subdirectories of the standard ldconfig search path with
    # one of the following names.
-    my $HWCAP_DIRS = $self->profile->load_data('shared-libs/hwcap-dirs');
-    my @ldconfig_folders = @{$self->profile->architectures->ldconfig_folders};
+    my $HWCAP_DIRS = $self->data->load('shared-libs/hwcap-dirs');
+    my @ldconfig_folders = @{$self->data->architectures->ldconfig_folders};
 
-    my $dirname = $file->dirname;
+    my $dirname = $item->dirname;
     my $encapsulator;
     do {
         $dirname =~ s{ ([^/]+) / $}{}x;

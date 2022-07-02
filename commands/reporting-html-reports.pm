@@ -2,9 +2,9 @@
 #
 # Lintian HTML reporting tool -- Create Lintian web reports
 #
-# Copyright © 1998 Christian Schwarz and Richard Braakman
-# Copyright © 2007 Russ Allbery
-# Copyright © 2017-2019 Chris Lamb <lamby@debian.org>
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 2007 Russ Allbery
+# Copyright (C) 2017-2019 Chris Lamb <lamby@debian.org>
 #
 # This program is free software.  It is distributed under the terms of
 # the GNU General Public License as published by the Free Software
@@ -18,7 +18,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 

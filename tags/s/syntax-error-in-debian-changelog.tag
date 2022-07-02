@@ -9,4 +9,4 @@ Explanation: While parsing the Debian changelog, a syntax error was found. If
  .
  with no leading whitespace before the legacy entries. This line and
  everything after it will be ignored.
-See-Also: policy 4.4
+See-Also: debian-policy 4.4

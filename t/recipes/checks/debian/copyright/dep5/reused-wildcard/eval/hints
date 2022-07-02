@@ -1,1 +1,2 @@
-reused-wildcard (source): duplicate-globbing-patterns debian/copyright debian/* in lines 7 11
+reused-wildcard (source): update-debian-copyright 2019 vs CHANGELOG-YEAR [debian/copyright:12]
+reused-wildcard (source): duplicate-globbing-patterns debian/* (lines 7 11) [debian/copyright]

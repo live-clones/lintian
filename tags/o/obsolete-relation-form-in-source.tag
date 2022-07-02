@@ -1,7 +1,11 @@
 Tag: obsolete-relation-form-in-source
-See-Also: policy 7.1
 Severity: error
-Check: debian/control
-Explanation: The forms "&lt;" and "&gt;" mean "&lt;=" and "&gt;=", not "&lt;&lt;"
- and "&gt;&gt;" as one might expect. These forms were marked obsolete and
- must no longer be used. Use the longer forms instead.
+Check: debian/control/field/relation
+Explanation: The short version restrictions <code>&lt;</code> and <code>&gt;</code>
+ actually mean <code>&lt;=</code> and <code>&gt;=</code> (and not <code>&lt;&lt;</code>
+ or <code>&gt;&gt;</code>, as one might expect).
+ .
+ The short forms are obsolete and no longer allowed. Please use the longer forms
+ in the parentheses instead.
+See-Also:
+ debian-policy 7.1

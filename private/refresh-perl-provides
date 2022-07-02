@@ -9,7 +9,7 @@ use utf8;
 # The list will have the package name and the upstream version of the
 # corresponding module integrated in the currently installed Perl version.
 
-# Copyright © 2008 Niko Tyni
+# Copyright (C) 2008 Niko Tyni
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -75,15 +75,16 @@ my @core_packages = (qw(perl-base perl), "perl-modules-$perl_version");
 warn encode_utf8(
     join(q{ },
         'Warning: this list should only be updated on a system',
-        'with an up to date APT cache of the Debian unstable distribution'))
+        'with an up to date APT cache of the Debian unstable distribution')
+  )
   if (
     none {
-             defined $_->{Origin}
+        defined $_->{Origin}
           && defined $_->{Archive}
           && $_->{Origin} eq 'Debian'
           && $_->{Archive} eq 'unstable';
-    }
-    @{$cache->files});
+    }@{$cache->files}
+  );
 
 print encode_utf8(<<"EOF");
 # virtual packages provided by the Perl core packages that also have a

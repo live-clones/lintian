@@ -1,6 +1,6 @@
 # libraries/shared/obsolete -- lintian check script -*- perl -*-
 
-# Copyright © 2020 Mo Zhou
+# Copyright (C) 2020 Mo Zhou
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -30,20 +30,19 @@ use namespace::clean;
 with 'Lintian::Check';
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     return
-      unless $file->is_file;
+      unless $item->is_file;
 
     return
-      unless $file->file_info =~ /^[^,]*\bELF\b/;
+      unless $item->file_type =~ /^[^,]*\bELF\b/;
 
-    my $objdump = $self->processable->objdump_info->{$file->name};
-
-    my @needed = @{$objdump->{NEEDED} // []};
+    my @needed = @{$item->elf->{NEEDED} // []};
     my @obsolete = grep { /^libcblas\.so\.\d/ } @needed;
 
-    $self->hint('linked-with-obsolete-library', $_, $file->name) for @obsolete;
+    $self->pointed_hint('linked-with-obsolete-library', $item->pointer, $_)
+      for @obsolete;
 
     return;
 }

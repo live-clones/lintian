@@ -4,4 +4,4 @@ Check: debian/copyright
 Explanation: The common licenses (GPL, BSD, Artistic, etc) have been moved from
  /usr/doc/copyright to /usr/share/common-licenses.
  Copyright files should be updated.
-See-Also: policy 12.5
+See-Also: debian-policy 12.5

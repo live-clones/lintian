@@ -1,6 +1,6 @@
-# Copyright © 2012 Niels Thykier <niels@thykier.net>
-# Copyright © 2019-2020 Felix Lechner <felix.lechner@lease-up.com>
-# Copyright © 2017-2018 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2012 Niels Thykier <niels@thykier.net>
+# Copyright (C) 2017-2018 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2019-2021 Felix Lechner <felix.lechner@lease-up.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -24,17 +24,18 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Carp;
 use Const::Fast;
 use Unicode::UTF8 qw(encode_utf8);
 
-use Moo::Role;
-use namespace::clean;
+use Lintian::Hint::Annotated;
+use Lintian::Hint::Pointed;
 
 const my $EMPTY => q{};
-const my $SLASH => q{/};
-const my $DOT => q{.};
+const my $SPACE => q{ };
 const my $UNDERSCORE => q{_};
+
+use Moo::Role;
+use namespace::clean;
 
 =head1 NAME
 
@@ -49,7 +50,7 @@ Lintian::Check -- Common facilities for Lintian checks
 
 =head1 DESCRIPTION
 
-A class for collecting Lintian tags as they are issued
+A class for operating Lintian checks
 
 =head1 INSTANCE METHODS
 
@@ -59,25 +60,30 @@ A class for collecting Lintian tags as they are issued
 
 =item processable
 
-Get processable underlying this check.
-
 =item group
-
-Get group that the processable is in.
 
 =item profile
 
+=item hints
+
 =cut
 
-has name => (
-    is => 'rw',
-    coerce => sub { my ($string) = @_; return $string // $EMPTY;},
-    default => $EMPTY
-);
-
+has name => (is => 'rw', default => $EMPTY);
 has processable => (is => 'rw', default => sub { {} });
 has group => (is => 'rw', default => sub { {} });
 has profile => (is => 'rw');
+
+has hints => (is => 'rw', default => sub { [] });
+
+=item data
+
+=cut
+
+sub data {
+    my ($self) = @_;
+
+    return $self->profile->data;
+}
 
 =item visit_files
 
@@ -108,12 +114,13 @@ sub visit_files {
 
 =item run
 
-Run the check.
-
 =cut
 
 sub run {
     my ($self) = @_;
+
+    # do not carry over any hints
+    $self->hints([]);
 
     my $type = $self->processable->type;
 
@@ -138,63 +145,70 @@ sub run {
     $self->always
       if $self->can('always');
 
-    return;
+    return @{$self->hints};
 }
 
-=item find_tag
+=item pointed_hint
 
 =cut
 
-sub find_tag {
-    my ($self, $tagname) = @_;
+sub pointed_hint {
+    my ($self, $tag_name, $pointer, @notes) = @_;
 
-    croak encode_utf8('No tag name')
-      unless length $tagname;
+    my $hint = Lintian::Hint::Pointed->new;
 
-    # try local name space
-    my $tag = $self->profile->get_tag($self->name . $SLASH . $tagname);
+    $hint->tag_name($tag_name);
+    $hint->issued_by($self->name);
 
-    warn encode_utf8("Using tag $tagname as name spaced in "
-          . $self->name
-          . ' while not so declared.')
-      if defined $tag && !$tag->name_spaced;
+    my $note = stringify(@notes);
+    $hint->note($note);
+    $hint->pointer($pointer);
 
-    # try global name space
-    $tag ||= $self->profile->get_tag($tagname);
+    push(@{$self->hints}, $hint);
 
-    return $tag;
+    return;
 }
 
 =item hint
 
-Tag the processable associated with this check
-
 =cut
 
 sub hint {
-    my ($self, $tagname, @context) = @_;
+    my ($self, $tag_name, @notes) = @_;
 
-    my $tag = $self->find_tag($tagname);
+    my $hint = Lintian::Hint::Annotated->new;
 
-    unless (defined $tag) {
+    $hint->tag_name($tag_name);
+    $hint->issued_by($self->name);
 
-        warn encode_utf8(
-            "Unknown tag $tagname in check " . $self->name . $DOT);
-        return undef;
-    }
+    my $note = stringify(@notes);
+    $hint->note($note);
 
-    unless ($tag->check eq $self->name) {
+    push(@{$self->hints}, $hint);
 
-        warn encode_utf8('Check '
-              . $self->name
-              . " has no tag $tagname (but "
-              . $tag->check
-              . ' does).');
-        return undef;
-    }
+    return;
+}
 
-    # pull name from tag; could be name-spaced
-    return $self->processable->hint($tag->name, @context);
+=item stringify
+
+=cut
+
+sub stringify {
+    my (@arguments) = @_;
+
+    # skip empty arguments
+    my @meaningful = grep { length } @arguments;
+
+    # trim both ends of each item
+    s{^ \s+ | \s+ $}{}gx for @meaningful;
+
+    # concatenate with spaces
+    my $text = join($SPACE, @meaningful) // $EMPTY;
+
+    # escape newlines; maybe add others
+    $text =~ s{\n}{\\n}g;
+
+    return $text;
 }
 
 =back

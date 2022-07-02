@@ -1,5 +1,5 @@
-# Copyright © 2011 Niels Thykier <niels@thykier.net>
-# Copyright © 2019 Felix Lechner
+# Copyright (C) 2011 Niels Thykier <niels@thykier.net>
+# Copyright (C) 2019-2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -13,7 +13,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -27,18 +27,20 @@ use Carp qw(croak);
 use Const::Fast;
 use Cwd;
 use Devel::Size qw(total_size);
+use Email::Address::XS;
 use File::Spec;
 use List::Compare;
-use List::SomeUtils qw(any none uniq firstval);
+use List::SomeUtils qw(any none uniq firstval true);
+use List::UtilsBy qw(sort_by);
 use POSIX qw(ENOENT);
+use Syntax::Keyword::Try;
 use Time::HiRes qw(gettimeofday tv_interval);
 use Time::Piece;
 use Unicode::UTF8 qw(encode_utf8);
 
-use Lintian::Util qw(human_bytes);
-
-use Moo;
-use namespace::clean;
+use Lintian::Hint::Pointed;
+use Lintian::Mask;
+use Lintian::Util qw(human_bytes match_glob);
 
 const my $EMPTY => q{};
 const my $SPACE => q{ };
@@ -47,13 +49,16 @@ const my $UNDERSCORE => q{_};
 const my $EXTRA_VERBOSE => 3;
 
 # A private table of supported types.
-my %SUPPORTED_TYPES = (
+const my %SUPPORTED_TYPES => (
     'binary'  => 1,
     'buildinfo' => 1,
     'changes' => 1,
     'source'  => 1,
     'udeb'    => 1,
 );
+
+use Moo;
+use namespace::clean;
 
 =head1 NAME
 
@@ -188,7 +193,8 @@ sub process {
         local $SIG{__WARN__}
           = sub { warn encode_utf8("Warning in processable $path: $_[0]") };
 
-        my $declared_overrides;
+        my @hints;
+        my %enabled_overrides;
 
         say {*STDERR}
           encode_utf8(
@@ -200,89 +206,55 @@ sub process {
             say {*STDERR} encode_utf8('Loading overrides file (if any) ...')
               if $option->{debug};
 
-            eval {$declared_overrides = $processable->overrides;};
-            if (my $err = $@) {
-                die encode_utf8($err) if not ref $err or $err->errno != ENOENT;
-            }
+            for my $override (@{$processable->overrides}) {
 
-            my %alias = %{$self->profile->known_aliases};
-            my @renamed_overrides
-              = grep { length $alias{$_} } keys %{$declared_overrides};
+                my $pattern = $override->pattern;
 
-            # treat renamed tags in overrides
-            for my $dated (@renamed_overrides) {
+                # catch renames
+                my $tag_name
+                  = $self->profile->get_current_name($override->tag_name);
 
-                # get new name
-                my $modern = $alias{$dated};
+                # catches unknown tags
+                next
+                  unless length $tag_name;
 
-                # make space for renamed override
-                $declared_overrides->{$modern} //= {};
+                next
+                  unless $self->profile->tag_is_enabled($tag_name);
 
-                for my $context (keys %{$declared_overrides->{$dated}}) {
+                my @architectures = @{$override->architectures};
 
-                    # alert user to new tag name
-                    $processable->hint('renamed-tag',
-                        "$dated => $modern in line "
-                          .$declared_overrides->{$dated}{$context}{line});
+                # count negations
+                my $negations = true { /^!/ } @architectures;
 
-                    if (exists $declared_overrides->{$modern}{$context}) {
+                # strip negations if present
+                s/^!// for @architectures;
 
-                        my @lines = (
-                            $declared_overrides->{$dated}{$context}{line},
-                            $declared_overrides->{$modern}{$context}{line});
-                        $processable->hint('duplicate-override-context',
-                            $modern, 'lines', sort @lines);
+                # enable overrides for this architecture
+                # proceed when none specified
+                my $data = $self->profile->data;
+                next
+                  if @architectures
+                  && (
+                    $negations xor none {
+                        $data->architectures->restriction_matches($_,
+                            $processable->architecture)
+                    }@architectures
+                  );
 
-                        next;
-                    }
+                if ($self->profile->is_durable($tag_name)) {
 
-                    # transfer context to current tag name
-                    $declared_overrides->{$modern}{$context}
-                      = $declared_overrides->{$dated}{$context};
-
-                    # remember old tagname
-                    $declared_overrides->{$modern}{$context}{'renamed-from'}
-                      = $dated;
-
-                    # remove the old override context
-                    delete $declared_overrides->{$dated}{$context};
+                    ++$ignored_overrides->{$tag_name};
+                    next;
                 }
 
-                # remove the alias override if there are no contexts left
-                delete $declared_overrides->{$dated}
-                  unless %{$declared_overrides->{$dated}};
-            }
-
-            # complain about and filter out unknown tags in overrides
-            my @unknown_overrides = grep { !$self->profile->get_tag($_) }
-              keys %{$declared_overrides};
-            for my $tagname (@unknown_overrides) {
-
-                $processable->hint('malformed-override',
-                    "Unknown tag $tagname in line "
-                      . $declared_overrides->{$tagname}{$_}{line})
-                  for keys %{$declared_overrides->{$tagname}};
-
-                delete $declared_overrides->{$tagname};
-            }
-
-            # treat ignored overrides here
-            for my $tagname (keys %{$declared_overrides}) {
-
-                unless ($self->profile->is_overridable($tagname)) {
-                    delete $declared_overrides->{$tagname};
-                    $ignored_overrides->{$tagname}++;
-                }
+                $enabled_overrides{$tag_name}{$pattern} = $override;
             }
         }
 
         my @check_names = sort $self->profile->enabled_checks;
-        for my $name (@check_names) {
 
-            my $timer = [gettimeofday];
-            my $procid = $processable->identifier;
-            say {*STDERR} encode_utf8("Running check: $name on $procid  ...")
-              if $option->{debug};
+        my @from_checks;
+        for my $name (@check_names) {
 
             my $absolute = $self->profile->check_path_by_name->{$name};
             require $absolute;
@@ -295,12 +267,17 @@ sub process {
             $check->group($self);
             $check->profile($self->profile);
 
-            eval { $check->run };
-            my $err = $@;
-            my $raw_res = tv_interval($timer);
+            my $timer = [gettimeofday];
+            my $procid = $processable->identifier;
+            say {*STDERR} encode_utf8("Running check: $name on $procid  ...")
+              if $option->{debug};
 
-            if ($err) {
-                my $message = $err;
+            try {
+                my @found_here = $check->run;
+                push(@from_checks, @found_here);
+
+            } catch {
+                my $message = $@;
                 $message
                   .= "warning: cannot run $name check on package $procid\n";
                 $message .= "skipping check of $procid\n";
@@ -311,116 +288,171 @@ sub process {
                 next;
             }
 
+            my $raw_res = tv_interval($timer);
             my $tres = sprintf('%.3fs', $raw_res);
+
             say {*STDERR} encode_utf8("Check $name for $procid done ($tres)")
               if $option->{debug};
             say {*STDERR} encode_utf8("$procid,check/$name,$raw_res")
               if $option->{'perf-output'};
         }
 
-        my @crossing;
-
-        my $hints = $processable->hints;
-        $processable->hints([]);
-
-        for my $hint (@{$hints}) {
-
-            next
-              if $hint->tag->show_always;
-
-            my @matches = grep { $_->suppress($processable, $hint->context) }
-              @{$hint->tag->screens};
-            next
-              unless @matches;
-
-            my @sorted = sort { $a->name cmp $b->name } @matches;
-
-            push(@crossing,
-                    $hint->tag->name
-                  . $SPACE
-                  . join($SPACE, map { $_->name } @sorted))
-              if @sorted > 1;
-
-            my $screen = $sorted[0];
-            $hint->screen($screen);
-        }
-
-        $processable->hints($hints);
-
-        $processable->hint('crossing-screens', $_) for @crossing;
-
+        my %context_tracker;
         my %used_overrides;
 
-        my @keep_hints;
-        for my $hint (@{$processable->hints}) {
+        for my $hint (@from_checks) {
 
-            my $declared = $declared_overrides->{$hint->tag->name};
-            if ($declared && !$hint->tag->show_always) {
+            my $as_issued = $hint->tag_name;
 
-                # empty context in specification matches all
-                my $override = $declared->{$EMPTY};
+            croak encode_utf8('No tag name')
+              unless length $as_issued;
 
-                # matches context exactly
-                $override = $declared->{$hint->context}
-                  unless $override;
+            my $issuer = $hint->issued_by;
 
-                # look for patterns
-                unless ($override) {
-                    my @candidates
-                      = sort grep { length $declared->{$_}{pattern} }
-                      keys %{$declared};
+            # try local name space
+            my $tag = $self->profile->get_tag("$issuer/$as_issued");
 
-                    my $match= firstval {
-                        $hint->context =~ m/^$declared->{$_}{pattern}\z/
-                    }
-                    @candidates;
+            warn encode_utf8(
+"Using tag $as_issued as name spaced while not so declared (in check $issuer)."
+            )if defined $tag && !$tag->name_spaced;
 
-                    $override = $declared->{$match}
-                      if $match;
-                }
+            # try global name space
+            $tag ||= $self->profile->get_tag($as_issued);
 
-                # new hash keys are autovivified to 0
-                $used_overrides{$hint->tag->name}{$override->{context}}++
-                  if $override;
-
-                $hint->override($override);
+            unless (defined $tag) {
+                warn encode_utf8(
+                    "Tried to issue unknown tag $as_issued in check $issuer.");
+                next;
             }
 
-            push(@keep_hints, $hint);
+            if (  !$tag->name_spaced && $tag->name ne $as_issued
+                || $tag->name_spaced && $tag->name ne "$issuer/$as_issued") {
+
+                my $current_name = $tag->name;
+                warn encode_utf8(
+"Tried to issue renamed tag $as_issued (current name $current_name) in check $issuer."
+                );
+
+                next;
+            }
+
+            my $owner = $tag->check;
+            if ($issuer ne $owner) {
+                warn encode_utf8(
+                    "Check $issuer has no tag $as_issued (but $owner does).");
+                next;
+            }
+
+            # pull name from tag; could be name-spaced
+            $hint->tag_name($tag->name);
+            my $tag_name = $hint->tag_name;
+
+            # skip disabled tags
+            next
+              unless $self->profile->tag_is_enabled($tag_name);
+
+            my $context = $hint->context;
+
+            if (exists $context_tracker{$tag_name}{$context}) {
+                warn encode_utf8(
+"Tried to issue duplicate hint in check $issuer: $tag_name $context\n"
+                );
+                next;
+            }
+
+            $context_tracker{$tag_name}{$context} = 1;
+
+            my @masks;
+            for my $screen (@{$tag->screens}) {
+
+                next
+                  unless $screen->suppress($processable, $hint);
+
+                my $mask = Lintian::Mask->new;
+                $mask->screen($screen->name);
+
+                push(@masks, $mask);
+            }
+
+            my @screen_names = map { $_->screen } @masks;
+            my $screen_list = join($SPACE, (sort @screen_names));
+
+            warn encode_utf8("Crossing screens for $tag_name ($screen_list)")
+              if @masks > 1;
+
+            $hint->masks(\@masks)
+              if !$tag->show_always;
+
+            if (exists $enabled_overrides{$tag_name}) {
+
+                my $for_tag = $enabled_overrides{$tag_name};
+
+                if (exists $for_tag->{$EMPTY}) {
+                    $hint->override($for_tag->{$EMPTY});
+
+                } else {
+
+                    # overrides without context handled above
+                    my @patterns = grep { length } keys %{$for_tag};
+
+                    # try short ones first
+                    my @by_length = sort_by { length } @patterns;
+
+                    my $match = firstval {
+                        match_glob($_, $hint->context)
+                    }
+                    @by_length;
+
+                    $hint->override($for_tag->{$match})
+                      if defined $match;
+                }
+            }
+
+            # new hash values autovivify to 0
+            ++$used_overrides{$tag_name}{$hint->override->pattern}
+              if defined $hint->override;
+
+            push(@hints, $hint);
         }
-
-        $processable->hints(\@keep_hints);
-
-        my %otherwise_visible = map { $_->tag->name => 1 } @keep_hints;
 
         # look for unused overrides
-        for my $tagname (keys %{$declared_overrides}) {
+        for my $tag_name (keys %enabled_overrides) {
 
-            next
-              unless $self->profile->tag_is_enabled($tagname);
+            my @declared_patterns = keys %{$enabled_overrides{$tag_name}};
+            my @used_patterns = keys %{$used_overrides{$tag_name} // {}};
 
-            my @declared_contexts = keys %{$declared_overrides->{$tagname}};
-            my @used_contexts = keys %{$used_overrides{$tagname} // {}};
+            my $pattern_lc
+              = List::Compare->new(\@declared_patterns, \@used_patterns);
+            my @unused_patterns = $pattern_lc->get_Lonly;
 
-            my $context_lc
-              = List::Compare->new(\@declared_contexts, \@used_contexts);
-            my @unused_contexts = $context_lc->get_Lonly;
+            for my $pattern (@unused_patterns) {
 
-            # cannot be overridden or suppressed
-            my $condition = 'unused-override';
-            $condition = 'mismatched-override'
-              if $otherwise_visible{$tagname};
+                my $override = $enabled_overrides{$tag_name}{$pattern};
 
-            for my $context (@unused_contexts) {
+                my $override_item = $processable->override_file;
+                my $position = $override->position;
+                my $pointer = $override_item->pointer($position);
 
-                # for renames, use the original name from overrides
-                my $original_name
-                  = $declared_overrides->{$tagname}{$context}{'renamed-from'}
-                  // $tagname;
+                my $unused = Lintian::Hint::Pointed->new;
+                $unused->issued_by('lintian');
 
-                $processable->hint($condition, $original_name, $context);
+                $unused->tag_name('unused-override');
+                $unused->tag_name('mismatched-override')
+                  if exists $context_tracker{$tag_name};
+
+                # use the original name, in case the tag was renamed
+                my $original_name = $override->tag_name;
+                $unused->note($original_name . $SPACE . $pattern);
+
+                $unused->pointer($pointer);
+
+                # cannot be overridden or suppressed
+                push(@hints, $unused);
             }
         }
+
+        # carry hints into the output modules
+        $processable->hints(\@hints);
     }
 
     $self->processing_end(gmtime->datetime . 'Z');
@@ -438,7 +470,8 @@ sub process {
         # suppress warnings without reliable sizes
         local $Devel::Size::warn = 0;
 
-        my $pivot = ($self->get_processables)[0];
+        my @processables = $self->get_processables;
+        my $pivot = shift @processables;
         my $group_id
           = $pivot->source_name . $UNDERSCORE . $pivot->source_version;
         my $group_usage
@@ -460,50 +493,7 @@ sub process {
     chdir $savedir
       or warn encode_utf8("Cannot change to directory $savedir");
 
-    $self->clean_lab($option);
-
     return $success;
-}
-
-=item clean_lab
-
-Removes the lab files to conserve disk space. Global destruction will
-also get these unless we are keeping the lab.
-
-=cut
-
-sub clean_lab {
-    my ($self, $option) = @_;
-
-    my $total = [gettimeofday];
-
-    for my $processable ($self->get_processables) {
-
-        my $proc_id = $processable->identifier;
-        say {*STDERR} encode_utf8("Auto removing: $proc_id ...")
-          if $option->{debug};
-
-        my $each = [gettimeofday];
-
-        $processable->remove;
-
-        my $raw_res = tv_interval($each);
-        say {*STDERR} encode_utf8("Auto removing: $proc_id done (${raw_res}s)")
-          if $option->{debug};
-        say {*STDERR} encode_utf8("$proc_id,auto-remove entry,$raw_res")
-          if $option->{'perf-output'};
-    }
-
-    my $raw_res = tv_interval($total);
-    my $tres = sprintf('%.3fs', $raw_res);
-    say {*STDERR}
-      encode_utf8(
-        'Auto-removal all for group ' . $self->name . " done ($tres)")
-      if $option->{debug};
-    say {*STDERR}encode_utf8($self->name . ",total-group-auto-remove,$raw_res")
-      if $option->{'perf-output'};
-
-    return;
 }
 
 =item $group->add_processable($proc)
@@ -526,7 +516,8 @@ sub add_processable {
             sprintf(
                 "warning: tainted %1\$s package '%2\$s', skipping\n",
                 $processable->type, $processable->name
-            ));
+            )
+        );
         return 0;
     }
 
@@ -543,12 +534,6 @@ sub add_processable {
       unless $self->pooldir;
 
     $processable->pooldir($self->pooldir);
-
-    # needed to read tag specifications and error reporting
-    croak encode_utf8('Please set profile first.')
-      unless $self->profile;
-
-    $processable->profile($self->profile);
 
     croak encode_utf8('Not a supported type (' . $processable->type . ')')
       unless exists $SUPPORTED_TYPES{$processable->type};
@@ -584,48 +569,32 @@ sub add_processable {
     return 1;
 }
 
-=item $group->get_processables([$type])
+=item get_processables
 
-Returns an array of all processables in $group.  The processables are
-returned in the following order: changes (if any), source (if any),
-all binaries (if any) and all udebs (if any).
-
-This order is based on the original order that Lintian processed
-packages in and some parts of the code relies on this order.
-
-Note if $type is given, then only processables of that type is
-returned.
+Returns an array of all processables in $group.
 
 =cut
 
 sub get_processables {
-    my ($self, $type) = @_;
-    my @result;
-    if (defined $type){
-        # We only want $type
-        if ($type eq 'changes' or $type eq 'source' or $type eq 'buildinfo'){
-            return $self->$type;
-        }
-        return values %{$self->$type}
-          if $type eq 'binary'
-          or $type eq 'udeb';
-        die encode_utf8("Unknown type of processable: $type");
-    }
-    # We return changes, dsc, buildinfo, debs and udebs in that order,
-    # because that is the order lintian used to process a changes
-    # file (modulo debs<->udebs ordering).
-    #
-    # Also correctness of other parts rely on this order.
-    foreach my $type (qw(changes source buildinfo)){
-        push @result, $self->$type if $self->$type;
-    }
-    foreach my $type (qw(binary udeb)){
-        push @result, values %{$self->$type};
-    }
-    return @result;
+    my ($self) = @_;
+
+    my @processables;
+
+    push(@processables, $self->changes)
+      if defined $self->changes;
+
+    push(@processables, $self->source)
+      if defined $self->source;
+
+    push(@processables, $self->buildinfo)
+      if defined $self->buildinfo;
+
+    push(@processables, $self->get_installables);
+
+    return @processables;
 }
 
-=item $group->get_binary_processables
+=item get_installables
 
 Returns all binary (and udeb) processables in $group.
 
@@ -634,13 +603,15 @@ returned.
 
 =cut
 
-sub get_binary_processables {
+sub get_installables {
     my ($self) = @_;
-    my @result;
-    foreach my $type (qw(binary udeb)){
-        push @result, values %{$self->$type};
-    }
-    return @result;
+
+    my @installables;
+
+    push(@installables, values %{$self->binary});
+    push(@installables, values %{$self->udeb});
+
+    return @installables;
 }
 
 =item direct_dependencies (PROC)
@@ -663,16 +634,15 @@ sub direct_dependencies {
 
     unless (keys %{$self->saved_direct_dependencies}) {
 
-        my @processables = $self->get_processables('binary');
-        push @processables, $self->get_processables('udeb');
+        my @processables = $self->get_installables;
 
         my %dependencies;
-        foreach my $that (@processables) {
+        for my $that (@processables) {
 
             my $relation = $that->relation('strong');
             my @specific;
 
-            foreach my $this (@processables) {
+            for my $this (@processables) {
 
                 # Ignore self deps - we have checks for that and it
                 # will just end up complicating "correctness" of
@@ -715,8 +685,7 @@ sub direct_reliants {
 
     unless (keys %{$self->saved_direct_reliants}) {
 
-        my @processables = $self->get_processables('binary');
-        push @processables, $self->get_processables('udeb');
+        my @processables = $self->get_installables;
 
         my %reliants;
         foreach my $that (@processables) {
@@ -762,22 +731,45 @@ has spelling_exceptions => (
     default => sub {
         my ($self) = @_;
 
-        my %exceptions;
+        my @acceptable;
 
+        # this run may not have all types
         for my $processable ($self->get_processables) {
 
-            my @names = ($processable->name, $processable->source_name);
-            push(@names, $processable->debian_control->installables)
+            # all processables have those
+            my @package_names= ($processable->name, $processable->source_name);
+
+            # for sources we have d/control
+            push(@package_names, $processable->debian_control->installables)
               if $processable->type eq 'source';
 
-            foreach my $name (@names) {
-                $exceptions{$name} = 1;
-                $exceptions{$_} = 1 for split m/-/, $name;
+            push(@acceptable, @package_names);
+
+            # exempt pieces, too
+            my @package_pieces = map { split(m{-}) } @package_names;
+            push(@acceptable, @package_pieces);
+
+            my @people_names;
+            for my $role (qw(Maintainer Uploaders Changed-By)) {
+
+                my $value = $processable->fields->value($role);
+                for my $parsed (Email::Address::XS->parse($value)) {
+
+                    push(@people_names, $parsed->phrase)
+                      if length $parsed->phrase;
+                }
             }
+
+            push(@acceptable, @people_names);
+
+            # exempt first and last name separately, too
+            my @people_pieces = map { split($SPACE) } @people_names;
+            push(@acceptable, @people_pieces);
         }
 
-        return \%exceptions;
-    });
+        return [uniq @acceptable];
+    }
+);
 
 =back
 

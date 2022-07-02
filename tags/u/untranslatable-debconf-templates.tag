@@ -14,4 +14,4 @@ Explanation: This package seems to be using debconf templates, but some
  .
  If the field is not intended for users to see, ensure the first line
  of the description contains "for internal use".
-See-Also: policy 3.9.1
+See-Also: debian-policy 3.9.1

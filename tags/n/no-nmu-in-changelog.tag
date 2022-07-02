@@ -12,4 +12,4 @@ Explanation: When you NMU a package, that fact should be mentioned on the first 
  package (not intended for Debian), you can suppress this warning by
  putting "local" in the version number or "local package" on the first
  line of the changelog entry.
-See-Also: devref 5.11.3
+See-Also: developer-reference 5.11.3

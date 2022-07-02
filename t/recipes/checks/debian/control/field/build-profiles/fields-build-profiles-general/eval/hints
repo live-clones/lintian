@@ -1,0 +1,2 @@
+fields-build-profiles-general (source): invalid-restriction-formula-in-build-profiles-field <in<valid> (in section for fields-build-profiles-general-wrong-syntax) [debian/control:14]
+fields-build-profiles-general (source): invalid-profile-name-in-build-profiles-field unknown (in section for fields-build-profiles-general-unknown-profile) [debian/control:26]

@@ -1,6 +1,6 @@
 # emacs -- lintian check script -*- perl -*-
 
-# Copyright © 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -26,24 +26,24 @@ use utf8;
 
 use Const::Fast;
 
+const my $WIDELY_READABLE => oct(644);
+
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
 
-const my $WIDELY_READABLE => oct(644);
-
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     # /etc/emacs.*
-    if (   $file->is_file
-        && $file->name =~ m{^etc/emacs.*/\S}
-        && $file->operm != $WIDELY_READABLE) {
+    if (   $item->is_file
+        && $item->name =~ m{^etc/emacs.*/\S}
+        && $item->operm != $WIDELY_READABLE) {
 
-        $self->hint('bad-permissions-for-etc-emacs-script',
-            $file->name,
-            sprintf('%04o != %04o', $file->operm, $WIDELY_READABLE));
+        $self->pointed_hint('bad-permissions-for-etc-emacs-script',
+            $item->pointer,
+            sprintf('%04o != %04o', $item->operm, $WIDELY_READABLE));
     }
 
     return;

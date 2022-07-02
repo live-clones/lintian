@@ -1,6 +1,6 @@
 # files/architecture -- lintian check script -*- perl -*-
 
-# Copyright © 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -35,13 +35,13 @@ has TRIPLETS => (
     default => sub {
         my ($self) = @_;
 
-        my $DEB_HOST_MULTIARCH
-          = $self->profile->architectures->deb_host_multiarch;
+        my $DEB_HOST_MULTIARCH= $self->data->architectures->deb_host_multiarch;
         my %triplets = map { $DEB_HOST_MULTIARCH->{$_} => $_ }
           keys %{$DEB_HOST_MULTIARCH};
 
         return \%triplets;
-    });
+    }
+);
 
 has depends_on_architecture => (is => 'rw', default => 0);
 
@@ -56,11 +56,11 @@ sub visit_installed_files {
         if (exists $self->TRIPLETS->{$potential_triplet}) {
 
             my $from_triplet = $self->TRIPLETS->{$potential_triplet};
+            my $port = $self->processable->fields->value('Architecture');
 
-            $self->hint('triplet-dir-and-architecture-mismatch',
-                $item->name, 'is for', $from_triplet)
-              unless $from_triplet eq
-              $self->processable->fields->value('Architecture');
+            $self->pointed_hint('triplet-dir-and-architecture-mismatch',
+                $item->pointer, "is for $from_triplet instead of $port")
+              unless $from_triplet eq $port;
         }
     }
 
@@ -76,8 +76,8 @@ sub visit_installed_files {
     $self->depends_on_architecture(1)
       if $item->is_file
       && $item->size > 0
-      && $item->file_info !~ m/^very short file/
-      && $item->file_info !~ m/\bASCII text\b/
+      && $item->file_type !~ m/^very short file/
+      && $item->file_type !~ m/\bASCII text\b/
       && $item->name !~ m{^usr/share/};
 
     return;

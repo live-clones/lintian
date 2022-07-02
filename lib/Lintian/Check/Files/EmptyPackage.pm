@@ -1,7 +1,7 @@
 # files/empty-package -- lintian check script -*- perl -*-
 
-# Copyright © 1998 Christian Schwarz and Richard Braakman
-# Copyright © 2019 Chris Lamb <lamby@debian.org>
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 2019 Chris Lamb <lamby@debian.org>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -38,8 +38,9 @@ has STANDARD_FILES => (
     default => sub {
         my ($self) = @_;
 
-        return $self->profile->load_data('files/standard-files');
-    });
+        return $self->data->load('files/standard-files');
+    }
+);
 
 has is_empty => (is => 'rw', default => 1);
 has is_dummy => (
@@ -54,10 +55,11 @@ has is_dummy => (
           || $self->processable->is_meta_package;
 
         return 0;
-    });
+    }
+);
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     return
       unless $self->is_empty;
@@ -67,17 +69,17 @@ sub visit_installed_files {
 
     # ignore directories
     return
-      if $file->is_dir;
+      if $item->is_dir;
 
     my $pkg = $self->processable->name;
     my $ppkg = quotemeta($self->processable->name);
 
     # skip if file is outside /usr/share/doc/$pkg directory
-    if ($file->name !~ m{^usr/share/doc/\Q$pkg\E}) {
+    if ($item->name !~ m{^usr/share/doc/\Q$pkg\E}) {
 
         # - except if it is a lintian override.
         return
-          if $file->name =~ m{\A
+          if $item->name =~ m{\A
                              # Except for:
                              usr/share/ (?:
                                  # lintian overrides
@@ -92,7 +94,7 @@ sub visit_installed_files {
     }
 
     # skip if /usr/share/doc/$pkg has files in a subdirectory
-    if ($file->name =~ m{^usr/share/doc/\Q$pkg\E/[^/]+/}) {
+    if ($item->name =~ m{^usr/share/doc/\Q$pkg\E/[^/]+/}) {
 
         $self->is_empty(0);
 
@@ -101,29 +103,29 @@ sub visit_installed_files {
 
     # skip /usr/share/doc/$pkg symlinks.
     return
-      if $file->name eq "usr/share/doc/$pkg";
+      if $item->name eq "usr/share/doc/$pkg";
 
     # For files directly in /usr/share/doc/$pkg, if the
     # file isn't one of the uninteresting ones, the
     # package isn't empty.
     return
-      if $self->STANDARD_FILES->recognizes($file->basename);
+      if $self->STANDARD_FILES->recognizes($item->basename);
 
     # ignore all READMEs
     return
-      if $file->basename =~ m/^README(?:\..*)?$/i;
+      if $item->basename =~ m/^README(?:\..*)?$/i;
 
     my $pkg_arch = $self->processable->architecture;
     unless ($pkg_arch eq 'all') {
 
         # binNMU changelog (debhelper)
         return
-          if $file->basename eq "changelog.Debian.${pkg_arch}.gz";
+          if $item->basename eq "changelog.Debian.${pkg_arch}.gz";
     }
 
     # buildinfo file (dh-buildinfo)
     return
-      if $file->basename eq "buildinfo_${pkg_arch}.gz";
+      if $item->basename eq "buildinfo_${pkg_arch}.gz";
 
     $self->is_empty(0);
 

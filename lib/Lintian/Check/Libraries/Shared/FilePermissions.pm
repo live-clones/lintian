@@ -1,8 +1,8 @@
 # libraries/shared/file-permissions -- lintian check script -*- perl -*-
 
-# Copyright © 1998 Christian Schwarz
-# Copyright © 2018-2019 Chris Lamb <lamby@debian.org>
-# Copyright © 2021 Felix Lechner
+# Copyright (C) 1998 Christian Schwarz
+# Copyright (C) 2018-2019 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -42,22 +42,21 @@ sub visit_installed_files {
       unless $item->is_file;
 
     # shared library
-    my $objdump = $self->processable->objdump_info->{$item->name};
     return
-      unless @{$objdump->{SONAME} // [] };
+      unless @{$item->elf->{SONAME} // [] };
 
     # Yes.  But if the library has an INTERP section, it's
     # designed to do something useful when executed, so don't
     # report an error.  Also give ld.so a pass, since it's
     # special.
-    $self->hint('shared-library-is-executable',
-        $item->name, $item->octal_permissions)
+    $self->pointed_hint('shared-library-is-executable',
+        $item->pointer, $item->octal_permissions)
       if $item->is_executable
-      && !$objdump->{INTERP}
+      && !$item->elf->{INTERP}
       && $item->name !~ m{^lib.*/ld-[\d.]+\.so$};
 
-    $self->hint('odd-permissions-on-shared-library',
-        $item->name, $item->octal_permissions)
+    $self->pointed_hint('odd-permissions-on-shared-library',
+        $item->pointer, $item->octal_permissions)
       if !$item->is_executable
       && $item->operm != $WIDELY_READABLE;
 

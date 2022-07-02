@@ -1,1 +1,1 @@
-testsuite-in-western-encoding (source): national-encoding debian/tests/control
+testsuite-in-western-encoding (source): national-encoding [debian/tests/control]

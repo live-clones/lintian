@@ -1,2 +1,2 @@
-scripts-diversions-variables (binary): maintainer-script-interpreter /bin/sh [control/preinst]
-scripts-diversions-variables (binary): maintainer-script-interpreter /bin/sh [control/postrm]
+scripts-diversions-variables (binary): maintainer-script-interpreter /bin/sh [preinst]
+scripts-diversions-variables (binary): maintainer-script-interpreter /bin/sh [postrm]

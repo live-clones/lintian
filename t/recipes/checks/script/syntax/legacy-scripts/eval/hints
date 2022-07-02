@@ -1,1 +1,1 @@
-scripts (binary): shell-script-fails-syntax-check usr/bin/sh-broken
+scripts (binary): shell-script-fails-syntax-check [usr/bin/sh-broken]

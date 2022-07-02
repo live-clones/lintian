@@ -1,9 +1,9 @@
 # -*- perl -*-
 # Lintian::Processable::Changelog::Version -- interface to source package data collection
 
-# Copyright © 2008 Russ Allbery
-# Copyright © 2009 Raphael Geissert
-# Copyright © 2020 Felix Lechner
+# Copyright (C) 2008 Russ Allbery
+# Copyright (C) 2009 Raphael Geissert
+# Copyright (C) 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -24,9 +24,9 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Try::Tiny;
+use Syntax::Keyword::Try;
 
-use Lintian::Inspect::Changelog::Version;
+use Lintian::Changelog::Version;
 
 use Moo::Role;
 use namespace::clean;
@@ -62,7 +62,7 @@ data in memory.
 
 =item changelog_version
 
-Returns a fully parsed Lintian::Inspect::Changelog::Version for the
+Returns a fully parsed Lintian::Changelog::Version for the
 source package's version string.
 
 =cut
@@ -75,13 +75,16 @@ has changelog_version => (
 
         my $versionstring = $self->fields->value('Version');
 
-        my $version = Lintian::Inspect::Changelog::Version->new;
+        my $version = Lintian::Changelog::Version->new;
         try {
             $version->assign($versionstring, $self->native);
-        };
+
+        } catch {
+        }
 
         return $version;
-    });
+    }
+);
 
 =back
 

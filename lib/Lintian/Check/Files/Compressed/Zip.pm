@@ -1,6 +1,6 @@
 # files/compressed/zip -- lintian check script -*- perl -*-
 
-# Copyright © 2020 Felix Lechner
+# Copyright (C) 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -32,19 +32,19 @@ use namespace::clean;
 with 'Lintian::Check';
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     return
-      unless $file->is_file;
+      unless $item->is_file;
 
-    if ($file->name =~ /\.zip$/si) {
+    if ($item->name =~ /\.zip$/si) {
 
         # maybe rewrite with Archive::Zip
 
         # may prompt for password with -t; piping yes '' does not work
-        safe_qx('unzip', '-l', $file->unpacked_path);
+        safe_qx('unzip', '-l', $item->unpacked_path);
 
-        $self->hint('broken-zip', $file->name)
+        $self->pointed_hint('broken-zip', $item->pointer)
           if $?;
 
         # should issue a tag for encrypted members, see Bug#935292

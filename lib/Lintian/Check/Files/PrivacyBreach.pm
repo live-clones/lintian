@@ -1,6 +1,7 @@
 # files/privacy-breach -- lintian check script -*- perl -*-
 
-# Copyright © 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +15,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -29,15 +30,15 @@ use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::SlidingWindow;
 
-use Moo;
-use namespace::clean;
-
-with 'Lintian::Check';
-
 const my $BLOCKSIZE => 16_384;
 const my $EMPTY => q{};
 
 const my $PRIVACY_BREAKER_WEBSITES_FIELDS => 3;
+
+use Moo;
+use namespace::clean;
+
+with 'Lintian::Check';
 
 has PRIVACY_BREAKER_WEBSITES => (
     is => 'rw',
@@ -45,31 +46,39 @@ has PRIVACY_BREAKER_WEBSITES => (
     default => sub {
         my ($self) = @_;
 
-        return $self->profile->load_data(
-            'files/privacy-breaker-websites',
-            qr/\s*\~\~/,
-            sub {
-                my ($regex, $tag, $suggest)= split(/ \s* ~~ \s* /msx,
-                    $_[1],$PRIVACY_BREAKER_WEBSITES_FIELDS);
+        my %website;
 
-                $tag //= $EMPTY;
+        my $data
+          = $self->data->load('files/privacy-breaker-websites',qr/\s*\~\~/);
 
-                # trim both ends
-                $tag =~ s/^\s+|\s+$//g;
+        for my $key ($data->all) {
 
-                if (length($tag) == 0) {
-                    $tag = $_[0];
-                }
-                my %ret = (
-                    'tag' => $tag,
-                    'regexp' => qr/$regex/xsm,
-                );
-                if (defined($suggest)) {
-                    $ret{'suggest'} = $suggest;
-                }
-                return \%ret;
-            });
-    });
+            my $value = $data->value($key);
+
+            my ($pattern, $tag, $suggest)
+              = split(/ \s* ~~ \s* /msx,
+                $value,$PRIVACY_BREAKER_WEBSITES_FIELDS);
+
+            $tag //= $EMPTY;
+
+            # trim both ends
+            $tag =~ s/^\s+|\s+$//g;
+
+            $tag = $key
+              unless length $tag;
+
+            $website{$key} = {
+                'tag' => $tag,
+                'regexp' => qr/$pattern/xsm,
+            };
+
+            $website{$key}{'suggest'} = $suggest
+              if defined $suggest;
+        }
+
+        return \%website;
+    }
+);
 
 has PRIVACY_BREAKER_FRAGMENTS => (
     is => 'rw',
@@ -77,18 +86,27 @@ has PRIVACY_BREAKER_FRAGMENTS => (
     default => sub {
         my ($self) = @_;
 
-        return $self->profile->load_data(
-            'files/privacy-breaker-fragments',
-            qr/\s*\~\~/,
-            sub {
-                my ($regex, $tag) = split(/\s*\~\~\s*/, $_[1], 2);
-                return {
-                    'keyword' => $_[0],
-                    'regex' => qr/$regex/xsm,
-                    'tag' => $tag,
-                };
-            });
-    });
+        my %fragment;
+
+        my $data
+          = $self->data->load('files/privacy-breaker-fragments',qr/\s*\~\~/);
+
+        for my $key ($data->all) {
+
+            my $value = $data->value($key);
+
+            my ($pattern, $tag) = split(/\s*\~\~\s*/, $value, 2);
+
+            $fragment{$key} = {
+                'keyword' => $key,
+                'regex' => qr/$pattern/xsm,
+                'tag' => $tag,
+            };
+        }
+
+        return \%fragment;
+    }
+);
 
 has PRIVACY_BREAKER_TAG_ATTR => (
     is => 'rw',
@@ -96,27 +114,41 @@ has PRIVACY_BREAKER_TAG_ATTR => (
     default => sub {
         my ($self) = @_;
 
-        return $self->profile->load_data(
-            'files/privacy-breaker-tag-attr',
-            qr/\s*\~\~\s*/,
-            sub {
-                my ($keywords,$regex) = split(/\s*\~\~\s*/, $_[1], 2);
-                $regex =~ s/&URL/(?:(?:ht|f)tps?:)?\/\/[^"\r\n]*/g;
-                my @keywordlist;
-                my @keywordsorraw = split(/\s*\|\|\s*/,$keywords);
-                foreach my $keywordor (@keywordsorraw) {
-                    my @keywordsandraw = split(/\s*&&\s*/,$keywordor);
-                    push(@keywordlist, \@keywordsandraw);
-                }
-                return {
-                    'keywords' => \@keywordlist,
-                    'regex' => qr/$regex/xsm,
-                };
-            });
-    });
+        my %attribute;
+
+        my $data
+          = $self->data->load('files/privacy-breaker-tag-attr',qr/\s*\~\~\s*/);
+
+        for my $key ($data->all) {
+
+            my $value = $data->value($key);
+
+            my ($keywords,$pattern) = split(/\s*\~\~\s*/, $value, 2);
+
+            $pattern =~ s/&URL/(?:(?:ht|f)tps?:)?\/\/[^"\r\n]*/g;
+
+            my @keywordlist;
+
+            my @keywordsorraw = split(/\s*\|\|\s*/,$keywords);
+
+            for my $keywordor (@keywordsorraw) {
+                my @keywordsandraw = split(/\s*&&\s*/,$keywordor);
+                push(@keywordlist, \@keywordsandraw);
+            }
+
+            $attribute{$key} = {
+                'keywords' => \@keywordlist,
+                'regex' => qr/$pattern/xsm,
+            };
+        }
+
+        return \%attribute;
+    }
+);
 
 sub detect_privacy_breach {
     my ($self, $file) = @_;
+
     my %privacybreachhash;
 
     return
@@ -138,23 +170,28 @@ sub detect_privacy_breach {
             $lowercase =~ s/$x//gs;
         }
 
-        # try generic fragment tagging
-        foreach my $keyword ($self->PRIVACY_BREAKER_FRAGMENTS->all) {
+        # keep sorted; otherwise 'exists' below produces inconsistent output
+        for my $keyword (sort keys %{$self->PRIVACY_BREAKER_FRAGMENTS}) {
+
             if ($lowercase =~ / \Q$keyword\E /msx) {
-                my $keyvalue
-                  = $self->PRIVACY_BREAKER_FRAGMENTS->value($keyword);
+                my $keyvalue= $self->PRIVACY_BREAKER_FRAGMENTS->{$keyword};
                 my $regex = $keyvalue->{'regex'};
+
                 if ($lowercase =~ m{($regex)}) {
                     my $capture = $1;
                     my $breaker_tag = $keyvalue->{'tag'};
+
                     unless (exists $privacybreachhash{'tag-'.$breaker_tag}){
+
                         $privacybreachhash{'tag-'.$breaker_tag} = 1;
-                        $self->hint($breaker_tag, $file->name,
+
+                        $self->pointed_hint($breaker_tag, $file->pointer,
                             "(choke on: $capture)");
                     }
                 }
             }
         }
+
         for my $x (
             qw(src="http src="ftp src="// data-href="http data-href="ftp
             data-href="// codebase="http codebase="ftp codebase="// data="http
@@ -187,8 +224,8 @@ sub detect_generic_privacy_breach {
 
     # now check generic tag
   TYPE:
-    foreach my $type ($self->PRIVACY_BREAKER_TAG_ATTR->all) {
-        my $keyvalue = $self->PRIVACY_BREAKER_TAG_ATTR->value($type);
+    for my $type (sort keys %{$self->PRIVACY_BREAKER_TAG_ATTR}) {
+        my $keyvalue = $self->PRIVACY_BREAKER_TAG_ATTR->{$type};
         my $keywords =  $keyvalue->{'keywords'};
 
         my $orblockok = 0;
@@ -246,6 +283,7 @@ sub is_localhost {
 
 sub check_tag_url_privacy_breach {
     my ($self, $fulltag, $tagattr, $url,$privacybreachhash, $file) = @_;
+
     my $website = $url;
     # detect also "^//" trick
     $website =~ s{^"?(?:(?:ht|f)tps?:)?//}{};
@@ -258,6 +296,7 @@ sub check_tag_url_privacy_breach {
 
     # reparse fulltag for rel
     if ($tagattr eq 'link') {
+
         my $rel = $fulltag;
         $rel =~ m{<link
                       (?:\s[^>]+)? \s+
@@ -265,6 +304,7 @@ sub check_tag_url_privacy_breach {
                       [^>]*
                       >}xismog;
         my $relcontent = $1;
+
         if (defined($relcontent)) {
             # See, for example, https://www.w3schools.com/tags/att_link_rel.asp
             my %allowed = (
@@ -283,7 +323,10 @@ sub check_tag_url_privacy_breach {
                 'schema.dct'        => 1, # #736992
                 'search'            => 1, # #891301
             );
-            return if ($allowed{$relcontent});
+
+            return
+              if ($allowed{$relcontent});
+
             if ($relcontent eq 'alternate') {
                 my $type = $fulltag;
                 $type =~ m{<link
@@ -306,6 +349,7 @@ sub check_tag_url_privacy_breach {
     if(    $file->basename eq 'legal.xml'
         && $tagattr eq 'link'
         && $website =~ m{^creativecommons.org/licenses/}) {
+
         return;
     }
 
@@ -314,20 +358,27 @@ sub check_tag_url_privacy_breach {
     if(    $file->basename =~ '.xml$'
         && $tagattr eq 'link'
         && $file->bytes=~ qr{ xmlns="http://projectmallard\.org/1\.0/"}) {
+
         return;
     }
 
     # track well known site
-    foreach my $breaker ($self->PRIVACY_BREAKER_WEBSITES->all) {
-        my $value = $self->PRIVACY_BREAKER_WEBSITES->value($breaker);
+    for my $breaker (sort keys %{$self->PRIVACY_BREAKER_WEBSITES}) {
+
+        my $value = $self->PRIVACY_BREAKER_WEBSITES->{$breaker};
         my $regex = $value->{'regexp'};
+
         if ($website =~ m{$regex}mxs) {
+
             unless (exists $privacybreachhash->{'tag-'.$breaker}) {
+
                 my $tag =  $value->{'tag'};
                 my $suggest = $value->{'suggest'} // $EMPTY;
+
                 $privacybreachhash->{'tag-'.$breaker}= 1;
-                $self->hint($tag, $file, $suggest, "($url)");
+                $self->pointed_hint($tag, $file->pointer, $suggest, "($url)");
             }
+
             # do not go to generic case
             return;
         }
@@ -335,9 +386,12 @@ sub check_tag_url_privacy_breach {
 
     # generic case
     unless (exists $privacybreachhash->{'tag-generic-'.$website}){
-        $self->hint('privacy-breach-generic', $file->name,"[$fulltag] ($url)");
+
+        $self->pointed_hint('privacy-breach-generic', $file->pointer,
+            "[$fulltag]","($url)");
         $privacybreachhash->{'tag-generic-'.$website} = 1;
     }
+
     return;
 }
 

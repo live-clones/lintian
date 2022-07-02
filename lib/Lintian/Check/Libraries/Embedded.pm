@@ -1,9 +1,9 @@
 # libraries/embedded -- lintian check script -*- perl -*-
 
-# Copyright © 1998 Christian Schwarz and Richard Braakman
-# Copyright © 2012 Kees Cook
-# Copyright © 2017-2020 Chris Lamb <lamby@debian.org>
-# Copyright © 2021 Felix Lechner
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 2012 Kees Cook
+# Copyright (C) 2017-2020 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -31,12 +31,12 @@ use Const::Fast;
 use List::Compare;
 use Unicode::UTF8 qw(encode_utf8);
 
+const my $SPACE => q{ };
+
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-const my $SPACE => q{ };
 
 has EMBEDDED_LIBRARIES => (
     is => 'rw',
@@ -44,41 +44,47 @@ has EMBEDDED_LIBRARIES => (
     default => sub {
         my ($self) = @_;
 
-        return $self->profile->load_data(
-            'binaries/embedded-libs',
-            qr/\s*+\|\|/,
-            sub {
-                my ($label, $details) = @_;
+        my %embedded_libraries;
 
-                my ($pairs, $regex) = split(m{\|\|}, $details, 2);
+        my $data
+          = $self->data->load('binaries/embedded-libs',qr{ \s*+ [|][|] }x);
 
-                my %result;
-                for my $kvpair (split($SPACE, $pairs)) {
+        for my $label ($data->all) {
 
-                    my ($key, $value) = split(/=/, $kvpair, 2);
-                    $result{$key} = $value;
-                }
+            my $details = $data->value($label);
 
-                my $lc= List::Compare->new([keys %result],
-                    [qw{libname source source-regex}]);
-                my @unknown = $lc->get_Lonly;
+            my ($pairs, $pattern) = split(m{ [|][|] }x, $details, 2);
 
-                die encode_utf8(
+            my %result;
+            for my $kvpair (split($SPACE, $pairs)) {
+
+                my ($key, $value) = split(/=/, $kvpair, 2);
+                $result{$key} = $value;
+            }
+
+            my $lc= List::Compare->new([keys %result],
+                [qw{libname source source-regex}]);
+            my @unknown = $lc->get_Lonly;
+
+            die encode_utf8(
 "Unknown options @unknown for $label (in binaries/embedded-libs)"
-                )if @unknown;
+            )if @unknown;
 
-                die encode_utf8(
+            die encode_utf8(
 "Both source and source-regex used for $label (in binaries/embedded-libs)"
-                )if length $result{source} && length $result{'source-regex'};
+            )if length $result{source} && length $result{'source-regex'};
 
-                $result{match} = qr/$regex/;
+            $result{match} = qr/$pattern/;
 
-                $result{libname} //= $label;
-                $result{source} //= $label;
+            $result{libname} //= $label;
+            $result{source} //= $label;
 
-                return \%result;
-            });
-    });
+            $embedded_libraries{$label} = \%result;
+        }
+
+        return \%embedded_libraries;
+    }
+);
 
 sub visit_installed_files {
     my ($self, $item) = @_;
@@ -87,11 +93,11 @@ sub visit_installed_files {
       unless $item->is_file;
 
     return
-      unless $item->file_info =~ /^ [^,]* \b ELF \b /x;
+      unless $item->file_type =~ /^ [^,]* \b ELF \b /x;
 
-    for my $embedded_name ($self->EMBEDDED_LIBRARIES->all) {
+    for my $embedded_name (keys %{$self->EMBEDDED_LIBRARIES}) {
 
-        my $library_data = $self->EMBEDDED_LIBRARIES->value($embedded_name);
+        my $library_data = $self->EMBEDDED_LIBRARIES->{$embedded_name};
 
         next
           if length $library_data->{'source-regex'}
@@ -101,7 +107,8 @@ sub visit_installed_files {
           if length $library_data->{source}
           && $self->processable->source_name eq $library_data->{source};
 
-        $self->hint('embedded-library', $library_data->{libname},$item->name)
+        $self->pointed_hint('embedded-library', $item->pointer,
+            $library_data->{libname})
           if $item->strings =~ $library_data->{match};
     }
 

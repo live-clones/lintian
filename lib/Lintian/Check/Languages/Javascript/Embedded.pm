@@ -1,7 +1,7 @@
 # languages/javascript/embedded -- lintian check script -*- perl -*-
 
-# Copyright © 1998 Christian Schwarz and Richard Braakman
-# Copyright © 2020 Felix Lechner
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -30,7 +30,8 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-my %JS_MAGIC = ('libjs-bootstrap' => 'var (Carousel|Typeahead)',);
+my %JS_MAGIC
+  = ('libjs-bootstrap' => qr{ var [ ] (?: Carousel | Typeahead ) }x,);
 
 my $JS_EXT
   = qr{(?:(?i)[-._]?(?:compiled|lite|min|pack(?:ed)?|prod|umd|yc)?\.(js|css)(?:\.gz)?)$};
@@ -99,16 +100,16 @@ qr{(?i)/mootools(?:(?:\.v|-)[\d\.]+)?(?:-(?:(?:core(?:-server)?)|more)(?:-(?:yc|
 );
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     return
-      unless $file->is_file;
+      unless $item->is_file;
 
     # ignore embedded jQuery libraries for Doxygen (#736360)
     my $doxygen = $self->processable->installed->resolve_path(
-        $file->dirname . 'doxygen.css');
+        $item->dirname . 'doxygen.css');
     return
-      if $file->basename eq 'jquery.js'
+      if $item->basename eq 'jquery.js'
       && defined $doxygen;
 
     # embedded javascript
@@ -118,13 +119,13 @@ sub visit_installed_files {
           if $self->processable->name =~ /^$provider$/;
 
         next
-          unless $file->name =~ /$JS_FILES{$provider}/;
+          unless $item->name =~ /$JS_FILES{$provider}/;
 
         next
           if length $JS_MAGIC{$provider}
-          && !length $file->bytes_match($JS_MAGIC{$provider});
+          && !length $item->bytes_match($JS_MAGIC{$provider});
 
-        $self->hint('embedded-javascript-library', $file->name,
+        $self->pointed_hint('embedded-javascript-library', $item->pointer,
             'please use', $provider);
     }
 

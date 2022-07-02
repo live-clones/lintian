@@ -6,4 +6,4 @@ Explanation: Leaving <code>debian/files</code> causes problems for the autobuild
  architecture, which will cause dpkg-buildpackage run by the buildd to fail.
  .
  The clean rule for the package should remove this file.
-See-Also: policy 4.12
+See-Also: debian-policy 4.12

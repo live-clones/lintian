@@ -11,4 +11,4 @@ Explanation: The listed packages from the same source circularly depend
  Note: This check is limited to packages created from the same
  source package. Full circular dependencies between binaries from
  different source packages is beyond the scope of Lintian.
-See-Also: policy 7.2
+See-Also: debian-policy 7.2

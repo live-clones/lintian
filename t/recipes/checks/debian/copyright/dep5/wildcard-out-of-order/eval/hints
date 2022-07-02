@@ -1,2 +1,3 @@
-wildcard-out-of-order (source): superfluous-file-pattern debian/copyright debian/patches/* (Files, line 9)
-wildcard-out-of-order (source): globbing-patterns-out-of-order debian/copyright debian/patches/* debian/* debian/patches/a.patch
+wildcard-out-of-order (source): update-debian-copyright 2019 vs CHANGELOG-YEAR [debian/copyright:10]
+wildcard-out-of-order (source): superfluous-file-pattern debian/patches/* [debian/copyright:9]
+wildcard-out-of-order (source): globbing-patterns-out-of-order debian/patches/* debian/* debian/patches/a.patch [debian/copyright:13]

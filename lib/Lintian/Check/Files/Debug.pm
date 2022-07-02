@@ -1,6 +1,6 @@
 # files/debug -- lintian check script -*- perl -*-
 
-# Copyright © 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -29,20 +29,18 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-has warned_debug_name => (is => 'rw', default => 0);
+has warned_already => (is => 'rw', default => 0);
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
-    if ($file->name =~ m{^usr/lib/debug/\S}) {
+    if ($item->name =~ m{^usr/lib/debug/\S}) {
 
-        unless ($self->processable->is_debug_package) {
+        $self->pointed_hint('debug-suffix-not-dbg', $item->pointer)
+          if !$self->processable->is_debug_package
+          && !$self->warned_already;
 
-            unless ($self->warned_debug_name) {
-                $self->hint('debug-suffix-not-dbg', $file->name);
-                $self->warned_debug_name(1);
-            }
-        }
+        $self->warned_already(1);
     }
 
     return;

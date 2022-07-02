@@ -2,10 +2,10 @@
 #
 # explain-lintian-tags -- transform lintian tags into descriptive text
 #
-# Copyright © 1998 Christian Schwarz and Richard Braakman
-# Copyright © 2013 Niels Thykier
-# Copyright © 2017 Chris Lamb <lamby@debian.org>
-# Copyright © 2020 Felix Lechner
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 2013 Niels Thykier
+# Copyright (C) 2017 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2020 Felix Lechner
 #
 # This program is free software.  It is distributed under the terms of
 # the GNU General Public License as published by the Free Software
@@ -19,7 +19,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -56,11 +56,14 @@ use Lintian::Version qw(guess_version);
 const my $EMPTY => q{};
 const my $SPACE => q{ };
 
+const my $DEFAULT_OUTPUT_WIDTH => 80;
+
 const my $NEW_PROGRAM_NAME => q{lintian-explain-tags};
 
 my $TERMINAL_WIDTH;
 ($TERMINAL_WIDTH, undef, undef, undef) = GetTerminalSize()
   if is_interactive;
+$TERMINAL_WIDTH //= $DEFAULT_OUTPUT_WIDTH;
 
 if (my $coverage_arg = $ENV{'LINTIAN_COVERAGE'}) {
     my $p5opt = $ENV{'PERL5OPT'}//$EMPTY;
@@ -131,7 +134,7 @@ my @available = grep { defined} map { $profile->get_tag($_) } @selected;
 
 my @sorted = sort { lc($a->name) cmp lc($b->name) } @available;
 
-$output->describe_tags(\@sorted, $TERMINAL_WIDTH);
+$output->describe_tags($profile->data, \@sorted, $TERMINAL_WIDTH);
 
 exit any { !defined $profile->get_tag($_) } @selected;
 

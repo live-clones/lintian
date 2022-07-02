@@ -1,7 +1,7 @@
 Tag: conflicts-with-version
 Severity: info
 Check: fields/package-relations
-See-Also: policy 7.4
+See-Also: debian-policy 7.4
 Explanation: An earlier-than version clause is normally an indication that Breaks
  should be used instead of Conflicts. Breaks is a weaker requirement that
  provides the package manager more leeway to find a valid upgrade path.

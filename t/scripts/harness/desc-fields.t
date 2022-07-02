@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# Copyright © 2020 Felix Lechner
+# Copyright (C) 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -121,7 +121,7 @@ for my $descpath (@descpaths) {
 
     # listed test-against belong to listed checks
     $known_tests += scalar @against;
-    my @tags = map { @{$profile->tagnames_for_check->{$_} // []} }
+    my @tags = map { @{$profile->tag_names_for_check->{$_} // []} }
       (@check_names, 'lintian');
     my %relatedtags = map { $_ => 1 } @tags;
     for my $tag (@against) {

@@ -1,9 +1,9 @@
 # libraries/shared/soname -- lintian check script -*- perl -*-
 
-# Copyright © 1998 Christian Schwarz and Richard Braakman
-# Copyright © 2012 Kees Cook
-# Copyright © 2017-2020 Chris Lamb <lamby@debian.org>
-# Copyright © 2021 Felix Lechner
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 2012 Kees Cook
+# Copyright (C) 2017-2020 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -28,7 +28,6 @@ use warnings;
 use utf8;
 
 use Const::Fast;
-use File::Basename;
 use List::SomeUtils qw(any none uniq);
 
 use Moo;
@@ -37,6 +36,7 @@ use namespace::clean;
 with 'Lintian::Check';
 
 const my $SPACE => q{ };
+const my $SLASH => q{/};
 
 has DEB_HOST_MULTIARCH => (
     is => 'rw',
@@ -44,8 +44,9 @@ has DEB_HOST_MULTIARCH => (
     default => sub {
         my ($self) = @_;
 
-        return $self->profile->architectures->deb_host_multiarch;
-    });
+        return $self->data->architectures->deb_host_multiarch;
+    }
+);
 
 sub installable {
     my ($self) = @_;
@@ -61,7 +62,7 @@ sub installable {
       if length $multiarch_component;
 
     my @duplicated;
-    for my $object_name (keys %{$self->processable->objdump_info}) {
+    for my $item (@{$self->processable->installed->sorted_list}) {
 
         # For the package naming check, filter out SONAMEs where all the
         # files are at paths other than /lib, /usr/lib and /usr/lib/<MA-DIR>.
@@ -69,15 +70,13 @@ sub installable {
         # which may have their own SONAMEs but which don't matter for the
         # purposes of this check.
         next
-          if none { dirname($object_name) eq $_ } @common_folders;
+          if none { $item->dirname eq $_ . $SLASH } @common_folders;
 
         # Also filter out nsswitch modules
         next
-          if basename($object_name) =~ m{^ libnss_[^.]+\.so(?:\.\d+) $}x;
+          if $item->basename =~ m{^ libnss_[^.]+\.so(?:\.\d+) $}x;
 
-        my $objdump = $self->processable->objdump_info->{$object_name};
-
-        push(@duplicated, @{$objdump->{SONAME} // []});
+        push(@duplicated, @{$item->elf->{SONAME} // []});
     }
 
     my @sonames = uniq @duplicated;
@@ -102,7 +101,7 @@ sub installable {
         my $lowercase = lc $soname;
 
         $match_found = any { $lowercase eq $_ }
-        ($self->processable->name, $shortened_name);
+          ($self->processable->name, $shortened_name);
 
         last
           if $match_found;

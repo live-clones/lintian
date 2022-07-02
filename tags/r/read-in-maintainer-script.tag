@@ -1,13 +1,14 @@
 Tag: read-in-maintainer-script
 Severity: error
 Check: scripts
-See-Also: policy 3.9.1 
-Explanation: This maintainer script appears to use read to get information from
- the user. Prompting in maintainer scripts must be done by communicating
- through a program such as debconf which conforms to the Debian
- Configuration management specification, version 2 or higher.
+Explanation: The given maintainer script appears to use <code>read</code> to
+ get information from the user. Prompting in maintainer scripts must be done
+ by communicating through a utility that conforms to the Debian configuration
+ management specification, version 2 or higher. The <code>debconf</code>
+ program is a popular choice.
  .
- This check can have false positives if read is used in a block with a
- redirection, in a function run in a pipe, or in other ways where
- standard input is provided in inobvious ways. If this is the case, please
- add an override for this tag.
+ With this tag, there is a potential for false positives. For example,
+ <code>read</code> could be used in a block with redirection, in a function
+ in a pipe, or when standard input is provided in an unusual way.
+See-Also:
+ debian-policy 3.9.1

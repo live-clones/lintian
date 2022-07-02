@@ -1,7 +1,7 @@
 Tag: native-source-file-without-utf8-name
 Severity: error
 Check: files/names
-See-Also: policy 10.10
+See-Also: debian-policy 10.10
 Explanation: The file name in the native source tree is not valid UTF-8.
  File names must decode as valid UTF-8. Please rename the file.
  .

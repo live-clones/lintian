@@ -1,8 +1,8 @@
 # -*- perl -*-
 #
-# Copyright © 1998 Christian Schwarz and Richard Braakman
-# Copyright © 2009 Russ Allbery
-# Copyright © 2020 Felix Lechner
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 2009 Russ Allbery
+# Copyright (C) 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -26,7 +26,7 @@ use utf8;
 use Moo;
 use namespace::clean;
 
-with 'Lintian::Data';
+with 'Lintian::Data::JoinedLines';
 
 =head1 NAME
 
@@ -45,13 +45,18 @@ This module provides a way to load data files for debhelper.
 
 =over 4
 
+=item title
+
 =item location
 
 =item separator
 
-=item accumulator
-
 =cut
+
+has title => (
+    is => 'rw',
+    default => 'Debhelper Levels'
+);
 
 has location => (
     is => 'rw',
@@ -60,9 +65,8 @@ has location => (
 
 has separator => (
     is => 'rw',
-    default => sub { qr/=/ });
-
-has accumulator => (is => 'rw');
+    default => sub { qr/=/ }
+);
 
 =back
 

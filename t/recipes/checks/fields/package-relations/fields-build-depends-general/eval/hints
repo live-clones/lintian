@@ -15,4 +15,4 @@ fields-build-depends-general (source): build-depends-on-essential-package-withou
 fields-build-depends-general (source): build-depends-on-build-essential-package-without-using-version make [Build-Depends: make]
 fields-build-depends-general (source): build-depends-on-build-essential Build-Depends
 fields-build-depends-general (source): build-depends-on-1-revision Build-Depends: revision-1 (>= 1.0-1)
-fields-build-depends-general (source): build-conflicts-with-build-dependency bd-conflict
+fields-build-depends-general (source): build-conflicts-with-build-dependency Build-Conflicts bd-conflict [debian/control:10]

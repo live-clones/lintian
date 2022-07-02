@@ -1,0 +1,5 @@
+#!/bin/sh
+
+# not using any templates, but dh_clean requires compat
+
+echo "[% $dh_compat_level %]" > "$1/debian/compat"

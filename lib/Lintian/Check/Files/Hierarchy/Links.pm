@@ -1,7 +1,7 @@
 # files/symbolic-links/broken -- lintian check script -*- perl -*-
 #
-# Copyright © 2020 Felix Lechner
-# Copyright © 2020 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2020 Felix Lechner
+# Copyright (C) 2020 Chris Lamb <lamby@debian.org>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -39,19 +39,19 @@ const my $SLASH => q{/};
 const my $ARROW => q{ -> };
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     # symbolic links only
     return
-      unless $file->is_symlink;
+      unless $item->is_symlink;
 
-    my $target = $file->link_normalized;
+    my $target = $item->link_normalized;
     return
       unless defined $target;
 
-    my @ldconfig_folders = @{$self->profile->architectures->ldconfig_folders};
+    my @ldconfig_folders = @{$self->data->architectures->ldconfig_folders};
 
-    my $origin_dirname= first_value { $file->dirname eq $_ } @ldconfig_folders;
+    my $origin_dirname= first_value { $item->dirname eq $_ } @ldconfig_folders;
 
     # look only at links originating in common ld.so load paths
     return
@@ -62,12 +62,12 @@ sub visit_installed_files {
     $target_dirname //= $EMPTY;
 
     # no subfolders
-    $self->hint('ldconfig-escape', $file->name . $ARROW .  $target)
+    $self->pointed_hint('ldconfig-escape', $item->pointer, $target)
       unless length $target_dirname;
 
-    my @multiarch= values %{$self->profile->architectures->deb_host_multiarch};
+    my @multiarch= values %{$self->data->architectures->deb_host_multiarch};
 
-    $self->hint('architecture-escape', $file->name . $ARROW .  $target)
+    $self->pointed_hint('architecture-escape', $item->pointer,  $target)
       if (any { basename($origin_dirname) eq $_ } @multiarch)
       && (any { $target_dirname eq "$_/" } qw{lib usr/lib usr/local/lib});
 

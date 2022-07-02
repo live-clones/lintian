@@ -7,29 +7,26 @@
 #   debian/rules refresh-perl-provides
 # in the lintian source tree
 #
-# last updated for PERL_VERSION=5.032001
-libsocket-perl 2.029
-libio-socket-ip-perl 0.39
-libversion-perl 1:0.9924
-libunicode-collate-perl 1.27
-libtest-simple-perl 1.302175
-libtest-harness-perl 3.42
-libpod-simple-perl 3.40
+# last updated for PERL_VERSION=5.034000
+libsocket-perl 2.031
+libio-socket-ip-perl 0.41
+libversion-perl 1:0.9928
+libunicode-collate-perl 1.29
+libtest-simple-perl 1.302183
+libtest-harness-perl 3.43
+libpod-simple-perl 3.42
 libmodule-metadata-perl 1.000037
-libmodule-load-conditional-perl 0.70
-libmodule-corelist-perl 5.20210123
+libmodule-load-conditional-perl 0.74
+libmodule-corelist-perl 5.20210520
 libmath-bigint-perl 1.999818
-libjson-pp-perl 4.04000
-libio-compress-perl 2.093
+libjson-pp-perl 4.06000
+libio-compress-perl 2.102
 libhttp-tiny-perl 0.076
-libextutils-parsexs-perl 3.400000
-libextutils-cbuilder-perl 0.280234
-libexperimental-perl 0.020
-libencode-perl 3.06
+libextutils-cbuilder-perl 0.280236
+libexperimental-perl 0.024
+libencode-perl 3.08
 libdigest-sha-perl 6.02
 libcpan-meta-yaml-perl 0.018
 libcpan-meta-requirements-perl 2.140
-libcpan-meta-perl 2.150010
-libcompress-raw-zlib-perl 2.093
-libcompress-raw-bzip2-perl 2.093
-libautodie-perl 2.32
+libcompress-raw-zlib-perl 2.101
+libcompress-raw-bzip2-perl 2.101

@@ -1,2 +1,0 @@
-Testname: control-file-gobject-introspection-package-missing-gir-depends
-Check: debian/control

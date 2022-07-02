@@ -1,8 +1,8 @@
 # md5sums -- lintian check script -*- perl -*-
 
-# Copyright © 1998 Christian Schwarz and Richard Braakman
-# Copyright © 2020 Felix Lechner
-# Copyright © 2018, 2020 Chris Lamb <lamby@debian.org>
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 2020 Felix Lechner
+# Copyright (C) 2018, 2020 Chris Lamb <lamby@debian.org>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -28,7 +28,6 @@ use utf8;
 
 use List::Compare;
 use Path::Tiny;
-use Try::Tiny;
 
 use Lintian::Util qw(read_md5sums drop_relative_prefix);
 
@@ -40,7 +39,7 @@ with 'Lintian::Check';
 has only_conffiles => (is => 'rw', default => 1);
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     # check if package contains non-conffiles
     # debhelper doesn't create entries in md5sums
@@ -49,10 +48,10 @@ sub visit_installed_files {
 
     # Skip non-files, they will not appear in the md5sums file
     return
-      unless $file->is_regular_file;
+      unless $item->is_regular_file;
 
     $self->only_conffiles(0)
-      unless $self->processable->conffiles->is_known($file->name);
+      unless $self->processable->declared_conffiles->is_known($item->name);
 
     return;
 }
@@ -89,7 +88,8 @@ sub binary {
 
     my ($md5sums, $errors) = read_md5sums($text);
 
-    $self->hint('malformed-md5sums-control-file', $_)for @{$errors};
+    $self->pointed_hint('malformed-md5sums-control-file',$control->pointer, $_)
+      for @{$errors};
 
     my %noprefix
       = map { drop_relative_prefix($_) => $md5sums->{$_} } keys %{$md5sums};
@@ -101,23 +101,24 @@ sub binary {
     my $lc = List::Compare->new(\@listed, \@found);
 
     # find files that should exist but do not
-    $self->hint('md5sums-lists-nonexistent-file', $_)for $lc->get_Lonly;
+    $self->pointed_hint('md5sums-lists-nonexistent-file',$control->pointer, $_)
+      for $lc->get_Lonly;
 
     # find files that should be listed but are not
     for my $name ($lc->get_Ronly) {
 
-        $self->hint('file-missing-in-md5sums', $name)
-          unless $self->processable->conffiles->is_known($name)
+        $self->pointed_hint('file-missing-in-md5sums', $control->pointer,$name)
+          unless $self->processable->declared_conffiles->is_known($name)
           || $name =~ m{^var/lib/[ai]spell/.};
     }
 
     # checksum should match for common files
     for my $name ($lc->get_intersection) {
 
-        my $file = $self->processable->installed->lookup($name);
+        my $item = $self->processable->installed->lookup($name);
 
-        $self->hint('md5sum-mismatch', $name)
-          unless $file->md5sum eq $noprefix{$name};
+        $self->pointed_hint('md5sum-mismatch', $control->pointer, $name)
+          unless $item->md5sum eq $noprefix{$name};
     }
 
     return;

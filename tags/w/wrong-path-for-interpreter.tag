@@ -7,4 +7,4 @@ Explanation: The interpreter you used is installed at another location on Debian
  Note that, as a particular exception, Debian Policy § 10.4 states that
  Perl scripts should use <code>/usr/bin/perl</code> directly and not
  <code>/usr/bin/env</code>, etc.
-See-Also: policy 10.4
+See-Also: debian-policy 10.4

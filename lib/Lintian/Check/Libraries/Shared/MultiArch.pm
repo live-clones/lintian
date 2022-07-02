@@ -1,8 +1,8 @@
 # libraries/shared/multi-arch -- lintian check script -*- perl -*-
 
-# Copyright © 1998 Christian Schwarz
-# Copyright © 2018-2019 Chris Lamb <lamby@debian.org>
-# Copyright © 2021 Felix Lechner
+# Copyright (C) 1998 Christian Schwarz
+# Copyright (C) 2018-2019 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -42,17 +42,13 @@ sub visit_installed_files {
       unless $item->is_file;
 
     return
-      unless $item->file_info =~ m{^ [^,]* \b ELF \b }x;
+      unless $item->file_type =~ m{^ [^,]* \b ELF \b }x;
 
     return
-      unless $item->file_info
+      unless $item->file_type
       =~ m{(?: shared [ ] object | pie [ ] executable )}x;
 
-    my $objdump = $self->processable->objdump_info->{$item->name};
-    return
-      unless defined $objdump;
-
-    my @ldconfig_folders = @{$self->profile->architectures->ldconfig_folders};
+    my @ldconfig_folders = @{$self->data->architectures->ldconfig_folders};
     return
       if none { $item->dirname eq $_ } @ldconfig_folders;
 
@@ -66,7 +62,8 @@ sub installable {
 
     $self->hint(
         'shared-library-is-multi-arch-foreign',
-        sort +uniq @{$self->shared_libraries})
+        (sort +uniq @{$self->shared_libraries})
+      )
       if @{$self->shared_libraries}
       && $self->processable->fields->value('Multi-Arch') eq 'foreign';
 

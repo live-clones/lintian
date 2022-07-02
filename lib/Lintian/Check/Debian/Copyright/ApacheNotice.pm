@@ -1,8 +1,8 @@
 # debian/copyright/apache-notice -- lintian check script -*- perl -*-
 
-# Copyright © 1998 Christian Schwarz
-# Copyright © 2011 Jakub Wilk
-# Copyright © 2020 Felix Lechner
+# Copyright (C) 1998 Christian Schwarz
+# Copyright (C) 2011 Jakub Wilk
+# Copyright (C) 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -65,14 +65,14 @@ sub check_apache_notice_files {
       unless $contents =~ /apache[-\s]+2\./i;
 
     my @notice_files = grep {
-              $_->basename =~ /^NOTICE(\.txt)?$/
+        $_->basename =~ /^NOTICE(\.txt)?$/
           and $_->is_open_ok
           and $_->bytes =~ /apache/i
     } @{$self->processable->patched->sorted_list};
     return
       unless @notice_files;
 
-    my @binaries = $self->group->get_processables('binary');
+    my @binaries = grep { $_->type ne 'udeb' } $self->group->get_installables;
     return
       unless @binaries;
 
@@ -90,8 +90,8 @@ sub check_apache_notice_files {
           if any { m{/NOTICE(\.txt)?(\.gz)?$} } @names;
     }
 
-    $self->hint('missing-notice-file-for-apache-license',
-        join($SPACE, @notice_files));
+    $self->pointed_hint('missing-notice-file-for-apache-license', $_->pointer)
+      for @notice_files;
 
     return;
 }

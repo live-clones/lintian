@@ -1,6 +1,6 @@
 # games -- lintian check script -*- perl -*-
 
-# Copyright © 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -30,13 +30,13 @@ use namespace::clean;
 with 'Lintian::Check';
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     # non-games-specific data in games subdirectory
-    if ($file->name=~ m{^usr/share/games/(?:applications|mime|icons|pixmaps)/}
-        and not $file->is_dir) {
+    if ($item->name=~ m{^usr/share/games/(?:applications|mime|icons|pixmaps)/}
+        && !$item->is_dir) {
 
-        $self->hint('global-data-in-games-directory', $file->name);
+        $self->pointed_hint('global-data-in-games-directory', $item->pointer);
     }
 
     return;
@@ -45,12 +45,12 @@ sub visit_installed_files {
 sub dir_counts {
     my ($self, $filename) = @_;
 
-    my $file = $self->processable->installed->lookup($filename);
+    my $item = $self->processable->installed->lookup($filename);
 
     return 0
-      unless $file;
+      unless $item;
 
-    return scalar $file->children;
+    return scalar $item->children;
 }
 
 sub installable {

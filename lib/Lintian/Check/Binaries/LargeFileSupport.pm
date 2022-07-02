@@ -1,9 +1,9 @@
 # binaries/large-file-support -- lintian check script -*- perl -*-
 
-# Copyright © 1998 Christian Schwarz and Richard Braakman
-# Copyright © 2012 Kees Cook
-# Copyright © 2017-2020 Chris Lamb <lamby@debian.org>
-# Copyright © 2021 Felix Lechner
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 2012 Kees Cook
+# Copyright (C) 2017-2020 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -40,9 +40,18 @@ has ARCH_REGEX => (
     default => sub {
         my ($self) = @_;
 
-        return $self->profile->load_data('binaries/arch-regex', qr/\s*\~\~/,
-            sub { return qr/$_[1]/ });
-    });
+        my %arch_regex;
+
+        my $data = $self->data->load('binaries/arch-regex', qr/\s*\~\~/);
+        for my $architecture ($data->all) {
+
+            my $pattern = $data->value($architecture);
+            $arch_regex{$architecture} = qr{$pattern};
+        }
+
+        return \%arch_regex;
+    }
+);
 
 has LFS_SYMBOLS => (
     is => 'rw',
@@ -50,8 +59,9 @@ has LFS_SYMBOLS => (
     default => sub {
         my ($self) = @_;
 
-        return $self->profile->load_data('binaries/lfs-symbols');
-    });
+        return $self->data->load('binaries/lfs-symbols');
+    }
+);
 
 sub visit_installed_files {
     my ($self, $item) = @_;
@@ -66,29 +76,24 @@ sub visit_installed_files {
 
     # Only 32bit ELF binaries can lack LFS.
     return
-      unless $item->file_info =~ $self->ARCH_REGEX->value('32');
+      unless $item->file_type =~ $self->ARCH_REGEX->{'32'};
 
     return
       if $item->name =~ m{^usr/lib/debug/};
 
-    my $objdump = $self->processable->objdump_info->{$item->name};
-    return
-      unless defined $objdump;
-
     my @unresolved_symbols;
-    for my $entry (@{$objdump->{SYMBOLS} // [] }) {
-        my ($resolution, $version, $symbol) = @{$entry};
+    for my $symbol (@{$item->elf->{SYMBOLS} // [] }) {
 
         # ignore if defined in the binary
         next
-          unless $resolution eq 'UND';
+          unless $symbol->section eq 'UND';
 
-        push(@unresolved_symbols, $symbol);
+        push(@unresolved_symbols, $symbol->name);
     }
 
     # Using a 32bit only interface call, some parts of the
     # binary are built without LFS
-    $self->hint('binary-file-built-without-LFS-support', $item->name)
+    $self->pointed_hint('binary-file-built-without-LFS-support',$item->pointer)
       if any { $self->LFS_SYMBOLS->recognizes($_) } @unresolved_symbols;
 
     return;

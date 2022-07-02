@@ -1,9 +1,9 @@
 # binaries/obsolete/crypt -- lintian check script -*- perl -*-
 
-# Copyright © 1998 Christian Schwarz and Richard Braakman
-# Copyright © 2012 Kees Cook
-# Copyright © 2017-2020 Chris Lamb <lamby@debian.org>
-# Copyright © 2021 Felix Lechner
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 2012 Kees Cook
+# Copyright (C) 2017-2020 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -38,29 +38,43 @@ has OBSOLETE_CRYPT_FUNCTIONS => (
     default => sub {
         my ($self) = @_;
 
-        return $self->profile->load_data('binaries/obsolete-crypt-functions',
+        return $self->data->load('binaries/obsolete-crypt-functions',
             qr/\s*\|\|\s*/);
-    });
+    }
+);
 
-sub installable {
-    my ($self) = @_;
+sub visit_installed_files {
+    my ($self, $item) = @_;
 
-    for my $object_name (keys %{$self->processable->objdump_info}) {
+    for my $symbol (@{$item->elf->{SYMBOLS} // []}) {
 
-        my $objdump = $self->processable->objdump_info->{$object_name};
+        next
+          unless $symbol->section eq 'UND';
 
-        for my $entry (@{$objdump->{SYMBOLS}}) {
-            my ($section, $version, $symbol) = @{$entry};
+        next
+          unless $self->OBSOLETE_CRYPT_FUNCTIONS->recognizes($symbol->name);
+
+        my $tag = $self->OBSOLETE_CRYPT_FUNCTIONS->value($symbol->name);
+
+        $self->pointed_hint($tag, $item->pointer, $symbol->name);
+    }
+
+    for my $member_name (keys %{$item->elf_by_member}) {
+
+        for
+          my $symbol (@{$item->elf_by_member->{$member_name}{SYMBOLS} // []}) {
 
             next
-              unless $section eq 'UND';
+              unless $symbol->section eq 'UND';
 
-            if ($self->OBSOLETE_CRYPT_FUNCTIONS->recognizes($symbol)){
+            next
+              unless $self->OBSOLETE_CRYPT_FUNCTIONS->recognizes(
+                $symbol->name);
 
-                my $tag = $self->OBSOLETE_CRYPT_FUNCTIONS->value($symbol);
+            my $tag = $self->OBSOLETE_CRYPT_FUNCTIONS->value($symbol->name);
 
-                $self->hint($tag, $object_name, $symbol);
-            }
+            $self->pointed_hint($tag, $item->pointer, "($member_name)",
+                $symbol->name);
         }
     }
 

@@ -1,0 +1,67 @@
+{
+  "$id": "https://lintian.debian.org/schema/json/lintian/tag.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A Lintian tag declaration",
+  "properties": {
+    "check": {
+      "description": "Issued by check",
+      "type": "string"
+    },
+    "experimental": {
+      "description": "Tag is experimental",
+      "type": "boolean"
+    },
+    "explanation": {
+      "description": "Explains condition and potential remedy",
+      "type": "string"
+    },
+    "lintian_version": {
+      "description": "Lintian version",
+      "type": "string"
+    },
+    "name": {
+      "description": "Tag name",
+      "type": "string"
+    },
+    "name_spaced": {
+      "description": "Has check-based name space",
+      "type": "boolean"
+    },
+    "renamed_from": {
+      "description": "Renamed from",
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "screens": {
+      "description": "Associated screens that can mask",
+      "items": {
+        "$ref": "/schema/json/lintian/screen.json"
+      },
+      "type": "array"
+    },
+    "see_also": {
+      "description": "Reference citations",
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "show_always": {
+      "description": "Always show",
+      "type": "boolean"
+    },
+    "visibility": {
+      "description": "User-facing visibility",
+      "type": "string"
+    }
+  },
+  "required": [
+    "explanation",
+    "name",
+    "visibility"
+  ],
+  "title": "Lintian Tag",
+  "type": "object"
+}

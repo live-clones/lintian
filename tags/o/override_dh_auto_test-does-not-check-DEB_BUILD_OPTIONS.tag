@@ -26,4 +26,4 @@ Explanation: The <code>debian/rules</code> file for this package has an
  .
  This check is not required in Debhelper compat level 13 or greater
  (see Bug#568897).
-See-Also: policy 4.9.1, https://wiki.debian.org/BuildProfileSpec#Registered_profile_names
+See-Also: debian-policy 4.9.1, https://wiki.debian.org/BuildProfileSpec#Registered_profile_names

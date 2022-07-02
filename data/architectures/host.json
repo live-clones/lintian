@@ -1,10 +1,5 @@
 {
-   "preamble" : {
-      "dpkg-version" : "1.20.7.1",
-      "last-update" : "2021-03-18T21:07:25Z",
-      "title" : "DEB_HOST_* Variables From Dpkg"
-   },
-   "variables" : {
+   "host_variables" : {
       "aix-alpha" : {
          "DEB_HOST_ARCH" : "aix-alpha",
          "DEB_HOST_ARCH_ABI" : "base",
@@ -30,6 +25,19 @@
          "DEB_HOST_GNU_SYSTEM" : "aix",
          "DEB_HOST_GNU_TYPE" : "x86_64-aix",
          "DEB_HOST_MULTIARCH" : "x86_64-aix"
+      },
+      "aix-arc" : {
+         "DEB_HOST_ARCH" : "aix-arc",
+         "DEB_HOST_ARCH_ABI" : "base",
+         "DEB_HOST_ARCH_BITS" : "32",
+         "DEB_HOST_ARCH_CPU" : "arc",
+         "DEB_HOST_ARCH_ENDIAN" : "little",
+         "DEB_HOST_ARCH_LIBC" : "sysv",
+         "DEB_HOST_ARCH_OS" : "aix",
+         "DEB_HOST_GNU_CPU" : "arc",
+         "DEB_HOST_GNU_SYSTEM" : "aix",
+         "DEB_HOST_GNU_TYPE" : "arc-aix",
+         "DEB_HOST_MULTIARCH" : "arc-aix"
       },
       "aix-arm" : {
          "DEB_HOST_ARCH" : "aix-arm",
@@ -486,6 +494,19 @@
          "DEB_HOST_GNU_TYPE" : "x86_64-linux-gnu",
          "DEB_HOST_MULTIARCH" : "x86_64-linux-gnu"
       },
+      "arc" : {
+         "DEB_HOST_ARCH" : "arc",
+         "DEB_HOST_ARCH_ABI" : "base",
+         "DEB_HOST_ARCH_BITS" : "32",
+         "DEB_HOST_ARCH_CPU" : "arc",
+         "DEB_HOST_ARCH_ENDIAN" : "little",
+         "DEB_HOST_ARCH_LIBC" : "gnu",
+         "DEB_HOST_ARCH_OS" : "linux",
+         "DEB_HOST_GNU_CPU" : "arc",
+         "DEB_HOST_GNU_SYSTEM" : "linux-gnu",
+         "DEB_HOST_GNU_TYPE" : "arc-linux-gnu",
+         "DEB_HOST_MULTIARCH" : "arc-linux-gnu"
+      },
       "arm" : {
          "DEB_HOST_ARCH" : "arm",
          "DEB_HOST_ARCH_ABI" : "base",
@@ -602,6 +623,19 @@
          "DEB_HOST_GNU_SYSTEM" : "darwin",
          "DEB_HOST_GNU_TYPE" : "x86_64-darwin",
          "DEB_HOST_MULTIARCH" : "x86_64-darwin"
+      },
+      "darwin-arc" : {
+         "DEB_HOST_ARCH" : "darwin-arc",
+         "DEB_HOST_ARCH_ABI" : "base",
+         "DEB_HOST_ARCH_BITS" : "32",
+         "DEB_HOST_ARCH_CPU" : "arc",
+         "DEB_HOST_ARCH_ENDIAN" : "little",
+         "DEB_HOST_ARCH_LIBC" : "bsd",
+         "DEB_HOST_ARCH_OS" : "darwin",
+         "DEB_HOST_GNU_CPU" : "arc",
+         "DEB_HOST_GNU_SYSTEM" : "darwin",
+         "DEB_HOST_GNU_TYPE" : "arc-darwin",
+         "DEB_HOST_MULTIARCH" : "arc-darwin"
       },
       "darwin-arm" : {
          "DEB_HOST_ARCH" : "darwin-arm",
@@ -1058,6 +1092,19 @@
          "DEB_HOST_GNU_TYPE" : "x86_64-dragonflybsd",
          "DEB_HOST_MULTIARCH" : "x86_64-dragonflybsd"
       },
+      "dragonflybsd-arc" : {
+         "DEB_HOST_ARCH" : "dragonflybsd-arc",
+         "DEB_HOST_ARCH_ABI" : "base",
+         "DEB_HOST_ARCH_BITS" : "32",
+         "DEB_HOST_ARCH_CPU" : "arc",
+         "DEB_HOST_ARCH_ENDIAN" : "little",
+         "DEB_HOST_ARCH_LIBC" : "bsd",
+         "DEB_HOST_ARCH_OS" : "dragonflybsd",
+         "DEB_HOST_GNU_CPU" : "arc",
+         "DEB_HOST_GNU_SYSTEM" : "dragonflybsd",
+         "DEB_HOST_GNU_TYPE" : "arc-dragonflybsd",
+         "DEB_HOST_MULTIARCH" : "arc-dragonflybsd"
+      },
       "dragonflybsd-arm" : {
          "DEB_HOST_ARCH" : "dragonflybsd-arm",
          "DEB_HOST_ARCH_ABI" : "base",
@@ -1512,6 +1559,19 @@
          "DEB_HOST_GNU_SYSTEM" : "freebsd",
          "DEB_HOST_GNU_TYPE" : "x86_64-freebsd",
          "DEB_HOST_MULTIARCH" : "x86_64-freebsd"
+      },
+      "freebsd-arc" : {
+         "DEB_HOST_ARCH" : "freebsd-arc",
+         "DEB_HOST_ARCH_ABI" : "base",
+         "DEB_HOST_ARCH_BITS" : "32",
+         "DEB_HOST_ARCH_CPU" : "arc",
+         "DEB_HOST_ARCH_ENDIAN" : "little",
+         "DEB_HOST_ARCH_LIBC" : "bsd",
+         "DEB_HOST_ARCH_OS" : "freebsd",
+         "DEB_HOST_GNU_CPU" : "arc",
+         "DEB_HOST_GNU_SYSTEM" : "freebsd",
+         "DEB_HOST_GNU_TYPE" : "arc-freebsd",
+         "DEB_HOST_MULTIARCH" : "arc-freebsd"
       },
       "freebsd-arm" : {
          "DEB_HOST_ARCH" : "freebsd-arm",
@@ -1980,6 +2040,19 @@
          "DEB_HOST_GNU_SYSTEM" : "gnu",
          "DEB_HOST_GNU_TYPE" : "x86_64-gnu",
          "DEB_HOST_MULTIARCH" : "x86_64-gnu"
+      },
+      "hurd-arc" : {
+         "DEB_HOST_ARCH" : "hurd-arc",
+         "DEB_HOST_ARCH_ABI" : "base",
+         "DEB_HOST_ARCH_BITS" : "32",
+         "DEB_HOST_ARCH_CPU" : "arc",
+         "DEB_HOST_ARCH_ENDIAN" : "little",
+         "DEB_HOST_ARCH_LIBC" : "gnu",
+         "DEB_HOST_ARCH_OS" : "hurd",
+         "DEB_HOST_GNU_CPU" : "arc",
+         "DEB_HOST_GNU_SYSTEM" : "gnu",
+         "DEB_HOST_GNU_TYPE" : "arc-gnu",
+         "DEB_HOST_MULTIARCH" : "arc-gnu"
       },
       "hurd-arm" : {
          "DEB_HOST_ARCH" : "hurd-arm",
@@ -2462,6 +2535,19 @@
          "DEB_HOST_GNU_TYPE" : "x86_64-kfreebsd-gnu",
          "DEB_HOST_MULTIARCH" : "x86_64-kfreebsd-gnu"
       },
+      "kfreebsd-arc" : {
+         "DEB_HOST_ARCH" : "kfreebsd-arc",
+         "DEB_HOST_ARCH_ABI" : "base",
+         "DEB_HOST_ARCH_BITS" : "32",
+         "DEB_HOST_ARCH_CPU" : "arc",
+         "DEB_HOST_ARCH_ENDIAN" : "little",
+         "DEB_HOST_ARCH_LIBC" : "gnu",
+         "DEB_HOST_ARCH_OS" : "kfreebsd",
+         "DEB_HOST_GNU_CPU" : "arc",
+         "DEB_HOST_GNU_SYSTEM" : "kfreebsd-gnu",
+         "DEB_HOST_GNU_TYPE" : "arc-kfreebsd-gnu",
+         "DEB_HOST_MULTIARCH" : "arc-kfreebsd-gnu"
+      },
       "kfreebsd-arm" : {
          "DEB_HOST_ARCH" : "kfreebsd-arm",
          "DEB_HOST_ARCH_ABI" : "base",
@@ -2930,6 +3016,19 @@
          "DEB_HOST_GNU_TYPE" : "x86_64-knetbsd-gnu",
          "DEB_HOST_MULTIARCH" : "x86_64-knetbsd-gnu"
       },
+      "knetbsd-arc" : {
+         "DEB_HOST_ARCH" : "knetbsd-arc",
+         "DEB_HOST_ARCH_ABI" : "base",
+         "DEB_HOST_ARCH_BITS" : "32",
+         "DEB_HOST_ARCH_CPU" : "arc",
+         "DEB_HOST_ARCH_ENDIAN" : "little",
+         "DEB_HOST_ARCH_LIBC" : "gnu",
+         "DEB_HOST_ARCH_OS" : "knetbsd",
+         "DEB_HOST_GNU_CPU" : "arc",
+         "DEB_HOST_GNU_SYSTEM" : "knetbsd-gnu",
+         "DEB_HOST_GNU_TYPE" : "arc-knetbsd-gnu",
+         "DEB_HOST_MULTIARCH" : "arc-knetbsd-gnu"
+      },
       "knetbsd-arm" : {
          "DEB_HOST_ARCH" : "knetbsd-arm",
          "DEB_HOST_ARCH_ABI" : "base",
@@ -3384,6 +3483,19 @@
          "DEB_HOST_GNU_SYSTEM" : "kopensolaris-gnu",
          "DEB_HOST_GNU_TYPE" : "x86_64-kopensolaris-gnu",
          "DEB_HOST_MULTIARCH" : "x86_64-kopensolaris-gnu"
+      },
+      "kopensolaris-arc" : {
+         "DEB_HOST_ARCH" : "kopensolaris-arc",
+         "DEB_HOST_ARCH_ABI" : "base",
+         "DEB_HOST_ARCH_BITS" : "32",
+         "DEB_HOST_ARCH_CPU" : "arc",
+         "DEB_HOST_ARCH_ENDIAN" : "little",
+         "DEB_HOST_ARCH_LIBC" : "gnu",
+         "DEB_HOST_ARCH_OS" : "kopensolaris",
+         "DEB_HOST_GNU_CPU" : "arc",
+         "DEB_HOST_GNU_SYSTEM" : "kopensolaris-gnu",
+         "DEB_HOST_GNU_TYPE" : "arc-kopensolaris-gnu",
+         "DEB_HOST_MULTIARCH" : "arc-kopensolaris-gnu"
       },
       "kopensolaris-arm" : {
          "DEB_HOST_ARCH" : "kopensolaris-arm",
@@ -4035,6 +4147,19 @@
          "DEB_HOST_GNU_TYPE" : "x86_64-linux-musl",
          "DEB_HOST_MULTIARCH" : "x86_64-linux-musl"
       },
+      "musl-linux-arc" : {
+         "DEB_HOST_ARCH" : "musl-linux-arc",
+         "DEB_HOST_ARCH_ABI" : "base",
+         "DEB_HOST_ARCH_BITS" : "32",
+         "DEB_HOST_ARCH_CPU" : "arc",
+         "DEB_HOST_ARCH_ENDIAN" : "little",
+         "DEB_HOST_ARCH_LIBC" : "musl",
+         "DEB_HOST_ARCH_OS" : "linux",
+         "DEB_HOST_GNU_CPU" : "arc",
+         "DEB_HOST_GNU_SYSTEM" : "linux-musl",
+         "DEB_HOST_GNU_TYPE" : "arc-linux-musl",
+         "DEB_HOST_MULTIARCH" : "arc-linux-musl"
+      },
       "musl-linux-arm" : {
          "DEB_HOST_ARCH" : "musl-linux-arm",
          "DEB_HOST_ARCH_ABI" : "base",
@@ -4503,6 +4628,19 @@
          "DEB_HOST_GNU_TYPE" : "x86_64-netbsd",
          "DEB_HOST_MULTIARCH" : "x86_64-netbsd"
       },
+      "netbsd-arc" : {
+         "DEB_HOST_ARCH" : "netbsd-arc",
+         "DEB_HOST_ARCH_ABI" : "base",
+         "DEB_HOST_ARCH_BITS" : "32",
+         "DEB_HOST_ARCH_CPU" : "arc",
+         "DEB_HOST_ARCH_ENDIAN" : "little",
+         "DEB_HOST_ARCH_LIBC" : "bsd",
+         "DEB_HOST_ARCH_OS" : "netbsd",
+         "DEB_HOST_GNU_CPU" : "arc",
+         "DEB_HOST_GNU_SYSTEM" : "netbsd",
+         "DEB_HOST_GNU_TYPE" : "arc-netbsd",
+         "DEB_HOST_MULTIARCH" : "arc-netbsd"
+      },
       "netbsd-arm" : {
          "DEB_HOST_ARCH" : "netbsd-arm",
          "DEB_HOST_ARCH_ABI" : "base",
@@ -4970,6 +5108,19 @@
          "DEB_HOST_GNU_SYSTEM" : "openbsd",
          "DEB_HOST_GNU_TYPE" : "x86_64-openbsd",
          "DEB_HOST_MULTIARCH" : "x86_64-openbsd"
+      },
+      "openbsd-arc" : {
+         "DEB_HOST_ARCH" : "openbsd-arc",
+         "DEB_HOST_ARCH_ABI" : "base",
+         "DEB_HOST_ARCH_BITS" : "32",
+         "DEB_HOST_ARCH_CPU" : "arc",
+         "DEB_HOST_ARCH_ENDIAN" : "little",
+         "DEB_HOST_ARCH_LIBC" : "bsd",
+         "DEB_HOST_ARCH_OS" : "openbsd",
+         "DEB_HOST_GNU_CPU" : "arc",
+         "DEB_HOST_GNU_SYSTEM" : "openbsd",
+         "DEB_HOST_GNU_TYPE" : "arc-openbsd",
+         "DEB_HOST_MULTIARCH" : "arc-openbsd"
       },
       "openbsd-arm" : {
          "DEB_HOST_ARCH" : "openbsd-arm",
@@ -5595,6 +5746,19 @@
          "DEB_HOST_GNU_TYPE" : "x86_64-solaris",
          "DEB_HOST_MULTIARCH" : "x86_64-solaris"
       },
+      "solaris-arc" : {
+         "DEB_HOST_ARCH" : "solaris-arc",
+         "DEB_HOST_ARCH_ABI" : "base",
+         "DEB_HOST_ARCH_BITS" : "32",
+         "DEB_HOST_ARCH_CPU" : "arc",
+         "DEB_HOST_ARCH_ENDIAN" : "little",
+         "DEB_HOST_ARCH_LIBC" : "sysv",
+         "DEB_HOST_ARCH_OS" : "solaris",
+         "DEB_HOST_GNU_CPU" : "arc",
+         "DEB_HOST_GNU_SYSTEM" : "solaris",
+         "DEB_HOST_GNU_TYPE" : "arc-solaris",
+         "DEB_HOST_MULTIARCH" : "arc-solaris"
+      },
       "solaris-arm" : {
          "DEB_HOST_ARCH" : "solaris-arm",
          "DEB_HOST_ARCH_ABI" : "base",
@@ -6089,6 +6253,19 @@
          "DEB_HOST_GNU_TYPE" : "x86_64-linux-uclibc",
          "DEB_HOST_MULTIARCH" : "x86_64-linux-uclibc"
       },
+      "uclibc-linux-arc" : {
+         "DEB_HOST_ARCH" : "uclibc-linux-arc",
+         "DEB_HOST_ARCH_ABI" : "base",
+         "DEB_HOST_ARCH_BITS" : "32",
+         "DEB_HOST_ARCH_CPU" : "arc",
+         "DEB_HOST_ARCH_ENDIAN" : "little",
+         "DEB_HOST_ARCH_LIBC" : "uclibc",
+         "DEB_HOST_ARCH_OS" : "linux",
+         "DEB_HOST_GNU_CPU" : "arc",
+         "DEB_HOST_GNU_SYSTEM" : "linux-uclibc",
+         "DEB_HOST_GNU_TYPE" : "arc-linux-uclibc",
+         "DEB_HOST_MULTIARCH" : "arc-linux-uclibc"
+      },
       "uclibc-linux-arm" : {
          "DEB_HOST_ARCH" : "uclibc-linux-arm",
          "DEB_HOST_ARCH_ABI" : "base",
@@ -6557,6 +6734,19 @@
          "DEB_HOST_GNU_TYPE" : "x86_64-uclinux-uclibc",
          "DEB_HOST_MULTIARCH" : "x86_64-uclinux-uclibc"
       },
+      "uclinux-arc" : {
+         "DEB_HOST_ARCH" : "uclinux-arc",
+         "DEB_HOST_ARCH_ABI" : "base",
+         "DEB_HOST_ARCH_BITS" : "32",
+         "DEB_HOST_ARCH_CPU" : "arc",
+         "DEB_HOST_ARCH_ENDIAN" : "little",
+         "DEB_HOST_ARCH_LIBC" : "uclibc",
+         "DEB_HOST_ARCH_OS" : "uclinux",
+         "DEB_HOST_GNU_CPU" : "arc",
+         "DEB_HOST_GNU_SYSTEM" : "uclinux-uclibc",
+         "DEB_HOST_GNU_TYPE" : "arc-uclinux-uclibc",
+         "DEB_HOST_MULTIARCH" : "arc-uclinux-uclibc"
+      },
       "uclinux-arm" : {
          "DEB_HOST_ARCH" : "uclinux-arm",
          "DEB_HOST_ARCH_ABI" : "base",
@@ -7012,5 +7202,9 @@
          "DEB_HOST_GNU_TYPE" : "x86_64-linux-gnux32",
          "DEB_HOST_MULTIARCH" : "x86_64-linux-gnux32"
       }
+   },
+   "preamble" : {
+      "cargo" : "host_variables",
+      "title" : "DEB_HOST_* Variables from Dpkg"
    }
 }

@@ -1,6 +1,6 @@
 # files/includes -- lintian check script -*- perl -*-
 
-# Copyright © 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -46,7 +46,7 @@ sub visit_installed_files {
       unless $consumed =~ s{^usr/include/}{};
 
     my @multiarch_folders
-      = values %{$self->profile->architectures->deb_host_multiarch};
+      = values %{$self->data->architectures->deb_host_multiarch};
 
     for my $tuple (@multiarch_folders) {
 
@@ -54,7 +54,7 @@ sub visit_installed_files {
           if $consumed =~ s{^$tuple/}{};
     }
 
-    $self->hint('header-has-overly-generic-name', $item->name)
+    $self->pointed_hint('header-has-overly-generic-name', $item->pointer)
       if any { $consumed =~ m{ $_ }isx } @GENERIC_PATHS;
 
     return;

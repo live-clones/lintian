@@ -1,6 +1,6 @@
 # fields/description -- lintian check script -*- perl -*-
 
-# Copyright © 1998 Christian Schwarz
+# Copyright (C) 1998 Christian Schwarz
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -129,8 +129,7 @@ sub installable {
           if length $synopsis > $MAXIMUM_WIDTH;
     }
 
-    my $PLANNED_FEATURES
-      = $self->profile->load_data('description/planned-features');
+    my $PLANNED_FEATURES= $self->data->load('description/planned-features');
 
     my $flagged_homepage;
     my @lines = split(/\n/, $extended);
@@ -262,17 +261,18 @@ sub installable {
 
     if ($synopsis) {
         check_spelling(
-            $self->profile,
+            $self->data,
             $synopsis,
             $group->spelling_exceptions,
             $self->spelling_tag_emitter(
-                'spelling-error-in-description-synopsis'));
+                'spelling-error-in-description-synopsis')
+        );
         # Auto-generated dbgsym packages will use the package name in
         # their synopsis.  Unfortunately, some package names trigger a
         # capitalization error, such as "dbus" -> "D-Bus".  Therefore,
         # we exempt auto-generated packages from this check.
         check_spelling_picky(
-            $self->profile,
+            $self->data,
             $synopsis,
             $self->spelling_tag_emitter(
                 'capitalization-error-in-description-synopsis')
@@ -281,10 +281,11 @@ sub installable {
 
     if ($extended) {
         check_spelling(
-            $self->profile,$extended,
+            $self->data,$extended,
             $group->spelling_exceptions,
-            $self->spelling_tag_emitter('spelling-error-in-description'));
-        check_spelling_picky($self->profile, $extended,
+            $self->spelling_tag_emitter('spelling-error-in-description')
+        );
+        check_spelling_picky($self->data, $extended,
             $self->spelling_tag_emitter('capitalization-error-in-description')
         );
     }

@@ -1,1 +1,1 @@
-declared-in-etc (binary): misplaced-systemd-tmpfiles etc/tmpfiles.d/test.conf
+declared-in-etc (binary): misplaced-systemd-tmpfiles [etc/tmpfiles.d/test.conf]

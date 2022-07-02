@@ -1,6 +1,6 @@
 # files/compressed -- lintian check script -*- perl -*-
 
-# Copyright © 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -26,22 +26,12 @@ use utf8;
 
 use Const::Fast;
 
+const my $VERTICAL_BAR => q{|};
+
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
-
-const my $VERTICAL_BAR => q{|};
-
-has COMPRESS_FILE_EXTENSIONS => (
-    is => 'rw',
-    lazy => 1,
-    default => sub {
-        my ($self) = @_;
-
-        return $self->profile->load_data('files/compressed-file-extensions',
-            qr/\s++/,sub { return qr/\Q$_[0]\E/ });
-    });
 
 # an OR (|) regex of all compressed extension
 has COMPRESS_FILE_EXTENSIONS_OR_ALL => (
@@ -50,18 +40,21 @@ has COMPRESS_FILE_EXTENSIONS_OR_ALL => (
     default => sub {
         my ($self) = @_;
 
+        my $COMPRESS_FILE_EXTENSIONS
+          = $self->data->load('files/compressed-file-extensions',qr/\s+/);
+
         my $text = join($VERTICAL_BAR,
-            map {$self->COMPRESS_FILE_EXTENSIONS->value($_) }
-              $self->COMPRESS_FILE_EXTENSIONS->all);
+            map { quotemeta }$COMPRESS_FILE_EXTENSIONS->all);
 
         return qr/$text/;
-    });
+    }
+);
 
 sub visit_installed_files {
-    my ($self, $file) = @_;
+    my ($self, $item) = @_;
 
     return
-      unless $file->is_file;
+      unless $item->is_file;
 
     my $regex = $self->COMPRESS_FILE_EXTENSIONS_OR_ALL;
 
@@ -69,8 +62,9 @@ sub visit_installed_files {
     my $DUPLICATED_COMPRESSED_FILE_REGEX= qr/^(.+)\.$regex$/;
 
     # both compressed and uncompressed present
-    if ($file->name =~ $DUPLICATED_COMPRESSED_FILE_REGEX) {
-        $self->hint('compressed-duplicate', $file->name)
+    if ($item->name =~ $DUPLICATED_COMPRESSED_FILE_REGEX) {
+
+        $self->pointed_hint('compressed-duplicate', $item->pointer)
           if $self->processable->installed->lookup($1);
     }
 

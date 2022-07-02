@@ -1,10 +1,10 @@
 # team/pkg-perl/no-testsuite -- lintian check script for detecting a missing Testsuite header -*- perl -*-
 #
-# Copyright © 2013 Niels Thykier <niels@thykier.net>
-# Copyright © 2013 gregor herrmann <gregoa@debian.org>
-# Copyright © 2014 Niko Tyni <ntyni@debian.org>
-# Copyright © 2018 Florian Schlichting <fsfs@debian.org>
-# Copyright © 2020 Felix Lechner
+# Copyright (C) 2013 Niels Thykier <niels@thykier.net>
+# Copyright (C) 2013 gregor herrmann <gregoa@debian.org>
+# Copyright (C) 2014 Niko Tyni <ntyni@debian.org>
+# Copyright (C) 2018 Florian Schlichting <fsfs@debian.org>
+# Copyright (C) 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 

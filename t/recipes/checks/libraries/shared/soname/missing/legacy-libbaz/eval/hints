@@ -1,1 +1,1 @@
-libbaz1 (binary): sharedobject-in-library-directory-missing-soname usr/lib/libbaz1.so.1.0.3b
+libbaz1 (binary): sharedobject-in-library-directory-missing-soname [usr/lib/libbaz1.so.1.0.3b]

@@ -1,8 +1,8 @@
 # libraries/shared/exit -- lintian check script -*- perl -*-
 
-# Copyright © 1998 Christian Schwarz
-# Copyright © 2018-2019 Chris Lamb <lamby@debian.org>
-# Copyright © 2021 Felix Lechner
+# Copyright (C) 1998 Christian Schwarz
+# Copyright (C) 2018-2019 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -35,7 +35,7 @@ with 'Lintian::Check';
 
 # not presently used
 #my $UNKNOWN_SHARED_LIBRARY_EXCEPTIONS
-#  = $self->profile->load_data('shared-libs/unknown-shared-library-exceptions');
+#  = $self->data->load('shared-libs/unknown-shared-library-exceptions');
 
 sub visit_installed_files {
     my ($self, $item) = @_;
@@ -44,20 +44,21 @@ sub visit_installed_files {
       unless $item->is_file;
 
     # shared library
-    my $objdump = $self->processable->objdump_info->{$item->name};
     return
-      unless @{$objdump->{SONAME} // [] };
+      unless @{$item->elf->{SONAME} // [] };
 
-    my @symbol_names
-      = map { @{$_}[2] } @{$objdump->{SYMBOLS} // []};
+    my @symbols = grep { $_->section eq '.text' || $_->section eq 'UND' }
+      @{$item->elf->{SYMBOLS} // []};
+
+    my @symbol_names = map { $_->name } @symbols;
 
     # If it has an INTERP section it might be an application with
     # a SONAME (hi openjdk-6, see #614305).  Also see the comment
     # for "shared-library-is-executable" below.
-    $self->hint('exit-in-shared-library', $item->name)
+    $self->pointed_hint('exit-in-shared-library', $item->pointer)
       if (any { m/^_?exit$/ } @symbol_names)
       && (none { $_ eq 'fork' } @symbol_names)
-      && !length $objdump->{INTERP};
+      && !length $item->elf->{INTERP};
 
     return;
 }

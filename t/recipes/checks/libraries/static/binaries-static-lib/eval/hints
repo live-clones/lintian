@@ -1,2 +1,2 @@
-libfoo-dev (binary): unstripped-static-library usr/lib/libfoo.a (code.o other.o)
-libfoo-dev (binary): static-library-has-unneeded-sections usr/lib/libbar.a (pstripped.o) .comment
+libfoo-dev (binary): unstripped-static-library (code.o other.o) [usr/lib/libfoo.a]
+libfoo-dev (binary): static-library-has-unneeded-sections (pstripped.o) .comment [usr/lib/libbar.a]

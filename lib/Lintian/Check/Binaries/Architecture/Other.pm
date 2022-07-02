@@ -1,9 +1,9 @@
 # binaries/architecture/other -- lintian check script -*- perl -*-
 
-# Copyright © 1998 Christian Schwarz and Richard Braakman
-# Copyright © 2012 Kees Cook
-# Copyright © 2017-2020 Chris Lamb <lamby@debian.org>
-# Copyright © 2021 Felix Lechner
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 2012 Kees Cook
+# Copyright (C) 2017-2020 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -44,9 +44,18 @@ has ARCH_REGEX => (
     default => sub {
         my ($self) = @_;
 
-        return $self->profile->load_data('binaries/arch-regex', qr/\s*\~\~/,
-            sub { return qr/$_[1]/ });
-    });
+        my %arch_regex;
+
+        my $data = $self->data->load('binaries/arch-regex', qr/\s*\~\~/);
+        for my $architecture ($data->all) {
+
+            my $pattern = $data->value($architecture);
+            $arch_regex{$architecture} = qr{$pattern};
+        }
+
+        return \%arch_regex;
+    }
+);
 
 has ARCH_64BIT_EQUIVS => (
     is => 'rw',
@@ -54,9 +63,9 @@ has ARCH_64BIT_EQUIVS => (
     default => sub {
         my ($self) = @_;
 
-        return $self->profile->load_data('binaries/arch-64bit-equivs',
-            qr/\s*\=\>\s*/);
-    });
+        return $self->data->load('binaries/arch-64bit-equivs',qr/\s*\=\>\s*/);
+    }
+);
 
 sub from_other_architecture {
     my ($self, $item) = @_;
@@ -68,8 +77,8 @@ sub from_other_architecture {
 
     # If it matches the architecture regex, it is good
     return 0
-      if $self->ARCH_REGEX->recognizes($architecture)
-      && $item->file_info =~ $self->ARCH_REGEX->value($architecture);
+      if exists $self->ARCH_REGEX->{$architecture}
+      && $item->file_type =~ $self->ARCH_REGEX->{$architecture};
 
     # Special case - "old" multi-arch dirs
     if (   $item->name =~ m{(?:^|/)lib(x?\d\d)/}
@@ -78,8 +87,8 @@ sub from_other_architecture {
         my $bus_width = $1;
 
         return 0
-          if $self->ARCH_REGEX->value($bus_width)
-          && $item->file_info =~ $self->ARCH_REGEX->value($bus_width);
+          if exists $self->ARCH_REGEX->{$bus_width}
+          && $item->file_type =~ $self->ARCH_REGEX->{$bus_width};
     }
 
     # Detached debug symbols could be for a biarch library.
@@ -97,13 +106,13 @@ sub from_other_architecture {
         my $equivalent_64 = $self->ARCH_64BIT_EQUIVS->value($architecture);
 
         return 0
-          if $item->file_info =~ $self->ARCH_REGEX->value($equivalent_64);
+          if $item->file_type =~ $self->ARCH_REGEX->{$equivalent_64};
     }
 
     # Ignore i386 binaries in amd64 packages for right now.
     return 0
       if $architecture eq 'amd64'
-      && $item->file_info =~ $self->ARCH_REGEX->value('i386');
+      && $item->file_type =~ $self->ARCH_REGEX->{i386};
 
     return 1;
 }
@@ -115,9 +124,9 @@ sub visit_installed_files {
       unless $item->is_file;
 
     return
-      unless $item->file_info =~ /^ [^,]* \b ELF \b /x;
+      unless $item->file_type =~ /^ [^,]* \b ELF \b /x;
 
-    $self->hint('binary-from-other-architecture', $item)
+    $self->pointed_hint('binary-from-other-architecture', $item->pointer)
       if $self->from_other_architecture($item);
 
     return;

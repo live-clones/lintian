@@ -8,4 +8,4 @@ Explanation: You've specified more than one target distribution for your upload
  Although this syntax is valid, it is not accepted by the Debian archive
  management software. This may not be a problem if this upload is
  targeted at an archive other than Debian's.
-See-Also: policy 5.6.14
+See-Also: debian-policy 5.6.14

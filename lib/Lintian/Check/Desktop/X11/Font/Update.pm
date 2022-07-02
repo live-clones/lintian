@@ -1,9 +1,9 @@
 # desktop/x11/font/update -- lintian check script -*- perl -*-
 #
-# Copyright © 1998 Richard Braakman
-# Copyright © 2002 Josip Rodin
-# Copyright © 2016-2019 Chris Lamb <lamby@debian.org>
-# Copyright © 2021 Felix Lechner
+# Copyright (C) 1998 Richard Braakman
+# Copyright (C) 2002 Josip Rodin
+# Copyright (C) 2016-2019 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -55,7 +55,8 @@ has x_fonts => (
           @{$self->processable->installed->sorted_list};
 
         return \@x_fonts;
-    });
+    }
+);
 
 sub visit_control_files {
     my ($self, $item) = @_;
@@ -115,7 +116,7 @@ sub visit_control_files {
 
     if ($item->name eq 'postinst' && !$saw_update_fonts) {
 
-        $self->hint('missing-call-to-update-fonts', $_, '[control/postinst]')
+        $self->pointed_hint('missing-call-to-update-fonts', $item->pointer, $_)
           for @{$self->x_fonts};
     }
 

@@ -7,4 +7,4 @@ Explanation: Maintainer scripts must not create device files directly. They
  If <code>mknod</code> is being used to create a FIFO (named pipe), use
  <code>mkfifo</code> instead to avoid triggering this tag.
 See-Also:
- policy 10.6
+ debian-policy 10.6

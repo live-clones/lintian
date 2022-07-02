@@ -1,7 +1,10 @@
 Tag: menu-icon-cannot-be-parsed
 Severity: warning
 Check: menu-format
-Explanation: The icon file could not be parsed. Perhaps this means a bad XPM file,
- or perhaps it means the Lintian parsing needs to be improved. If the
- window managers and standard tools accept the file then probably it's the
- latter; please file a bug on Lintian then.
+Explanation: The <code>icon</code> file could not be parsed.
+ .
+ Sometimes, it is a bad XPM file. Sometimes, Lintian parsing needs to be
+ improved.
+ .
+ If window managers and other standard tools accept the file without
+ complaints, please file a bug against Lintian.

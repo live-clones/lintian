@@ -1,4 +1,0 @@
-# before 50004 bugs were removed not archived
-min-bug = 50004
-# a bug number likely for in future
-max-bug = 1000000

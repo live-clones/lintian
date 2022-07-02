@@ -1,8 +1,8 @@
 # -*- perl -*-
 
-# Copyright © 2011-2012 Niels Thykier <niels@thykier.net>
+# Copyright (C) 2011-2012 Niels Thykier <niels@thykier.net>
 #  - Based on a shell script by Raphael Geissert <atomo64@gmail.com>
-# Copyright © 2020-2021 Felix Lechner
+# Copyright (C) 2020-2021 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -23,20 +23,21 @@ use v5.20;
 use warnings;
 use utf8;
 
-use Carp qw(croak);
 use Const::Fast;
-use JSON::MaybeXS;
 use List::SomeUtils qw(first_value);
-use Path::Tiny;
-use Time::Piece;
-use Unicode::UTF8 qw(decode_utf8 encode_utf8);
+use Unicode::UTF8 qw(decode_utf8);
 
 use Lintian::IPC::Run3 qw(safe_qx);
+
+const my $EMPTY => q{};
+const my $SLASH => q{/};
+
+const my $HOST_VARIABLES => q{host_variables};
 
 use Moo;
 use namespace::clean;
 
-const my $SLASH => q{/};
+with 'Lintian::Data::PreambledJSON';
 
 =encoding utf-8
 
@@ -64,9 +65,9 @@ Note that the architecture and cpu name are not always identical
 
 =over 4
 
-=item location
+=item title
 
-=item preamble
+=item location
 
 =item host_variables
 
@@ -76,13 +77,21 @@ Note that the architecture and cpu name are not always identical
 
 =cut
 
+has title => (
+    is => 'rw',
+    default => 'DEB_HOST_* Variables from Dpkg'
+);
+
 has location => (
     is => 'rw',
     default => 'architectures/host.json'
 );
 
-has preamble => (is => 'rw');
-has host_variables => (is => 'rw');
+has host_variables => (
+    is => 'rw',
+    default => sub { {} },
+    coerce => sub { my ($hashref) = @_; return ($hashref // {}); }
+);
 
 has deb_host_multiarch => (
     is => 'rw',
@@ -98,7 +107,8 @@ has deb_host_multiarch => (
           for keys %{$self->host_variables};
 
         return \%deb_host_multiarch;
-    });
+    }
+);
 
 # The list of directories searched by default by the dynamic linker.
 # Packages installing shared libraries into these directories must call
@@ -138,7 +148,8 @@ has ldconfig_folders => (
         my @with_slash = map { $_ . $SLASH } @ldconfig_folders;
 
         return \@with_slash;
-    });
+    }
+);
 
 # Valid architecture wildcards.
 has wildcards => (
@@ -194,7 +205,8 @@ has wildcards => (
         }
 
         return \%wildcards;
-    });
+    }
+);
 
 # Maps aliases to the "original" arch name.
 # (e.g. "linux-amd64" => "amd64")
@@ -219,7 +231,7 @@ has names => (
 
             if ($os eq 'linux') {
 
-                # Per Policy §11.1 (3.9.3):
+                # Per Policy section 11.1 (3.9.3):
                 #
                 #"""[architecture] strings are in the format "os-arch", though
                 # the OS part is sometimes elided, as when the OS is Linux."""
@@ -244,7 +256,8 @@ has names => (
         }
 
         return \%names;
-    });
+    }
+);
 
 =item is_wildcard ($wildcard)
 
@@ -329,7 +342,7 @@ sub valid_restriction {
     $restriction =~ s/^!//;
 
     return
-         $self->is_release_architecture($restriction)
+      $self->is_release_architecture($restriction)
       || $self->is_wildcard($restriction)
       || $restriction eq 'all';
 }
@@ -364,16 +377,14 @@ sub load {
     my @candidates = map { $_ . $SLASH . $self->location } @{$search_space};
     my $path = first_value { -e } @candidates;
 
-    croak encode_utf8('Unknown data file: ' . $self->location)
-      unless length $path;
+    my $host_variables;
 
-    my $json = path($path)->slurp;
-    my $data = decode_json($json);
+    return 0
+      unless $self->read_file($path, \$host_variables);
 
-    $self->preamble($data->{preamble});
-    $self->host_variables($data->{'variables'});
+    $self->host_variables($host_variables);
 
-    return;
+    return 1;
 }
 
 =item refresh
@@ -381,63 +392,40 @@ sub load {
 =cut
 
 sub refresh {
-    my ($self, $basedir) = @_;
+    my ($self, $archive, $basedir) = @_;
 
     local $ENV{LC_ALL} = 'C';
     delete local $ENV{DEB_HOST_ARCH};
-
-    my $version_output= decode_utf8(safe_qx(qw{dpkg-architecture --version}));
-    my ($dpkg_version) = split(/\n/, $version_output);
-
-    # retain only the version number
-    $dpkg_version =~ s/^.*\s(\S+)[.]$/$1/s;
 
     my @architectures
       = split(/\n/, decode_utf8(safe_qx(qw{dpkg-architecture --list-known})));
     chomp for @architectures;
 
-    my %variables;
+    my %host_variables;
     for my $architecture (@architectures) {
 
         my @lines= split(
             /\n/,
             decode_utf8(
-                safe_qx(qw{dpkg-architecture --host-arch}, $architecture)));
+                safe_qx(qw{dpkg-architecture --host-arch}, $architecture)
+            )
+        );
 
         for my $line (@lines) {
             my ($key, $value) = split(/=/, $line, 2);
 
-            $variables{$architecture}{$key} = $value
+            $host_variables{$architecture}{$key} = $value
               if $key =~ /^DEB_HOST_/;
         }
     }
 
-    my %preamble;
-    $preamble{title} = 'DEB_HOST_* Variables From Dpkg';
-    $preamble{'dpkg-version'} = $dpkg_version;
-    $preamble{'last-update'} = gmtime->datetime . 'Z';
+    $self->cargo('host_variables');
 
-    my %all;
-    $all{preamble} = \%preamble;
-    $all{'variables'} = \%variables;
+    my $data_path = "$basedir/" . $self->location;
+    my $status
+      = $self->write_file($HOST_VARIABLES, \%host_variables, $data_path);
 
-    # convert to UTF-8 prior to encoding in JSON
-    my $encoder = JSON->new;
-    $encoder->canonical;
-    $encoder->utf8;
-    $encoder->pretty;
-
-    my $json = $encoder->encode(\%all);
-
-    my $datapath = "$basedir/" . $self->location;
-    my $parentdir = path($datapath)->parent->stringify;
-    path($parentdir)->mkpath
-      unless -e $parentdir;
-
-    # already in UTF-8
-    path($datapath)->spew($json);
-
-    return 1;
+    return $status;
 }
 
 =back

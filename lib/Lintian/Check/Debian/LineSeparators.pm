@@ -1,13 +1,13 @@
 # debian/line-separators -- lintian check script -*- perl -*-
 #
 # based on debhelper check,
-# Copyright © 1999 Joey Hess
-# Copyright © 2000 Sean 'Shaleh' Perry
-# Copyright © 2002 Josip Rodin
-# Copyright © 2007 Russ Allbery
-# Copyright © 2013-2018 Bastien ROUCARIÈS
-# Copyright © 2017-2020 Chris Lamb <lamby@debian.org>
-# Copyright © 2020 Felix Lechner
+# Copyright (C) 1999 Joey Hess
+# Copyright (C) 2000 Sean 'Shaleh' Perry
+# Copyright (C) 2002 Josip Rodin
+# Copyright (C) 2007 Russ Allbery
+# Copyright (C) 2013-2018 Bastien ROUCARIES
+# Copyright (C) 2017-2020 Chris Lamb <lamby@debian.org>
+# Copyright (C) 2020 Felix Lechner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
-# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Web at https://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -31,29 +31,24 @@ use v5.20;
 use warnings;
 use utf8;
 
+use List::SomeUtils qw(none);
+
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
 
 # files in ./debian to check for line terminators
-my @CANDIDATES = qw(control changelog);
+my @CANDIDATES = qw(debian/control debian/changelog);
 
-sub source {
-    my ($self) = @_;
+sub visit_patched_files {
+    my ($self, $item) = @_;
 
-    my @files= grep { defined }
-      map { $self->processable->patched->resolve_path("debian/$_") }
-      @CANDIDATES;
+    return
+      if none { $item->name eq $_ } @CANDIDATES;
 
-    for my $file (@files) {
-        my $bytes = $file->bytes;
-        next
-          unless length $bytes;
-
-        $self->hint('carriage-return-line-feed', $file->name)
-          if $bytes =~ m{\r\n\Z}m;
-    }
+    $self->pointed_hint('carriage-return-line-feed', $item->pointer)
+      if $item->bytes =~ m{\r\n\Z}m;
 
     return;
 }
