@@ -75,18 +75,19 @@ sub visit_patched_files {
     return
       unless $item->is_regular_file;
 
-    # Skip if file has a known binary or XML suffix.
+    # Skip if file has a known binary, XML or JSON suffix.
     my $pattern = $self->BINARY_FILE_EXTENSIONS_OR_ALL;
     return
-      if $item->basename =~ qr{ [.] ($pattern | xml | sgml | svg) \s* $}x;
+      if $item->basename
+      =~ qr{ [.] ($pattern | xml | sgml | svg | jsonl?) \s* $}x;
 
     # Skip if we can't open it.
     return
       unless $item->is_open_ok;
 
-    # Skip if file is detected to be an image.
+    # Skip if file is detected to be an image or JSON.
     return
-      if $item->file_type =~ m{image|bitmap};
+      if $item->file_type =~ m{image|bitmap|JSON};
 
     open(my $fd, '<', $item->unpacked_path)
       or die encode_utf8('Cannot open ' . $item->unpacked_path);
