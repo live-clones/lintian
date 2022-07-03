@@ -38,7 +38,7 @@ my @image_formats = (
     {
         name => 'JPEG',
         file_type => qr/^JPEG image data/,
-        good_name => sub { $_[0] =~ /\.(?:jpg|JPG|jpeg|JPEG)$/ }
+        good_name => sub { $_[0] =~ /\.(?:jpe?g|JPE?G)$/ }
     },
     {
         name => 'GIF',
@@ -48,7 +48,7 @@ my @image_formats = (
     {
         name => 'TIFF',
         file_type => qr/^TIFF image data/,
-        good_name => sub { $_[0] =~ /\.(?:tiff|TIFF|tif|TIF)$/ }
+        good_name => sub { $_[0] =~ /\.(?:tiff?|TIFF?)$/ }
     },
     {
         name => 'XPM',
@@ -58,7 +58,7 @@ my @image_formats = (
     {
         name => 'Netpbm',
         file_type => qr/^Netpbm image data/,
-        good_name => sub { $_[0] =~ /\.(?:pbm|PBM|pgm|PGM|ppm|PPM|pnm|PNM)$/ }
+        good_name => sub { $_[0] =~ /\.(?:p[bgpn]m|P[BGPN]M)$/ }
     },
     {
         name => 'SVG',
