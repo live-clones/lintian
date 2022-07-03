@@ -86,7 +86,7 @@ sub visit_patched_files {
 
     # Skip if file is detected to be an image.
     return
-        if $item->file_type =~ m{image|bitmap};
+      if $item->file_type =~ m{image|bitmap};
 
     open(my $fd, '<', $item->unpacked_path)
       or die encode_utf8('Cannot open ' . $item->unpacked_path);
@@ -96,8 +96,8 @@ sub visit_patched_files {
     my $position = 1;
     while (my $line = <$fd>) {
         # Skip SQL insert and select statements
-        next if ($line =~ /^(INSERT|SELECT)\s/i and
-                 $item->basename =~ /sql/i);
+        next if ($line =~ /^(INSERT|SELECT)\s/i
+            and $item->basename =~ /sql/i);
 
         # count codepoints, if possible
         $line = decode_utf8($line)
