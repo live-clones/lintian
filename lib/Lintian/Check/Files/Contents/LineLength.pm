@@ -84,9 +84,9 @@ sub visit_patched_files {
     return
       unless $item->is_open_ok;
 
-    # Skip if file is detected to be an SVG image.
+    # Skip if file is detected to be an image.
     return
-        if $item->file_type =~ m{SVG Scalable Vector Graphics image};
+        if $item->file_type =~ m{image|bitmap};
 
     open(my $fd, '<', $item->unpacked_path)
       or die encode_utf8('Cannot open ' . $item->unpacked_path);
