@@ -76,7 +76,7 @@ sub visit_patched_files {
 
     my $pattern = $self->BINARY_FILE_EXTENSIONS_OR_ALL;
     return
-      if $item->basename =~ qr{ [.] ($pattern) \s* $}x;
+      if $item->basename =~ qr{ [.] ($pattern | xml | sgml | svg) \s* $}x;
 
     return
       unless $item->is_open_ok;
