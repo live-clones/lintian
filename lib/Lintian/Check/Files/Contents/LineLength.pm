@@ -88,6 +88,9 @@ sub visit_patched_files {
 
     my $position = 1;
     while (my $line = <$fd>) {
+        # Skip SQL insert and select statements
+        next if ($line =~ /^(INSERT|SELECT)\s/i and
+                 $item->basename =~ /sql/i);
 
         # count codepoints, if possible
         $line = decode_utf8($line)
