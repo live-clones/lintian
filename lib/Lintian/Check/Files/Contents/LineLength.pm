@@ -71,16 +71,20 @@ has BINARY_FILE_EXTENSIONS_OR_ALL => (
 sub visit_patched_files {
     my ($self, $item) = @_;
 
+    # Skip if no regular file
     return
       unless $item->is_regular_file;
 
+    # Skip if file has a known binary or XML suffix.
     my $pattern = $self->BINARY_FILE_EXTENSIONS_OR_ALL;
     return
       if $item->basename =~ qr{ [.] ($pattern | xml | sgml | svg) \s* $}x;
 
+    # Skip if we can't open it.
     return
       unless $item->is_open_ok;
 
+    # Skip if file is detected to be an SVG image.
     return
         if $item->file_type =~ m{SVG Scalable Vector Graphics image};
 
