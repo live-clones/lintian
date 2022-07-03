@@ -81,6 +81,9 @@ sub visit_patched_files {
     return
       unless $item->is_open_ok;
 
+    return
+        if $item->file_type =~ m{SVG Scalable Vector Graphics image};
+
     open(my $fd, '<', $item->unpacked_path)
       or die encode_utf8('Cannot open ' . $item->unpacked_path);
 
@@ -113,8 +116,7 @@ sub visit_patched_files {
 
     $self->pointed_hint('very-long-line-length-in-source-file',
         $pointer, $line_lengths{$longest}, $GREATER_THAN, $VERY_LONG)
-      if $line_lengths{$longest} > $VERY_LONG
-      && $item->file_type !~ m{SVG Scalable Vector Graphics image};
+      if $line_lengths{$longest} > $VERY_LONG;
 
     return;
 }
