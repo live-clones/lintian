@@ -10,6 +10,7 @@ avif
 avifs
 bmp
 der
+djvu
 dll
 dmg
 exe
@@ -28,10 +29,12 @@ m4a
 m4s
 mjpg
 mkv
+mo
 mov
 mp3
 mp4
 mpg
+ods
 oga
 ogg
 ogv
@@ -48,6 +51,7 @@ sqlite3
 svgz
 swf
 tar
+tga
 tgz
 tbz2
 txz
@@ -64,4 +68,5 @@ woff2
 wv
 xcf
 xpi
+xv
 zip
