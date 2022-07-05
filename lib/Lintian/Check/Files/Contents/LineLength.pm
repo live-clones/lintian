@@ -75,6 +75,11 @@ sub visit_patched_files {
     return
       unless $item->is_regular_file;
 
+    # Skip if file type is not text
+    my $text_types = qr{(ASCII|Unicode) text};
+    return
+      unless $item->file_type =~ $text_types;
+
     # Skip if file has a known binary, XML or JSON suffix.
     my $pattern = $self->BINARY_FILE_EXTENSIONS_OR_ALL;
     return
