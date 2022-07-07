@@ -225,7 +225,8 @@ sub source {
         my %PYPROJECT_PREREQUISITES = (
             'poetry.core.masonry.api' => 'python3-poetry-core:any',
             'flit_core.buildapi' => 'flit:any',
-            'setuptools.build_meta' => 'python3-setuptools:any'
+            'setuptools.build_meta' => 'python3-setuptools:any',
+            'pdm.pep517.api' => 'python3-pdm-pep517:any'
         );
 
         open(my $fd, '<', $pyproject->unpacked_path)
