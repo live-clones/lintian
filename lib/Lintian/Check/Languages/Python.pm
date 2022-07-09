@@ -246,6 +246,11 @@ sub source {
                   && $build_depends->satisfies('python3-poetry:any')
                   && !$build_depends->satisfies('python3-poetry-core:any');
 
+                $self->pointed_hint('uses-pdm-cli', $pointer)
+                  if $backend eq 'pdm.pep517.api'
+                  && $build_depends->satisfies('python3-pdm:any')
+                  && !$build_depends->satisfies('python3-pdm-pep517:any');
+
                 if (exists $PYPROJECT_PREREQUISITES{$backend}) {
 
                     my $prerequisites = $PYPROJECT_PREREQUISITES{$backend}
