@@ -34,6 +34,7 @@ my %affected_tags = (
     'spelling-error-in-binary' => [ qr/(\S+) (\S*[ *]\S*)$/, '$2 [$1]' ],
     'package-contains-documentation-outside-usr-share-doc' =>
       [ qr/(.*)$/, '[$1]' ],
+    'no-manual-page' => [ qr/(.*)/, '[$1]' ],
 );
 
 ### Sanity check
