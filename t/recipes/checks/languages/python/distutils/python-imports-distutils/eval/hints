@@ -1,0 +1,2 @@
+python-imports-distutils (source): uses-python-distutils [import.py:3]
+python-imports-distutils (source): uses-python-distutils [from.py:7]
