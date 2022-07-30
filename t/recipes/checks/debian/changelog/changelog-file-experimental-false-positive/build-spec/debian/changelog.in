@@ -1,0 +1,13 @@
+[% $source %] ([% $version %]) unstable; urgency=low
+
+  * Lintian Test Suite.
+  * Upload to sid.
+  * Test: [% $testname %]
+
+ -- [% $author %]  [% $date %]
+
+[% $source %] (1.0-1) experimental; urgency=low
+
+  * First upload to experimental.
+
+ -- [% $author %]  Fri, 06 Feb 2009 22:22:37 -0800
