@@ -85,6 +85,11 @@ sub visit_patched_files {
     return
       unless $item->is_open_ok;
 
+    # Skip if file is a REUSE license (LICENSES/**.txt), which are
+    # canonically provided with long lines rather than being hard-wrapped.
+    return
+      if $item->name =~ m{^ LICENSES/ .* [.] txt $}x;
+
     # Skip if file is detected to be an image or JSON.
     return
       if $item->file_type =~ m{image|bitmap|JSON};
