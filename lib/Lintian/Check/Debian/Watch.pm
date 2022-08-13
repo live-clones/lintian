@@ -120,7 +120,7 @@ sub source {
     # allow spaces for all watch file versions (#950250, #950277)
     my $separator = qr/\s*,\s*/;
 
-    my $withgpgverification = 0;
+    my $withpgpverification = 0;
     my %dversions;
 
     my $position = 1;
@@ -196,7 +196,7 @@ sub source {
               if $option =~ /^dversionmangle\s*=.*(?:s\/\@DEB_EXT\@\/|auto)/
               && $standard >= $DMANGLES_AUTOMATICALLY;
 
-            $withgpgverification = 1
+            $withpgpverification = 1
               if $option =~ /^pgpsigurlmangle\s*=\s*/
               || $option =~ /^pgpmode\s*=\s*(?!none\s*$)\S.*$/;
 
@@ -302,7 +302,7 @@ sub source {
 
     $self->pointed_hint('debian-watch-does-not-check-openpgp-signature',
         $item->pointer)
-      unless $withgpgverification;
+      unless $withpgpverification;
 
     my $SIGNING_KEY_FILENAMES
       = $self->data->load('common/signing-key-filenames');
@@ -316,12 +316,12 @@ sub source {
     # check upstream key is present if needed
     $self->pointed_hint('debian-watch-file-pubkey-file-is-missing',
         $item->pointer)
-      if $withgpgverification && !$keyfile;
+      if $withpgpverification && !$keyfile;
 
     # check upstream key is used if present
     $self->pointed_hint('debian-watch-could-verify-download',
         $item->pointer, $keyfile->name)
-      if $keyfile && !$withgpgverification;
+      if $keyfile && !$withpgpverification;
 
     if (defined $self->processable->changelog && %dversions) {
 
