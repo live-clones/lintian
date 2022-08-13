@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: file-has-implementation-specific-extension
+Description: OpenPGP file has an implementation specific extension
