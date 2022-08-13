@@ -300,7 +300,7 @@ sub source {
         ++$position;
     }
 
-    $self->pointed_hint('debian-watch-does-not-check-gpg-signature',
+    $self->pointed_hint('debian-watch-does-not-check-openpgp-signature',
         $item->pointer)
       unless $withgpgverification;
 

@@ -47,7 +47,7 @@
 #TMPDIR="/var/tmp"
 
 # Suppress the listed tags (--suppress-tags)
-#suppress-tags = debian-watch-does-not-check-gpg-signature
+#suppress-tags = debian-watch-does-not-check-openpgp-signature
 
 # Suppress the tags listed in the specified file (--suppress-tags-from-file)
 #suppress-tags-from-file = /path/to/file.txt
