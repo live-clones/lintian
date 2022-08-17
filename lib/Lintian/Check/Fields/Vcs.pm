@@ -339,14 +339,6 @@ sub always {
                 );
             }
         }
-
-        $self->hint('old-dpmt-vcs', $platform)
-          if $maintainer =~ m{python-modules-team\@lists\.alioth\.debian\.org}
-          and $uri !~ m{salsa.debian.org/python-team/packages/.+};
-
-        $self->hint('old-papt-vcs', $platform)
-          if $maintainer =~ m{python-apps-team\@lists\.alioth\.debian\.org}
-          and $uri !~ m{salsa.debian.org/python-team/packages/.+};
     }
 
     $self->hint('vcs-fields-use-more-than-one-vcs',
