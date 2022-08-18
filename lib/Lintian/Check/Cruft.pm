@@ -45,6 +45,13 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
+# Half of the size used in the "sliding window" for detecting bad
+# licenses like GFDL with invariant sections.
+# NB: Keep in sync cruft-gfdl-fp-sliding-win/pre_build.
+# not less than 8192 for source missing
+use constant BLOCKSIZE => 16_384;
+use Lintian::SlidingWindow;
+
 my %NVIDIA_LICENSE = (
     keywords => [qw{license intellectual retain property}],
     sentences =>[
@@ -72,7 +79,12 @@ qr{software [ ] shall [ ] be [ ] used [ ] for [ ] good [ ]? ,? [ ]? not [ ] evil
         keywords => [qw{document purpose translate language}],
         sentences => ['this document itself may not be modified in any way'],
         regex =>
-qr/this [ ] document [ ] itself [ ] may [ ] not [ ] be [ ] modified [ ] in [ ] any [ ] way [ ]?, [ ]? such [ ] as [ ] by [ ] removing [ ] the [ ] copyright [ ] notice [ ] or [ ] references [ ] to [ ] .{0,256} [ ]? except [ ] as [ ] needed [ ] for [ ] the [ ] purpose [ ] of [ ] developing [ ] .{0,128} [ ]? in [ ] which [ ] case [ ] the [ ] procedures [ ] for [ ] copyrights [ ] defined [ ] in [ ] the [ ] .{0,128} [ ]? process [ ] must [ ] be [ ] followed[ ]?,[ ]? or [ ] as [ ] required [ ] to [ ] translate [ ] it [ ] into [ ] languages [ ]/msx,
+qr/this [ ] document [ ] itself [ ] may [ ] not [ ] be [ ] modified [ ] in [ ] any [ ] way [ ]?,
+        [ ]? such [ ] as [ ] by [ ] removing [ ] the [ ] copyright [ ] notice [ ] or [ ] references
+        [ ] to [ ] .{0,256} [ ]? except [ ] as [ ] needed [ ] for [ ] the [ ] purpose [ ] of [ ] developing
+        [ ] .{0,128} [ ]? in [ ] which [ ] case [ ] the [ ] procedures [ ] for [ ] copyrights [ ] defined
+        [ ] in [ ] the [ ] .{0,128} [ ]? process [ ] must [ ] be [ ] followed[ ]?,[ ]?
+        or [ ] as [ ] required [ ] to [ ] translate [ ] it [ ] into [ ] languages [ ]/msx,
         callsub => 'rfc_whitelist_filename'
     },
     'license-problem-non-free-RFC-BCP78' => {
@@ -92,7 +104,12 @@ qr{this [ ] document [ ] is [ ] subject [ ] to [ ] (?:the [ ] rights [ ]?, [ ] l
         keywords => [qw{license document gnu copy documentation}],
         sentences => ['gnu free documentation license'],
         regex =>
-qr/(?'rawcontextbefore'(?:(?:(?!a [ ] copy [ ] of [ ] the [ ] license [ ] is).){1024}|\A(?:(?!a [ ] copy [ ] of [ ] the [ ] license [ ] is).){0,1024}|(?:[ ] copy [ ] of [ ] the [ ] license [ ] is.{0,1024}?))) gnu [ ] free [ ] documentation [ ] license (?'rawgfdlsections'(?:(?!gnu [ ] free [ ] documentation [ ] license).){0,1024}?) (?:a [ ] copy [ ] of [ ] the [ ] license [ ] is|this [ ] document [ ] is [ ] distributed)/msx,
+qr/(?'rawcontextbefore'(?:(?:(?!a [ ] copy [ ] of [ ] the [ ] license [ ] is).){1024}|
+\A(?:(?!a [ ] copy [ ] of [ ] the [ ] license [ ] is).){0,1024}|
+(?:[ ] copy [ ] of [ ] the [ ] license [ ] is.{0,1024}?))) gnu [ ] free [ ]
+documentation [ ] license (?'rawgfdlsections'(?:(?!gnu [ ] free [ ] documentation
+[ ] license).){0,1024}?) (?:a [ ] copy [ ] of [ ] the [ ] license [ ] is|
+this [ ] document [ ] is [ ] distributed)/msx,
         callsub => 'check_gfdl_license_problem'
     },
     # php license
@@ -211,232 +228,264 @@ sub visit_patched_files {
     return;
 }
 
+sub lc_block {
+    return $_ = lc($_);
+}
+
 # do basic license check against well known offender
 # note that it does not replace licensecheck(1)
 # and is only used for autoreject by ftp-master
 sub full_text_check {
     my ($self, $item) = @_;
 
-    my $contents = $item->decoded_utf8;
     return
-      unless length $contents;
+      unless $item ->is_regular_file;
 
-    my $lowercase = lc($contents);
-    my $clean = clean_text($lowercase);
+    open(my $fd, '<:raw', $item->unpacked_path)
+      or die encode_utf8('Cannot open ' . $item->unpacked_path);
 
-    # Check for non-distributable files - this
-    # applies even to non-free, as we still need
-    # permission to distribute those.
-    # nvdia opencv infamous license
-    return
-      if $self->check_for_single_bad_license($item, $lowercase, $clean,
-        'license-problem-nvidia-intellectual',
-        \%NVIDIA_LICENSE);
+    my $sfd = Lintian::SlidingWindow->new;
+    $sfd->handle($fd);
+    $sfd->blocksize(&BLOCKSIZE);
 
-    unless ($self->processable->is_non_free) {
-
-        for my $tag_name (keys %NON_FREE_LICENSES) {
-
-            return
-              if $self->check_for_single_bad_license($item, $lowercase, $clean,
-                $tag_name, $NON_FREE_LICENSES{$tag_name});
-        }
+    unless (-T $fd) {
+        close($fd);
+        return;
     }
 
-    # check javascript in html file
-    if ($item->basename =~ /\.(?:x?html?\d?|xht)$/i) {
+    # we try to read this file in block and use a sliding window
+    # for efficiency.  We store two blocks in @queue and the whole
+    # string to match in $block. Please emit license tags only once
+    # per file
+  BLOCK:
+    while (my $lowercase = $sfd->readwindow()) {
 
-        my $blockscript = $lowercase;
-        my $indexscript;
+        my %matchedkeyword;
+        my $blocknumber = $sfd->blocknumber();
 
-        while (
-            ($indexscript = index($blockscript, '<script')) > $ITEM_NOT_FOUND){
+        my $clean = clean_text($lowercase);
 
-            $blockscript = substr($blockscript,$indexscript);
+        # Check for non-distributable files - this
+        # applies even to non-free, as we still need
+        # permission to distribute those.
+        # nvdia opencv infamous license
+        last BLOCK
+          if $self->check_for_single_bad_license($item, $lowercase, $clean,
+            'license-problem-nvidia-intellectual',
+            \%NVIDIA_LICENSE);
 
-            # sourced script ok
-            if ($blockscript =~ m{\A<script\s+[^>]*?src="[^"]+?"[^>]*?>}sm) {
+        unless ($self->processable->is_non_free) {
 
-                $blockscript = substr($blockscript,$+[0]);
-                next;
+            for my $tag_name (keys %NON_FREE_LICENSES) {
+
+                last BLOCK
+                  if $self->check_for_single_bad_license($item, $lowercase,
+                    $clean,$tag_name, $NON_FREE_LICENSES{$tag_name});
             }
+        }
 
-            # extract script
-            if ($blockscript =~ m{<script[^>]*?>(.*?)</script>}sm) {
+        # check javascript in html file
+        if ($item->basename =~ /\.(?:x?html?\d?|xht)$/i) {
 
-                $blockscript = substr($blockscript,$+[0]);
+            my $blockscript = $lowercase;
+            my $indexscript;
 
-                my $lcscript = $1;
+            while (($indexscript = index($blockscript, '<script'))
+                > $ITEM_NOT_FOUND){
 
-                # check if js script is minified
-                my $firstline = $EMPTY;
-                for my $line (split /\n/, $lcscript) {
+                $blockscript = substr($blockscript,$indexscript);
 
-                    if ($line =~ /^\s*$/) {
-                        next;
+                # sourced script ok
+                if ($blockscript =~ m{\A<script\s+[^>]*?src="[^"]+?"[^>]*?>}sm)
+                {
 
-                    } else {
-                        $firstline = $line;
-                        last;
+                    $blockscript = substr($blockscript,$+[0]);
+                    next;
+                }
+
+                # extract script
+                if ($blockscript =~ m{<script[^>]*?>(.*?)</script>}sm) {
+
+                    $blockscript = substr($blockscript,$+[0]);
+
+                    my $lcscript = $1;
+
+                    # check if js script is minified
+                    my $firstline = $EMPTY;
+                    for my $line (split /\n/, $lcscript) {
+
+                        if ($line =~ /^\s*$/) {
+                            next;
+
+                        } else {
+                            $firstline = $line;
+                            last;
+                        }
                     }
-                }
 
-                if ($firstline
-                    =~ m/.{0,20}((?:\bcopyright\b|[\(]c[\)]\s*\w|\N{COPYRIGHT SIGN}).{0,50})/
-                ){
+                    if ($firstline
+                        =~ m/.{0,20}((?:\bcopyright\b|[\(]c[\)]\s*\w|\N{COPYRIGHT SIGN}).{0,50})/
+                    ){
 
-                    my $extract = $1;
-                    $extract =~ s/^\s+|\s+$//g;
+                        my $extract = $1;
+                        $extract =~ s/^\s+|\s+$//g;
 
-                    $self->pointed_hint(
-                        'embedded-script-includes-copyright-statement',
-                        $item->pointer,'extract of copyright statement:',
-                        $extract);
-                }
-
-                # clean up jslint craps line
-                my $cleaned = $lcscript;
-                $cleaned =~ s{^\s*/[*][^\n]*[*]/\s*$}{}gm;
-                $cleaned =~ s{^\s*//[^\n]*$}{}gm;
-                $cleaned =~ s/^\s+//gm;
-
-                # strip indentation
-                $cleaned =~ s/^\s+//mg;
-                $cleaned = _strip_c_comments($cleaned);
-                # strip empty line
-                $cleaned =~ s/^\s*\n//mg;
-                # remove last \n
-                $cleaned =~ s/\n\Z//m;
-
-# detect browserified javascript (comment are removed here and code is stripped)
-                my $contiguous = $cleaned;
-                $contiguous =~ s/\n/ /msg;
-
-                # get browserified regexp
-                my $BROWSERIFY_REGEX
-                  = $self->data->load('cruft/browserify-regex',qr/\s*\~\~\s*/);
-
-                for my $condition ($BROWSERIFY_REGEX->all) {
-
-                    my $pattern = $BROWSERIFY_REGEX->value($condition);
-                    if ($contiguous =~ m{$pattern}msx) {
-
-                        my $extra= (defined $1) ? 'code fragment:'.$1 : $EMPTY;
                         $self->pointed_hint(
-                            'source-contains-browserified-javascript',
-                            $item->pointer, $extra);
-
-                        last;
+                            'embedded-script-includes-copyright-statement',
+                            $item->pointer,
+                            'extract of copyright statement:',
+                            $extract
+                        );
                     }
-                }
 
-                next;
-            }
+                    # clean up jslint craps line
+                    my $cleaned = $lcscript;
+                    $cleaned =~ s{^\s*/[*][^\n]*[*]/\s*$}{}gm;
+                    $cleaned =~ s{^\s*//[^\n]*$}{}gm;
+                    $cleaned =~ s/^\s+//gm;
 
-            last;
-        }
-    }
-
-    # check if file is javascript but not minified
-    my $isjsfile = ($item->name =~ m/\.js$/) ? 1 : 0;
-    if ($isjsfile) {
-        my $minjsregexp
-          = qr/(?i)[-._](?:compiled|compressed|lite|min|pack(?:ed)?|prod|umd|yc)\.js$/;
-        $isjsfile = ($item->name =~ m{$minjsregexp}) ? 0 : 1;
-    }
-
-    if ($isjsfile) {
-        # exception sphinx documentation
-        if ($item->basename eq 'searchindex.js') {
-            if ($lowercase =~ m/\A\s*search\.setindex\s* \s* \(\s*\{/xms) {
-
-                $self->pointed_hint(
-                    'source-contains-prebuilt-sphinx-documentation',
-                    $item->parent_dir->pointer);
-                return;
-            }
-        }
-
-        if ($item->basename eq 'search_index.js') {
-            if ($lowercase =~ m/\A\s*var\s*search_index\s*=/xms) {
-
-                $self->pointed_hint(
-                    'source-contains-prebuilt-pandoc-documentation',
-                    $item->parent_dir->pointer);
-                return;
-            }
-        }
-        # false positive in dx package at least
-        elsif ($item->basename eq 'srchidx.js') {
-
-            return
-              if $lowercase=~ m/\A\s*profiles \s* = \s* new \s* Array\s*\(/xms;
-        }
-        # https://github.com/rafaelp/css_browser_selector is actually the
-        # original source. (#874381)
-        elsif ($lowercase =~ m/css_browser_selector\(/) {
-
-            return;
-        }
-        # Avoid false-positives in Jush's syntax highlighting definition files.
-        elsif ($lowercase =~ m/jush\.tr\./) {
-
-            return;
-        }
-
-        # now search hidden minified
-
-        # clean up jslint craps line
-        my $cleaned = $lowercase;
-        $cleaned =~ s{^\s*/[*][^\n]*[*]/\s*$}{}gm;
-        $cleaned =~ s{^\s*//[^\n]*$}{}gm;
-        $cleaned =~ s/^\s+//gm;
-
-        # strip indentation
-        $cleaned =~ s/^\s+//mg;
-        $cleaned = _strip_c_comments($cleaned);
-        # strip empty line
-        $cleaned =~ s/^\s*\n//mg;
-        # remove last \n
-        $cleaned =~ s/\n\Z//m;
+                    # strip indentation
+                    $cleaned =~ s/^\s+//mg;
+                    $cleaned = _strip_c_comments($cleaned);
+                    # strip empty line
+                    $cleaned =~ s/^\s*\n//mg;
+                    # remove last \n
+                    $cleaned =~ s/\n\Z//m;
 
 # detect browserified javascript (comment are removed here and code is stripped)
-        my $contiguous = $cleaned;
-        $contiguous =~ s/\n/ /msg;
+                    my $contiguous = $cleaned;
+                    $contiguous =~ s/\n/ /msg;
 
-        # get browserified regexp
-        my $BROWSERIFY_REGEX
-          = $self->data->load('cruft/browserify-regex',qr/\s*\~\~\s*/);
+                    # get browserified regexp
+                    my $BROWSERIFY_REGEX
+                      = $self->data->load('cruft/browserify-regex',
+                        qr/\s*\~\~\s*/);
 
-        for my $condition ($BROWSERIFY_REGEX->all) {
+                    for my $condition ($BROWSERIFY_REGEX->all) {
 
-            my $pattern = $BROWSERIFY_REGEX->value($condition);
-            if ($contiguous =~ m{$pattern}msx) {
+                        my $pattern = $BROWSERIFY_REGEX->value($condition);
+                        if ($contiguous =~ m{$pattern}msx) {
 
-                my $extra = (defined $1) ? 'code fragment:'.$1 : $EMPTY;
-                $self->pointed_hint('source-contains-browserified-javascript',
-                    $item->pointer, $extra);
+                            my $extra
+                              = (defined $1) ? 'code fragment:'.$1 : $EMPTY;
+                            $self->pointed_hint(
+                                'source-contains-browserified-javascript',
+                                $item->pointer, $extra);
+
+                            last;
+                        }
+                    }
+
+                    next;
+                }
 
                 last;
             }
         }
-    }
 
-    # search link rel header
-    if ($lowercase =~ / \Q rel="copyright" \E /msx) {
+        # check if file is javascript but not minified
+        my $isjsfile = ($item->name =~ m/\.js$/) ? 1 : 0;
+        if ($isjsfile) {
+            my $minjsregexp
+              = qr/(?i)[-._](?:compiled|compressed|lite|min|pack(?:ed)?|prod|umd|yc)\.js$/;
+            $isjsfile = ($item->name =~ m{$minjsregexp}) ? 0 : 1;
+        }
 
-        my $href = $lowercase;
-        $href =~ m{<link \s+
+        if ($isjsfile) {
+            # exception sphinx documentation
+            if ($item->basename eq 'searchindex.js') {
+                if ($lowercase =~ m/\A\s*search\.setindex\s* \s* \(\s*\{/xms) {
+
+                    $self->pointed_hint(
+                        'source-contains-prebuilt-sphinx-documentation',
+                        $item->parent_dir->pointer);
+                    last BLOCK;
+                }
+            }
+
+            if ($item->basename eq 'search_index.js') {
+                if ($lowercase =~ m/\A\s*var\s*search_index\s*=/xms) {
+
+                    $self->pointed_hint(
+                        'source-contains-prebuilt-pandoc-documentation',
+                        $item->parent_dir->pointer);
+                    last BLOCK;
+                }
+            }
+            # false positive in dx package at least
+            elsif ($item->basename eq 'srchidx.js') {
+
+                last BLOCK
+                  if $lowercase
+                  =~ m/\A\s*profiles \s* = \s* new \s* Array\s*\(/xms;
+            }
+            # https://github.com/rafaelp/css_browser_selector is actually the
+            # original source. (#874381)
+            elsif ($lowercase =~ m/css_browser_selector\(/) {
+
+                last BLOCK;
+            }
+        # Avoid false-positives in Jush's syntax highlighting definition files.
+            elsif ($lowercase =~ m/jush\.tr\./) {
+
+                last BLOCK;
+            }
+
+            # now search hidden minified
+
+            # clean up jslint craps line
+            my $cleaned = $lowercase;
+            $cleaned =~ s{^\s*/[*][^\n]*[*]/\s*$}{}gm;
+            $cleaned =~ s{^\s*//[^\n]*$}{}gm;
+            $cleaned =~ s/^\s+//gm;
+
+            # strip indentation
+            $cleaned =~ s/^\s+//mg;
+            $cleaned = _strip_c_comments($cleaned);
+            # strip empty line
+            $cleaned =~ s/^\s*\n//mg;
+            # remove last \n
+            $cleaned =~ s/\n\Z//m;
+
+# detect browserified javascript (comment are removed here and code is stripped)
+            my $contiguous = $cleaned;
+            $contiguous =~ s/\n/ /msg;
+
+            # get browserified regexp
+            my $BROWSERIFY_REGEX
+              = $self->data->load('cruft/browserify-regex',qr/\s*\~\~\s*/);
+
+            for my $condition ($BROWSERIFY_REGEX->all) {
+
+                my $pattern = $BROWSERIFY_REGEX->value($condition);
+                if ($contiguous =~ m{$pattern}msx) {
+
+                    my $extra = (defined $1) ? 'code fragment:'.$1 : $EMPTY;
+                    $self->pointed_hint(
+                        'source-contains-browserified-javascript',
+                        $item->pointer, $extra);
+
+                    last;
+                }
+            }
+        }
+
+        # search link rel header
+        if ($lowercase =~ / \Q rel="copyright" \E /msx) {
+
+            my $href = $lowercase;
+            $href =~ m{<link \s+
                   rel="copyright" \s+
                   href="([^"]+)" \s*/? \s*>}xmsi;
 
-        my $url = $1 // $EMPTY;
+            my $url = $1 // $EMPTY;
 
-        $self->pointed_hint('license-problem-cc-by-nc-sa', $item->pointer)
-          if $url =~ m{^https?://creativecommons.org/licenses/by-nc-sa/};
+            $self->pointed_hint('license-problem-cc-by-nc-sa', $item->pointer)
+              if $url =~ m{^https?://creativecommons.org/licenses/by-nc-sa/};
+        }
+        last BLOCK;
     }
-
-    return;
+    close($fd);
 }
 
 # strip C comment
