@@ -79,12 +79,12 @@ qr{software [ ] shall [ ] be [ ] used [ ] for [ ] good [ ]? ,? [ ]? not [ ] evil
         keywords => [qw{document purpose translate language}],
         sentences => ['this document itself may not be modified in any way'],
         regex =>
-qr/this [ ] document [ ] itself [ ] may [ ] not [ ] be [ ] modified [ ] in [ ] any [ ] way [ ]?,
+qr{this [ ] document [ ] itself [ ] may [ ] not [ ] be [ ] modified [ ] in [ ] any [ ] way [ ]?,
         [ ]? such [ ] as [ ] by [ ] removing [ ] the [ ] copyright [ ] notice [ ] or [ ] references
         [ ] to [ ] .{0,256} [ ]? except [ ] as [ ] needed [ ] for [ ] the [ ] purpose [ ] of [ ] developing
         [ ] .{0,128} [ ]? in [ ] which [ ] case [ ] the [ ] procedures [ ] for [ ] copyrights [ ] defined
         [ ] in [ ] the [ ] .{0,128} [ ]? process [ ] must [ ] be [ ] followed[ ]?,[ ]?
-        or [ ] as [ ] required [ ] to [ ] translate [ ] it [ ] into [ ] languages [ ]/msx,
+        or [ ] as [ ] required [ ] to [ ] translate [ ] it [ ] into [ ] languages [ ]}msx,
         callsub => 'rfc_whitelist_filename'
     },
     'license-problem-non-free-RFC-BCP78' => {
@@ -104,12 +104,12 @@ qr{this [ ] document [ ] is [ ] subject [ ] to [ ] (?:the [ ] rights [ ]?, [ ] l
         keywords => [qw{license document gnu copy documentation}],
         sentences => ['gnu free documentation license'],
         regex =>
-qr/(?'rawcontextbefore'(?:(?:(?!a [ ] copy [ ] of [ ] the [ ] license [ ] is).){1024}|
+qr{(?'rawcontextbefore'(?:(?:(?!a [ ] copy [ ] of [ ] the [ ] license [ ] is).){1024}|
 \A(?:(?!a [ ] copy [ ] of [ ] the [ ] license [ ] is).){0,1024}|
 (?:[ ] copy [ ] of [ ] the [ ] license [ ] is.{0,1024}?))) gnu [ ] free [ ]
 documentation [ ] license (?'rawgfdlsections'(?:(?!gnu [ ] free [ ] documentation
 [ ] license).){0,1024}?) (?:a [ ] copy [ ] of [ ] the [ ] license [ ] is|
-this [ ] document [ ] is [ ] distributed)/msx,
+this [ ] document [ ] is [ ] distributed)}msx,
         callsub => 'check_gfdl_license_problem'
     },
     # php license
@@ -229,7 +229,7 @@ sub visit_patched_files {
 }
 
 sub lc_block {
-    return $_ = lc($_);
+    return lc(shift);
 }
 
 # do basic license check against well known offender
@@ -238,7 +238,7 @@ sub lc_block {
 sub full_text_check {
     my ($self, $item) = @_;
 
-    return
+    return undef
       unless $item ->is_regular_file;
 
     open(my $fd, '<:raw', $item->unpacked_path)
@@ -246,11 +246,11 @@ sub full_text_check {
 
     my $sfd = Lintian::SlidingWindow->new;
     $sfd->handle($fd);
-    $sfd->blocksize(&BLOCKSIZE);
+    $sfd->blocksize(BLOCKSIZE);
 
     unless (-T $fd) {
         close($fd);
-        return;
+        return undef;
     }
 
     # we try to read this file in block and use a sliding window
@@ -260,7 +260,6 @@ sub full_text_check {
   BLOCK:
     while (my $lowercase = $sfd->readwindow()) {
 
-        my %matchedkeyword;
         my $blocknumber = $sfd->blocknumber();
 
         my $clean = clean_text($lowercase);
@@ -485,7 +484,7 @@ sub full_text_check {
         }
         last BLOCK;
     }
-    close($fd);
+    return close($fd);
 }
 
 # strip C comment
