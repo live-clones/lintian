@@ -1,1 +1,2 @@
 filenames (binary): file-in-etc-not-marked-as-conffile [etc/gconf/schemas/test.schema]
+filenames (binary): config-file-all-comments [etc/gconf/schemas/test.schema]
