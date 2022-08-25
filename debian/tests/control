@@ -12,7 +12,6 @@ Depends:
  dh-python,
  dh-r,
  dh-runit,
- dpatch,
  fakeroot,
  gcc-mingw-w64-i686,
  gcc-mingw-w64-x86-64,
