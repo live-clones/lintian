@@ -228,10 +228,6 @@ sub visit_patched_files {
     return;
 }
 
-sub lc_block {
-    return lc(shift);
-}
-
 # do basic license check against well known offender
 # note that it does not replace licensecheck(1)
 # and is only used for autoreject by ftp-master
@@ -247,6 +243,7 @@ sub full_text_check {
     my $sfd = Lintian::SlidingWindow->new;
     $sfd->handle($fd);
     $sfd->blocksize(BLOCKSIZE);
+    $sfd->blocksub(sub { $_ = lc; });
 
     unless (-T $fd) {
         close($fd);

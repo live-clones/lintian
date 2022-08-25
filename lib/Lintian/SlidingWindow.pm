@@ -29,26 +29,59 @@ use Moo;
 use namespace::clean;
 
 const my $DEFAULT_BLOCK_SIZE => 4096;
+const my $EMPTY => q{};
 
 has handle => (is => 'rw');
 has blocksize => (is => 'rw', default => $DEFAULT_BLOCK_SIZE);
 has blocknumber => (is => 'rw', default => -1);
+has blocksub => (is => 'rw', default => undef);
+has _queue => (is => 'rw', default =>  sub {[q{}, q{}]});
 
 sub readwindow {
     my ($self) = @_;
-
     my $window;
 
-    my $count = read($self->handle, $window, $self->blocksize);
-    die encode_utf8("read failed: $!\n")
-      unless defined $count;
+    my $first = $self->blocknumber < 0;
+    {
+        # This path is too hot for autodie at its current performance
+        # (at the time of writing, that would be autodie/2.23).
+        # - Benchmark chromium-browser/32.0.1700.123-2/source
+        no autodie qw(read);
+        my $blocksize = $self->blocksize;
+        # Read twice the amount in the first window and split that
+        # into "two parts".  That way we avoid half a block followed
+        # by a full block with the first half being identical to the
+        # previous one.
+        $blocksize *= 2 if $first;
+        my $res = read($self->handle, $window, $blocksize);
+        if (not $res) {
+            die encode_utf8("read failed: $!\n") unless defined($res);
+            return;
+        }
+    }
 
-    return undef
-      unless $count;
+    if(defined($self->blocksub)) {
+        local $_ = $window;
+        $self->blocksub->();
+        $window = $_;
+    }
 
     $self->blocknumber($self->blocknumber + 1);
 
-    return $window;
+    if ($first && $self->blocksize < length($window)) {
+        # Split the first block into two windows.  We assume here that
+        # if the two halves are not of equal length, then it is
+        # because the file is shorter than 2*blocksize.  In this case,
+        # make the second half the shorter (it shouldn't matter and it
+        # is easier to do this way).
+        my $blocksize = $self->blocksize;
+        $self->_queue->[0] = substr($window, 0, $blocksize);
+        $self->_queue->[1] = substr($window, $blocksize);
+        return $window;
+    }
+    shift(@{$self->_queue});
+    push(@{$self->_queue}, $window);
+    return join($EMPTY, @{$self->_queue});
 }
 
 =head1 NAME
@@ -106,6 +139,8 @@ Return a new block of sliding window. Return undef at end of file.
 =item blocknumber
 
 =item handle
+
+=item blocksub
 
 =back
 
