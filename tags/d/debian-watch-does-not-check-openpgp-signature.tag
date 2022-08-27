@@ -1,4 +1,4 @@
-Tag: debian-watch-does-not-check-gpg-signature
+Tag: debian-watch-does-not-check-openpgp-signature
 Severity: pedantic
 Check: debian/watch
 Experimental: yes
@@ -8,7 +8,7 @@ Explanation: This watch file does not specify a means to verify the upstream
  .
  If upstream distributions provides such signatures, please use the
  <code>pgpsigurlmangle</code> options in this watch file's <code>opts=</code> to
- generate the URL of an upstream GPG signature. This signature is
+ generate the URL of an upstream OpenPGP signature. This signature is
  automatically downloaded and verified against a keyring stored in
  <code>debian/upstream/signing-key.asc</code>
  .
@@ -17,4 +17,5 @@ Explanation: This watch file does not specify a means to verify the upstream
  code after its release (projects such as phpmyadmin, unrealircd, and
  proftpd have suffered from this kind of attack).
 Renamed-From:
+ debian-watch-does-not-check-gpg-signature
  debian-watch-may-check-gpg-signature
