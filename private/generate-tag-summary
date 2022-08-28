@@ -46,7 +46,7 @@ if (not $commit_range) {
     die encode_utf8("git describe failed with code $status\n")
       if $status;
 
-    my $describe = decode_utf8($bytes);
+    my $describe = $bytes;
     chomp($describe);
 
     if (not $describe) {
@@ -91,11 +91,11 @@ if ($opt{'in-place'}) {
     my $matched = 0;
 
     my $infile = 'debian/changelog';
-    open(my $in_fd, '<', $infile)
+    open(my $in_fd, '<:encoding(UTF-8)', $infile)
       or die encode_utf8("Cannot open $infile");
 
     my $outfile = 'debian/changelog.tmp';
-    open(my $out_fd, '>', $outfile)
+    open(my $out_fd, '>:encoding(UTF-8)', $outfile)
       or die encode_utf8("Cannot open $outfile");
 
     while (my $line = <$in_fd>) {
