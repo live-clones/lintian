@@ -1,8 +1,33 @@
-lintian (2.115.2+git) UNRELEASED; urgency=medium
+lintian (2.115.3) unstable; urgency=medium
 
-  * WIP (generated at release time: please do not add entries below).
+  The "RPB (Restore Previous Behavior)" Release.
 
- -- Axel Beckert <abe@debian.org>  Wed, 29 Jun 2022 18:02:15 +0200
+  [ Gioele Barabucci ]
+  * experimental-to-unstable-without-comment: Fix regex (Closes: #101387)
+
+  [ Axel Beckert]
+  * Recognise many more binary file type suffixes (Closes: #1014156)
+
+  [ Guillem Jover ]
+  * Add pedantic hint for OpenPGP files named after
+    specific implementations
+  * Add more extensions for OpenPGP files
+  * In the US "cancelation" is a valid spelling of "cancellation"
+  * Rename debian-watch-does-not-check-gpg-signature
+    tag to say openpgp
+
+  [ Bastien Roucariès ]
+  * Restore sliding windows (Closes: #993613)
+  * Add myself as uploaders
+
+  * Summary of tag changes:
+    + Added:
+      - debian-watch-does-not-check-openpgp-signature
+      - openpgp-file-has-implementation-specific-extension
+    + Removed:
+      - debian-watch-does-not-check-gpg-signature
+
+ -- Bastien Roucariès <rouca@debian.org>  Sun, 28 Aug 2022 08:31:41 +0000
 
 lintian (2.115.2) unstable; urgency=medium
 
