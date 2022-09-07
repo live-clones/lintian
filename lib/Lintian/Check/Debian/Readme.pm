@@ -62,7 +62,7 @@ sub open_readme {
             my $path = $doc_dir->child($name);
 
             next
-              unless $path && defined $path->is_open_ok;
+              unless $path && $path->is_open_ok;
 
             if ($name =~ m/\.gz$/) {
                 open(my $fd, '<:gzip', $path->unpacked_path)
@@ -103,7 +103,7 @@ sub installable {
         $item = $doc_dir->child($name);
 
         next
-          unless $item && defined $item->is_open_ok;
+          unless $item && $item->is_open_ok;
 
         if ($name =~ m/\.gz$/) {
             open($fd, '<:gzip', $item->unpacked_path)
