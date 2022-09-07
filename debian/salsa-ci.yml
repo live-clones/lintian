@@ -6,19 +6,23 @@ include:
 build-testing:
   variables:
     RELEASE: 'testing'
+    DEB_BUILD_OPTIONS: 'nocheck'
   extends: .build-package
 
 build-bullseye-backports:
   variables:
     RELEASE: 'bullseye-backports'
+    DEB_BUILD_OPTIONS: 'nocheck'
   extends: .build-package
   allow_failure: true
 
 build-buster-backports:
   variables:
     RELEASE: 'buster-backports'
+    DEB_BUILD_OPTIONS: 'nocheck'
   extends: .build-package
   allow_failure: true
 
 variables:
   SALSA_CI_LINTIAN_FAIL_WARNING: 1
+  DEB_BUILD_OPTIONS: 'nocheck'
