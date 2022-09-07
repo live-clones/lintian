@@ -110,11 +110,6 @@
             "dh-dkms"
          ]
       },
-      "dpatch" : {
-         "installed_by" : [
-            "dpatch"
-         ]
-      },
       "dwz" : {
          "installed_by" : [
             "libdebhelper-perl"
@@ -170,6 +165,11 @@
             "libdebhelper-perl"
          ]
       },
+      "installnss" : {
+         "installed_by" : [
+            "dh-nss"
+         ]
+      },
       "javahelper" : {
          "installed_by" : [
             "javahelper"
@@ -223,6 +223,11 @@
       "mkdocs" : {
          "installed_by" : [
             "mkdocs"
+         ]
+      },
+      "nginx" : {
+         "installed_by" : [
+            "nginx-dev"
          ]
       },
       "nodejs" : {

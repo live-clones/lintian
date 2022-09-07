@@ -15,17 +15,17 @@
             "fonts-aenigma"
          ]
       },
-      "3270-regular.otf" : {
+      "3270-regular.ttf" : {
          "installed_by" : [
             "fonts-3270"
          ]
       },
-      "3270condensed-regular.otf" : {
+      "3270condensed-regular.ttf" : {
          "installed_by" : [
             "fonts-3270"
          ]
       },
-      "3270semicondensed-regular.otf" : {
+      "3270semicondensed-regular.ttf" : {
          "installed_by" : [
             "fonts-3270"
          ]
@@ -1920,7 +1920,17 @@
             "fonts-urw-base35"
          ]
       },
+      "c059-bdita.pfb" : {
+         "installed_by" : [
+            "fonts-urw-base35"
+         ]
+      },
       "c059-bold.otf" : {
+         "installed_by" : [
+            "fonts-urw-base35"
+         ]
+      },
+      "c059-bold.pfb" : {
          "installed_by" : [
             "fonts-urw-base35"
          ]
@@ -1930,7 +1940,17 @@
             "fonts-urw-base35"
          ]
       },
+      "c059-italic.pfb" : {
+         "installed_by" : [
+            "fonts-urw-base35"
+         ]
+      },
       "c059-roman.otf" : {
+         "installed_by" : [
+            "fonts-urw-base35"
+         ]
+      },
+      "c059-roman.pfb" : {
          "installed_by" : [
             "fonts-urw-base35"
          ]
@@ -2796,6 +2816,11 @@
          ]
       },
       "d050000l.otf" : {
+         "installed_by" : [
+            "fonts-urw-base35"
+         ]
+      },
+      "d050000l.pfb" : {
          "installed_by" : [
             "fonts-urw-base35"
          ]
@@ -9762,7 +9787,17 @@
             "fonts-urw-base35"
          ]
       },
+      "nimbusmonops-bold.pfb" : {
+         "installed_by" : [
+            "fonts-urw-base35"
+         ]
+      },
       "nimbusmonops-bolditalic.otf" : {
+         "installed_by" : [
+            "fonts-urw-base35"
+         ]
+      },
+      "nimbusmonops-bolditalic.pfb" : {
          "installed_by" : [
             "fonts-urw-base35"
          ]
@@ -9772,7 +9807,17 @@
             "fonts-urw-base35"
          ]
       },
+      "nimbusmonops-italic.pfb" : {
+         "installed_by" : [
+            "fonts-urw-base35"
+         ]
+      },
       "nimbusmonops-regular.otf" : {
+         "installed_by" : [
+            "fonts-urw-base35"
+         ]
+      },
+      "nimbusmonops-regular.pfb" : {
          "installed_by" : [
             "fonts-urw-base35"
          ]
@@ -9782,7 +9827,17 @@
             "fonts-urw-base35"
          ]
       },
+      "nimbusroman-bold.pfb" : {
+         "installed_by" : [
+            "fonts-urw-base35"
+         ]
+      },
       "nimbusroman-bolditalic.otf" : {
+         "installed_by" : [
+            "fonts-urw-base35"
+         ]
+      },
+      "nimbusroman-bolditalic.pfb" : {
          "installed_by" : [
             "fonts-urw-base35"
          ]
@@ -9792,7 +9847,17 @@
             "fonts-urw-base35"
          ]
       },
+      "nimbusroman-italic.pfb" : {
+         "installed_by" : [
+            "fonts-urw-base35"
+         ]
+      },
       "nimbusroman-regular.otf" : {
+         "installed_by" : [
+            "fonts-urw-base35"
+         ]
+      },
+      "nimbusroman-regular.pfb" : {
          "installed_by" : [
             "fonts-urw-base35"
          ]
@@ -9802,7 +9867,17 @@
             "fonts-urw-base35"
          ]
       },
+      "nimbussans-bold.pfb" : {
+         "installed_by" : [
+            "fonts-urw-base35"
+         ]
+      },
       "nimbussans-bolditalic.otf" : {
+         "installed_by" : [
+            "fonts-urw-base35"
+         ]
+      },
+      "nimbussans-bolditalic.pfb" : {
          "installed_by" : [
             "fonts-urw-base35"
          ]
@@ -9812,7 +9887,17 @@
             "fonts-urw-base35"
          ]
       },
+      "nimbussans-italic.pfb" : {
+         "installed_by" : [
+            "fonts-urw-base35"
+         ]
+      },
       "nimbussans-regular.otf" : {
+         "installed_by" : [
+            "fonts-urw-base35"
+         ]
+      },
+      "nimbussans-regular.pfb" : {
          "installed_by" : [
             "fonts-urw-base35"
          ]
@@ -9822,7 +9907,17 @@
             "fonts-urw-base35"
          ]
       },
+      "nimbussansnarrow-bold.pfb" : {
+         "installed_by" : [
+            "fonts-urw-base35"
+         ]
+      },
       "nimbussansnarrow-boldoblique.otf" : {
+         "installed_by" : [
+            "fonts-urw-base35"
+         ]
+      },
+      "nimbussansnarrow-boldoblique.pfb" : {
          "installed_by" : [
             "fonts-urw-base35"
          ]
@@ -9832,7 +9927,17 @@
             "fonts-urw-base35"
          ]
       },
+      "nimbussansnarrow-oblique.pfb" : {
+         "installed_by" : [
+            "fonts-urw-base35"
+         ]
+      },
       "nimbussansnarrow-regular.otf" : {
+         "installed_by" : [
+            "fonts-urw-base35"
+         ]
+      },
+      "nimbussansnarrow-regular.pfb" : {
          "installed_by" : [
             "fonts-urw-base35"
          ]
@@ -22187,7 +22292,17 @@
             "fonts-urw-base35"
          ]
       },
+      "p052-bold.pfb" : {
+         "installed_by" : [
+            "fonts-urw-base35"
+         ]
+      },
       "p052-bolditalic.otf" : {
+         "installed_by" : [
+            "fonts-urw-base35"
+         ]
+      },
+      "p052-bolditalic.pfb" : {
          "installed_by" : [
             "fonts-urw-base35"
          ]
@@ -22197,7 +22312,17 @@
             "fonts-urw-base35"
          ]
       },
+      "p052-italic.pfb" : {
+         "installed_by" : [
+            "fonts-urw-base35"
+         ]
+      },
       "p052-roman.otf" : {
+         "installed_by" : [
+            "fonts-urw-base35"
+         ]
+      },
+      "p052-roman.pfb" : {
          "installed_by" : [
             "fonts-urw-base35"
          ]
@@ -24537,6 +24662,11 @@
          ]
       },
       "standardsymbolsps.otf" : {
+         "installed_by" : [
+            "fonts-urw-base35"
+         ]
+      },
+      "standardsymbolsps.pfb" : {
          "installed_by" : [
             "fonts-urw-base35"
          ]
@@ -27359,7 +27489,17 @@
             "fonts-urw-base35"
          ]
       },
+      "urwbookman-demi.pfb" : {
+         "installed_by" : [
+            "fonts-urw-base35"
+         ]
+      },
       "urwbookman-demiitalic.otf" : {
+         "installed_by" : [
+            "fonts-urw-base35"
+         ]
+      },
+      "urwbookman-demiitalic.pfb" : {
          "installed_by" : [
             "fonts-urw-base35"
          ]
@@ -27369,7 +27509,17 @@
             "fonts-urw-base35"
          ]
       },
+      "urwbookman-light.pfb" : {
+         "installed_by" : [
+            "fonts-urw-base35"
+         ]
+      },
       "urwbookman-lightitalic.otf" : {
+         "installed_by" : [
+            "fonts-urw-base35"
+         ]
+      },
+      "urwbookman-lightitalic.pfb" : {
          "installed_by" : [
             "fonts-urw-base35"
          ]
@@ -27379,7 +27529,17 @@
             "fonts-urw-base35"
          ]
       },
+      "urwgothic-book.pfb" : {
+         "installed_by" : [
+            "fonts-urw-base35"
+         ]
+      },
       "urwgothic-bookoblique.otf" : {
+         "installed_by" : [
+            "fonts-urw-base35"
+         ]
+      },
+      "urwgothic-bookoblique.pfb" : {
          "installed_by" : [
             "fonts-urw-base35"
          ]
@@ -27389,7 +27549,17 @@
             "fonts-urw-base35"
          ]
       },
+      "urwgothic-demi.pfb" : {
+         "installed_by" : [
+            "fonts-urw-base35"
+         ]
+      },
       "urwgothic-demioblique.otf" : {
+         "installed_by" : [
+            "fonts-urw-base35"
+         ]
+      },
+      "urwgothic-demioblique.pfb" : {
          "installed_by" : [
             "fonts-urw-base35"
          ]
@@ -28680,6 +28850,11 @@
          ]
       },
       "z003-mediumitalic.otf" : {
+         "installed_by" : [
+            "fonts-urw-base35"
+         ]
+      },
+      "z003-mediumitalic.pfb" : {
          "installed_by" : [
             "fonts-urw-base35"
          ]

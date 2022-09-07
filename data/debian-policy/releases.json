@@ -8,6 +8,25 @@
          "author" : "Sean Whitton <spwhitton@spwhitton.name>",
          "changes" : [
             "",
+            "debian-policy (4.6.1.1) unstable; urgency=medium",
+            "",
+            "  * d/control: Add Homepage field (Closes: #1012879).",
+            "    Thanks to Benjamin Drung for the suggestion.",
+            "  * Upgrading checklist for 4.5.1: apply wording change from 07f1b39",
+            "    (Closes: #1017095)."
+         ],
+         "closes" : [
+            1012879,
+            1017095
+         ],
+         "epoch" : 1660436014,
+         "timestamp" : "2022-08-14T00:13:34Z",
+         "version" : "4.6.1.1"
+      },
+      {
+         "author" : "Sean Whitton <spwhitton@spwhitton.name>",
+         "changes" : [
+            "",
             "debian-policy (4.6.1.0) unstable; urgency=medium",
             "",
             "  * Policy: Allow non-64-bit packages to install to /usr/lib64",

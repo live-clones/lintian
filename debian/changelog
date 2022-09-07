@@ -10,6 +10,7 @@ lintian (2.115.4~git) UNRELEASED; urgency=medium
   * Fix warning: cannot run debian/readme check on
     package binary:postgresql-15_15~beta2-2+salsaci_amd64
     (Closes: #1014175)
+  * refresh data
 
  -- Bastien Roucariès <rouca@debian.org>  Wed, 07 Sep 2022 10:44:45 +0000
 

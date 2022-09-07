@@ -261,16 +261,6 @@
             "doxygen"
          ]
       },
-      "dh_dpatch_patch" : {
-         "installed_by" : [
-            "dpatch"
-         ]
-      },
-      "dh_dpatch_unpatch" : {
-         "installed_by" : [
-            "dpatch"
-         ]
-      },
       "dh_dwz" : {
          "installed_by" : [
             "debhelper"
@@ -560,11 +550,6 @@
             "debhelper"
          ]
       },
-      "dh_installkpatches" : {
-         "installed_by" : [
-            "dh-kpatches"
-         ]
-      },
       "dh_installlogcheck" : {
          "installed_by" : [
             "debhelper"
@@ -599,6 +584,12 @@
       "dh_installmodules" : {
          "installed_by" : [
             "debhelper"
+         ],
+         "uses_autoscript" : 1
+      },
+      "dh_installnss" : {
+         "installed_by" : [
+            "dh-nss"
          ],
          "uses_autoscript" : 1
       },
@@ -774,6 +765,13 @@
          "installed_by" : [
             "pkg-kde-tools"
          ]
+      },
+      "dh_nginx" : {
+         "installed_by" : [
+            "nginx-dev"
+         ],
+         "uses_autoscript" : 1,
+         "uses_misc_depends" : 1
       },
       "dh_nodejs_autodocs" : {
          "installed_by" : [
