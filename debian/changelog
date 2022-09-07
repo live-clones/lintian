@@ -2,6 +2,9 @@ lintian (2.115.4~git) UNRELEASED; urgency=medium
 
   * WIP (generated at release time: please do not add entries below).
 
+  [ Simon McVittie ]
+  * obsolete-packages: Add some more transitional package
+
   [ Bastien Roucariès ]
   * Run test suite at build time except on salci
   * Fix warning: cannot run debian/readme check on
