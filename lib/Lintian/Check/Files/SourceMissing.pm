@@ -35,6 +35,8 @@ use Const::Fast;
 use File::Basename qw(basename);
 use List::SomeUtils qw(first_value);
 use List::UtilsBy qw(max_by);
+use List::Util qw(max);
+use Lintian::SlidingWindow;
 
 # very long line lengths
 const my $VERY_LONG_LINE_LENGTH => 512;
@@ -43,6 +45,7 @@ const my $EMPTY => q{};
 const my $DOLLAR => q{$};
 const my $DOT => q{.};
 const my $DOUBLE_DOT => q{..};
+const my $BLOCKSIZE => 16_384;
 
 use Moo;
 use namespace::clean;
@@ -143,25 +146,39 @@ sub visit_patched_files {
         return;
     }
 
-    my @lines = split(/\n/, $item->bytes);
-    my %line_length;
-    my %semicolon_count;
+    open(my $fd, '<:raw', $item->unpacked_path)
+      or die encode_utf8('Cannot open ' . $item->unpacked_path);
+    my $sfd = Lintian::SlidingWindow->new;
+    $sfd->handle($fd);
+    $sfd->blocksize($BLOCKSIZE);
+    my $longestl = -1;
+    my $mostl = -1;
 
-    my $position = 1;
-    for my $line (@lines) {
+    while (my $block = $sfd->readwindow) {
+        my @lines = split(/\n/, $item->bytes);
+        my %line_length;
+        my %semicolon_count;
+        my $longest;
+        my $most;
 
-        $line_length{$position} = length $line;
-        $semicolon_count{$position} = ($line =~ tr/;/;/);
+        my $position = 1;
+        for my $line (@lines) {
 
-    } continue {
-        ++$position;
+            $line_length{$position} = length $line;
+            $semicolon_count{$position} = ($line =~ tr/;/;/);
+
+        } continue {
+            ++$position;
+        }
+
+        $longest = max_by { $line_length{$_} } keys %line_length;
+        $most = max_by { $semicolon_count{$_} } keys %semicolon_count;
+        return if !defined $longest;
+        $longestl = max($longestl,$line_length{$longest});
+        $mostl = max($mostl,$line_length{$most});
     }
-
-    my $longest = max_by { $line_length{$_} } keys %line_length;
-    my $most = max_by { $semicolon_count{$_} } keys %semicolon_count;
-
     return
-      if !defined $longest || $line_length{$longest} <= $VERY_LONG_LINE_LENGTH;
+      if $longestl <= $VERY_LONG_LINE_LENGTH;
 
     if ($item->basename =~ m{\.js$}i) {
 
