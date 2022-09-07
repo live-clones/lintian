@@ -123,6 +123,31 @@ libjs-swfobject
 
 # Deprecated in stretch
 libavresample-dev => libswresample-dev
+liblircclient-dev => liblirc-dev
 
 # Deprecated in buster
+apt-transport-https => apt
+e2fslibs-dev => libext2fs-dev
+libncurses5-dev => libncurses-dev
+libncursesw5-dev => libncurses-dev
+libpango1.0-0 => libpango-1.0-0, libpangocairo-1.0-0, libpangoft2-1.0-0 and/or libpangoxft-1.0-0
+libsensors4-dev => libsensors-dev
 libservlet3.1-java => libservlet-api-java
+libtinfo-dev => libncurses-dev
+
+# Deprecated in bullseye
+bsdmainutils => bsdextrautils and/or ncal
+libegl1-mesa-dev => libegl-dev
+libfontconfig1-dev => libfontconfig-dev
+libfreetype6-dev => libfreetype-dev
+libgdk-pixbuf2.0-0 => libgdk-pixbuf-2.0-0 and optionally libgdk-pixbuf-xlib-2.0-0
+libgdk-pixbuf2.0-dev => libgdk-pixbuf-2.0-dev and optionally libgdk-pixbuf-xlib-2.0-dev
+libgl1-mesa-dev => libgl-dev
+libshout3-dev => libshout-dev
+libtiff5-dev => libtiff-dev
+libxcb-util0-dev => libxcb-util-dev
+
+# Deprecated in bookworm
+libgsasl7-dev => libgsasl-dev
+libidn11-dev => libidn-dev
+policykit-1 => polkitd and optionally pkexec
