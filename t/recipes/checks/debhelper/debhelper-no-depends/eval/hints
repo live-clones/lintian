@@ -6,7 +6,6 @@ debhelper-no-depends (source): missing-build-dependency-for-dh_-command dh_strip
 debhelper-no-depends (source): missing-build-dependency-for-dh_-command dh_scour (does not satisfy scour:any) [debian/rules]
 debhelper-no-depends (source): missing-build-dependency-for-dh_-command dh_lisp (does not satisfy dh-lisp:any) [debian/rules]
 debhelper-no-depends (source): missing-build-dependency-for-dh_-command dh_gstscancodecs (does not satisfy libgstreamer1.0-dev:any) [debian/rules]
-debhelper-no-depends (source): missing-build-dependency-for-dh_-command dh_dpatch_patch (does not satisfy dpatch:any) [debian/rules]
 debhelper-no-depends (source): missing-build-dependency-for-dh_-command dh_clideps (does not satisfy cli-common-dev:any) [debian/rules]
 debhelper-no-depends (source): debian-build-system dh [debian/rules]
 debhelper-no-depends (source): debhelper-compat-level 9
