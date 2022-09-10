@@ -26,6 +26,7 @@ lintian (2.115.4~git) UNRELEASED; urgency=medium
 
   [ Axel Beckert ]
   * data/spelling/corrections: Remove valid word "licence".
+  * Fix typos and add missing changelog items in 2.115.3 release.
 
  -- Axel Beckert <abe@debian.org>  Sat, 10 Sep 2022 17:11:45 +0200
 
@@ -36,7 +37,7 @@ lintian (2.115.3) unstable; urgency=medium
   [ Gioele Barabucci ]
   * experimental-to-unstable-without-comment: Fix regex (Closes: #101387)
 
-  [ Axel Beckert]
+  [ Axel Beckert ]
   * Recognise many more binary file type suffixes (Closes: #1014156)
 
   [ Guillem Jover ]
@@ -48,6 +49,9 @@ lintian (2.115.3) unstable; urgency=medium
     tag to say openpgp
   * Fix --fail-on to revert to original default on error
     (Closes: #995492)
+
+  [ Francois-Xavier Le Bail ]
+  * spelling: Add several corrections.
 
   [ Bastien Roucariès ]
   * Restore sliding windows (Closes: #993613)
