@@ -233,10 +233,10 @@ getent passwd good || true  # grep /etc/passwd false-positive
 getent group good || true # grep /etc/group false-positive
 grep bad /etc/passwd || true
 grep bad /etc/group || true
-egrep bad /etc/passwd || true
-egrep bad /etc/passwd || true
-fgrep bad /etc/group || true
-fgrep bad /etc/group || true
+grep -E bad /etc/passwd || true
+grep -E bad /etc/passwd || true
+grep -F bad /etc/group || true
+grep -F bad /etc/group || true
 # grep /etc/passwd false-positive
 # grep /etc/group false-positive
 
