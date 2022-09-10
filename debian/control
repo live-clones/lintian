@@ -8,7 +8,6 @@ Uploaders:
 Build-Depends:
  aspell <!nocheck>,
  aspell-en <!nocheck>,
- build-essential <!nocheck>,
  cdbs <!nocheck>,
  debhelper-compat (= 13),
  default-jdk-headless | default-jdk <!nocheck>,
