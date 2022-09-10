@@ -2,17 +2,32 @@ lintian (2.115.4~git) UNRELEASED; urgency=medium
 
   * WIP (generated at release time: please do not add entries below).
 
+  DO NOT ADD ANY FURTHER CHANGELOG ENTRIES HERE UNTIL SHORTLY BEFORE
+  RELEASING AND UPLOADING. IT BREAKS GBP DCH. THANKS!
+
+  [ Sebastian Ramacher ]
+  * Revert "Turn embedded-library into a classification tag. (Closes:
+    #932634)". The tag embedded-library is used by FTP masters for
+    automatic rejects.  So let's revert this change. First, #932634 has
+    seen no coordination with FTP masters. Second, it confuses developers
+    when their packages get rejected for tags that are not emitted
+    locally.
+
   [ Simon McVittie ]
-  * obsolete-packages: Add some more transitional package
+  * obsolete-packages: Add some more transitional packages.
 
   [ Bastien Roucariès ]
-  * Run test suite at build time except on salci
+  * Run test suite at build time except on Salsa.
   * Fix warning: cannot run debian/readme check on
     package binary:postgresql-15_15~beta2-2+salsaci_amd64
     (Closes: #1014175)
-  * refresh data
+  * Refresh data.
+  * L…/C…/Files/PrivacyBreach.pm: Run lc in sliding windows block.
 
- -- Bastien Roucariès <rouca@debian.org>  Wed, 07 Sep 2022 10:44:45 +0000
+  [ Axel Beckert ]
+  * data/spelling/corrections: Remove valid word "licence".
+
+ -- Axel Beckert <abe@debian.org>  Sat, 10 Sep 2022 17:11:45 +0200
 
 lintian (2.115.3) unstable; urgency=medium
 
