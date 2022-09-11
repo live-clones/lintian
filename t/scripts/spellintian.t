@@ -34,7 +34,7 @@ const my $WAIT_STATUS_SHIFT => 8;
 $ENV{'LINTIAN_BASE'} //= $DOT;
 
 my $cmd_path = "$ENV{LINTIAN_BASE}/bin/spellintian";
-my $spelling_data = 'data/spelling/corrections';
+my $spelling_data = "$ENV{LINTIAN_BASE}/data/spelling/corrections";
 my @word_lists
   = qw(/usr/share/dict/american-english /usr/share/dict/british-english);
 
