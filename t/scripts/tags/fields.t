@@ -35,6 +35,7 @@ use List::SomeUtils qw(true);
 use Path::Tiny;
 use Test::More;
 
+BEGIN { $ENV{'LINTIAN_BASE'} //= q{.}; }
 use lib "$ENV{'LINTIAN_BASE'}/lib";
 
 use Lintian::Deb822;
