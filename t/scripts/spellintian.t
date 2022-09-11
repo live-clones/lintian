@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
 # Copyright (C) 2014-2016 Jakub Wilk <jwilk@jwilk.net>
-# Copyright (C) 2017 Axel Beckert <abe@debian.org>
+# Copyright (C) 2017-2022 Axel Beckert <abe@debian.org>
 #
 # This program is free software.  It is distributed under the terms of
 # the GNU General Public License as published by the Free Software
@@ -24,7 +24,8 @@ use warnings;
 
 use Const::Fast;
 use IPC::Run3;
-use Test::More tests => 8;
+use List::SomeUtils qw(uniq);
+use Test::More tests => 7;
 
 const my $NEWLINE => qq{\n};
 const my $DOT => q{.};
@@ -34,6 +35,17 @@ $ENV{'LINTIAN_BASE'} //= $DOT;
 
 my $cmd_path = "$ENV{LINTIAN_BASE}/bin/spellintian";
 my $spelling_data = 'data/spelling/corrections';
+my @word_lists
+  = qw(/usr/share/dict/american-english /usr/share/dict/british-english);
+
+# See #1019541 why some valid words are ignored and still ok to be
+# listed as a misspelled word.
+my @valid_but_very_seldom_words = qw(bellow singed want's);
+
+# See #865055 why "iff" is wrong. "publically" is a seldom, but valid
+# English word, is used in the OpenSSL license and hence causes quite
+# some false positives, when being added (again).
+my @valid_words = qw(iff publically);
 
 sub t {
     my ($input, $expected, @options) = @_;
@@ -67,10 +79,29 @@ t(
     '--picky'
 );
 
+foreach my $word_list (@word_lists) {
+    open(my $wl_fh, '<', $word_list)
+      or die "Can't open $word_list for reading: $!";
+    local $/ = undef; # enable localized slurp mode
+    push(@valid_words, split(/\n/, <$wl_fh>));
+    close $wl_fh;
+}
+
+# Don't list identical words from American and British English twice.
+@valid_words = uniq(@valid_words);
+
+# Ignore words which are valid but very seldom and unlikely to show up
+# in Debian packages.
+foreach my $valid_but_very_seldom_word (@valid_but_very_seldom_words) {
+    @valid_words = grep { !/^$valid_but_very_seldom_word$/ } @valid_words;
+}
+
 my $iff = 0;
 my $publically = 0;
 my @case_sen;
 my @equal;
+my @valid_but_listed_words = qw();
+my @bad_spellings = qw();
 
 open(my $sp_fh, '<', $spelling_data)
   or die "Can't open $spelling_data for reading: $!";
@@ -89,15 +120,8 @@ while (my $corr = <$sp_fh>) {
         push @case_sen, $wrong;
     }
 
-    # Check if "iff" has been added as correction. See #865055 why
-    # this is wrong. Bad example: iff||if
-    $iff++ if $corr =~ m{ ^ iff \|\| }x;
-
-    # Check if "publically" has been added as correction. It is a
-    # seldom, but valid English word, is used in the OpenSSL license
-    # and hence causes quite some false positives, when being added
-    # (again).
-    $publically++ if $corr =~ m{ ^ publically \|\| }x;
+    # Needed later for checking against lists of valid words.
+    push(@bad_spellings, $wrong);
 }
 close($sp_fh);
 
@@ -111,17 +135,20 @@ ok(
     "No case sensitive correction present in ${spelling_data} ("
       . join(', ', @case_sen) . ')'
 );
+
+# Check if valid words have beeing has been added as correction.
+my %word_count = ();
+foreach my $word (@valid_words, @bad_spellings) {
+    $word_count{$word}++;
+}
+foreach my $word (keys %word_count) {
+    push(@valid_but_listed_words, $word) if $word_count{$word} > 1;
+}
+
 ok(
-    $iff == 0,
-    '"iff" is not present in '
-      . $spelling_data
-      .'. See #865055 why this is wrong.'
-);
-ok(
-    $publically == 0,
-    '"publically" is not present in '
-      . $spelling_data
-      .q{. It's a valid English word and used in the OpenSSL license.}
+    scalar(@valid_but_listed_words) == 0,
+    "No valid word is present in ${spelling_data} ("
+      . join(', ', sort @valid_but_listed_words) . ')'
 );
 
 # Local Variables:

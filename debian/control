@@ -25,6 +25,7 @@ Build-Depends:
  libfile-basedir-perl,
  libio-prompt-tiny-perl <!nocheck>,
  libipc-run3-perl,
+ liblist-someutils-perl <!nocheck>,
  libmce-perl <!nocheck>,
  libpath-tiny-perl,
  libperl-critic-freenode-perl <!nocheck>,
@@ -55,6 +56,8 @@ Build-Depends:
  quilt <!nocheck>,
  tidy <!nocheck>,
  uglifyjs <!nocheck>,
+ wamerican <!nocheck>,
+ wbritish <!nocheck>,
  zip <!nocheck>
 Standards-Version: 4.6.1
 Rules-Requires-Root: no
