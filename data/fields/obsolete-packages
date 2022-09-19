@@ -151,3 +151,4 @@ libxcb-util0-dev => libxcb-util-dev
 libgsasl7-dev => libgsasl-dev
 libidn11-dev => libidn-dev
 policykit-1 => polkitd and optionally pkexec
+lsb-base
