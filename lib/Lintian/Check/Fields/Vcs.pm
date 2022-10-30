@@ -52,8 +52,9 @@ my %VCS_EXTRACT = (
     # hg uri followed by optional -b branchname
     Hg      => sub { return shift =~ /^(.+?)(?:\s+-b\s+(\S*))?$/;},
     # git uri followed by optional "[subdir]", "-b branchname" etc.
-    Git     =>
-      sub { return shift =~ /^(.+?)(?:\s+\[(\S*)\])?(?:\s+-b\s+(\S*))?$/;},
+    Git     => sub {
+        return shift =~ /^(.+?)(?:(?:\s+\[(\S*)\])?(?:\s+-b\s+(\S*))?){0,2}$/;
+    },
     Svn     => sub { return @_;},
     # New "mtn://host?branch" uri or deprecated "host branch".
     Mtn     => sub { return shift =~ /^(.+?)(?:\s+\S+)?$/;},
