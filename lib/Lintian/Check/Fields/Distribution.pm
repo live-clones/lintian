@@ -92,7 +92,7 @@ sub changes {
     my $version = $self->processable->fields->value('Version');
     my $distnumber;
     my $bpoversion;
-    if ($version=~ /~bpo(\d+)\+(\d+)$/) {
+    if ($version=~ /~bpo(\d+)\+(\d+)(\+salsaci)?$/) {
         $distnumber = $1;
         $bpoversion = $2;
 
