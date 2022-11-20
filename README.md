@@ -51,7 +51,7 @@ can find the Lintian User's Manual in:
 
     $ sensible-browser /usr/share/doc/lintian/lintian.html
     # or in txt format
-    $ less /usr/share/doc/lintian/lintian.txt.gz
+    $ zless /usr/share/doc/lintian/lintian.txt.gz
 
 
 Compiling Lintian
