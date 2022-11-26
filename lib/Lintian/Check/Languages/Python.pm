@@ -225,7 +225,8 @@ sub source {
         my %PYPROJECT_PREREQUISITES = (
             'poetry.core.masonry.api' => 'python3-poetry-core:any',
             'flit_core.buildapi' => 'flit:any',
-            'setuptools.build_meta' => 'python3-setuptools:any'
+            'setuptools.build_meta' => 'python3-setuptools:any',
+            'pdm.pep517.api' => 'python3-pdm-pep517:any'
         );
 
         open(my $fd, '<', $pyproject->unpacked_path)
@@ -244,6 +245,11 @@ sub source {
                   if $backend eq 'poetry.core.masonry.api'
                   && $build_depends->satisfies('python3-poetry:any')
                   && !$build_depends->satisfies('python3-poetry-core:any');
+
+                $self->pointed_hint('uses-pdm-cli', $pointer)
+                  if $backend eq 'pdm.pep517.api'
+                  && $build_depends->satisfies('python3-pdm:any')
+                  && !$build_depends->satisfies('python3-pdm-pep517:any');
 
                 if (exists $PYPROJECT_PREREQUISITES{$backend}) {
 
