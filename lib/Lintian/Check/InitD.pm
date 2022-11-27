@@ -472,16 +472,6 @@ sub check_init {
             $saw_command{$1} = 1;
         }
 
-        if (
-            $line =~ m{^\s*\.\s+/lib/lsb/init-functions}
-            && !$processable->relation('strong')->satisfies('lsb-base:any')
-            && (none { $_->basename =~ m/\.service$/ && !$_->is_dir }
-                @{$processable->installed->sorted_list})
-        ) {
-            $self->pointed_hint('init.d-script-needs-depends-on-lsb-base',
-                $item->pointer($position));
-        }
-
         # nested while
     } continue {
         ++$position;

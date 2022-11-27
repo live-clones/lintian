@@ -1,5 +1,4 @@
 scripts (binary): init.d-script-not-marked-as-conffile etc/init.d/skeleton
-scripts (binary): init.d-script-needs-depends-on-lsb-base [etc/init.d/skeleton:35]
 scripts (binary): init.d-script-missing-lsb-short-description [etc/init.d/lsb-other]
 scripts (binary): init.d-script-missing-lsb-section [etc/init.d/no-lsb]
 scripts (binary): init.d-script-missing-lsb-keyword required-start [etc/init.d/lsb-broken]
