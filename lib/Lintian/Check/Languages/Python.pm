@@ -119,11 +119,6 @@ sub source {
       if $build_all->satisfies('python-sphinx')
       && !$build_all->satisfies('python3-sphinx');
 
-    my $maintainer = $self->processable->fields->value('Maintainer');
-    $self->hint('python-teams-merged', $maintainer)
-      if $maintainer =~ m{python-modules-team\@lists\.alioth\.debian\.org}
-      || $maintainer =~ m{python-apps-team\@lists\.alioth\.debian\.org};
-
     $self->hint(
         'alternatively-build-depends-on-python-sphinx-and-python3-sphinx')
       if $self->processable->fields->value('Build-Depends')

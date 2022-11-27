@@ -203,9 +203,8 @@ sub always {
 
         my $maintainer = $processable->fields->unfolded_value($field);
 
-        my $is_list
-          = $maintainer =~ /\b(\S+\@lists(?:\.alioth)?\.debian\.org)\b/;
-        if ($is_list) {
+        if ($maintainer =~ /\b(\S+\@lists(?:\.alioth)?\.debian\.org)\b/
+            || $maintainer =~ /\b(\S+\@tracker\.debian\.org)\b/) {
             $is_teammaintained = 1;
             $team_email = $1;
             $is_maintained_by_individual = 0;
@@ -339,14 +338,6 @@ sub always {
                 );
             }
         }
-
-        $self->hint('old-dpmt-vcs', $platform)
-          if $maintainer =~ m{python-modules-team\@lists\.alioth\.debian\.org}
-          and $uri !~ m{salsa.debian.org/python-team/packages/.+};
-
-        $self->hint('old-papt-vcs', $platform)
-          if $maintainer =~ m{python-apps-team\@lists\.alioth\.debian\.org}
-          and $uri !~ m{salsa.debian.org/python-team/packages/.+};
     }
 
     $self->hint('vcs-fields-use-more-than-one-vcs',
