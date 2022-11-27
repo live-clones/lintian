@@ -74,6 +74,9 @@ my $PROPERTIES = 'org.freedesktop.DBus.Properties';
 sub check_policy {
     my ($self, $item) = @_;
 
+    $self->pointed_hint('dbus-policy-in-etc', $item->pointer)
+      if $item->name =~ m{^etc/};
+
     my $xml = $item->decoded_utf8;
     return
       unless length $xml;
