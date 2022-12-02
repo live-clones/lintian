@@ -3,7 +3,8 @@ Priority: optional
 Section: python
 Maintainer: [% $author %]
 Standards-Version: [% $standards_version %]
-Build-Depends: [% $build_depends %], python3-poetry
+Build-Depends: [% $build_depends %], python3-poetry, pybuild-plugin-pyproject
+Build-Depends-Indep: python3-poetry-core
 Rules-Requires-Root: no
 
 Package: python3-[% $source %]

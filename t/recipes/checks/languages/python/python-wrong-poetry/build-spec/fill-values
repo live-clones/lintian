@@ -1,3 +1,4 @@
 Skeleton: source-native
 Testname: python-wrong-poetry
-Description: Check packages that build-depend on python3-poetry.
+Description: Check packages that build-depend on python3-poetry. Also acts as a
+ test for packages that have the pyproject dependencies in Build-Depends-Indep.
