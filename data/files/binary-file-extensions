@@ -15,6 +15,7 @@ cbr
 cbt
 cbz
 chm
+dbf
 der
 djvu
 dll
@@ -64,6 +65,11 @@ png
 ppt
 pptx
 psd
+qix
+sbn
+sbx
+shp
+shx
 spx
 sqlite
 sqlite3
