@@ -11,6 +11,7 @@ needs-internet
 needs-reboot
 needs-recommends
 needs-root
+needs-sudo
 rw-build-tree
 skip-not-installable
 skippable

@@ -26,7 +26,7 @@ Features: unknownfeature, test-name=false-positive
 Restrictions: unknownrestriction
 
 Test-Command: /bin/true
-Restrictions: breaks-testbed, rw-build-tree, needs-root, needs-recommends # comment
+Restrictions: breaks-testbed, rw-build-tree, needs-root, needs-recommends, needs-sudo # comment
 Depends: @, @builddeps@
 
 Tests: test-1, test-2
