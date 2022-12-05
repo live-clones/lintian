@@ -34,10 +34,7 @@ use Const::Fast;
 use List::UtilsBy qw(max_by);
 use Unicode::UTF8 qw(encode_utf8 decode_utf8 valid_utf8);
 
-const my $GREATER_THAN => q{>};
 const my $VERTICAL_BAR => q{|};
-
-const my $VERY_LONG => 512;
 
 use Moo;
 use namespace::clean;
@@ -111,17 +108,6 @@ sub visit_patched_files {
     }
 
     close $fd;
-
-    my $longest = max_by { $line_lengths{$_} } keys %line_lengths;
-
-    return
-      unless defined $longest;
-
-    my $pointer = $item->pointer($longest);
-
-    $self->pointed_hint('very-long-line-length-in-source-file',
-        $pointer, $line_lengths{$longest}, $GREATER_THAN, $VERY_LONG)
-      if $line_lengths{$longest} > $VERY_LONG;
 
     return;
 }

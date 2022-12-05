@@ -1,1 +1,0 @@
-// this catch missing . in regexp 
