@@ -1,4 +1,5 @@
 Tag: update-debian-copyright
+Experimental: yes
 Severity: pedantic
 Check: debian/copyright/dep5
 Explanation: The most recent copyright year mentioned for files in <code>./debian</code>
