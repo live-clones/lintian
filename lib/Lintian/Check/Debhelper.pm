@@ -125,6 +125,7 @@ my %DH_ADDON_MANUAL_PREREQUISITES = (
 'sphinx:any | python-sphinx:any | python3-sphinx:any | dh-sequence-sphinxdoc:any',
     systemd =>
 'debhelper:any (>= 9.20160709~) | debhelper-compat:any | dh-sequence-systemd:any | dh-systemd:any',
+    vim_addon => 'dh_vim-addon:any | dh-sequence-vim-addon:any',
 );
 
 sub visit_patched_files {
