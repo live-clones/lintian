@@ -778,6 +778,11 @@
             "dh-nodejs"
          ]
       },
+      "dh_nodejs_build_debug_package" : {
+         "installed_by" : [
+            "dh-nodejs"
+         ]
+      },
       "dh_nodejs_substvars" : {
          "installed_by" : [
             "dh-nodejs"
@@ -842,11 +847,6 @@
       "dh_octave_version" : {
          "installed_by" : [
             "dh-octave"
-         ]
-      },
-      "dh_package_notes" : {
-         "installed_by" : [
-            "dh-package-notes"
          ]
       },
       "dh_pdl" : {
@@ -929,23 +929,16 @@
             "debhelper"
          ]
       },
+      "dh_puredata_substvar" : {
+         "installed_by" : [
+            "dh-puredata"
+         ]
+      },
       "dh_pyppd" : {
          "installed_by" : [
             "pyppd"
          ],
          "uses_misc_depends" : 1
-      },
-      "dh_pypy" : {
-         "installed_by" : [
-            "dh-python"
-         ],
-         "uses_autoscript" : 1
-      },
-      "dh_python2" : {
-         "installed_by" : [
-            "dh-python"
-         ],
-         "uses_autoscript" : 1
       },
       "dh_python3" : {
          "installed_by" : [

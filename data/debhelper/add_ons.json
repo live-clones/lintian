@@ -50,6 +50,11 @@
             "dh-buildinfo"
          ]
       },
+      "cargo" : {
+         "installed_by" : [
+            "dh-cargo"
+         ]
+      },
       "cli" : {
          "installed_by" : [
             "cli-common-dev"
@@ -170,6 +175,11 @@
             "dh-nss"
          ]
       },
+      "installsysusers" : {
+         "installed_by" : [
+            "libdebhelper-perl"
+         ]
+      },
       "javahelper" : {
          "installed_by" : [
             "javahelper"
@@ -255,9 +265,9 @@
             "dh-octave"
          ]
       },
-      "package_notes" : {
+      "pd_lib_builder" : {
          "installed_by" : [
-            "dh-package-notes"
+            "dh-puredata"
          ]
       },
       "perl6" : {
@@ -318,16 +328,6 @@
       "pyppd" : {
          "installed_by" : [
             "pyppd"
-         ]
-      },
-      "pypy" : {
-         "installed_by" : [
-            "dh-python"
-         ]
-      },
-      "python2" : {
-         "installed_by" : [
-            "dh-python"
          ]
       },
       "python3" : {
