@@ -60,7 +60,11 @@ sub t {
 }
 
 t('auto-reject-diff', qr/Found \d+ certain/);
-t('generate-tag-summary', qr/Assuming commit range to be/, qr/tags/);
+t(
+    'generate-tag-summary',
+    qr/Assuming commit range to be/,
+    qr/^No tags were added or removed$|\A\Z/
+);
 t('latest-policy-version', qr/^(\d+\.){3}/);
 
 done_testing();
