@@ -254,7 +254,7 @@ sub source {
                     $self->pointed_hint(
                         'missing-prerequisite-for-pyproject-backend',
                         $pointer, $backend,"(does not satisfy $prerequisites)")
-                      if !$build_depends->satisfies($prerequisites);
+                      if !$build_all->satisfies($prerequisites);
                 }
             }
 
