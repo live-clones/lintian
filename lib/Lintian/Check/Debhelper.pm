@@ -90,7 +90,8 @@ my %DH_COMMAND_MANUAL_PREREQUISITES = (
     dh_nativejava => 'gcj-native-helper:any | default-jdk-builddep:any',
     dh_pgxs_test => 'postgresql-server-dev-all:any | postgresql-all:any',
     dh_python2 => 'dh-python:any | dh-sequence-python2:any',
-    dh_python3 => 'dh-python:any | dh-sequence-python3:any',
+    dh_python3 =>
+      'dh-python:any | dh-sequence-python3:any | pybuild-plugin-pyproject:any',
     dh_sphinxdoc =>
 'sphinx:any | python-sphinx:any | python3-sphinx:any | dh-sequence-sphinxdoc:any',
     dh_xine => 'libxine-dev:any | libxine2-dev:any'
