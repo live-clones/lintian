@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: cpython-extensions
+Description: Check packages build cpython extensions for all available Python
+ versions.
