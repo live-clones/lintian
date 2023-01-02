@@ -40,3 +40,12 @@ Reason:
  bootstrapping systems where the GNU suite may not yet be available.
 See-Also:
  Bug#996740
+
+Screen: reuse/long-lines
+Advocates: Simon McVittie <smcv@debian.org>
+Reason:
+ In packages that use the REUSE specification for declaring licensing
+ information, the canonical form of the license text as downloaded by
+ <code>reuse download</code> does not wrap long lines.
+See-Also:
+ Bug#1013314
