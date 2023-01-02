@@ -83,15 +83,20 @@ sub version_from_git {
     return $EMPTY
       unless -d $git_path;
 
+    # Example outputs:
+    # 2.115.3-49-g086a9a113
+    # 2.115.3-49-g086a9a113-dirty
     my $describe
-      = decode_utf8(safe_qx('git', "--git-dir=$git_path", 'describe'));
+      = decode_utf8(safe_qx('git', "--git-dir=$git_path", 'describe', '--dirty'));
     chomp $describe;
 
-    my ($guess, $step, $commit) = split(/-/, $describe);
-    return $EMPTY
-      unless defined $step;
-
-    $guess =~ s/ [.] 0 $/.$step/sx;
+    # Modify it to make it a valid native version number and make it
+    # look more debianish like these:
+    # 2.115.3+49commits+git086a9a113
+    # 2.115.3+49commits+git086a9a113+dirty
+    my $guess = $describe;
+    $guess =~ s/ - ( \d+ ) -g /+${1}commits+git/sx;
+    $guess =~ s/ - /+/sxg;
 
     return ($guess // $EMPTY);
 }
