@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 
 # Copyright (C) 2020 Felix Lechner
+# Copyright (C) 2023 Axel Beckert
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
