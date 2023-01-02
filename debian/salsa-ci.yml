@@ -26,3 +26,10 @@ build-buster-backports:
 variables:
   SALSA_CI_LINTIAN_FAIL_WARNING: 1
   DEB_BUILD_OPTIONS: 'nocheck'
+
+# Try to override the lintian version being used to the just built
+# version.
+.test-lintian: &test-lintian
+  before_script:
+  - apt-get update
+  - apt-get install -y ${WORKING_DIR}/lintian_*.deb
