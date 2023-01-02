@@ -31,7 +31,7 @@ use v5.10;
 use Const::Fast;
 use File::Find::Rule;
 use List::SomeUtils qw(uniq);
-use List::Util qw(all);
+use List::Util qw(all any);
 use Path::Tiny;
 use Test::More;
 
@@ -41,12 +41,31 @@ use lib "$ENV{'LINTIAN_BASE'}/lib";
 use Lintian::Profile;
 use Test::Lintian::ConfigFile qw(read_config);
 
-const my $FIXED_TESTS_PER_FILE => 6;
+const my $FIXED_TESTS_PER_FILE => 7;
 
 my @descpaths = File::Find::Rule->file()->name('desc')->in('t/recipes');
 
 # mandatory fields
 my @mandatory = qw(Testname);
+
+# all known fields
+my @known = qw(
+  Check
+  Default-Lintian-Options
+  Exit-Status
+  Lintian-Command-Line
+  Match-Strategy
+  Options
+  Output-Format
+  Profile
+  See-Also
+  Test-Against
+  Test-Architectures
+  Test-Conflicts
+  Test-Depends
+  Testname
+  Todo
+);
 
 # disallowed fields
 my @disallowed = qw(Test-For Checks References Reference Ref);
@@ -73,6 +92,16 @@ for my $descpath (@descpaths) {
     ok(
         (all { $count{$_} == 1 } keys %count),
         "No duplicate fields in $descpath"
+    );
+
+    ok(
+        (
+            all {
+                my $key = $_;
+                any { $key eq $_ } @known;
+            } keys %count
+        ),
+        "No unknown field names are present in $descpath"
     );
 
     my $testcase = read_config($descpath);
