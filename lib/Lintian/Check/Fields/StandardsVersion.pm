@@ -74,7 +74,7 @@ sub source {
     my $latest_standard = $policy_releases->latest_version;
 
     my ($latest_major, $latest_minor, $latest_patch)
-      = split(/[.]/, $latest_standard, $MAXIMUM_COMPONENTS_ANALYZED);
+      = ((split(/[.]/, $latest_standard))[0..$MAXIMUM_COMPONENTS_ANALYZED]);
 
     # a fourth digit is a non-normative change in policy
     my $latest_normalized
