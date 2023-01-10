@@ -657,7 +657,7 @@ sub php_source_whitelist {
     return 0
       if defined $copyright_path
       && $copyright_path->bytes
-      =~ m{^Source: https?://pecl.php.net/package/.*$}m;
+      =~ m{^Source: https?://(pecl|pear).php.net/package/.*$}m;
 
     return 0
       if $self->processable->source_name =~ /^php\d*(?:\.\d+)?$/xms;
