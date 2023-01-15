@@ -851,19 +851,30 @@ sub check_dep5_copyright {
             my $seen = lc($first->firstChild->data // $EMPTY);
             next
               unless $seen;
-            my $seen_nozero = $seen;
+
+            # Compare and also normalize the seen and wanted license
+            # identifier wrt. to redundant trailing dot-zeros,
+            # -or-later suffix vs + suffix, -only suffix vs no
+            # suffix. Still display the original variant in the tag.
+            my $seen_normalized = $seen;
+            $seen_normalized =~ s/-or-later$/+/i;
+            $seen_normalized =~ s/-only$//i;
+            my $seen_nozero = $seen_normalized;
             $seen_nozero =~ s/\.0//g;
 
             my @wanted = @{$license_identifiers_by_file{$name}};
             my @mismatched = grep {
                 my $want = $_;
-                my $want_nozero = $want;
+                my $want_normalized = $want;
+                $want_normalized =~ s/-or-later$/+/i;
+                $want_normalized =~ s/-only$//i;
+                my $want_nozero = $want_normalized;
                 $want_nozero =~ s/\.0//g;
 
-                $want ne $seen
-                    and $want_nozero ne $seen
-                    and $want ne $seen_nozero
-                    and $want_nozero ne $seen_nozero;
+                $want_normalized ne $seen_normalized
+                  and $want_nozero ne $seen_normalized
+                  and $want_normalized ne $seen_nozero
+                  and $want_nozero ne $seen_nozero;
             } @wanted;
 
             $self->pointed_hint('inconsistent-appstream-metadata-license',
