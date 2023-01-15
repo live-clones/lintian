@@ -851,9 +851,20 @@ sub check_dep5_copyright {
             my $seen = lc($first->firstChild->data // $EMPTY);
             next
               unless $seen;
+            my $seen_nozero = $seen;
+            $seen_nozero =~ s/\.0//g;
 
             my @wanted = @{$license_identifiers_by_file{$name}};
-            my @mismatched = grep { $_ ne $seen } @wanted;
+            my @mismatched = grep {
+                my $want = $_;
+                my $want_nozero = $want;
+                $want_nozero =~ s/\.0//g;
+
+                $want ne $seen
+                    and $want_nozero ne $seen
+                    and $want ne $seen_nozero
+                    and $want_nozero ne $seen_nozero;
+            } @wanted;
 
             $self->pointed_hint('inconsistent-appstream-metadata-license',
                 $copyright_file->pointer, $name, "($seen != $_)")
