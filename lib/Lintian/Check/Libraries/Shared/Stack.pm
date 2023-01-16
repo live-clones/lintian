@@ -47,7 +47,15 @@ sub visit_installed_files {
 
     $self->pointed_hint('executable-stack-in-shared-library', $item->pointer)
       if exists $item->elf->{PH}{STACK}
-      && $item->elf->{PH}{STACK}{flags} ne 'rw-';
+      && $item->elf->{PH}{STACK}{flags} ne 'rw-'
+     # Once the following line is removed again, please also remove
+     # the Test-Architectures line in
+     # t/recipes/checks/libraries/shared/stack/shared-libs-exec-stack/eval/desc
+     # and the MIPS-related notes in
+     # tags/e/executable-stack-in-shared-library.tag. See
+     # https://bugs.debian.org/1025436 and
+     # https://bugs.debian.org/1022787 for details
+      && $self->processable->fields->value('Architecture') !~ /mips/;
 
     return;
 }

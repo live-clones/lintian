@@ -14,3 +14,7 @@ Explanation: The listed shared library declares the stack as executable.
  To see the permissions on the stack, run <code>readelf -l</code> on the
  shared library and look for the program header of type GNU&lowbar;STACK. In the
  flag column, there should not be an E flag set.
+ .
+ This tag is currently not emitted on MIPS architectures.
+See-Also: https://bugs.debian.org/1025436,
+ https://bugs.debian.org/1022787
