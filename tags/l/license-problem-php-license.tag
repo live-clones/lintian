@@ -7,4 +7,5 @@ Explanation: This package appears to be covered by version 3.0 (exactly) of the
  .
  This tag is not emitted for packages from pecl.php.net or pear.php.net as determined by
  the <code>Source:</code> field in <code>debian/copyright</code>.
-See-Also: https://ftp-master.debian.org/REJECT-FAQ.html
+See-Also: https://ftp-master.debian.org/php-license.html,
+ https://ftp-master.debian.org/REJECT-FAQ.html
