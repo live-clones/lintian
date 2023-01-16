@@ -81,9 +81,14 @@ sub source {
     # check signatures
     my @allsigs = map { @{$signatures{$_}} } @origtar;
     for my $signature (@allsigs) {
+        my $sig_file = path($parentdir)->child($signature);
+        # Only try to slurp file if it exists. Otherwise Path::Tiny ≥
+        # 0.142 will bail out. (Returned empty string instead before
+        # that version.)
+        next unless $sig_file->is_file;
 
         # take from location near input file
-        my $contents = path($parentdir)->child($signature)->slurp;
+        my $contents = $sig_file->slurp;
 
         if ($contents =~ /^-----BEGIN PGP ARMORED FILE-----/m) {
 
