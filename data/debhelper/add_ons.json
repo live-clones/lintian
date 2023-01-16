@@ -115,6 +115,11 @@
             "dh-dkms"
          ]
       },
+      "doxygen" : {
+         "installed_by" : [
+            "doxygen"
+         ]
+      },
       "dwz" : {
          "installed_by" : [
             "libdebhelper-perl"

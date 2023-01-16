@@ -24736,6 +24736,11 @@
             "fonts-wine"
          ]
       },
+      "smileysans-oblique.ttf" : {
+         "installed_by" : [
+            "fonts-smiley-sans"
+         ]
+      },
       "snailets.ttf" : {
          "installed_by" : [
             "fonts-aenigma"
