@@ -17,6 +17,7 @@ Depends:
  gcc-mingw-w64-x86-64,
  gpg-agent,
  javahelper,
+ libarray-utils-perl,
  libio-prompt-tiny-perl,
  liblist-someutils-perl,
  libmce-perl,

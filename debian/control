@@ -21,6 +21,7 @@ Build-Depends:
  gcc-mingw-w64-x86-64 <!nocheck>,
  gpg-agent <!nocheck>,
  javahelper <!nocheck>,
+ libarray-utils-perl <!nocheck>,
  libconst-fast-perl,
  libfile-basedir-perl,
  libio-prompt-tiny-perl <!nocheck>,

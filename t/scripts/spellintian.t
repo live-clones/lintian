@@ -25,7 +25,8 @@ use warnings;
 use Const::Fast;
 use IPC::Run3;
 use List::SomeUtils qw(uniq);
-use Test::More tests => 7;
+use Array::Utils qw(intersect);
+use Test::More tests => 8;
 
 const my $NEWLINE => qq{\n};
 const my $DOT => q{.};
@@ -102,6 +103,7 @@ my @case_sen;
 my @equal;
 my @valid_but_listed_words = qw();
 my @bad_spellings = qw();
+my @good_spellings = qw();
 
 open(my $sp_fh, '<', $spelling_data)
   or die "Can't open $spelling_data for reading: $!";
@@ -120,8 +122,9 @@ while (my $corr = <$sp_fh>) {
         push @case_sen, $wrong;
     }
 
-    # Needed later for checking against lists of valid words.
+    # Needed later, e.g. for checking against lists of valid words.
     push(@bad_spellings, $wrong);
+    push(@good_spellings, $good);
 }
 close($sp_fh);
 
@@ -149,6 +152,14 @@ ok(
     scalar(@valid_but_listed_words) == 0,
     "No valid word is present in ${spelling_data} ("
       . join(', ', sort @valid_but_listed_words) . ')'
+);
+
+my @good_bad_ugly = intersect(@bad_spellings, @good_spellings);
+
+ok(
+    scalar(@good_bad_ugly) == 0,
+    'No bad spelling is listed as good spelling for another bad spelling ('
+      . join(', ', @good_bad_ugly) . ')'
 );
 
 # Local Variables:
