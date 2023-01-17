@@ -37,7 +37,8 @@ with 'Lintian::Check';
 
 const my $EMPTY => q{};
 
-our %KNOWN_ARCHIVE_PARTS = map { $_ => 1 } qw(non-free contrib);
+our %KNOWN_ARCHIVE_PARTS
+  = map { $_ => 1 } qw(non-free contrib non-free-firmware);
 
 sub udeb {
     my ($self) = @_;

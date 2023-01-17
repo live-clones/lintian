@@ -12,6 +12,7 @@ Explanation: The "Section:" field in this package's control file is not one of
  utils, vcs, video, web, x11, xfce, zope.
  .
  The section name should be preceded by "non-free/" if the package
- is in the non-free archive area, and by "contrib/" if the package
- is in the contrib archive area.
+ is in the non-free archive area, by "contrib/" if the package is
+ in the contrib archive area, and by "non-free-firmware/" if the
+ package is in the non-free-firmware area.
 See-Also: debian-policy 2.4
