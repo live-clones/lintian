@@ -24,7 +24,7 @@ use warnings;
 
 use Const::Fast;
 use IPC::Run3;
-use Test::More tests => 3;
+use Test::More tests => 2;
 
 const my $DOT => q{.};
 const my $WAIT_STATUS_SHIFT => 8;
@@ -59,7 +59,6 @@ sub t {
     return;
 }
 
-t('auto-reject-diff', qr/Found \d+ certain/);
 t(
     'generate-tag-summary',
     qr/Assuming commit range to be/,
