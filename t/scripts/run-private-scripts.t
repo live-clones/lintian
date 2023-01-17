@@ -59,11 +59,15 @@ sub t {
     return;
 }
 
-t(
-    'generate-tag-summary',
-    qr/Assuming commit range to be/,
-    qr/^No tags were added or removed$|\A\Z/
-);
+SKIP: {
+    skip('Only works with git', 1) unless -x '/usr/bin/git' && -d '.git';
+
+    t(
+        'generate-tag-summary',
+        qr/Assuming commit range to be/,
+        qr/^No tags were added or removed$|\A\Z/
+    );
+}
 t('latest-policy-version', qr/^(\d+\.){3}/);
 
 done_testing();
