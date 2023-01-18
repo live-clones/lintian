@@ -1,0 +1,6 @@
+Skeleton: upload-non-native
+Testname: rules-missing-pkg-php-tools-addon-phppear
+Description: Test for missing-pkg-php-tools-addon when using dh-sequence-phppear
+Source: rules-missing-pkg-php-tools-addon-phppear
+Version: 1.0.0-1
+Extra-Build-Depends: dh-sequence-phppear
