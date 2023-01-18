@@ -1,0 +1,5 @@
+Skeleton: upload-non-native
+Testname: rules-missing-pkg-php-tools-addon-phpcomposer
+Description: Test for missing-pkg-php-tools-addon when using dh-sequence-phpcomposer
+Source: rules-missing-pkg-php-tools-addon-phpcomposer
+Version: 1.0.0-1
