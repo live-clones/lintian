@@ -124,8 +124,8 @@ sub visit_installed_files {
       =~ m{^ usr/share/doc/ (?:.+/)? (?:doxygen|html) / .* [.]map [.] $regex }sx;
 
     if ($item->is_file
-        && any { $item->basename =~ m{$_}xi } @DOCUMENTATION_FILE_REGEXES
-        && any { $item->basename !~ m{$_}xi } @NOT_DOCUMENTATION_FILE_REGEXES) {
+        and any { $item->basename =~ m{$_}xi } @DOCUMENTATION_FILE_REGEXES
+        and any { $item->basename !~ m{$_}xi } @NOT_DOCUMENTATION_FILE_REGEXES) {
 
         $self->pointed_hint(
             'package-contains-documentation-outside-usr-share-doc',
