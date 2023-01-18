@@ -55,6 +55,9 @@ sub visit_patched_files {
     return
       unless $item->is_file;
 
+    return
+      if $item->dirname =~ m{^debian/missing-sources/};
+
     # prebuilt-file or forbidden file type
     $self->pointed_hint('source-contains-prebuilt-wasm-binary', $item->pointer)
       if $item->file_type =~ m{^WebAssembly \s \(wasm\) \s binary \s module}x;
