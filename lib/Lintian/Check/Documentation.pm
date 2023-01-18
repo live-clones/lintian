@@ -39,6 +39,20 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
+# a list of regex for detecting non documentation files checked against basename (xi)
+my @NOT_DOCUMENTATION_FILE_REGEXES = qw{
+  ^dependency_links[.]txt$
+  ^entry_points[.]txt$
+  ^requires[.]txt$
+  ^top_level[.]txt$
+  ^requirements[.]txt$
+  ^namespace_packages[.]txt$
+  ^bindep[.]txt$
+  ^version[.]txt$
+  ^robots[.]txt$
+  ^cmakelists[.]txt$
+}
+
 # a list of regex for detecting documentation file checked against basename (xi)
 my @DOCUMENTATION_FILE_REGEXES = qw{
   [.]docx?$
@@ -110,7 +124,8 @@ sub visit_installed_files {
       =~ m{^ usr/share/doc/ (?:.+/)? (?:doxygen|html) / .* [.]map [.] $regex }sx;
 
     if ($item->is_file
-        && any { $item->basename =~ m{$_}xi } @DOCUMENTATION_FILE_REGEXES) {
+        && any { $item->basename =~ m{$_}xi } @DOCUMENTATION_FILE_REGEXES
+        && any { $item->basename !~ m{$_}xi } @NOT_DOCUMENTATION_FILE_REGEXES) {
 
         $self->pointed_hint(
             'package-contains-documentation-outside-usr-share-doc',
