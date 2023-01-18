@@ -51,7 +51,7 @@ my @NOT_DOCUMENTATION_FILE_REGEXES = qw{
   ^version[.]txt$
   ^robots[.]txt$
   ^cmakelists[.]txt$
-}
+};
 
 # a list of regex for detecting documentation file checked against basename (xi)
 my @DOCUMENTATION_FILE_REGEXES = qw{
