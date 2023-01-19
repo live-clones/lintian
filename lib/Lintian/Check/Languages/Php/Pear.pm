@@ -188,11 +188,13 @@ sub source {
 
                 $has_addon_phppear = 1
                   if $line
-                  =~ /^\t\s*dh\s.*--with(?:=|\s+)(?:\S+,)*phppear(?:,\S+)*\s/;
+                  =~ /^\t\s*dh\s.*--with(?:=|\s+)(?:\S+,)*phppear(?:,\S+)*\s/
+                  or $build_depends->satisfies('dh-sequence-phppear');
 
                 $has_addon_phpcomposer = 1
                   if $line
-                  =~ /^\t\s*dh\s.*--with(?:=|\s+)(?:\S+,)*phpcomposer(?:,\S+)*\s/;
+                  =~ /^\t\s*dh\s.*--with(?:=|\s+)(?:\S+,)*phpcomposer(?:,\S+)*\s/
+                  or $build_depends->satisfies('dh-sequence-phpcomposer');
 
                 $has_addon_php = 1
                   if $line
