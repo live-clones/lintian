@@ -55,7 +55,8 @@ sub source {
 
     if (defined($package_xml) || defined($package2_xml)) {
         # Checking source builddep
-        if (!$build_depends->satisfies('pkg-php-tools')) {
+        if (!$build_depends->satisfies('pkg-php-tools')
+            && !$build_depends->satisfies('dh-sequence-phppear')) {
             $self->hint('pear-package-without-pkg-php-tools-builddep');
 
         } else {
