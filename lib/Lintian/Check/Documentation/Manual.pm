@@ -67,7 +67,7 @@ sub spelling_tag_emitter {
 }
 
 my @user_locations= qw(bin/ usr/bin/ usr/bin/X11/ usr/bin/mh/ usr/games/);
-my @admin_locations= qw(sbin/ usr/sbin/);
+my @admin_locations= qw(sbin/ usr/sbin/ usr/libexec/);
 
 sub visit_installed_files {
     my ($self, $item) = @_;
