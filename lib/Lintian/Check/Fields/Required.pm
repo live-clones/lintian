@@ -25,6 +25,7 @@ use warnings;
 use utf8;
 
 use Const::Fast;
+use List::SomeUtils qw(all);
 use Path::Tiny;
 
 use Moo;
@@ -54,12 +55,18 @@ my @CHANGES = qw(Format Date Source Architecture Version Distribution
 sub source {
     my ($self) = @_;
 
-    #my $all_udeb = 1;
-    #$all_udeb = 0
-    #  if any {
-    #      $debian_control->installable_package_type($_) ne 'udeb'
-    #  }
-    #  $debian_control->installables;
+    my $debian_control = $self->processable->debian_control;
+
+    # policy 5.6.11
+    my $all_udeb = 0;
+    $all_udeb = 1
+      if all {$debian_control->installable_package_type($_) eq 'udeb'}
+      $debian_control->installables;
+    if ($all_udeb) {
+        @DEBIAN_CONTROL_SOURCE
+          = grep { $_ ne 'Standards-Version' } @DEBIAN_CONTROL_SOURCE;
+        @DSC = grep { $_ ne 'Standards-Version' } @DSC;
+    }
 
     my $fields = $self->processable->fields;
     my @missing_dsc = grep { !$fields->declares($_) } @DSC;
@@ -67,7 +74,6 @@ sub source {
     my $dscfile = path($self->processable->path)->basename;
     $self->hint('required-field', $dscfile, $_) for @missing_dsc;
 
-    my $debian_control = $self->processable->debian_control;
     my $control_item = $debian_control->item;
 
     # look at d/control source paragraph
