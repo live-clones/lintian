@@ -35,13 +35,22 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
+# Whitelist of XS-* source fields
+my %source_field_whitelist = (
+    'Autobuild'      => 1,
+    'Go-Import-Path' => 1,
+    'Ruby-Versions'  => 1,
+);
+
 sub source {
     my ($self) = @_;
 
     my $KNOWN_SOURCE_FIELDS= $self->data->load('common/source-fields');
     my @unknown= $self->processable->fields->extra($KNOWN_SOURCE_FIELDS->all);
 
-    $self->hint('unknown-field', $_)for @unknown;
+    # The grep filter is a workaround for #1014885 and #1029471
+    $self->hint('unknown-field', $_)
+      for grep { !exists($source_field_whitelist{$_}) } @unknown;
 
     return;
 }
