@@ -2,6 +2,7 @@ lintian (2.116.2~git) UNRELEASED; urgency=medium
 
   * Add private script to automate post release version bump.
   * Fix typo in previous debian/changelog entry. Thanks Lintian! ;-)
+  -------------------------------------------------------------------
   * WIP (generated at release time: please do not add entries below.)
 
  -- Axel Beckert <abe@debian.org>  Mon, 23 Jan 2023 12:46:07 +0100
