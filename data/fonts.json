@@ -9207,12 +9207,12 @@
             "fonts-monoid"
          ]
       },
-      "mononoki-bold.ttf" : {
+      "mononoki-bold-italic.ttf" : {
          "installed_by" : [
             "fonts-mononoki"
          ]
       },
-      "mononoki-bolditalic.ttf" : {
+      "mononoki-bold.ttf" : {
          "installed_by" : [
             "fonts-mononoki"
          ]
