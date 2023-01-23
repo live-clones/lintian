@@ -857,6 +857,7 @@ sub check_dep5_copyright {
             # -or-later suffix vs + suffix, -only suffix vs no
             # suffix. Still display the original variant in the tag.
             my $seen_normalized = $seen;
+            $seen_normalized = 'expat' if $seen_normalized eq 'mit';
             $seen_normalized =~ s/-or-later$/+/i;
             $seen_normalized =~ s/-only$//i;
             my $seen_nozero = $seen_normalized;
@@ -866,6 +867,7 @@ sub check_dep5_copyright {
             my @mismatched = grep {
                 my $want = $_;
                 my $want_normalized = $want;
+                $want_normalized = 'expat' if $want_normalized eq 'mit';
                 $want_normalized =~ s/-or-later$/+/i;
                 $want_normalized =~ s/-only$//i;
                 my $want_nozero = $want_normalized;
