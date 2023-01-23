@@ -1,8 +1,34 @@
-lintian (2.116.1~git) UNRELEASED; urgency=medium
+lintian (2.116.1) unstable; urgency=medium
 
-  * WIP (generated at release time: please do not add entries below).
+  The "No More Neglected Autopkgtest Architectures" Release.
 
- -- Axel Beckert <abe@debian.org>  Tue, 17 Jan 2023 08:03:32 +0100
+  [ Axel Beckert ]
+  * bitbucket.org no more supports Mercurial.
+  * [Testsuite] Fix armhf+i386-only test binaries-missing-lfs. Should fix
+    autopkgtest on these architectures.
+  * unknown-section description: Factorize explanations to avoid repitions
+    as suggested by Cyril Brulebois. (See also below.)
+  * Fix remaining i386 testsuite issues due to missing brackets.
+  * Don't emit inconsistent-appstream-metadata-license with "MIT !=
+    Expat". (Closes: #1029055)
+  * Update Lintian User's Manual for pointed hints in tags and overrides.
+    Thanks to Soren Stoutner. (Closes: #1029177)
+  * Whitelist Autobuild, Go-Import-Path, and Ruby-Versions from
+    unknown-field. (Closes: #1014885)
+  * Don't emit spare-manual-page for binaries in /usr/libexec/.
+    (Closes: #1027744)
+  * Refresh static data.
+  * data/java/constants: Default is now Java17, versions available up to Java21.
+
+  [ Cyril Brulebois ]
+  * Add non-free-firmware to known archive areas.
+
+  [ William Desportes ]
+  * Fix lintian package-contains-documentation-outside-usr-share-doc
+    matches python files and robots.txt. (Closes: #997987, #976636)
+  * Add more typo fixes.
+
+ -- Axel Beckert <abe@debian.org>  Mon, 23 Jan 2023 03:32:04 +0100
 
 lintian (2.116.0) unstable; urgency=medium
 
