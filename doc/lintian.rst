@@ -364,8 +364,13 @@ per line (and may contain empty lines and comments, starting with a
 for more info); <type> is one of ``binary``, ``udeb`` and ``source``,
 and <context> is all additional information provided by Lintian
 except for the tag. What's inside brackets is optional and may be
-omitted if you want to match it all. An example file for a binary
-package would look like:
+omitted if you want to match it all. Additionally, if the context of
+the tag contains paths to files in the package, they're enclosed with
+literal brackets (so called "pointed hints") so that tools which
+process lintian tags can link to the according file and potentially
+even line in the file.
+
+An example file for a binary package would look like:
 
 ::
 
@@ -374,7 +379,7 @@ package would look like:
    # We use a non-standard dir permission to only allow the webserver to look
    # into this directory:
    foo binary: non-standard-dir-perm
-   foo binary: FSSTND-dir-in-usr /usr/man/man1/foo.1.gz
+   foo binary: FSSTND-dir-in-usr [/usr/man/man1/foo.1.gz]
 
 An example file for a source package would look like:
 
@@ -384,7 +389,7 @@ An example file for a source package would look like:
    foo source: debian-files-list-in-source
    # Upstream distributes it like this, repacking would be overkill though, so
    # tell lintian to not complain:
-   foo source: configure-generated-file-in-source config.cache
+   foo source: configure-generated-file-in-source [config.cache]
 
 Many tags can occur more than once (e.g. if the same error is found in
 more than one file). You can override a tag either completely by
@@ -395,8 +400,8 @@ will match arbitrary strings similar to the shell wildcard. For example:
 
 ::
 
-   # The "help text" must also be covered by the override
-   source-is-missing apidoc/html/api_data.js *
+   # Multiple files need to be covered by the override
+   source-is-missing [apidoc/html/*.js]
 
 .. _section-2.4.2:
 
