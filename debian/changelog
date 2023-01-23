@@ -1,5 +1,6 @@
 lintian (2.116.2~git) UNRELEASED; urgency=medium
 
+  * Fix typo in previous debian/changelog entry. Thanks Lintian! ;-)
   * WIP (generated at release time: please do not add entries below.)
 
  -- Axel Beckert <abe@debian.org>  Mon, 23 Jan 2023 12:46:07 +0100
@@ -12,8 +13,8 @@ lintian (2.116.1) unstable; urgency=medium
   * bitbucket.org no more supports Mercurial.
   * [Testsuite] Fix armhf+i386-only test binaries-missing-lfs. Should fix
     autopkgtest on these architectures.
-  * unknown-section description: Factorize explanations to avoid repitions
-    as suggested by Cyril Brulebois. (See also below.)
+  * unknown-section description: Factorize explanations to avoid
+    repetitions as suggested by Cyril Brulebois. (See also below.)
   * Fix remaining i386 testsuite issues due to missing brackets.
   * Don't emit inconsistent-appstream-metadata-license with "MIT !=
     Expat". (Closes: #1029055)
