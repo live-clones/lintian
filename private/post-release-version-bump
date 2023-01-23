@@ -1,0 +1,15 @@
+#!/bin/sh
+
+# Post-release version bump script. Not really lintian-specific, but needed here.
+
+set -e
+
+if head -1 debian/changelog | grep -Fq 'UNRELEASED' ; then
+    echo 'Most recent debian/changelog entry already sports an "UNRELEASED", doing nothing.'
+    exit 1;
+fi
+
+dch --increment 'WIP (generated at release time: please do not add entries below.)'
+sed -e '1 s/)/~git)/' -i debian/changelog
+git add debian/changelog
+git commit -m "Post-release version bump" -m "Gbp-Dch: Ignore"
