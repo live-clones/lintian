@@ -80,7 +80,8 @@ has is_non_free => (
         $section ||= 'main';
 
         return 1
-          if $section =~ m{^(?:non-free|non-free-firmware|restricted|multiverse)/};
+          if $section
+          =~ m{^(?:non-free|non-free-firmware|restricted|multiverse)/};
 
         return 0;
     }
