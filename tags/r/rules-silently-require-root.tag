@@ -10,7 +10,7 @@ Explanation: These sources require  <code>fakeroot(1)</code> or similar to build
  At least the shown path in the indicated installation package is owned by user
  (or a group) other than <code>root:root</code>.
  .
- Over time, Debian has sucessively narrowed the steps for which elevated privileges
+ Over time, Debian has successively narrowed the steps for which elevated privileges
  are required. It speeds up the building of installation packages in the archive.
  .
  Please declare whether the sources require root privileges. Eventually, Debian will

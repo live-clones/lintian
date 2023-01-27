@@ -6,7 +6,7 @@ Explanation: The given icon file was not found.
  If the path to the icon that is listed in the menu file is absolute,
  make sure that your package also installs the icon at that path.
  .
- If the path is just a filename or othewise a relative path, make sure
+ If the path is just a filename or otherwise a relative path, make sure
  the icon is being installed in <code>/usr/share/pixmaps</code>, which
  is the default location.
  .

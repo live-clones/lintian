@@ -6,7 +6,7 @@ Renamed-From:
 Explanation: The field <code>Rules-Requires-Root</code> is missing from the file
  <code>debian/control</code>.
  .
- Over time, Debian has sucessively narrowed the steps for which elevated privileges
+ Over time, Debian has successively narrowed the steps for which elevated privileges
  are required. It speeds up the building of installation packages in the archive.
  Eventually, Debian will switch the default archive-wide behaviour to expedite the
  build process further.

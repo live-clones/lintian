@@ -2,7 +2,7 @@ Tag: spelling-error-in-rules-requires-root
 Severity: warning
 Check: debian/control/field/rules-requires-root
 Explanation: The sources attempt to declare a <code>Rules-Requires-Root</code> field
- but the field name is mispelled.
+ but the field name is misspelled.
  .
  This tag was necessary because Debian uses a non-standard grammar. The field should
  be named <code>Rules-Require-Root</code> (with the verb in the singular).

@@ -9,7 +9,7 @@ Explanation: The contact's mail address either loops back to itself or is known
  .
  Loops happen because an address is <code>package@packages.debian.org</code>
  or to <code>package@packages.qa.debian.org</code>. Bounces happen when the
- receipient, typically a mailing list, is known to bounce mails.
+ recipient, typically a mailing list, is known to bounce mails.
  .
  The mail address must accept messages from role accounts used to send
  automated mails regarding the package, including those from the bug

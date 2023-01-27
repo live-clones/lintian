@@ -1,7 +1,7 @@
 Tag: su-wrapper-not-su-to-root
 Severity: warning
 Check: menu-format
-Explanation: The commend in a <code>menu</code> item or in a Desktop file uses
+Explanation: The command in a <code>menu</code> item or in a Desktop file uses
  a <code>su</code> wrapper other than <code>su-to-root</code>.
  .
  On Debian systems, please use <code>su-to-root -X</code>. That will pick the
