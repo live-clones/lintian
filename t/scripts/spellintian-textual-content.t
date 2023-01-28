@@ -33,6 +33,7 @@ use Test::More tests => 4;
 
 const my $NEWLINE => qq{\n};
 const my $DOT => q{.};
+const my $EMPTY => q{};
 const my $WAIT_STATUS_SHIFT => 8;
 
 $ENV{'LINTIAN_BASE'} //= $DOT;
@@ -42,10 +43,10 @@ my @list_of_tag_files = glob('tags/*/*.tag');
 my @list_of_doc_files = (
     glob('doc/tutorial/Lintian/Tutorial/*.pod doc/examples/tags/m/*.desc'),
     qw(
-        doc/README.developers.pod
-        doc/lintian.rst
-        doc/releases.md
-        doc/tutorial/Lintian/Tutorial.pod
+      doc/README.developers.pod
+      doc/lintian.rst
+      doc/releases.md
+      doc/tutorial/Lintian/Tutorial.pod
     )
 );
 
@@ -57,7 +58,7 @@ sub t {
 
     my $status = ($? >> $WAIT_STATUS_SHIFT);
     is($status, 0, "Exit status is 0 when checking $filetype");
-    is($output, '', "No spelling errors in $filetype");
+    is($output, $EMPTY, "No spelling errors in $filetype");
 
     return;
 }
