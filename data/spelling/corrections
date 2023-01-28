@@ -16,6 +16,12 @@
 # should be included in the appropriate data file, rather than here.
 #
 # Please keep the list sorted using `make sort` in this directory.
+#
+# (And in case you wonder about these entries at the end of the file
+# seemingly starting with a "c" and still being listed at the end of
+# the file after "make sort", please note that they start with a
+# cyrillic "с", not with a latin "c". They look the same at least in
+# most fonts, though.)
 
 aaccessibility||accessibility
 aaccession||accession
