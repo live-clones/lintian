@@ -21,7 +21,8 @@
 
 # TODO: lintian should probably find these issues itself when running
 # against itself , i.e. without having a specific check in the test
-# suite for this.
+# suite for this. That way we especially also could use Lintian
+# overrides to declare false positives.
 
 use strict;
 use warnings;
