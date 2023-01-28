@@ -9,7 +9,7 @@ Explanation: The specified autopkgtest control file is considered obsolete.
  by autodep8 they provided those tests in a file named
  <code>debian/tests/control.autodep8</code>.
  .
- It is now prefered to declare the additional tests in the regular
+ It is now preferred to declare the additional tests in the regular
  <code>debian/tests/control</code> file so that <code>dpkg-source</code> can
  pick up the test dependencies.
  .

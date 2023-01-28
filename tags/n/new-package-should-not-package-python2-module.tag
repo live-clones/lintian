@@ -19,6 +19,6 @@ Explanation: This package appears to be the initial packaging of a new upstream
  if it is a split of an existing Debian package. This warning can also be
  ignored if viewed on https://lintian.debian.org/.
  .
- Please do not override this warning. Instaed, add a justification to your
+ Please do not override this warning. Instead, add a justification to your
  changelog entry. Lintian will detect your comment in the changelog. It ensures
  that your rationale is preserved for posterity.

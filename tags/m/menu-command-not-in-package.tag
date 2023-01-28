@@ -5,4 +5,4 @@ Explanation: The <code>menu</code> item specifies a command that is not shipped
  in the package.
  .
  The condition can be caused by a typo. Sometimes, an executable was moved
- without updating tha <code>menu</code> file.
+ without updating the <code>menu</code> file.
