@@ -5,7 +5,7 @@ Explanation: The version number contains the string <code>dfsg</code> but
  the sources are native.
  .
  The string <code>dfsg</code> is used in Debian versions to indicate that
- that the sources were repackaged in order to comply with the Debian Free
+ the sources were repackaged in order to comply with the Debian Free
  Software Guidelines, but all native packages should comply with the
  guidelines.
 See-Also:

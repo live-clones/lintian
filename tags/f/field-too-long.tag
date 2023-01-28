@@ -3,7 +3,7 @@ Severity: error
 Check: fields/length
 Explanation: The length of the specified field is too long.
  .
- Overly-long fields not only can break some tools tools (eg.
+ Overly-long fields not only can break some tools (e.g.
  <code>reprepro(1)</code>) they can waste space as they are shipped to all
  users.
  .

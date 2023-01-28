@@ -80,7 +80,7 @@ the lintian release.
 Step 2
 ------
 
-Login to the lintian-host and ensure that lintian is not currectly
+Login to the lintian-host and ensure that lintian is not currently
 performing an archive-wide run and that you have "plenty" of time to
 complete the upgrade.  The entire upgrade can be done in less than 5
 minutes (but you may want to have a "slightly" larger window the first

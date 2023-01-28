@@ -8,4 +8,4 @@ Explanation: This symlink in a patched source tree points to an absolute target.
  file references.
  .
  Please remove the symbolic link from the source package or point it to a
- a location inside the patched source tree.
+ location inside the patched source tree.

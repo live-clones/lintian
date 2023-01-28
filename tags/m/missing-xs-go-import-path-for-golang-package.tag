@@ -5,7 +5,7 @@ Explanation: This Golang source does not declare a <code>XS-Go-Import-Path</code
  field in the <code>debian/control</code> file..
  .
  Many tools like <code>dh-make-golang(1)</code> use the field to resolve
- resolve prerequisites correctly. It is also used in the Golang team's CI.
+ prerequisites correctly. It is also used in the Golang team's CI.
  .
  When using <code>dh-golang</code>, the field's value should be the same as
  <code>DH&lowbar;GOPKG</code> in <code>debian/rules</code>. The

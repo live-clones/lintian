@@ -8,7 +8,7 @@ Explanation: The rules file use the make variable $(&lowbar;).
  According to Policy 4.9, 'invoking either of <code>make -f debian/rules
  &lt;...&gt;</code> or <code>./debian/rules
  &lt;args...&gt;</code>' must result in identical behavior'.
- The <code>$&lowbar;</code> variable is an easy way to to violate that rule
+ The <code>$&lowbar;</code> variable is an easy way to violate that rule
  unwittingly.
  .
  If the <code>rules</code> file uses <code>$(dir $(&lowbar;))</code> to
