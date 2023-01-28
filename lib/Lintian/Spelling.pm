@@ -4,6 +4,7 @@
 # Copyright (C) 2009 Russ Allbery
 # Copyright (C) 2004 Marc Brockschmidt
 # Copyright (C) 1998 Richard Braakman
+# Copyright (C) 2023 Axel Beckert
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -153,7 +154,8 @@ sub check_spelling {
               if not $quoted
               and not $duplicates{$word}++
               and not $ends_with_punct
-              and $text_orig !~ /\b$word\s*\($word\b/;
+              and $text_orig !~ /\b$word\s*\($word\b/
+              and $text_orig !~ /\b$word\)\s*$word\b/;
         }
 
         if ($word =~ m/^[A-Za-z]+$/ and not $ends_with_punct) {
