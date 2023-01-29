@@ -650,12 +650,14 @@ sub source {
     $self->pointed_hint(
         'debian-rules-uses-unnecessary-dh-argument',
         $drules->pointer($seen_dh_parallel),
+        "$debhelper_level >= $DH_PARALLEL_NOT_NEEDED",
         'dh ... --parallel'
     )if $seen_dh_parallel && $debhelper_level >= $DH_PARALLEL_NOT_NEEDED;
 
     $self->pointed_hint(
         'debian-rules-uses-unnecessary-dh-argument',
         $drules->pointer($seen_dh_systemd),
+        "$debhelper_level >= $INVOKES_SYSTEMD",
         'dh ... --with=systemd'
     )if $seen_dh_systemd && $debhelper_level >= $INVOKES_SYSTEMD;
 
