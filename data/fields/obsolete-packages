@@ -137,7 +137,6 @@ libtinfo-dev => libncurses-dev
 
 # Deprecated in bullseye
 bsdmainutils => bsdextrautils and/or ncal
-libegl1-mesa-dev => libegl-dev
 libfontconfig1-dev => libfontconfig-dev
 libfreetype6-dev => libfreetype-dev
 libgdk-pixbuf2.0-0 => libgdk-pixbuf-2.0-0 and optionally libgdk-pixbuf-xlib-2.0-0
