@@ -58,11 +58,8 @@ sub source {
     my $debian_control = $self->processable->debian_control;
 
     # policy 5.6.11
-    my $all_udeb = 0;
-    $all_udeb = 1
-      if all {$debian_control->installable_package_type($_) eq 'udeb'}
-      $debian_control->installables;
-    if ($all_udeb) {
+    if (all { $debian_control->installable_package_type($_) eq 'udeb' }
+        $debian_control->installables) {
         @DEBIAN_CONTROL_SOURCE
           = grep { $_ ne 'Standards-Version' } @DEBIAN_CONTROL_SOURCE;
         @DSC = grep { $_ ne 'Standards-Version' } @DSC;
