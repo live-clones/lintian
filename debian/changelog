@@ -1,11 +1,61 @@
-lintian (2.116.2~git) UNRELEASED; urgency=medium
+lintian (2.116.2) unstable; urgency=medium
 
+  The "FFP2 (Fixing False Positives, too)" Release.
+
+  [ Axel Beckert ]
   * Add private script to automate post release version bump.
   * Fix typo in previous debian/changelog entry. Thanks Lintian! ;-)
-  -------------------------------------------------------------------
-  * WIP (generated at release time: please do not add entries below.)
+  * Mention that #1024039 got closed by 2.116.1 in its changelog entry.
+  * [Testsuite] Check tag files and docs with spellintian. Thanks to
+    Sylvestre Ledru for noticing the typos this check now finds.
+  * Fix duplicate words and one more typo found by
+    spellintian-textual-content.t.
+  * "currectly" can be a misspelling of "correctly" or "currently"
+  * Fix spellintian false positives found by spellintian-textual-content.t:
+    + "these package" followed by a plural, e.g. "these package sections",
+    + Double word with closing parenthesis inbetween. (So far only opening
+      parentheses were whitelisted.)
+  * Add testsuite check for missing-pkg-php-tools-addon false positive
+    with dh-sequence-phpcomposer. (See MR !438.)
+  * Add testsuite check for a vcs-field-has-unexpected-spaces false
+    positive. (See #1023155 and MR !422.)
+  * debian-rules-uses-unnecessary-dh-argument: Also report found and
+    minimum dh compat level. Additionally also rephrase tag description to
+    no more say "this debhelper compatibility level". Thanks to Anthony
+    Fok for making us aware of the issue in MR !451.
 
- -- Axel Beckert <abe@debian.org>  Mon, 23 Jan 2023 12:46:07 +0100
+  [ Cyril Brulebois ]
+  * Teach the is_non_free attribute about the non-free-firmware section.
+  * Stop checking for Standards-Version for installer-only (i.e. udeb)
+    packages. (Closes: #991533)
+
+  [ Andreas Beckmann ]
+  * backports-upload-has-incorrect-version-number: Fix salsaci version
+    regexp again.  (Closes: #1024361)
+
+  [ Sylvestre Ledru ]
+  * Fix some typos in the doc.
+
+  [ William Desportes ]
+  * missing-pkg-php-tools-addon: Allow dh-sequence-phpcomposer as
+    alternative to pkg-php-tools-addon.
+  * Lintian::Check::Files::SourceMissing: Ignore files in
+    debian/missing-sources/. Fixes false positives in source-is-missing,
+    source-contains-prebuilt-javascript-object and friends.
+
+  [ Tino Didriksen ]
+  * vcs-field-has-unexpected-spaces: Allow any order of git branch and
+    path. (Closes: #1023155) Thanks to Bradford D. Boyle for the bug
+    report.
+
+  [ Johannes Schauer Marin Rodrigues ]
+  * Multiarch terminology: Use "qualifier" instead of "acceptor": Update
+    tag descriptions of rules-require-build-prerequisite and
+    missing-build-depends-for-clean-target-in-debian-rules. Also rename
+    method multiarch_acceptor() to multiarch_qualifier() in
+    Lintian::Relation::Predicate.
+
+ -- Axel Beckert <abe@debian.org>  Sun, 29 Jan 2023 09:32:16 +0100
 
 lintian (2.116.1) unstable; urgency=medium
 
@@ -27,7 +77,8 @@ lintian (2.116.1) unstable; urgency=medium
   * Don't emit spare-manual-page for binaries in /usr/libexec/.
     (Closes: #1027744)
   * Refresh static data.
-  * data/java/constants: Default is now Java17, versions available up to Java21.
+  * data/java/constants: Default is now Java17, versions available up to
+    Java21. (Closes: #1024039)
 
   [ Cyril Brulebois ]
   * Add non-free-firmware to known archive areas.
