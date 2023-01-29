@@ -194,6 +194,12 @@
             "dh-cmake"
          ]
       },
+      "dh_cruft" : {
+         "installed_by" : [
+            "dh-cruft"
+         ],
+         "uses_autoscript" : 1
+      },
       "dh_ctest_build" : {
          "installed_by" : [
             "dh-cmake"

@@ -95,6 +95,11 @@
             "dh-cmake"
          ]
       },
+      "cruft" : {
+         "installed_by" : [
+            "dh-cruft"
+         ]
+      },
       "ctest" : {
          "installed_by" : [
             "dh-cmake"

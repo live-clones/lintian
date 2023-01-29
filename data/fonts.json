@@ -7359,7 +7359,37 @@
             "fonts-aenigma"
          ]
       },
-      "lateefgr-regular.ttf" : {
+      "lateef-bold.ttf" : {
+         "installed_by" : [
+            "fonts-sil-lateef"
+         ]
+      },
+      "lateef-extrabold.ttf" : {
+         "installed_by" : [
+            "fonts-sil-lateef"
+         ]
+      },
+      "lateef-extralight.ttf" : {
+         "installed_by" : [
+            "fonts-sil-lateef"
+         ]
+      },
+      "lateef-light.ttf" : {
+         "installed_by" : [
+            "fonts-sil-lateef"
+         ]
+      },
+      "lateef-medium.ttf" : {
+         "installed_by" : [
+            "fonts-sil-lateef"
+         ]
+      },
+      "lateef-regular.ttf" : {
+         "installed_by" : [
+            "fonts-sil-lateef"
+         ]
+      },
+      "lateef-semibold.ttf" : {
          "installed_by" : [
             "fonts-sil-lateef"
          ]
