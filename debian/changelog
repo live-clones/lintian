@@ -1,3 +1,9 @@
+lintian (2.116.3~git) UNRELEASED; urgency=medium
+
+  * WIP (generated at release time: please do not add entries below.)
+
+ -- Axel Beckert <abe@debian.org>  Sun, 29 Jan 2023 16:34:44 +0100
+
 lintian (2.116.2) unstable; urgency=medium
 
   The "FFP2 (Fixing False Positives, too)" Release.
