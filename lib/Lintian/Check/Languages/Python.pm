@@ -222,7 +222,8 @@ sub source {
             'flit_core.buildapi' => 'flit:any',
             'setuptools.build_meta' => 'python3-setuptools:any',
             'pdm.pep517.api' => 'python3-pdm-pep517:any',
-            'hatchling.build' => 'python3-hatchling:any'
+            'hatchling.build' => 'python3-hatchling:any',
+            'mesonpy' => 'python3-mesonpy:any'
         );
 
         open(my $fd, '<', $pyproject->unpacked_path)
@@ -233,7 +234,10 @@ sub source {
 
             my $pointer = $pyproject->pointer($position);
 
-            if ($line =~ m{^ \s* build-backend \s* = \s* "([^"]+)" }x) {
+           # In theory, TOML only uses double quotes. In practice, that's not
+           # true and only matching for double quotes introduce false negatives
+            if ($line =~ m{^ \s* build-backend \s* = \s* "([^"]+)" }x
+                ||  $line =~ m{^ \s* build-backend \s* = \s* '([^"]+)' }x) {
 
                 my $backend = $1;
 
