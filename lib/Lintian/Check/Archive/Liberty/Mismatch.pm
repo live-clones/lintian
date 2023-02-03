@@ -88,6 +88,10 @@ sub source {
         next
           if $source_liberty eq 'main' && $installable_liberty eq 'contrib';
 
+        # and non-free-firmware built from non-free
+        next
+          if $source_liberty eq 'non-free'
+          && $installable_liberty eq 'non-free-firmware';
         my $control_item= $self->processable->debian_control->item;
         my $position = $installable_fields->position('Section');
         my $pointer = $control_item->pointer($position);
