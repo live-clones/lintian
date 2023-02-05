@@ -1,8 +1,19 @@
-lintian (2.116.3~git) UNRELEASED; urgency=medium
+lintian (2.116.3) unstable; urgency=medium
 
-  * WIP (generated at release time: please do not add entries below.)
+  The "FFP3 (Fixing False Positives, Three Small Changes)" Release.
 
- -- Axel Beckert <abe@debian.org>  Sun, 29 Jan 2023 16:34:44 +0100
+  [ Axel Beckert ]
+  * Refresh data. (Loong64 removed from two lists, some fonts and dh_cruft
+    added.)
+
+  [ Simon McVittie ]
+  * obsolete-packages: libegl1-mesa-dev is not obsolete.
+
+  [ Andreas Beckmann ]
+  * archive-liberty-mismatch: Add exception for 'non-free-firmware binary
+    package build from non-free source package'. (Closes: #1030325)
+
+ -- Axel Beckert <abe@debian.org>  Sun, 05 Feb 2023 09:10:20 +0100
 
 lintian (2.116.2) unstable; urgency=medium
 
