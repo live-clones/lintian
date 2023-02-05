@@ -622,11 +622,15 @@ sub installable {
           && any { $_ == $USER_COMMAND_SECTION } @sections;
     }
 
-    $self->pointed_hint('no-english-manual-page', $_->pointer)
-      for map {$local_executables{$_}} @english_missing;
+    for (map {$local_executables{$_}} @english_missing) {
+        $self->pointed_hint('no-english-manual-page', $_->pointer)
+          unless $_->name =~ m{/libexec/};
+    }
 
-    $self->pointed_hint('no-manual-page', $_->pointer)
-      for map {$local_executables{$_}} @manpage_missing;
+    for (map {$local_executables{$_}} @manpage_missing) {
+        $self->pointed_hint('no-manual-page', $_->pointer)
+          unless $_->name =~ m{/libexec/};
+    }
 
     # surplus manpages only for this package; provides sorted output
     my $local = List::Compare->new(\@related_commands, [keys %local_manpages]);
