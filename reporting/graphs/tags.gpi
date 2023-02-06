@@ -27,7 +27,6 @@ load "common.gpi"
 set xrange [ date_min : date_max ]
 set yrange [ 0 : ]
 
-
 set output sprintf("%s/tags/%s.svg", graph_dir, tag)
 plot sprintf("%s/tags/%s.dat", history_dir, tag) \
     u 1:2 w filledcurve x1 ls 20 t sprintf("Tag %s emitted", tag), \
