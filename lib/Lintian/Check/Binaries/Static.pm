@@ -38,16 +38,34 @@ has built_with_golang => (
     default => sub {
         my ($self) = @_;
 
-        my $built_with_golang = $self->processable->name =~ m/^golang-/;
+        # Check source package name starts with "golang-"
+        if ($self->processable->source_name =~ m/^golang-/) {
+          return 1;
+        }
 
-        my $source = $self->group->source;
+        # Check package section is golang
+        if ($self->processable->fields->value('Section') eq 'golang') {
+          return 1;
+        }
 
-        $built_with_golang
-          = $source->relation('Build-Depends-All')
-          ->satisfies('golang-go | golang-any')
-          if defined $source;
+        # Check binary package was built using golang
+        if ($self->processable->fields->value('Built-Using') =~ m/golang-\d\.\d+/ ||
+            $self->processable->fields->value('Static-Built-Using') =~ m/golang-\d\.\d+/) {
+          return 1;
+        }
 
-        return $built_with_golang;
+        # Check binary package name starts with "golang-"
+        if ($self->processable->name =~ m/^golang-/) {
+          return 1;
+        }
+
+        # Check source package build-depends contains a golang compiler
+        if (defined($self->group->source)) {
+          return $self->group->source->relation('Build-Depends-All')
+            ->satisfies('golang-go | golang-any');
+        }
+
+        return 0;
     }
 );
 
