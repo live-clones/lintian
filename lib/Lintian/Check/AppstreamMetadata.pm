@@ -1,6 +1,6 @@
 # appstream-metadata -- lintian check script -*- perl -*-
 
-# Copyright (C) 2016 Petter Reinholdtsen
+# Copyright (C) 2016,2023 Petter Reinholdtsen
 # Copyright (C) 2017-2018 Chris Lamb <lamby@debian.org>
 #
 # This program is free software; you can redistribute it and/or modify
@@ -29,6 +29,9 @@ package Lintian::Check::AppstreamMetadata;
 #
 # For modaliases, maybe udev rules could give some hints.
 # Check modalias values to ensure hex numbers are using capital A-F.
+#
+# For metadata XML files, validate the content using "appstreamcli
+# validate".
 
 use v5.20;
 use warnings;
@@ -39,6 +42,7 @@ use File::Basename qw(basename);
 use Syntax::Keyword::Try;
 use XML::LibXML;
 
+use Capture::Tiny qw(capture_merged);
 use Moo;
 use namespace::clean;
 
@@ -76,6 +80,13 @@ sub installable {
             if ($item->is_file) {
                 $metainfo{$item} = 1;
                 $found_modalias|= $self->check_modalias($item, $modaliases);
+                my ($output, $status) = capture_merged {
+                    system('appstreamcli', 'validate',
+                        '--no-net',$item->unpacked_path);
+                };
+                if ($status) {
+                    $self->hint('appstream-metadata-validation-failed',$item);
+                }
             }
         }
     }
