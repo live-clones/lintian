@@ -12,4 +12,5 @@ override_dh_install:
 	dh_install
 	install -m 0644 debian/appstream-metadata.metadata.xml $(APPSYNC_DIR)
 	install -m 0644 debian/appstream-metadata-invalid.metadata.xml $(APPSYNC_DIR)
+	install -m 0644 debian/appstream-metadata-validation-failed.metadata.xml $(APPSYNC_DIR)
 	install -m 0644 debian/appstream-metadata-obsolete.metadata.xml $(OBSOLETE_APPSYNC_DIR)
