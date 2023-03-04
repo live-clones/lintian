@@ -72,6 +72,14 @@
          "format",
          "fortify"
       ],
+      "aix-loong64" : [
+         "bindnow",
+         "format",
+         "fortify",
+         "relro",
+         "stackprotector",
+         "stackprotectorstrong"
+      ],
       "aix-m32r" : [
          "bindnow",
          "format",
@@ -429,6 +437,14 @@
          "format",
          "fortify"
       ],
+      "darwin-loong64" : [
+         "bindnow",
+         "format",
+         "fortify",
+         "relro",
+         "stackprotector",
+         "stackprotectorstrong"
+      ],
       "darwin-m32r" : [
          "bindnow",
          "format",
@@ -703,6 +719,14 @@
          "format",
          "fortify"
       ],
+      "dragonflybsd-loong64" : [
+         "bindnow",
+         "format",
+         "fortify",
+         "relro",
+         "stackprotector",
+         "stackprotectorstrong"
+      ],
       "dragonflybsd-m32r" : [
          "bindnow",
          "format",
@@ -976,6 +1000,14 @@
       "freebsd-ia64" : [
          "format",
          "fortify"
+      ],
+      "freebsd-loong64" : [
+         "bindnow",
+         "format",
+         "fortify",
+         "relro",
+         "stackprotector",
+         "stackprotectorstrong"
       ],
       "freebsd-m32r" : [
          "bindnow",
@@ -1262,6 +1294,15 @@
          "format",
          "fortify",
          "pie"
+      ],
+      "hurd-loong64" : [
+         "bindnow",
+         "format",
+         "fortify",
+         "pie",
+         "relro",
+         "stackprotector",
+         "stackprotectorstrong"
       ],
       "hurd-m32r" : [
          "bindnow",
@@ -1594,6 +1635,15 @@
          "fortify",
          "pie"
       ],
+      "kfreebsd-loong64" : [
+         "bindnow",
+         "format",
+         "fortify",
+         "pie",
+         "relro",
+         "stackprotector",
+         "stackprotectorstrong"
+      ],
       "kfreebsd-m32r" : [
          "bindnow",
          "format",
@@ -1902,6 +1952,15 @@
          "fortify",
          "pie"
       ],
+      "knetbsd-loong64" : [
+         "bindnow",
+         "format",
+         "fortify",
+         "pie",
+         "relro",
+         "stackprotector",
+         "stackprotectorstrong"
+      ],
       "knetbsd-m32r" : [
          "bindnow",
          "format",
@@ -2202,6 +2261,14 @@
          "format",
          "fortify"
       ],
+      "kopensolaris-loong64" : [
+         "bindnow",
+         "format",
+         "fortify",
+         "relro",
+         "stackprotector",
+         "stackprotectorstrong"
+      ],
       "kopensolaris-m32r" : [
          "bindnow",
          "format",
@@ -2404,6 +2471,15 @@
          "bindnow",
          "format",
          "fortify",
+         "relro",
+         "stackprotector",
+         "stackprotectorstrong"
+      ],
+      "loong64" : [
+         "bindnow",
+         "format",
+         "fortify",
+         "pie",
          "relro",
          "stackprotector",
          "stackprotectorstrong"
@@ -2626,6 +2702,15 @@
          "format",
          "fortify",
          "pie"
+      ],
+      "musl-linux-loong64" : [
+         "bindnow",
+         "format",
+         "fortify",
+         "pie",
+         "relro",
+         "stackprotector",
+         "stackprotectorstrong"
       ],
       "musl-linux-m32r" : [
          "bindnow",
@@ -2927,6 +3012,14 @@
          "format",
          "fortify"
       ],
+      "netbsd-loong64" : [
+         "bindnow",
+         "format",
+         "fortify",
+         "relro",
+         "stackprotector",
+         "stackprotectorstrong"
+      ],
       "netbsd-m32r" : [
          "bindnow",
          "format",
@@ -3207,6 +3300,14 @@
       "openbsd-ia64" : [
          "format",
          "fortify"
+      ],
+      "openbsd-loong64" : [
+         "bindnow",
+         "format",
+         "fortify",
+         "relro",
+         "stackprotector",
+         "stackprotectorstrong"
       ],
       "openbsd-m32r" : [
          "bindnow",
@@ -3599,6 +3700,14 @@
          "format",
          "fortify"
       ],
+      "solaris-loong64" : [
+         "bindnow",
+         "format",
+         "fortify",
+         "relro",
+         "stackprotector",
+         "stackprotectorstrong"
+      ],
       "solaris-m32r" : [
          "bindnow",
          "format",
@@ -3917,6 +4026,15 @@
          "fortify",
          "pie"
       ],
+      "uclibc-linux-loong64" : [
+         "bindnow",
+         "format",
+         "fortify",
+         "pie",
+         "relro",
+         "stackprotector",
+         "stackprotectorstrong"
+      ],
       "uclibc-linux-m32r" : [
          "bindnow",
          "format",
@@ -4224,6 +4342,14 @@
       "uclinux-ia64" : [
          "format",
          "fortify"
+      ],
+      "uclinux-loong64" : [
+         "bindnow",
+         "format",
+         "fortify",
+         "relro",
+         "stackprotector",
+         "stackprotectorstrong"
       ],
       "uclinux-m32r" : [
          "bindnow",

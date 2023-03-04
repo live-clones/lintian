@@ -130,6 +130,19 @@
          "DEB_HOST_GNU_TYPE" : "ia64-aix",
          "DEB_HOST_MULTIARCH" : "ia64-aix"
       },
+      "aix-loong64" : {
+         "DEB_HOST_ARCH" : "aix-loong64",
+         "DEB_HOST_ARCH_ABI" : "base",
+         "DEB_HOST_ARCH_BITS" : "64",
+         "DEB_HOST_ARCH_CPU" : "loong64",
+         "DEB_HOST_ARCH_ENDIAN" : "little",
+         "DEB_HOST_ARCH_LIBC" : "sysv",
+         "DEB_HOST_ARCH_OS" : "aix",
+         "DEB_HOST_GNU_CPU" : "loongarch64",
+         "DEB_HOST_GNU_SYSTEM" : "aix",
+         "DEB_HOST_GNU_TYPE" : "loongarch64-aix",
+         "DEB_HOST_MULTIARCH" : "loongarch64-aix"
+      },
       "aix-m32r" : {
          "DEB_HOST_ARCH" : "aix-m32r",
          "DEB_HOST_ARCH_ABI" : "base",
@@ -728,6 +741,19 @@
          "DEB_HOST_GNU_TYPE" : "ia64-darwin",
          "DEB_HOST_MULTIARCH" : "ia64-darwin"
       },
+      "darwin-loong64" : {
+         "DEB_HOST_ARCH" : "darwin-loong64",
+         "DEB_HOST_ARCH_ABI" : "base",
+         "DEB_HOST_ARCH_BITS" : "64",
+         "DEB_HOST_ARCH_CPU" : "loong64",
+         "DEB_HOST_ARCH_ENDIAN" : "little",
+         "DEB_HOST_ARCH_LIBC" : "bsd",
+         "DEB_HOST_ARCH_OS" : "darwin",
+         "DEB_HOST_GNU_CPU" : "loongarch64",
+         "DEB_HOST_GNU_SYSTEM" : "darwin",
+         "DEB_HOST_GNU_TYPE" : "loongarch64-darwin",
+         "DEB_HOST_MULTIARCH" : "loongarch64-darwin"
+      },
       "darwin-m32r" : {
          "DEB_HOST_ARCH" : "darwin-m32r",
          "DEB_HOST_ARCH_ABI" : "base",
@@ -1196,6 +1222,19 @@
          "DEB_HOST_GNU_TYPE" : "ia64-dragonflybsd",
          "DEB_HOST_MULTIARCH" : "ia64-dragonflybsd"
       },
+      "dragonflybsd-loong64" : {
+         "DEB_HOST_ARCH" : "dragonflybsd-loong64",
+         "DEB_HOST_ARCH_ABI" : "base",
+         "DEB_HOST_ARCH_BITS" : "64",
+         "DEB_HOST_ARCH_CPU" : "loong64",
+         "DEB_HOST_ARCH_ENDIAN" : "little",
+         "DEB_HOST_ARCH_LIBC" : "bsd",
+         "DEB_HOST_ARCH_OS" : "dragonflybsd",
+         "DEB_HOST_GNU_CPU" : "loongarch64",
+         "DEB_HOST_GNU_SYSTEM" : "dragonflybsd",
+         "DEB_HOST_GNU_TYPE" : "loongarch64-dragonflybsd",
+         "DEB_HOST_MULTIARCH" : "loongarch64-dragonflybsd"
+      },
       "dragonflybsd-m32r" : {
          "DEB_HOST_ARCH" : "dragonflybsd-m32r",
          "DEB_HOST_ARCH_ABI" : "base",
@@ -1663,6 +1702,19 @@
          "DEB_HOST_GNU_SYSTEM" : "freebsd",
          "DEB_HOST_GNU_TYPE" : "ia64-freebsd",
          "DEB_HOST_MULTIARCH" : "ia64-freebsd"
+      },
+      "freebsd-loong64" : {
+         "DEB_HOST_ARCH" : "freebsd-loong64",
+         "DEB_HOST_ARCH_ABI" : "base",
+         "DEB_HOST_ARCH_BITS" : "64",
+         "DEB_HOST_ARCH_CPU" : "loong64",
+         "DEB_HOST_ARCH_ENDIAN" : "little",
+         "DEB_HOST_ARCH_LIBC" : "bsd",
+         "DEB_HOST_ARCH_OS" : "freebsd",
+         "DEB_HOST_GNU_CPU" : "loongarch64",
+         "DEB_HOST_GNU_SYSTEM" : "freebsd",
+         "DEB_HOST_GNU_TYPE" : "loongarch64-freebsd",
+         "DEB_HOST_MULTIARCH" : "loongarch64-freebsd"
       },
       "freebsd-m32r" : {
          "DEB_HOST_ARCH" : "freebsd-m32r",
@@ -2144,6 +2196,19 @@
          "DEB_HOST_GNU_SYSTEM" : "gnu",
          "DEB_HOST_GNU_TYPE" : "ia64-gnu",
          "DEB_HOST_MULTIARCH" : "ia64-gnu"
+      },
+      "hurd-loong64" : {
+         "DEB_HOST_ARCH" : "hurd-loong64",
+         "DEB_HOST_ARCH_ABI" : "base",
+         "DEB_HOST_ARCH_BITS" : "64",
+         "DEB_HOST_ARCH_CPU" : "loong64",
+         "DEB_HOST_ARCH_ENDIAN" : "little",
+         "DEB_HOST_ARCH_LIBC" : "gnu",
+         "DEB_HOST_ARCH_OS" : "hurd",
+         "DEB_HOST_GNU_CPU" : "loongarch64",
+         "DEB_HOST_GNU_SYSTEM" : "gnu",
+         "DEB_HOST_GNU_TYPE" : "loongarch64-gnu",
+         "DEB_HOST_MULTIARCH" : "loongarch64-gnu"
       },
       "hurd-m32r" : {
          "DEB_HOST_ARCH" : "hurd-m32r",
@@ -2652,6 +2717,19 @@
          "DEB_HOST_GNU_TYPE" : "ia64-kfreebsd-gnu",
          "DEB_HOST_MULTIARCH" : "ia64-kfreebsd-gnu"
       },
+      "kfreebsd-loong64" : {
+         "DEB_HOST_ARCH" : "kfreebsd-loong64",
+         "DEB_HOST_ARCH_ABI" : "base",
+         "DEB_HOST_ARCH_BITS" : "64",
+         "DEB_HOST_ARCH_CPU" : "loong64",
+         "DEB_HOST_ARCH_ENDIAN" : "little",
+         "DEB_HOST_ARCH_LIBC" : "gnu",
+         "DEB_HOST_ARCH_OS" : "kfreebsd",
+         "DEB_HOST_GNU_CPU" : "loongarch64",
+         "DEB_HOST_GNU_SYSTEM" : "kfreebsd-gnu",
+         "DEB_HOST_GNU_TYPE" : "loongarch64-kfreebsd-gnu",
+         "DEB_HOST_MULTIARCH" : "loongarch64-kfreebsd-gnu"
+      },
       "kfreebsd-m32r" : {
          "DEB_HOST_ARCH" : "kfreebsd-m32r",
          "DEB_HOST_ARCH_ABI" : "base",
@@ -3119,6 +3197,19 @@
          "DEB_HOST_GNU_SYSTEM" : "knetbsd-gnu",
          "DEB_HOST_GNU_TYPE" : "ia64-knetbsd-gnu",
          "DEB_HOST_MULTIARCH" : "ia64-knetbsd-gnu"
+      },
+      "knetbsd-loong64" : {
+         "DEB_HOST_ARCH" : "knetbsd-loong64",
+         "DEB_HOST_ARCH_ABI" : "base",
+         "DEB_HOST_ARCH_BITS" : "64",
+         "DEB_HOST_ARCH_CPU" : "loong64",
+         "DEB_HOST_ARCH_ENDIAN" : "little",
+         "DEB_HOST_ARCH_LIBC" : "gnu",
+         "DEB_HOST_ARCH_OS" : "knetbsd",
+         "DEB_HOST_GNU_CPU" : "loongarch64",
+         "DEB_HOST_GNU_SYSTEM" : "knetbsd-gnu",
+         "DEB_HOST_GNU_TYPE" : "loongarch64-knetbsd-gnu",
+         "DEB_HOST_MULTIARCH" : "loongarch64-knetbsd-gnu"
       },
       "knetbsd-m32r" : {
          "DEB_HOST_ARCH" : "knetbsd-m32r",
@@ -3588,6 +3679,19 @@
          "DEB_HOST_GNU_TYPE" : "ia64-kopensolaris-gnu",
          "DEB_HOST_MULTIARCH" : "ia64-kopensolaris-gnu"
       },
+      "kopensolaris-loong64" : {
+         "DEB_HOST_ARCH" : "kopensolaris-loong64",
+         "DEB_HOST_ARCH_ABI" : "base",
+         "DEB_HOST_ARCH_BITS" : "64",
+         "DEB_HOST_ARCH_CPU" : "loong64",
+         "DEB_HOST_ARCH_ENDIAN" : "little",
+         "DEB_HOST_ARCH_LIBC" : "gnu",
+         "DEB_HOST_ARCH_OS" : "kopensolaris",
+         "DEB_HOST_GNU_CPU" : "loongarch64",
+         "DEB_HOST_GNU_SYSTEM" : "kopensolaris-gnu",
+         "DEB_HOST_GNU_TYPE" : "loongarch64-kopensolaris-gnu",
+         "DEB_HOST_MULTIARCH" : "loongarch64-kopensolaris-gnu"
+      },
       "kopensolaris-m32r" : {
          "DEB_HOST_ARCH" : "kopensolaris-m32r",
          "DEB_HOST_ARCH_ABI" : "base",
@@ -3926,6 +4030,19 @@
          "DEB_HOST_GNU_TYPE" : "tilegx-kopensolaris-gnu",
          "DEB_HOST_MULTIARCH" : "tilegx-kopensolaris-gnu"
       },
+      "loong64" : {
+         "DEB_HOST_ARCH" : "loong64",
+         "DEB_HOST_ARCH_ABI" : "base",
+         "DEB_HOST_ARCH_BITS" : "64",
+         "DEB_HOST_ARCH_CPU" : "loong64",
+         "DEB_HOST_ARCH_ENDIAN" : "little",
+         "DEB_HOST_ARCH_LIBC" : "gnu",
+         "DEB_HOST_ARCH_OS" : "linux",
+         "DEB_HOST_GNU_CPU" : "loongarch64",
+         "DEB_HOST_GNU_SYSTEM" : "linux-gnu",
+         "DEB_HOST_GNU_TYPE" : "loongarch64-linux-gnu",
+         "DEB_HOST_MULTIARCH" : "loongarch64-linux-gnu"
+      },
       "m32r" : {
          "DEB_HOST_ARCH" : "m32r",
          "DEB_HOST_ARCH_ABI" : "base",
@@ -4263,6 +4380,19 @@
          "DEB_HOST_GNU_SYSTEM" : "linux-musl",
          "DEB_HOST_GNU_TYPE" : "ia64-linux-musl",
          "DEB_HOST_MULTIARCH" : "ia64-linux-musl"
+      },
+      "musl-linux-loong64" : {
+         "DEB_HOST_ARCH" : "musl-linux-loong64",
+         "DEB_HOST_ARCH_ABI" : "base",
+         "DEB_HOST_ARCH_BITS" : "64",
+         "DEB_HOST_ARCH_CPU" : "loong64",
+         "DEB_HOST_ARCH_ENDIAN" : "little",
+         "DEB_HOST_ARCH_LIBC" : "musl",
+         "DEB_HOST_ARCH_OS" : "linux",
+         "DEB_HOST_GNU_CPU" : "loongarch64",
+         "DEB_HOST_GNU_SYSTEM" : "linux-musl",
+         "DEB_HOST_GNU_TYPE" : "loongarch64-linux-musl",
+         "DEB_HOST_MULTIARCH" : "loongarch64-linux-musl"
       },
       "musl-linux-m32r" : {
          "DEB_HOST_ARCH" : "musl-linux-m32r",
@@ -4731,6 +4861,19 @@
          "DEB_HOST_GNU_SYSTEM" : "netbsd",
          "DEB_HOST_GNU_TYPE" : "ia64-netbsd",
          "DEB_HOST_MULTIARCH" : "ia64-netbsd"
+      },
+      "netbsd-loong64" : {
+         "DEB_HOST_ARCH" : "netbsd-loong64",
+         "DEB_HOST_ARCH_ABI" : "base",
+         "DEB_HOST_ARCH_BITS" : "64",
+         "DEB_HOST_ARCH_CPU" : "loong64",
+         "DEB_HOST_ARCH_ENDIAN" : "little",
+         "DEB_HOST_ARCH_LIBC" : "bsd",
+         "DEB_HOST_ARCH_OS" : "netbsd",
+         "DEB_HOST_GNU_CPU" : "loongarch64",
+         "DEB_HOST_GNU_SYSTEM" : "netbsd",
+         "DEB_HOST_GNU_TYPE" : "loongarch64-netbsd",
+         "DEB_HOST_MULTIARCH" : "loongarch64-netbsd"
       },
       "netbsd-m32r" : {
          "DEB_HOST_ARCH" : "netbsd-m32r",
@@ -5212,6 +5355,19 @@
          "DEB_HOST_GNU_SYSTEM" : "openbsd",
          "DEB_HOST_GNU_TYPE" : "ia64-openbsd",
          "DEB_HOST_MULTIARCH" : "ia64-openbsd"
+      },
+      "openbsd-loong64" : {
+         "DEB_HOST_ARCH" : "openbsd-loong64",
+         "DEB_HOST_ARCH_ABI" : "base",
+         "DEB_HOST_ARCH_BITS" : "64",
+         "DEB_HOST_ARCH_CPU" : "loong64",
+         "DEB_HOST_ARCH_ENDIAN" : "little",
+         "DEB_HOST_ARCH_LIBC" : "bsd",
+         "DEB_HOST_ARCH_OS" : "openbsd",
+         "DEB_HOST_GNU_CPU" : "loongarch64",
+         "DEB_HOST_GNU_SYSTEM" : "openbsd",
+         "DEB_HOST_GNU_TYPE" : "loongarch64-openbsd",
+         "DEB_HOST_MULTIARCH" : "loongarch64-openbsd"
       },
       "openbsd-m32r" : {
          "DEB_HOST_ARCH" : "openbsd-m32r",
@@ -5850,6 +6006,19 @@
          "DEB_HOST_GNU_TYPE" : "ia64-solaris",
          "DEB_HOST_MULTIARCH" : "ia64-solaris"
       },
+      "solaris-loong64" : {
+         "DEB_HOST_ARCH" : "solaris-loong64",
+         "DEB_HOST_ARCH_ABI" : "base",
+         "DEB_HOST_ARCH_BITS" : "64",
+         "DEB_HOST_ARCH_CPU" : "loong64",
+         "DEB_HOST_ARCH_ENDIAN" : "little",
+         "DEB_HOST_ARCH_LIBC" : "sysv",
+         "DEB_HOST_ARCH_OS" : "solaris",
+         "DEB_HOST_GNU_CPU" : "loongarch64",
+         "DEB_HOST_GNU_SYSTEM" : "solaris",
+         "DEB_HOST_GNU_TYPE" : "loongarch64-solaris",
+         "DEB_HOST_MULTIARCH" : "loongarch64-solaris"
+      },
       "solaris-m32r" : {
          "DEB_HOST_ARCH" : "solaris-m32r",
          "DEB_HOST_ARCH_ABI" : "base",
@@ -6370,6 +6539,19 @@
          "DEB_HOST_GNU_TYPE" : "ia64-linux-uclibc",
          "DEB_HOST_MULTIARCH" : "ia64-linux-uclibc"
       },
+      "uclibc-linux-loong64" : {
+         "DEB_HOST_ARCH" : "uclibc-linux-loong64",
+         "DEB_HOST_ARCH_ABI" : "base",
+         "DEB_HOST_ARCH_BITS" : "64",
+         "DEB_HOST_ARCH_CPU" : "loong64",
+         "DEB_HOST_ARCH_ENDIAN" : "little",
+         "DEB_HOST_ARCH_LIBC" : "uclibc",
+         "DEB_HOST_ARCH_OS" : "linux",
+         "DEB_HOST_GNU_CPU" : "loongarch64",
+         "DEB_HOST_GNU_SYSTEM" : "linux-uclibc",
+         "DEB_HOST_GNU_TYPE" : "loongarch64-linux-uclibc",
+         "DEB_HOST_MULTIARCH" : "loongarch64-linux-uclibc"
+      },
       "uclibc-linux-m32r" : {
          "DEB_HOST_ARCH" : "uclibc-linux-m32r",
          "DEB_HOST_ARCH_ABI" : "base",
@@ -6850,6 +7032,19 @@
          "DEB_HOST_GNU_SYSTEM" : "uclinux-uclibc",
          "DEB_HOST_GNU_TYPE" : "ia64-uclinux-uclibc",
          "DEB_HOST_MULTIARCH" : "ia64-uclinux-uclibc"
+      },
+      "uclinux-loong64" : {
+         "DEB_HOST_ARCH" : "uclinux-loong64",
+         "DEB_HOST_ARCH_ABI" : "base",
+         "DEB_HOST_ARCH_BITS" : "64",
+         "DEB_HOST_ARCH_CPU" : "loong64",
+         "DEB_HOST_ARCH_ENDIAN" : "little",
+         "DEB_HOST_ARCH_LIBC" : "uclibc",
+         "DEB_HOST_ARCH_OS" : "uclinux",
+         "DEB_HOST_GNU_CPU" : "loongarch64",
+         "DEB_HOST_GNU_SYSTEM" : "uclinux-uclibc",
+         "DEB_HOST_GNU_TYPE" : "loongarch64-uclinux-uclibc",
+         "DEB_HOST_MULTIARCH" : "loongarch64-uclinux-uclibc"
       },
       "uclinux-m32r" : {
          "DEB_HOST_ARCH" : "uclinux-m32r",
