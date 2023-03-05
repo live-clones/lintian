@@ -614,7 +614,7 @@ unless (@ARGV || $selected{'packages-from-file'}) {
 if ($selected{debug}) {
     say {*STDERR} encode_utf8("Lintian v$ENV{LINTIAN_VERSION}");
     say {*STDERR} encode_utf8("Lintian root directory: $ENV{LINTIAN_BASE}");
-    say {*STDERR} encode_utf8("Configuration file: $LINTIAN_CFG");
+    say {*STDERR} encode_utf8('Configuration file: '.($LINTIAN_CFG//'(none)'));
 }
 
 if (defined $selected{LINTIAN_PROFILE}) {
