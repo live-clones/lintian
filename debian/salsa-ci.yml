@@ -24,6 +24,8 @@ build-buster-backports:
   allow_failure: true
 
 variables:
+  SALSA_CI_DISABLE_BLHC: 1
+  SALSA_CI_DISABLE_BUILD_PACKAGE_ANY: 1
   SALSA_CI_LINTIAN_FAIL_WARNING: 1
   DEB_BUILD_OPTIONS: 'nocheck'
 
