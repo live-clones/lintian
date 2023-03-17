@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: cruft-old-unicode
+Description: Check for old non free unicode license
