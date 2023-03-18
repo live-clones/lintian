@@ -1,0 +1,3 @@
+Skeleton: source-non-native
+Testname: no-origin
+Description: Debian patch without "Origin:" field
