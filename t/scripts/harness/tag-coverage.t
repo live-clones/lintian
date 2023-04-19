@@ -48,6 +48,7 @@ const my $NEWLINE => qq{\n};
 
 my @known_missing = (
     qw(
+      binaries/time32
       changed-by-invalid-for-derivative
       debian-files-list-in-source
       debian-rules-missing-recommended-target
