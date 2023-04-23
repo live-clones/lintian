@@ -62,6 +62,7 @@ our $PYTHON3_ALL_DEPEND
 my %KNOWN_SPECIAL_DEPENDS = map { $_ => 1 } qw(
   @
   @builddeps@
+  @recommends@
 );
 
 sub source {
