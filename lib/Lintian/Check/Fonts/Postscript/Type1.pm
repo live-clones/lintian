@@ -90,7 +90,25 @@ sub visit_installed_files {
         # copyright adobe a few line before the only
         # place where the startlock is documented is
         # in the black book copyrighted fragment
-        if ($line =~ m/startlock\s*get\s*exec/) {
+        #
+        # 2023-06-05: this check has been adjusted because
+        # Adobe's type hint code[1] (including Flex[2]) became
+        # open source[3] with an Apache-2.0 license[4] as
+        # committed on 2014-09-19, making that check a false
+        # positive[7].
+        #
+        # We continue to check for copyrighted code that is not
+        # available under an open source license from the origin
+        # publication,  "Adobe Type 1 Font Format"[5][6].
+        #
+        # [1] - https://github.com/adobe-type-tools/afdko/blob/2bf85cf44a64148353b24db17e0cc41ede5493b1/FDK/Tools/Programs/public/lib/source/t1write/t1write_hintothers.h
+        # [2] - https://github.com/adobe-type-tools/afdko/blob/2bf85cf44a64148353b24db17e0cc41ede5493b1/FDK/Tools/Programs/public/lib/source/t1write/t1write_flexothers.h
+        # [3] - https://www.mail-archive.com/debian-bugs-dist@lists.debian.org/msg1375813.html
+        # [4] - https://github.com/adobe-type-tools/afdko/blob/2bf85cf44a64148353b24db17e0cc41ede5493b1/LICENSE.txt
+        # [5] - https://adobe-type-tools.github.io/font-tech-notes/pdfs/T1_SPEC.pdf
+        # [6] - https://lccn.loc.gov/90042516
+        # [7] - https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1029555
+        if ($line =~ m/UniqueID\s*6859/) {
 
             $self->pointed_hint(
                 'license-problem-font-adobe-copyrighted-fragment-no-credit',
