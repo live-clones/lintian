@@ -56,12 +56,13 @@ sub changes {
     for my $target (@targets) {
 
         my $reduced = $target;
-        $reduced =~ s{- (?:backports(?:-sloppy)?
+        $reduced =~ s{- (?:backports(?:-(?:sloppy|staging))?
                                    |lts
                                    |proposed(?:-updates)?
                                    |updates
                                    |security
-                                   |volatile)$}{}xsm;
+                                   |volatile
+                                   |fasttrack)$}{}xsm;
 
         $major{$target} = $reduced;
     }
