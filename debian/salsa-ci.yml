@@ -9,16 +9,16 @@ build-testing:
     DEB_BUILD_OPTIONS: 'nocheck'
   extends: .build-package
 
-build-bullseye-backports:
+build-bookworm-backports:
   variables:
-    RELEASE: 'bullseye-backports'
+    RELEASE: 'bookworm-backports'
     DEB_BUILD_OPTIONS: 'nocheck'
   extends: .build-package
   allow_failure: true
 
-build-buster-backports:
+build-bullseye-backports:
   variables:
-    RELEASE: 'buster-backports'
+    RELEASE: 'bullseye-backports'
     DEB_BUILD_OPTIONS: 'nocheck'
   extends: .build-package
   allow_failure: true
