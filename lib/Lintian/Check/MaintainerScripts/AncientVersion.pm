@@ -38,9 +38,9 @@ with 'Lintian::Check';
 
 const my $EMPTY => q{};
 
-# date --date="Sat, 6 Jul 2019 20:53:14 -0400" +%s
-# https://lists.debian.org/debian-announce/2019/msg00003.html
-const my $OLDSTABLE_RELEASE_EPOCH => 1_562_460_794;
+# date --date="Sat, 14 Aug 2021 17:41:41 -0400" +%s
+# https://lists.debian.org/debian-announce/2021/msg00003.html
+const my $OLDSTABLE_RELEASE_EPOCH => 1_628_977_301;
 
 # When detecting commands inside shell scripts, use this regex to match the
 # beginning of the command rather than checking whether the command is at the
