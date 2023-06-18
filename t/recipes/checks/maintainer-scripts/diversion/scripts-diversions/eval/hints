@@ -1,3 +1,5 @@
+scripts-diversions (binary): systemd-diversion usr/lib/systemd/system/foo.service [preinst:51]
+scripts-diversions (binary): systemd-diversion lib/udev/rules.d/00-rule.rules [preinst:48]
 scripts-diversions (binary): remove-of-unknown-diversion usr/share/scripts/old-file [postrm:12]
 scripts-diversions (binary): package-uses-local-diversion [preinst:12]
 scripts-diversions (binary): package-uses-local-diversion [postrm:31]
