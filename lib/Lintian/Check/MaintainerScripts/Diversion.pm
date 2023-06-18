@@ -288,6 +288,18 @@ sub installable {
         $self->pointed_hint('orphaned-diversion', $pointer, $unquoted)
           unless exists $self->added_diversions->{$divertrx}{removed};
 
+        # As per policy 3.9 raise an error if systemd files are diverted
+        if (
+            $divertrx =~ m{^(usr\\/)?lib\\/(systemd|
+                udev|
+                tmpfiles.d|
+                sysusers.d|
+                repart.d|
+                modules-load.d)}x
+        ){
+            $self->pointed_hint('systemd-diversion', $pointer, $unquoted);
+        }
+
         # Handle man page diversions somewhat specially.  We may
         # divert away a man page in one section without replacing that
         # same file, since we're installing a man page in a different
