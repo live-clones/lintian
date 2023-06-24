@@ -151,6 +151,7 @@ libgsasl7-dev => libgsasl-dev
 libidn11-dev => libidn-dev
 policykit-1 => polkitd and optionally pkexec
 lsb-base
+pkg-config => pkgconf
 
 # Deprecated in trixie
 gnome-common => https://wiki.gnome.org/Projects/GnomeCommon/Migration
