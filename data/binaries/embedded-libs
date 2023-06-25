@@ -102,6 +102,7 @@ taglib    || ||One of the size bytes in the id3v2 header was greater than the al
 t1lib     || ||t1lib is copyright \(c\) Rainer Menzner
 tiff      ||source-regex=tiff\d* ||No space for PixarLog state block
 tinyxml   || ||(?m)^(?:Error when TiXmlDocument added to document|Error null \(0\) or unexpected EOF found in input stream\.)
+yajl      || ||context_pop: Bottom of stack reached prematurely
 
 # We exclude version strings starting with "4 " since that's a mark of the
 # Pascal implementation, which is not what this tag is designed to detect.
