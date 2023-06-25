@@ -85,6 +85,7 @@ libupnp   ||source-regex=libupnp\d?||(?m)(?:SSDP_LIB: New Request Handler:Error|
 libxml2   || ||root and DTD name do not match
 libyaml   || ||(?m)^did not find expected <stream-start>
 libytnef  || ||Signature does not match\. Not TNEF\.
+libzstd   || ||pathological dataset : literals are not compressible : samples are noisy or too regular
 ltdl      ||source=libtool ||(?m)^library already shutdown
 mbedtls   || ||(?m)^(?:ASN1 - Actual length differs from expected length|SSL - The connection indicated an EOF)
 mpfr      ||source=mpfr4 ||MPFR: Can't allocate memory
