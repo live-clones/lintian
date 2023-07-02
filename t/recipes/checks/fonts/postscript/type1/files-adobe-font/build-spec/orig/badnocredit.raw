@@ -9,7 +9,7 @@
 /RD{string currentfile exch readstring pop}executeonly def
 
 % The code below is here to trick Lintian...
-trick { /startlock get exec } def
+trick { /UniqueID 6859 } def
 
 2 index /CharStrings 2 dict dup begin
 
