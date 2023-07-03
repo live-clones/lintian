@@ -320,6 +320,10 @@ sub visit_installed_files {
                                (?:stdlib-extensions|profiler|old-doctools) \Z}xsm;
     }
 
+    $self->pointed_hint('package-installs-deprecated-python2-path',
+        $item->pointer)
+      if $item->name =~ m{^usr/lib/python2(.+)};
+
     # ---------------- Python file locations
     #  - The Python people kindly provided the following table.
     # good:
