@@ -37,8 +37,6 @@ const my $ARROW => q{ -> };
 const my $DOLLAR => q{$};
 
 const my $PYTHON3_MAJOR => 3;
-const my $PYTHON2_MIGRATION_MAJOR => 2;
-const my $PYTHON2_MIGRATION_MINOR => 6;
 
 use Moo;
 use namespace::clean;
@@ -324,60 +322,18 @@ sub visit_installed_files {
         $item->pointer)
       if $item->name =~ m{^usr/lib/python2(.+)};
 
-    # ---------------- Python file locations
-    #  - The Python people kindly provided the following table.
-    # good:
-    # /usr/lib/python2.5/site-packages/
-    # /usr/lib/python2.6/dist-packages/
-    # /usr/lib/python2.7/dist-packages/
-    # /usr/lib/python3/dist-packages/
-    #
-    # bad:
-    # /usr/lib/python2.5/dist-packages/
-    # /usr/lib/python2.6/site-packages/
-    # /usr/lib/python2.7/site-packages/
-    # /usr/lib/python3.*/*-packages/
     if (
         $item->name =~ m{\A
-                   (usr/lib/debug/)?
-                   usr/lib/python(\d+(?:\.\d+)?)/
+                   usr/lib/python(3(?:\.\d+)?)/
                    ((?:site|dist)-packages)/(.+)
                    \Z}xsm
     ){
-        my ($debug, $pyver, $actual_package_dir, $relative) = ($1, $2, $3, $4);
-        $debug //= $EMPTY;
+        my ($pyver, $actual_package_dir, $relative) = ($1, $2, $3);
 
         my ($pmaj, $pmin) = split(m{\.}, $pyver, 2);
         $pmin //= 0;
 
-        next
-          if $pmaj < $PYTHON2_MIGRATION_MAJOR;
-
         my ($module_name) = ($relative =~ m{^([^/]+)});
-
-        my $actual_python_libpath = "usr/lib/python$pyver/";
-        my $specified_python_libpath = "usr/lib/python$pmaj/";
-
-        # for python 2.X, folder was python2.X and not python2
-        $specified_python_libpath = $actual_python_libpath
-          if $pmaj < $PYTHON3_MAJOR;
-
-        my $specified_package_dir = 'dist-packages';
-
-        # python 2.4 and 2.5
-        $specified_package_dir = 'site-packages'
-          if $pmaj == $PYTHON2_MIGRATION_MAJOR
-          && $pmin < $PYTHON2_MIGRATION_MINOR;
-
-        my $actual_module_path
-          = $debug. $actual_python_libpath. "$actual_package_dir/$module_name";
-        my $specified_module_path
-          = $debug
-          . $specified_python_libpath
-          . "$specified_package_dir/$module_name";
-
-        $self->correct_location->{$actual_module_path} = $specified_module_path
-          unless $actual_module_path eq $specified_module_path;
 
         for my $regex ($self->GENERIC_PYTHON_MODULES->all) {
             $self->pointed_hint('python-module-has-overly-generic-name',
@@ -390,6 +346,15 @@ sub visit_installed_files {
           if $item->is_file
           && $relative eq $item->basename  # "top-level"
           &&!$self->ALLOWED_PYTHON_FILES->matches_any($item->basename, 'i');
+
+        # Prepare variables for the 'python-module-in-wrong-location' hint
+        my $actual_module_path
+          = "usr/lib/python$pyver/". "$actual_package_dir/$module_name";
+        my $specified_module_path
+          = "usr/lib/python$pmaj/". "dist-packages/$module_name";
+
+        $self->correct_location->{$actual_module_path} = $specified_module_path
+          unless $actual_module_path eq $specified_module_path;
     }
 
     return;
