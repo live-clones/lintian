@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: directory-in-etc-sv-directory-without-executable-run-script
+Description: Check for directories in /etc/sv missing run script
