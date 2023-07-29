@@ -95,6 +95,7 @@ qr{(?i)/mootools(?:(?:\.v|-)[\d\.]+)?(?:-(?:(?:core(?:-server)?)|more)(?:-(?:yc|
       qr{(?i)/_static/(?:doctools|language_data|searchtools)} . $JS_EXT,
     'tinymce'                      => qr{(?i)/tiny_mce(?:_(?:popup|src))?}
       . $JS_EXT,
+    'libjs-lodash'                 => qr{(?i)lodash} . $JS_EXT,
 # not yet available in unstable
 # 'xinha'                      => qr{(?i)/(htmlarea|Xinha(Loader|Core))} . $JS_EXT,
 );
