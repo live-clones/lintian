@@ -96,6 +96,8 @@ qr{(?i)/mootools(?:(?:\.v|-)[\d\.]+)?(?:-(?:(?:core(?:-server)?)|more)(?:-(?:yc|
     'tinymce'                      => qr{(?i)/tiny_mce(?:_(?:popup|src))?}
       . $JS_EXT,
     'libjs-lodash'                 => qr{(?i)lodash} . $JS_EXT,
+    'node-pako'                    => qr{(?i)pako(?:_deflate(?:.es5)?)(?:-[\d\.]+)?}
+      . $JS_EXT,
 # not yet available in unstable
 # 'xinha'                      => qr{(?i)/(htmlarea|Xinha(Loader|Core))} . $JS_EXT,
 );
