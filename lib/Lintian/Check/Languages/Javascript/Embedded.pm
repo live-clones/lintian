@@ -101,6 +101,8 @@ qr{(?i)/mootools(?:(?:\.v|-)[\d\.]+)?(?:-(?:(?:core(?:-server)?)|more)(?:-(?:yc|
     'node-jszip-utils'             => qr{(?i)jszip-utils(?:-ie)?(?:-[\d\.]+)?}
       . $JS_EXT,
     'node-jszip'             => qr{(?i)jszip(?:-ie)?(?:-[\d\.]+)?} . $JS_EXT,
+    'libjs-codemirror'       => qr{(?i)codemirror} . $JS_EXT,
+    'libjs-punycode'         => qr{(?i)punycode(?:\.es\d+)?} . $JS_EXT,
 # not yet available in unstable
 # 'xinha'                      => qr{(?i)/(htmlarea|Xinha(Loader|Core))} . $JS_EXT,
 );
