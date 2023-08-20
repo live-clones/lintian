@@ -35,8 +35,7 @@ sub suppress {
     return 1
       if $item->dirname =~ m{ [^/] [.] dist-info / $}x
       && defined $item->parent_dir->child('METADATA')
-      && defined $item->parent_dir->child('WHEEL')
-      && defined $item->parent_dir->child('RECORD');
+      && defined $item->parent_dir->child('WHEEL');
 
     return 1
       if $item->dirname =~ m{ [^/] [.] egg-info / $}x
