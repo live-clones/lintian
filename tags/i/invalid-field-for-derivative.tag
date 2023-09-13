@@ -10,7 +10,7 @@ Explanation: The specified field in <code>debian/control</code> does not match t
    - Debian maintainers are not contacted for forked or packages that
      are otherwise modified by the derivative.
    - The original maintainer is still credited for their work (eg. in a
-     <code>XSBC-Original-Maintainer</code> field.
+     <code>XSBC-Original-Maintainer</code> field).
    - References to revision control systems (eg. <code>Vcs-Git</code>) are
      pointing to the correct, updated location.
    - Fields that become misleading in the context of a derivative are
