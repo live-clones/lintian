@@ -61,7 +61,7 @@
 
 guile   => /usr/bin, guile-([\d.]+), guile-$1:any, 2.2 3.0, guile:any
 jruby   => /usr/bin, jruby([\d.]+), jruby$1:any, 1.0 1.1 1.2, jruby:any
-lua     => /usr/bin, lua([\d.]+), lua$1:any, 40 50 5.1 5.2, lua:any
+lua     => /usr/bin, lua([\d.]+), lua$1:any, 40 50 5.1 5.2 5.3 5.4, lua:any
 octave  => /usr/bin, octave([\d.]+), octave$1:any, 3.0 3.2, octave:any
 pike    => /usr/bin, pike([\d.]+), pike$1:any | pike$1-core:any, 7.6 7.8
 python2 => /usr/bin, python([\d.]+), python$1:any | python$1-minimal:any, 2.7, @SKIP_UNVERSIONED@
