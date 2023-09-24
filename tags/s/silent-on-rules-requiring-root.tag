@@ -16,6 +16,6 @@ Explanation: The field <code>Rules-Requires-Root</code> is missing from the file
  <code>debian/control</code>, but please verify with <code>diffoscope(1)</code> that
  the installation packages produced are in fact identical.
 See-Also:
- /usr/share/doc/dpkg/rootless-builds.txt.gz,
+ /usr/share/doc/dpkg/spec/rootless-builds.txt,
  debian-policy 4.9.2,
  debian-policy 5.6.31

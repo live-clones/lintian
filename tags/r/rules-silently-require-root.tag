@@ -19,6 +19,6 @@ Explanation: These sources require  <code>fakeroot(1)</code> or similar to build
  You can use the field <code>Rules-Requires-Root</code> in the source stanza of
  <code>debian/control</code> to declare the required build privileges.
 See-Also:
- /usr/share/doc/dpkg-dev/rootless-builds.txt.gz,
+ /usr/share/doc/dpkg/spec/rootless-builds.txt,
  debian-policy 4.9.2,
  debian-policy 5.6.31
