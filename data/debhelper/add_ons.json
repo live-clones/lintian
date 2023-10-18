@@ -50,6 +50,11 @@
             "dh-buildinfo"
          ]
       },
+      "builtusing" : {
+         "installed_by" : [
+            "dh-builtusing"
+         ]
+      },
       "cargo" : {
          "installed_by" : [
             "dh-cargo"
@@ -110,6 +115,11 @@
             "dh-di"
          ]
       },
+      "debputy" : {
+         "installed_by" : [
+            "dh-debputy"
+         ]
+      },
       "dist_zilla" : {
          "installed_by" : [
             "dh-dist-zilla"
@@ -168,6 +178,11 @@
       "golang" : {
          "installed_by" : [
             "dh-golang"
+         ]
+      },
+      "grantlee" : {
+         "installed_by" : [
+            "libgrantlee5-dev"
          ]
       },
       "haskell" : {
@@ -280,6 +295,11 @@
             "dh-puredata"
          ]
       },
+      "pdl" : {
+         "installed_by" : [
+            "pdl"
+         ]
+      },
       "perl6" : {
          "installed_by" : [
             "dh-perl6"
@@ -333,6 +353,11 @@
       "ppp" : {
          "installed_by" : [
             "ppp-dev"
+         ]
+      },
+      "puredata" : {
+         "installed_by" : [
+            "dh-puredata"
          ]
       },
       "pyppd" : {
@@ -425,6 +450,11 @@
             "tex-common"
          ]
       },
+      "user_session_migration" : {
+         "installed_by" : [
+            "dh-user-session-migration"
+         ]
+      },
       "uwsgi" : {
          "installed_by" : [
             "uwsgi-dev"
@@ -478,6 +508,11 @@
       "zathura" : {
          "installed_by" : [
             "zathura-dev"
+         ]
+      },
+      "zz_debputy" : {
+         "installed_by" : [
+            "dh-debputy"
          ]
       }
    },

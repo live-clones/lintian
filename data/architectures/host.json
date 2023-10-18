@@ -78,19 +78,6 @@
          "DEB_HOST_GNU_TYPE" : "armeb-aix",
          "DEB_HOST_MULTIARCH" : "armeb-aix"
       },
-      "aix-avr32" : {
-         "DEB_HOST_ARCH" : "aix-avr32",
-         "DEB_HOST_ARCH_ABI" : "base",
-         "DEB_HOST_ARCH_BITS" : "32",
-         "DEB_HOST_ARCH_CPU" : "avr32",
-         "DEB_HOST_ARCH_ENDIAN" : "big",
-         "DEB_HOST_ARCH_LIBC" : "sysv",
-         "DEB_HOST_ARCH_OS" : "aix",
-         "DEB_HOST_GNU_CPU" : "avr32",
-         "DEB_HOST_GNU_SYSTEM" : "aix",
-         "DEB_HOST_GNU_TYPE" : "avr32-aix",
-         "DEB_HOST_MULTIARCH" : "avr32-aix"
-      },
       "aix-hppa" : {
          "DEB_HOST_ARCH" : "aix-hppa",
          "DEB_HOST_ARCH_ABI" : "base",
@@ -142,19 +129,6 @@
          "DEB_HOST_GNU_SYSTEM" : "aix",
          "DEB_HOST_GNU_TYPE" : "loongarch64-aix",
          "DEB_HOST_MULTIARCH" : "loongarch64-aix"
-      },
-      "aix-m32r" : {
-         "DEB_HOST_ARCH" : "aix-m32r",
-         "DEB_HOST_ARCH_ABI" : "base",
-         "DEB_HOST_ARCH_BITS" : "32",
-         "DEB_HOST_ARCH_CPU" : "m32r",
-         "DEB_HOST_ARCH_ENDIAN" : "big",
-         "DEB_HOST_ARCH_LIBC" : "sysv",
-         "DEB_HOST_ARCH_OS" : "aix",
-         "DEB_HOST_GNU_CPU" : "m32r",
-         "DEB_HOST_GNU_SYSTEM" : "aix",
-         "DEB_HOST_GNU_TYPE" : "m32r-aix",
-         "DEB_HOST_MULTIARCH" : "m32r-aix"
       },
       "aix-m68k" : {
          "DEB_HOST_ARCH" : "aix-m68k",
@@ -468,19 +442,6 @@
          "DEB_HOST_GNU_TYPE" : "sparc64-aix",
          "DEB_HOST_MULTIARCH" : "sparc64-aix"
       },
-      "aix-tilegx" : {
-         "DEB_HOST_ARCH" : "aix-tilegx",
-         "DEB_HOST_ARCH_ABI" : "base",
-         "DEB_HOST_ARCH_BITS" : "64",
-         "DEB_HOST_ARCH_CPU" : "tilegx",
-         "DEB_HOST_ARCH_ENDIAN" : "little",
-         "DEB_HOST_ARCH_LIBC" : "sysv",
-         "DEB_HOST_ARCH_OS" : "aix",
-         "DEB_HOST_GNU_CPU" : "tilegx",
-         "DEB_HOST_GNU_SYSTEM" : "aix",
-         "DEB_HOST_GNU_TYPE" : "tilegx-aix",
-         "DEB_HOST_MULTIARCH" : "tilegx-aix"
-      },
       "alpha" : {
          "DEB_HOST_ARCH" : "alpha",
          "DEB_HOST_ARCH_ABI" : "base",
@@ -598,19 +559,6 @@
          "DEB_HOST_GNU_TYPE" : "arm-linux-gnueabihf",
          "DEB_HOST_MULTIARCH" : "arm-linux-gnueabihf"
       },
-      "avr32" : {
-         "DEB_HOST_ARCH" : "avr32",
-         "DEB_HOST_ARCH_ABI" : "base",
-         "DEB_HOST_ARCH_BITS" : "32",
-         "DEB_HOST_ARCH_CPU" : "avr32",
-         "DEB_HOST_ARCH_ENDIAN" : "big",
-         "DEB_HOST_ARCH_LIBC" : "gnu",
-         "DEB_HOST_ARCH_OS" : "linux",
-         "DEB_HOST_GNU_CPU" : "avr32",
-         "DEB_HOST_GNU_SYSTEM" : "linux-gnu",
-         "DEB_HOST_GNU_TYPE" : "avr32-linux-gnu",
-         "DEB_HOST_MULTIARCH" : "avr32-linux-gnu"
-      },
       "darwin-alpha" : {
          "DEB_HOST_ARCH" : "darwin-alpha",
          "DEB_HOST_ARCH_ABI" : "base",
@@ -689,19 +637,6 @@
          "DEB_HOST_GNU_TYPE" : "armeb-darwin",
          "DEB_HOST_MULTIARCH" : "armeb-darwin"
       },
-      "darwin-avr32" : {
-         "DEB_HOST_ARCH" : "darwin-avr32",
-         "DEB_HOST_ARCH_ABI" : "base",
-         "DEB_HOST_ARCH_BITS" : "32",
-         "DEB_HOST_ARCH_CPU" : "avr32",
-         "DEB_HOST_ARCH_ENDIAN" : "big",
-         "DEB_HOST_ARCH_LIBC" : "bsd",
-         "DEB_HOST_ARCH_OS" : "darwin",
-         "DEB_HOST_GNU_CPU" : "avr32",
-         "DEB_HOST_GNU_SYSTEM" : "darwin",
-         "DEB_HOST_GNU_TYPE" : "avr32-darwin",
-         "DEB_HOST_MULTIARCH" : "avr32-darwin"
-      },
       "darwin-hppa" : {
          "DEB_HOST_ARCH" : "darwin-hppa",
          "DEB_HOST_ARCH_ABI" : "base",
@@ -753,19 +688,6 @@
          "DEB_HOST_GNU_SYSTEM" : "darwin",
          "DEB_HOST_GNU_TYPE" : "loongarch64-darwin",
          "DEB_HOST_MULTIARCH" : "loongarch64-darwin"
-      },
-      "darwin-m32r" : {
-         "DEB_HOST_ARCH" : "darwin-m32r",
-         "DEB_HOST_ARCH_ABI" : "base",
-         "DEB_HOST_ARCH_BITS" : "32",
-         "DEB_HOST_ARCH_CPU" : "m32r",
-         "DEB_HOST_ARCH_ENDIAN" : "big",
-         "DEB_HOST_ARCH_LIBC" : "bsd",
-         "DEB_HOST_ARCH_OS" : "darwin",
-         "DEB_HOST_GNU_CPU" : "m32r",
-         "DEB_HOST_GNU_SYSTEM" : "darwin",
-         "DEB_HOST_GNU_TYPE" : "m32r-darwin",
-         "DEB_HOST_MULTIARCH" : "m32r-darwin"
       },
       "darwin-m68k" : {
          "DEB_HOST_ARCH" : "darwin-m68k",
@@ -1079,19 +1001,6 @@
          "DEB_HOST_GNU_TYPE" : "sparc64-darwin",
          "DEB_HOST_MULTIARCH" : "sparc64-darwin"
       },
-      "darwin-tilegx" : {
-         "DEB_HOST_ARCH" : "darwin-tilegx",
-         "DEB_HOST_ARCH_ABI" : "base",
-         "DEB_HOST_ARCH_BITS" : "64",
-         "DEB_HOST_ARCH_CPU" : "tilegx",
-         "DEB_HOST_ARCH_ENDIAN" : "little",
-         "DEB_HOST_ARCH_LIBC" : "bsd",
-         "DEB_HOST_ARCH_OS" : "darwin",
-         "DEB_HOST_GNU_CPU" : "tilegx",
-         "DEB_HOST_GNU_SYSTEM" : "darwin",
-         "DEB_HOST_GNU_TYPE" : "tilegx-darwin",
-         "DEB_HOST_MULTIARCH" : "tilegx-darwin"
-      },
       "dragonflybsd-alpha" : {
          "DEB_HOST_ARCH" : "dragonflybsd-alpha",
          "DEB_HOST_ARCH_ABI" : "base",
@@ -1170,19 +1079,6 @@
          "DEB_HOST_GNU_TYPE" : "armeb-dragonflybsd",
          "DEB_HOST_MULTIARCH" : "armeb-dragonflybsd"
       },
-      "dragonflybsd-avr32" : {
-         "DEB_HOST_ARCH" : "dragonflybsd-avr32",
-         "DEB_HOST_ARCH_ABI" : "base",
-         "DEB_HOST_ARCH_BITS" : "32",
-         "DEB_HOST_ARCH_CPU" : "avr32",
-         "DEB_HOST_ARCH_ENDIAN" : "big",
-         "DEB_HOST_ARCH_LIBC" : "bsd",
-         "DEB_HOST_ARCH_OS" : "dragonflybsd",
-         "DEB_HOST_GNU_CPU" : "avr32",
-         "DEB_HOST_GNU_SYSTEM" : "dragonflybsd",
-         "DEB_HOST_GNU_TYPE" : "avr32-dragonflybsd",
-         "DEB_HOST_MULTIARCH" : "avr32-dragonflybsd"
-      },
       "dragonflybsd-hppa" : {
          "DEB_HOST_ARCH" : "dragonflybsd-hppa",
          "DEB_HOST_ARCH_ABI" : "base",
@@ -1234,19 +1130,6 @@
          "DEB_HOST_GNU_SYSTEM" : "dragonflybsd",
          "DEB_HOST_GNU_TYPE" : "loongarch64-dragonflybsd",
          "DEB_HOST_MULTIARCH" : "loongarch64-dragonflybsd"
-      },
-      "dragonflybsd-m32r" : {
-         "DEB_HOST_ARCH" : "dragonflybsd-m32r",
-         "DEB_HOST_ARCH_ABI" : "base",
-         "DEB_HOST_ARCH_BITS" : "32",
-         "DEB_HOST_ARCH_CPU" : "m32r",
-         "DEB_HOST_ARCH_ENDIAN" : "big",
-         "DEB_HOST_ARCH_LIBC" : "bsd",
-         "DEB_HOST_ARCH_OS" : "dragonflybsd",
-         "DEB_HOST_GNU_CPU" : "m32r",
-         "DEB_HOST_GNU_SYSTEM" : "dragonflybsd",
-         "DEB_HOST_GNU_TYPE" : "m32r-dragonflybsd",
-         "DEB_HOST_MULTIARCH" : "m32r-dragonflybsd"
       },
       "dragonflybsd-m68k" : {
          "DEB_HOST_ARCH" : "dragonflybsd-m68k",
@@ -1560,19 +1443,6 @@
          "DEB_HOST_GNU_TYPE" : "sparc64-dragonflybsd",
          "DEB_HOST_MULTIARCH" : "sparc64-dragonflybsd"
       },
-      "dragonflybsd-tilegx" : {
-         "DEB_HOST_ARCH" : "dragonflybsd-tilegx",
-         "DEB_HOST_ARCH_ABI" : "base",
-         "DEB_HOST_ARCH_BITS" : "64",
-         "DEB_HOST_ARCH_CPU" : "tilegx",
-         "DEB_HOST_ARCH_ENDIAN" : "little",
-         "DEB_HOST_ARCH_LIBC" : "bsd",
-         "DEB_HOST_ARCH_OS" : "dragonflybsd",
-         "DEB_HOST_GNU_CPU" : "tilegx",
-         "DEB_HOST_GNU_SYSTEM" : "dragonflybsd",
-         "DEB_HOST_GNU_TYPE" : "tilegx-dragonflybsd",
-         "DEB_HOST_MULTIARCH" : "tilegx-dragonflybsd"
-      },
       "freebsd-alpha" : {
          "DEB_HOST_ARCH" : "freebsd-alpha",
          "DEB_HOST_ARCH_ABI" : "base",
@@ -1651,19 +1521,6 @@
          "DEB_HOST_GNU_TYPE" : "armeb-freebsd",
          "DEB_HOST_MULTIARCH" : "armeb-freebsd"
       },
-      "freebsd-avr32" : {
-         "DEB_HOST_ARCH" : "freebsd-avr32",
-         "DEB_HOST_ARCH_ABI" : "base",
-         "DEB_HOST_ARCH_BITS" : "32",
-         "DEB_HOST_ARCH_CPU" : "avr32",
-         "DEB_HOST_ARCH_ENDIAN" : "big",
-         "DEB_HOST_ARCH_LIBC" : "bsd",
-         "DEB_HOST_ARCH_OS" : "freebsd",
-         "DEB_HOST_GNU_CPU" : "avr32",
-         "DEB_HOST_GNU_SYSTEM" : "freebsd",
-         "DEB_HOST_GNU_TYPE" : "avr32-freebsd",
-         "DEB_HOST_MULTIARCH" : "avr32-freebsd"
-      },
       "freebsd-hppa" : {
          "DEB_HOST_ARCH" : "freebsd-hppa",
          "DEB_HOST_ARCH_ABI" : "base",
@@ -1715,19 +1572,6 @@
          "DEB_HOST_GNU_SYSTEM" : "freebsd",
          "DEB_HOST_GNU_TYPE" : "loongarch64-freebsd",
          "DEB_HOST_MULTIARCH" : "loongarch64-freebsd"
-      },
-      "freebsd-m32r" : {
-         "DEB_HOST_ARCH" : "freebsd-m32r",
-         "DEB_HOST_ARCH_ABI" : "base",
-         "DEB_HOST_ARCH_BITS" : "32",
-         "DEB_HOST_ARCH_CPU" : "m32r",
-         "DEB_HOST_ARCH_ENDIAN" : "big",
-         "DEB_HOST_ARCH_LIBC" : "bsd",
-         "DEB_HOST_ARCH_OS" : "freebsd",
-         "DEB_HOST_GNU_CPU" : "m32r",
-         "DEB_HOST_GNU_SYSTEM" : "freebsd",
-         "DEB_HOST_GNU_TYPE" : "m32r-freebsd",
-         "DEB_HOST_MULTIARCH" : "m32r-freebsd"
       },
       "freebsd-m68k" : {
          "DEB_HOST_ARCH" : "freebsd-m68k",
@@ -2041,19 +1885,6 @@
          "DEB_HOST_GNU_TYPE" : "sparc64-freebsd",
          "DEB_HOST_MULTIARCH" : "sparc64-freebsd"
       },
-      "freebsd-tilegx" : {
-         "DEB_HOST_ARCH" : "freebsd-tilegx",
-         "DEB_HOST_ARCH_ABI" : "base",
-         "DEB_HOST_ARCH_BITS" : "64",
-         "DEB_HOST_ARCH_CPU" : "tilegx",
-         "DEB_HOST_ARCH_ENDIAN" : "little",
-         "DEB_HOST_ARCH_LIBC" : "bsd",
-         "DEB_HOST_ARCH_OS" : "freebsd",
-         "DEB_HOST_GNU_CPU" : "tilegx",
-         "DEB_HOST_GNU_SYSTEM" : "freebsd",
-         "DEB_HOST_GNU_TYPE" : "tilegx-freebsd",
-         "DEB_HOST_MULTIARCH" : "tilegx-freebsd"
-      },
       "hppa" : {
          "DEB_HOST_ARCH" : "hppa",
          "DEB_HOST_ARCH_ABI" : "base",
@@ -2145,19 +1976,6 @@
          "DEB_HOST_GNU_TYPE" : "armeb-gnu",
          "DEB_HOST_MULTIARCH" : "armeb-gnu"
       },
-      "hurd-avr32" : {
-         "DEB_HOST_ARCH" : "hurd-avr32",
-         "DEB_HOST_ARCH_ABI" : "base",
-         "DEB_HOST_ARCH_BITS" : "32",
-         "DEB_HOST_ARCH_CPU" : "avr32",
-         "DEB_HOST_ARCH_ENDIAN" : "big",
-         "DEB_HOST_ARCH_LIBC" : "gnu",
-         "DEB_HOST_ARCH_OS" : "hurd",
-         "DEB_HOST_GNU_CPU" : "avr32",
-         "DEB_HOST_GNU_SYSTEM" : "gnu",
-         "DEB_HOST_GNU_TYPE" : "avr32-gnu",
-         "DEB_HOST_MULTIARCH" : "avr32-gnu"
-      },
       "hurd-hppa" : {
          "DEB_HOST_ARCH" : "hurd-hppa",
          "DEB_HOST_ARCH_ABI" : "base",
@@ -2209,19 +2027,6 @@
          "DEB_HOST_GNU_SYSTEM" : "gnu",
          "DEB_HOST_GNU_TYPE" : "loongarch64-gnu",
          "DEB_HOST_MULTIARCH" : "loongarch64-gnu"
-      },
-      "hurd-m32r" : {
-         "DEB_HOST_ARCH" : "hurd-m32r",
-         "DEB_HOST_ARCH_ABI" : "base",
-         "DEB_HOST_ARCH_BITS" : "32",
-         "DEB_HOST_ARCH_CPU" : "m32r",
-         "DEB_HOST_ARCH_ENDIAN" : "big",
-         "DEB_HOST_ARCH_LIBC" : "gnu",
-         "DEB_HOST_ARCH_OS" : "hurd",
-         "DEB_HOST_GNU_CPU" : "m32r",
-         "DEB_HOST_GNU_SYSTEM" : "gnu",
-         "DEB_HOST_GNU_TYPE" : "m32r-gnu",
-         "DEB_HOST_MULTIARCH" : "m32r-gnu"
       },
       "hurd-m68k" : {
          "DEB_HOST_ARCH" : "hurd-m68k",
@@ -2535,19 +2340,6 @@
          "DEB_HOST_GNU_TYPE" : "sparc64-gnu",
          "DEB_HOST_MULTIARCH" : "sparc64-gnu"
       },
-      "hurd-tilegx" : {
-         "DEB_HOST_ARCH" : "hurd-tilegx",
-         "DEB_HOST_ARCH_ABI" : "base",
-         "DEB_HOST_ARCH_BITS" : "64",
-         "DEB_HOST_ARCH_CPU" : "tilegx",
-         "DEB_HOST_ARCH_ENDIAN" : "little",
-         "DEB_HOST_ARCH_LIBC" : "gnu",
-         "DEB_HOST_ARCH_OS" : "hurd",
-         "DEB_HOST_GNU_CPU" : "tilegx",
-         "DEB_HOST_GNU_SYSTEM" : "gnu",
-         "DEB_HOST_GNU_TYPE" : "tilegx-gnu",
-         "DEB_HOST_MULTIARCH" : "tilegx-gnu"
-      },
       "i386" : {
          "DEB_HOST_ARCH" : "i386",
          "DEB_HOST_ARCH_ABI" : "base",
@@ -2665,19 +2457,6 @@
          "DEB_HOST_GNU_TYPE" : "arm-kfreebsd-gnueabihf",
          "DEB_HOST_MULTIARCH" : "arm-kfreebsd-gnueabihf"
       },
-      "kfreebsd-avr32" : {
-         "DEB_HOST_ARCH" : "kfreebsd-avr32",
-         "DEB_HOST_ARCH_ABI" : "base",
-         "DEB_HOST_ARCH_BITS" : "32",
-         "DEB_HOST_ARCH_CPU" : "avr32",
-         "DEB_HOST_ARCH_ENDIAN" : "big",
-         "DEB_HOST_ARCH_LIBC" : "gnu",
-         "DEB_HOST_ARCH_OS" : "kfreebsd",
-         "DEB_HOST_GNU_CPU" : "avr32",
-         "DEB_HOST_GNU_SYSTEM" : "kfreebsd-gnu",
-         "DEB_HOST_GNU_TYPE" : "avr32-kfreebsd-gnu",
-         "DEB_HOST_MULTIARCH" : "avr32-kfreebsd-gnu"
-      },
       "kfreebsd-hppa" : {
          "DEB_HOST_ARCH" : "kfreebsd-hppa",
          "DEB_HOST_ARCH_ABI" : "base",
@@ -2729,19 +2508,6 @@
          "DEB_HOST_GNU_SYSTEM" : "kfreebsd-gnu",
          "DEB_HOST_GNU_TYPE" : "loongarch64-kfreebsd-gnu",
          "DEB_HOST_MULTIARCH" : "loongarch64-kfreebsd-gnu"
-      },
-      "kfreebsd-m32r" : {
-         "DEB_HOST_ARCH" : "kfreebsd-m32r",
-         "DEB_HOST_ARCH_ABI" : "base",
-         "DEB_HOST_ARCH_BITS" : "32",
-         "DEB_HOST_ARCH_CPU" : "m32r",
-         "DEB_HOST_ARCH_ENDIAN" : "big",
-         "DEB_HOST_ARCH_LIBC" : "gnu",
-         "DEB_HOST_ARCH_OS" : "kfreebsd",
-         "DEB_HOST_GNU_CPU" : "m32r",
-         "DEB_HOST_GNU_SYSTEM" : "kfreebsd-gnu",
-         "DEB_HOST_GNU_TYPE" : "m32r-kfreebsd-gnu",
-         "DEB_HOST_MULTIARCH" : "m32r-kfreebsd-gnu"
       },
       "kfreebsd-m68k" : {
          "DEB_HOST_ARCH" : "kfreebsd-m68k",
@@ -3055,19 +2821,6 @@
          "DEB_HOST_GNU_TYPE" : "sparc64-kfreebsd-gnu",
          "DEB_HOST_MULTIARCH" : "sparc64-kfreebsd-gnu"
       },
-      "kfreebsd-tilegx" : {
-         "DEB_HOST_ARCH" : "kfreebsd-tilegx",
-         "DEB_HOST_ARCH_ABI" : "base",
-         "DEB_HOST_ARCH_BITS" : "64",
-         "DEB_HOST_ARCH_CPU" : "tilegx",
-         "DEB_HOST_ARCH_ENDIAN" : "little",
-         "DEB_HOST_ARCH_LIBC" : "gnu",
-         "DEB_HOST_ARCH_OS" : "kfreebsd",
-         "DEB_HOST_GNU_CPU" : "tilegx",
-         "DEB_HOST_GNU_SYSTEM" : "kfreebsd-gnu",
-         "DEB_HOST_GNU_TYPE" : "tilegx-kfreebsd-gnu",
-         "DEB_HOST_MULTIARCH" : "tilegx-kfreebsd-gnu"
-      },
       "knetbsd-alpha" : {
          "DEB_HOST_ARCH" : "knetbsd-alpha",
          "DEB_HOST_ARCH_ABI" : "base",
@@ -3146,19 +2899,6 @@
          "DEB_HOST_GNU_TYPE" : "armeb-knetbsd-gnu",
          "DEB_HOST_MULTIARCH" : "armeb-knetbsd-gnu"
       },
-      "knetbsd-avr32" : {
-         "DEB_HOST_ARCH" : "knetbsd-avr32",
-         "DEB_HOST_ARCH_ABI" : "base",
-         "DEB_HOST_ARCH_BITS" : "32",
-         "DEB_HOST_ARCH_CPU" : "avr32",
-         "DEB_HOST_ARCH_ENDIAN" : "big",
-         "DEB_HOST_ARCH_LIBC" : "gnu",
-         "DEB_HOST_ARCH_OS" : "knetbsd",
-         "DEB_HOST_GNU_CPU" : "avr32",
-         "DEB_HOST_GNU_SYSTEM" : "knetbsd-gnu",
-         "DEB_HOST_GNU_TYPE" : "avr32-knetbsd-gnu",
-         "DEB_HOST_MULTIARCH" : "avr32-knetbsd-gnu"
-      },
       "knetbsd-hppa" : {
          "DEB_HOST_ARCH" : "knetbsd-hppa",
          "DEB_HOST_ARCH_ABI" : "base",
@@ -3210,19 +2950,6 @@
          "DEB_HOST_GNU_SYSTEM" : "knetbsd-gnu",
          "DEB_HOST_GNU_TYPE" : "loongarch64-knetbsd-gnu",
          "DEB_HOST_MULTIARCH" : "loongarch64-knetbsd-gnu"
-      },
-      "knetbsd-m32r" : {
-         "DEB_HOST_ARCH" : "knetbsd-m32r",
-         "DEB_HOST_ARCH_ABI" : "base",
-         "DEB_HOST_ARCH_BITS" : "32",
-         "DEB_HOST_ARCH_CPU" : "m32r",
-         "DEB_HOST_ARCH_ENDIAN" : "big",
-         "DEB_HOST_ARCH_LIBC" : "gnu",
-         "DEB_HOST_ARCH_OS" : "knetbsd",
-         "DEB_HOST_GNU_CPU" : "m32r",
-         "DEB_HOST_GNU_SYSTEM" : "knetbsd-gnu",
-         "DEB_HOST_GNU_TYPE" : "m32r-knetbsd-gnu",
-         "DEB_HOST_MULTIARCH" : "m32r-knetbsd-gnu"
       },
       "knetbsd-m68k" : {
          "DEB_HOST_ARCH" : "knetbsd-m68k",
@@ -3536,19 +3263,6 @@
          "DEB_HOST_GNU_TYPE" : "sparc64-knetbsd-gnu",
          "DEB_HOST_MULTIARCH" : "sparc64-knetbsd-gnu"
       },
-      "knetbsd-tilegx" : {
-         "DEB_HOST_ARCH" : "knetbsd-tilegx",
-         "DEB_HOST_ARCH_ABI" : "base",
-         "DEB_HOST_ARCH_BITS" : "64",
-         "DEB_HOST_ARCH_CPU" : "tilegx",
-         "DEB_HOST_ARCH_ENDIAN" : "little",
-         "DEB_HOST_ARCH_LIBC" : "gnu",
-         "DEB_HOST_ARCH_OS" : "knetbsd",
-         "DEB_HOST_GNU_CPU" : "tilegx",
-         "DEB_HOST_GNU_SYSTEM" : "knetbsd-gnu",
-         "DEB_HOST_GNU_TYPE" : "tilegx-knetbsd-gnu",
-         "DEB_HOST_MULTIARCH" : "tilegx-knetbsd-gnu"
-      },
       "kopensolaris-alpha" : {
          "DEB_HOST_ARCH" : "kopensolaris-alpha",
          "DEB_HOST_ARCH_ABI" : "base",
@@ -3627,19 +3341,6 @@
          "DEB_HOST_GNU_TYPE" : "armeb-kopensolaris-gnu",
          "DEB_HOST_MULTIARCH" : "armeb-kopensolaris-gnu"
       },
-      "kopensolaris-avr32" : {
-         "DEB_HOST_ARCH" : "kopensolaris-avr32",
-         "DEB_HOST_ARCH_ABI" : "base",
-         "DEB_HOST_ARCH_BITS" : "32",
-         "DEB_HOST_ARCH_CPU" : "avr32",
-         "DEB_HOST_ARCH_ENDIAN" : "big",
-         "DEB_HOST_ARCH_LIBC" : "gnu",
-         "DEB_HOST_ARCH_OS" : "kopensolaris",
-         "DEB_HOST_GNU_CPU" : "avr32",
-         "DEB_HOST_GNU_SYSTEM" : "kopensolaris-gnu",
-         "DEB_HOST_GNU_TYPE" : "avr32-kopensolaris-gnu",
-         "DEB_HOST_MULTIARCH" : "avr32-kopensolaris-gnu"
-      },
       "kopensolaris-hppa" : {
          "DEB_HOST_ARCH" : "kopensolaris-hppa",
          "DEB_HOST_ARCH_ABI" : "base",
@@ -3691,19 +3392,6 @@
          "DEB_HOST_GNU_SYSTEM" : "kopensolaris-gnu",
          "DEB_HOST_GNU_TYPE" : "loongarch64-kopensolaris-gnu",
          "DEB_HOST_MULTIARCH" : "loongarch64-kopensolaris-gnu"
-      },
-      "kopensolaris-m32r" : {
-         "DEB_HOST_ARCH" : "kopensolaris-m32r",
-         "DEB_HOST_ARCH_ABI" : "base",
-         "DEB_HOST_ARCH_BITS" : "32",
-         "DEB_HOST_ARCH_CPU" : "m32r",
-         "DEB_HOST_ARCH_ENDIAN" : "big",
-         "DEB_HOST_ARCH_LIBC" : "gnu",
-         "DEB_HOST_ARCH_OS" : "kopensolaris",
-         "DEB_HOST_GNU_CPU" : "m32r",
-         "DEB_HOST_GNU_SYSTEM" : "kopensolaris-gnu",
-         "DEB_HOST_GNU_TYPE" : "m32r-kopensolaris-gnu",
-         "DEB_HOST_MULTIARCH" : "m32r-kopensolaris-gnu"
       },
       "kopensolaris-m68k" : {
          "DEB_HOST_ARCH" : "kopensolaris-m68k",
@@ -4017,19 +3705,6 @@
          "DEB_HOST_GNU_TYPE" : "sparc64-kopensolaris-gnu",
          "DEB_HOST_MULTIARCH" : "sparc64-kopensolaris-gnu"
       },
-      "kopensolaris-tilegx" : {
-         "DEB_HOST_ARCH" : "kopensolaris-tilegx",
-         "DEB_HOST_ARCH_ABI" : "base",
-         "DEB_HOST_ARCH_BITS" : "64",
-         "DEB_HOST_ARCH_CPU" : "tilegx",
-         "DEB_HOST_ARCH_ENDIAN" : "little",
-         "DEB_HOST_ARCH_LIBC" : "gnu",
-         "DEB_HOST_ARCH_OS" : "kopensolaris",
-         "DEB_HOST_GNU_CPU" : "tilegx",
-         "DEB_HOST_GNU_SYSTEM" : "kopensolaris-gnu",
-         "DEB_HOST_GNU_TYPE" : "tilegx-kopensolaris-gnu",
-         "DEB_HOST_MULTIARCH" : "tilegx-kopensolaris-gnu"
-      },
       "loong64" : {
          "DEB_HOST_ARCH" : "loong64",
          "DEB_HOST_ARCH_ABI" : "base",
@@ -4042,19 +3717,6 @@
          "DEB_HOST_GNU_SYSTEM" : "linux-gnu",
          "DEB_HOST_GNU_TYPE" : "loongarch64-linux-gnu",
          "DEB_HOST_MULTIARCH" : "loongarch64-linux-gnu"
-      },
-      "m32r" : {
-         "DEB_HOST_ARCH" : "m32r",
-         "DEB_HOST_ARCH_ABI" : "base",
-         "DEB_HOST_ARCH_BITS" : "32",
-         "DEB_HOST_ARCH_CPU" : "m32r",
-         "DEB_HOST_ARCH_ENDIAN" : "big",
-         "DEB_HOST_ARCH_LIBC" : "gnu",
-         "DEB_HOST_ARCH_OS" : "linux",
-         "DEB_HOST_GNU_CPU" : "m32r",
-         "DEB_HOST_GNU_SYSTEM" : "linux-gnu",
-         "DEB_HOST_GNU_TYPE" : "m32r-linux-gnu",
-         "DEB_HOST_MULTIARCH" : "m32r-linux-gnu"
       },
       "m68k" : {
          "DEB_HOST_ARCH" : "m68k",
@@ -4329,19 +3991,6 @@
          "DEB_HOST_GNU_TYPE" : "arm-linux-musleabihf",
          "DEB_HOST_MULTIARCH" : "arm-linux-musleabihf"
       },
-      "musl-linux-avr32" : {
-         "DEB_HOST_ARCH" : "musl-linux-avr32",
-         "DEB_HOST_ARCH_ABI" : "base",
-         "DEB_HOST_ARCH_BITS" : "32",
-         "DEB_HOST_ARCH_CPU" : "avr32",
-         "DEB_HOST_ARCH_ENDIAN" : "big",
-         "DEB_HOST_ARCH_LIBC" : "musl",
-         "DEB_HOST_ARCH_OS" : "linux",
-         "DEB_HOST_GNU_CPU" : "avr32",
-         "DEB_HOST_GNU_SYSTEM" : "linux-musl",
-         "DEB_HOST_GNU_TYPE" : "avr32-linux-musl",
-         "DEB_HOST_MULTIARCH" : "avr32-linux-musl"
-      },
       "musl-linux-hppa" : {
          "DEB_HOST_ARCH" : "musl-linux-hppa",
          "DEB_HOST_ARCH_ABI" : "base",
@@ -4393,19 +4042,6 @@
          "DEB_HOST_GNU_SYSTEM" : "linux-musl",
          "DEB_HOST_GNU_TYPE" : "loongarch64-linux-musl",
          "DEB_HOST_MULTIARCH" : "loongarch64-linux-musl"
-      },
-      "musl-linux-m32r" : {
-         "DEB_HOST_ARCH" : "musl-linux-m32r",
-         "DEB_HOST_ARCH_ABI" : "base",
-         "DEB_HOST_ARCH_BITS" : "32",
-         "DEB_HOST_ARCH_CPU" : "m32r",
-         "DEB_HOST_ARCH_ENDIAN" : "big",
-         "DEB_HOST_ARCH_LIBC" : "musl",
-         "DEB_HOST_ARCH_OS" : "linux",
-         "DEB_HOST_GNU_CPU" : "m32r",
-         "DEB_HOST_GNU_SYSTEM" : "linux-musl",
-         "DEB_HOST_GNU_TYPE" : "m32r-linux-musl",
-         "DEB_HOST_MULTIARCH" : "m32r-linux-musl"
       },
       "musl-linux-m68k" : {
          "DEB_HOST_ARCH" : "musl-linux-m68k",
@@ -4719,19 +4355,6 @@
          "DEB_HOST_GNU_TYPE" : "sparc64-linux-musl",
          "DEB_HOST_MULTIARCH" : "sparc64-linux-musl"
       },
-      "musl-linux-tilegx" : {
-         "DEB_HOST_ARCH" : "musl-linux-tilegx",
-         "DEB_HOST_ARCH_ABI" : "base",
-         "DEB_HOST_ARCH_BITS" : "64",
-         "DEB_HOST_ARCH_CPU" : "tilegx",
-         "DEB_HOST_ARCH_ENDIAN" : "little",
-         "DEB_HOST_ARCH_LIBC" : "musl",
-         "DEB_HOST_ARCH_OS" : "linux",
-         "DEB_HOST_GNU_CPU" : "tilegx",
-         "DEB_HOST_GNU_SYSTEM" : "linux-musl",
-         "DEB_HOST_GNU_TYPE" : "tilegx-linux-musl",
-         "DEB_HOST_MULTIARCH" : "tilegx-linux-musl"
-      },
       "netbsd-alpha" : {
          "DEB_HOST_ARCH" : "netbsd-alpha",
          "DEB_HOST_ARCH_ABI" : "base",
@@ -4810,19 +4433,6 @@
          "DEB_HOST_GNU_TYPE" : "armeb-netbsd",
          "DEB_HOST_MULTIARCH" : "armeb-netbsd"
       },
-      "netbsd-avr32" : {
-         "DEB_HOST_ARCH" : "netbsd-avr32",
-         "DEB_HOST_ARCH_ABI" : "base",
-         "DEB_HOST_ARCH_BITS" : "32",
-         "DEB_HOST_ARCH_CPU" : "avr32",
-         "DEB_HOST_ARCH_ENDIAN" : "big",
-         "DEB_HOST_ARCH_LIBC" : "bsd",
-         "DEB_HOST_ARCH_OS" : "netbsd",
-         "DEB_HOST_GNU_CPU" : "avr32",
-         "DEB_HOST_GNU_SYSTEM" : "netbsd",
-         "DEB_HOST_GNU_TYPE" : "avr32-netbsd",
-         "DEB_HOST_MULTIARCH" : "avr32-netbsd"
-      },
       "netbsd-hppa" : {
          "DEB_HOST_ARCH" : "netbsd-hppa",
          "DEB_HOST_ARCH_ABI" : "base",
@@ -4874,19 +4484,6 @@
          "DEB_HOST_GNU_SYSTEM" : "netbsd",
          "DEB_HOST_GNU_TYPE" : "loongarch64-netbsd",
          "DEB_HOST_MULTIARCH" : "loongarch64-netbsd"
-      },
-      "netbsd-m32r" : {
-         "DEB_HOST_ARCH" : "netbsd-m32r",
-         "DEB_HOST_ARCH_ABI" : "base",
-         "DEB_HOST_ARCH_BITS" : "32",
-         "DEB_HOST_ARCH_CPU" : "m32r",
-         "DEB_HOST_ARCH_ENDIAN" : "big",
-         "DEB_HOST_ARCH_LIBC" : "bsd",
-         "DEB_HOST_ARCH_OS" : "netbsd",
-         "DEB_HOST_GNU_CPU" : "m32r",
-         "DEB_HOST_GNU_SYSTEM" : "netbsd",
-         "DEB_HOST_GNU_TYPE" : "m32r-netbsd",
-         "DEB_HOST_MULTIARCH" : "m32r-netbsd"
       },
       "netbsd-m68k" : {
          "DEB_HOST_ARCH" : "netbsd-m68k",
@@ -5200,19 +4797,6 @@
          "DEB_HOST_GNU_TYPE" : "sparc64-netbsd",
          "DEB_HOST_MULTIARCH" : "sparc64-netbsd"
       },
-      "netbsd-tilegx" : {
-         "DEB_HOST_ARCH" : "netbsd-tilegx",
-         "DEB_HOST_ARCH_ABI" : "base",
-         "DEB_HOST_ARCH_BITS" : "64",
-         "DEB_HOST_ARCH_CPU" : "tilegx",
-         "DEB_HOST_ARCH_ENDIAN" : "little",
-         "DEB_HOST_ARCH_LIBC" : "bsd",
-         "DEB_HOST_ARCH_OS" : "netbsd",
-         "DEB_HOST_GNU_CPU" : "tilegx",
-         "DEB_HOST_GNU_SYSTEM" : "netbsd",
-         "DEB_HOST_GNU_TYPE" : "tilegx-netbsd",
-         "DEB_HOST_MULTIARCH" : "tilegx-netbsd"
-      },
       "nios2" : {
          "DEB_HOST_ARCH" : "nios2",
          "DEB_HOST_ARCH_ABI" : "base",
@@ -5304,19 +4888,6 @@
          "DEB_HOST_GNU_TYPE" : "armeb-openbsd",
          "DEB_HOST_MULTIARCH" : "armeb-openbsd"
       },
-      "openbsd-avr32" : {
-         "DEB_HOST_ARCH" : "openbsd-avr32",
-         "DEB_HOST_ARCH_ABI" : "base",
-         "DEB_HOST_ARCH_BITS" : "32",
-         "DEB_HOST_ARCH_CPU" : "avr32",
-         "DEB_HOST_ARCH_ENDIAN" : "big",
-         "DEB_HOST_ARCH_LIBC" : "bsd",
-         "DEB_HOST_ARCH_OS" : "openbsd",
-         "DEB_HOST_GNU_CPU" : "avr32",
-         "DEB_HOST_GNU_SYSTEM" : "openbsd",
-         "DEB_HOST_GNU_TYPE" : "avr32-openbsd",
-         "DEB_HOST_MULTIARCH" : "avr32-openbsd"
-      },
       "openbsd-hppa" : {
          "DEB_HOST_ARCH" : "openbsd-hppa",
          "DEB_HOST_ARCH_ABI" : "base",
@@ -5368,19 +4939,6 @@
          "DEB_HOST_GNU_SYSTEM" : "openbsd",
          "DEB_HOST_GNU_TYPE" : "loongarch64-openbsd",
          "DEB_HOST_MULTIARCH" : "loongarch64-openbsd"
-      },
-      "openbsd-m32r" : {
-         "DEB_HOST_ARCH" : "openbsd-m32r",
-         "DEB_HOST_ARCH_ABI" : "base",
-         "DEB_HOST_ARCH_BITS" : "32",
-         "DEB_HOST_ARCH_CPU" : "m32r",
-         "DEB_HOST_ARCH_ENDIAN" : "big",
-         "DEB_HOST_ARCH_LIBC" : "bsd",
-         "DEB_HOST_ARCH_OS" : "openbsd",
-         "DEB_HOST_GNU_CPU" : "m32r",
-         "DEB_HOST_GNU_SYSTEM" : "openbsd",
-         "DEB_HOST_GNU_TYPE" : "m32r-openbsd",
-         "DEB_HOST_MULTIARCH" : "m32r-openbsd"
       },
       "openbsd-m68k" : {
          "DEB_HOST_ARCH" : "openbsd-m68k",
@@ -5694,19 +5252,6 @@
          "DEB_HOST_GNU_TYPE" : "sparc64-openbsd",
          "DEB_HOST_MULTIARCH" : "sparc64-openbsd"
       },
-      "openbsd-tilegx" : {
-         "DEB_HOST_ARCH" : "openbsd-tilegx",
-         "DEB_HOST_ARCH_ABI" : "base",
-         "DEB_HOST_ARCH_BITS" : "64",
-         "DEB_HOST_ARCH_CPU" : "tilegx",
-         "DEB_HOST_ARCH_ENDIAN" : "little",
-         "DEB_HOST_ARCH_LIBC" : "bsd",
-         "DEB_HOST_ARCH_OS" : "openbsd",
-         "DEB_HOST_GNU_CPU" : "tilegx",
-         "DEB_HOST_GNU_SYSTEM" : "openbsd",
-         "DEB_HOST_GNU_TYPE" : "tilegx-openbsd",
-         "DEB_HOST_MULTIARCH" : "tilegx-openbsd"
-      },
       "or1k" : {
          "DEB_HOST_ARCH" : "or1k",
          "DEB_HOST_ARCH_ABI" : "base",
@@ -5954,19 +5499,6 @@
          "DEB_HOST_GNU_TYPE" : "armeb-solaris",
          "DEB_HOST_MULTIARCH" : "armeb-solaris"
       },
-      "solaris-avr32" : {
-         "DEB_HOST_ARCH" : "solaris-avr32",
-         "DEB_HOST_ARCH_ABI" : "base",
-         "DEB_HOST_ARCH_BITS" : "32",
-         "DEB_HOST_ARCH_CPU" : "avr32",
-         "DEB_HOST_ARCH_ENDIAN" : "big",
-         "DEB_HOST_ARCH_LIBC" : "sysv",
-         "DEB_HOST_ARCH_OS" : "solaris",
-         "DEB_HOST_GNU_CPU" : "avr32",
-         "DEB_HOST_GNU_SYSTEM" : "solaris",
-         "DEB_HOST_GNU_TYPE" : "avr32-solaris",
-         "DEB_HOST_MULTIARCH" : "avr32-solaris"
-      },
       "solaris-hppa" : {
          "DEB_HOST_ARCH" : "solaris-hppa",
          "DEB_HOST_ARCH_ABI" : "base",
@@ -6018,19 +5550,6 @@
          "DEB_HOST_GNU_SYSTEM" : "solaris",
          "DEB_HOST_GNU_TYPE" : "loongarch64-solaris",
          "DEB_HOST_MULTIARCH" : "loongarch64-solaris"
-      },
-      "solaris-m32r" : {
-         "DEB_HOST_ARCH" : "solaris-m32r",
-         "DEB_HOST_ARCH_ABI" : "base",
-         "DEB_HOST_ARCH_BITS" : "32",
-         "DEB_HOST_ARCH_CPU" : "m32r",
-         "DEB_HOST_ARCH_ENDIAN" : "big",
-         "DEB_HOST_ARCH_LIBC" : "sysv",
-         "DEB_HOST_ARCH_OS" : "solaris",
-         "DEB_HOST_GNU_CPU" : "m32r",
-         "DEB_HOST_GNU_SYSTEM" : "solaris",
-         "DEB_HOST_GNU_TYPE" : "m32r-solaris",
-         "DEB_HOST_MULTIARCH" : "m32r-solaris"
       },
       "solaris-m68k" : {
          "DEB_HOST_ARCH" : "solaris-m68k",
@@ -6344,19 +5863,6 @@
          "DEB_HOST_GNU_TYPE" : "sparc64-solaris",
          "DEB_HOST_MULTIARCH" : "sparc64-solaris"
       },
-      "solaris-tilegx" : {
-         "DEB_HOST_ARCH" : "solaris-tilegx",
-         "DEB_HOST_ARCH_ABI" : "base",
-         "DEB_HOST_ARCH_BITS" : "64",
-         "DEB_HOST_ARCH_CPU" : "tilegx",
-         "DEB_HOST_ARCH_ENDIAN" : "little",
-         "DEB_HOST_ARCH_LIBC" : "sysv",
-         "DEB_HOST_ARCH_OS" : "solaris",
-         "DEB_HOST_GNU_CPU" : "tilegx",
-         "DEB_HOST_GNU_SYSTEM" : "solaris",
-         "DEB_HOST_GNU_TYPE" : "tilegx-solaris",
-         "DEB_HOST_MULTIARCH" : "tilegx-solaris"
-      },
       "sparc" : {
          "DEB_HOST_ARCH" : "sparc",
          "DEB_HOST_ARCH_ABI" : "base",
@@ -6382,19 +5888,6 @@
          "DEB_HOST_GNU_SYSTEM" : "linux-gnu",
          "DEB_HOST_GNU_TYPE" : "sparc64-linux-gnu",
          "DEB_HOST_MULTIARCH" : "sparc64-linux-gnu"
-      },
-      "tilegx" : {
-         "DEB_HOST_ARCH" : "tilegx",
-         "DEB_HOST_ARCH_ABI" : "base",
-         "DEB_HOST_ARCH_BITS" : "64",
-         "DEB_HOST_ARCH_CPU" : "tilegx",
-         "DEB_HOST_ARCH_ENDIAN" : "little",
-         "DEB_HOST_ARCH_LIBC" : "gnu",
-         "DEB_HOST_ARCH_OS" : "linux",
-         "DEB_HOST_GNU_CPU" : "tilegx",
-         "DEB_HOST_GNU_SYSTEM" : "linux-gnu",
-         "DEB_HOST_GNU_TYPE" : "tilegx-linux-gnu",
-         "DEB_HOST_MULTIARCH" : "tilegx-linux-gnu"
       },
       "uclibc-linux-alpha" : {
          "DEB_HOST_ARCH" : "uclibc-linux-alpha",
@@ -6487,19 +5980,6 @@
          "DEB_HOST_GNU_TYPE" : "arm-linux-uclibceabi",
          "DEB_HOST_MULTIARCH" : "arm-linux-uclibceabi"
       },
-      "uclibc-linux-avr32" : {
-         "DEB_HOST_ARCH" : "uclibc-linux-avr32",
-         "DEB_HOST_ARCH_ABI" : "base",
-         "DEB_HOST_ARCH_BITS" : "32",
-         "DEB_HOST_ARCH_CPU" : "avr32",
-         "DEB_HOST_ARCH_ENDIAN" : "big",
-         "DEB_HOST_ARCH_LIBC" : "uclibc",
-         "DEB_HOST_ARCH_OS" : "linux",
-         "DEB_HOST_GNU_CPU" : "avr32",
-         "DEB_HOST_GNU_SYSTEM" : "linux-uclibc",
-         "DEB_HOST_GNU_TYPE" : "avr32-linux-uclibc",
-         "DEB_HOST_MULTIARCH" : "avr32-linux-uclibc"
-      },
       "uclibc-linux-hppa" : {
          "DEB_HOST_ARCH" : "uclibc-linux-hppa",
          "DEB_HOST_ARCH_ABI" : "base",
@@ -6551,19 +6031,6 @@
          "DEB_HOST_GNU_SYSTEM" : "linux-uclibc",
          "DEB_HOST_GNU_TYPE" : "loongarch64-linux-uclibc",
          "DEB_HOST_MULTIARCH" : "loongarch64-linux-uclibc"
-      },
-      "uclibc-linux-m32r" : {
-         "DEB_HOST_ARCH" : "uclibc-linux-m32r",
-         "DEB_HOST_ARCH_ABI" : "base",
-         "DEB_HOST_ARCH_BITS" : "32",
-         "DEB_HOST_ARCH_CPU" : "m32r",
-         "DEB_HOST_ARCH_ENDIAN" : "big",
-         "DEB_HOST_ARCH_LIBC" : "uclibc",
-         "DEB_HOST_ARCH_OS" : "linux",
-         "DEB_HOST_GNU_CPU" : "m32r",
-         "DEB_HOST_GNU_SYSTEM" : "linux-uclibc",
-         "DEB_HOST_GNU_TYPE" : "m32r-linux-uclibc",
-         "DEB_HOST_MULTIARCH" : "m32r-linux-uclibc"
       },
       "uclibc-linux-m68k" : {
          "DEB_HOST_ARCH" : "uclibc-linux-m68k",
@@ -6877,19 +6344,6 @@
          "DEB_HOST_GNU_TYPE" : "sparc64-linux-uclibc",
          "DEB_HOST_MULTIARCH" : "sparc64-linux-uclibc"
       },
-      "uclibc-linux-tilegx" : {
-         "DEB_HOST_ARCH" : "uclibc-linux-tilegx",
-         "DEB_HOST_ARCH_ABI" : "base",
-         "DEB_HOST_ARCH_BITS" : "64",
-         "DEB_HOST_ARCH_CPU" : "tilegx",
-         "DEB_HOST_ARCH_ENDIAN" : "little",
-         "DEB_HOST_ARCH_LIBC" : "uclibc",
-         "DEB_HOST_ARCH_OS" : "linux",
-         "DEB_HOST_GNU_CPU" : "tilegx",
-         "DEB_HOST_GNU_SYSTEM" : "linux-uclibc",
-         "DEB_HOST_GNU_TYPE" : "tilegx-linux-uclibc",
-         "DEB_HOST_MULTIARCH" : "tilegx-linux-uclibc"
-      },
       "uclinux-alpha" : {
          "DEB_HOST_ARCH" : "uclinux-alpha",
          "DEB_HOST_ARCH_ABI" : "base",
@@ -6981,19 +6435,6 @@
          "DEB_HOST_GNU_TYPE" : "arm-uclinux-uclibceabi",
          "DEB_HOST_MULTIARCH" : "arm-uclinux-uclibceabi"
       },
-      "uclinux-avr32" : {
-         "DEB_HOST_ARCH" : "uclinux-avr32",
-         "DEB_HOST_ARCH_ABI" : "base",
-         "DEB_HOST_ARCH_BITS" : "32",
-         "DEB_HOST_ARCH_CPU" : "avr32",
-         "DEB_HOST_ARCH_ENDIAN" : "big",
-         "DEB_HOST_ARCH_LIBC" : "uclibc",
-         "DEB_HOST_ARCH_OS" : "uclinux",
-         "DEB_HOST_GNU_CPU" : "avr32",
-         "DEB_HOST_GNU_SYSTEM" : "uclinux-uclibc",
-         "DEB_HOST_GNU_TYPE" : "avr32-uclinux-uclibc",
-         "DEB_HOST_MULTIARCH" : "avr32-uclinux-uclibc"
-      },
       "uclinux-hppa" : {
          "DEB_HOST_ARCH" : "uclinux-hppa",
          "DEB_HOST_ARCH_ABI" : "base",
@@ -7045,19 +6486,6 @@
          "DEB_HOST_GNU_SYSTEM" : "uclinux-uclibc",
          "DEB_HOST_GNU_TYPE" : "loongarch64-uclinux-uclibc",
          "DEB_HOST_MULTIARCH" : "loongarch64-uclinux-uclibc"
-      },
-      "uclinux-m32r" : {
-         "DEB_HOST_ARCH" : "uclinux-m32r",
-         "DEB_HOST_ARCH_ABI" : "base",
-         "DEB_HOST_ARCH_BITS" : "32",
-         "DEB_HOST_ARCH_CPU" : "m32r",
-         "DEB_HOST_ARCH_ENDIAN" : "big",
-         "DEB_HOST_ARCH_LIBC" : "uclibc",
-         "DEB_HOST_ARCH_OS" : "uclinux",
-         "DEB_HOST_GNU_CPU" : "m32r",
-         "DEB_HOST_GNU_SYSTEM" : "uclinux-uclibc",
-         "DEB_HOST_GNU_TYPE" : "m32r-uclinux-uclibc",
-         "DEB_HOST_MULTIARCH" : "m32r-uclinux-uclibc"
       },
       "uclinux-m68k" : {
          "DEB_HOST_ARCH" : "uclinux-m68k",
@@ -7370,19 +6798,6 @@
          "DEB_HOST_GNU_SYSTEM" : "uclinux-uclibc",
          "DEB_HOST_GNU_TYPE" : "sparc64-uclinux-uclibc",
          "DEB_HOST_MULTIARCH" : "sparc64-uclinux-uclibc"
-      },
-      "uclinux-tilegx" : {
-         "DEB_HOST_ARCH" : "uclinux-tilegx",
-         "DEB_HOST_ARCH_ABI" : "base",
-         "DEB_HOST_ARCH_BITS" : "64",
-         "DEB_HOST_ARCH_CPU" : "tilegx",
-         "DEB_HOST_ARCH_ENDIAN" : "little",
-         "DEB_HOST_ARCH_LIBC" : "uclibc",
-         "DEB_HOST_ARCH_OS" : "uclinux",
-         "DEB_HOST_GNU_CPU" : "tilegx",
-         "DEB_HOST_GNU_SYSTEM" : "uclinux-uclibc",
-         "DEB_HOST_GNU_TYPE" : "tilegx-uclinux-uclibc",
-         "DEB_HOST_MULTIARCH" : "tilegx-uclinux-uclibc"
       },
       "x32" : {
          "DEB_HOST_ARCH" : "x32",

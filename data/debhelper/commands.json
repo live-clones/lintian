@@ -113,6 +113,11 @@
             "dh-buildinfo"
          ]
       },
+      "dh_builtusing" : {
+         "installed_by" : [
+            "dh-builtusing"
+         ]
+      },
       "dh_clean" : {
          "installed_by" : [
             "debhelper"
@@ -235,6 +240,11 @@
             "dh-cmake"
          ]
       },
+      "dh_debputy" : {
+         "installed_by" : [
+            "dh-debputy"
+         ]
+      },
       "dh_di_kernel_gencontrol" : {
          "installed_by" : [
             "dh-di"
@@ -350,6 +360,11 @@
       "dh_golang_autopkgtest" : {
          "installed_by" : [
             "dh-golang"
+         ]
+      },
+      "dh_grantlee" : {
+         "installed_by" : [
+            "libgrantlee5-dev"
          ]
       },
       "dh_gstscancodecs" : {
@@ -977,6 +992,11 @@
             "dh-raku"
          ]
       },
+      "dh_raku_clean" : {
+         "installed_by" : [
+            "dh-raku"
+         ]
+      },
       "dh_raku_install" : {
          "installed_by" : [
             "dh-raku"
@@ -1094,6 +1114,12 @@
          "installed_by" : [
             "debhelper"
          ]
+      },
+      "dh_user-session-migration" : {
+         "installed_by" : [
+            "dh-user-session-migration"
+         ],
+         "uses_misc_depends" : 1
       },
       "dh_usrlocal" : {
          "installed_by" : [
