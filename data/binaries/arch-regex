@@ -35,6 +35,7 @@ i386          ~~^ELF 32-bit LSB .* 80386, .* (?:GNU/Linux|(?!GNU)).*$
 ia64          ~~^ELF 64-bit LSB .* IA-64
 kfreebsd-amd64~~^ELF 64-bit LSB .* x86-64, .* (?:GNU/kFreeBSD|(?!GNU)).*$
 kfreebsd-i386 ~~^ELF 32-bit LSB .* 80386, .* (?:GNU/kFreeBSD|(?!GNU)).*$
+loong64       ~~^ELF 64-bit LSB .* LoongArch
 lpia          ~~^ELF 32-bit LSB .* 80386, .* (?:GNU/Linux|(?!GNU)).*$
 m32r          ~~^ELF 32-bit MSB .* M32R
 m68k          ~~^ELF 32-bit MSB .* 680[02]0
