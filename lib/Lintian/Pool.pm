@@ -191,8 +191,7 @@ sub process{
                 next
                   unless $PROFILE->display_level_for_tag($hint->tag_name);
 
-                if (!defined $hint->override
-                    || $option->{'show-overrides'}) {
+                if (!defined $hint->override) {
 
                     ++$reported_count{$tag->visibility}
                       if !$tag->experimental;
