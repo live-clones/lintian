@@ -50,9 +50,12 @@ sub always {
       if $self->processable->fields->declares('Auto-Built-Package');
 
     my $basename = basename($self->processable->path);
+    # remove salsaci suffix
+    my $nosalsabasename = $basename;
+    $nosalsabasename =~ s/[+]salsaci[+]\d+[+]\d+(_[[:alnum:]]+\.[[:alnum:]]+)$/$1/;
 
     my $adjusted_length
-      = length($basename)
+      = length($nosalsabasename)
       - length($self->processable->architecture)
       + $LONGEST_ARCHITECTURE;
 
