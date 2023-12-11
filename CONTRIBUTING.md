@@ -12,10 +12,11 @@ on [salsa.debian.org][salsa]. First, create an account on Salsa if you
 do not have one. You need to configure at least one SSH key.
 
 The easiest way to file merge requests on Salsa is to fork our team
-repository into your private name space. That is done on the website.
+repository into your private namespace. That is done on the salsa
+website.
 
 Then you should clone the forked version of Lintian from your private
-name space to your local machine. You can find the command for that
+namespace to your local machine. You can find the command for that
 under a blue button that says "Clone'. Choose the git protocol (not
 HTTPS).
 
@@ -28,7 +29,7 @@ Create a feature branch for your proposed changes.
 
 ### Make Lintian better
 
-Now you can fix bugs or implement new checks.
+Now you can fix bugs or implement new features.
 
 Please commit your changes with suitable explanations in the commit
 messages. You can find some examples with:
@@ -49,121 +50,152 @@ you provide tests for your proposed tags.
 There is a way to exempt your tag from testing, but please do not do
 so.
 
-Our test specifications have two parts. One declares how to build the
-test package. The other declares how to run Lintian on it.
+Most tests only run a specific lintian 'check'. Please name your tests
+after this check: do not name them after the tag they are testing
+because many tags need two or more tests to exercise subtle variations
+in the trigger conditions.
 
-The build instructions are almost completely parameterized. In many
-cases, you will not need to copy or modify any templates. For each
-test, the build specifications are located in the file
-${recipe-dir}/build-spec/fill-values.
+Test specifications have two parts, build specifications and
+evaluation specifications. Build specifications tell the testsuite how
+to build a test package, and evaluation specifications declare how to
+run Lintian on the package and say what the expected output is.
 
-A simple one might look like this:
+Build specifications are located in the directory
+'t/recipes/path/to/test/build-spec/'. This must contain:
+- A partial debian/ directory that includes as little packaging files
+  as possible
+- An optional 'orig' directory containing upstream files (if any are
+  needed to trigger the tag)
+- A file called 'fill-values' that tells the test suite how to use
+  existing template to 'fill in' anything not included in debian/
+
+For most tests, debian/ will be very minimal indeed. A simple
+'fill-values' might look like this:
 
     Skeleton: upload-native
     Testname: pdf-in-etc
     Description: Ships a PDF file in /etc
 
-Such a package would probably be used to trigger a tag about
-documentation in a place other than /usr/share/doc. Please do not look
-for this test in the test suite; it is ficticious.
+This will use the 'upload-native' template to create a native package
+with the given 'Description'.  The 'debian' directory would have a
+one-line 'install' file putting some PDF documentation in /etc, and a
+PDF file would be included in orig. (Please do not look for this test
+in the test suite; it is just an example).
 
-For most tests, we run only the check being tested. That is why the
-tests are sorted according to the check to which they belong.
+Evaluation specifications are located in the directory
+'t/recipes/path/to/test/eval/'. These describes how to run Lintian and
+which output (tags, exit code) to expect.
 
-Please name your tests after what they contain. Do not name them after
-the tag they are testing. Many tags use two or more tests to exercise
-subtle variations in the trigger conditions.
-
-The second part of each test describes how to run Lintian and which
-tags to expect. Evaluation specifications are located in the file
-${recipe-dir}/eval/desc.
-
-A simple evaluation specification might look like this:
+The main file is 'desc'. A simple evaluation specification might look
+like this:
 
     Testname: pdf-in-etc
     Check: documentation
 
-As noted, this will only run the specified check. It eliminates all
-nuisance tags, such as debian-watch-does-not-check-gpg-signature
-(unless you are working on the check debian/watch).
+As noted, this will only run the specified 'documentation' check. This
+keeps output to a minimum so you do not get nuisance tags, such as
+debian-watch-does-not-check-gpg-signature (unless you are working on
+the a check for debian/watch). The contents of the 'Testname' field
+must match the directory name.
 
-Another file in that same directory shows the tags expected to be
-triggered. Only tags from the selected check will show up there.
+A 'hints' file in the eval directory contains the tags that lintian is
+expected to be produce when run on the test package. Only tags from
+the selected 'check' should be included.
 
-You should scrupulously examine that file to make sure your tags show
-up exactly the way you want, but you do not have to write it
-yourself. The test suite will do it for you during the interactive
-calibration in the next step.
+You should scrupulously examine the 'hints' to make sure your tags
+show up exactly the way you want, but you do not have to write it
+yourself. The test suite will help you write this during the
+interactive calibration described in the next step.
 
-### Calibrate your tests
+Further details are in the file t/recipes/README
 
-To build the test package you probably have to install all test
-prerequisites from d/tests/control. Usually, that can be done with:
+### Preparing to run the test suite
 
-    $ autopkgtest -B
+To run the testsuite you probably have to install all testsuite
+prerequisites from lintian's debian/tests/control. This can be done
+with:
 
-If anyhing else is missing, you may also have to install the build
-prerequisites. That can be done with:
+    # autopkgtest -B
 
-    $ apt build-dep .
+You may also have to install the build dependencies with:
 
-Both of these commands have to be run with superuse privileges (root).
+    # apt build-dep .
 
-As you might imagine, Lintian comes with a large number of test
-packages. You have to build all of them locally. It takes time the
-first time around but is much faster in subsequent runs. You can build
-the test packages with:
+Both of these commands have to be run with root privileges.
 
-    $ private/build-test-packages
+### Running the testsuite
 
-Now, please calibrate your tests. For the documentation check the
-command would be:
+To run all tests run
+
+    $ private/runtests
+
+This takes a long time the first time you run it because Lintian has a
+large number of tests each building its own test package. The
+packages are built locally (in debian/test-out/) and reused so
+subsequent runs are much faster.
+
+To run a subset of tests, use --onlyrun:
 
     $ private/runtests --onlyrun=check:documentation
 
-Make sure to select the check you are actually modifying.
+This runs all tests that have 'Check: documentation' in their
+'eval/desc' file. Alternatively,
 
-The interactive calibration will add expected tags to your test
-specifications. In many cases, it is best to "accept all" and examine
-the changes in git. In complex cases, you can use git add -i to accept
-only the ones you need.
+    $ private/runtests --onlyrun=test:name
 
-This is a crucial step. Please make sure the expected tags are
-meaningful. We also pay close attention to these tags when we look at
-your merge request.
+Will run a single test with 'Testname: name'. Running
+
+    $ private/runtests --help
+
+will show you further options.
+
+
+### Calibrating tests to fix test failures
+
+If tests fail, the teststuite will use an interactive 'calibration'
+process to help you write or amend a 'hints' file. Simply follow
+the instructions on the screen. In many cases, it is best to "accept
+all" and examine the changes in git. In complex cases, you can use
+'git add -i' to stage only the changes you need.
+
+This is a crucial step when adding a new test. Please make sure the
+expected tags are correct. We pay close attention to these tags when
+we look at your merge request.
 
 ### Run the full test suite
 
-Finally, please start the entire test suite. It will run a variety of
-style and consistency tests. The most common issue is that you have to
-run perltidy.
+Once your test is correct and passing, please ensure the entire test
+suite passes. This includes a variety of style and consistency
+tests.
 
-We configure perltidy in a special way. Please run it from the
+The most common issue detected is that you have to run perltidy. We
+configure perltidy in a special way. Please run it from the
 repository's base directory. Otherwise it will not find the custom
 configuration, and the test suite will not pass.
 
-### Submit your merge request
+### Submit a merge request
 
-Finally, please push your changes to the Lintian repo in your own name
-space. You may end up doing that multiple times, It will eventually
-require the force switch.
+Once all the above is done, please push your changes to your Lintian
+fork on salsa.
+
+You may end up doing that multiple times: use
 
     $ git push -f
 
-That command will respond with the single most important message in
-this document. Salsa will ask you to create a merge request. Just
-click the link provided in the terminal.
+to keep the git history simple.
 
-Your browser will open a draft merge request. For a single commit, the
-text field is populated with your commit message. Otherwise, please
-explain the purpose of your commit series and hit "Submit".
+After each push you will be shown a link to create a merge
+request. Just click the link provided in the terminal. Your browser
+will open a draft merge request. For a single commit, the text field
+is populated with your commit message. Otherwise, please explain the
+purpose of your commit series and hit "Submit".
 
 The push command also started the standard CI pipeline on Salsa, which
 is very comprehensive. It builds Debian packages and runs autopkgtest,
 among many other jobs.
 
 We will generally not accept merge requests unless the CI pipeline
-passes sucessfully. You can see the status on Salsa in two places: in
+passes successfully. You can see the status on Salsa in two places: in
 the MR and in your own repo. The pipeline takes about one hundred
 minutes.
 
