@@ -1,4 +1,4 @@
-multiarch := $(shell dpkg-architecture -qDEB_HOST_ARCH)
+multiarch := $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
 
 all:
 	install -d usr/lib/$(multiarch)/girepository-1.0
