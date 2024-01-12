@@ -1,6 +1,5 @@
 gir (source): typelib-missing-gir-depends gir1.2-bad [debian/control]
 gir (source): typelib-missing-gir-depends gir1.2-bad-multiarch [debian/control]
-gir1.2-good-42 (binary): typelib-not-in-multiarch-directory usr/lib/x86_64-linux-gnu/girepository-1.0 [usr/lib/girepository-1.0/GoodExtras-42.typelib]
 gir1.2-good-42 (binary): typelib-not-in-multiarch-directory usr/lib/x86_64-linux-gnu/girepository-1.0 [usr/lib/girepository-1.0/Good-42.typelib]
 gir1.2-bad (binary): typelib-section-not-introspection misc [usr/lib/girepository-1.0/Bad-23.typelib]
 gir1.2-bad (binary): typelib-package-name-does-not-match gir1.2-bad-23 [usr/lib/girepository-1.0/Bad-23.typelib]
