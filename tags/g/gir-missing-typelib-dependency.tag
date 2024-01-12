@@ -2,9 +2,11 @@ Tag: gir-missing-typelib-dependency
 Severity: warning
 Check: desktop/gnome/gir
 Explanation: Development packages that contain GObject-Introspection XML files
- (<code>/usr/share/gir-1.0/Foo-23.gir</code>) must depend on the package
- containing the corresponding binary typelib, which is conventionally named
- <code>gir1.2-foo-23</code>. The dependency must be strictly versioned
+ (<code>/usr/share/gir-1.0/Foo-23.gir</code> or
+ <code>/usr/lib/${DEB_HOST_MULTIARCH}/gir-1.0/Foo-23.gir</code>)
+ must depend on the package containing the corresponding binary typelib,
+ which should normally be named <code>gir1.2-foo-23</code>.
+ The dependency must be strictly versioned
  (for example <code>gir1.2-foo-23 (= ${binary:Version})</code> when using
  debhelper).
  .
