@@ -17,6 +17,17 @@ Description: [% $description %]
  .
  This package gets GObject-Introspection wrong in various ways.
 
+Package: gir1.2-bad-multiarch
+Section: misc
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: [% $description %]
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.
+ .
+ This package also gets GObject-Introspection wrong in various ways.
+
 Package: gir1.2-good-42
 Section: oldlibs
 Architecture: any
