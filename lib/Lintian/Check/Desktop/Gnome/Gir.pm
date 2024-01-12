@@ -133,6 +133,14 @@ sub installable {
         $expected =~ s/\.gir$//;
         $expected =~ tr/_/-/;
 
+        my $our_version = $self->processable->fields->value('Version');
+
+        $self->pointed_hint('gir-package-name-does-not-match',
+            $gir->pointer, "${expected}-dev")
+          if $self->processable->name ne "${expected}-dev"
+          && !$self->processable->relation('Provides')
+          ->satisfies("${expected}-dev (= $our_version)");
+
         for my $installable ($self->group->get_installables) {
             next
               unless $installable->name =~ m/^gir1\.2-/;
@@ -145,8 +153,6 @@ sub installable {
               && $self->processable->relation('strong')
               ->satisfies("$name (= $version)");
         }
-
-        my $our_version = $self->processable->fields->value('Version');
 
         $self->pointed_hint('gir-missing-typelib-dependency',
             $gir->pointer, $expected)
