@@ -10,10 +10,20 @@ Explanation: Development packages that contain GObject-Introspection XML files
  (for example <code>gir1.2-foo-23 (= ${binary:Version})</code> when using
  debhelper).
  .
+ The recommended way to populate the <code>Depends</code> fields is to use
+ debhelper and dh_girepository, via the gir addon or the dh-sequence-gir
+ virtual package, and add <code>Depends: ${gir:Depends}</code> to
+ packages that contain GIR XML.
+ .
  If multiple typelibs are shipped in the same package, then that package
  should have versioned <code>Provides</code> for the names that would have been
  used for separate packages. In this case, Lintian does not emit this tag
  when a group of binary packages from the same source is checked together.
+ Since gobject-introspection 1.78.1-6 (Debian trixie),
+ the recommended way to populate the <code>Provides</code> fields is to use
+ debhelper and dh_girepository, via the gir addon or the dh-sequence-gir
+ virtual package, and add <code>Provides: ${gir:Provides}</code> to
+ packages that contain more than one typelib.
  .
  For example, <code>libgtk-3-dev</code> contains <code>Gtk-3.0.gir</code>,
  <code>Gdk-3.0.gir</code> and <code>GdkX11-3.0.gir</code>.
