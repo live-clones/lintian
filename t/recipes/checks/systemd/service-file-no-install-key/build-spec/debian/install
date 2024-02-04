@@ -1,1 +1,1 @@
-debian/no-install.service lib/systemd/system/
+debian/no-install.service usr/lib/systemd/system/
