@@ -97,8 +97,8 @@ sub installable {
     foreach my $lib_dir (qw(usr/lib lib)) {
         if (
             defined(
-                my $dir =
-                $processable->installed->resolve_path("$lib_dir/udev/rules.d/")
+                my $dir = $processable->installed->resolve_path(
+                    "$lib_dir/udev/rules.d/")
             )
         ) {
             for my $item ($dir->descendants) {
