@@ -52,7 +52,8 @@ sub always {
     my $basename = basename($self->processable->path);
     # remove salsaci suffix
     my $nosalsabasename = $basename;
-    $nosalsabasename =~ s/[+]salsaci[+]\d+[+]\d+(_[[:alnum:]]+\.[[:alnum:]]+)$/$1/;
+    $nosalsabasename
+      =~ s/[+]salsaci[+]\d+[+]\d+(_[[:alnum:]]+\.[[:alnum:]]+)$/$1/;
 
     my $adjusted_length
       = length($nosalsabasename)
