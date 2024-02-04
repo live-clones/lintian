@@ -41,20 +41,23 @@ with 'Lintian::Check';
 sub installable {
     my ($self) = @_;
 
-    my $rules_dir
-      = $self->processable->installed->resolve_path('lib/udev/rules.d/');
-    return
-      unless $rules_dir;
+    foreach my $lib_dir (qw(usr/lib lib)) {
+        my $rules_dir
+          = $self->processable->installed->resolve_path(
+            "$lib_dir/udev/rules.d/");
+        next
+          unless $rules_dir;
 
-    for my $item ($rules_dir->children) {
+        for my $item ($rules_dir->children) {
 
-        if (!$item->is_open_ok) {
+            if (!$item->is_open_ok) {
 
-            $self->pointed_hint('udev-rule-unreadable', $item->pointer);
-            next;
+                $self->pointed_hint('udev-rule-unreadable', $item->pointer);
+                next;
+            }
+
+            $self->check_udev_rules($item);
         }
-
-        $self->check_udev_rules($item);
     }
 
     return;

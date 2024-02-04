@@ -94,13 +94,16 @@ sub installable {
             }
         }
     }
-    if (
-        defined(
-            my $dir= $processable->installed->resolve_path('lib/udev/rules.d/')
-        )
-    ) {
-        for my $item ($dir->descendants) {
-            push(@udevrules, $item) if ($item->is_file);
+    foreach my $lib_dir (qw(usr/lib lib)) {
+        if (
+            defined(
+                my $dir =
+                $processable->installed->resolve_path("$lib_dir/udev/rules.d/")
+            )
+        ) {
+            for my $item ($dir->descendants) {
+                push(@udevrules, $item) if ($item->is_file);
+            }
         }
     }
 
