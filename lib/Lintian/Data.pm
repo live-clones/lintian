@@ -122,7 +122,8 @@ sub all_sources {
         $self->debhelper_levels,$self->fonts,
         $self->hardening_buildflags,$self->mail_transport_agents,
         $self->policy_releases,$self->sections,
-        $self->style_sheet,$self->virtual_initd_facilities
+        #$self->style_sheet,
+        $self->virtual_initd_facilities
     );
 
     return @sources;
