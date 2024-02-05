@@ -308,10 +308,10 @@ has style_sheet => (
     default => sub {
         my ($self) = @_;
 
-        my $releases = Lintian::Data::Stylesheet->new;
-        $releases->load($self->data_paths, $self->vendor);
+        my $stylesheets = Lintian::Data::Stylesheet->new;
+        $stylesheets->load($self->data_paths, $self->vendor);
 
-        return $releases;
+        return $stylesheets;
     }
 );
 
