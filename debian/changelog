@@ -1,8 +1,119 @@
-lintian (2.116.4~git) UNRELEASED; urgency=medium
+lintian (2.117.0) unstable; urgency=low
 
-  * WIP (generated at release time: please do not add entries below.)
+  The "One Year Later" Release.
 
- -- Axel Beckert <abe@debian.org>  Sun, 05 Feb 2023 11:30:30 +0100
+  * Summary of tag changes:
+    + Removed:
+      - package-supports-alternative-init-but-no-init.d-script
+
+  [ Multiple developers multiple times ]
+  * Refresh data. (Re-adds the Loongson 64 architecture, see #1028654)
+  * Run perltidy
+
+  [ Axel Beckert ]
+  * Fix "Use of uninitialized value $LINTIAN_CFG" in debug output.
+  * data/spelling/corrections: Drop valid word "resizeable".
+  * Salsa CI: add bookworm-backports, drop buster-backports.
+  * Fix test suite issues caused by usrmerge changes in debhelper.
+  * Udev+AppstreamMetadata checks: Detect udev rules also under /usr/lib/.
+  * Add b-d on debhleper ≥ 13.11.8~ if testsuite is run at build time.
+  * L::C::B::Corrupted::check_elf_issues(): Return immediately if file is
+    no ELF file. Thanks to Corvin Köhne via MR !486.
+  * L::Data: Rename one usage of $releases to $stylesheets. (Fixes copy
+    and paste error.)
+  * L::Data: lintian.d.o no more exists, so don't fetch files from there.
+  * Add minimal test for "@recommends@" from !464 to "testsuite-general".
+  * Salsa CI: Drop backports to bullseye (oldstable): Testsuite requires a
+    newer debhelper version than available in bullseye-backports.
+  * private/generate-tag-summary --in-place: Avoid mojibake by not
+    double-encoding UTF-8.
+
+  [ Andreas Beckmann ]
+  * dh_dkms is now provided by dh-dkms instead of dkms. (See #1013417)
+
+  [ Simon McVittie ]
+  * Add test coverage for #1027744.
+  * Treat man pages as optional for executables in /usr/libexec/.
+  * Add test asserting that man pages are not required for libexec binaries.
+  * obsolete-packages: Report gnome-common as obsolete.
+  * tags: Raise typelib-not-in-multiarch-directory to warning level.
+
+  [ Guido Günther ]
+  * Add byzantium and octarine as known PureOS distributions.
+
+  [ Hideki Yamane ]
+  * Disable BLHC and BUILD_PACKAGE_ANY in debian/salsa-ci.yml.
+
+  [ Simon Quigley ]
+  * Add "mantic" and "noble" as a known Ubuntu distributions.
+
+  [ Nilesh Patra ]
+  * Make lintian recognize fasttrack as a dist.
+  * Update known dists and oldstable epoch.
+  * autopkgtest fix: Update badnocredit.raw for updated Adobe license tag
+    check.
+  * Fix rootless-builds.txt location in lintian tags. (Closes: #1051538)
+  * Don't check for "RECORD" in .dist-info, they are now always excluded.
+
+  [ Bastien Roucariès ]
+  * Detect embedded yajl and libzstd.
+  * Add lodash for embedded JavaScript library.
+  * Add node-pako as embedded library.
+  * Improve detection of node-pako.
+  * Add node-jzip-utils for detection of embedded JavaScript.
+  * Detect node-jzip as embedded JavaScript
+  * Add a punycode and codemirror JavaScript library.
+  * Remove "salsaci" suffix for length test.
+
+  [ James Addison ]
+  * Fix license-problem-font-adobe-copyrighted-fragment-no-credit.
+
+  [ Paul Wise ]
+  * Add 01.org to the list of obsolete domains.
+
+  [ Shengjing Zhu ]
+  * Adapt testsuite to groff 1.23 warning message. (Closes: #1042049)
+
+  [ Thompson, Brian ]
+  * Make SVG graphs more understandable by adding the tag name.
+
+  [ Agathe Porte ]
+  * Add missing closing parens in invalid-field-for-derivative.tag.
+
+  [ Benjamin Drung ]
+  * Exclude not-binnmuable-* tags in ubuntu/main profile. (LP: #2026208)
+
+  [ Sebastian Crane ]
+  * Detect recent versions of the Lua interpreter.
+
+  [ Gioele Barabucci ]
+  * Remove obsolete tag
+    "package-supports-alternative-init-but-no-init.d-script".
+
+  [ Louis-Philippe Véronneau ]
+  * missing-prerequisite-for-pyproject-backend: add support for meson.
+  * missing-prerequisite-for-pyproject-backend: add support for sipbuild.
+
+  [ Jiajie Chen ]
+  * arch-regex: Add loong64 support.
+
+  [ Alexandre Detiste ]
+  * obsolete-packages: Add "pkg-config => pkgconf".
+
+  [ Richard Lewis ]
+  * Add *~ to ".gitignore".
+  * Fix exit code when --show-overrides is given and an 'error' tag is
+    overridden. Also add a test for it. (Closes: #1019690)
+  * Update testsuite documentation.
+
+  [ Emilio Pozuelo Monfort ]
+  * Don't emit source-nmu-has-incorrect-version-number for stable updates.
+    (Closes: #1022759)
+
+  [ Valentin Vidic ]
+  * Allow @recommends@ as autopkgtest dependency.
+
+ -- Axel Beckert <abe@debian.org>  Mon, 05 Feb 2024 21:58:11 +0100
 
 lintian (2.116.3) unstable; urgency=medium
 
