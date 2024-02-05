@@ -48,3 +48,6 @@ Restrictions: needs-root, # comment
 Depends: @,
  @builddeps@
  # comment
+
+Test-Command: /bin/true
+Depends: @, @builddeps@, @recommends@
