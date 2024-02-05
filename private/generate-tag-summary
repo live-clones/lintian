@@ -95,7 +95,7 @@ if ($opt{'in-place'}) {
       or die encode_utf8("Cannot open $infile");
 
     my $outfile = 'debian/changelog.tmp';
-    open(my $out_fd, '>:encoding(UTF-8)', $outfile)
+    open(my $out_fd, '>', $outfile)
       or die encode_utf8("Cannot open $outfile");
 
     while (my $line = <$in_fd>) {
