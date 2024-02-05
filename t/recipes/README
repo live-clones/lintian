@@ -18,28 +18,6 @@ Use generic- as a prefix for test cases that don't cover a specific
 portion of Lintian but instead test Lintian's behavior on a useful special
 case of package (such as a generic dh-make template).
 
-Sequence numbers
-----------------
-
-Each test should have a sequence number to get a more deterministic order.
-You do not need to use unique numbers, only enough to make the order
-deterministic and to your liking!  You should use the middle of the
-assigned range as default number and only divert from it if you have a
-reason to.
-
-Number ranges:
-
-0000 - 0999	Basic test, that generally just assure that the test
-		suite and lintian are not completely broken
-1000 - 1999	Tests for lib/       [1500]
-2000 - 2999	Tests for frontend/  [2500]
-3000 - 3999	Tests for unpack/    [3500]
-4000 - 4999	Tests for collection/[4500]
-5000 - 6999	Tests for checks/    [6000]
-7000 - 8999	<unused>
-9000 - 9998	Tests for reporting/ [9500]
-9999            Tests from the old legacy test suite
-
 The desc file
 -------------
 
@@ -51,8 +29,8 @@ fields are:
     Description: <description of the purpose of the test>
 
 In addition, the tags (if any) that the test case is testing for should be
-listed in a Test-For key.  The tags that the test case is testing are not
-issued (checking against false positives) should be listed in a
+listed in a Test-For key.  If the test case is expecting some tags to not
+be issued (checking against false positives), those tags should be listed in a
 Test-Against key.  In both cases, the tags should be separated by
 whitespace.  The following format is suggested for multiple tags:
 
@@ -69,11 +47,10 @@ For example, to test --show-overrides with the -T option, use:
 
     Options: --show-overrides -T no-copyright-file
 
-The string TESTSET is no longer replaced in the Options field. Instead,
 Lintian is run in the test's directory. Please use a local, relative
 reference to the file or list the tags explicitly with '--suppress-tags'.
 
-By default, the Lintian output is sorted before comparing it to the tags
+By default, the Lintian output is sorted before comparing it to the 'hints'
 file.  To suppress the sort (when, for instance, checking non-standard
 output formats), use:
 
@@ -84,7 +61,7 @@ the test case as a non-native package, add:
 
     Type: non-native
 
-to the .desc file.  You will also want to change the version number to
+to the 'desc' file.  You will also want to change the version number to
 be non-native unless you're testing a mismatch.
 
 By default all tests are run with the default Lintian profile.  If a
@@ -100,7 +77,7 @@ failing, use:
 
     Todo: yes
 
-Test cases marked as Todo will succeed if they fail _the testing step_
+Test cases marked as 'Todo: yes' will succeed if they fail _the testing step_
 and fail if they succeed.  Although this option can be very useful to
 document what needs to be done, the ideal situation is to have none of
 them :)
@@ -174,7 +151,7 @@ If you notice such a case, you can use:
 If any of the dependencies are unavailable or conflicts are present,
 the test will be skipped.
 
-All other fields in the .desc file are optional and control the values
+All other fields in the desc file are optional and control the values
 filled into the template control and changelog files by the test suite
 harness.  The following additional fields are currently supported:
 
