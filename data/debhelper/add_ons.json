@@ -167,7 +167,7 @@
       },
       "gir" : {
          "installed_by" : [
-            "gobject-introspection"
+            "gobject-introspection-bin"
          ]
       },
       "gnome" : {
@@ -188,6 +188,11 @@
       "haskell" : {
          "installed_by" : [
             "dh-haskell"
+         ]
+      },
+      "installdebputy" : {
+         "installed_by" : [
+            "dh-debputy"
          ]
       },
       "installinitramfs" : {
@@ -258,6 +263,11 @@
       "mkdocs" : {
          "installed_by" : [
             "mkdocs"
+         ]
+      },
+      "movetousr" : {
+         "installed_by" : [
+            "libdebhelper-perl"
          ]
       },
       "nginx" : {

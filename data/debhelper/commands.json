@@ -309,12 +309,16 @@
             "debhelper"
          ]
       },
+      "dh_fortran_lib" : {
+         "installed_by" : [
+            "dh-fortran-mod"
+         ]
+      },
       "dh_fortran_mod" : {
          "installed_by" : [
             "dh-fortran-mod"
          ],
-         "uses_autoscript" : 1,
-         "uses_misc_depends" : 1
+         "uses_autoscript" : 1
       },
       "dh_gencontrol" : {
          "installed_by" : [
@@ -334,7 +338,7 @@
       },
       "dh_girepository" : {
          "installed_by" : [
-            "gobject-introspection"
+            "gobject-introspection-bin"
          ]
       },
       "dh_gnome" : {
@@ -520,6 +524,11 @@
          ],
          "uses_autoscript" : 1,
          "uses_misc_depends" : 1
+      },
+      "dh_installdebputy" : {
+         "installed_by" : [
+            "dh-debputy"
+         ]
       },
       "dh_installdirs" : {
          "installed_by" : [
@@ -785,6 +794,11 @@
       "dh_movelibkdeinit" : {
          "installed_by" : [
             "pkg-kde-tools"
+         ]
+      },
+      "dh_movetousr" : {
+         "installed_by" : [
+            "debhelper"
          ]
       },
       "dh_nginx" : {

@@ -525,12 +525,32 @@
             "fonts-agave"
          ]
       },
+      "akatab-black.ttf" : {
+         "installed_by" : [
+            "fonts-sil-akatab"
+         ]
+      },
       "akatab-bold.ttf" : {
          "installed_by" : [
             "fonts-sil-akatab"
          ]
       },
+      "akatab-extrabold.ttf" : {
+         "installed_by" : [
+            "fonts-sil-akatab"
+         ]
+      },
+      "akatab-medium.ttf" : {
+         "installed_by" : [
+            "fonts-sil-akatab"
+         ]
+      },
       "akatab-regular.ttf" : {
+         "installed_by" : [
+            "fonts-sil-akatab"
+         ]
+      },
+      "akatab-semibold.ttf" : {
          "installed_by" : [
             "fonts-sil-akatab"
          ]
@@ -713,11 +733,6 @@
       "alfios_r.otf" : {
          "installed_by" : [
             "fonts-ancient-scripts"
-         ]
-      },
-      "alkalami-light.ttf" : {
-         "installed_by" : [
-            "fonts-sil-alkalami"
          ]
       },
       "alkalami-regular.ttf" : {
@@ -5339,7 +5354,17 @@
             "fonts-sil-harmattan"
          ]
       },
+      "harmattan-medium.ttf" : {
+         "installed_by" : [
+            "fonts-sil-harmattan"
+         ]
+      },
       "harmattan-regular.ttf" : {
+         "installed_by" : [
+            "fonts-sil-harmattan"
+         ]
+      },
+      "harmattan-semibold.ttf" : {
          "installed_by" : [
             "fonts-sil-harmattan"
          ]
@@ -5669,11 +5694,6 @@
             "fonts-inter"
          ]
       },
-      "inter-italic.var.ttf" : {
-         "installed_by" : [
-            "fonts-inter-variable"
-         ]
-      },
       "inter-light.otf" : {
          "installed_by" : [
             "fonts-inter"
@@ -5699,11 +5719,6 @@
             "fonts-inter"
          ]
       },
-      "inter-roman.var.ttf" : {
-         "installed_by" : [
-            "fonts-inter-variable"
-         ]
-      },
       "inter-semibold.otf" : {
          "installed_by" : [
             "fonts-inter"
@@ -5722,11 +5737,6 @@
       "inter-thinitalic.otf" : {
          "installed_by" : [
             "fonts-inter"
-         ]
-      },
-      "inter.var.ttf" : {
-         "installed_by" : [
-            "fonts-inter-variable"
          ]
       },
       "interdisplay-black.otf" : {
@@ -5774,11 +5784,6 @@
             "fonts-inter"
          ]
       },
-      "interdisplay-italic.var.ttf" : {
-         "installed_by" : [
-            "fonts-inter-variable"
-         ]
-      },
       "interdisplay-light.otf" : {
          "installed_by" : [
             "fonts-inter"
@@ -5804,11 +5809,6 @@
             "fonts-inter"
          ]
       },
-      "interdisplay-roman.var.ttf" : {
-         "installed_by" : [
-            "fonts-inter-variable"
-         ]
-      },
       "interdisplay-semibold.otf" : {
          "installed_by" : [
             "fonts-inter"
@@ -5829,11 +5829,6 @@
             "fonts-inter"
          ]
       },
-      "interdisplay.var.ttf" : {
-         "installed_by" : [
-            "fonts-inter-variable"
-         ]
-      },
       "intersc.ttf" : {
          "installed_by" : [
             "fonts-aenigma"
@@ -5847,6 +5842,11 @@
       "interso.ttf" : {
          "installed_by" : [
             "fonts-aenigma"
+         ]
+      },
+      "intervariable.ttf" : {
+         "installed_by" : [
+            "fonts-inter-variable"
          ]
       },
       "ipabold.ttf" : {
@@ -24432,6 +24432,36 @@
       "sahadeva.ttf" : {
          "installed_by" : [
             "fonts-sahadeva"
+         ]
+      },
+      "sahel-black-wol.ttf" : {
+         "installed_by" : [
+            "fonts-sahel"
+         ]
+      },
+      "sahel-bold-wol.ttf" : {
+         "installed_by" : [
+            "fonts-sahel"
+         ]
+      },
+      "sahel-light-wol.ttf" : {
+         "installed_by" : [
+            "fonts-sahel"
+         ]
+      },
+      "sahel-semibold-wol.ttf" : {
+         "installed_by" : [
+            "fonts-sahel"
+         ]
+      },
+      "sahel-vf.ttf" : {
+         "installed_by" : [
+            "fonts-sahel-variable"
+         ]
+      },
+      "sahel-wol.ttf" : {
+         "installed_by" : [
+            "fonts-sahel"
          ]
       },
       "salaowu-bold.ttf" : {
