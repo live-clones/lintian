@@ -16,13 +16,6 @@ build-bookworm-backports:
   extends: .build-package
   allow_failure: true
 
-build-bullseye-backports:
-  variables:
-    RELEASE: 'bullseye-backports'
-    DEB_BUILD_OPTIONS: 'nocheck'
-  extends: .build-package
-  allow_failure: true
-
 variables:
   SALSA_CI_DISABLE_BLHC: 1
   SALSA_CI_DISABLE_BUILD_PACKAGE_ANY: 1
