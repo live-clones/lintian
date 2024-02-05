@@ -37,6 +37,10 @@ with 'Lintian::Check';
 sub visit_patched_files {
     my ($self, $item) = @_;
 
+    if (!$item->is_elf) {
+        return;
+    }
+
     $self->check_elf_issues($item);
 
     return;
@@ -44,6 +48,10 @@ sub visit_patched_files {
 
 sub visit_installed_files {
     my ($self, $item) = @_;
+
+    if (!$item->is_elf) {
+        return;
+    }
 
     $self->check_elf_issues($item);
 
