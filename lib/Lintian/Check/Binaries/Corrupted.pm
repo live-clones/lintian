@@ -53,6 +53,8 @@ sub visit_installed_files {
 sub check_elf_issues {
     my ($self, $item) = @_;
 
+    return unless $item->is_elf;
+
     for (uniq @{$item->elf->{ERRORS} // []}) {
         $self->pointed_hint('elf-error',$item->pointer, $_)
           unless (
