@@ -88,6 +88,7 @@ sub installable {
     $shortened_name =~ s/(\d)g$/$1/;
     $shortened_name =~ s/(\d)gf$/$1/;
     $shortened_name =~ s/(\d)v[56]$/$1/; # GCC-5 / libstdc++6 C11 ABI breakage
+    $shortened_name =~ s/(\d)t64$/$1/;   # 64 bit time_t
     $shortened_name =~ s/-udeb$//;
     $shortened_name =~ s/^lib64/lib/;
 
