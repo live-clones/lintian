@@ -85,7 +85,7 @@ sub installable {
     my $shortened_name = $self->processable->name;
     $shortened_name =~ s/c102\b//;
     $shortened_name =~ s/c2a?\b//;
-    $shortened_name =~ s/\dg$//;
+    $shortened_name =~ s/(\d)g$/$1/;
     $shortened_name =~ s/gf$//;
     $shortened_name =~ s/v[5-6]$//; # GCC-5 / libstdc++6 C11 ABI breakage
     $shortened_name =~ s/-udeb$//;
