@@ -1,5 +1,8 @@
 lintian (2.117.1~git) UNRELEASED; urgency=medium
 
+  [ Axel Beckert ]
+  * Retroactively mention #1033894 in previous changelog entry.
+
   * WIP (generated at release time: please do not add entries below.)
 
  -- Axel Beckert <abe@debian.org>  Mon, 05 Feb 2024 23:25:47 +0100
@@ -55,7 +58,7 @@ lintian (2.117.0) unstable; urgency=low
 
   [ Nilesh Patra ]
   * Make lintian recognize fasttrack as a dist.
-  * Update known dists and oldstable epoch.
+  * Update known dists and oldstable epoch. (Closes: #1033894)
   * autopkgtest fix: Update badnocredit.raw for updated Adobe license tag
     check.
   * Fix rootless-builds.txt location in lintian tags. (Closes: #1051538)
