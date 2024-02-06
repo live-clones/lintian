@@ -83,11 +83,11 @@ sub installable {
 
     # try to strip transition strings
     my $shortened_name = $self->processable->name;
-    $shortened_name =~ s/c102\b//;
-    $shortened_name =~ s/c2a?\b//;
+    $shortened_name =~ s/(\d)c102$/$1/;
+    $shortened_name =~ s/(\d)c2a?$/$1/;
     $shortened_name =~ s/(\d)g$/$1/;
-    $shortened_name =~ s/gf$//;
-    $shortened_name =~ s/v[5-6]$//; # GCC-5 / libstdc++6 C11 ABI breakage
+    $shortened_name =~ s/(\d)gf$/$1/;
+    $shortened_name =~ s/(\d)v[56]$/$1/; # GCC-5 / libstdc++6 C11 ABI breakage
     $shortened_name =~ s/-udeb$//;
     $shortened_name =~ s/^lib64/lib/;
 
