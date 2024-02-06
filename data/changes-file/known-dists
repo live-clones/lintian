@@ -11,6 +11,8 @@ stretch
 buster
 bullseye
 bookworm
+trixie
+forky
 sid
 
 # Aliases
@@ -19,4 +21,3 @@ stable
 testing
 unstable
 experimental
-
