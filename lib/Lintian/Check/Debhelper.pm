@@ -109,6 +109,7 @@ my %DH_ADDON_MANUAL_PREREQUISITES = (
     dwz => 'debhelper:any | debhelper-compat:any | dh-sequence-dwz:any',
     installinitramfs =>
 'debhelper:any | debhelper-compat:any | dh-sequence-installinitramfs:any',
+    gir => 'gobject-introspection:any | dh-sequence-gir:any',
     gnome => 'gnome-pkg-tools:any | dh-sequence-gnome:any',
     lv2config => 'lv2core:any',
     nodejs => 'pkg-js-tools:any | dh-sequence-nodejs:any',
