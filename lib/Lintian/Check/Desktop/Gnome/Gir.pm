@@ -1,8 +1,8 @@
 # desktop/gnome/gir -- lintian check script for GObject-Introspection -*- perl -*-
 #
 # Copyright (C) 2012 Arno Toell
-# Copyright (C) 2014 Collabora Ltd.
-# Copyright (C) 2016 Simon McVittie
+# Copyright (C) 2014-2024 Collabora Ltd.
+# Copyright (C) 2016-2024 Simon McVittie
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -59,11 +59,16 @@ sub installable {
 
     my $DEB_HOST_MULTIARCH= $self->data->architectures->deb_host_multiarch;
     my $triplet = $DEB_HOST_MULTIARCH->{$self->processable->architecture};
+    my $multiarch_xml_dir = undef;
 
-    # Slightly contrived, but it might be Architecture: all, in which
-    # case this is the best we can do
-    $triplet = $DOLLAR . '{DEB_HOST_MULTIARCH}'
-      unless defined $triplet;
+    if (defined $triplet) {
+        $multiarch_xml_dir = $self->processable->installed->resolve_path(
+            "usr/lib/$triplet/gir-1.0/");
+    } else {
+        # Slightly contrived, but it might be Architecture: all, in which
+        # case this is the best we can do
+        $triplet = $DOLLAR . '{DEB_HOST_MULTIARCH}';
+    }
 
     my $xml_dir
       = $self->processable->installed->resolve_path('usr/share/gir-1.0/');
@@ -71,6 +76,13 @@ sub installable {
     my @girs;
     @girs = grep { $_->name =~ m{ [.]gir $}x } $xml_dir->children
       if defined $xml_dir;
+
+    my @ma_girs;
+    if (defined $multiarch_xml_dir) {
+        @ma_girs
+          = grep { $_->name =~ m{ [.]gir $}x } $multiarch_xml_dir->children;
+        push @girs, @ma_girs;
+    }
 
     my @type_libs;
 
@@ -121,6 +133,14 @@ sub installable {
         $expected =~ s/\.gir$//;
         $expected =~ tr/_/-/;
 
+        my $our_version = $self->processable->fields->value('Version');
+
+        $self->pointed_hint('gir-package-name-does-not-match',
+            $gir->pointer, "${expected}-dev")
+          if $self->processable->name ne "${expected}-dev"
+          && !$self->processable->relation('Provides')
+          ->satisfies("${expected}-dev (= $our_version)");
+
         for my $installable ($self->group->get_installables) {
             next
               unless $installable->name =~ m/^gir1\.2-/;
@@ -133,8 +153,6 @@ sub installable {
               && $self->processable->relation('strong')
               ->satisfies("$name (= $version)");
         }
-
-        my $our_version = $self->processable->fields->value('Version');
 
         $self->pointed_hint('gir-missing-typelib-dependency',
             $gir->pointer, $expected)
