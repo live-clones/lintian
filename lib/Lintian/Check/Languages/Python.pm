@@ -224,7 +224,8 @@ sub source {
             'pdm.pep517.api' => 'python3-pdm-pep517:any',
             'hatchling.build' => 'python3-hatchling:any',
             'mesonpy' => 'python3-mesonpy:any',
-            'sipbuild.api' => 'python3-sipbuild:any'
+            'sipbuild.api' => 'python3-sipbuild:any',
+            'whey' => 'python3-whey:any'
         );
 
         open(my $fd, '<', $pyproject->unpacked_path)
