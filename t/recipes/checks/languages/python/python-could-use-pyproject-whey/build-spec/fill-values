@@ -1,0 +1,3 @@
+Skeleton: source-native
+Testname: python-could-use-pyproject-whey
+Description: Check for a package not built using pyproject whey, but that could.
