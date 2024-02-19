@@ -1,1 +1,0 @@
-python-could-use-pyproject-pdm-pep517 (source): missing-prerequisite-for-pyproject-backend pdm.pep517.api (does not satisfy python3-pdm-pep517:any, pybuild-plugin-pyproject:any) [pyproject.toml:3]

@@ -1,0 +1,3 @@
+Skeleton: source-native
+Testname: python-could-use-pyproject-pdm-backend
+Description: Check for a package not built using pyproject pdm-backend, but that could.
