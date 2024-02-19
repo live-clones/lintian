@@ -155,3 +155,4 @@ pkg-config => pkgconf
 
 # Deprecated in trixie
 gnome-common => https://wiki.gnome.org/Projects/GnomeCommon/Migration
+python3-pdm-pep517 => python3-pdm-backend
