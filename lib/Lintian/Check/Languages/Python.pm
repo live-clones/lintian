@@ -221,7 +221,7 @@ sub source {
             'poetry.core.masonry.api' => 'python3-poetry-core:any',
             'flit_core.buildapi' => 'flit:any',
             'setuptools.build_meta' => 'python3-setuptools:any',
-            'pdm.pep517.api' => 'python3-pdm-pep517:any',
+            'pdm.pep517.api' => 'python3-pdm-backend:any',
             'hatchling.build' => 'python3-hatchling:any',
             'mesonpy' => 'python3-mesonpy:any',
             'sipbuild.api' => 'python3-sipbuild:any',
@@ -251,7 +251,7 @@ sub source {
                 $self->pointed_hint('uses-pdm-cli', $pointer)
                   if $backend eq 'pdm.pep517.api'
                   && $build_depends->satisfies('python3-pdm:any')
-                  && !$build_depends->satisfies('python3-pdm-pep517:any');
+                  && !$build_depends->satisfies('python3-pdm-backend:any');
 
                 if (exists $PYPROJECT_PREREQUISITES{$backend}) {
 
