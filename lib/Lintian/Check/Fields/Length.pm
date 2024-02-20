@@ -46,6 +46,7 @@ my @ALLOWED_FIELDS = qw(
   Package-List
   Installed-Build-Depends
   Checksums-Sha256
+  X-Cargo-Built-Using
 );
 
 sub always {
