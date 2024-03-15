@@ -4,7 +4,7 @@ COMPILE:= $(CC) $(NOPIE_CFLAGS) $(CPPFLAGS) $(NOPIE_LDFLAGS)
 
 all:
 	# static version
-	$(COMPILE) -static -o basic.static basic.c
+	$(COMPILE) -std=c99 -static -o basic.static basic.c
 
 install:
 	install -d $(DESTDIR)/usr/lib/foo/
