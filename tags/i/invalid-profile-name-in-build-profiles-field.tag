@@ -9,6 +9,7 @@ Explanation: The restriction formula in the <code>Build-Profiles</code> field
  - <code>nocheck</code>
  - <code>nocil</code>
  - <code>nodoc</code>
+ - <code>nogir</code>
  - <code>nogolang</code>
  - <code>noguile</code>
  - <code>noinsttest</code>

@@ -3,6 +3,7 @@ nobiarch
 nocheck
 nocil
 nodoc
+nogir
 nogolang
 noguile
 noinsttest
