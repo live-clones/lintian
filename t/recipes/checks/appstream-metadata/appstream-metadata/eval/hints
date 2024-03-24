@@ -3,3 +3,5 @@ appstream-metadata (binary): appstream-metadata-malformed-modalias-provide inclu
 appstream-metadata (binary): appstream-metadata-legacy-format [usr/share/appdata/appstream-metadata-obsolete.metadata.xml]
 appstream-metadata (binary): appstream-metadata-invalid [usr/share/metainfo/appstream-metadata-invalid.metadata.xml]
 appstream-metadata (binary): appstream-metadata-in-legacy-location [usr/share/appdata/appstream-metadata-obsolete.metadata.xml]
+appstream-metadata (binary): appstream-metadata-validation-failed usr/share/metainfo/appstream-metadata-invalid.metadata.xml
+appstream-metadata (binary): appstream-metadata-validation-failed usr/share/metainfo/appstream-metadata-validation-failed.metadata.xml

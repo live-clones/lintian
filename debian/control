@@ -6,6 +6,7 @@ Uploaders:
  Axel Beckert <abe@debian.org>,
  Bastien Roucariès <rouca@debian.org>
 Build-Depends:
+ appstream <!nocheck>,
  aspell <!nocheck>,
  aspell-en <!nocheck>,
  cdbs <!nocheck>,
@@ -70,6 +71,7 @@ Homepage: https://lintian.debian.org/
 Package: lintian
 Architecture: all
 Depends:
+ appstream,
  binutils,
  bzip2,
  diffstat,
