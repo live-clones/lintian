@@ -8,6 +8,7 @@
 # Copyright (C) 2013-2018 Bastien ROUCARIES
 # Copyright (C) 2017-2020 Chris Lamb <lamby@debian.org>
 # Copyright (C) 2020-2021 Felix Lechner
+# Copyright (C) 2023 Soren Stoutner
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -155,12 +156,12 @@ qr{microsoft [ ] visual [ ] c[+][+] [ ] generated (?![ ] by [ ] freeze\.py)}msx
         sentences => ['dr. b. struck'],
         regex => qr{dr. [ ] b. [ ] struck}msx
     },
-    # warn about unicode license for utf for convert utf
-    'license-problem-convert-utf-code' => {
-        keywords => [qw{fall-through bytestowrite utf-8}],
-        sentences => ['the fall-through switches in utf-8 reading'],
+    # warn about old non-DFSG unicode license
+    'license-problem-old-unicode' => {
+        keywords => [qw{unicode hereby grants right}],
+        sentences => ['unicode, inc. hereby grants the right'],
         regex =>
-qr{the [ ] fall-through [ ] switches [ ] in [ ] utf-8 [ ] reading [ ] code [ ] save}msx
+          qr{unicode, [ ] inc. [ ] hereby [ ] grants [ ] the [ ] right}msx
     }
 );
 
