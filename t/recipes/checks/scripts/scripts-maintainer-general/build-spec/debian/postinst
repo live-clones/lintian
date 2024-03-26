@@ -253,3 +253,9 @@ echo $PIUPARTS_IS_AWESOME # good
 # Automatically added by dh_dummy/12
 true `/usr/bin/false-positive "$0"`
 # End automatically added section
+
+update-alternatives --install /lib/systemd/system/foo.service foo.service /lib/systemd/system/foo-bar.service 40
+update-alternatives \
+    --install /usr/lib/systemd/system/bar.service bar.service /usr/lib/systemd/system/bar-foo.service 40
+update-alternatives --install /lib/udev/rules.d/foo.rules foo.rules /lib/udev/rules.d/bar.rules 40
+update-alternatives --install /usr/lib/tmpfiles.d/foo.conf foo.conf /usr/lib/tmpfiles.d/bar.conf 40
