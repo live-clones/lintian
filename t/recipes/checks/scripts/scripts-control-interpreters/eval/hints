@@ -9,8 +9,6 @@ scripts-control-interpreters-prepython (binary): unusual-control-interpreter /us
 scripts-control-interpreters-prepython (binary): unusual-control-interpreter /usr/bin/python3 [postinst]
 scripts-control-interpreters-prepython (binary): maintainer-script-interpreter /usr/bin/python3 [preinst]
 scripts-control-interpreters-prepython (binary): maintainer-script-interpreter /usr/bin/python3 [postinst]
-scripts-control-interpreters-paths (binary): wrong-path-for-interpreter /usr/bin/bash != /bin/bash [postinst]
-scripts-control-interpreters-paths (binary): wrong-path-for-interpreter /bin/python3 != /usr/bin/python3 [prerm]
 scripts-control-interpreters-paths (binary): unusual-control-interpreter /bin/python3 [prerm]
 scripts-control-interpreters-paths (binary): maintainer-script-interpreter /usr/local/bin/bash [preinst]
 scripts-control-interpreters-paths (binary): maintainer-script-interpreter /usr/bin/bash [postinst]
