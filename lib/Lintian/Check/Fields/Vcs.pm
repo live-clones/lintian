@@ -205,6 +205,7 @@ sub always {
         my $maintainer = $processable->fields->unfolded_value($field);
 
         if ($maintainer =~ /\b(\S+\@lists(?:\.alioth)?\.debian\.org)\b/
+            || $maintainer =~ /\b(\S+\@alioth-lists\.debian\.net)\b/
             || $maintainer =~ /\b(\S+\@tracker\.debian\.org)\b/) {
             $is_teammaintained = 1;
             $team_email = $1;
