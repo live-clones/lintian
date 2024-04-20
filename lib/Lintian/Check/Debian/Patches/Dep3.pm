@@ -80,10 +80,16 @@ sub visit_patched_files {
     # use last mention when present multiple times
     my $origin = $deb822->last_mention('Origin');
 
-    my ($category) = split(m{\s*,\s*}, $origin, 2);
-    $category //= $EMPTY;
-    return
-      if any { $category eq $_ } qw(upstream backport);
+    if ($origin =~ /,/) {
+        my ($category, $origin_value) = split(m{\s*,\s*}, $origin, 2);
+        $category //= $EMPTY;
+        return
+          if ($origin_value =~ /^(?:http|https):\/\/|commit:/)
+          && any { $category eq $_ } qw(upstream backport);
+    } else {
+        $origin =~ s/\s//g;
+        return if $origin =~ (/^(?:http|https):\/\/|commit:/);
+    }
 
     $self->pointed_hint('patch-not-forwarded-upstream', $item->pointer)
       if $deb822->last_mention('Forwarded') eq 'no'
