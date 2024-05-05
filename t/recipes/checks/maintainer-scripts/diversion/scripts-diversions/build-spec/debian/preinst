@@ -41,6 +41,14 @@ if [ install = "$1"  ]; then
     dpkg-divert --add --rename --package scripts-diversions \
         --divert /usr/share/man/man1/foo.real.1.gz \
         /usr/share/man/man1/foo.1.gz
+
+    # This is incorrect, systemd files must not be diverted.
+    dpkg-divert --package scripts-diversions --add --rename \
+        --divert /lib/udev/rules.d/00-rule.rules.disabled \
+        /lib/udev/rules.d/00-rule.rules
+    dpkg-divert --package scripts-diversions --add --rename \
+        --divert /usr/lib/systemd/system/foo.service.disabled \
+        /usr/lib/systemd/system/foo.service
 fi
 
 # This isn't a diversion we create anywhere, but we're allowed to do this in

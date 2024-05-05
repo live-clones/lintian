@@ -1,4 +1,8 @@
 scripts-maintainer-general (binary): trailing-slash-for-dpkg-maintscript-helper-symlink_to_dir "dpkg-maintscript-helper symlink_to_dir               /usr/share/autoconf-archive/html/" [postinst:190]
+scripts-maintainer-general (binary): systemd-alternatives "update-alternatives --install /usr/lib/tmpfiles.d" [postinst:264]
+scripts-maintainer-general (binary): systemd-alternatives "update-alternatives --install /lib/udev" [postinst:263]
+scripts-maintainer-general (binary): systemd-alternatives "update-alternatives --install /lib/systemd" [postinst:260]
+scripts-maintainer-general (binary): systemd-alternatives "update-alternatives     --install /usr/lib/systemd" [postinst:262]
 scripts-maintainer-general (binary): recursive-privilege-change "find /bad -maxdepth 2 -type d -exec chown" [postinst:219]
 scripts-maintainer-general (binary): recursive-privilege-change "find /bad -maxdepth 2 -type d -exec chmod" [postinst:220]
 scripts-maintainer-general (binary): recursive-privilege-change "chown root:root -R" [postinst:212]
