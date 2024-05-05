@@ -28,3 +28,13 @@ variables:
   before_script:
   - apt-get update
   - apt-get install -y ${WORKING_DIR}/lintian_*.deb
+
+# Try to check whether the maximum job timeout is extended to longer one.
+.test-autopkgtest: &test-autopkgtest
+  before_script:
+    - 'echo "CI/CD Settings / General pipelines / Timeout: $CI_JOB_TIMEOUT seconds"'
+    - |
+      if [[ $CI_JOB_TIMEOUT -le 3600 ]]; then
+        echo -e "\e[31;1mERROR: CI/CD Settings / General pipelines / Timeout is too short ($CI_JOB_TIMEOUT). Use longer timeout - e.g. 7200 (2h) is enough.\e[0m"
+        exit 1
+      fi
