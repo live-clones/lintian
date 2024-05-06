@@ -964,6 +964,17 @@
             "debhelper"
          ]
       },
+      "dh_puppet_module" : {
+         "installed_by" : [
+            "dh-puppet"
+         ],
+         "uses_autoscript" : 1
+      },
+      "dh_puppet_module_autopkgtest" : {
+         "installed_by" : [
+            "dh-puppet"
+         ]
+      },
       "dh_puredata_substvar" : {
          "installed_by" : [
             "dh-puredata"

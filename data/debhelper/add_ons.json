@@ -230,6 +230,11 @@
             "pkg-kde-tools"
          ]
       },
+      "kf6" : {
+         "installed_by" : [
+            "pkg-kde-tools"
+         ]
+      },
       "kodiaddon" : {
          "installed_by" : [
             "kodi-addons-dev-common"
@@ -363,6 +368,11 @@
       "ppp" : {
          "installed_by" : [
             "ppp-dev"
+         ]
+      },
+      "puppet_module" : {
+         "installed_by" : [
+            "dh-puppet"
          ]
       },
       "puredata" : {
@@ -521,6 +531,11 @@
          ]
       },
       "zz_debputy" : {
+         "installed_by" : [
+            "dh-debputy"
+         ]
+      },
+      "zz_debputy_rrr" : {
          "installed_by" : [
             "dh-debputy"
          ]

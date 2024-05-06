@@ -885,6 +885,11 @@
             "fonts-smc-anjalioldlipi"
          ]
       },
+      "ankaclm-bold.otf" : {
+         "installed_by" : [
+            "fonts-culmus-fancy"
+         ]
+      },
       "annapurnasil-bold.ttf" : {
          "installed_by" : [
             "fonts-sil-annapurna"
@@ -1645,6 +1650,11 @@
             "fonts-morisawa-bizud-gothic"
          ]
       },
+      "bizudmincho-bold.ttf" : {
+         "installed_by" : [
+            "fonts-morisawa-bizud-mincho"
+         ]
+      },
       "bizudmincho-regular.ttf" : {
          "installed_by" : [
             "fonts-morisawa-bizud-mincho"
@@ -1658,6 +1668,11 @@
       "bizudpgothic-regular.ttf" : {
          "installed_by" : [
             "fonts-morisawa-bizud-gothic"
+         ]
+      },
+      "bizudpmincho-bold.ttf" : {
+         "installed_by" : [
+            "fonts-morisawa-bizud-mincho"
          ]
       },
       "bizudpmincho-regular.ttf" : {
@@ -2760,6 +2775,16 @@
             "fonts-comic-neue"
          ]
       },
+      "comixno2clm-bold.otf" : {
+         "installed_by" : [
+            "fonts-culmus-fancy"
+         ]
+      },
+      "comixno2clm-medium.otf" : {
+         "installed_by" : [
+            "fonts-culmus-fancy"
+         ]
+      },
       "compagnon-bold.otf" : {
          "installed_by" : [
             "fonts-compagnon"
@@ -3248,6 +3273,16 @@
       "domestic_manners.ttf" : {
          "installed_by" : [
             "fonts-dustin"
+         ]
+      },
+      "dorianclm-book.ttf" : {
+         "installed_by" : [
+            "fonts-culmus-fancy"
+         ]
+      },
+      "dorianclm-bookitalic.ttf" : {
+         "installed_by" : [
+            "fonts-culmus-fancy"
          ]
       },
       "dosis-bold.otf" : {
@@ -4235,6 +4270,11 @@
             "fonts-fanwood"
          ]
       },
+      "farissolclm-bolditalic.otf" : {
+         "installed_by" : [
+            "fonts-culmus-fancy"
+         ]
+      },
       "fascii.ttf" : {
          "installed_by" : [
             "fonts-aenigma"
@@ -4591,6 +4631,11 @@
       "gamaliel.ttf" : {
          "installed_by" : [
             "fonts-gamaliel"
+         ]
+      },
+      "ganclm-bold.otf" : {
+         "installed_by" : [
+            "fonts-culmus-fancy"
          ]
       },
       "gaposiso.ttf" : {
@@ -5068,6 +5113,11 @@
             "fonts-arphic-gkai00mp"
          ]
       },
+      "gladiaclm-bold.otf" : {
+         "installed_by" : [
+            "fonts-culmus-fancy"
+         ]
+      },
       "glass_tty_vt220.ttf" : {
          "installed_by" : [
             "fonts-glasstty"
@@ -5429,6 +5479,11 @@
             "fonts-ldco"
          ]
       },
+      "hillelclm-medium.otf" : {
+         "installed_by" : [
+            "fonts-culmus-fancy"
+         ]
+      },
       "hillock.ttf" : {
          "installed_by" : [
             "fonts-aenigma"
@@ -5452,6 +5507,11 @@
       "homespun.ttf" : {
          "installed_by" : [
             "fonts-aenigma"
+         ]
+      },
+      "horevclm-heavy.otf" : {
+         "installed_by" : [
+            "fonts-culmus-fancy"
          ]
       },
       "humor-sans.ttf" : {
@@ -6169,6 +6229,11 @@
             "fonts-ldco"
          ]
       },
+      "journalclm-light.otf" : {
+         "installed_by" : [
+            "fonts-culmus-fancy"
+         ]
+      },
       "jsmath-bbold10.ttf" : {
          "installed_by" : [
             "fonts-jsmath"
@@ -6879,6 +6944,31 @@
             "fonts-smc-keraleeyam"
          ]
       },
+      "keteraramtsova.ttf" : {
+         "installed_by" : [
+            "fonts-culmus-fancy"
+         ]
+      },
+      "keteryg-bold.ttf" : {
+         "installed_by" : [
+            "fonts-culmus-fancy"
+         ]
+      },
+      "keteryg-boldoblique.ttf" : {
+         "installed_by" : [
+            "fonts-culmus-fancy"
+         ]
+      },
+      "keteryg-medium.ttf" : {
+         "installed_by" : [
+            "fonts-culmus-fancy"
+         ]
+      },
+      "keteryg-mediumoblique.ttf" : {
+         "installed_by" : [
+            "fonts-culmus-fancy"
+         ]
+      },
       "keyrialt.ttf" : {
          "installed_by" : [
             "fonts-aenigma"
@@ -7172,6 +7262,16 @@
       "kristi.ttf" : {
          "installed_by" : [
             "fonts-kristi"
+         ]
+      },
+      "ktavyadclm-bolditalic.otf" : {
+         "installed_by" : [
+            "fonts-culmus-fancy"
+         ]
+      },
+      "ktavyadclm-mediumitalic.otf" : {
+         "installed_by" : [
+            "fonts-culmus-fancy"
          ]
       },
       "kurvatur.ttf" : {
@@ -8384,6 +8484,11 @@
             "fonts-aenigma"
          ]
       },
+      "lulavclm-bold.otf" : {
+         "installed_by" : [
+            "fonts-culmus-fancy"
+         ]
+      },
       "lxgwwenkai-bold.ttf" : {
          "installed_by" : [
             "fonts-lxgw-wenkai"
@@ -8437,6 +8542,11 @@
       "madscrwl.ttf" : {
          "installed_by" : [
             "fonts-aenigma"
+         ]
+      },
+      "makabiyg.ttf" : {
+         "installed_by" : [
+            "fonts-culmus-fancy"
          ]
       },
       "mallanna.ttf" : {
@@ -22780,6 +22890,11 @@
             "fonts-opendin"
          ]
       },
+      "ottilie-u1ay.ttf" : {
+         "installed_by" : [
+            "fonts-ottilie"
+         ]
+      },
       "outersid.ttf" : {
          "installed_by" : [
             "fonts-aenigma"
@@ -22803,6 +22918,11 @@
       "oxygenmono-regular.ttf" : {
          "installed_by" : [
             "fonts-oxygen"
+         ]
+      },
+      "ozradclm-bold.otf" : {
+         "installed_by" : [
+            "fonts-culmus-fancy"
          ]
       },
       "p052-bold.otf" : {
@@ -23098,6 +23218,51 @@
       "powerlinesymbols.otf" : {
          "installed_by" : [
             "fonts-powerline"
+         ]
+      },
+      "pretendard-black.otf" : {
+         "installed_by" : [
+            "fonts-pretendard"
+         ]
+      },
+      "pretendard-bold.otf" : {
+         "installed_by" : [
+            "fonts-pretendard"
+         ]
+      },
+      "pretendard-extrabold.otf" : {
+         "installed_by" : [
+            "fonts-pretendard"
+         ]
+      },
+      "pretendard-extralight.otf" : {
+         "installed_by" : [
+            "fonts-pretendard"
+         ]
+      },
+      "pretendard-light.otf" : {
+         "installed_by" : [
+            "fonts-pretendard"
+         ]
+      },
+      "pretendard-medium.otf" : {
+         "installed_by" : [
+            "fonts-pretendard"
+         ]
+      },
+      "pretendard-regular.otf" : {
+         "installed_by" : [
+            "fonts-pretendard"
+         ]
+      },
+      "pretendard-semibold.otf" : {
+         "installed_by" : [
+            "fonts-pretendard"
+         ]
+      },
+      "pretendard-thin.otf" : {
+         "installed_by" : [
+            "fonts-pretendard"
          ]
       },
       "prociono.otf" : {
@@ -24964,6 +25129,31 @@
             "fonts-sil-shimenkan-zonghe"
          ]
       },
+      "shmulikclm.ttf" : {
+         "installed_by" : [
+            "fonts-culmus-fancy"
+         ]
+      },
+      "shofardemi-bold.ttf" : {
+         "installed_by" : [
+            "fonts-culmus-fancy"
+         ]
+      },
+      "shofardemi-boldoblique.ttf" : {
+         "installed_by" : [
+            "fonts-culmus-fancy"
+         ]
+      },
+      "shofarregular.ttf" : {
+         "installed_by" : [
+            "fonts-culmus-fancy"
+         ]
+      },
+      "shofarregularoblique.ttf" : {
+         "installed_by" : [
+            "fonts-culmus-fancy"
+         ]
+      },
       "sideways.ttf" : {
          "installed_by" : [
             "fonts-aenigma"
@@ -25052,6 +25242,86 @@
       "sni.ttf" : {
          "installed_by" : [
             "fonts-sil-sophia-nubian"
+         ]
+      },
+      "snpro-black.otf" : {
+         "installed_by" : [
+            "fonts-sn-pro"
+         ]
+      },
+      "snpro-blackitalic.otf" : {
+         "installed_by" : [
+            "fonts-sn-pro"
+         ]
+      },
+      "snpro-bold.otf" : {
+         "installed_by" : [
+            "fonts-sn-pro"
+         ]
+      },
+      "snpro-bolditalic.otf" : {
+         "installed_by" : [
+            "fonts-sn-pro"
+         ]
+      },
+      "snpro-heavy.otf" : {
+         "installed_by" : [
+            "fonts-sn-pro"
+         ]
+      },
+      "snpro-heavyitalic.otf" : {
+         "installed_by" : [
+            "fonts-sn-pro"
+         ]
+      },
+      "snpro-light.otf" : {
+         "installed_by" : [
+            "fonts-sn-pro"
+         ]
+      },
+      "snpro-lightitalic.otf" : {
+         "installed_by" : [
+            "fonts-sn-pro"
+         ]
+      },
+      "snpro-medium.otf" : {
+         "installed_by" : [
+            "fonts-sn-pro"
+         ]
+      },
+      "snpro-mediumitalic.otf" : {
+         "installed_by" : [
+            "fonts-sn-pro"
+         ]
+      },
+      "snpro-regular.otf" : {
+         "installed_by" : [
+            "fonts-sn-pro"
+         ]
+      },
+      "snpro-regularitalic.otf" : {
+         "installed_by" : [
+            "fonts-sn-pro"
+         ]
+      },
+      "snpro-semibold.otf" : {
+         "installed_by" : [
+            "fonts-sn-pro"
+         ]
+      },
+      "snpro-semibolditalic.otf" : {
+         "installed_by" : [
+            "fonts-sn-pro"
+         ]
+      },
+      "snpro-thin.otf" : {
+         "installed_by" : [
+            "fonts-sn-pro"
+         ]
+      },
+      "snpro-thinitalic.otf" : {
+         "installed_by" : [
+            "fonts-sn-pro"
          ]
       },
       "snr.ttf" : {
@@ -25922,6 +26192,66 @@
       "system.ttf" : {
          "installed_by" : [
             "fonts-wine"
+         ]
+      },
+      "taameyashkenaz-bold.ttf" : {
+         "installed_by" : [
+            "fonts-culmus-fancy"
+         ]
+      },
+      "taameyashkenaz-boldoblique.ttf" : {
+         "installed_by" : [
+            "fonts-culmus-fancy"
+         ]
+      },
+      "taameyashkenaz-medium.ttf" : {
+         "installed_by" : [
+            "fonts-culmus-fancy"
+         ]
+      },
+      "taameyashkenaz-mediumoblique.ttf" : {
+         "installed_by" : [
+            "fonts-culmus-fancy"
+         ]
+      },
+      "taameydavidclm-bold.ttf" : {
+         "installed_by" : [
+            "fonts-culmus-fancy"
+         ]
+      },
+      "taameydavidclm-boldoblique.ttf" : {
+         "installed_by" : [
+            "fonts-culmus-fancy"
+         ]
+      },
+      "taameydavidclm-medium.ttf" : {
+         "installed_by" : [
+            "fonts-culmus-fancy"
+         ]
+      },
+      "taameydavidclm-mediumoblique.ttf" : {
+         "installed_by" : [
+            "fonts-culmus-fancy"
+         ]
+      },
+      "taameyfrankclm-bold.ttf" : {
+         "installed_by" : [
+            "fonts-culmus-fancy"
+         ]
+      },
+      "taameyfrankclm-boldoblique.ttf" : {
+         "installed_by" : [
+            "fonts-culmus-fancy"
+         ]
+      },
+      "taameyfrankclm-medium.ttf" : {
+         "installed_by" : [
+            "fonts-culmus-fancy"
+         ]
+      },
+      "taameyfrankclm-mediumoblique.ttf" : {
+         "installed_by" : [
+            "fonts-culmus-fancy"
          ]
       },
       "tagbanwa.ttf" : {
@@ -26914,6 +27244,16 @@
             "fonts-aenigma"
          ]
       },
+      "topaz_unicode_ks13_bold.ttf" : {
+         "installed_by" : [
+            "fonts-topaz-unicode"
+         ]
+      },
+      "topaz_unicode_ks13_regular.ttf" : {
+         "installed_by" : [
+            "fonts-topaz-unicode"
+         ]
+      },
       "tragic2.ttf" : {
          "installed_by" : [
             "fonts-aenigma"
@@ -26922,6 +27262,11 @@
       "trainone-regular.ttf" : {
          "installed_by" : [
             "fonts-train"
+         ]
+      },
+      "trashimclm-bold.otf" : {
+         "installed_by" : [
+            "fonts-culmus-fancy"
          ]
       },
       "tribunadfstd-bold.otf" : {
