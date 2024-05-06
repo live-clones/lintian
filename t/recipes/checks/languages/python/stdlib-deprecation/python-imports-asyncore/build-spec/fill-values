@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: python-imports-asyncore
+Description: Check packages that have python files importing asyncore
