@@ -26,7 +26,7 @@ lintian-explain-tags - offer more information about Lintian's tags
 
 =head1 SYNOPSIS
 
-B<lintian-explain-tags> B<--tags> I<tag> ...
+B<lintian-explain-tags> I<tag> ...
 
 =head1 DESCRIPTION
 
