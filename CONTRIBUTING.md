@@ -152,7 +152,7 @@ will show you further options.
 
 ### Calibrating tests to fix test failures
 
-If tests fail, the teststuite will use an interactive 'calibration'
+If tests fail, the testsuite will use an interactive 'calibration'
 process to help you write or amend a 'hints' file. Simply follow
 the instructions on the screen. In many cases, it is best to "accept
 all" and examine the changes in git. In complex cases, you can use
@@ -172,6 +172,25 @@ The most common issue detected is that you have to run perltidy. We
 configure perltidy in a special way. Please run it from the
 repository's base directory. Otherwise it will not find the custom
 configuration, and the test suite will not pass.
+
+### Run perltidy
+
+The program perltidy is provided by the package [perltidy](https://packages.debian.org/perltidy).
+The program prove is provided by the package [perl](https://packages.debian.org/perl).
+
+#### On all files
+
+```sh
+prove -l t/scripts/01-critic/
+```
+
+### On recently changed files
+
+On the 10 last commits
+
+```sh
+git diff --name-only HEAD~10 HEAD | grep -F ".pm" | xargs perltidy -b
+```
 
 ### Submit a merge request
 
