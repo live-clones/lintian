@@ -659,6 +659,11 @@ m{^\t\s*[-@]?(?:(?:/usr)?/bin/)?(?:cp|chmod|echo|ln|mv|mkdir|rm|test|true)}
                         \t+ CFLAGS \s+ \+ = \s+ -O[02] \n+
                         endif $}xsm;
 
+    $self->pointed_hint('debian-rules-invalid-build-profile-nodocs',
+        $rules->pointer)
+      if $contents
+      =~ m{ifn?eq \(,\$\(findstring nodocs, \$\(DEB_BUILD_OPTIONS\)\)\)};
+
     return;
 }
 

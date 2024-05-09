@@ -1,0 +1,4 @@
+Skeleton: source-native
+Testname: rules-invalid-build-profile-nodocs
+Description: Check for a package that uses the incorrect nodocs build-profile
+ instead of the correct nodoc.

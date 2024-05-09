@@ -1,0 +1,2 @@
+Testname: rules-invalid-build-profile-nodocs
+Check: debian/rules
