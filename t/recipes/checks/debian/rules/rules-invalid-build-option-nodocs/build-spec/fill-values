@@ -1,0 +1,3 @@
+Skeleton: source-native
+Testname: rules-invalid-build-option-nodocs
+Description: Check for a package that checks for incorrect nodocs build option.

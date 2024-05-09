@@ -1,0 +1,2 @@
+Testname: rules-invalid-build-option-nodocs
+Check: debian/rules

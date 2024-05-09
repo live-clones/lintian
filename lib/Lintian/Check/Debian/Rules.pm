@@ -269,6 +269,11 @@ sub source {
             $self->pointed_hint('debian-rules-sets-DEB_BUILD_OPTIONS',$pointer)
               if $line =~ /^\s*(?:export\s+)?DEB_BUILD_OPTIONS\s*:?=/;
 
+            $self->pointed_hint('debian-rules-invalid-build-option-nodocs',
+                $pointer)
+              if $contents
+              =~ m{ifn?eq \(,\$\(findstring nodocs, *\$\(DEB_BUILD_OPTIONS\)\)\)};
+
             if (
                 $line =~m{^
                 \s*(?:export\s+)?
@@ -658,11 +663,6 @@ m{^\t\s*[-@]?(?:(?:/usr)?/bin/)?(?:cp|chmod|echo|ln|mv|mkdir|rm|test|true)}
                         else \n+
                         \t+ CFLAGS \s+ \+ = \s+ -O[02] \n+
                         endif $}xsm;
-
-    $self->pointed_hint('debian-rules-invalid-build-profile-nodocs',
-        $rules->pointer)
-      if $contents
-      =~ m{ifn?eq \(,\$\(findstring nodocs, \$\(DEB_BUILD_OPTIONS\)\)\)};
 
     return;
 }

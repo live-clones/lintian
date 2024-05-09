@@ -1,1 +1,0 @@
-rules-invalid-build-profile-nodocs (source): debian-rules-invalid-build-profile-nodocs [debian/rules]
