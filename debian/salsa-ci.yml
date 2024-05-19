@@ -29,8 +29,11 @@ variables:
   - apt-get update
   - apt-get install -y ${WORKING_DIR}/lintian_*.deb
 
-# Try to check whether the maximum job timeout is extended to longer one.
 .test-autopkgtest: &test-autopkgtest
+  # Extend Salsa-CI build jobs to have longer timeout as the default GitLab
+  # timeout (1h) is often not enough.
+  timeout: 3h
+  # Try to check whether the maximum job timeout is extended to longer one.
   before_script:
     - 'echo "CI/CD Settings / General pipelines / Timeout: $CI_JOB_TIMEOUT seconds"'
     - |
