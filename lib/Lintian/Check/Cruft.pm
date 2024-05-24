@@ -8,7 +8,7 @@
 # Copyright (C) 2013-2018 Bastien ROUCARIES
 # Copyright (C) 2017-2020 Chris Lamb <lamby@debian.org>
 # Copyright (C) 2020-2021 Felix Lechner
-# Copyright (C) 2023 Soren Stoutner
+# Copyright (C) 2023 Soren Stoutner <soren@debian.org>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
