@@ -10,9 +10,9 @@ ifeq (,$(findstring nodocs, $(DEB_BUILD_OPTIONS)))
 	dh_sphinxdoc
 endif
 
-# Test without space after nodocs
+# Test without space after nodocs and filter instead of findstring
 override_dh_installman:
-ifeq (,$(findstring nodocs,$(DEB_BUILD_OPTIONS)))
+ifeq (,$(filter nodocs,$(DEB_BUILD_OPTIONS)))
 	mkdir debian/tmp
 	rst2man manpage.rst debian/tmp/foobar.1
 	dh_installman debian/tmp/foobar.1

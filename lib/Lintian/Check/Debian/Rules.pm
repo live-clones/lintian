@@ -269,10 +269,10 @@ sub source {
             $self->pointed_hint('debian-rules-sets-DEB_BUILD_OPTIONS',$pointer)
               if $line =~ /^\s*(?:export\s+)?DEB_BUILD_OPTIONS\s*:?=/;
 
-            $self->pointed_hint('debian-rules-invalid-build-option-nodocs',
-                $pointer)
+            $self->pointed_hint('debian-rules-invalid-build-option',
+                $pointer, 'nodocs')
               if $contents
-              =~ m{ifn?eq \(,\$\(findstring nodocs, *\$\(DEB_BUILD_OPTIONS\)\)\)};
+              =~ m{ifn?eq \(,\$\((findstring|filter) nodocs, *\$\(DEB_BUILD_OPTIONS\)\)\)};
 
             if (
                 $line =~m{^
