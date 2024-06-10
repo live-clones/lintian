@@ -272,6 +272,11 @@
          "uses_autoscript" : 1,
          "uses_misc_depends" : 1
       },
+      "dh_dlopenlibdeps" : {
+         "installed_by" : [
+            "dh-dlopenlibdeps"
+         ]
+      },
       "dh_doxygen" : {
          "installed_by" : [
             "doxygen"
@@ -349,6 +354,11 @@
       "dh_gnome_clean" : {
          "installed_by" : [
             "gnome-pkg-tools"
+         ]
+      },
+      "dh_gnulib_patch" : {
+         "installed_by" : [
+            "gnulib"
          ]
       },
       "dh_gnustep" : {
