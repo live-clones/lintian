@@ -160,34 +160,6 @@ sub visit_patched_files {
 
     my $longest = max_by { $line_length{$_} } keys %line_length;
 
-    return
-      if !defined $longest || $line_length{$longest} <= $VERY_LONG_LINE_LENGTH;
-
-    if ($item->basename =~ m{\.js$}i) {
-
-        $self->pointed_hint('source-contains-prebuilt-javascript-object',
-            $item->pointer);
-
-        # Check for missing source.  It will check
-        # for the source file in well known directories
-        $self->pointed_hint('source-is-missing', $item->pointer)
-          unless $self->find_source(
-            $item,
-            {
-                '.debug.js' => '(?i)\.js$',
-                '-debug.js' => '(?i)\.js$',
-                $EMPTY => $EMPTY
-            }
-          );
-    }
-
-    if ($item->basename =~ /\.(?:x?html?\d?|xht)$/i) {
-
-        # html file
-        $self->pointed_hint('source-is-missing', $item->pointer)
-          unless $self->find_source($item, {'.fragment.js' => $DOLLAR});
-    }
-
     return;
 }
 
