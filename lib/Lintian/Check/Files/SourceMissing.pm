@@ -148,20 +148,17 @@ sub visit_patched_files {
 
     my @lines = split(/\n/, $item->bytes);
     my %line_length;
-    my %semicolon_count;
 
     my $position = 1;
     for my $line (@lines) {
 
         $line_length{$position} = length $line;
-        $semicolon_count{$position} = ($line =~ tr/;/;/);
 
     } continue {
         ++$position;
     }
 
     my $longest = max_by { $line_length{$_} } keys %line_length;
-    my $most = max_by { $semicolon_count{$_} } keys %semicolon_count;
 
     return
       if !defined $longest || $line_length{$longest} <= $VERY_LONG_LINE_LENGTH;
