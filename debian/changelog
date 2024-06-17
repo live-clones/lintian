@@ -1,3 +1,10 @@
+lintian (2.116.3+deb12u1) UNRELEASED; urgency=medium
+
+  * Team upload.
+  * data/changes-file/known-dists: Add bookworm (Closes: #1051140)
+
+ -- Maytham Alsudany <maytha8thedev@gmail.com>  Mon, 17 Jun 2024 19:43:58 +0800
+
 lintian (2.116.3) unstable; urgency=medium
 
   The "FFP3 (Fixing False Positives, Three Small Changes)" Release.
