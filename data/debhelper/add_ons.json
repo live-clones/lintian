@@ -130,6 +130,11 @@
             "dh-dkms"
          ]
       },
+      "dlopenlibdeps" : {
+         "installed_by" : [
+            "dh-dlopenlibdeps"
+         ]
+      },
       "doxygen" : {
          "installed_by" : [
             "doxygen"

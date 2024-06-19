@@ -6364,17 +6364,7 @@
             "fonts-junicode"
          ]
       },
-      "junicode-bolditalic.otf" : {
-         "installed_by" : [
-            "fonts-junicode"
-         ]
-      },
       "junicode-cond.otf" : {
-         "installed_by" : [
-            "fonts-junicode"
-         ]
-      },
-      "junicode-conditalic.otf" : {
          "installed_by" : [
             "fonts-junicode"
          ]
@@ -6384,17 +6374,7 @@
             "fonts-junicode"
          ]
       },
-      "junicode-condlightitalic.otf" : {
-         "installed_by" : [
-            "fonts-junicode"
-         ]
-      },
       "junicode-condmedium.otf" : {
-         "installed_by" : [
-            "fonts-junicode"
-         ]
-      },
-      "junicode-condmediumitalic.otf" : {
          "installed_by" : [
             "fonts-junicode"
          ]
@@ -6409,22 +6389,7 @@
             "fonts-junicode"
          ]
       },
-      "junicode-expbolditalic.otf" : {
-         "installed_by" : [
-            "fonts-junicode"
-         ]
-      },
-      "junicode-expitalic.otf" : {
-         "installed_by" : [
-            "fonts-junicode"
-         ]
-      },
       "junicode-expmedium.otf" : {
-         "installed_by" : [
-            "fonts-junicode"
-         ]
-      },
-      "junicode-expmediumitalic.otf" : {
          "installed_by" : [
             "fonts-junicode"
          ]
@@ -6434,32 +6399,12 @@
             "fonts-junicode"
          ]
       },
-      "junicode-expsmbolditalic.otf" : {
-         "installed_by" : [
-            "fonts-junicode"
-         ]
-      },
-      "junicode-italic.otf" : {
-         "installed_by" : [
-            "fonts-junicode"
-         ]
-      },
       "junicode-light.otf" : {
          "installed_by" : [
             "fonts-junicode"
          ]
       },
-      "junicode-lightitalic.otf" : {
-         "installed_by" : [
-            "fonts-junicode"
-         ]
-      },
       "junicode-medium.otf" : {
-         "installed_by" : [
-            "fonts-junicode"
-         ]
-      },
-      "junicode-mediumitalic.otf" : {
          "installed_by" : [
             "fonts-junicode"
          ]
@@ -6474,17 +6419,7 @@
             "fonts-junicode"
          ]
       },
-      "junicode-smbolditalic.otf" : {
-         "installed_by" : [
-            "fonts-junicode"
-         ]
-      },
       "junicode-smcond.otf" : {
-         "installed_by" : [
-            "fonts-junicode"
-         ]
-      },
-      "junicode-smconditalic.otf" : {
          "installed_by" : [
             "fonts-junicode"
          ]
@@ -6494,17 +6429,7 @@
             "fonts-junicode"
          ]
       },
-      "junicode-smcondlightitalic.otf" : {
-         "installed_by" : [
-            "fonts-junicode"
-         ]
-      },
       "junicode-smcondmedium.otf" : {
-         "installed_by" : [
-            "fonts-junicode"
-         ]
-      },
-      "junicode-smcondmediumitalic.otf" : {
          "installed_by" : [
             "fonts-junicode"
          ]
@@ -6519,32 +6444,12 @@
             "fonts-junicode"
          ]
       },
-      "junicode-smexpbolditalic.otf" : {
-         "installed_by" : [
-            "fonts-junicode"
-         ]
-      },
-      "junicode-smexpitalic.otf" : {
-         "installed_by" : [
-            "fonts-junicode"
-         ]
-      },
       "junicode-smexpmedium.otf" : {
          "installed_by" : [
             "fonts-junicode"
          ]
       },
-      "junicode-smexpmediumitalic.otf" : {
-         "installed_by" : [
-            "fonts-junicode"
-         ]
-      },
       "junicode-smexpsmbold.otf" : {
-         "installed_by" : [
-            "fonts-junicode"
-         ]
-      },
-      "junicode-smexpsmbolditalic.otf" : {
          "installed_by" : [
             "fonts-junicode"
          ]
