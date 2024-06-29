@@ -1,0 +1,21 @@
+Source: rules-missing-pkg-php-tools-addon-phppear
+Maintainer: William Desportes <williamdes@wdes.fr>
+Section: php
+Priority: optional
+Build-Depends: debhelper-compat (= 13),
+               dh-sequence-phppear,
+               phpab,
+               phpunit
+Standards-Version: 4.6.2
+Vcs-Browser: https://salsa.debian.org/wdes-team/no-code
+Vcs-Git: https://salsa.debian.org/wdes-team/no-code.git -b debian/blob-backports
+Homepage: https://github.com/wdes/no-code
+Rules-Requires-Root: no
+
+Package: rules-missing-pkg-php-tools-addon-phppear
+Architecture: all
+Depends: ${misc:Depends}, ${phppear:Debian-Depends}
+Recommends: ${phppear:Debian-Recommends}
+Breaks: ${phppear:Debian-Breaks}
+Description: ${phppear:summary}
+ ${phppear:description}
