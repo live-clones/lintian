@@ -1,6 +1,8 @@
 Tag: license-problem-old-unicode
 Severity: error
 Check: cruft
+Renamed-From:
+ license-problem-convert-utf-code
 Explanation: The following file includes material under an old, non-free license
  from Unicode Inc. Therefore, it is not possible to ship this in main or
  contrib.
