@@ -1,14 +1,21 @@
-lintian (2.117.1~git) UNRELEASED; urgency=medium
+lintian (2.117.1) unstable; urgency=medium
 
   [ Axel Beckert ]
   * Retroactively mention #1033894 in previous changelog entry.
 
-  [ Bastien Roucariès ]
+  [ Otto Kekäläinen ]
+  * Declare compliance with Debian Policy 4.7.0
+  * Salsa-CI: Run both current and new Lintian to
+    ensure full compatibility
+
+  [ Bastien Roucariès ]
+  * Avoid an error with recent dpkg tools
+  * Workarround failure with recent gcc
+  * invalid-versioned-provides could not be anymore tested
+    due to dpkg-dev change
   * rebuild against dh-elpa >=2.1.5 (Closes: #1077112)
 
-  * WIP (generated at release time: please do not add entries below.)
-
- -- Axel Beckert <abe@debian.org>  Mon, 05 Feb 2024 23:25:47 +0100
+ -- Bastien Roucariès <rouca@debian.org>  Sat, 27 Jul 2024 21:39:04 +0000
 
 lintian (2.117.0) unstable; urgency=low
 
