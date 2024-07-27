@@ -24,7 +24,7 @@ Description: [% $description %]
 Package: [% $source %]2
 Architecture: [% $package_architecture %]
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Provides: a, iNvAlId-NaMe, versioned (>> 0.1)
+Provides: a, iNvAlId-NaMe
 Description: [% $description %] - bogus
  This is a bogus test package designed to exercise some feature or tag
  of Lintian.  It is part of the Lintian test suite and may do very odd
