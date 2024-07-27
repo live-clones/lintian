@@ -3,6 +3,9 @@ lintian (2.117.1~git) UNRELEASED; urgency=medium
   [ Axel Beckert ]
   * Retroactively mention #1033894 in previous changelog entry.
 
+  [ Bastien Roucariès ]
+  * rebuild against dh-elpa >=2.1.5 (Closes: #1077112)
+
   * WIP (generated at release time: please do not add entries below.)
 
  -- Axel Beckert <abe@debian.org>  Mon, 05 Feb 2024 23:25:47 +0100
