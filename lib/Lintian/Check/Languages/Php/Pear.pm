@@ -149,7 +149,8 @@ sub source {
     $self->pointed_hint('composer-package-without-pkg-php-tools-builddep',
         $composer_json->pointer)
       if defined $composer_json
-      && !$build_depends->satisfies('pkg-php-tools')
+      && !($build_depends->satisfies('pkg-php-tools')
+        || $build_depends->satisfies('dh-sequence-phpcomposer'))
       && !defined $package_xml
       && !defined $package2_xml;
 

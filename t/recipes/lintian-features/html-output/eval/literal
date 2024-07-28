@@ -638,7 +638,7 @@ footer p {
       </ul>
 
       <a class="visibility-symbol tiny experimental" href="https://lintian.debian.org/levels#experimental"></a>
-      <span class="hint tiny"><a href="https://lintian.debian.org/tags/debian-watch-does-not-check-gpg-signature">debian-watch-does-not-check-gpg-signature</a></span>
+      <span class="hint tiny"><a href="https://lintian.debian.org/tags/debian-watch-does-not-check-openpgp-signature">debian-watch-does-not-check-openpgp-signature</a></span>
       <span class="context tiny">[debian/watch]</span>
 
     </li>

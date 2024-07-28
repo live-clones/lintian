@@ -13,6 +13,6 @@ Explanation: Debian packages should install nothing into <code>/srv</code>.
  If a package wishes to place data below <code>/srv</code>, it must do so in
  a way that permits the local administrator to select the folder (for
  example, through post-install configuration, setup scripts,
- <code>debconf</code> promps, or similar).
+ <code>debconf</code> prompts, or similar).
 See-Also:
  filesystem-hierarchy srvdataforservicesprovidedbysystem

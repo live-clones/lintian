@@ -1,8 +1,454 @@
-lintian (2.115.2+git) UNRELEASED; urgency=medium
+lintian (2.117.1~git) UNRELEASED; urgency=medium
 
-  * WIP (generated at release time: please do not add entries below).
+  [ Axel Beckert ]
+  * Retroactively mention #1033894 in previous changelog entry.
 
- -- Axel Beckert <abe@debian.org>  Wed, 29 Jun 2022 18:02:15 +0200
+  [ Bastien Roucariès ]
+  * rebuild against dh-elpa >=2.1.5 (Closes: #1077112)
+
+  * WIP (generated at release time: please do not add entries below.)
+
+ -- Axel Beckert <abe@debian.org>  Mon, 05 Feb 2024 23:25:47 +0100
+
+lintian (2.117.0) unstable; urgency=low
+
+  The "One Year Later" Release.
+
+  * Summary of tag changes:
+    + Removed:
+      - package-supports-alternative-init-but-no-init.d-script
+
+  [ Multiple developers multiple times ]
+  * Refresh data. (Re-adds the Loongson 64 architecture, see #1028654)
+  * Run perltidy
+
+  [ Axel Beckert ]
+  * Fix "Use of uninitialized value $LINTIAN_CFG" in debug output.
+  * data/spelling/corrections: Drop valid word "resizeable".
+  * Salsa CI: add bookworm-backports, drop buster-backports.
+  * Fix test suite issues caused by usrmerge changes in debhelper.
+  * Udev+AppstreamMetadata checks: Detect udev rules also under /usr/lib/.
+  * Add b-d on debhleper ≥ 13.11.8~ if testsuite is run at build time.
+  * L::C::B::Corrupted::check_elf_issues(): Return immediately if file is
+    no ELF file. Thanks to Corvin Köhne via MR !486.
+  * L::Data: Rename one usage of $releases to $stylesheets. (Fixes copy
+    and paste error.)
+  * L::Data: lintian.d.o no more exists, so don't fetch files from there.
+  * Add minimal test for "@recommends@" from !464 to "testsuite-general".
+  * Salsa CI: Drop backports to bullseye (oldstable): Testsuite requires a
+    newer debhelper version than available in bullseye-backports.
+  * private/generate-tag-summary --in-place: Avoid mojibake by not
+    double-encoding UTF-8.
+
+  [ Andreas Beckmann ]
+  * dh_dkms is now provided by dh-dkms instead of dkms. (See #1013417)
+
+  [ Simon McVittie ]
+  * Add test coverage for #1027744.
+  * Treat man pages as optional for executables in /usr/libexec/.
+  * Add test asserting that man pages are not required for libexec binaries.
+  * obsolete-packages: Report gnome-common as obsolete.
+  * tags: Raise typelib-not-in-multiarch-directory to warning level.
+
+  [ Guido Günther ]
+  * Add byzantium and octarine as known PureOS distributions.
+
+  [ Hideki Yamane ]
+  * Disable BLHC and BUILD_PACKAGE_ANY in debian/salsa-ci.yml.
+
+  [ Simon Quigley ]
+  * Add "mantic" and "noble" as a known Ubuntu distributions.
+
+  [ Nilesh Patra ]
+  * Make lintian recognize fasttrack as a dist.
+  * Update known dists and oldstable epoch. (Closes: #1033894)
+  * autopkgtest fix: Update badnocredit.raw for updated Adobe license tag
+    check.
+  * Fix rootless-builds.txt location in lintian tags. (Closes: #1051538)
+  * Don't check for "RECORD" in .dist-info, they are now always excluded.
+
+  [ Bastien Roucariès ]
+  * Detect embedded yajl and libzstd.
+  * Add lodash for embedded JavaScript library.
+  * Add node-pako as embedded library.
+  * Improve detection of node-pako.
+  * Add node-jzip-utils for detection of embedded JavaScript.
+  * Detect node-jzip as embedded JavaScript
+  * Add a punycode and codemirror JavaScript library.
+  * Remove "salsaci" suffix for length test.
+
+  [ James Addison ]
+  * Fix license-problem-font-adobe-copyrighted-fragment-no-credit.
+
+  [ Paul Wise ]
+  * Add 01.org to the list of obsolete domains.
+
+  [ Shengjing Zhu ]
+  * Adapt testsuite to groff 1.23 warning message. (Closes: #1042049)
+
+  [ Thompson, Brian ]
+  * Make SVG graphs more understandable by adding the tag name.
+
+  [ Agathe Porte ]
+  * Add missing closing parens in invalid-field-for-derivative.tag.
+
+  [ Benjamin Drung ]
+  * Exclude not-binnmuable-* tags in ubuntu/main profile. (LP: #2026208)
+
+  [ Sebastian Crane ]
+  * Detect recent versions of the Lua interpreter.
+
+  [ Gioele Barabucci ]
+  * Remove obsolete tag
+    "package-supports-alternative-init-but-no-init.d-script".
+
+  [ Louis-Philippe Véronneau ]
+  * missing-prerequisite-for-pyproject-backend: add support for meson.
+  * missing-prerequisite-for-pyproject-backend: add support for sipbuild.
+
+  [ Jiajie Chen ]
+  * arch-regex: Add loong64 support.
+
+  [ Alexandre Detiste ]
+  * obsolete-packages: Add "pkg-config => pkgconf".
+
+  [ Richard Lewis ]
+  * Add *~ to ".gitignore".
+  * Fix exit code when --show-overrides is given and an 'error' tag is
+    overridden. Also add a test for it. (Closes: #1019690)
+  * Update testsuite documentation.
+
+  [ Emilio Pozuelo Monfort ]
+  * Don't emit source-nmu-has-incorrect-version-number for stable updates.
+    (Closes: #1022759)
+
+  [ Valentin Vidic ]
+  * Allow @recommends@ as autopkgtest dependency.
+
+ -- Axel Beckert <abe@debian.org>  Mon, 05 Feb 2024 21:58:11 +0100
+
+lintian (2.116.3) unstable; urgency=medium
+
+  The "FFP3 (Fixing False Positives, Three Small Changes)" Release.
+
+  [ Axel Beckert ]
+  * Refresh data. (Loong64 removed from two lists, some fonts and dh_cruft
+    added.)
+
+  [ Simon McVittie ]
+  * obsolete-packages: libegl1-mesa-dev is not obsolete.
+
+  [ Andreas Beckmann ]
+  * archive-liberty-mismatch: Add exception for 'non-free-firmware binary
+    package build from non-free source package'. (Closes: #1030325)
+
+ -- Axel Beckert <abe@debian.org>  Sun, 05 Feb 2023 09:10:20 +0100
+
+lintian (2.116.2) unstable; urgency=medium
+
+  The "FFP2 (Fixing False Positives, too)" Release.
+
+  [ Axel Beckert ]
+  * Add private script to automate post release version bump.
+  * Fix typo in previous debian/changelog entry. Thanks Lintian! ;-)
+  * Mention that #1024039 got closed by 2.116.1 in its changelog entry.
+  * [Testsuite] Check tag files and docs with spellintian. Thanks to
+    Sylvestre Ledru for noticing the typos this check now finds.
+  * Fix duplicate words and one more typo found by
+    spellintian-textual-content.t.
+  * "currectly" can be a misspelling of "correctly" or "currently"
+  * Fix spellintian false positives found by spellintian-textual-content.t:
+    + "these package" followed by a plural, e.g. "these package sections",
+    + Double word with closing parenthesis inbetween. (So far only opening
+      parentheses were whitelisted.)
+  * Add testsuite check for missing-pkg-php-tools-addon false positive
+    with dh-sequence-phpcomposer. (See MR !438.)
+  * Add testsuite check for a vcs-field-has-unexpected-spaces false
+    positive. (See #1023155 and MR !422.)
+  * debian-rules-uses-unnecessary-dh-argument: Also report found and
+    minimum dh compat level. Additionally also rephrase tag description to
+    no more say "this debhelper compatibility level". Thanks to Anthony
+    Fok for making us aware of the issue in MR !451.
+
+  [ Cyril Brulebois ]
+  * Teach the is_non_free attribute about the non-free-firmware section.
+  * Stop checking for Standards-Version for installer-only (i.e. udeb)
+    packages. (Closes: #991533)
+
+  [ Andreas Beckmann ]
+  * backports-upload-has-incorrect-version-number: Fix salsaci version
+    regexp again.  (Closes: #1024361)
+
+  [ Sylvestre Ledru ]
+  * Fix some typos in the doc.
+
+  [ William Desportes ]
+  * missing-pkg-php-tools-addon: Allow dh-sequence-phpcomposer as
+    alternative to pkg-php-tools-addon.
+  * Lintian::Check::Files::SourceMissing: Ignore files in
+    debian/missing-sources/. Fixes false positives in source-is-missing,
+    source-contains-prebuilt-javascript-object and friends.
+
+  [ Tino Didriksen ]
+  * vcs-field-has-unexpected-spaces: Allow any order of git branch and
+    path. (Closes: #1023155) Thanks to Bradford D. Boyle for the bug
+    report.
+
+  [ Johannes Schauer Marin Rodrigues ]
+  * Multiarch terminology: Use "qualifier" instead of "acceptor": Update
+    tag descriptions of rules-require-build-prerequisite and
+    missing-build-depends-for-clean-target-in-debian-rules. Also rename
+    method multiarch_acceptor() to multiarch_qualifier() in
+    Lintian::Relation::Predicate.
+
+ -- Axel Beckert <abe@debian.org>  Sun, 29 Jan 2023 09:32:16 +0100
+
+lintian (2.116.1) unstable; urgency=medium
+
+  The "No More Neglected Autopkgtest Architectures" Release.
+
+  [ Axel Beckert ]
+  * bitbucket.org no more supports Mercurial.
+  * [Testsuite] Fix armhf+i386-only test binaries-missing-lfs. Should fix
+    autopkgtest on these architectures.
+  * unknown-section description: Factorize explanations to avoid
+    repetitions as suggested by Cyril Brulebois. (See also below.)
+  * Fix remaining i386 testsuite issues due to missing brackets.
+  * Don't emit inconsistent-appstream-metadata-license with "MIT !=
+    Expat". (Closes: #1029055)
+  * Update Lintian User's Manual for pointed hints in tags and overrides.
+    Thanks to Soren Stoutner. (Closes: #1029177)
+  * Whitelist Autobuild, Go-Import-Path, and Ruby-Versions from
+    unknown-field. (Closes: #1014885)
+  * Don't emit spare-manual-page for binaries in /usr/libexec/.
+    (Closes: #1027744)
+  * Refresh static data.
+  * data/java/constants: Default is now Java17, versions available up to
+    Java21. (Closes: #1024039)
+
+  [ Cyril Brulebois ]
+  * Add non-free-firmware to known archive areas.
+
+  [ William Desportes ]
+  * Fix lintian package-contains-documentation-outside-usr-share-doc
+    matches python files and robots.txt. (Closes: #997987, #976636)
+  * Add more typo fixes.
+
+ -- Axel Beckert <abe@debian.org>  Mon, 23 Jan 2023 03:32:04 +0100
+
+lintian (2.116.0) unstable; urgency=medium
+
+  The "Crowd Merging" Release.
+
+  * Summary of tag changes:
+    + Added:
+      - dbus-policy-in-etc
+      - homepage-github-url-ends-with-dot-git
+      - homepage-gitlab-url-ends-with-dot-git
+      - homepage-salsa-url-ends-with-dot-git
+      - uses-pdm-cli
+      - uses-python-distutils
+    + Removed:
+      - init.d-script-needs-depends-on-lsb-base
+      - old-dpmt-vcs
+      - old-papt-vcs
+      - python-teams-merged
+
+  [ Sebastian Ramacher ]
+  * Revert "Turn embedded-library into a classification tag. (Closes:
+    #932634)". The tag embedded-library is used by FTP masters for
+    automatic rejects.  So let's revert this change. First, #932634 has
+    seen no coordination with FTP masters. Second, it confuses developers
+    when their packages get rejected for tags that are not emitted
+    locally.
+
+  [ Simon McVittie ]
+  * obsolete-packages: Add some more transitional packages.
+  * desktop/dbus: Check for dbus policy files installed into /etc/.
+    (Closes: #1006631)
+  * Don't emit very-long-line-length-in-source-file for REUSE licenses.
+    (Closes: #1013314)
+
+  [ Bastien Roucariès ]
+  * Run test suite at build time except on Salsa.
+  * Fix warning: cannot run debian/readme check on
+    package binary:postgresql-15_15~beta2-2+salsaci_amd64
+    (Closes: #1014175)
+  * Refresh data.
+  * L…/C…/Files/PrivacyBreach.pm: Run lc in sliding windows block.
+
+  [ Axel Beckert ]
+  * data/spelling/corrections: Remove valid word "licence".
+  * Fix typos and add missing changelog items in 2.115.3 release.
+  * .gitignore: Also ignore debian/*.debhelper files and drop wrong
+    trailing slash for doc/lintian.html.
+  * private/refresh-virtual-packages-data: Replace "egrep" with "grep -E".
+  * Replace "egrep" and "fgrep" in all test suite dummy packages with "grep
+    -E/-F".
+  * Add build-dependencies of the test suite.
+  * Fix test broken by dpatch removal.
+  * Fix test broken by updating the list of virtual packages.
+  * Extend spellintian.t to check all listed misspellings against dictionaries.
+    Add test suite build dependencies on liblist-someutils-perl, wamerican
+    and wbritish. (Closes: #1019541)
+  * Make spellintian.t to use the installed corrections list under autopkgtest.
+  * t/scripts/tags/fields.t: Allow running with just "prove -l".
+  * Remove spelling corrections which are valid words and now caught by
+    the new spellintian.t check against English dictionaries.
+    (Closes: #1019235)
+  * Remove valid word "tye" from data/spelling/corrections.
+  * Remove spelling correction for "curren", it's a valid HTML entity.
+  * Refresh data: Adds Debian Policy 4.6.2 and Loong64 architectures among
+    other things.
+  * Declare compliance with Debian Policy 4.6.2.
+  * Make test for generate-tag-summary more precise and properly cover all
+    cases.
+  * out-of-date-/newer-standards-version: Only output the significant
+    digits of the current policy version.
+  * Salsa CI: Override the lintian version being used to the just built
+    version.
+  * Extend desc-fields.t to only accept known field names, see #1025868.
+  * Fix singular vs plural field name typo. (Fixes ½ of #1025868)
+  * debian/copyright: Bump my copyright years to 2023.
+  * Make "lintian --version" emit versions unique per commit if run from a
+    git checkout.
+  * Fix read error with libpath-tiny-perl ≥ 0.142 if debian/templates is a
+    directory. Thanks to Salvatore Bonaccorso and src:linux. :-)
+  * Fix arm64 autopkgtest by using a shell script as example instead of a
+    compiled C binary for testing bin-sbin-mismatch. Also fix that so far
+    on other architectures there was a bin-sbin-mismatch false negative
+    accepted by the test suite while the true positive on arm64 hadn't
+    been accepted by the test suite. (Closes: #1025868)
+  * inconsistent-appstream-metadata-license:
+    + Versions with trailing ".0" are equivalent to versions without
+      (Closes: #1002053)
+    + Normalize comparison (-or-later/+, -only suffix)
+    + Tag description: Text improvements; add direct reference to
+      AppStream metadata_license tag specification. (Closes: #1014956)
+  * Unpack orig.tar: Ignore warnings about tar ignoring tar ball
+    peculiarities. (Closes: #1028975)
+  * Fix error with Path::Tiny ≥ 0.142 when searching for upstream
+    signatures. (Closes: #1028274)
+  * license-problem-php-license: Also refer to
+    https://ftp-master.debian.org/php-license.html
+  * Delete dangling symlink reporting/harness. (Closes: 1027323)
+  * spellintian.t: Make sure that no bad spelling is used as good spelling
+    of another bad spelling. Prompted by #1027399. Add build-dependency on
+    "libarray-utils-perl <!nocheck>" and autopkgtest dependency for that.
+  * Fix bad spellings that were used as good spelling for another bad
+    spelling. (Closes: #1027399)
+  * Do not emit executable-stack-in-shared-library on MIPS architectures
+    for now. (Closes: #1025436, see also #1022787)
+  * run-private-scripts.t:
+    + Do not run auto-reject-diff as it requires network access.
+    + Skip generate-tag-summary without git.
+    Thanks Louis-Philippe Véronneau!
+
+  [ Akbarkhon Variskhanov ]
+  * debian/control: Bump Standards-Version in Description.
+
+  [ Simon Quigley ]
+  * Add "lunar" as a known Ubuntu distribution.
+
+  [ billchenchina ]
+  * README.md: use zless for lintian.txt.gz.
+
+  [ Philip Hands ]
+  * Accept bpo...+salsaci versions. (Closes: #1024361)
+
+  [ Aurélien COUDERC ]
+  * Add SingleMainWindow to known-desktop-keys.
+
+  [ Johannes Schauer Marin Rodrigues ]
+  * transitional-package-not-oldlibs-optional: Developer reference section
+    6.7.7 is now 6.8.7.
+  * Remove init.d-script-needs-depends-on-lsb-base and add lsb-base to
+    obsolete-packages. (Closes: #1019851)
+
+  [ Louis-Philippe Véronneau ]
+  * missing-prerequisite-for-pyproject-backend: Add support for
+    pdm-pep517.
+  * uses-pdm-cli: Create new tag.
+  * Fix false-positive for missing-build-dependency-for-dh-addon when
+    using dh-sequence-python3. (Closes: #1016147)
+  * Add new tag 'uses-python-distutils' to warn people of the Python
+    distutils deprecation.
+  * Remove tag 'python-teams-merged', as this transition has been done and
+    no package in the archive raises it anymore.
+  * Remove tags 'old-dpmt/papt-vcs', as this transition has been done and
+    no package in the archive raises them anymore.
+  * Rework the 'package-is-team-maintained' tag.
+  * Mark 'very-long-line-length-in-source-file' as experimental, because
+    of the high number of false-positives.
+  * Update known autopkgtest restrictions to add 'needs-sudo'.
+  * Mark the 'update-debian-copyright' tag as experimental.
+    (Closes: #1025644)
+  * Fix false-positive for missing-prerequisite-for-pyproject-backend when
+    the backend is specified as a Build-Depends-Indep. (Closes: #1025164)
+  * missing-prerequisite-for-pyproject-backend: Add support for hatchling.
+  * Add 'autopkgtest-pkg-pybuild' as known autopkgtest testsuite.
+  * Make sure pybuild-plugin-pyproject is registered as a valid
+    prerequisite for dh-python3.
+
+  [ Edward Betts ]
+  * spelling: Add a correction.
+  * dh-sequence-vim-addon pulls in dh-vim-addon.
+  * GitHub, GitLab and Salsa URLs shouldn't end with ".git" in Homepage
+    header.
+
+  [ Fatih Altun ]
+  * Add "yirmiuc" as a known Pardus distribution.
+
+  [ William Desportes ]
+  * data: Register .{dbf,shp,shx,sbx,sbn,qix} ESRI file extensions.
+  * Fix false positive for license-problem-php-license for pear.php.net
+    source code.
+
+  [ Luca Boccassi ]
+  * missing-systemd-service-for-init.d-script: Mention future deprecation
+    of generator.
+
+  [ Christoph Biedl ]
+  * Lintian::Index::FileTypes: Call "file" with "--raw" to unbreak test
+    suite with file/libmagic ≥ 5.42. (Closes: #1026920)
+
+ -- Axel Beckert <abe@debian.org>  Tue, 17 Jan 2023 01:37:56 +0100
+
+lintian (2.115.3) unstable; urgency=medium
+
+  The "RPB (Restore Previous Behavior)" Release.
+
+  [ Gioele Barabucci ]
+  * experimental-to-unstable-without-comment: Fix regex (Closes: #101387)
+
+  [ Axel Beckert ]
+  * Recognise many more binary file type suffixes (Closes: #1014156)
+
+  [ Guillem Jover ]
+  * Add pedantic hint for OpenPGP files named after
+    specific implementations
+  * Add more extensions for OpenPGP files
+  * In the US "cancelation" is a valid spelling of "cancellation"
+  * Rename debian-watch-does-not-check-gpg-signature
+    tag to say openpgp
+  * Fix --fail-on to revert to original default on error
+    (Closes: #995492)
+
+  [ Francois-Xavier Le Bail ]
+  * spelling: Add several corrections.
+
+  [ Bastien Roucariès ]
+  * Restore sliding windows (Closes: #993613)
+  * Add myself as uploaders
+
+  * Summary of tag changes:
+    + Added:
+      - debian-watch-does-not-check-openpgp-signature
+      - openpgp-file-has-implementation-specific-extension
+    + Removed:
+      - debian-watch-does-not-check-gpg-signature
+
+ -- Bastien Roucariès <rouca@debian.org>  Sun, 28 Aug 2022 08:31:41 +0000
 
 lintian (2.115.2) unstable; urgency=medium
 
@@ -24507,7 +24953,7 @@ lintian (1.11.12) unstable; urgency=low
   * removed references to libtool-workarounds.txt (it never died ....),
     Closes: #78420
   * my reformat of the code in checks/menu-format changed the regex from
-    m/^#/ to m/^	#/, I changed it back (kind of).  The test is now
+    m/^#/ to m/^        #/, I changed it back (kind of).  The test is now
     m/^\s*\#/ just in case a space snuck in.  Also modified the code so it
     does a if (m//) { next;} rather than if (! m//) { ........ }.
     Closes: #78532
@@ -24748,8 +25194,8 @@ lintian (1.5) unstable; urgency=low
      + Changed file error message to indicate it's file's
        fault(closes: #37259)
      + Changed perl depends to perl | perl5 to cover both
-	   Also added perl-5.004 and perl-5.005 since they are valid perls
-	   (closes: #41041, closes: #39835)
+           Also added perl-5.004 and perl-5.005 since they are valid perls
+           (closes: #41041, closes: #39835)
      + Remove a undefine causing spurious unknown-tag error (close: #40699)
      + Ancient-ized standards-version 2.4.0 and 2.4.1
      + Added policy 2.5.1 to the accepted number for standards-version
@@ -24774,7 +25220,7 @@ lintian (1.4-1) unstable; urgency=low
        files/dirs have non-standard permissions.
      + override requested by adam kleine for gtk-engines-gtkstep.  Contains
        libraries not meant to be linked.
-	 + override requested by Manoj Srivastava for latex2html.  Fixes
+         + override requested by Manoj Srivastava for latex2html.  Fixes
        bug#38098.
      + hugs added to the list of interpreters.  Fixes bug#37668 reported by
        Antti-Juhani Kaijanaho.
@@ -24805,16 +25251,16 @@ lintian (1.3-1) unstable; urgency=low
 lintian (1.2-1) unstable; urgency=low
 
   * Darren's changes:
-  	+ added the -1 to denote purely packaging changes
-  	+ added fvwmother to menu needs= check (fixes bug#35057)
+        + added the -1 to denote purely packaging changes
+        + added fvwmother to menu needs= check (fixes bug#35057)
   * Richard's changes:
     + Added new tag package-installs-packlist.
-		This closes wishlist bug#33827, reported by Joey Hess.
+                This closes wishlist bug#33827, reported by Joey Hess.
     + Mark all versions of libgtk1.1 as obsolete for
-		depends-on-obsolete-package tag.
+                depends-on-obsolete-package tag.
     + For tag arch-indep-package-contains-binary-or-object,
-		tighten up regexp that detects "ELF".  This fixes bug#35237,
-		reported by Mark Brown.
+                tighten up regexp that detects "ELF".  This fixes bug#35237,
+                reported by Mark Brown.
 
  -- Darren Benham <gecko@debian.org>  Mon, 29 Mar 1999 16:31:05 -0800
 
@@ -25958,7 +26404,7 @@ lintian (0.3.2) unstable; urgency=low
       - executables may only be in /usr/doc/<something>/examples
       - files should be owned by root.root (thanks to Joey)
       - files should not be directly placed into /usr/doc/
-  	(fixes:bug#19485)
+        (fixes:bug#19485)
     - no files may be installed into /tmp and /var/tmp
     - renamed file-directly-in-usr-share to
       file-directly-in-usr-share-not-in-a-sub-directory
@@ -26040,7 +26486,7 @@ lintian (0.3.1) unstable; urgency=low
 
   * Fixed `files' check WRT files in /usr/lib/sgml and
     /etc/emacs/site-start.d:
-      -	ignore directories and symbolic links when checking for correct
+      - ignore directories and symbolic links when checking for correct
         file permissions
       - display permissions in octal format
     (fixes:bug#18866,#19026)

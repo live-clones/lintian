@@ -20,5 +20,5 @@ watch-file-general (source): debian-watch-lacks-sourceforge-redirector ftp://upl
 watch-file-general (source): debian-watch-file-uses-deprecated-sf-redirector-method http://qa.debian.org/watch/sf.php?project=foo scripts\.([\d.]+)\.tar\.gz debian uupdate [debian/watch:5]
 watch-file-general (source): debian-watch-file-uses-deprecated-githubredir http://githubredir.debian.net/github/username/project /(.*).tar.gz [debian/watch:24]
 watch-file-general (source): debian-watch-file-specifies-wrong-upstream-version 2.0.ds1-1 [debian/watch]
-watch-file-general (source): debian-watch-does-not-check-gpg-signature [debian/watch]
+watch-file-general (source): debian-watch-does-not-check-openpgp-signature [debian/watch]
 watch-file-general (source): debian-watch-could-verify-download debian/upstream/signing-key.asc [debian/watch]

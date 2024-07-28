@@ -89,7 +89,7 @@ cat > "$workdir/virtual-packages" <<EOF
 EOF
 
 [ -f "$lintian_data/fields/virtual-packages" ] && {
-    egrep '^#\s*Keep:\s*.+$' "$lintian_data/fields/virtual-packages" \
+    grep -E '^#\s*Keep:\s*.+$' "$lintian_data/fields/virtual-packages" \
         >> "$workdir/virtual-packages" || true
 }
 [ -z "$VIRTUAL_PACKAGES" ] || {

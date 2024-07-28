@@ -24,7 +24,7 @@ use warnings;
 
 use Const::Fast;
 use IPC::Run3;
-use Test::More tests => 3;
+use Test::More tests => 2;
 
 const my $DOT => q{.};
 const my $WAIT_STATUS_SHIFT => 8;
@@ -59,8 +59,15 @@ sub t {
     return;
 }
 
-t('auto-reject-diff', qr/Found \d+ certain/);
-t('generate-tag-summary', qr/Assuming commit range to be/, qr/tags/);
+SKIP: {
+    skip('Only works with git', 1) unless -x '/usr/bin/git' && -d '.git';
+
+    t(
+        'generate-tag-summary',
+        qr/Assuming commit range to be/,
+        qr/^No tags were added or removed$|\A\Z/
+    );
+}
 t('latest-policy-version', qr/^(\d+\.){3}/);
 
 done_testing();

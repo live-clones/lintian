@@ -50,6 +50,16 @@
             "dh-buildinfo"
          ]
       },
+      "builtusing" : {
+         "installed_by" : [
+            "dh-builtusing"
+         ]
+      },
+      "cargo" : {
+         "installed_by" : [
+            "dh-cargo"
+         ]
+      },
       "cli" : {
          "installed_by" : [
             "cli-common-dev"
@@ -90,6 +100,11 @@
             "dh-cmake"
          ]
       },
+      "cruft" : {
+         "installed_by" : [
+            "dh-cruft"
+         ]
+      },
       "ctest" : {
          "installed_by" : [
             "dh-cmake"
@@ -98,6 +113,11 @@
       "d_i" : {
          "installed_by" : [
             "dh-di"
+         ]
+      },
+      "debputy" : {
+         "installed_by" : [
+            "dh-debputy"
          ]
       },
       "dist_zilla" : {
@@ -110,9 +130,14 @@
             "dh-dkms"
          ]
       },
-      "dpatch" : {
+      "dlopenlibdeps" : {
          "installed_by" : [
-            "dpatch"
+            "dh-dlopenlibdeps"
+         ]
+      },
+      "doxygen" : {
+         "installed_by" : [
+            "doxygen"
          ]
       },
       "dwz" : {
@@ -147,7 +172,7 @@
       },
       "gir" : {
          "installed_by" : [
-            "gobject-introspection"
+            "gobject-introspection-bin"
          ]
       },
       "gnome" : {
@@ -160,12 +185,32 @@
             "dh-golang"
          ]
       },
+      "grantlee" : {
+         "installed_by" : [
+            "libgrantlee5-dev"
+         ]
+      },
       "haskell" : {
          "installed_by" : [
             "dh-haskell"
          ]
       },
+      "installdebputy" : {
+         "installed_by" : [
+            "dh-debputy"
+         ]
+      },
       "installinitramfs" : {
+         "installed_by" : [
+            "libdebhelper-perl"
+         ]
+      },
+      "installnss" : {
+         "installed_by" : [
+            "dh-nss"
+         ]
+      },
+      "installsysusers" : {
          "installed_by" : [
             "libdebhelper-perl"
          ]
@@ -186,6 +231,11 @@
          ]
       },
       "kf5" : {
+         "installed_by" : [
+            "pkg-kde-tools"
+         ]
+      },
+      "kf6" : {
          "installed_by" : [
             "pkg-kde-tools"
          ]
@@ -225,6 +275,16 @@
             "mkdocs"
          ]
       },
+      "movetousr" : {
+         "installed_by" : [
+            "libdebhelper-perl"
+         ]
+      },
+      "nginx" : {
+         "installed_by" : [
+            "nginx-dev"
+         ]
+      },
       "nodejs" : {
          "installed_by" : [
             "dh-nodejs"
@@ -250,9 +310,14 @@
             "dh-octave"
          ]
       },
-      "package_notes" : {
+      "pd_lib_builder" : {
          "installed_by" : [
-            "dh-package-notes"
+            "dh-puredata"
+         ]
+      },
+      "pdl" : {
+         "installed_by" : [
+            "pdl"
          ]
       },
       "perl6" : {
@@ -310,19 +375,19 @@
             "ppp-dev"
          ]
       },
+      "puppet_module" : {
+         "installed_by" : [
+            "dh-puppet"
+         ]
+      },
+      "puredata" : {
+         "installed_by" : [
+            "dh-puredata"
+         ]
+      },
       "pyppd" : {
          "installed_by" : [
             "pyppd"
-         ]
-      },
-      "pypy" : {
-         "installed_by" : [
-            "dh-python"
-         ]
-      },
-      "python2" : {
-         "installed_by" : [
-            "dh-python"
          ]
       },
       "python3" : {
@@ -410,6 +475,11 @@
             "tex-common"
          ]
       },
+      "user_session_migration" : {
+         "installed_by" : [
+            "dh-user-session-migration"
+         ]
+      },
       "uwsgi" : {
          "installed_by" : [
             "uwsgi-dev"
@@ -463,6 +533,16 @@
       "zathura" : {
          "installed_by" : [
             "zathura-dev"
+         ]
+      },
+      "zz_debputy" : {
+         "installed_by" : [
+            "dh-debputy"
+         ]
+      },
+      "zz_debputy_rrr" : {
+         "installed_by" : [
+            "dh-debputy"
          ]
       }
    },

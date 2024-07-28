@@ -42,4 +42,4 @@ maintainer-scripts (binary): maintainer-script-calls-chown-improperly "chown -R 
 maintainer-scripts (binary): install-info-used-in-maintainer-script "install-info" [postinst:28]
 maintainer-scripts (binary): forbidden-config-interpreter /usr/bin/python [config]
 maintainer-scripts (binary): command-with-path-in-maintainer-script /usr/bin/baz (plain script) [postinst:172]
-maintainer-scripts (binary): command-with-path-in-maintainer-script /bin/egrep (plain script) [preinst:12]
+maintainer-scripts (binary): command-with-path-in-maintainer-script /bin/grep (plain script) [preinst:12]

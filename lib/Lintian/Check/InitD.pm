@@ -472,16 +472,6 @@ sub check_init {
             $saw_command{$1} = 1;
         }
 
-        if (
-            $line =~ m{^\s*\.\s+/lib/lsb/init-functions}
-            && !$processable->relation('strong')->satisfies('lsb-base:any')
-            && (none { $_->basename =~ m/\.service$/ && !$_->is_dir }
-                @{$processable->installed->sorted_list})
-        ) {
-            $self->pointed_hint('init.d-script-needs-depends-on-lsb-base',
-                $item->pointer($position));
-        }
-
         # nested while
     } continue {
         ++$position;
@@ -717,25 +707,6 @@ sub check_defaults {
 
 sub visit_installed_files {
     my ($self, $item) = @_;
-
-    # check for missing init.d script when alternative init system is present
-
-    if (   $item =~ m{etc/sv/(?<svc>[^/]+)/run$}
-        || $item =~ m{(?<usr>usr/)?lib/systemd/system/(?<svc>[^/@]+)\.service})
-    {
-
-        my ($usr, $service) = ($+{usr} // $EMPTY, $+{svc});
-
-        $self->pointed_hint(
-            'package-supports-alternative-init-but-no-init.d-script',
-            $item->pointer)
-          unless $self->processable->installed->resolve_path(
-            "etc/init.d/${service}")
-          || $self->processable->installed->resolve_path(
-            "${usr}lib/systemd/system/${service}.path")
-          || $self->processable->installed->resolve_path(
-            "${usr}lib/systemd/system/${service}.timer");
-    }
 
     if ($item =~ m{etc/sv/([^/]+)/$}) {
 

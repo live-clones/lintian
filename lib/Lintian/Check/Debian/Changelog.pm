@@ -692,7 +692,7 @@ sub binary {
               if $latest_dist eq 'unstable'
               && $previous_dist eq 'experimental'
               && $latest_entry->Changes
-              !~ m{ \b to \s+ ['"\N{LEFT SINGLE QUOTATION MARK}\N{LEFT DOUBLE QUOTATION MARK}]? (?:unstable|sid) ['"\N{RIGHT SINGLE QUOTATION MARK}\N{RIGHT DOUBLE QUOTATION MARK}]? \b }im;
+              !~ m{ \b to \s+ ['"\N{LEFT SINGLE QUOTATION MARK}\N{LEFT DOUBLE QUOTATION MARK}]? (?:unstable|sid) ['"\N{RIGHT SINGLE QUOTATION MARK}\N{RIGHT DOUBLE QUOTATION MARK}]? \b }imx;
 
             my $changes = $group->changes;
             if ($changes) {

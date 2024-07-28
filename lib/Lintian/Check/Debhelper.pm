@@ -81,7 +81,7 @@ my %DH_COMMAND_MANUAL_PREREQUISITES = (
 'dh-autoreconf:any | debhelper:any (>= 9.20160403~) | debhelper-compat:any',
     dh_autoreconf =>
 'dh-autoreconf:any | debhelper:any (>= 9.20160403~) | debhelper-compat:any',
-    dh_dkms => 'dkms:any | dh-sequence-dkms:any',
+    dh_dkms => 'dh-dkms:any | dh-sequence-dkms:any',
     dh_girepository => 'gobject-introspection:any | dh-sequence-gir:any',
     dh_gnome => 'gnome-pkg-tools:any | dh-sequence-gnome:any',
     dh_gnome_clean => 'gnome-pkg-tools:any | dh-sequence-gnome:any',
@@ -90,7 +90,8 @@ my %DH_COMMAND_MANUAL_PREREQUISITES = (
     dh_nativejava => 'gcj-native-helper:any | default-jdk-builddep:any',
     dh_pgxs_test => 'postgresql-server-dev-all:any | postgresql-all:any',
     dh_python2 => 'dh-python:any | dh-sequence-python2:any',
-    dh_python3 => 'dh-python:any | dh-sequence-python3:any',
+    dh_python3 =>
+      'dh-python:any | dh-sequence-python3:any | pybuild-plugin-pyproject:any',
     dh_sphinxdoc =>
 'sphinx:any | python-sphinx:any | python3-sphinx:any | dh-sequence-sphinxdoc:any',
     dh_xine => 'libxine-dev:any | libxine2-dev:any'
@@ -108,6 +109,7 @@ my %DH_ADDON_MANUAL_PREREQUISITES = (
     dwz => 'debhelper:any | debhelper-compat:any | dh-sequence-dwz:any',
     installinitramfs =>
 'debhelper:any | debhelper-compat:any | dh-sequence-installinitramfs:any',
+    gir => 'gobject-introspection:any | dh-sequence-gir:any',
     gnome => 'gnome-pkg-tools:any | dh-sequence-gnome:any',
     lv2config => 'lv2core:any',
     nodejs => 'pkg-js-tools:any | dh-sequence-nodejs:any',
@@ -124,6 +126,7 @@ my %DH_ADDON_MANUAL_PREREQUISITES = (
 'sphinx:any | python-sphinx:any | python3-sphinx:any | dh-sequence-sphinxdoc:any',
     systemd =>
 'debhelper:any (>= 9.20160709~) | debhelper-compat:any | dh-sequence-systemd:any | dh-systemd:any',
+    vim_addon => 'dh-vim-addon:any | dh-sequence-vim-addon:any',
 );
 
 sub visit_patched_files {
@@ -648,12 +651,14 @@ sub source {
     $self->pointed_hint(
         'debian-rules-uses-unnecessary-dh-argument',
         $drules->pointer($seen_dh_parallel),
+        "$debhelper_level >= $DH_PARALLEL_NOT_NEEDED",
         'dh ... --parallel'
     )if $seen_dh_parallel && $debhelper_level >= $DH_PARALLEL_NOT_NEEDED;
 
     $self->pointed_hint(
         'debian-rules-uses-unnecessary-dh-argument',
         $drules->pointer($seen_dh_systemd),
+        "$debhelper_level >= $INVOKES_SYSTEMD",
         'dh ... --with=systemd'
     )if $seen_dh_systemd && $debhelper_level >= $INVOKES_SYSTEMD;
 
@@ -800,7 +805,8 @@ sub source {
 
         # As a special case, the python3 addon needs a dependency on
         # dh-python unless the -dev packages are used.
-        my $python_source = 'dh-python:any | pybuild-plugin-pyproject:any';
+        my $python_source
+          = 'dh-python:any | dh-sequence-python3:any | pybuild-plugin-pyproject:any';
 
         $self->pointed_hint('missing-build-dependency-for-dh-addon',
             $drules->pointer,$addon, "(does not satisfy $python_source)")

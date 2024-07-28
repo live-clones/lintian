@@ -160,11 +160,9 @@ sub detect_privacy_breach {
     my $sfd = Lintian::SlidingWindow->new;
     $sfd->handle($fd);
     $sfd->blocksize($BLOCKSIZE);
+    $sfd->blocksub(sub { $_ = lc; });
 
-    while (my $block = $sfd->readwindow) {
-
-        my $lowercase = lc($block);
-
+    while (my $lowercase = $sfd->readwindow) {
         # strip comments
         for my $x (qw(<!--(?!\[if).*?--\s*> /\*(?!@cc_on).*?\*/)) {
             $lowercase =~ s/$x//gs;

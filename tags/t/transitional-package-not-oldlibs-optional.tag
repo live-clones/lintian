@@ -10,4 +10,4 @@ Explanation: The package appears to be a transitional package, but it is not
  Using oldlibs/optional assists package managers in handling the
  transition package correctly.
 See-Also: Bug#645438,
- developer-reference 6.7.7
+ developer-reference 6.8.7

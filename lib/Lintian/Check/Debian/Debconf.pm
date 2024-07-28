@@ -93,7 +93,7 @@ sub source {
     my @files = grep { defined }
       map { $self->processable->patched->resolve_path("debian/$_") } @catalogs;
 
-    my @utf8 = grep { $_->is_valid_utf8 } @files;
+    my @utf8 = grep { $_->is_valid_utf8 and $_->is_file } @files;
     for my $item (@utf8) {
 
         my $deb822 = Lintian::Deb822->new;

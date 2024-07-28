@@ -74,7 +74,7 @@ sub source {
     my $latest_standard = $policy_releases->latest_version;
 
     my ($latest_major, $latest_minor, $latest_patch)
-      = split(/[.]/, $latest_standard, $MAXIMUM_COMPONENTS_ANALYZED);
+      = ((split(/[.]/, $latest_standard))[0..$MAXIMUM_COMPONENTS_ANALYZED]);
 
     # a fourth digit is a non-normative change in policy
     my $latest_normalized
@@ -99,7 +99,7 @@ sub source {
         if (versioncmp($compliance_standard, $latest_standard) == 1) {
 
             $self->hint('newer-standards-version',
-                "$compliance_standard (current is $latest_standard)")
+                "$compliance_standard (current is $latest_normalized)")
               unless $distribution =~ /backports/;
 
         } else {
@@ -146,7 +146,7 @@ sub source {
       = grep { $_ <= $changelog_epoch } @newer_normative_epochs;
 
     my $outdated_illustration
-      = "$compliance_standard (released $compliance_date) (current is $latest_standard)";
+      = "$compliance_standard (released $compliance_date) (current is $latest_normalized)";
 
     # use normative to prevent tag changes on minor new policy edits
     $self->hint('out-of-date-standards-version', $outdated_illustration)

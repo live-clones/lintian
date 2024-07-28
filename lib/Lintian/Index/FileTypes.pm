@@ -72,7 +72,7 @@ sub add_file_types {
     my @files = grep { $_->is_file } @{$self->sorted_list};
     my @names = map { $_->name } @files;
 
-    my @command = qw(file --no-pad --print0 --print0 --);
+    my @command = qw(file --raw --no-pad --print0 --print0 --);
 
     my %file_types;
 

@@ -151,7 +151,7 @@ Usage: $NEW_PROGRAM_NAME [log-file...] ...
 
 Options:
     -l, --list-tags    list all tags Lintian knows about
-    -t, --tag, --tags  display tag descriptions
+    -t, --tag, --tags  this option has no effect.
     --include-dir DIR  check for Lintian data in DIR
     --profile X        use vendor profile X to determine severities
     --output-width NUM set output width instead of probing terminal

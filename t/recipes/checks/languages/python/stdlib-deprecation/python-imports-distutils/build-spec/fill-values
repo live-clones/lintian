@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: python-imports-distutils
+Description: Check packages that have python files importing distutils

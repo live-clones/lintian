@@ -43,6 +43,7 @@ const my $EMPTY => q{};
 const my $DOLLAR => q{$};
 const my $DOT => q{.};
 const my $DOUBLE_DOT => q{..};
+const my $ITEM_NOT_FOUND => -1;
 
 use Moo;
 use namespace::clean;
@@ -54,6 +55,9 @@ sub visit_patched_files {
 
     return
       unless $item->is_file;
+
+    return
+      if $item->dirname =~ m{^debian/missing-sources/};
 
     # prebuilt-file or forbidden file type
     $self->pointed_hint('source-contains-prebuilt-wasm-binary', $item->pointer)
@@ -144,24 +148,21 @@ sub visit_patched_files {
     }
 
     my @lines = split(/\n/, $item->bytes);
-    my %line_length;
-    my %semicolon_count;
 
-    my $position = 1;
+    my $longest;
+    my $length = $ITEM_NOT_FOUND;
+    my $position = 0;
     for my $line (@lines) {
+        $position++;
 
-        $line_length{$position} = length $line;
-        $semicolon_count{$position} = ($line =~ tr/;/;/);
-
-    } continue {
-        ++$position;
+        if( length $line > $length ) {
+            $longest = $position;
+            $length = length $line;
+        }
     }
 
-    my $longest = max_by { $line_length{$_} } keys %line_length;
-    my $most = max_by { $semicolon_count{$_} } keys %semicolon_count;
-
     return
-      if !defined $longest || $line_length{$longest} <= $VERY_LONG_LINE_LENGTH;
+      if !defined $longest || $length <= $VERY_LONG_LINE_LENGTH;
 
     if ($item->basename =~ m{\.js$}i) {
 

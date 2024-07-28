@@ -9,6 +9,9 @@ Disable-Tags:
  maintainer-upload-has-incorrect-version-number
  no-human-maintainers
  no-nmu-in-changelog
+ not-binnmuable-all-depends-any
+ not-binnmuable-any-depends-all
+ not-binnmuable-any-depends-any
  qa-upload-has-incorrect-version-number
  source-nmu-has-incorrect-version-number
  team-upload-has-incorrect-version-number

@@ -28,6 +28,6 @@
 (?i)per say||per se
 (?i)pleases see||please see
 (?i)seams like||seems like
-(?i)these package||this package
+(?i)these package(?!\s+\w+s\b)||this package
 (?i)this packages||these packages
 (?i)will be remove||will be removed

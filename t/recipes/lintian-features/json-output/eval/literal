@@ -151,7 +151,7 @@
                         },
                         "line_position" : 0
                      },
-                     "tag" : "debian-watch-does-not-check-gpg-signature",
+                     "tag" : "debian-watch-does-not-check-openpgp-signature",
                      "visibility" : "pedantic"
                   },
                   {

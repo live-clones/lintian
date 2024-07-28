@@ -4,7 +4,7 @@ COMPILE:= $(CC) $(NOPIE_CFLAGS) $(CPPFLAGS) $(NOPIE_LDFLAGS)
 
 all:
 	# static version
-	$(COMPILE) -static -o static basic.c
+	$(COMPILE) -std=c99 -static -o static basic.c
 
 clean distclean:
 	rm -f basic

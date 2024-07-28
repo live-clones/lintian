@@ -1,4 +1,3 @@
 license-problem-json-evil *tags/l/license-problem-json-evil.tag*
 license-problem-nvidia-intellectual *lib/Lintian/Check/Cruft.pm*
-very-long-line-length-in-source-file 549 > 512 *lib/Lintian/Check/Cruft.pm:75*
 test-leaves-python-version-untested *debian/tests/build-and-evaluate-test-packages*

@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: fields-gitlab-homepage
+Description: GitLab homepage URL should't end with .git

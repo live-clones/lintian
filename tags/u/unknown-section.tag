@@ -11,7 +11,7 @@ Explanation: The "Section:" field in this package's control file is not one of
  php, python, ruby, rust, science, shells, sound, tex, text,
  utils, vcs, video, web, x11, xfce, zope.
  .
- The section name should be preceded by "non-free/" if the package
- is in the non-free archive area, and by "contrib/" if the package
- is in the contrib archive area.
+ The section name should be preceded by either "contrib/", "non-free/"
+ or "non-free-firmware/" if the package is in the according archive
+ area.
 See-Also: debian-policy 2.4

@@ -2,7 +2,7 @@ Tag: debian-rules-uses-unnecessary-dh-argument
 Severity: warning
 Check: debhelper
 Explanation: The <code>debian/rules</code> file passes the specified argument to
- <code>dh $@</code> but it is enabled by default from this debhelper
+ <code>dh $@</code> but it is enabled by default from the mentioned debhelper
  compatibility level onwards.
  .
  Please remove the argument from the call to <code>dh(1)</code>.

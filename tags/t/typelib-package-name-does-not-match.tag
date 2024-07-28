@@ -14,5 +14,11 @@ Explanation: GObject-Introspection binary typelibs (<code>Foo-23.typelib</code>)
  typelibs. It should have versioned <code>Provides</code> entries for
  <code>gir1.2-gdk-3.0 (= ${binary:Version})</code>
  and <code>gir1.2-gdkx11-3.0 (= ${binary:Version})</code> to indicate this.
+ .
+ Since gobject-introspection 1.78.1-6 (Debian trixie),
+ the recommended way to populate the <code>Provides</code> fields is to use
+ debhelper and dh_girepository, via the gir addon or the dh-sequence-gir
+ virtual package, and add <code>Provides: ${gir:Provides}</code> to any
+ package that contains public typelibs not matching its package name.
 See-Also:
  /usr/share/doc/gobject-introspection/policy.txt

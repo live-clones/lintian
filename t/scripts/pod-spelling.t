@@ -128,7 +128,7 @@ REMOVESLASH STAMPFILE TAGNAME TCODE TESTDATA BLOCKSIZE jN
 POSIX t1c2pfb init runtime txt executability writability
 INHANDLE OUTHANDLES UTC timestamp faux tag_name READMEs Testname
 debhelper compat dh buildpackage uaccess udev AppStream plugdev dbgsym
-buildinfo dfsg addons
+buildinfo dfsg addons xargs
 
 Buildflags
 __END__

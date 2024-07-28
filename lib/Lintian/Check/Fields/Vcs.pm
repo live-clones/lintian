@@ -52,8 +52,9 @@ my %VCS_EXTRACT = (
     # hg uri followed by optional -b branchname
     Hg      => sub { return shift =~ /^(.+?)(?:\s+-b\s+(\S*))?$/;},
     # git uri followed by optional "[subdir]", "-b branchname" etc.
-    Git     =>
-      sub { return shift =~ /^(.+?)(?:\s+\[(\S*)\])?(?:\s+-b\s+(\S*))?$/;},
+    Git     => sub {
+        return shift =~ /^(.+?)(?:(?:\s+\[(\S*)\])?(?:\s+-b\s+(\S*))?){0,2}$/;
+    },
     Svn     => sub { return @_;},
     # New "mtn://host?branch" uri or deprecated "host branch".
     Mtn     => sub { return shift =~ /^(.+?)(?:\s+\S+)?$/;},
@@ -203,9 +204,9 @@ sub always {
 
         my $maintainer = $processable->fields->unfolded_value($field);
 
-        my $is_list
-          = $maintainer =~ /\b(\S+\@lists(?:\.alioth)?\.debian\.org)\b/;
-        if ($is_list) {
+        if ($maintainer =~ /\b(\S+\@lists(?:\.alioth)?\.debian\.org)\b/
+            || $maintainer =~ /\b(\S+\@alioth-lists\.debian\.net)\b/
+            || $maintainer =~ /\b(\S+\@tracker\.debian\.org)\b/) {
             $is_teammaintained = 1;
             $team_email = $1;
             $is_maintained_by_individual = 0;
@@ -339,14 +340,6 @@ sub always {
                 );
             }
         }
-
-        $self->hint('old-dpmt-vcs', $platform)
-          if $maintainer =~ m{python-modules-team\@lists\.alioth\.debian\.org}
-          and $uri !~ m{salsa.debian.org/python-team/packages/.+};
-
-        $self->hint('old-papt-vcs', $platform)
-          if $maintainer =~ m{python-apps-team\@lists\.alioth\.debian\.org}
-          and $uri !~ m{salsa.debian.org/python-team/packages/.+};
     }
 
     $self->hint('vcs-fields-use-more-than-one-vcs',

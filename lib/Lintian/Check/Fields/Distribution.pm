@@ -56,12 +56,13 @@ sub changes {
     for my $target (@targets) {
 
         my $reduced = $target;
-        $reduced =~ s{- (?:backports(?:-sloppy)?
+        $reduced =~ s{- (?:backports(?:-(?:sloppy|staging))?
                                    |lts
                                    |proposed(?:-updates)?
                                    |updates
                                    |security
-                                   |volatile)$}{}xsm;
+                                   |volatile
+                                   |fasttrack)$}{}xsm;
 
         $major{$target} = $reduced;
     }
@@ -92,7 +93,7 @@ sub changes {
     my $version = $self->processable->fields->value('Version');
     my $distnumber;
     my $bpoversion;
-    if ($version=~ /~bpo(\d+)\+(\d+)$/) {
+    if ($version=~ /~bpo(\d+)\+(\d+)(\+salsaci(\+\d+)*)?$/) {
         $distnumber = $1;
         $bpoversion = $2;
 

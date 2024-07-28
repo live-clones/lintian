@@ -2,7 +2,7 @@
 
 DESTDIR = debian/$(shell dh_listpackages)
 APPSYNC_DIR=$(DESTDIR)/usr/share/metainfo/
-UDEV_DIR=$(DESTDIR)/lib/udev/rules.d/
+UDEV_DIR=$(DESTDIR)/usr/lib/udev/rules.d/
 
 %:
 	dh $@

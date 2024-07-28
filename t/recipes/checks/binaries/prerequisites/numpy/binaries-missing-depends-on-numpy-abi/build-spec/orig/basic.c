@@ -14,8 +14,9 @@ hardening_trigger(char *p, int i, void (*f)(char *))
     printf("%s", test);
 }
 
-void do_import_array(void)
+void * do_import_array(void)
 {
     import_array();
     hardening_trigger(NULL, 0, NULL);
+    return NULL;
 }

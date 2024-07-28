@@ -68,6 +68,7 @@ my @known_missing = (
       unpack-message-for-deb-control
       unpack-message-for-orig
       uses-deprecated-adttmp
+      invalid-versioned-provides
     ),
 
 # the following tags are not testable due to restrictions in reprotest

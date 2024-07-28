@@ -47,6 +47,7 @@ const my $NOT_EQUAL => q{!=};
 const my $BAD_MAINTAINER_COMMAND_FIELDS => 5;
 const my $UNVERSIONED_INTERPRETER_FIELDS => 2;
 const my $VERSIONED_INTERPRETER_FIELDS => 5;
+const my $USR_PREFIX_LENGTH => 4;
 
 use Moo;
 use namespace::clean;
@@ -692,10 +693,17 @@ sub visit_control_files {
           'incorrect-path-for-interpreter'
           : 'wrong-path-for-interpreter';
 
+# Debian is now mandatory usr-merged, so /bin/sh and /usr/bin/sh are both acceptable
+        if ($expected =~ '^(/bin/|/sbin/)') {
+            $expected = '(?:/usr)?' . $expected;
+        } elsif ($expected =~ '^/usr(/bin/|/sbin/)') {
+            $expected = '(?:/usr)?' . substr($expected, $USR_PREFIX_LENGTH);
+        }
+
         $self->pointed_hint(
             $tag_name, $item->pointer,  $interpreter,
             $NOT_EQUAL, $expected
-        )unless $interpreter eq $expected;
+        )unless $interpreter =~ $expected;
 
     } elsif ($item->name eq 'config') {
         $self->pointed_hint('forbidden-config-interpreter',
@@ -716,10 +724,17 @@ sub visit_control_files {
           'incorrect-path-for-interpreter'
           : 'wrong-path-for-interpreter';
 
+# Debian is now mandatory usr-merged, so /bin/sh and /usr/bin/sh are both acceptable
+        if ($expected =~ '^(/bin/|/sbin/)') {
+            $expected = '(?:/usr)?' . $expected;
+        } elsif ($expected =~ '^/usr(/bin/|/sbin/)') {
+            $expected = '(?:/usr)?' . substr($expected, $USR_PREFIX_LENGTH);
+        }
+
         $self->pointed_hint(
             $tag_name, $item->pointer, $interpreter,
             $NOT_EQUAL, $expected
-        )unless $interpreter eq $expected;
+        )unless $interpreter =~ $expected;
 
         $self->pointed_hint('unusual-control-interpreter', $item->pointer,
             $interpreter);

@@ -85,6 +85,9 @@ X-Python3-Version
 
 XB-Ruby-Versions
 
+# See https://bugs.debian.org/1014885 and
+# https://bugs.debian.org/1029471 for Lintian issues with specifically
+# the "XS-" prefix
 XS-Autobuild
 XS-Go-Import-Path
 XS-Ruby-Versions

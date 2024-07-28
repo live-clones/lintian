@@ -17,7 +17,6 @@ hostname
 hurd
 init-system-helpers
 libc-bin
-login
 ncurses-base
 ncurses-bin
 perl-base

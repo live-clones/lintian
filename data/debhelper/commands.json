@@ -113,6 +113,11 @@
             "dh-buildinfo"
          ]
       },
+      "dh_builtusing" : {
+         "installed_by" : [
+            "dh-builtusing"
+         ]
+      },
       "dh_clean" : {
          "installed_by" : [
             "debhelper"
@@ -194,6 +199,12 @@
             "dh-cmake"
          ]
       },
+      "dh_cruft" : {
+         "installed_by" : [
+            "dh-cruft"
+         ],
+         "uses_autoscript" : 1
+      },
       "dh_ctest_build" : {
          "installed_by" : [
             "dh-cmake"
@@ -229,6 +240,11 @@
             "dh-cmake"
          ]
       },
+      "dh_debputy" : {
+         "installed_by" : [
+            "dh-debputy"
+         ]
+      },
       "dh_di_kernel_gencontrol" : {
          "installed_by" : [
             "dh-di"
@@ -256,19 +272,14 @@
          "uses_autoscript" : 1,
          "uses_misc_depends" : 1
       },
+      "dh_dlopenlibdeps" : {
+         "installed_by" : [
+            "dh-dlopenlibdeps"
+         ]
+      },
       "dh_doxygen" : {
          "installed_by" : [
             "doxygen"
-         ]
-      },
-      "dh_dpatch_patch" : {
-         "installed_by" : [
-            "dpatch"
-         ]
-      },
-      "dh_dpatch_unpatch" : {
-         "installed_by" : [
-            "dpatch"
          ]
       },
       "dh_dwz" : {
@@ -303,12 +314,16 @@
             "debhelper"
          ]
       },
+      "dh_fortran_lib" : {
+         "installed_by" : [
+            "dh-fortran-mod"
+         ]
+      },
       "dh_fortran_mod" : {
          "installed_by" : [
             "dh-fortran-mod"
          ],
-         "uses_autoscript" : 1,
-         "uses_misc_depends" : 1
+         "uses_autoscript" : 1
       },
       "dh_gencontrol" : {
          "installed_by" : [
@@ -328,7 +343,7 @@
       },
       "dh_girepository" : {
          "installed_by" : [
-            "gobject-introspection"
+            "gobject-introspection-bin"
          ]
       },
       "dh_gnome" : {
@@ -339,6 +354,11 @@
       "dh_gnome_clean" : {
          "installed_by" : [
             "gnome-pkg-tools"
+         ]
+      },
+      "dh_gnulib_patch" : {
+         "installed_by" : [
+            "gnulib"
          ]
       },
       "dh_gnustep" : {
@@ -354,6 +374,11 @@
       "dh_golang_autopkgtest" : {
          "installed_by" : [
             "dh-golang"
+         ]
+      },
+      "dh_grantlee" : {
+         "installed_by" : [
+            "libgrantlee5-dev"
          ]
       },
       "dh_gstscancodecs" : {
@@ -510,6 +535,11 @@
          "uses_autoscript" : 1,
          "uses_misc_depends" : 1
       },
+      "dh_installdebputy" : {
+         "installed_by" : [
+            "dh-debputy"
+         ]
+      },
       "dh_installdirs" : {
          "installed_by" : [
             "debhelper"
@@ -560,11 +590,6 @@
             "debhelper"
          ]
       },
-      "dh_installkpatches" : {
-         "installed_by" : [
-            "dh-kpatches"
-         ]
-      },
       "dh_installlogcheck" : {
          "installed_by" : [
             "debhelper"
@@ -599,6 +624,12 @@
       "dh_installmodules" : {
          "installed_by" : [
             "debhelper"
+         ],
+         "uses_autoscript" : 1
+      },
+      "dh_installnss" : {
+         "installed_by" : [
+            "dh-nss"
          ],
          "uses_autoscript" : 1
       },
@@ -775,7 +806,24 @@
             "pkg-kde-tools"
          ]
       },
+      "dh_movetousr" : {
+         "installed_by" : [
+            "debhelper"
+         ]
+      },
+      "dh_nginx" : {
+         "installed_by" : [
+            "nginx-dev"
+         ],
+         "uses_autoscript" : 1,
+         "uses_misc_depends" : 1
+      },
       "dh_nodejs_autodocs" : {
+         "installed_by" : [
+            "dh-nodejs"
+         ]
+      },
+      "dh_nodejs_build_debug_package" : {
          "installed_by" : [
             "dh-nodejs"
          ]
@@ -844,11 +892,6 @@
       "dh_octave_version" : {
          "installed_by" : [
             "dh-octave"
-         ]
-      },
-      "dh_package_notes" : {
-         "installed_by" : [
-            "dh-package-notes"
          ]
       },
       "dh_pdl" : {
@@ -931,23 +974,27 @@
             "debhelper"
          ]
       },
+      "dh_puppet_module" : {
+         "installed_by" : [
+            "dh-puppet"
+         ],
+         "uses_autoscript" : 1
+      },
+      "dh_puppet_module_autopkgtest" : {
+         "installed_by" : [
+            "dh-puppet"
+         ]
+      },
+      "dh_puredata_substvar" : {
+         "installed_by" : [
+            "dh-puredata"
+         ]
+      },
       "dh_pyppd" : {
          "installed_by" : [
             "pyppd"
          ],
          "uses_misc_depends" : 1
-      },
-      "dh_pypy" : {
-         "installed_by" : [
-            "dh-python"
-         ],
-         "uses_autoscript" : 1
-      },
-      "dh_python2" : {
-         "installed_by" : [
-            "dh-python"
-         ],
-         "uses_autoscript" : 1
       },
       "dh_python3" : {
          "installed_by" : [
@@ -976,6 +1023,11 @@
          ]
       },
       "dh_raku_build" : {
+         "installed_by" : [
+            "dh-raku"
+         ]
+      },
+      "dh_raku_clean" : {
          "installed_by" : [
             "dh-raku"
          ]
@@ -1097,6 +1149,12 @@
          "installed_by" : [
             "debhelper"
          ]
+      },
+      "dh_user-session-migration" : {
+         "installed_by" : [
+            "dh-user-session-migration"
+         ],
+         "uses_misc_depends" : 1
       },
       "dh_usrlocal" : {
          "installed_by" : [

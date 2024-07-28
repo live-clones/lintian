@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: show-overrides-exit-status
+Description: Bug #1019690 correct exit status when show-overrides

@@ -116,7 +116,7 @@ has orig => (
             my $errors = $subindex->create_from_piped_tar(\@command);
 
             push(@{$index->unpack_messages}, "$tarball . $_")
-              for uniq split(/\n/, $errors);
+              for grep { !/^tar: Ignoring / } uniq split(/\n/, $errors);
 
             # treat hard links like regular files
             my @hardlinks = grep { $_->is_hardlink } @{$subindex->sorted_list};

@@ -9,8 +9,8 @@ Explanation: The named maintainer script appears to call <code>chmod</code> or
  All such uses are vulnerable to hardlink attacks on mainline (i.e.
  non-Debian) kernels that do not set <code>fs.protected&lowbar;hardlinks=1</code>.
  .
- The security risk arises when when a non-privileged user set links
- to files they do not own, such as such as <code>/etc/shadow</code> or
+ The security risk arises when a non-privileged user set links to
+ files they do not own, such as such as <code>/etc/shadow</code> or
  files in <code>/var/lib/dpkg/</code>. A superuser's recursive call to
  <code>chown</code> or <code>chmod</code> on behalf of a role user account
  would then modify the non-owned files in ways that allow the

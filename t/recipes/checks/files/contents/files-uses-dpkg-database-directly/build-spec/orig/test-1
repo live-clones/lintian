@@ -1,6 +1,6 @@
 #!/bin/sh
 
-/bin/egrep --mmap "^Package: foo$" /var/lib/dpkg/status
+/bin/grep -E --mmap "^Package: foo$" /var/lib/dpkg/status
 
 echo /var/lib/dpkg/info/other-package.conffiles
 echo /var/lib/dpkg/info/other-package.shlibs

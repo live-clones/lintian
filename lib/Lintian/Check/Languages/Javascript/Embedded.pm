@@ -95,6 +95,14 @@ qr{(?i)/mootools(?:(?:\.v|-)[\d\.]+)?(?:-(?:(?:core(?:-server)?)|more)(?:-(?:yc|
       qr{(?i)/_static/(?:doctools|language_data|searchtools)} . $JS_EXT,
     'tinymce'                      => qr{(?i)/tiny_mce(?:_(?:popup|src))?}
       . $JS_EXT,
+    'libjs-lodash'                 => qr{(?i)lodash} . $JS_EXT,
+    'node-pako'                    =>
+      qr{(?i)pako(?:_(:?de|in)flate(?:.es\d+)?)(?:-[\d\.]+)?}. $JS_EXT,
+    'node-jszip-utils'             => qr{(?i)jszip-utils(?:-ie)?(?:-[\d\.]+)?}
+      . $JS_EXT,
+    'node-jszip'             => qr{(?i)jszip(?:-ie)?(?:-[\d\.]+)?} . $JS_EXT,
+    'libjs-codemirror'       => qr{(?i)codemirror} . $JS_EXT,
+    'libjs-punycode'         => qr{(?i)punycode(?:\.es\d+)?} . $JS_EXT,
 # not yet available in unstable
 # 'xinha'                      => qr{(?i)/(htmlarea|Xinha(Loader|Core))} . $JS_EXT,
 );

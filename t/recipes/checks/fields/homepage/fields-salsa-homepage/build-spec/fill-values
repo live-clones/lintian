@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: fields-salsa-homepage
+Description: Salsa homepage URL should't end with .git

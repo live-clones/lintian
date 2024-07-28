@@ -46,3 +46,4 @@ postrm-removes-alternative                                      ~~ 1 ~~ 0 ~~    
 maintainer-script-sets-alternative-improperly                   ~~ 1 ~~ 0 ~~                    ~~          ~~^(?!\s*echo\s+["'][^'"]*)\bupdate\-alternatives\s+\-\-(?:set|set\-selections|config)\b
 trailing-slash-for-dpkg-maintscript-helper-symlink_to_dir       ~~ 1 ~~ 0 ~~                    ~~          ~~ dpkg-maintscript-helper\s+symlink_to_dir\s+[^\s]+/\s
 maintainer-script-switches-dir-to-symlink-unsafely              ~~ 1 ~~ 0 ~~                    ~~          ~~ ln[ ]*-f?s.*doc
+systemd-alternatives                                            ~~ 1 ~~ 0 ~~                    ~~          ~~update-alternatives\s+--install\s+(/usr)?/lib/(systemd|udev|tmpfiles.d|sysusers.d|repart.d|modules-load.d)

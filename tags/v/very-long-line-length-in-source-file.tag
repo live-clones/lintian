@@ -1,4 +1,5 @@
 Tag: very-long-line-length-in-source-file
+Experimental: yes
 Severity: pedantic
 Check: files/contents/line-length
 Explanation: The source file includes a line length that is well beyond

@@ -5,7 +5,6 @@ dma
 esmtp-run
 exim4-daemon-heavy
 exim4-daemon-light
-masqmail
 msmtp-mta
 nullmailer
 opensmtpd

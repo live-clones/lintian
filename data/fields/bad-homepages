@@ -18,3 +18,6 @@ homepage-for-cpan-package-contains-version             ~~ (?:search\.cpan\.org|m
 homepage-for-cran-package-not-canonical                ~~ cran\.r-project\.org/web/packages/.+
 homepage-refers-to-filesystem-listing                  ~~ (https?|ftp)://ftp\.gnu\.org/gnu/(.*)
 homepage-refers-to-obsolete-debian-infrastructure      ~~ alioth\.debian\.org
+homepage-github-url-ends-with-dot-git                  ~~ ^https?://github\.com/.*\.git$
+homepage-gitlab-url-ends-with-dot-git                  ~~ ^https?://gitlab\.com/.*\.git$
+homepage-salsa-url-ends-with-dot-git                   ~~ ^https?://salsa.debian.org/.*\.git$

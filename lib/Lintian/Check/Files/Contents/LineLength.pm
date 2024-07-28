@@ -31,13 +31,13 @@ use warnings;
 use utf8;
 
 use Const::Fast;
-use List::UtilsBy qw(max_by);
 use Unicode::UTF8 qw(encode_utf8 decode_utf8 valid_utf8);
 
 const my $GREATER_THAN => q{>};
 const my $VERTICAL_BAR => q{|};
 
 const my $VERY_LONG => 512;
+const my $ITEM_NOT_FOUND => -1;
 
 use Moo;
 use namespace::clean;
@@ -90,13 +90,24 @@ sub visit_patched_files {
     return
       unless $item->is_open_ok;
 
+    # Skip if file is a REUSE license (LICENSES/**.txt), which are
+    # canonically provided with long lines rather than being hard-wrapped.
+    return
+      if $item->name =~ m{^ LICENSES/ .* [.] txt $}x;
+
+    # Skip if file is detected to be an image or JSON.
+    return
+      if $item->file_type =~ m{image|bitmap|JSON};
+      
     open(my $fd, '<', $item->unpacked_path)
       or die encode_utf8('Cannot open ' . $item->unpacked_path);
 
-    my %line_lengths;
-
-    my $position = 1;
+    my $longest;
+    my $length = $ITEM_NOT_FOUND;
+    my $position = 0;
     while (my $line = <$fd>) {
+        $position++;
+
         # Skip SQL insert and select statements
         next if ($line =~ /^(INSERT|SELECT)\s/i
             and $item->basename =~ /sql/i);
@@ -105,15 +116,13 @@ sub visit_patched_files {
         $line = decode_utf8($line)
           if valid_utf8($line);
 
-        $line_lengths{$position} = length $line;
-
-    } continue {
-        ++$position;
+        if( length $line > $length ) {
+            $longest = $position;
+            $length = length $line;
+        }
     }
 
     close $fd;
-
-    my $longest = max_by { $line_lengths{$_} } keys %line_lengths;
 
     return
       unless defined $longest;
@@ -121,8 +130,8 @@ sub visit_patched_files {
     my $pointer = $item->pointer($longest);
 
     $self->pointed_hint('very-long-line-length-in-source-file',
-        $pointer, $line_lengths{$longest}, $GREATER_THAN, $VERY_LONG)
-      if $line_lengths{$longest} > $VERY_LONG;
+        $pointer, $length, $GREATER_THAN, $VERY_LONG)
+      if $length > $VERY_LONG;
 
     return;
 }

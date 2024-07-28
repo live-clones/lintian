@@ -10,7 +10,7 @@ Explanation: These sources require  <code>fakeroot(1)</code> or similar to build
  At least the shown path in the indicated installation package is owned by user
  (or a group) other than <code>root:root</code>.
  .
- Over time, Debian has sucessively narrowed the steps for which elevated privileges
+ Over time, Debian has successively narrowed the steps for which elevated privileges
  are required. It speeds up the building of installation packages in the archive.
  .
  Please declare whether the sources require root privileges. Eventually, Debian will
@@ -19,6 +19,6 @@ Explanation: These sources require  <code>fakeroot(1)</code> or similar to build
  You can use the field <code>Rules-Requires-Root</code> in the source stanza of
  <code>debian/control</code> to declare the required build privileges.
 See-Also:
- /usr/share/doc/dpkg-dev/rootless-builds.txt.gz,
+ /usr/share/doc/dpkg/spec/rootless-builds.txt,
  debian-policy 4.9.2,
  debian-policy 5.6.31

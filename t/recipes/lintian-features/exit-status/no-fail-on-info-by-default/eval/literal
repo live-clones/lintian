@@ -2,4 +2,4 @@ I: no-fail-on-info-by-default source: older-debian-watch-file-standard 3 [debian
 I: no-fail-on-info-by-default: spare-manual-page [usr/share/man/man8/lsmod.8.gz]
 I: no-fail-on-info-by-default source: upstream-metadata-missing-bug-tracking [debian/upstream/metadata]
 I: no-fail-on-info-by-default source: upstream-metadata-missing-repository [debian/upstream/metadata]
-X: no-fail-on-info-by-default source: debian-watch-does-not-check-gpg-signature [debian/watch]
+X: no-fail-on-info-by-default source: debian-watch-does-not-check-openpgp-signature [debian/watch]

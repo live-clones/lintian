@@ -1,7 +1,7 @@
 Tag: weak-library-dev-dependency
 Severity: error
 Check: debian/control/prerequisite/development
-Explanation: This package seems to contain the development files fer a
+Explanation: This package seems to contain the development files for a
  shared library, but the requirement for that shared library to be installed
  does not include the same version.
  .

@@ -1,3 +1,4 @@
+fields-depends-general (source): virtual-package-depends-without-real-package-depends Build-Depends: perl-modules
 fields-depends-general (source): package-relation-with-perl-modules Build-Depends: perl-modules
 py-fields-depends-general (binary): depends-on-python-minimal Depends
 libfields-depends-general (binary): package-relation-with-perl-modules Depends: perl-modules-5.22
@@ -5,6 +6,7 @@ libfields-depends-general (binary): lib-recommends-documentation Recommends: deb
 libfields-depends-general (binary): depends-on-libdb1-compat Depends
 libfields-depends-general (binary): binary-package-depends-on-toolchain-package Recommends: cdbs
 fields-depends-general-doc (binary): doc-package-depends-on-main-package Depends
+fields-depends-general (binary): virtual-package-depends-without-real-package-depends Depends: perl-modules
 fields-depends-general (binary): package-relation-with-self Breaks: fields-depends-general (<< 0.1)
 fields-depends-general (binary): package-relation-with-perl-modules Depends: perl-modules
 fields-depends-general (binary): package-depends-on-an-x-font-package Depends: xfont-a
