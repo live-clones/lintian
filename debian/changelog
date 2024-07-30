@@ -6,10 +6,24 @@ lintian (2.118.0~git) UNRELEASED; urgency=medium
 
 lintian (2.117.1) unstable; urgency=medium
 
+  * Summary of tag changes:
+    + Added:
+      - gir-package-name-does-not-match
+      - package-installs-deprecated-python2-path
+      - systemd-alternatives
+      - systemd-diversion
+      - uses-deprecated-python-stdlib
+    + Removed:
+      - uses-python-distutils
+
   [ Axel Beckert ]
   * Retroactively mention #1033894 in previous changelog entry.
+  * data/changes-file/known-dists: Add trixie and forky
+  * Refresh data (fonts and debhelper add-ons and commands)
+  * Refresh data (add-ons, commands, fonts)
 
   [ Otto Kekäläinen ]
+  * Salsa-CI: Extend autopkgtest job timeout to 3h by default
   * Declare compliance with Debian Policy 4.7.0
   * Salsa-CI: Run both current and new Lintian to
     ensure full compatibility
@@ -20,6 +34,71 @@ lintian (2.117.1) unstable; urgency=medium
   * invalid-versioned-provides could not be anymore tested
     due to dpkg-dev change
   * rebuild against dh-elpa >=2.1.5 (Closes: #1077112)
+
+  [ Simon McVittie ]
+  * gobject-introspection | dh-sequence-gir implements dh --with=gir
+    (Closes: #964290, #1063709)
+  * gir: Also look for GIR XML in /usr/lib/${DEB_HOST_MULTIARCH}/gir-1.0
+  * t/recipes/checks/desktop/gnome/gir: Install multiarch files correctly
+  * t: Assert that desktop/gnome/gir checks are done on multiarch locations
+  * t: Exercise the good (no warnings) case for multiarch desktop/gnome/gir
+  * tags: Describe preferred Provides for typelib-package-name-does-not-match
+  * tags: Mention the multiarch directory for public GIR XML
+  * tags: Say how to add Depends/Provides for gir-missing-typelib-dependency
+  * t: Catch up with best practices for GIR XML packaging
+  * desktop/gnome/gir: Check for GIR XML canonical naming
+  * data: Add nogir as a known build-profile
+
+  [ Louis-Philippe Véronneau ]
+  * missing-prerequisite-for-pyproject-backend: add support for whey
+  * Modify checks for the python3-pdm-pep517 -> python3-pdm-backend rename.
+  * New tag: uses-deprecated-python-stdlib
+  * New tag: package-installs-deprecated-python2-path (Closes: #1033294)
+  * Refactor 'python-module-in-wrong-location' check
+
+  [ Nilesh Patra ]
+  * Obsolete package python3-pdm-pep517 replaced by python3-pdm-backend
+  * Remove strict check for comma in "Origin" field in DEP3 header
+  * [ci skip] Revert "Remove strict check for comma in "Origin" field in
+    DEP3 header"
+
+  [ James McCoy ]
+  * t: Fix compilation failures with dpkg 1.22.6 (Closes: #1066261)
+
+  [ Colin Watson ]
+  * Add alioth-lists.debian.net to team maintenance check
+
+  [ Simon Quigley ]
+  * Add "oracular" as a known Ubuntu distribution.
+
+  [ Bo YU ]
+  * Update debian-policy for 4.7.0
+
+  [ Kentaro Hayashi ]
+  * ci: check longer timeout for autopkgtest
+
+  [ Luca Boccassi ]
+  * Upgrade the severity of missing-systemd-service-for-init.d-script from
+    warning to error.
+  * Raise an error when diversions/alternatives are used for systemd
+    files.
+  * wrong-path-for-interpreter: allow aliased locations (Closes: #1051338)
+
+  [ Mattias Ellert ]
+  * Fix regex replacement for transition suffix g
+  * Only remove transition suffices when preceded by a digit
+  * Add transition suffix t64 for 64 bit time_t transition
+
+  [ William Desportes ]
+  * Improve CONTRIBUTING.md
+
+  [ Edu Gómez Escandell ]
+  * Fix inconsistencies in documentation of lintian-explain-tags
+
+  [ Andrius Merkys ]
+  * Rewrite files/contents/line-length in a more effective manner.
+  * Drop unused semicolor counting code from lib/Lintian/Check/Files/SourceMissing.pm
+  * Speed up files/source-missing check
 
  -- Bastien Roucariès <rouca@debian.org>  Sat, 27 Jul 2024 21:39:04 +0000
 
