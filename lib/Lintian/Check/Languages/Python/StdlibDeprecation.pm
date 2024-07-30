@@ -94,7 +94,19 @@ sub visit_patched_files {
                 $pointer,
                 $library,
 "(deprecated in Python $deprecated, removed in Python $removed)"
-            ) if $line =~ m{from $library} || $line =~ m{import $library};
+              )
+              # from library import foo
+              # from library.sub import foo
+              # this also won't match "from library2"
+              if $line =~ m{^from $library(\s||\..+ import)}
+              # import foo, library, bar
+              ||$line =~ m{^import.+$library,}
+              # import library
+              # import library.sub
+              # import foo, library
+              # import foo, library.sub
+              # import foo, library.sub, bar
+              ||$line =~ m{^import.+$library(,||\..+)?$};
         }
 
     }continue {
