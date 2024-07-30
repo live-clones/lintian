@@ -1,3 +1,9 @@
+lintian (2.118.0~git) UNRELEASED; urgency=medium
+
+  * WIP (generated at release time: please do not add entries below.)
+
+ -- Bastien Roucariès <rouca@debian.org>  Tue, 30 Jul 2024 08:43:52 +0000
+
 lintian (2.117.1) unstable; urgency=medium
 
   [ Axel Beckert ]
