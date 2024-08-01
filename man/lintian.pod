@@ -137,6 +137,13 @@ In the configuration file, this option is enabled by using B<verbose>
 variable.  The B<verbose> and B<quiet> variables may not both appear
 in the config file.
 
+=item B<-d>, B<--debug>
+
+Display extra-verbose messages.
+
+This is a deeper B<--verbose>, and implies B<--verbose>. Pass >= 3 times to get
+memory-usage information as well
+
 =item B<-V>, B<--version>
 
 Display lintian version number and exit.
