@@ -568,13 +568,19 @@ Utility scripts used by the other lintian scripts.
 =back
 
 For binary packages, Lintian looks for overrides in a file named
-I<usr/share/lintian/overrides/E<lt>packageE<gt>> inside the binary
-package, where I<E<lt>packageE<gt>> is the name of the binary
-package.  For source packages, Lintian looks for overrides in
+I<usr/share/lintian/overrides/E<lt>packageE<gt>> inside the binary package,
+where I<E<lt>packageE<gt>> is the name of the binary package. This is usually
+created automatically by debhelper from the
+I<debian/E<lt>packageE<gt>.lintian-overrides> file.
+
+For source packages, Lintian looks for overrides in
 I<debian/source/lintian-overrides> and then in
 I<debian/source.lintian-overrides> if the first file is not found.
 The first path is preferred.  See the Lintian User's Manual for the
 syntax of overrides.
+
+Lintian errors in automatically-generated packages (such as I<xxx-dbgsym>) and
+in the I<changes> file are currently not overrideable.
 
 =head1 CONFIGURATION FILE
 
