@@ -38,6 +38,7 @@ sub source {
 
     my $control = $self->processable->debian_control;
     my $source_fields = $control->source_fields;
+    my $build_prerequisites= $self->processable->relation('Build-Depends-All');
 
     my @r3_misspelled = grep { $_ ne 'Rules-Requires-Root' }
       grep { m{^ Rules? - Requires? - Roots? $}xi } $source_fields->names;
@@ -57,14 +58,17 @@ sub source {
     my $pointer = $control_item->pointer($position);
 
     $self->pointed_hint('rules-do-not-require-root', $pointer)
-      if $source_fields->value('Rules-Requires-Root') eq 'no';
+      if $source_fields->value('Rules-Requires-Root') eq 'no'
+      || (!$source_fields->declares('Rules-Requires-Root')
+        && $build_prerequisites->satisfies('dpkg-build-api (>= 1)'));
 
     $self->pointed_hint('rules-require-root-explicitly', $pointer)
       if $source_fields->declares('Rules-Requires-Root')
       && $source_fields->value('Rules-Requires-Root') ne 'no';
 
     $self->pointed_hint('silent-on-rules-requiring-root', $pointer)
-      unless $source_fields->declares('Rules-Requires-Root');
+      unless $source_fields->declares('Rules-Requires-Root')
+      || $build_prerequisites->satisfies('dpkg-build-api (>= 1)');
 
     if (  !$source_fields->declares('Rules-Requires-Root')
         || $source_fields->value('Rules-Requires-Root') eq 'no') {
