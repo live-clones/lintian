@@ -364,7 +364,8 @@
       "dh_gnustep" : {
          "installed_by" : [
             "gnustep-make"
-         ]
+         ],
+         "uses_misc_depends" : 1
       },
       "dh_golang" : {
          "installed_by" : [
@@ -1199,11 +1200,6 @@
          ],
          "uses_autoscript" : 1
       },
-      "dh_webext" : {
-         "installed_by" : [
-            "mozilla-devscripts"
-         ]
-      },
       "dh_xine" : {
          "installed_by" : [
             "libxine2-dev"
@@ -1212,11 +1208,6 @@
       "dh_xsf_substvars" : {
          "installed_by" : [
             "xserver-xorg-dev"
-         ]
-      },
-      "dh_xul-ext" : {
-         "installed_by" : [
-            "mozilla-devscripts"
          ]
       },
       "dh_zathura" : {

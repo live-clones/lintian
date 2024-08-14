@@ -520,7 +520,17 @@
             "fonts-agave"
          ]
       },
+      "agave-boo-autohinted.ttf" : {
+         "installed_by" : [
+            "fonts-agave"
+         ]
+      },
       "agave-r-autohinted.ttf" : {
+         "installed_by" : [
+            "fonts-agave"
+         ]
+      },
+      "agave-roo-autohinted.ttf" : {
          "installed_by" : [
             "fonts-agave"
          ]
@@ -2275,22 +2285,122 @@
             "fonts-crosextra-carlito"
          ]
       },
-      "cascadiacode.ttf" : {
+      "cascadiacode-bold.ttf" : {
          "installed_by" : [
             "fonts-cascadia-code"
          ]
       },
-      "cascadiacodepl.ttf" : {
+      "cascadiacode-bolditalic.ttf" : {
          "installed_by" : [
             "fonts-cascadia-code"
          ]
       },
-      "cascadiamono.ttf" : {
+      "cascadiacode-extralight.ttf" : {
          "installed_by" : [
             "fonts-cascadia-code"
          ]
       },
-      "cascadiamonopl.ttf" : {
+      "cascadiacode-extralightitalic.ttf" : {
+         "installed_by" : [
+            "fonts-cascadia-code"
+         ]
+      },
+      "cascadiacode-italic.ttf" : {
+         "installed_by" : [
+            "fonts-cascadia-code"
+         ]
+      },
+      "cascadiacode-light.ttf" : {
+         "installed_by" : [
+            "fonts-cascadia-code"
+         ]
+      },
+      "cascadiacode-lightitalic.ttf" : {
+         "installed_by" : [
+            "fonts-cascadia-code"
+         ]
+      },
+      "cascadiacode-regular.ttf" : {
+         "installed_by" : [
+            "fonts-cascadia-code"
+         ]
+      },
+      "cascadiacode-semibold.ttf" : {
+         "installed_by" : [
+            "fonts-cascadia-code"
+         ]
+      },
+      "cascadiacode-semibolditalic.ttf" : {
+         "installed_by" : [
+            "fonts-cascadia-code"
+         ]
+      },
+      "cascadiacode-semilight.ttf" : {
+         "installed_by" : [
+            "fonts-cascadia-code"
+         ]
+      },
+      "cascadiacode-semilightitalic.ttf" : {
+         "installed_by" : [
+            "fonts-cascadia-code"
+         ]
+      },
+      "cascadiamono-bold.ttf" : {
+         "installed_by" : [
+            "fonts-cascadia-code"
+         ]
+      },
+      "cascadiamono-bolditalic.ttf" : {
+         "installed_by" : [
+            "fonts-cascadia-code"
+         ]
+      },
+      "cascadiamono-extralight.ttf" : {
+         "installed_by" : [
+            "fonts-cascadia-code"
+         ]
+      },
+      "cascadiamono-extralightitalic.ttf" : {
+         "installed_by" : [
+            "fonts-cascadia-code"
+         ]
+      },
+      "cascadiamono-italic.ttf" : {
+         "installed_by" : [
+            "fonts-cascadia-code"
+         ]
+      },
+      "cascadiamono-light.ttf" : {
+         "installed_by" : [
+            "fonts-cascadia-code"
+         ]
+      },
+      "cascadiamono-lightitalic.ttf" : {
+         "installed_by" : [
+            "fonts-cascadia-code"
+         ]
+      },
+      "cascadiamono-regular.ttf" : {
+         "installed_by" : [
+            "fonts-cascadia-code"
+         ]
+      },
+      "cascadiamono-semibold.ttf" : {
+         "installed_by" : [
+            "fonts-cascadia-code"
+         ]
+      },
+      "cascadiamono-semibolditalic.ttf" : {
+         "installed_by" : [
+            "fonts-cascadia-code"
+         ]
+      },
+      "cascadiamono-semilight.ttf" : {
+         "installed_by" : [
+            "fonts-cascadia-code"
+         ]
+      },
+      "cascadiamono-semilightitalic.ttf" : {
          "installed_by" : [
             "fonts-cascadia-code"
          ]
@@ -24777,6 +24887,16 @@
       "schoui__.ttf" : {
          "installed_by" : [
             "fonts-uralic"
+         ]
+      },
+      "schraubenkiste.ttf" : {
+         "installed_by" : [
+            "fonts-schraubenkiste"
+         ]
+      },
+      "schraubenkiste2.ttf" : {
+         "installed_by" : [
+            "fonts-schraubenkiste"
          ]
       },
       "sclnmaze.ttf" : {

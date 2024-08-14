@@ -435,6 +435,11 @@
             "dh-runit"
          ]
       },
+      "rust" : {
+         "installed_by" : [
+            "dh-rust"
+         ]
+      },
       "scour" : {
          "installed_by" : [
             "scour"
@@ -500,11 +505,6 @@
             "dh-vim-addon"
          ]
       },
-      "webext" : {
-         "installed_by" : [
-            "mozilla-devscripts"
-         ]
-      },
       "xine" : {
          "installed_by" : [
             "libxine2-dev"
@@ -523,11 +523,6 @@
       "xsp" : {
          "installed_by" : [
             "dh-xsp"
-         ]
-      },
-      "xul_ext" : {
-         "installed_by" : [
-            "mozilla-devscripts"
          ]
       },
       "zathura" : {
