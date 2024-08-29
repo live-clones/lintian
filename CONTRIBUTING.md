@@ -276,3 +276,20 @@ jenkins.debian.net to test this.
  * perldoc [doc/tutorial/Lintian/Tutorial.pod](doc/tutorial/Lintian/Tutorial.pod)
  * perldoc [doc/README.developers](doc/README.developers)
  * [doc/releases.md](doc/releases.md)
+
+## Making a release
+
+First ensure that test suite pass both locally and on salsa.
+
+Then make a release commit by running the following command
+(make sure the `DEBEMAIL` and `DEBFULLNAME` variables are set)
+
+    $ gbp dch -R --postedit="private/generate-tag-summary" --in-place"
+
+Check if commit message and changelog are in good shape (edit if needed
+and amend commit). Then build as usual.
+
+When lintian hit unstable or experimental, add tag using  `gbp tag`
+and open a new version by:
+
+	$ private/generate-tag-summary --in-place
