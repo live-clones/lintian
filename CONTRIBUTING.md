@@ -281,8 +281,8 @@ jenkins.debian.net to test this.
 
 First ensure that test suite pass both locally and on salsa.
 
-Then make a commit release by (ensure that `DEBEMAIL` and `DEBFULLNAMÈ`
-variable are set)
+Then make a release commit by running the following command
+(make sure the `DEBEMAIL` and `DEBFULLNAME` variables are set)
 
     $ gbp dch -R --postedit="private/generate-tag-summary" --in-place"
 
