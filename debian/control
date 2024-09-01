@@ -4,7 +4,8 @@ Priority: optional
 Maintainer: Debian Lintian Maintainers <lintian-maint@debian.org>
 Uploaders:
  Axel Beckert <abe@debian.org>,
- Bastien Roucariès <rouca@debian.org>
+ Bastien Roucariès <rouca@debian.org>,
+ Louis-Philippe Véronneau <pollo@debian.org>
 Build-Depends:
  aspell <!nocheck>,
  aspell-en <!nocheck>,
