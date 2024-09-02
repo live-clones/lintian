@@ -17,13 +17,16 @@
 #     62 -> Java18
 #     63 -> Java19
 #     64 -> Java20
-#     65 -> Java21 - highest version in Debian unstable
+#     65 -> Java21
+#     66 -> Java22
+#     67 -> Java23
+#     68 -> Java24 - highest version in Debian unstable
 
 # current default in Debian
-default-bytecode-version = 61
+default-bytecode-version = 65
 
 # highest known anywhere
-highest-known-bytecode-version = 65
+highest-known-bytecode-version = 68
 
 # The following should not change
 lowest-known-bytecode-version = 45
