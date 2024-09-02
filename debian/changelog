@@ -1,8 +1,14 @@
-lintian (2.118.1~git) UNRELEASED; urgency=medium
+lintian (2.118.1) unstable; urgency=medium
 
-  * WIP (generated at release time: please do not add entries below.)
+  [ Louis-Philippe Véronneau ]
+  * Fix false-positive for uses-deprecated-python-stdlib tag (Closes: #1077324)
+  * Add myself to the uploaders
 
- -- Axel Beckert <abe@debian.org>  Wed, 31 Jul 2024 14:34:35 +0200
+  [ Bastien Roucariès ]
+  * Refresh data
+  * Document release
+
+ -- Louis-Philippe Véronneau <pollo@debian.org>  Sun, 01 Sep 2024 19:45:56 -0400
 
 lintian (2.118.0) unstable; urgency=medium
 
