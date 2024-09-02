@@ -1,3 +1,9 @@
+lintian (2.118.2) UNRELEASED; urgency=medium
+
+  * XXX: generate tag summary with private/generate-tag-summary
+
+ -- Louis-Philippe Véronneau <pollo@debian.org>  Sun, 01 Sep 2024 20:38:45 -0400
+
 lintian (2.118.1) unstable; urgency=medium
 
   [ Louis-Philippe Véronneau ]
