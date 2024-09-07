@@ -8,3 +8,5 @@ profiles		usr/share/lintian
 tags			usr/share/lintian
 templates		usr/share/lintian
 vendors 		usr/share/lintian
+
+completions/*.fish usr/share/fish/completions
