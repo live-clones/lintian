@@ -110,7 +110,7 @@ sub check_single_address {
     }
 
     $self->hint('bogus-mail-host', $role, $parsed->address)
-      unless is_domain($parsed->host, {domain_disable_tld_validation => 1});
+      unless is_domain($parsed->host);
 
     $self->hint('mail-address-loops-or-bounces',$role, $parsed->address)
       if any { $_ eq $parsed->address } @KNOWN_BOUNCE_ADDRESSES;
