@@ -1,3 +1,9 @@
+lintian (2.118.3) UNRELEASED; urgency=medium
+
+  * XXX: generate tag summary with private/generate-tag-summary
+
+ -- Louis-Philippe Véronneau <pollo@debian.org>  Tue, 10 Sep 2024 22:09:12 -0400
+
 lintian (2.118.2) unstable; urgency=medium
 
   * Validate domain's TLD when checking for bogus-mail-host. (Closes: #1081316)
