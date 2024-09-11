@@ -284,7 +284,7 @@ First ensure that test suite pass both locally and on salsa.
 Then make a release commit by running the following command
 (make sure the `DEBEMAIL` and `DEBFULLNAME` variables are set)
 
-    $ gbp dch -R --postedit="private/generate-tag-summary" --in-place"
+    $ gbp dch -R --postedit="private/generate-tag-summary --in-place"
 
 Check if commit message and changelog are in good shape (edit if needed
 and amend commit). Then build as usual.
