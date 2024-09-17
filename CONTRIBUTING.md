@@ -5,7 +5,58 @@ This document is intended for prospective and existing contributors.
 The first section will cover how to get started for newcomers. After
 that is a section on recommended practices and additional resources.
 
-## Getting started
+## Understand the codebase
+
+### Core Directories
+
+* `bin/`: Contains the main Lintian executable scripts.
+* `lib/`: The core Lintian library code.
+  * `Lintian/`: Most of Lintian's Perl modules are here.
+    * `Check/`: Individual check modules that implement Lintian's various
+      checks.
+    * `Collect/`: Collector modules that gather data from packages.
+    * `Tag/`: Modules related to Lintian tags.
+* `data/`: Contains data files used by Lintian, such as lists of valid
+  maintainers, architectures, etc.
+* `t/`: Contains the test suite.
+  * `recipes/`: Test cases for Lintian checks.
+* `doc/`: Documentation files, including the Lintian User Manual source.
+* `reporting/`: Code for generating HTML reports from Lintian output.
+* `private/`: Various helper scripts used for development and testing.
+
+### Key Files
+
+* `frontend/lintian`: The main Lintian script that users run.
+* `lib/Lintian/Profile.pm`: Defines the Lintian profile, which controls which
+  checks are run.
+* `lib/Lintian/Processable.pm`: Represents a processable object (e.g., a .deb or
+  .changes file).
+* `lib/Lintian/Collect.pm`: Base class for collector objects.
+
+### Overview of adding a new check
+
+To add a new check to Lintian:
+
+1. Create a new module in `lib/Lintian/Check/`.
+2. Implement the check logic.
+3. Add test cases in `t/recipes/`. Testing explained in detail below.
+
+For classification tags, which indicate a characteristic of a package
+rather than a policy violation, the process is similar:
+1. The check module (e.g., `lib/Lintian/Check/VersionControl/GitBuildpackage.pm`)
+   emits a tag (e.g., `uses-gbp-conf`).
+2. The tag's definition is in `tags/<first-letter-of-tag>/<tag-name>.tag`
+   (e.g., `tags/u/uses-gbp-conf.tag`), and its `Check:` field must point
+   to the check module's path (e.g., `version-control/git-buildpackage`).
+3. The test recipe directory `t/recipes/checks/<check-path>/<test-name>/`
+   (e.g., `t/recipes/checks/version-control/git-buildpackage/git-buildpackage-conf/`)
+   should mirror the check module's logical path.
+4. The `Testname:` field in `eval/desc` and `build-spec/fill-values`
+   should match the `<test-name>` part, and the `Check:` field in `eval/desc`
+   should match the check's path.
+5. See commit `6a62aa56` as an example of adding a new classification tag.
+
+## Contributing on Salsa using git
 
 The best way to contribute code to Lintian is to submit merge requests
 on [salsa.debian.org][salsa]. First, create an account on Salsa if you
@@ -31,7 +82,7 @@ Create a feature branch for your proposed changes.
 git checkout -b my-feature
 ```
 
-### Improve Lintian
+### View git history to follow existing conventions
 
 Now you can fix bugs or implement new features.
 
@@ -183,9 +234,11 @@ configuration, and the test suite will not pass.
 
 ### Run perltidy
 
-The program `perltidy` is provided by the package [perltidy](https://packages.debian.org/perltidy).
+The program `perltidy` is provided by the package
+[perltidy](https://packages.debian.org/perltidy).
 
-The program `prove` is provided by the package [perl](https://packages.debian.org/perl).
+The program `prove` is provided by the package
+[perl](https://packages.debian.org/perl).
 
 #### On all files
 
@@ -250,9 +303,6 @@ You are welcome to attach the changes to the bug report or link to a
 git branch.  If you use attachments, please generate the changes via
 the `git format-patch` command.
 
-[merge-request]: https://salsa.debian.org/lintian/lintian/merge_requests
-[salsa]: https://salsa.debian.org/
-
 ## Recommended practices
 
 ### The "master" branch is "always releasable"
@@ -307,3 +357,6 @@ and open a new version by:
 ```shell
 private/generate-tag-summary --in-place
 ```
+
+[merge-request]: https://salsa.debian.org/lintian/lintian/merge_requests
+[salsa]: https://salsa.debian.org/

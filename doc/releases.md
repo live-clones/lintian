@@ -1,10 +1,6 @@
-Lintian release management
-==========================
+# Lintian release management
 
-
-
-Preparing and doing a release
------------------------------
+## Preparing and doing a release
 
 Run the full test suite while the distribution is still set to
 UNRELEASED to ensure everything and all tests are green.  Once
@@ -42,10 +38,10 @@ the same time, the "tag-summary" reminder can be re-added.  See commit
 a9c67f2 as an example of how it is done.
 
 
-Updating lintian.debian.org
-===========================
+## Updating lintian.debian.org
 
-lintian.debian.org is ran by DSA, using the files provided in the `lintian-doc`
+The [lintian.debian.org](https://lintian.debian.org) website is run by the
+Debian System Administrators, using the files provided in the `lintian-doc`
 binary package.
 
 As such, the website should be automatically updated when a new lintian release
