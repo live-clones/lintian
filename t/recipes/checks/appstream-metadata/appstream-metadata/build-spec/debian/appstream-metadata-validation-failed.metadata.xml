@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component>
-  <id>org.debian.lintian.check.appstream.udev</id>
+  <id>appstream-udev-data</id>
   <metadata_license>MIT</metadata_license>
   <name>lintian appstream-udev-data</name>
   <summary>Test AppStream and udev related checks in lintian</summary>
@@ -12,11 +12,9 @@
       package.  It may be an empty package.
     </p>
   </description>
-  <provides>
-    <modalias>usb:v0000p0001d*</modalias>
-    <modalias>usb:v0000p0002d*</modalias>
-    <modalias>usb:v0000p0003d*</modalias>
-    <modalias>usb:v0000p0004d*</modalias>
-    <modalias>usb:v0000p000ad*</modalias>
-  </provides>
+  <categories>
+    <category>Bogus</category>
+    <category>Recorder;</category>
+    <category>Recorder</category>
+  </categories>
 </component>
