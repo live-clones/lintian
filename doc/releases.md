@@ -1,10 +1,6 @@
-Lintian release management
-==========================
+# Lintian release management
 
-
-
-Preparing and doing a release
------------------------------
+## Preparing and doing a release
 
 Run the full test suite while the distribution is still set to
 UNRELEASED to ensure everything and all tests are green.  Once
@@ -42,15 +38,13 @@ the same time, the "tag-summary" reminder can be re-added.  See commit
 a9c67f2 as an example of how it is done.
 
 
-To update lintian on lintian.debian.org, please see the README in
-/srv/lintian.debian.org on lintian.debian.org.  NOTE: if Lintian has
+To update Lintian on lintian.debian.org, please see the README in
+`/srv/lintian.debian.org` on lintian.debian.org. NOTE: if Lintian has
 obtained any new dependencies, these must be installed by DSA before
 updating lintian.debian.org (send a patch to DSA for their metapackage
 for lintian.debian.org).
 
-
-Updating lintian.debian.org
-===========================
+## Updating lintian.debian.org
 
 Once a new release is done and tagged, we can update the installation
 on archive-wide processing server that generates "lintian.debian.org".
