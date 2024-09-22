@@ -6,3 +6,5 @@ import foo, distutils.core, bara
 
 # This should not match the uses-deprecated-python-stdlib tag
 import distutils2
+import notdistutils
+import notdistutils as distutils
