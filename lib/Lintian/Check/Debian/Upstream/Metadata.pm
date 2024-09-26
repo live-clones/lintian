@@ -31,6 +31,7 @@ use List::Compare;
 use List::Util qw(none);
 use Syntax::Keyword::Try;
 use YAML::XS;
+use version;
 
 # default changed to false in 0.81; enable then in .perlcriticrc
 $YAML::XS::LoadBlessed = 0;
@@ -103,7 +104,7 @@ sub source {
     }
 
     return
-      if $YAML::XS::VERSION < $HAS_LOAD_BLESSED;
+      if version->parse($YAML::XS::VERSION)< version->parse($HAS_LOAD_BLESSED);
 
     my $yaml;
     try {
