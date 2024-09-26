@@ -95,18 +95,29 @@ sub visit_patched_files {
                 $library,
 "(deprecated in Python $deprecated, removed in Python $removed)"
               )
+              # these do not match relative imports (from .library,
+              # import ..library) on the assumption that those are
+              # probably something package-internal
+              # not the actual stdlib module
               # from library import foo
               # from library.sub import foo
-              # this also won't match "from library2"
-              if $line =~ m{^from $library(\s||\..+ import)}
+              # does not match "from library2"
+              # does not match "from notlibrary"
+              # does not match "from library2.library"
+              if $line =~ m{^from $library(\s+|\..+)import}
               # import foo, library, bar
-              ||$line =~ m{^import.+$library,}
               # import library
+              # import library as l
               # import library.sub
+              # import library, bar
               # import foo, library
               # import foo, library.sub
               # import foo, library.sub, bar
-              ||$line =~ m{^import.+$library(,||\..+)?$};
+              # does not match "import library2"
+              # does not match "import notlibrary"
+              # does not match "import library2.library"
+              # does not match "import library2 as library"
+              ||$line =~ m{^import(\s+|.+,\s?)$library([,.\s]|$)};
         }
 
     }continue {
