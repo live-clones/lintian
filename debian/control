@@ -47,6 +47,7 @@ Build-Depends:
  libtext-diff-perl <!nocheck>,
  libtext-template-perl <!nocheck>,
  libunicode-utf8-perl,
+ libversion-perl <!nocheck>,
  lintian <!nocheck>,
  mingw-w64-tools <!nocheck>,
  pkg-php-tools <!nocheck>,
@@ -134,6 +135,7 @@ Depends:
  libtimedate-perl,
  libunicode-utf8-perl,
  liburi-perl,
+ libversion-perl,
  libwww-mechanize-perl,
 # Bug#1001164 solved in 3.16-4; leave for backports for now
  libwww-perl,
