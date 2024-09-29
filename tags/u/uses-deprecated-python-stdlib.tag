@@ -3,8 +3,7 @@ Severity: info
 Check: languages/python/stdlib-deprecation
 Explanation:
  .
- In Python $deprecated, $library has been formally marked as deprecated. Code
- that imports $library will no longer work from Python $removed.
+ The Python library flagged by this tag has been formally marked as deprecated.
  .
  Please prepare for this deprecation and migrate away from this Python library.
  .
