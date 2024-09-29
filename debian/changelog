@@ -1,8 +1,37 @@
-lintian (2.118.3) UNRELEASED; urgency=medium
+lintian (2.119.0) unstable; urgency=medium
 
-  * XXX: generate tag summary with private/generate-tag-summary
+  [ Blair Noctis ]
+  * Add fish completions for lintian, lintian-explain-tags,
+    lintian-annotate-hints.
 
- -- Louis-Philippe Véronneau <pollo@debian.org>  Tue, 10 Sep 2024 22:09:12 -0400
+  [ Louis-Philippe Véronneau ]
+  * Recommend node-async instead of the now removed libjs-async.
+    (Closes: #1082761)
+  * Mark 'source-is-missing' as Experimental.
+  * Remove string interpolations from uses-deprecated-python-stdlib tag
+    description.
+
+  [ Otto Kekäläinen ]
+  * Salsa CI: Remove unnecessary autopkgtest timeout check.
+  * Minor improvements to CONTRIBUTING.md.
+
+  [ Bas Couwenberg ]
+  * Java 21 is now default. (Closes: #1080352)
+
+  [ Petter Reinholdtsen ]
+  * Extended AppstreamMetadata check to validate XML content.
+
+  [ Rebecca N. Palmer ]
+  * Improve uses-deprecated-python-stdlib. (Closes: #1077324)
+
+  [ Andrius Merkys ]
+  * Compare parsed version strings of YAML::XS. (Closes: #1082612)
+
+  [ Adrian Bunk ]
+  * source-nmu-has-incorrect-version-number: Fix false positive for +deb*u*
+    versions.
+
+ -- Louis-Philippe Véronneau <pollo@debian.org>  Sun, 29 Sep 2024 15:16:45 -0400
 
 lintian (2.118.2) unstable; urgency=medium
 
