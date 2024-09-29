@@ -102,7 +102,7 @@ sub source {
     my $version_nmuness = 0;
     my $version_local = 0;
     my $upload_is_backport = $version =~ m/~bpo(\d+)\+(\d+)$/;
-    my $upload_is_stable_update = $version =~ m/~deb(\d+)u(\d+)$/;
+    my $upload_is_stable_update = $version =~ m/[~|\+]deb(\d+)u(\d+)$/;
 
     if ($version =~ /-[^.-]+(\.[^.-]+)?(\.[^.-]+)?$/) {
         $version_nmuness = 1 if defined $1;
