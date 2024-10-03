@@ -1,3 +1,6 @@
 license-problem-json-evil *tags/l/license-problem-json-evil.tag*
 license-problem-nvidia-intellectual *lib/Lintian/Check/Cruft.pm*
 test-leaves-python-version-untested *debian/tests/build-and-evaluate-test-packages*
+
+# Don't flag the explanation tag as an old Unicode license.
+license-problem-old-unicode [tags/l/license-problem-old-unicode.tag]
