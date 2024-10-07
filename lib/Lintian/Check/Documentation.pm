@@ -150,7 +150,12 @@ sub visit_installed_files {
           # see Bug#1009679, not documentation, just an unlucky suffix
           || $item->name =~ m{^var/lib/ocaml/lintian/.+[.]info$}
           # see Bug#970275
-          || $item->name =~ m{^usr/share/gtk-doc/html/.+[.]html?$};
+          || $item->name =~ m{^usr/share/gtk-doc/html/.+[.]html?$}
+          # GNUstep documentation, same rationale as Bug#970275
+          || $item->name =~ m{^usr/share/GNUstep/Documentation/
+                              .+[.](html|pdf)$}x
+          # GNUstep Gorm files (not documentation)
+          || ($item->dirname =~ m{[.]gorm} && $item->basename eq 'data.info');
     }
 
     if ($item->name =~ m{^usr/share/doc/\S}) {
