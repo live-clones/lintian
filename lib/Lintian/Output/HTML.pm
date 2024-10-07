@@ -129,7 +129,8 @@ sub issue_hints {
         my $tag = %{$self->issuedtags}{$tag_name};
         my %data;
         $data{tag} = $tag;
-        $data{description} = markdown($self->markdown_description($profile->data, $tag));
+        $data{description}
+          = markdown($self->markdown_description($profile->data, $tag));
         push(@tag_infos, \%data);
     }
 
@@ -224,11 +225,12 @@ sub hintlist {
         $html_hint{tag_name} = $hint->tag_name;
 
         if ($option->{info}) {
-          # Link to explanation generated on this page.
-          $html_hint{url} = '#' . $hint->tag_name;
+            # Link to explanation generated on this page.
+            $html_hint{url} = q{#} . $hint->tag_name;
         } else {
-          # Link to the (now defunct) lintian.debian.org page.
-          $html_hint{url} = 'https://lintian.debian.org/tags/' . $hint->tag_name;
+            # Link to the (now defunct) lintian.debian.org page.
+            $html_hint{url}
+              = 'https://lintian.debian.org/tags/' . $hint->tag_name;
         }
 
         $html_hint{context} = $hint->context
@@ -299,11 +301,11 @@ Register a tag to have its description included in the output.
 =cut
 
 sub issue_tag {
-  my ($self, $tag) = @_;
+    my ($self, $tag) = @_;
 
-  $self->issuedtags->{$tag->name} = $tag;
+    $self->issuedtags->{$tag->name} = $tag;
 
-  return;
+    return;
 }
 
 =item markdown_description
