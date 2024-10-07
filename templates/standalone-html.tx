@@ -66,6 +66,22 @@
 
 : }
 
+: if $output.tag_infos.size() {
+<h2>Tag Explanations</h2>
+
+: for $output.tag_infos -> $tagdata {
+
+<h3 id="<: $tagdata.tag.name :>"><: $tagdata.tag.name :></h3>
+
+<: $tagdata.description | mark_raw :>
+
+: }
+: }
+: else {
+<!-- if you would like to see explanations of lintian tags in this file, pass -i on the lintian commandline.
+Otherwise, you can use the lintian-explain-tags command from the lintian package. -->
+: }
+
 </article>
 
 </main>
