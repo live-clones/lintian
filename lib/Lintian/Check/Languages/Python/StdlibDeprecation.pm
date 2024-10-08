@@ -62,12 +62,6 @@ my %DEPRECATED_STDLIBS = (
 sub visit_patched_files {
     my ( $self, $item ) = @_;
 
-    my $build_all = $self->processable->relation('Build-Depends-All');
-
-    # Skip if the package doesn't depend on python
-    return
-      unless $build_all->satisfies($PYTHON3_DEPEND);
-
     # Skip if it's not a python file
     return
       unless $item->name =~ /\.py$/;
@@ -75,6 +69,12 @@ sub visit_patched_files {
     # Skip if we can't open the file
     return
       unless $item->is_open_ok;
+
+    my $build_all = $self->processable->relation('Build-Depends-All');
+
+    # Skip if the package doesn't depend on python
+    return
+      unless $build_all->satisfies($PYTHON3_DEPEND);
 
     open( my $fd, '<', $item->unpacked_path )
       or die encode_utf8( 'Cannot open ' . $item->unpacked_path );
