@@ -100,18 +100,23 @@ sub visit_patched_files {
     my $longest;
     my $length = $ITEM_NOT_FOUND;
     my $position = 0;
+    my $is_sql = $item->basename =~ /sql/i;
     while (my $line = <$fd>) {
         $position++;
 
-        # Skip SQL insert and select statements
-        next if ($line =~ /^(INSERT|SELECT)\s/i
-            and $item->basename =~ /sql/i);
+        # If the line can't be longer than our current longest,
+        # no need to decode.
+        next if( length $line < $length );
 
         # count codepoints, if possible
         $line = decode_utf8($line)
           if valid_utf8($line);
 
         if( length $line > $length ) {
+            # Skip SQL insert and select statements
+            next if ($is_sql
+                and $line =~ /^(INSERT|SELECT)\s/i);
+
             $longest = $position;
             $length = length $line;
         }
