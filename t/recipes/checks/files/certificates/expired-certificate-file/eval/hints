@@ -1,0 +1,2 @@
+expired-certificate-file (source): source-contains-expired-certificate-file [certificate.pem]
+expired-certificate-file (binary): package-installs-expired-certificate-file [usr/share/expired-certificate-file/certificate.pem]
