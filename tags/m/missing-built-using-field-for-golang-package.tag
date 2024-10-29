@@ -11,4 +11,4 @@ Explanation: The stanza for a Golang installation package in the
  .
  Please add the following line to the relevant stanza:
  .
-  <code>Built-Using: ${misc:Built-Using}</code>
+     Built-Using: ${misc:Built-Using}
