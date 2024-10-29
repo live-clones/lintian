@@ -5,8 +5,8 @@ Explanation: The Homepage field contains a GitHub URL that ends with .git
  Please update to use the canonical URL, without .git at the end, for the
  GitHub repository instead.
  .
- https://github.com/foo/bar
+     https://github.com/foo/bar
  .
  not:
  .
- https://github.com/foo/bar.git
+     https://github.com/foo/bar.git

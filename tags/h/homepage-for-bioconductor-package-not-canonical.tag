@@ -7,8 +7,8 @@ Explanation: The Homepage field for this package points to an uncanonical Biocon
  release version (or devel if package is not in release yet). For example, the
  link for the package "foo" should be:
  .
- https://bioconductor.org/packages/foo/
+     https://bioconductor.org/packages/foo/
  .
  not:
  .
- https://www.bioconductor.org/packages/(release|devel|&ast;)/bioc/html/foo.html
+     https://www.bioconductor.org/packages/(release|devel|&ast;)/bioc/html/foo.html
