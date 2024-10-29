@@ -34,6 +34,6 @@ Explanation: A manual page provoked warnings or errors from the <code>man</code>
  .
  You can see the warnings yourself by running the command used by Lintian:
  .
-     <code>LC&lowbar;ALL=C.UTF-8 MANROFFSEQ='' MANWIDTH=80 \
-         man --warnings -E UTF-8 -l -Tutf8 -Z &lt;file&gt; &gt;/dev/null</code>
+     LC&lowbar;ALL=C.UTF-8 MANROFFSEQ='' MANWIDTH=80 \
+         man --warnings -E UTF-8 -l -Tutf8 -Z &lt;file&gt; &gt;/dev/null
 See-Also: groff_man(7), groff_mdoc(7)

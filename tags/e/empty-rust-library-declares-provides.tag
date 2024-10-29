@@ -14,8 +14,8 @@ Explanation: For some time, Rust libraries used empty installation packages
  .
  You can see some examples here:
  .
-     - https://sources.debian.org/src/rust-dbus/0.9.0-2/debian/control/
-     - https://sources.debian.org/src/rust-x11rb/0.7.0-1/debian/control/
+  - https://sources.debian.org/src/rust-dbus/0.9.0-2/debian/control/
+  - https://sources.debian.org/src/rust-x11rb/0.7.0-1/debian/control/
  .
  The decision to burden the Rust packaging team with that extra step was
  made after weighing all possible alternatives.
