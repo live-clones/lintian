@@ -9,6 +9,6 @@ Explanation: The desktop entry file has lines ending in carriage-return and line
  .
  You can run the following command to remove any <code>CR</code> character in a file:
  .
-      <code>sed -i 's/\r//g' path/to/file</code>
+     sed -i 's/\r//g' path/to/file
 See-Also:
  https://specifications.freedesktop.org/desktop-entry-spec/latest/ar01s03.html
