@@ -5,7 +5,7 @@ Explanation: The <code>debian/rules</code> file for this package has an
  <code>override&lowbar;dh&lowbar;auto&lowbar;test</code> target that does not appear to
  check <code>DEB&lowbar;BUILD&lowbar;OPTIONS</code> against <code>nocheck</code>.
  .
- As this check is not automatically performed by debhelper(1), the
+ As this check is not automatically performed by debhelper(7), the
  specified testsuite is run regardless of another maintainer using
  the <code>nocheck</code> build option.
  .

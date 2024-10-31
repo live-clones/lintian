@@ -6,7 +6,7 @@ Explanation: The stanza for a Golang installation package in the
  <code>Built-Using</code> field that contains the <code>${misc:Built-Using}</code>
  substitution variable. 
  .
- The <code>dh-golang(1)</code> build system provides the <code>${misc:Built-Using}</code>
+ The <code>dh_golang(1)</code> build system provides the <code>${misc:Built-Using}</code>
  variable. It is used when scheduling binNMUs.
  .
  Please add the following line to the relevant stanza:
