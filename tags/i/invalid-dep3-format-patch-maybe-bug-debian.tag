@@ -1,10 +1,12 @@
 Tag: invalid-dep3-format-patch-maybe-bug-debian
 Severity: warning
 Check: debian/patches/dep3
-Explanation: According to the DEP-3, "Bug:" line should contain upstream URL
- but now it seems to be Debian BTS number. If so, you should use "Bug-Debian:"
- field and set URL as its value, instead of "Bug:" field.
+Explanation: According to the DEP-3, this patch's headers
+ <code>Bug</code> field should contain an upstream bug URL instead
+ of a Debian BTS URL.
  .
- e.g. "Bug-Debian: https://bugs.debian.org/927914"
+ If you want to refer to a Debian BTS URL, you should use the
+ <code>Bug-Debian</code> field instead.
  .
+ For example: <code>Bug-Debian: https://bugs.debian.org/927914</code>
 See-Also: https://dep-team.pages.debian.net/deps/dep3/
