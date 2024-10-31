@@ -1,4 +1,4 @@
-Tag: invalid-dep3-format-patch-bug-use-template-value
+Tag: invalid-dep3-format-patch-bug-field-default-value
 Severity: error
 Check: debian/patches/dep3
 Explanation: This patch's headers <code>Bug</code> field contains a default value

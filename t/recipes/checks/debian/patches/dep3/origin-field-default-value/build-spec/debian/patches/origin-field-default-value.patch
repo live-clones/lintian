@@ -1,4 +1,4 @@
-Description: Origin field now contains template value, it should be changed as actual upstream url
+Description: Origin field now contains default value, it should be changed to an actual upstream url
 Author: Hideki Yamane <henrich@debian.org>
 Forwarded: Yes
 Origin: (upstream|backport|vendor|other), (<patch-url>|commit:<commit-id>)

@@ -1,4 +1,4 @@
-Description: Bug field now contains template value, it should be changed as actual upstream url
+Description: Bug field now contains default value, it should be changed as actual upstream url
 Author: Hideki Yamane <henrich@debian.org>
 Forwarded: Yes
 Bug: <url in upstream bugtracker>

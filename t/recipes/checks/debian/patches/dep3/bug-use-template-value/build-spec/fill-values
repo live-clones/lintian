@@ -1,3 +1,0 @@
-Skeleton: source-non-native
-Testname: bug-use-template-value
-Description: "Bug:" field contains template value, it should be changes as appropriate value

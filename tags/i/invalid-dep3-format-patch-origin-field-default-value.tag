@@ -1,4 +1,4 @@
-Tag: invalid-dep3-format-patch-origin-use-template-value
+Tag: invalid-dep3-format-patch-origin-field-default-value
 Severity: error
 Check: debian/patches/dep3
 Explanation: The <code>Origin</code> field contains a default value and should

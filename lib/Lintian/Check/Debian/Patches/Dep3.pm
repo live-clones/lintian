@@ -180,7 +180,7 @@ sub visit_patched_files {
     # chech whether it is template value or not
     if ($origin eq $origin_template1 || $origin eq $origin_template2) {
         $self->pointed_hint(
-            'invalid-dep3-format-patch-origin-use-template-value',
+            'invalid-dep3-format-patch-origin-field-default-value',
             $item->pointer);
         # is it email address?
     } elsif ($origin_email //= $EMPTY) {
@@ -200,7 +200,7 @@ sub visit_patched_files {
     if (($bug //= $EMPTY) && is_invalid_url($bug)) {
         if ($bug eq '<url in upstream bugtracker>')  {
             $self->pointed_hint(
-                'invalid-dep3-format-patch-bug-use-template-value',
+                'invalid-dep3-format-patch-bug-field-default-value',
                 $item->pointer);
             # guess "#99999" would be Debian BTS number
         }elsif ($bug =~ /^#\d+$/) {
