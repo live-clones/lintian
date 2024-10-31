@@ -27,7 +27,7 @@ Explanation: The named text file contains a Unicode codepoint that has been
  .
  You can also run a similar check in your shell with that command:
  .
- <code>grep -r $'[\u061C\u200E\u200F\u202A\u202B\u202C\u202D\u202E\u2066\u2067\u2068\u2069]'</code>
+     grep -r $'[\u061C\u200E\u200F\u202A\u202B\u202C\u202D\u202E\u2066\u2067\u2068\u2069]'
  .
  The registered vulnerabilities are  CVE-2021-42694 ("Homoglyph") and
  CVE-2021-42574 ("Bidirectional Attack").
