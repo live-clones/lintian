@@ -1,8 +1,52 @@
-lintian (2.119.1) UNRELEASED; urgency=medium
+lintian (2.120.0) unstable; urgency=medium
 
-  * XXX: generate tag summary with private/generate-tag-summary
+  * Summary of tag changes:
+    + Added:
+      - dep3-format-patch-author-or-from-is-better
+      - invalid-dep3-format-patch-bug-field-default-value
+      - invalid-dep3-format-patch-bug-not-contain-url
+      - invalid-dep3-format-patch-maybe-bug-debian
+      - invalid-dep3-format-patch-no-description-and-subject
+      - invalid-dep3-format-patch-no-origin
+      - invalid-dep3-format-patch-origin-field-default-value
+      - invalid-dep3-format-patch-wrong-bug-debian-url
+      - invalid-dep3-format-patch-wrong-last-update
 
- -- Louis-Philippe Véronneau <pollo@debian.org>  Sun, 29 Sep 2024 15:41:02 -0400
+  [ Louis-Philippe Véronneau ]
+  * depends-on-obsolete-package: reduce the severity to warning.
+    (Closes: #1029187)
+
+  [ Timo Paulssen ]
+  * Don't re-check if python is in dependencies for every file.
+  * Make File::Contents::LineLength::visit_patched_files a bit faster.
+
+  [ Simon Quigley ]
+  * Add "plucky" as a known Ubuntu distribution.
+
+  [ Nicolas Peugnet ]
+  * Indent some lists with a single space to fix console output.
+  * Indent descriptions with a single space.
+  * Fix some obvious broken links to man pages.
+  * Fix clearly invalid Markdown tag descriptions.
+  * Fix some more invalid <code> tags in literal blocks.
+  * Indent some text to turn them into literal blocks.
+
+  [ Yavor Doganov ]
+  * Don't emit package-contains-documentation-outside-usr-share-doc for .gorm
+    files and GNUstep docs. (Closes: #1084465).
+
+  [ Andrea Pappacoda ]
+  * Do not raise silent-on-rules-requiring-root if dpkg-build-api is v1 or
+    newer. (Closes: #1057176)
+
+  [ Hideki Yamane ]
+  * Extend DEP3 check.
+
+  [ наб ]
+  * command-with-path-in-maintainer-script: recommend command -v (standard
+    built-in) instead of which (some program).
+
+ -- Louis-Philippe Véronneau <pollo@debian.org>  Sat, 02 Nov 2024 16:13:21 -0400
 
 lintian (2.119.0) unstable; urgency=medium
 
