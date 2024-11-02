@@ -1,0 +1,3 @@
+Skeleton: source-non-native
+Testname: bug-not-contain-url
+Description: According to DEP3, "Bug:" field should contain URL.

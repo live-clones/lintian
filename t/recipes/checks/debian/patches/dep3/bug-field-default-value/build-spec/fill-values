@@ -1,0 +1,4 @@
+Skeleton: source-non-native
+Testname: bug-field-default-value
+Description: The "Bug:" field contains a default value, it should be changed to
+ an appropriate value
