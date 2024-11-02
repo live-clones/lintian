@@ -1,0 +1,3 @@
+Skeleton: source-non-native
+Testname: origin-field-default-value
+Description: "Origin:" field contains template value, it should be changes as appropriate value
