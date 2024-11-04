@@ -1,4 +1,4 @@
-bar bin/foo
+bar bin
 bar emul
 bar etc/apt/preferences.d
 bar etc/apt/sources.list.d
@@ -8,11 +8,12 @@ bar etc/init
 bar etc/rc.boot
 bar etc/rc.d
 bar etc/udev/rules.d
-bar lib32
-bar lib64
-bar libx32
+bar usr/lib32
+bar usr/lib64
+bar usr/libx32
 bar mnt/foo
 bar run/foo
+bar sbin
 bar srv/foo
 bar tmp/foo
 bar usr/bin/foo

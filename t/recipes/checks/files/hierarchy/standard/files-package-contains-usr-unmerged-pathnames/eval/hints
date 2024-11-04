@@ -1,1 +1,3 @@
-files-package-contains-usr-unmerged-pathnames (binary): subdir-in-bin [bin/subdir/]
+files-package-contains-usr-unmerged-pathnames (binary): aliased-location [bin/subdir/file-outside-usr]
+files-package-contains-usr-unmerged-pathnames (binary): aliased-location [bin/subdir/]
+files-package-contains-usr-unmerged-pathnames (binary): aliased-location [bin/]

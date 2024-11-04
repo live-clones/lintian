@@ -184,10 +184,10 @@ sub visit_installed_files {
         # /mnt
         $self->pointed_hint('dir-or-file-in-mnt', $item->pointer);
 
-    } elsif ($item->name =~ m{^bin/}) {
-        # /bin
-        $self->pointed_hint('subdir-in-bin', $item->pointer)
-          if $item->is_dir && $item->name =~ m{^bin/.};
+    } elsif ($item->name =~ m{^(bin|lib[a-z0-9]*|sbin)($|/)}
+        && $self->processable->name ne 'base-files') {
+        # Aliased file
+        $self->pointed_hint('aliased-location', $item->pointer);
 
     } elsif ($item->name =~ m{^srv/.}) {
         # /srv
