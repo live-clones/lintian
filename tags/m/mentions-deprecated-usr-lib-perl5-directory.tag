@@ -7,4 +7,5 @@ Explanation: As of Perl 5.20, the vendorarch directory is /usr/lib/&lt;triplet&g
  but this package still uses usr/lib/perl5 in some of the files under debian/.
  Please replace that with the value of $Config{vendorarch} configuration
  parameter, e.g.
+ .
   $(shell perl -MConfig -wE'say substr($$Config{vendorarch},1)')

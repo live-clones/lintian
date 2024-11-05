@@ -4,6 +4,7 @@ Check: nmu
 Explanation: There is too much whitespace around the name in debian/changelog.
  .
  The format is:
+ .
    -- NAME &lt;EMAIL&gt;  DATE
  .
  Note that there must be exactly 1 space after the "--" and exactly
