@@ -28,3 +28,4 @@ fields-depends-general (binary): conflicts-with-version package-with-version (<<
 fields-depends-general (binary): conflicts-with-dependency Depends conflict-dep
 fields-depends-general (binary): breaks-without-version package-without-version
 fields-depends-general (binary): binary-package-depends-on-toolchain-package Depends: debhelper
+fields-depends-general (binary): depends-on-obsolete-bootstrap Depends
