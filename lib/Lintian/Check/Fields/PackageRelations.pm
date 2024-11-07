@@ -351,6 +351,14 @@ sub installable {
 
                     }
                 }
+
+                $self->hint('depends-on-obsolete-bootstrap',$field)
+                  if (
+                    $is_dep_field
+                    && (  $d_pkg eq 'libjs-bootstrap'
+                        || $d_pkg eq 'fonts-glyphicons-halflings'
+                        || $d_pkg eq 'libjs-bootstrap4')
+                  );
             }
 
             for my $d (@seen_obsolete_packages) {
@@ -601,6 +609,14 @@ sub source {
                       )
                       if $d_pkg =~ /^perl-modules/
                       && $processable->source_name ne 'perl';
+
+                    $self->hint('build-depends-on-obsolete-bootstrap',$field)
+                      if (
+                        $is_dep_field
+                        && (  $d_pkg eq 'libjs-bootstrap'
+                            || $d_pkg eq 'fonts-glyphicons-halflings'
+                            || $d_pkg eq 'libjs-bootstrap4')
+                      );
                 }
 
                 my $all_obsolete = 0;

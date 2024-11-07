@@ -9,7 +9,7 @@ Build-Depends: [% $build_depends %], bd-conflict, revision-1 (>= 1.0-1),
  bar [i386 any], baz [source lintian-fake-arch], baz [i386 !amd64],
  other-pkg [kfreebsd-any], yet-another [any-powerpc],
  packaging-dev, libdb5.1++-dev, libdb5.1-java-dev, hardening-wrapper (>= 2.2),
- mount
+ mount, libjs-bootstrap
 Build-Conflicts:
  bd-conflict,
 Rules-Requires-Root: no
