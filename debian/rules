@@ -33,12 +33,19 @@ execute_before_dh_clean:
 	rm -rf $(CURDIR)/debian/test-out
 	rm -rf doc/api.html doc/lintian.html
 	rm -rf man/man1/ man/man3/ l10n/
+	rm -f lintian-tags.json
 
 execute_after_dh_install:
 	echo "Setting LINTIAN_VERSION to $(VER)"
 	$(PERL) -p -i -e 's/my \$$LINTIAN_VERSION;/my \$$LINTIAN_VERSION = q{$(VER)};/;' \
 	    $(tmp)/usr/share/lintian/bin/*
 
+execute_after_dh_installdocs:
+ifeq (,$(filter nodoc,$(DEB_BUILD_OPTIONS)))
+	bin/lintian-explain-tags --format=json > lintian-tags.json
+	lintian-ssg --output-dir lintian-ssg --tags-file lintian-tags.json
+	mv lintian-ssg debian/lintian-doc/usr/share/doc/lintian-doc/html
+endif
 
 api-doc:
 	private/generate-html-docs doc/api.html

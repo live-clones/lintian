@@ -28,6 +28,7 @@ Build-Depends:
  libconst-fast-perl,
  libfile-basedir-perl,
  libio-prompt-tiny-perl <!nocheck>,
+ libio-interactive-perl <!nodoc>,
  libipc-run3-perl,
  liblist-someutils-perl <!nocheck>,
  libmce-perl <!nocheck>,
@@ -49,6 +50,7 @@ Build-Depends:
  libunicode-utf8-perl,
  libversion-perl <!nocheck>,
  lintian <!nocheck>,
+ lintian-ssg <!nodoc>,
  mingw-w64-tools <!nocheck>,
  pkg-php-tools <!nocheck>,
  python-dev-is-python3 <!nocheck>,
@@ -175,3 +177,18 @@ Description: Debian package checker
  with this tool before uploading them to the archive.
  .
  This version of Lintian is calibrated for Debian Policy version 4.6.2.
+
+Package: lintian-doc
+Architecture: all
+Section: doc
+Description: Debian package checker -- static website
+ Lintian dissects Debian packages and reports bugs and policy violations. It
+ contains automated checks for many aspects of Debian policy as well as some
+ checks for common errors.
+ .
+ This package is useful for all people who want to check Debian packages for
+ compliance with Debian policy. Every Debian maintainer should check packages
+ with this tool before uploading them to the archive.
+ .
+ This package provides a Web version of Lintian tags' explanations, created by
+ lintian-ssg.
