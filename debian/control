@@ -175,8 +175,6 @@ Description: Debian package checker
  This package is useful for all people who want to check Debian packages for
  compliance with Debian policy. Every Debian maintainer should check packages
  with this tool before uploading them to the archive.
- .
- This version of Lintian is calibrated for Debian Policy version 4.6.2.
 
 Package: lintian-doc
 Architecture: all
