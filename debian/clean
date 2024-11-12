@@ -1,0 +1,7 @@
+debian/test-out/
+doc/api.html
+doc/lintian.html
+man/man1/
+man/man3/
+l10n/
+lintian-tags.json
