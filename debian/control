@@ -178,14 +178,10 @@ Description: Debian package checker
 Package: lintian-doc
 Architecture: all
 Section: doc
-Description: Debian package checker -- static website
+Description: Debian package checker -- HTML documentation
  Lintian dissects Debian packages and reports bugs and policy violations. It
  contains automated checks for many aspects of Debian policy as well as some
  checks for common errors.
  .
- This package is useful for all people who want to check Debian packages for
- compliance with Debian policy. Every Debian maintainer should check packages
- with this tool before uploading them to the archive.
- .
- This package provides a Web version of Lintian tags' explanations, created by
- lintian-ssg.
+ This package provides Lintian tags' explanations in HTML format, generated
+ with lintian-ssg, suitable to be browsed locally or published online.
