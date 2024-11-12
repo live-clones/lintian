@@ -16,9 +16,13 @@ Explanation: The binary or shared library sets RPATH or RUNPATH. This
  RPATH/RUNPATH is unnecessary.
  .
  To fix this problem, look for link lines like:
+ .
      gcc test.o -o test -Wl,--rpath,/usr/local/lib
+ .
  or
+ .
      gcc test.o -o test -R/usr/local/lib
+ .
  and remove the <code>-Wl,--rpath</code> or <code>-R</code> argument. You can also
  use the chrpath utility to remove the RPATH.
 See-Also:
