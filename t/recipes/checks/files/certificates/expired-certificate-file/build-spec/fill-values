@@ -1,0 +1,3 @@
+Skeleton: upload-non-native
+Testname: expired-certificate-file
+Description: Source and binary packages contain an expired certificate.
