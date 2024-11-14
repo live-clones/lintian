@@ -37,7 +37,9 @@ execute_after_dh_install:
 execute_after_dh_installdocs:
 ifeq (,$(filter nodoc,$(DEB_BUILD_OPTIONS)))
 	bin/lintian-explain-tags --format=json > lintian-tags.json
-	lintian-ssg --output-dir lintian-ssg --tags-file lintian-tags.json
+	lintian-ssg --output-dir=lintian-ssg --tags-file=lintian-tags.json \
+	    --lintian-version=$(VER) --base-url=https://lintian.debian.org \
+	    --manual-file=doc/lintian.html --stats
 	mv lintian-ssg debian/lintian-doc/usr/share/doc/lintian-doc/html
 endif
 
