@@ -178,6 +178,7 @@ Description: Debian package checker
 Package: lintian-doc
 Architecture: all
 Section: doc
+Depends: ${misc:Depends}
 Description: Debian package checker -- HTML documentation
  Lintian dissects Debian packages and reports bugs and policy violations. It
  contains automated checks for many aspects of Debian policy as well as some
