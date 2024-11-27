@@ -1,0 +1,5 @@
+Skeleton: upload-non-native
+Testname: rules-dh-auto-test-does-not-check-deb-build-options-php
+Description: Test for missing checks for DEB_BUILD_PROFILES
+Source: rules-dh-auto-test-does-not-check-deb-build-options-php
+Version: 1.0.0
