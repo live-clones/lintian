@@ -273,7 +273,7 @@ all dependencies must be satisfied in Debian stable or stable-backports.
 There are several reasons for this requirement. The two main ones are:
 
 * Lintian is run on various debian.org hosts which are all running
-  Debian stable (lintian.debian.org and ftp-master.debian.org)
+  Debian stable (ftp-master.debian.org)
 
 * Many developers use stable and will want easy access to an up to date
   Lintian.

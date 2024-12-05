@@ -48,7 +48,8 @@ Build-Depends:
  libtext-template-perl <!nocheck>,
  libunicode-utf8-perl,
  libversion-perl <!nocheck>,
- lintian <!nocheck>,
+ lintian <!nocheck> <!nodoc>,
+ lintian-ssg <!nodoc>,
  mingw-w64-tools <!nocheck>,
  pkg-php-tools <!nocheck>,
  python-dev-is-python3 <!nocheck>,
@@ -173,5 +174,15 @@ Description: Debian package checker
  This package is useful for all people who want to check Debian packages for
  compliance with Debian policy. Every Debian maintainer should check packages
  with this tool before uploading them to the archive.
+
+Package: lintian-doc
+Architecture: all
+Section: doc
+Depends: ${misc:Depends}
+Description: Debian package checker -- HTML documentation
+ Lintian dissects Debian packages and reports bugs and policy violations. It
+ contains automated checks for many aspects of Debian policy as well as some
+ checks for common errors.
  .
- This version of Lintian is calibrated for Debian Policy version 4.6.2.
+ This package provides Lintian tags' explanations in HTML format, generated
+ with lintian-ssg, suitable to be browsed locally or published online.
