@@ -43,6 +43,9 @@ ifeq (,$(filter nodoc,$(DEB_BUILD_OPTIONS)))
 	mv lintian-ssg debian/lintian-doc/usr/share/doc/lintian-doc/html
 endif
 
+override_dh_compress:
+	dh_compress -Xfavicon.ico
+
 api-doc:
 	private/generate-html-docs doc/api.html
 
