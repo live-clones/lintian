@@ -77,7 +77,7 @@ is necessary to report in case no hints were found.
 =cut
 
 sub issue_hints {
-    my ($self, $profile, $groups) = @_;
+    my ($self, $profile, $groups, $option) = @_;
 
     $groups //= [];
 
@@ -118,9 +118,20 @@ sub issue_hints {
             my %file_output;
             $file_output{filename} = path($processable->path)->basename;
             $file_output{hints}
-              = $self->hintlist($profile, $processable->hints);
+              = $self->hintlist($profile, $option, $processable->hints);
             push(@allfiles_output, \%file_output);
         }
+    }
+
+    my @tag_infos;
+    $output{tag_infos} = \@tag_infos;
+    for my $tag_name (sort { $a cmp $b } keys %{$self->issuedtags}) {
+        my $tag = %{$self->issuedtags}{$tag_name};
+        my %data;
+        $data{tag} = $tag;
+        $data{description}
+          = markdown($self->markdown_description($profile->data, $tag));
+        push(@tag_infos, \%data);
     }
 
     my $style_sheet = $profile->data->style_sheet->css;
@@ -146,7 +157,7 @@ sub issue_hints {
 =cut
 
 sub hintlist {
-    my ($self, $profile, $arrayref) = @_;
+    my ($self, $profile, $option, $arrayref) = @_;
 
     my %sorter;
     for my $hint (@{$arrayref // []}) {
@@ -166,6 +177,11 @@ sub hintlist {
           if @{$hint->masks};
 
         my $code_priority = $CODE_PRIORITY{$ranking_code};
+
+        if ($option->{info}) {
+
+            $self->issue_tag($tag);
+        }
 
         push(
             @{
@@ -208,7 +224,14 @@ sub hintlist {
 
         $html_hint{tag_name} = $hint->tag_name;
 
-        $html_hint{url} = 'https://lintian.debian.org/tags/' . $hint->tag_name;
+        if ($option->{info}) {
+            # Link to explanation generated on this page.
+            $html_hint{url} = q{#} . $hint->tag_name;
+        } else {
+            # Link to the (now defunct) lintian.debian.org page.
+            $html_hint{url}
+              = 'https://lintian.debian.org/tags/' . $hint->tag_name;
+        }
 
         $html_hint{context} = $hint->context
           if length $hint->context;
@@ -259,6 +282,28 @@ sub describe_tags {
 
         print encode_utf8(markdown($self->markdown_description($data, $tag)));
     }
+
+    return;
+}
+
+=item issuedtags
+
+Hash containing the tags which have been issued.
+
+=cut
+
+has issuedtags => (is => 'rw', default => sub { {} });
+
+=item C<issue_tag($tag)>
+
+Register a tag to have its description included in the output.
+
+=cut
+
+sub issue_tag {
+    my ($self, $tag) = @_;
+
+    $self->issuedtags->{$tag->name} = $tag;
 
     return;
 }
