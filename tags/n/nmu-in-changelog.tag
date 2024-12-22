@@ -9,5 +9,10 @@ Explanation: The first line of the changelog entry for this package appears to
  maintainers.
  .
  If this was intended to be an NMU, do not add yourself as a maintainer or
- uploader. Otherwise, please rephrase your changelog entry to not cause
- confusion.
+ uploader.
+ .
+ If this is *not* intended to be a NMU, remove the string "NMU".
+ .
+ If you are trying to acknowledge a NMU, you might have misspelled the
+ string lintian expects in such cases. Rephrase your changelog entry to
+ say "Acknowledge NMU" literally.
