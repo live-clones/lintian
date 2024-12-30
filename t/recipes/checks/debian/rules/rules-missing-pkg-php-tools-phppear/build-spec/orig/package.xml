@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package packagerversion="1.10.12" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0 http://pear.php.net/dtd/tasks-1.0.xsd http://pear.php.net/dtd/package-2.0 http://pear.php.net/dtd/package-2.0.xsd">
+ <name>NoCode</name>
+ <channel>pear.php.net</channel>
+ <summary>No code</summary>
+ <description>No code has no vulnerabilities.</description>
+ <lead>
+  <name>William Desportes</name>
+  <user>williamdes</user>
+  <email>williamdes@wdes.fr</email>
+  <active>yes</active>
+ </lead>
+ <developer>
+  <name>William Desportes</name>
+  <user>williamdes</user>
+  <email>williamdes@wdes.fr</email>
+  <active>no</active>
+ </developer>
+ <date>2023-01-19</date>
+ <time>20:47:42</time>
+ <version>
+  <release>1.10.12</release>
+  <api>1.10.12</api>
+ </version>
+ <stability>
+  <release>stable</release>
+  <api>stable</api>
+ </stability>
+ <license uri="https://opensource.org/licenses/MPL-2.0">MPL-2.0</license>
+ <notes>
+It has no code
+ </notes>
+ <contents>
+  <dir baseinstalldir="NoCode" name="/">
+   <file baseinstalldir="NoCode" md5sum="d41d8cd98f00b204e9800998ecf8427e" name="my-lib.php" role="php" />
+  </dir>
+ </contents>
+ <dependencies>
+  <required>
+   <php>
+    <min>7.4.0</min>
+   </php>
+   <pearinstaller>
+    <min>1.4.0</min>
+   </pearinstaller>
+  </required>
+ </dependencies>
+ <phprelease />
+</package>
