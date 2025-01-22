@@ -40,6 +40,7 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
+const my $EMPTY => q{};
 const my $DOT => q{.};
 const my $DOUBLE_QUOTE => q{"};
 
@@ -381,9 +382,77 @@ sub check_control_paragraph {
         $self->pointed_hint('testsuite-dependency-has-unparsable-elements',
             $pointer, $DOUBLE_QUOTE . $_ . $DOUBLE_QUOTE)
           for @unparsable;
+
+        my $OBSOLETE_PACKAGES
+          = $self->data->load('fields/obsolete-packages',qr/\s*=>\s*/);
+
+        for my $dep (split /\s*,\s*/, $depends) {
+            my (@alternatives, @seen_obsolete_packages);
+
+            push @alternatives, [_split_dep($_), $_]
+              for (split /\s*\|\s*/, $dep);
+
+            for my $part_d (@alternatives) {
+                my ($d_pkg, $d_march, $d_version, undef, undef, $rest,
+                    $part_d_orig)
+                  = @{$part_d};
+
+                push @seen_obsolete_packages, [$part_d_orig, $d_pkg]
+                  if $OBSOLETE_PACKAGES->recognizes($d_pkg);
+            }
+
+            for my $d (@seen_obsolete_packages) {
+                my ($dep, $pkg_name) = @{$d};
+                my $replacement = $OBSOLETE_PACKAGES->value($pkg_name)
+                  // $EMPTY;
+                $replacement = ' => ' . $replacement
+                  if $replacement ne $EMPTY;
+                if ($pkg_name eq $alternatives[0][0]
+                    or scalar @seen_obsolete_packages== scalar @alternatives) {
+                    $self->hint('testsuite-depends-on-obsolete-package',
+                        "Depends: $dep${replacement}");
+                } else {
+                    $self->hint('testsuite-ored-depends-on-obsolete-package',
+                        "Depends: $dep${replacement}");
+                }
+            }
+        }
     }
 
     return;
+}
+
+sub _split_dep {
+    my $dep = shift;
+    my ($pkg, $dmarch, $version, $darch, $restr)
+      = ($EMPTY, $EMPTY, [$EMPTY,$EMPTY], [[], 0], []);
+
+    if ($dep =~ s/^\s*([^<\s\[\(]+)\s*//) {
+        ($pkg, $dmarch) = split(/:/, $1, 2);
+        $dmarch //= $EMPTY;  # Ensure it is defined (in case there is no ":")
+    }
+
+    if (length $dep) {
+        if ($dep
+            =~ s/\s* \( \s* (<<|<=|>=|>>|[=<>]) \s* ([^\s(]+) \s* \) \s*//x) {
+            @{$version} = ($1, $2);
+        }
+        if ($dep && $dep =~ s/\s*\[([^\]]+)\]\s*//) {
+            my $t = $1;
+            $darch->[0] = [split /\s+/, $t];
+            my $negated = 0;
+            for my $arch (@{ $darch->[0] }) {
+                $negated++ if $arch =~ s/^!//;
+            }
+            $darch->[1] = $negated;
+        }
+        while ($dep && $dep =~ s/\s*<([^>]+)>\s*//) {
+            my $t = $1;
+            push(@{$restr}, [split /\s+/, $t]);
+        }
+    }
+
+    return ($pkg, $dmarch, $version, $darch, $restr, $dep);
 }
 
 1;
