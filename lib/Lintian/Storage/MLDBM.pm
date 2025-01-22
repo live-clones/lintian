@@ -74,7 +74,7 @@ sub create {
     my $stem = "mldbm-$description";
 
     my $tempfile
-      = Path::Tiny->tempfile(TEMPLATE => $stem . 'XXXXXXXX', UNLINK => 0);
+      = Path::Tiny->tempfile(TEMPLATE => $stem . 'XXXXXXXX', UNLINK => 1);
     $self->tempfile($tempfile);
 
     try {
@@ -99,9 +99,6 @@ sub DEMOLISH {
     my ($self, $in_global_destruction) = @_;
 
     untie %{$self->tied_hash};
-
-    $self->tempfile->remove
-      if defined $self->tempfile;
 
     return;
 }
