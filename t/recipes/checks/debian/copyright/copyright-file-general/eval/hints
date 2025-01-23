@@ -2,6 +2,8 @@ copyright-symlink (binary): copyright-file-is-symlink [usr/share/doc/copyright-s
 copyright-poor-common-licenses (binary): copyright-not-using-common-license-for-gpl
 copyright-poor-common-licenses (binary): copyright-does-not-refer-to-common-license-file /GPL-3
 copyright-old-style (binary): no-copyright-file
+copyright-old-fsf-2 (binary): old-fsf-address-in-copyright-file
+copyright-old-fsf-3 (binary): old-fsf-address-in-copyright-file
 copyright-old-fsf (binary): old-fsf-address-in-copyright-file
 copyright-missing-perl-license-pointer (binary): copyright-file-lacks-pointer-to-perl-license
 copyright-missing-apache2-license-pointer (binary): copyright-not-using-common-license-for-apache2
