@@ -119,7 +119,7 @@ sub always {
           if $pkg !~ /-dbg(?:sym)?$/;
     }
 
-    if ($self->processable->is_transitional) {
+    if ($self->processable->type eq 'binary' and $self->processable->is_transitional) {
 
         my $priority = $self->processable->fields->unfolded_value('Priority');
 

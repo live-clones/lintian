@@ -118,6 +118,10 @@ Returns the base directory of this package inside the lab.
 has path => (
     is => 'rw',
     default => $EMPTY,
+    coerce => sub {
+        my ($value) = @_;
+        return path($value)->realpath if length $value;
+    },
     trigger => sub {
         my ($self, $path) = @_;
 

@@ -1,4 +1,5 @@
 # Copyright (C) 2019-2020 Felix Lechner
+# Copyright (C) 2025 Maytham Alsudany
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,7 +17,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::Processable::Source;
+package Lintian::Processable::SourceTree;
 
 use v5.20;
 use warnings;
@@ -26,6 +27,7 @@ use Carp qw(croak);
 use File::Spec;
 use Unicode::UTF8 qw(encode_utf8);
 
+use Lintian::Changelog;
 use Lintian::Deb822;
 
 use Moo;
@@ -39,67 +41,74 @@ with
   'Lintian::Processable::Fields::Files',
   'Lintian::Processable::IsNonFree',
   'Lintian::Processable::Source::Changelog',
-  'Lintian::Processable::Source::Components',
-  'Lintian::Processable::Source::Format',
   'Lintian::Processable::Source::Orig',
   'Lintian::Processable::Source::Overrides',
-  'Lintian::Processable::Source::Patched',
   'Lintian::Processable::Source::Relation',
-  'Lintian::Processable::Source::Repacked';
+  'Lintian::Processable::Source::Repacked',
+  'Lintian::Processable::SourceTree::Components',
+  'Lintian::Processable::SourceTree::Format',
+  'Lintian::Processable::SourceTree::Patched';
 
 =for Pod::Coverage BUILDARGS
 
 =head1 NAME
 
-Lintian::Processable::Source -- A dsc source package Lintian can process
+Lintian::Processable::SourceTree -- A package source tree Lintian can process
 
 =head1 SYNOPSIS
 
- use Lintian::Processable::Source;
+ use Lintian::Processable::SourceTree;
 
- my $processable = Lintian::Processable::Source->new;
- $processable->init_from_file('path');
+ my $processable = Lintian::Processable::SourceTree->new;
+ $processable->init_from_directory('path');
 
 =head1 DESCRIPTION
 
-This class represents a 'dsc' file that Lintian can process. Objects
-of this kind are often part of a L<Lintian::Group>, which
-represents all the files in a changes or buildinfo file.
+This class represents a package source tree that Lintian can
+process. Objects of this kind are often part of a L<Lintian::Group>,
+which represents all the files in a changes or buildinfo file.
 
 =head1 INSTANCE METHODS
 
 =over 4
 
-=item init_from_file (PATH)
+=item init_from_directory (PATH)
 
 Initializes a new object from PATH.
 
 =cut
 
-sub init_from_file {
-    my ($self, $file) = @_;
+sub init_from_directory {
+    my ($self, $path) = @_;
 
-    croak encode_utf8("File $file does not exist")
-      unless -e $file;
+    croak encode_utf8("Directory $path does not exist")
+      unless -d $path;
 
-    $self->path($file);
+    $self->path($path);
     $self->type('source');
 
+    croak encode_utf8($self->path . '/debian/control does not exist')
+      unless -e $self->path . '/debian/control';
+
     my $primary = Lintian::Deb822->new;
-    my @sections = $primary->read_file($self->path)
-      or croak encode_utf8($self->path . ' is not valid dsc file');
+    my @sections = $primary->read_file($self->path->child('debian/control'))
+      or croak encode_utf8($self->path . '/debian/control is not a valid control file');
 
     $self->fields($sections[0]);
 
     my $name = $self->fields->value('Source');
-    my $version = $self->fields->value('Version');
     my $architecture = 'source';
+
+    my $changelog = Lintian::Changelog->new;
+    $changelog->read_file($self->path->child('debian/changelog'));
+    my ($entry) = @{$changelog->entries};
+    my $version = $entry->Version;
 
     # it is its own source package
     my $source_name = $name;
     my $source_version = $version;
 
-    croak encode_utf8($self->path . ' is missing Source field')
+    croak encode_utf8($self->path . '/debian/control is missing Source field')
       unless length $name;
 
     $self->name($name);
@@ -128,7 +137,7 @@ has is_tree => (
 
 =head1 AUTHOR
 
-Originally written by Felix Lechner <felix.lechner@lease-up.com> for Lintian.
+Originally written by Maytham Alsudany <maytha8thedev@gmail.com> for Lintian.
 
 =head1 SEE ALSO
 

@@ -44,6 +44,7 @@ my %source_field_whitelist = (
 
 sub source {
     my ($self) = @_;
+    return if $self->processable->is_tree;
 
     my $KNOWN_SOURCE_FIELDS= $self->data->load('common/source-fields');
     my @unknown= $self->processable->fields->extra($KNOWN_SOURCE_FIELDS->all);
