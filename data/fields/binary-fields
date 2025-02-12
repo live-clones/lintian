@@ -39,6 +39,7 @@ Gstreamer-Decoders
 Lua-Versions
 Auto-Built-Package
 X-Cargo-Built-Using
+Protected
 
 # Special-case, original-maintainer is not ok in Debian, but we allow
 # it in any non-Debian profile by default.
