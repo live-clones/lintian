@@ -1,2 +1,3 @@
 Testname: legacy-scripts
 Check: documentation
+Test-Depends: dpkg-dev (<< 1.22.12~)
