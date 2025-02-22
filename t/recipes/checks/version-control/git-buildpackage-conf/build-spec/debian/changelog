@@ -1,0 +1,6 @@
+basic (1.0-1) unstable; urgency=low
+
+  * Initial release.
+  * Test package for git-buildpackage detection.
+
+ -- Debian Lintian Maintainers <lintian-maint@debian.org>  Sat, 22 Feb 2025 12:00:00 +0000
