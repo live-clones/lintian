@@ -32,7 +32,7 @@ maintainer-script-hides-init-failure                            ~~ 0 ~~ 0 ~~    
 maintainer-script-changes-ld-so-conf                            ~~ 0 ~~ 0 ~~^libc               ~~          ~~(?:\A\s*(?:cp|mv)\s+.*\s+|>\s*)/etc/ld\.so\.conf\s*(?:\s|\Z)
 maintainer-script-changes-netbase                               ~~ 0 ~~ 0 ~~                    ~~          ~~(?:\A\s*(?:cp|mv)\s+.*\s+|>\s*)(/etc/(?:services|protocols|rpc))\s*(?:\s|\Z)
 maintainer-script-should-not-parse-etc-passwd-or-group          ~~ 0 ~~ 0 ~~                    ~~          ~~\b([ef]?grep\b.*/etc/(?:passwd|group))\b
-maintainer-script-lacks-home-in-adduser                         ~~ 1 ~~ 0 ~~                    ~~          ~~(adduser\s(?:(?!.*(?<=\s)--home\s.*\s--system).*(?<=\s)--system(?=\s)(?!.*\s--home\s+(?:["]?/(?!home/)|["]?\$[\(\[\{]?))|--home\s+["]?/home/.*\s--system(?:\s|$)).*)
+maintainer-script-lacks-home-in-adduser                         ~~ 1 ~~ 0 ~~                    ~~          ~~(adduser\s(?:(?!.*(?<=\s)--home[\=\s].*\s--system).*(?<=\s)--system(?=\s)(?!.*\s--home[\=\s]\s*(?:["]?/(?!home/)|["]?\$[\(\[\{]?))|--home[\=\s]\s*["]?/home/.*\s--system(?:\s|$)).*)
 maintainer-script-calls-chown-improperly                        ~~ 0 ~~ 0 ~~                    ~~          ~~(chown(?:\s+--?[A-Za-z-]+)*\s+[-_A-Za-z0-9]+\.[-_A-Za-z0-9]+)\s+
 maintainer-script-should-not-use-dpkg-maintscript-helper        ~~ 1 ~~ 1 ~~                    ~~          ~~dpkg-maintscript-helper
 maintainer-script-updates-fontconfig-cache-improperly           ~~ 0 ~~ 0 ~~^(fontconfig)$      ~~          ~~${LEADING_PATTERN}(?:/usr/bin/)?fc-cache(?:\s|\Z)
