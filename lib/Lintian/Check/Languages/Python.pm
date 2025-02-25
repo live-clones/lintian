@@ -345,7 +345,8 @@ sub visit_installed_files {
             $item->pointer)
           if $item->is_file
           && $relative eq $item->basename  # "top-level"
-          &&!$self->ALLOWED_PYTHON_FILES->matches_any($item->basename, 'i');
+          && (!$self->ALLOWED_PYTHON_FILES->matches_any($item->basename, 'i')
+            || $item->basename =~ /^__init__\.py[ic]?$/);
 
         # Prepare variables for the 'python-module-in-wrong-location' hint
         my $actual_module_path
