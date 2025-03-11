@@ -1,1 +1,1 @@
-git-buildpackage-conf (source): uses-gbp-conf
+git-buildpackage-conf (source): uses-gbp-conf [debian/gbp.conf]
