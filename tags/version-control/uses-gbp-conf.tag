@@ -1,6 +1,7 @@
 Tag: uses-gbp-conf
 Severity: classification
 Check: version-control
+Name-Spaced: yes
 Explanation: The package appears to use git-buildpackage (gbp) for package maintenance,
  as indicated by the presence of a gbp.conf configuration file.
  .

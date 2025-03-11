@@ -1,4 +1,4 @@
-# version-control/Git-buildpackage -- lintian check script -*- perl -*-
+# version-control/git-buildpackage-conf -- lintian check script -*- perl -*-
 
 # Copyright (C) 2025 Otto Kekäläinen
 #
