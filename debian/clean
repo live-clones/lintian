@@ -1,5 +1,5 @@
 debian/test-out/
-doc/api.html
+doc/api.html/
 doc/lintian.html
 man/man1/
 man/man3/

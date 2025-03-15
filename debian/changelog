@@ -4,6 +4,17 @@ lintian (2.121.2) UNRELEASED; urgency=medium
 
  -- Louis-Philippe Véronneau <pollo@debian.org>  Fri, 06 Dec 2024 20:06:49 -0500
 
+lintian (2.121.1+nmu1) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * d/clean: Add trailing slashes to directories to fix clean
+    rule.
+  * t: Disable tests that fail with dpkg/1.22.12 and newer until
+    the maintainer can have a look at a better fix.
+    (Closes: #1092092, #1092381)
+
+ -- Niels Thykier <niels@thykier.net>  Sun, 16 Feb 2025 10:44:57 +0000
+
 lintian (2.121.1) unstable; urgency=medium
 
   * Source-only upload. No changes.
