@@ -913,8 +913,7 @@ sub is_open_ok {
     } catch {
         return 0;
 
-        # perlcritic 1.140-1 requires the semicolon on the next line
-    };
+    }
 
     return 1;
 }

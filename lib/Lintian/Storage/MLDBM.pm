@@ -86,7 +86,7 @@ sub create {
 
     } catch {
         die encode_utf8("Cannot create database in $tempfile: $@");
-    };
+    }
 
     return;
 }

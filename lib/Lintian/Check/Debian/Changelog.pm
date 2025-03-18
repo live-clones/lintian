@@ -113,8 +113,7 @@ sub source {
             $latest_pointer,$versionstring, "(for $indicator)");
         undef $latest_version;
 
-        # perlcritic 1.140-1 requires a semicolon on the next line
-    };
+    }
 
     if (defined $latest_version) {
 

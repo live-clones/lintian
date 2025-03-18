@@ -157,7 +157,7 @@ has files => (
         }
 
         return \%files;
-    }
+      }
 );
 
 =back
