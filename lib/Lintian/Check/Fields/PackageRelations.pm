@@ -301,8 +301,8 @@ sub installable {
 
                 $self->hint(
                     'package-relation-with-perl-modules', "$field: $d_pkg"
-                      # matches "perl-modules" (<= 5.20) as well as
-                      # perl-modules-5.xx (>> 5.20)
+                    # matches "perl-modules" (<= 5.20) as well as
+                    # perl-modules-5.xx (>> 5.20)
                   )
                   if $d_pkg =~ /^perl-modules/
                   && $field ne 'Replaces'
@@ -604,8 +604,8 @@ sub source {
                     $self->hint(
                         'package-relation-with-perl-modules',
                         "$field: $part_d_orig"
-                          # matches "perl-modules" (<= 5.20) as well as
-                          # perl-modules-5.xx (>> 5.20)
+                        # matches "perl-modules" (<= 5.20) as well as
+                        # perl-modules-5.xx (>> 5.20)
                       )
                       if $d_pkg =~ /^perl-modules/
                       && $processable->source_name ne 'perl';

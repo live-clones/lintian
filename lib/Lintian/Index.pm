@@ -375,7 +375,7 @@ sub load {
         $entry->path_info(
             $operm | (
                 $FILE_CODE2LPATH_TYPE{$raw_type}
-                  // Lintian::Index::Item::TYPE_OTHER
+                // Lintian::Index::Item::TYPE_OTHER
             )
         );
     }
@@ -537,14 +537,14 @@ sub load {
 
         $preferred->path_info(
             ($preferred->path_info& ~Lintian::Index::Item::TYPE_HARDLINK)
-            | Lintian::Index::Item::TYPE_FILE);
+              | Lintian::Index::Item::TYPE_FILE);
 
         foreach my $pointer (@links) {
 
             # turn into a hard link
             $pointer->path_info(
                 ($pointer->path_info & ~Lintian::Index::Item::TYPE_FILE)
-                | Lintian::Index::Item::TYPE_HARDLINK);
+                  | Lintian::Index::Item::TYPE_HARDLINK);
 
             # set link to preferred path
             $pointer->link($preferred->name);

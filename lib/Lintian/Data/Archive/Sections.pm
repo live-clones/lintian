@@ -98,8 +98,7 @@ sub refresh {
     my $sections = join("\n",
         map { s/^Section: //r }
           grep { m{^Section: [^/]*$} }
-          split(/\n/, $sections_822))
-      ."\n";
+          split(/\n/, $sections_822))."\n";
 
     my $data_path = "$basedir/" . $self->location;
     my $parent_dir = path($data_path)->parent->stringify;

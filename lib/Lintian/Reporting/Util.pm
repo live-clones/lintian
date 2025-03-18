@@ -145,8 +145,7 @@ sub save_state_cache {
         }
         die encode_utf8($err);
 
-        # perlcritic 1.140-1 requires the semicolon on the next line
-    };
+    }
 
     return 1;
 }
