@@ -135,7 +135,7 @@ has orig => (
 
                 $item->path_info(
                     ($item->path_info & ~Lintian::Index::Item::TYPE_HARDLINK)
-                    | Lintian::Index::Item::TYPE_FILE);
+                      | Lintian::Index::Item::TYPE_FILE);
             }
 
             my @prefixes = @{$subindex->sorted_list};
