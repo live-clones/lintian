@@ -1,1 +1,1 @@
-rules-including-deprecated-makefiles (source): debian-rules-uses-deprecated-makefile /usr/share/cdbs/1/rules/simple-patchsys.mk [debian/rules:4]
+rules-including-deprecated-makefiles (source): debian-rules-uses-deprecated-makefile /usr/share/cdbs/1/class/cmake.mk [debian/rules:4]

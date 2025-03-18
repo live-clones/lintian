@@ -3,10 +3,8 @@
 #
 # Please keep it sorted by file name.
 
-/usr/share/cdbs/1/class/perlmodule-vars.mk
-/usr/share/cdbs/1/class/perlmodule.mk
-/usr/share/cdbs/1/rules/dpatch.mk
-/usr/share/cdbs/1/rules/simple-patchsys.mk
-/usr/share/cdbs/1/rules/tarball.mk
-/usr/share/dbs/dbs-build.mk
-/usr/share/dbs/dpkg-arch.mk
+/usr/share/cdbs/1/class/ant.mk
+/usr/share/cdbs/1/class/cmake.mk
+/usr/share/cdbs/1/class/gnome.mk
+/usr/share/cdbs/1/class/python-distutils.mk
+/usr/share/cdbs/1/class/qmake.mk
