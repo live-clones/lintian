@@ -45,11 +45,6 @@
             "libdebhelper-perl"
          ]
       },
-      "buildinfo" : {
-         "installed_by" : [
-            "dh-buildinfo"
-         ]
-      },
       "builtusing" : {
          "installed_by" : [
             "dh-builtusing"
@@ -297,7 +292,7 @@
       },
       "numpy3" : {
          "installed_by" : [
-            "python3-numpy"
+            "python3-numpy-dev"
          ]
       },
       "ocaml" : {
@@ -342,12 +337,12 @@
       },
       "pgxs" : {
          "installed_by" : [
-            "postgresql-server-dev-all"
+            "postgresql-common-dev"
          ]
       },
       "pgxs_loop" : {
          "installed_by" : [
-            "postgresql-server-dev-all"
+            "postgresql-common-dev"
          ]
       },
       "php" : {
@@ -405,6 +400,11 @@
             "pkg-kde-tools"
          ]
       },
+      "qmldeps" : {
+         "installed_by" : [
+            "pkg-kde-tools"
+         ]
+      },
       "quilt" : {
          "installed_by" : [
             "quilt"
@@ -443,6 +443,11 @@
       "scour" : {
          "installed_by" : [
             "scour"
+         ]
+      },
+      "shell_completions" : {
+         "installed_by" : [
+            "dh-shell-completions"
          ]
       },
       "single_binary" : {
@@ -490,6 +495,11 @@
             "uwsgi-dev"
          ]
       },
+      "varnishabi" : {
+         "installed_by" : [
+            "libvarnishapi-dev"
+         ]
+      },
       "vdrplugin" : {
          "installed_by" : [
             "vdr-dev"
@@ -518,11 +528,6 @@
       "xsf" : {
          "installed_by" : [
             "xserver-xorg-dev"
-         ]
-      },
-      "xsp" : {
-         "installed_by" : [
-            "dh-xsp"
          ]
       },
       "zathura" : {
