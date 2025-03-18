@@ -108,11 +108,6 @@
             "debhelper"
          ]
       },
-      "dh_buildinfo" : {
-         "installed_by" : [
-            "dh-buildinfo"
-         ]
-      },
       "dh_builtusing" : {
          "installed_by" : [
             "dh-builtusing"
@@ -702,12 +697,6 @@
          "uses_autoscript" : 1,
          "uses_misc_depends" : 1
       },
-      "dh_installxsp" : {
-         "installed_by" : [
-            "dh-xsp"
-         ],
-         "uses_autoscript" : 1
-      },
       "dh_installyorick" : {
          "installed_by" : [
             "yorick-dev"
@@ -763,7 +752,7 @@
       },
       "dh_make_pgxs" : {
          "installed_by" : [
-            "postgresql-server-dev-all"
+            "postgresql-common-dev"
          ]
       },
       "dh_makeclilibs" : {
@@ -836,7 +825,7 @@
       },
       "dh_numpy3" : {
          "installed_by" : [
-            "python3-numpy"
+            "python3-numpy-dev"
          ]
       },
       "dh_ocaml" : {
@@ -938,7 +927,7 @@
       },
       "dh_pgxs_test" : {
          "installed_by" : [
-            "postgresql-server-dev-all"
+            "postgresql-common-dev"
          ]
       },
       "dh_php" : {
@@ -1013,6 +1002,11 @@
             "pkg-kde-tools"
          ]
       },
+      "dh_qmldeps" : {
+         "installed_by" : [
+            "pkg-kde-tools"
+         ]
+      },
       "dh_quilt_patch" : {
          "installed_by" : [
             "quilt"
@@ -1078,6 +1072,11 @@
       "dh_scour" : {
          "installed_by" : [
             "scour"
+         ]
+      },
+      "dh_shell_completions" : {
+         "installed_by" : [
+            "dh-shell-completions"
          ]
       },
       "dh_shlibdeps" : {
@@ -1172,6 +1171,12 @@
          "installed_by" : [
             "vagrant"
          ]
+      },
+      "dh_varnishabi" : {
+         "installed_by" : [
+            "libvarnishapi-dev"
+         ],
+         "uses_misc_depends" : 1
       },
       "dh_vdrplugin_depends" : {
          "installed_by" : [
