@@ -104,7 +104,7 @@ sub visit_patched_files {
               # does not match "from library2"
               # does not match "from notlibrary"
               # does not match "from library2.library"
-              if $line =~ m{^from $library(\s+|\..+)import}
+              if $line =~ m{^\s*from $library(\s+|\..+)import}
               # import foo, library, bar
               # import library
               # import library as l
@@ -117,7 +117,7 @@ sub visit_patched_files {
               # does not match "import notlibrary"
               # does not match "import library2.library"
               # does not match "import library2 as library"
-              ||$line =~ m{^import(\s+|.+,\s?)$library([,.\s]|$)};
+              ||$line =~ m{^\s*import(\s+|.+,\s?)$library([,.\s]|$)};
         }
 
     }continue {
