@@ -1,8 +1,5 @@
-This is part of the testsuite of lintian. See the file debian/copyright
-in the lintian source directory for more details.
-
-So far as it is copyrightable at all, this template is
-   Copyright (C) 2008 Frank Lichtenheld <djpig@debian.org>
+To the extend this is copyrightable (if at all), it is:
+  Copyright 2012 Niels Thykier <niels@thykier.net>.
 
 This program is free software; you may redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -15,5 +12,8 @@ fitness for a particular purpose. See the GNU General Public License
 for more details.
 
 A copy of the GNU General Public License version 2 is available as
-/usr/share/common-licenses/GPL in the Debian GNU/Linux distribution
+/usr/share/common-licenses/GPL-2 in the Debian GNU/Linux distribution
 or at http://www.gnu.org/licenses/old-licenses/gpl-2.0.html.
+You can also obtain it by writing to the Free Software Foundation, Inc.,
+59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+

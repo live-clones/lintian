@@ -271,7 +271,8 @@ sub binary {
 
     # Lame check for old FSF zip code.  Try to avoid false positives from other
     # Cambridge, MA addresses.
-    if ($contents =~ m/(?:Free\s*Software\s*Foundation.*02139|02111-1307)/s) {
+    if ($contents
+        =~ m/(?:Free\s*Software\s*Foundation.*02139|02111-1307|02110-1301)/s) {
         $self->hint('old-fsf-address-in-copyright-file');
     }
 
