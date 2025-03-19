@@ -8,6 +8,150 @@
          "author" : "Sean Whitton <spwhitton@spwhitton.name>",
          "changes" : [
             "",
+            "debian-policy (4.7.2.1) UNRELEASED; urgency=medium",
+            "",
+            "  * Fix missing word in 10.1 & upgrading checklist.",
+            "  * Rewrite \"date\"->\"day-of-month\" in Policy 3.2.1 (Closes: #1100455).",
+            "    Thanks to Ahmed Siam for reporting the issue."
+         ],
+         "closes" : [
+            1100455.0
+         ],
+         "epoch" : 1740711826,
+         "timestamp" : "2025-02-28T03:03:46Z",
+         "version" : "4.7.2.1"
+      },
+      {
+         "author" : "Sean Whitton <spwhitton@spwhitton.name>",
+         "changes" : [
+            "",
+            "debian-policy (4.7.2.0) unstable; urgency=medium",
+            "",
+            "  * Policy: Relax 10.1 slightly for /usr/games",
+            "    Wording: Sean Whitton <spwhitton@spwhitton.name>",
+            "    Seconded: Holger Levsen <holger@layer-acht.org>",
+            "    Seconded: Chris Hofstaedtler <zeha@debian.org>",
+            "    Seconded: Jochen Sprickerhof <jspricke@debian.org>",
+            "    Closes: #1098948"
+         ],
+         "closes" : [
+            1098948.0
+         ],
+         "epoch" : 1740638102,
+         "timestamp" : "2025-02-27T06:35:02Z",
+         "version" : "4.7.2.0"
+      },
+      {
+         "author" : "Sean Whitton <spwhitton@spwhitton.name>",
+         "changes" : [
+            "",
+            "debian-policy (4.7.1.1) unstable; urgency=medium",
+            "",
+            "  * Source-only upload."
+         ],
+         "closes" : [],
+         "epoch" : 1740199144,
+         "timestamp" : "2025-02-22T04:39:04Z",
+         "version" : "4.7.1.1"
+      },
+      {
+         "author" : "Sean Whitton <spwhitton@spwhitton.name>",
+         "changes" : [
+            "",
+            "debian-policy (4.7.1.0) unstable; urgency=medium",
+            "",
+            "  [ Fei Ding & Ke Zhang ]",
+            "  * New Simplified Chinese translation.",
+            "",
+            "  [ Sean Whitton ]",
+            "  * Install new translation in new binary package.",
+            "  * Merge two duplicate sets of .po files, locales/ & policy/locale/.",
+            "  * Policy: Clarify filename conflicts for programs",
+            "    Wording: Chris Hofstaedtler <zeha@debian.org>",
+            "    Seconded: Helmut Grohne <helmut@subdivi.de>",
+            "    Seconded: Jochen Sprickerhof <jspricke@debian.org>",
+            "    Seconded: Holger Levsen <holger@layer-acht.org>",
+            "    Closes: #1075856",
+            "  * 5.6.31: Update default value of Rules-Requires-Root (Closes: #1091913).",
+            "    Thanks to Niels Thykier for the report.",
+            "  * Policy: Packages must/should not require man, info and locale files",
+            "    Wording: Josh Triplett <josh@joshtriplett.org>",
+            "    Seconded: Sean Whitton <spwhitton@spwhitton.name>",
+            "    Seconded: Mattia Rizzolo <mattia@debian.org>",
+            "    Closes: #1089110",
+            "  * Policy: Packages must not install to /bin, /lib, /lib* or /sbin",
+            "    Wording: Helmut Grohne <helmut@subdivi.de>",
+            "    Seconded: Russ Allbery <rra@debian.org>",
+            "    Seconded: Sam Hartman <hartmans@debian.org>",
+            "    Seconded: Luca Boccassi <bluca@debian.org>",
+            "    Seconded: Chris Hofstaedtler <zeha@debian.org>",
+            "    Seconded: Holger Levsen <holger@layer-acht.org>",
+            "    Seconded: Michael Biebl <biebl@debian.org>",
+            "    Seconded: Jochen Sprickerhof <jspricke@debian.org>",
+            "    Closes: #1074014",
+            "    - Rewrite Helmut's text to avoid mentioning the merged-/usr transition",
+            "      by name, and to avoid the transition-specific \"aliased paths\" jargon.",
+            "      My hope is that this will be better for future readers.",
+            "  * 10.1: Delete paragraph about compatibility symlinks /path -> /usr/path.",
+            "    This paragraph is effectively superseded by the preceding Policy change.",
+            "  * Fix formatting issue in 10.2 (Closes: #1094664).",
+            "    Thanks to Roberto C. Sanchez for the report.",
+            "  * Fix typo in 2.2.2 (Closes: #1098339).",
+            "    Thanks to Ahmed Siam for the report."
+         ],
+         "closes" : [
+            1074014,
+            1075856,
+            1089110,
+            1091913,
+            1094664,
+            1098339
+         ],
+         "epoch" : 1740044693,
+         "timestamp" : "2025-02-20T09:44:53Z",
+         "version" : "4.7.1.0"
+      },
+      {
+         "author" : "Sean Whitton <spwhitton@spwhitton.name>",
+         "changes" : [
+            "",
+            "debian-policy (4.7.0.2) unstable; urgency=medium",
+            "",
+            "  * Support building without (fake)root (Closes: #1087626).",
+            "    Thanks to Niels Thykier for the patch.",
+            "  * Add debian/debian-policy-*/ to .gitignore."
+         ],
+         "closes" : [
+            1087626.0
+         ],
+         "epoch" : 1735922888,
+         "timestamp" : "2025-01-03T16:48:08Z",
+         "version" : "4.7.0.2"
+      },
+      {
+         "author" : "Sean Whitton <spwhitton@spwhitton.name>",
+         "changes" : [
+            "",
+            "debian-policy (4.7.0.1) unstable; urgency=medium",
+            "",
+            "  * Fix typo in 9.3.1.",
+            "    Thanks to Paul Gevers for the report.",
+            "  * Fix markup problem in 3.9 (Closes: #1074040).",
+            "    Thanks to Ke Zhang for the report & patch.",
+            "  * Update specification of the default value for Rules-Requires-Root.",
+            "    See #1057238."
+         ],
+         "closes" : [
+            1074040.0
+         ],
+         "epoch" : 1724578910,
+         "timestamp" : "2024-08-25T09:41:50Z",
+         "version" : "4.7.0.1"
+      },
+      {
+         "author" : "Sean Whitton <spwhitton@spwhitton.name>",
+         "changes" : [
+            "",
             "debian-policy (4.7.0.0) unstable; urgency=medium",
             "",
             "  [ Sean Whitton ]",
