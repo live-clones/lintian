@@ -5,7 +5,8 @@ Maintainer: Debian Lintian Maintainers <lintian-maint@debian.org>
 Uploaders:
  Axel Beckert <abe@debian.org>,
  Bastien Roucariès <rouca@debian.org>,
- Louis-Philippe Véronneau <pollo@debian.org>
+ Louis-Philippe Véronneau <pollo@debian.org>,
+ Maytham Alsudany <maytham@debian.org>
 Build-Depends:
  appstream <!nocheck>,
  aspell <!nocheck>,
