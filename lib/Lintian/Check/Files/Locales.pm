@@ -89,6 +89,29 @@ has ISO639_3_by_alpha3 => (
     }
 );
 
+has ISO639_5_by_alpha3 => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        local $ENV{LC_ALL} = 'C';
+
+        my $bytes = path('/usr/share/iso-codes/json/iso_639-5.json')->slurp;
+        my $json = decode_json($bytes);
+
+        my %iso639_5;
+        for my $entry (@{$json->{'639-5'}}) {
+
+            my $alpha_3 = $entry->{alpha_3};
+
+            $iso639_5{$alpha_3} = $entry;
+        }
+
+        return \%iso639_5;
+    }
+);
+
 has LOCALE_CODES => (
     is => 'rw',
     lazy => 1,
@@ -119,6 +142,25 @@ has LOCALE_CODES => (
 
             # a value indicates that two letters are preferred
             $CODES{$three_letters} = $two_letters || $EMPTY;
+        }
+
+        return \%CODES;
+    }
+);
+
+has LOCALE_GROUP_CODES => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        local $ENV{LC_ALL} = 'C';
+
+        my %CODES;
+        for my $entry (values %{$self->ISO639_5_by_alpha3}) {
+            # only three letter codes present in ISO 639-5
+            my $three_letters = $entry->{alpha_3};
+            $CODES{$three_letters} = $EMPTY;
         }
 
         return \%CODES;
@@ -187,6 +229,13 @@ sub visit_installed_files {
         $self->pointed_hint('incorrect-locale-code', $item->pointer, $folder,
             $ARROW,$fixed);
 
+        return;
+    }
+
+    # check known group codes
+    if (exists $self->LOCALE_GROUP_CODES->{$two_or_three}) {
+        $self->pointed_hint('locale-uses-language-group-code',
+            $item->pointer, $folder);
         return;
     }
 
