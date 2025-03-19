@@ -48,6 +48,9 @@ sub source {
     $self->hint('no-human-maintainers')
       if $is_list && !$self->processable->fields->declares('Uploaders');
 
+    $self->hint('trailing-comma-in-maintainer-field', $maintainer)
+      if $maintainer =~ /,$/;
+
     return;
 }
 
