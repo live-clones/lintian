@@ -456,6 +456,12 @@ sub source {
                 $pointer);
         }
 
+        if ($line =~ /\$\$\(\s*((\/usr)?\/bin\/)?nproc\s*\)/s
+            || $line =~ /\$\(shell \s*((\/usr)?\/bin\/)?nproc\s*\)/s
+            || $line =~ /`\s*((\/usr)?\/bin\/)?nproc\s*\`/s) {
+            $self->pointed_hint('debian-rules-calls-nproc',$pointer);
+        }
+
         if ($line !~ /^ifn?(?:eq|def)\s/ && $line =~ /^([^\s:][^:]*):+(.*)/s) {
             my ($target_names, $target_dependencies) = ($1, $2);
             @current_targets = split $SPACE, $target_names;
