@@ -161,7 +161,7 @@ has orig => (
                         # shortens paths; keeps same base directory
                         my $sub_errors = $subindex->drop_common_prefix;
 
-                        push(@{$index->unpack_errors}, "$tarball . $_")
+                        push(@{$index->unpack_messages}, "$tarball . $_")
                           for uniq split(/\n/, $sub_errors);
                     }
                 }
