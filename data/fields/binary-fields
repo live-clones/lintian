@@ -27,6 +27,7 @@ Origin
 Multi-Arch
 Build-Ids
 Built-Using
+Static-Built-Using
 Ruby-Versions
 Ghc-Package
 Gstreamer-Version

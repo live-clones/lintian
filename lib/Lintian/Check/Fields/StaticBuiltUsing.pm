@@ -1,9 +1,11 @@
-# languages/golang/built-using -- lintian check script -*- perl -*-
+# fields/built-using -- lintian check script (rewrite) -*- perl -*-
 #
 # Copyright (C) 2004 Marc Brockschmidt
-# Copyright (C) 2020 Chris Lamb <lamby@debian.org>
-# Copyright (C) 2020-2021 Felix Lechner
 # Copyright (C) 2025 Maytham Alsudany <maytha8thedev@gmail.com>
+#
+# Parts of the code were taken from the old check script, which
+# was Copyright (C) 1998 Richard Braakman (also licensed under the
+# GPL 2 or higher)
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,41 +23,44 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::Check::Languages::Golang::BuiltUsing;
+package Lintian::Check::Fields::StaticBuiltUsing;
 
 use v5.20;
 use warnings;
 use utf8;
+
+use Lintian::Relation;
+use Lintian::Util qw($PKGNAME_REGEX $PKGVERSION_REGEX);
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
 
-sub source {
+sub always {
     my ($self) = @_;
 
+    my $processable = $self->processable;
+
     return
-      unless $self->processable->relation('Build-Depends')
-      ->satisfies('golang-go | golang-any');
+      unless $processable->fields->declares('Static-Built-Using');
 
-    my $control = $self->processable->debian_control;
+    my $built_using = $processable->fields->value('Static-Built-Using');
 
-    for my $installable ($control->installables) {
-        my $installable_fields= $control->installable_fields($installable);
-
-        my $control_item= $self->processable->debian_control->item;
-        my $position = $installable_fields->position('Package');
-
-        $self->pointed_hint(
-            'missing-static-built-using-field-for-golang-package',
-            $control_item->pointer($position),
-            "(in section for $installable)"
-          )
-          if $installable_fields->value('Static-Built-Using')
-          !~ m{ \$ [{] misc:Static-Built-Using [}] }x
-          && $installable_fields->value('Architecture') ne 'all';
-    }
+    my $built_using_rel = Lintian::Relation->new->load($built_using);
+    $built_using_rel->visit(
+        sub {
+            my ($package) = @_;
+            if ($package !~ /^$PKGNAME_REGEX \(= $PKGVERSION_REGEX\)$/) {
+                $self->hint('invalid-value-in-static-built-using-field',
+                    $package);
+                return 1;
+            }
+            return 0;
+        },
+        Lintian::Relation::VISIT_OR_CLAUSE_FULL
+          | Lintian::Relation::VISIT_STOP_FIRST_MATCH
+    );
 
     return;
 }
