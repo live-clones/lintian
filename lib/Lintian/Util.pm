@@ -400,6 +400,7 @@ purpose. No more directly having to access module variables either.
 
 sub match_glob {
     my ($glob, @things_to_test) = @_;
+    $glob =~ s{^\./}{}; # Normalize file path, remove leading "./"
     my $re = $rw->convert($glob);
 
     return grep { /^$re\z/ } @things_to_test;
