@@ -55,7 +55,7 @@ scripts-maintainer-general (binary): maintainer-script-lacks-home-in-adduser "ad
 scripts-maintainer-general (binary): maintainer-script-lacks-home-in-adduser "adduser --system foo2 --home /home/foo2" [postinst:149]
 scripts-maintainer-general (binary): maintainer-script-lacks-home-in-adduser "adduser --system foo" [postinst:148]
 scripts-maintainer-general (binary): maintainer-script-lacks-home-in-adduser "adduser --system --quiet --ingroup ntp --no-create-home ntp" [postinst:199]
-scripts-maintainer-general (binary): maintainer-script-lacks-home-in-adduser "adduser --home /home/fnord2 --system fnord2" [postinst:152]
+scripts-maintainer-general (binary): maintainer-script-lacks-home-in-adduser "adduser --home=/home/fnord2 --system fnord2" [postinst:152]
 scripts-maintainer-general (binary): maintainer-script-interpreter /bin/sh [prerm]
 scripts-maintainer-general (binary): maintainer-script-interpreter /bin/sh [preinst]
 scripts-maintainer-general (binary): maintainer-script-interpreter /bin/sh [postrm]
