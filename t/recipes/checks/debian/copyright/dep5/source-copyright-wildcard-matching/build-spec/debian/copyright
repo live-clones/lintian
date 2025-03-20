@@ -38,6 +38,7 @@ Files: rare-filenames/01-file-with-(something-in-parenthesis).png
        rare-filenames/03-even-]-is-not-safe.png
        rare-filenames/04-Perhaps-even-|-will-cause-problems.png
        rare-filenames/05-Lets-not-forget-^-and-$-for-added-fun.png
+       rare-filenames/06-how-about-a-+-sign.png
 Copyright: 2014, somebody1
 License: mylicense-5
  Fixme
