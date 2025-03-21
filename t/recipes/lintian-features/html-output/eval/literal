@@ -782,6 +782,9 @@ footer p {
 </ul>
 
 
+<!-- if you would like to see explanations of lintian tags in this file, pass -i on the lintian commandline.
+Otherwise, you can use the lintian-explain-tags command from the lintian package. -->
+
 </article>
 
 </main>
