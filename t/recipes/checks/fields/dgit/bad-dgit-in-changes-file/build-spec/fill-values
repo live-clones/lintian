@@ -1,0 +1,3 @@
+Skeleton: changes
+Testname: bad-dgit-in-changes-file
+Description: Testing the dgit check
