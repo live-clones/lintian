@@ -1,0 +1,17 @@
+Format: 1.8
+Date: [% $date %]
+Source: [% $source %]
+Binary: [% $source %]
+Architecture: source all
+Version: [% $version %]
+Distribution: unstable
+Urgency: low
+Maintainer: [% $author %]
+Changed-By: [% $author %]
+Description:
+ [% $source %] - [% $description %]
+Changes:
+ [% $source %] ([% $version %]) unstable; urgency=low
+ .
+   * I'm using dgit!
+Dgit: ab93893eefa2a87fc5bee7f3b8ac9e94f0b4e63f debian archive/debian/2.121.2 https://git.dgit.debian.org/lintian
