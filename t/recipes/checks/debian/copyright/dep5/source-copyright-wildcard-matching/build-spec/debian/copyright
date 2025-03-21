@@ -41,3 +41,8 @@ Files: rare-filenames/01-file-with-(something-in-parenthesis).png
 Copyright: 2014, somebody1
 License: mylicense-5
  Fixme
+
+Files: ./folder/another-file
+Copyright: 2015, somebody1
+License: mylicense-6
+ Fixme
