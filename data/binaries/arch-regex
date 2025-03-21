@@ -30,6 +30,7 @@ armhf         ~~^ELF 32-bit LSB .* ARM, .* [(](?:SYSV|GNU/Linux)[)]
 #avr32        ~~^ELF 32-bit MSB .* [(]SYSV[)]
 hppa          ~~^ELF 32-bit MSB .* PA-RISC
 hppa64        ~~^ELF 64-bit MSB .* PA-RISC
+hurd-amd64    ~~^ELF 64-bit LSB .* x86-64, .* (?:GNU/Hurd|(?!GNU)).*$
 hurd-i386     ~~^ELF 32-bit LSB .* Intel 80386, .* (?:GNU/Hurd|(?!GNU)).*$
 i386          ~~^ELF 32-bit LSB .* (80386|i386), .* (?:GNU/Linux|(?!GNU)).*$
 ia64          ~~^ELF 64-bit LSB .* IA-64
