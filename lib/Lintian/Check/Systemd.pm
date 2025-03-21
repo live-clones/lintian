@@ -249,7 +249,7 @@ sub check_init_script {
         $lsb_source_seen = 1
           if $position == 1
           && $line
-          =~ m{\A [#]! \s* (?:/usr/bin/env)? \s* /lib/init/init-d-script}xsm;
+          =~ m{\A [#]! \s* (?:/usr/bin/env)? \s* (?:/usr)?/lib/init/init-d-script}xsm;
 
         $is_rcs_script = 1
           if $line =~ m{#.*Default-Start:.*S};
@@ -259,7 +259,7 @@ sub check_init_script {
 
         $lsb_source_seen = 1
           if $line
-          =~ m{(?:\.|source)\s+/lib/(?:lsb/init-functions|init/init-d-script)};
+          =~ m{(?:\.|source)\s+(?:/usr)?/lib/(?:lsb/init-functions|init/init-d-script)};
 
     } continue {
         ++$position;
