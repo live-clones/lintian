@@ -74,22 +74,20 @@ sub installable {
 
     my $depends = $self->processable->relation('strong');
 
-    # Check for dependency on python3-numpy-abiN dependency (or strict
-    # versioned dependency on python3-numpy)
+    # Check for dependency on python3-numpy-abiN dependency
     # We do not allow alternatives as it would mostly likely
     # defeat the purpose of this relation.  Also, we do not allow
     # versions for -abi as it is a virtual package.
     $self->hint('missing-dependency-on-numpy-abi')
       if $self->uses_numpy_c_abi
-      && !$depends->matches(qr/^python3?-numpy-abi\d+$/,
-        Lintian::Relation::VISIT_OR_CLAUSE_FULL)
       && (
-        !$depends->matches(
-            qr/^python3-numpy \(>[>=][^\|]+$/,
-            Lintian::Relation::VISIT_OR_CLAUSE_FULL
-        )
-        || !$depends->matches(
-            qr/^python3-numpy \(<[<=][^\|]+$/,
+        !$depends->matches(qr/^python3-numpy2?-abi\d+$/,
+            Lintian::Relation::VISIT_OR_CLAUSE_FULL)
+        # First ABI release of NumPy 2 is backwards-compatible with the last
+        # ABI release on NumPy 1, therefore the following is permittied; see
+        # Bug#1094364
+        && !$depends->matches(
+            qr/^python3-numpy2-abi0 | python3-numpy-abi9$/,
             Lintian::Relation::VISIT_OR_CLAUSE_FULL
         )
       )
