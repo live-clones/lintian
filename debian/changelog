@@ -1,8 +1,60 @@
-lintian (2.122.0) UNRELEASED; urgency=medium
+lintian (2.122.0) unstable; urgency=medium
 
-  * WIP (generated at release time: please do not add entries below.)
+  [ Louis-Philippe Véronneau ]
+  * Add Maytham Alsudany as maintainer
+  * d/control: Bump Standards-Version to 4.7.2. No changes needed.
 
- -- Louis-Philippe Véronneau <pollo@debian.org>  Wed, 19 Mar 2025 18:15:17 -0400
+  [ Maytham Alsudany ]
+  * Implement separate hint for when a language group code is used as a locale
+    (Closes: #1013946)
+  * Account for indented imports in Python stdlib-deprecation check
+    (Closes: #1084833)
+  * Add duke to list of known distributions
+  * Emit error when a trailing comma is present in the Maintainer field
+    (Closes: #1089649)
+  * Emit unknown-file-in-python-module-directory tag if __init__.py found in
+    dist-packages root (Closes: #1071061)
+  * Check for another old FSF address (Closes: #1080497)
+  * d/salsa-ci.yml: Disable bookworm-backports job
+  * Allow for "=" in --home option when checking
+    maintainer-script-lacks-home-in-adduser (Closes: #1055591)
+  * Emit warning when nproc is used in debian/rules (Closes: #1088671)
+  * Add support and checks for the Static-Built-Using field (Closes: #1050428)
+  * Decrease severity of spelling-error-in-binary tag to experimental
+  * Enable UNLINK option for tempfile created by Lintian::Storage::MLDBM
+    (Closes: #1014083)
+  * Lower severity of bash-completion-with-hashbang to pedantic
+    (Closes: #965327)
+  * Remove "./" from d/copyright glob before testing if it matches anything
+    (Closes: #1008479)
+  * Convert silent-on-rules-requiring-root to a classification hint
+    (Closes: #1091912)
+  * Allow sourcing init-functions from /usr/lib as well (Closes: #1099868)
+  * Update check for dependency on python3-numpy-abi (Closes: #1094364)
+  * Replace reference to non-existent "unpack_errors" property with
+    "unpack_messages" (Closes: #1065175)
+  * Add testcase for filename with the "+" sign in a DEP5 copyright file
+
+  [ Christoph Biedl ]
+  * Adjust i386 architecture detection (Closes: #1100664)
+
+  [ Samuel Thibault ]
+  * data/binaries/arch-regex: Add hurd-amd64 case
+
+  [ Christopher Obbard ]
+  * Correctly determine if package has been built with golang (Closes: #947630)
+
+  [ Timo Paulssen ]
+  * When "info" is set, also have tag descs in html
+
+  [ Charles Short ]
+  * Add profile for eLxr Linux
+
+  [ Bo YU ]
+  * Update build-depends with libperl-critic-community-perl to replace
+    libperl-critic-freenode-perl. (Closes: #1101405)
+
+ -- Louis-Philippe Véronneau <pollo@debian.org>  Fri, 28 Mar 2025 14:43:21 -0400
 
 lintian (2.121.2) unstable; urgency=medium
 
