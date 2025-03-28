@@ -21,7 +21,7 @@ Depends:
  libio-prompt-tiny-perl,
  liblist-someutils-perl,
  libmce-perl,
- libperl-critic-freenode-perl,
+ libperl-critic-community-perl,
  libperl-critic-pulp-perl,
  libpod-coverage-trustpod-perl,
  libtest-minimumversion-perl,

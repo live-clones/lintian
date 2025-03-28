@@ -33,7 +33,7 @@ Build-Depends:
  liblist-someutils-perl <!nocheck>,
  libmce-perl <!nocheck>,
  libpath-tiny-perl,
- libperl-critic-freenode-perl <!nocheck>,
+ libperl-critic-community-perl <!nocheck>,
  libperl-critic-pulp-perl <!nocheck>,
  libpod-coverage-trustpod-perl <!nocheck>,
  libtest-minimumversion-perl <!nocheck>,
