@@ -66,7 +66,7 @@ Build-Depends:
  wamerican <!nocheck>,
  wbritish <!nocheck>,
  zip <!nocheck>
-Standards-Version: 4.7.0
+Standards-Version: 4.7.2
 Rules-Requires-Root: no
 Vcs-Git: https://salsa.debian.org/lintian/lintian.git
 Vcs-Browser: https://salsa.debian.org/lintian/lintian
