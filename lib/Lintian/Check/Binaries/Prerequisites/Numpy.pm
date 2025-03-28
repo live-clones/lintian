@@ -90,7 +90,8 @@ sub installable {
             qr/^python3-numpy2-abi0 | python3-numpy-abi9$/,
             Lintian::Relation::VISIT_OR_CLAUSE_FULL
         )
-      )&& $self->processable->name !~ m{\A python3?-numpy \Z}xsm;
+      )
+      && $self->processable->name !~ m{\A python3?-numpy \Z}xsm;
 
     return;
 }
