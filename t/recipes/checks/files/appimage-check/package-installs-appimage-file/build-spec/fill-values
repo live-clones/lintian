@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: package-installs-appimage-file
+Description: General tests for AppImage file in package
