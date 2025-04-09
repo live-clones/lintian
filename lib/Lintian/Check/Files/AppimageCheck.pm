@@ -21,10 +21,16 @@ use v5.20;
 use warnings;
 use utf8;
 
+use Const::Fast;
+
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+# magic number 41 49 02 (3 bytes from offset 8)
+const my $AI_MAGIC_BYTE_SIZE => 11;
+const my $AI_MAGIC_BYTES => "\x41\x49\x02";
 
 sub visit_installed_files {
     my ($self, $item) = @_;
@@ -36,9 +42,9 @@ sub visit_installed_files {
     $self->pointed_hint('package-installs-appimage', $item->pointer)
       if $item->name =~ /\.AppImage$/i;
 
-    my $magic = $item->magic(3);
+    my $magic = $item->magic($AI_MAGIC_BYTE_SIZE);
     $self->pointed_hint('package-installs-appimage', $item->pointer)
-      if $magic eq "AI\x02";
+      if $magic =~ /$AI_MAGIC_BYTES$/;
 
     return;
 }
