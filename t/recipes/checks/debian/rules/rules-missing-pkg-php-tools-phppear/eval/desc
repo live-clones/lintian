@@ -1,0 +1,2 @@
+Testname: rules-missing-pkg-php-tools-phppear
+Check: languages/php/pear
