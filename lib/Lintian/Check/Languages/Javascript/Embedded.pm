@@ -68,6 +68,8 @@ my %JS_FILES = (
     'libjs-jquery-treetable'       => qr{(?i)/jquery\.treetable} . $JS_EXT,
     'libjs-jquery-ui'              => qr{(?i)/jquery[\.-](?:-[\d\.]+)?ui}
       . $JS_EXT,
+    'libjs-jquery-validation'      => qr{(?i)/jquery[\.-](?:-[\d\.]+)?validate}
+      . $JS_EXT,
     'libjs-mocha'                  => qr{(?i)/mocha} . $JS_EXT,
     'libjs-mochikit'               => qr{(?i)/mochikit} . $JS_EXT,
     'libjs-mootools'               =>
