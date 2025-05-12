@@ -1,2 +1,2 @@
 Testname: git-buildpackage-conf
-Check: version-control
+Check: vcs
