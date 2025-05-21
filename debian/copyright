@@ -36,11 +36,18 @@ Copyright: 1998, Christian Schwarz
            2010-2019, Niels Thykier
            2011, Gerfried Fuchs
            2011-2016, Jakub Wilk
-           2013-2018, Bastien ROUCARIÈS
+           2011-2023, Paul Wise
+           2013-2023, Sylvestre Ledru
+           2013-2018, Bastien Roucariès
            2014-2023, Axel Beckert
+           2014-2024, Simon McVittie
+           2016-2019, Josh Triplett
            2016-2021, Chris Lamb
            2018-2022, Felix Lechner
-           2017, Edward Betts
+           2016-2022, Edward Betts
+           2019-2021, Xavier Guimard
+           2019-2025, Louis-Philippe Véronneau
+           2025, Maytham Alsudany
 License: GPL-2+
  This program is free software; you may redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
