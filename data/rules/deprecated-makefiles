@@ -6,5 +6,8 @@
 /usr/share/cdbs/1/class/ant.mk
 /usr/share/cdbs/1/class/cmake.mk
 /usr/share/cdbs/1/class/gnome.mk
+/usr/share/cdbs/1/class/perl-build.mk
+/usr/share/cdbs/1/class/perl-makemaker.mk
+/usr/share/cdbs/1/class/python-autotools.mk
 /usr/share/cdbs/1/class/python-distutils.mk
 /usr/share/cdbs/1/class/qmake.mk
