@@ -114,7 +114,7 @@ sub visit_installed_files {
       && $item->name !~ m{\b$gnu_triplet_pattern(?:\b|_)}
       && length $ruby_triplet_pattern
       && $item->name !~ m{/$ruby_triplet_pattern/}
-      && $item->name !~ m{/java-\d+-openjdk-\Q$architecture\E/}
+      && $item->name !~ m{/java-\d+-openjdk-\Q$architecture\E(-jvmci)?/}
       && $item->name !~ m{/[.]build-id/};
 
     return
