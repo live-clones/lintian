@@ -27,6 +27,7 @@ Build-Depends:
  javahelper <!nocheck>,
  libarray-utils-perl <!nocheck>,
  libconst-fast-perl,
+ libcrypt-dev,
  libfile-basedir-perl,
  libio-prompt-tiny-perl <!nocheck>,
  libipc-run3-perl,
