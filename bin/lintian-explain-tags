@@ -136,7 +136,9 @@ my @sorted = sort { lc($a->name) cmp lc($b->name) } @available;
 
 $output->describe_tags($profile->data, \@sorted, $TERMINAL_WIDTH);
 
-exit any { !defined $profile->get_tag($_) } @selected;
+if ( any { !defined $profile->get_tag($_) } @selected) {
+    die "The tag '@selected' does not exist\n";
+}
 
 sub show_version {
     say encode_utf8("$NEW_PROGRAM_NAME v$ENV{LINTIAN_VERSION}");
