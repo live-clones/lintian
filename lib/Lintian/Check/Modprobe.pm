@@ -40,6 +40,9 @@ sub visit_installed_files {
         } elsif ($item->name !~ m{ [.]conf $}x) {
             $self->pointed_hint('non-conf-file-in-modprobe.d', $item->pointer);
         } else {
+            if ($item->name =~ m{ ^etc/(modprobe|modules-load)\.d/. }x) {
+                $self->pointed_hint('file-in-etc-modprobe.d', $item->pointer);
+            }
             my @obsolete = ($item->bytes =~ m{^ \s* ( install | remove ) }gmx);
             $self->pointed_hint('obsolete-command-in-modprobe.d-file',
                 $item->pointer, $_)
