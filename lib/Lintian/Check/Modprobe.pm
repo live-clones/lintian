@@ -34,14 +34,13 @@ with 'Lintian::Check';
 sub visit_installed_files {
     my ($self, $item) = @_;
 
-    if (   $item->name =~ m{^etc/modprobe\.d/ }x
+    if (   $item->name =~ m{^ (usr/lib|etc)/modprobe\.d/ }x
         && $item->name !~ m{ [.]conf $}x
         && !$item->is_dir) {
 
         $self->pointed_hint('non-conf-file-in-modprobe.d', $item->pointer);
 
-    } elsif ($item->name =~ m{^ etc/modprobe[.]d/ }x
-        || $item->name =~ m{^ etc/modules-load\.d/ }x) {
+    } elsif ($item->name =~ m{^ (usr/lib|etc)/(modprobe|modules-load)\.d/ }x) {
 
         my @obsolete = ($item->bytes =~ m{^ \s* ( install | remove ) }gmx);
         $self->pointed_hint('obsolete-command-in-modprobe.d-file',
