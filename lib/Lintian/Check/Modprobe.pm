@@ -31,6 +31,27 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
+sub visit_patched_files {
+    my ($self, $item) = @_;
+
+    return
+      unless $item->dirname eq 'debian/';
+
+    if ($item->basename eq 'install' || $item->basename =~ /\.install$/) {
+        return unless $item->is_open_ok;
+
+        my @lines = split(/\n/, $item->decoded_utf8);
+        for my $i (0 .. $#lines) {
+            my $line = $lines[$i];
+            if ($line =~ /^debian\/.+[[:blank:]]+.+\/modprobe\.d.?$/) {
+                $self->pointed_hint('dh-install-instead-of-dh-installmodules',
+                    $item->pointer($i + 1));
+            }
+        }
+    }
+    return;
+}
+
 sub visit_installed_files {
     my ($self, $item) = @_;
 
