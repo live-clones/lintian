@@ -31,22 +31,44 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
+sub visit_patched_files {
+    my ($self, $item) = @_;
+
+    return
+      unless $item->dirname eq 'debian/';
+
+    if ($item->basename eq 'install' || $item->basename =~ /\.install$/) {
+        return unless $item->is_open_ok;
+
+        my @lines = split(/\n/, $item->decoded_utf8);
+        for my $i (0 .. $#lines) {
+            my $line = $lines[$i];
+            if ($line =~ /^debian\/.+[[:blank:]]+.+\/modprobe\.d.?$/) {
+                $self->pointed_hint('dh-install-instead-of-dh-installmodules',
+                    $item->pointer($i + 1));
+            }
+        }
+    }
+    return;
+}
+
 sub visit_installed_files {
     my ($self, $item) = @_;
 
-    if (   $item->name =~ m{^etc/modprobe\.d/ }x
-        && $item->name !~ m{ [.]conf $}x
-        && !$item->is_dir) {
-
-        $self->pointed_hint('non-conf-file-in-modprobe.d', $item->pointer);
-
-    } elsif ($item->name =~ m{^ etc/modprobe[.]d/ }x
-        || $item->name =~ m{^ etc/modules-load\.d/ }x) {
-
-        my @obsolete = ($item->bytes =~ m{^ \s* ( install | remove ) }gmx);
-        $self->pointed_hint('obsolete-command-in-modprobe.d-file',
-            $item->pointer, $_)
-          for uniq @obsolete;
+    if ($item->name =~ m{ ^(usr/lib|etc)/(modprobe|modules-load)\.d/. }x) {
+        if ($item->is_dir) {
+            $self->pointed_hint('directory-in-modprobe.d', $item->pointer);
+        } elsif ($item->name !~ m{ [.]conf $}x) {
+            $self->pointed_hint('non-conf-file-in-modprobe.d', $item->pointer);
+        } else {
+            if ($item->name =~ m{ ^etc/(modprobe|modules-load)\.d/. }x) {
+                $self->pointed_hint('file-in-etc-modprobe.d', $item->pointer);
+            }
+            my @obsolete = ($item->bytes =~ m{^ \s* ( install | remove ) }gmx);
+            $self->pointed_hint('obsolete-command-in-modprobe.d-file',
+                $item->pointer, $_)
+              for uniq @obsolete;
+        }
     }
 
     return;

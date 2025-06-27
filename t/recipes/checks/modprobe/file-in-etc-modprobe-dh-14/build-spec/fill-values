@@ -1,0 +1,5 @@
+Testname: file-in-etc-modprobe-dh-14
+Skeleton: upload-native
+Description: File in /etc/modprobe.d when using debhelper compat 14
+Dh-Compat-Level: 14
+Default-Build-Depends: debhelper
