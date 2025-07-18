@@ -1,9 +1,18 @@
 lintian (2.116.3+deb12u1) UNRELEASED; urgency=medium
 
   * Team upload.
-  * data/changes-file/known-dists: Add bookworm (Closes: #1051140)
 
- -- Maytham Alsudany <maytha8thedev@gmail.com>  Mon, 17 Jun 2024 19:43:58 +0800
+  [ Maytham Alsudany ]
+  * data/changes-file/known-dists: Add bookworm, trixie, forky, duke (Closes: #1051140)
+
+  [ Emilio Pozuelo Monfort ]
+  * Don't emit source-nmu-has-incorrect-version-number for stable updates
+    (Closes: #1022759)
+
+  [ Adrian Bunk ]
+  * source-nmu-has-incorrect-version-number: Fix false positive for +deb*u* versions
+
+ -- Maytham Alsudany <maytham@debian.org>  Fri, 18 Jul 2025 20:03:34 +0800
 
 lintian (2.116.3) unstable; urgency=medium
 
