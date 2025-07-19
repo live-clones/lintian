@@ -1,5 +1,5 @@
 Tag: package-contains-usr-unmerged-pathnames
-Severity: classification
+Severity: error
 Check: files/usr-merge
 Explanation: The package installs the listed file to a directory in / (the
  filesystem root) rather than to the corresponding directory inside /usr.
