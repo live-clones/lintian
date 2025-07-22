@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: static-built-using-field-not-too-long
+Description: The Static-Built-Using: field in d/control is not too long, even if exceeding 5k characters
