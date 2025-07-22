@@ -1,0 +1,21 @@
+Source: rules-dh-auto-test-does-not-check-deb-build-options-php-dh-12
+Maintainer: William Desportes <williamdes@wdes.fr>
+Section: php
+Priority: optional
+Build-Depends: debhelper-compat (= 12),
+               phpab,
+               phpunit,
+               pkg-php-tools
+Standards-Version: 4.6.2
+Vcs-Browser: https://salsa.debian.org/wdes-team/no-code
+Vcs-Git: https://salsa.debian.org/wdes-team/no-code.git -b debian/blob-backports
+Homepage: https://github.com/wdes/no-code
+Rules-Requires-Root: no
+
+Package: rules-dh-auto-test-does-not-check-deb-build-options-php-dh-12
+Architecture: all
+Depends: ${misc:Depends}, ${phpcomposer:Debian-require}
+Recommends: ${phpcomposer:Debian-recommend}
+Suggests: ${phpcomposer:Debian-suggest}
+Description: This library does nothing
+ And it's a lot of fun
