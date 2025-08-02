@@ -44,7 +44,7 @@ sub source {
     my $build_deps = $self->processable->relation('Build-Depends-All');
 
     # Get source package format
-    my $source_format = $self->processable->fields->value('Format');
+    my $source_format = $self->processable->source_format;
     my $quilt_format = ($source_format =~ /3\.\d+ \(quilt\)/) ? 1 : 0;
 
     my $debian_dir = $self->processable->patched->resolve_path('debian/');
