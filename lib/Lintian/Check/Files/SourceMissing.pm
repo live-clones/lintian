@@ -44,6 +44,8 @@ const my $DOLLAR => q{$};
 const my $DOT => q{.};
 const my $DOUBLE_DOT => q{..};
 const my $ITEM_NOT_FOUND => -1;
+const my $JS_SUFFIX => qr/\.js$/;
+const my $HTML_SUFFIX => qr/\.(?:x?html?\d?|xht)$/;
 
 use Moo;
 use namespace::clean;
@@ -147,6 +149,10 @@ sub visit_patched_files {
         return;
     }
 
+    return
+      unless $item->basename =~ /$JS_SUFFIX/i
+      || $item->basename =~ /$HTML_SUFFIX/i;
+
     my @lines = split(/\n/, $item->bytes);
 
     my $longest;
@@ -164,7 +170,7 @@ sub visit_patched_files {
     return
       if !defined $longest || $length <= $VERY_LONG_LINE_LENGTH;
 
-    if ($item->basename =~ m{\.js$}i) {
+    if ($item->basename =~ /$JS_SUFFIX/i) {
 
         $self->pointed_hint('source-contains-prebuilt-javascript-object',
             $item->pointer);
@@ -182,7 +188,7 @@ sub visit_patched_files {
           );
     }
 
-    if ($item->basename =~ /\.(?:x?html?\d?|xht)$/i) {
+    if ($item->basename =~ /$HTML_SUFFIX/i) {
 
         # html file
         $self->pointed_hint('source-is-missing', $item->pointer)
