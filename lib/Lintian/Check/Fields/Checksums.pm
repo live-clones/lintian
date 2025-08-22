@@ -39,7 +39,7 @@ sub source {
     my $processable = $self->processable;
 
     $self->hint('no-strong-digests-in-dsc')
-      unless $processable->fields->declares('Checksums-Sha256');
+      unless $processable->is_tree or $processable->fields->declares('Checksums-Sha256');
 
     return;
 }
