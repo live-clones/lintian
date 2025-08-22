@@ -613,7 +613,7 @@ sub source {
                 $rules->pointer($memorized_position)
               )
               if none { m/^\t\s*-?($cmd\b|\$\(overridden_command\))/ }
-            @{$rules_per_target{"override_$cmd$suffix"}};
+              @{$rules_per_target{"override_$cmd$suffix"}};
         }
     }
 
