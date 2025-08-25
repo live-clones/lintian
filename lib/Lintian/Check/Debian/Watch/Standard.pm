@@ -35,8 +35,8 @@ with 'Lintian::Check';
 
 const my $SPACE => q{ };
 
-const my @STANDARDS => (2, 3, 4);
-const my $NEWLY_SUPERSEEDED => 3;
+const my @STANDARDS => (2, 3, 4, 5);
+const my $NEWLY_SUPERSEEDED => 4;
 
 sub visit_patched_files {
     my ($self, $item) = @_;
@@ -50,6 +50,7 @@ sub visit_patched_files {
 
     # look for version
     my @mentioned = ($contents =~ /^ version \s* = \s* (\d+) \s* $/gmsx);
+    @mentioned = ($contents =~ /^ Version \s* : \s* (\d+) \s* $/gmsx) unless @mentioned;
 
     my $has_contents = !!($contents =~ m{^ \s* [^#] }gmx);
 
