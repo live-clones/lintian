@@ -1,0 +1,6 @@
+{
+    "name": "wdes/no-code",
+    "require": {
+        "php": "*"
+    }
+}
