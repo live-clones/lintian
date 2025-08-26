@@ -557,9 +557,9 @@ footer p {
       <ul class="commentlist">
       </ul>
 
-      <a class="visibility-symbol tiny info" href="https://lintian.debian.org/levels#info"></a>
-      <span class="hint tiny"><a href="https://lintian.debian.org/tags/installable-field-mirrors-source">installable-field-mirrors-source</a></span>
-      <span class="context tiny">(in section for html-output) Section [debian/control:13]</span>
+      <a class="visibility-symbol tiny warning" href="https://lintian.debian.org/levels#warning"></a>
+      <span class="hint tiny"><a href="https://lintian.debian.org/tags/obsolete-debian-watch-file-standard">obsolete-debian-watch-file-standard</a></span>
+      <span class="context tiny">3 [debian/watch]</span>
 
     </li>
     <li class="hintitem">
@@ -568,8 +568,8 @@ footer p {
       </ul>
 
       <a class="visibility-symbol tiny info" href="https://lintian.debian.org/levels#info"></a>
-      <span class="hint tiny"><a href="https://lintian.debian.org/tags/older-debian-watch-file-standard">older-debian-watch-file-standard</a></span>
-      <span class="context tiny">3 [debian/watch]</span>
+      <span class="hint tiny"><a href="https://lintian.debian.org/tags/installable-field-mirrors-source">installable-field-mirrors-source</a></span>
+      <span class="context tiny">(in section for html-output) Section [debian/control:13]</span>
 
     </li>
     <li class="hintitem">
