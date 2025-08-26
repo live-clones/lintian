@@ -50,7 +50,8 @@ sub visit_patched_files {
 
     # look for version
     my @mentioned = ($contents =~ /^ version \s* = \s* (\d+) \s* $/gmsx);
-    @mentioned = ($contents =~ /^ Version \s* : \s* (\d+) \s* $/gmsx) unless @mentioned;
+    @mentioned = ($contents =~ /^ Version \s* : \s* (\d+) \s* $/gmsx)
+      unless @mentioned;
 
     my $has_contents = !!($contents =~ m{^ \s* [^#] }gmx);
 

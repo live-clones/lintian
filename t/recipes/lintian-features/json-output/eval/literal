@@ -46,6 +46,19 @@
                   },
                   {
                      "experimental" : false,
+                     "note" : "3",
+                     "pointer" : {
+                        "item" : {
+                           "index" : "json-output_1.0+dsfg-1.1.dsc (patched)",
+                           "name" : "debian/watch"
+                        },
+                        "line_position" : 0
+                     },
+                     "tag" : "obsolete-debian-watch-file-standard",
+                     "visibility" : "warning"
+                  },
+                  {
+                     "experimental" : false,
                      "note" : "(in section for json-output) Section",
                      "pointer" : {
                         "item" : {
@@ -55,19 +68,6 @@
                         "line_position" : 13
                      },
                      "tag" : "installable-field-mirrors-source",
-                     "visibility" : "info"
-                  },
-                  {
-                     "experimental" : false,
-                     "note" : "3",
-                     "pointer" : {
-                        "item" : {
-                           "index" : "json-output_1.0+dsfg-1.1.dsc (patched)",
-                           "name" : "debian/watch"
-                        },
-                        "line_position" : 0
-                     },
-                     "tag" : "older-debian-watch-file-standard",
                      "visibility" : "info"
                   },
                   {
