@@ -1,8 +1,81 @@
-lintian (2.123.0) UNRELEASED; urgency=medium
+lintian (2.123.0) unstable; urgency=medium
 
-  * WIP (generated at release time: please do not add entries below.)
+  [ Louis-Philippe Véronneau ]
+  * d/copyright: Clean file and remove old FSF address
+  * Refresh copyright by adding names of important contributors past 2017
+  * Remove obsolete maintainer-script-lacks-home-in-adduser tag.
+    (Closes: #1108232)
+  * Make lintian-explain-tags exit with an error message when asked about a
+    non-existing tag. (Closes: #1042436)
+  * add support for "/usr/lib/jvm/java-$VERSION-openjdk-$ARCH-jvmci" as an
+    arch-specific directory. (Closes: #1101094)
+  * Use non-matching group for regex to fix perlcritic
+  * Explicitly add libcrypt-dev as a B-D, as part of the efforts to remove it
+    from build-essentials. (Closes: #1107029)
+  * Downgrade non-virtual-facility-in-initd-script to warning.
+    (Closes: #1105037)
 
- -- Louis-Philippe Véronneau <pollo@debian.org>  Fri, 28 Mar 2025 15:30:24 -0400
+  [ Simon Quigley ]
+  * Add "questing" as a known Ubuntu distribution.
+
+  [ Bastien Roucariès ]
+  * Add jquery-validate as js well known package
+  * Add libjs-jquery-validation as well known embded file
+
+  [ Alexandre Detiste ]
+  * deprecate more CDBS modules
+  * dh-buildinfo is now marked as a dummy transitional stub
+
+  [ Marc Leeman ]
+  * add test for appimages in debian packages
+  * package-installs-appimage: correct detection on magic bytes
+
+  [ Andrea Pappacoda ]
+  * modprobe: also look for files in /usr/lib/modprobe.d
+  * modprobe: add directory-in-modprobe.d check
+  * modprobe: add file-in-etc-modprobe.d check
+  * modprobe: add dh-install-instead-of-dh-installmodules tag.
+    (Closes: #1107661)
+
+  [ Sebastian Krzyszkowiak ]
+  * Add dawn as known PureOS distribution
+
+  [ Samuel Thibault ]
+  * Adjust other i386 architecture detection. (Closes: #1100664)
+
+  [ Chris Hofstaedtler ]
+  * Upgrade package-contains-usr-unmerged-pathnames to error
+
+  [ Fabian Grünbichler ]
+  * field-too-long: allow Static-Built-Using
+
+  [ Johannes Schauer Marin Rodrigues ]
+  * data/fields/binary-fields: add support for Protected. (Closes: #1077637)
+
+  [ Maytham Alsudany ]
+  * symbols-file-missing-build-depends-package-field: consider
+    Build-Depends-Packages field as well. (Closes: #1109992)
+
+  [ Andrius Merkys ]
+  * In files/source-missing check, look for longest lines only in JavaScript
+    and HTML files
+
+  [ Nilesh Patra ]
+  * Update nusoap.php embedded package from libnusoap-php -> php-econea-nusoap
+    (Closes: #1111302)
+
+  [ Michael Biebl ]
+  * Drop package-contains-usr-unmerged-pathnames as it duplicates
+    aliased-location (Closes: #1106391)
+
+  [ Bo YU ]
+  * improve ocaml-dev-file-not-in-usr-lib-ocaml tag
+
+  [ William Desportes ]
+  * Fix override_dh_auto_test-does-not-check-DEB_BUILD_OPTIONS with
+    debhelper-compat (>= 13). (Closes: #950455, #1111506)
+
+ -- Louis-Philippe Véronneau <pollo@debian.org>  Mon, 25 Aug 2025 22:56:01 -0400
 
 lintian (2.122.0) unstable; urgency=medium
 
