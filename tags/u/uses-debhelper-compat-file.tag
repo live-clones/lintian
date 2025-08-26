@@ -1,5 +1,5 @@
 Tag: uses-debhelper-compat-file
-Severity: pedantic
+Severity: warning
 Check: debhelper
 Explanation: This package uses a <code>debian/compat</code> file to denote the
  required debhelper compatibility number.
