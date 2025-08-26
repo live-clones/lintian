@@ -102,7 +102,7 @@ sub source {
     # look for watch file version
     for my $line (@lines) {
 
-        if ($line =~ /^\s*version\s*=\s*(\d+)\s*$/) {
+        if ($line =~ /^\s*version\s*[:=]\s*(\d+)\s*$/i) {
             if (length $1) {
                 $standard = $1;
                 last;
@@ -119,13 +119,15 @@ sub source {
 
     # allow spaces for all watch file versions (#950250, #950277)
     my $separator = qr/\s*,\s*/;
+    $separator = qr/\s*\r?\n\s*/ if $standard >= 5;
 
     my $withpgpverification = 0;
     my %dversions;
 
     my $position = 1;
     my $continued = $EMPTY;
-    for my $line (@lines) {
+    my $line;
+    while (defined($line = shift @lines)) {
 
         my $pointer = $item->pointer($position);
 
@@ -135,35 +137,46 @@ sub source {
         # strip comments, if any
         $line =~ s/^\#.*$//;
 
-        unless (length $line) {
+        unless (length $line or $standard >= 5) {
             $continued = $EMPTY;
             next;
         }
 
         # merge continuation lines
-        if ($line =~ s/\\$//) {
-            $continued .= $line;
-            next;
+        if ($standard < 5) {
+            if ($line =~ s/\\$//) {
+                $continued .= $line;
+                next;
+            }
+        }else {
+            if (length $line) {
+                $continued .= "\n".$line;
+                next if @lines;
+            }
         }
 
-        $line = $continued . $line
+        $line = $continued . ($standard>=5? "\n":$line)
           if length $continued;
 
         $continued = $EMPTY;
 
-        next
-          if $line =~ /^version\s*=\s*\d+\s*$/;
+        next if $line =~ /^version\s*[:=]\s*(\d+)\s*$/i;
 
         my $remainder = $line;
 
         my @options;
 
         # keep order; otherwise. alternative \S+ ends up with quotes
-        if ($remainder =~ s/opt(?:ion)?s=(?|\"((?:[^\"]|\\\")+)\"|(\S+))\s+//){
-            @options = split($separator, $1);
+        if ($standard < 5) {
+            if ($remainder
+                =~ s/opt(?:ion)?s=(?|\"((?:[^\"]|\\\")+)\"|(\S+))\s+//){
+                @options = split($separator, $1);
+            }
+        }else {
+            @options = grep /\w/, split($separator, $line);
         }
 
-        unless (length $remainder) {
+        unless (length $remainder or $standard >= 5) {
 
             $self->pointed_hint('debian-watch-line-invalid', $pointer, $line);
             next;
@@ -176,6 +189,15 @@ sub source {
         my $prerelease_umangle = 0;
 
         for my $option (@options) {
+
+            if ($standard >= 5) {
+                chomp $option;
+                my ($key, $value) = split /:\s*/, $option, 2;
+                if ($key and $value) {
+                    $key =~ s/-//g;
+                    $option = lc($key)."=$value";
+                }
+            }
 
             if (length $repack) {
                 $repack_mangle = 1
@@ -258,7 +280,8 @@ sub source {
 
         # If the version of the package contains dfsg, assume that it needs
         # to be mangled to get reasonable matches with upstream.
-        my $needs_repack_mangling = ($repack && $lastversion eq 'debian');
+        my $needs_repack_mangling
+          = ($repack && ($standard >= 5 || $lastversion eq 'debian'));
 
         $self->pointed_hint('debian-watch-not-mangling-version',
             $pointer, $line)
