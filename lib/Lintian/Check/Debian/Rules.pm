@@ -617,7 +617,8 @@ sub source {
         }
     }
 
-    if (my $memorized_position = $overridden{'dh_auto_test'}) {
+    if (my $memorized_position = $overridden{'dh_auto_test'}
+        and ! $build_regular->satisfies('debhelper-compat (>= 13)')) {
 
         my @rules = grep {
             !m{^\t\s*[\:\[]}

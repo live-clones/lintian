@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: rules-dh-auto-test-does-not-check-deb-build-options-dh-12
+Description: Test for missing checks for DEB_BUILD_PROFILES using DH12
+Dh-Compat-Level: 12
