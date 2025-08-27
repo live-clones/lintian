@@ -56,8 +56,15 @@ sub visit_installed_files {
         # iso-8859-1 works too, but the Font 1 standard could be older
         $output = decode('cp1252', $bytes, Encode::FB_CROAK);
 
-    } catch {
-        die 'In file ' . $item->name . $COLON . $SPACE . $@;
+    } catch ($e) {
+        if ($e =~ m{^cp1252 "\\x81" does not map to Unicode at .+}) {
+            eval {
+                # sometimes, the file is utf8
+                $output = decode('utf8', $bytes, Encode::FB_CROAK);
+            }
+        }else {
+            die 'In file ' . $item->name . $COLON . $SPACE . $@;
+        }
     }
 
     my @lines = split(/\n/, $output);
