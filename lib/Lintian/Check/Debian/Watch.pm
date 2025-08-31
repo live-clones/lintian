@@ -101,9 +101,22 @@ sub source {
     my @lines = split(/\n/, $contents);
 
     # look for watch file version
+    my $position = 1;
     for my $line (@lines) {
 
+        my $pointer = $item->pointer($position);
+
+        # Get version of format
         if ($line =~ /^\s*version\s*[:=]\s*(\d+)\s*$/i) {
+            unless (
+                # Version 1 to 4 (format version=\d)
+                $line =~ /^\s*version\s*=\s*([1-4])\s*$/i
+                # Version 5+ (format Version: \d+)
+                or $line =~ /^\s*version\s?[:=]\s*([5-9]|[1-9]\d+)$/i
+            ) {
+                $self->pointed_hint('debian-watch-line-invalid', $pointer,
+                    $line);
+            }
             if (length $1) {
                 $standard = $1;
                 last;
@@ -125,7 +138,7 @@ sub source {
     my $withpgpverification = 0;
     my %dversions;
 
-    my $position = 1;
+    $position = 1;
     my $continued = $EMPTY;
     my $line;
     while (defined($line = shift @lines)) {
