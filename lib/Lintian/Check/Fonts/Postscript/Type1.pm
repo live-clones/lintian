@@ -62,7 +62,7 @@ sub visit_installed_files {
                 # sometimes, the file is utf8
                 $output = decode('utf8', $bytes, Encode::FB_CROAK);
             }
-        }else {
+        } else {
             die 'In file ' . $item->name . $COLON . $SPACE . $@;
         }
     }
