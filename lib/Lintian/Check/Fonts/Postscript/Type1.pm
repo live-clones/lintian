@@ -50,6 +50,7 @@ sub visit_installed_files {
 
     my @command = ('t1disasm', $item->unpacked_path);
     my $bytes = safe_qx(@command);
+    my $enc_warning = 'In file ' . $item->name . $COLON . $SPACE;
 
     my $output;
     try {
@@ -58,12 +59,14 @@ sub visit_installed_files {
 
     } catch ($e) {
         if ($e =~ m{^cp1252 "\\x81" does not map to Unicode at .+}) {
-            eval {
+            try {
                 # sometimes, the file is utf8
                 $output = decode('utf8', $bytes, Encode::FB_CROAK);
+            } catch {
+                die $enc_warning . $@;
             }
         } else {
-            die 'In file ' . $item->name . $COLON . $SPACE . $@;
+            die $enc_warning . $@;
         }
     }
 
