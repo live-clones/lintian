@@ -157,3 +157,7 @@ pkg-config => pkgconf
 gnome-common => https://wiki.gnome.org/Projects/GnomeCommon/Migration
 python3-pdm-pep517 => python3-pdm-backend
 dh-buildinfo
+
+# Deprecated in forky
+# https://lists.debian.org/debian-devel/2025/08/msg00150.html
+libgirepository1.0-dev => gobject-introspection (>= 1.80), gir1.2-*-dev, rarely libgirepository-1.0-dev
