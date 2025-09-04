@@ -14,7 +14,7 @@ uglyjs="$uglydir/fullpath.min.js"
 mkdir -p "$uglydir"
 
 # create a js file
-uglifyjs -o "$uglyjs" "$sourcejs"
+terser -o "$uglyjs" "$sourcejs"
 
 cp "$sourcejs" "$sourcedir/basename.js"
 cp "$uglyjs" "$uglydir/basename.min.js"

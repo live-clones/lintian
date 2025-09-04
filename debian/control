@@ -63,7 +63,7 @@ Build-Depends:
  python3-setuptools <!nocheck>,
  quilt <!nocheck>,
  tidy <!nocheck>,
- uglifyjs <!nocheck>,
+ terser <!nocheck>,
  wamerican <!nocheck>,
  wbritish <!nocheck>,
  zip <!nocheck>
