@@ -50,14 +50,24 @@ sub visit_installed_files {
 
     my @command = ('t1disasm', $item->unpacked_path);
     my $bytes = safe_qx(@command);
+    my $enc_warning = 'In file ' . $item->name . $COLON . $SPACE;
 
     my $output;
     try {
         # iso-8859-1 works too, but the Font 1 standard could be older
         $output = decode('cp1252', $bytes, Encode::FB_CROAK);
 
-    } catch {
-        die 'In file ' . $item->name . $COLON . $SPACE . $@;
+    } catch ($e) {
+        if ($e =~ m{^cp1252 "\\x81" does not map to Unicode at .+}) {
+            try {
+                # sometimes, the file is utf8
+                $output = decode('utf8', $bytes, Encode::FB_CROAK);
+            } catch {
+                die $enc_warning . $@;
+            }
+        } else {
+            die $enc_warning . $@;
+        }
     }
 
     my @lines = split(/\n/, $output);
