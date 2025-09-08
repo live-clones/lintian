@@ -125,6 +125,9 @@ libjs-swfobject
 libavresample-dev => libswresample-dev
 liblircclient-dev => liblirc-dev
 
+# Any::Moose, see https://bugs.debian.org/960909
+libany-moose-perl
+
 # Deprecated in buster
 apt-transport-https => apt
 e2fslibs-dev => libext2fs-dev
