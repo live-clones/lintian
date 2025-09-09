@@ -46,7 +46,7 @@ Depends:
  python3-setuptools,
  quilt,
  tidy,
- uglifyjs,
+ terser,
  wamerican,
  wbritish,
  zip,

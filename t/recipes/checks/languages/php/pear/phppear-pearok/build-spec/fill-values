@@ -1,4 +1,4 @@
 Testname: phppear-pearok
 Description: phppear tests for PEAR packages
-Extra-Build-Depends: uglifyjs
+Extra-Build-Depends: terser
 Skeleton: upload-non-native
