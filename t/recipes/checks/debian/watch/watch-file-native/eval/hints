@@ -1,2 +1,0 @@
-watch-file-native (source): debian-watch-file-in-native-package [debian/watch]
-watch-file-native (source): debian-watch-does-not-check-openpgp-signature [debian/watch]

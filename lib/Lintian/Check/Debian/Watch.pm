@@ -59,10 +59,6 @@ sub source {
         return;
     }
 
-    # Perform the other checks even if it is a native package
-    $self->pointed_hint('debian-watch-file-in-native-package', $item->pointer)
-      if $self->processable->native;
-
     # Check if the Debian version contains anything that resembles a repackaged
     # source package sign, for fine grained version mangling check
     # If the version field is missing, we assume a neutral non-native one.
