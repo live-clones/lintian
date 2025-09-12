@@ -104,6 +104,29 @@ has built_with_golang => (
     }
 );
 
+has built_with_rust => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        # Check binary package was built using rustc
+        if ($self->processable->fields->value('Built-Using')=~ m/rustc/
+            ||$self->processable->fields->value('Static-Built-Using')
+            =~ m/rustc/) {
+            return 1;
+        }
+
+        # Check source package build-depends contains rustc
+        if (defined($self->group->source)) {
+            return $self->group->source->relation('Build-Depends-All')
+              ->satisfies('rustc');
+        }
+
+        return 0;
+    }
+);
+
 sub visit_installed_files {
     my ($self, $item) = @_;
 
@@ -132,6 +155,7 @@ sub visit_installed_files {
       if @elf_unhardened
       && !@elf_hardened
       && !$self->built_with_golang
+      && !$self->built_with_rust
       && $self->recommended_hardening_features->{fortify};
 
     for my $member_name (keys %{$item->elf_by_member}) {
