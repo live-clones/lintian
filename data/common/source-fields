@@ -28,6 +28,10 @@ Checksums-Sha256
 @if-vendor-is-not debian Debian-Vcs-Mtn
 @if-vendor-is-not debian Debian-Vcs-Svn
 
+# Fields added by tag2upload
+Git-Tag-Info
+Git-Tag-Tagger
+
 # pending in policy via Bug#998165
 Description
 
