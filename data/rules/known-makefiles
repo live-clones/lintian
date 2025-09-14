@@ -29,11 +29,7 @@
 /usr/share/octave/debian/defs.make||
 /usr/share/pkg-kde-tools/makefiles/1/variables.mk||
 /usr/share/postgresql-common/pgxs_debian_control.mk||
-/usr/share/pycentral-data/pycentral.mk||
-/usr/share/python/python.mk||
 /usr/share/python3/python.mk||
 
 # Makefiles with (possibly) relevant targets
 /usr/share/quilt/quilt.make||patch, unpatch, $(QUILT_STAMPFN)
-/usr/share/dpatch/dpatch.make||patch, unpatch
-/usr/share/topgit/tg2quilt.mk||patch, unpatch
