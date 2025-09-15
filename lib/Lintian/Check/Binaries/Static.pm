@@ -91,14 +91,14 @@ sub visit_installed_files {
 
     my $is_shared = $item->file_type =~ m/(shared object|pie executable)/;
 
-    # Some exceptions: files in /boot, /usr/lib/debug/*,
-    # named *-static or *.static, or *-static as
-    # package-name.
-    # Binaries built by the Go compiler are statically
-    # linked by default.
-    # klibc binaries appear to be static.
-    # Location of debugging symbols.
-    # ldconfig must be static.
+   # Some exceptions: files in /boot, /usr/lib/debug/*,
+   # named *-static or *.static, or *-static as
+   # package-name.
+   # Binaries built by the Go compiler not using any cgo are statically linked:
+   # https://wiki.debian.org/StaticLinking#Go
+   # klibc binaries appear to be static.
+   # Location of debugging symbols.
+   # ldconfig must be static.
     $self->pointed_hint('statically-linked-binary', $item->pointer)
       if !$is_shared
       && !exists $item->elf->{NEEDED}
