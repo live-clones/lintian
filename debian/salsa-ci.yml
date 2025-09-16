@@ -9,12 +9,11 @@ build-testing:
     DEB_BUILD_OPTIONS: 'nocheck'
   extends: .build-package
 
-# build-bookworm-backports:
-#   variables:
-#     RELEASE: 'bookworm-backports'
-#     DEB_BUILD_OPTIONS: 'nocheck'
-#   extends: .build-package
-#   allow_failure: true
+build-trixie-backports:
+  variables:
+    RELEASE: 'trixie-backports'
+    DEB_BUILD_OPTIONS: 'nocheck'
+  extends: .build-package
 
 variables:
   SALSA_CI_DISABLE_BLHC: 1
