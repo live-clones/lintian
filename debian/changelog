@@ -1,8 +1,37 @@
-lintian (2.125.0) UNRELEASED; urgency=medium
+lintian (2.125.0) unstable; urgency=medium
 
-  * WIP (generated at release time: please do not add entries below.)
+  [ Louis-Philippe Véronneau ]
+  * fix typo in the uses-gbp-conf tag
+  * salsa-ci: re-enable backports build tests
 
- -- Louis-Philippe Véronneau <pollo@debian.org>  Mon, 08 Sep 2025 12:55:36 -0400
+  [ intrigeri ]
+  * obsolete-packages: Deprecate libany-moose-perl
+
+  [ William Desportes ]
+  * Fix jquery-validation package name
+
+  [ Yadd ]
+  * Replace deprecated uglifyjs by terser in test and related dependencies
+
+  [ Otto Kekäläinen ]
+  * New classification tag: uses-gbp-conf
+  * Misc documentation improvements
+
+  [ Nilesh Patra ]
+  * Remove debian-watch-file-in-native-package tag (Closes: #1114873)
+  * Update OldStable Epoch after trixie release
+  * Add fields in source-fields that are added by tag2upload
+
+  [ Samuel Thibault ]
+  * Add "unreleased" release
+
+  [ Alexandre Detiste ]
+  * remove removed makefile fragments from list
+
+  [ Emanuele Rocca ]
+  * Mention StaticLinking wiki page for go programs
+
+ -- Louis-Philippe Véronneau <pollo@debian.org>  Tue, 16 Sep 2025 15:36:56 -0400
 
 lintian (2.124.0) unstable; urgency=medium
 
