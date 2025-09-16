@@ -142,6 +142,19 @@
                      "visibility" : "pedantic"
                   },
                   {
+                     "experimental" : false,
+                     "note" : "",
+                     "pointer" : {
+                        "item" : {
+                           "index" : "json-output_1.0+dsfg-1.1.dsc (patched)",
+                           "name" : "debian/control"
+                        },
+                        "line_position" : 7
+                     },
+                     "tag" : "redundant-rules-requires-root-no-field",
+                     "visibility" : "pedantic"
+                  },
+                  {
                      "experimental" : true,
                      "note" : "",
                      "pointer" : {
