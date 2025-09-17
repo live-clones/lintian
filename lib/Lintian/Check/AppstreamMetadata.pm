@@ -88,7 +88,7 @@ sub installable {
             system('appstreamcli', 'validate-tree', '--format=yaml',
                 '--no-net', $basedir);
         };
-        if ($output =~ m/Passed: no/) {
+        if ($output =~ m/'?Passed'?: '?no'?/) {
             my @yaml = YAML::XS::Load($output);
             die
               unless @yaml;
