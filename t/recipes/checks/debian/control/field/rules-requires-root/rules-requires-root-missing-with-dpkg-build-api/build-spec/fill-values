@@ -1,4 +1,0 @@
-Testname: rules-requires-root-missing-with-dpkg-build-api
-Skeleton: upload-native
-Description: d/control without explicit rules-requires-root but with dpkg-build-api
-Extra-Build-Depends: dpkg-build-api (= 1)

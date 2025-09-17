@@ -1,4 +1,0 @@
-Testname: rules-requires-root-missing-with-dpkg-build-api
-Check: debian/control/field/rules-requires-root
-Test-Against: silent-on-rules-requiring-root
-See-Also: Bug #1057176

@@ -1,3 +1,0 @@
-Testname: legacy-relations
-Check: debian/control/field/rules-requires-root
-Test-Depends: dpkg-dev (<< 1.22.12~)

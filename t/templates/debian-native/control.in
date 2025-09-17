@@ -4,7 +4,6 @@ Section: [% $section %]
 Maintainer: [% $author %]
 Standards-Version: [% $standards_version %]
 Build-Depends: [% $build_depends %]
-Rules-Requires-Root: [% $rules_requires_root %]
 Homepage: [% $homepage %]
 
 Package: [% $source %]
