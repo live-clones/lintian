@@ -1,0 +1,17 @@
+Format: 1.8
+Date: [% $date %]
+Source: [% $source %]
+Binary: [% $source %]
+Architecture: source all
+Version: [% $version %]
+Distribution: unstable
+Urgency: low
+Maintainer: [% $author %]
+Changed-By: [% $author %]
+Description:
+ [% $source %] - [% $description %]
+Changes:
+ [% $source %] ([% $version %]) unstable; urgency=low
+ .
+   * I'm using dgit!
+Dgit: this is an invalid value
