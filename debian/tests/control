@@ -45,6 +45,7 @@ Depends:
  python3-numpy,
  python3-setuptools,
  quilt,
+ rustc,
  tidy,
  terser,
  wamerican,

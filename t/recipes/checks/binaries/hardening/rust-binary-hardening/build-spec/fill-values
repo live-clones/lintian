@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: rust-binary-hardening
+Description: Check for missing hardening features in rust programs
+Package-Architecture: any

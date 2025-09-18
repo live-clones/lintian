@@ -62,6 +62,7 @@ Build-Depends:
  python3-numpy <!nocheck>,
  python3-setuptools <!nocheck>,
  quilt <!nocheck>,
+ rustc <!nocheck>,
  tidy <!nocheck>,
  terser <!nocheck>,
  wamerican <!nocheck>,
