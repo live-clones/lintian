@@ -1,3 +1,9 @@
+lintian (2.127.0) UNRELEASED; urgency=medium
+
+  * WIP (generated at release time: please do not add entries below.)
+
+ -- Louis-Philippe Véronneau <pollo@debian.org>  Thu, 18 Sep 2025 10:54:54 -0400
+
 lintian (2.126.0) unstable; urgency=medium
 
   [ Nilesh Patra ]
