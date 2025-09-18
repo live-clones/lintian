@@ -160,12 +160,12 @@ sub source {
             }
         }else {
             if (length $line) {
-                $continued .= "\n".$line;
+                $continued .= $line."\n";
                 next if @lines;
             }
         }
 
-        $line = $continued . ($standard>=$CURRENT_WATCH_VERSION? "\n":$line)
+        $line = $continued . ($standard>=$CURRENT_WATCH_VERSION ? q{} : $line)
           if length $continued;
 
         $continued = $EMPTY;
