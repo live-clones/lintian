@@ -160,6 +160,7 @@ pkg-config => pkgconf
 gnome-common => https://wiki.gnome.org/Projects/GnomeCommon/Migration
 python3-pdm-pep517 => python3-pdm-backend
 dh-buildinfo
+python3-tz => python3-pytz
 
 # Deprecated in forky
 # https://lists.debian.org/debian-devel/2025/08/msg00150.html
