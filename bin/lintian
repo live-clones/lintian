@@ -1010,7 +1010,7 @@ General options:
     --print-version           print unadorned version number and exit
     -q, --quiet               suppress all informational messages
     -v, --verbose             verbose messages
-    -d, --debug               extra-verbose messages
+    -d, --debug               debug messages
     -V, --version             display Lintian version and exit
 Behavior options:
     --color never/always/auto disable, enable, or enable color for TTY

@@ -139,10 +139,9 @@ in the config file.
 
 =item B<-d>, B<--debug>
 
-Display extra-verbose messages.
+Display debug messages.
 
-This is a deeper B<--verbose>, and implies B<--verbose>. Pass >= 3 times to get
-memory-usage information as well
+This option implies B<--verbose>.
 
 =item B<-V>, B<--version>
 
