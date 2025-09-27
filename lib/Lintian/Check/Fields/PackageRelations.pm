@@ -352,7 +352,7 @@ sub installable {
                     }
                 }
 
-                $self->hint('depends-on-obsolete-bootstrap',$field)
+                $self->hint('depends-on-obsolete-bootstrap',$field,$d_pkg)
                   if (
                     $is_dep_field
                     && (  $d_pkg eq 'libjs-bootstrap'
@@ -610,7 +610,8 @@ sub source {
                       if $d_pkg =~ /^perl-modules/
                       && $processable->source_name ne 'perl';
 
-                    $self->hint('build-depends-on-obsolete-bootstrap',$field)
+                    $self->hint('build-depends-on-obsolete-bootstrap',
+                        $field,$d_pkg)
                       if (
                         $is_dep_field
                         && (  $d_pkg eq 'libjs-bootstrap'

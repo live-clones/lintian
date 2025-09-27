@@ -10,8 +10,9 @@ Build-Depends: [% $build_depends %], bd-conflict, revision-1 (>= 1.0-1),
  other-pkg [kfreebsd-any], yet-another [any-powerpc],
  packaging-dev, libdb5.1++-dev, libdb5.1-java-dev, hardening-wrapper (>= 2.2),
  mount, libjs-bootstrap
+Build-Depends-Indep: libjs-bootstrap4
 Build-Conflicts:
- bd-conflict,
+ bd-conflict
 Rules-Requires-Root: no
 
 Package: [% $source %]
