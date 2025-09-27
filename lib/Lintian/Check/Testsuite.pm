@@ -232,7 +232,42 @@ sub check_control_paragraph {
     my $debian_control = $self->processable->debian_control;
 
     my $depends_norestriction = Lintian::Relation->new;
-    $depends_norestriction->load($section->unfolded_value('Depends'));
+    my $test_depends = $section->unfolded_value('Depends');
+    if ($test_depends =~ /\@builddeps\@/) {
+        my $build_depends
+          = $debian_control->source_fields->unfolded_value('Build-Depends');
+        my $build_depends_indep
+          = $debian_control->source_fields->unfolded_value(
+            'Build-Depends-Indep');
+        my $build_depends_arch
+          = $debian_control->source_fields->unfolded_value(
+            'Build-Depends-Arch');
+        my $all_build_deps = join(q{,},
+            $build_depends, $build_depends_indep,
+            $build_depends_arch, 'build-essential');
+
+        $test_depends =~ s/\@builddeps\@/$all_build_deps/;
+    }
+    if ($test_depends =~ /\@recommends\@/) {
+        my $package_recommends = q{};
+        for my $installable ($debian_control->installables) {
+            my $installable_fields
+              = $debian_control->installable_fields($installable);
+            my $installable_recommends
+              = $installable_fields->unfolded_value('Recommends');
+            if ($installable_recommends ne q{}) {
+                $package_recommends .= ",$installable_recommends";
+            }
+        }
+        $test_depends =~ s/\@recommends\@/$package_recommends/;
+    }
+
+    # Remove white-spaces
+    $test_depends =~ s/\s+//g;
+    # Remove multiple commas, which can be the
+    # case due to substituting `@builddeps@,` or `@recommends@`
+    $test_depends =~ s/,+/,/g;
+    $depends_norestriction->load($test_depends);
 
     my $all_tests_use_supported = 1;
 
