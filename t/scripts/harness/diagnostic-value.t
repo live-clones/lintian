@@ -83,7 +83,9 @@ my $missing = scalar @undeclared;
 my $total = scalar @testpaths;
 diag "$missing tests out of $total have no declared diagnostic value.";
 
-diag "Test with unknown purpose: $_" for @undeclared;
+diag
+"Test with unknown purpose: $_.\nAdd expected results to eval/hints, or 'Test-Against' to eval/desc\nSee also: t/recipes/README."
+  for @undeclared;
 
 my $exceptions = List::Compare->new(\@undeclared, \@known_undeclared);
 my @unknown = $exceptions->get_Lonly;
