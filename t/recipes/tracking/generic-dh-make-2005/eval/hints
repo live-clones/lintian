@@ -4,6 +4,7 @@ generic-dh-make-2005 (source): trailing-whitespace [debian/rules:54]
 generic-dh-make-2005 (source): trailing-whitespace [debian/rules:49]
 generic-dh-make-2005 (source): trailing-whitespace [debian/rules:32]
 generic-dh-make-2005 (source): trailing-whitespace [debian/changelog:6]
+generic-dh-make-2005 (source): redundant-priority-optional-field [debian/control:3]
 generic-dh-make-2005 (source): package-uses-deprecated-debhelper-compat-version 7
 generic-dh-make-2005 (source): older-source-format 1.0
 generic-dh-make-2005 (source): no-versioned-debhelper-prerequisite 7

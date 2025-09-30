@@ -638,6 +638,16 @@ footer p {
       </ul>
 
       <a class="visibility-symbol tiny pedantic" href="https://lintian.debian.org/levels#pedantic"></a>
+      <span class="hint tiny"><a href="https://lintian.debian.org/tags/redundant-priority-optional-field">redundant-priority-optional-field</a></span>
+      <span class="context tiny">[debian/control:2]</span>
+
+    </li>
+    <li class="hintitem">
+
+      <ul class="commentlist">
+      </ul>
+
+      <a class="visibility-symbol tiny pedantic" href="https://lintian.debian.org/levels#pedantic"></a>
       <span class="hint tiny"><a href="https://lintian.debian.org/tags/redundant-rules-requires-root-no-field">redundant-rules-requires-root-no-field</a></span>
       <span class="context tiny">[debian/control:7]</span>
 
