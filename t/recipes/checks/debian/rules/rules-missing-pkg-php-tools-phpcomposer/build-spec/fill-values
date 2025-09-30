@@ -1,0 +1,5 @@
+Skeleton: upload-non-native
+Testname: rules-missing-pkg-php-tools-phpcomposer
+Description: Test for missing-pkg-php-tools-phpcomposer it reports that pkg-php-tools should be used for this composer package
+Source: rules-missing-pkg-php-tools-phpcomposer
+Version: 1.0.0-1
