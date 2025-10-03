@@ -37,7 +37,7 @@ maintainer-script-should-not-use-dpkg-maintscript-helper        ~~ 1 ~~ 1 ~~    
 maintainer-script-updates-fontconfig-cache-improperly           ~~ 0 ~~ 0 ~~^(fontconfig)$      ~~          ~~${LEADING_PATTERN}(?:/usr/bin/)?fc-cache(?:\s|\Z)
 maintainer-script-calls-gconftool                               ~~ 1 ~~ 0 ~~^(gconf\d)$         ~~          ~~(?:/usr/bin/)?gconftool(?:-\d)?(?:\s|\Z)
 maintainer-script-calls-install-sgmlcatalog                     ~~ 1 ~~ 0 ~~                    ~~          ~~\binstall-sgmlcatalog\b
-recursive-privilege-change                                      ~~ 1 ~~ 0 ~~                    ~~          ~~\b(?:(?:chmod|chown).*(?:-R|--recursive)|find.*exec.*(?:chmod|chown))\b
+recursive-privilege-change                                      ~~ 1 ~~ 0 ~~                    ~~          ~~\b(?:(?:chmod|chown).*(?:-R|--recursive)|find(?:(?!-maxdepth[[:space:]]+1).)*exec.*(?:chmod|chown))\b
 maintainer-script-should-not-use-piuparts-variable              ~~ 0 ~~ 0 ~~                    ~~          ~~(PIUPARTS_(?:TEST|OBJECTS|PHASE|DISTRIBUTION(?:_PREV|_NEXT)?))\b
 maintainer-script-calls-service                                 ~~ 1 ~~ 0 ~~                    ~~          ~~${LEADING_PATTERN}service\b
 maintainer-script-calls-start-stop-daemon                       ~~ 0 ~~ 0 ~~                    ~~          ~~\bstart-stop-daemon(?=\s)(?!.*\s--stop\b)
