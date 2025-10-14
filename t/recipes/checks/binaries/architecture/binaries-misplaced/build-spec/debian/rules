@@ -5,7 +5,8 @@ pkg=binaries-misplaced
 
 override_dh_install:
 	mkdir -p debian/$(pkg)/etc/
-	cp -a /bin/true debian/$(pkg)/etc/foo
+	# --dereference in case /bin/true is a symlink
+	cp -a --dereference /bin/true debian/$(pkg)/etc/foo
 	# explicitly call dh_shlibdeps since debhelper is being
 	# "smart" and not calling it in newer versions (8.9.something)
 	dh_shlibdeps
