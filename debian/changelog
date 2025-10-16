@@ -1,8 +1,42 @@
-lintian (2.127.0) UNRELEASED; urgency=medium
+lintian (2.127.0) unstable; urgency=medium
 
-  * WIP (generated at release time: please do not add entries below.)
+  [ Louis-Philippe Véronneau ]
+  * adjust phrasing in the newly documented debug entries.
+  * Add information on the Origin field being parsed in the
+    patch-not-forwarded-upstream tag. (Closes: #1065870)
+  * d/control: remove redundant Rules-Requires-Root field.
 
- -- Louis-Philippe Véronneau <pollo@debian.org>  Thu, 18 Sep 2025 10:54:54 -0400
+  [ Rafael Laboissière ]
+  * Correctly parse the paragraphs in watch file with format v5.
+    (Closes: #1115463)
+
+  [ Emanuele Rocca ]
+  * hardening-no-fortify-functions: exclude Rust code.
+  * Suggest solution for tests without purpose.
+
+  [ Alexandre Detiste ]
+  * add python3-tz to the list of obsolete-packages.
+
+  [ Nilesh Patra ]
+  * Expand @builddeps@ and @recommends@ field if it specified in Test Depends.
+    (Closes: #1017916, #1024610)
+  * Add a check in existing check to smoket-test @builddeps@ and @recommends@
+    are expanded.
+  * Display the package against which (build-,)depends-obsolete-bootstrap is
+    issued. Adjust tests accordingly. (Closes: #1065177)
+
+  [ Dima Kogan ]
+  * Document --debug parameter.
+  * Improved documentation for lintian-override files. (Closes: #1077709)
+
+  [ Marc Leeman ]
+  * recursive-privilege-change: do not trigger with -maxdepth 1.
+
+  [ Florent 'Skia' Jacquet ]
+  * tests: fix 'binaries-misplaced' pkg if '/bin/true' is a symlink.
+  * Add 'Resolute Raccoon' in the list of known Ubuntu series.
+
+ -- Louis-Philippe Véronneau <pollo@debian.org>  Thu, 16 Oct 2025 15:31:04 -0400
 
 lintian (2.126.0) unstable; urgency=medium
 
