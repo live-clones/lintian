@@ -4,7 +4,6 @@
 base-files
 base-passwd
 bash
-bsdutils
 coreutils
 dash
 debianutils
