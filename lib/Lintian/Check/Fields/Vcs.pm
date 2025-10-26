@@ -206,7 +206,8 @@ sub always {
 
         if ($maintainer =~ /\b(\S+\@lists(?:\.alioth)?\.debian\.org)\b/
             || $maintainer =~ /\b(\S+\@alioth-lists\.debian\.net)\b/
-            || $maintainer =~ /\b(\S+\@tracker\.debian\.org)\b/) {
+            || $maintainer =~ /\b(\S+\@tracker\.debian\.org)\b/
+            || $maintainer =~ /\b(\S+\@security\.debian\.org)\b/) {
             $is_teammaintained = 1;
             $team_email = $1;
             $is_maintained_by_individual = 0;

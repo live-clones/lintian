@@ -136,7 +136,8 @@ sub check_single_address {
       || $parsed->address eq 'debian-qa@lists.debian.org';
 
     $self->hint('mailing-list-on-alioth', $role, $parsed->address)
-      if $parsed->host eq 'lists.alioth.debian.org';
+      if $parsed->host eq 'lists.alioth.debian.org'
+      ||$parsed->host eq 'alioth-lists.debian.net';
 
     return;
 }

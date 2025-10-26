@@ -43,7 +43,12 @@ sub source {
 
     my $maintainer = $self->processable->fields->value('Maintainer');
 
-    my $is_list = $maintainer =~ /\@lists(?:\.alioth)?\.debian\.org\b/;
+    my $is_list
+      = $maintainer =~ /\@lists(?:\.alioth)?\.debian\.org\b/
+      || $maintainer =~ /\@alioth-lists\.debian\.net\b/
+      || $maintainer =~ /\@tracker\.debian\.org\b/
+      || $maintainer =~ /\@security\.debian\.org\b/
+      || $maintainer =~ /\@packages\.debian\.org\b/;
 
     $self->hint('no-human-maintainers')
       if $is_list && !$self->processable->fields->declares('Uploaders');
