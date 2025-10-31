@@ -111,6 +111,8 @@ sub visit_control_files {
 
 sub installable {
     my ($self) = @_;
+    return
+      if $self->processable->type eq 'udeb';
 
     for my $command (keys %{$self->seen_helper_commands}) {
 
