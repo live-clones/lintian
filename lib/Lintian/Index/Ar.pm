@@ -69,7 +69,8 @@ sub add_ar {
     my $magic = File::LibMagic->new;
 
     my @archives= grep {
-        $_->is_regular_file
+        $_->name =~ / [.]a $/msx
+          && $_->is_regular_file
           && $magic->info_from_filename($_->name)->{mime_type} eq
           'application/x-archive'
     }@{$self->sorted_list};
