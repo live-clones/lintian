@@ -31,6 +31,8 @@ use Lintian::IPC::Run3 qw(safe_qx);
 use Moo::Role;
 use namespace::clean;
 
+use File::LibMagic;
+
 const my $EMPTY => q{};
 const my $NEWLINE => qq{\n};
 
@@ -64,9 +66,14 @@ sub add_ar {
 
     my $errors = $EMPTY;
 
-    my @archives
-      = grep { $_->name =~ / [.]a $/msx && $_->is_regular_file }
-      @{$self->sorted_list};
+    my $magic = File::LibMagic->new;
+
+    my @archives= grep {
+        $_->name =~ / [.]a $/msx
+          && $_->is_regular_file
+          && $magic->info_from_filename($_->name)->{mime_type} eq
+          'application/x-archive'
+    }@{$self->sorted_list};
 
     for my $archive (@archives) {
 
