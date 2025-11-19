@@ -1,0 +1,3 @@
+Skeleton: upload-non-native
+Testname: not-an-ar-archive
+Description: Check for ar files detected by libmagic only
