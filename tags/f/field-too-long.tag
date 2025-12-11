@@ -1,5 +1,5 @@
 Tag: field-too-long
-Severity: error
+Severity: warning
 Check: fields/length
 Explanation: The length of the specified field is too long.
  .
