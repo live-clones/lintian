@@ -54,7 +54,7 @@ sub source {
         my $pointer = $control_item->pointer($position);
 
         if (
-            $raw!~ m{^\s*              # skip leading whitespace
+            $raw=~ m{^\s*              # skip leading whitespace
                      <                 # first list start
                        !?[^\s<>]+      # (possibly negated) term
                        (?:             # any additional terms
@@ -75,11 +75,6 @@ sub source {
                      \s*$              # trailing spaces at the end
               }x
         ) {
-            $self->pointed_hint(
-                'invalid-restriction-formula-in-build-profiles-field',
-                $pointer, $raw,"(in section for $installable)");
-
-        } else {
             # parse the field and check the profile names
             $raw =~ s/^\s*<(.*)>\s*$/$1/;
 
