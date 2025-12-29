@@ -39,6 +39,7 @@ with 'Lintian::Check';
 my @KNOWN_LOCATIONS = qw(
   debian/salsa-ci.yml
   debian/gitlab-ci.yml
+  debian/.gitlab-ci.yml
   gitlab-ci.yml
   .gitlab-ci.yml
 );
