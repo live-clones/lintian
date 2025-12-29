@@ -238,42 +238,6 @@
          "format",
          "fortify"
       ],
-      "kfreebsd-amd64" : [
-         "bindnow",
-         "branch",
-         "format",
-         "fortify",
-         "pie",
-         "relro",
-         "stackprotector",
-         "stackprotectorstrong"
-      ],
-      "kfreebsd-i386" : [
-         "bindnow",
-         "format",
-         "fortify",
-         "pie",
-         "relro",
-         "stackprotector",
-         "stackprotectorstrong"
-      ],
-      "kopensolaris-amd64" : [
-         "bindnow",
-         "branch",
-         "format",
-         "fortify",
-         "relro",
-         "stackprotector",
-         "stackprotectorstrong"
-      ],
-      "kopensolaris-i386" : [
-         "bindnow",
-         "format",
-         "fortify",
-         "relro",
-         "stackprotector",
-         "stackprotectorstrong"
-      ],
       "loong64" : [
          "bindnow",
          "format",
@@ -287,7 +251,6 @@
          "bindnow",
          "format",
          "fortify",
-         "pie",
          "relro",
          "stackprotector",
          "stackprotectorstrong"
@@ -500,7 +463,6 @@
          "bindnow",
          "format",
          "fortify",
-         "pie",
          "relro",
          "stackprotector",
          "stackprotectorstrong"
@@ -678,7 +640,6 @@
          "bindnow",
          "format",
          "fortify",
-         "pie",
          "relro",
          "stackprotector",
          "stackprotectorstrong"
@@ -1268,15 +1229,6 @@
          "stackprotector",
          "stackprotectorstrong"
       ],
-      "powerpcspe" : [
-         "bindnow",
-         "format",
-         "fortify",
-         "pie",
-         "relro",
-         "stackprotector",
-         "stackprotectorstrong"
-      ],
       "ppc64" : [
          "bindnow",
          "format",
@@ -1344,7 +1296,6 @@
          "bindnow",
          "format",
          "fortify",
-         "pie",
          "relro",
          "stackprotector",
          "stackprotectorstrong"
@@ -1501,7 +1452,6 @@
          "bindnow",
          "format",
          "fortify",
-         "pie",
          "relro",
          "stackprotector",
          "stackprotectorstrong"
@@ -1679,7 +1629,6 @@
          "bindnow",
          "format",
          "fortify",
-         "pie",
          "relro",
          "stackprotector",
          "stackprotectorstrong"

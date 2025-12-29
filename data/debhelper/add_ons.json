@@ -155,9 +155,14 @@
             "dh-elpa"
          ]
       },
+      "fortran" : {
+         "installed_by" : [
+            "dh-fortran"
+         ]
+      },
       "fortran_mod" : {
          "installed_by" : [
-            "dh-fortran-mod"
+            "dh-fortran"
          ]
       },
       "germinate" : {
@@ -315,11 +320,6 @@
             "pdl"
          ]
       },
-      "perl6" : {
-         "installed_by" : [
-            "dh-perl6"
-         ]
-      },
       "perl_dbi" : {
          "installed_by" : [
             "libdbi-perl"
@@ -453,11 +453,6 @@
       "single_binary" : {
          "installed_by" : [
             "libdebhelper-perl"
-         ]
-      },
-      "sip3" : {
-         "installed_by" : [
-            "python3-sip-dev"
          ]
       },
       "sodeps" : {

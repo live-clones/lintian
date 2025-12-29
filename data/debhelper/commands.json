@@ -31,7 +31,8 @@
       "dh_assistant" : {
          "installed_by" : [
             "debhelper"
-         ]
+         ],
+         "uses_misc_depends" : 1
       },
       "dh_asterisk" : {
          "installed_by" : [
@@ -158,6 +159,11 @@
          "uses_misc_depends" : 1
       },
       "dh_compress" : {
+         "installed_by" : [
+            "debhelper"
+         ]
+      },
+      "dh_computeautosubstvars" : {
          "installed_by" : [
             "debhelper"
          ]
@@ -309,16 +315,41 @@
             "debhelper"
          ]
       },
+      "dh_fortran" : {
+         "installed_by" : [
+            "dh-fortran"
+         ]
+      },
+      "dh_fortran_cmake" : {
+         "installed_by" : [
+            "dh-fortran"
+         ]
+      },
       "dh_fortran_lib" : {
          "installed_by" : [
-            "dh-fortran-mod"
+            "dh-fortran"
+         ]
+      },
+      "dh_fortran_lib_old" : {
+         "installed_by" : [
+            "dh-fortran"
          ]
       },
       "dh_fortran_mod" : {
          "installed_by" : [
-            "dh-fortran-mod"
+            "dh-fortran"
+         ]
+      },
+      "dh_fortran_mod_old" : {
+         "installed_by" : [
+            "dh-fortran"
          ],
          "uses_autoscript" : 1
+      },
+      "dh_fortran_pkgconf" : {
+         "installed_by" : [
+            "dh-fortran"
+         ]
       },
       "dh_gencontrol" : {
          "installed_by" : [
@@ -342,11 +373,6 @@
          ]
       },
       "dh_gnome" : {
-         "installed_by" : [
-            "gnome-pkg-tools"
-         ]
-      },
-      "dh_gnome_clean" : {
          "installed_by" : [
             "gnome-pkg-tools"
          ]
@@ -425,6 +451,11 @@
       "dh_haskell_install_development_libs" : {
          "installed_by" : [
             "haskell-devscripts-minimal"
+         ]
+      },
+      "dh_haskell_install_docfiles" : {
+         "installed_by" : [
+            "dh-haskell"
          ]
       },
       "dh_haskell_install_ghc_registration" : {
@@ -757,7 +788,8 @@
       },
       "dh_makeclilibs" : {
          "installed_by" : [
-            "cli-common-dev"
+            "cli-common-dev",
+            "mono-devel"
          ]
       },
       "dh_makefont" : {
@@ -892,22 +924,6 @@
       "dh_perl" : {
          "installed_by" : [
             "debhelper"
-         ]
-      },
-      "dh_perl6_depsfile" : {
-         "installed_by" : [
-            "dh-perl6"
-         ]
-      },
-      "dh_perl6_maintscript" : {
-         "installed_by" : [
-            "dh-perl6"
-         ],
-         "uses_autoscript" : 1
-      },
-      "dh_perl6_test" : {
-         "installed_by" : [
-            "dh-perl6"
          ]
       },
       "dh_perl_dbi" : {
@@ -1082,11 +1098,6 @@
       "dh_shlibdeps" : {
          "installed_by" : [
             "debhelper"
-         ]
-      },
-      "dh_sip3" : {
-         "installed_by" : [
-            "python3-sip-dev"
          ]
       },
       "dh_sodeps" : {

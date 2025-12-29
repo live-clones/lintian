@@ -364,58 +364,6 @@
          "DEB_HOST_GNU_TYPE" : "ia64-linux-gnu",
          "DEB_HOST_MULTIARCH" : "ia64-linux-gnu"
       },
-      "kfreebsd-amd64" : {
-         "DEB_HOST_ARCH" : "kfreebsd-amd64",
-         "DEB_HOST_ARCH_ABI" : "base",
-         "DEB_HOST_ARCH_BITS" : "64",
-         "DEB_HOST_ARCH_CPU" : "amd64",
-         "DEB_HOST_ARCH_ENDIAN" : "little",
-         "DEB_HOST_ARCH_LIBC" : "gnu",
-         "DEB_HOST_ARCH_OS" : "kfreebsd",
-         "DEB_HOST_GNU_CPU" : "x86_64",
-         "DEB_HOST_GNU_SYSTEM" : "kfreebsd-gnu",
-         "DEB_HOST_GNU_TYPE" : "x86_64-kfreebsd-gnu",
-         "DEB_HOST_MULTIARCH" : "x86_64-kfreebsd-gnu"
-      },
-      "kfreebsd-i386" : {
-         "DEB_HOST_ARCH" : "kfreebsd-i386",
-         "DEB_HOST_ARCH_ABI" : "base",
-         "DEB_HOST_ARCH_BITS" : "32",
-         "DEB_HOST_ARCH_CPU" : "i386",
-         "DEB_HOST_ARCH_ENDIAN" : "little",
-         "DEB_HOST_ARCH_LIBC" : "gnu",
-         "DEB_HOST_ARCH_OS" : "kfreebsd",
-         "DEB_HOST_GNU_CPU" : "i686",
-         "DEB_HOST_GNU_SYSTEM" : "kfreebsd-gnu",
-         "DEB_HOST_GNU_TYPE" : "i686-kfreebsd-gnu",
-         "DEB_HOST_MULTIARCH" : "i386-kfreebsd-gnu"
-      },
-      "kopensolaris-amd64" : {
-         "DEB_HOST_ARCH" : "kopensolaris-amd64",
-         "DEB_HOST_ARCH_ABI" : "base",
-         "DEB_HOST_ARCH_BITS" : "64",
-         "DEB_HOST_ARCH_CPU" : "amd64",
-         "DEB_HOST_ARCH_ENDIAN" : "little",
-         "DEB_HOST_ARCH_LIBC" : "gnu",
-         "DEB_HOST_ARCH_OS" : "kopensolaris",
-         "DEB_HOST_GNU_CPU" : "x86_64",
-         "DEB_HOST_GNU_SYSTEM" : "kopensolaris-gnu",
-         "DEB_HOST_GNU_TYPE" : "x86_64-kopensolaris-gnu",
-         "DEB_HOST_MULTIARCH" : "x86_64-kopensolaris-gnu"
-      },
-      "kopensolaris-i386" : {
-         "DEB_HOST_ARCH" : "kopensolaris-i386",
-         "DEB_HOST_ARCH_ABI" : "base",
-         "DEB_HOST_ARCH_BITS" : "32",
-         "DEB_HOST_ARCH_CPU" : "i386",
-         "DEB_HOST_ARCH_ENDIAN" : "little",
-         "DEB_HOST_ARCH_LIBC" : "gnu",
-         "DEB_HOST_ARCH_OS" : "kopensolaris",
-         "DEB_HOST_GNU_CPU" : "i686",
-         "DEB_HOST_GNU_SYSTEM" : "kopensolaris-gnu",
-         "DEB_HOST_GNU_TYPE" : "i686-kopensolaris-gnu",
-         "DEB_HOST_MULTIARCH" : "i386-kopensolaris-gnu"
-      },
       "loong64" : {
          "DEB_HOST_ARCH" : "loong64",
          "DEB_HOST_ARCH_ABI" : "base",
@@ -2001,19 +1949,6 @@
          "DEB_HOST_GNU_SYSTEM" : "linux-gnu",
          "DEB_HOST_GNU_TYPE" : "powerpcle-linux-gnu",
          "DEB_HOST_MULTIARCH" : "powerpcle-linux-gnu"
-      },
-      "powerpcspe" : {
-         "DEB_HOST_ARCH" : "powerpcspe",
-         "DEB_HOST_ARCH_ABI" : "spe",
-         "DEB_HOST_ARCH_BITS" : "32",
-         "DEB_HOST_ARCH_CPU" : "powerpc",
-         "DEB_HOST_ARCH_ENDIAN" : "big",
-         "DEB_HOST_ARCH_LIBC" : "gnu",
-         "DEB_HOST_ARCH_OS" : "linux",
-         "DEB_HOST_GNU_CPU" : "powerpc",
-         "DEB_HOST_GNU_SYSTEM" : "linux-gnuspe",
-         "DEB_HOST_GNU_TYPE" : "powerpc-linux-gnuspe",
-         "DEB_HOST_MULTIARCH" : "powerpc-linux-gnuspe"
       },
       "ppc64" : {
          "DEB_HOST_ARCH" : "ppc64",

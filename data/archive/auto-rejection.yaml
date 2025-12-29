@@ -111,6 +111,7 @@ lintian:
     - no-version-field
     - not-allowed-control-file
     - package-contains-ancient-file
+    - package-contains-usr-unmerged-pathnames
     - package-has-no-description
     - package-installs-apt-keyring
     - package-installs-apt-preferences
