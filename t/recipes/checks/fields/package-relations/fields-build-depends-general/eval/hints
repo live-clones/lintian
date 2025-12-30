@@ -1,6 +1,7 @@
 fields-build-depends-general (source): ored-build-depends-on-obsolete-package Build-Depends: xlibmesa-gl-dev
 fields-build-depends-general (source): invalid-arch-string-in-source-relation source [Build-Depends: baz [source lintian-fake-arch]]
 fields-build-depends-general (source): invalid-arch-string-in-source-relation lintian-fake-arch [Build-Depends: baz [source lintian-fake-arch]]
+fields-build-depends-general (source): invalid-arch-string-in-source-relation kfreebsd-any [Build-Depends: other-pkg [kfreebsd-any]]
 fields-build-depends-general (source): invalid-arch-string-in-source-relation all [Build-Depends: foo [all]]
 fields-build-depends-general (source): depends-on-packaging-dev Build-Depends
 fields-build-depends-general (source): conflicting-negation-in-source-relation Build-Depends: baz [i386 !amd64]
