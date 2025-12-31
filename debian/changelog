@@ -1,8 +1,37 @@
-lintian (2.128.0) UNRELEASED; urgency=medium
+lintian (2.128.0) unstable; urgency=medium
 
-  * WIP (generated at release time: please do not add entries below.)
+  [ Louis-Philippe Véronneau ]
+  * Refresh data sources - 2025-12-28
+  * Downgrade field-too-long from 'error' to 'warning'. Closes: #1021207
+  * Add debian/.gitlab-ci.yml to @KNOWN_LOCATIONS. (Closes: #1123984)
+  * Remove tag 'built-using-field-on-arch-all-package' (Closes: #999785)
 
- -- Louis-Philippe Véronneau <pollo@debian.org>  Thu, 16 Oct 2025 15:34:56 -0400
+  [ Nilesh Patra ]
+  * Remove recommended-field check for "Priority:" field (Closes: #1111513)
+  * Remove bsdutils from essential package set check (Closes: #1118442)
+  * Add some missing team domains for team maintained packages and flagging
+    packages using alioth domain
+  * Do not check for missing-call-to-dpkg-maintscript-helper on udeb (Closes:
+    #1119083)
+
+  [ Rong Fu ]
+  * Add known-dists for eLxr
+
+  [ Luca Boccassi ]
+  * Downgrade hardening-no-fortify-functions to experimental (Closes: #931112)
+
+  [ Rafael Laboissière ]
+  * Prevent non-ar *.a files from triggering false positives in
+    unpack-message-for-{source,orig,deb-data} (Closes: #1120737)
+
+  [ Jeremy Bícha ]
+  * Remove library-not-linked-against-libc check (Closes: #896012, #909267)
+  * Remove stray-devhelp-documentation
+
+  [ Bas Couwenberg ]
+  * Fix FTBFS with dpkg 1.23.0. (closes: #1123580)
+
+ -- Louis-Philippe Véronneau <pollo@debian.org>  Tue, 30 Dec 2025 19:00:24 -0500
 
 lintian (2.127.0) unstable; urgency=medium
 
