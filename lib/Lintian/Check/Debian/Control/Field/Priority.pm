@@ -32,23 +32,29 @@ with 'Lintian::Check';
 sub source {
     my ($self) = @_;
 
+    my $field = 'Priority';
     my $control = $self->processable->debian_control;
     my $source_fields = $control->source_fields;
     my $control_item = $self->processable->debian_control->item;
-    my $position = $source_fields->position('Priority');
+    my $position = $source_fields->position($field);
     my $pointer = $control_item->pointer($position);
 
     $self->pointed_hint('redundant-priority-optional-field', $pointer)
-      if $source_fields->value('Priority') eq 'optional';
+      if $source_fields->value($field) eq 'optional';
 
     # Priority may also be present in the binary stanza
-    for my $installable ($control->installables) {
-        my $installable_fields = $control->installable_fields($installable);
-        my $installable_position = $installable_fields->position('Priority');
-        my $installable_pointer= $control_item->pointer($installable_position);
-        $self->pointed_hint('redundant-priority-optional-field',
-            $installable_pointer)
-          if $installable_fields->value('Priority') eq 'optional';
+    # check for the same only if it is optional in the source stanza
+    if (!$source_fields->declares($field)
+        || $source_fields->value($field) eq 'optional') {
+        for my $installable ($control->installables) {
+            my $installable_fields= $control->installable_fields($installable);
+            my $installable_position= $installable_fields->position($field);
+            my $installable_pointer
+              = $control_item->pointer($installable_position);
+            $self->pointed_hint('redundant-priority-optional-field',
+                $installable_pointer)
+              if $installable_fields->value($field) eq 'optional';
+        }
     }
 
     return;
