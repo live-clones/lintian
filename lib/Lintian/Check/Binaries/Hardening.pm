@@ -138,7 +138,7 @@ sub visit_installed_files {
         next
           unless $symbol->section eq 'UND';
 
-        if ($symbol->name =~ /^__(\S+)_chk$/) {
+        if ($symbol->name =~ /^__(\S+)_chk(|ieee128)$/) {
 
             my $vulnerable = $1;
             push(@elf_hardened, $vulnerable)
