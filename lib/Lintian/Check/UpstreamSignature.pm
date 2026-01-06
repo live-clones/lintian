@@ -45,7 +45,11 @@ sub source {
 
     # in uscan's gittag mode,signature will never match
     my $watch = $self->processable->patched->resolve_path('debian/watch');
-    my $gittag = $watch && $watch->bytes =~ /pgpmode=gittag/;
+    my $gittag = $watch
+      && (
+        $watch->bytes =~ /pgpmode=gittag/ # d/watch v4
+        || $watch->bytes =~ /Pgp-Mode: gittag/ # d/watch v5
+      );
 
     my @filenames = sort keys %{$self->processable->files};
     my @origtar= grep { /^.*\.orig(?:-[A-Za-z\d-]+)?\.tar\./ }
