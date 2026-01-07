@@ -120,6 +120,14 @@ sub source {
         $self->pointed_hint('superficial-tests', $tests_control->pointer)
           if @sections && !@thorough;
 
+        my @skip_not_inst
+          = grep { $_->value('Restrictions') =~ m{\bskip-not-installable\b} }
+          @sections;
+        $self->pointed_hint(
+            'testsuite-restrictions-has-deprecated-skip-not-installable',
+            $tests_control->pointer)
+          if @skip_not_inst;
+
         if (scalar @sections == 1) {
 
             my $section = $sections[0];
