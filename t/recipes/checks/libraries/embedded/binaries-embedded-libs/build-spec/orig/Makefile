@@ -1,6 +1,6 @@
 BINARIES :=  zlib libpng libjpeg libopenjpeg libtiff libpcre3 libbz2 libxml2 \
 		libmagic libexpat libsqlite libm gmp mpfr \
-		ieee-data1 ieee-data2 ieee-data3
+		ieee-data1 ieee-data2 ieee-data3 libminizip
 
 MANPAGES := $(patsubst %,%.1,$(BINARIES))
 
