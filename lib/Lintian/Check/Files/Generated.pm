@@ -47,6 +47,9 @@ sub visit_patched_files {
     return
       unless $item->is_open_ok;
 
+    return
+      unless $item->is_regular_file;
+
     open(my $fd, '<', $item->unpacked_path)
       or die encode_utf8('Cannot open ' . $item->unpacked_path);
 
@@ -65,8 +68,8 @@ sub visit_patched_files {
     }
 
     if ($found_one == 0) {
-      close $fd;
-      return;
+        close $fd;
+        return;
     }
 
     seek $fd, 0, 0;
