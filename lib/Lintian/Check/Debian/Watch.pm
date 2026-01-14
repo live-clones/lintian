@@ -170,7 +170,7 @@ sub source {
 
         $continued = $EMPTY;
 
-        next if $line =~ /^version\s*[:=]\s*(\d+)\s*$/i;
+        next if $line =~ /^version\s*[:=]\s*(\d+)\s*$/i || !length($line);
 
         my $remainder = $line;
 
