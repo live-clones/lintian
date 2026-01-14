@@ -1,3 +1,4 @@
 Skeleton: source-non-native
 Testname: filenamemangle
 Description: Option filenamemangle in d/watch
+Version: 1.0+ds-1
