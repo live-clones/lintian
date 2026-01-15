@@ -1,0 +1,5 @@
+Skeleton: upload-non-native
+Testname: rules-missing-pkg-php-tools-phppear
+Description: Test for missing-pkg-php-tools-phppear it reports that pkg-php-tools should be used for this pear package
+Source: rules-missing-pkg-php-tools-phppear
+Version: 1.0.0-1
