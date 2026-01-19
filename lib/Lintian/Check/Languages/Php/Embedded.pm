@@ -34,7 +34,8 @@ my $PHP_EXT = qr{(?i)\.(?:php|inc|dtd)$};
 my %PHP_FILES = (
     'libphp-adodb'         => qr{(?i)/adodb\.inc\.php$},
     'smarty3?'             => qr{(?i)/Smarty(?:_Compiler)?\.class\.php$},
-    'libphp-phpmailer'     => qr{(?i)/class\.phpmailer(\.(?:php|inc))+$},
+    'libphp-phpmailer'     =>
+      qr{(?i)/(phpmailer\.lang-(.*)\.php|PHPMailer\.php)$},
     'phpsysinfo'           =>
 qr{(?i)/phpsysinfo\.dtd|/class\.(?:Linux|(?:Open|Net|Free|)BSD)\.inc\.php$},
     'libphp-snoopy'        => qr{(?i)/Snoopy\.class\.(?:php|inc)$},
