@@ -55,9 +55,6 @@ qr{(?i)/phpsysinfo\.dtd|/class\.(?:Linux|(?:Open|Net|Free|)BSD)\.inc\.php$},
     'php-sparkline'        => qr{(?i)/Sparkline\.php$},
     'php-econea-nusoap'    => qr{(?i)/(?:class\.)?nusoap\.(?:php|inc)$},
     'php-htmlpurifier'     => qr{(?i)/HTMLPurifier\.php$},
-    # not yet available in unstable:,
-    # 'libphp-ixr'         => qr{(?i)/IXR_Library(?:\.inc|\.php)+$},
-    # 'libphp-kses'        => qr{(?i)/(?:class\.)?kses\.php$},
 );
 
 sub visit_installed_files {
