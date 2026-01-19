@@ -38,7 +38,6 @@ my %PHP_FILES = (
     'phpsysinfo'           =>
 qr{(?i)/phpsysinfo\.dtd|/class\.(?:Linux|(?:Open|Net|Free|)BSD)\.inc\.php$},
     'libphp-snoopy'        => qr{(?i)/Snoopy\.class\.(?:php|inc)$},
-    'php-markdown'         => qr{(?i)/markdown\.php$},
     'php-geshi'            => qr{(?i)/geshi\.php$},
     'libphp-phplayersmenu' => qr{(?i)/.*layersmenu.*/(lib/)?PHPLIB\.php$},
     'libphp-phpsniff'      => qr{(?i)/phpSniff\.(?:class|core)\.php$},
