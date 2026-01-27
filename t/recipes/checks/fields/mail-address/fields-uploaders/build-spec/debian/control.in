@@ -2,11 +2,8 @@ Source: [% $source %]
 Priority: optional
 Section: devel
 Maintainer: [% $author %]
-Uploaders: Mrs. Localhost <user@localhost>,
-           Mr. Weird<no-space@somewhere.com>,
-           Malformed Email <@ddress@myspace.com>,
+Uploaders: Mrs. Localhost <user@localhost.domain>,
            John A. J. Doe <i.am.ok@somewhere.com>,
-           Doris Double-Email <Doris Double-Email <doris@demail.com>>,
            Valid email <0@somewhere.com>
 Standards-Version: [% $standards_version %]
 Build-Depends: [% $build_depends %]
