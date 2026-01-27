@@ -1,4 +1,4 @@
-generic-empty (source): malformed-contact Maintainer a
-generic-empty (changes): malformed-contact Maintainer a
+generic-empty (source): mail-contact Maintainer a <a@debian.org>
 generic-empty (changes): malformed-contact Changed-By a <>
-generic-empty (binary): malformed-contact Maintainer a
+generic-empty (changes): mail-contact Maintainer a <a@debian.org>
+generic-empty (binary): mail-contact Maintainer a <a@debian.org>
