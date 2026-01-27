@@ -1,5 +1,0 @@
-Testname: missing-closing-bracket
-Check: fields/mail-address
-Test-Against:
- malformed-contact
-See-Also: Bug#965335
