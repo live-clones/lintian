@@ -62,6 +62,16 @@ sub always {
     return;
 }
 
+sub source {
+    my $uploaders = $self->processable->fields->value('Uploaders');
+    # check for empty field see  #783628
+    if ($uploaders =~ /,\s*,/) {
+        $self->hint('uploader-name-missing','you have used a double comma');
+        $uploaders =~ s/,\s*,/,/g;
+    }
+    return;
+}
+
 1;
 
 # Local Variables:
