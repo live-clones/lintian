@@ -46,6 +46,7 @@ use Test::Lintian::Output::Universal qw(tag_name);
 const my $SPACE => q{ };
 const my $NEWLINE => qq{\n};
 
+# See Bug#1126502 for why ansi-escape can't be tested at the moment
 my @known_missing = (
     qw(
       changed-by-invalid-for-derivative
