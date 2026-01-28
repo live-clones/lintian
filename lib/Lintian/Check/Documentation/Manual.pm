@@ -638,7 +638,8 @@ sub installable {
 
     # filter out sub commands, underscore for libreswan; see Bug#947258
     for my $command (@related_commands) {
-        @surplus_manpages = grep { !/^$command(?:\b|_)/ } @surplus_manpages;
+        @surplus_manpages
+          = grep { !/^\Q$command\E(?:\b|_)/ } @surplus_manpages;
     }
 
     for my $manpage (map { @{$local_manpages{$_} // []} } @surplus_manpages) {
