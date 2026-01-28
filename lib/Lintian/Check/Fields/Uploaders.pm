@@ -74,10 +74,14 @@ sub source {
       unless $debian_control->source_fields->declares('Uploaders');
 
     my $uploaders = $debian_control->source_fields->value('Uploaders');
+    my $control_position
+      = $debian_control->source_fields->position('Uploaders');
+    my $control_pointer = $debian_control->item->pointer($control_position);
 
     # check for empty field see  #783628
     if ($uploaders =~ /,\s*,/) {
-        $self->hint('uploader-name-missing','you have used a double comma');
+        $self->pointed_hint('uploader-name-missing',$control_pointer,
+            'you have used a double comma');
         $uploaders =~ s/,\s*,/,/g;
     }
 
