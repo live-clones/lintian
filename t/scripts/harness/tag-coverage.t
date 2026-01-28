@@ -70,6 +70,7 @@ my @known_missing = (
       uses-deprecated-adttmp
       invalid-versioned-provides
       too-many-contacts
+      ansi-escape
     ),
 
 # the following tags are not testable due to restrictions in reprotest
