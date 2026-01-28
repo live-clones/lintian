@@ -80,19 +80,6 @@
                         },
                         "line_position" : 0
                      },
-                     "tag" : "patch-not-forwarded-upstream",
-                     "visibility" : "info"
-                  },
-                  {
-                     "experimental" : false,
-                     "note" : "",
-                     "pointer" : {
-                        "item" : {
-                           "index" : "json-output_1.0+dsfg-1.1.dsc (patched)",
-                           "name" : "debian/patches/debian-changes-1.0+dsfg-1.1"
-                        },
-                        "line_position" : 0
-                     },
                      "tag" : "quilt-patch-using-template-description",
                      "visibility" : "info"
                   },
