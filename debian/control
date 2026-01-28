@@ -12,14 +12,14 @@ Build-Depends:
  aspell <!nocheck>,
  aspell-en <!nocheck>,
  cdbs <!nocheck>,
- debhelper (>= 13.11.8~) <!nocheck>,
+ debhelper <!nocheck>,
  debhelper-compat (= 13),
  default-jdk-headless | default-jdk <!nocheck>,
- dh-elpa | bash (<< 4.4) <!nocheck>,
+ dh-elpa | bash <!nocheck>,
  dh-python <!nocheck>,
  dh-r <!nocheck>,
  dh-runit <!nocheck>,
- dpkg (>= 1.17.14),
+ dpkg (>= 1.23.4),
  fakeroot <!nocheck>,
  gcc-mingw-w64-i686 <!nocheck>,
  gcc-mingw-w64-x86-64 <!nocheck>,
@@ -81,7 +81,7 @@ Depends:
  binutils,
  bzip2,
  diffstat,
- dpkg (>= 1.17.14),
+ dpkg (>= 1.23.4),
  dpkg-dev,
  file,
  gettext,
@@ -92,8 +92,6 @@ Depends:
  libarchive-zip-perl,
  libberkeleydb-perl,
  libcapture-tiny-perl,
-# Bug#1001173 solved in 2.005004-3; leave for backports for now
- libclass-xsaccessor-perl,
  libclone-perl,
  libconfig-tiny-perl,
  libconst-fast-perl,
@@ -142,8 +140,6 @@ Depends:
  liburi-perl,
  libversion-perl,
  libwww-mechanize-perl,
-# Bug#1001164 solved in 3.16-4; leave for backports for now
- libwww-perl,
  libxml-libxml-perl,
  libyaml-libyaml-perl,
  plzip | lzip-decompressor,
@@ -159,16 +155,6 @@ Depends:
 Suggests:
  binutils-multiarch,
  libtext-template-perl,
-Breaks:
- funny-manpages (<< 1.3-5.1),
- libconfig-model-dpkg-perl (<< 2.151),
- lintian-brush (<< 0.88),
-# for bullseye, https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1001655#35
- lzd (<< 1.2-3~),
- pkg-js-tools (<< 0.9.4),
- pkg-perl-tools (<< 0.53),
-Replaces:
- funny-manpages (<< 1.3-5.1),
 Multi-Arch: foreign
 Description: Debian package checker
  Lintian dissects Debian packages and reports bugs and policy violations. It
