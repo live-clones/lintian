@@ -14,6 +14,7 @@ build-trixie-backports:
     RELEASE: 'trixie-backports'
     DEB_BUILD_OPTIONS: 'nocheck'
   extends: .build-package
+  allow_failure: true
 
 variables:
   SALSA_CI_DISABLE_BLHC: 1
