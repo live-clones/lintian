@@ -15,7 +15,7 @@ Build-Depends:
  debhelper <!nocheck>,
  debhelper-compat (= 13),
  default-jdk-headless | default-jdk <!nocheck>,
- dh-elpa | bash <!nocheck>,
+ dh-elpa <!nocheck>,
  dh-python <!nocheck>,
  dh-r <!nocheck>,
  dh-runit <!nocheck>,
