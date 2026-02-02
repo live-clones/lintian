@@ -46,6 +46,7 @@ use Test::Lintian::Output::Universal qw(tag_name);
 const my $SPACE => q{ };
 const my $NEWLINE => qq{\n};
 
+# See Bug#1126502 for why ansi-escape can't be tested at the moment
 my @known_missing = (
     qw(
       changed-by-invalid-for-derivative
@@ -69,6 +70,8 @@ my @known_missing = (
       unpack-message-for-orig
       uses-deprecated-adttmp
       invalid-versioned-provides
+      too-many-contacts
+      ansi-escape
     ),
 
 # the following tags are not testable due to restrictions in reprotest

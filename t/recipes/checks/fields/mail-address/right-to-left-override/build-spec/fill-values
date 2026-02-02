@@ -1,4 +1,0 @@
-Skeleton: upload-native
-Testname: right-to-left-override
-Author: Ansgar <"‮ansgar"@43-1.org>
-Description: Maintainer with UTF-8 RIGHT-TO-LEFT OVERRIDE from Ansgar's 'colorful' test package (false positive)

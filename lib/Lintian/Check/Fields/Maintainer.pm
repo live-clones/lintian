@@ -56,6 +56,21 @@ sub source {
     $self->hint('trailing-comma-in-maintainer-field', $maintainer)
       if $maintainer =~ /,$/;
 
+    my $debian_control = $self->processable->debian_control;
+
+    return
+      unless $debian_control->source_fields->declares('Maintainer');
+
+    my $control_position
+      = $debian_control->source_fields->position('Maintainer');
+    my $control_pointer = $debian_control->item->pointer($control_position);
+    my $control_maintainer
+      = $debian_control->source_fields->value('Maintainer');
+
+    $self->pointed_hint('trailing-comma-in-maintainer-field',
+        $control_pointer, $maintainer)
+      if $control_maintainer =~ /,$/;
+
     return;
 }
 

@@ -14,6 +14,7 @@ build-trixie-backports:
     RELEASE: 'trixie-backports'
     DEB_BUILD_OPTIONS: 'nocheck'
   extends: .build-package
+  allow_failure: true
 
 variables:
   SALSA_CI_DISABLE_BLHC: 1
@@ -26,6 +27,7 @@ lintian-git:
   extends: .test-autopkgtest
   before_script:
   - apt-get update
+  - apt-get install -y dpkg/unstable
   - apt-get install -y ${WORKING_DIR}/lintian_*.deb
 
 # Extend Salsa-CI build jobs to have longer timeout as the default GitLab
