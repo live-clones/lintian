@@ -707,7 +707,9 @@ sub binary {
                     'changelog-distribution-does-not-match-changes-file',
                     $latest_pointer,$latest_dist,
                     $NOT_EQUALS, $changes_dist
-                )unless @normalized == 1;
+                  )
+                  unless @normalized == 1
+                  || $changes_dist eq "$latest_dist-proposed"; # Ubuntu-ism
             }
 
         }

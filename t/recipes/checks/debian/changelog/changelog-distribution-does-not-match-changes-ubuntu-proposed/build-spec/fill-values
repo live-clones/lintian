@@ -1,0 +1,5 @@
+Skeleton: upload-native
+Testname: changelog-distribution-does-not-match-changes-ubuntu-proposed
+Description: Test distribution mismatch suppression for Ubuntu packages built
+ in the proposed pocket.
+Distribution: noble
