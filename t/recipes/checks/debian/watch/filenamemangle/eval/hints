@@ -1,2 +1,2 @@
-filenamemangle (source): prefer-uscan-symlink filenamemangle s/.+\/tag\/(\d\S+)$/foot-$1\.tar\.gz/ [debian/watch:6]
+filenamemangle (source): prefer-uscan-symlink filenamemangle s/.+\/tag\/(\d\S+)$/foot-$1\.tar\.gz/ [debian/watch:8]
 filenamemangle (source): debian-watch-does-not-check-openpgp-signature [debian/watch]

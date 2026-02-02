@@ -137,6 +137,7 @@ sub source {
     $position = 1;
     my $continued = $EMPTY;
     my $line;
+    my $total_lines = $#lines;
     while (defined($line = shift @lines)) {
 
         my $pointer = $item->pointer($position);
@@ -168,9 +169,17 @@ sub source {
         $line = $continued . ($standard>=$CURRENT_WATCH_VERSION ? q{} : $line)
           if length $continued;
 
-        $continued = $EMPTY;
-
-        next if $line =~ /^version\s*[:=]\s*(\d+)\s*$/i;
+        my $version_line = ($line =~ /^version\s*[:=]\s*(\d+)\s*$/i);
+        if ($standard<$CURRENT_WATCH_VERSION) {
+            $continued = $EMPTY;
+            next if $version_line;
+        } else {
+            if ($version_line) {
+                $continued = $EMPTY;
+                next;
+            }
+            next if $position < $total_lines + 1;
+        }
 
         my $remainder = $line;
 
