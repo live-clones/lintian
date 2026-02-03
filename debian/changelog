@@ -1,8 +1,44 @@
-lintian (2.129.0) UNRELEASED; urgency=medium
+lintian (2.129.0) unstable; urgency=medium
 
-  * WIP (generated at release time: please do not add entries below.)
+  [ Louis-Philippe Véronneau ]
+  * d/control: tighten dpkg version restriction and drop other old and
+    outdated restrictions
+  * Fix false-positive for orig-tarball-missing-upstream-signature when using
+    debian/watch v5 files and the gittag mode.
+  * d/control: Add Nilesh Patra as maintainer. (Closes: #1012289)
+  * d/control: Standards-Version bump to 4.7.3. Remove redundant 'Priority:
+    optional' field.
 
- -- Louis-Philippe Véronneau <pollo@debian.org>  Thu, 01 Jan 2026 22:43:43 -0500
+  [ Aurelien Jarno ]
+  * hardening-no-fortify-functions: fix detection of IEEE 128-bit long double
+
+  [ James Addison ]
+  * Detect embedded minizip usage
+
+  [ Nilesh Patra ]
+  * Add new tag "testsuite-restrictions-has-deprecated-skip-not-installable"
+    (Closes: #1123542)
+  * Fix compatibility with dpkg >= 1.23.4
+  * Drop right-to-left-override and colorful (See #1126502)
+  * Skip d/watch processing on (empty) lines with comments and spaces (Closes:
+    #1125489)
+
+  [ Timo Paulssen ]
+  * Files/Generated: Use SlidingWindow instead of getline
+
+  [ William Desportes ]
+  * Fix detecting dh-sequence-{phppear,phpcomposer}, fix
+    pear-package-without-pkg-php-tools-builddep and
+    composer-package-without-pkg-php-tools-builddep
+
+  [ Simon McVittie ]
+  * obsolete-packages: Add obsolete transitional names for libgd-perl
+
+  [ Andrius Merkys ]
+  * Disable pattern metacharacters in surplus_manpages regex to fix unmatched
+    bracket. Closes: #1126459
+
+ -- Louis-Philippe Véronneau <pollo@debian.org>  Mon, 02 Feb 2026 22:19:42 -0500
 
 lintian (2.128.1) unstable; urgency=medium
 
