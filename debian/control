@@ -6,7 +6,8 @@ Uploaders:
  Axel Beckert <abe@debian.org>,
  Bastien Roucariès <rouca@debian.org>,
  Louis-Philippe Véronneau <pollo@debian.org>,
- Maytham Alsudany <maytham@debian.org>
+ Maytham Alsudany <maytham@debian.org>,
+ Nilesh Patra <nilesh@debian.org>
 Build-Depends:
  appstream <!nocheck>,
  aspell <!nocheck>,
