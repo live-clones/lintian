@@ -518,9 +518,9 @@ sub source {
         $self->pointed_hint('debian-build-system', $drules->pointer, 'other');
     }
 
-    unless ($seen_any_dh_command || $includes_cdbs) {
+    unless ($seen_any_dh_command) {
 
-        $self->pointed_hint('package-does-not-use-debhelper-or-cdbs',
+        $self->pointed_hint('package-does-not-use-debhelper',
             $drules->pointer);
         return;
     }

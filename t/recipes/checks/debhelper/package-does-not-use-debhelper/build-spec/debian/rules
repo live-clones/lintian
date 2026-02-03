@@ -1,6 +1,6 @@
 #!/usr/bin/make -f
 
-PKG = debhelper-package-does-not-use-debhelper-or-cdbs
+PKG = debhelper-package-does-not-use-debhelper
 DOCS = debian/tmp/usr/share/doc/$(PKG)
 
 clean:
