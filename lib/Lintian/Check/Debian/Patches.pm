@@ -64,9 +64,6 @@ sub source {
 
     $self->hint('patch-system', $_) for @patch_system;
 
-    $self->hint('more-than-one-patch-system')
-      if @patch_system > 1;
-
     if (@patch_system && !$quilt_format) {
 
         my $readme = $debian_dir->resolve_path('README.source');
