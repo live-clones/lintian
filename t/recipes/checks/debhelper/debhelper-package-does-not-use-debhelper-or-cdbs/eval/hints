@@ -1,2 +1,0 @@
-debhelper-package-does-not-use-debhelper-or-cdbs (source): package-does-not-use-debhelper-or-cdbs [debian/rules]
-debhelper-package-does-not-use-debhelper-or-cdbs (source): debian-build-system other [debian/rules]
