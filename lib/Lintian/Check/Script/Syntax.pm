@@ -57,20 +57,16 @@ sub visit_installed_files {
       if ($item->name =~ m{^usr/share/doc/} || $item->name =~ m{^usr/src/})
       && $item->name !~ m{^usr/share/doc/[^/]+/examples/};
 
-    # Syntax-check most shell scripts, but don't syntax-check
-    # scripts that end in .dpatch.  bash -n doesn't stop checking
-    # at exit 0 and goes on to blow up on the patch itself.
+    # Syntax-check most shell scripts
     $self->pointed_hint('shell-script-fails-syntax-check',$item->pointer)
       if $self->fails_syntax_check($item)
       && $item->name !~ m{^usr/share/doc/[^/]+/examples/}
-      && $item->name !~ /\.dpatch$/
       && $item->name !~ /\.erb$/;
 
     $self->pointed_hint('example-shell-script-fails-syntax-check',
         $item->pointer)
       if $self->fails_syntax_check($item)
       && $item->name =~ m{^usr/share/doc/[^/]+/examples/}
-      && $item->name !~ /\.dpatch$/
       && $item->name !~ /\.erb$/;
 
     return;
