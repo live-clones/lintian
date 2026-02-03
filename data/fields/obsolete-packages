@@ -169,3 +169,4 @@ python3-tz => python3-pytz
 # Deprecated in forky
 # https://lists.debian.org/debian-devel/2025/08/msg00150.html
 libgirepository1.0-dev => gobject-introspection (>= 1.80), gir1.2-*-dev, rarely libgirepository-1.0-dev
+libselinux1-dev => libselinux-dev
