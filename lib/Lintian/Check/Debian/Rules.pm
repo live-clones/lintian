@@ -129,10 +129,6 @@ sub source {
             qr{^include\s+/usr/share/cdbs/1/rules/debhelper\.mk},
             qr{^include\s+/usr/share/R/debian/r-cran\.mk}
         ],
-        'dpatch:any' => [
-            qr{^include\s+/usr/share/dpatch/},
-            qr{^include\s+/usr/share/cdbs/1/rules/dpatch\.mk}
-        ],
         'gnome-pkg-tools:any | dh-sequence-gnome:any' =>
           [qr{^include\s+/usr/share/gnome-pkg-tools/}],
         'quilt:any' => [
@@ -165,7 +161,6 @@ sub source {
         'debhelper:any | debhelper-compat:any' =>
           [qr/^\t\s*dh_(?!autoreconf).+/],
         'dh-ocaml:any, ocaml-nox:any | ocaml:any' =>[qr/^\t\s*dh_ocamlinit\s/],
-        'dpatch:any' => [qr/^\t\s*(\S+=\S+\s+)*dpatch\s/],
         'po-debconf:any' => [qr/^\t\s*debconf-updatepo\s/],
         $PYTHON_DEPEND => [qr/^\t\s*python\s/],
         $PYTHON3_DEPEND => [qr/^\t\s*python3\s/],
