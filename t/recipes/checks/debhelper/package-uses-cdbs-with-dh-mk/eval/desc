@@ -1,0 +1,2 @@
+Testname: package-uses-cdbs-with-dh-mk
+Check: debhelper

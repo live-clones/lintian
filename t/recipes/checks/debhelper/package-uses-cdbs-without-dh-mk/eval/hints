@@ -1,0 +1,2 @@
+package-uses-cdbs-without-dh-mk (source): package-does-not-use-debhelper [debian/rules]
+package-uses-cdbs-without-dh-mk (source): debian-build-system cdbs-without-debhelper.mk [debian/rules]
