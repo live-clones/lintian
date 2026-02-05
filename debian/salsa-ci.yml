@@ -14,6 +14,7 @@ build-trixie-backports:
     RELEASE: 'trixie-backports'
     DEB_BUILD_OPTIONS: 'nocheck'
   extends: .build-package
+  # This is due to a hard dependency on dpkg 1.23.4 not available in trixie backports
   allow_failure: true
 
 variables:
@@ -21,14 +22,6 @@ variables:
   SALSA_CI_DISABLE_BUILD_PACKAGE_ANY: 1
   SALSA_CI_LINTIAN_FAIL_WARNING: 1
   DEB_BUILD_OPTIONS: 'nocheck'
-
-# Run additional Lintian check using latest version from git
-lintian-git:
-  extends: .test-autopkgtest
-  before_script:
-  - apt-get update
-  - apt-get install -y dpkg/unstable
-  - apt-get install -y ${WORKING_DIR}/lintian_*.deb
 
 # Extend Salsa-CI build jobs to have longer timeout as the default GitLab
 # timeout (1h) is often not enough.
