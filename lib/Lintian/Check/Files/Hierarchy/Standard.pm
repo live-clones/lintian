@@ -72,7 +72,7 @@ sub visit_installed_files {
         && $item->name =~ m{^usr/[^/]+/$}) {
 
         # /usr subdirs
-        if ($item->name=~ m{^usr/(?:dict|doc|etc|info|man|adm|preserve)/}) {
+        if ($item->name=~ m{^usr/(?:dict|doc|info|man|adm|preserve)/}) {
             # FSSTND dirs
             $self->pointed_hint('FSSTND-dir-in-usr', $item->pointer);
         } elsif (
