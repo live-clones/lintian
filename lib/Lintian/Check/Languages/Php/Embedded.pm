@@ -34,14 +34,12 @@ my $PHP_EXT = qr{(?i)\.(?:php|inc|dtd)$};
 my %PHP_FILES = (
     'libphp-adodb'         => qr{(?i)/adodb\.inc\.php$},
     'smarty3?'             => qr{(?i)/Smarty(?:_Compiler)?\.class\.php$},
-    'libphp-phpmailer'     => qr{(?i)/class\.phpmailer(\.(?:php|inc))+$},
+    'libphp-phpmailer'     =>
+      qr{(?i)/(phpmailer\.lang-(.*)\.php|PHPMailer\.php)$},
     'phpsysinfo'           =>
 qr{(?i)/phpsysinfo\.dtd|/class\.(?:Linux|(?:Open|Net|Free|)BSD)\.inc\.php$},
-    'php-openid'           => qr{/Auth/(?:OpenID|Yadis/Yadis)\.php$},
     'libphp-snoopy'        => qr{(?i)/Snoopy\.class\.(?:php|inc)$},
-    'php-markdown'         => qr{(?i)/markdown\.php$},
     'php-geshi'            => qr{(?i)/geshi\.php$},
-    'libphp-pclzip'        =>qr{(?i)/(?:class[.-])?pclzip\.(?:inc|lib)?\.php$},
     'libphp-phplayersmenu' => qr{(?i)/.*layersmenu.*/(lib/)?PHPLIB\.php$},
     'libphp-phpsniff'      => qr{(?i)/phpSniff\.(?:class|core)\.php$},
     'libphp-jabber'        => qr{(?i)/(?:class\.)?jabber\.php$},
@@ -50,15 +48,12 @@ qr{(?i)/phpsysinfo\.dtd|/class\.(?:Linux|(?:Open|Net|Free|)BSD)\.inc\.php$},
     'libphp-jpgraph'       => qr{(?i)/jpgraph\.php$},
     'php-fpdf'             => qr{(?i)/fpdf\.php$},
     'php-getid3'           => qr{(?i)/getid3\.(?:lib\.)?(?:\.(?:php|inc))+$},
-    'php-php-gettext'      => qr{(?i)/(?<!pomo/)streams\.php$},
+    'php-php-gettext'      => qr{(?)/gettext\.inc$},
     'libphp-magpierss'     => qr{(?i)/rss_parse\.(?:php|inc)$},
     'php-simpletest'       => qr{(?i)/unit_tester\.php$},
-    'libsparkline-php'     => qr{(?i)/Sparkline\.php$},
+    'php-sparkline'        => qr{(?i)/Sparkline\.php$},
     'php-econea-nusoap'    => qr{(?i)/(?:class\.)?nusoap\.(?:php|inc)$},
     'php-htmlpurifier'     => qr{(?i)/HTMLPurifier\.php$},
-    # not yet available in unstable:,
-    # 'libphp-ixr'         => qr{(?i)/IXR_Library(?:\.inc|\.php)+$},
-    # 'libphp-kses'        => qr{(?i)/(?:class\.)?kses\.php$},
 );
 
 sub visit_installed_files {
