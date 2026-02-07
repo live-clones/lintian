@@ -59,16 +59,10 @@ sub source {
     $patch_series
       = $self->processable->patched->resolve_path('debian/patches/series');
 
-    push(@patch_system, 'dpatch')
-      if $build_deps->satisfies('dpatch');
-
     push(@patch_system, 'quilt')
       if $quilt_format || $build_deps->satisfies('quilt');
 
     $self->hint('patch-system', $_) for @patch_system;
-
-    $self->hint('more-than-one-patch-system')
-      if @patch_system > 1;
 
     if (@patch_system && !$quilt_format) {
 
