@@ -88,6 +88,9 @@ sub source {
                         $pointer, $profile,"(in section for $installable)")
                       unless $KNOWN_BUILD_PROFILES->recognizes($profile)
                       || $profile =~ /^pkg\.[a-z0-9][a-z0-9+.-]+\../;
+
+                    $self->pointed_hint('varies-content-with-nocheck',$pointer)
+                      if $profile eq 'nocheck';
                 }
             }
         }
