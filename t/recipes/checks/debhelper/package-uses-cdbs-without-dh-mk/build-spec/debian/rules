@@ -1,0 +1,15 @@
+#!/usr/bin/make -f
+
+include /usr/share/cdbs/1/rules/buildvars.mk
+
+clean::
+build::
+binary::
+	mkdir -p debian/tmp/DEBIAN
+	cd debian/tmp && \
+		find * -type f ! -regex "DEBIAN/.*" -print0 | \
+		LC_ALL=C sort -z | xargs -0r md5sum > DEBIAN/md5sums
+	chown -R 0:0 debian/tmp
+	chmod -R u+w,go=rX debian/tmp
+	dpkg-gencontrol
+	dpkg --build debian/tmp ..
