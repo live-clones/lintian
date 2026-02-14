@@ -86,8 +86,9 @@ sub version_from_git {
     # Example outputs:
     # 2.115.3-49-g086a9a113
     # 2.115.3-49-g086a9a113-dirty
-    my $describe = decode_utf8(
-        safe_qx('git', "--git-dir=$git_path", 'describe', '--dirty'));
+    my $describe = eval {
+        decode_utf8(safe_qx('git', "--git-dir=$git_path", 'describe', '--dirty'))
+    } or return;
     chomp $describe;
 
     # Modify it to make it a valid native version number and make it
