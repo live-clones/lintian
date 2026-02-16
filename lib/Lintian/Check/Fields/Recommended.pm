@@ -62,11 +62,13 @@ my @CHANGES = qw(Urgency);
 sub source {
     my ($self) = @_;
 
-    my $fields = $self->processable->fields;
-    my @missing_dsc = grep { !$fields->declares($_) } @DSC;
+    unless ($self->processable->is_tree) {
+        my $fields = $self->processable->fields;
+        my @missing_dsc = grep { !$fields->declares($_) } @DSC;
 
-    my $dscfile = path($self->processable->path)->basename;
-    $self->hint('recommended-field', $dscfile, $_) for @missing_dsc;
+        my $dscfile = path($self->processable->path)->basename;
+        $self->hint('recommended-field', $dscfile, $_) for @missing_dsc;
+    }
 
     my $debian_control = $self->processable->debian_control;
     my $control_item = $debian_control->item;

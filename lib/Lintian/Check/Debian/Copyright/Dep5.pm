@@ -429,10 +429,12 @@ sub check_dep5_copyright {
 
     } else {
         @shipped_items = @{$self->processable->orig->sorted_list};
+        use Data::Dump qw(dump);
+        # say dump(@shipped_items);
 
         # remove ./debian folder from orig, if any
         @shipped_items = grep { !m{^debian/} } @shipped_items
-          if $self->processable->fields->value('Format') eq '3.0 (quilt)';
+          if $self->processable->source_format eq '3.0 (quilt)';
 
         # add ./ debian folder from patched
         my $debian_dir = $self->processable->patched->resolve_path('debian/');

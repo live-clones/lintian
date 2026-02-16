@@ -61,6 +61,7 @@ use Lintian::Processable::Installable;
 use Lintian::Processable::Buildinfo;
 use Lintian::Processable::Changes;
 use Lintian::Processable::Source;
+use Lintian::Processable::SourceTree;
 use Lintian::Profile;
 use Lintian::Version qw(guess_version);
 
@@ -703,12 +704,12 @@ if ($selected{'packages-from-file'}){
 my $pool = Lintian::Pool->new;
 
 for my $subject (@subjects) {
-    die encode_utf8("$subject is not a readable file\n") unless -r $subject;
+    die encode_utf8("$subject is not a readable file or source directory\n") unless -r $subject or -d $subject;
 
     # in ubuntu, automatic dbgsym packages end with .ddeb
     die encode_utf8(
 "bad package file name $subject (neither .deb, .udeb, .ddeb, .changes, .dsc or .buildinfo file)\n"
-    ) unless $subject =~ /\.(?:[u|d]?deb|dsc|changes|buildinfo)$/;
+    ) unless $subject =~ /\.(?:[u|d]?deb|dsc|changes|buildinfo)$/ or -d $subject;
 
     try {
         # create a new group
@@ -770,6 +771,12 @@ sub create_processable_from_file {
 
     my $processable;
 
+    if (-d $path) {
+        $processable = Lintian::Processable::SourceTree->new;
+        $processable->init_from_directory($path);
+        return $processable;
+    }
+
     if ($path =~ /\.dsc$/) {
         $processable = Lintian::Processable::Source->new;
 
@@ -787,7 +794,6 @@ sub create_processable_from_file {
 
     } elsif ($path =~ /\.changes$/) {
         $processable = Lintian::Processable::Changes->new;
-
     } else {
         croak encode_utf8("$path is not a known type of package");
     }

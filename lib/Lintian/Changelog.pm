@@ -25,6 +25,7 @@ use utf8;
 use Carp;
 use Const::Fast;
 use Date::Parse;
+use Path::Tiny;
 
 use Lintian::Changelog::Entry;
 
@@ -348,6 +349,18 @@ sub parse {
     }
 
     return;
+}
+
+=item read_file
+
+=cut
+
+sub read_file {
+    my ($self, $path) = @_;
+
+    my $contents = path($path)->slurp_utf8;
+
+    return $self->parse($contents);
 }
 
 =item errors

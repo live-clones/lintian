@@ -359,7 +359,7 @@ sub source {
                         'dh-quilt-addon-but-quilt-source-format',
                         $pointer,"dh ... --with $orig_addon")
                       if $addon eq 'quilt'
-                      && $self->processable->fields->value('Format') eq
+                      && $self->processable->source_format eq
                       '3.0 (quilt)';
 
                     $addon_by_prerequisite{$prerequisite} = $addon
