@@ -8,6 +8,7 @@ Explanation: The nocheck build profile is used to disable binary
  There is a use case for skipping the installation of benchmarks, samples
  and test programs and it is served by the noinsttest build profile.
  .
- If a build dependency is required for running build-time tests or
- installed tests, it should be annotated <!nocheck> <!noinsttest>.
- Then it can only be skipped when supplying both profiles at the same time.
+ If a build dependency is needed both to run build-time tests and to build
+ installed tests that reside in a separate binary package with !noinsttest
+ build profile, it should be annotated with <!nocheck> <!noinsttest>.
+ It can then only be skipped when both profiles are supplied at the same time.
