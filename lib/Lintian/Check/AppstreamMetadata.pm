@@ -89,9 +89,6 @@ sub installable {
                 '--no-net', $basedir);
         };
         if ($output =~ m/['"]?Passed['"]?: ['"]?no['"]?/) {
-            my @yaml = YAML::XS::Load($output);
-            die
-              unless @yaml;
             $self->hint('appstream-metadata-validation-failed',
                 q{Problems reported by "appstreamcli validate-tree".});
         }
