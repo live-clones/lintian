@@ -479,6 +479,8 @@ sub source {
                     for my $rulebypolicy (keys %TAG_FOR_POLICY_TARGET) {
                         $seen{$rulebypolicy}++ if $rulebypolicy =~ m/$pattern/;
                     }
+                } elsif($target eq '.DEFAULT') {
+                    $seen{$_}++ for keys %TAG_FOR_POLICY_TARGET;
                 } else {
                     # Is it $(VAR) ?
                     if ($target =~ m/^\$[\(\{]([^\)\}]++)[\)\}]$/) {
