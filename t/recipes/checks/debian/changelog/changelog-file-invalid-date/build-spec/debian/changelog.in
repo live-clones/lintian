@@ -6,3 +6,10 @@
   * Writes out "Sept" and "Thurs"; should be "Sep" and "Thu".
 
  -- [% $author %]  Thurs, 14 Sept 2017 10:47:43 +0000
+
+
+[% $source %] (0.0) unstable; urgency=low
+
+  * Lintian Test Suite.
+
+ -- [% $author %]  Wed, 13 Sep 2017 10:47:43 +0000
