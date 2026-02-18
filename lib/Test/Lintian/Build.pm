@@ -106,7 +106,8 @@ sub build_subject {
     path($buildpath)->remove_tree
       if -e $buildpath;
 
-    path($buildpath)->mkpath;
+    path($buildpath)->mkpath
+      or die encode_utf8("Cannot create the directory $buildpath");
 
     # get lintian subject
     croak encode_utf8('Could not get subject of Lintian examination.')
