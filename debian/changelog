@@ -1,8 +1,31 @@
-lintian (2.129.1) UNRELEASED; urgency=medium
+lintian (2.130.0) unstable; urgency=medium
 
-  * WIP (generated at release time: please do not add entries below.)
+  [ Louis-Philippe Véronneau ]
+  * Rename tag package-does-not-use-debhelper-or-cdbs to
+    package-does-not-use-debhelper (Closes: #1125329)
+  * d/salsa-ci: remove backports, as they are broken for Trixie and thus not
+    useful
 
- -- Louis-Philippe Véronneau <pollo@debian.org>  Mon, 02 Feb 2026 22:51:30 -0500
+  [ Christian Göttsche ]
+  * obsolete-packages: add libselinux1-dev
+
+  [ Nilesh Patra ]
+  * Drop lintian-git test from d/salsa-ci.yml (Closes: #1127003)
+  * Add tests to detect buildsystem with cdbs along with/without debhelper
+  * Add check to flag !nocheck in Build-Profiles with error (Closes: #1126934)
+  * Reword a few lines varies-content-with-nocheck.tag
+  * Check double quotes as well for appstream metadata check
+  * Add additional d/ch entry in changelog-file-invalid-date as a workaround
+    for #1128372
+  * Do not raise lintian error for missing targets when .DEFAULT is specified
+    (Closes: #983539)
+  * Stop loading appstream yaml and rely on regex to check if validation
+    passed (Closes: #1128262)
+
+  [ Maytham Alsudany ]
+  * Check for obsolete packages in debian/tests/control (Closes: #1091166)
+
+ -- Louis-Philippe Véronneau <pollo@debian.org>  Sun, 22 Feb 2026 14:15:01 -0500
 
 lintian (2.129.0) unstable; urgency=medium
 
