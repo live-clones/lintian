@@ -9,14 +9,6 @@ build-testing:
     DEB_BUILD_OPTIONS: 'nocheck'
   extends: .build-package
 
-build-trixie-backports:
-  variables:
-    RELEASE: 'trixie-backports'
-    DEB_BUILD_OPTIONS: 'nocheck'
-  extends: .build-package
-  # This is due to a hard dependency on dpkg 1.23.4 not available in trixie backports
-  allow_failure: true
-
 variables:
   SALSA_CI_DISABLE_BLHC: 1
   SALSA_CI_DISABLE_BUILD_PACKAGE_ANY: 1
