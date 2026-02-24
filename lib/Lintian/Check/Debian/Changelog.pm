@@ -815,7 +815,7 @@ sub binary {
         }
 
         $self->pointed_hint(
-            'debian-news-entry-has-unknown-version',
+            'debian-news-entry-version-missing-in-installed-changelog',
             $news_item->pointer($news->position),
             $news->Version
           )
