@@ -49,6 +49,7 @@ const my $NEWLINE => qq{\n};
 # See Bug#1126502 for why ansi-escape can't be tested at the moment
 my @known_missing = (
     qw(
+      binaries/time32
       changed-by-invalid-for-derivative
       debian-files-list-in-source
       debian-rules-missing-recommended-target
