@@ -3,6 +3,7 @@ May-Generate:
  changelog
  control
  compat
+ NEWS
  source/format
  tests/control
  tests/test
