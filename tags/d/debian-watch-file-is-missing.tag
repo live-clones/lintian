@@ -12,5 +12,5 @@ Explanation: This source package is not Debian-native but it does not have a
  If the package is not maintained upstream or if upstream uses a
  distribution mechanism that cannot be meaningfully monitored by uscan
  and the Debian External Health Status project, please consider adding a
- <code>debian/watch</code> file containing only comments documenting the
- situation.
+ format 5 <code>debian/watch</code> file containing an
+ <code>Untrackable</code> field documenting the situation.
