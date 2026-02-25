@@ -1,0 +1,19 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@ --buildsystem=pybuild --with sphinxdoc
+
+# Test with space after nodocs
+override_dh_sphinxdoc:
+ifeq (,$(findstring nodocs, $(DEB_BUILD_OPTIONS)))
+	python3 -m sphinx -b html doc/source debian/python-dracclient-doc/usr/share/doc/python-dracclient-doc/html
+	dh_sphinxdoc
+endif
+
+# Test without space after nodocs and filter instead of findstring
+override_dh_installman:
+ifeq (,$(filter nodocs,$(DEB_BUILD_OPTIONS)))
+	mkdir debian/tmp
+	rst2man manpage.rst debian/tmp/foobar.1
+	dh_installman debian/tmp/foobar.1
+endif

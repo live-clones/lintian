@@ -1,0 +1,2 @@
+rules-invalid-build-option-nodocs (source): debian-rules-invalid-build-option nodocs [debian/rules:3]
+rules-invalid-build-option-nodocs (source): debian-rules-invalid-build-option nodocs [debian/rules:2]
