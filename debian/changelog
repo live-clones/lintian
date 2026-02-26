@@ -1,8 +1,23 @@
-lintian (2.130.1) UNRELEASED; urgency=medium
+lintian (2.130.1) unstable; urgency=medium
 
-  * WIP (generated at release time: please do not add entries below.)
+  [ Guillem Jover ]
+  * Recommend using debian/watch format 5 with Untrackable field for
+    packages which have untrackable upstreams
 
- -- Louis-Philippe Véronneau <pollo@debian.org>  Sun, 22 Feb 2026 14:42:59 -0500
+  [ Nilesh Patra ]
+  * Fix tests which fail with new debhelper 13.31:
+    - Allow NEWS to be generated from NEWS.in in tests
+    - changelog-file-news-version: consume date in NEWS file from template
+    - changelog-file-news-general: consume date in NEWS file from template
+    - changelog-file-invalid-date: Install d/ch manually (without
+      dh_installchangelogs)
+
+  [ Alexandre Detiste ]
+  * no-dh-sequencer tag: stop testing for deprecated
+    /usr/share/cdbs/1/class/hlibrary.mk and drop DEB_CABAL_PACKAGE check as
+    well which is a Haskell with CDBS instruction
+
+ -- Nilesh Patra <nilesh@debian.org>  Fri, 27 Feb 2026 00:25:31 +0530
 
 lintian (2.130.0) unstable; urgency=medium
 
