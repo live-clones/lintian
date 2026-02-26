@@ -1,3 +1,9 @@
+lintian (2.131.0) UNRELEASED; urgency=medium
+
+  * WIP (generated at release time: please do not add entries below.)
+
+ -- Nilesh Patra <nilesh@debian.org>  Fri, 27 Feb 2026 01:10:47 +0530
+
 lintian (2.130.1) unstable; urgency=medium
 
   [ Guillem Jover ]
