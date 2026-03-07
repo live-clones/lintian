@@ -1,0 +1,11 @@
+Format: 1.8
+Date: [% $date %]
+Source: [% $source %]
+Binary: [% $source %]
+Architecture: source all
+Version: [% $version %]
+Distribution: unstable
+Urgency: low
+Maintainer: Work <me@work.com>, Home <me@debian.org>
+Description:
+ [% $source %] - [% $description %]
