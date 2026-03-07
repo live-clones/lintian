@@ -70,7 +70,6 @@ my @known_missing = (
       unpack-message-for-orig
       uses-deprecated-adttmp
       invalid-versioned-provides
-      too-many-contacts
       ansi-escape
     ),
 
