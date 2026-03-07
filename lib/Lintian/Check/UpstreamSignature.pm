@@ -48,7 +48,7 @@ sub source {
     my $gittag = $watch
       && (
         $watch->bytes =~ /pgpmode=gittag/ # d/watch v4
-        || $watch->bytes =~ /Pgp-Mode: gittag/ # d/watch v5
+        || $watch->bytes =~ /pgp-?mode: gittag/i # d/watch v5
       );
 
     my @filenames = sort keys %{$self->processable->files};
