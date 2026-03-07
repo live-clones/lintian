@@ -1,5 +1,0 @@
-Source: [% $source %]
-Maintainer: a <a@debian.org>
-
-Package: [% $source %]
-Architecture: [% $package_architecture %]

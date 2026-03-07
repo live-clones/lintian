@@ -1,6 +1,0 @@
-#!/bin/sh
-#
-# Remove as many files from the package as possible.
-
-rm -f "$1/debian/compat"
-rm -f "$1/debian/copyright"
