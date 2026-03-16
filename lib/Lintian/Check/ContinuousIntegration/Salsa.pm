@@ -58,9 +58,11 @@ sub visit_patched_files {
     return
       unless $item->is_open_ok;
 
-    my $yaml = LoadFile($item->unpacked_path);
-    return
-      unless defined $yaml;
+    my $yaml = eval { LoadFile($item->unpacked_path) };
+    if (!defined $yaml) {
+        $self->pointed_hint('invalid-yaml', $item->pointer);
+        return;
+    }
 
 # traditionally examined via codesearch
 # https://codesearch.debian.net/search?q=salsa-ci-team%2Fpipeline%2Fraw%2Fmaster%2Fsalsa-ci.yml&literal=1
