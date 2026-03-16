@@ -1409,9 +1409,7 @@ sub elf {
         return ();
     }
 
-    my %copy = %{$self->index->elf_storage->{$self->name} // {} };
-
-    return \%copy;
+    return $self->index->elf_storage->{$self->name} // {};
 }
 
 =item elf_by_member
@@ -1433,9 +1431,7 @@ sub elf_by_member {
         return ();
     }
 
-    my %copy = %{$self->index->elf_storage_by_member->{$self->name} // {} };
-
-    return \%copy;
+    return $self->index->elf_storage_by_member->{$self->name} // {};
 }
 
 =item pointer
