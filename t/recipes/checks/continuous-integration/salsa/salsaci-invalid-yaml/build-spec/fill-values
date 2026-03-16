@@ -1,0 +1,3 @@
+Skeleton: source-native
+Testname: salsaci-invalid-yaml
+Description: Salsa CI file contains invalid YAML
