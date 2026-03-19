@@ -1,0 +1,4 @@
+Testname: quilt-patch-dpatch-file-ext
+Skeleton: upload-non-native
+Source-Format: 3.0 (quilt)
+Description: Check for dpatch related file ext in quilt patch
