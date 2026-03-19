@@ -65,7 +65,7 @@ Build-Depends:
  quilt <!nocheck>,
  rustc <!nocheck>,
  tidy <!nocheck>,
- terser <!nocheck>,
+ terser (>= 5.46.1-1~) <!nocheck>,
  wamerican <!nocheck>,
  wbritish <!nocheck>,
  zip <!nocheck>
