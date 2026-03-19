@@ -21,7 +21,6 @@ binary-indep:
 	install -d $(tmp)/usr/share/scripts/
 	install -d $(tmp)/usr/share/doc/scripts/
 	install -d $(tmp)/usr/lib/cgi-bin
-	install -d $(tmp)/usr/src/scripts
 	install -d $(tmp)/DEBIAN
 
 	install -m 755 csh-foo $(tmp)/etc/csh/login.d/ 
@@ -49,8 +48,6 @@ binary-indep:
 	install -m 705 guile-bizarre $(tmp)/usr/bin/
 
 # First one should produce a warning; second one shouldn't.
-	install -m 755 gccbug.dpatch $(tmp)/usr/share/scripts/
-	install -m 755 gccbug.dpatch $(tmp)/usr/src/scripts/
 
 	install -m 644 init-skeleton $(tmp)/etc/init.d/skeleton
 	install -m 755 init-no-lsb $(tmp)/etc/init.d/no-lsb
