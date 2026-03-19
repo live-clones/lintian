@@ -1,3 +1,0 @@
-Template: debconf/testmulti
-Type: multiselect
-Choices: foo, bar\, boo, boo
