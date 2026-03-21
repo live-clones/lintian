@@ -1,0 +1,4 @@
+Testname: quilt-patch-dpatch-desc
+Skeleton: upload-non-native
+Source-Format: 3.0 (quilt)
+Description: Check for dpatch related flags in quilt patch

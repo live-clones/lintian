@@ -138,7 +138,8 @@ sub source {
 
         my @patch_files;
         for my $name (@patch_names) {
-
+            $self->hint('quilt-patch-uses-dpatch-extension', $name)
+              if $name =~ m{\.dpatch$};
             my $item = $patch_dir->resolve_path($name);
 
             if (defined $item && $item->is_file) {
@@ -162,8 +163,13 @@ sub source {
             open(my $patch_fd, '<', $item->unpacked_path)
               or die encode_utf8('Cannot open ' . $item->unpacked_path);
 
+            $position = 1;
             while (my $line = <$patch_fd>) {
-
+                $self->pointed_hint('quilt-patch-uses-dpatch-placeholder',
+                    $item->pointer($position))
+                  if $line
+                  =~ m{^#!\s*/bin/sh\s+/usr/share/dpatch/dpatch-run\s*$}
+                  || $line =~ m{^\s*\@DPATCH\@\s*$};
                 # stop if something looking like a patch starts:
                 last
                   if $line =~ /^---/;
@@ -177,6 +183,8 @@ sub source {
 
                 $has_template_description = 1
                   if $line =~ / \Q$PATCH_DESC_TEMPLATE\E /msx;
+            } continue {
+                ++$position;
             }
             close $patch_fd;
 
