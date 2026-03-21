@@ -1,8 +1,14 @@
-lintian (2.131.1) UNRELEASED; urgency=medium
+lintian (2.132.0) unstable; urgency=medium
 
-  * WIP (generated at release time: please do not add entries below.)
+  [ Nilesh Patra ]
+  * Fixup tests with terser 5.46.1-1.
+  * Add 2 new tags 'quilt-patch-uses-dpatch-extension' and
+    'quilt-patch-uses-dpatch-placeholder'.
 
- -- Nilesh Patra <nilesh@debian.org>  Sat, 07 Mar 2026 20:20:58 +0530
+  [ Louis-Philippe Véronneau ]
+  * Remove dpatch-related tags and tests. (Closes: #1124803)
+
+ -- Louis-Philippe Véronneau <pollo@debian.org>  Sat, 21 Mar 2026 12:39:48 -0400
 
 lintian (2.131.0) unstable; urgency=medium
 
