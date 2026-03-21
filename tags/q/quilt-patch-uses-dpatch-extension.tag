@@ -1,6 +1,7 @@
 Tag: quilt-patch-uses-dpatch-extension
 Severity: info
 Check: debian/patches/quilt
-Explanation: quilt patch file uses <code>.dpatch</code> which points
- to the kind of patch files dpatch will consume which is long removed.
- Use <code>.diff</code> or <code>.patch</code> for quilt patch files.
+Explanation: This quilt patch file erroneoulsy uses the <code>.dpatch</code>
+ extension, which refers to the deprecated dpatch patching system.
+ .
+ Please use the <code>.diff</code> or <code>.patch</code> extensions instead.
