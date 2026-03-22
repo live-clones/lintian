@@ -1,8 +1,21 @@
-lintian (2.132.1) UNRELEASED; urgency=medium
+lintian (2.132.1) unstable; urgency=medium
 
-  * WIP (generated at release time: please do not add entries below.)
+  This release only adds these missing changelog entries that should have been
+  in 2.132.0.
 
- -- Louis-Philippe Véronneau <pollo@debian.org>  Sat, 21 Mar 2026 12:56:00 -0400
+  [ Nilesh Patra ]
+  * Re-word description in missing-systemd-service-for-init.d-rcS-script to
+    emphasize that SysV compatibility mode is no longer supported.
+    (Closes: #1129064)
+  * New tag continuous-integration/salsa/invalid-yaml: Detect invalid yaml in
+    salsa CI files. (Closes: #1031171)
+  * Avoid returning copy of elf storage to improve memory usage and
+    performance. (Closes: #1030991)
+
+  [Bas Couwenberg]
+  * Add support for Java 26 and 27.
+
+ -- Louis-Philippe Véronneau <pollo@debian.org>  Sat, 21 Mar 2026 21:18:50 -0400
 
 lintian (2.132.0) unstable; urgency=medium
 
