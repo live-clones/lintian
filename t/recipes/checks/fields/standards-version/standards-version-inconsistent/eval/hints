@@ -1,0 +1,2 @@
+standards-version-inconsistent (source): standards-version VERSION
+standards-version-inconsistent (source): standards-version-inconsistent VERSION != 4.7.3
