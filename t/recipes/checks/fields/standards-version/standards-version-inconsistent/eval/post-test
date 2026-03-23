@@ -1,2 +1,0 @@
-s/(standards-version) [0-9.]+/\1 VERSION/
-s/(standards-version-inconsistent) [0-9.]+ != /\1 VERSION != /

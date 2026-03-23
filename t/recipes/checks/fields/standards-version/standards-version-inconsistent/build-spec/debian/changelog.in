@@ -1,12 +1,6 @@
 [% $source %] ([% $version %]) [% $distribution %]; urgency=low
 
   * Test: [% $testname %]
-  * Bump Standards-Version to 4.7.3.
+  * Bump Standards-Version to 4.7.2.
 
  -- [% $author %]  [% $date %]
-
-[% $source %] ([% $prev_version %]) [% $distribution %]; urgency=low
-
-  * Lintian Test Suite.
-
- -- [% $author %]  [% $prev_date %]
