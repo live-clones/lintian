@@ -1,0 +1,6 @@
+[% $source %] ([% $version %]) [% $distribution %]; urgency=low
+
+  * Test: [% $testname %]
+  * Bump Standards-Version to 4.7.2.
+
+ -- [% $author %]  [% $date %]
