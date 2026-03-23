@@ -37,6 +37,11 @@ const my $SPACE => q{ };
 sub source {
     my ($self) = @_;
 
+    my $py2_override_file
+      = $self->processable->patched->resolve_path('debian/pydist-overrides');
+    $self->hint('useless-pydist-overrides-file')
+      if defined $py2_override_file;
+
     my $override_file
       = $self->processable->patched->resolve_path('debian/py3dist-overrides');
     return
