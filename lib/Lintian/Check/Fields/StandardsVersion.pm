@@ -97,8 +97,9 @@ sub source {
 
         my $changes = $entry->Changes;
 
-        if ($changes =~ /standards[ -]?version.*\b(\d+\.\d+\.\d+)\b(?!.*\b\d+\.\d+\.\d+\b)/i) {
-
+        if ($changes
+            =~ /(?:standards[ -]?version|\bs-v:?\s).*\b(\d+\.\d+\.\d+)\b(?!.*\b\d+\.\d+\.\d+\b)/i
+        ) {
             my $changelog_standard = $1;
 
             $self->hint('standards-version-inconsistent',
