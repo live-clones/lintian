@@ -8,8 +8,6 @@ build-testing:
     RELEASE: 'testing'
     DEB_BUILD_OPTIONS: 'nocheck'
   extends: .build-package
-  # temporarily allow failure until terser migrates to testing
-  allow_failure: true
 
 variables:
   SALSA_CI_DISABLE_BLHC: 1
