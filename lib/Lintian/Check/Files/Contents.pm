@@ -41,32 +41,6 @@ const my $ARROW => q{ -> };
 my $SENSIBLE_REGEX
   = qr{(?<!-)(?:select-editor|sensible-(?:browser|editor|pager))\b};
 
-# with this Moo default, maintainer scripts are also checked
-has switched_locations => (
-    is => 'rw',
-    lazy => 1,
-    default => sub {
-        my ($self) = @_;
-
-        my @files
-          = grep { $_->is_file } @{$self->processable->installed->sorted_list};
-
-        my @commands = grep { $_->name =~ m{^(?:usr/)?s?bin/} } @files;
-
-        my %switched_locations;
-        for my $command (@commands) {
-
-            my @variants = map { $_ . $SLASH . $command->basename }
-              qw(bin sbin usr/bin usr/sbin);
-            my @confused = grep { $_ ne $command->name } @variants;
-
-            $switched_locations{$_} = $command->name for @confused;
-        }
-
-        return \%switched_locations;
-    }
-);
-
 sub build_path {
     my ($self) = @_;
 
@@ -98,18 +72,6 @@ sub check_item {
 
         $self->pointed_hint('uses-dpkg-database-directly', $item->pointer)
           if length $item->mentions_in_operation(qr{/var/lib/dpkg});
-    }
-
-    # if we have a /usr/sbin/foo, check for references to /usr/bin/foo
-    my %switched_locations = %{$self->switched_locations};
-    for my $confused (keys %switched_locations) {
-
-  # may not work as expected on ELF due to ld's SHF_MERGE
-  # but word boundaries are also superior in strings spanning multiple commands
-        my $correct = $switched_locations{$confused};
-        $self->pointed_hint('bin-sbin-mismatch', $item->pointer,
-            $confused . $ARROW . $correct)
-          if length $item->mentions_in_operation(qr{ \B / \Q$confused\E \b }x);
     }
 
     if (length $self->build_path) {
