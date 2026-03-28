@@ -240,16 +240,6 @@ sub source {
             $withpgpverification = 1
               if $option =~ /^pgpsigurlmangle\s*=\s*/
               || $option =~ /^pgpmode\s*=\s*(?!none\s*$)\S.*$/;
-
-            my ($name, $value) = split(m{ \s* = \s* }x, $option, 2);
-
-            next
-              unless length $name;
-
-            $value //= $EMPTY;
-
-            $self->pointed_hint('prefer-uscan-symlink',$pointer, $name, $value)
-              if $name eq 'filenamemangle';
         }
 
         $self->pointed_hint(
