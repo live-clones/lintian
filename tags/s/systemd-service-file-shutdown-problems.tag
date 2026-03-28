@@ -1,6 +1,5 @@
 Tag: systemd-service-file-shutdown-problems
 Severity: warning
-Experimental: no
 Check: systemd
 See-Also: https://github.com/systemd/systemd/issues/11821
 Explanation: The specified systemd <code>.service</code> file contains both

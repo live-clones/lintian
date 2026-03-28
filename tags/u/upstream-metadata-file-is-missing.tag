@@ -1,7 +1,6 @@
 Tag: upstream-metadata-file-is-missing
 Severity: pedantic
 Check: debian/upstream/metadata
-Experimental: yes
 See-Also: https://dep-team.pages.debian.net/deps/dep12/, https://wiki.debian.org/UpstreamMetadata
 Explanation: This source package is not Debian-native but it does not have a
  <code>debian/upstream/metadata</code> file.

@@ -1,7 +1,6 @@
 Tag: maintainer-script-calls-service
 Severity: error
 Check: scripts
-Experimental: yes
 Renamed-From: maintainer-script-should-not-use-service
 Explanation: The maintainer script apparently runs the service command. This
  command is reserved for local administrators and must never be used
