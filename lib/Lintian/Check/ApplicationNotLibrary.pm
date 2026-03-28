@@ -114,16 +114,6 @@ sub installable {
         }
     }
 
-    my $section = $self->processable->fields->value('Section');
-
-    # oldlibs is ok
-    if ($section =~ m{ perl | python | ruby | (?: ^ | / ) libs }x) {
-
-        $self->pointed_hint('application-in-library-section',
-            $_->pointer, $section)
-          for @programs;
-    }
-
     return;
 }
 
