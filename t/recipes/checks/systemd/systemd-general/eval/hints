@@ -6,8 +6,6 @@ systemd-general (binary): systemd-service-file-refers-to-obsolete-target syslog.
 systemd-general (binary): systemd-service-file-refers-to-obsolete-target syslog.target [etc/systemd/system/systemd-general.test.service]
 systemd-general (binary): systemd-service-file-refers-to-obsolete-bindto [usr/lib/systemd/system/systemd-general.test.service]
 systemd-general (binary): systemd-service-file-refers-to-obsolete-bindto [etc/systemd/system/systemd-general.test.service]
-systemd-general (binary): systemd-service-file-missing-hardening-features [usr/lib/systemd/system/systemd-general.test.service]
-systemd-general (binary): systemd-service-file-missing-hardening-features [etc/systemd/system/systemd-general.test.service]
 systemd-general (binary): systemd-service-file-missing-documentation-key [usr/lib/systemd/system/systemd-general.test.service]
 systemd-general (binary): systemd-service-file-missing-documentation-key [etc/systemd/system/systemd-general.test.service]
 systemd-general (binary): systemd-service-alias-without-extension [usr/lib/systemd/system/systemd-general.test.service]
