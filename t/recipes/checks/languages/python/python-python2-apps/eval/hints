@@ -1,6 +1,0 @@
-pkg-suggests (binary): dependency-on-python-version-marked-for-end-of-life Suggests (satisfies python2:any)
-pkg-suggests (binary): dependency-on-python-version-marked-for-end-of-life Suggests (satisfies python2.7:any)
-pkg-recommends (binary): dependency-on-python-version-marked-for-end-of-life Recommends (satisfies python2-dev:any)
-pkg-pre-depends (binary): dependency-on-python-version-marked-for-end-of-life Pre-Depends (satisfies python2.7:any)
-pkg-depends-any (binary): dependency-on-python-version-marked-for-end-of-life Depends (satisfies python2:any)
-pkg-depends (binary): dependency-on-python-version-marked-for-end-of-life Depends (satisfies python2:any)
