@@ -1,4 +1,3 @@
-source-copyright-undefined (source): update-debian-copyright 2017 vs CHANGELOG-YEAR [debian/copyright:29]
 source-copyright-undefined (source): superfluous-file-pattern debian/g [debian/copyright:51]
 source-copyright-undefined (source): superfluous-file-pattern debian/f [debian/copyright:45]
 source-copyright-undefined (source): superfluous-file-pattern debian/e [debian/copyright:39]
