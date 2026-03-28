@@ -725,30 +725,6 @@ sub check_dep5_copyright {
         $section_count++;
     }
 
-    my @debian_years = keys %positions_by_debian_year;
-    my @changelog_entries = @{$self->processable->changelog->entries};
-
-    if (@debian_years && @changelog_entries) {
-
-        my @descending = reverse sort { $a <=> $b } @debian_years;
-        my $most_recent_copyright = $descending[0];
-
-        my $tp = Time::Piece->strptime($changelog_entries[0]->Date,
-            '%a, %d %b %Y %T %z');
-        my $most_recent_changelog = $tp->year;
-
-        my @candidates = @{$positions_by_debian_year{$most_recent_copyright}};
-        my @sorted = sort { $a <=> $b } @candidates;
-
-        # pick the topmost, which should be the broadest pattern
-        my $position = $candidates[0];
-
-        $self->pointed_hint('update-debian-copyright',
-            $copyright_file->pointer($position),
-            $most_recent_copyright, 'vs', $most_recent_changelog)
-          if $most_recent_copyright < $most_recent_changelog;
-    }
-
     if ($check_wildcards) {
 
         my @duplicate_wildcards= grep { @{$sections_by_wildcard{$_}} > 1 }
