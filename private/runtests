@@ -778,7 +778,9 @@ sub build_package {
 
     path($build_path)->remove_tree
       if -e $build_path;
-    path($build_path)->mkpath;
+
+    path($build_path)->mkpath
+      or die encode_utf8("Cannot create the directory $build_path");
 
     # read dynamic file names
     my $runfiles = "$source_path/files";
@@ -848,7 +850,8 @@ sub prepare_test {
             path($evalpath)->remove_tree
               if -e $evalpath;
 
-            path($evalpath)->mkpath;
+            path($evalpath)->mkpath
+                or die encode_utf8("Cannot create the directory $evalpath");
 
             # prepare
             filleval("$specpath/eval", $evalpath, $testset);
