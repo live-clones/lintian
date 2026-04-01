@@ -278,6 +278,11 @@
             "dh-dlopenlibdeps"
          ]
       },
+      "dh_doc_privacy" : {
+         "installed_by" : [
+            "dh-doc-privacy"
+         ]
+      },
       "dh_doxygen" : {
          "installed_by" : [
             "doxygen"
@@ -330,21 +335,10 @@
             "dh-fortran"
          ]
       },
-      "dh_fortran_lib_old" : {
-         "installed_by" : [
-            "dh-fortran"
-         ]
-      },
       "dh_fortran_mod" : {
          "installed_by" : [
             "dh-fortran"
          ]
-      },
-      "dh_fortran_mod_old" : {
-         "installed_by" : [
-            "dh-fortran"
-         ],
-         "uses_autoscript" : 1
       },
       "dh_fortran_pkgconf" : {
          "installed_by" : [
@@ -609,8 +603,7 @@
          "installed_by" : [
             "debhelper"
          ],
-         "uses_autoscript" : 1,
-         "uses_misc_depends" : 1
+         "uses_autoscript" : 1
       },
       "dh_installinitramfs" : {
          "installed_by" : [
@@ -1088,6 +1081,11 @@
       "dh_scour" : {
          "installed_by" : [
             "scour"
+         ]
+      },
+      "dh_setup_copyright" : {
+         "installed_by" : [
+            "dh-setup-copyright"
          ]
       },
       "dh_shell_completions" : {
