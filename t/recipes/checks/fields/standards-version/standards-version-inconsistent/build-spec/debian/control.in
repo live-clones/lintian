@@ -1,7 +1,7 @@
 Source: [% $source %]
 Section: devel
 Maintainer: [% $author %]
-Standards-Version: 4.7.3
+Standards-Version: 4.7.4
 Build-Depends: [% $build_depends %]
 Homepage: https://lintian.debian.org/
 
