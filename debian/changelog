@@ -1,8 +1,35 @@
-lintian (2.132.2) UNRELEASED; urgency=medium
+lintian (2.133.0) unstable; urgency=medium
 
-  * WIP (generated at release time: please do not add entries below.)
+  [ Louis-Philippe Véronneau ]
+  * Change the following tag from Experimental: 'yes' to 'no':
+    - upstream-metadata-file-is-missing
+    - bogus-python-prerequisite
+    - empty-udeb-package
+    - embedded-pear-module
+    - maintainer-script-supports-ancient-package-version
+    - maintainer-script-calls-service
+    - maintainer-script-switches-dir-to-symlink-unsafely
+    - perl-module-name-not-mentioned-in-description
+    - debian-rules-uses-as-needed-linker-flag
+    - deprecated-configure-filename
+    - development-package-ships-elf-binary-in-path
+    - libmodule-build-tiny-perl-needs-to-be-in-build-depends
+    - libmodule-build-perl-needs-to-be-in-build-depends
+  * Refresh data and add debian-policy 4.7.4.1
 
- -- Louis-Philippe Véronneau <pollo@debian.org>  Sat, 21 Mar 2026 21:24:16 -0400
+  [ Daniel Lange ]
+  * Add new tag "standards-version-inconsistent"
+
+  [ Nilesh Patra ]
+  * Add new tag useless-pydist-overrides-file to detect the usage of
+    pydist-overrides file (Closes: #1131714)
+  * Make build-testing CI job fatal again
+  * Drop redundant tags: malformed-contact and too-many-contacts
+
+  [ Alex ]
+  * tags/m: update missing-debian-watch-file-standard Explanation
+
+ -- Louis-Philippe Véronneau <pollo@debian.org>  Fri, 03 Apr 2026 16:03:02 -0400
 
 lintian (2.132.1) unstable; urgency=medium
 
