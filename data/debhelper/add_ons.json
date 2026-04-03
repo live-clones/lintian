@@ -445,6 +445,11 @@
             "scour"
          ]
       },
+      "setup_copyright" : {
+         "installed_by" : [
+            "dh-setup-copyright"
+         ]
+      },
       "shell_completions" : {
          "installed_by" : [
             "dh-shell-completions"
