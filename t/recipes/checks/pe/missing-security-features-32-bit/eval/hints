@@ -1,3 +1,0 @@
-missing-security-features-32-bit (binary): portable-executable-missing-security-features SafeSEH [usr/share/win32/hello32-unsafe-seh.exe]
-missing-security-features-32-bit (binary): portable-executable-missing-security-features DEP/NX [usr/share/win32/hello32-data-execution.exe]
-missing-security-features-32-bit (binary): portable-executable-missing-security-features ASLR [usr/share/win32/hello32-static-base.exe]

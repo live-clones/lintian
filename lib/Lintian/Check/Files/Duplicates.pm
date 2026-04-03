@@ -70,9 +70,6 @@ sub installable {
 
         if (any { m/changelog/i} @files) {
             $self->hint('duplicate-changelog-files', (sort @files));
-
-        } else {
-            $self->hint('duplicate-files', (sort @files));
         }
     }
 

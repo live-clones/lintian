@@ -111,22 +111,7 @@ sub installable {
         if ($self->processable->name =~ m{^ libapp (?:.+) -perl $}x) {
             $self->pointed_hint('libapp-perl-package-name', $_->pointer)
               for @programs;
-
-        } else {
-            $self->pointed_hint('library-package-name-for-application',
-                $_->pointer)
-              for @programs;
         }
-    }
-
-    my $section = $self->processable->fields->value('Section');
-
-    # oldlibs is ok
-    if ($section =~ m{ perl | python | ruby | (?: ^ | / ) libs }x) {
-
-        $self->pointed_hint('application-in-library-section',
-            $_->pointer, $section)
-          for @programs;
     }
 
     return;

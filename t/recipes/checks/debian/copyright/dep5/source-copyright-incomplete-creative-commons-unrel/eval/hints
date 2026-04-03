@@ -1,4 +1,3 @@
-source-copyright-incomplete-creative-commons-unrel (source): update-debian-copyright 2017 vs CHANGELOG-YEAR [debian/copyright:23]
 source-copyright-incomplete-creative-commons-unrel (source): superfluous-file-pattern flycheck.svg [debian/copyright:18]
 source-copyright-incomplete-creative-commons-unrel (source): superfluous-file-pattern doc/*.py [debian/copyright:14]
 source-copyright-incomplete-creative-commons-unrel (source): superfluous-file-pattern doc/* [debian/copyright:10]

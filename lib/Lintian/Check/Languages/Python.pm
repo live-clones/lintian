@@ -422,20 +422,6 @@ sub installable {
       !~ / \b python [ ]? 2 (?:[.]x)? [ ] (?:variant|version) \b /imsx
       && $entries[0]->Changes !~ / \Q$pkg\E /msx;
 
-    # Python applications
-    if ($self->processable->name !~ /^python[23]?-/
-        && (none { $_ eq $self->processable->name } @PYTHON2)) {
-        for my $field (@FIELDS) {
-            for my $dep (@PYTHON2) {
-
-                $self->hint(
-                    'dependency-on-python-version-marked-for-end-of-life',
-                    $field, "(satisfies $dep)")
-                  if $self->processable->relation($field)->satisfies($dep);
-            }
-        }
-    }
-
     # Django modules
     for my $regex (keys %DJANGO_PACKAGES) {
         my $basepkg = $DJANGO_PACKAGES{$regex};

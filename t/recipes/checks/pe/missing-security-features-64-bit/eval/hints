@@ -1,3 +1,0 @@
-missing-security-features-64-bit (binary): portable-executable-missing-security-features SafeSEH [usr/share/win32/hello64-unsafe-seh.exe]
-missing-security-features-64-bit (binary): portable-executable-missing-security-features DEP/NX [usr/share/win32/hello64-data-execution.exe]
-missing-security-features-64-bit (binary): portable-executable-missing-security-features ASLR [usr/share/win32/hello64-static-base.exe]
