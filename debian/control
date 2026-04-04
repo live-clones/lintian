@@ -11,7 +11,6 @@ Build-Depends:
  appstream <!nocheck>,
  aspell <!nocheck>,
  aspell-en <!nocheck>,
- cdbs <!nocheck>,
  debhelper <!nocheck>,
  debhelper-compat (= 13),
  default-jdk-headless | default-jdk <!nocheck>,

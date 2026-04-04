@@ -6,7 +6,6 @@ Depends:
  aspell,
  aspell-en,
  build-essential,
- cdbs,
  default-jdk-headless | default-jdk,
  dh-elpa | bash (<< 4.4),
  dh-python,

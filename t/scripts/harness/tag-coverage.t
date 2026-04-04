@@ -71,6 +71,7 @@ my @known_missing = (
       uses-deprecated-adttmp
       invalid-versioned-provides
       ansi-escape
+      debian-rules-uses-deprecated-makefile
     ),
 
 # the following tags are not testable due to restrictions in reprotest

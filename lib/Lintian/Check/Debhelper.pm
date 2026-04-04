@@ -43,12 +43,6 @@ const my $HORIZONTAL_BAR => q{|};
 
 const my $ARROW => q{=>};
 
-# If there is no debian/compat file present but cdbs is being used, cdbs will
-# create one automatically.  Currently it always uses compatibility level 5.
-# It may be better to look at what version of cdbs the package depends on and
-# from that derive the compatibility level....
-const my $CDBS_COMPAT => 5;
-
 # minimum versions for features
 const my $BRACE_EXPANSION => 5;
 const my $USES_EXECUTABLE_FILES => 9;
@@ -187,7 +181,6 @@ sub source {
     my $uses_dh_exec = 0;
     my $uses_autotools_dev_dh = 0;
 
-    my $includes_cdbs = 0;
     my $modifies_scripts = 0;
 
     my $seen_any_dh_command = 0;
@@ -372,20 +365,6 @@ sub source {
                 }
             }
 
-        } elsif ($line =~ m{^include\s+/usr/share/cdbs/1/rules/debhelper.mk}
-            || $line =~ m{^include\s+/usr/share/R/debian/r-cran.mk}) {
-
-            $build_systems{'cdbs-with-debhelper.mk'} = 1;
-            delete($build_systems{'cdbs-without-debhelper.mk'});
-
-            $seen_any_dh_command = 1;
-            $uses_debhelper = 1;
-            $modifies_scripts = 1;
-            $includes_cdbs = 1;
-
-            # CDBS sets DH_COMPAT but doesn't export it.
-            $dh_compat_variable = $CDBS_COMPAT;
-
         } elsif ($line =~ /^\s*export\s+DH_COMPAT\s*:?=\s*([^\s]+)/) {
             $debhelper_level = $1;
 
@@ -460,13 +439,6 @@ sub source {
                 )if length $missingauto;
             }
 
-        } elsif ($line =~ m{^include\s+/usr/share/cdbs/}) {
-
-            $includes_cdbs = 1;
-
-            $build_systems{'cdbs-without-debhelper.mk'} = 1
-              unless exists $build_systems{'cdbs-with-debhelper.mk'};
-
         } elsif (
             $line =~m{
               ^include \s+
@@ -488,7 +460,6 @@ sub source {
               }xsm
         ) {
 
-            $includes_cdbs = 1;
             $build_systems{'dhmk'} = 1;
             delete($build_systems{'debhelper'});
         }
@@ -502,11 +473,6 @@ sub source {
     # Variables could contain any add-ons; assume we have seen them all
     %seen = map { $_ => 1 } keys %seen
       if $seen_dh_dynamic;
-
-    # Okay - d/rules does not include any file in /usr/share/cdbs/
-    $self->pointed_hint('unused-build-dependency-on-cdbs', $drules->pointer)
-      if $build_prerequisites->satisfies('cdbs:any')
-      && !$includes_cdbs;
 
     if (%build_systems) {
 

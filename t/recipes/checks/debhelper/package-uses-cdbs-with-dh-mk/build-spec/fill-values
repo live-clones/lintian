@@ -1,3 +1,0 @@
-Skeleton: upload-native
-Testname: package-uses-cdbs-with-dh-mk
-Description: Test for packages not using debhelper but cdbs instead
