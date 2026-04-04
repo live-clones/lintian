@@ -121,9 +121,7 @@ sub source {
         'dbs:any' => [qr{^include\s+/usr/share/dbs/}],
         'gnome-pkg-tools:any | dh-sequence-gnome:any' =>
           [qr{^include\s+/usr/share/gnome-pkg-tools/}],
-        'quilt:any' => [
-            qr{^include\s+/usr/share/quilt/},
-        ],
+        'quilt:any' => [qr{^include\s+/usr/share/quilt/},],
         'mozilla-devscripts:any' =>
           [qr{^include\s+/usr/share/mozilla-devscripts/}],
         'ruby-pkg-tools:any' =>
