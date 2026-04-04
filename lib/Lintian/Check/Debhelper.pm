@@ -372,8 +372,7 @@ sub source {
                 }
             }
 
-        } elsif ($line =~ m{^include\s+/usr/share/cdbs/1/rules/debhelper.mk}
-            || $line =~ m{^include\s+/usr/share/R/debian/r-cran.mk}) {
+        } elsif ($line =~ m{^include\s+/usr/share/cdbs/1/rules/debhelper.mk}) {
 
             $build_systems{'cdbs-with-debhelper.mk'} = 1;
             delete($build_systems{'cdbs-without-debhelper.mk'});

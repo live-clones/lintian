@@ -121,13 +121,11 @@ sub source {
         'ant:any' => [qr{^include\s*/usr/share/cdbs/1/rules/ant\.mk}],
         'cdbs:any' => [
             qr{^include\s+/usr/share/cdbs/},
-            qr{^include\s+/usr/share/R/debian/r-cran\.mk}
         ],
         'dbs:any' => [qr{^include\s+/usr/share/dbs/}],
         'dh-make-php:any' => [qr{^include\s+/usr/share/cdbs/1/class/pear\.mk}],
         'debhelper:any | debhelper-compat:any' =>[
             qr{^include\s+/usr/share/cdbs/1/rules/debhelper\.mk},
-            qr{^include\s+/usr/share/R/debian/r-cran\.mk}
         ],
         'gnome-pkg-tools:any | dh-sequence-gnome:any' =>
           [qr{^include\s+/usr/share/gnome-pkg-tools/}],
@@ -139,7 +137,6 @@ sub source {
           [qr{^include\s+/usr/share/mozilla-devscripts/}],
         'ruby-pkg-tools:any' =>
           [qr{^include\s+/usr/share/ruby-pkg-tools/1/class/}],
-        'r-base-dev:any' => [qr{^include\s+/usr/share/R/debian/r-cran\.mk}],
         $ANYPYTHON_DEPEND =>[qr{/usr/share/cdbs/1/class/python-distutils\.mk}],
     );
 
