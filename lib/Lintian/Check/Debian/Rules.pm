@@ -118,26 +118,16 @@ sub source {
    # optional tags to use for reporting the problem if some information other
    # than the default is required.
     my %GLOBAL_CLEAN_DEPENDS = (
-        'ant:any' => [qr{^include\s*/usr/share/cdbs/1/rules/ant\.mk}],
-        'cdbs:any' => [
-            qr{^include\s+/usr/share/cdbs/},
-        ],
         'dbs:any' => [qr{^include\s+/usr/share/dbs/}],
-        'dh-make-php:any' => [qr{^include\s+/usr/share/cdbs/1/class/pear\.mk}],
-        'debhelper:any | debhelper-compat:any' =>[
-            qr{^include\s+/usr/share/cdbs/1/rules/debhelper\.mk},
-        ],
         'gnome-pkg-tools:any | dh-sequence-gnome:any' =>
           [qr{^include\s+/usr/share/gnome-pkg-tools/}],
         'quilt:any' => [
             qr{^include\s+/usr/share/quilt/},
-            qr{^include\s+/usr/share/cdbs/1/rules/patchsys-quilt\.mk}
         ],
         'mozilla-devscripts:any' =>
           [qr{^include\s+/usr/share/mozilla-devscripts/}],
         'ruby-pkg-tools:any' =>
           [qr{^include\s+/usr/share/ruby-pkg-tools/1/class/}],
-        $ANYPYTHON_DEPEND =>[qr{/usr/share/cdbs/1/class/python-distutils\.mk}],
     );
 
   # A list of packages; regular expressions that, if they match anywhere in the
