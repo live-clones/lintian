@@ -118,7 +118,6 @@ sub source {
    # optional tags to use for reporting the problem if some information other
    # than the default is required.
     my %GLOBAL_CLEAN_DEPENDS = (
-        'dbs:any' => [qr{^include\s+/usr/share/dbs/}],
         'gnome-pkg-tools:any | dh-sequence-gnome:any' =>
           [qr{^include\s+/usr/share/gnome-pkg-tools/}],
         'quilt:any' => [qr{^include\s+/usr/share/quilt/},],
