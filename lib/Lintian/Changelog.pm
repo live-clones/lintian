@@ -185,7 +185,7 @@ sub parse {
                     # Extensions - XB for putting in Binary,
                     # XC for putting in Control, XS for putting in Source
                     $entry->{$k}= $v;
-                } else {
+                } elsif ($k ne 'Binary-only') {
                     push @{$self->errors},
                       [$position,
                         "unknown key-value key $k - copying to XS-$k"];
