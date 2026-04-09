@@ -68,7 +68,6 @@ my @known_missing = (
       sphinxdoc-but-no-sphinxdoc-depends
       unpack-message-for-deb-control
       unpack-message-for-orig
-      uses-deprecated-adttmp
       invalid-versioned-provides
       ansi-escape
       debian-rules-uses-deprecated-makefile

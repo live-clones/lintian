@@ -1,0 +1,3 @@
+Skeleton: upload-non-native
+Testname: testsuite-with-adttmp
+Description: Test using ADTTMP for autopkgtests
