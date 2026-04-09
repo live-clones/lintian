@@ -122,6 +122,13 @@ sub source {
             $latest_pointer,$latest_version->upstream)
           if !$processable->native && $latest_version->upstream =~ qr/-/;
 
+        my $revision = $latest_version->maintainer_revision;
+        my $distribution = $latest_entry->Distribution;
+        $self->pointed_hint(
+            'version-refers-to-unstable-distribution-with-exp-version',
+            $latest_pointer,$latest_version->literal)
+          if ($distribution eq 'unstable' && $revision =~ /~exp/);
+
         # unstable, testing, and stable shouldn't be used in Debian
         # version numbers.  unstable should get a normal version
         # increment and testing and stable should get suite-specific
@@ -130,16 +137,14 @@ sub source {
         # NMUs get a free pass because they need to work with the
         # version number that was already there.
         unless (length $latest_version->source_nmu) {
-            my $revision = $latest_version->maintainer_revision;
-            my $distribution = $latest_entry->Distribution;
-
             $self->pointed_hint('version-refers-to-distribution',
                 $latest_pointer,$latest_version->literal)
               if ($revision =~ /testing|(?:un)?stable/i)
               || (
                 ($distribution eq 'unstable'|| $distribution eq 'experimental')
                 && $revision
-                =~ /woody|sarge|etch|lenny|squeeze|stretch|buster/);
+                =~ /woody|sarge|etch|lenny|squeeze|stretch|buster|bookworm|bullseye|trixie/
+              );
         }
 
         my $examine = $latest_version->maintainer_revision;
