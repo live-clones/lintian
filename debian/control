@@ -13,6 +13,7 @@ Build-Depends:
  aspell-en <!nocheck>,
  debhelper <!nocheck>,
  debhelper-compat (= 13),
+ debputy <!nocheck>,
  default-jdk-headless | default-jdk <!nocheck>,
  dh-elpa <!nocheck>,
  dh-python <!nocheck>,

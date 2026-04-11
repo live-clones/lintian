@@ -157,7 +157,6 @@ sub source {
     my @MAINT_COMMANDS = @{$self->data->debhelper_commands->maint_commands};
 
     my $FILENAME_CONFIGS= $self->data->load('debhelper/filename-config-files');
-
     my $DEBHELPER_LEVELS = $self->data->debhelper_levels;
     my $DH_ADDONS = $self->data->debhelper_addons;
     my $DH_COMMANDS_DEPENDS= $self->data->debhelper_commands;
@@ -193,23 +192,24 @@ sub source {
     my %command_by_prerequisite;
     my %addon_by_prerequisite;
     my %overrides;
+    my %build_systems;
+
+    my $dcontrol = $self->processable->debian_control;
+    my $source_fields = $dcontrol->source_fields;
+
+    my $bdrv = 'Build-Driver';
+    my $build_driver;
+
+    if ($source_fields->declares($bdrv)) {
+        $build_driver = $source_fields->value($bdrv);
+        $build_systems{$build_driver} = 1
+          unless $build_driver eq 'debian-rules';
+    }
 
     my $droot = $self->processable->patched->resolve_path('debian/');
 
     my $drules;
     $drules = $droot->child('rules') if $droot;
-
-    return
-      unless $drules && $drules->is_open_ok;
-
-    open(my $rules_fd, '<', $drules->unpacked_path)
-      or die encode_utf8('Cannot open ' . $drules->unpacked_path);
-
-    my $command_prefix_pattern = qr/\s+[@+-]?(?:\S+=\S+\s+)*/;
-
-    my $build_prerequisites_norestriction
-      = $self->processable->relation_norestriction('Build-Depends-All');
-    my $build_prerequisites= $self->processable->relation('Build-Depends-All');
 
     my %seen = (
         'python2' => 0,
@@ -218,268 +218,287 @@ sub source {
         'sphinxdoc' => 0,
     );
 
-    for (qw(python2 python3)) {
+    my $build_prerequisites_norestriction
+      = $self->processable->relation_norestriction('Build-Depends-All');
+    my $build_prerequisites= $self->processable->relation('Build-Depends-All');
 
-        $seen{$_} = 1
-          if $build_prerequisites_norestriction->satisfies(
-            "dh-sequence-$_:any");
-    }
+    if (!defined $build_driver || $build_driver eq 'debian-rules') {
+        return
+          unless $drules && $drules->is_open_ok;
 
-    my %build_systems;
+        open(my $rules_fd, '<', $drules->unpacked_path)
+          or die encode_utf8('Cannot open ' . $drules->unpacked_path);
 
-    my $position = 1;
-    while (my $line = <$rules_fd>) {
+        my $command_prefix_pattern = qr/\s+[@+-]?(?:\S+=\S+\s+)*/;
 
-        my $pointer = $drules->pointer($position);
+        for (qw(python2 python3)) {
 
-        while ($line =~ s/\\$// && defined(my $cont = <$rules_fd>)) {
-            $line .= $cont;
+            $seen{$_} = 1
+              if $build_prerequisites_norestriction->satisfies(
+                "dh-sequence-$_:any");
         }
 
-        if ($line =~ /^ifn?(?:eq|def)\s/) {
-            $maybe_skipping++;
+        my $position = 1;
+        while (my $line = <$rules_fd>) {
 
-        } elsif ($line =~ /^endif\s/) {
-            $maybe_skipping--;
-        }
+            my $pointer = $drules->pointer($position);
 
-        next
-          if $line =~ /^\s*\#/;
-
-        if ($line =~ /^$command_prefix_pattern(dh_(?!autoreconf)\S+)/) {
-
-            my $dh_command = $1;
-
-            $build_systems{'debhelper'} = 1
-              unless exists $build_systems{'dh'};
-
-            $self->pointed_hint('dh_installmanpages-is-obsolete',$pointer)
-              if $dh_command eq 'dh_installmanpages';
-
-            if (   $dh_command eq 'dh_autotools-dev_restoreconfig'
-                || $dh_command eq 'dh_autotools-dev_updateconfig') {
-
-                $self->pointed_hint(
-                    'debhelper-tools-from-autotools-dev-are-deprecated',
-                    $pointer, $dh_command);
-                $uses_autotools_dev_dh = 1;
+            while ($line =~ s/\\$// && defined(my $cont = <$rules_fd>)) {
+                $line .= $cont;
             }
 
-            # Record if we've seen specific helpers, special-casing
-            # "dh_python" as Python 2.x.
-            $seen{'python2'} = 1 if $dh_command eq 'dh_python2';
-            for my $k (keys %seen) {
-                $seen{$k} = 1 if $dh_command eq "dh_$k";
+            if ($line =~ /^ifn?(?:eq|def)\s/) {
+                $maybe_skipping++;
+
+            } elsif ($line =~ /^endif\s/) {
+                $maybe_skipping--;
             }
 
-            $seen_dh_clean_k = 1
-              if $dh_command eq 'dh_clean'
-              && $line =~ /\s+\-k(?:\s+.*)?$/s;
+            next
+              if $line =~ /^\s*\#/;
 
-            # if command is passed -n, it does not modify the scripts
-            $modifies_scripts = 1
-              if (any { $dh_command eq $_ } @MAINT_COMMANDS)
-              && $line !~ /\s+\-n\s+/;
+            if ($line =~ /^$command_prefix_pattern(dh_(?!autoreconf)\S+)/) {
+
+                my $dh_command = $1;
+
+                $build_systems{'debhelper'} = 1
+                  unless exists $build_systems{'dh'};
+
+                $self->pointed_hint('dh_installmanpages-is-obsolete',$pointer)
+                  if $dh_command eq 'dh_installmanpages';
+
+                if (   $dh_command eq 'dh_autotools-dev_restoreconfig'
+                    || $dh_command eq 'dh_autotools-dev_updateconfig') {
+
+                    $self->pointed_hint(
+                        'debhelper-tools-from-autotools-dev-are-deprecated',
+                        $pointer, $dh_command);
+                    $uses_autotools_dev_dh = 1;
+                }
+
+                # Record if we've seen specific helpers, special-casing
+                # "dh_python" as Python 2.x.
+                $seen{'python2'} = 1 if $dh_command eq 'dh_python2';
+                for my $k (keys %seen) {
+                    $seen{$k} = 1 if $dh_command eq "dh_$k";
+                }
+
+                $seen_dh_clean_k = 1
+                  if $dh_command eq 'dh_clean'
+                  && $line =~ /\s+\-k(?:\s+.*)?$/s;
+
+                # if command is passed -n, it does not modify the scripts
+                $modifies_scripts = 1
+                  if (any { $dh_command eq $_ } @MAINT_COMMANDS)
+                  && $line !~ /\s+\-n\s+/;
 
            # If debhelper commands are wrapped in make conditionals, assume the
            # maintainer knows what they're doing and don't check build
            # dependencies.
-            unless ($maybe_skipping) {
+                unless ($maybe_skipping) {
 
-                if (exists $DH_COMMAND_MANUAL_PREREQUISITES{$dh_command}) {
-                    my $prerequisite
-                      = $DH_COMMAND_MANUAL_PREREQUISITES{$dh_command};
-                    $command_by_prerequisite{$prerequisite} = $dh_command;
+                    if (exists $DH_COMMAND_MANUAL_PREREQUISITES{$dh_command}) {
+                        my $prerequisite
+                          = $DH_COMMAND_MANUAL_PREREQUISITES{$dh_command};
+                        $command_by_prerequisite{$prerequisite} = $dh_command;
 
-                } elsif ($DH_COMMANDS_DEPENDS->installed_by($dh_command)) {
+                    } elsif ($DH_COMMANDS_DEPENDS->installed_by($dh_command)) {
 
-                    my @broadened = map { "$_:any" }
-                      $DH_COMMANDS_DEPENDS->installed_by($dh_command);
-                    my $prerequisite
-                      = join($SPACE . $HORIZONTAL_BAR . $SPACE,@broadened);
-                    $command_by_prerequisite{$prerequisite} = $dh_command;
-                }
-            }
-
-            $seen_any_dh_command = 1;
-            $uses_debhelper = 1;
-
-        } elsif ($line =~ m{^(?:$command_prefix_pattern)dh\s+}) {
-
-            $build_systems{'dh'} = 1;
-            delete($build_systems{'debhelper'});
-
-            $seen_dh_sequencer = 1;
-            $seen_any_dh_command = 1;
-
-            $seen_dh_dynamic = 1
-              if $line =~ /\$[({]\w/;
-
-            $seen_dh_parallel = $position
-              if $line =~ /--parallel/;
-
-            $uses_debhelper = 1;
-            $modifies_scripts = 1;
-
-            while ($line =~ /\s--with(?:=|\s+)(['"]?)(\S+)\1/g) {
-
-                my $addon_list = $2;
-
-                for my $addon (split(/,/, $addon_list)) {
-
-                    my $orig_addon = $addon;
-
-                    $addon =~ y,-,_,;
-
-                    my @broadened
-                      = map { "$_:any" } $DH_ADDONS->installed_by($addon);
-                    my $prerequisite = $DH_ADDON_MANUAL_PREREQUISITES{$addon}
-                      || join($SPACE . $HORIZONTAL_BAR . $SPACE,@broadened);
-
-                    if ($addon eq 'autotools_dev') {
-
-                        $self->pointed_hint(
-'debhelper-tools-from-autotools-dev-are-deprecated',
-                            $pointer,"dh ... --with $orig_addon"
-                        );
-                        $uses_autotools_dev_dh = 1;
-                    }
-
-                    $seen_dh_systemd = $position
-                      if $addon eq 'systemd';
-
-                    $self->pointed_hint(
-                        'dh-quilt-addon-but-quilt-source-format',
-                        $pointer,"dh ... --with $orig_addon")
-                      if $addon eq 'quilt'
-                      && $self->processable->fields->value('Format') eq
-                      '3.0 (quilt)';
-
-                    $addon_by_prerequisite{$prerequisite} = $addon
-                      if defined $prerequisite;
-
-                    for my $k (keys %seen) {
-                        $seen{$k} = 1
-                          if $addon eq $k;
+                        my @broadened = map { "$_:any" }
+                          $DH_COMMANDS_DEPENDS->installed_by($dh_command);
+                        my $prerequisite
+                          = join($SPACE . $HORIZONTAL_BAR . $SPACE,@broadened);
+                        $command_by_prerequisite{$prerequisite} = $dh_command;
                     }
                 }
-            }
 
-        } elsif ($line =~ /^\s*export\s+DH_COMPAT\s*:?=\s*([^\s]+)/) {
-            $debhelper_level = $1;
-
-        } elsif ($line =~ /^\s*export\s+DH_COMPAT/) {
-            $debhelper_level = $dh_compat_variable
-              if $dh_compat_variable;
-
-        } elsif ($line =~ /^\s*DH_COMPAT\s*:?=\s*([^\s]+)/) {
-            $dh_compat_variable = $1;
-
-            # one can export and then set the value:
-            $debhelper_level = $1
-              if $debhelper_level;
-
-        } elsif (
-            $line =~ /^[^:]*(override|execute_(?:after|before))\s+(dh_[^:]*):/)
-        {
-            $self->pointed_hint('typo-in-debhelper-override-target',
-                $pointer, "$1 $2",$ARROW, "$1_$2");
-
-        } elsif ($line =~ /^([^:]*_dh_[^:]*):/) {
-
-            my $alltargets = $1;
-            # can be multiple targets per rule.
-            my @targets = split(/\s+/, $alltargets);
-            my @dh_targets = grep { /_dh_/ } @targets;
-
-            # If maintainer is using wildcards, it's unlikely to be a typo.
-            my @no_wildcards = grep { !/%/ } @dh_targets;
-
-            my $lc = List::Compare->new(\@no_wildcards, \@KNOWN_DH_COMMANDS);
-            my @unknown = $lc->get_Lonly;
-
-            for my $target (@unknown) {
-
-                my %distance
-                  = map { $_ => distance($target, $_) } @KNOWN_DH_COMMANDS;
-                my @near = grep { $distance{$_} < $LEVENSHTEIN_TOLERANCE }
-                  keys %distance;
-                my $nearest = min_by { $distance{$_} } @near;
-
-                $self->pointed_hint('typo-in-debhelper-override-target',
-                    $pointer, $target, $ARROW, $nearest)
-                  if length $nearest;
-            }
-
-            for my $target (@no_wildcards) {
-
-                next
-                  unless $target
-                  =~ /^(override|execute_(?:before|after))_dh_([^\s]+?)(-arch|-indep|)$/;
-
-                my $timing = $1;
-                my $command = $2;
-                my $focus = $3;
-                my $dh_command = "dh_$command";
-
-                $overrides{$dh_command} = [$position, $focus];
+                $seen_any_dh_command = 1;
                 $uses_debhelper = 1;
 
-                next
-                  if $DH_COMMANDS_DEPENDS->installed_by($dh_command);
+            } elsif ($line =~ m{^(?:$command_prefix_pattern)dh\s+}) {
 
-                # Unknown command, so check for likely misspellings
-                my $missingauto = firstval { "dh_auto_$command" eq $_ }
-                $DH_COMMANDS_DEPENDS->all;
+                $build_systems{'dh'} = 1;
+                delete($build_systems{'debhelper'});
 
-                $self->pointed_hint(
-                    'typo-in-debhelper-override-target',$pointer,
-                    $timing . $UNDERSCORE . $dh_command,$ARROW,
-                    $timing . $UNDERSCORE . $missingauto,
-                )if length $missingauto;
-            }
+                $seen_dh_sequencer = 1;
+                $seen_any_dh_command = 1;
 
-        } elsif (
-            $line =~m{
+                $seen_dh_dynamic = 1
+                  if $line =~ /\$[({]\w/;
+
+                $seen_dh_parallel = $position
+                  if $line =~ /--parallel/;
+
+                $uses_debhelper = 1;
+                $modifies_scripts = 1;
+
+                while ($line =~ /\s--with(?:=|\s+)(['"]?)(\S+)\1/g) {
+
+                    my $addon_list = $2;
+
+                    for my $addon (split(/,/, $addon_list)) {
+
+                        my $orig_addon = $addon;
+
+                        $addon =~ y,-,_,;
+
+                        my @broadened
+                          = map { "$_:any" } $DH_ADDONS->installed_by($addon);
+                        my $prerequisite
+                          = $DH_ADDON_MANUAL_PREREQUISITES{$addon}
+                          || join($SPACE . $HORIZONTAL_BAR . $SPACE,
+                            @broadened);
+
+                        if ($addon eq 'autotools_dev') {
+
+                            $self->pointed_hint(
+'debhelper-tools-from-autotools-dev-are-deprecated',
+                                $pointer,"dh ... --with $orig_addon"
+                            );
+                            $uses_autotools_dev_dh = 1;
+                        }
+
+                        $seen_dh_systemd = $position
+                          if $addon eq 'systemd';
+
+                        $self->pointed_hint(
+                            'dh-quilt-addon-but-quilt-source-format',
+                            $pointer,"dh ... --with $orig_addon")
+                          if $addon eq 'quilt'
+                          && $self->processable->fields->value('Format') eq
+                          '3.0 (quilt)';
+
+                        $addon_by_prerequisite{$prerequisite} = $addon
+                          if defined $prerequisite;
+
+                        for my $k (keys %seen) {
+                            $seen{$k} = 1
+                              if $addon eq $k;
+                        }
+                    }
+                }
+
+            } elsif ($line =~ /^\s*export\s+DH_COMPAT\s*:?=\s*([^\s]+)/) {
+                $debhelper_level = $1;
+
+            } elsif ($line =~ /^\s*export\s+DH_COMPAT/) {
+                $debhelper_level = $dh_compat_variable
+                  if $dh_compat_variable;
+
+            } elsif ($line =~ /^\s*DH_COMPAT\s*:?=\s*([^\s]+)/) {
+                $dh_compat_variable = $1;
+
+                # one can export and then set the value:
+                $debhelper_level = $1
+                  if $debhelper_level;
+
+            } elsif ($line
+                =~ /^[^:]*(override|execute_(?:after|before))\s+(dh_[^:]*):/){
+                $self->pointed_hint('typo-in-debhelper-override-target',
+                    $pointer, "$1 $2",$ARROW, "$1_$2");
+
+            } elsif ($line =~ /^([^:]*_dh_[^:]*):/) {
+
+                my $alltargets = $1;
+                # can be multiple targets per rule.
+                my @targets = split(/\s+/, $alltargets);
+                my @dh_targets = grep { /_dh_/ } @targets;
+
+                # If maintainer is using wildcards, it's unlikely to be a typo.
+                my @no_wildcards = grep { !/%/ } @dh_targets;
+
+                my $lc
+                  = List::Compare->new(\@no_wildcards, \@KNOWN_DH_COMMANDS);
+                my @unknown = $lc->get_Lonly;
+
+                for my $target (@unknown) {
+
+                    my %distance
+                      = map { $_ => distance($target, $_) } @KNOWN_DH_COMMANDS;
+                    my @near = grep { $distance{$_} < $LEVENSHTEIN_TOLERANCE }
+                      keys %distance;
+                    my $nearest = min_by { $distance{$_} } @near;
+
+                    $self->pointed_hint('typo-in-debhelper-override-target',
+                        $pointer, $target, $ARROW, $nearest)
+                      if length $nearest;
+                }
+
+                for my $target (@no_wildcards) {
+
+                    next
+                      unless $target
+                      =~ /^(override|execute_(?:before|after))_dh_([^\s]+?)(-arch|-indep|)$/;
+
+                    my $timing = $1;
+                    my $command = $2;
+                    my $focus = $3;
+                    my $dh_command = "dh_$command";
+
+                    $overrides{$dh_command} = [$position, $focus];
+                    $uses_debhelper = 1;
+
+                    next
+                      if $DH_COMMANDS_DEPENDS->installed_by($dh_command);
+
+                    # Unknown command, so check for likely misspellings
+                    my $missingauto = firstval { "dh_auto_$command" eq $_ }
+                    $DH_COMMANDS_DEPENDS->all;
+
+                    $self->pointed_hint(
+                        'typo-in-debhelper-override-target',$pointer,
+                        $timing . $UNDERSCORE . $dh_command,$ARROW,
+                        $timing . $UNDERSCORE . $missingauto,
+                    )if length $missingauto;
+                }
+
+            } elsif (
+                $line =~m{
               ^include \s+
                  /usr/share/(?:
                    dh-php/pkg-pecl\.mk
                   |blends-dev/rules
                  )
               }xsm
-        ) {
-            # All of these indirectly use dh.
-            $seen_any_dh_command = 1;
-            $build_systems{'dh'} = 1;
-            delete($build_systems{'debhelper'});
+            ) {
+                # All of these indirectly use dh.
+                $seen_any_dh_command = 1;
+                $build_systems{'dh'} = 1;
+                delete($build_systems{'debhelper'});
 
-        } elsif (
-            $line =~m{
+            } elsif (
+                $line =~m{
               ^include \s+
                  /usr/share/pkg-kde-tools/qt-kde-team/\d+/debian-qt-kde\.mk
               }xsm
-        ) {
+            ) {
 
-            $build_systems{'dhmk'} = 1;
-            delete($build_systems{'debhelper'});
+                $build_systems{'dhmk'} = 1;
+                delete($build_systems{'debhelper'});
+            }
+
+        } continue {
+            ++$position;
         }
 
-    } continue {
-        ++$position;
+        close $rules_fd;
+
     }
-
-    close $rules_fd;
-
     # Variables could contain any add-ons; assume we have seen them all
     %seen = map { $_ => 1 } keys %seen
       if $seen_dh_dynamic;
 
-    if (%build_systems) {
-
+    if (defined $build_driver && $build_driver ne 'debian-rules') {
+        my @systems = sort keys %build_systems;
+        $self->pointed_hint(
+            'debian-build-system',
+            $dcontrol->item->pointer,
+            join(', ', @systems)
+        );
+    } elsif (%build_systems) {
         my @systems = sort keys %build_systems;
         $self->pointed_hint('debian-build-system', $drules->pointer,
             join(', ', @systems));
-
     } else {
         $self->pointed_hint('debian-build-system', $drules->pointer, 'other');
     }
