@@ -113,15 +113,6 @@ sub source {
     }
 
     my $build_all = $self->processable->relation('Build-Depends-All');
-    $self->hint('build-depends-on-python-sphinx-only')
-      if $build_all->satisfies('python-sphinx')
-      && !$build_all->satisfies('python3-sphinx');
-
-    $self->hint(
-        'alternatively-build-depends-on-python-sphinx-and-python3-sphinx')
-      if $self->processable->fields->value('Build-Depends')
-      =~ /\bpython-sphinx\s+\|\s+python3-sphinx\b/;
-
     my $debian_control = $self->processable->debian_control;
 
     # Mismatched substvars
