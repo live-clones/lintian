@@ -1,0 +1,3 @@
+Skeleton: upload-non-native
+Testname: package-uses-debputy-build-driver
+Description: Test for packages using debputy as Build-Driver
