@@ -1,0 +1,3 @@
+package-uses-x-dh-compat (source): debian-build-system dh [debian/rules]
+package-uses-x-dh-compat (source): debhelper-compat-virtual-relation 13 [debian/control]
+package-uses-x-dh-compat (source): debhelper-compat-level 13
