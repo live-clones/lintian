@@ -1,0 +1,3 @@
+Skeleton: upload-non-native
+Testname: package-uses-x-dh-compat
+Description: Test for packages using X-DH-Compat to specify compat level

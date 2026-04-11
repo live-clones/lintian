@@ -548,20 +548,23 @@ sub source {
     }
 
     my $virtual_compat;
+    if ($source_fields->declares('X-DH-Compat')) {
+        $virtual_compat = $source_fields->value('X-DH-Compat');
+    } else {
+        $build_prerequisites->visit(
+            sub{
+                return 0
+                  unless
+                  m{^ debhelper-compat (?: : \S+ )? \s+ [(]= \s+ (\d+) [)] $}x;
 
-    $build_prerequisites->visit(
-        sub {
-            return 0
-              unless
-              m{^ debhelper-compat (?: : \S+ )? \s+ [(]= \s+ (\d+) [)] $}x;
+                $virtual_compat = $1;
 
-            $virtual_compat = $1;
-
-            return 1;
-        },
-        Lintian::Relation::VISIT_PRED_FULL
-          | Lintian::Relation::VISIT_STOP_FIRST_MATCH
-    );
+                return 1;
+            },
+            Lintian::Relation::VISIT_PRED_FULL
+              | Lintian::Relation::VISIT_STOP_FIRST_MATCH
+        );
+    }
 
     my $control_item=$self->processable->debian_control->item;
 
