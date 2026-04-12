@@ -2,4 +2,5 @@ Testname: package-uses-x-dh-compat
 Test-Against:
  debhelper-compat-virtual-relation
  debhelper-compat-file-is-missing
+ debhelper-but-no-misc-depends
 Check: debhelper
