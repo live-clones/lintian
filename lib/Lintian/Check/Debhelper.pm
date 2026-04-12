@@ -55,6 +55,7 @@ const my $VERSIONED_PREREQUISITE_AVAILABLE => 11;
 
 const my $LEVENSHTEIN_TOLERANCE => 3;
 const my $MANY_OVERRIDES => 20;
+const my $DEBHELPER_LEVEL_MISC_DEPENDS_AUTO_APPLY => 14;
 
 use Moo;
 use namespace::clean;
@@ -509,26 +510,6 @@ sub source {
         return;
     }
 
-    my @installable_names= $self->processable->debian_control->installables;
-
-    for my $installable_name (@installable_names) {
-
-        next
-          if $self->processable->debian_control->installable_package_type(
-            $installable_name) ne 'deb';
-
-        my $strong
-          = $self->processable->binary_relation($installable_name, 'strong');
-        my $all= $self->processable->binary_relation($installable_name, 'all');
-
-        $self->hint('debhelper-but-no-misc-depends', $installable_name)
-          unless $all->satisfies($MISC_DEPENDS);
-
-        $self->hint('weak-dependency-on-misc-depends', $installable_name)
-          if $all->satisfies($MISC_DEPENDS)
-          && !$strong->satisfies($MISC_DEPENDS);
-    }
-
     for my $installable ($self->group->get_installables) {
 
         next
@@ -615,6 +596,36 @@ sub source {
 
     $self->pointed_hint('dh-clean-k-is-deprecated', $drules->pointer)
       if $seen_dh_clean_k;
+
+    my @installable_names= $self->processable->debian_control->installables;
+    my $uses_debputy_sequencer
+      = $build_prerequisites->satisfies('dh-sequence-debputy')
+      || $build_prerequisites->satisfies('dh-sequence-zz-debputy')
+      || $build_prerequisites->satisfies('dh-sequence-zz-debputy-rrr');
+
+    for my $installable_name (@installable_names) {
+
+        next
+          if $self->processable->debian_control->installable_package_type(
+            $installable_name) ne 'deb';
+
+        my $strong
+          = $self->processable->binary_relation($installable_name, 'strong');
+        my $all= $self->processable->binary_relation($installable_name, 'all');
+        my $dh_no_misc
+          = $debhelper_level >= $DEBHELPER_LEVEL_MISC_DEPENDS_AUTO_APPLY;
+
+        $self->hint('debhelper-but-no-misc-depends', $installable_name)
+          unless $all->satisfies($MISC_DEPENDS)
+          || $uses_debputy_sequencer
+          || $dh_no_misc;
+
+        $self->hint('weak-dependency-on-misc-depends', $installable_name)
+          if $all->satisfies($MISC_DEPENDS)
+          && !$strong->satisfies($MISC_DEPENDS)
+          && !$uses_debputy_sequencer
+          && !$dh_no_misc;
+    }
 
     for my $suffix (qw(enable start)) {
 
