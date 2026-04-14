@@ -114,7 +114,8 @@ sub check_item {
         my $correct = $switched_locations{$confused};
         $self->pointed_hint('bin-sbin-mismatch', $item->pointer,
             $confused . $ARROW . $correct)
-          if length $item->mentions_in_operation(qr{ \B / \Q$confused\E \b }x);
+          if length $item->mentions_in_operation(
+            qr{ \B / \Q$confused\E (?![\w.-]) }x);
     }
 
     if (length $self->build_path) {
