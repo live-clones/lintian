@@ -56,6 +56,7 @@ const my $VERSIONED_PREREQUISITE_AVAILABLE => 11;
 const my $LEVENSHTEIN_TOLERANCE => 3;
 const my $MANY_OVERRIDES => 20;
 const my $DEBHELPER_LEVEL_MISC_DEPENDS_AUTO_APPLY => 14;
+const my $DEBHELPER_DEB_SUBST_LEVEL => 13;
 
 use Moo;
 use namespace::clean;
@@ -753,7 +754,7 @@ sub source {
                 if ($actual->hashbang =~ /dh-exec/) {
 
                     $uses_dh_exec = 1;
-                    $self->check_dh_exec($item, $category);
+                    $self->check_dh_exec($item, $category, $debhelper_level);
                 }
             }
         }
@@ -986,7 +987,7 @@ sub check_compat_file {
 }
 
 sub check_dh_exec {
-    my ($self, $item, $category) = @_;
+    my ($self, $item, $category, $debhelper_level) = @_;
 
     return
       unless $item->is_open_ok;
@@ -999,6 +1000,7 @@ sub check_dh_exec {
       or die encode_utf8('Cannot open ' . $item->unpacked_path);
 
     my $position = 1;
+    my $dhe_needed = 0;
     while (my $line = <$fd>) {
 
         chomp $line;
@@ -1031,10 +1033,16 @@ sub check_dh_exec {
         $dhe_filter = 1
           if $line =~ /<[^>]+>/;
 
-        if (   $line =~ /^usr\/lib\/\$\{([^\}]+)\}\/?$/
-            || $line
-            =~ /^usr\/lib\/\$\{([^\}]+)\}\/?\s+\/usr\/lib\/\$\{([^\}]+)\}\/?$/
-            || $line =~ /^usr\/lib\/\$\{([^\}]+)\}[^\s]+$/) {
+        $dhe_needed = $dhe_filter || $dhe_install;
+
+# dh_install can substitute DEB_HOST_*, DEB_BUILD_*, DEB_TARGET_* since dh 13 so this check is moot
+        if (
+            $debhelper_level < $DEBHELPER_DEB_SUBST_LEVEL
+            &&(   $line =~ /^usr\/lib\/\$\{([^\}]+)\}\/?$/
+                || $line
+                =~ /^usr\/lib\/\$\{([^\}]+)\}\/?\s+\/usr\/lib\/\$\{([^\}]+)\}\/?$/
+                || $line =~ /^usr\/lib\/\$\{([^\}]+)\}[^\s]+$/)
+        ) {
 
             my $sv = $1;
             my $dv = $2;
@@ -1052,10 +1060,10 @@ sub check_dh_exec {
                 } else {
                     $dhe_useless = 1;
                 }
+
+                $dhe_needed ||= !$dhe_useless;
             }
 
-            $self->pointed_hint('dh-exec-useless-usage', $pointer, $line)
-              if $dhe_useless && $item =~ /debian\/.*(install|manpages)/;
         }
 
     } continue {
@@ -1063,6 +1071,9 @@ sub check_dh_exec {
     }
 
     close $fd;
+
+    $self->pointed_hint('dh-exec-useless-usage', $item->pointer)
+      if !$dhe_needed && $item =~ /debian\/.*(install|manpages)/;
 
     $self->pointed_hint('dh-exec-script-without-dh-exec-features',
         $item->pointer)
