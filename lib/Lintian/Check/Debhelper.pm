@@ -1010,7 +1010,7 @@ sub check_dh_exec {
         if ($line =~ /\$\{([^\}]+)\}/) {
 
             my $sv = $1;
-            $dhe_subst = 1;
+            $dhe_subst = 1 && $debhelper_level < $DEBHELPER_DEB_SUBST_LEVEL;
 
             if (
                 $sv !~ m{ \A
