@@ -1,8 +1,50 @@
-lintian (2.134.1) UNRELEASED; urgency=medium
+lintian (2.135.0) unstable; urgency=medium
 
-  * WIP (generated at release time: please do not add entries below.)
+  [ Nilesh Patra ]
+  * Do not emit syntax-error-in-debian-changelog when changelog entry is a
+    BinNMU (Closes: #1031378)
+  * New (warning) tag: version-refers-to-unstable-distribution-with-exp-version
+    (Closes: #1064637)
+  * Add test for "uses-deprecated-adttmp" check
+  * Do not print line number for "spelling-error-in-binary" check (See #1128948)
+  * Drop un-needed tags:
+    - "build-depends-on-python-sphinx-only"
+    - "alternatively-build-depends-on-python-sphinx-and-python3-sphinx"
+    as python2 has been long removed (Closes: #1133273)
+  * Add initial support for parsing Build-Driver; add corresponding test to
+    detect the same (Closes: #1077938)
+  * Add support for X-DH-Compat field as replacement for d/compat (Closes:
+    #1072741)
+  * Do not trigger misc-depends missing tags for dh compat 14+ and when debputy
+    sequencers are in B-D (Closes: #1067653)
+  * Update package-uses-x-dh-compat test to use dh-14 and test against
+    debhelper-but-no-misc-depends
+  * Add test for debputy sequencer plugin and test it against
+    debhelper-but-no-misc-depends
+  * Ignore usr-merged location for bin-sbin-mismatch check (Closes: #1079020)
+  * Fix (usrmerge) F-P in bin-sbin-confusion-in-script test
+  * bin-sbin-match: use better regex to avoid false positives with word boundary
+    (Closes: #1017632)
+  * Emit dh-exec-useless-usage only when none of the lines needs dh-exec
+    (Closes: #969973)
+  * Adjust hints for "debhelper-dh-exec" test
+  * Add another test to check when dh-exec is used un-necessarily
+  * Do not mark substitution as feature of dh-exec for dh level >= 13
+  * Set Dh-compat to 12 in "debhelper-dh-exec-useless" to fix the test
+  * Mark "maintainer-script-calls-service" as "Experimental: yes" (See:
+    #1134509)
+  * Mark "maintainer-script-switches-dir-to-symlink-unsafely" as "Experimental:
+    yes"
+  * Tighten Versioned B-D on groff-base in tests due to changing hints with new
+    groff version
 
- -- Nilesh Patra <nilesh@debian.org>  Wed, 08 Apr 2026 00:36:33 +0530
+  [ William Desportes ]
+  * Fix regexes to catch embedded-php-library
+
+  [ Louis-Philippe Véronneau ]
+  * Fix the testsuite for groff 1.24 version
+
+ -- Nilesh Patra <nilesh@debian.org>  Mon, 27 Apr 2026 05:33:35 +0530
 
 lintian (2.134.0) unstable; urgency=medium
 
