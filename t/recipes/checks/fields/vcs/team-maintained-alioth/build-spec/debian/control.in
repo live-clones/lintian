@@ -1,7 +1,7 @@
 Source: [% $source %]
 Priority: optional
 Section: [% $section %]
-Maintainer: Debian Team-Team <teamteam@lists.alioth.debian.org >
+Maintainer: Debian Team-Team <teamteam@lists.alioth.debian.org>
 Standards-Version: [% $standards_version %]
 Build-Depends: [% $build_depends %]
 Rules-Requires-Root: no

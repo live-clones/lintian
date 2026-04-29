@@ -169,13 +169,6 @@ sub source {
               && $operator eq $EQUAL
               && $substvar eq 'source:Version';
 
-            # (b2) any -> all (= ${binary:Version}) [or S-V]
-            $self->hint('maybe-not-arch-all-binnmuable', $context)
-              if !$installable_is_all
-              && $prerequisite_is_all
-              && $operator eq $EQUAL
-              && $substvar eq 'source:Version';
-
             # (b2) any -> all (* ${binary:Version}) [or S-V]
             $self->hint('not-binnmuable-any-depends-all', $context)
               if !$installable_is_all

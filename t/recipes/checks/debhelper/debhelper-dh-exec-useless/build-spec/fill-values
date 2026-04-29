@@ -1,0 +1,4 @@
+Skeleton: upload-non-native
+Testname: debhelper-dh-exec-useless
+Dh-Compat-Level: 12
+Description: Flag case where dh-exec is not required

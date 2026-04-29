@@ -543,7 +543,9 @@ sub check_symbols_file {
 
         $self->pointed_hint('symbols-file-missing-build-depends-package-field',
             $symbols_file->pointer,$soname)
-          if none { $_ eq 'Build-Depends-Package' } @used_meta_labels;
+          if none {
+            $_ eq 'Build-Depends-Package' or $_ eq 'Build-Depends-Packages'
+          } @used_meta_labels;
 
         my @full_version_symbols
           = @{$full_version_symbols_by_soname{$soname} // [] };

@@ -1,0 +1,4 @@
+Testname: watch-v5-gittag
+Skeleton: upload-non-native
+Source-Format: 3.0 (quilt)
+Description: Upstream signature parsed via the gittag mode in a debian/watch file

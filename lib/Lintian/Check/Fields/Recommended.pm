@@ -35,8 +35,8 @@ with 'Lintian::Check';
 const my $AT => q{@};
 
 # policy section 5.2 states unequivocally that the two fields Section
-# and Priority are recommended not only in the source paragraph, but
-# also in the binary paragraphs.
+# is recommended not only in the source paragraph, but
+# also in the binary paragraphs in source debian/control.
 
 # in the author's opinion, however, it does not make sense to flag them
 # there because the same two fields in the source paragraph provide the
@@ -47,8 +47,8 @@ const my $AT => q{@};
 # super confusing
 
 # policy 5.2
-my @DEBIAN_CONTROL_SOURCE = qw(Section Priority);
-my @DEBIAN_CONTROL_INSTALLABLE = qw(); # Section Priority
+my @DEBIAN_CONTROL_SOURCE = qw(Section);
+my @DEBIAN_CONTROL_INSTALLABLE = qw(); # Section
 
 # policy 5.3
 my @INSTALLATION_CONTROL = qw(Section Priority);

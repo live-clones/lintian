@@ -1,5 +1,6 @@
 Tag: source-is-missing
 Severity: error
+Experimental: yes
 Check: files/source-missing
 Explanation: The source of the following file is missing. Lintian checked a few
  possible paths to find the source, and did not find it.

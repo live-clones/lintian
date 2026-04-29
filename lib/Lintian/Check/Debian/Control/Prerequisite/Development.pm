@@ -68,7 +68,7 @@ sub source {
               unless $other_name =~ /^lib[\w.+-]+\d/;
 
             my @relevant
-              = grep { m{ (?: ^ | [\s|] ) \Q$other_name\E (?: [\s|(] | \z ) }x }
+              = grep {m{ (?: ^ | [\s|] ) \Q$other_name\E (?: [\s|(] | \z ) }x}
               @depends;
 
             # If there are any alternatives here, something special is

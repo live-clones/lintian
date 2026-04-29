@@ -56,18 +56,18 @@ sub source {
     my $position = $source_fields->position('Rules-Requires-Root');
     my $pointer = $control_item->pointer($position);
 
-    $self->pointed_hint('rules-do-not-require-root', $pointer)
-      if $source_fields->value('Rules-Requires-Root') eq 'no';
-
     $self->pointed_hint('rules-require-root-explicitly', $pointer)
       if $source_fields->declares('Rules-Requires-Root')
       && $source_fields->value('Rules-Requires-Root') ne 'no';
 
-    $self->pointed_hint('silent-on-rules-requiring-root', $pointer)
-      unless $source_fields->declares('Rules-Requires-Root');
+    $self->pointed_hint('redundant-rules-requires-root-no-field', $pointer)
+      if $source_fields->declares('Rules-Requires-Root')
+      && $source_fields->value('Rules-Requires-Root') eq 'no';
 
     if (  !$source_fields->declares('Rules-Requires-Root')
         || $source_fields->value('Rules-Requires-Root') eq 'no') {
+
+        $self->pointed_hint('rules-do-not-require-root', $pointer);
 
         for my $installable ($self->group->get_installables) {
 

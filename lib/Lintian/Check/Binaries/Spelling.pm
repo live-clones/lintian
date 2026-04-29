@@ -48,10 +48,7 @@ sub spelling_tag_emitter {
     my ($self, $tag_name, $item, @orig_args) = @_;
 
     return sub {
-
-        my $pointer = $item->pointer($.);
-
-        return $self->pointed_hint($tag_name, $pointer, @orig_args, @_);
+        return $self->pointed_hint($tag_name, $item->pointer, @orig_args, @_);
     };
 }
 

@@ -3,6 +3,7 @@
 # Copyright (C) 2004 Marc Brockschmidt
 # Copyright (C) 2020 Chris Lamb <lamby@debian.org>
 # Copyright (C) 2020-2021 Felix Lechner
+# Copyright (C) 2025 Maytham Alsudany <maytha8thedev@gmail.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -47,12 +48,12 @@ sub source {
         my $position = $installable_fields->position('Package');
 
         $self->pointed_hint(
-            'missing-built-using-field-for-golang-package',
+            'missing-static-built-using-field-for-golang-package',
             $control_item->pointer($position),
             "(in section for $installable)"
           )
-          if $installable_fields->value('Built-Using')
-          !~ m{ \$ [{] misc:Built-Using [}] }x
+          if $installable_fields->value('Static-Built-Using')
+          !~ m{ \$ [{] misc:Static-Built-Using [}] }x
           && $installable_fields->value('Architecture') ne 'all';
     }
 

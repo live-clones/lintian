@@ -52,42 +52,6 @@ const my @WANTEDBY_WHITELIST => qw{
   sysinit.target
 };
 
-# Known hardening flags in [Service] section
-const my @HARDENING_FLAGS => qw{
-  CapabilityBoundingSet
-  DeviceAllow
-  DynamicUser
-  IPAddressDeny
-  InaccessiblePaths
-  KeyringMode
-  LimitNOFILE
-  LockPersonality
-  MemoryDenyWriteExecute
-  MountFlags
-  NoNewPrivileges
-  PrivateDevices
-  PrivateMounts
-  PrivateNetwork
-  PrivateTmp
-  PrivateUsers
-  ProtectControlGroups
-  ProtectHome
-  ProtectHostname
-  ProtectKernelLogs
-  ProtectKernelModules
-  ProtectKernelTunables
-  ProtectSystem
-  ReadOnlyPaths
-  RemoveIPC
-  RestrictAddressFamilies
-  RestrictNamespaces
-  RestrictRealtime
-  RestrictSUIDSGID
-  SystemCallArchitectures
-  SystemCallFilter
-  UMask
-};
-
 # init scripts that do not need a service file
 has PROVIDED_BY_SYSTEMD => (
     is => 'rw',
@@ -249,7 +213,7 @@ sub check_init_script {
         $lsb_source_seen = 1
           if $position == 1
           && $line
-          =~ m{\A [#]! \s* (?:/usr/bin/env)? \s* /lib/init/init-d-script}xsm;
+          =~ m{\A [#]! \s* (?:/usr/bin/env)? \s* (?:/usr)?/lib/init/init-d-script}xsm;
 
         $is_rcs_script = 1
           if $line =~ m{#.*Default-Start:.*S};
@@ -259,7 +223,7 @@ sub check_init_script {
 
         $lsb_source_seen = 1
           if $line
-          =~ m{(?:\.|source)\s+/lib/(?:lsb/init-functions|init/init-d-script)};
+          =~ m{(?:\.|source)\s+(?:/usr)?/lib/(?:lsb/init-functions|init/init-d-script)};
 
     } continue {
         ++$position;
@@ -386,16 +350,6 @@ sub check_systemd_service_file {
                 $item->pointer, 'PIDFile', $x)
               if $x =~ m{^/var/run/};
         }
-
-        my $seen_hardening
-          = any { $self->extract_service_file_values($item, 'Service', $_) }
-          @HARDENING_FLAGS;
-
-        $self->pointed_hint('systemd-service-file-missing-hardening-features',
-            $item->pointer)
-          unless $seen_hardening
-          || $is_oneshot
-          || any { 'sleep.target' eq $_ } @wanted_by;
 
         if (
             $self->extract_service_file_values(

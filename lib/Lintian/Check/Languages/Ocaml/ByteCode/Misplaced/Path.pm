@@ -41,9 +41,9 @@ has misplaced_files => (is => 'rw', default => sub { [] });
 sub visit_installed_files {
     my ($self, $item) = @_;
 
-    # development files outside /usr/lib/ocaml (.cmi, .cmx, .cmxa)
+# development files outside /usr/lib/<multiarch>/ocaml/<abi> (.cmi, .cmx, .cmxa)
     return
-      if $item->name =~ m{^ usr/lib/ocaml/ }x;
+      if $item->name =~ m{^ usr/lib/[^/]+/ocaml/[^/]+/ }x;
 
     # .cma, .cmo and .cmxs are excluded because they can be plugins
     push(@{$self->misplaced_files}, $item->name)

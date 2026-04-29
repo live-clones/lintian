@@ -1,0 +1,8 @@
+Document: lintian-doc
+Title: Lintian website
+Abstract: This website provides Lintian tags' explanations
+Section: Debian
+
+Format: HTML
+Index: /usr/share/doc/lintian-doc/html/index.html
+Files: /usr/share/doc/lintian-doc/html/*

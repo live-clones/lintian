@@ -265,6 +265,16 @@
             "fonts-aenigma"
          ]
       },
+      "adwaitasans-italic.ttf" : {
+         "installed_by" : [
+            "fonts-adwaita-sans"
+         ]
+      },
+      "adwaitasans-regular.ttf" : {
+         "installed_by" : [
+            "fonts-adwaita-sans"
+         ]
+      },
       "ae_alarabiya.ttf" : {
          "installed_by" : [
             "fonts-arabeyes"
@@ -460,46 +470,6 @@
             "fonts-ancient-scripts"
          ]
       },
-      "aerial.ttf" : {
-         "installed_by" : [
-            "fonts-arkpandora"
-         ]
-      },
-      "aerialbd.ttf" : {
-         "installed_by" : [
-            "fonts-arkpandora"
-         ]
-      },
-      "aerialbdit.ttf" : {
-         "installed_by" : [
-            "fonts-arkpandora"
-         ]
-      },
-      "aerialit.ttf" : {
-         "installed_by" : [
-            "fonts-arkpandora"
-         ]
-      },
-      "aerialmono.ttf" : {
-         "installed_by" : [
-            "fonts-arkpandora"
-         ]
-      },
-      "aerialmonobd.ttf" : {
-         "installed_by" : [
-            "fonts-arkpandora"
-         ]
-      },
-      "aerialmonobdit.ttf" : {
-         "installed_by" : [
-            "fonts-arkpandora"
-         ]
-      },
-      "aerialmonoit.ttf" : {
-         "installed_by" : [
-            "fonts-arkpandora"
-         ]
-      },
       "aescrawl.ttf" : {
          "installed_by" : [
             "fonts-aenigma"
@@ -520,9 +490,44 @@
             "fonts-agave"
          ]
       },
+      "agave-boo-autohinted.ttf" : {
+         "installed_by" : [
+            "fonts-agave"
+         ]
+      },
       "agave-r-autohinted.ttf" : {
          "installed_by" : [
             "fonts-agave"
+         ]
+      },
+      "agave-roo-autohinted.ttf" : {
+         "installed_by" : [
+            "fonts-agave"
+         ]
+      },
+      "aharoniclm-bold.otf" : {
+         "installed_by" : [
+            "fonts-culmus"
+         ]
+      },
+      "aharoniclm-boldoblique.otf" : {
+         "installed_by" : [
+            "fonts-culmus"
+         ]
+      },
+      "aharoniclm-book.otf" : {
+         "installed_by" : [
+            "fonts-culmus"
+         ]
+      },
+      "aharoniclm-bookoblique.otf" : {
+         "installed_by" : [
+            "fonts-culmus"
+         ]
+      },
+      "akaashnormal.ttf" : {
+         "installed_by" : [
+            "fonts-beng-extra"
          ]
       },
       "akatab-black.ttf" : {
@@ -563,146 +568,6 @@
       "aksharyogini2normal.ttf" : {
          "installed_by" : [
             "fonts-aksharyogini2"
-         ]
-      },
-      "alegreyasans-black.otf" : {
-         "installed_by" : [
-            "fonts-alegreya-sans"
-         ]
-      },
-      "alegreyasans-blackitalic.otf" : {
-         "installed_by" : [
-            "fonts-alegreya-sans"
-         ]
-      },
-      "alegreyasans-bold.otf" : {
-         "installed_by" : [
-            "fonts-alegreya-sans"
-         ]
-      },
-      "alegreyasans-bolditalic.otf" : {
-         "installed_by" : [
-            "fonts-alegreya-sans"
-         ]
-      },
-      "alegreyasans-extrabold.otf" : {
-         "installed_by" : [
-            "fonts-alegreya-sans"
-         ]
-      },
-      "alegreyasans-extrabolditalic.otf" : {
-         "installed_by" : [
-            "fonts-alegreya-sans"
-         ]
-      },
-      "alegreyasans-italic.otf" : {
-         "installed_by" : [
-            "fonts-alegreya-sans"
-         ]
-      },
-      "alegreyasans-light.otf" : {
-         "installed_by" : [
-            "fonts-alegreya-sans"
-         ]
-      },
-      "alegreyasans-lightitalic.otf" : {
-         "installed_by" : [
-            "fonts-alegreya-sans"
-         ]
-      },
-      "alegreyasans-medium.otf" : {
-         "installed_by" : [
-            "fonts-alegreya-sans"
-         ]
-      },
-      "alegreyasans-mediumitalic.otf" : {
-         "installed_by" : [
-            "fonts-alegreya-sans"
-         ]
-      },
-      "alegreyasans-regular.otf" : {
-         "installed_by" : [
-            "fonts-alegreya-sans"
-         ]
-      },
-      "alegreyasans-thin.otf" : {
-         "installed_by" : [
-            "fonts-alegreya-sans"
-         ]
-      },
-      "alegreyasans-thinitalic.otf" : {
-         "installed_by" : [
-            "fonts-alegreya-sans"
-         ]
-      },
-      "alegreyasanssc-black.otf" : {
-         "installed_by" : [
-            "fonts-alegreya-sans"
-         ]
-      },
-      "alegreyasanssc-blackitalic.otf" : {
-         "installed_by" : [
-            "fonts-alegreya-sans"
-         ]
-      },
-      "alegreyasanssc-bold.otf" : {
-         "installed_by" : [
-            "fonts-alegreya-sans"
-         ]
-      },
-      "alegreyasanssc-bolditalic.otf" : {
-         "installed_by" : [
-            "fonts-alegreya-sans"
-         ]
-      },
-      "alegreyasanssc-extrabold.otf" : {
-         "installed_by" : [
-            "fonts-alegreya-sans"
-         ]
-      },
-      "alegreyasanssc-extrabolditalic.otf" : {
-         "installed_by" : [
-            "fonts-alegreya-sans"
-         ]
-      },
-      "alegreyasanssc-italic.otf" : {
-         "installed_by" : [
-            "fonts-alegreya-sans"
-         ]
-      },
-      "alegreyasanssc-light.otf" : {
-         "installed_by" : [
-            "fonts-alegreya-sans"
-         ]
-      },
-      "alegreyasanssc-lightitalic.otf" : {
-         "installed_by" : [
-            "fonts-alegreya-sans"
-         ]
-      },
-      "alegreyasanssc-medium.otf" : {
-         "installed_by" : [
-            "fonts-alegreya-sans"
-         ]
-      },
-      "alegreyasanssc-mediumitalic.otf" : {
-         "installed_by" : [
-            "fonts-alegreya-sans"
-         ]
-      },
-      "alegreyasanssc-regular.otf" : {
-         "installed_by" : [
-            "fonts-alegreya-sans"
-         ]
-      },
-      "alegreyasanssc-thin.otf" : {
-         "installed_by" : [
-            "fonts-alegreya-sans"
-         ]
-      },
-      "alegreyasanssc-thinitalic.otf" : {
-         "installed_by" : [
-            "fonts-alegreya-sans"
          ]
       },
       "alexander_hint.ttf" : {
@@ -935,36 +800,6 @@
             "fonts-apropal"
          ]
       },
-      "arapey-black-display.otf" : {
-         "installed_by" : [
-            "fonts-arapey"
-         ]
-      },
-      "arapey-black.otf" : {
-         "installed_by" : [
-            "fonts-arapey"
-         ]
-      },
-      "arapey-regular-display.otf" : {
-         "installed_by" : [
-            "fonts-arapey"
-         ]
-      },
-      "arapey-regular.otf" : {
-         "installed_by" : [
-            "fonts-arapey"
-         ]
-      },
-      "arapey-thin-display.otf" : {
-         "installed_by" : [
-            "fonts-arapey"
-         ]
-      },
-      "arapey-thin.otf" : {
-         "installed_by" : [
-            "fonts-arapey"
-         ]
-      },
       "arimo-bold.ttf" : {
          "installed_by" : [
             "fonts-croscore"
@@ -1145,9 +980,99 @@
             "fonts-atkinson-hyperlegible-ttf"
          ]
       },
+      "atkinsonhyperlegiblenext-bold.ttf" : {
+         "installed_by" : [
+            "fonts-atkinson-hyperlegible-next"
+         ]
+      },
+      "atkinsonhyperlegiblenext-bolditalic.ttf" : {
+         "installed_by" : [
+            "fonts-atkinson-hyperlegible-next"
+         ]
+      },
+      "atkinsonhyperlegiblenext-extrabold.ttf" : {
+         "installed_by" : [
+            "fonts-atkinson-hyperlegible-next"
+         ]
+      },
+      "atkinsonhyperlegiblenext-extrabolditalic.ttf" : {
+         "installed_by" : [
+            "fonts-atkinson-hyperlegible-next"
+         ]
+      },
+      "atkinsonhyperlegiblenext-extralight.ttf" : {
+         "installed_by" : [
+            "fonts-atkinson-hyperlegible-next"
+         ]
+      },
+      "atkinsonhyperlegiblenext-extralightitalic.ttf" : {
+         "installed_by" : [
+            "fonts-atkinson-hyperlegible-next"
+         ]
+      },
+      "atkinsonhyperlegiblenext-italic.ttf" : {
+         "installed_by" : [
+            "fonts-atkinson-hyperlegible-next"
+         ]
+      },
+      "atkinsonhyperlegiblenext-light.ttf" : {
+         "installed_by" : [
+            "fonts-atkinson-hyperlegible-next"
+         ]
+      },
+      "atkinsonhyperlegiblenext-lightitalic.ttf" : {
+         "installed_by" : [
+            "fonts-atkinson-hyperlegible-next"
+         ]
+      },
+      "atkinsonhyperlegiblenext-medium.ttf" : {
+         "installed_by" : [
+            "fonts-atkinson-hyperlegible-next"
+         ]
+      },
+      "atkinsonhyperlegiblenext-mediumitalic.ttf" : {
+         "installed_by" : [
+            "fonts-atkinson-hyperlegible-next"
+         ]
+      },
+      "atkinsonhyperlegiblenext-regular.ttf" : {
+         "installed_by" : [
+            "fonts-atkinson-hyperlegible-next"
+         ]
+      },
+      "atkinsonhyperlegiblenext-semibold.ttf" : {
+         "installed_by" : [
+            "fonts-atkinson-hyperlegible-next"
+         ]
+      },
+      "atkinsonhyperlegiblenext-semibolditalic.ttf" : {
+         "installed_by" : [
+            "fonts-atkinson-hyperlegible-next"
+         ]
+      },
       "automati.ttf" : {
          "installed_by" : [
             "fonts-aenigma"
+         ]
+      },
+      "avant-garde-bi.pfb" : {
+         "installed_by" : [
+            "fonts-texmacs"
+         ]
+      },
+      "avant-garde-bx.pfb" : {
+         "installed_by" : [
+            "fonts-texmacs"
+         ]
+      },
+      "avant-garde-rm.pfb" : {
+         "installed_by" : [
+            "fonts-texmacs"
+         ]
+      },
+      "avant-garde-ti.pfb" : {
+         "installed_by" : [
+            "fonts-texmacs"
          ]
       },
       "avdira_hint.ttf" : {
@@ -1460,27 +1385,7 @@
             "fonts-baekmuk"
          ]
       },
-      "bebasneue-bold.otf" : {
-         "installed_by" : [
-            "fonts-bebas-neue"
-         ]
-      },
-      "bebasneue-book.otf" : {
-         "installed_by" : [
-            "fonts-bebas-neue"
-         ]
-      },
-      "bebasneue-light.otf" : {
-         "installed_by" : [
-            "fonts-bebas-neue"
-         ]
-      },
       "bebasneue-regular.otf" : {
-         "installed_by" : [
-            "fonts-bebas-neue"
-         ]
-      },
-      "bebasneue-thin.otf" : {
          "installed_by" : [
             "fonts-bebas-neue"
          ]
@@ -1775,6 +1680,11 @@
             "fonts-woowa-bm"
          ]
       },
+      "bmkkubulimttf.ttf" : {
+         "installed_by" : [
+            "fonts-woowa-bm"
+         ]
+      },
       "bmyeonsung_ttf.ttf" : {
          "installed_by" : [
             "fonts-woowa-bm"
@@ -1813,6 +1723,26 @@
       "bocumang.ttf" : {
          "installed_by" : [
             "fonts-aenigma"
+         ]
+      },
+      "bookman-bi.pfb" : {
+         "installed_by" : [
+            "fonts-texmacs"
+         ]
+      },
+      "bookman-bx.pfb" : {
+         "installed_by" : [
+            "fonts-texmacs"
+         ]
+      },
+      "bookman-rm.pfb" : {
+         "installed_by" : [
+            "fonts-texmacs"
+         ]
+      },
+      "bookman-ti.pfb" : {
+         "installed_by" : [
+            "fonts-texmacs"
          ]
       },
       "booku___.ttf" : {
@@ -2195,6 +2125,11 @@
             "fonts-crosextra-caladea"
          ]
       },
+      "caladingsclm.otf" : {
+         "installed_by" : [
+            "fonts-culmus"
+         ]
+      },
       "caliban.ttf" : {
          "installed_by" : [
             "fonts-georgewilliams"
@@ -2215,27 +2150,7 @@
             "fonts-aenigma"
          ]
       },
-      "cantarell-bold.otf" : {
-         "installed_by" : [
-            "fonts-cantarell"
-         ]
-      },
-      "cantarell-extrabold.otf" : {
-         "installed_by" : [
-            "fonts-cantarell"
-         ]
-      },
-      "cantarell-light.otf" : {
-         "installed_by" : [
-            "fonts-cantarell"
-         ]
-      },
-      "cantarell-regular.otf" : {
-         "installed_by" : [
-            "fonts-cantarell"
-         ]
-      },
-      "cantarell-thin.otf" : {
+      "cantarell-vf.otf" : {
          "installed_by" : [
             "fonts-cantarell"
          ]
@@ -2280,7 +2195,27 @@
             "fonts-cascadia-code"
          ]
       },
+      "cascadiacodeitalic.ttf" : {
+         "installed_by" : [
+            "fonts-cascadia-code"
+         ]
+      },
+      "cascadiacodenf.ttf" : {
+         "installed_by" : [
+            "fonts-cascadia-code"
+         ]
+      },
+      "cascadiacodenfitalic.ttf" : {
+         "installed_by" : [
+            "fonts-cascadia-code"
+         ]
+      },
       "cascadiacodepl.ttf" : {
+         "installed_by" : [
+            "fonts-cascadia-code"
+         ]
+      },
+      "cascadiacodeplitalic.ttf" : {
          "installed_by" : [
             "fonts-cascadia-code"
          ]
@@ -2290,7 +2225,27 @@
             "fonts-cascadia-code"
          ]
       },
+      "cascadiamonoitalic.ttf" : {
+         "installed_by" : [
+            "fonts-cascadia-code"
+         ]
+      },
+      "cascadiamononf.ttf" : {
+         "installed_by" : [
+            "fonts-cascadia-code"
+         ]
+      },
+      "cascadiamononfitalic.ttf" : {
+         "installed_by" : [
+            "fonts-cascadia-code"
+         ]
+      },
       "cascadiamonopl.ttf" : {
+         "installed_by" : [
+            "fonts-cascadia-code"
+         ]
+      },
+      "cascadiamonoplitalic.ttf" : {
          "installed_by" : [
             "fonts-cascadia-code"
          ]
@@ -2680,6 +2635,11 @@
             "fonts-cmu"
          ]
       },
+      "cmuserif-math.ttf" : {
+         "installed_by" : [
+            "fonts-gr-framework"
+         ]
+      },
       "codelife.ttf" : {
          "installed_by" : [
             "fonts-aenigma"
@@ -2860,6 +2820,26 @@
             "fonts-aenigma"
          ]
       },
+      "courier-bi.pfb" : {
+         "installed_by" : [
+            "fonts-texmacs"
+         ]
+      },
+      "courier-bx.pfb" : {
+         "installed_by" : [
+            "fonts-texmacs"
+         ]
+      },
+      "courier-rm.pfb" : {
+         "installed_by" : [
+            "fonts-texmacs"
+         ]
+      },
+      "courier-ti.pfb" : {
+         "installed_by" : [
+            "fonts-texmacs"
+         ]
+      },
       "courier.ttf" : {
          "installed_by" : [
             "fonts-wine"
@@ -2965,6 +2945,16 @@
             "fonts-urw-base35"
          ]
       },
+      "d2coding-ver1.3.2-20180524-ligature.ttf" : {
+         "installed_by" : [
+            "fonts-nanum"
+         ]
+      },
+      "d2codingbold-ver1.3.2-20180524-ligature.ttf" : {
+         "installed_by" : [
+            "fonts-nanum"
+         ]
+      },
       "damase.ttf" : {
          "installed_by" : [
             "fonts-mph-2b-damase"
@@ -3003,6 +2993,26 @@
       "dastardl.ttf" : {
          "installed_by" : [
             "fonts-aenigma"
+         ]
+      },
+      "davidclm-bold.otf" : {
+         "installed_by" : [
+            "fonts-culmus"
+         ]
+      },
+      "davidclm-bolditalic.otf" : {
+         "installed_by" : [
+            "fonts-culmus"
+         ]
+      },
+      "davidclm-medium.otf" : {
+         "installed_by" : [
+            "fonts-culmus"
+         ]
+      },
+      "davidclm-mediumitalic.otf" : {
+         "installed_by" : [
+            "fonts-culmus"
          ]
       },
       "dblayer1.ttf" : {
@@ -3245,6 +3255,11 @@
             "fonts-teluguvijayam"
          ]
       },
+      "dingbats-regu.ttf" : {
+         "installed_by" : [
+            "fonts-gr-framework"
+         ]
+      },
       "discorda.ttf" : {
          "installed_by" : [
             "fonts-aenigma"
@@ -3358,6 +3373,11 @@
       "droidsansfallbackfull.ttf" : {
          "installed_by" : [
             "fonts-droid-fallback"
+         ]
+      },
+      "drugulinclm-bold.otf" : {
+         "installed_by" : [
+            "fonts-culmus"
          ]
       },
       "dseg14classic-bold.ttf" : {
@@ -3682,32 +3702,32 @@
       },
       "ebgaramond-initials.otf" : {
          "installed_by" : [
-            "fonts-ebgaramond-extra"
+            "fonts-ebgaramond-initials"
          ]
       },
       "ebgaramond-initials.ttf" : {
          "installed_by" : [
-            "fonts-ebgaramond-extra"
+            "fonts-ebgaramond-initials-extra"
          ]
       },
       "ebgaramond-initialsf1.otf" : {
          "installed_by" : [
-            "fonts-ebgaramond-extra"
+            "fonts-ebgaramond-initials"
          ]
       },
       "ebgaramond-initialsf1.ttf" : {
          "installed_by" : [
-            "fonts-ebgaramond-extra"
+            "fonts-ebgaramond-initials-extra"
          ]
       },
       "ebgaramond-initialsf2.otf" : {
          "installed_by" : [
-            "fonts-ebgaramond-extra"
+            "fonts-ebgaramond-initials"
          ]
       },
       "ebgaramond-initialsf2.ttf" : {
          "installed_by" : [
-            "fonts-ebgaramond-extra"
+            "fonts-ebgaramond-initials-extra"
          ]
       },
       "ebgaramond08-italic.otf" : {
@@ -3875,6 +3895,26 @@
             "fonts-linex"
          ]
       },
+      "elliniaclm-bold.otf" : {
+         "installed_by" : [
+            "fonts-culmus"
+         ]
+      },
+      "elliniaclm-bolditalic.otf" : {
+         "installed_by" : [
+            "fonts-culmus"
+         ]
+      },
+      "elliniaclm-light.otf" : {
+         "installed_by" : [
+            "fonts-culmus"
+         ]
+      },
+      "elliniaclm-lightitalic.otf" : {
+         "installed_by" : [
+            "fonts-culmus"
+         ]
+      },
       "elsewhe2.ttf" : {
          "installed_by" : [
             "fonts-aenigma"
@@ -3885,7 +3925,87 @@
             "fonts-aenigma"
          ]
       },
-      "elstob-bold.otf" : {
+      "elstob-10ptbolditalic.otf" : {
+         "installed_by" : [
+            "fonts-elstob"
+         ]
+      },
+      "elstob-10ptitalic.otf" : {
+         "installed_by" : [
+            "fonts-elstob"
+         ]
+      },
+      "elstob-10ptmediumitalic.otf" : {
+         "installed_by" : [
+            "fonts-elstob"
+         ]
+      },
+      "elstob-10ptsemibolditalic.otf" : {
+         "installed_by" : [
+            "fonts-elstob"
+         ]
+      },
+      "elstob-14ptbolditalic.otf" : {
+         "installed_by" : [
+            "fonts-elstob"
+         ]
+      },
+      "elstob-14ptitalic.otf" : {
+         "installed_by" : [
+            "fonts-elstob"
+         ]
+      },
+      "elstob-14ptmediumitalic.otf" : {
+         "installed_by" : [
+            "fonts-elstob"
+         ]
+      },
+      "elstob-14ptsemibolditalic.otf" : {
+         "installed_by" : [
+            "fonts-elstob"
+         ]
+      },
+      "elstob-18ptbolditalic.otf" : {
+         "installed_by" : [
+            "fonts-elstob"
+         ]
+      },
+      "elstob-18ptextrabolditalic.otf" : {
+         "installed_by" : [
+            "fonts-elstob"
+         ]
+      },
+      "elstob-18ptitalic.otf" : {
+         "installed_by" : [
+            "fonts-elstob"
+         ]
+      },
+      "elstob-18ptmediumitalic.otf" : {
+         "installed_by" : [
+            "fonts-elstob"
+         ]
+      },
+      "elstob-18ptsemibolditalic.otf" : {
+         "installed_by" : [
+            "fonts-elstob"
+         ]
+      },
+      "elstob-8ptbolditalic.otf" : {
+         "installed_by" : [
+            "fonts-elstob"
+         ]
+      },
+      "elstob-8ptitalic.otf" : {
+         "installed_by" : [
+            "fonts-elstob"
+         ]
+      },
+      "elstob-8ptmediumitalic.otf" : {
+         "installed_by" : [
+            "fonts-elstob"
+         ]
+      },
+      "elstob-8ptsemibolditalic.otf" : {
          "installed_by" : [
             "fonts-elstob"
          ]
@@ -3895,17 +4015,7 @@
             "fonts-elstob"
          ]
       },
-      "elstob-extrabold.otf" : {
-         "installed_by" : [
-            "fonts-elstob"
-         ]
-      },
       "elstob-extrabolditalic.otf" : {
-         "installed_by" : [
-            "fonts-elstob"
-         ]
-      },
-      "elstob-extralight.otf" : {
          "installed_by" : [
             "fonts-elstob"
          ]
@@ -3920,32 +4030,12 @@
             "fonts-elstob"
          ]
       },
-      "elstob-light.otf" : {
-         "installed_by" : [
-            "fonts-elstob"
-         ]
-      },
       "elstob-lightitalic.otf" : {
          "installed_by" : [
             "fonts-elstob"
          ]
       },
-      "elstob-medium.otf" : {
-         "installed_by" : [
-            "fonts-elstob"
-         ]
-      },
       "elstob-mediumitalic.otf" : {
-         "installed_by" : [
-            "fonts-elstob"
-         ]
-      },
-      "elstob-regular.otf" : {
-         "installed_by" : [
-            "fonts-elstob"
-         ]
-      },
-      "elstob-semibold.otf" : {
          "installed_by" : [
             "fonts-elstob"
          ]
@@ -4029,11 +4119,6 @@
       "entplain.ttf" : {
          "installed_by" : [
             "fonts-aenigma"
-         ]
-      },
-      "entypo.ttf" : {
-         "installed_by" : [
-            "fonts-entypo"
          ]
       },
       "esint10.ttf" : {
@@ -4320,12 +4405,7 @@
             "fonts-femkeklaver"
          ]
       },
-      "ferritecoredx-black.otf" : {
-         "installed_by" : [
-            "fonts-ferrite-core"
-         ]
-      },
-      "ferritecoredx-display.otf" : {
+      "ferritecoredx-bold.otf" : {
          "installed_by" : [
             "fonts-ferrite-core"
          ]
@@ -4335,24 +4415,9 @@
             "fonts-ferrite-core"
          ]
       },
-      "ferritecoredx-medium.otf" : {
-         "installed_by" : [
-            "fonts-ferrite-core"
-         ]
-      },
-      "ferritecoredx-regular.otf" : {
-         "installed_by" : [
-            "fonts-ferrite-core"
-         ]
-      },
       "feta.ttf" : {
          "installed_by" : [
             "fonts-denemo"
-         ]
-      },
-      "fetteclassicunzfraktur.ttf" : {
-         "installed_by" : [
-            "fonts-cegui"
          ]
       },
       "fidgety.ttf" : {
@@ -4436,6 +4501,26 @@
          "installed_by" : [
             "fonts-fork-awesome",
             "fonts-fork-awesome"
+         ]
+      },
+      "frankruehlclm-bold.otf" : {
+         "installed_by" : [
+            "fonts-culmus"
+         ]
+      },
+      "frankruehlclm-boldoblique.otf" : {
+         "installed_by" : [
+            "fonts-culmus"
+         ]
+      },
+      "frankruehlclm-medium.otf" : {
+         "installed_by" : [
+            "fonts-culmus"
+         ]
+      },
+      "frankruehlclm-mediumoblique.otf" : {
+         "installed_by" : [
+            "fonts-culmus"
          ]
       },
       "freaktur.ttf" : {
@@ -4601,11 +4686,6 @@
       "fust&schoeffer-durandus-goticoantiqua118g.otf" : {
          "installed_by" : [
             "fonts-gotico-antiqua"
-         ]
-      },
-      "futharkadapted.ttf" : {
-         "installed_by" : [
-            "fonts-cegui"
          ]
       },
       "galapogo.ttf" : {
@@ -5259,11 +5339,6 @@
             "fonts-aenigma"
          ]
       },
-      "greatvibes-regular.ttf" : {
-         "installed_by" : [
-            "fonts-cegui"
-         ]
-      },
       "grotesq.ttf" : {
          "installed_by" : [
             "fonts-aenigma"
@@ -5364,6 +5439,26 @@
             "fonts-aenigma"
          ]
       },
+      "hadasimclm-bold.otf" : {
+         "installed_by" : [
+            "fonts-culmus"
+         ]
+      },
+      "hadasimclm-boldoblique.otf" : {
+         "installed_by" : [
+            "fonts-culmus"
+         ]
+      },
+      "hadasimclm-regular.otf" : {
+         "installed_by" : [
+            "fonts-culmus"
+         ]
+      },
+      "hadasimclm-regularoblique.otf" : {
+         "installed_by" : [
+            "fonts-culmus"
+         ]
+      },
       "hairball.ttf" : {
          "installed_by" : [
             "fonts-aenigma"
@@ -5452,6 +5547,26 @@
       "hearts.ttf" : {
          "installed_by" : [
             "fonts-aenigma"
+         ]
+      },
+      "helvetica-bi.pfb" : {
+         "installed_by" : [
+            "fonts-texmacs"
+         ]
+      },
+      "helvetica-bx.pfb" : {
+         "installed_by" : [
+            "fonts-texmacs"
+         ]
+      },
+      "helvetica-rm.pfb" : {
+         "installed_by" : [
+            "fonts-texmacs"
+         ]
+      },
+      "helvetica-ti.pfb" : {
+         "installed_by" : [
+            "fonts-texmacs"
          ]
       },
       "hermit-bold.otf" : {
@@ -5572,11 +5687,6 @@
       "ilits.ttf" : {
          "installed_by" : [
             "fonts-aenigma"
-         ]
-      },
-      "imfepirm29p.ttf" : {
-         "installed_by" : [
-            "fonts-cegui"
          ]
       },
       "imposs.ttf" : {
@@ -5904,9 +6014,284 @@
             "fonts-aenigma"
          ]
       },
+      "intervariable-italic.ttf" : {
+         "installed_by" : [
+            "fonts-inter-variable"
+         ]
+      },
       "intervariable.ttf" : {
          "installed_by" : [
             "fonts-inter-variable"
+         ]
+      },
+      "iosevka-bold.ttf" : {
+         "installed_by" : [
+            "fonts-iosevka"
+         ]
+      },
+      "iosevka-bolditalic.ttf" : {
+         "installed_by" : [
+            "fonts-iosevka"
+         ]
+      },
+      "iosevka-boldoblique.ttf" : {
+         "installed_by" : [
+            "fonts-iosevka"
+         ]
+      },
+      "iosevka-extended.ttf" : {
+         "installed_by" : [
+            "fonts-iosevka"
+         ]
+      },
+      "iosevka-extendedbold.ttf" : {
+         "installed_by" : [
+            "fonts-iosevka"
+         ]
+      },
+      "iosevka-extendedbolditalic.ttf" : {
+         "installed_by" : [
+            "fonts-iosevka"
+         ]
+      },
+      "iosevka-extendedboldoblique.ttf" : {
+         "installed_by" : [
+            "fonts-iosevka"
+         ]
+      },
+      "iosevka-extendedextrabold.ttf" : {
+         "installed_by" : [
+            "fonts-iosevka"
+         ]
+      },
+      "iosevka-extendedextrabolditalic.ttf" : {
+         "installed_by" : [
+            "fonts-iosevka"
+         ]
+      },
+      "iosevka-extendedextraboldoblique.ttf" : {
+         "installed_by" : [
+            "fonts-iosevka"
+         ]
+      },
+      "iosevka-extendedextralight.ttf" : {
+         "installed_by" : [
+            "fonts-iosevka"
+         ]
+      },
+      "iosevka-extendedextralightitalic.ttf" : {
+         "installed_by" : [
+            "fonts-iosevka"
+         ]
+      },
+      "iosevka-extendedextralightoblique.ttf" : {
+         "installed_by" : [
+            "fonts-iosevka"
+         ]
+      },
+      "iosevka-extendedheavy.ttf" : {
+         "installed_by" : [
+            "fonts-iosevka"
+         ]
+      },
+      "iosevka-extendedheavyitalic.ttf" : {
+         "installed_by" : [
+            "fonts-iosevka"
+         ]
+      },
+      "iosevka-extendedheavyoblique.ttf" : {
+         "installed_by" : [
+            "fonts-iosevka"
+         ]
+      },
+      "iosevka-extendeditalic.ttf" : {
+         "installed_by" : [
+            "fonts-iosevka"
+         ]
+      },
+      "iosevka-extendedlight.ttf" : {
+         "installed_by" : [
+            "fonts-iosevka"
+         ]
+      },
+      "iosevka-extendedlightitalic.ttf" : {
+         "installed_by" : [
+            "fonts-iosevka"
+         ]
+      },
+      "iosevka-extendedlightoblique.ttf" : {
+         "installed_by" : [
+            "fonts-iosevka"
+         ]
+      },
+      "iosevka-extendedmedium.ttf" : {
+         "installed_by" : [
+            "fonts-iosevka"
+         ]
+      },
+      "iosevka-extendedmediumitalic.ttf" : {
+         "installed_by" : [
+            "fonts-iosevka"
+         ]
+      },
+      "iosevka-extendedmediumoblique.ttf" : {
+         "installed_by" : [
+            "fonts-iosevka"
+         ]
+      },
+      "iosevka-extendedoblique.ttf" : {
+         "installed_by" : [
+            "fonts-iosevka"
+         ]
+      },
+      "iosevka-extendedsemibold.ttf" : {
+         "installed_by" : [
+            "fonts-iosevka"
+         ]
+      },
+      "iosevka-extendedsemibolditalic.ttf" : {
+         "installed_by" : [
+            "fonts-iosevka"
+         ]
+      },
+      "iosevka-extendedsemiboldoblique.ttf" : {
+         "installed_by" : [
+            "fonts-iosevka"
+         ]
+      },
+      "iosevka-extendedthin.ttf" : {
+         "installed_by" : [
+            "fonts-iosevka"
+         ]
+      },
+      "iosevka-extendedthinitalic.ttf" : {
+         "installed_by" : [
+            "fonts-iosevka"
+         ]
+      },
+      "iosevka-extendedthinoblique.ttf" : {
+         "installed_by" : [
+            "fonts-iosevka"
+         ]
+      },
+      "iosevka-extrabold.ttf" : {
+         "installed_by" : [
+            "fonts-iosevka"
+         ]
+      },
+      "iosevka-extrabolditalic.ttf" : {
+         "installed_by" : [
+            "fonts-iosevka"
+         ]
+      },
+      "iosevka-extraboldoblique.ttf" : {
+         "installed_by" : [
+            "fonts-iosevka"
+         ]
+      },
+      "iosevka-extralight.ttf" : {
+         "installed_by" : [
+            "fonts-iosevka"
+         ]
+      },
+      "iosevka-extralightitalic.ttf" : {
+         "installed_by" : [
+            "fonts-iosevka"
+         ]
+      },
+      "iosevka-extralightoblique.ttf" : {
+         "installed_by" : [
+            "fonts-iosevka"
+         ]
+      },
+      "iosevka-heavy.ttf" : {
+         "installed_by" : [
+            "fonts-iosevka"
+         ]
+      },
+      "iosevka-heavyitalic.ttf" : {
+         "installed_by" : [
+            "fonts-iosevka"
+         ]
+      },
+      "iosevka-heavyoblique.ttf" : {
+         "installed_by" : [
+            "fonts-iosevka"
+         ]
+      },
+      "iosevka-italic.ttf" : {
+         "installed_by" : [
+            "fonts-iosevka"
+         ]
+      },
+      "iosevka-light.ttf" : {
+         "installed_by" : [
+            "fonts-iosevka"
+         ]
+      },
+      "iosevka-lightitalic.ttf" : {
+         "installed_by" : [
+            "fonts-iosevka"
+         ]
+      },
+      "iosevka-lightoblique.ttf" : {
+         "installed_by" : [
+            "fonts-iosevka"
+         ]
+      },
+      "iosevka-medium.ttf" : {
+         "installed_by" : [
+            "fonts-iosevka"
+         ]
+      },
+      "iosevka-mediumitalic.ttf" : {
+         "installed_by" : [
+            "fonts-iosevka"
+         ]
+      },
+      "iosevka-mediumoblique.ttf" : {
+         "installed_by" : [
+            "fonts-iosevka"
+         ]
+      },
+      "iosevka-oblique.ttf" : {
+         "installed_by" : [
+            "fonts-iosevka"
+         ]
+      },
+      "iosevka-regular.ttf" : {
+         "installed_by" : [
+            "fonts-iosevka"
+         ]
+      },
+      "iosevka-semibold.ttf" : {
+         "installed_by" : [
+            "fonts-iosevka"
+         ]
+      },
+      "iosevka-semibolditalic.ttf" : {
+         "installed_by" : [
+            "fonts-iosevka"
+         ]
+      },
+      "iosevka-semiboldoblique.ttf" : {
+         "installed_by" : [
+            "fonts-iosevka"
+         ]
+      },
+      "iosevka-thin.ttf" : {
+         "installed_by" : [
+            "fonts-iosevka"
+         ]
+      },
+      "iosevka-thinitalic.ttf" : {
+         "installed_by" : [
+            "fonts-iosevka"
+         ]
+      },
+      "iosevka-thinoblique.ttf" : {
+         "installed_by" : [
+            "fonts-iosevka"
          ]
       },
       "ipabold.ttf" : {
@@ -6194,6 +6579,86 @@
             "fonts-jetbrains-mono"
          ]
       },
+      "jetbrainsmononl-bold.ttf" : {
+         "installed_by" : [
+            "fonts-jetbrains-mono"
+         ]
+      },
+      "jetbrainsmononl-bolditalic.ttf" : {
+         "installed_by" : [
+            "fonts-jetbrains-mono"
+         ]
+      },
+      "jetbrainsmononl-extrabold.ttf" : {
+         "installed_by" : [
+            "fonts-jetbrains-mono"
+         ]
+      },
+      "jetbrainsmononl-extrabolditalic.ttf" : {
+         "installed_by" : [
+            "fonts-jetbrains-mono"
+         ]
+      },
+      "jetbrainsmononl-extralight.ttf" : {
+         "installed_by" : [
+            "fonts-jetbrains-mono"
+         ]
+      },
+      "jetbrainsmononl-extralightitalic.ttf" : {
+         "installed_by" : [
+            "fonts-jetbrains-mono"
+         ]
+      },
+      "jetbrainsmononl-italic.ttf" : {
+         "installed_by" : [
+            "fonts-jetbrains-mono"
+         ]
+      },
+      "jetbrainsmononl-light.ttf" : {
+         "installed_by" : [
+            "fonts-jetbrains-mono"
+         ]
+      },
+      "jetbrainsmononl-lightitalic.ttf" : {
+         "installed_by" : [
+            "fonts-jetbrains-mono"
+         ]
+      },
+      "jetbrainsmononl-medium.ttf" : {
+         "installed_by" : [
+            "fonts-jetbrains-mono"
+         ]
+      },
+      "jetbrainsmononl-mediumitalic.ttf" : {
+         "installed_by" : [
+            "fonts-jetbrains-mono"
+         ]
+      },
+      "jetbrainsmononl-regular.ttf" : {
+         "installed_by" : [
+            "fonts-jetbrains-mono"
+         ]
+      },
+      "jetbrainsmononl-semibold.ttf" : {
+         "installed_by" : [
+            "fonts-jetbrains-mono"
+         ]
+      },
+      "jetbrainsmononl-semibolditalic.ttf" : {
+         "installed_by" : [
+            "fonts-jetbrains-mono"
+         ]
+      },
+      "jetbrainsmononl-thin.ttf" : {
+         "installed_by" : [
+            "fonts-jetbrains-mono"
+         ]
+      },
+      "jetbrainsmononl-thinitalic.ttf" : {
+         "installed_by" : [
+            "fonts-jetbrains-mono"
+         ]
+      },
       "jiret.ttf" : {
          "installed_by" : [
             "fonts-senamirmir-washra"
@@ -6354,7 +6819,17 @@
             "fonts-jsmath"
          ]
       },
-      "junction.otf" : {
+      "junction-bold.otf" : {
+         "installed_by" : [
+            "fonts-junction"
+         ]
+      },
+      "junction-light.otf" : {
+         "installed_by" : [
+            "fonts-junction"
+         ]
+      },
+      "junction-regular.otf" : {
          "installed_by" : [
             "fonts-junction"
          ]
@@ -6489,46 +6964,6 @@
             "fonts-jura"
          ]
       },
-      "kacstart.ttf" : {
-         "installed_by" : [
-            "fonts-kacst"
-         ]
-      },
-      "kacstbook.ttf" : {
-         "installed_by" : [
-            "fonts-kacst"
-         ]
-      },
-      "kacstdecorative.ttf" : {
-         "installed_by" : [
-            "fonts-kacst"
-         ]
-      },
-      "kacstdigital.ttf" : {
-         "installed_by" : [
-            "fonts-kacst"
-         ]
-      },
-      "kacstfarsi.ttf" : {
-         "installed_by" : [
-            "fonts-kacst"
-         ]
-      },
-      "kacstletter.ttf" : {
-         "installed_by" : [
-            "fonts-kacst"
-         ]
-      },
-      "kacstnaskh.ttf" : {
-         "installed_by" : [
-            "fonts-kacst"
-         ]
-      },
-      "kacstoffice.ttf" : {
-         "installed_by" : [
-            "fonts-kacst"
-         ]
-      },
       "kacstone-bold.ttf" : {
          "installed_by" : [
             "fonts-kacst-one"
@@ -6537,36 +6972,6 @@
       "kacstone.ttf" : {
          "installed_by" : [
             "fonts-kacst-one"
-         ]
-      },
-      "kacstpen.ttf" : {
-         "installed_by" : [
-            "fonts-kacst"
-         ]
-      },
-      "kacstposter.ttf" : {
-         "installed_by" : [
-            "fonts-kacst"
-         ]
-      },
-      "kacstqurn.ttf" : {
-         "installed_by" : [
-            "fonts-kacst"
-         ]
-      },
-      "kacstscreen.ttf" : {
-         "installed_by" : [
-            "fonts-kacst"
-         ]
-      },
-      "kacsttitle.ttf" : {
-         "installed_by" : [
-            "fonts-kacst"
-         ]
-      },
-      "kacsttitlel.ttf" : {
-         "installed_by" : [
-            "fonts-kacst"
          ]
       },
       "kalapi.ttf" : {
@@ -6597,11 +7002,6 @@
       "kanjistrokeorders_v4.003.ttf" : {
          "installed_by" : [
             "fonts-kanjistrokeorders"
-         ]
-      },
-      "kapl.ttf" : {
-         "installed_by" : [
-            "xfonts-kapl"
          ]
       },
       "karla-bold.otf" : {
@@ -6856,22 +7256,22 @@
       },
       "keteryg-bold.ttf" : {
          "installed_by" : [
-            "fonts-culmus-fancy"
+            "fonts-culmus"
          ]
       },
       "keteryg-boldoblique.ttf" : {
          "installed_by" : [
-            "fonts-culmus-fancy"
+            "fonts-culmus"
          ]
       },
       "keteryg-medium.ttf" : {
          "installed_by" : [
-            "fonts-culmus-fancy"
+            "fonts-culmus"
          ]
       },
       "keteryg-mediumoblique.ttf" : {
          "installed_by" : [
-            "fonts-culmus-fancy"
+            "fonts-culmus"
          ]
       },
       "keyrialt.ttf" : {
@@ -7079,32 +7479,27 @@
             "fonts-klee"
          ]
       },
-      "klingon-piqad-hasta.ttf" : {
-         "installed_by" : [
-            "fonts-cegui"
-         ]
-      },
       "knot.ttf" : {
          "installed_by" : [
             "fonts-aenigma"
          ]
       },
-      "kodemono-bold.ttf" : {
+      "kodemono-bold.otf" : {
          "installed_by" : [
             "fonts-kode-mono"
          ]
       },
-      "kodemono-medium.ttf" : {
+      "kodemono-medium.otf" : {
          "installed_by" : [
             "fonts-kode-mono"
          ]
       },
-      "kodemono-regular.ttf" : {
+      "kodemono-regular.otf" : {
          "installed_by" : [
             "fonts-kode-mono"
          ]
       },
-      "kodemono-semibold.ttf" : {
+      "kodemono-semibold.otf" : {
          "installed_by" : [
             "fonts-kode-mono"
          ]
@@ -8394,12 +8789,12 @@
             "fonts-culmus-fancy"
          ]
       },
-      "lxgwwenkai-bold.ttf" : {
+      "lxgwwenkai-light.ttf" : {
          "installed_by" : [
             "fonts-lxgw-wenkai"
          ]
       },
-      "lxgwwenkai-light.ttf" : {
+      "lxgwwenkai-medium.ttf" : {
          "installed_by" : [
             "fonts-lxgw-wenkai"
          ]
@@ -8409,12 +8804,12 @@
             "fonts-lxgw-wenkai"
          ]
       },
-      "lxgwwenkaimono-bold.ttf" : {
+      "lxgwwenkaimono-light.ttf" : {
          "installed_by" : [
             "fonts-lxgw-wenkai"
          ]
       },
-      "lxgwwenkaimono-light.ttf" : {
+      "lxgwwenkaimono-medium.ttf" : {
          "installed_by" : [
             "fonts-lxgw-wenkai"
          ]
@@ -8795,6 +9190,281 @@
             "fonts-migmix"
          ]
       },
+      "mikhak-black.ttf" : {
+         "installed_by" : [
+            "fonts-mikhak"
+         ]
+      },
+      "mikhak-bold.ttf" : {
+         "installed_by" : [
+            "fonts-mikhak"
+         ]
+      },
+      "mikhak-ds1-black.ttf" : {
+         "installed_by" : [
+            "fonts-mikhak"
+         ]
+      },
+      "mikhak-ds1-bold.ttf" : {
+         "installed_by" : [
+            "fonts-mikhak"
+         ]
+      },
+      "mikhak-ds1-extrabold.ttf" : {
+         "installed_by" : [
+            "fonts-mikhak"
+         ]
+      },
+      "mikhak-ds1-extralight.ttf" : {
+         "installed_by" : [
+            "fonts-mikhak"
+         ]
+      },
+      "mikhak-ds1-fd-black.ttf" : {
+         "installed_by" : [
+            "fonts-mikhak"
+         ]
+      },
+      "mikhak-ds1-fd-bold.ttf" : {
+         "installed_by" : [
+            "fonts-mikhak"
+         ]
+      },
+      "mikhak-ds1-fd-extrabold.ttf" : {
+         "installed_by" : [
+            "fonts-mikhak"
+         ]
+      },
+      "mikhak-ds1-fd-extralight.ttf" : {
+         "installed_by" : [
+            "fonts-mikhak"
+         ]
+      },
+      "mikhak-ds1-fd-light.ttf" : {
+         "installed_by" : [
+            "fonts-mikhak"
+         ]
+      },
+      "mikhak-ds1-fd-medium.ttf" : {
+         "installed_by" : [
+            "fonts-mikhak"
+         ]
+      },
+      "mikhak-ds1-fd-regular.ttf" : {
+         "installed_by" : [
+            "fonts-mikhak"
+         ]
+      },
+      "mikhak-ds1-fd-semibold.ttf" : {
+         "installed_by" : [
+            "fonts-mikhak"
+         ]
+      },
+      "mikhak-ds1-fd-thin.ttf" : {
+         "installed_by" : [
+            "fonts-mikhak"
+         ]
+      },
+      "mikhak-ds1-light.ttf" : {
+         "installed_by" : [
+            "fonts-mikhak"
+         ]
+      },
+      "mikhak-ds1-medium.ttf" : {
+         "installed_by" : [
+            "fonts-mikhak"
+         ]
+      },
+      "mikhak-ds1-regular.ttf" : {
+         "installed_by" : [
+            "fonts-mikhak"
+         ]
+      },
+      "mikhak-ds1-semibold.ttf" : {
+         "installed_by" : [
+            "fonts-mikhak"
+         ]
+      },
+      "mikhak-ds1-thin.ttf" : {
+         "installed_by" : [
+            "fonts-mikhak"
+         ]
+      },
+      "mikhak-ds2-black.ttf" : {
+         "installed_by" : [
+            "fonts-mikhak"
+         ]
+      },
+      "mikhak-ds2-bold.ttf" : {
+         "installed_by" : [
+            "fonts-mikhak"
+         ]
+      },
+      "mikhak-ds2-extrabold.ttf" : {
+         "installed_by" : [
+            "fonts-mikhak"
+         ]
+      },
+      "mikhak-ds2-extralight.ttf" : {
+         "installed_by" : [
+            "fonts-mikhak"
+         ]
+      },
+      "mikhak-ds2-fd-black.ttf" : {
+         "installed_by" : [
+            "fonts-mikhak"
+         ]
+      },
+      "mikhak-ds2-fd-bold.ttf" : {
+         "installed_by" : [
+            "fonts-mikhak"
+         ]
+      },
+      "mikhak-ds2-fd-extrabold.ttf" : {
+         "installed_by" : [
+            "fonts-mikhak"
+         ]
+      },
+      "mikhak-ds2-fd-extralight.ttf" : {
+         "installed_by" : [
+            "fonts-mikhak"
+         ]
+      },
+      "mikhak-ds2-fd-light.ttf" : {
+         "installed_by" : [
+            "fonts-mikhak"
+         ]
+      },
+      "mikhak-ds2-fd-medium.ttf" : {
+         "installed_by" : [
+            "fonts-mikhak"
+         ]
+      },
+      "mikhak-ds2-fd-regular.ttf" : {
+         "installed_by" : [
+            "fonts-mikhak"
+         ]
+      },
+      "mikhak-ds2-fd-semibold.ttf" : {
+         "installed_by" : [
+            "fonts-mikhak"
+         ]
+      },
+      "mikhak-ds2-fd-thin.ttf" : {
+         "installed_by" : [
+            "fonts-mikhak"
+         ]
+      },
+      "mikhak-ds2-light.ttf" : {
+         "installed_by" : [
+            "fonts-mikhak"
+         ]
+      },
+      "mikhak-ds2-medium.ttf" : {
+         "installed_by" : [
+            "fonts-mikhak"
+         ]
+      },
+      "mikhak-ds2-regular.ttf" : {
+         "installed_by" : [
+            "fonts-mikhak"
+         ]
+      },
+      "mikhak-ds2-semibold.ttf" : {
+         "installed_by" : [
+            "fonts-mikhak"
+         ]
+      },
+      "mikhak-ds2-thin.ttf" : {
+         "installed_by" : [
+            "fonts-mikhak"
+         ]
+      },
+      "mikhak-extrabold.ttf" : {
+         "installed_by" : [
+            "fonts-mikhak"
+         ]
+      },
+      "mikhak-extralight.ttf" : {
+         "installed_by" : [
+            "fonts-mikhak"
+         ]
+      },
+      "mikhak-fd-black.ttf" : {
+         "installed_by" : [
+            "fonts-mikhak"
+         ]
+      },
+      "mikhak-fd-bold.ttf" : {
+         "installed_by" : [
+            "fonts-mikhak"
+         ]
+      },
+      "mikhak-fd-extrabold.ttf" : {
+         "installed_by" : [
+            "fonts-mikhak"
+         ]
+      },
+      "mikhak-fd-extralight.ttf" : {
+         "installed_by" : [
+            "fonts-mikhak"
+         ]
+      },
+      "mikhak-fd-light.ttf" : {
+         "installed_by" : [
+            "fonts-mikhak"
+         ]
+      },
+      "mikhak-fd-medium.ttf" : {
+         "installed_by" : [
+            "fonts-mikhak"
+         ]
+      },
+      "mikhak-fd-regular.ttf" : {
+         "installed_by" : [
+            "fonts-mikhak"
+         ]
+      },
+      "mikhak-fd-semibold.ttf" : {
+         "installed_by" : [
+            "fonts-mikhak"
+         ]
+      },
+      "mikhak-fd-thin.ttf" : {
+         "installed_by" : [
+            "fonts-mikhak"
+         ]
+      },
+      "mikhak-light.ttf" : {
+         "installed_by" : [
+            "fonts-mikhak"
+         ]
+      },
+      "mikhak-medium.ttf" : {
+         "installed_by" : [
+            "fonts-mikhak"
+         ]
+      },
+      "mikhak-regular.ttf" : {
+         "installed_by" : [
+            "fonts-mikhak"
+         ]
+      },
+      "mikhak-semibold.ttf" : {
+         "installed_by" : [
+            "fonts-mikhak"
+         ]
+      },
+      "mikhak-thin.ttf" : {
+         "installed_by" : [
+            "fonts-mikhak"
+         ]
+      },
+      "mikhak[dsty,kshd,wght].ttf" : {
+         "installed_by" : [
+            "fonts-mikhak-variable"
+         ]
+      },
       "mima4x4i.ttf" : {
          "installed_by" : [
             "fonts-aenigma"
@@ -8838,6 +9508,36 @@
       "minikstt.ttf" : {
          "installed_by" : [
             "fonts-aenigma"
+         ]
+      },
+      "miriamclm-bold.otf" : {
+         "installed_by" : [
+            "fonts-culmus"
+         ]
+      },
+      "miriamclm-book.otf" : {
+         "installed_by" : [
+            "fonts-culmus"
+         ]
+      },
+      "miriammonoclm-bold.ttf" : {
+         "installed_by" : [
+            "fonts-culmus"
+         ]
+      },
+      "miriammonoclm-boldoblique.ttf" : {
+         "installed_by" : [
+            "fonts-culmus"
+         ]
+      },
+      "miriammonoclm-book.ttf" : {
+         "installed_by" : [
+            "fonts-culmus"
+         ]
+      },
+      "miriammonoclm-bookoblique.ttf" : {
+         "installed_by" : [
+            "fonts-culmus"
          ]
       },
       "misaki_gothic.ttf" : {
@@ -9775,11 +10475,6 @@
             "fonts-mplus"
          ]
       },
-      "mry_kacstqurn.ttf" : {
-         "installed_by" : [
-            "fonts-kacst"
-         ]
-      },
       "ms_sans_serif.ttf" : {
          "installed_by" : [
             "fonts-wine"
@@ -9811,6 +10506,16 @@
          ]
       },
       "muktibold.ttf" : {
+         "installed_by" : [
+            "fonts-beng-extra"
+         ]
+      },
+      "muktibolditalic.ttf" : {
+         "installed_by" : [
+            "fonts-beng-extra"
+         ]
+      },
+      "muktiitalic.ttf" : {
          "installed_by" : [
             "fonts-beng-extra"
          ]
@@ -10030,6 +10735,26 @@
             "t1-cyrillic"
          ]
       },
+      "nachlieliclm-bold.otf" : {
+         "installed_by" : [
+            "fonts-culmus"
+         ]
+      },
+      "nachlieliclm-boldoblique.otf" : {
+         "installed_by" : [
+            "fonts-culmus"
+         ]
+      },
+      "nachlieliclm-light.otf" : {
+         "installed_by" : [
+            "fonts-culmus"
+         ]
+      },
+      "nachlieliclm-lightoblique.otf" : {
+         "installed_by" : [
+            "fonts-culmus"
+         ]
+      },
       "nafeesweb.ttf" : {
          "installed_by" : [
             "fonts-nafees"
@@ -10095,32 +10820,17 @@
             "fonts-nanum"
          ]
       },
-      "nanumgothiccoding.ttf" : {
-         "installed_by" : [
-            "fonts-nanum"
-         ]
-      },
-      "nanumgothiccodingbold.ttf" : {
-         "installed_by" : [
-            "fonts-nanum"
-         ]
-      },
       "nanumgothiceco.ttf" : {
          "installed_by" : [
-            "fonts-nanum-eco"
+            "fonts-nanum-extra"
          ]
       },
       "nanumgothicecobold.ttf" : {
          "installed_by" : [
-            "fonts-nanum-eco"
+            "fonts-nanum-extra"
          ]
       },
       "nanumgothicecoextrabold.ttf" : {
-         "installed_by" : [
-            "fonts-nanum-eco"
-         ]
-      },
-      "nanumgothicecor.ttf" : {
          "installed_by" : [
             "fonts-nanum-extra"
          ]
@@ -10131,6 +10841,36 @@
          ]
       },
       "nanumgothiclight.ttf" : {
+         "installed_by" : [
+            "fonts-nanum-extra"
+         ]
+      },
+      "nanumhumanbold.ttf" : {
+         "installed_by" : [
+            "fonts-nanum-extra"
+         ]
+      },
+      "nanumhumaneb.ttf" : {
+         "installed_by" : [
+            "fonts-nanum-extra"
+         ]
+      },
+      "nanumhumanel.ttf" : {
+         "installed_by" : [
+            "fonts-nanum-extra"
+         ]
+      },
+      "nanumhumanheavy.ttf" : {
+         "installed_by" : [
+            "fonts-nanum-extra"
+         ]
+      },
+      "nanumhumanlight.ttf" : {
+         "installed_by" : [
+            "fonts-nanum-extra"
+         ]
+      },
+      "nanumhumanregular.ttf" : {
          "installed_by" : [
             "fonts-nanum-extra"
          ]
@@ -10152,20 +10892,15 @@
       },
       "nanummyeongjoeco.ttf" : {
          "installed_by" : [
-            "fonts-nanum-eco"
+            "fonts-nanum-extra"
          ]
       },
       "nanummyeongjoecobold.ttf" : {
          "installed_by" : [
-            "fonts-nanum-eco"
+            "fonts-nanum-extra"
          ]
       },
       "nanummyeongjoecoextrabold.ttf" : {
-         "installed_by" : [
-            "fonts-nanum-eco"
-         ]
-      },
-      "nanummyeongjoecor.ttf" : {
          "installed_by" : [
             "fonts-nanum-extra"
          ]
@@ -10211,6 +10946,36 @@
          ]
       },
       "nanumsquarel.ttf" : {
+         "installed_by" : [
+            "fonts-nanum-extra"
+         ]
+      },
+      "nanumsquareneo-alt.ttf" : {
+         "installed_by" : [
+            "fonts-nanum-extra"
+         ]
+      },
+      "nanumsquareneo-brg.ttf" : {
+         "installed_by" : [
+            "fonts-nanum"
+         ]
+      },
+      "nanumsquareneo-cbd.ttf" : {
+         "installed_by" : [
+            "fonts-nanum"
+         ]
+      },
+      "nanumsquareneo-deb.ttf" : {
+         "installed_by" : [
+            "fonts-nanum-extra"
+         ]
+      },
+      "nanumsquareneo-ehv.ttf" : {
+         "installed_by" : [
+            "fonts-nanum-extra"
+         ]
+      },
+      "nanumsquareneo-variable.ttf" : {
          "installed_by" : [
             "fonts-nanum-extra"
          ]
@@ -10283,6 +11048,26 @@
       "nazlib.ttf" : {
          "installed_by" : [
             "fonts-farsiweb"
+         ]
+      },
+      "nc-schoolbook-bi.pfb" : {
+         "installed_by" : [
+            "fonts-texmacs"
+         ]
+      },
+      "nc-schoolbook-bx.pfb" : {
+         "installed_by" : [
+            "fonts-texmacs"
+         ]
+      },
+      "nc-schoolbook-rm.pfb" : {
+         "installed_by" : [
+            "fonts-texmacs"
+         ]
+      },
+      "nc-schoolbook-ti.pfb" : {
+         "installed_by" : [
+            "fonts-texmacs"
          ]
       },
       "neo.otf" : {
@@ -22495,6 +23280,96 @@
             "fonts-aenigma"
          ]
       },
+      "nunito-black.ttf" : {
+         "installed_by" : [
+            "fonts-nunito"
+         ]
+      },
+      "nunito-blackitalic.ttf" : {
+         "installed_by" : [
+            "fonts-nunito"
+         ]
+      },
+      "nunito-bold.ttf" : {
+         "installed_by" : [
+            "fonts-nunito"
+         ]
+      },
+      "nunito-bolditalic.ttf" : {
+         "installed_by" : [
+            "fonts-nunito"
+         ]
+      },
+      "nunito-extrabold.ttf" : {
+         "installed_by" : [
+            "fonts-nunito"
+         ]
+      },
+      "nunito-extrabolditalic.ttf" : {
+         "installed_by" : [
+            "fonts-nunito"
+         ]
+      },
+      "nunito-extralight.ttf" : {
+         "installed_by" : [
+            "fonts-nunito"
+         ]
+      },
+      "nunito-extralightitalic.ttf" : {
+         "installed_by" : [
+            "fonts-nunito"
+         ]
+      },
+      "nunito-italic.ttf" : {
+         "installed_by" : [
+            "fonts-nunito"
+         ]
+      },
+      "nunito-light.ttf" : {
+         "installed_by" : [
+            "fonts-nunito"
+         ]
+      },
+      "nunito-lightitalic.ttf" : {
+         "installed_by" : [
+            "fonts-nunito"
+         ]
+      },
+      "nunito-medium.ttf" : {
+         "installed_by" : [
+            "fonts-nunito"
+         ]
+      },
+      "nunito-mediumitalic.ttf" : {
+         "installed_by" : [
+            "fonts-nunito"
+         ]
+      },
+      "nunito-regular.ttf" : {
+         "installed_by" : [
+            "fonts-nunito"
+         ]
+      },
+      "nunito-semibold.ttf" : {
+         "installed_by" : [
+            "fonts-nunito"
+         ]
+      },
+      "nunito-semibolditalic.ttf" : {
+         "installed_by" : [
+            "fonts-nunito"
+         ]
+      },
+      "nunitoheavy-italic.ttf" : {
+         "installed_by" : [
+            "fonts-nunito"
+         ]
+      },
+      "nunitoheavy-regular.ttf" : {
+         "installed_by" : [
+            "fonts-nunito"
+         ]
+      },
       "nuosusil-regular.ttf" : {
          "installed_by" : [
             "fonts-sil-nuosusil"
@@ -22575,11 +23450,6 @@
             "fonts-ocr-b"
          ]
       },
-      "octicons.ttf" : {
-         "installed_by" : [
-            "fonts-octicons"
-         ]
-      },
       "offkiltl.ttf" : {
          "installed_by" : [
             "fonts-aenigma"
@@ -22628,11 +23498,6 @@
       "oldaniaadfstd-regular.otf" : {
          "installed_by" : [
             "fonts-adf-oldania"
-         ]
-      },
-      "oldslavicregu.pfb" : {
-         "installed_by" : [
-            "t1-oldslavic"
          ]
       },
       "oldstandard-bold.ttf" : {
@@ -22810,21 +23675,6 @@
             "fonts-aenigma"
          ]
       },
-      "oxygen-sans-bold.ttf" : {
-         "installed_by" : [
-            "fonts-oxygen"
-         ]
-      },
-      "oxygen-sans.ttf" : {
-         "installed_by" : [
-            "fonts-oxygen"
-         ]
-      },
-      "oxygenmono-regular.ttf" : {
-         "installed_by" : [
-            "fonts-oxygen"
-         ]
-      },
       "ozradclm-bold.otf" : {
          "installed_by" : [
             "fonts-culmus-fancy"
@@ -22930,6 +23780,46 @@
             "fonts-pagul"
          ]
       },
+      "palatino-bi.pfb" : {
+         "installed_by" : [
+            "fonts-texmacs"
+         ]
+      },
+      "palatino-bl.pfb" : {
+         "installed_by" : [
+            "fonts-texmacs"
+         ]
+      },
+      "palatino-bx.pfb" : {
+         "installed_by" : [
+            "fonts-texmacs"
+         ]
+      },
+      "palatino-cc.pfb" : {
+         "installed_by" : [
+            "fonts-texmacs"
+         ]
+      },
+      "palatino-rm.pfb" : {
+         "installed_by" : [
+            "fonts-texmacs"
+         ]
+      },
+      "palatino-sl.pfb" : {
+         "installed_by" : [
+            "fonts-texmacs"
+         ]
+      },
+      "palatino-ti.pfb" : {
+         "installed_by" : [
+            "fonts-texmacs"
+         ]
+      },
+      "palatino-xc.pfb" : {
+         "installed_by" : [
+            "fonts-texmacs"
+         ]
+      },
       "pallu___.ttf" : {
          "installed_by" : [
             "fonts-uralic"
@@ -22983,11 +23873,6 @@
       "pdark.ttf" : {
          "installed_by" : [
             "fonts-aenigma"
-         ]
-      },
-      "pecita.otf" : {
-         "installed_by" : [
-            "fonts-pecita"
          ]
       },
       "peddana-regular.ttf" : {
@@ -24075,11 +24960,6 @@
             "fonts-roadgeek"
          ]
       },
-      "richstyle.ttf" : {
-         "installed_by" : [
-            "fonts-cegui"
-         ]
-      },
       "rictydiminished-bold.ttf" : {
          "installed_by" : [
             "fonts-ricty-diminished"
@@ -24129,7 +25009,6 @@
          "installed_by" : [
             "fonts-roboto-fontface",
             "fonts-roboto-fontface",
-            "fonts-roboto-hinted",
             "fonts-roboto-unhinted"
          ]
       },
@@ -24137,7 +25016,6 @@
          "installed_by" : [
             "fonts-roboto-fontface",
             "fonts-roboto-fontface",
-            "fonts-roboto-hinted",
             "fonts-roboto-unhinted"
          ]
       },
@@ -24145,7 +25023,6 @@
          "installed_by" : [
             "fonts-roboto-fontface",
             "fonts-roboto-fontface",
-            "fonts-roboto-hinted",
             "fonts-roboto-unhinted"
          ]
       },
@@ -24153,7 +25030,6 @@
          "installed_by" : [
             "fonts-roboto-fontface",
             "fonts-roboto-fontface",
-            "fonts-roboto-hinted",
             "fonts-roboto-unhinted"
          ]
       },
@@ -24195,7 +25071,6 @@
       },
       "roboto-italic.ttf" : {
          "installed_by" : [
-            "fonts-roboto-hinted",
             "fonts-roboto-unhinted"
          ]
       },
@@ -24203,7 +25078,6 @@
          "installed_by" : [
             "fonts-roboto-fontface",
             "fonts-roboto-fontface",
-            "fonts-roboto-hinted",
             "fonts-roboto-unhinted"
          ]
       },
@@ -24211,7 +25085,6 @@
          "installed_by" : [
             "fonts-roboto-fontface",
             "fonts-roboto-fontface",
-            "fonts-roboto-hinted",
             "fonts-roboto-unhinted"
          ]
       },
@@ -24219,7 +25092,6 @@
          "installed_by" : [
             "fonts-roboto-fontface",
             "fonts-roboto-fontface",
-            "fonts-roboto-hinted",
             "fonts-roboto-unhinted"
          ]
       },
@@ -24227,7 +25099,6 @@
          "installed_by" : [
             "fonts-roboto-fontface",
             "fonts-roboto-fontface",
-            "fonts-roboto-hinted",
             "fonts-roboto-unhinted"
          ]
       },
@@ -24235,7 +25106,6 @@
          "installed_by" : [
             "fonts-roboto-fontface",
             "fonts-roboto-fontface",
-            "fonts-roboto-hinted",
             "fonts-roboto-unhinted"
          ]
       },
@@ -24249,7 +25119,6 @@
          "installed_by" : [
             "fonts-roboto-fontface",
             "fonts-roboto-fontface",
-            "fonts-roboto-hinted",
             "fonts-roboto-unhinted"
          ]
       },
@@ -24257,55 +25126,46 @@
          "installed_by" : [
             "fonts-roboto-fontface",
             "fonts-roboto-fontface",
-            "fonts-roboto-hinted",
             "fonts-roboto-unhinted"
          ]
       },
       "robotocondensed-bold.ttf" : {
          "installed_by" : [
-            "fonts-roboto-hinted",
             "fonts-roboto-unhinted"
          ]
       },
       "robotocondensed-bolditalic.ttf" : {
          "installed_by" : [
-            "fonts-roboto-hinted",
             "fonts-roboto-unhinted"
          ]
       },
       "robotocondensed-italic.ttf" : {
          "installed_by" : [
-            "fonts-roboto-hinted",
             "fonts-roboto-unhinted"
          ]
       },
       "robotocondensed-light.ttf" : {
          "installed_by" : [
-            "fonts-roboto-hinted",
             "fonts-roboto-unhinted"
          ]
       },
       "robotocondensed-lightitalic.ttf" : {
          "installed_by" : [
-            "fonts-roboto-hinted",
             "fonts-roboto-unhinted"
          ]
       },
       "robotocondensed-medium.ttf" : {
          "installed_by" : [
-            "fonts-roboto-hinted",
             "fonts-roboto-unhinted"
          ]
       },
       "robotocondensed-mediumitalic.ttf" : {
          "installed_by" : [
-            "fonts-roboto-hinted",
             "fonts-roboto-unhinted"
          ]
       },
       "robotocondensed-regular.ttf" : {
          "installed_by" : [
-            "fonts-roboto-hinted",
             "fonts-roboto-unhinted"
          ]
       },
@@ -24779,6 +25639,16 @@
             "fonts-uralic"
          ]
       },
+      "schraubenkiste.ttf" : {
+         "installed_by" : [
+            "fonts-schraubenkiste"
+         ]
+      },
+      "schraubenkiste2.ttf" : {
+         "installed_by" : [
+            "fonts-schraubenkiste"
+         ]
+      },
       "sclnmaze.ttf" : {
          "installed_by" : [
             "fonts-aenigma"
@@ -25041,22 +25911,22 @@
       },
       "shofardemi-bold.ttf" : {
          "installed_by" : [
-            "fonts-culmus-fancy"
+            "fonts-culmus"
          ]
       },
       "shofardemi-boldoblique.ttf" : {
          "installed_by" : [
-            "fonts-culmus-fancy"
+            "fonts-culmus"
          ]
       },
       "shofarregular.ttf" : {
          "installed_by" : [
-            "fonts-culmus-fancy"
+            "fonts-culmus"
          ]
       },
       "shofarregularoblique.ttf" : {
          "installed_by" : [
-            "fonts-culmus-fancy"
+            "fonts-culmus"
          ]
       },
       "sideways.ttf" : {
@@ -25072,6 +25942,26 @@
       "sileotsr.ttf" : {
          "installed_by" : [
             "fonts-sil-ezra"
+         ]
+      },
+      "simpleclm-bold.ttf" : {
+         "installed_by" : [
+            "fonts-culmus"
+         ]
+      },
+      "simpleclm-boldoblique.ttf" : {
+         "installed_by" : [
+            "fonts-culmus"
+         ]
+      },
+      "simpleclm-medium.ttf" : {
+         "installed_by" : [
+            "fonts-culmus"
+         ]
+      },
+      "simpleclm-mediumoblique.ttf" : {
+         "installed_by" : [
+            "fonts-culmus"
          ]
       },
       "simplto2.ttf" : {
@@ -25314,6 +26204,76 @@
             "fonts-gotico-antiqua"
          ]
       },
+      "sourcesans3-black.otf" : {
+         "installed_by" : [
+            "fonts-adobe-sourcesans3"
+         ]
+      },
+      "sourcesans3-blackit.otf" : {
+         "installed_by" : [
+            "fonts-adobe-sourcesans3"
+         ]
+      },
+      "sourcesans3-bold.otf" : {
+         "installed_by" : [
+            "fonts-adobe-sourcesans3"
+         ]
+      },
+      "sourcesans3-boldit.otf" : {
+         "installed_by" : [
+            "fonts-adobe-sourcesans3"
+         ]
+      },
+      "sourcesans3-extralight.otf" : {
+         "installed_by" : [
+            "fonts-adobe-sourcesans3"
+         ]
+      },
+      "sourcesans3-extralightit.otf" : {
+         "installed_by" : [
+            "fonts-adobe-sourcesans3"
+         ]
+      },
+      "sourcesans3-it.otf" : {
+         "installed_by" : [
+            "fonts-adobe-sourcesans3"
+         ]
+      },
+      "sourcesans3-light.otf" : {
+         "installed_by" : [
+            "fonts-adobe-sourcesans3"
+         ]
+      },
+      "sourcesans3-lightit.otf" : {
+         "installed_by" : [
+            "fonts-adobe-sourcesans3"
+         ]
+      },
+      "sourcesans3-medium.otf" : {
+         "installed_by" : [
+            "fonts-adobe-sourcesans3"
+         ]
+      },
+      "sourcesans3-mediumit.otf" : {
+         "installed_by" : [
+            "fonts-adobe-sourcesans3"
+         ]
+      },
+      "sourcesans3-regular.otf" : {
+         "installed_by" : [
+            "fonts-adobe-sourcesans3"
+         ]
+      },
+      "sourcesans3-semibold.otf" : {
+         "installed_by" : [
+            "fonts-adobe-sourcesans3"
+         ]
+      },
+      "sourcesans3-semiboldit.otf" : {
+         "installed_by" : [
+            "fonts-adobe-sourcesans3"
+         ]
+      },
       "spaciouo.ttf" : {
          "installed_by" : [
             "fonts-aenigma"
@@ -25389,6 +26349,16 @@
             "fonts-aenigma"
          ]
       },
+      "stamashkenazclm.ttf" : {
+         "installed_by" : [
+            "fonts-culmus"
+         ]
+      },
+      "stamsefaradclm.ttf" : {
+         "installed_by" : [
+            "fonts-culmus"
+         ]
+      },
       "standardsymbolsps.otf" : {
          "installed_by" : [
             "fonts-urw-base35"
@@ -25422,101 +26392,6 @@
       "sticks.ttf" : {
          "installed_by" : [
             "fonts-ldco"
-         ]
-      },
-      "stix-bold.otf" : {
-         "installed_by" : [
-            "fonts-stix"
-         ]
-      },
-      "stix-bolditalic.otf" : {
-         "installed_by" : [
-            "fonts-stix"
-         ]
-      },
-      "stix-italic.otf" : {
-         "installed_by" : [
-            "fonts-stix"
-         ]
-      },
-      "stix-regular.otf" : {
-         "installed_by" : [
-            "fonts-stix"
-         ]
-      },
-      "stixgeneral-bold.otf" : {
-         "installed_by" : [
-            "fonts-stix"
-         ]
-      },
-      "stixgeneral-bolditalic.otf" : {
-         "installed_by" : [
-            "fonts-stix"
-         ]
-      },
-      "stixgeneral-italic.otf" : {
-         "installed_by" : [
-            "fonts-stix"
-         ]
-      },
-      "stixgeneral-regular.otf" : {
-         "installed_by" : [
-            "fonts-stix"
-         ]
-      },
-      "stixintegralsd-bold.otf" : {
-         "installed_by" : [
-            "fonts-stix"
-         ]
-      },
-      "stixintegralsd-regular.otf" : {
-         "installed_by" : [
-            "fonts-stix"
-         ]
-      },
-      "stixintegralssm-bold.otf" : {
-         "installed_by" : [
-            "fonts-stix"
-         ]
-      },
-      "stixintegralssm-regular.otf" : {
-         "installed_by" : [
-            "fonts-stix"
-         ]
-      },
-      "stixintegralsup-bold.otf" : {
-         "installed_by" : [
-            "fonts-stix"
-         ]
-      },
-      "stixintegralsup-regular.otf" : {
-         "installed_by" : [
-            "fonts-stix"
-         ]
-      },
-      "stixintegralsupd-bold.otf" : {
-         "installed_by" : [
-            "fonts-stix"
-         ]
-      },
-      "stixintegralsupd-regular.otf" : {
-         "installed_by" : [
-            "fonts-stix"
-         ]
-      },
-      "stixintegralsupsm-bold.otf" : {
-         "installed_by" : [
-            "fonts-stix"
-         ]
-      },
-      "stixintegralsupsm-regular.otf" : {
-         "installed_by" : [
-            "fonts-stix"
-         ]
-      },
-      "stixmath-regular.otf" : {
-         "installed_by" : [
-            "fonts-stix"
          ]
       },
       "stixmathjax_alphabets-bold.otf" : {
@@ -25794,77 +26669,92 @@
             "fonts-mathjax"
          ]
       },
-      "stixnonunicode-bold.otf" : {
+      "stixtwomath-regular.otf" : {
          "installed_by" : [
             "fonts-stix"
          ]
       },
-      "stixnonunicode-bolditalic.otf" : {
+      "stixtwomath-regular.ttf" : {
          "installed_by" : [
             "fonts-stix"
          ]
       },
-      "stixnonunicode-italic.otf" : {
+      "stixtwotext-bold.otf" : {
          "installed_by" : [
             "fonts-stix"
          ]
       },
-      "stixnonunicode-regular.otf" : {
+      "stixtwotext-bold.ttf" : {
          "installed_by" : [
             "fonts-stix"
          ]
       },
-      "stixsizefivesym-regular.otf" : {
+      "stixtwotext-bolditalic.otf" : {
          "installed_by" : [
             "fonts-stix"
          ]
       },
-      "stixsizefoursym-bold.otf" : {
+      "stixtwotext-bolditalic.ttf" : {
          "installed_by" : [
             "fonts-stix"
          ]
       },
-      "stixsizefoursym-regular.otf" : {
+      "stixtwotext-italic.otf" : {
          "installed_by" : [
             "fonts-stix"
          ]
       },
-      "stixsizeonesym-bold.otf" : {
+      "stixtwotext-italic.ttf" : {
          "installed_by" : [
             "fonts-stix"
          ]
       },
-      "stixsizeonesym-regular.otf" : {
+      "stixtwotext-medium.otf" : {
          "installed_by" : [
             "fonts-stix"
          ]
       },
-      "stixsizethreesym-bold.otf" : {
+      "stixtwotext-medium.ttf" : {
          "installed_by" : [
             "fonts-stix"
          ]
       },
-      "stixsizethreesym-regular.otf" : {
+      "stixtwotext-mediumitalic.otf" : {
          "installed_by" : [
             "fonts-stix"
          ]
       },
-      "stixsizetwosym-bold.otf" : {
+      "stixtwotext-mediumitalic.ttf" : {
          "installed_by" : [
             "fonts-stix"
          ]
       },
-      "stixsizetwosym-regular.otf" : {
+      "stixtwotext-regular.otf" : {
          "installed_by" : [
             "fonts-stix"
          ]
       },
-      "stixvariants-bold.otf" : {
+      "stixtwotext-regular.ttf" : {
          "installed_by" : [
             "fonts-stix"
          ]
       },
-      "stixvariants-regular.otf" : {
+      "stixtwotext-semibold.otf" : {
+         "installed_by" : [
+            "fonts-stix"
+         ]
+      },
+      "stixtwotext-semibold.ttf" : {
+         "installed_by" : [
+            "fonts-stix"
+         ]
+      },
+      "stixtwotext-semibolditalic.otf" : {
+         "installed_by" : [
+            "fonts-stix"
+         ]
+      },
+      "stixtwotext-semibolditalic.ttf" : {
          "installed_by" : [
             "fonts-stix"
          ]
@@ -26067,6 +26957,11 @@
       "symbol.ttf" : {
          "installed_by" : [
             "fonts-wine"
+         ]
+      },
+      "symbola.ttf" : {
+         "installed_by" : [
+            "fonts-gr-framework"
          ]
       },
       "symbola_hint.ttf" : {
@@ -26552,6 +27447,46 @@
       "tibetansambhotayigchung.ttf" : {
          "installed_by" : [
             "fonts-sambhota-yigchung"
+         ]
+      },
+      "times-bi.pfb" : {
+         "installed_by" : [
+            "fonts-texmacs"
+         ]
+      },
+      "times-bl.pfb" : {
+         "installed_by" : [
+            "fonts-texmacs"
+         ]
+      },
+      "times-bx.pfb" : {
+         "installed_by" : [
+            "fonts-texmacs"
+         ]
+      },
+      "times-cc.pfb" : {
+         "installed_by" : [
+            "fonts-texmacs"
+         ]
+      },
+      "times-rm.pfb" : {
+         "installed_by" : [
+            "fonts-texmacs"
+         ]
+      },
+      "times-sl.pfb" : {
+         "installed_by" : [
+            "fonts-texmacs"
+         ]
+      },
+      "times-ti.pfb" : {
+         "installed_by" : [
+            "fonts-texmacs"
+         ]
+      },
+      "times-xc.pfb" : {
+         "installed_by" : [
+            "fonts-texmacs"
          ]
       },
       "timmanaregular.ttf" : {
@@ -27134,11 +28069,6 @@
             "fonts-tlwg-typo-ttf"
          ]
       },
-      "tnua-libre.ttf" : {
-         "installed_by" : [
-            "fonts-cegui"
-         ]
-      },
       "tomsontalks.ttf" : {
          "installed_by" : [
             "fonts-tomsontalks"
@@ -27167,6 +28097,11 @@
       "trainone-regular.ttf" : {
          "installed_by" : [
             "fonts-train"
+         ]
+      },
+      "transit105.otf" : {
+         "installed_by" : [
+            "fonts-transit105"
          ]
       },
       "trashimclm-bold.otf" : {
@@ -27387,16 +28322,6 @@
       "tw-sung-plus-98_1.ttf" : {
          "installed_by" : [
             "fonts-cns11643-sung"
-         ]
-      },
-      "tymes.ttf" : {
-         "installed_by" : [
-            "fonts-arkpandora"
-         ]
-      },
-      "tymesbd.ttf" : {
-         "installed_by" : [
-            "fonts-arkpandora"
          ]
       },
       "typoscript.otf" : {
@@ -28179,6 +29104,21 @@
             "fonts-uniol"
          ]
       },
+      "uniolbold.ttf" : {
+         "installed_by" : [
+            "fonts-uniol"
+         ]
+      },
+      "uniolbolditalic.ttf" : {
+         "installed_by" : [
+            "fonts-uniol"
+         ]
+      },
+      "uniolitalic.ttf" : {
+         "installed_by" : [
+            "fonts-uniol"
+         ]
+      },
       "united.ttf" : {
          "installed_by" : [
             "fonts-aenigma"
@@ -28609,26 +29549,6 @@
             "fonts-adf-verana"
          ]
       },
-      "veranda.ttf" : {
-         "installed_by" : [
-            "fonts-arkpandora"
-         ]
-      },
-      "verandabd.ttf" : {
-         "installed_by" : [
-            "fonts-arkpandora"
-         ]
-      },
-      "verandabdit.ttf" : {
-         "installed_by" : [
-            "fonts-arkpandora"
-         ]
-      },
-      "verandait.ttf" : {
-         "installed_by" : [
-            "fonts-arkpandora"
-         ]
-      },
       "verase.ttf" : {
          "installed_by" : [
             "ttf-bitstream-vera"
@@ -28854,6 +29774,11 @@
             "fonts-aenigma"
          ]
       },
+      "weathericons-regular.otf" : {
+         "installed_by" : [
+            "fonts-weather-icons"
+         ]
+      },
       "weathers.ttf" : {
          "installed_by" : [
             "fonts-aenigma"
@@ -29014,6 +29939,16 @@
             "fonts-aenigma"
          ]
       },
+      "xolonium-bold.otf" : {
+         "installed_by" : [
+            "fonts-xolonium"
+         ]
+      },
+      "xolonium-regular.otf" : {
+         "installed_by" : [
+            "fonts-xolonium"
+         ]
+      },
       "xtrusion.ttf" : {
          "installed_by" : [
             "fonts-aenigma"
@@ -29067,6 +30002,16 @@
       "yebse.ttf" : {
          "installed_by" : [
             "fonts-senamirmir-washra"
+         ]
+      },
+      "yehudaclm-bold.otf" : {
+         "installed_by" : [
+            "fonts-culmus"
+         ]
+      },
+      "yehudaclm-light.otf" : {
+         "installed_by" : [
+            "fonts-culmus"
          ]
       },
       "yesterda.ttf" : {

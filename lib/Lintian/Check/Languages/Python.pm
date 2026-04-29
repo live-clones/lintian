@@ -113,15 +113,6 @@ sub source {
     }
 
     my $build_all = $self->processable->relation('Build-Depends-All');
-    $self->hint('build-depends-on-python-sphinx-only')
-      if $build_all->satisfies('python-sphinx')
-      && !$build_all->satisfies('python3-sphinx');
-
-    $self->hint(
-        'alternatively-build-depends-on-python-sphinx-and-python3-sphinx')
-      if $self->processable->fields->value('Build-Depends')
-      =~ /\bpython-sphinx\s+\|\s+python3-sphinx\b/;
-
     my $debian_control = $self->processable->debian_control;
 
     # Mismatched substvars
@@ -345,7 +336,8 @@ sub visit_installed_files {
             $item->pointer)
           if $item->is_file
           && $relative eq $item->basename  # "top-level"
-          &&!$self->ALLOWED_PYTHON_FILES->matches_any($item->basename, 'i');
+          && (!$self->ALLOWED_PYTHON_FILES->matches_any($item->basename, 'i')
+            || $item->basename =~ /^__init__\.py[ic]?$/);
 
         # Prepare variables for the 'python-module-in-wrong-location' hint
         my $actual_module_path
@@ -420,20 +412,6 @@ sub installable {
       && $entries[0]->Changes
       !~ / \b python [ ]? 2 (?:[.]x)? [ ] (?:variant|version) \b /imsx
       && $entries[0]->Changes !~ / \Q$pkg\E /msx;
-
-    # Python applications
-    if ($self->processable->name !~ /^python[23]?-/
-        && (none { $_ eq $self->processable->name } @PYTHON2)) {
-        for my $field (@FIELDS) {
-            for my $dep (@PYTHON2) {
-
-                $self->hint(
-                    'dependency-on-python-version-marked-for-end-of-life',
-                    $field, "(satisfies $dep)")
-                  if $self->processable->relation($field)->satisfies($dep);
-            }
-        }
-    }
 
     # Django modules
     for my $regex (keys %DJANGO_PACKAGES) {

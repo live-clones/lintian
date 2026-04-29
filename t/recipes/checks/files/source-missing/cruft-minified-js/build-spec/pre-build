@@ -21,7 +21,7 @@ mkdir -p "$srcdir/src/js"
 mkdir -p "$srcdir/build/js"
 
 # create a js file
-uglifyjs -o "$uglyjson" "$json"
+terser -o "$uglyjson" "$json"
 # fake install of minified js without min.js
 cp "$uglyjson" "$jsdir/jswithoutminext/json.js"
 # fake not sourced

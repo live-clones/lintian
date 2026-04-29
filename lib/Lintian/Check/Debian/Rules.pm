@@ -118,33 +118,13 @@ sub source {
    # optional tags to use for reporting the problem if some information other
    # than the default is required.
     my %GLOBAL_CLEAN_DEPENDS = (
-        'ant:any' => [qr{^include\s*/usr/share/cdbs/1/rules/ant\.mk}],
-        'cdbs:any' => [
-            qr{^include\s+/usr/share/cdbs/},
-            qr{^include\s+/usr/share/R/debian/r-cran\.mk}
-        ],
-        'dbs:any' => [qr{^include\s+/usr/share/dbs/}],
-        'dh-make-php:any' => [qr{^include\s+/usr/share/cdbs/1/class/pear\.mk}],
-        'debhelper:any | debhelper-compat:any' =>[
-            qr{^include\s+/usr/share/cdbs/1/rules/debhelper\.mk},
-            qr{^include\s+/usr/share/R/debian/r-cran\.mk}
-        ],
-        'dpatch:any' => [
-            qr{^include\s+/usr/share/dpatch/},
-            qr{^include\s+/usr/share/cdbs/1/rules/dpatch\.mk}
-        ],
         'gnome-pkg-tools:any | dh-sequence-gnome:any' =>
           [qr{^include\s+/usr/share/gnome-pkg-tools/}],
-        'quilt:any' => [
-            qr{^include\s+/usr/share/quilt/},
-            qr{^include\s+/usr/share/cdbs/1/rules/patchsys-quilt\.mk}
-        ],
+        'quilt:any' => [qr{^include\s+/usr/share/quilt/},],
         'mozilla-devscripts:any' =>
           [qr{^include\s+/usr/share/mozilla-devscripts/}],
         'ruby-pkg-tools:any' =>
           [qr{^include\s+/usr/share/ruby-pkg-tools/1/class/}],
-        'r-base-dev:any' => [qr{^include\s+/usr/share/R/debian/r-cran\.mk}],
-        $ANYPYTHON_DEPEND =>[qr{/usr/share/cdbs/1/class/python-distutils\.mk}],
     );
 
   # A list of packages; regular expressions that, if they match anywhere in the
@@ -165,7 +145,6 @@ sub source {
         'debhelper:any | debhelper-compat:any' =>
           [qr/^\t\s*dh_(?!autoreconf).+/],
         'dh-ocaml:any, ocaml-nox:any | ocaml:any' =>[qr/^\t\s*dh_ocamlinit\s/],
-        'dpatch:any' => [qr/^\t\s*(\S+=\S+\s+)*dpatch\s/],
         'po-debconf:any' => [qr/^\t\s*debconf-updatepo\s/],
         $PYTHON_DEPEND => [qr/^\t\s*python\s/],
         $PYTHON3_DEPEND => [qr/^\t\s*python3\s/],
@@ -456,6 +435,12 @@ sub source {
                 $pointer);
         }
 
+        if ($line =~ /\$\$\(\s*((\/usr)?\/bin\/)?nproc\s*\)/s
+            || $line =~ /\$\(shell \s*((\/usr)?\/bin\/)?nproc\s*\)/s
+            || $line =~ /`\s*((\/usr)?\/bin\/)?nproc\s*\`/s) {
+            $self->pointed_hint('debian-rules-calls-nproc',$pointer);
+        }
+
         if ($line !~ /^ifn?(?:eq|def)\s/ && $line =~ /^([^\s:][^:]*):+(.*)/s) {
             my ($target_names, $target_dependencies) = ($1, $2);
             @current_targets = split $SPACE, $target_names;
@@ -473,6 +458,8 @@ sub source {
                     for my $rulebypolicy (keys %TAG_FOR_POLICY_TARGET) {
                         $seen{$rulebypolicy}++ if $rulebypolicy =~ m/$pattern/;
                     }
+                } elsif($target eq '.DEFAULT') {
+                    $seen{$_}++ for keys %TAG_FOR_POLICY_TARGET;
                 } else {
                     # Is it $(VAR) ?
                     if ($target =~ m/^\$[\(\{]([^\)\}]++)[\)\}]$/) {
@@ -611,7 +598,8 @@ sub source {
         }
     }
 
-    if (my $memorized_position = $overridden{'dh_auto_test'}) {
+    if (my $memorized_position = $overridden{'dh_auto_test'}
+        and ! $build_regular->satisfies('debhelper-compat (>= 13)')) {
 
         my @rules = grep {
             !m{^\t\s*[\:\[]}

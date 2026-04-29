@@ -38,7 +38,6 @@ my $JS_EXT
 my %JS_FILES = (
     'ckeditor' => qr{(?i)/ckeditor} . $JS_EXT,
     'fckeditor' => qr{(?i)/fckeditor} . $JS_EXT,
-    'libjs-async' => qr{(?i)/async} . $JS_EXT,
     'libjs-bootstrap' => qr{(?i)/bootstrap(?:-[\d\.]+)?} . $JS_EXT,
     'libjs-chai'      => qr{(?i)/chai} . $JS_EXT,
     'libjs-cropper'   => qr{(?i)/cropper(?:\.uncompressed)?} . $JS_EXT,
@@ -69,6 +68,8 @@ my %JS_FILES = (
     'libjs-jquery-treetable'       => qr{(?i)/jquery\.treetable} . $JS_EXT,
     'libjs-jquery-ui'              => qr{(?i)/jquery[\.-](?:-[\d\.]+)?ui}
       . $JS_EXT,
+    'node-jquery-validation'       =>qr{(?i)/jquery[\.-](?:-[\d\.]+)?validate}
+      . $JS_EXT,
     'libjs-mocha'                  => qr{(?i)/mocha} . $JS_EXT,
     'libjs-mochikit'               => qr{(?i)/mochikit} . $JS_EXT,
     'libjs-mootools'               =>
@@ -96,6 +97,7 @@ qr{(?i)/mootools(?:(?:\.v|-)[\d\.]+)?(?:-(?:(?:core(?:-server)?)|more)(?:-(?:yc|
     'tinymce'                      => qr{(?i)/tiny_mce(?:_(?:popup|src))?}
       . $JS_EXT,
     'libjs-lodash'                 => qr{(?i)lodash} . $JS_EXT,
+    'node-async'                   => qr{(?i)/async} . $JS_EXT,
     'node-pako'                    =>
       qr{(?i)pako(?:_(:?de|in)flate(?:.es\d+)?)(?:-[\d\.]+)?}. $JS_EXT,
     'node-jszip-utils'             => qr{(?i)jszip-utils(?:-ie)?(?:-[\d\.]+)?}

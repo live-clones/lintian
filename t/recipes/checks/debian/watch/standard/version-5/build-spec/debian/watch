@@ -1,2 +1,4 @@
-version=5
-http://www.example.com/dist/ dh7-test\.([\d.]+)\.tar\.gz debian uupdate
+Version: 5
+
+Source: http://www.example.com/dist/ dh7-test\.([\d.]+)\.tar\.gz debian uupdate
+Matching-Version: .*@ANY_VERSION@

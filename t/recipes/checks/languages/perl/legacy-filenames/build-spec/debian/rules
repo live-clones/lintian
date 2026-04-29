@@ -187,24 +187,6 @@ binary-indep:
 	ln -s / debian/tmp/usr/lib/filenames/symlink7ok+warn
 	ln -s ../../.. debian/tmp/usr/lib/filenames/symlink10wrong
 
-# devhelp tests.  Files in /usr/share/gtk-doc/html or /usr/share/devhelp/books
-# are okay.  Files elsewhere are okay iff their parent path is symlinked into
-# one of those paths.
-	install -d debian/tmp/usr/share/devhelp/books/filenames
-	echo 'Not really XML' > debian/tmp/usr/share/devhelp/books/filenames/a.devhelp
-	echo 'Not really XML' > debian/tmp/usr/share/devhelp/books/filenames/.devhelp2
-	gzip -n -9 debian/tmp/usr/share/devhelp/books/filenames/.devhelp2
-	install -d debian/tmp/usr/share/gtk-doc/html/filenames
-	echo 'Not really XML' > debian/tmp/usr/share/gtk-doc/html/filenames/b.devhelp
-	gzip -n -9 debian/tmp/usr/share/gtk-doc/html/filenames/b.devhelp
-	install -d debian/tmp/usr/share/doc/filenames/good-devhelp
-	echo 'Not really XML' > debian/tmp/usr/share/doc/filenames/good-devhelp/.devhelp2
-	install -d debian/tmp/usr/share/doc/filenames/bad-devhelp
-	echo 'Not really XML' > debian/tmp/usr/share/doc/filenames/bad-devhelp/c.devhelp
-	gzip -n -9 debian/tmp/usr/share/doc/filenames/bad-devhelp/c.devhelp
-	ln -s ../../doc/filenames/good-devhelp debian/tmp/usr/share/gtk-doc/html/good
-	ln -s ../doc/filenames/bad-devhelp debian/tmp/usr/share/gtk-doc/html/bad
-
 	install -d debian/tmp/usr/share/doc-base
 	install -m 644 debian/doc-base debian/tmp/usr/share/doc-base/filenames
 

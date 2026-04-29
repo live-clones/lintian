@@ -1,5 +1,6 @@
 Tag: spelling-error-in-binary
-Severity: info
+Severity: pedantic
+Experimental: yes
 Check: binaries/spelling
 Explanation: Lintian found a spelling error in the given binary. Lintian has a
  list of common misspellings that it looks for. It does not have a

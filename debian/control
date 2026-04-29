@@ -1,22 +1,25 @@
 Source: lintian
 Section: devel
-Priority: optional
 Maintainer: Debian Lintian Maintainers <lintian-maint@debian.org>
 Uploaders:
  Axel Beckert <abe@debian.org>,
- Bastien Roucariès <rouca@debian.org>
+ Bastien Roucariès <rouca@debian.org>,
+ Louis-Philippe Véronneau <pollo@debian.org>,
+ Maytham Alsudany <maytham@debian.org>,
+ Nilesh Patra <nilesh@debian.org>
 Build-Depends:
+ appstream <!nocheck>,
  aspell <!nocheck>,
  aspell-en <!nocheck>,
- cdbs <!nocheck>,
- debhelper (>= 13.11.8~) <!nocheck>,
+ debhelper <!nocheck>,
  debhelper-compat (= 13),
+ debputy <!nocheck>,
  default-jdk-headless | default-jdk <!nocheck>,
- dh-elpa | bash (<< 4.4) <!nocheck>,
+ dh-elpa <!nocheck>,
  dh-python <!nocheck>,
  dh-r <!nocheck>,
  dh-runit <!nocheck>,
- dpkg (>= 1.17.14),
+ dpkg (>= 1.23.4),
  fakeroot <!nocheck>,
  gcc-mingw-w64-i686 <!nocheck>,
  gcc-mingw-w64-x86-64 <!nocheck>,
@@ -24,13 +27,15 @@ Build-Depends:
  javahelper <!nocheck>,
  libarray-utils-perl <!nocheck>,
  libconst-fast-perl,
+ libcrypt-dev,
  libfile-basedir-perl,
+ libfile-libmagic-perl,
  libio-prompt-tiny-perl <!nocheck>,
  libipc-run3-perl,
  liblist-someutils-perl <!nocheck>,
  libmce-perl <!nocheck>,
  libpath-tiny-perl,
- libperl-critic-freenode-perl <!nocheck>,
+ libperl-critic-community-perl <!nocheck>,
  libperl-critic-pulp-perl <!nocheck>,
  libpod-coverage-trustpod-perl <!nocheck>,
  libtest-minimumversion-perl <!nocheck>,
@@ -45,7 +50,9 @@ Build-Depends:
  libtext-diff-perl <!nocheck>,
  libtext-template-perl <!nocheck>,
  libunicode-utf8-perl,
- lintian <!nocheck>,
+ libversion-perl <!nocheck>,
+ lintian <!nocheck> <!nodoc>,
+ lintian-ssg <!nodoc>,
  mingw-w64-tools <!nocheck>,
  pkg-php-tools <!nocheck>,
  python-dev-is-python3 <!nocheck>,
@@ -56,13 +63,13 @@ Build-Depends:
  python3-numpy <!nocheck>,
  python3-setuptools <!nocheck>,
  quilt <!nocheck>,
+ rustc <!nocheck>,
  tidy <!nocheck>,
- uglifyjs <!nocheck>,
+ terser (>= 5.46.1-1~) <!nocheck>,
  wamerican <!nocheck>,
  wbritish <!nocheck>,
  zip <!nocheck>
-Standards-Version: 4.7.0
-Rules-Requires-Root: no
+Standards-Version: 4.7.4
 Vcs-Git: https://salsa.debian.org/lintian/lintian.git
 Vcs-Browser: https://salsa.debian.org/lintian/lintian
 Homepage: https://lintian.debian.org/
@@ -70,10 +77,11 @@ Homepage: https://lintian.debian.org/
 Package: lintian
 Architecture: all
 Depends:
+ appstream,
  binutils,
  bzip2,
  diffstat,
- dpkg (>= 1.17.14),
+ dpkg (>= 1.23.4),
  dpkg-dev,
  file,
  gettext,
@@ -84,8 +92,6 @@ Depends:
  libarchive-zip-perl,
  libberkeleydb-perl,
  libcapture-tiny-perl,
-# Bug#1001173 solved in 2.005004-3; leave for backports for now
- libclass-xsaccessor-perl,
  libclone-perl,
  libconfig-tiny-perl,
  libconst-fast-perl,
@@ -100,6 +106,7 @@ Depends:
  libemail-address-xs-perl,
  libfile-basedir-perl,
  libfile-find-rule-perl,
+ libfile-libmagic-perl,
  libfont-ttf-perl,
  libhtml-html5-entities-perl,
  libhtml-tokeparser-simple-perl,
@@ -131,9 +138,8 @@ Depends:
  libtimedate-perl,
  libunicode-utf8-perl,
  liburi-perl,
+ libversion-perl,
  libwww-mechanize-perl,
-# Bug#1001164 solved in 3.16-4; leave for backports for now
- libwww-perl,
  libxml-libxml-perl,
  libyaml-libyaml-perl,
  plzip | lzip-decompressor,
@@ -149,16 +155,6 @@ Depends:
 Suggests:
  binutils-multiarch,
  libtext-template-perl,
-Breaks:
- funny-manpages (<< 1.3-5.1),
- libconfig-model-dpkg-perl (<< 2.151),
- lintian-brush (<< 0.88),
-# for bullseye, https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1001655#35
- lzd (<< 1.2-3~),
- pkg-js-tools (<< 0.9.4),
- pkg-perl-tools (<< 0.53),
-Replaces:
- funny-manpages (<< 1.3-5.1),
 Multi-Arch: foreign
 Description: Debian package checker
  Lintian dissects Debian packages and reports bugs and policy violations. It
@@ -168,5 +164,16 @@ Description: Debian package checker
  This package is useful for all people who want to check Debian packages for
  compliance with Debian policy. Every Debian maintainer should check packages
  with this tool before uploading them to the archive.
+
+Package: lintian-doc
+Architecture: all
+Multi-Arch: foreign
+Section: doc
+Depends: ${misc:Depends}
+Description: Debian package checker -- HTML documentation
+ Lintian dissects Debian packages and reports bugs and policy violations. It
+ contains automated checks for many aspects of Debian policy as well as some
+ checks for common errors.
  .
- This version of Lintian is calibrated for Debian Policy version 4.6.2.
+ This package provides Lintian tags' explanations in HTML format, generated
+ with lintian-ssg, suitable to be browsed locally or published online.

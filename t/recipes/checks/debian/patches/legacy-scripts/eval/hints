@@ -1,3 +1,0 @@
-scripts (source): patch-system quilt
-scripts (source): patch-system dpatch
-scripts (source): more-than-one-patch-system

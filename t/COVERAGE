@@ -24,7 +24,6 @@ binaries binary-has-unneeded-section
 binaries binary-with-bad-dynamic-table
 
 files desktop-file-in-wrong-dir
-files package-contains-devhelp-file-without-symlink
 files package-contains-upstream-installation-documentation
 files script-in-usr-share-doc
 files script-with-language-extension
@@ -133,7 +132,6 @@ fields
 filenames
   bad-menu-file-name
   desktop-file-in-wrong-dir
-  package-contains-devhelp-file-without-symlink
   use-of-compat-symlink
 
 foo++

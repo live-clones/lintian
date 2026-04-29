@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component>
-  <id>appstream-udev-data</id>
+  <id>org.debian.lintian.check.appstream.udev</id>
   <metadata_license>MIT</metadata_license>
   <name>lintian appstream-udev-data</name>
   <summary>Test AppStream and udev related checks in lintian</summary>

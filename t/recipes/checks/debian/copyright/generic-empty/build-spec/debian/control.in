@@ -1,5 +1,5 @@
 Source: [% $source %]
-Maintainer: a
+Maintainer: a <a@localhost.localdomain>
 
 Package: [% $source %]
 Architecture: [% $package_architecture %]

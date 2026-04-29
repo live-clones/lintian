@@ -13,6 +13,7 @@ bullseye
 bookworm
 trixie
 forky
+duke
 sid
 
 # Aliases
@@ -21,3 +22,4 @@ stable
 testing
 unstable
 experimental
+unreleased

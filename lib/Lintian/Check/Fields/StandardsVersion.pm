@@ -93,6 +93,21 @@ sub source {
     $changelog_epoch //= $policy_releases->epoch($latest_standard);
     $distribution //= $EMPTY;
 
+    if (defined $entry) {
+
+        my $changes = $entry->Changes;
+
+        if ($changes
+            =~ /(?:standards[ -]?version|\bs-v:?\s).*\b(\d+\.\d+\.\d+)\b(?!.*\b\d+\.\d+\.\d+\b)/i
+        ) {
+            my $changelog_standard = $1;
+
+            $self->hint('standards-version-inconsistent',
+                "$compliance_normalized != $changelog_standard")
+              if $changelog_standard ne $compliance_normalized;
+        }
+    }
+
     unless ($policy_releases->is_known($compliance_standard)) {
 
         # could be newer

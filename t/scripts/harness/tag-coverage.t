@@ -46,6 +46,7 @@ use Test::Lintian::Output::Universal qw(tag_name);
 const my $SPACE => q{ };
 const my $NEWLINE => qq{\n};
 
+# See Bug#1126502 for why ansi-escape can't be tested at the moment
 my @known_missing = (
     qw(
       changed-by-invalid-for-derivative
@@ -67,8 +68,9 @@ my @known_missing = (
       sphinxdoc-but-no-sphinxdoc-depends
       unpack-message-for-deb-control
       unpack-message-for-orig
-      uses-deprecated-adttmp
       invalid-versioned-provides
+      ansi-escape
+      debian-rules-uses-deprecated-makefile
     ),
 
 # the following tags are not testable due to restrictions in reprotest

@@ -10,4 +10,4 @@ Explanation: The version contains the string <code>.dfsg</code>.
  It is better to use <code>+dfsg</code> instead. The plus sign <code>+</code> sorts
  before <code>.</code>, so the sorting that is usually desired can take place:
  .
-   <code>1.2</code> &lt; <code>1.2+dfsg</code> &lt; <code>1.2.1</code>
+ <code>1.2</code> &lt; <code>1.2+dfsg</code> &lt; <code>1.2.1</code>

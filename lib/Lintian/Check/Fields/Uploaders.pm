@@ -62,6 +62,32 @@ sub always {
     return;
 }
 
+sub source {
+    my ($self) = @_;
+
+    return
+      unless $self->processable->fields->declares('Uploaders');
+
+    my $debian_control = $self->processable->debian_control;
+
+    return
+      unless $debian_control->source_fields->declares('Uploaders');
+
+    my $uploaders = $debian_control->source_fields->value('Uploaders');
+    my $control_position
+      = $debian_control->source_fields->position('Uploaders');
+    my $control_pointer = $debian_control->item->pointer($control_position);
+
+    # check for empty field see  #783628
+    if ($uploaders =~ /,\s*,/) {
+        $self->pointed_hint('uploader-name-missing',$control_pointer,
+            'you have used a double comma');
+        $uploaders =~ s/,\s*,/,/g;
+    }
+
+    return;
+}
+
 1;
 
 # Local Variables:

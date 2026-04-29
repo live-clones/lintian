@@ -120,15 +120,6 @@ sub visit_installed_files {
     my $linked_with_libc
       = any { m{^ libc[.]so[.] }x } @{$item->elf->{NEEDED} // []};
 
-    $self->pointed_hint('library-not-linked-against-libc', $item->pointer)
-      if !$linked_with_libc
-      && $is_shared
-      && @{$item->elf->{NEEDED} // [] }
-      && (none { /^libc[.]so[.]/ } @{$item->elf->{NEEDED} // [] })
-      && $item->name !~ m{/libc\b}
-      && (!$self->built_with_octave
-        || $item->name !~ m/\.(?:oct|mex)$/);
-
     $self->pointed_hint('program-not-linked-against-libc', $item->pointer)
       if !$linked_with_libc
       && !$is_shared

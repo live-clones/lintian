@@ -62,12 +62,6 @@ my %DEPRECATED_STDLIBS = (
 sub visit_patched_files {
     my ( $self, $item ) = @_;
 
-    my $build_all = $self->processable->relation('Build-Depends-All');
-
-    # Skip if the package doesn't depend on python
-    return
-      unless $build_all->satisfies($PYTHON3_DEPEND);
-
     # Skip if it's not a python file
     return
       unless $item->name =~ /\.py$/;
@@ -75,6 +69,12 @@ sub visit_patched_files {
     # Skip if we can't open the file
     return
       unless $item->is_open_ok;
+
+    my $build_all = $self->processable->relation('Build-Depends-All');
+
+    # Skip if the package doesn't depend on python
+    return
+      unless $build_all->satisfies($PYTHON3_DEPEND);
 
     open( my $fd, '<', $item->unpacked_path )
       or die encode_utf8( 'Cannot open ' . $item->unpacked_path );
@@ -94,7 +94,30 @@ sub visit_patched_files {
                 $pointer,
                 $library,
 "(deprecated in Python $deprecated, removed in Python $removed)"
-            ) if $line =~ m{from $library} || $line =~ m{import $library};
+              )
+              # these do not match relative imports (from .library,
+              # import ..library) on the assumption that those are
+              # probably something package-internal
+              # not the actual stdlib module
+              # from library import foo
+              # from library.sub import foo
+              # does not match "from library2"
+              # does not match "from notlibrary"
+              # does not match "from library2.library"
+              if $line =~ m{^\s*from $library(\s+|\..+)import}
+              # import foo, library, bar
+              # import library
+              # import library as l
+              # import library.sub
+              # import library, bar
+              # import foo, library
+              # import foo, library.sub
+              # import foo, library.sub, bar
+              # does not match "import library2"
+              # does not match "import notlibrary"
+              # does not match "import library2.library"
+              # does not match "import library2 as library"
+              ||$line =~ m{^\s*import(\s+|.+,\s?)$library([,.\s]|$)};
         }
 
     }continue {

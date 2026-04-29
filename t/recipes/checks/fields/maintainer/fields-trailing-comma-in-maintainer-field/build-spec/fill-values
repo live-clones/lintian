@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: fields-trailing-comma-in-maintainer-field
+Description: Checks for a trailing comma in the Maintainer field
+Author: Maytham Alsudany <maytha8thedev@gmail.com>,

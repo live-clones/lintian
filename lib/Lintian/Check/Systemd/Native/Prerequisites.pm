@@ -38,20 +38,6 @@ with 'Lintian::Check';
 
 const my $EMPTY => q{};
 
-const my $SYSTEMD_NATIVE_PREREQUISITES => 'init-system-helpers:any';
-
-has satisfies_systemd_native_prerequisites => (
-    is => 'rw',
-    lazy => 1,
-    default => sub {
-        my ($self) = @_;
-
-        my $pre_depends = $self->processable->relation('Pre-Depends');
-
-        return $pre_depends->satisfies($SYSTEMD_NATIVE_PREREQUISITES);
-    }
-);
-
 sub visit_control_files {
     my ($self, $item) = @_;
 
@@ -97,11 +83,6 @@ sub visit_control_files {
         $stashed = $EMPTY;
 
         my $pointer = $item->pointer($position);
-
-        $self->pointed_hint('skip-systemd-native-flag-missing-pre-depends',
-            $pointer,"(does not satisfy $SYSTEMD_NATIVE_PREREQUISITES)")
-          if $line =~ /invoke-rc.d\b.*--skip-systemd-native\b/
-          && !$self->satisfies_systemd_native_prerequisites;
 
     } continue {
         ++$position;

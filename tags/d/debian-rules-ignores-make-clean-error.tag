@@ -5,7 +5,9 @@ Explanation: A rule in the <code>debian/rules</code> file for this package calls
  package's clean or distclean target with a line like:
  .
   -$(MAKE) distclean
+ .
  or
+ .
   $(MAKE) -i distclean
  .
  The leading "-" or the option -i tells make to ignore all errors.

@@ -1,2 +1,1 @@
-scripts (source): build-depends-on-obsolete-package Build-Depends-Indep: dpatch
 scripts (binary): depends-on-obsolete-package Depends: ruby1.8

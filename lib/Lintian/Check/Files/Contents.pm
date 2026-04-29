@@ -56,10 +56,15 @@ has switched_locations => (
         my %switched_locations;
         for my $command (@commands) {
 
-            my @variants = map { $_ . $SLASH . $command->basename }
-              qw(bin sbin usr/bin usr/sbin);
-            my @confused = grep { $_ ne $command->name } @variants;
+            my @bin_loc = qw(bin sbin usr/bin usr/sbin);
 
+            if ($command->dirname =~ m{^(?:usr/)?bin/}) {
+                @bin_loc = grep { $_ ne 'bin' && $_ ne 'usr/bin' } @bin_loc;
+            } else {
+                @bin_loc = grep { $_ ne 'sbin' && $_ ne 'usr/sbin' } @bin_loc;
+            }
+
+            my @confused = map { $_ . $SLASH . $command->basename } @bin_loc;
             $switched_locations{$_} = $command->name for @confused;
         }
 
@@ -109,7 +114,8 @@ sub check_item {
         my $correct = $switched_locations{$confused};
         $self->pointed_hint('bin-sbin-mismatch', $item->pointer,
             $confused . $ARROW . $correct)
-          if length $item->mentions_in_operation(qr{ \B / \Q$confused\E \b }x);
+          if length $item->mentions_in_operation(
+            qr{ \B / \Q$confused\E (?![\w.-]) }x);
     }
 
     if (length $self->build_path) {

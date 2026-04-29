@@ -1,3 +1,0 @@
-Testname: rules-including-deprecated-makefiles
-Test-Conflicts: dh-buildinfo
-Check: debian/rules

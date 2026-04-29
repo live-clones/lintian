@@ -1,6 +1,7 @@
 /*-stamp
 /debian/*.debhelper*
 /debian/debhelper-build-stamp
+/debian/changelog.tmp
 /debian/files
 /debian/lintian.substvars
 /debian/lintian/

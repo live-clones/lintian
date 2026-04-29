@@ -43,6 +43,7 @@ const my $SPACE => q{ };
 
 const my $URL_ACTION_FIELDS => 4;
 const my $VERSION_ACTION_FIELDS => 3;
+const my $CURRENT_WATCH_VERSION => 5;
 
 const my $DMANGLES_AUTOMATICALLY => 4;
 
@@ -57,10 +58,6 @@ sub source {
 
         return;
     }
-
-    # Perform the other checks even if it is a native package
-    $self->pointed_hint('debian-watch-file-in-native-package', $item->pointer)
-      if $self->processable->native;
 
     # Check if the Debian version contains anything that resembles a repackaged
     # source package sign, for fine grained version mangling check
@@ -100,9 +97,22 @@ sub source {
     my @lines = split(/\n/, $contents);
 
     # look for watch file version
+    my $position = 1;
     for my $line (@lines) {
 
-        if ($line =~ /^\s*version\s*=\s*(\d+)\s*$/) {
+        my $pointer = $item->pointer($position);
+
+        # Get version of format
+        if ($line =~ /^\s*version\s*[:=]\s*(\d+)\s*$/i) {
+            unless (
+                # Version 1 to 4 (format version=\d)
+                $line =~ /^\s*version\s*=\s*([1-4])\s*$/i
+                # Version 5+ (format Version: \d+)
+                or $line =~ /^\s*version\s?[:=]\s*([5-9]|[1-9]\d+)$/i
+            ) {
+                $self->pointed_hint('debian-watch-line-invalid', $pointer,
+                    $line);
+            }
             if (length $1) {
                 $standard = $1;
                 last;
@@ -118,14 +128,17 @@ sub source {
       if $standard < 2;
 
     # allow spaces for all watch file versions (#950250, #950277)
-    my $separator = qr/\s*,\s*/;
+    my $separator
+      = $standard >= $CURRENT_WATCH_VERSION ? qr/\s*\r?\n\s*/ : qr/\s*,\s*/;
 
     my $withpgpverification = 0;
     my %dversions;
 
-    my $position = 1;
+    $position = 1;
     my $continued = $EMPTY;
-    for my $line (@lines) {
+    my $line;
+    my $total_lines = $#lines;
+    while (defined($line = shift @lines)) {
 
         my $pointer = $item->pointer($position);
 
@@ -135,35 +148,54 @@ sub source {
         # strip comments, if any
         $line =~ s/^\#.*$//;
 
-        unless (length $line) {
+        if ( $standard < $CURRENT_WATCH_VERSION && length($line) == 0) {
             $continued = $EMPTY;
             next;
         }
 
         # merge continuation lines
-        if ($line =~ s/\\$//) {
-            $continued .= $line;
-            next;
+        if ($standard < $CURRENT_WATCH_VERSION) {
+            if ($line =~ s/\\$//) {
+                $continued .= $line;
+                next;
+            }
+        }else {
+            if (length $line) {
+                $continued .= $line."\n";
+                next if @lines;
+            }
         }
 
-        $line = $continued . $line
+        $line = $continued . ($standard>=$CURRENT_WATCH_VERSION ? q{} : $line)
           if length $continued;
 
-        $continued = $EMPTY;
-
-        next
-          if $line =~ /^version\s*=\s*\d+\s*$/;
+        my $version_line = ($line =~ /^version\s*[:=]\s*(\d+)\s*$/i);
+        if ($standard<$CURRENT_WATCH_VERSION) {
+            $continued = $EMPTY;
+            next if $version_line;
+        } else {
+            if ($version_line) {
+                $continued = $EMPTY;
+                next;
+            }
+            next if $position < $total_lines + 1;
+        }
 
         my $remainder = $line;
 
         my @options;
 
         # keep order; otherwise. alternative \S+ ends up with quotes
-        if ($remainder =~ s/opt(?:ion)?s=(?|\"((?:[^\"]|\\\")+)\"|(\S+))\s+//){
-            @options = split($separator, $1);
+        if ($standard < $CURRENT_WATCH_VERSION) {
+            if ($remainder
+                =~ s/opt(?:ion)?s=(?|\"((?:[^\"]|\\\")+)\"|(\S+))\s+//){
+                @options = split($separator, $1);
+            }
+        }else {
+            @options = grep {/\w/} split($separator, $line);
         }
 
-        unless (length $remainder) {
+        if ( $standard < $CURRENT_WATCH_VERSION && length($remainder) == 0 ) {
 
             $self->pointed_hint('debian-watch-line-invalid', $pointer, $line);
             next;
@@ -176,6 +208,15 @@ sub source {
         my $prerelease_umangle = 0;
 
         for my $option (@options) {
+
+            if ($standard >= $CURRENT_WATCH_VERSION) {
+                chomp $option;
+                my ($key, $value) = split /:\s*/, $option, 2;
+                if ($key and $value) {
+                    $key =~ s/-//g;
+                    $option = lc($key)."=$value";
+                }
+            }
 
             if (length $repack) {
                 $repack_mangle = 1
@@ -199,16 +240,6 @@ sub source {
             $withpgpverification = 1
               if $option =~ /^pgpsigurlmangle\s*=\s*/
               || $option =~ /^pgpmode\s*=\s*(?!none\s*$)\S.*$/;
-
-            my ($name, $value) = split(m{ \s* = \s* }x, $option, 2);
-
-            next
-              unless length $name;
-
-            $value //= $EMPTY;
-
-            $self->pointed_hint('prefer-uscan-symlink',$pointer, $name, $value)
-              if $name eq 'filenamemangle';
         }
 
         $self->pointed_hint(
@@ -258,7 +289,10 @@ sub source {
 
         # If the version of the package contains dfsg, assume that it needs
         # to be mangled to get reasonable matches with upstream.
-        my $needs_repack_mangling = ($repack && $lastversion eq 'debian');
+        my $needs_repack_mangling= (
+            $repack&& ($standard >= $CURRENT_WATCH_VERSION
+                || $lastversion eq 'debian')
+        );
 
         $self->pointed_hint('debian-watch-not-mangling-version',
             $pointer, $line)

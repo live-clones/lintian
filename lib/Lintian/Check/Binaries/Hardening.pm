@@ -62,22 +62,68 @@ has recommended_hardening_features => (
     }
 );
 
+# TODO the logic is duplicated in lib/Lintian/Check/Binaries/Static.pm
 has built_with_golang => (
     is => 'rw',
     lazy => 1,
     default => sub {
         my ($self) = @_;
 
-        my $built_with_golang = $self->processable->name =~ m/^golang-/;
+        # Check source package name starts with "golang-"
+        if ($self->processable->source_name =~ m/^golang-/) {
+            return 1;
+        }
 
-        my $source = $self->group->source;
+        # Check package section is golang
+        if ($self->processable->fields->value('Section') eq 'golang') {
+            return 1;
+        }
 
-        $built_with_golang
-          = $source->relation('Build-Depends-All')
-          ->satisfies('golang-go | golang-any')
-          if defined $source;
+        # Check binary package was built using golang
+        if (
+            $self->processable->fields->value('Built-Using')
+            =~ m/golang-\d\.\d+/
+            ||$self->processable->fields->value(
+                'Static-Built-Using')=~ m/golang-\d\.\d+/
+        ) {
+            return 1;
+        }
 
-        return $built_with_golang;
+        # Check binary package name starts with "golang-"
+        if ($self->processable->name =~ m/^golang-/) {
+            return 1;
+        }
+
+        # Check source package build-depends contains a golang compiler
+        if (defined($self->group->source)) {
+            return $self->group->source->relation('Build-Depends-All')
+              ->satisfies('golang-go | golang-any');
+        }
+
+        return 0;
+    }
+);
+
+has built_with_rust => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my ($self) = @_;
+
+        # Check binary package was built using rustc
+        if ($self->processable->fields->value('Built-Using')=~ m/rustc/
+            ||$self->processable->fields->value('Static-Built-Using')
+            =~ m/rustc/) {
+            return 1;
+        }
+
+        # Check source package build-depends contains rustc
+        if (defined($self->group->source)) {
+            return $self->group->source->relation('Build-Depends-All')
+              ->satisfies('rustc');
+        }
+
+        return 0;
     }
 );
 
@@ -92,7 +138,7 @@ sub visit_installed_files {
         next
           unless $symbol->section eq 'UND';
 
-        if ($symbol->name =~ /^__(\S+)_chk$/) {
+        if ($symbol->name =~ /^__(\S+)_chk(|ieee128)$/) {
 
             my $vulnerable = $1;
             push(@elf_hardened, $vulnerable)
@@ -109,6 +155,7 @@ sub visit_installed_files {
       if @elf_unhardened
       && !@elf_hardened
       && !$self->built_with_golang
+      && !$self->built_with_rust
       && $self->recommended_hardening_features->{fortify};
 
     for my $member_name (keys %{$item->elf_by_member}) {

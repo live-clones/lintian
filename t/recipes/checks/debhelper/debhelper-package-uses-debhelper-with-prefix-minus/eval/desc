@@ -1,4 +1,4 @@
 Testname: debhelper-package-uses-debhelper-with-prefix-minus
 Test-Against:
- package-does-not-use-debhelper-or-cdbs
+ package-does-not-use-debhelper
 Check: debhelper

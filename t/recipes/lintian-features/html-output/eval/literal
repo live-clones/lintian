@@ -557,18 +557,8 @@ footer p {
       <ul class="commentlist">
       </ul>
 
-      <a class="visibility-symbol tiny info" href="https://lintian.debian.org/levels#info"></a>
-      <span class="hint tiny"><a href="https://lintian.debian.org/tags/installable-field-mirrors-source">installable-field-mirrors-source</a></span>
-      <span class="context tiny">(in section for html-output) Section [debian/control:13]</span>
-
-    </li>
-    <li class="hintitem">
-
-      <ul class="commentlist">
-      </ul>
-
-      <a class="visibility-symbol tiny info" href="https://lintian.debian.org/levels#info"></a>
-      <span class="hint tiny"><a href="https://lintian.debian.org/tags/older-debian-watch-file-standard">older-debian-watch-file-standard</a></span>
+      <a class="visibility-symbol tiny warning" href="https://lintian.debian.org/levels#warning"></a>
+      <span class="hint tiny"><a href="https://lintian.debian.org/tags/obsolete-debian-watch-file-standard">obsolete-debian-watch-file-standard</a></span>
       <span class="context tiny">3 [debian/watch]</span>
 
     </li>
@@ -578,8 +568,8 @@ footer p {
       </ul>
 
       <a class="visibility-symbol tiny info" href="https://lintian.debian.org/levels#info"></a>
-      <span class="hint tiny"><a href="https://lintian.debian.org/tags/patch-not-forwarded-upstream">patch-not-forwarded-upstream</a></span>
-      <span class="context tiny">[debian/patches/debian-changes-1.0+dsfg-1.1]</span>
+      <span class="hint tiny"><a href="https://lintian.debian.org/tags/installable-field-mirrors-source">installable-field-mirrors-source</a></span>
+      <span class="context tiny">(in section for html-output) Section [debian/control:13]</span>
 
     </li>
     <li class="hintitem">
@@ -630,6 +620,26 @@ footer p {
       <a class="visibility-symbol tiny pedantic" href="https://lintian.debian.org/levels#pedantic"></a>
       <span class="hint tiny"><a href="https://lintian.debian.org/tags/no-homepage-field">no-homepage-field</a></span>
       <span class="context tiny"></span>
+
+    </li>
+    <li class="hintitem">
+
+      <ul class="commentlist">
+      </ul>
+
+      <a class="visibility-symbol tiny pedantic" href="https://lintian.debian.org/levels#pedantic"></a>
+      <span class="hint tiny"><a href="https://lintian.debian.org/tags/redundant-priority-optional-field">redundant-priority-optional-field</a></span>
+      <span class="context tiny">[debian/control:2]</span>
+
+    </li>
+    <li class="hintitem">
+
+      <ul class="commentlist">
+      </ul>
+
+      <a class="visibility-symbol tiny pedantic" href="https://lintian.debian.org/levels#pedantic"></a>
+      <span class="hint tiny"><a href="https://lintian.debian.org/tags/redundant-rules-requires-root-no-field">redundant-rules-requires-root-no-field</a></span>
+      <span class="context tiny">[debian/control:7]</span>
 
     </li>
     <li class="hintitem">
@@ -781,6 +791,9 @@ footer p {
 
 </ul>
 
+
+<!-- if you would like to see explanations of lintian tags in this file, pass -i on the lintian commandline.
+Otherwise, you can use the lintian-explain-tags command from the lintian package. -->
 
 </article>
 

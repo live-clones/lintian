@@ -1,0 +1,4 @@
+Testname: version-refers-to-unstable-distribution-with-exp-version.tag
+Skeleton: upload-non-native
+Version: 1.0-1~exp1
+Description: Test a exp version with unstable distribution package

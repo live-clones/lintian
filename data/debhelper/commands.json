@@ -31,7 +31,8 @@
       "dh_assistant" : {
          "installed_by" : [
             "debhelper"
-         ]
+         ],
+         "uses_misc_depends" : 1
       },
       "dh_asterisk" : {
          "installed_by" : [
@@ -108,11 +109,6 @@
             "debhelper"
          ]
       },
-      "dh_buildinfo" : {
-         "installed_by" : [
-            "dh-buildinfo"
-         ]
-      },
       "dh_builtusing" : {
          "installed_by" : [
             "dh-builtusing"
@@ -163,6 +159,11 @@
          "uses_misc_depends" : 1
       },
       "dh_compress" : {
+         "installed_by" : [
+            "debhelper"
+         ]
+      },
+      "dh_computeautosubstvars" : {
          "installed_by" : [
             "debhelper"
          ]
@@ -277,6 +278,11 @@
             "dh-dlopenlibdeps"
          ]
       },
+      "dh_doc_privacy" : {
+         "installed_by" : [
+            "dh-doc-privacy"
+         ]
+      },
       "dh_doxygen" : {
          "installed_by" : [
             "doxygen"
@@ -314,16 +320,30 @@
             "debhelper"
          ]
       },
+      "dh_fortran" : {
+         "installed_by" : [
+            "dh-fortran"
+         ]
+      },
+      "dh_fortran_cmake" : {
+         "installed_by" : [
+            "dh-fortran"
+         ]
+      },
       "dh_fortran_lib" : {
          "installed_by" : [
-            "dh-fortran-mod"
+            "dh-fortran"
          ]
       },
       "dh_fortran_mod" : {
          "installed_by" : [
-            "dh-fortran-mod"
-         ],
-         "uses_autoscript" : 1
+            "dh-fortran"
+         ]
+      },
+      "dh_fortran_pkgconf" : {
+         "installed_by" : [
+            "dh-fortran"
+         ]
       },
       "dh_gencontrol" : {
          "installed_by" : [
@@ -351,11 +371,6 @@
             "gnome-pkg-tools"
          ]
       },
-      "dh_gnome_clean" : {
-         "installed_by" : [
-            "gnome-pkg-tools"
-         ]
-      },
       "dh_gnulib_patch" : {
          "installed_by" : [
             "gnulib"
@@ -364,7 +379,8 @@
       "dh_gnustep" : {
          "installed_by" : [
             "gnustep-make"
-         ]
+         ],
+         "uses_misc_depends" : 1
       },
       "dh_golang" : {
          "installed_by" : [
@@ -429,6 +445,11 @@
       "dh_haskell_install_development_libs" : {
          "installed_by" : [
             "haskell-devscripts-minimal"
+         ]
+      },
+      "dh_haskell_install_docfiles" : {
+         "installed_by" : [
+            "dh-haskell"
          ]
       },
       "dh_haskell_install_ghc_registration" : {
@@ -582,8 +603,7 @@
          "installed_by" : [
             "debhelper"
          ],
-         "uses_autoscript" : 1,
-         "uses_misc_depends" : 1
+         "uses_autoscript" : 1
       },
       "dh_installinitramfs" : {
          "installed_by" : [
@@ -701,12 +721,6 @@
          "uses_autoscript" : 1,
          "uses_misc_depends" : 1
       },
-      "dh_installxsp" : {
-         "installed_by" : [
-            "dh-xsp"
-         ],
-         "uses_autoscript" : 1
-      },
       "dh_installyorick" : {
          "installed_by" : [
             "yorick-dev"
@@ -762,12 +776,13 @@
       },
       "dh_make_pgxs" : {
          "installed_by" : [
-            "postgresql-server-dev-all"
+            "postgresql-common-dev"
          ]
       },
       "dh_makeclilibs" : {
          "installed_by" : [
-            "cli-common-dev"
+            "cli-common-dev",
+            "mono-devel"
          ]
       },
       "dh_makefont" : {
@@ -835,7 +850,7 @@
       },
       "dh_numpy3" : {
          "installed_by" : [
-            "python3-numpy"
+            "python3-numpy-dev"
          ]
       },
       "dh_ocaml" : {
@@ -904,22 +919,6 @@
             "debhelper"
          ]
       },
-      "dh_perl6_depsfile" : {
-         "installed_by" : [
-            "dh-perl6"
-         ]
-      },
-      "dh_perl6_maintscript" : {
-         "installed_by" : [
-            "dh-perl6"
-         ],
-         "uses_autoscript" : 1
-      },
-      "dh_perl6_test" : {
-         "installed_by" : [
-            "dh-perl6"
-         ]
-      },
       "dh_perl_dbi" : {
          "installed_by" : [
             "libdbi-perl"
@@ -937,7 +936,7 @@
       },
       "dh_pgxs_test" : {
          "installed_by" : [
-            "postgresql-server-dev-all"
+            "postgresql-common-dev"
          ]
       },
       "dh_php" : {
@@ -1012,6 +1011,11 @@
             "pkg-kde-tools"
          ]
       },
+      "dh_qmldeps" : {
+         "installed_by" : [
+            "pkg-kde-tools"
+         ]
+      },
       "dh_quilt_patch" : {
          "installed_by" : [
             "quilt"
@@ -1079,14 +1083,19 @@
             "scour"
          ]
       },
+      "dh_setup_copyright" : {
+         "installed_by" : [
+            "dh-setup-copyright"
+         ]
+      },
+      "dh_shell_completions" : {
+         "installed_by" : [
+            "dh-shell-completions"
+         ]
+      },
       "dh_shlibdeps" : {
          "installed_by" : [
             "debhelper"
-         ]
-      },
-      "dh_sip3" : {
-         "installed_by" : [
-            "python3-sip-dev"
          ]
       },
       "dh_sodeps" : {
@@ -1172,6 +1181,12 @@
             "vagrant"
          ]
       },
+      "dh_varnishabi" : {
+         "installed_by" : [
+            "libvarnishapi-dev"
+         ],
+         "uses_misc_depends" : 1
+      },
       "dh_vdrplugin_depends" : {
          "installed_by" : [
             "vdr-dev"
@@ -1199,11 +1214,6 @@
          ],
          "uses_autoscript" : 1
       },
-      "dh_webext" : {
-         "installed_by" : [
-            "mozilla-devscripts"
-         ]
-      },
       "dh_xine" : {
          "installed_by" : [
             "libxine2-dev"
@@ -1212,11 +1222,6 @@
       "dh_xsf_substvars" : {
          "installed_by" : [
             "xserver-xorg-dev"
-         ]
-      },
-      "dh_xul-ext" : {
-         "installed_by" : [
-            "mozilla-devscripts"
          ]
       },
       "dh_zathura" : {

@@ -1,4 +1,3 @@
-source-copyright-incomplete-creative-commons-b (source): update-debian-copyright 2012 vs CHANGELOG-YEAR [debian/copyright:41]
 source-copyright-incomplete-creative-commons-b (source): superfluous-file-pattern sounds/* [debian/copyright:19]
 source-copyright-incomplete-creative-commons-b (source): superfluous-file-pattern resources/ts/zh_CN.ts [debian/copyright:59]
 source-copyright-incomplete-creative-commons-b (source): superfluous-file-pattern resources/ts/it_IT.ts [debian/copyright:47]

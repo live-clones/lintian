@@ -49,9 +49,7 @@ sub visit_patched_files {
     my $rule_target = qr/(?:$rule_altern|'$rule_altern'|"$rule_altern")/;
 
     $self->pointed_hint('no-dh-sequencer', $item->pointer)
-      unless $bytes =~ /^\t+(?:[\+@-])?(?:[^=]+=\S+ )?dh[ \t]+$rule_target/m
-      || $bytes =~ m{^\s*include\s+/usr/share/cdbs/1/class/hlibrary.mk\s*$}m
-      || $bytes =~ m{\bDEB_CABAL_PACKAGE\b};
+      unless $bytes =~ /^\t+(?:[\+@-])?(?:[^=]+=\S+ )?dh[ \t]+$rule_target/m;
 
     return;
 }

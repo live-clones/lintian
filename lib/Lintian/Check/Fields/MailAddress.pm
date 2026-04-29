@@ -69,25 +69,12 @@ sub always {
     }
 
     for my $role (keys %parsed) {
-
-        my @invalid = grep { !$_->is_valid } @{$parsed{$role}};
-        $self->hint('malformed-contact', $role, $_->original)for @invalid;
-
-        my @valid = grep { $_->is_valid } @{$parsed{$role}};
-        my @unique = uniq_by { $_->format } @valid;
-
+        my @unique = uniq_by { $_->format } @{$parsed{$role}};
         $self->check_single_address($role, $_) for @unique;
     }
 
-    for my $role (@singles_present) {
-        $self->hint('too-many-contacts', $role,
-            $self->processable->fields->value($role))
-          if @{$parsed{$role}} > 1;
-    }
-
     for my $role (@groups_present) {
-        my @valid = grep { $_->is_valid } @{$parsed{$role}};
-        my @addresses = map { $_->address } @valid;
+        my @addresses = map { $_->address } @{$parsed{$role}};
 
         my %count;
         $count{$_}++ for @addresses;
@@ -110,7 +97,7 @@ sub check_single_address {
     }
 
     $self->hint('bogus-mail-host', $role, $parsed->address)
-      unless is_domain($parsed->host, {domain_disable_tld_validation => 1});
+      unless is_domain($parsed->host);
 
     $self->hint('mail-address-loops-or-bounces',$role, $parsed->address)
       if any { $_ eq $parsed->address } @KNOWN_BOUNCE_ADDRESSES;
@@ -136,7 +123,8 @@ sub check_single_address {
       || $parsed->address eq 'debian-qa@lists.debian.org';
 
     $self->hint('mailing-list-on-alioth', $role, $parsed->address)
-      if $parsed->host eq 'lists.alioth.debian.org';
+      if $parsed->host eq 'lists.alioth.debian.org'
+      ||$parsed->host eq 'alioth-lists.debian.net';
 
     return;
 }

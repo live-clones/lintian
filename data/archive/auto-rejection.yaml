@@ -98,8 +98,6 @@ lintian:
     - magic-arch-in-arch-list
     - maintainer-address-causes-mail-loops-or-bounces
     - maintainer-address-is-on-localhost
-    - maintainer-address-malformed
-    - maintainer-address-missing
     - maintainer-name-missing
     - maintainer-script-removes-device-files
     - malformed-deb-archive
@@ -122,6 +120,5 @@ lintian:
     - symlink-has-too-many-up-segments
     - too-many-architectures
     - uploader-address-is-on-localhost
-    - uploader-address-malformed
     - uploader-name-missing
     - usr-share-doc-symlink-to-foreign-package

@@ -46,6 +46,19 @@
                   },
                   {
                      "experimental" : false,
+                     "note" : "3",
+                     "pointer" : {
+                        "item" : {
+                           "index" : "json-output_1.0+dsfg-1.1.dsc (patched)",
+                           "name" : "debian/watch"
+                        },
+                        "line_position" : 0
+                     },
+                     "tag" : "obsolete-debian-watch-file-standard",
+                     "visibility" : "warning"
+                  },
+                  {
+                     "experimental" : false,
                      "note" : "(in section for json-output) Section",
                      "pointer" : {
                         "item" : {
@@ -55,32 +68,6 @@
                         "line_position" : 13
                      },
                      "tag" : "installable-field-mirrors-source",
-                     "visibility" : "info"
-                  },
-                  {
-                     "experimental" : false,
-                     "note" : "3",
-                     "pointer" : {
-                        "item" : {
-                           "index" : "json-output_1.0+dsfg-1.1.dsc (patched)",
-                           "name" : "debian/watch"
-                        },
-                        "line_position" : 0
-                     },
-                     "tag" : "older-debian-watch-file-standard",
-                     "visibility" : "info"
-                  },
-                  {
-                     "experimental" : false,
-                     "note" : "",
-                     "pointer" : {
-                        "item" : {
-                           "index" : "json-output_1.0+dsfg-1.1.dsc (patched)",
-                           "name" : "debian/patches/debian-changes-1.0+dsfg-1.1"
-                        },
-                        "line_position" : 0
-                     },
-                     "tag" : "patch-not-forwarded-upstream",
                      "visibility" : "info"
                   },
                   {
@@ -139,6 +126,32 @@
                      "experimental" : false,
                      "note" : "",
                      "tag" : "no-homepage-field",
+                     "visibility" : "pedantic"
+                  },
+                  {
+                     "experimental" : false,
+                     "note" : "",
+                     "pointer" : {
+                        "item" : {
+                           "index" : "json-output_1.0+dsfg-1.1.dsc (patched)",
+                           "name" : "debian/control"
+                        },
+                        "line_position" : 2
+                     },
+                     "tag" : "redundant-priority-optional-field",
+                     "visibility" : "pedantic"
+                  },
+                  {
+                     "experimental" : false,
+                     "note" : "",
+                     "pointer" : {
+                        "item" : {
+                           "index" : "json-output_1.0+dsfg-1.1.dsc (patched)",
+                           "name" : "debian/control"
+                        },
+                        "line_position" : 7
+                     },
+                     "tag" : "redundant-rules-requires-root-no-field",
                      "visibility" : "pedantic"
                   },
                   {

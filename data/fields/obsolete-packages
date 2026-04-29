@@ -76,9 +76,6 @@ libruby1.8
 # See: https://wiki.debian.org/Teams/DebianPerlGroup/OpenTasks/Transitions/DigestSHA1ToDigestSHA
 libdigest-sha1-perl
 
-# Deprecated in Wheezy by maintainer (#646420)
-dpatch
-
 # Deprecated in Jessie (#710466)
 texi2html
 
@@ -107,6 +104,10 @@ ruby1.9.1
 ruby1.9.1-dev
 libruby1.9.1
 
+# Deprecated in Jessie (see #966498, #1126352)
+libgd-gd2-noxpm-perl => libgd-perl
+libgd-gd2-perl => libgd-perl
+
 # Deprecated in Stretch (https://lists.debian.org/debian-devel-announce/2016/09/msg00000.html)
 mysql-server => default-mysql-server
 mysql-server-core => default-mysql-server-core
@@ -124,6 +125,9 @@ libjs-swfobject
 # Deprecated in stretch
 libavresample-dev => libswresample-dev
 liblircclient-dev => liblirc-dev
+
+# Any::Moose, see https://bugs.debian.org/960909
+libany-moose-perl
 
 # Deprecated in buster
 apt-transport-https => apt
@@ -156,3 +160,10 @@ pkg-config => pkgconf
 # Deprecated in trixie
 gnome-common => https://wiki.gnome.org/Projects/GnomeCommon/Migration
 python3-pdm-pep517 => python3-pdm-backend
+dh-buildinfo
+python3-tz => python3-pytz
+
+# Deprecated in forky
+# https://lists.debian.org/debian-devel/2025/08/msg00150.html
+libgirepository1.0-dev => gobject-introspection (>= 1.80), gir1.2-*-dev, rarely libgirepository-1.0-dev
+libselinux1-dev => libselinux-dev

@@ -4,4 +4,3 @@ version-substvars-general (source): not-binnmuable-any-depends-any program-utils
 version-substvars-general (source): not-binnmuable-any-depends-all program-utils -> program-data
 version-substvars-general (source): not-binnmuable-any-depends-all program-bin -> program-data
 version-substvars-general (source): not-binnmuable-all-depends-any program-data-extra -> program-bin
-version-substvars-general (source): maybe-not-arch-all-binnmuable program-bin -> program-data-extra

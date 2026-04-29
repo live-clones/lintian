@@ -2,42 +2,99 @@
 
 This document is intended for prospective and existing contributors.
 
-The first section will cover how to get started for newcomers.  After
+The first section will cover how to get started for newcomers. After
 that is a section on recommended practices and additional resources.
 
-## Getting started
+## Understand the codebase
+
+### Core Directories
+
+* `bin/`: Contains the main Lintian executable scripts.
+* `lib/`: The core Lintian library code.
+  * `Lintian/`: Most of Lintian's Perl modules are here.
+    * `Check/`: Individual check modules that implement Lintian's various
+      checks.
+    * `Collect/`: Collector modules that gather data from packages.
+    * `Tag/`: Modules related to Lintian tags.
+* `data/`: Contains data files used by Lintian, such as lists of valid
+  maintainers, architectures, etc.
+* `t/`: Contains the test suite.
+  * `recipes/`: Test cases for Lintian checks.
+* `doc/`: Documentation files, including the Lintian User Manual source.
+* `reporting/`: Code for generating HTML reports from Lintian output.
+* `private/`: Various helper scripts used for development and testing.
+
+### Key Files
+
+* `frontend/lintian`: The main Lintian script that users run.
+* `lib/Lintian/Profile.pm`: Defines the Lintian profile, which controls which
+  checks are run.
+* `lib/Lintian/Processable.pm`: Represents a processable object (e.g., a .deb or
+  .changes file).
+* `lib/Lintian/Collect.pm`: Base class for collector objects.
+
+### Overview of adding a new check
+
+To add a new check to Lintian:
+
+1. Create a new module in `lib/Lintian/Check/`.
+2. Implement the check logic.
+3. Add test cases in `t/recipes/`. Testing explained in detail below.
+
+For classification tags, which indicate a characteristic of a package
+rather than a policy violation, the process is similar:
+1. The check module (e.g., `lib/Lintian/Check/VersionControl/GitBuildpackage.pm`)
+   emits a tag (e.g., `uses-gbp-conf`).
+2. The tag's definition is in `tags/<first-letter-of-tag>/<tag-name>.tag`
+   (e.g., `tags/u/uses-gbp-conf.tag`), and its `Check:` field must point
+   to the check module's path (e.g., `version-control/git-buildpackage`).
+3. The test recipe directory `t/recipes/checks/<check-path>/<test-name>/`
+   (e.g., `t/recipes/checks/version-control/git-buildpackage/git-buildpackage-conf/`)
+   should mirror the check module's logical path.
+4. The `Testname:` field in `eval/desc` and `build-spec/fill-values`
+   should match the `<test-name>` part, and the `Check:` field in `eval/desc`
+   should match the check's path.
+5. See commit `6a62aa56` as an example of adding a new classification tag.
+
+## Contributing on Salsa using git
 
 The best way to contribute code to Lintian is to submit merge requests
 on [salsa.debian.org][salsa]. First, create an account on Salsa if you
 do not have one. You need to configure at least one SSH key.
 
 The easiest way to file merge requests on Salsa is to fork our team
-repository into your private namespace. That is done on the salsa
+repository into your private namespace. That is done on the Salsa
 website.
 
 Then you should clone the forked version of Lintian from your private
 namespace to your local machine. You can find the command for that
-under a blue button that says "Clone'. Choose the git protocol (not
+under a blue button that says "Clone". Choose the git protocol (not
 HTTPS).
 
-    $ git clone git@salsa.debian.org:${your-namespace}/lintian.git
-    $ cd lintian
+```shell
+git clone git@salsa.debian.org:${your-namespace}/lintian.git
+cd lintian
+```
 
 Create a feature branch for your proposed changes.
 
-    $ git checkout -b my-feature
+```shell
+git checkout -b my-feature
+```
 
-### Make Lintian better
+### View git history to follow existing conventions
 
 Now you can fix bugs or implement new features.
 
 Please commit your changes with suitable explanations in the commit
 messages. You can find some examples with:
 
-    $ git log
+```shell
+git log
+```
 
-Please do not touch debian/changelog. We automatically update that
-file at release time from commit messages via `gbp-buildpackage`.
+Please do not touch `debian/changelog`. We automatically update that
+file at release time from commit messages via `gbp dch`.
 
 The first line of your commit message is special. It should make sense
 without any context in a list of other, unrelated changes.
@@ -47,8 +104,7 @@ without any context in a list of other, unrelated changes.
 All new tags require unit tests. Lintian's test suite will fail unless
 you provide tests for your proposed tags.
 
-There is a way to exempt your tag from testing, but please do not do
-so.
+**There is a way to exempt your tag from testing.**
 
 Most tests only run a specific lintian 'check'. Please name your tests
 after this check: do not name them after the tag they are testing
@@ -61,12 +117,13 @@ to build a test package, and evaluation specifications declare how to
 run Lintian on the package and say what the expected output is.
 
 Build specifications are located in the directory
-'t/recipes/path/to/test/build-spec/'. This must contain:
-- A partial debian/ directory that includes as little packaging files
+`t/recipes/path/to/test/build-spec/`. This must contain:
+
+* A partial debian/ directory that includes as little packaging files
   as possible
-- An optional 'orig' directory containing upstream files (if any are
+* An optional 'orig' directory containing upstream files (if any are
   needed to trigger the tag)
-- A file called 'fill-values' that tells the test suite how to use
+* A file called 'fill-values' that tells the test suite how to use
   existing template to 'fill in' anything not included in debian/
 
 For most tests, debian/ will be very minimal indeed. A simple
@@ -83,7 +140,7 @@ PDF file would be included in orig. (Please do not look for this test
 in the test suite; it is just an example).
 
 Evaluation specifications are located in the directory
-'t/recipes/path/to/test/eval/'. These describes how to run Lintian and
+'t/recipes/path/to/test/eval/'. These describe how to run Lintian and
 which output (tags, exit code) to expect.
 
 The main file is 'desc'. A simple evaluation specification might look
@@ -107,19 +164,23 @@ show up exactly the way you want, but you do not have to write it
 yourself. The test suite will help you write this during the
 interactive calibration described in the next step.
 
-Further details are in the file t/recipes/README
+Further details are in the file [t/recipes/README](t/recipes/README).
 
 ### Preparing to run the test suite
 
 To run the testsuite you probably have to install all testsuite
-prerequisites from lintian's debian/tests/control. This can be done
+prerequisites from Lintian's `debian/tests/control`. This can be done
 with:
 
-    # autopkgtest -B
+```shell
+autopkgtest -B
+```
 
 You may also have to install the build dependencies with:
 
-    # apt build-dep .
+```shell
+apt build-dep .
+```
 
 Both of these commands have to be run with root privileges.
 
@@ -127,27 +188,25 @@ Both of these commands have to be run with root privileges.
 
 To run all tests run
 
-    $ private/runtests
+```shell
+private/runtests
+```
 
 This takes a long time the first time you run it because Lintian has a
 large number of tests each building its own test package. The
-packages are built locally (in debian/test-out/) and reused so
+packages are built locally (in `debian/test-out/`) and reused so
 subsequent runs are much faster.
 
-To run a subset of tests, use --onlyrun:
+To run a subset of tests, use `--onlyrun`:
 
-    $ private/runtests --onlyrun=check:documentation
+```shell
+private/runtests --onlyrun=check:documentation
+```
 
 This runs all tests that have 'Check: documentation' in their
-'eval/desc' file. Alternatively,
-
-    $ private/runtests --onlyrun=test:name
-
-Will run a single test with 'Testname: name'. Running
-
-    $ private/runtests --help
-
-will show you further options.
+'eval/desc' file. Alternatively `private/runtests --onlyrun=test:name`
+will run a single test with 'Testname: name'. Running
+`private/runtests --help` will show you further options.
 
 
 ### Calibrating tests to fix test failures
@@ -156,7 +215,7 @@ If tests fail, the testsuite will use an interactive 'calibration'
 process to help you write or amend a 'hints' file. Simply follow
 the instructions on the screen. In many cases, it is best to "accept
 all" and examine the changes in git. In complex cases, you can use
-'git add -i' to stage only the changes you need.
+`git add -i` to stage only the changes you need.
 
 This is a crucial step when adding a new test. Please make sure the
 expected tags are correct. We pay close attention to these tags when
@@ -175,12 +234,15 @@ configuration, and the test suite will not pass.
 
 ### Run perltidy
 
-The program perltidy is provided by the package [perltidy](https://packages.debian.org/perltidy).
-The program prove is provided by the package [perl](https://packages.debian.org/perl).
+The program `perltidy` is provided by the package
+[perltidy](https://packages.debian.org/perltidy).
+
+The program `prove` is provided by the package
+[perl](https://packages.debian.org/perl).
 
 #### On all files
 
-```sh
+```shell
 prove -l t/scripts/01-critic/
 ```
 
@@ -188,20 +250,17 @@ prove -l t/scripts/01-critic/
 
 On the 10 last commits
 
-```sh
+```shell
 git diff --name-only HEAD~10 HEAD | grep -F ".pm" | xargs perltidy -b
 ```
 
 ### Submit a merge request
 
 Once all the above is done, please push your changes to your Lintian
-fork on salsa.
+fork on Salsa.
 
-You may end up doing that multiple times: use
-
-    $ git push -f
-
-to keep the git history simple.
+You may end up doing that multiple times: use `git push -fv` to keep
+the git history simple.
 
 After each push you will be shown a link to create a merge
 request. Just click the link provided in the terminal. Your browser
@@ -225,23 +284,24 @@ will very likely pass.
 ## Other ways to submit changes
 
 Please make an effort to submit your changes to Lintian by creating a
-[merge-request][merge-request] on [Salsa][salsa].
+[mmerge request][merge-request] on [Salsa][salsa]. When submitting on
+Salsa, ensure you have Salsa CI enabled and if the Lintian test suite
+reports any failures, please review them.
 
 Alternatively, submit your changes to the Debian Bug Tracker by reporting
 a bug against the `lintian` package  On a Debian system, this can usually
 be done by using `reportbug`:
 
-    $ reportbug lintian
+```shell
+reportbug lintian
+```
 
-Otherwise send a plain text mail to "<submit@bugs.debian.org>" with
+Otherwise send a plain text mail to <submit@bugs.debian.org> with
 the first line being `Package: lintian`:
 
 You are welcome to attach the changes to the bug report or link to a
 git branch.  If you use attachments, please generate the changes via
 the `git format-patch` command.
-
-[merge-request]: https://salsa.debian.org/lintian/lintian/merge_requests
-[salsa]: https://salsa.debian.org/
 
 ## Recommended practices
 
@@ -260,19 +320,43 @@ There are some limits to which changes Lintian can accept as it needs
 to be backportable to the current Debian stable release.  As such,
 all dependencies must be satisfied in Debian stable or stable-backports.
 
-There are several reasons for this requirement.  The two primary being:
+There are several reasons for this requirement. The two main ones are:
 
- * Lintian is run on various debian.org hosts which are all running
-   Debian stable (lintian.debian.org and ftp-master.debian.org)
+* Lintian is run on various debian.org hosts which are all running
+  Debian stable (ftp-master.debian.org)
 
- * A lot of developers use stable and will easy access to an up to date
-   lintian.
+* Many developers use stable and will want easy access to an up to date
+  Lintian.
 
 Accordingly, we have continuous integration job running on
 jenkins.debian.net to test this.
 
 ### Additional resources
 
- * perldoc [doc/tutorial/Lintian/Tutorial.pod](doc/tutorial/Lintian/Tutorial.pod)
- * perldoc [doc/README.developers](doc/README.developers)
- * [doc/releases.md](doc/releases.md)
+* perldoc [doc/tutorial/Lintian/Tutorial.pod](doc/tutorial/Lintian/Tutorial.pod)
+* perldoc [doc/README.developers](doc/README.developers)
+* [doc/releases.md](doc/releases.md)
+
+## Making a release
+
+First ensure that test suite pass both locally and on Salsa.
+
+Then make a release commit by running the following command
+(make sure the `DEBEMAIL` and `DEBFULLNAME` variables are set)
+
+```shell
+gbp dch -R --postedit="private/generate-tag-summary --in-place"
+```
+
+Check if commit message and changelog are in good shape (edit if needed
+and amend commit). Then build as usual.
+
+When lintian hit unstable or experimental, add tag using `gbp tag`
+and open a new version by:
+
+```shell
+private/generate-tag-summary --in-place
+```
+
+[merge-request]: https://salsa.debian.org/lintian/lintian/merge_requests
+[salsa]: https://salsa.debian.org/

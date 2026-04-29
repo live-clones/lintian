@@ -29,18 +29,22 @@ ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
 	private/runtests
 endif
 
-override_dh_clean:
-	rm -rf $(CURDIR)/debian/test-out
-	rm -rf doc/api.html doc/lintian.html
-	rm -rf man/man1/ man/man3/ l10n/
-	dh_clean
-
-override_dh_install:
-	dh_install
+execute_after_dh_install:
 	echo "Setting LINTIAN_VERSION to $(VER)"
 	$(PERL) -p -i -e 's/my \$$LINTIAN_VERSION;/my \$$LINTIAN_VERSION = q{$(VER)};/;' \
 	    $(tmp)/usr/share/lintian/bin/*
 
+execute_after_dh_installdocs:
+ifeq (,$(filter nodoc,$(DEB_BUILD_OPTIONS)))
+	bin/lintian-explain-tags --format=json > lintian-tags.json
+	lintian-ssg --output-dir=lintian-ssg --tags-file=lintian-tags.json \
+	    --lintian-version=$(VER) --base-url=https://lintian.debian.org \
+	    --manual-file=doc/lintian.html --stats
+	mv lintian-ssg debian/lintian-doc/usr/share/doc/lintian-doc/html
+endif
+
+override_dh_compress:
+	dh_compress -Xfavicon.ico
 
 api-doc:
 	private/generate-html-docs doc/api.html
@@ -51,7 +55,7 @@ generate-docs: generate-docs-stamp
 generate-docs-stamp: $(docsources)
 	dh_testdir
 # A UTF-8 locale seemed appropriate; manual uses &sect; character
-	cd doc && LC_ALL=en_US.UTF-8 rst2html lintian.rst > lintian.html
+	cd doc && LC_ALL=C.UTF-8 rst2html lintian.rst > lintian.html
 	mkdir -p man/man1/ man/man3/
 	$(pod2man) --name lintian --section=1 man/lintian.pod > man/man1/lintian.1
 	set -e ; for POD in $(pod2mansources) ; do \
