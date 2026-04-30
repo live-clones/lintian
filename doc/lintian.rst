@@ -394,13 +394,13 @@ An example file for a source package would look like:
    # tell lintian to not complain:
    foo source: configure-generated-file-in-source [config.cache]
 
-In most cases, it is sufficient to copy the messge emitted by lintian, minus the
-type indicator, into the override unomodified. However, the ``<package>``,
-``<archlist>``, and ``<type>`` fields are optional and may be omitted.
+In most cases, it is sufficient to copy the messge emitted by lintian, without
+the type indicator, into the override. However, the ``<package>``, ``<archlist>``,
+and ``<type>`` fields are optional and may be omitted.
 
-A tag can be overridden either completely by specifying only its name, as seen
-in the ``non-standard-dir-perm`` example above, or only one occurrence of it by
-specifying the context, as seen in the following line.
+A tag can be overridden completely by specifying only its name, as seen
+in the ``non-standard-dir-perm`` example above, or by overriding only a single
+occurrence by specifying the context, as seen in the following line.
 
 If an asterisk (``*``) is used in the context, this will match arbitrary
 strings similar to a shell wildcard. For example:
