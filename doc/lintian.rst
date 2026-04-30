@@ -356,19 +356,22 @@ not used in current Lintian versions.
 Format of override files
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-The format of the overrides file is simple, it consists of one override
-per line (and may contain empty lines and comments, starting with a
-``#``, on others): ``[[<package>][ <archlist>][ <type>]: ]<lintian-tag>[
-[*]<context>[*]]``. <package> is the package name;
-<archlist> is an architecture list (see Architecture specific overrides
-for more info); <type> is one of ``binary``, ``udeb`` and ``source``,
-and <context> is all additional information provided by Lintian
-except for the tag. What's inside brackets is optional and may be
-omitted if you want to match it all. Additionally, if the context of
-the tag contains paths to files in the package, they're enclosed with
-literal brackets (so called "pointed hints") so that tools which
-process lintian tags can link to the according file and potentially
-even line in the file.
+Each line in an override file can contain a single override,
+it can be a comment (noted by ``#``), or it can be blank.
+
+Overrides are formatted as:
+
+::
+
+  [[<package>][ <archlist>][ <type>]: ]<lintian-tag>[[*]<context>[*]]
+
+``<package>`` is the package name; ``<archlist>`` is an architecture list
+(see `2.4.3 Architecture specific overrides <#section-2.4.3>`__); ``<type>`` is one of
+``binary``, ``udeb`` and ``source``, and ``<context>`` is all additional
+information provided by Lintian except for the tag. If the context of the tag
+contains paths to files in the package, they're enclosed with literal brackets
+(so called "pointed hints"), as seen below in the ``foo.1.gz`` and
+``config.cache`` examples.
 
 An example file for a binary package would look like:
 
@@ -391,12 +394,16 @@ An example file for a source package would look like:
    # tell lintian to not complain:
    foo source: configure-generated-file-in-source [config.cache]
 
-Many tags can occur more than once (e.g. if the same error is found in
-more than one file). You can override a tag either completely by
-specifying its name (first line in the examples) or only one occurrence
-of it by specifying the additional info, too (second line in the
-examples). If you add an asterisk (``*``) in the additional info, this
-will match arbitrary strings similar to the shell wildcard. For example:
+In most cases, it is sufficient to copy the message emitted by lintian, without
+the type indicator, into the override. However, the ``<package>``, ``<archlist>``,
+and ``<type>`` fields are optional and may be omitted.
+
+A tag can be overridden completely by specifying only its name, as seen
+in the ``non-standard-dir-perm`` example above, or by overriding only a single
+occurrence by specifying the context, as seen in the following line.
+
+If an asterisk (``*``) is used in the context, this will match arbitrary
+strings similar to a shell wildcard. For example:
 
 ::
 
