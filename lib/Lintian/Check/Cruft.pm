@@ -158,10 +158,14 @@ qr{microsoft [ ] visual [ ] c[+][+] [ ] generated (?![ ] by [ ] freeze\.py)}msx
     },
     # warn about old non-DFSG unicode license
     'license-problem-old-unicode' => {
-        keywords => [qw{unicode hereby grants right}],
-        sentences => ['unicode, inc. hereby grants the right'],
+        keywords => [
+            qw{unicode hereby grants right freely use information supplied file creation products}
+        ],
+        sentences => [
+'unicode, inc. hereby grants the right to freely use the information supplied in this file in the creation of products'
+        ],
         regex =>
-          qr{unicode, [ ] inc. [ ] hereby [ ] grants [ ] the [ ] right}msx
+qr{unicode, [ ] inc. [ ] hereby [ ] grants [ ] the [ ] right [ ] to [ ] freely [ ] use [ ] the [ ] information [ ] supplied [ ] in [ ] this [ ] file [ ] in [ ] the [ ] creation [ ] of [ ] products}msx
     }
 );
 
