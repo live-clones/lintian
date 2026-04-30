@@ -78,7 +78,7 @@ sub visit_installed_files {
     return
       unless $item->file_type =~ m{ executable | shared [ ] object }x;
 
-    my $is_shared = $item->file_type =~ m/(shared object|pie executable)/;
+    my $is_shared = $item->file_type =~ m/(shared object)/;
 
     for my $library (@{$item->elf->{NEEDED} // [] }) {
 
