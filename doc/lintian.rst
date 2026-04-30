@@ -394,7 +394,7 @@ An example file for a source package would look like:
    # tell lintian to not complain:
    foo source: configure-generated-file-in-source [config.cache]
 
-In most cases, it is sufficient to copy the messge emitted by lintian, without
+In most cases, it is sufficient to copy the message emitted by lintian, without
 the type indicator, into the override. However, the ``<package>``, ``<archlist>``,
 and ``<type>`` fields are optional and may be omitted.
 
