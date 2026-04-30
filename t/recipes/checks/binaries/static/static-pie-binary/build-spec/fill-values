@@ -1,0 +1,5 @@
+Skeleton: upload-non-native
+Testname: static-pie-binary
+Source: binary
+Package-Architecture: any
+Description: Check a static-pie "binary"
