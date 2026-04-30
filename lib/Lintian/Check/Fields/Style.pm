@@ -29,6 +29,8 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
+my %cute_field_exceptions = ('x-dh-compat'      => 'X-DH-Compat',);
+
 # the fields in d/control provide the values for many fields elsewhere
 sub source {
     my ($self) = @_;
@@ -60,11 +62,14 @@ sub check_style {
 
         # title-case the field name
         my $standard = lc $name;
-        $standard =~ s/\b(\w)/\U$1/g;
+        if (exists $cute_field_exceptions{$standard}) {
+            $standard = $cute_field_exceptions{$standard};
+        } else {
+            $standard =~ s/\b(\w)/\U$1/g;
 
-        # capitalize up to three letters after an X, if followed by hyphen
-        $standard =~ s/^(X[SBC]{1,3})-/\U$1-/i;
-
+            # capitalize up to three letters after an X, if followed by hyphen
+            $standard =~ s/^(X[SBC]{1,3})-/\U$1-/i;
+        }
         my $position = $fields->position($name);
         my $pointer = $item->pointer($position);
 
