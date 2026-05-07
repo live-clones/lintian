@@ -1,0 +1,5 @@
+Testname: watch-file-uses-cran-template
+Skeleton: upload-non-native
+Source-Format: 3.0 (quilt)
+Version: 1.0+dfsg-1
+Description: Package should not emit "debian-watch-not-mangling-version" for CRAN or Bioconductor uscan templates
