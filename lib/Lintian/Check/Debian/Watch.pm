@@ -209,21 +209,26 @@ sub source {
 
         for my $option (@options) {
 
+            my $template = $EMPTY;
             if ($standard >= $CURRENT_WATCH_VERSION) {
                 chomp $option;
                 my ($key, $value) = split /:\s*/, $option, 2;
                 if ($key and $value) {
                     $key =~ s/-//g;
-                    $option = lc($key)."=$value";
+                    my $lc_key = lc($key);
+                    $option = $lc_key . "=$value";
+                    $template = $value if lc($key) eq 'template';
                 }
             }
 
             if (length $repack) {
                 $repack_mangle = 1
                   if $option
-                  =~ /^[ud]?versionmangle\s*=\s*(?:auto|.*$repack.*)/;
+                  =~ /^[ud]?versionmangle\s*=\s*(?:auto|.*$repack.*)/
+                  || $template =~ /(CRAN|Bioconductor)/i;
                 $repack_dmangle = 1
-                  if $option =~ /^dversionmangle\s*=\s*(?:auto|.*$repack.*)/;
+                  if $option =~ /^dversionmangle\s*=\s*(?:auto|.*$repack.*)/
+                  || $template =~ /(CRAN|Bioconductor)/i;
             }
 
             if (length $prerelease) {
