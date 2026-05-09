@@ -771,6 +771,8 @@ sub binary {
               if $intended eq 'sid';
 
             my $uploaded = $latest_entry->Distribution;
+            $uploaded = 'unstable'
+              if $uploaded eq 'sid';
 
             $self->pointed_hint('bad-intended-distribution', $latest_pointer,
                 "intended for $intended but uploaded to $uploaded")
