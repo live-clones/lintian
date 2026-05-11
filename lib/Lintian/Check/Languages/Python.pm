@@ -58,11 +58,6 @@ my %REQUIRED_DEPENDS = (
     'python3' => 'python3-minimal:any | python3:any',
 );
 
-my %MISMATCHED_SUBSTVARS = (
-    '^python3-.+' => $DOLLAR . '{python:Depends}',
-    '^python2?-.+' => $DOLLAR . '{python3:Depends}',
-);
-
 has ALLOWED_PYTHON_FILES => (
     is => 'rw',
     lazy => 1,
@@ -114,25 +109,6 @@ sub source {
 
     my $build_all = $self->processable->relation('Build-Depends-All');
     my $debian_control = $self->processable->debian_control;
-
-    # Mismatched substvars
-    for my $regex (keys %MISMATCHED_SUBSTVARS) {
-        my $substvar = $MISMATCHED_SUBSTVARS{$regex};
-
-        for my $installable_name ($debian_control->installables) {
-
-            next
-              if any { $installable_name =~ /$_/ } @IGNORE;
-
-            next
-              if $installable_name !~ qr/$regex/;
-
-            $self->hint('mismatched-python-substvar', $installable_name,
-                $substvar)
-              if $self->processable->binary_relation($installable_name, 'all')
-              ->satisfies($substvar);
-        }
-    }
 
     my $VERSIONS = $self->data->load('python/versions', qr/\s*=\s*/);
 
