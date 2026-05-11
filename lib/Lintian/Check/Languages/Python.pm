@@ -47,13 +47,9 @@ my @FIELDS = qw(Depends Pre-Depends Recommends Suggests);
 my @IGNORE = qw(-dev$ -docs?$ -common$ -tools$);
 my @PYTHON3 = qw(python3:any python3-dev:any);
 
-my %DJANGO_PACKAGES = (
-    '^python3-django-' => 'python3-django',
-);
+my %DJANGO_PACKAGES = ('^python3-django-' => 'python3-django',);
 
-my %REQUIRED_DEPENDS = (
-    'python3' => 'python3-minimal:any | python3:any',
-);
+my %REQUIRED_DEPENDS = ('python3' => 'python3-minimal:any | python3:any',);
 
 has ALLOWED_PYTHON_FILES => (
     is => 'rw',
@@ -82,6 +78,14 @@ sub source {
     my ($self) = @_;
 
     my @installable_names = $self->processable->debian_control->installables;
+    for my $installable_name (@installable_names) {
+        $self->hint('package-uses-old-python-depends-substvar',
+            $installable_name)
+          if any {
+            $self->processable->binary_relation($_, 'all')
+              ->satisfies($DOLLAR . '{python:Depends}')
+          }@installable_names;
+    }
     my $build_all = $self->processable->relation('Build-Depends-All');
     my $debian_control = $self->processable->debian_control;
 

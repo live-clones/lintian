@@ -1,0 +1,19 @@
+Source: [% $source %]
+Priority: optional
+Section: [% $section %]
+Maintainer: [% $author %]
+Standards-Version: [% $standards_version %]
+Build-Depends: [% $build_depends %]
+Rules-Requires-Root: no
+
+Package: python3-cheshire
+Section: python
+Architecture: all
+Depends: ${misc:Depends}, ${python3:Depends}, ${python:Depends}
+Description: Cheshire cheese for Python 3.X
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+ .
+ For Python 3.X.
