@@ -45,7 +45,6 @@ with 'Lintian::Check';
 
 my @FIELDS = qw(Depends Pre-Depends Recommends Suggests);
 my @IGNORE = qw(-dev$ -docs?$ -common$ -tools$);
-my @PYTHON2 = qw(python2:any python2.7:any python2-dev:any);
 my @PYTHON3 = qw(python3:any python3-dev:any);
 
 my %DJANGO_PACKAGES = (
@@ -366,21 +365,6 @@ sub installable {
                 $self->hint('python-package-missing-depends-on-python');
 
                 last;
-            }
-        }
-    }
-
-    # Check for duplicate dependencies
-    for my $field (@FIELDS) {
-        my $dep = $self->processable->relation($field);
-      FIELD: for my $py2 (@PYTHON2) {
-            for my $py3 (@PYTHON3) {
-
-                if ($dep->satisfies($py2) && $dep->satisfies($py3)) {
-                    $self->hint('depends-on-python2-and-python3',
-                        $field, "(satisfies $py2, $py3)");
-                    last FIELD;
-                }
             }
         }
     }
