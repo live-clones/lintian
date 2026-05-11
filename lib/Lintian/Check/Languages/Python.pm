@@ -373,31 +373,6 @@ sub installable {
           unless $self->processable->relation('strong')->satisfies($basepkg);
     }
 
-    if (
-        $self->processable->name =~ /^python([23]?)-/
-        && (none { $self->processable->name =~ /$_/ } @IGNORE)
-    ) {
-        my $version = $1 || '2'; # Assume python-foo is a Python 2.x package
-        my @prefixes = ($version eq '2') ? 'python3' : qw(python python2);
-
-        for my $field (@FIELDS) {
-            for my $prefix (@prefixes) {
-
-                my $visit = sub {
-                    my $rel = $_;
-                    return if any { $rel =~ /$_/ } @IGNORE;
-                    $self->hint(
-'python-package-depends-on-package-from-other-python-variant',
-                        "$field: $rel"
-                    ) if /^$prefix-/;
-                };
-
-                $self->processable->relation($field)
-                  ->visit($visit, Lintian::Relation::VISIT_PRED_NAME);
-            }
-        }
-    }
-
     return;
 }
 
