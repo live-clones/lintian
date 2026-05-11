@@ -6,26 +6,6 @@ Standards-Version: [% $standards_version %]
 Build-Depends: [% $build_depends %]
 Rules-Requires-Root: no
 
-Package: python-django-positive
-Architecture: all
-Depends: ${misc:Depends}, python2.7
-Description: Python 2 package without corresponding python-django dependency
- This is a test package designed to exercise some feature or tag of
- Lintian.  It is part of the Lintian test suite and may do very odd
- things.  It should not be installed like a regular package.  It may
- be an empty package.
-
-Package: python2-django-positive
-Architecture: all
-Depends: ${misc:Depends}, python2.7
-Description: Python 2 package without corresponding python-django dependency (explicit)
- This is a test package designed to exercise some feature or tag of
- Lintian.  It is part of the Lintian test suite and may do very odd
- things.  It should not be installed like a regular package.  It may
- be an empty package.
- .
- Explicit Python 2 variant.
-
 Package: python3-django-positive
 Architecture: all
 Depends: ${misc:Depends}, python3
@@ -36,17 +16,6 @@ Description: Python 3 package without corresponding python3-django dependency
  be an empty package.
  .
  Python 3 variant.
-
-Package: python-django-false-positive
-Architecture: all
-Depends: ${misc:Depends}, python2.7, python-django
-Description: Python 2 package with corresponding python3-django dependency
- This is a test package designed to exercise some feature or tag of
- Lintian.  It is part of the Lintian test suite and may do very odd
- things.  It should not be installed like a regular package.  It may
- be an empty package.
- .
- This is a false positive.
 
 Package: python3-django-false-positive
 Architecture: all

@@ -49,11 +49,9 @@ my @PYTHON3 = qw(python3:any python3-dev:any);
 
 my %DJANGO_PACKAGES = (
     '^python3-django-' => 'python3-django',
-    '^python2?-django-' => 'python-django',
 );
 
 my %REQUIRED_DEPENDS = (
-    'python2' => 'python2-minimal:any | python2:any',
     'python3' => 'python3-minimal:any | python3:any',
 );
 
