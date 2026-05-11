@@ -85,7 +85,6 @@ my %DH_COMMAND_MANUAL_PREREQUISITES = (
     dh_make_pgxs => 'postgresql-server-dev-all:any | postgresql-all:any',
     dh_nativejava => 'gcj-native-helper:any | default-jdk-builddep:any',
     dh_pgxs_test => 'postgresql-server-dev-all:any | postgresql-all:any',
-    dh_python2 => 'dh-python:any | dh-sequence-python2:any',
     dh_python3 =>
       'dh-python:any | dh-sequence-python3:any | pybuild-plugin-pyproject:any',
     dh_sphinxdoc =>
@@ -114,7 +113,6 @@ my %DH_ADDON_MANUAL_PREREQUISITES = (
     pgxs => 'postgresql-server-dev-all:any | postgresql-all:any',
     pgxs_loop => 'postgresql-server-dev-all:any | postgresql-all:any',
     pypy => 'dh-python:any | dh-sequence-pypy:any',
-    python2 => 'python2:any | python2-dev:any | dh-sequence-python2:any',
     python3 =>
 'python3:any | python3-all:any | python3-dev:any | python3-all-dev:any | dh-sequence-python3:any',
     scour => 'scour:any | python-scour:any | dh-sequence-scour:any',
@@ -214,7 +212,6 @@ sub source {
     $drules = $droot->child('rules') if $droot;
 
     my %seen = (
-        'python2' => 0,
         'python3' => 0,
         'runit'   => 0,
         'sphinxdoc' => 0,
@@ -233,12 +230,9 @@ sub source {
 
         my $command_prefix_pattern = qr/\s+[@+-]?(?:\S+=\S+\s+)*/;
 
-        for (qw(python2 python3)) {
-
-            $seen{$_} = 1
-              if $build_prerequisites_norestriction->satisfies(
-                "dh-sequence-$_:any");
-        }
+        $seen{'python3'} = 1
+          if $build_prerequisites_norestriction->satisfies(
+            'dh-sequence-python3:any');
 
         my $position = 1;
         while (my $line = <$rules_fd>) {
@@ -279,8 +273,6 @@ sub source {
                 }
 
                 # Record if we've seen specific helpers, special-casing
-                # "dh_python" as Python 2.x.
-                $seen{'python2'} = 1 if $dh_command eq 'dh_python2';
                 for my $k (keys %seen) {
                     $seen{$k} = 1 if $dh_command eq "dh_$k";
                 }
@@ -833,22 +825,6 @@ sub source {
                 "(does not need to satisfy $autotools_source)")
               if $build_prerequisites->satisfies($autotools_source);
         }
-    }
-
-    if ($seen_dh_sequencer && !$seen{'python2'}) {
-
-        my %python_depends;
-
-        for my $installable_name (@installable_names) {
-
-            $python_depends{$installable_name} = 1
-              if $self->processable->binary_relation($installable_name,'all')
-              ->satisfies($DOLLAR . '{python:Depends}');
-        }
-
-        $self->hint('python-depends-but-no-python-helper',
-            (sort keys %python_depends))
-          if %python_depends;
     }
 
     if ($seen_dh_sequencer && !$seen{'python3'}) {
