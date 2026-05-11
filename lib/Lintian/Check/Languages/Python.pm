@@ -295,6 +295,14 @@ sub visit_installed_files {
         || $item->name =~ m{^usr/lib/pyshared}
         || $item->name =~ m{^usr/share/});
 
+    # .egg-info (Python egg-info dir)
+    $self->pointed_hint('package-installs-legacy-python-egg-info',
+        $item->pointer)
+      if $item->name =~ /\.egg-info/
+      && ( $item->name =~ m{^usr/lib/python3/dist-packages}
+        || $item->name =~ m{^usr/lib/pyshared}
+        || $item->name =~ m{^usr/share/});
+
     # /usr/lib/site-python
     $self->pointed_hint('file-in-usr-lib-site-python', $item->pointer)
       if $item->name =~ m{^usr/lib/site-python/\S};
