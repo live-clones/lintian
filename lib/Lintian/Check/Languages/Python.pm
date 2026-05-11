@@ -84,28 +84,6 @@ sub source {
     my ($self) = @_;
 
     my @installable_names = $self->processable->debian_control->installables;
-    for my $installable_name (@installable_names) {
-        # Python 2 modules
-        if ($installable_name =~ /^python2?-(.*)$/) {
-            my $suffix = $1;
-
-            next
-              if any { $installable_name =~ /$_/ } @IGNORE;
-
-            next
-              if any { $_ eq "python3-${suffix}" } @installable_names;
-
-            # Don't trigger if we ship any Python 3 module
-            next
-              if any {
-                $self->processable->binary_relation($_, 'all')
-                  ->satisfies($DOLLAR . '{python3:Depends}')
-              }@installable_names;
-
-            $self->hint('python-foo-but-no-python3-foo', $installable_name);
-        }
-    }
-
     my $build_all = $self->processable->relation('Build-Depends-All');
     my $debian_control = $self->processable->debian_control;
 
