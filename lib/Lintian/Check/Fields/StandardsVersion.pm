@@ -98,7 +98,7 @@ sub source {
         my $changes = $entry->Changes;
 
         if ($changes
-            =~ /(?:standards[ -]?version|\bs-v:?\s).*\b(\d+\.\d+\.\d+)\b(?!.*\b\d+\.\d+\.\d+\b)/i
+            =~ /(?:standards[ -]?version|\bs-v:?\s).*?\b(\d+\.\d+\.\d+)(?:\.\d+)?\b(?!.*\b\d+\.\d+\.\d+(?:\.\d+)?\b)/i
         ) {
             my $changelog_standard = $1;
 
