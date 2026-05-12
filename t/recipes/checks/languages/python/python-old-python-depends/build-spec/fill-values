@@ -1,0 +1,3 @@
+Skeleton: upload-non-native
+Testname: python-old-python-depends
+Description: Check if python:Depends gets flagged

@@ -1,2 +1,0 @@
-python-mismatched-python-substvar (source): mismatched-python-substvar python3-python-mismatched-python-substvar ${python:Depends}
-python-mismatched-python-substvar (source): mismatched-python-substvar python-python-mismatched-python-substvar ${python3:Depends}

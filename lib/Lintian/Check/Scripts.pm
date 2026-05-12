@@ -550,7 +550,7 @@ sub visit_installed_files {
                     $item->pointer, $item->interpreter,
                     "(does not satisfy $depends)");
 
-            } elsif ($basename =~ /^(python\d|ruby|[mg]awk)$/) {
+            } elsif ($basename =~ /^(python3|ruby|[mg]awk)$/) {
 
                 $self->pointed_hint(
                     (

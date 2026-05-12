@@ -45,23 +45,11 @@ with 'Lintian::Check';
 
 my @FIELDS = qw(Depends Pre-Depends Recommends Suggests);
 my @IGNORE = qw(-dev$ -docs?$ -common$ -tools$);
-my @PYTHON2 = qw(python2:any python2.7:any python2-dev:any);
 my @PYTHON3 = qw(python3:any python3-dev:any);
 
-my %DJANGO_PACKAGES = (
-    '^python3-django-' => 'python3-django',
-    '^python2?-django-' => 'python-django',
-);
+my %DJANGO_PACKAGES = ('^python3-django-' => 'python3-django',);
 
-my %REQUIRED_DEPENDS = (
-    'python2' => 'python2-minimal:any | python2:any',
-    'python3' => 'python3-minimal:any | python3:any',
-);
-
-my %MISMATCHED_SUBSTVARS = (
-    '^python3-.+' => $DOLLAR . '{python:Depends}',
-    '^python2?-.+' => $DOLLAR . '{python3:Depends}',
-);
+my %REQUIRED_DEPENDS = ('python3' => 'python3-minimal:any | python3:any',);
 
 has ALLOWED_PYTHON_FILES => (
     is => 'rw',
@@ -91,48 +79,15 @@ sub source {
 
     my @installable_names = $self->processable->debian_control->installables;
     for my $installable_name (@installable_names) {
-        # Python 2 modules
-        if ($installable_name =~ /^python2?-(.*)$/) {
-            my $suffix = $1;
-
-            next
-              if any { $installable_name =~ /$_/ } @IGNORE;
-
-            next
-              if any { $_ eq "python3-${suffix}" } @installable_names;
-
-            # Don't trigger if we ship any Python 3 module
-            next
-              if any {
-                $self->processable->binary_relation($_, 'all')
-                  ->satisfies($DOLLAR . '{python3:Depends}')
-              }@installable_names;
-
-            $self->hint('python-foo-but-no-python3-foo', $installable_name);
-        }
+        $self->hint('package-uses-old-python-depends-substvar',
+            $installable_name)
+          if any {
+            $self->processable->binary_relation($_, 'all')
+              ->satisfies($DOLLAR . '{python:Depends}')
+          }@installable_names;
     }
-
     my $build_all = $self->processable->relation('Build-Depends-All');
     my $debian_control = $self->processable->debian_control;
-
-    # Mismatched substvars
-    for my $regex (keys %MISMATCHED_SUBSTVARS) {
-        my $substvar = $MISMATCHED_SUBSTVARS{$regex};
-
-        for my $installable_name ($debian_control->installables) {
-
-            next
-              if any { $installable_name =~ /$_/ } @IGNORE;
-
-            next
-              if $installable_name !~ qr/$regex/;
-
-            $self->hint('mismatched-python-substvar', $installable_name,
-                $substvar)
-              if $self->processable->binary_relation($installable_name, 'all')
-              ->satisfies($substvar);
-        }
-    }
 
     my $VERSIONS = $self->data->load('python/versions', qr/\s*=\s*/);
 
@@ -394,21 +349,6 @@ sub installable {
         }
     }
 
-    # Check for duplicate dependencies
-    for my $field (@FIELDS) {
-        my $dep = $self->processable->relation($field);
-      FIELD: for my $py2 (@PYTHON2) {
-            for my $py3 (@PYTHON3) {
-
-                if ($dep->satisfies($py2) && $dep->satisfies($py3)) {
-                    $self->hint('depends-on-python2-and-python3',
-                        $field, "(satisfies $py2, $py3)");
-                    last FIELD;
-                }
-            }
-        }
-    }
-
     my $pkg = $self->processable->name;
 
     # Python 2 modules
@@ -433,31 +373,6 @@ sub installable {
 
         $self->hint('django-package-does-not-depend-on-django', $basepkg)
           unless $self->processable->relation('strong')->satisfies($basepkg);
-    }
-
-    if (
-        $self->processable->name =~ /^python([23]?)-/
-        && (none { $self->processable->name =~ /$_/ } @IGNORE)
-    ) {
-        my $version = $1 || '2'; # Assume python-foo is a Python 2.x package
-        my @prefixes = ($version eq '2') ? 'python3' : qw(python python2);
-
-        for my $field (@FIELDS) {
-            for my $prefix (@prefixes) {
-
-                my $visit = sub {
-                    my $rel = $_;
-                    return if any { $rel =~ /$_/ } @IGNORE;
-                    $self->hint(
-'python-package-depends-on-package-from-other-python-variant',
-                        "$field: $rel"
-                    ) if /^$prefix-/;
-                };
-
-                $self->processable->relation($field)
-                  ->visit($visit, Lintian::Relation::VISIT_PRED_NAME);
-            }
-        }
     }
 
     return;
