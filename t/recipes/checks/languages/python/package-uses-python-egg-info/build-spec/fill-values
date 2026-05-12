@@ -1,0 +1,4 @@
+Skeleton: upload-non-native
+Testname: package-uses-python-egg-info
+Description: Test for detecting egg-info installation
+Extra-Build-Depends: python3
