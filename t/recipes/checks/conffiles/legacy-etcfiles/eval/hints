@@ -1,3 +1,8 @@
+only-etcfiles (binary): config-file-all-comments [etc/etcfiles/foo]
+only-etcfiles (binary): config-file-all-comments [etc/etcfiles/bar]
 etcfiles (binary): non-etc-file-marked-as-conffile var/lib/foo [conffiles:2]
 etcfiles (binary): file-in-etc-not-marked-as-conffile [etc/improper]
 etcfiles (binary): file-in-etc-not-marked-as-conffile [etc/improper-link]
+etcfiles (binary): config-file-all-comments [etc/cron.daily/cronfile-normal]
+etcfiles (binary): config-file-all-comments [etc/cron.daily/cronfile-contains.fullstop]
+etcfiles (binary): config-file-all-comments [etc/cron.daily/.cronfile-begins-with-fullstop]
