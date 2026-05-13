@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use Test::More tests => 12;
+use Test::More tests => 14;
 
 use Lintian::Relation;
 
@@ -21,6 +21,11 @@ my @satisfies_tests = (
         desc => 'pkgA:any satisfies pkgA:any',
     },
     {
+        other => 'pkgA:i386',
+        satisfies => 0,
+        desc => 'pkgA:any does not necessarily satisfy pkgA:i386',
+    },
+    {
         other => 'pkgB',
         satisfies => 1,
         desc => 'pkgB satisfies pkgB',
@@ -29,6 +34,11 @@ my @satisfies_tests = (
         other => 'pkgB:any',
         satisfies => 1,
         desc => 'pkgB satisfies pkgB:any',
+    },
+    {
+        other => 'pkgB:i386',
+        satisfies => 0,
+        desc => 'pkgB does not necessarily satisfy pkgB:i386',
     },
     {
         other => 'pkgC',
