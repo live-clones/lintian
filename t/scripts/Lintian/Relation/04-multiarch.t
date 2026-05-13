@@ -11,6 +11,11 @@ my $relation = Lintian::Relation->new->load($orig);
 
 my @satisfies_tests = (
     {
+        other => 'pkgA',
+        satisfies => 0,
+        desc => 'pkgA:any does not satisfy pkgA',
+    },
+    {
         other => 'pkgA:any',
         satisfies => 1,
         desc => 'pkgA:any satisfies pkgA:any',
@@ -21,29 +26,24 @@ my @satisfies_tests = (
         desc => 'pkgB satisfies pkgB',
     },
     {
-        other => 'pkgC',
-        satisfies => 0,
-        desc => 'pkgC:i386 does not satisfy pkgC',
-    },
-    {
-        other => 'pkgC:i386',
-        satisfies => 1,
-        desc => 'pkgC:i386 satisfies pkgC:i386',
-    },
-    {
         other => 'pkgB:any',
         satisfies => 1,
         desc => 'pkgB satisfies pkgB:any',
     },
     {
-        other => 'pkgA',
+        other => 'pkgC',
         satisfies => 0,
-        desc => 'pkgA:any does not satisfy pkgA',
+        desc => 'pkgC:i386 does not satisfy pkgC',
     },
     {
         other => 'pkgC:any',
         satisfies => 0,
         desc => 'pkgC:i386 does not satisfy pkgC:any',
+    },
+    {
+        other => 'pkgC:i386',
+        satisfies => 1,
+        desc => 'pkgC:i386 satisfies pkgC:i386',
     },
 );
 
