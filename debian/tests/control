@@ -18,6 +18,7 @@ Depends:
  gpg-agent,
  javahelper,
  libarray-utils-perl,
+ libdpkg-perl,
  libio-prompt-tiny-perl,
  liblist-someutils-perl,
  libmce-perl,

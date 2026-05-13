@@ -28,6 +28,7 @@ Build-Depends:
  libarray-utils-perl <!nocheck>,
  libconst-fast-perl,
  libcrypt-dev,
+ libdpkg-perl <!nocheck>,
  libfile-basedir-perl,
  libfile-libmagic-perl,
  libio-prompt-tiny-perl <!nocheck>,
