@@ -9,18 +9,51 @@ use Lintian::Relation;
 my $orig = 'pkgA:any, pkgB, pkgC:i386';
 my $relation = Lintian::Relation->new->load($orig);
 
-ok($relation->satisfies('pkgA:any'),   'pkgA:any satisfies pkgA:any');
+my @satisfies_tests = (
+    {
+        other => 'pkgA:any',
+        satisfies => 1,
+        desc => 'pkgA:any satisfies pkgA:any',
+    },
+    {
+        other => 'pkgB',
+        satisfies => 1,
+        desc => 'pkgB satisfies pkgB',
+    },
+    {
+        other => 'pkgC',
+        satisfies => 0,
+        desc => 'pkgC:i386 does not satisfy pkgC',
+    },
+    {
+        other => 'pkgC:i386',
+        satisfies => 1,
+        desc => 'pkgC:i386 satisfies pkgC:i386',
+    },
+    {
+        other => 'pkgB:any',
+        satisfies => 1,
+        desc => 'pkgB satisfies pkgB:any',
+    },
+    {
+        other => 'pkgA',
+        satisfies => 0,
+        desc => 'pkgA:any does not satisfy pkgA',
+    },
+    {
+        other => 'pkgC:any',
+        satisfies => 0,
+        desc => 'pkgC:i386 does not satisfy pkgC:any',
+    },
+);
 
-ok($relation->satisfies('pkgB'),       'pkgB satisfies pkgB');
-
-ok(!$relation->satisfies('pkgC'),      'pkgC:i386 does not satisfy pkgC');
-ok($relation->satisfies('pkgC:i386'),  'pkgC:i386 satisfies pkgC:i386');
-
-ok($relation->satisfies('pkgB:any'),   'pkgB satisfies pkgB:any');
-
-ok(!$relation->satisfies('pkgA'),      'pkgA:any does not satisfy pkgA');
-
-ok(!$relation->satisfies('pkgC:any'),  'pkgC:i386 does not satisfy pkgC:any');
+foreach my $t (@satisfies_tests) {
+    if ($t->{satisfies}) {
+        ok($relation->satisfies($t->{other}), $t->{desc});
+    } else {
+        ok(!$relation->satisfies($t->{other}), $t->{desc});
+    }
+}
 
 is($relation->to_string, $orig,      'reconstituted eq original');
 
