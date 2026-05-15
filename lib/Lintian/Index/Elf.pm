@@ -30,6 +30,7 @@ use Const::Fast;
 use Cwd;
 use IPC::Run3;
 use Unicode::UTF8 qw(encode_utf8 valid_utf8 decode_utf8);
+use File::Spec::Functions qw(rel2abs abs2rel);
 
 use Lintian::Elf::Section;
 use Lintian::Elf::Symbol;
@@ -102,11 +103,6 @@ has elf_storage_by_member => (
 sub add_elf {
     my ($self) = @_;
 
-    my $savedir = getcwd;
-    chdir($self->basedir)
-      or die encode_utf8(
-        $self->identifier . ': Cannot change to directory ' . $self->basedir);
-
     my $errors = $EMPTY;
 
     my @files = grep { $_->is_file } @{$self->sorted_list};
@@ -127,7 +123,8 @@ sub add_elf {
                   . ": $_[0]");
         };
 
-        my @command = (qw{readelf --all --wide}, $file->name);
+        my $file_abspath = rel2abs($file->name, $self->basedir);
+        my @command = (qw{readelf --all --wide}, $file_abspath);
         my $combined_bytes;
 
         run3(\@command, \undef, \$combined_bytes, \$combined_bytes);
@@ -142,7 +139,10 @@ sub add_elf {
 
         } else {
             $combined_output = $combined_bytes;
-            $errors .= "Output from '@command' is not valid UTF-8" . $NEWLINE;
+            my @display_command = @command;
+            $display_command[-1] = $file->name;
+            $errors
+              .= "Output from '@display_command' is not valid UTF-8". $NEWLINE;
         }
 
         # each object file in an archive gets its own File section
@@ -160,7 +160,7 @@ sub add_elf {
         #   simply use xargs directly on readelf and just parse its output
         #   in the loop below.
         if (@per_files == 1) {
-            unshift(@per_files, $file->name);
+            unshift(@per_files, $file_abspath);
             unshift(@per_files, 'File');
         }
 
@@ -192,6 +192,8 @@ sub add_elf {
             $container = $recorded_name
               unless defined $container && defined $member;
 
+            $container = abs2rel($container, $self->basedir);
+
             unless ($container eq $file->name) {
                 $errors
                   .= "Container not same as file name ($container vs $file)"
@@ -213,10 +215,6 @@ sub add_elf {
             parse_per_file($file, $object_name, $per_file);
         }
     }
-
-    chdir($savedir)
-      or die encode_utf8(
-        $self->identifier . ": Cannot change to directory $savedir");
 
     return $errors;
 }
