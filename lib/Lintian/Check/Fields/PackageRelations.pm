@@ -618,6 +618,15 @@ sub source {
                             || $d_pkg eq 'fonts-glyphicons-halflings'
                             || $d_pkg eq 'libjs-bootstrap4')
                       );
+
+                    # dh-sysuser exists specifically for the runit package,
+                    # the canonical implementation that other packages must
+                    # use is dh-sequence-installsysusers.
+                    $self->hint('build-depends-on-dh-sysuser',
+                        "$field: $part_d_orig")
+                      if ( $is_dep_field
+                        && $d_pkg eq 'dh-sysuser'
+                        && $processable->source_name ne 'runit');
                 }
 
                 my $all_obsolete = 0;
