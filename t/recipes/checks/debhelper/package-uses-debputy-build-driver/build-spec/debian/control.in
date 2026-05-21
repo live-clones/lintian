@@ -3,7 +3,7 @@ Priority: optional
 Section: [% $section %]
 Maintainer: [% $author %]
 Standards-Version: [% $standards_version %]
-Build-Depends: [% $build_depends %], debputy
+Build-Depends: debputy
 Build-Driver: debputy
 
 Package: [% $source %]

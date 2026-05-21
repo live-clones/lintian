@@ -1,2 +1,0 @@
-package-uses-debputy-build-driver-full-integration (source): package-does-not-use-debhelper
-package-uses-debputy-build-driver-full-integration (source): debian-build-system debputy [debian/control]
