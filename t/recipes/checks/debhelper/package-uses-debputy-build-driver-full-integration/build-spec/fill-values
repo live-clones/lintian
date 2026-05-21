@@ -1,0 +1,4 @@
+Testname: package-uses-debputy-build-driver-full-integration
+Skeleton: upload-builder-only
+Description: Package builds without debian/rules
+Default-Build-Depends: debputy

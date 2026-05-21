@@ -489,6 +489,8 @@ sub source {
             $dcontrol->item->pointer,
             join(', ', @systems)
         );
+        $self->hint('package-does-not-use-debhelper');
+        return;
     } elsif (%build_systems) {
         my @systems = sort keys %build_systems;
         $self->pointed_hint('debian-build-system', $drules->pointer,
