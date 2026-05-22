@@ -270,6 +270,11 @@ You can also run groups of tests defined by selectors such as:
     script: runs the named code quality script
     minimal: runs only required internal tests
 
+Example:
+
+    private/runtests --onlyrun=test:deb-format-lzma
+    private/runtests --onlyrun=check:deb-format
+
 The internal tests cannot be disabled. They make sure that essential
 components behave as expected.
 
