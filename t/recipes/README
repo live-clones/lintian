@@ -260,7 +260,7 @@ check.
 
 To run a specific test case, run:
 
-    private/runtests onlyrun=test:<path>
+    private/runtests --onlyrun=test:<path>
 
 You can also run groups of tests defined by selectors such as:
 
@@ -269,6 +269,11 @@ You can also run groups of tests defined by selectors such as:
     check: runs all tests that relate to the named Lintian check
     script: runs the named code quality script
     minimal: runs only required internal tests
+
+Example:
+
+    private/runtests --onlyrun=test:deb-format-lzma
+    private/runtests --onlyrun=check:deb-format
 
 The internal tests cannot be disabled. They make sure that essential
 components behave as expected.
