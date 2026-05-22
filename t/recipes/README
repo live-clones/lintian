@@ -260,7 +260,7 @@ check.
 
 To run a specific test case, run:
 
-    private/runtests onlyrun=test:<path>
+    private/runtests --onlyrun=test:<path>
 
 You can also run groups of tests defined by selectors such as:
 
