@@ -113,19 +113,6 @@ documentation [ ] license (?'rawgfdlsections'(?:(?!gnu [ ] free [ ] documentatio
 this [ ] document [ ] is [ ] distributed)}msx,
         callsub => 'check_gfdl_license_problem'
     },
-    # php license
-    'license-problem-php-license' => {
-        keywords => [qw{www.php.net group\@php.net phpfoo conjunction php}],
-        sentences => ['this product includes php'],
-        regex => qr{php [ ] license [ ]?[,;][ ]? version [ ] 3(?:\.\d+)?}msx,
-        callsub => 'php_source_whitelist'
-    },
-    'license-problem-bad-php-license' => {
-        keywords => [qw{www.php.net add-on conjunction}],
-        sentences => ['this product includes php'],
-        regex => qr{php [ ] license [ ]?[,;][ ]? version [ ] 2(?:\.\d+)?}msx,
-        callsub => 'php_source_whitelist'
-    },
     # cc by nc sa note that " is replaced by [ ]
     'license-problem-cc-by-nc-sa' => {
         keywords => [qw{license by-nc-sa creativecommons.org}],
@@ -647,25 +634,6 @@ sub rfc_whitelist_filename {
 
     return 0
       if any { $lcname =~ m/ $_ /xms } @patterns;
-
-    $self->pointed_hint($tag_name, $item->pointer);
-
-    return 1;
-}
-
-sub php_source_whitelist {
-    my ($self, $item, $tag_name, %matchedhash) = @_;
-
-    my $copyright_path
-      = $self->processable->patched->resolve_path('debian/copyright');
-
-    return 0
-      if defined $copyright_path
-      && $copyright_path->bytes
-      =~ m{^Source: https?://(pecl|pear).php.net/package/.*$}m;
-
-    return 0
-      if $self->processable->source_name =~ /^php\d*(?:\.\d+)?$/xms;
 
     $self->pointed_hint($tag_name, $item->pointer);
 
