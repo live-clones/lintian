@@ -484,12 +484,14 @@ sub source {
 
     if (defined $build_driver && $build_driver ne 'debian-rules') {
         my @systems = sort keys %build_systems;
+        my $bdrv_position = $source_fields->position($bdrv);
         $self->pointed_hint(
             'debian-build-system',
             $dcontrol->item->pointer,
             join(', ', @systems)
         );
-        $self->hint('package-does-not-use-debhelper');
+        $self->pointed_hint('package-does-not-use-debhelper',
+            $dcontrol->item->pointer($bdrv_position));
         return;
     } elsif (%build_systems) {
         my @systems = sort keys %build_systems;
