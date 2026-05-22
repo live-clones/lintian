@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: rules-variable
+Description: Test for debian/rules export the DPKG_BUILD_API variable
