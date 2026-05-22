@@ -42,8 +42,7 @@ my $PYTHON3_DEPEND
   = 'python3:any | python3-dev:any | python3-all:any | python3-all-dev:any';
 my $PYTHON3X_DEPEND
   = join(' | ',map { "python${_}:any | python${_}-dev:any" } @py3versions);
-my $ANYPYTHON_DEPEND
-  = "$PYTHON3_DEPEND | $PYTHON3X_DEPEND";
+my $ANYPYTHON_DEPEND= "$PYTHON3_DEPEND | $PYTHON3X_DEPEND";
 my $PYTHON3_ALL_DEPEND
   = 'python3-all:any | python3-all-dev:any | python3-all-dbg:any';
 
