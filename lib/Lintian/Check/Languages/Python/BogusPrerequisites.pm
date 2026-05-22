@@ -52,8 +52,6 @@ sub what_is_python {
 
     # see Bug#973011
     my @WHAT_IS_PYTHON = qw(
-      python-is-python2:any
-      python-dev-is-python2:any
       python-is-python3:any
       python-dev-is-python3:any
     );

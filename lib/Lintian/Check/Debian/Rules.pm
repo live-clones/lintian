@@ -36,16 +36,13 @@ const my $EMPTY => q{};
 const my $SPACE => q{ };
 const my $PERCENT => q{%};
 
-my @py3versions = qw(3.4 3.5 3.6 3.7);
+my @py3versions = qw(3.13 3.14);
 
-my $PYTHON_DEPEND= 'python2:any | python2-dev:any';
 my $PYTHON3_DEPEND
   = 'python3:any | python3-dev:any | python3-all:any | python3-all-dev:any';
-my $PYTHON2X_DEPEND = 'python2.7:any | python2.7-dev:any';
 my $PYTHON3X_DEPEND
   = join(' | ',map { "python${_}:any | python${_}-dev:any" } @py3versions);
-my $ANYPYTHON_DEPEND
-  = "$PYTHON_DEPEND | $PYTHON2X_DEPEND | $PYTHON3_DEPEND | $PYTHON3X_DEPEND";
+my $ANYPYTHON_DEPEND= "$PYTHON3_DEPEND | $PYTHON3X_DEPEND";
 my $PYTHON3_ALL_DEPEND
   = 'python3-all:any | python3-all-dev:any | python3-all-dbg:any';
 
@@ -146,7 +143,6 @@ sub source {
           [qr/^\t\s*dh_(?!autoreconf).+/],
         'dh-ocaml:any, ocaml-nox:any | ocaml:any' =>[qr/^\t\s*dh_ocamlinit\s/],
         'po-debconf:any' => [qr/^\t\s*debconf-updatepo\s/],
-        $PYTHON_DEPEND => [qr/^\t\s*python\s/],
         $PYTHON3_DEPEND => [qr/^\t\s*python3\s/],
         $ANYPYTHON_DEPEND => [qr/\ssetup\.py\b/],
         'quilt:any' => [qr/^\t\s*(\S+=\S+\s+)*quilt\s/],
