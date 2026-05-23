@@ -599,6 +599,8 @@ sub source {
       = $build_prerequisites->satisfies('dh-sequence-debputy')
       || $build_prerequisites->satisfies('dh-sequence-zz-debputy')
       || $build_prerequisites->satisfies('dh-sequence-zz-debputy-rrr');
+    my $dh_no_misc
+      = $debhelper_level >= $DEBHELPER_LEVEL_MISC_DEPENDS_AUTO_APPLY;
 
     for my $installable_name (@installable_names) {
 
@@ -609,8 +611,6 @@ sub source {
         my $strong
           = $self->processable->binary_relation($installable_name, 'strong');
         my $all= $self->processable->binary_relation($installable_name, 'all');
-        my $dh_no_misc
-          = $debhelper_level >= $DEBHELPER_LEVEL_MISC_DEPENDS_AUTO_APPLY;
 
         $self->hint('debhelper-but-no-misc-depends', $installable_name)
           unless $all->satisfies($MISC_DEPENDS)
@@ -844,7 +844,7 @@ sub source {
 
         $self->hint('python3-depends-but-no-python3-helper',
             (sort keys %python3_depends))
-          if %python3_depends;
+          if %python3_depends && !$dh_no_misc && !$uses_debputy_sequencer;
     }
 
     if ($seen{'sphinxdoc'} && !$seen_dh_dynamic) {
@@ -859,7 +859,7 @@ sub source {
 
         $self->pointed_hint('sphinxdoc-but-no-sphinxdoc-depends',
             $drules->pointer)
-          unless $seen_sphinxdoc;
+          unless $seen_sphinxdoc || $dh_no_misc || $uses_debputy_sequencer;
     }
 
     return;
