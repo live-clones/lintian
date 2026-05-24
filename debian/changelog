@@ -1,8 +1,103 @@
-lintian (2.135.1) UNRELEASED; urgency=medium
+lintian (2.136.0) unstable; urgency=medium
 
-  * WIP (generated at release time: please do not add entries below.)
+  [ Nilesh Patra ]
+  * Summary of tag changes:
+    + Added:
+      - license-problem-old-unicode
+      - package-installs-legacy-python-egg-info
+      - package-uses-old-python-depends-substvar
+    + Removed:
+      - depends-on-python2-and-python3
+      - license-problem-bad-php-license
+      - license-problem-convert-utf-code
+      - license-problem-php-license
+      - mismatched-python-substvar
+      - python-depends-but-no-python-helper
+      - python-foo-but-no-python3-foo
+      - python-package-depends-on-package-from-other-python-variant
+      - python2-script-but-no-python2-dep
+  * Avoid checking for "pie executable" for detecting shared objects
+    (Closes: #1068304)
+    + Add a test to detect static-pie also as a static executable to
+      test against #1068304
+  * Update cute-field check to flag differently for "X-DH-Compat"
+    (Closes: #1135283)
+    + Add test to flag correct "X-DH-Compat" style (See: #1072741)
+  * Avoid "debian-watch-not-mangling-version" for CRAN or Bioconductor
+    templates (Closes: #1135884)
+  * Add test to check CRAN templates do not get flagged for not
+    mangling version
+  * Update regex to match the correct policy version in d/ch when 4 version
+    component is used (Closes: #1135883)
+    + Add test to ensure we detect four component standards version
+      correctly
+  * Recognize "Commands" as a valid field in binary control
+    (Closes: #1112495)
+  * bad-intended-distribution: Also change `$uploaded` to `unstable`
+    when set to `sid`
+  * New tag: package-installs-legacy-egg-info to flag packages using
+    deprecated setup.py (Closes: #1121735)
+    + Add test for tag "package-installs-legacy-egg-info"
+  * Drop the following tags which are no longer applicable after python2
+    removal:
+    - python-depends-but-no-python-helper
+    - python-mismatched-python-substvar
+    - python-depends-python2-and-python3
+    - python-foo-but-no-python3-foo
+    - python-package-depends-on-package-from-other-python-variant
+    - python2-script-but-no-python2-dep
+  * Drop more instances of un-needed python2 checks
+  * No longer classify python2 as interpreter for checks
+  * New tag: package-uses-old-python-depends-substvar to flag old
+    `${python:Depends}` substvar
+  * Avoid `chdir` in add_elf to avoid destruction errors when OOM
+    happens (See: #1136356)
+  * Avoid crash when d/rules is absent with `Build-Driver` not equal
+    to `debian-rules` (Closes: #1137245)
+  * Add test to run lintian on package with debputy in full integration
+    mode (without d/rules)
+    + Adjust existing test hints for debputy
+    + Merge debputy build-driver tests
+  * Update "package-does-not-use-debhelper" to use pointed hint to the
+    line of `Build-Driver` in d/control for cases where `Build-Driver`
+    is not `debian-rules`
+  * Drop tags: license-problem-bad-php-license and
+    license-problem-php-license (Closes: #1136812)
+  * Rules.pm: Drop python2 related code
+  * BogusPrerequisites.pm: drop python-is-python2 and
+    python-dev-is-python2-dev as these packages have been dropped
+  * Skip Dependency check for `python3:Depends` and `sphinxdoc:Depends`
+    when debputy sequencers are used or compat >= 14 (See: #1067653)
+  * not-an-ar-archive test: Update test to instead install a `.a` file
+    which is not an archive (Closes: #1137359)
+  * Remove test deb-format-wrong-order as it can no longer work with newer
+    dpkg and add a working check for malformed-deb-archive
+    + Add ncompress to Build and test depends
+  * Drop mingw packages and bash from Build and test depends
 
- -- Nilesh Patra <nilesh@debian.org>  Mon, 27 Apr 2026 09:43:54 +0530
+  [ Jesse Rhodes ]
+  * Rewrite manual section 2.4.1 for clarity. (Closes: #1128948)
+
+  [ Soren Stoutner ]
+  * Refactor license-problem-convert-utf-code to
+    license-problem-old-unicode (closes: #854209)
+
+  [ Oliver Reiche ]
+  * Add 'Stonking Stingray' to the list of known Ubuntu series
+
+  [ Simon McVittie ]
+  * tests: Check Lintian and dpkg agree on multiarch dependency
+    implications
+    + Test Lintian::Relation->satisfies by looping over an array
+    + Sort array of test-cases
+    + Add missing multiarch Lintian::Relation->satisfies tests
+
+  [ Benjamin Drung ]
+  * Build numpy test with -fPIC
+  * README: add missing dashes to test run command and examples
+    for calling private/runtests
+
+ -- Nilesh Patra <nilesh@debian.org>  Sun, 24 May 2026 16:05:58 +0530
 
 lintian (2.135.0) unstable; urgency=medium
 
