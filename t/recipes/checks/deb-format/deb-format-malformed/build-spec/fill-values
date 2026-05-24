@@ -1,0 +1,4 @@
+Skeleton: deb
+Testname: deb-format-malformed
+Description: Test package with wrong .Z
+Extra-Build-Depends: dpkg (>= 1.17.6)
