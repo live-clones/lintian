@@ -38,6 +38,7 @@ Depends:
  libtext-template-perl,
  lintian,
  mingw-w64-tools,
+ ncompress,
  pkg-php-tools,
  python-dev-is-python3,
  python3,
