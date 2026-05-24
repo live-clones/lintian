@@ -8,7 +8,7 @@ Depends:
  build-essential,
  debputy,
  default-jdk-headless | default-jdk,
- dh-elpa | bash (<< 4.4),
+ dh-elpa,
  dh-python,
  dh-r,
  dh-runit,
