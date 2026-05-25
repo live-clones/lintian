@@ -24,9 +24,9 @@ product = [% $build_product %]
 upload_type = [% $upload_type %]
 
 ifeq ($(upload_type),source)
-extraflags = -S
+extraflags = -S --build-profiles='!noudeb'
 else
-extraflags =
+extraflags = --build-profiles='!noudeb'
 endif
 
 .DEFAULT_GOAL := $(product)
