@@ -16,3 +16,4 @@ Disable-Tags:
  source-nmu-has-incorrect-version-number
  team-upload-has-incorrect-version-number
  upstart-job-in-etc-init.d-not-registered-via-update-rc.d
+ zstd-deb-archive

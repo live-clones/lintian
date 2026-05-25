@@ -133,15 +133,18 @@ sub installable {
         } else {
             if (
                 $ctrl_member !~ m{\A
-                     control\.tar(?:\.(?:gz|xz))?  \Z}xsm
+                     control\.tar(?:\.(?:gz|xz|zst))?  \Z}xsm
             ) {
                 $self->hint(
                     'malformed-deb-archive',
                     join($SPACE,
                         "second (official) member $ctrl_member",
-                        'not control.tar.(gz|xz)')
+                        'not control.tar.(gz|xz|zst)')
                 );
                 $failed = 1;
+            } elsif ($ctrl_member eq 'control.tar.zst') {
+                $self->hint('zstd-deb-archive',
+                    "second (official) member $ctrl_member");
             } elsif ($ctrl_member eq 'control.tar') {
                 $self->hint('uses-no-compression-for-control-tarball');
             }
@@ -158,14 +161,14 @@ sub installable {
         } else {
             if (
                 $data_member !~ m{\A
-                     data\.tar(?:\.(?:gz|bz2|xz|lzma))?  \Z}xsm
+                     data\.tar(?:\.(?:gz|bz2|xz|lzma|zst))?  \Z}xsm
             ) {
                 # wasn't okay after all
                 $self->hint(
                     'malformed-deb-archive',
                     join($SPACE,
                         "third (official) member $data_member",
-                        'not data.tar.(gz|xz|bz2|lzma)')
+                        'not data.tar.(gz|xz|bz2|lzma|zst)')
                 );
                 $failed = 1;
             } elsif ($self->processable->type eq 'udeb'
@@ -180,6 +183,9 @@ sub installable {
             } elsif ($data_member eq 'data.tar.bz2') {
                 $self->hint('uses-deprecated-compression-for-data-tarball',
                     'bzip2');
+            } elsif ($data_member eq 'data.tar.zst') {
+                $self->hint('zstd-deb-archive',
+                    "third (official) member $data_member");
             } elsif ($data_member eq 'data.tar') {
                 $self->hint('uses-no-compression-for-data-tarball');
             }

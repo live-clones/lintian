@@ -50,3 +50,4 @@ Depends:
  wamerican,
  wbritish,
  zip,
+ zstd,

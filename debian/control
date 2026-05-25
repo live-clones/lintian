@@ -67,7 +67,8 @@ Build-Depends:
  terser (>= 5.46.1-1~) <!nocheck>,
  wamerican <!nocheck>,
  wbritish <!nocheck>,
- zip <!nocheck>
+ zip <!nocheck>,
+ zstd <!nocheck>
 Standards-Version: 4.7.4
 Vcs-Git: https://salsa.debian.org/lintian/lintian.git
 Vcs-Browser: https://salsa.debian.org/lintian/lintian
