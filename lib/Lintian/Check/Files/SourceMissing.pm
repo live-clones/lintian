@@ -63,7 +63,7 @@ sub visit_patched_files {
 
     # prebuilt-file or forbidden file type
     $self->pointed_hint('source-contains-prebuilt-wasm-binary', $item->pointer)
-      if $item->file_type =~ m{^WebAssembly \s \(wasm\) \s binary \s module}x;
+      if $item->file_type =~ m{^WebAssembly \s \(wasm\) \s binary}x;
 
     $self->pointed_hint('source-contains-prebuilt-windows-binary',
         $item->pointer)
