@@ -96,7 +96,7 @@ $PROFILE->load(undef, \@INCLUDE_DIRS, $user_dirs);
 my $exit_code = 0;
 
 unless (@ARGV) {
-    my $text = do { local $/ = undef; decode_utf8(<STDIN>) };
+    my $text = do { local $/ = undef; decode_utf8(<STDIN> or $EMPTY) };
     spellcheck($PROFILE->data, undef, $picky, $text);
 }
 
