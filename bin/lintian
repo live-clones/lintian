@@ -728,6 +728,10 @@ for my $subject (@subjects) {
           if $processable->can('files');
 
         for my $basename (@files) {
+            # The basename comes from control file in the deb822 format which
+            # enforces UTF-8 encoding. Convert it to byte string before we
+            # concatenate with the parent prefix.
+            $basename = encode_utf8($basename);
 
             # ignore traversal attempts
             next

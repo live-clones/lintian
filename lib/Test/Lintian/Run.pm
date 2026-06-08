@@ -273,8 +273,10 @@ sub runner {
 
     my $lintian_command_line
       = $testcase->unfolded_value('Lintian-Command-Line');
-    my $command
-      = "cd $runpath; $ENV{'LINTIAN_UNDER_TEST'} $lintian_command_line $subject";
+    utf8::downgrade($lintian_command_line);
+
+    my $command  # FIXME: shell injection possible via $runpath or $subject
+      = "cd $runpath && $ENV{LINTIAN_UNDER_TEST} $lintian_command_line $subject";
     say encode_utf8($command);
     my ($output, $status) = capture_merged { system($command); };
     $status >>= $WAIT_STATUS_SHIFT;
