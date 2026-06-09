@@ -1,5 +1,7 @@
 #!/bin/sh
 
-name=$1
+set -e -u
 
-ar q $name.deb members/extra-stuff
+package=$1
+
+ar q "$package" members/extra-stuff
