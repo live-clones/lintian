@@ -344,7 +344,9 @@ sub check_dep5_copyright {
             push(@{$found_standalone{$license_identifier}}, $section);
         }
 
-        if ($license_identifier =~ /^cc-/ && length $license_text) {
+        if ($license_identifier =~ /^cc-/
+            && length $license_text
+            && $license_text !~ m{usr/share/common-licenses/CC-}) {
 
             my $num_lines = $license_text =~ tr/\n//;
 
