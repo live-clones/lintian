@@ -1,0 +1,18 @@
+Source: [% $source %]
+Priority: optional
+Section: libs
+Maintainer: [% $author %]
+Standards-Version: [% $standards_version %]
+Testsuite: autopkgtest-pkg-nodejs
+Build-Depends: [% $build_depends %]
+Rules-Requires-Root: no
+
+Package: [% $source %]
+Architecture: [% $package_architecture %]
+Pre-Depends: ${misc:Pre-Depends}
+Depends: ${misc:Depends}, ${shlibs:Depends}
+Description: [% $description %]
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
