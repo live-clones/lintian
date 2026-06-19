@@ -29,7 +29,7 @@ use utf8;
 use Const::Fast;
 
 const my $DOLLAR => q{$};
-
+const my $MIN_DH_COMPAT_IMPLICIT_SUBSTVARS => 14;
 const my $NONE => q{NONE};
 
 use Moo;
@@ -39,6 +39,10 @@ with 'Lintian::Check';
 
 sub source {
     my ($self) = @_;
+
+    my $debhelper_level_info = $self->processable->compat_level;
+    my $level = $debhelper_level_info->{level};
+    return if length $level && $level >= $MIN_DH_COMPAT_IMPLICIT_SUBSTVARS;
 
     my $debian_control = $self->processable->debian_control;
 

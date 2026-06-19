@@ -1,3 +1,4 @@
 Skeleton: upload-native
 Testname: typelib-missing-gir-depends
 Description: Check for missing binary dependencies on ${gir:Depends}
+Dh-Compat-Level: 13
