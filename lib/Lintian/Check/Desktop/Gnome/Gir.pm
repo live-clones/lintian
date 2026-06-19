@@ -46,7 +46,7 @@ sub source {
 
         $self->pointed_hint('typelib-missing-gir-depends',
             $debian_control->item->pointer, $installable)
-          if $installable =~ m/^gir1\.2-/
+          if $installable =~ m/^gir[\d.]+-/
           && !$self->processable->binary_relation($installable, 'strong')
           ->satisfies($DOLLAR . '{gir:Depends}');
     }
