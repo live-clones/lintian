@@ -1,0 +1,5 @@
+Skeleton: upload-native
+Testname: fields-build-depends-on-dh-sysuser-runit
+Source: runit
+Package-Architecture: all
+Description: Test that runit may build-depend on dh-sysuser
