@@ -119,7 +119,9 @@ sub source {
         my @thorough
           = grep { $_->value('Restrictions') !~ m{\bsuperficial\b} } @sections;
         $self->pointed_hint('superficial-tests', $tests_control->pointer)
-          if @sections && !@thorough;
+          if @sections
+          && !@thorough
+          && (@testsuites == 0 || @testsuites == @unknown);
 
         my @skip_not_inst
           = grep { $_->value('Restrictions') =~ m{\bskip-not-installable\b} }
