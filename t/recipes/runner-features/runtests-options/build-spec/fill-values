@@ -1,3 +1,4 @@
 Skeleton: upload-native
 Testname: runtests-options
+Dh-Compat-Level: 13
 Description: Test a bad package but use -C to only catch some tags
