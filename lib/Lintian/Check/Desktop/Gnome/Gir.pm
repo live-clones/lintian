@@ -41,12 +41,16 @@ sub source {
     my ($self) = @_;
 
     my $debian_control = $self->processable->debian_control;
+    my $source_fields = $debian_control->source_fields;
+    my $build_depends = $self->processable->relation('Build-Depends');
+
+    return if $build_depends->satisfies('debhelper-compat (>= 14)');
 
     for my $installable ($debian_control->installables) {
 
         $self->pointed_hint('typelib-missing-gir-depends',
             $debian_control->item->pointer, $installable)
-          if $installable =~ m/^gir1\.2-/
+          if $installable =~ m/^gir[\d.]+-/
           && !$self->processable->binary_relation($installable, 'strong')
           ->satisfies($DOLLAR . '{gir:Depends}');
     }
