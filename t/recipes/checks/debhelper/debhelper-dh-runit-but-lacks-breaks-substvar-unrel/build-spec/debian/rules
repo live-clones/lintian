@@ -1,0 +1,11 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@ --with runit
+
+override_dh_runit:
+	for X in $(shell dh_listpackages); do \
+		echo "debian/test.runscript disable,name=$$X" >> debian/$$X.runit; \
+	done
+	dh_runit
+	rm -f debian/*.runit
