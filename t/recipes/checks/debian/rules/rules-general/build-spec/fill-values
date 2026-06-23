@@ -3,3 +3,4 @@ Testname: rules-general
 Package-Architecture: all
 Description: Test various debian/rules checks
 Default-Build-Depends: debhelper (>= [% $dh_compat_level %]~)
+Dh-Compat-Level: 13

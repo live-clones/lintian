@@ -1,4 +1,5 @@
 Skeleton: upload-native
 Testname: debhelper-compat-missing
 Description: Test for missing debian/compat
+Dh-Compat-Level: 13
 Default-Build-Depends: debhelper (>= [% $dh_compat_level %]~)

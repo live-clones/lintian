@@ -9,6 +9,7 @@ Build-Conflicts: bar,
  baz,
  bar [i386]
 Rules-Requires-Root: no
+X-DH-Compat: [% $dh_compat_level %]
 
 Package: [% $source %]
 Architecture: [% $package_architecture %]

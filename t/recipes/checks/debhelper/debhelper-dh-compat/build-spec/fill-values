@@ -1,4 +1,5 @@
 Skeleton: upload-native
 Testname: debhelper-dh-compat
 Description: Test the value of DH_COMPAT
+Dh-Compat-Level: 13
 Default-Build-Depends: debhelper (>= [% $dh_compat_level %]~)

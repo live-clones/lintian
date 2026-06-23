@@ -526,8 +526,10 @@ sub source {
     }
 
     my $virtual_compat;
+    my $x_dh_compat_declared = 0;
     if ($source_fields->declares('X-DH-Compat')) {
         $virtual_compat = $source_fields->value('X-DH-Compat');
+        $x_dh_compat_declared = 1;
     } else {
         $build_prerequisites->visit(
             sub{
@@ -816,7 +818,8 @@ sub source {
       unless $build_prerequisites->satisfies(
         "debhelper:any (>= $debhelper_level~)")
       || $build_prerequisites->satisfies(
-        "debhelper-compat:any (= $debhelper_level)");
+        "debhelper-compat:any (= $debhelper_level)")
+      || $x_dh_compat_declared;
 
     if ($debhelper_level >= $USES_AUTORECONF) {
         for my $autotools_source (qw(dh-autoreconf:any autotools-dev:any)) {
@@ -844,7 +847,7 @@ sub source {
 
         $self->hint('python3-depends-but-no-python3-helper',
             (sort keys %python3_depends))
-          if %python3_depends && !$dh_no_misc && !$uses_debputy_sequencer;
+          if %python3_depends;
     }
 
     if ($seen{'sphinxdoc'} && !$seen_dh_dynamic) {

@@ -1,4 +1,5 @@
 libbaz (source): uses-debhelper-compat-file [debian/compat]
+libbaz (source): package-uses-old-debhelper-compat-version 13
 libbaz (source): no-versioned-debhelper-prerequisite 13
 libbaz (source): maintainer-script-lacks-debhelper-token [debian/lib.prerm]
 libbaz (source): maintainer-script-lacks-debhelper-token [debian/lib.postinst]
