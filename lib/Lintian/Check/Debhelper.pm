@@ -507,24 +507,6 @@ sub source {
         return;
     }
 
-    for my $installable ($self->group->get_installables) {
-
-        next
-          if $installable->type eq 'udeb';
-
-        my $breaks
-          = $self->processable->binary_relation($installable->name, 'Breaks');
-        my $strong
-          = $self->processable->binary_relation($installable->name, 'strong');
-
-        $self->pointed_hint('package-uses-dh-runit-but-lacks-breaks-substvar',
-            $drules->pointer,$installable->name)
-          if $seen{'runit'}
-          && $strong->satisfies('runit:any')
-          && (any { m{^ etc/sv/ }msx } @{$installable->installed->sorted_list})
-          && !$breaks->satisfies($DOLLAR . '{runit:Breaks}');
-    }
-
     my $virtual_compat;
     my $x_dh_compat_declared = 0;
     if ($source_fields->declares('X-DH-Compat')) {
@@ -603,6 +585,26 @@ sub source {
       || $build_prerequisites->satisfies('dh-sequence-zz-debputy-rrr');
     my $dh_no_misc
       = $debhelper_level >= $DEBHELPER_LEVEL_MISC_DEPENDS_AUTO_APPLY;
+
+    for my $installable ($self->group->get_installables) {
+
+        next
+          if $installable->type eq 'udeb';
+
+        my $breaks
+          = $self->processable->binary_relation($installable->name, 'Breaks');
+        my $strong
+          = $self->processable->binary_relation($installable->name, 'strong');
+
+        $self->pointed_hint('package-uses-dh-runit-but-lacks-breaks-substvar',
+            $drules->pointer,$installable->name)
+          if $seen{'runit'}
+          && $strong->satisfies('runit:any')
+          && (any { m{^ etc/sv/ }msx } @{$installable->installed->sorted_list})
+          && !$breaks->satisfies($DOLLAR . '{runit:Breaks}')
+          && !$uses_debputy_sequencer
+          && !$dh_no_misc;
+    }
 
     for my $installable_name (@installable_names) {
 

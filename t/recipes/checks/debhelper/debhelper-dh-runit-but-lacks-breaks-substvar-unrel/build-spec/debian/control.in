@@ -1,0 +1,42 @@
+Source: [% $source %]
+Priority: optional
+Section: python
+Maintainer: [% $author %]
+Standards-Version: [% $standards_version %]
+Build-Depends: [% $build_depends %], dh-runit
+Rules-Requires-Root: no
+
+Package: [% $source %]-missing
+Architecture: [% $package_architecture %]
+Depends: ${misc:Depends}, runit
+Description: [% $description %] (true positive)
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+ .
+ Missing breaks.
+
+Package: [% $source %]-present
+Architecture: [% $package_architecture %]
+Depends: ${misc:Depends}, runit
+Breaks: ${runit:Breaks}
+Description: [% $description %] (false positive)
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+ .
+ Has breaks.
+
+Package: [% $source %]-unrelated
+Architecture: all
+Depends: ${misc:Depends}
+Breaks: ${runit:Breaks}
+Description: [% $description %] (unrelated)
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+ .
+ No, breaks, but unrelated.

@@ -12,7 +12,7 @@ Build-Depends:
  aspell <!nocheck>,
  aspell-en <!nocheck>,
  debhelper <!nocheck>,
- debhelper-compat (= 13),
+ debhelper-compat (= 14),
  debputy <!nocheck>,
  default-jdk-headless | default-jdk <!nocheck>,
  dh-elpa <!nocheck>,
