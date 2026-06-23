@@ -1,3 +1,4 @@
 Skeleton: upload-native
 Testname: debhelper-dh-runit-but-lacks-breaks-substvar
+Dh-Compat-Level: 13
 Description: Check Breaks requirements for dh --with dh_runit
