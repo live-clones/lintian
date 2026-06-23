@@ -844,7 +844,7 @@ sub source {
 
         $self->hint('python3-depends-but-no-python3-helper',
             (sort keys %python3_depends))
-          if %python3_depends && !$dh_no_misc && !$uses_debputy_sequencer;
+          if %python3_depends;
     }
 
     if ($seen{'sphinxdoc'} && !$seen_dh_dynamic) {
