@@ -19,7 +19,7 @@ lintian (2.137.0) unstable; urgency=medium
   * Do not flag autopkgtests which have d/t/control along with
     `Testsuite` in d/control as superficial (Closes: #1033103)
   * Bump recommended debhelper compat-level to 14 and change
-    experimental level to 15 (Closes: #140006)
+    experimental level to 15 (Closes: #1140006)
     + Fixup testsuite with default debhelper 14 and hard-code to
       lower compat where needed
   * Emit "python3-depends-but-no-python3-helper" regardless of
