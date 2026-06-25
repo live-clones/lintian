@@ -1,8 +1,43 @@
-lintian (2.137.0) UNRELEASED; urgency=medium
+lintian (2.137.0) unstable; urgency=medium
 
-  * WIP (generated at release time: please do not add entries below.)
+  [ Nilesh Patra ]
+  * Summary of tag changes:
+    + Added:
+      - build-depends-on-dh-sysuser
+    + Removed:
+      - standards-version-inconsistent
+  * Drop tag: standards-version-inconsistent
+  * Do not emit `incomplete-creative-commons-license` when the text
+    refers to `/usr/share/common-licenses` as CC licenses have been
+    added to base-files (See #1139561 and #1136090)
+  * Do not flag autopkgtests which have d/t/control along with
+    `Testsuite` in d/control as superficial (Closes: #1033103)
+  * Bump recommended debhelper compat-level to 14 and change
+    experimental level to 15 (Closes: #140006)
+    + Fixup testsuite with default debhelper 14 and hard-code to
+      lower compat where needed
+  * Emit "python3-depends-but-no-python3-helper" regardless of
+    debputy or compat 14 as this might mean a missing helper
+  * Do not emit "no-versioned-debhelper-prerequisite" when
+    `X-DH-Compat` is declared
+    + tests (package-uses-x-dh-compat): Adjust to drop FP hint for
+      no-versioned-dh
+  * Do not emit "package-uses-dh-runit-but-lacks-breaks-substvar"
+    when debputy sequencer is used or dh compat is 14 or greater
+    + Add test debhelper-dh-runit-but-lacks-breaks-substvar-unrel: to
+      validate dh-runit-breaks-substvar against dh 14
+  * d/control: Bump debhelper compatibility level to 14
 
- -- Nilesh Patra <nilesh@debian.org>  Mon, 01 Jun 2026 20:21:59 +0530
+  [ Steev Klimaszewski ]
+  * Add profile for ParrotOS
+
+  [ Luca Boccassi ]
+  * Add new tag: build-depends-on-dh-sysuser error
+
+  [ Agathe Porte ]
+  * tags: udev-rule-in-etc: account for usrmerge
+
+ -- Nilesh Patra <nilesh@debian.org>  Thu, 25 Jun 2026 19:03:06 +0530
 
 lintian (2.136.2) unstable; urgency=medium
 
