@@ -1,5 +1,8 @@
 #!/usr/bin/make -f
 
+# dh-runit is disabled by default on Ubuntu
+export DH_RUNIT_FORCE_ENABLE=1
+
 %:
 	dh $@ --with runit
 
