@@ -1,0 +1,4 @@
+deb-format-zstd (binary): unsupported-zstd-deb-archive third (official) member data.tar.zst
+deb-format-zstd (binary): unsupported-zstd-deb-archive second (official) member control.tar.zst
+deb-format-zstd (binary): data-tarball-compression-format zst
+deb-format-zstd (binary): control-tarball-compression-format zst

@@ -15,4 +15,5 @@ Disable-Tags:
  qa-upload-has-incorrect-version-number
  source-nmu-has-incorrect-version-number
  team-upload-has-incorrect-version-number
+ unsupported-zstd-deb-archive
  upstart-job-in-etc-init.d-not-registered-via-update-rc.d
