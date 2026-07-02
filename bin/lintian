@@ -703,7 +703,10 @@ if ($selected{'packages-from-file'}){
 my $pool = Lintian::Pool->new;
 
 for my $subject (@subjects) {
-    die encode_utf8("$subject is not a readable file\n") unless -r $subject;
+    die sprintf(
+        encode_utf8("%s is not a readable file\n"),
+        sanitize_utf8($subject),
+    ) unless -r $subject;
 
     # in ubuntu, automatic dbgsym packages end with .ddeb
     die encode_utf8(
@@ -728,13 +731,19 @@ for my $subject (@subjects) {
           if $processable->can('files');
 
         for my $basename (@files) {
+            # The basename comes from control file in the deb822 format which
+            # enforces UTF-8 encoding. Convert it to byte string before we
+            # concatenate with the parent prefix.
+            $basename = encode_utf8($basename);
 
             # ignore traversal attempts
             next
               if $basename =~ m{/};
 
-            die encode_utf8("$parent/$basename does not exist, exiting\n")
-              unless -e "$parent/$basename";
+            die sprintf(
+                encode_utf8("%s does not exist, exiting\n"),
+                sanitize_utf8("$parent/$basename"),
+            ) unless -e "$parent/$basename";
 
             # only care about some files; ddeb is ubuntu dbgsym
             next
@@ -749,7 +758,8 @@ for my $subject (@subjects) {
         $pool->add_group($group);
 
     } catch {
-        warn encode_utf8("Skipping $subject: $@\n");
+        warn sprintf(encode_utf8("Skipping %s: %s\n"),
+            sanitize_utf8($subject), $@);
         $exit_code = 1;
     }
 }
@@ -975,6 +985,24 @@ sub open_file_or_fd {
     }
 
     return $fd;
+}
+
+=item sanitize_utf8 (OCTETS)
+
+Remove invalid byte sequences that cannot appear in UTF-8 encoding.
+
+=cut
+
+sub sanitize_utf8 {
+    my $octets = shift;
+
+    my $string = do {
+        no warnings 'utf8';
+
+        decode_utf8($octets);
+    };
+
+    return encode_utf8($string);
 }
 
 =item default_jobs
