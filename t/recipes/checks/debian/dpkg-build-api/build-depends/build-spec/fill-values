@@ -1,0 +1,4 @@
+Skeleton: upload-native
+Testname: build-depends
+Description: Test for source package dpkg build API level declared though build dependencies
+Build-Depends: dpkg-build-api (= 1)
