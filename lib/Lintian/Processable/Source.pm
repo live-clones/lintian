@@ -45,7 +45,8 @@ with
   'Lintian::Processable::Source::Overrides',
   'Lintian::Processable::Source::Patched',
   'Lintian::Processable::Source::Relation',
-  'Lintian::Processable::Source::Repacked';
+  'Lintian::Processable::Source::Repacked',
+  'Lintian::Processable::Source::CompatLevel';
 
 =for Pod::Coverage BUILDARGS
 
