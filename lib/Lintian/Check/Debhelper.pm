@@ -58,6 +58,9 @@ const my $MANY_OVERRIDES => 20;
 const my $DEBHELPER_LEVEL_MISC_DEPENDS_AUTO_APPLY => 14;
 const my $DEBHELPER_DEB_SUBST_LEVEL => 13;
 
+# X-DH-Compat works with this as minimum version
+const my $MIN_X_DH_COMPAT_VERS => 13.15;
+
 use Moo;
 use namespace::clean;
 
@@ -172,7 +175,12 @@ sub source {
         }
     }
 
+    my $debhelper_level_info;
+    my $debhelper_level_rules;
     my $debhelper_level;
+    my $debhelper_compat_source;
+    my $virtual_compat;
+    my $x_dh_compat_declared = 0;
     my $dh_compat_variable;
     my $maybe_skipping;
 
@@ -371,20 +379,19 @@ sub source {
                         }
                     }
                 }
-
             } elsif ($line =~ /^\s*export\s+DH_COMPAT\s*:?=\s*([^\s]+)/) {
-                $debhelper_level = $1;
+                $debhelper_level_rules = $1;
 
             } elsif ($line =~ /^\s*export\s+DH_COMPAT/) {
-                $debhelper_level = $dh_compat_variable
+                $debhelper_level_rules = $dh_compat_variable
                   if $dh_compat_variable;
 
             } elsif ($line =~ /^\s*DH_COMPAT\s*:?=\s*([^\s]+)/) {
                 $dh_compat_variable = $1;
 
                 # one can export and then set the value:
-                $debhelper_level = $1
-                  if $debhelper_level;
+                $debhelper_level_rules = $1
+                  if $debhelper_level_rules;
 
             } elsif ($line
                 =~ /^[^:]*(override|execute_(?:after|before))\s+(dh_[^:]*):/){
@@ -507,56 +514,41 @@ sub source {
         return;
     }
 
-    my $virtual_compat;
-    my $x_dh_compat_declared = 0;
-    if ($source_fields->declares('X-DH-Compat')) {
-        $virtual_compat = $source_fields->value('X-DH-Compat');
-        $x_dh_compat_declared = 1;
-    } else {
-        $build_prerequisites->visit(
-            sub{
-                return 0
-                  unless
-                  m{^ debhelper-compat (?: : \S+ )? \s+ [(]= \s+ (\d+) [)] $}x;
-
-                $virtual_compat = $1;
-
-                return 1;
-            },
-            Lintian::Relation::VISIT_PRED_FULL
-              | Lintian::Relation::VISIT_STOP_FIRST_MATCH
-        );
-    }
-
     my $control_item=$self->processable->debian_control->item;
-
+    $debhelper_level_info = $self->processable->compat_level // {};
+    $debhelper_level = $debhelper_level_info->{level};
+    $debhelper_compat_source = $debhelper_level_info->{source};
+    $virtual_compat = $debhelper_level
+      if length $debhelper_compat_source
+      && $debhelper_compat_source =~ m{debhelper-compat};
+    $x_dh_compat_declared = 1
+      if length $debhelper_compat_source
+      && $debhelper_compat_source =~ m{X-DH-Compat};
     $self->pointed_hint('debhelper-compat-virtual-relation',
         $control_item->pointer, $virtual_compat)
-      if length $virtual_compat;
-
-    # gives precedence to virtual compat
-    $debhelper_level = $virtual_compat
       if length $virtual_compat;
 
     my $compat_file = $droot->child('compat');
 
     $self->hint('debhelper-compat-file-is-missing')
       unless ($compat_file && $compat_file->is_open_ok)
-      || $virtual_compat;
+      || $virtual_compat
+      || $x_dh_compat_declared;
 
-    my $from_compat_file = $self->check_compat_file;
+    $self->check_compat_file;
 
-    if (length $debhelper_level && length $from_compat_file) {
-
+# Package will fail to build with different values in d/control and d/compat so this is effecively the only combination
+    if (length $debhelper_level_rules && length $debhelper_level) {
         $self->pointed_hint(
             'declares-possibly-conflicting-debhelper-compat-versions',
-            $compat_file->pointer,$from_compat_file,'vs elsewhere',
-            $debhelper_level);
+            $drules->pointer,
+            $debhelper_level,
+            ' from ',
+            $debhelper_compat_source,
+            'vs DH_COMPAT',
+            $debhelper_level_rules
+        );
     }
-
-    # this is not just to fill in the gap, but because debhelper
-    # prefers DH_COMPAT over debian/compat
-    $debhelper_level ||= $from_compat_file;
 
     $self->hint('debhelper-compat-level', $debhelper_level)
       if length $debhelper_level;
@@ -816,12 +808,12 @@ sub source {
           && !$build_prerequisites_norestriction->satisfies($python_source);
     }
 
+    my $dh_versioned = $debhelper_level;
+    $dh_versioned = $MIN_X_DH_COMPAT_VERS if $x_dh_compat_declared;
     $self->hint('no-versioned-debhelper-prerequisite', $debhelper_level)
       unless $build_prerequisites->satisfies(
-        "debhelper:any (>= $debhelper_level~)")
-      || $build_prerequisites->satisfies(
-        "debhelper-compat:any (= $debhelper_level)")
-      || $x_dh_compat_declared;
+        "debhelper:any (>= $dh_versioned~)")
+      || $virtual_compat;
 
     if ($debhelper_level >= $USES_AUTORECONF) {
         for my $autotools_source (qw(dh-autoreconf:any autotools-dev:any)) {
