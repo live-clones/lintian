@@ -85,6 +85,7 @@ Bastien ROUCARIES
 Felix Lechner
 Schwarz
 Axel Beckert
+Nilesh Patra
 
 lintian Lintian Lintian's # ' # hi emacs
 dpkg

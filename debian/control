@@ -79,6 +79,7 @@ Depends:
  appstream,
  binutils,
  bzip2,
+ debhelper,
  diffstat,
  dpkg (>= 1.23.4),
  dpkg-dev,
