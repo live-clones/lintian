@@ -35,6 +35,7 @@ with 'Lintian::Check';
 const my $EMPTY => q{};
 const my $SPACE => q{ };
 const my $PERCENT => q{%};
+const my $MIN_DH_COMPAT_DH_AUTO_TEST => 13;
 
 my @py3versions = qw(3.13 3.14);
 
@@ -594,8 +595,14 @@ sub source {
         }
     }
 
-    if (my $memorized_position = $overridden{'dh_auto_test'}
-        and ! $build_regular->satisfies('debhelper-compat (>= 13)')) {
+    my $debhelper_level_info = $self->processable->compat_level;
+    if (
+        my $memorized_position = $overridden{'dh_auto_test'}
+        and ! (
+            length $debhelper_level_info->{level}
+            && $debhelper_level_info->{level} >= $MIN_DH_COMPAT_DH_AUTO_TEST
+        )
+    ) {
 
         my @rules = grep {
             !m{^\t\s*[\:\[]}
