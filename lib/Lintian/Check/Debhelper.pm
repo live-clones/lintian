@@ -515,7 +515,7 @@ sub source {
     }
 
     my $control_item=$self->processable->debian_control->item;
-    $debhelper_level_info = $self->processable->compat_level // {};
+    $debhelper_level_info = $self->processable->compat_level;
     $debhelper_level = $debhelper_level_info->{level};
     $debhelper_compat_source = $debhelper_level_info->{source};
     $virtual_compat = $debhelper_level
