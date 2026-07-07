@@ -92,7 +92,7 @@ binary-arch: build-arch binary-correct
 	install -m 755 debian/lib.shlibs $(lib_tmp)/DEBIAN/shlibs
 	install -m 755 debian/lib.symbols $(lib_tmp)/DEBIAN/symbols
 	dpkg-gencontrol -isp -p$(LIB) -P$(lib_tmp)
-	dpkg --build $(lib_tmp) ..
+	dpkg-deb --root-owner-group --build $(lib_tmp) ..
 
 	# now the -dev package
 	install -d $(dev_tmp)/usr/include
@@ -111,7 +111,7 @@ binary-arch: build-arch binary-correct
 	install -m 755 debian/dev.postinst $(dev_tmp)/DEBIAN/postinst
 	install -m 755 debian/dev.prerm $(dev_tmp)/DEBIAN/prerm
 	dpkg-gencontrol -isp -p$(DEV) -P$(dev_tmp)
-	dpkg --build $(dev_tmp) ..
+	dpkg-deb --root-owner-group --build $(dev_tmp) ..
 
 
 binary: binary-arch

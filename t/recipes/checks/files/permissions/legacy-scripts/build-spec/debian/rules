@@ -92,7 +92,7 @@ binary-indep:
 	touch $(tmp)/DEBIAN/prerm
 	chmod 755 $(tmp)/DEBIAN/prerm
 	dpkg-gencontrol -isp
-	dpkg --build $(tmp) ..
+	dpkg-deb --root-owner-group --build $(tmp) ..
 
 binary: binary-arch binary-indep
 
