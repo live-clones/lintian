@@ -530,7 +530,7 @@ sub source {
 
     my $compat_file = $droot->child('compat');
 
-    $self->hint('debhelper-compat-file-is-missing')
+    $self->hint('debhelper-base-compat-level-is-missing')
       unless ($compat_file && $compat_file->is_open_ok)
       || $virtual_compat
       || $x_dh_compat_declared;
