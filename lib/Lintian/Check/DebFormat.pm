@@ -131,15 +131,19 @@ sub installable {
             $self->hint('malformed-deb-archive', 'Missing control.tar member');
             $failed = 1;
         } else {
+            my @control_compressions
+              = $self->data->load('deb-format/control-compressions')->all;
+            my $control_ext_pattern
+              = join(q{|}, map { quotemeta } @control_compressions);
             if (
                 $ctrl_member !~ m{\A
-                     control\.tar(?:\.(?:gz|xz))?  \Z}xsm
+                     control\.tar(?:\.(?:$control_ext_pattern))?  \Z}xsm
             ) {
                 $self->hint(
                     'malformed-deb-archive',
                     join($SPACE,
                         "second (official) member $ctrl_member",
-                        'not control.tar.(gz|xz)')
+                        'not control.tar.(' . $control_ext_pattern . ')')
                 );
                 $failed = 1;
             } elsif ($ctrl_member eq 'control.tar') {
@@ -156,16 +160,20 @@ sub installable {
             $self->hint('malformed-deb-archive', 'Missing data.tar member');
             $failed = 1;
         } else {
+            my @data_compressions
+              = $self->data->load('deb-format/data-compressions')->all;
+            my $data_ext_pattern
+              = join(q{|}, map { quotemeta } @data_compressions);
             if (
                 $data_member !~ m{\A
-                     data\.tar(?:\.(?:gz|bz2|xz|lzma))?  \Z}xsm
+                     data\.tar(?:\.(?:$data_ext_pattern))?  \Z}xsm
             ) {
                 # wasn't okay after all
                 $self->hint(
                     'malformed-deb-archive',
                     join($SPACE,
                         "third (official) member $data_member",
-                        'not data.tar.(gz|xz|bz2|lzma)')
+                        'not data.tar.(' . $data_ext_pattern . ')')
                 );
                 $failed = 1;
             } elsif ($self->processable->type eq 'udeb'
