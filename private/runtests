@@ -255,6 +255,10 @@ say encode_utf8("Running up to $numjobs tests concurrently")
 
 $ENV{'DUMP_LOGS'} = $dump_logs//$NO ? $YES : $NO;
 
+# Set dpkg-deb compressor explicit to avoid deb-format-malformed
+# errors when running on Ubuntu. Use gzip over xz for speed.
+$ENV{'DPKG_DEB_COMPRESSOR_TYPE'} = 'gzip';
+
 # Disable translation support in dpkg as it is a considerable
 # unnecessary overhead.
 $ENV{'DPKG_NLS'} = 0;

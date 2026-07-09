@@ -3,3 +3,4 @@ gz
 xz
 bz2
 lzma
+@if-vendor-is ubuntu zst
