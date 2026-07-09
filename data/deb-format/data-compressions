@@ -1,0 +1,6 @@
+# List of supported file extensions for data.tar
+gz
+xz
+bz2
+lzma
+@if-vendor-is ubuntu zst
