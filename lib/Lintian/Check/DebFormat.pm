@@ -180,14 +180,6 @@ sub installable {
                 && $data_member !~ m/^data\.tar\.[gx]z$/) {
                 $self->hint(
                     'udeb-uses-unsupported-compression-for-data-tarball');
-            } elsif ($data_member eq 'data.tar.lzma') {
-                $self->hint('uses-deprecated-compression-for-data-tarball',
-                    'lzma');
-                # Ubuntu's archive allows lzma packages.
-                $self->hint('lzma-deb-archive');
-            } elsif ($data_member eq 'data.tar.bz2') {
-                $self->hint('uses-deprecated-compression-for-data-tarball',
-                    'bzip2');
             } elsif ($data_member eq 'data.tar') {
                 $self->hint('uses-no-compression-for-data-tarball');
             }
