@@ -4,7 +4,6 @@ Extends: debian/main
 Disable-Tags:
  bugs-field-does-not-refer-to-debian-infrastructure
  debian-changelog-file-is-a-symlink
- lzma-deb-archive
  mail-address-loops-or-bounces
  maintainer-upload-has-incorrect-version-number
  no-human-maintainers
