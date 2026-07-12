@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: typelib-not-missing-gir-depends
+Description: Missing binary dependencies on ${gir:Depends} not a problem with dh 14

@@ -1,3 +1,4 @@
 Skeleton: upload-native
 Testname: gir
 Description: test GObject-Introspection
+Dh-Compat-Level: 13
