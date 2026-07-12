@@ -14,6 +14,7 @@ Depends:
  dh-runit,
  fakeroot,
  gpg-agent,
+ golang-go,
  javahelper,
  libarray-utils-perl,
  libdpkg-perl,
