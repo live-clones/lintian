@@ -35,6 +35,7 @@ our @EXPORT_OK = (
 use Exporter qw(import);
 
 use Const::Fast;
+use IPC::Cmd qw(can_run);
 use Unicode::UTF8 qw(decode_utf8);
 
 use Lintian::IPC::Run3 qw(safe_qx);
@@ -78,16 +79,17 @@ sub guess_version {
 sub version_from_git {
     my ($source_path) = @_;
 
+    my $git_binary = can_run('git');
     my $git_path = "$source_path/.git";
 
     return $EMPTY
-      unless -d $git_path;
+      if not length $git_binary or not -d $git_path;
 
     # Example outputs:
     # 2.115.3-49-g086a9a113
     # 2.115.3-49-g086a9a113-dirty
     my $describe = decode_utf8(
-        safe_qx('git', "--git-dir=$git_path", 'describe', '--dirty'));
+        safe_qx($git_binary, "--git-dir=$git_path", 'describe', '--dirty'));
     chomp $describe;
 
     # Modify it to make it a valid native version number and make it
