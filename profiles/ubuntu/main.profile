@@ -6,6 +6,7 @@ Disable-Tags:
  debian-changelog-file-is-a-symlink
  mail-address-loops-or-bounces
  maintainer-upload-has-incorrect-version-number
+ nmu-in-changelog
  no-human-maintainers
  no-nmu-in-changelog
  not-binnmuable-all-depends-any
@@ -14,4 +15,5 @@ Disable-Tags:
  qa-upload-has-incorrect-version-number
  source-nmu-has-incorrect-version-number
  team-upload-has-incorrect-version-number
+ unnecessary-team-upload
  upstart-job-in-etc-init.d-not-registered-via-update-rc.d
