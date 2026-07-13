@@ -6,6 +6,7 @@ Disable-Tags:
  debian-changelog-file-is-a-symlink
  mail-address-loops-or-bounces
  maintainer-upload-has-incorrect-version-number
+ nmu-in-changelog
  no-human-maintainers
  no-nmu-in-changelog
  not-binnmuable-all-depends-any
