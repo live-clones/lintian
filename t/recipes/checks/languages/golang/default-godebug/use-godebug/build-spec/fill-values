@@ -1,0 +1,5 @@
+Skeleton: upload-native
+Testname: use-godebug
+Extra-Build-Depends: golang-go (>= 2:1.1.1-4)
+Description: Check for DefaultGODEBUG in binary
+Package-Architecture: any
