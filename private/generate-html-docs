@@ -5,18 +5,25 @@ use warnings;
 use utf8;
 
 use Const::Fast;
+use Cwd qw(realpath);
+use File::Basename qw(dirname);
 use IPC::Run3;
 use Pod::Simple::HTMLBatch;
 use Unicode::UTF8 qw(encode_utf8);
 
+use constant THISDIR => dirname realpath __FILE__;
+use lib THISDIR . '/../lib';
+use Lintian::Version qw(guess_version);
+
 const my $EMPTY => q{};
+const my $DOT => q{.};
 
 my $destination = pop @ARGV;
 my @input = @ARGV;
 
 push @input, './lib', './doc/tutorial' unless @input;
 $destination //= './doc/api.html';
-my $lintian_version = guess_version();
+my $lintian_version = guess_version($DOT);
 
 if (!-d $destination) {
     mkdir $destination
@@ -47,42 +54,6 @@ sub header {
 <h1>Lintian (v$lintian_version) API doc</h1>
 <p><em>Note: </em>This API is not stable between releases.</p>
 EOF
-}
-
-sub guess_version {
-    my $version;
-    my $dist;
-
-    my @dpkg_command = qw{dpkg-parsechangelog -c0};
-    my $output;
-
-    run3(\@dpkg_command, \undef, \$output);
-    my @lines = split(/\n/, $output);
-
-    while (defined(my $line = shift @lines)) {
-        $version = $1 if $line =~ m{\A Version: \s*+ (\S++) \s* \Z}xsm;
-        $dist = $1 if $line =~ m{\A Distribution: \s*+ (\S++) \s* \Z}xsm;
-    }
-
-    if ((not defined($dist) or $dist eq 'UNRELEASED') and -d '.git') {
-
-        delete $ENV{'GITDIR'};
-
-        # For unreleased versions, git describe is probably a better
-        # choice when available.
-        my @command = qw(git describe);
-        my $guess;
-        run3(\@command, \undef, \$guess);
-
-        chomp $guess;
-        $version = $guess
-          if $guess ne $EMPTY && $guess =~ m{\A \d+\. }xsm;
-
-        # Ignore git being missing (or even failing to work)
-        # - the version being incorrect for non-release cases is
-        #   not a major issue.
-    }
-    return $version;
 }
 
 package My::Pod::Simple::XHTML;
