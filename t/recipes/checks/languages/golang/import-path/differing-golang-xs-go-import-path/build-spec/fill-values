@@ -1,0 +1,4 @@
+Skeleton: upload-non-native
+Testname: differing-golang-xs-go-import-path
+Description: XS-Go-Import-Path differs from go.mod
+Package-Architecture: all
