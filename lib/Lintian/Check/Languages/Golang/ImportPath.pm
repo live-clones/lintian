@@ -25,6 +25,10 @@ package Lintian::Check::Languages::Golang::ImportPath;
 use v5.20;
 use warnings;
 use utf8;
+use Unicode::UTF8 qw(encode_utf8);
+use Const::Fast;
+
+const my $EMPTY => q{};
 
 use Moo;
 use namespace::clean;
@@ -41,8 +45,33 @@ sub source {
     my $control = $self->processable->debian_control;
     my $source_fields = $control->source_fields;
 
-    $self->hint('missing-xs-go-import-path-for-golang-package')
-      unless $source_fields->declares('XS-Go-Import-Path');
+    if (!$source_fields->declares('XS-Go-Import-Path')) {
+        $self->hint('missing-xs-go-import-path-for-golang-package');
+        return;
+    }
+
+    my $gomod = $self->processable->patched->resolve_path('go.mod');
+    if (defined $gomod && $gomod->is_open_ok) {
+        open(my $fd, '<', $gomod->unpacked_path)
+          or die encode_utf8('Cannot open ' . $gomod->unpacked_path);
+
+        my $xs_go_import_path = $source_fields->value('XS-Go-Import-Path');
+        my $go_module_path = $EMPTY;
+
+        while (my $line = <$fd>) {
+
+            if ($line =~ m{^ \s* module \s+ (\S+) }x) {
+                $go_module_path = $1;
+                last;
+            }
+
+        }
+        close $fd;
+
+        $self->hint('xs-go-import-path-differs-from-module-path',
+            $xs_go_import_path, ' vs ', $go_module_path)
+          if $go_module_path ne $xs_go_import_path;
+    }
 
     return;
 }
