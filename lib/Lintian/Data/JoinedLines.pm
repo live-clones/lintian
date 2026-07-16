@@ -26,6 +26,7 @@ use utf8;
 
 use Carp qw(carp croak);
 use Const::Fast;
+use Debian::DistroInfo qw(get_all_series);
 use List::SomeUtils qw(any);
 use Unicode::UTF8 qw(encode_utf8);
 
@@ -286,6 +287,17 @@ sub load {
 
                 @{$self->keyorder} = grep { $_ ne $value } @{$self->keyorder};
                 delete $self->dataset->{$value};
+
+            } elsif ($directive eq 'include-distro-info-series') {
+
+                croak encode_utf8(
+"Missing vendor name after \@$directive in $path at line $position"
+                )unless length $value;
+
+                my @all_series = get_all_series($value);
+                foreach my $series (@all_series) {
+                    _add_key($self, $series, q{});
+                }
 
             } elsif ($directive eq 'include-parent') {
 

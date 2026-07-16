@@ -7,14 +7,7 @@
 
 
 # Codenames
-stretch
-buster
-bullseye
-bookworm
-trixie
-forky
-duke
-sid
+@include-distro-info-series debian
 
 # Aliases
 oldstable

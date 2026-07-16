@@ -3,40 +3,4 @@
 # Alias
 devel
 
-dapper
-hardy
-karmic
-lucid
-maverick
-natty
-oneiric
-precise
-quantal
-raring
-saucy
-trusty
-utopic
-vivid
-wily
-xenial
-yakkety
-zesty
-artful
-bionic
-cosmic
-disco
-eoan
-focal
-groovy
-hirsute
-impish
-jammy
-kinetic
-lunar
-mantic
-noble
-oracular
-plucky
-questing
-resolute
-stonking
+@include-distro-info-series ubuntu
