@@ -216,6 +216,32 @@ sub matches_any {
 
 =cut
 
+sub _add_key {
+    my ($self, $key, $remainder) = @_;
+
+    # do not autovivify; 'exists' below
+    my $previous;
+    $previous = $self->dataset->{$key}
+      if exists $self->dataset->{$key};
+
+    my $value;
+    if ($self->can('consumer')) {
+
+        $value = $self->consumer($key, $remainder, $previous);
+        next
+          unless defined $value;
+
+    } else {
+        $value = $remainder;
+    }
+
+    push(@{$self->keyorder}, $key)
+      unless exists $self->dataset->{$key};
+
+    $self->dataset->{$key} = $value;
+    return;
+}
+
 sub load {
     my ($self, $search_space, $our_vendor) = @_;
 
@@ -304,26 +330,7 @@ sub load {
         ($key, $remainder) = split($self->separator, $line, 2)
           if defined $self->separator;
 
-        # do not autovivify; 'exists' below
-        my $previous;
-        $previous = $self->dataset->{$key}
-          if exists $self->dataset->{$key};
-
-        my $value;
-        if ($self->can('consumer')) {
-
-            $value = $self->consumer($key, $remainder, $previous);
-            next
-              unless defined $value;
-
-        } else {
-            $value = $remainder;
-        }
-
-        push(@{$self->keyorder}, $key)
-          unless exists $self->dataset->{$key};
-
-        $self->dataset->{$key} = $value;
+        _add_key($self, $key, $remainder);
 
     } continue {
         ++$position;
