@@ -1,5 +1,5 @@
 Tag: xs-go-import-path-differs-from-module-path
-Severity: pedantic
+Severity: info
 Check: languages/golang/import-path
 Explanation: This Golang source declares a <code>XS-Go-Import-Path</code>
  field in the <code>debian/control</code> file that is different from
