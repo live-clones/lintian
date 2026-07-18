@@ -55,7 +55,9 @@ sub source {
         open(my $fd, '<', $gomod->unpacked_path)
           or die encode_utf8('Cannot open ' . $gomod->unpacked_path);
 
-        my $xs_go_import_path = $source_fields->value('XS-Go-Import-Path');
+        my $xs_go_import_path
+          = (split /,/,$source_fields->value('XS-Go-Import-Path'))[0];
+        $xs_go_import_path =~ s/\s+$//g;
         my $go_module_path = $EMPTY;
 
         while (my $line = <$fd>) {

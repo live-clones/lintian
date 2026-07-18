@@ -1,0 +1,4 @@
+Skeleton: upload-non-native
+Testname: golang-xs-go-import-path-multiple
+Description: XS-Go-Import-Path contains multiple values, check FP is not flagged
+Package-Architecture: all

@@ -6,7 +6,8 @@ Standards-Version: [% $standards_version %]
 Rules-Requires-Root: [% $rules_requires_root %]
 Build-Depends: [% $build_depends %],
  golang-go (>= 2:1.1.1-4)
-XS-Go-Import-Path: github.com/Debian/lintian-test-package
+XS-Go-Import-Path: hello,
+                   github.com/Debian/lintian-test-package
 
 Package: [% $source %]
 Architecture: [% $package_architecture %]
