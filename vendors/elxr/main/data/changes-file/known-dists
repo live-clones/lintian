@@ -1,4 +1,3 @@
 # List of eLxr distributions
 
-aria
-bianca
+@include-distro-info-series elxr
