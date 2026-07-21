@@ -142,6 +142,7 @@ sub check_modalias {
 
     my $parser = XML::LibXML->new;
     $parser->set_option('no_network', 1);
+    $parser->set_option('expand_entities', 0);
 
     my $doc;
     try {
