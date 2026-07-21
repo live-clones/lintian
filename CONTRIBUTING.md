@@ -289,7 +289,7 @@ Salsa, ensure you have Salsa CI enabled and if the Lintian test suite
 reports any failures, please review them.
 
 Alternatively, submit your changes to the Debian Bug Tracker by reporting
-a bug against the `lintian` package  On a Debian system, this can usually
+a bug against the `lintian` package. On a Debian system, this can usually
 be done by using `reportbug`:
 
 ```shell
