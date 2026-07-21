@@ -284,7 +284,7 @@ will very likely pass.
 ## Other ways to submit changes
 
 Please make an effort to submit your changes to Lintian by creating a
-[mmerge request][merge-request] on [Salsa][salsa]. When submitting on
+[merge request][merge-request] on [Salsa][salsa]. When submitting on
 Salsa, ensure you have Salsa CI enabled and if the Lintian test suite
 reports any failures, please review them.
 
