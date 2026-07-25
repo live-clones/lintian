@@ -457,7 +457,9 @@
       },
       "single_binary" : {
          "installed_by" : [
-            "libdebhelper-perl"
+            "dh-sequence-single-binary",
+            "debhelper-compat",
+            "debhelper"
          ]
       },
       "sodeps" : {
