@@ -106,13 +106,13 @@ sub parse {
     return;
 }
 
-=item all
+=item all_entries
 
 Returns a list of absolute filenames found for conffiles.
 
 =cut
 
-sub all {
+sub all_entries {
     my ($self) = @_;
 
     return keys %{$self->by_file};
