@@ -349,7 +349,7 @@ sub source {
     # look for upstream signing key
     my @candidates
       = map { $self->processable->patched->resolve_path("debian/$_") }
-      $SIGNING_KEY_FILENAMES->all;
+      $SIGNING_KEY_FILENAMES->all_entries;
     my $keyfile = firstval {$_ && $_->is_file} @candidates;
 
     # check upstream key is present if needed

@@ -63,7 +63,7 @@ sub visit_installed_files {
 
     my @acceptable = (
         @{ $self->group->spelling_exceptions },
-        $self->BINARY_SPELLING_EXCEPTIONS->all
+        $self->BINARY_SPELLING_EXCEPTIONS->all_entries
     );
 
     my $tag_emitter

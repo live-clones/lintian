@@ -51,7 +51,7 @@ has PRIVACY_BREAKER_WEBSITES => (
         my $data
           = $self->data->load('files/privacy-breaker-websites',qr/\s*\~\~/);
 
-        for my $key ($data->all) {
+        for my $key ($data->all_entries) {
 
             my $value = $data->value($key);
 
@@ -91,7 +91,7 @@ has PRIVACY_BREAKER_FRAGMENTS => (
         my $data
           = $self->data->load('files/privacy-breaker-fragments',qr/\s*\~\~/);
 
-        for my $key ($data->all) {
+        for my $key ($data->all_entries) {
 
             my $value = $data->value($key);
 
@@ -119,7 +119,7 @@ has PRIVACY_BREAKER_TAG_ATTR => (
         my $data
           = $self->data->load('files/privacy-breaker-tag-attr',qr/\s*\~\~\s*/);
 
-        for my $key ($data->all) {
+        for my $key ($data->all_entries) {
 
             my $value = $data->value($key);
 

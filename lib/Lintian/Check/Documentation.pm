@@ -90,7 +90,7 @@ has COMPRESS_FILE_EXTENSIONS_OR_ALL => (
           = $self->data->load('files/compressed-file-extensions',qr/\s+/);
 
         my $text = join($VERTICAL_BAR,
-            (map { quotemeta } $COMPRESS_FILE_EXTENSIONS->all));
+            (map { quotemeta } $COMPRESS_FILE_EXTENSIONS->all_entries));
 
         return qr/$text/;
     }

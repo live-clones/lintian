@@ -46,7 +46,8 @@ sub source {
     my ($self) = @_;
 
     my $KNOWN_SOURCE_FIELDS= $self->data->load('common/source-fields');
-    my @unknown= $self->processable->fields->extra($KNOWN_SOURCE_FIELDS->all);
+    my @unknown
+      = $self->processable->fields->extra($KNOWN_SOURCE_FIELDS->all_entries);
 
     # The grep filter is a workaround for #1014885 and #1029471
     $self->hint('unknown-field', $_)
@@ -59,7 +60,8 @@ sub binary {
     my ($self) = @_;
 
     my $KNOWN_BINARY_FIELDS= $self->data->load('fields/binary-fields');
-    my @unknown= $self->processable->fields->extra($KNOWN_BINARY_FIELDS->all);
+    my @unknown
+      = $self->processable->fields->extra($KNOWN_BINARY_FIELDS->all_entries);
 
     $self->hint('unknown-field', $_)for @unknown;
 
@@ -70,7 +72,8 @@ sub udeb {
     my ($self) = @_;
 
     my $KNOWN_UDEB_FIELDS = $self->data->load('fields/udeb-fields');
-    my @unknown = $self->processable->fields->extra($KNOWN_UDEB_FIELDS->all);
+    my @unknown
+      = $self->processable->fields->extra($KNOWN_UDEB_FIELDS->all_entries);
 
     $self->hint('unknown-field', $_)for @unknown;
 

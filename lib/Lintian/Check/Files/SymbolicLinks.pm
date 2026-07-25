@@ -48,7 +48,7 @@ has COMPRESS_FILE_EXTENSIONS_OR_ALL => (
           = $self->data->load('files/compressed-file-extensions',qr/\s+/);
 
         my $text = join($VERTICAL_BAR,
-            (map { quotemeta } $COMPRESS_FILE_EXTENSIONS->all));
+            (map { quotemeta } $COMPRESS_FILE_EXTENSIONS->all_entries));
 
         return qr/$text/;
     }
@@ -120,7 +120,7 @@ sub visit_installed_files {
         my $BUILD_PATH_REGEX
           = $self->data->load('files/build-path-regex',qr/~~~~~/);
 
-        for my $pattern ($BUILD_PATH_REGEX->all) {
+        for my $pattern ($BUILD_PATH_REGEX->all_entries) {
 
             $self->pointed_hint('symlink-target-in-build-tree',
                 $item->pointer, $mylink)

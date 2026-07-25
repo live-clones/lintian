@@ -195,9 +195,9 @@ Data files work with 3 access methods, "all", "known" and "value".
 
 =over 4
 
-=item all
+=item all_entries
 
-"all" (i.e. $data->all) returns a list of all the entries in the data
+"all_entries" (i.e. $data->all_entries) returns a list of all the entries in the data
 file (for key/value tables, all returns the keys).  The list is not
 sorted in any order (not even input order).
 

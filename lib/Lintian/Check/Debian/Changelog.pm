@@ -643,7 +643,7 @@ sub binary {
             my $warned = 0;
             my $longdate = $latest_entry->Date;
 
-            for my $re ($INVALID_DATES->all()) {
+            for my $re ($INVALID_DATES->all_entries()) {
                 if ($longdate =~ m/($re)/i) {
 
                     my $match = $1;

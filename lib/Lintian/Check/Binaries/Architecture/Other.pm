@@ -47,7 +47,7 @@ has ARCH_REGEX => (
         my %arch_regex;
 
         my $data = $self->data->load('binaries/arch-regex', qr/\s*\~\~/);
-        for my $architecture ($data->all) {
+        for my $architecture ($data->all_entries) {
 
             my $pattern = $data->value($architecture);
             $arch_regex{$architecture} = qr{$pattern};

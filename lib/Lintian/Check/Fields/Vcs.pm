@@ -172,7 +172,7 @@ has VCS_HOSTERS_BY_PATTERN => (
         my $KNOWN_VCS_HOSTERS
           = $self->data->load('fields/vcs-hosters',qr/\s*~~\s*/);
 
-        for my $pattern ($KNOWN_VCS_HOSTERS->all) {
+        for my $pattern ($KNOWN_VCS_HOSTERS->all_entries) {
 
             my @known_hosters
               = split(m{,}, $KNOWN_VCS_HOSTERS->value($pattern));

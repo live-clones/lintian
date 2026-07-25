@@ -84,7 +84,7 @@ sub always {
 
     my $BAD_HOMEPAGES = $self->data->load('fields/bad-homepages');
 
-    foreach my $line ($BAD_HOMEPAGES->all) {
+    foreach my $line ($BAD_HOMEPAGES->all_entries) {
         my ($tag, $re) = split(/\s*~~\s*/, $line);
         $self->hint($tag, $orig) if $homepage =~ m/$re/;
     }

@@ -540,7 +540,7 @@ sub _check_reference {
 
             my $volume = $manual->shorthand;
 
-            for my $section_key ($manual->all){
+            for my $section_key ($manual->all_entries){
                 my $entry = $manual->value($section_key);
 
                 my $url = $entry->{$section_key}{url};

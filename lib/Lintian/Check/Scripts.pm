@@ -74,7 +74,7 @@ has INTERPRETERS => (
         my $data
           = $self->data->load('scripts/interpreters',qr/ \s* => \s* /msx);
 
-        for my $interpreter ($data->all) {
+        for my $interpreter ($data->all_entries) {
 
             my $remainder = $data->value($interpreter);
 
@@ -133,7 +133,7 @@ has VERSIONED_INTERPRETERS => (
         my $data = $self->data->load('scripts/versioned-interpreters',
             qr/ \s* => \s* /msx);
 
-        for my $interpreter ($data->all) {
+        for my $interpreter ($data->all_entries) {
 
             my $remainder = $data->value($interpreter);
 
@@ -185,7 +185,7 @@ has BAD_MAINTAINER_COMMANDS => (
         my $data = $self->data->load('scripts/maintainer-script-bad-command',
             qr/\s*\~\~/);
 
-        for my $key ($data->all) {
+        for my $key ($data->all_entries) {
 
             my $value = $data->value($key);
 

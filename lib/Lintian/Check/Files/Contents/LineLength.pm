@@ -59,8 +59,8 @@ has BINARY_FILE_EXTENSIONS_OR_ALL => (
         my $text = join(
             $VERTICAL_BAR,
             (
-                map { quotemeta } $BINARY_FILE_EXTENSIONS->all,
-                $COMPRESSED_FILE_EXTENSIONS->all
+                map { quotemeta } $BINARY_FILE_EXTENSIONS->all_entries,
+                $COMPRESSED_FILE_EXTENSIONS->all_entries
             )
         );
 

@@ -46,13 +46,13 @@ has VCS_PATTERNS_ORED => (
           = $self->data->load('files/compressed-file-extensions',qr/\s+/);
 
         my @quoted_extension_patterns
-          = map { quotemeta } $COMPRESS_FILE_EXTENSIONS->all;
+          = map { quotemeta } $COMPRESS_FILE_EXTENSIONS->all_entries;
         my $ored_extension_patterns= ored_patterns(@quoted_extension_patterns);
 
         my $VCS_CONTROL_PATTERNS
           = $self->data->load('files/vcs-control-files', qr/\s+/);
 
-        for my $pattern ($VCS_CONTROL_PATTERNS->all) {
+        for my $pattern ($VCS_CONTROL_PATTERNS->all_entries) {
             $pattern =~ s/\$[{]COMPRESS_EXT[}]/(?:$ored_extension_patterns)/g;
             push(@vcs_patterns, $pattern);
         }

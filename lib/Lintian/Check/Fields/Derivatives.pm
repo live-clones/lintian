@@ -47,7 +47,7 @@ has DERIVATIVE_FIELDS => (
 
         my $data= $self->data->load('fields/derivative-fields',qr/\s*\~\~\s*/);
 
-        for my $key ($data->all) {
+        for my $key ($data->all_entries) {
 
             my $value = $data->value($key);
             my ($regexp, $explanation) = split(/\s*\~\~\s*/, $value, 2);

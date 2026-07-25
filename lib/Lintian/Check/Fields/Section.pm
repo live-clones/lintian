@@ -94,7 +94,7 @@ sub always {
     # anything go there.
     if ($fraction ne 'oldlibs') {
 
-        for my $pattern ($NAME_SECTION_MAPPINGS->all()) {
+        for my $pattern ($NAME_SECTION_MAPPINGS->all_entries()) {
 
             my $want = $NAME_SECTION_MAPPINGS->value($pattern);
 

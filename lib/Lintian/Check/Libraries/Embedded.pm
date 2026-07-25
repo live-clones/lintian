@@ -49,7 +49,7 @@ has EMBEDDED_LIBRARIES => (
         my $data
           = $self->data->load('binaries/embedded-libs',qr{ \s*+ [|][|] }x);
 
-        for my $label ($data->all) {
+        for my $label ($data->all_entries) {
 
             my $details = $data->value($label);
 

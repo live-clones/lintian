@@ -37,7 +37,7 @@ sub source {
     my $SIGNING_KEY_FILENAMES
       = $self->data->load('common/signing-key-filenames');
 
-    my @keynames = $SIGNING_KEY_FILENAMES->all;
+    my @keynames = $SIGNING_KEY_FILENAMES->all_entries;
     my @keypaths
       = map { $self->processable->patched->resolve_path("debian/$_") }
       @keynames;

@@ -42,7 +42,7 @@ has OBSOLETE_PATHS => (
 
         my $data = $self->data->load('files/obsolete-paths',qr/\s*\->\s*/);
 
-        for my $key ($data->all) {
+        for my $key ($data->all_entries) {
 
             my $value = $data->value($key);
 

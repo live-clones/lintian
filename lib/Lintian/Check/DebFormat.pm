@@ -132,7 +132,8 @@ sub installable {
             $failed = 1;
         } else {
             my @control_compressions
-              = $self->data->load('deb-format/control-compressions')->all;
+              = $self->data->load('deb-format/control-compressions')
+              ->all_entries;
             my $control_ext_pattern
               = join(q{|}, map { quotemeta } @control_compressions);
             if (
@@ -161,7 +162,7 @@ sub installable {
             $failed = 1;
         } else {
             my @data_compressions
-              = $self->data->load('deb-format/data-compressions')->all;
+              = $self->data->load('deb-format/data-compressions')->all_entries;
             my $data_ext_pattern
               = join(q{|}, map { quotemeta } @data_compressions);
             if (
