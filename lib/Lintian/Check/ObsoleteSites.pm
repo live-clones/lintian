@@ -67,7 +67,7 @@ sub search_for_obsolete_sites {
     # strip comments
     $bytes =~ s/^ \s* [#] .* $//gmx;
 
-    for my $site ($OBSOLETE_SITES->all) {
+    for my $site ($OBSOLETE_SITES->all_entries) {
 
         if ($bytes
             =~ m{ (\w+:// (?: [\w.]* [.] )? \Q$site\E [/:] [^\s"<>\$]* ) }ix) {

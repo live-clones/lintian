@@ -95,7 +95,7 @@ sub visit_installed_files {
                 }
             }
 
-            for my $pattern ($self->PKG_CONFIG_BAD_REGEX->all) {
+            for my $pattern ($self->PKG_CONFIG_BAD_REGEX->all_entries) {
 
                 while($block =~ m{$pattern}xmsg) {
 

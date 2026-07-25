@@ -69,7 +69,7 @@ sub binary {
     my ($self) = @_;
 
     my $declared_conffiles = $self->processable->declared_conffiles;
-    for my $relative ($declared_conffiles->all) {
+    for my $relative ($declared_conffiles->all_entries) {
 
         my $item = $self->processable->conffiles_item;
 

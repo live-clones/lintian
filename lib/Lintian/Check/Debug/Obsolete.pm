@@ -55,7 +55,7 @@ sub source {
           )
           if $installable =~ m{ [-] dbg $}x
           && (none { $installable =~ m{$_}xms }
-            $KNOWN_LEGACY_DBG_PATTERNS->all);
+            $KNOWN_LEGACY_DBG_PATTERNS->all_entries);
     }
 
     return;

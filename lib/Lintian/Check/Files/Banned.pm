@@ -49,7 +49,7 @@ sub _md5sum_based_lintian_data {
 
     my %md5sum_data;
 
-    for my $md5sum ($data->all) {
+    for my $md5sum ($data->all_entries) {
 
         my $value = $data->value($md5sum);
 

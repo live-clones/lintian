@@ -46,7 +46,7 @@ has LENNA_BLACKLIST => (
         my $data = $self->data->load('files/banned/lenna/blacklist',
             qr/ \s* ~~ \s* /x);
 
-        for my $md5sum ($data->all) {
+        for my $md5sum ($data->all_entries) {
 
             my $value = $data->value($md5sum);
 

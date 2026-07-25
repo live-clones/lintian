@@ -43,7 +43,7 @@ sub source {
 
     # Check all possible locations for signing keys
     my %key_items;
-    for my $key_name ($SIGNING_KEY_FILENAMES->all) {
+    for my $key_name ($SIGNING_KEY_FILENAMES->all_entries) {
         my $item
           = $self->processable->patched->resolve_path("debian/$key_name");
         $key_items{$key_name} = $item

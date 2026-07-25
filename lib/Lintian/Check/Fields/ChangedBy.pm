@@ -44,7 +44,7 @@ sub changes {
     my $DERIVATIVE_CHANGED_BY
       = $self->data->load('common/derivative-changed-by',qr/\s*~~\s*/);
 
-    for my $regex ($DERIVATIVE_CHANGED_BY->all) {
+    for my $regex ($DERIVATIVE_CHANGED_BY->all_entries) {
 
         next
           if $changed_by =~ /$regex/;

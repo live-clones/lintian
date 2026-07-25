@@ -54,7 +54,7 @@ Lintian::Data::JoinedLines - Lintian interface to query lists of keywords
     if ($list->value($keyword) > 1) {
         # do something ...
     }
-    my @keywords = $list->all;
+    my @keywords = $list->all_entries;
     if ($list->matches_any($keyword)) {
         # do something ...
     }
@@ -121,14 +121,14 @@ has keyorder => (
     default => sub { [] }
 );
 
-=item all
+=item all_entries
 
 Returns all keywords listed in the data file as a list in original order.
 In a scalar context, returns the number of keywords.
 
 =cut
 
-sub all {
+sub all_entries {
     my ($self) = @_;
 
     return @{$self->keyorder};
@@ -208,7 +208,7 @@ sub matches_any {
     $modifiers //= $EMPTY;
 
     return 1
-      if any { $wanted =~ /(?$modifiers)$_/ } $self->all;
+      if any { $wanted =~ /(?$modifiers)$_/ } $self->all_entries;
 
     return 0;
 }

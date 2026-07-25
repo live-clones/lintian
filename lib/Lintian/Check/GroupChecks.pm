@@ -183,7 +183,7 @@ sub check_multiarch {
                     $processable->name . ' => ' . $dep->name
                   )
                   unless any { $processable->name =~ m/$_/xms }
-                  $KNOWN_DBG_PACKAGE->all;
+                  $KNOWN_DBG_PACKAGE->all_entries;
             }
         }
     }

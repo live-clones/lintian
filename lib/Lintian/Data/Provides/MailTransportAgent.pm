@@ -74,11 +74,11 @@ has location => (
 
 has mail_transport_agents => (is => 'rw', default => sub { [] });
 
-=item all
+=item all_entries
 
 =cut
 
-sub all {
+sub all_entries {
     my ($self) = @_;
 
     return keys %{$self->mail_transport_agents};

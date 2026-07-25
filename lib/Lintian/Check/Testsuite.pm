@@ -76,7 +76,7 @@ sub source {
     my $testsuite = $debian_control->source_fields->value('Testsuite');
     my @testsuites = split(/\s*,\s*/, $testsuite);
 
-    my $lc = List::Compare->new(\@testsuites, [$KNOWN_TESTSUITES->all]);
+    my $lc= List::Compare->new(\@testsuites, [$KNOWN_TESTSUITES->all_entries]);
     my @unknown = $lc->get_Lonly;
 
     my $control_position

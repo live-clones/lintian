@@ -35,7 +35,7 @@ sub visit_installed_files {
     my $BUILD_PATH_REGEX
       = $self->data->load('files/build-path-regex', qr/~~~~~/);
 
-    for my $pattern ($BUILD_PATH_REGEX->all) {
+    for my $pattern ($BUILD_PATH_REGEX->all_entries) {
 
         $self->pointed_hint('dir-or-file-in-build-tree', $item->pointer)
           if $item->name =~ m{$pattern}xms

@@ -133,8 +133,8 @@ sub installable {
     my $KNOWN_METAPACKAGES = $self->data->load('fields/metapackages');
 
     my $DH_ADDONS = $self->data->debhelper_addons;
-    my %DH_ADDONS_VALUES
-      = map { $_ => 1 } map { $DH_ADDONS->installed_by($_) } $DH_ADDONS->all;
+    my %DH_ADDONS_VALUES= map { $_ => 1 }
+      map { $DH_ADDONS->installed_by($_) } $DH_ADDONS->all_entries;
 
     my $OBSOLETE_PACKAGES
       = $self->data->load('fields/obsolete-packages',qr/\s*=>\s*/);

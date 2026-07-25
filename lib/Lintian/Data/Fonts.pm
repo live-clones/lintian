@@ -73,11 +73,11 @@ has location => (
 
 has installable_names_by_font => (is => 'rw', default => sub { {} });
 
-=item all
+=item all_entries
 
 =cut
 
-sub all {
+sub all_entries {
     my ($self) = @_;
 
     return keys %{$self->installable_names_by_font};

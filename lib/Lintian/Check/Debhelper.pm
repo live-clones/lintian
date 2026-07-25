@@ -165,7 +165,7 @@ sub source {
     my $DH_COMMANDS_DEPENDS= $self->data->debhelper_commands;
 
     my @KNOWN_DH_COMMANDS;
-    for my $command ($DH_COMMANDS_DEPENDS->all) {
+    for my $command ($DH_COMMANDS_DEPENDS->all_entries) {
         for my $focus ($EMPTY, qw(-arch -indep)) {
             for my $timing (qw(override execute_before execute_after)) {
 
@@ -444,7 +444,7 @@ sub source {
 
                     # Unknown command, so check for likely misspellings
                     my $missingauto = firstval { "dh_auto_$command" eq $_ }
-                    $DH_COMMANDS_DEPENDS->all;
+                    $DH_COMMANDS_DEPENDS->all_entries;
 
                     $self->pointed_hint(
                         'typo-in-debhelper-override-target',$pointer,

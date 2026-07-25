@@ -58,7 +58,7 @@ sub source {
 
     unless ($self->processable->native) {
 
-        for my $pattern ($DERIVATIVE_VERSIONS->all) {
+        for my $pattern ($DERIVATIVE_VERSIONS->all_entries) {
 
             next
               if $version =~ m/$pattern/;

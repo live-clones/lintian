@@ -119,10 +119,10 @@ sub check_spelling {
         my $corrections_multiword
           = $data->load('spelling/corrections-multiword', '\|\|');
         my $corrections = $data->load('spelling/corrections', '\|\|');
-        for my $misspelled ($corrections->all) {
+        for my $misspelled ($corrections->all_entries) {
             $CORRECTIONS{$misspelled} = $corrections->value($misspelled);
         }
-        for my $misspelled_regex ($corrections_multiword->all) {
+        for my $misspelled_regex ($corrections_multiword->all_entries) {
             my $correct = $corrections_multiword->value($misspelled_regex);
             push(@CORRECTIONS_MULTIWORD,
                 [qr/\b($misspelled_regex)\b/, $correct]);

@@ -289,7 +289,7 @@ sub visit_installed_files {
 
         my ($module_name) = ($relative =~ m{^([^/]+)});
 
-        for my $regex ($self->GENERIC_PYTHON_MODULES->all) {
+        for my $regex ($self->GENERIC_PYTHON_MODULES->all_entries) {
             $self->pointed_hint('python-module-has-overly-generic-name',
                 $item->pointer, "($1)")
               if $relative =~ m{^($regex)(?:\.py|/__init__\.py)$}i;

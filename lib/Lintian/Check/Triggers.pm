@@ -49,7 +49,7 @@ has TRIGGER_TYPES => (
 
         my $data
           = $self->data->load('triggers/trigger-types',qr{ \s* => \s* }x);
-        for my $type ($data->all) {
+        for my $type ($data->all_entries) {
 
             my $attributes  = $data->value($type);
 

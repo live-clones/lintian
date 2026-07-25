@@ -91,7 +91,7 @@ has MENU_SECTIONS => (
 
         my $data = $self->data->load('menu-format/menu-sections');
 
-        for my $key ($data->all) {
+        for my $key ($data->all_entries) {
 
             my ($root, $under) = split(m{/}, $key, 2);
 

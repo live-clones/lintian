@@ -168,7 +168,7 @@ has GFDL_FRAGMENTS => (
         my $data = $self->data->load('cruft/gfdl-license-fragments-checks',
             qr/\s*\~\~\s*/);
 
-        for my $gfdlsectionsregex ($data->all) {
+        for my $gfdlsectionsregex ($data->all_entries) {
 
             my $secondpart = $data->value($gfdlsectionsregex);
 
@@ -349,7 +349,7 @@ sub full_text_check {
                       = $self->data->load('cruft/browserify-regex',
                         qr/\s*\~\~\s*/);
 
-                    for my $condition ($BROWSERIFY_REGEX->all) {
+                    for my $condition ($BROWSERIFY_REGEX->all_entries) {
 
                         my $pattern = $BROWSERIFY_REGEX->value($condition);
                         if ($contiguous =~ m{$pattern}msx) {
@@ -443,7 +443,7 @@ sub full_text_check {
             my $BROWSERIFY_REGEX
               = $self->data->load('cruft/browserify-regex',qr/\s*\~\~\s*/);
 
-            for my $condition ($BROWSERIFY_REGEX->all) {
+            for my $condition ($BROWSERIFY_REGEX->all_entries) {
 
                 my $pattern = $BROWSERIFY_REGEX->value($condition);
                 if ($contiguous =~ m{$pattern}msx) {
@@ -630,7 +630,7 @@ sub rfc_whitelist_filename {
     # specified separator protects against spaces in pattern
     my $RFC_WHITELIST= $self->data->load('cruft/rfc-whitelist',qr/\s*\~\~\s*/);
 
-    my @patterns = $RFC_WHITELIST->all;
+    my @patterns = $RFC_WHITELIST->all_entries;
 
     return 0
       if any { $lcname =~ m/ $_ /xms } @patterns;
