@@ -52,6 +52,7 @@ sub source {
       unless $self->processable->fields->declares('Maintainer');
 
     my $maintainer = $self->processable->fields->value('Maintainer');
+    my $source_pkg = $self->processable->source_name;
 
     my $parsed = Email::Address::XS->parse($maintainer);
     return
@@ -63,6 +64,10 @@ sub source {
     $self->hint('no-human-maintainers')
       if exists $REQ_HUMAN_UPLOADER_HOSTS{$parsed->host}
       && !$self->processable->fields->declares('Uploaders');
+
+    $self->hint('wrong-package-mail-alias')
+      if $parsed->host eq 'packages.debian.org'
+      && $parsed->user ne $source_pkg;
 
     $self->hint('trailing-comma-in-maintainer-field', $maintainer)
       if $maintainer =~ /,$/;
