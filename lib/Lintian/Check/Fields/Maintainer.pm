@@ -29,11 +29,21 @@ package Lintian::Check::Fields::Maintainer;
 use v5.20;
 use warnings;
 use utf8;
+use Email::Address::XS;
+use Const::Fast;
 
 use Moo;
 use namespace::clean;
 
 with 'Lintian::Check';
+
+const my %REQ_HUMAN_UPLOADER_HOSTS => map { $_ => 1 } qw(
+  lists.debian.org
+  lists.alioth.debian.org
+  tracker.debian.org
+  security.debian.org
+  packages.debian.org
+);
 
 sub source {
     my ($self) = @_;
@@ -43,15 +53,16 @@ sub source {
 
     my $maintainer = $self->processable->fields->value('Maintainer');
 
-    my $is_list
-      = $maintainer =~ /\@lists(?:\.alioth)?\.debian\.org\b/
-      || $maintainer =~ /\@alioth-lists\.debian\.net\b/
-      || $maintainer =~ /\@tracker\.debian\.org\b/
-      || $maintainer =~ /\@security\.debian\.org\b/
-      || $maintainer =~ /\@packages\.debian\.org\b/;
+    my $parsed = Email::Address::XS->parse($maintainer);
+    return
+      unless $parsed->is_valid;
+
+    return
+      unless length $parsed->address;
 
     $self->hint('no-human-maintainers')
-      if $is_list && !$self->processable->fields->declares('Uploaders');
+      if exists $REQ_HUMAN_UPLOADER_HOSTS{$parsed->host}
+      && !$self->processable->fields->declares('Uploaders');
 
     $self->hint('trailing-comma-in-maintainer-field', $maintainer)
       if $maintainer =~ /,$/;
