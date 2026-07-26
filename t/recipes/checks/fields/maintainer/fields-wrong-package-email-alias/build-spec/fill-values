@@ -1,0 +1,4 @@
+Skeleton: upload-non-native
+Testname: fields-wrong-package-email-alias
+Description: Checks for a package using packages.debian.org email with wrong source package name
+Author: Lintian Maintainers <wrong-email-alias@packages.debian.org>
