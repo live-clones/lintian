@@ -352,12 +352,14 @@
       },
       "phpcomposer" : {
          "installed_by" : [
-            "pkg-php-tools"
+            "pkg-php-tools",
+            "dh-sequence-phpcomposer"
          ]
       },
       "phppear" : {
          "installed_by" : [
-            "pkg-php-tools"
+            "pkg-php-tools",
+            "dh-sequence-phppear"
          ]
       },
       "pkgkde_symbolshelper" : {
