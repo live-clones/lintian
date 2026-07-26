@@ -1,0 +1,3 @@
+Skeleton: upload-non-native
+Testname: fields-unknown-autobuild-unrel
+Description: Check XS-Autobuild does not spawn unknown-field
