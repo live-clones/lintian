@@ -750,8 +750,10 @@ sub clean_text {
     # to space character
     $text =~ s{\s++}{ }gsm;
 
-    # trim both ends
-    $text =~ s/^\s+|\s+$//g;
+    # trim both ends; two anchored passes are much faster than the
+    # unanchored alternation with /g on large buffers
+    $text =~ s/^\s+//;
+    $text =~ s/\s+$//;
 
     return $text;
 }
@@ -769,8 +771,10 @@ sub _strip_punct() {
     # to space character
     $text =~ s{\s++}{ }gsm;
 
-    # trim both ends
-    $text =~ s/^\s+|\s+$//g;
+    # trim both ends; two anchored passes are much faster than the
+    # unanchored alternation with /g on large buffers
+    $text =~ s/^\s+//;
+    $text =~ s/\s+$//;
 
     return $text;
 }
@@ -780,11 +784,14 @@ sub check_for_single_bad_license {
 
     # do fast keyword search
     # could make more sense as 'return 1 unless all' but does not work
+    # index() instead of a regex: interpolating \Q$_\E recompiled a
+    # pattern per keyword/file pair, and under /x the surrounding
+    # spaces were ignored anyway, making this a plain substring search
     return 0
-      if none { $lowercase =~ / \Q$_\E /msx } @{$license_data->{keywords}};
+      if none { index($lowercase, $_) >= 0 } @{$license_data->{keywords}};
 
     return 0
-      if none { $clean =~ / \Q$_\E /msx }@{$license_data->{sentences}};
+      if none { index($clean, $_) >= 0 } @{$license_data->{sentences}};
 
     my $regex = $license_data->{regex};
     return 0
