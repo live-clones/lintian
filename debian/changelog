@@ -1,5 +1,11 @@
 lintian (2.138.1~git) UNRELEASED; urgency=medium
 
+  * elf index: batch readelf calls (32 files per invocation instead of
+    one process per file); readelf accounted for ~33% of a full run on
+    a large package (1727 spawns on llvm-toolchain, now ~60).
+    Estimated saving: ~7 min on a 26-min llvm-toolchain run; fork cost
+    grows with parent RSS (measured ~0.3 s per spawn from a 12 GiB
+    parent, vs ~0.02 s from a small one).
   * WIP (generated at release time: please do not add entries below.)
 
  -- Nilesh Patra <nilesh@debian.org>  Sun, 12 Jul 2026 13:26:27 +0530
