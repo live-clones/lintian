@@ -24,6 +24,8 @@ use v5.20;
 use warnings;
 use utf8;
 
+use Const::Fast;
+
 use Moo;
 use namespace::clean;
 
@@ -59,6 +61,40 @@ my %DEPRECATED_STDLIBS = (
     'xdrlib'      => { 'deprecated' => '3.11',  'removed' => '3.13' }
 );
 
+# The library names are folded into a single alternation so that the
+# patterns can be compiled once at load time; interpolating each name
+# separately would force a regex compilation for every line/library
+# combination, which dominates the check's runtime on large source
+# trees.
+my $DEPRECATED_STDLIB_ALTERNATION = join q{|}, sort keys %DEPRECATED_STDLIBS;
+
+# these do not match relative imports (from .library,
+# import ..library) on the assumption that those are
+# probably something package-internal
+# not the actual stdlib module
+# from library import foo
+# from library.sub import foo
+# does not match "from library2"
+# does not match "from notlibrary"
+# does not match "from library2.library"
+const my $DEPRECATED_STDLIB_FROM_REGEX =>
+  qr{^\s*from ($DEPRECATED_STDLIB_ALTERNATION)(?:\s+|\..+)import};
+
+# import foo, library, bar
+# import library
+# import library as l
+# import library.sub
+# import library, bar
+# import foo, library
+# import foo, library.sub
+# import foo, library.sub, bar
+# does not match "import library2"
+# does not match "import notlibrary"
+# does not match "import library2.library"
+# does not match "import library2 as library"
+const my $DEPRECATED_STDLIB_IMPORT_REGEX =>
+  qr{^\s*import(?:\s+|.+,\s?)($DEPRECATED_STDLIB_ALTERNATION)(?:[,.\s]|$)};
+
 sub visit_patched_files {
     my ( $self, $item ) = @_;
 
@@ -82,43 +118,20 @@ sub visit_patched_files {
     my $position = 1;
     while ( my $line = <$fd> ) {
 
-        my $pointer = $item->pointer($position);
+        next
+          unless $line =~ $DEPRECATED_STDLIB_FROM_REGEX
+          || $line =~ $DEPRECATED_STDLIB_IMPORT_REGEX;
 
-        foreach my $library ( keys %DEPRECATED_STDLIBS ) {
+        my $library    = $1;
+        my $deprecated = $DEPRECATED_STDLIBS{$library}{'deprecated'};
+        my $removed    = $DEPRECATED_STDLIBS{$library}{'removed'};
 
-            my $deprecated = $DEPRECATED_STDLIBS{$library}{'deprecated'};
-            my $removed    = $DEPRECATED_STDLIBS{$library}{'removed'};
-
-            $self->pointed_hint(
-                'uses-deprecated-python-stdlib',
-                $pointer,
-                $library,
-"(deprecated in Python $deprecated, removed in Python $removed)"
-              )
-              # these do not match relative imports (from .library,
-              # import ..library) on the assumption that those are
-              # probably something package-internal
-              # not the actual stdlib module
-              # from library import foo
-              # from library.sub import foo
-              # does not match "from library2"
-              # does not match "from notlibrary"
-              # does not match "from library2.library"
-              if $line =~ m{^\s*from $library(\s+|\..+)import}
-              # import foo, library, bar
-              # import library
-              # import library as l
-              # import library.sub
-              # import library, bar
-              # import foo, library
-              # import foo, library.sub
-              # import foo, library.sub, bar
-              # does not match "import library2"
-              # does not match "import notlibrary"
-              # does not match "import library2.library"
-              # does not match "import library2 as library"
-              ||$line =~ m{^\s*import(\s+|.+,\s?)$library([,.\s]|$)};
-        }
+        $self->pointed_hint(
+            'uses-deprecated-python-stdlib',
+            $item->pointer($position),
+            $library,
+            "(deprecated in Python $deprecated, removed in Python $removed)"
+        );
 
     }continue {
         ++$position;
