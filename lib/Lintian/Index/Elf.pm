@@ -46,6 +46,9 @@ const my $NEWLINE => qq{\n};
 
 const my $LINES_PER_FILE => 3;
 
+# files per readelf invocation
+const my $BATCH_SIZE => 32;
+
 =head1 NAME
 
 Lintian::Index::Elf - binary symbol information.
@@ -104,17 +107,12 @@ sub add_elf {
             && $_->name =~ /\.a$/)
     } @files;
 
-    for my $file (@with_objects) {
+    my %item_by_name = map { $_->name => $_ } @with_objects;
 
-        local $SIG{__WARN__}= sub {
-            warn encode_utf8($self->identifier
-                  . ': Warning while running readelf on'
-                  . $file->name
-                  . ": $_[0]");
-        };
+    while (my @batch = splice(@with_objects, 0, $BATCH_SIZE)) {
 
-        my $file_abspath = rel2abs($file->name, $self->basedir);
-        my @command = (qw{readelf --all --wide}, $file_abspath);
+        my @batch_abspaths = map { rel2abs($_->name, $self->basedir) } @batch;
+        my @command = (qw{readelf --all --wide}, @batch_abspaths);
         my $combined_bytes;
 
         run3(\@command, \undef, \$combined_bytes, \$combined_bytes);
@@ -129,35 +127,29 @@ sub add_elf {
 
         } else {
             $combined_output = $combined_bytes;
-            my @display_command = @command;
-            $display_command[-1] = $file->name;
             $errors
-              .= "Output from '@display_command' is not valid UTF-8". $NEWLINE;
+              .= q{Output from 'readelf --all --wide' on batch starting with }
+              . $batch[0]->name
+              . ' is not valid UTF-8'
+              . $NEWLINE;
         }
 
-        # each object file in an archive gets its own File section
+        # each argument and each object file in an archive gets its own
+        # File section when readelf receives more than one argument
         my @per_files = split(/^(File): (.*)$/m, $combined_output);
         shift @per_files while @per_files && $per_files[0] ne 'File';
 
-        @per_files = ($combined_output)
-          unless @per_files;
-
         # Special case - readelf will not prefix the output with "File:
-        # $name" if it only gets one ELF file argument, so act as if it did...
-        # (but it does "the right thing" if passed a static lib >.>)
-        #
-        # - In fact, if readelf always emitted that File: header, we could
-        #   simply use xargs directly on readelf and just parse its output
-        #   in the loop below.
-        if (@per_files == 1) {
-            unshift(@per_files, $file_abspath);
-            unshift(@per_files, 'File');
-        }
+        # $name" if it only gets one ELF file argument, so act as if it
+        # did... (but it does "the right thing" if passed a static lib >.>)
+        @per_files = ('File', $batch_abspaths[0], $combined_output)
+          if !@per_files && @batch == 1;
 
         unless (@per_files % $LINES_PER_FILE == 0) {
 
             $errors
-              .= "Parsed data from readelf is not a multiple of $LINES_PER_FILE for $file"
+              .= "Parsed data from readelf is not a multiple of $LINES_PER_FILE for batch starting with "
+              . $batch[0]->name
               . $NEWLINE;
             next;
         }
@@ -168,12 +160,14 @@ sub add_elf {
             my $per_file = shift @per_files;
 
             unless ($fixed eq 'File') {
-                $errors .= "Unknown output from readelf for $file" . $NEWLINE;
+                $errors
+                  .= "Unknown output from readelf near $recorded_name"
+                  . $NEWLINE;
                 next;
             }
 
             unless (length $recorded_name) {
-                $errors .= "No file name from readelf for $file" . $NEWLINE;
+                $errors .= 'No file name from readelf' . $NEWLINE;
                 next;
             }
 
@@ -182,14 +176,27 @@ sub add_elf {
             $container = $recorded_name
               unless defined $container && defined $member;
 
+            # drop the newline left over from splitting on the File:
+            # line so standalone files parse like single-argument output
+            $per_file =~ s/^\n//
+              unless defined $member;
+
             $container = abs2rel($container, $self->basedir);
 
-            unless ($container eq $file->name) {
+            my $file = $item_by_name{$container};
+
+            unless (defined $file) {
                 $errors
-                  .= "Container not same as file name ($container vs $file)"
-                  . $NEWLINE;
+                  .= "Unknown container from readelf ($container)". $NEWLINE;
                 next;
             }
+
+            local $SIG{__WARN__}= sub {
+                warn encode_utf8($self->identifier
+                      . ': Warning while running readelf on'
+                      . $file->name
+                      . ": $_[0]");
+            };
 
             # ignore empty archives, such as in musl-dev_1.2.1-1_amd64.deb
             next
