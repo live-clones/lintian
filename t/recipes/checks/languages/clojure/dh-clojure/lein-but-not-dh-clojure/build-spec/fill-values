@@ -1,0 +1,4 @@
+Skeleton: upload-non-native
+Testname: lein-but-not-dh-clojure
+Description: Checks for a Clojure package using leiningen but not dh-clojure
+Extra-Build-Depends: leiningen
