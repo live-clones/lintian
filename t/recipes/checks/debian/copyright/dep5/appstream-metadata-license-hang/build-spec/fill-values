@@ -1,0 +1,3 @@
+Skeleton: upload-non-native
+Testname: appstream-metadata-license-hang
+Description: Test that lintian does not hang on parsing improper XML for license check

@@ -804,6 +804,7 @@ sub check_dep5_copyright {
 
             my $parser = XML::LibXML->new;
             $parser->set_option('no_network', 1);
+            $parser->set_option('expand_entities', 0);
 
             my $file = $self->processable->patched->resolve_path($name);
             my $doc;
