@@ -1,0 +1,3 @@
+Skeleton: upload-non-native
+Testname: puppet-module-but-not-dh-puppet
+Description: Checks for a Puppet module package not using dh-puppet
