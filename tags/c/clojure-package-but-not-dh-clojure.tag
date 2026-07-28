@@ -1,6 +1,7 @@
 Tag: clojure-package-but-not-dh-clojure
 Severity: warning
 Check: languages/clojure/dh-clojure
+Experimental: yes
 Explanation: This Clojure source package build-depends on <code>leiningen</code>
  but does not build using <code>dh-clojure</code>.
  .
