@@ -34,7 +34,7 @@ with 'Lintian::Check';
 const my $ARROW => qq{ \N{RIGHT-POINTING DOUBLE ANGLE QUOTATION MARK} };
 
 my %team_names = (
-    'debian-go@lists.debian.org' => 'golang',
+    'team+pkg-go@tracker.debian.org' => 'golang',
     'debian-clojure@lists.debian.org' => 'clojure',
     'pkg-java-maintainers@lists.alioth.debian.org' => 'java',
     'pkg-javascript-maintainers@lists.alioth.debian.org' => 'javascript',
