@@ -18,15 +18,15 @@ Checksums-Sha256
 #
 # NB: Do not rely on @if-vendor-is-not in your data files; it may
 # disappear without notice
-@if-vendor-is-not debian Debian-Vcs-Arch
-@if-vendor-is-not debian Debian-Vcs-Browser
-@if-vendor-is-not debian Debian-Vcs-Bzr
-@if-vendor-is-not debian Debian-Vcs-Cvs
-@if-vendor-is-not debian Debian-Vcs-Darcs
-@if-vendor-is-not debian Debian-Vcs-Git
-@if-vendor-is-not debian Debian-Vcs-Hg
-@if-vendor-is-not debian Debian-Vcs-Mtn
-@if-vendor-is-not debian Debian-Vcs-Svn
+@if-vendor-is-not debian XS-Debian-Vcs-Arch
+@if-vendor-is-not debian XS-Debian-Vcs-Browser
+@if-vendor-is-not debian XS-Debian-Vcs-Bzr
+@if-vendor-is-not debian XS-Debian-Vcs-Cvs
+@if-vendor-is-not debian XS-Debian-Vcs-Darcs
+@if-vendor-is-not debian XS-Debian-Vcs-Git
+@if-vendor-is-not debian XS-Debian-Vcs-Hg
+@if-vendor-is-not debian XS-Debian-Vcs-Mtn
+@if-vendor-is-not debian XS-Debian-Vcs-Svn
 
 # Fields added by tag2upload
 Git-Tag-Info
@@ -48,7 +48,7 @@ Origin
 #
 # NB: Do not rely on @if-vendor-is-not in your data files; it may
 # disappear without notice
-@if-vendor-is-not debian Original-Maintainer
+@if-vendor-is-not debian XSBC-Original-Maintainer
 
 Package-List
 Rules-Requires-Root
