@@ -41,9 +41,11 @@ sub visit_installed_files {
 
     for my $symbol (@{$item->elf->{SYMBOLS} // [] }) {
 
-        # According to the binutils documentation[1], the profiling symbol
-        # can be named "mcount", "_mcount" or even "__mcount".
-        # [1] http://sourceware.org/binutils/docs/gprof/Implementation.html
+        $is_profiled = 1
+          if $symbol->version =~ /^GLIBC_.*/
+          && $symbol->name =~ m{\A __fentry__ \Z}xsm
+          && ($symbol->section eq 'UND' || $symbol->section eq '.text');
+
         $is_profiled = 1
           if $symbol->version =~ /^GLIBC_.*/
           && $symbol->name =~ m{\A _?+ _?+ (gnu_)?+mcount(_nc)?+ \Z}xsm

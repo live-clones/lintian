@@ -1,6 +1,9 @@
 #!/usr/bin/make -f
 
 export DEB_BUILD_MAINT_OPTIONS=hardening=+all
+ifeq ($(DEB_HOST_ARCH), amd64)
+export NO_FENTRY := -mno-fentry
+endif
 
 %:
 	dh $@
