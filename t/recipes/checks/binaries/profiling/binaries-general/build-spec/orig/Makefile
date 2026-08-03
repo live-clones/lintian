@@ -16,6 +16,7 @@ all:
 	# rpath not matching any of the exceptions to the rpath checks
 	#  - with profiling enabled.
 	$(COMPILE_NOPIE) -o basic basic.c -pg -Wl,--rpath,/usr/local/lib
+	$(COMPILE_NOPIE) -o basic.nofentry basic.c -pg $(NO_FENTRY) -Wl,--rpath,/usr/local/lib
 	# rpath shipped in the package, but one of {/usr}?/lib
 	$(COMPILE) -o basiclibrpath basic.c -Wl,--rpath,/usr/lib
 	# non-special rpath shipped in the package
@@ -37,6 +38,7 @@ install:
 	install -d $(DESTDIR)/usr/bin
 
 	install -m 755 -c basic $(DESTDIR)/usr/share/foo/basic
+	install -m 755 -c basic.nofentry $(DESTDIR)/usr/share/foo/basic.nofentry
 	objcopy --only-keep-debug basic $(DESTDIR)/usr/lib/debug/usr/share/foo/basic
 	strip -s $(DESTDIR)/usr/lib/debug/usr/share/foo/basic
 	install -m 755 -c basiclibrpath $(DESTDIR)/usr/lib/foo/basiclibrpath
@@ -59,6 +61,6 @@ install:
 	install -m 755 basic.static $(DESTDIR)/usr/bin/static
 
 clean distclean:
-	rm -f basic
+	rm -f basic basic.nofentry
 
 check test:
