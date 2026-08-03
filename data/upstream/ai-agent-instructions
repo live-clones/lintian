@@ -1,0 +1,11 @@
+# Regular expressions for instructions files consumed by AI coding agents
+# and shipped by upstream. Matched against the file name (relative to the
+# patched source tree root).
+
+^AGENTS\.md$
+^CLAUDE\.md$
+^GEMINI\.md$
+^\.cursorrules$
+^\.windsurfrules$
+^\.github/copilot-instructions\.md$
+^\.cursor/rules/[^/]+\.mdc$
