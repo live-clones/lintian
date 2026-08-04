@@ -1,8 +1,81 @@
-lintian (2.138.1~git) UNRELEASED; urgency=medium
+lintian (2.139.0) unstable; urgency=medium
 
-  * WIP (generated at release time: please do not add entries below.)
+  [ Nilesh Patra ]
+  * d/control: Drop ${misc:Depends} from Depends
+  * Move d/lintian-overrides -> d/lintian.lintian-overrides
+  * New tag: binary-contains-insecure-defaultgodebug-settings
+    (Closes: #1141908)
+  * tests(use-godebug): Add test to test against
+    `binary-contains-defaultgodebug-options`
+  * Add golang-go as a test-dep both for build and autopkgtest
+  * New tag: xs-go-import-path-differs-from-module-path
+  * tests(differing-golang-xs-go-import-path): Add test to test against
+    `xs-go-import-path-differs-from-module-path`
+  * Golang::ImportPath - consider first path in case of multiple
+    `XS-Go-Import-Path`
+  * tests(golang-xs-go-import-path-multiple): Add test to check
+    `xs-go-import-path-differs-from-module-path` against multiple go import
+    paths
+  * tests(differing-golang-xs-go-import-path): Drop bogus Go-Import-Path in
+    d/control.in
+  * Bump severity of `xs-go-import-path-differs-from-module-path` to `info`
+  * Rename `sub all` to `sub all_entries` in lib sources
+  * Replace `->all` calls with `->all_entries` in Checks, docs and tests
+  * Update `single_binary` to be provided by sequencers and debhelper itself
+    (Closes: #1140893)
+  * Update phpcomposer to be provided by dh-sequence-phpcomposer
+    (Closes: #1142809)
+  * Update phppear to be provided by dh-sequence-phppear
+  * tests(appstream-metadata-license-hang): Add test to check against hang due
+    to missing `expand_entities` set to `0` (test against: #1142332)
+  * Lintian::Check::Fields::Maintainer::Team - Update team email address for
+    go team
+  * Lintian::Check::Fields::Maintainer - Improve check for
+    `no-human-maintainers` to instead parse email and check hosts instead of
+    checking raw maintainer strings
+  * Add new tag wrong-package-mail-alias to flag instances of packages using
+    wrong packages.debian.org alias (Closes: #1142627)
+  * tests(fields-wrong-package-email-alias): Add test for tag
+    wrong-package-mail-alias
+  * Lintian::Check::Fields::Unknown - Drop prefix starting with X (XS-*,
+    XSBC-* etc) as the fields in `.dsc` strips them off
+    (Closes: #1029471, #1013414)
+  * tests(fields-unknown-autobuild-unrel): Add test to ensure XS-Autobuild
+    does not spawn unknown-field (to test against #1013414)
+  * source-fields: Update downstream fields with full prefix
+    (Closes: #1141065)
+  * Check for `__fentry__` for profiling options as well
+  * tests(binaries-general): Also add a test to compile with `-mno-fentry` on
+    amd64 to continue testing against `mcount`
 
- -- Nilesh Patra <nilesh@debian.org>  Sun, 12 Jul 2026 13:26:27 +0530
+  [ Simon McVittie ]
+  * t: Make a test package more realistic
+  * Remove gobject-introspection-package-missing-depends-on-gir-depends tag
+  * Avoid typelib-missing-gir-depends with debhelper compat level 14
+    (Closes: #1140147)
+  * Add tests for #1140147
+
+  [ Benjamin Drung ]
+  * Disable unnecessary-team-upload and nmu-in-changelog tags in ubuntu/main
+    profile
+  * Use distro-info-data in changes-file/known-dists (Closes: #1141228)
+    (LP: #1012459)
+
+  [ Nicholas Guriev ]
+  * Do not fail at version guessing when Git binary is unavailable
+  * Do not fail spellintian on empty stdin
+  * Implement dpkg-build-api-level and debian-rules-defines-dpkg-build-api
+    tags
+
+  [ Nikolas Nyby ]
+  * Fix typos in CONTRIBUTING.md
+  * XML parser: Disable external entity expansion. (Closes: #1142332)
+
+  [ Louis-Philippe Véronneau ]
+  * d/control: debputy is a transitionnal package, use dh-debputy instead
+  * new tag 'puppet-module-but-not-dh-puppet'
+
+ -- Louis-Philippe Véronneau <pollo@debian.org>  Tue, 04 Aug 2026 00:29:41 -0400
 
 lintian (2.138.0) unstable; urgency=medium
 
