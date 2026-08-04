@@ -50,13 +50,6 @@ sub visit_installed_files {
           if $symbol->version =~ /^GLIBC_.*/
           && $symbol->name =~ m{\A _?+ _?+ (gnu_)?+mcount(_nc)?+ \Z}xsm
           && ($symbol->section eq 'UND' || $symbol->section eq '.text');
-
-        # This code was used to detect profiled code in Wheezy and earlier
-        $is_profiled = 1
-          if $symbol->section eq '.text'
-          && $symbol->version eq 'Base'
-          && $symbol->name eq '__gmon_start__'
-          && $architecture ne 'hppa';
     }
 
     $self->pointed_hint('binary-compiled-with-profiling-enabled',
