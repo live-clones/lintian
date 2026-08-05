@@ -195,6 +195,7 @@ sub process {
 
         my @hints;
         my %enabled_overrides;
+        my %checks_actually_run;
 
         say {*STDERR}
           encode_utf8(
@@ -255,6 +256,22 @@ sub process {
 
         my @from_checks;
         for my $name (@check_names) {
+
+            # skip checks that cannot emit any displayable tag
+            my @check_tag_names
+              = @{$self->profile->tag_names_for_check->{$name} // []};
+
+            my @displayable = grep {
+                $self->profile->tag_is_enabled($_)
+                  && $self->profile->display_level_for_tag($_)
+                  && (  !$self->profile->get_tag($_)->experimental
+                    || $option->{'display-experimental'})
+            } @check_tag_names;
+
+            next
+              unless @displayable;
+
+            ++$checks_actually_run{$name};
 
             my $absolute = $self->profile->check_path_by_name->{$name};
             require $absolute;
@@ -417,6 +434,11 @@ sub process {
 
         # look for unused overrides
         for my $tag_name (keys %enabled_overrides) {
+
+            # skip tags whose check was not actually run
+            my $tag_obj = $self->profile->get_tag($tag_name);
+            next
+              unless $checks_actually_run{$tag_obj->check};
 
             my @declared_patterns = keys %{$enabled_overrides{$tag_name}};
             my @used_patterns = keys %{$used_overrides{$tag_name} // {}};
