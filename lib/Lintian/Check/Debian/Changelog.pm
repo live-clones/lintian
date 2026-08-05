@@ -41,6 +41,7 @@ use Lintian::Changelog::Version;
 use Lintian::IPC::Run3 qw(safe_qx);
 use Lintian::Relation::Version qw(versions_gt);
 use Lintian::Spelling qw(check_spelling);
+use Debian::DistroInfo;
 
 const my $EMPTY => q{};
 const my $DOUBLE_QUOTE => q{"};
@@ -137,14 +138,17 @@ sub source {
         # NMUs get a free pass because they need to work with the
         # version number that was already there.
         unless (length $latest_version->source_nmu) {
+            my @all_distro_series
+              = Debian::DistroInfo::get_all_series('debian');
+            @all_distro_series
+              = grep { $_ ne 'sid' && $_ ne 'rc-buggy' } @all_distro_series;
+            my $all_distro_regex = join(q{|}, @all_distro_series);
             $self->pointed_hint('version-refers-to-distribution',
                 $latest_pointer,$latest_version->literal)
               if ($revision =~ /testing|(?:un)?stable/i)
               || (
                 ($distribution eq 'unstable'|| $distribution eq 'experimental')
-                && $revision
-                =~ /woody|sarge|etch|lenny|squeeze|stretch|buster|bookworm|bullseye|trixie/
-              );
+                && $revision=~ /$all_distro_regex/);
         }
 
         my $examine = $latest_version->maintainer_revision;
@@ -246,6 +250,13 @@ sub source {
             # start with a reasonable default
             my $expected_previous = $previous_version->literal;
 
+            # use distroinfo to get current stable
+            my $deb = DebianDistroInfo->new();
+
+            # this is going to use current system time, as date is not passed
+            # this is a reasonable compromise to avoid hard-coding dates.
+            my $current_stable = $deb->stable();
+
             $expected_previous = $latest_version->without_backport
               if $latest_version->backport_release
               && $latest_version->backport_revision
@@ -268,8 +279,8 @@ sub source {
                 $latest_version->literal
               )
               unless $previous_version->literal eq $expected_previous
-              || $latest_entry->Distribution eq 'bullseye'
-              || $previous_entry->Distribution eq 'bullseye'
+              || $latest_entry->Distribution eq $current_stable
+              || $previous_entry->Distribution eq $current_stable
               || $latest_entry->Distribution =~ /-security$/i;
 
             if (   $latest_version->epoch eq $previous_version->epoch
