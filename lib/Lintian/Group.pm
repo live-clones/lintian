@@ -256,6 +256,20 @@ sub process {
         my @from_checks;
         for my $name (@check_names) {
 
+            # skip checks that cannot emit any displayable tag
+            my @check_tag_names
+              = @{$self->profile->tag_names_for_check->{$name} // []};
+
+            my @displayable = grep {
+                $self->profile->tag_is_enabled($_)
+                  && $self->profile->display_level_for_tag($_)
+                  && (  !$self->profile->get_tag($_)->experimental
+                      || $option->{'display-experimental'})
+            } @check_tag_names;
+
+            next
+              unless @displayable;
+
             my $absolute = $self->profile->check_path_by_name->{$name};
             require $absolute;
 
