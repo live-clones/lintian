@@ -1,5 +1,9 @@
 lintian (2.139.1) UNRELEASED; urgency=medium
 
+  * cruft: speed up the license scan (~6% of a full run): substring
+    search with index() instead of per-keyword regexes, anchored
+    whitespace trims, and depend on liblist-someutils-xs-perl.
+    Estimated saving: ~1.5 min on a 26-min llvm-toolchain run.
   * WIP (generated at release time: please do not add entries below.)
 
  -- Louis-Philippe Véronneau <pollo@debian.org>  Tue, 04 Aug 2026 00:56:23 -0400
