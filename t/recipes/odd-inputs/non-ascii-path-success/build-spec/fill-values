@@ -1,0 +1,5 @@
+Skeleton: upload-native
+Testname: non-ascii-path
+Version: 1.0
+Description: Test dummy package placed at the directory with non-English characters
+Build-Product: bonjour/привет/今日は/non-ascii-path_1.0_[% $host_architecture %].changes
