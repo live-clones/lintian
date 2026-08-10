@@ -32,6 +32,7 @@ use v5.20;
 use warnings;
 use utf8;
 
+use builtin qw(trim);
 use Const::Fast;
 use List::SomeUtils qw(any none);
 
@@ -751,7 +752,7 @@ sub clean_text {
     $text =~ s{\s++}{ }gsm;
 
     # trim both ends
-    $text =~ s/^\s+|\s+$//g;
+    $text = trim($text);
 
     return $text;
 }
@@ -770,7 +771,7 @@ sub _strip_punct() {
     $text =~ s{\s++}{ }gsm;
 
     # trim both ends
-    $text =~ s/^\s+|\s+$//g;
+    $text = trim($text);
 
     return $text;
 }
