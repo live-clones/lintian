@@ -108,6 +108,7 @@ alot
 # Other various names/fields/arguments/variables/expressions that
 # trips aspell.  Ordered by nothing in particular
 PTS QA qa uploader uploaders UPLOADER Uploaders changelog changelogs
+FIRSTKEY NEXTKEY TIEHASH
 desc COND CURVALUE subdirectory subdirectories udeb deb dsc nlist
 olist KEYN BASEDIR METADATA OO TODO dir exitcode nohang substvar
 substvars listref metadata blockingly checksum checksums Nativeness
