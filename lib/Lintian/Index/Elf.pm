@@ -34,7 +34,7 @@ use File::Spec::Functions qw(rel2abs abs2rel);
 
 use Lintian::Elf::Section;
 use Lintian::Elf::Symbol;
-use Lintian::Storage::MLDBM;
+use Lintian::Storage::PerMember;
 
 use Moo::Role;
 use namespace::clean;
@@ -70,12 +70,7 @@ has elf_storage => (
     is => 'rw',
     lazy => 1,
     default => sub {
-        my ($self) = @_;
-
-        my $storage = Lintian::Storage::MLDBM->new;
-        $storage->create('elf');
-
-        return $storage;
+        return Lintian::Storage::PerMember->create('elf');
     }
 );
 
@@ -87,12 +82,7 @@ has elf_storage_by_member => (
     is => 'rw',
     lazy => 1,
     default => sub {
-        my ($self) = @_;
-
-        my $storage = Lintian::Storage::MLDBM->new;
-        $storage->create('elf-by-member');
-
-        return $storage;
+        return Lintian::Storage::PerMember->create('elf-by-member');
     }
 );
 
