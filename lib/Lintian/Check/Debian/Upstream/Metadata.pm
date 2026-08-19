@@ -43,9 +43,6 @@ with 'Lintian::Check';
 
 const my $EMPTY => q{};
 
-# Need 0.69 for $LoadBlessed (#861958)
-const my $HAS_LOAD_BLESSED => 0.69;
-
 # taken from https://wiki.debian.org/UpstreamMetadata
 my @known_fields = qw(
   Archive
@@ -102,9 +99,6 @@ sub source {
         $self->pointed_hint('upstream-metadata-is-not-a-file', $item->pointer);
         return;
     }
-
-    return
-      if version->parse($YAML::XS::VERSION)< version->parse($HAS_LOAD_BLESSED);
 
     my $yaml;
     try {
