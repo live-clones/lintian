@@ -1,0 +1,4 @@
+Skeleton: upload-builder-only
+Testname: watch-file-missing-with-cran-upstream-metadata-missing
+Description: Tests for d/watch missing but valid missing values cran d/copyright
+Extra-Build-Depends: libyaml-libyaml-perl (>= 0.69)
