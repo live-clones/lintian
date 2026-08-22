@@ -1,0 +1,4 @@
+Skeleton: upload-builder-only
+Testname: watch-file-missing-with-unknown-upstream-metadata
+Description: Tests for d/watch missing but valid d/u/metadata with unknown archive
+Extra-Build-Depends: libyaml-libyaml-perl (>= 0.69)

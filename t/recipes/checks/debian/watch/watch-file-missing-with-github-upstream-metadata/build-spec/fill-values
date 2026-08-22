@@ -1,0 +1,4 @@
+Skeleton: upload-builder-only
+Testname: watch-file-missing-with-github-upstream-metadata-missing
+Description: Tests for d/watch missing but valid github d/u/metadata
+Extra-Build-Depends: libyaml-libyaml-perl (>= 0.69)

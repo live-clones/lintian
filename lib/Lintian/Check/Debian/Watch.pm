@@ -47,14 +47,64 @@ const my $CURRENT_WATCH_VERSION => 5;
 
 const my $DMANGLES_AUTOMATICALLY => 4;
 
+# As per https://salsa.debian.org/debian/devscripts/-/commit/0eb2557c
+# and http://salsa.debian.org/debian/devscripts/-/commit/27c20499c5f5384c01f42fbd01c47b1ada5f7df3
+my %templates = (
+    github => sub {
+        my ($res) = @_;
+        my $src = $res->{Repository} || $res->{'Repository-Browse'};
+        $src =~ s/\.git\s*$// if $src;
+        return $src && $src =~ qr{https://github.com/([^/]+)/([^/]+)/?};
+    },
+    cpan => sub {
+        my ($res) = @_;
+        return $res->{'Upstream-Name'} || $res->{Name};
+    },
+    bioconductor => sub {
+        my ($res, $copyright) = @_;
+        return unless $copyright;
+        return $copyright->value('Upstream-Name');
+    },
+    cran => sub {
+        my ($res, $copyright) = @_;
+        return unless $copyright;
+        return $copyright->value('Upstream-Name');
+    },
+);
+
 sub source {
     my ($self) = @_;
+
+    my $metadata_uscan_process;
+    my $du_metadata
+      = $self->processable->patched->resolve_path('debian/upstream/metadata');
+
+   # Check if d/u/metadata exists without d/watch which is valid with new uscan
+    if ($du_metadata && $du_metadata->is_open_ok) {
+        my $yaml = eval { YAML::XS::LoadFile($du_metadata->unpacked_path); };
+        if (defined $yaml && ref $yaml eq 'HASH') {
+            my $copyright;
+            my $copyright_file
+              = $self->processable->patched->resolve_path('debian/copyright');
+            if ($copyright_file && $copyright_file->is_open_ok) {
+                my $deb822 = Lintian::Deb822->new;
+                my @sections
+                  = eval {$deb822->read_file($copyright_file->unpacked_path);};
+
+                ($copyright) = @sections if @sections;
+            }
+            if (defined $yaml->{'Archive'}) {
+                my $sub= $templates{lc $yaml->{'Archive'}};
+                $metadata_uscan_process = $sub->($yaml, $copyright) if $sub;
+            }
+        }
+    }
 
     my $item = $self->processable->patched->resolve_path('debian/watch');
     unless ($item && $item->is_file) {
 
         $self->hint('debian-watch-file-is-missing')
-          unless $self->processable->native;
+          unless $self->processable->native || $metadata_uscan_process;
 
         return;
     }

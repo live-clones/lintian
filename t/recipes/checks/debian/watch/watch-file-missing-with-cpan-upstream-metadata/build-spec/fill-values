@@ -1,0 +1,4 @@
+Skeleton: upload-builder-only
+Testname: watch-file-missing-with-cpan-upstream-metadata
+Description: Tests for d/watch missing but valid cpan d/u/metadata
+Extra-Build-Depends: libyaml-libyaml-perl (>= 0.69)
