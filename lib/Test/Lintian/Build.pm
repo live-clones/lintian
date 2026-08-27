@@ -135,8 +135,7 @@ sub build_subject {
           or die encode_utf8("Cannot change to directory $savedir");
 
         # sanitize log so it is UTF-8 from here on
-        my $utf8_bytes = utf8_clean_log($combined_bytes);
-        print $utf8_bytes;
+        say utf8_clean_log($combined_bytes);
 
         croak encode_utf8("$command failed")
           if $status;

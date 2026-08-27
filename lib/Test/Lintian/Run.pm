@@ -281,15 +281,23 @@ sub runner {
     my ($output, $status) = capture_merged { system($command); };
     $status >>= $WAIT_STATUS_SHIFT;
 
-    $output = decode_utf8($output)
-      if length $output;
+    my @errors;
+    $output = decode_utf8(
+        $output,
+        sub {
+            my ($octets, $is_usv, $position) = @_;
 
-    say encode_utf8("$command exited with status $status.");
+            push @errors, 'Encountered broken UTF-8 sequence in Lintian output'
+              unless @errors;
+
+            return "\x{FFFD}";  # REPLACEMENT CHARACTER
+        },
+    ) if length $output;
+
+    say encode_utf8("Lintian under test exited with status $status.");
     say encode_utf8($output) if $status == 1;
 
     my $expected_status = $testcase->unfolded_value('Exit-Status');
-
-    my @errors;
     push(@errors,
         "Exit code $status differs from expected value $expected_status.")
       if $testcase->declares('Exit-Status')
