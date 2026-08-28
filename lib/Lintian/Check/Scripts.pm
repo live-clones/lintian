@@ -840,7 +840,8 @@ sub visit_control_files {
 
         $saw_sete = 1
           if $item->is_shell_script
-          && $line =~ /${LEADING_REGEX}set\s*(?:\s+-(?:-.*|[^e]+))*\s-\w*e/;
+          && $line
+          =~ /${LEADING_REGEX}set\s*(?:\s+-(?:-.*|[^e]+))*\s(?:-\w*e|errexit)/;
 
         $saw_udevadm_guard = 1
           if $line =~ /\b(if|which|command)\s+.*udevadm/g;
