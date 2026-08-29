@@ -32,6 +32,7 @@ use v5.20;
 use warnings;
 use utf8;
 
+use builtin qw(trim);
 use Const::Fast;
 use List::SomeUtils qw(any none);
 
@@ -751,7 +752,7 @@ sub clean_text {
     $text =~ s{\s++}{ }gsm;
 
     # trim both ends
-    $text =~ s/^\s+|\s+$//g;
+    $text = trim($text);
 
     return $text;
 }
@@ -770,7 +771,7 @@ sub _strip_punct() {
     $text =~ s{\s++}{ }gsm;
 
     # trim both ends
-    $text =~ s/^\s+|\s+$//g;
+    $text = trim($text);
 
     return $text;
 }
@@ -781,10 +782,10 @@ sub check_for_single_bad_license {
     # do fast keyword search
     # could make more sense as 'return 1 unless all' but does not work
     return 0
-      if none { $lowercase =~ / \Q$_\E /msx } @{$license_data->{keywords}};
+      if none { index($lowercase, $_) >= 0 } @{$license_data->{keywords}};
 
     return 0
-      if none { $clean =~ / \Q$_\E /msx }@{$license_data->{sentences}};
+      if none { index($clean, $_) >= 0 } @{$license_data->{sentences}};
 
     my $regex = $license_data->{regex};
     return 0

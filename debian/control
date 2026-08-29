@@ -117,6 +117,7 @@ Depends:
  libjson-maybexs-perl,
  liblist-compare-perl,
  liblist-someutils-perl,
+ liblist-someutils-xs-perl,
  liblist-utilsby-perl,
  libmoo-perl,
  libmoox-aliases-perl,
