@@ -56,23 +56,37 @@ qr{(?i)/phpsysinfo\.dtd|/class\.(?:Linux|(?:Open|Net|Free|)BSD)\.inc\.php$},
     'php-htmlpurifier'     => qr{(?i)/HTMLPurifier\.php$},
 );
 
+# Cheap pre-filter: every pattern above ends in ".php", ".inc" or ".dtd".
+my $PHP_INTERESTING = qr{\.(?:php|inc|dtd)}i;
+
+my @PHP_PROVIDERS = map {
+    { name => $_, package_regex => qr{^$_$}, file_regex => $PHP_FILES{$_} }
+} keys %PHP_FILES;
+
 sub visit_installed_files {
     my ($self, $item) = @_;
 
     return
       unless $item->is_file;
 
+    my $name = $item->name;
+
+    return
+      unless $name =~ $PHP_INTERESTING;
+
+    my $package = $self->processable->name;
+
     # embedded PHP
-    for my $provider (keys %PHP_FILES) {
+    for my $provider (@PHP_PROVIDERS) {
 
         next
-          if $self->processable->name =~ /^$provider$/;
+          if $package =~ $provider->{package_regex};
 
         next
-          unless $item->name =~ /$PHP_FILES{$provider}/;
+          unless $name =~ $provider->{file_regex};
 
         $self->pointed_hint('embedded-php-library', $item->pointer,
-            'please use',$provider);
+            'please use',$provider->{name});
     }
 
     return;
