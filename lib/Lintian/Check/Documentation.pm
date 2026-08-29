@@ -79,6 +79,13 @@ my @DOCUMENTATION_FILE_REGEXES = qw{
   ^todos?$
 };
 
+# Precompiled once rather than per file.
+my $DOCUMENTATION_FILE_REGEX
+  = qr{(?xi: @{[join $VERTICAL_BAR, @DOCUMENTATION_FILE_REGEXES]} )};
+
+@NOT_DOCUMENTATION_FILE_REGEXES
+  = map { qr{$_}xi } @NOT_DOCUMENTATION_FILE_REGEXES;
+
 # an OR (|) regex of all compressed extension
 has COMPRESS_FILE_EXTENSIONS_OR_ALL => (
     is => 'rw',
@@ -124,9 +131,8 @@ sub visit_installed_files {
       =~ m{^ usr/share/doc/ (?:.+/)? (?:doxygen|html) / .* [.]map [.] $regex }sx;
 
     if ($item->is_file
-        and any { $item->basename =~ m{$_}xi } @DOCUMENTATION_FILE_REGEXES
-        and any { $item->basename !~ m{$_}xi } @NOT_DOCUMENTATION_FILE_REGEXES)
-    {
+        and $item->basename =~ $DOCUMENTATION_FILE_REGEX
+        and any { $item->basename !~ $_ } @NOT_DOCUMENTATION_FILE_REGEXES){
 
         $self->pointed_hint(
             'package-contains-documentation-outside-usr-share-doc',
