@@ -40,6 +40,7 @@ use Unicode::UTF8 qw(encode_utf8);
 
 const my $SPACE => q{ };
 const my $DOUBLE_QUOTE => q{"};
+const my $VERTICAL_BAR => q{|};
 
 =head1 NAME
 
@@ -90,7 +91,7 @@ Returns the number of spelling mistakes found in TEXT.
 
 =cut
 
-my (%CORRECTIONS, @CORRECTIONS_MULTIWORD);
+my (%CORRECTIONS, @CORRECTIONS_MULTIWORD, $ANY_CORRECTION_MULTIWORD);
 
 sub check_spelling {
     my ($data, $text, $acceptable, $code_ref, $duplicate_check) = @_;
@@ -129,6 +130,11 @@ sub check_spelling {
             push(@CORRECTIONS_MULTIWORD,
                 [qr/\b($misspelled_regex)\b/, $correct]);
         }
+
+        # Union of all multiword patterns, used to skip the loop below.
+        my $alternation = join($VERTICAL_BAR,
+            map { "(?:$_)" } $corrections_multiword->all_entries);
+        $ANY_CORRECTION_MULTIWORD = qr/\b(?:$alternation)\b/;
     }
 
     $text =~ tr/[]//d;
@@ -194,6 +200,9 @@ sub check_spelling {
     }
 
     # Special case for correcting multi-word strings.
+    return $counter
+      unless $text =~ $ANY_CORRECTION_MULTIWORD;
+
     for my $cm (@CORRECTIONS_MULTIWORD) {
         my ($oregex, $correction) = @{$cm};
         if ($text =~ $oregex) {
