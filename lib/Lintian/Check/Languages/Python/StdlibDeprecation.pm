@@ -59,6 +59,38 @@ my %DEPRECATED_STDLIBS = (
     'xdrlib'      => { 'deprecated' => '3.11',  'removed' => '3.13' }
 );
 
+# Compile both patterns for each library once at load time; interpolating
+# $library in the match itself would recompile them for every line.
+for my $library ( keys %DEPRECATED_STDLIBS ) {
+
+    # these do not match relative imports (from .library,
+    # import ..library) on the assumption that those are
+    # probably something package-internal
+    # not the actual stdlib module
+    # from library import foo
+    # from library.sub import foo
+    # does not match "from library2"
+    # does not match "from notlibrary"
+    # does not match "from library2.library"
+    $DEPRECATED_STDLIBS{$library}{'from_regex'}
+      = qr{^\s*from $library(\s+|\..+)import};
+
+    # import foo, library, bar
+    # import library
+    # import library as l
+    # import library.sub
+    # import library, bar
+    # import foo, library
+    # import foo, library.sub
+    # import foo, library.sub, bar
+    # does not match "import library2"
+    # does not match "import notlibrary"
+    # does not match "import library2.library"
+    # does not match "import library2 as library"
+    $DEPRECATED_STDLIBS{$library}{'import_regex'}
+      = qr{^\s*import(\s+|.+,\s?)$library([,.\s]|$)};
+}
+
 sub visit_patched_files {
     my ( $self, $item ) = @_;
 
@@ -82,6 +114,10 @@ sub visit_patched_files {
     my $position = 1;
     while ( my $line = <$fd> ) {
 
+        # both patterns require this prefix
+        next
+          unless $line =~ m{^\s*(?:from|import)};
+
         my $pointer = $item->pointer($position);
 
         foreach my $library ( keys %DEPRECATED_STDLIBS ) {
@@ -95,31 +131,9 @@ sub visit_patched_files {
                 $library,
 "(deprecated in Python $deprecated, removed in Python $removed)"
               )
-              # these do not match relative imports (from .library,
-              # import ..library) on the assumption that those are
-              # probably something package-internal
-              # not the actual stdlib module
-              # from library import foo
-              # from library.sub import foo
-              # does not match "from library2"
-              # does not match "from notlibrary"
-              # does not match "from library2.library"
-              if $line =~ m{^\s*from $library(\s+|\..+)import}
-              # import foo, library, bar
-              # import library
-              # import library as l
-              # import library.sub
-              # import library, bar
-              # import foo, library
-              # import foo, library.sub
-              # import foo, library.sub, bar
-              # does not match "import library2"
-              # does not match "import notlibrary"
-              # does not match "import library2.library"
-              # does not match "import library2 as library"
-              ||$line =~ m{^\s*import(\s+|.+,\s?)$library([,.\s]|$)};
+              if $line =~ $DEPRECATED_STDLIBS{$library}{'from_regex'}
+              || $line =~ $DEPRECATED_STDLIBS{$library}{'import_regex'};
         }
-
     }continue {
         ++$position;
     }
