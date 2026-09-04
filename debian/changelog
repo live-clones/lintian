@@ -1,8 +1,47 @@
-lintian (2.139.1) UNRELEASED; urgency=medium
+lintian (2.140.0) unstable; urgency=medium
 
-  * WIP (generated at release time: please do not add entries below.)
+  [ Louis-Philippe Véronneau ]
+  * Remove old GCC profiler detection method for Wheezy and earlier
+  * new tag 'clojure-package-but-not-dh-clojure'
+  * Mark 'clojure-package-but-not-dh-clojure' as Experimental
+  * Refresh data for new licenses in /usr/share/common-licenses
 
- -- Louis-Philippe Véronneau <pollo@debian.org>  Tue, 04 Aug 2026 00:56:23 -0400
+  [ Nilesh Patra ]
+  * Lintian::Check::Debian::Changelog - Use distroinfo instead of hard-coding
+    distro names (Closes: #1040138)
+  * Lintian::Check::Debian::Upstream::Metadata - drop old code for checking
+    YAML version
+  * Lintian::Check::Debian::Watch - do not emit `debian-watch-file-is-missing`
+    if d/u/metadata is present and has all the required fields (Closes:
+    #1118077)
+  * Add several tests to validate against uscan using d/u/metadata with
+    missing d/watch
+  * tests(copyright-file-general): Use `Apache-2.gz` to trigger
+    `copyright-refers-to-compressed-license`
+  * Lintian::Check::Scripts - Also check for `errexit` while emitting
+    `maintainer-script-ignores-errors` (Closes: #1145935)
+  * tests(scripts-maintainer-general): Add a preinst to check against #1145935
+  * tests(use-godebug): Fix with golang 1.27 (Closes: #1146226)
+
+  [ Bastian Germann ]
+  * Replace MLDBM storage with per-member Storable files
+
+  [ Nicholas Guriev ]
+  * Update t/recipes/README
+  * Fix processing non-ASCII arguments (Closes: #1137319)
+  * Fix error handling on non-ASCII paths
+
+  [ Lucas Nussbaum ]
+  * new tag 'ai-agent-instructions-exist'
+
+  [ Sylvestre Ledru ]
+  * Precompile regexes in languages/python/stdlib-deprecation
+  * Batch readelf calls when indexing ELF objects
+  * Cruft.pm: use index() for the license keyword pre-search
+  * Cruft.pm: trim whitespace with builtin::trim
+  * Depend on liblist-someutils-xs-perl
+
+ -- Louis-Philippe Véronneau <pollo@debian.org>  Fri, 04 Sep 2026 14:18:10 -0400
 
 lintian (2.139.0) unstable; urgency=medium
 
