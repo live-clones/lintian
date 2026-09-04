@@ -85,6 +85,7 @@ const my $BACKSLASH => q{\\};
 const my $DEFAULT_READ_SIZE => 4096;
 const my $KIB_UNIT_FACTOR => 1024;
 const my $COMFORT_THRESHOLD => 1536;
+const my $SPLIT_EVERYTHING => -1;
 
 const my $OWNER_READ => oct(400);
 const my $OWNER_WRITE => oct(200);
@@ -630,7 +631,7 @@ sub utf8_clean_log {
         return utf8_clean_bytes($line, $SPACE, $utf8_clean_word);
     };
 
-    return utf8_clean_bytes($bytes, $NEWLINE, $utf8_clean_line) . $NEWLINE;
+    return utf8_clean_bytes($bytes, $NEWLINE, $utf8_clean_line);
 }
 
 =item utf8_clean_bytes
@@ -643,7 +644,7 @@ sub utf8_clean_bytes {
     my @utf8_clean_parts;
 
     my $regex = quotemeta($separator);
-    my @parts = split(/$regex/, $bytes);
+    my @parts = split(/$regex/, $bytes, $SPLIT_EVERYTHING);
 
     for my $part (@parts) {
 

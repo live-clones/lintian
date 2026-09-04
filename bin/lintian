@@ -62,6 +62,7 @@ use Lintian::Processable::Buildinfo;
 use Lintian::Processable::Changes;
 use Lintian::Processable::Source;
 use Lintian::Profile;
+use Lintian::Util qw(utf8_clean_log);
 use Lintian::Version qw(guess_version);
 
 const my $EMPTY => q{};
@@ -685,13 +686,12 @@ if ($selected{'packages-from-file'}){
     my $fd = open_file_or_fd($selected{'packages-from-file'}, '<');
 
     while (my $bytes = <$fd>) {
-        my $line = decode_utf8($bytes);
-        chomp $line;
+        chomp $bytes;
 
         next
-          if $line =~ /^\s*$/;
+          if decode_utf8($bytes) =~ /^\s*$/;
 
-        push(@subjects, $line);
+        push(@subjects, $bytes);
     }
 
     # close unless it is STDIN (else we will see a lot of warnings
@@ -703,12 +703,12 @@ if ($selected{'packages-from-file'}){
 my $pool = Lintian::Pool->new;
 
 for my $subject (@subjects) {
-    die encode_utf8("$subject is not a readable file\n") unless -r $subject;
+    die utf8_clean_log("$subject is not a readable file\n") unless -r $subject;
 
     # in ubuntu, automatic dbgsym packages end with .ddeb
-    die encode_utf8(
+    die utf8_clean_log(
 "bad package file name $subject (neither .deb, .udeb, .ddeb, .changes, .dsc or .buildinfo file)\n"
-    ) unless $subject =~ /\.(?:[u|d]?deb|dsc|changes|buildinfo)$/;
+    ) unless $subject =~ /\.(?:[ud]?deb|dsc|changes|buildinfo)$/;
 
     try {
         # create a new group
@@ -728,12 +728,16 @@ for my $subject (@subjects) {
           if $processable->can('files');
 
         for my $basename (@files) {
+            # The basename comes from control file in the deb822 format which
+            # enforces UTF-8 encoding. Convert it to byte string before we
+            # concatenate with the parent prefix.
+            $basename = encode_utf8($basename);
 
             # ignore traversal attempts
             next
               if $basename =~ m{/};
 
-            die encode_utf8("$parent/$basename does not exist, exiting\n")
+            die utf8_clean_log("$parent/$basename does not exist, exiting\n")
               unless -e "$parent/$basename";
 
             # only care about some files; ddeb is ubuntu dbgsym
@@ -749,7 +753,7 @@ for my $subject (@subjects) {
         $pool->add_group($group);
 
     } catch {
-        warn encode_utf8("Skipping $subject: $@\n");
+        warn utf8_clean_log("Skipping $subject: $@\n");
         $exit_code = 1;
     }
 }

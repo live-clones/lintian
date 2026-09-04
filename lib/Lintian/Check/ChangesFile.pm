@@ -29,6 +29,7 @@ use Const::Fast;
 use List::Compare;
 use List::SomeUtils qw(uniq);
 use Path::Tiny;
+use Unicode::UTF8 qw(encode_utf8);
 
 use Lintian::Util qw(get_file_checksum);
 
@@ -55,7 +56,9 @@ sub changes {
 
         # take from location near input file
         my $physical_path
-          = path($self->processable->path)->sibling($basename)->stringify;
+          = path($self->processable->path)
+          ->sibling(encode_utf8($basename))
+          ->stringify;
         my $actual_size = -s $physical_path;
 
         # check size
