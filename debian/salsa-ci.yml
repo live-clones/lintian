@@ -19,3 +19,32 @@ variables:
 # timeout (1h) is often not enough.
 .test-autopkgtest: &test-autopkgtest
   timeout: 3h
+
+# CodeLayout::RequireTidyCode enforces this too, but it lives in
+# t/scripts/01-critic, and the test suite is not run in this pipeline
+# (DEB_BUILD_OPTIONS=nocheck above).
+perltidy:
+  stage: test
+  needs: []
+  image: debian:unstable
+  before_script:
+    - apt-get update
+    - apt-get install --yes --no-install-recommends git perltidy
+    - git config --global --add safe.directory "$CI_PROJECT_DIR"
+  script:
+    - |
+      status=0
+      for file in $(git ls-files bin lib private t/scripts t/templates); do
+          if test -L "$file"; then continue; fi
+          case "$file" in
+              *.pm|*.pl|*.t) ;;
+              *) head -n1 "$file" | grep -qs '^#!.*perl' || continue ;;
+          esac
+          perltidy --profile=.perltidyrc --standard-output "$file" > tidied
+          diff -u --label "$file" --label "$file (tidied)" "$file" tidied || status=1
+      done
+      rm -f tidied perltidy.LOG
+      test "$status" -eq 0 || {
+          echo 'Please run: perltidy --profile=.perltidyrc -b -bext=/ FILE...' >&2
+          exit 1
+      }
