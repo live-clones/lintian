@@ -35,6 +35,7 @@ use List::SomeUtils qw(any all uniq);
 use Path::Tiny;
 use Syntax::Keyword::Try;
 use Unicode::UTF8 qw(valid_utf8 decode_utf8 encode_utf8);
+use POSIX qw(strftime);
 
 use Lintian::Changelog;
 use Lintian::Changelog::Version;
@@ -54,6 +55,7 @@ const my $ARROW => q{->};
 const my $MAXIMUM_WIDTH => 82;
 const my $FIRST_ARCHIVED_BUG_NUMBER => 50_004;
 const my $OUT_OF_REACH_BUG_NUMBER => 1_500_000;
+const my $DATE_ONLY => '%Y-%m-%d';
 
 use Moo;
 use namespace::clean;
@@ -86,6 +88,7 @@ sub source {
       unless @entries;
 
     my $latest_entry = $entries[0];
+    my $changelog_date = strftime($DATE_ONLY, gmtime $latest_entry->Timestamp);
 
     my $changelog_item = $self->processable->changelog_item;
     my $latest_pointer = $changelog_item->pointer($latest_entry->position);
@@ -252,10 +255,9 @@ sub source {
 
             # use distroinfo to get current stable
             my $deb = DebianDistroInfo->new();
-
-            # this is going to use current system time, as date is not passed
-            # this is a reasonable compromise to avoid hard-coding dates.
-            my $current_stable = $deb->stable();
+            my $changelog_date_converted
+              = Debian::DistroInfo::convert_date($changelog_date);
+            my $current_stable = $deb->stable($changelog_date_converted);
 
             $expected_previous = $latest_version->without_backport
               if $latest_version->backport_release
