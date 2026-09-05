@@ -48,7 +48,7 @@ const my $CURRENT_WATCH_VERSION => 5;
 const my $DMANGLES_AUTOMATICALLY => 4;
 
 # As per https://salsa.debian.org/debian/devscripts/-/commit/0eb2557c
-# and http://salsa.debian.org/debian/devscripts/-/commit/27c20499c5f5384c01f42fbd01c47b1ada5f7df3
+# and https://salsa.debian.org/debian/devscripts/-/commit/27c20499c5f5384c01f42fbd01c47b1ada5f7df3
 my %templates = (
     github => sub {
         my ($res) = @_;
