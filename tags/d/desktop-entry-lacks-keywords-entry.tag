@@ -13,6 +13,6 @@ Explanation: This <code>.desktop</code> file is either missing a <code>Keywords<
  The <code>desktop-file-validate</code> tool in the <code>desktop-file-utils</code>
  package may be useful when checking the syntax of desktop entries.
 See-Also:
- https://specifications.freedesktop.org/desktop-entry-spec/latest/ar01s06.html,
+ https://specifications.freedesktop.org/desktop-entry/latest/recognized-keys.html,
  Bug#693918,
  https://wiki.gnome.org/Initiatives/GnomeGoals/DesktopFileKeywords
