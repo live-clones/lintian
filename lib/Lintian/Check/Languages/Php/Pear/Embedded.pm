@@ -58,20 +58,35 @@ my %PEAR_FILES = (
     'php-net-socket'      => qr{(?<!/FTP)/Socket} . $PEAR_EXT,
 );
 
+# Cheap pre-filter: every pattern above ends in ".php".
+my $PEAR_INTERESTING = qr{\.php}i;
+
+my @PEAR_PROVIDERS
+  = map { [$_, qr{^$_$}, qr{$PEAR_FILES{$_}}] } keys %PEAR_FILES;
+
 sub visit_installed_files {
     my ($self, $item) = @_;
 
     return
       unless $item->is_file;
 
+    my $name = $item->name;
+
+    return
+      unless $name =~ $PEAR_INTERESTING;
+
+    my $package = $self->processable->name;
+
     # embedded PEAR
-    for my $provider (keys %PEAR_FILES) {
+    for my $entry (@PEAR_PROVIDERS) {
+
+        my ($provider, $package_regex, $file_regex) = @{$entry};
 
         next
-          if $self->processable->name =~ /^$provider$/;
+          if $package =~ $package_regex;
 
         next
-          unless $item->name =~ /$PEAR_FILES{$provider}/;
+          unless $name =~ $file_regex;
 
         next
           unless length $item->bytes_match($PEAR_MAGIC);

@@ -109,11 +109,22 @@ qr{(?i)/mootools(?:(?:\.v|-)[\d\.]+)?(?:-(?:(?:core(?:-server)?)|more)(?:-(?:yc|
 # 'xinha'                      => qr{(?i)/(htmlarea|Xinha(Loader|Core))} . $JS_EXT,
 );
 
+# Cheap pre-filter: every pattern above needs ".js" or ".css" in the path.
+my $JS_INTERESTING = qr{\.(?:js|css)}i;
+
+my @JS_PROVIDERS
+  = map { [$_, qr{^$_$}, qr{$JS_FILES{$_}}, $JS_MAGIC{$_}] } keys %JS_FILES;
+
 sub visit_installed_files {
     my ($self, $item) = @_;
 
     return
       unless $item->is_file;
+
+    my $name = $item->name;
+
+    return
+      unless $name =~ $JS_INTERESTING;
 
     # ignore embedded jQuery libraries for Doxygen (#736360)
     my $doxygen = $self->processable->installed->resolve_path(
@@ -122,18 +133,22 @@ sub visit_installed_files {
       if $item->basename eq 'jquery.js'
       && defined $doxygen;
 
+    my $package = $self->processable->name;
+
     # embedded javascript
-    for my $provider (keys %JS_FILES) {
+    for my $entry (@JS_PROVIDERS) {
+
+        my ($provider, $package_regex, $file_regex, $magic) = @{$entry};
 
         next
-          if $self->processable->name =~ /^$provider$/;
+          if $package =~ $package_regex;
 
         next
-          unless $item->name =~ /$JS_FILES{$provider}/;
+          unless $name =~ $file_regex;
 
         next
-          if length $JS_MAGIC{$provider}
-          && !length $item->bytes_match($JS_MAGIC{$provider});
+          if defined $magic
+          && !length $item->bytes_match($magic);
 
         $self->pointed_hint('embedded-javascript-library', $item->pointer,
             'please use', $provider);
