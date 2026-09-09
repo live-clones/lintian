@@ -26,7 +26,7 @@ use warnings;
 use utf8;
 
 use Const::Fast;
-use List::SomeUtils qw(any);
+use List::SomeUtils qw(any none);
 use Unicode::UTF8 qw(encode_utf8);
 
 const my $VERTICAL_BAR => q{|};
@@ -42,9 +42,7 @@ with 'Lintian::Check';
 # a list of regex for detecting non documentation files checked against basename (xi)
 my @NOT_DOCUMENTATION_FILE_REGEXES = qw{
   ^dependency_links[.]txt$
-  ^entry_points[.]txt$
   ^requires[.]txt$
-  ^top_level[.]txt$
   ^requirements[.]txt$
   ^namespace_packages[.]txt$
   ^bindep[.]txt$
@@ -125,7 +123,7 @@ sub visit_installed_files {
 
     if ($item->is_file
         and any { $item->basename =~ m{$_}xi } @DOCUMENTATION_FILE_REGEXES
-        and any { $item->basename !~ m{$_}xi } @NOT_DOCUMENTATION_FILE_REGEXES)
+        and none { $item->basename =~ m{$_}xi }@NOT_DOCUMENTATION_FILE_REGEXES)
     {
 
         $self->pointed_hint(
@@ -133,10 +131,6 @@ sub visit_installed_files {
             $item->pointer)
           unless $item->name =~ m{^etc/}
           || $item->name =~ m{^usr/share/(?:doc|help)/}
-          # see Bug#981268
-          # usr/lib/python3/dist-packages/*.dist-info/entry_points.txt
-          || $item->name =~ m{^ usr/lib/python3/dist-packages/
-                              .+ [.] dist-info/entry_points.txt $}sx
           # No need for dh-r packages to automatically
           # create overrides if we just allow them all to
           # begin with.
