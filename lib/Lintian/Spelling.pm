@@ -25,6 +25,8 @@ use v5.20;
 use warnings;
 use utf8;
 
+use builtin qw(trim);
+
 use Exporter qw(import);
 
 our @EXPORT_OK = qw(
@@ -137,7 +139,7 @@ sub check_spelling {
     $text =~ s/\s++/ /g;
 
     # trim both ends
-    $text =~ s/^\s+|\s+$//g;
+    $text = trim($text);
 
     for my $word (split($SPACE, $text)) {
         my $ends_with_punct = 0;
@@ -259,7 +261,7 @@ sub check_spelling_picky {
     $text =~ s/\s++/ /g;
 
     # trim both ends
-    $text =~ s/^\s+|\s+$//g;
+    $text = trim($text);
 
     for my $word (split(/\s+/, $text)) {
         $word =~ s/^\(|[).,?!:;]+$//g;
