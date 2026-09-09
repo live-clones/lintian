@@ -1,8 +1,16 @@
-lintian (2.140.1) UNRELEASED; urgency=medium
+lintian (2.140.1) unstable; urgency=medium
 
-  * WIP (generated at release time: please do not add entries below.)
+  [ Louis-Philippe Véronneau ]
+  * Add libberkeleydb-perl and libmldbm-perl as B-D to fix circular dependency
+    issue.
 
- -- Louis-Philippe Véronneau <pollo@debian.org>  Fri, 04 Sep 2026 15:34:30 -0400
+  [ Nilesh Patra ]
+  * Lintian::Check::Debian::Changelog - use latest changelog entry date to
+    derive stable release version
+  * Revert "Replace MLDBM storage with per-member Storable files" (Closes:
+    #1147170)
+
+ -- Louis-Philippe Véronneau <pollo@debian.org>  Wed, 09 Sep 2026 11:52:14 -0400
 
 lintian (2.140.0) unstable; urgency=medium
 
