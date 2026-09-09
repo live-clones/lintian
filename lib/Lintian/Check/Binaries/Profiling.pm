@@ -42,14 +42,14 @@ sub visit_installed_files {
     for my $symbol (@{$item->elf->{SYMBOLS} // [] }) {
 
         $is_profiled = 1
-          if $symbol->version =~ /^GLIBC_.*/
-          && $symbol->name =~ m{\A __fentry__ \Z}xsm
-          && ($symbol->section eq 'UND' || $symbol->section eq '.text');
+          if $symbol->{version} =~ /^GLIBC_.*/
+          && $symbol->{name} =~ m{\A __fentry__ \Z}xsm
+          && ($symbol->{section} eq 'UND' || $symbol->{section} eq '.text');
 
         $is_profiled = 1
-          if $symbol->version =~ /^GLIBC_.*/
-          && $symbol->name =~ m{\A _?+ _?+ (gnu_)?+mcount(_nc)?+ \Z}xsm
-          && ($symbol->section eq 'UND' || $symbol->section eq '.text');
+          if $symbol->{version} =~ /^GLIBC_.*/
+          && $symbol->{name} =~ m{\A _?+ _?+ (gnu_)?+mcount(_nc)?+ \Z}xsm
+          && ($symbol->{section} eq 'UND' || $symbol->{section} eq '.text');
     }
 
     $self->pointed_hint('binary-compiled-with-profiling-enabled',

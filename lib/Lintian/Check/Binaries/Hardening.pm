@@ -136,9 +136,9 @@ sub visit_installed_files {
     for my $symbol (@{$item->elf->{SYMBOLS}}) {
 
         next
-          unless $symbol->section eq 'UND';
+          unless $symbol->{section} eq 'UND';
 
-        if ($symbol->name =~ /^__(\S+)_chk(|ieee128)$/) {
+        if ($symbol->{name} =~ /^__(\S+)_chk(|ieee128)$/) {
 
             my $vulnerable = $1;
             push(@elf_hardened, $vulnerable)
@@ -146,8 +146,8 @@ sub visit_installed_files {
 
         } else {
 
-            push(@elf_unhardened, $symbol->name)
-              if $self->HARDENED_FUNCTIONS->recognizes($symbol->name);
+            push(@elf_unhardened, $symbol->{name})
+              if $self->HARDENED_FUNCTIONS->recognizes($symbol->{name});
         }
     }
 
@@ -166,9 +166,9 @@ sub visit_installed_files {
         for my $symbol (@{$item->elf_by_member->{$member_name}{SYMBOLS}}) {
 
             next
-              unless $symbol->section eq 'UND';
+              unless $symbol->{section} eq 'UND';
 
-            if ($symbol->name =~ /^__(\S+)_chk$/) {
+            if ($symbol->{name} =~ /^__(\S+)_chk$/) {
 
                 my $vulnerable = $1;
                 push(@member_hardened, $vulnerable)
@@ -176,8 +176,8 @@ sub visit_installed_files {
 
             } else {
 
-                push(@member_unhardened, $symbol->name)
-                  if $self->HARDENED_FUNCTIONS->recognizes($symbol->name);
+                push(@member_unhardened, $symbol->{name})
+                  if $self->HARDENED_FUNCTIONS->recognizes($symbol->{name});
             }
         }
 

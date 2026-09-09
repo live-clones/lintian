@@ -281,7 +281,7 @@ sub check_symbols_file {
               unless defined $item;
 
             my @symbols
-              = grep { $_->section eq '.text' || $_->section eq 'UND' }
+              = grep { $_->{section} eq '.text' || $_->{section} eq 'UND' }
               @{$item->elf->{SYMBOLS} // []};
 
             # only public shared libraries
@@ -290,7 +290,7 @@ sub check_symbols_file {
             $self->hint('no-symbols-control-file', $file_name)
               if (any { (dirname($file_name) . $SLASH) eq $_ }
                 @ldconfig_folders)
-              && (none { $_->name =~ m/^__objc_/ } @symbols)
+              && (none { $_->{name} =~ m/^__objc_/ } @symbols)
               && !is_nss_plugin($file_name);
         }
     }
