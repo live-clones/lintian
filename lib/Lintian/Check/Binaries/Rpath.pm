@@ -116,6 +116,10 @@ sub visit_installed_files {
             # GHC in Debian uses a scheme for RPATH (#914873)
             next
               if $folder =~ m{^ /usr/lib/ghc (?: / | $ ) }x;
+            next
+              if $folder =~ m{^ /usr/lib/haskell-packages/ghc (?: / | $ ) }x;
+            next
+              if $item->name=~ m{^ usr/lib/haskell-packages/ghc (?: / | $ ) }x;
 
             push(@custom, $folder);
         }
