@@ -1,0 +1,3 @@
+Skeleton: upload-non-native
+Testname: golang-package-without-version-suffix
+Description: Flag package not including version suffix

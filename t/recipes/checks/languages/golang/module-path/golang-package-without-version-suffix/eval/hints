@@ -1,0 +1,2 @@
+golang-package-without-version-suffix (source): go-source-package-does-not-include-version
+golang-package-without-version-suffix (source): go-library-package-does-not-include-version
