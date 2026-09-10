@@ -1,4 +1,4 @@
-# languages/golang/import-path -- lintian check script -*- perl -*-
+# languages/golang/module-path -- lintian check script -*- perl -*-
 #
 # Copyright (C) 2004 Marc Brockschmidt
 # Copyright (C) 2020 Chris Lamb <lamby@debian.org>
@@ -20,7 +20,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::Check::Languages::Golang::ImportPath;
+package Lintian::Check::Languages::Golang::ModulePath;
 
 use v5.20;
 use warnings;

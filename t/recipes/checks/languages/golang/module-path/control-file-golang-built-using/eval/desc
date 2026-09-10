@@ -1,2 +1,2 @@
 Testname: control-file-golang-built-using
-Check: languages/golang/import-path
+Check: languages/golang/module-path
