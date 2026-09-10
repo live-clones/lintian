@@ -1,4 +1,4 @@
-# languages/golang/import-path -- lintian check script -*- perl -*-
+# languages/golang/module-path -- lintian check script -*- perl -*-
 #
 # Copyright (C) 2004 Marc Brockschmidt
 # Copyright (C) 2020 Chris Lamb <lamby@debian.org>
@@ -20,7 +20,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::Check::Languages::Golang::ImportPath;
+package Lintian::Check::Languages::Golang::ModulePath;
 
 use v5.20;
 use warnings;
@@ -62,7 +62,7 @@ sub source {
 
         while (my $line = <$fd>) {
 
-            if ($line =~ m{^ \s* module \s+ (\S+) }x) {
+            if ($line =~ m{^ \s* module \s+ "? (\S+) "? }x) {
                 $go_module_path = $1;
                 last;
             }
@@ -73,6 +73,25 @@ sub source {
         $self->hint('xs-go-import-path-differs-from-module-path',
             $xs_go_import_path, ' vs ', $go_module_path)
           if $go_module_path ne $xs_go_import_path;
+
+        if ($go_module_path =~ m{/v (\d+) $}x) {
+            my $go_module_version = $1;
+            my $name = $self->processable->source_name;
+            my @installable_names
+              = $self->processable->debian_control->installables;
+
+            for my $installable_name (@installable_names) {
+                $self->hint('go-library-package-does-not-include-version')
+                  if $installable_name =~ m{^golang- \S+ -dev$}x
+                  && $installable_name !~ m{
+                    ^golang- \S+ -v $go_module_version -dev$
+                }x;
+            }
+
+            $self->hint('go-source-package-does-not-include-version')
+              if $name =~ m{^golang-}
+              && $name !~ m{golang- \S+ -v $go_module_version$}x;
+        }
     }
 
     return;
