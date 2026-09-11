@@ -39,8 +39,8 @@ use namespace::clean;
 
 with 'Lintian::Check';
 
-# a list of regex for detecting non documentation files checked against basename (xi)
-my @NOT_DOCUMENTATION_FILE_REGEXES = qw{
+# a list of regex for detecting non documentation files checked against basename
+my @NOT_DOCUMENTATION_FILE_REGEXES = map { qr{$_}xi } qw{
   ^dependency_links[.]txt$
   ^requires[.]txt$
   ^requirements[.]txt$
@@ -51,31 +51,54 @@ my @NOT_DOCUMENTATION_FILE_REGEXES = qw{
   ^cmakelists[.]txt$
 };
 
-# a list of regex for detecting documentation file checked against basename (xi)
-my @DOCUMENTATION_FILE_REGEXES = qw{
-  [.]docx?$
-  [.]html?$
-  [.]info$
-  [.]latex$
-  [.]markdown$
-  [.]md$
-  [.]odt$
-  [.]pdf$
-  [.]readme$
-  [.]rmd$
-  [.]rst$
-  [.]rtf$
-  [.]tex$
-  [.]txt$
-  ^code[-_]of[-_]conduct$
-  ^contribut(?:e|ing)$
-  ^copyright$
-  ^licen[sc]es?$
-  ^howto$
-  ^patents?$
-  ^readme(?:[.]?first|[.]1st|[.]debian|[.]source)?$
-  ^todos?$
-};
+# a regex for detecting documentation files checked against basename
+my $DOCUMENTATION_FILE_REGEX = qr{
+  (?:
+    [.]docx?$
+  |
+    [.]html?$
+  |
+    [.]info$
+  |
+    [.]latex$
+  |
+    [.]markdown$
+  |
+    [.]md$
+  |
+    [.]odt$
+  |
+    [.]pdf$
+  |
+    [.]readme$
+  |
+    [.]rmd$
+  |
+    [.]rst$
+  |
+    [.]rtf$
+  |
+    [.]tex$
+  |
+    [.]txt$
+  |
+    ^code[-_]of[-_]conduct$
+  |
+    ^contribut(?:e|ing)$
+  |
+    ^copyright$
+  |
+    ^licen[sc]es?$
+  |
+    ^howto$
+  |
+    ^patents?$
+  |
+    ^readme(?:[.]?first|[.]1st|[.]debian|[.]source)?$
+  |
+    ^todos?$
+  )
+}xi;
 
 # an OR (|) regex of all compressed extension
 has COMPRESS_FILE_EXTENSIONS_OR_ALL => (
@@ -122,9 +145,8 @@ sub visit_installed_files {
       =~ m{^ usr/share/doc/ (?:.+/)? (?:doxygen|html) / .* [.]map [.] $regex }sx;
 
     if ($item->is_file
-        and any { $item->basename =~ m{$_}xi } @DOCUMENTATION_FILE_REGEXES
-        and none { $item->basename =~ m{$_}xi }@NOT_DOCUMENTATION_FILE_REGEXES)
-    {
+        and $item->basename =~ $DOCUMENTATION_FILE_REGEX
+        and none { $item->basename =~ $_ } @NOT_DOCUMENTATION_FILE_REGEXES){
 
         $self->pointed_hint(
             'package-contains-documentation-outside-usr-share-doc',
