@@ -59,7 +59,6 @@ my @known_missing = (
       invalid-version-number-for-derivative
       manual-page-in-udeb
       no-tests
-      old-python-version-field
       old-source-override-location
       patch-modifying-debian-files
       patch-system-but-direct-changes-in-diff

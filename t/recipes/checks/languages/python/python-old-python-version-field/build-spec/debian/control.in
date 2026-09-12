@@ -3,7 +3,7 @@ Priority: optional
 Section: python
 Maintainer: [% $author %]
 Standards-Version: [% $standards_version %]
-X-Python3-Version: >= 3.5
+X-Python3-Version: >= 3.13
 Build-Depends: [% $build_depends %]
 Rules-Requires-Root: no
 
