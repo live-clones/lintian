@@ -1,5 +1,5 @@
 Tag: no-dep5-copyright
-Severity: pedantic
+Severity: warning
 Check: debian/copyright/dep5
 Explanation: This package does not use a machine-readable debian/copyright file.
  .
