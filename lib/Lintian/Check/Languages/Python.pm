@@ -70,8 +70,6 @@ has GENERIC_PYTHON_MODULES => (
     }
 );
 
-my @VERSION_FIELDS = qw(X-Python-Version XS-Python-Version X-Python3-Version);
-
 has correct_location => (is => 'rw', default => sub { {} });
 
 sub source {
@@ -90,13 +88,11 @@ sub source {
     my $debian_control = $self->processable->debian_control;
 
     my $VERSIONS = $self->data->load('python/versions', qr/\s*=\s*/);
+    my $version_field = q(X-Python3-Version);
 
-    for my $field (@VERSION_FIELDS) {
+    if ($debian_control->source_fields->declares($version_field)) {
 
-        next
-          unless $debian_control->source_fields->declares($field);
-
-        my $pyversion= $debian_control->source_fields->value($field);
+        my $pyversion= $debian_control->source_fields->value($version_field);
 
         my @valid = (
             ['\d+\.\d+', '\d+\.\d+'],['\d+\.\d+'],
@@ -108,12 +104,13 @@ sub source {
         my @pyversion = split(/\s*,\s*/, $pyversion);
 
         if ($pyversion =~ m/^current/) {
-            $self->hint('python-version-current-is-deprecated', $field);
+            $self->hint('python-version-current-is-deprecated',$version_field);
         }
 
         if (@pyversion > 2) {
             if (any { !/^\d+\.\d+$/ } @pyversion) {
-                $self->hint('malformed-python-version', $field, $pyversion);
+                $self->hint('malformed-python-version', $version_field,
+                    $pyversion);
             }
         } else {
             my $okay = 0;
@@ -133,7 +130,7 @@ sub source {
                     last;
                 }
             }
-            $self->hint('malformed-python-version', $field, $pyversion)
+            $self->hint('malformed-python-version', $version_field, $pyversion)
               unless $okay;
         }
 
@@ -143,9 +140,9 @@ sub source {
             my $ancient = $VERSIONS->value("ancient-python$major");
 
             if (versions_lte($v, $ancient)) {
-                $self->hint('ancient-python-version-field', $field, $v);
+                $self->hint('ancient-python-version-field', $version_field,$v);
             } elsif (versions_lte($v, $old)) {
-                $self->hint('old-python-version-field', $field, $v);
+                $self->hint('old-python-version-field', $version_field, $v);
             }
         }
     }
