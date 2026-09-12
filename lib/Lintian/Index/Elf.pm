@@ -588,17 +588,7 @@ sub section_headers {
         $section->number($section_header{Nr});
         $section->name($section_header{Name});
         $section->type($section_header{Type});
-
-        # readelf uses both
-        $section->address(
-            hex($section_header{Address} // $section_header{Addr}));
-        $section->offset(hex($section_header{Off}));
         $section->size(hex($section_header{Size}));
-        $section->entry_size(hex($section_header{ES}));
-        $section->flags($section_header{Flg});
-        $section->index_link(hex($section_header{Lk}));
-        $section->index_info(hex($section_header{Inf}));
-        $section->alignment(hex($section_header{Al}));
 
         die 'No section number.'
           unless length $section->number;

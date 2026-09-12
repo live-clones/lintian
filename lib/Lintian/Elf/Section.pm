@@ -51,21 +51,7 @@ A class for storing ELF section data
 
 =item type
 
-=item address
-
-=item offset
-
 =item size
-
-=item entry_size
-
-=item flags
-
-=item index_link
-
-=item index_info
-
-=item alignment
 
 =cut
 
@@ -87,52 +73,10 @@ has type => (
     default => $EMPTY
 );
 
-has address => (
-    is => 'rw',
-    coerce => sub { my ($number) = @_; return ($number // 0); },
-    default => 0
-);
-
-has offset => (
-    is => 'rw',
-    coerce => sub { my ($number) = @_; return ($number // 0); },
-    default => 0
-);
-
 has size => (
     is => 'rw',
     coerce => sub { my ($number) = @_; return ($number // 0); },
     default => 0
-);
-
-has entry_size => (
-    is => 'rw',
-    coerce => sub { my ($number) = @_; return ($number // 0); },
-    default => 0
-);
-
-has flags => (
-    is => 'rw',
-    coerce => sub { my ($text) = @_; return ($text // $EMPTY); },
-    default => $EMPTY
-);
-
-has index_link => (
-    is => 'rw',
-    coerce => sub { my ($number) = @_; return ($number // 0); },
-    default => 0
-);
-
-has index_info => (
-    is => 'rw',
-    coerce => sub { my ($number) = @_; return ($number // 0); },
-    default => 0
-);
-
-has alignment => (
-    is => 'rw',
-    coerce => sub { my ($text) = @_; return ($text // $EMPTY); },
-    default => $EMPTY
 );
 
 =back
