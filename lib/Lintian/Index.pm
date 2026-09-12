@@ -106,6 +106,14 @@ Returns the base directory for file references.
 =cut
 
 has identifier => (is => 'rw', default => 'unnamed');
+has debug => (
+    is => 'rw',
+    default => sub { $ENV{'LINTIAN_DEBUG'} // 0 }
+);
+has perf_debug => (
+    is => 'rw',
+    default => sub { $ENV{'LINTIAN_PERF_DEBUG'} // 0 }
+);
 
 has catalog => (
     is => 'rw',
