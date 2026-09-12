@@ -49,14 +49,14 @@ sub visit_installed_files {
     for my $symbol (@{$item->elf->{SYMBOLS} // []}) {
 
         next
-          unless $symbol->section eq 'UND';
+          unless $symbol->{section} eq 'UND';
 
         next
-          unless $self->OBSOLETE_CRYPT_FUNCTIONS->recognizes($symbol->name);
+          unless $self->OBSOLETE_CRYPT_FUNCTIONS->recognizes($symbol->{name});
 
-        my $tag = $self->OBSOLETE_CRYPT_FUNCTIONS->value($symbol->name);
+        my $tag = $self->OBSOLETE_CRYPT_FUNCTIONS->value($symbol->{name});
 
-        $self->pointed_hint($tag, $item->pointer, $symbol->name);
+        $self->pointed_hint($tag, $item->pointer, $symbol->{name});
     }
 
     for my $member_name (keys %{$item->elf_by_member}) {
@@ -65,16 +65,16 @@ sub visit_installed_files {
           my $symbol (@{$item->elf_by_member->{$member_name}{SYMBOLS} // []}) {
 
             next
-              unless $symbol->section eq 'UND';
+              unless $symbol->{section} eq 'UND';
 
             next
               unless $self->OBSOLETE_CRYPT_FUNCTIONS->recognizes(
-                $symbol->name);
+                $symbol->{name});
 
-            my $tag = $self->OBSOLETE_CRYPT_FUNCTIONS->value($symbol->name);
+            my $tag = $self->OBSOLETE_CRYPT_FUNCTIONS->value($symbol->{name});
 
             $self->pointed_hint($tag, $item->pointer, "($member_name)",
-                $symbol->name);
+                $symbol->{name});
         }
     }
 

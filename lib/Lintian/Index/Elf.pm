@@ -33,7 +33,6 @@ use Unicode::UTF8 qw(encode_utf8 valid_utf8 decode_utf8);
 use File::Spec::Functions qw(rel2abs abs2rel);
 
 use Lintian::Elf::Section;
-use Lintian::Elf::Symbol;
 use Lintian::Storage::MLDBM;
 
 use Moo::Role;
@@ -330,10 +329,11 @@ sub parse_per_file {
         my $section_name = $section_name_by_number{$section_number}
           // $section_number;
 
-        my $symbol = Lintian::Elf::Symbol->new;
-        $symbol->section($section_name);
-        $symbol->version($symbol_version);
-        $symbol->name($symbol_name);
+        my $symbol = {
+            name    => $symbol_name,
+            version => $symbol_version,
+            section => $section_name,
+        };
 
         push(@{ $by_object{SYMBOLS} }, $symbol);
     }
