@@ -1,0 +1,3 @@
+Skeleton: upload-non-native
+Testname: python-version-current-deprecated
+Description: Test for "current" in the Python3-Version field
