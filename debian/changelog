@@ -1,8 +1,41 @@
-lintian (2.140.2) UNRELEASED; urgency=medium
+lintian (2.141.0) unstable; urgency=medium
 
-  * WIP (generated at release time: please do not add entries below.)
+  [ Louis-Philippe Véronneau ]
+  * Remove deprecated XS-Python-Version and X-Python-Version fields
 
- -- Louis-Philippe Véronneau <pollo@debian.org>  Wed, 09 Sep 2026 12:25:43 -0400
+  [ Nilesh Patra ]
+  * Lintian::Screen::Python::Egg::Metadata - Do not check for `WHEEL` in
+    `dist-info` (Closes: #1147187)
+  * Lintian::Check::Documentation - Drop `dist-info` related files from
+    `NOT_DOCUMENTATION_FILE_REGEXES` and fix condition for exclusion of these.
+    Thanks to Lucas Nussbaum <lucas@debian.org>
+  * Rename Golang/ImportPath.pm -> Golang/ModulePath.pm to incorporate for
+    more module path related checks
+  * new tags: "go-library-package-does-not-include-version" and
+    "go-source-package-does-not-include-version" (Closes: #1147142)
+  * new tag: deprecated-debian-control-field (Closes: #1145776)
+  * Change severity level of `no-dep5-copyright` to `warning` (Closes:
+    #1147483)
+  * Unknown.pm, data: Add XB- prefixes for binary stanza fields in `data/` and
+    remove XB-* prefix in known binary fields checking for unknown fields
+    (Closes: #1017064)
+  * tags/tests/checks: Minor fixes in URLs (See: #1146466)
+
+  [ Scott Talbert ]
+  * Add more GHC path exclusions to RPATH check
+
+  [ Lucas Nussbaum ]
+  * Trim spelling text with builtin::trim
+  * Remove unused ELF section header fields
+  * Drop bignum for the ELF section Size decoding
+
+  [ Sylvestre Ledru ]
+  * Precompile the provider regexes for Javascript/Embedded.pm, Php/Embedded.pm
+    and Php/Pear/Embedded.pm.
+  * Documentation.pm: match the file name lists as compiled regexes
+  * Spelling.pm: gate the multi-word corrections on a single regex
+
+ -- Louis-Philippe Véronneau <pollo@debian.org>  Sat, 12 Sep 2026 12:38:47 -0400
 
 lintian (2.140.1) unstable; urgency=medium
 
