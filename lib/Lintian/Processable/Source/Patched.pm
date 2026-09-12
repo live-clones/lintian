@@ -74,6 +74,8 @@ has patched => (
         my $index = Lintian::Index->new;
         my $archive = $self->basename;
         $index->identifier("$archive (patched)");
+        $index->procid($self->identifier);
+        $index->kind('patched');
         $index->basedir($self->basedir . $SLASH . 'unpacked');
 
         # source packages can be unpacked anywhere; no anchored roots
