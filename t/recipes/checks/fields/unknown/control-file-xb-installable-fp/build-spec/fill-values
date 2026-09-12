@@ -1,0 +1,3 @@
+Skeleton: upload-non-native
+Testname: control-file-xb-installable-fp
+Description: Test to not flag unknown-field and adopted-extended-field for XB-Lua-Versions

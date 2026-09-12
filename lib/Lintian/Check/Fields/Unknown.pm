@@ -58,8 +58,15 @@ sub binary {
     my ($self) = @_;
 
     my $KNOWN_BINARY_FIELDS= $self->data->load('fields/binary-fields');
+    my @known_binary_fields_sanitized;
+    for my $field ($KNOWN_BINARY_FIELDS->all_entries) {
+        my ($marker, $bare) = split(qr{-}, $field, 2);
+
+        push @known_binary_fields_sanitized,
+          ($marker =~ m{^ XB}x ? $bare : $field);
+    }
     my @unknown
-      = $self->processable->fields->extra($KNOWN_BINARY_FIELDS->all_entries);
+      = $self->processable->fields->extra(@known_binary_fields_sanitized);
 
     $self->hint('unknown-field', $_)for @unknown;
 
