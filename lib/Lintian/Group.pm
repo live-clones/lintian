@@ -264,7 +264,7 @@ sub process {
                 $self->profile->tag_is_enabled($_)
                   && $self->profile->display_level_for_tag($_)
                   && (  !$self->profile->get_tag($_)->experimental
-                      || $option->{'display-experimental'})
+                    || $option->{'display-experimental'})
             } @check_tag_names;
 
             next
