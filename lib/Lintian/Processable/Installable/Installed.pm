@@ -65,6 +65,8 @@ has installed => (
         my $index = Lintian::Index->new;
         my $archive = $self->basename;
         $index->identifier("$archive (installed)");
+        $index->procid($self->identifier);
+        $index->kind('installed');
         $index->basedir($self->basedir . $SLASH . 'unpacked');
 
         # binary packages are anchored to the system root

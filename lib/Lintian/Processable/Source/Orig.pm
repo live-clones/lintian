@@ -73,6 +73,8 @@ has orig => (
         my $index = Lintian::Index->new;
         my $archive = $self->basename;
         $index->identifier("$archive (orig)");
+        $index->procid($self->identifier);
+        $index->kind('orig');
         $index->basedir($self->basedir . $SLASH . 'orig');
 
         return $index
@@ -97,6 +99,8 @@ has orig => (
 
             my $subindex = Lintian::Index->new;
             $subindex->basedir($component_dir);
+            $subindex->procid($self->identifier);
+            $subindex->kind('orig');
 
             # source packages can be unpacked anywhere; no anchored roots
             $index->anchored(0);

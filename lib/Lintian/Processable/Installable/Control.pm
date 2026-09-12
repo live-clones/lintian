@@ -62,6 +62,8 @@ has control => (
         my $index = Lintian::Index->new;
         my $archive = $self->basename;
         $index->identifier("$archive (control)");
+        $index->procid($self->identifier);
+        $index->kind('control');
         $index->basedir($self->basedir . $SLASH . 'control');
 
         # control files are not installed relative to the system root

@@ -112,7 +112,7 @@ desc COND CURVALUE subdirectory subdirectories udeb deb dsc nlist
 olist KEYN BASEDIR METADATA OO TODO dir exitcode nohang substvar
 substvars listref metadata blockingly checksum checksums Nativeness
 src nativeness Indep debfiles diffstat gz env classpath conffiles
-objdump tasksel filename Pre pre hardlink hardlinking hardlinks PROC
+objdump tasksel filename Pre pre hardlink hardlinking hardlinks PROC procid
 dirs PROFNAME CHECKNAMES COLLMAP ERRHANDLER LPKG unpacker worklist
 BASEPATH stderr stdout stdin ascii html issuedtags subclasses
 showdescription printables overridable processables msg ORed SIGKILLs
@@ -132,6 +132,7 @@ debhelper compat dh buildpackage uaccess udev AppStream plugdev dbgsym
 buildinfo dfsg addons xargs
 
 Buildflags
+CSV perf
 __END__
 
 # Local Variables:
