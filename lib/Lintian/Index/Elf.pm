@@ -24,8 +24,6 @@ use v5.20;
 use warnings;
 use utf8;
 
-use bignum qw(hex);
-
 use Const::Fast;
 use Cwd;
 use IPC::Run3;
