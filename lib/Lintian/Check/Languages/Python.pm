@@ -134,10 +134,10 @@ sub source {
               unless $okay;
         }
 
-        if ($pyversion =~ /\b(([23])\.\d+)$/) {
-            my ($v, $major) = ($1, $2);
-            my $old = $VERSIONS->value("old-python$major");
-            my $ancient = $VERSIONS->value("ancient-python$major");
+        if ($pyversion =~ /\b(3\.\d+)$/) {
+            my $v = $1;
+            my $old = $VERSIONS->value('old-python');
+            my $ancient = $VERSIONS->value('ancient-python');
 
             if (versions_lte($v, $ancient)) {
                 $self->hint('ancient-python-version-field', $version_field,$v);
