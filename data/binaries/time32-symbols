@@ -1,0 +1,52 @@
+# Manually maintained list of symbols that make use of 32bit wide time_t.
+# Symbols using struct timeval or struct timespec are also affected as the
+# tv_sec member is of type time_t. struct itimerval has two embedded timeval
+# members.
+#
+# Please keep this sorted.
+
+adjtime
+clock_getres
+clock_gettime
+clock_settime
+ctime
+difftime
+fstat
+fstatat
+futimens
+futimes
+futimesat
+getitimer
+getrusage
+gettimeofday
+gmtime
+localtime
+lstat
+lutimes
+mktime
+msgctl
+nanosleep
+ntp_gettime
+ntp_gettimex
+ppoll
+pselect
+recvmmsg
+sched_rr_get_interval
+select
+semctl
+semtimedop
+sem_timedwait
+setitimer
+settimeofday
+shmctl
+sigtimedwait
+stat
+time
+timegm
+timerfd_gettime
+timerfd_settime
+timer_gettime
+timer_settime
+utime
+utimensat
+utimes
