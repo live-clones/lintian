@@ -294,7 +294,7 @@ sub process {
             say {*STDERR} encode_utf8("Check $name for $procid done ($tres)")
               if $option->{debug};
             say {*STDERR} encode_utf8("$procid,check/$name,$raw_res")
-              if $option->{'perf-output'};
+              if $option->{'perf-debug'};
         }
 
         my %context_tracker;
@@ -463,7 +463,7 @@ sub process {
       encode_utf8('Checking all of group ' . $self->name . " done ($tres)")
       if $option->{debug};
     say {*STDERR} encode_utf8($self->name . ",total-group-check,$raw_res")
-      if $option->{'perf-output'};
+      if $option->{'perf-debug'};
 
     if ($option->{'debug'} > 2) {
 
