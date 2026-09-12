@@ -25,7 +25,7 @@ use Const::Fast;
 use Path::Tiny;
 use Unicode::UTF8 qw(decode_utf8);
 
-use Lintian::IPC::Run3 qw(safe_qx);
+use Lintian::IPC::Run3 qw(xargs);
 
 use Moo::Role;
 use namespace::clean;
@@ -58,6 +58,9 @@ sub add_strings {
     my $errors = $EMPTY;
 
     my @files = grep { $_->is_file } @{$self->sorted_list};
+
+    # collect ELF files outside debug directories
+    my %by_path;
     for my $file (@files) {
 
         next
@@ -67,12 +70,42 @@ sub add_strings {
         next
           unless $file->file_type =~ /\bELF\b/;
 
-        # prior implementations sometimes made the list unique
-        my $allstrings
-          = decode_utf8(safe_qx(qw{strings --all --}, $file->unpacked_path));
-
-        $file->strings($allstrings);
+        $by_path{$file->unpacked_path} = $file;
     }
+
+    my @paths = keys %by_path;
+    return $errors
+      unless @paths;
+
+    # one strings(1) invocation per xargs batch instead of one per file;
+    # GNU strings prefixes each line with "FILE: " via --print-file-name
+    my $processor = sub {
+        my ($stdout) = @_;
+
+        my %strings;
+        for my $line (split /\n/, $stdout) {
+
+            next
+              if $line eq $EMPTY;
+
+            my ($path, $string) = split /: /, $line, 2;
+
+            next
+              unless defined $string && exists $by_path{$path};
+
+            push @{$strings{$path}}, $string;
+        }
+
+        for my $path (keys %strings) {
+            my $file = $by_path{$path};
+            $file->strings(
+                decode_utf8(join qq{\n}, @{$strings{$path}}, $EMPTY));
+        }
+
+        return;
+    };
+
+    xargs([qw{strings --all -f --}], \@paths, $processor);
 
     return $errors;
 }
