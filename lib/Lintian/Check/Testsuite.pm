@@ -85,8 +85,11 @@ sub source {
 
     $self->pointed_hint('unknown-testsuite', $control_pointer, $_)for @unknown;
 
-    my $tests_control
-      = $self->processable->patched->resolve_path('debian/tests/control');
+    my $tests_dir= $self->processable->patched->resolve_path('debian/tests/');
+    my $tests_control;
+    my $control_autodep8;
+    $tests_control = $tests_dir->child('control')
+      if $tests_dir && $tests_dir->is_dir;
 
     # field added automatically since dpkg 1.17 when d/tests/control is present
     $self->pointed_hint('unnecessary-testsuite-autopkgtest-field',
@@ -100,56 +103,54 @@ sub source {
     die encode_utf8('debian tests control is not a regular file')
       if defined $tests_control && !$tests_control->is_regular_file;
 
-    if (defined $tests_control && $tests_control->is_valid_utf8) {
-
-        # another check complains about invalid encoding
-        my $contents = $tests_control->decoded_utf8;
-
-        my $control_file = Lintian::Deb822->new;
-        $control_file->parse_string($contents, DCTRL_COMMENTS_AT_EOL);
-
-        my @sections = @{$control_file->sections};
-
-        $self->pointed_hint('empty-debian-tests-control',
-            $tests_control->pointer)
-          unless @sections;
-
-        $self->check_control_paragraph($tests_control, $_) for @sections;
-
-        my @thorough
-          = grep { $_->value('Restrictions') !~ m{\bsuperficial\b} } @sections;
-        $self->pointed_hint('superficial-tests', $tests_control->pointer)
-          if @sections
-          && !@thorough
-          && (@testsuites == 0 || @testsuites == @unknown);
-
-        my @skip_not_inst
-          = grep { $_->value('Restrictions') =~ m{\bskip-not-installable\b} }
-          @sections;
-        $self->pointed_hint(
-            'testsuite-restrictions-has-deprecated-skip-not-installable',
-            $tests_control->pointer)
-          if @skip_not_inst;
-
-        if (scalar @sections == 1) {
-
-            my $section = $sections[0];
-
-            my $command = $section->unfolded_value('Test-Command');
-            my $position = $section->position('Test-Command');
-            my $pointer = $tests_control->pointer($position);
-
-            $self->pointed_hint('no-op-testsuite', $pointer)
-              if $command =~ m{^ \s* (?:/bin/)? true \s* $}sx;
-        }
-    }
-
-    my $control_autodep8
-      = $self->processable->patched->resolve_path(
-        'debian/tests/control.autodep8');
+    $control_autodep8= $tests_dir->child('control.autodep8')
+      if $tests_dir && $tests_dir->is_dir;
     $self->pointed_hint('debian-tests-control-autodep8-is-obsolete',
         $control_autodep8->pointer)
       if defined $control_autodep8;
+
+    return
+      if !defined $tests_control || !$tests_control->is_valid_utf8;
+
+    # another check complains about invalid encoding
+    my $contents = $tests_control->decoded_utf8;
+
+    my $control_file = Lintian::Deb822->new;
+    $control_file->parse_string($contents, DCTRL_COMMENTS_AT_EOL);
+
+    my @sections = @{$control_file->sections};
+
+    $self->pointed_hint('empty-debian-tests-control',$tests_control->pointer)
+      unless @sections;
+
+    $self->check_control_paragraph($tests_control, $_) for @sections;
+
+    my @thorough
+      = grep { $_->value('Restrictions') !~ m{\bsuperficial\b} } @sections;
+    $self->pointed_hint('superficial-tests', $tests_control->pointer)
+      if @sections
+      && !@thorough
+      && (@testsuites == 0 || @testsuites == @unknown);
+
+    my @skip_not_inst
+      = grep { $_->value('Restrictions') =~ m{\bskip-not-installable\b} }
+      @sections;
+    $self->pointed_hint(
+        'testsuite-restrictions-has-deprecated-skip-not-installable',
+        $tests_control->pointer)
+      if @skip_not_inst;
+
+    if (scalar @sections == 1) {
+
+        my $section = $sections[0];
+
+        my $command = $section->unfolded_value('Test-Command');
+        my $position = $section->position('Test-Command');
+        my $pointer = $tests_control->pointer($position);
+
+        $self->pointed_hint('no-op-testsuite', $pointer)
+          if $command =~ m{^ \s* (?:/bin/)? true \s* $}sx;
+    }
 
     return;
 }
