@@ -47,6 +47,13 @@ const my $LINES_PER_FILE => 3;
 # files per readelf invocation
 const my $BATCH_SIZE => 32;
 
+# only what parse_per_file() below reads back; --all additionally dumps
+# relocations and GOT contents, which costs far more than everything else
+const my @READELF_COMMAND => (
+    qw{readelf --file-header --program-headers --section-headers
+      --section-groups --dynamic --dyn-syms --version-info --wide}
+);
+
 =head1 NAME
 
 Lintian::Index::Elf - binary symbol information.
@@ -120,7 +127,7 @@ sub add_elf {
     while (my @batch = splice(@with_objects, 0, $BATCH_SIZE)) {
 
         my @batch_abspaths = map { rel2abs($_->name, $self->basedir) } @batch;
-        my @command = (qw{readelf --all --wide}, @batch_abspaths);
+        my @command = (@READELF_COMMAND, @batch_abspaths);
         my $combined_bytes;
 
         run3(\@command, \undef, \$combined_bytes, \$combined_bytes);
@@ -136,7 +143,9 @@ sub add_elf {
         } else {
             $combined_output = $combined_bytes;
             $errors
-              .= q{Output from 'readelf --all --wide' on batch starting with }
+              .= q{Output from '}
+              . join($SPACE, @READELF_COMMAND)
+              . q{' on batch starting with }
               . $batch[0]->name
               . ' is not valid UTF-8'
               . $NEWLINE;
