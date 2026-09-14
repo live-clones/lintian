@@ -457,7 +457,7 @@ sub extract_service_file_values {
             next;
         }
 
-        my ($key, $value) = ($line =~ m{^(.*)\s*=\s*(.*)$});
+        my ($key, $value) = ($line =~ m{^(.*?)\s*=\s*(.*)$});
         if (   defined($key)
             && $section eq $extract_section
             && $key eq $extract_key) {
