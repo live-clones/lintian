@@ -595,6 +595,9 @@ if ($selected{debug}) {
     };
 }
 
+$ENV{LINTIAN_PERF_DEBUG} = 1
+  if $selected{'perf-debug'};
+
 # check for arguments
 unless (@ARGV || $selected{'packages-from-file'}) {
 
