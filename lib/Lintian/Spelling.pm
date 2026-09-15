@@ -41,6 +41,8 @@ use Unicode::UTF8 qw(encode_utf8);
 const my $SPACE => q{ };
 const my $DOUBLE_QUOTE => q{"};
 const my $VERTICAL_BAR => q{|};
+const my $TRAILING_PUNCTUATION => q{.,;:?!};
+const my $LAST_CHARACTER => -1;
 
 =head1 NAME
 
@@ -148,29 +150,45 @@ sub check_spelling {
     $text = trim($text);
 
     for my $word (split($SPACE, $text)) {
+
+        # cheaper than running the substitution on every word
         my $ends_with_punct = 0;
-        my $q = $word =~ tr/"/"/;
-        # Change quoting on "foo or foo" but not "foo".
-        if ($q & 1) {
-            $quoted = not $quoted;
-        }
-        $ends_with_punct = 1 if $word =~ s/[.,;:?!]+$//;
-
-        if ($duplicate_check and defined($last_word) and $last_word eq $word) {
-            # Avoid flagging words inside quoted text.
-            $code_ref->("$word $word (duplicate word)", $word)
-              if not $quoted
-              and not $duplicates{$word}++
-              and not $ends_with_punct
-              and $text_orig !~ /\b$word\s*\($word\b/
-              and $text_orig !~ /\b$word\)\s*$word\b/;
+        if (index($TRAILING_PUNCTUATION, substr($word, $LAST_CHARACTER)) >= 0){
+            $ends_with_punct = 1
+              if $word =~ s/[.,;:?!]+$//;
         }
 
-        if ($word =~ m/^[A-Za-z]+$/ and not $ends_with_punct) {
-            $last_word = $word;
-        } else {
-            $last_word = undef;
+        # $quoted and $last_word feed the duplicate test and nothing else
+        if ($duplicate_check) {
+
+            my $q = $word =~ tr/"/"/;
+            # Change quoting on "foo or foo" but not "foo".
+            if ($q & 1) {
+                $quoted = not $quoted;
+            }
+
+            if (defined($last_word) and $last_word eq $word) {
+                # Avoid flagging words inside quoted text.
+                $code_ref->("$word $word (duplicate word)", $word)
+                  if not $quoted
+                  and not $duplicates{$word}++
+                  and not $ends_with_punct
+                  and $text_orig !~ /\b$word\s*\($word\b/
+                  and $text_orig !~ /\b$word\)\s*$word\b/;
+            }
+
+            if ($word =~ m/^[A-Za-z]+$/ and not $ends_with_punct) {
+                $last_word = $word;
+            } else {
+                $last_word = undef;
+            }
         }
+
+        # most selective test first; the skips below have no side effects
+        my $lcword = lc $word;
+
+        next
+          unless exists $CORRECTIONS{$lcword};
 
         next
           if $word =~ /^[A-Z]{1,5}\z/;
@@ -179,24 +197,22 @@ sub check_spelling {
         next
           if exists $exceptions{$word};
 
-        my $lcword = lc $word;
-        if (exists $CORRECTIONS{$lcword}
-            && !exists $exceptions{$lcword}) {
+        next
+          if exists $exceptions{$lcword};
 
-            $counter++;
-            my $correction = $CORRECTIONS{$lcword};
+        $counter++;
+        my $correction = $CORRECTIONS{$lcword};
 
-            if ($word =~ /^[A-Z]+$/) {
-                $correction = uc $correction;
-            } elsif ($word =~ /^[A-Z]/) {
-                $correction = ucfirst $correction;
-            }
-
-            next
-              if $seen{$lcword}++;
-
-            $code_ref->($word, $correction);
+        if ($word =~ /^[A-Z]+$/) {
+            $correction = uc $correction;
+        } elsif ($word =~ /^[A-Z]/) {
+            $correction = ucfirst $correction;
         }
+
+        next
+          if $seen{$lcword}++;
+
+        $code_ref->($word, $correction);
     }
 
     # Special case for correcting multi-word strings.
