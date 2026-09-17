@@ -27,6 +27,7 @@ use Cwd;
 use IPC::Run3;
 use List::SomeUtils qw(any);
 use Path::Tiny;
+use Time::HiRes qw(gettimeofday tv_interval);
 use Unicode::UTF8 qw(encode_utf8 decode_utf8);
 
 use Lintian::Index::Item;
@@ -91,6 +92,14 @@ Lintian::Processable::Source::Orig::Index provides an interface to collected dat
 
 =item identifier
 
+=item procid
+
+=item kind
+
+=item debug
+
+=item perf_debug
+
 =item catalog
 
 Returns a reference to a hash with elements catalogued by path names.
@@ -106,6 +115,16 @@ Returns the base directory for file references.
 =cut
 
 has identifier => (is => 'rw', default => 'unnamed');
+has procid => (is => 'rw', default => $EMPTY);
+has kind => (is => 'rw', default => $EMPTY);
+has debug => (
+    is => 'rw',
+    default => sub { $ENV{'LINTIAN_DEBUG'} // 0 }
+);
+has perf_debug => (
+    is => 'rw',
+    default => sub { $ENV{'LINTIAN_PERF_DEBUG'} // 0 }
+);
 
 has catalog => (
     is => 'rw',
@@ -559,15 +578,51 @@ sub load {
 
     $self->catalog(\%all);
 
-    $errors .= $self->add_md5sums;
-    $errors .= $self->add_file_types;
+    $errors .= $self->_timed_collect('md5sums', sub { $self->add_md5sums });
+    $errors
+      .= $self->_timed_collect('file-types', sub { $self->add_file_types });
 
-    $errors .= $self->add_ar;
-    $errors .= $self->add_elf;
-    $errors .= $self->add_java;
-    $errors .= $self->add_strings;
+    $errors .= $self->_timed_collect('ar', sub { $self->add_ar });
+    $errors .= $self->_timed_collect('elf', sub { $self->add_elf });
+    $errors .= $self->_timed_collect('java', sub { $self->add_java });
+    $errors .= $self->_timed_collect('strings', sub { $self->add_strings });
 
     return $errors;
+}
+
+=item _timed_collect(LABEL, CODEREF)
+
+Runs CODEREF, reporting its elapsed time to STDERR if debug output is
+enabled on the index (human-readable line) or perf-debug is enabled
+(machine-readable CSV line).  Used to time the lazily built data
+collections (md5sums, file types, ar, elf, java, strings) that otherwise
+hide inside whichever check first touches the index.
+
+=cut
+
+sub _timed_collect {
+    my ($self, $label, $coderef) = @_;
+
+    return $coderef->()
+      unless $self->debug || $self->perf_debug;
+
+    my $timer = [gettimeofday];
+    my $result = $coderef->();
+    my $raw_res = tv_interval($timer);
+
+    if ($self->debug) {
+        my $tres = sprintf('%.3fs', $raw_res);
+        say {*STDERR}
+          encode_utf8(
+            'Collect '. $label . ' for '. $self->identifier. " done ($tres)");
+    }
+
+    say {*STDERR}
+      encode_utf8(
+        $self->procid . ',collect/' . $self->kind . "/$label,$raw_res")
+      if $self->perf_debug;
+
+    return $result;
 }
 
 =item merge_in
