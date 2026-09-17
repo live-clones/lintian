@@ -2,6 +2,7 @@
 
 # Copyright (C) 1998 Christian Schwarz and Richard Braakman
 # Copyright (C) 2020 Felix Lechner
+# Copyright (C) 2026 Soren Stoutner <soren@debian.org>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -75,8 +76,21 @@ sub visit_installed_files {
             $self->pointed_hint('font-in-non-font-package', $item->pointer)
               unless $self->processable->name =~ m/^(?:[ot]tf|t1|x?fonts)-/;
 
-            $self->pointed_hint('font-outside-font-dir', $item->pointer)
-              unless $item->name =~ m{^usr/share/fonts/};
+            if ( $item->basename =~ m{ [\w-]+ [.] woff2? (?:[.]gz)? $}ix ) {
+
+                # If this is a WOFF or WOFF2 font, make sure it is in the
+                # /usr/share/fonts-fontname/woff or
+                # /usr/share/fonts-fontname/woff2 directory.
+                # See <https://wiki.debian.org/Fonts/PackagingPolicy>
+                $self->pointed_hint( 'woff-font-in-wrong-dir', $item->pointer )
+                  unless $item->name =~ m{^usr/share/fonts-(.+)/woff2?/};
+
+            }else {
+                # All other fonts should be in /usr/share/fonts.
+                # See <https://wiki.debian.org/Fonts/PackagingPolicy>
+                $self->pointed_hint( 'font-outside-font-dir', $item->pointer )
+                  unless $item->name =~ m{^usr/share/fonts/};
+            }
         }
     }
 
