@@ -7,3 +7,6 @@ Explanation: Packages with Ruby scripts must depend on a valid Ruby interpreter.
  .
  In some cases, a weaker relationship like <code>Suggests</code> or
  <code>Recommends</code> is more appropriate.
+ .
+ If the script is not meant to be executable, but meant to be consumed by other
+ programs or are reserved for specific use, the script should be made non-executable.

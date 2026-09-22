@@ -19,3 +19,8 @@ Explanation: Packages with Python3 scripts should depend on the package
  .
  In some cases a weaker relationship, such as Suggests or Recommends, will
  be more appropriate.
+ .
+ If the script is not meant to be executable, but meant to be consumed by
+ other programs or are reserved for specific use, for instance, apport hooks
+ that are installed in <code>/usr/share/apport/package-hooks</code>, the script
+ should be made non-executable.
