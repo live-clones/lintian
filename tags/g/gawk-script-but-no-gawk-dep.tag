@@ -7,3 +7,6 @@ Explanation: Packages that use gawk scripts must depend on the gawk package.
  .
  In some cases a weaker relationship, such as Suggests or Recommends, will
  be more appropriate.
+ .
+ If the script is not meant to be executable, but meant to be consumed by other
+ programs or are reserved for specific use, the script should be made non-executable.
