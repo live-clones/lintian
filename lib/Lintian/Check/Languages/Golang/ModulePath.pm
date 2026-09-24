@@ -76,21 +76,21 @@ sub source {
 
         if ($go_module_path =~ m{/v (\d+) $}x) {
             my $go_module_version = $1;
-            my $name = $self->processable->source_name;
-            my @installable_names
-              = $self->processable->debian_control->installables;
+            my @installable_names= $control->installables;
 
             for my $installable_name (@installable_names) {
-                $self->hint('go-library-package-does-not-include-version')
+                my $installable_fields
+                  = $control->installable_fields($installable_name);
+                my $installable_section = $installable_fields->value('Section')
+                  || $source_fields->value('Section');
+
+                $self->hint('go-library-package-does-not-include-version',
+                    $installable_name)
                   if $installable_name =~ m{^golang- \S+ -dev$}x
                   && $installable_name !~ m{
                     ^golang- \S+ -v $go_module_version -dev$
-                }x;
+                }x && $installable_section ne 'oldlibs';
             }
-
-            $self->hint('go-source-package-does-not-include-version')
-              if $name =~ m{^golang-}
-              && $name !~ m{golang- \S+ -v $go_module_version$}x;
         }
     }
 
