@@ -18,7 +18,20 @@ Description: [% $description %]
  things.  It should not be installed like a regular package.  It may
  be an empty package.
 
-Package: [% $source %]-dev
+Package: [% $source %]-one-dev
+Architecture: all
+Depends: ${misc:Depends}
+Section: oldlibs
+Description: [% $description %] (dev)
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+ .
+ This package contains the source one.
+
+
+Package: [% $source %]-two-dev
 Architecture: all
 Depends: ${misc:Depends}
 Description: [% $description %] (dev)
@@ -27,4 +40,4 @@ Description: [% $description %] (dev)
  things.  It should not be installed like a regular package.  It may
  be an empty package.
  .
- This package contains the source.
+ This package contains the source two.
