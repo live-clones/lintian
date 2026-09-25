@@ -159,14 +159,14 @@ sub source {
     if (defined $pyproject && $pyproject->is_open_ok) {
 
         my %PYPROJECT_PREREQUISITES = (
-            'poetry.core.masonry.api' => 'python3-poetry-core:any',
-            'flit_core.buildapi' => 'flit:any',
-            'setuptools.build_meta' => 'python3-setuptools:any',
-            'pdm.pep517.api' => 'python3-pdm-backend:any',
-            'hatchling.build' => 'python3-hatchling:any',
-            'mesonpy' => 'python3-mesonpy:any',
-            'sipbuild.api' => 'python3-sipbuild:any',
-            'whey' => 'python3-whey:any'
+            'poetry.core.masonry.api' => 'python3-poetry-core',
+            'flit_core.buildapi' => 'flit | python3-flit',
+            'setuptools.build_meta' => 'python3-setuptools',
+            'pdm.pep517.api' => 'python3-pdm-backend',
+            'hatchling.build' => 'python3-hatchling',
+            'mesonpy' => 'python3-mesonpy',
+            'sipbuild.api' => 'python3-sipbuild',
+            'whey' => 'python3-whey'
         );
 
         open(my $fd, '<', $pyproject->unpacked_path)
@@ -197,7 +197,7 @@ sub source {
                 if (exists $PYPROJECT_PREREQUISITES{$backend}) {
 
                     my $prerequisites = $PYPROJECT_PREREQUISITES{$backend}
-                      . ', pybuild-plugin-pyproject:any';
+                      . ', pybuild-plugin-pyproject';
 
                     $self->pointed_hint(
                         'missing-prerequisite-for-pyproject-backend',
