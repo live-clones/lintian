@@ -590,8 +590,9 @@ sub source {
                 "override_$cmd-does-not-call-$cmd",
                 $rules->pointer($memorized_position)
               )
-              if none { m/^\t\s*-?($cmd\b|\$\(overridden_command\))/ }
-              @{$rules_per_target{"override_$cmd$suffix"}};
+              if none {
+m/^\t\s*-?($cmd\b|\$\(overridden_command\)|\$\(DH_OVERRIDDEN_COMMAND\))/
+              }@{$rules_per_target{"override_$cmd$suffix"}};
         }
     }
 
