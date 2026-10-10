@@ -57,6 +57,11 @@ sub source {
     my $debian_po_dir = $debian_dir->resolve_path('po');
     my ($templ_pot_path, $potfiles_in_path);
 
+    # Exception in some cases like openstack using po.in to merge templates
+    # like openstack-pkg-tools see #1149975
+    $debian_po_dir = $debian_dir->resolve_path('po.in')
+      unless $debian_po_dir && $debian_po_dir->is_dir;
+
     if ($debian_po_dir and $debian_po_dir->is_dir) {
         $templ_pot_path = $debian_po_dir->resolve_path('templates.pot');
         $potfiles_in_path = $debian_po_dir->resolve_path('POTFILES.in');
