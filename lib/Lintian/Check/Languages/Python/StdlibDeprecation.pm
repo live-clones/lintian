@@ -32,7 +32,11 @@ with 'Lintian::Check';
 my $PYTHON3_DEPEND
   ='python3:any | python3-dev:any | python3-all:any | python3-all-dev:any';
 
-# This list is based on https://peps.python.org/pep-0594/#deprecated-modules
+# This list is based on PEP 594:
+# https://peps.python.org/pep-0594/#deprecated-modules
+#
+# Note that distutils was removed from this PEP and deprecated in PEP 632:
+# https://peps.python.org/pep-0632/
 my %DEPRECATED_STDLIBS = (
     'aifc'        => { 'deprecated' => '3.11',  'removed' => '3.13' },
     'asynchat'    => { 'deprecated' => '3.6',   'removed' => '3.12' },
