@@ -30,6 +30,10 @@ use utf8;
 use Moo;
 use namespace::clean;
 
+use Const::Fast;
+
+const my $MIN_DH_COMPAT_IMPLICIT_BUILT_USING => 14;
+
 with 'Lintian::Check';
 
 sub source {
@@ -46,6 +50,8 @@ sub source {
 
         my $control_item= $self->processable->debian_control->item;
         my $position = $installable_fields->position('Package');
+        my $debhelper_level_info = $self->processable->compat_level;
+        my $level = $debhelper_level_info->{level};
 
         $self->pointed_hint(
             'missing-static-built-using-field-for-golang-package',
@@ -54,7 +60,9 @@ sub source {
           )
           if $installable_fields->value('Static-Built-Using')
           !~ m{ \$ [{] misc:Static-Built-Using [}] }x
-          && $installable_fields->value('Architecture') ne 'all';
+          && $installable_fields->value('Architecture') ne 'all'
+          && length $level
+          && $level < $MIN_DH_COMPAT_IMPLICIT_BUILT_USING;
     }
 
     return;
