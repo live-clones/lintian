@@ -134,7 +134,7 @@ For most tests, debian/ will be very minimal indeed. A simple
     Description: Ships a PDF file in /etc
 
 This will use the 'upload-native' template to create a native package
-with the given 'Description'.  The 'debian' directory would have a
+with the given 'Description'. The 'debian' directory would have a
 one-line 'install' file putting some PDF documentation in /etc, and a
 PDF file would be included in orig. (Please do not look for this test
 in the test suite; it is just an example).
@@ -152,11 +152,11 @@ like this:
 As noted, this will only run the specified 'documentation' check. This
 keeps output to a minimum so you do not get nuisance tags, such as
 debian-watch-does-not-check-gpg-signature (unless you are working on
-the a check for debian/watch). The contents of the 'Testname' field
+the check for debian/watch). The contents of the 'Testname' field
 must match the directory name.
 
 A 'hints' file in the eval directory contains the tags that lintian is
-expected to be produce when run on the test package. Only tags from
+expected to produce when run on the test package. Only tags from
 the selected 'check' should be included.
 
 You should scrupulously examine the 'hints' to make sure your tags
@@ -300,7 +300,7 @@ Otherwise send a plain text mail to <submit@bugs.debian.org> with
 the first line being `Package: lintian`:
 
 You are welcome to attach the changes to the bug report or link to a
-git branch.  If you use attachments, please generate the changes via
+git branch. If you use attachments, please generate the changes via
 the `git format-patch` command.
 
 ## Recommended practices
@@ -317,7 +317,7 @@ WIP: in the title.
 ### Backport requirements
 
 There are some limits to which changes Lintian can accept as it needs
-to be backportable to the current Debian stable release.  As such,
+to be backportable to the current Debian stable release. As such,
 all dependencies must be satisfied in Debian stable or stable-backports.
 
 There are several reasons for this requirement. The two main ones are:
@@ -351,7 +351,7 @@ gbp dch -R --postedit="private/generate-tag-summary --in-place"
 Check if commit message and changelog are in good shape (edit if needed
 and amend commit). Then build as usual.
 
-When lintian hit unstable or experimental, add tag using `gbp tag`
+When lintian hits unstable or experimental, add tag using `gbp tag`
 and open a new version by:
 
 ```shell
