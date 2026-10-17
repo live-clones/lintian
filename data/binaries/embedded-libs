@@ -82,7 +82,6 @@ libswscale  ||source-regex=(?:libav|ffmpeg)||Exactly one scaler algorithm must b
 # Trailing whitespace was present when the file was created (see commit: 77fd246)
 libtheora || ||Xiph.Org libtheora\s
 
-libupnp   ||source-regex=libupnp\d?||(?m)(?:SSDP_LIB: New Request Handler:Error|^mserv start: Error in IPv4 listen)
 libxml2   || ||root and DTD name do not match
 libyaml   || ||(?m)^did not find expected <stream-start>
 libytnef  || ||Signature does not match\. Not TNEF\.
@@ -98,6 +97,7 @@ openjpeg  ||source-regex=openjpeg2?||(?:tcd_decode: incomplete bit?stream|Cannot
 openssl   ||source-regex=openssl(?:\d+(?:\.\d+)?)?||You need to read the OpenSSL FAQ
 pcre3     || ||this version of PCRE is not compiled with PCRE_UTF8 support
 poppler   ||source-regex=(?:poppler|xpdf)||(?:May not be a PDF file \(continuing anyway\)|PDF file is damaged - attempting to reconstruct xref table\.\.\.)
+pupnp     ||source-regex=(?:libupnp|pupnp)\d*||(?m)(?:SSDP_LIB: New Request Handler:Error|^mserv start: Error in IPv4 listen)
 srtp      || ||srtp: in stream 0x%x:
 sqlite    ||source-regex=sqlite3? ||CREATE TABLE sqlite_master\(
 taglib    || ||One of the size bytes in the id3v2 header was greater than the allowed 128
