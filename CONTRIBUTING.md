@@ -14,8 +14,8 @@ that is a section on recommended practices and additional resources.
   * `Lintian/`: Most of Lintian's Perl modules are here.
     * `Check/`: Individual check modules that implement Lintian's various
       checks.
-    * `Collect/`: Collector modules that gather data from packages.
-    * `Tag/`: Modules related to Lintian tags.
+    * `Processable/`: Modules giving information and access to package data
+      such as control file, changelog fields, etc.
 * `data/`: Contains data files used by Lintian, such as lists of valid
   maintainers, architectures, etc.
 * `t/`: Contains the test suite.
@@ -23,15 +23,17 @@ that is a section on recommended practices and additional resources.
 * `doc/`: Documentation files, including the Lintian User Manual source.
 * `reporting/`: Code for generating HTML reports from Lintian output.
 * `private/`: Various helper scripts used for development and testing.
+* `tags/`: List of tags and their descriptions.
 
 ### Key Files
 
-* `frontend/lintian`: The main Lintian script that users run.
+* `bin/lintian`: The main Lintian script that users run.
 * `lib/Lintian/Profile.pm`: Defines the Lintian profile, which controls which
   checks are run.
 * `lib/Lintian/Processable.pm`: Represents a processable object (e.g., a .deb or
   .changes file).
-* `lib/Lintian/Collect.pm`: Base class for collector objects.
+* `lib/Lintian/Tag.pm`: Interface for tag metadata (e.g. visibility, explanation,
+  references).
 
 ### Overview of adding a new check
 
@@ -334,7 +336,7 @@ jenkins.debian.net to test this.
 ### Additional resources
 
 * perldoc [doc/tutorial/Lintian/Tutorial.pod](doc/tutorial/Lintian/Tutorial.pod)
-* perldoc [doc/README.developers](doc/README.developers)
+* perldoc [doc/README.developers.pod](doc/README.developers.pod)
 * [doc/releases.md](doc/releases.md)
 
 ## Making a release
