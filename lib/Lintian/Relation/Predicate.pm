@@ -206,7 +206,8 @@ sub parse {
           if $self->version_operator eq $GREATER_THAN;
 
         unless ($with_restrictions) {
-            $self->multiarch_qualifier('any');
+            $self->multiarch_qualifier($EMPTY)
+              if $self->multiarch_qualifier ne 'any';
             $self->version_operator($EMPTY);
             $self->reference_version($EMPTY);
             $self->build_architecture($EMPTY);

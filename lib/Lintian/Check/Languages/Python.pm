@@ -186,13 +186,13 @@ sub source {
 
                 $self->pointed_hint('uses-poetry-cli', $pointer)
                   if $backend eq 'poetry.core.masonry.api'
-                  && $build_depends->satisfies('python3-poetry:any')
-                  && !$build_depends->satisfies('python3-poetry-core:any');
+                  && $build_depends->satisfies('python3-poetry')
+                  && !$build_depends->satisfies('python3-poetry-core');
 
                 $self->pointed_hint('uses-pdm-cli', $pointer)
                   if $backend eq 'pdm.pep517.api'
-                  && $build_depends->satisfies('python3-pdm:any')
-                  && !$build_depends->satisfies('python3-pdm-backend:any');
+                  && $build_depends->satisfies('python3-pdm')
+                  && !$build_depends->satisfies('python3-pdm-backend');
 
                 if (exists $PYPROJECT_PREREQUISITES{$backend}) {
 

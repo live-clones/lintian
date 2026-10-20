@@ -738,7 +738,7 @@ sub source {
     $self->hint('libmodule-build-tiny-perl-needs-to-be-in-build-depends')
       if $processable->relation('Build-Depends-Indep')
       ->satisfies('libmodule-build-tiny-perl')
-      && !$bdepends->satisfies('libmodule-build-tiny-perl:any');
+      && !$bdepends->satisfies('libmodule-build-tiny-perl');
 
     return;
 }

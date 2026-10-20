@@ -75,55 +75,49 @@ my $MISC_DEPENDS = Lintian::Relation->new->load($DOLLAR . '{misc:Depends}');
 # This overrules any thing listed in dh_commands (which is auto-generated).
 
 my %DH_COMMAND_MANUAL_PREREQUISITES = (
-    dh_apache2 => 'dh-apache2:any | apache2-dev:any',
+    dh_apache2 => 'dh-apache2 | apache2-dev',
     dh_autoreconf_clean =>
-'dh-autoreconf:any | debhelper:any (>= 9.20160403~) | debhelper-compat:any',
+      'dh-autoreconf | debhelper (>= 9.20160403~) | debhelper-compat',
     dh_autoreconf =>
-'dh-autoreconf:any | debhelper:any (>= 9.20160403~) | debhelper-compat:any',
-    dh_dkms => 'dh-dkms:any | dh-sequence-dkms:any',
-    dh_girepository => 'gobject-introspection:any | dh-sequence-gir:any',
-    dh_gnome => 'gnome-pkg-tools:any | dh-sequence-gnome:any',
-    dh_gnome_clean => 'gnome-pkg-tools:any | dh-sequence-gnome:any',
-    dh_lv2config => 'lv2core:any',
-    dh_make_pgxs => 'postgresql-server-dev-all:any | postgresql-all:any',
-    dh_nativejava => 'gcj-native-helper:any | default-jdk-builddep:any',
-    dh_pgxs_test => 'postgresql-server-dev-all:any | postgresql-all:any',
-    dh_python3 =>
-      'dh-python:any | dh-sequence-python3:any | pybuild-plugin-pyproject:any',
-    dh_sphinxdoc =>
-'sphinx:any | python-sphinx:any | python3-sphinx:any | dh-sequence-sphinxdoc:any',
-    dh_xine => 'libxine-dev:any | libxine2-dev:any'
+      'dh-autoreconf | debhelper (>= 9.20160403~) | debhelper-compat',
+    dh_dkms => 'dh-dkms | dh-sequence-dkms',
+    dh_girepository => 'gobject-introspection | dh-sequence-gir',
+    dh_gnome => 'gnome-pkg-tools | dh-sequence-gnome',
+    dh_gnome_clean => 'gnome-pkg-tools | dh-sequence-gnome',
+    dh_make_pgxs => 'postgresql-server-dev-all | postgresql-all',
+    dh_pgxs_test => 'postgresql-server-dev-all | postgresql-all',
+    dh_python3 =>'dh-python | dh-sequence-python3 | pybuild-plugin-pyproject',
+    dh_sphinxdoc =>'sphinx | python3-sphinx | dh-sequence-sphinxdoc',
+    dh_xine => 'libxine2-dev'
 );
 
 # Manually maintained list of dependencies needed for dh addons. This overrides
 # information from data/common/dh_addons (the latter file is automatically
 # generated).
 my %DH_ADDON_MANUAL_PREREQUISITES = (
-    ada_library => 'dh-ada-library:any | dh-sequence-ada-library:any',
-    apache2 => 'dh-apache2:any | apache2-dev:any',
+    ada_library => 'dh-ada-library | dh-sequence-ada-library',
+    apache2 => 'dh-apache2 | apache2-dev',
     autoreconf =>
-'dh-autoreconf:any | debhelper:any (>= 9.20160403~) | debhelper-compat:any',
-    cli => 'cli-common-dev:any | dh-sequence-cli:any',
-    dwz => 'debhelper:any | debhelper-compat:any | dh-sequence-dwz:any',
+      'dh-autoreconf | debhelper (>= 9.20160403~) | debhelper-compat',
+    cli => 'cli-common-dev | dh-sequence-cli',
+    dwz => 'debhelper | debhelper-compat | dh-sequence-dwz',
     installinitramfs =>
-'debhelper:any | debhelper-compat:any | dh-sequence-installinitramfs:any',
-    gir => 'gobject-introspection:any | dh-sequence-gir:any',
-    gnome => 'gnome-pkg-tools:any | dh-sequence-gnome:any',
-    lv2config => 'lv2core:any',
-    nodejs => 'pkg-js-tools:any | dh-sequence-nodejs:any',
-    perl_dbi => 'libdbi-perl:any | dh-sequence-perl-dbi:any',
-    perl_imager => 'libimager-perl:any | dh-sequence-perl-imager:any',
-    pgxs => 'postgresql-server-dev-all:any | postgresql-all:any',
-    pgxs_loop => 'postgresql-server-dev-all:any | postgresql-all:any',
-    pypy => 'dh-python:any | dh-sequence-pypy:any',
+      'debhelper | debhelper-compat | dh-sequence-installinitramfs',
+    gir => 'gobject-introspection | dh-sequence-gir',
+    gnome => 'gnome-pkg-tools | dh-sequence-gnome',
+    nodejs => 'pkg-js-tools | dh-sequence-nodejs',
+    perl_dbi => 'libdbi-perl | dh-sequence-perl-dbi',
+    perl_imager => 'libimager-perl | dh-sequence-perl-imager',
+    pgxs => 'postgresql-server-dev-all | postgresql-all',
+    pgxs_loop => 'postgresql-server-dev-all | postgresql-all',
+    pypy => 'dh-python | dh-sequence-pypy',
     python3 =>
-'python3:any | python3-all:any | python3-dev:any | python3-all-dev:any | dh-sequence-python3:any',
-    scour => 'scour:any | python-scour:any | dh-sequence-scour:any',
-    sphinxdoc =>
-'sphinx:any | python-sphinx:any | python3-sphinx:any | dh-sequence-sphinxdoc:any',
+'python3:any | python3-all:any | python3-dev:any | python3-all-dev:any | dh-sequence-python3',
+    scour => 'scour | dh-sequence-scour',
+    sphinxdoc =>'sphinx | python3-sphinx | dh-sequence-sphinxdoc',
     systemd =>
-'debhelper:any (>= 9.20160709~) | debhelper-compat:any | dh-sequence-systemd:any | dh-systemd:any',
-    vim_addon => 'dh-vim-addon:any | dh-sequence-vim-addon:any',
+'debhelper (>= 9.20160709~) | debhelper-compat | dh-sequence-systemd | dh-systemd',
+    vim_addon => 'dh-vim-addon | dh-sequence-vim-addon',
 );
 
 sub visit_patched_files {
@@ -240,7 +234,7 @@ sub source {
 
         $seen{'python3'} = 1
           if $build_prerequisites_norestriction->satisfies(
-            'dh-sequence-python3:any');
+            'dh-sequence-python3');
 
         my $position = 1;
         while (my $line = <$rules_fd>) {
@@ -304,12 +298,12 @@ sub source {
                           = $DH_COMMAND_MANUAL_PREREQUISITES{$dh_command};
                         $command_by_prerequisite{$prerequisite} = $dh_command;
 
-                    } elsif ($DH_COMMANDS_DEPENDS->installed_by($dh_command)) {
-
-                        my @broadened = map { "$_:any" }
-                          $DH_COMMANDS_DEPENDS->installed_by($dh_command);
-                        my $prerequisite
-                          = join($SPACE . $HORIZONTAL_BAR . $SPACE,@broadened);
+                    } elsif (my @installed_prereq
+                        = $DH_COMMANDS_DEPENDS->installed_by($dh_command)) {
+                        my $prerequisite= join(
+                            $SPACE . $HORIZONTAL_BAR . $SPACE,
+                            @installed_prereq
+                        );
                         $command_by_prerequisite{$prerequisite} = $dh_command;
                     }
                 }
@@ -344,12 +338,12 @@ sub source {
 
                         $addon =~ y,-,_,;
 
-                        my @broadened
-                          = map { "$_:any" } $DH_ADDONS->installed_by($addon);
                         my $prerequisite
                           = $DH_ADDON_MANUAL_PREREQUISITES{$addon}
-                          || join($SPACE . $HORIZONTAL_BAR . $SPACE,
-                            @broadened);
+                          || join(
+                            $SPACE . $HORIZONTAL_BAR . $SPACE,
+                            $DH_ADDONS->installed_by($addon)
+                          );
 
                         if ($addon eq 'autotools_dev') {
 
@@ -591,7 +585,7 @@ sub source {
         $self->pointed_hint('package-uses-dh-runit-but-lacks-breaks-substvar',
             $drules->pointer,$installable->name)
           if $seen{'runit'}
-          && $strong->satisfies('runit:any')
+          && $strong->satisfies('runit')
           && (any { m{^ etc/sv/ }msx } @{$installable->installed->sorted_list})
           && !$breaks->satisfies($DOLLAR . '{runit:Breaks}')
           && !$uses_debputy_sequencer
@@ -755,13 +749,13 @@ sub source {
     $self->pointed_hint('package-uses-debhelper-but-lacks-build-depends',
         $drules->pointer)
       if $uses_debhelper
-      && !$build_prerequisites->satisfies('debhelper:any')
-      && !$build_prerequisites->satisfies('debhelper-compat:any');
+      && !$build_prerequisites->satisfies('debhelper')
+      && !$build_prerequisites->satisfies('debhelper-compat');
 
     $self->pointed_hint('package-uses-dh-exec-but-lacks-build-depends',
         $drules->pointer)
       if $uses_dh_exec
-      && !$build_prerequisites->satisfies('dh-exec:any');
+      && !$build_prerequisites->satisfies('dh-exec');
 
     for my $prerequisite (keys %command_by_prerequisite) {
 
@@ -769,12 +763,12 @@ sub source {
 
         # handled above
         next
-          if $prerequisite eq 'debhelper:any';
+          if $prerequisite eq 'debhelper';
 
         next
           if $debhelper_level >= $REQUIRES_AUTOTOOLS
           && (any { $_ eq $prerequisite }
-            qw(autotools-dev:any dh-strip-nondeterminism:any));
+            qw(autotools-dev dh-strip-nondeterminism));
 
         $self->pointed_hint('missing-build-dependency-for-dh_-command',
             $drules->pointer,$command, "(does not satisfy $prerequisite)")
@@ -797,7 +791,7 @@ sub source {
         # As a special case, the python3 addon needs a dependency on
         # dh-python unless the -dev packages are used.
         my $python_source
-          = 'dh-python:any | dh-sequence-python3:any | pybuild-plugin-pyproject:any';
+          = 'dh-python | dh-sequence-python3 | pybuild-plugin-pyproject';
 
         $self->pointed_hint('missing-build-dependency-for-dh-addon',
             $drules->pointer,$addon, "(does not satisfy $python_source)")
@@ -811,15 +805,14 @@ sub source {
     my $dh_versioned = $debhelper_level;
     $dh_versioned = $MIN_X_DH_COMPAT_VERS if $x_dh_compat_declared;
     $self->hint('no-versioned-debhelper-prerequisite', $debhelper_level)
-      unless $build_prerequisites->satisfies(
-        "debhelper:any (>= $dh_versioned~)")
+      unless $build_prerequisites->satisfies("debhelper (>= $dh_versioned~)")
       || $virtual_compat;
 
     if ($debhelper_level >= $USES_AUTORECONF) {
-        for my $autotools_source (qw(dh-autoreconf:any autotools-dev:any)) {
+        for my $autotools_source (qw(dh-autoreconf autotools-dev)) {
 
             next
-              if $autotools_source eq 'autotools-dev:any'
+              if $autotools_source eq 'autotools-dev'
               && $uses_autotools_dev_dh;
 
             $self->hint('useless-autoreconf-build-depends',

@@ -854,7 +854,7 @@ sub visit_control_files {
             $self->pointed_hint('udevadm-called-without-guard',$pointer)
               unless $saw_udevadm_guard
               || $line =~ m{\|\|}
-              || $self->strong_prerequisites->satisfies('udev:any');
+              || $self->strong_prerequisites->satisfies('udev');
         }
 
         if ($item->is_shell_script) {
@@ -889,13 +889,13 @@ sub visit_control_files {
                     $pointer)
                   if $line =~ m{>\s*/etc/inetd\.conf(?:\s|\Z)}
                   && !$self->processable->relation('Provides')
-                  ->satisfies('inet-superserver:any');
+                  ->satisfies('inet-superserver');
 
                 $self->pointed_hint('maintainer-script-modifies-inetd-conf',
                     $pointer)
                   if $line=~ m{^\s*(?:cp|mv)\s+(?:.*\s)?/etc/inetd\.conf\s*$}
                   && !$self->processable->relation('Provides')
-                  ->satisfies('inet-superserver:any');
+                  ->satisfies('inet-superserver');
 
                 # Check for running commands with a leading path.
                 #
