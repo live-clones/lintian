@@ -15,15 +15,15 @@
 # insensitively)!
 #
 
-ash            => /bin, ash:any
+ash            => /usr/bin, ash:any
 awk            => /usr/bin
-bash           => /bin
+bash           => /usr/bin
 bltwish        => /usr/bin, blt:any
 cfagent        => /usr/sbin, cfengine2:any
 clisp          => /usr/bin, clisp:any
-csh            => /bin, tcsh:any | csh:any | c-shell:any
+csh            => /usr/bin, tcsh:any | csh:any | c-shell:any
 cwl-runner     => /usr/bin, cwltool:any | cwl-runner:any
-dash           => /bin
+dash           => /usr/bin
 escript        => /usr/bin, erlang-base:any | erlang-base-hipe:any
 expect         => /usr/bin, expect:any
 expectk        => /usr/bin, expectk:any
@@ -44,20 +44,20 @@ hhvm           => /usr/bin, hhvm:any
 icmake         => /usr/bin, icmake:any
 init-d-script  => /lib/init
 install-menu   => /usr/bin
-invoke-run     => /lib/runit
+invoke-run     => /usr/lib/runit
 ir             => /usr/bin, ironruby:any
 jed            => /usr/bin, jed:any
 jed-script     => /usr/bin, jed:any | xjed:any
 julia          => /usr/bin, julia:any
 jython         => /usr/bin, jython:any
 kaptain        => /usr/bin, kaptain:any
-ksh            => /bin, ksh:any | mksh:any | pdksh:any | zsh:any
+ksh            => /usr/bin, ksh:any | mksh:any | pdksh:any | zsh:any
 lefty          => /usr/bin, graphviz:any
 liquidsoap     => /usr/bin, liquidsoap:any
 magicfilter    => /usr/sbin, magicfilter:any
 make           => /usr/bin, make:any | build-essential:any | dpkg-dev:any
 mawk           => /usr/bin, mawk:any
-mksh           => /bin, mksh:any
+mksh           => /usr/bin, mksh:any
 mscgen         => /usr/bin, mscgen:any
 newlisp        => /usr/bin, newlisp:any
 ngraph         => /usr/bin, ngraph-gtk:any
@@ -87,21 +87,21 @@ rexx           => /usr/bin, regina-rexx:any
 rrdcgi         => /usr/bin, rrdtool:any
 Rscript        => /usr/bin, r-base-core:any
 ruby           => /usr/bin, ruby:any
-run            => /lib/runit/invoke, runit:any (>= 2.1.2-23)
+run            => /usr/lib/runit/invoke, runit:any (>= 2.1.2-23)
 runhaskell     => /usr/bin, ghc:any | ghc6:any
 runhugs        => /usr/bin, hugs:any | hugs98:any
-sed            => /bin
+sed            => /usr/bin
 seed           => /usr/bin, seed:any
-sh             => /bin
+sh             => /usr/bin
 slsh           => /usr/bin, slsh:any
 speedy         => /usr/bin, speedy-cgi-perl:any
 stap           => /usr/bin, systemtap:any
 swipl          => /usr/bin, swi-prolog:any | swi-prolog-nox:any
-tcsh           => /bin, tcsh:any
+tcsh           => /usr/bin, tcsh:any
 texlua         => /usr/bin, texlive-binaries:any (>= 2014.20140512.33982)
 tixwish        => /usr/bin, tix:any
 trs            => /usr/bin, konwert:any
 xjed           => /usr/bin, xjed:any
 yforth         => /usr/bin, yforth:any
 yorick         => /usr/bin, yorick:any
-zsh            => /bin, zsh:any | zsh-beta:any
+zsh            => /usr/bin, zsh:any | zsh-beta:any

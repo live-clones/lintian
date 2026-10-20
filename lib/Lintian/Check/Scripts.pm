@@ -418,35 +418,44 @@ sub visit_installed_files {
 
     if (defined $interpreter_data) {
         my $expected = $interpreter_data->{folder} . $SLASH . $basename;
-
+        my $expected_is_perlenv = $expected eq '/usr/bin/env perl';
         my @context = ($item->interpreter, $NOT_EQUAL, $expected);
 
+        if ($expected =~ '^/usr(/bin/|/sbin/|/lib/)' && $basename ne 'perl') {
+# Debian is now mandatory usr-merged, so /bin/sh and /usr/bin/sh are both acceptable
+            my $non_usr_path = substr($expected, $USR_PREFIX_LENGTH);
+            @context = (
+                $item->interpreter, $NOT_EQUAL, $non_usr_path, 'OR',
+                '/usr' . $non_usr_path
+            );
+            $expected = '^(?:/usr)?' . $non_usr_path;
+        }
         $self->pointed_hint('wrong-path-for-interpreter', $item->pointer,
             @context)
-          if $item->interpreter ne $expected
+          if $item->interpreter !~ $expected
           && !$item->calls_env
-          && $expected ne '/usr/bin/env perl'
+          && !$expected_is_perlenv
           && $item->name !~ m{^usr/share/doc/[^/]+/examples/};
 
         $self->pointed_hint('example-wrong-path-for-interpreter',
             $item->pointer, @context)
-          if $item->interpreter ne $expected
+          if $item->interpreter !~ $expected
           && !$item->calls_env
-          && $expected ne '/usr/bin/env perl'
+          && !$expected_is_perlenv
           && $item->name =~ m{^usr/share/doc/[^/]+/examples/};
 
         $self->pointed_hint('incorrect-path-for-interpreter',
             $item->pointer, @context)
-          if $item->interpreter ne $expected
+          if $item->interpreter !~ $expected
           && !$item->calls_env
-          && $expected eq '/usr/bin/env perl'
+          && $expected_is_perlenv
           && $item->name !~ m{^usr/share/doc/[^/]+/examples/};
 
         $self->pointed_hint('example-incorrect-path-for-interpreter',
             $item->pointer, @context)
-          if $item->interpreter ne $expected
+          if $item->interpreter !~ $expected
           && !$item->calls_env
-          && $expected eq '/usr/bin/env perl'
+          && $expected_is_perlenv
           && $item->name =~ m{^usr/share/doc/[^/]+/examples/};
 
     } elsif ($item->interpreter =~ m{^/usr/local/}) {
@@ -694,11 +703,8 @@ sub visit_control_files {
           : 'wrong-path-for-interpreter';
 
 # Debian is now mandatory usr-merged, so /bin/sh and /usr/bin/sh are both acceptable
-        if ($expected =~ '^(/bin/|/sbin/)') {
-            $expected = '(?:/usr)?' . $expected;
-        } elsif ($expected =~ '^/usr(/bin/|/sbin/)') {
-            $expected = '(?:/usr)?' . substr($expected, $USR_PREFIX_LENGTH);
-        }
+        $expected = '^(?:/usr)?' . substr($expected, $USR_PREFIX_LENGTH)
+          if ($expected =~ '^/usr(/bin/|/sbin/|/lib/)');
 
         $self->pointed_hint(
             $tag_name, $item->pointer,  $interpreter,
@@ -725,11 +731,8 @@ sub visit_control_files {
           : 'wrong-path-for-interpreter';
 
 # Debian is now mandatory usr-merged, so /bin/sh and /usr/bin/sh are both acceptable
-        if ($expected =~ '^(/bin/|/sbin/)') {
-            $expected = '(?:/usr)?' . $expected;
-        } elsif ($expected =~ '^/usr(/bin/|/sbin/)') {
-            $expected = '(?:/usr)?' . substr($expected, $USR_PREFIX_LENGTH);
-        }
+        $expected = '^(?:/usr)?' . substr($expected, $USR_PREFIX_LENGTH)
+          if ($expected =~ '^/usr(/bin/|/sbin/|/lib/)');
 
         $self->pointed_hint(
             $tag_name, $item->pointer, $interpreter,
