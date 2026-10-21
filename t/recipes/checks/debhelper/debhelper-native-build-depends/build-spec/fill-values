@@ -1,0 +1,5 @@
+Skeleton: upload-non-native
+Testname: debhelper-native-build-depends
+Description: Test dependency requirements for debhelper with native build-dep
+Extra-Build-Depends: python3-sphinx:native
+Package-Architecture: any

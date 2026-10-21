@@ -65,6 +65,7 @@ Build-Depends:
  python3-docutils,
  python3-numpy <!nocheck>,
  python3-setuptools <!nocheck>,
+ python3-sphinx <!nocheck>,
  quilt <!nocheck>,
  rustc <!nocheck>,
  tidy <!nocheck>,
