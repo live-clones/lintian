@@ -108,13 +108,6 @@ libruby1.9.1
 libgd-gd2-noxpm-perl => libgd-perl
 libgd-gd2-perl => libgd-perl
 
-# Deprecated in Stretch (https://lists.debian.org/debian-devel-announce/2016/09/msg00000.html)
-mysql-server => default-mysql-server
-mysql-server-core => default-mysql-server-core
-mysql-client => default-mysql-client
-mysql-client-core => default-mysql-client-core
-libmysqlclient-dev => default-libmysqlclient-dev
-
 # Deprecated in Stretch (#872076)
 dh-systemd => use debhelper (>= 9.20160709)
 
