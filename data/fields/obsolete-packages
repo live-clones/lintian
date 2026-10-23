@@ -108,6 +108,13 @@ libruby1.9.1
 libgd-gd2-noxpm-perl => libgd-perl
 libgd-gd2-perl => libgd-perl
 
+# Deprecated in Forky (https://lists.debian.org/debian-devel/2026/05/msg00161.html)
+default-mysql-server => mariadb-server or mariadb-server-compat | mysql-server
+default-mysql-server-core => mariadb-server-core or mariadb-server-core | mysql-server-core
+default-mysql-client => mariadb-client or mariadb-client-compat | mysql-client
+default-mysql-client-core => mariadb-client-core or mariadb-client-core | mysql-client-core
+default-libmysqlclient-dev => libmariadb-dev or libmariadb-dev-compat | libmysqlclient-dev
+
 # Deprecated in Stretch (#872076)
 dh-systemd => use debhelper (>= 9.20160709)
 
