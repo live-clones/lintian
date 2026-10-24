@@ -1,8 +1,45 @@
-lintian (2.143.0) UNRELEASED; urgency=medium
+lintian (2.143.0) unstable; urgency=medium
 
-  * WIP (generated at release time: please do not add entries below.)
+  [ Nilesh Patra ]
+  * PoDebconf.pm: Check for d/po.in in cases for d/po being absent
+    (Closes: #1149975)
+  * CONTRIBUTING.md: Fix wrong paths and add new paths with descriptions.
+    Thanks to rui cheng <chengrui0428@gmail.com>
+  * embedded-libs: Update source package and source-regex for `pupnp`
+    (Closes: #1151165)
+  * BuiltUsing.pm: Do not `missing-static-built-using-field-for-golang-package`
+    for dh-14+ (Closes: #1150723)
+  * tests(binaries-golang): Hard-code dh compat to 13 to trigger
+    `missing-static-built-using-field-for-golang-package`
+  * add_ons.json: Add dh-go for golang addon (Closes: #1151342)
+  * tests(legacy-relations): Test for `default-mysql-client` as well
+  * scripts/interpreters, Check/Scripts.pm: Update all paths to usr-merged paths
+    and simplify logic for interpreter path matching
+  * scripts/{interpreters, versioned-interpreters}: Drop `:any` suffix from
+    non `M-A: allowed` packages; drop removed packages
+  * Drop `:any` qualifier for non `M-A: allowed` packages and wrong M-A
+    semantics throughout the library code
+  * tests: Adjust hints with wrong `:any` qualifiers dropped in the code
+  * tests(debhelper-native-build-depends): Add test to check that `:native` in
+    B-D does not lead to lintian error (Check against #1000234)
+  * tests(binaries-missing-depends-on-numpy-abi): B-D on python3-dev
+    instead of python3-all-dev
 
- -- Louis-Philippe Véronneau <pollo@debian.org>  Fri, 09 Oct 2026 17:20:18 -0400
+  [ Agathe Porte ]
+  * tags(uses-deprecated-python-stdlib): Add information of deprecation
+    in PEP-632
+
+  [ Noah Meyerhans ]
+  * Pool.pm: do not count screen/masked tags as reported (Closes: #1031878)
+
+  [ CHENG Rui ]
+  * CONTRIBUTING.md: fix typos and stray double spaces
+
+  [ Lena Voytek ]
+  * obsolete-packages: Drop warnings redirecting to default-mysql-* packages
+  * obsolete-packages: Add default-mysql-* packages
+
+ -- Nilesh Patra <nilesh@debian.org>  Sat, 24 Oct 2026 08:55:43 +0200
 
 lintian (2.142.0) unstable; urgency=medium
 
