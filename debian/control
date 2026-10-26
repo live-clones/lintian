@@ -2,11 +2,9 @@ Source: lintian
 Section: devel
 Maintainer: Debian Lintian Maintainers <lintian-maint@debian.org>
 Uploaders:
- Axel Beckert <abe@debian.org>,
  Bastien Roucariès <rouca@debian.org>,
- Louis-Philippe Véronneau <pollo@debian.org>,
- Maytham Alsudany <maytham@debian.org>,
- Nilesh Patra <nilesh@debian.org>
+ Nilesh Patra <nilesh@debian.org>,
+ Noah Meyerhans <noahm@debian.org>
 Build-Depends:
  appstream <!nocheck>,
  aspell <!nocheck>,
