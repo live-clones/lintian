@@ -140,6 +140,9 @@ sub changes {
         return;
     }
 
+    @distributions = map {$_ eq 'sid' ? 'unstable' : $_} @distributions;
+    @changesdists = map {$_ eq 'sid' ? 'unstable' : $_} @changesdists;
+
     my $mismatch_lc = List::Compare->new(\@distributions, \@changesdists);
     my @from_distribution = $mismatch_lc->get_Lonly;
     my @from_changes = $mismatch_lc->get_Ronly;
