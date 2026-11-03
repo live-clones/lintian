@@ -1,0 +1,3 @@
+Skeleton: changes
+Testname: changes-distribution-mismatch-fp
+Description: Test for unstable and sid distributions on changelog and .changes
