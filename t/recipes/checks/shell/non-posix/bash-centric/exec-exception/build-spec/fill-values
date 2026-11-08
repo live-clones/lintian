@@ -1,0 +1,4 @@
+Testname: exec-exception
+Skeleton: upload-non-native
+Description: Check bashism detection - should skip post exec
+Extra-Build-Depends: dash (>= 0.5.10.2)
