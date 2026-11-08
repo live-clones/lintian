@@ -204,7 +204,7 @@ sub check_bash_centric {
 
         # see Bug#999756 and tclsh(1)
         last
-          if $line =~ m{^ exec \s }x;
+          if $line =~ m{^ exec \s (?! .* >& (?: \d+ | -) $) }x;
 
         my $pointer = $item->pointer($position);
 
