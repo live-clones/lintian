@@ -1,0 +1,9 @@
+#!/bin/sh
+#
+# Create an upstream tarball containing a file with old timestamp
+
+set -e
+
+dir="$1"
+
+TZ=GMT touch -t 197501010000 "$dir/foobar"

@@ -57,6 +57,18 @@ sub visit_installed_files {
     return;
 }
 
+sub visit_orig_files {
+    my ($self, $item) = @_;
+
+    my ($year) = ($item->date =~ /^(\d{4})/);
+
+    $self->pointed_hint('orig-tarball-contains-ancient-file',
+        $item->pointer, $item->date)
+      if $year <= $DINSTALL_CUTOFF_YEAR;
+
+    return;
+}
+
 1;
 
 # Local Variables:
