@@ -1,8 +1,41 @@
-lintian (2.144.0) UNRELEASED; urgency=medium
+lintian (2.144.0) unstable; urgency=medium
 
-  * WIP (generated at release time: please do not add entries below.)
+  [ Nilesh Patra ]
+  * Summary of tag changes:
+    + Added:
+      - orig-tarball-contains-ancient-file
+  * Change severity of `no-dep5-copyright` to info (Closes: #1151963)
+  * Distribution.pm: Do not error `distribution-and-changes-mismatch` for sid
+    and unstable
+  * tests(changes-distribution-mismatch-fp): Add test to check for
+    `distribution-and-changes-mismatch` for sid v/s unstable
+  * BashCentric.pm: Tighten check for `exec` to continue parsing
+    on redirection execs (See: #997911)
+  * tests(exec-exception): Add test to check against exec exception for
+    bashism in scripts
+  * tests(cruft-general-quilt): Drop check for `debian/.pc` as it is dropped
+    by dpkg-source by default with dpkg version 1.23.12
+  * tests: Adjust output with new groff version 1.25.0-2
+  * ObsoleteSites.pm: Add exceptions file to not flag some obsolete links
+    with valid subdomains (Closes: #1126769)
+  * tests(obsolete-sites-fp): Add test to check for obsolete
+    site exceptions (See: #1126769)
+  * scripts/versioned-interpreters: Add `:any` for lua now that all versions
+    have been marked `M-A: allowed`
 
- -- Nilesh Patra <nilesh@debian.org>  Sat, 24 Oct 2026 20:37:58 +0200
+  [ Louis-Philippe Véronneau ]
+  * Update lintian Maintainers
+
+  [ Rafael Laboissière ]
+  * Add new check for ancient files in the orig tarball (Closes: #1153525)
+  * tags(package-contains-ancient-file): Document the correct cut-off point
+    for ancient files (Closes: #1153831)
+
+  [ Subin Siby ]
+  * BashCentric.pm: Update regex to ignore <<< in "" string literals
+    (Closes: #997911)
+
+ -- Nilesh Patra <nilesh@debian.org>  Sat, 14 Nov 2026 13:57:11 +0100
 
 lintian (2.143.0) unstable; urgency=medium
 
