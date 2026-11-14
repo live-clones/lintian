@@ -90,12 +90,12 @@ sub assign {
     # these capture three matches each
     $source_pattern
       = qr/$upstream_pattern/
-      . qr/(?:-$maintainer_revision_pattern(?:\.$source_nmu_pattern)?)?/
+      . qr/(?:-$maintainer_revision_pattern(?:(\.)$source_nmu_pattern)?)?/
       if !$native;
     $source_pattern
       = qr/()/
-      . qr/$maintainer_revision_pattern/
-      . qr/(?:\+nmu$source_nmu_pattern)?/
+      . qr/$upstream_pattern/
+      . qr/(?:(\+nmu|\.)$source_nmu_pattern)?/
       if $native;
 
     my $pattern
@@ -104,18 +104,19 @@ sub assign {
       . qr/$source_pattern/
       . qr/(?:\+b$bin_nmu_pattern)?/. qr/$/;
 
-    my ($epoch, $upstream, $maintainer_revision, $source_nmu, $binary_nmu)
+    my ($epoch, $upstream, $maintainer_revision, $source_nmu_prefix, $source_nmu, $binary_nmu)
       = ($literal =~ $pattern);
 
     $epoch //= $EMPTY;
     $upstream //= $EMPTY;
     $maintainer_revision //= $EMPTY;
+    $source_nmu_prefix //= $EMPTY;
     $source_nmu //= $EMPTY;
     $binary_nmu //= $EMPTY;
 
     my $source_nmu_string = $EMPTY;
 
-    $source_nmu_string = ($native ? "+nmu$source_nmu" : ".$source_nmu")
+    $source_nmu_string = "$source_nmu_prefix$source_nmu"
       if length $source_nmu;
 
     my $debian_source = $maintainer_revision . $source_nmu_string;
