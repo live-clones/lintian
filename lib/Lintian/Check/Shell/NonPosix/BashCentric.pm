@@ -76,7 +76,9 @@ my @bashism_string_regexes = (
     qr/\$\{?SHELLOPTS\}?\b/,       # $SHELLOPTS
     qr/\$\{?PIPESTATUS\}?\b/,      # $PIPESTATUS
     qr/\$\{?SHLVL\}?\b/,           # $SHLVL
-    qr/<<</,                       # <<< here string
+    qr{
+      "(?![^"\\]*(?:\$\(|`))(?:\\.|[^"\\])*"(*SKIP)(*F)|<<<
+    }x, # <<< here string
     $LEADING_REGEX
       . qr/echo\s+(?:-[^e\s]+\s+)?\"[^\"]*(\\[abcEfnrtv0])+.*?[\"]/,
     # unsafe echo with backslashes
