@@ -116,6 +116,9 @@ sub assign {
 
     my $source_nmu_string = $EMPTY;
 
+    croak encode_utf("Failed to parse package version: native package uses non-native-style version number but native-style NMU suffix")
+      if ($native && $source_nmu_prefix eq '+nmu' && $maintainer_revision =~ /\-/);
+
     $source_nmu_string = "$source_nmu_prefix$source_nmu"
       if length $source_nmu;
 

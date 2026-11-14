@@ -1,0 +1,5 @@
+Skeleton: upload-native
+Testname: cruft-native-dash-version-native-nmu
+Source-Format: 1.0
+Version: 1.0-1+nmu1
+Description: Test for native packages with dash version and native NMU suffix
