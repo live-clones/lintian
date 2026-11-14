@@ -1,3 +1,12 @@
+lintian (2.122.0+deb13u1) trixie; urgency=medium
+
+  * Team Upload.
+  * tests(cruft-general-quilt): Drop check for `debian/.pc` as it is dropped
+    by dpkg-source by default with dpkg version 1.22.23 in trixie
+    (See: #1153899)
+
+ -- Nilesh Patra <nilesh@debian.org>  Sat, 14 Nov 2026 15:18:18 +0100
+
 lintian (2.122.0) unstable; urgency=medium
 
   [ Louis-Philippe Véronneau ]
