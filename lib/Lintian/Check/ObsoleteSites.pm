@@ -61,6 +61,8 @@ sub search_for_obsolete_sites {
       unless $item->is_open_ok;
 
     my $OBSOLETE_SITES= $self->data->load('obsolete-sites/obsolete-sites');
+    my $OBSOLETE_SITES_EXCEPTIONS
+      = $self->data->load('obsolete-sites/site-exceptions');
 
     my $bytes = $item->bytes;
 
@@ -73,6 +75,9 @@ sub search_for_obsolete_sites {
             =~ m{ (\w+:// (?: [\w.]* [.] )? \Q$site\E [/:] [^\s"<>\$]* ) }ix) {
 
             my $url = $1;
+            next
+              if any {$url =~ m { (\w+:// \Q$_\E [/:]) }ix}
+              $OBSOLETE_SITES_EXCEPTIONS->all_entries;
             $self->pointed_hint('obsolete-url-in-packaging', $item->pointer,
                 $url);
         }
