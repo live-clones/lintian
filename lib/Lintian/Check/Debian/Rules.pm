@@ -618,7 +618,7 @@ m{^\t\s*[-@]?(?:(?:/usr)?/bin/)?(?:cp|chmod|echo|ln|mv|mkdir|rm|test|true)}
     $self->pointed_hint(
         'debian-rules-contains-unnecessary-get-orig-source-target',
         $rules->pointer)
-      if any { m/^\s+uscan\b/ } @{$rules_per_target{'get-orig-source'}};
+      if any { m/^\s+[-@+]*uscan\b/ } @{$rules_per_target{'get-orig-source'}};
 
     my @clean_in_indep
       = grep { $build_indep->satisfies($_) } uniq @needed_clean;
