@@ -78,6 +78,7 @@ sub visit_installed_files {
       && $item->size > 0
       && $item->file_type !~ m/^very short file/
       && $item->file_type !~ m/\bASCII text\b/
+      && $item->file_type !~ m/\bUnicode text\b/
       && $item->name !~ m{^usr/share/};
 
     return;
