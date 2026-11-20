@@ -7,3 +7,4 @@ libfields-java-java (binary): ored-depends-on-obsolete-package Depends: openjdk-
 libfields-java-java (binary): needless-suggest-recommend-libservlet-java libservlet3.0-java
 libfields-java-java (binary): needless-suggest-recommend-libservlet-java libservlet2.5-java
 libfields-java-java (binary): needless-dependency-on-jre
+libfields-java-java (binary): depends-on-obsolete-java-virtual-package Depends: java2-runtime-headless

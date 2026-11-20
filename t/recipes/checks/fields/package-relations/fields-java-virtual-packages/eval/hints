@@ -1,0 +1,4 @@
+fields-java-virtual-packages-numbered (binary): depends-on-obsolete-java-virtual-package Recommends: java21-runtime
+fields-java-virtual-packages-numbered (binary): depends-on-obsolete-java-virtual-package Depends: java17-runtime-headless
+fields-java-virtual-packages (source): depends-on-obsolete-java-virtual-package Build-Depends: java17-sdk-headless
+fields-java-virtual-packages (source): depends-on-obsolete-java-virtual-package Build-Depends-Indep: java21-sdk

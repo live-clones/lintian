@@ -1,0 +1,3 @@
+Skeleton: upload-native
+Testname: fields-java-virtual-packages
+Description: Test for dependencies on numbered Java virtual packages

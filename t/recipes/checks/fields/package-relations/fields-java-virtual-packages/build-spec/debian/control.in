@@ -1,0 +1,30 @@
+Source: [% $source %]
+Section: java
+Maintainer: [% $author %]
+Standards-Version: [% $standards_version %]
+Build-Depends: [% $build_depends %], default-jdk-headless | java17-sdk-headless
+Build-Depends-Indep: default-jdk | java-sdk (>= 17) | java21-sdk
+
+Package: [% $source %]-numbered
+Architecture: all
+Depends: ${misc:Depends},
+         default-jre-headless | java17-runtime-headless
+Recommends: default-jre | java21-runtime
+Description: [% $description %]
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+
+Package: [% $source %]
+Architecture: all
+# Negative testing, the versioned virtual packages are fine.
+Depends: ${misc:Depends},
+         default-jre-headless | java-runtime-headless (>= 17)
+Description: [% $description %] - versioned
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+ .
+ Versioned dependency package.

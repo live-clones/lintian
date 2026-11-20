@@ -242,6 +242,11 @@ sub installable {
                   if ( $OBSOLETE_PACKAGES->recognizes($d_pkg)
                     && $is_dep_field);
 
+                $self->hint('depends-on-obsolete-java-virtual-package',
+                    "$field: $part_d_orig")
+                  if ( $d_pkg =~ /^java\d+-(?:runtime|sdk)(?:-headless)?$/
+                    && $is_dep_field);
+
                 $self->hint('depends-on-metapackage', "$field: $part_d_orig")
                   if ( $KNOWN_METAPACKAGES->recognizes($d_pkg)
                     && !$KNOWN_METAPACKAGES->recognizes($pkg)
@@ -540,6 +545,11 @@ sub source {
                             'build-depends-on-an-obsolete-java-package',
                             $d_pkg);
                     }
+
+                    $self->hint('depends-on-obsolete-java-virtual-package',
+                        "$field: $part_d_orig")
+                      if ( $d_pkg =~ /^java\d+-(?:runtime|sdk)(?:-headless)?$/
+                        && $is_dep_field);
 
                     if (    $d_pkg =~ /^libdb\d+\.\d+.*-dev$/
                         and $is_dep_field) {
