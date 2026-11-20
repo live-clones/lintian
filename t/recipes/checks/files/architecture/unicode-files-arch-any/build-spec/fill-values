@@ -1,0 +1,4 @@
+Skeleton: upload-non-native
+Testname: unicode-files-arch-any
+Package-Architecture: any
+Description: Contains unicode file but marked architecture-dependent
